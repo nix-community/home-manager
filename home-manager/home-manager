@@ -29,7 +29,11 @@ function doListGens() {
 function doListPackages() {
     local outPath
     outPath="$(nix-env -q --out-path | grep -o '/.*home-manager-path$')"
-    nix-store -q --references "$outPath" | sed 's/[^-]*-//'
+    if [[ -n "$outPath" ]] ; then
+        nix-store -q --references "$outPath" | sed 's/[^-]*-//'
+    else
+        echo "No home-manager packages seem to be installed."
+    fi
 }
 
 function doHelp() {
