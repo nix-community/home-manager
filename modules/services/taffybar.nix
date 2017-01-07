@@ -1,0 +1,41 @@
+{ config, lib, pkgs, ... }:
+
+with lib;
+
+let
+
+  cfg = config.services.taffybar;
+
+in
+
+{
+  options = {
+    services.taffybar = {
+      enable = mkEnableOption "Taffybar";
+
+      package = mkOption {
+        default = pkgs.taffybar;
+        defaultText = "pkgs.taffybar";
+        type = types.package;
+        example = literalExample "pkgs.taffybar";
+        description = "The package to use for the Taffybar binary.";
+      };
+    };
+  };
+
+  config = mkIf config.services.taffybar.enable {
+    systemd.user.services.taffybar = {
+        Unit = {
+          Description = "Taffybar desktop bar";
+        };
+
+        Service = {
+          ExecStart = "${cfg.package}/bin/taffybar";
+        };
+
+        Install = {
+          WantedBy = [ "xorg.target" ];
+        };
+    };
+  };
+}

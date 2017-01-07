@@ -1,0 +1,62 @@
+#!@bash@/bin/bash
+
+function doRebuild() {
+    if [[ -z "$1" ]] ; then
+        echo "Need to provide path to configuration file."
+        exit 1
+    fi
+
+    local wrkdir
+    wrkdir="$(mktemp -d)"
+
+    nix-build --show-trace \
+        "@HOME_MANAGER_EXPR_PATH@" \
+        --argstr modulesPath "$HOME/.nixpkgs/home-manager/modules" \
+        --argstr confPath "$1" \
+        -A activation-script \
+        -o "$wrkdir/activate"
+
+    "$wrkdir/activate/libexec/home-activate"
+
+    rm -rv "$wrkdir"
+}
+
+function doListGens() {
+    ls --color=yes -gG --sort time "/nix/var/nix/gcroots/per-user/$(whoami)" \
+        | cut -d' ' -f 4-
+}
+
+function doListPackages() {
+    local outPath
+    outPath="$(nix-env -q --out-path | grep -o '/.*home-manager-path$')"
+    nix-store -q --references "$outPath" | sed 's/[^-]*-//'
+}
+
+function doHelp() {
+    echo "Usage: $0 {help | rebuild CONF | generations | packages}"
+    echo
+    echo "Commands"
+    echo "  help        Print this help"
+    echo "  rebuild     Rebuild the current environment"
+    echo "  generations List all home environment generations"
+    echo "  packages    List all packages installed in home-manager-path"
+}
+
+case $1 in
+    rebuild)
+        doRebuild "$2"
+        ;;
+    generations)
+        doListGens
+        ;;
+    packages)
+        doListPackages
+        ;;
+    help|--help)
+        doHelp
+        ;;
+    *)
+        echo "Unknown command: $1"
+        doHelp
+        exit 1
+esac
