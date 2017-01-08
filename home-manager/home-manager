@@ -6,13 +6,16 @@ function doRebuild() {
         exit 1
     fi
 
+    local confFile
+    confFile="$(realpath "$1")"
+
     local wrkdir
     wrkdir="$(mktemp -d)"
 
     nix-build --show-trace \
         "@HOME_MANAGER_EXPR_PATH@" \
         --argstr modulesPath "$HOME/.nixpkgs/home-manager/modules" \
-        --argstr confPath "$1" \
+        --argstr confPath "$confFile" \
         -A activation-script \
         -o "$wrkdir/activate"
 
