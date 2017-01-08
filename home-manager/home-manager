@@ -51,7 +51,7 @@ function doHelp() {
     echo "  packages    List all packages installed in home-manager-path"
 }
 
-case $1 in
+case "$1" in
     rebuild)
         doRebuild "$2"
         ;;
@@ -68,4 +68,5 @@ case $1 in
         echo "Unknown command: $1"
         doHelp
         exit 1
+        ;;
 esac
