@@ -64,13 +64,15 @@ in
     home.activation.reloadSystemD = stringAfter ["linkages"] ''
       function systemdPostReload() {
         local servicesDiffFile="$(mktemp)"
+        local oldUserServicePath="$oldGenPath/home-files/.config/systemd/user"
+        local newUserServicePath="$newGenPath/home-files/.config/systemd/user"
 
         diff \
           --new-line-format='+%L' \
           --old-line-format='-%L' \
           --unchanged-line-format=' %L' \
-          <(basename -a $(echo "$oldGenPath/.config/systemd/user/*.service") | sort) \
-          <(basename -a $(echo "$newGenPath/.config/systemd/user/*.service") | sort) \
+          <(basename -a $(echo "$oldUserServicePath/*.service") | sort) \
+          <(basename -a $(echo "$newUserServicePath/*.service") | sort) \
           > $servicesDiffFile
 
         local -a maybeRestart=( $(grep '^ ' $servicesDiffFile | cut -c2-) )
@@ -81,8 +83,8 @@ in
         for f in ''${maybeRestart[@]} ; do
           if systemctl --quiet --user is-active "$f" \
              && ! cmp --quiet \
-                 "$oldGenPath/.config/systemd/user/$f" \
-                 "$newGenPath/.config/systemd/user/$f" ; then
+                 "$oldUserServicePath/$f" \
+                 "$newUserServicePath/$f" ; then
             echo "Adding '$f' to restart list";
             toRestart+=("$f")
           fi
@@ -90,7 +92,7 @@ in
 
         rm $servicesDiffFile
 
-        sugg=""
+        local sugg=""
 
         if [[ -n "''${toRestart[@]}" ]] ; then
           sugg="$sugg\nsystemctl --user restart ''${toRestart[@]}"
@@ -110,10 +112,8 @@ in
         fi
       }
 
-      if [[ "$oldGenPath" != "$newGenPath" ]] ; then
-        systemctl --user daemon-reload
-        systemdPostReload
-      fi
+      systemctl --user daemon-reload
+      systemdPostReload
     '';
   };
 }

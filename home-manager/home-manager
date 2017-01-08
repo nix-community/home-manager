@@ -17,16 +17,18 @@ function doRebuild() {
         --argstr modulesPath "$HOME/.nixpkgs/home-manager/modules" \
         --argstr confPath "$confFile" \
         -A activation-script \
-        -o "$wrkdir/activate"
+        -o "$wrkdir/generation"
 
-    "$wrkdir/activate/libexec/home-activate"
+    "$wrkdir/generation/activate"
 
-    rm -rv "$wrkdir"
+    rm -r "$wrkdir"
 }
 
 function doListGens() {
-    ls --color=yes -gG --sort time "/nix/var/nix/gcroots/per-user/$(whoami)" \
+    pushd "/nix/var/nix/profiles/per-user/$USER" > /dev/null
+    ls --color=yes -gG --sort time home-manager-*-link \
         | cut -d' ' -f 4-
+    popd > /dev/null
 }
 
 function doListPackages() {

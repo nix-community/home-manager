@@ -193,34 +193,26 @@ in
 
     home.activation.linkages =
       let
-        pak = pkgs.stdenv.mkDerivation {
-          name = "home-environment";
-
-          phases = [ "installPhase" ];
-
-          installPhase =
-            concatStringsSep "\n" (
-              mapAttrsToList (name: value:
-                "install -v -D -m${value.mode} ${value.source} $out/${value.target}"
-              ) cfg.file
-            );
-        };
-
         link = pkgs.writeText "link" ''
+          newGenFiles="$1"
+          shift
           for sourcePath in "$@" ; do
-            basePath="''${sourcePath#/nix/store/*-home-environment/}"
-            targetPath="$HOME/$basePath"
+            relativePath="$(realpath --relative-to "$newGenFiles" "$sourcePath")"
+            targetPath="$HOME/$relativePath"
             mkdir -vp "$(dirname "$targetPath")"
             ln -vsf "$sourcePath" "$targetPath"
           done
         '';
 
         cleanup = pkgs.writeText "cleanup" ''
+          newGenFiles="$1"
+          oldGenFiles="$2"
+          shift 2
           for sourcePath in "$@" ; do
-            basePath="''${sourcePath#/nix/store/*-home-environment/}"
-            targetPath="$HOME/$basePath"
+            relativePath="$(realpath --relative-to "$oldGenFiles" "$sourcePath")"
+            targetPath="$HOME/$relativePath"
             echo -n "Checking $targetPath"
-            if [[ -f "${pak}/$basePath" ]] ; then
+            if [[ -f "$newGenFiles/$relativePath" ]] ; then
               echo "  exists"
             else
               echo "  gone (deleting)"
@@ -232,34 +224,67 @@ in
       in
         ''
           function setupVars() {
+            local profilesPath="/nix/var/nix/profiles/per-user/$(whoami)"
             local gcPath="/nix/var/nix/gcroots/per-user/$(whoami)"
             local greatestGenNum=( \
-              $(find "$gcPath" -name 'home-*' \
-                | sed 's/^.*-\([0-9]*\)$/\1/' \
+              $(find "$profilesPath" -name 'home-manager-*-link' \
+                | sed 's/^.*-\([0-9]*\)-link$/\1/' \
                 | sort -rn \
                 | head -1) \
             )
+
             if [[ -n "$greatestGenNum" ]] ; then
               oldGenNum=$greatestGenNum
               newGenNum=$(($oldGenNum + 1))
-              oldGenPath="$(readlink -e "$gcPath/home-$oldGenNum")"
             else
               newGenNum=1
             fi
-            newGenPath="${pak}";
-            newGenGcPath="$gcPath/home-$newGenNum"
+
+            if [[ -e "$gcPath/current-home" ]] ; then
+              oldGenPath="$(readlink -e "$gcPath/current-home")"
+            fi
+
+            newGenPath="@GENERATION_DIR@";
+            newGenProfilePath="$profilesPath/home-manager-$newGenNum-link"
+            newGenGcPath="$gcPath/current-home"
           }
 
           # Set some vars, these can be used later on as well.
           setupVars
 
-          if [[ "$oldGenPath" != "$newGenPath" ]] ; then
-            ln -sfv "$newGenPath" "$newGenGcPath"
-            find "$newGenPath" -type f -print0 | xargs -0 bash ${link}
-            if [[ -n "$oldGenPath" ]] ; then
-              echo "Cleaning up orphan links from $HOME"
-              find "$oldGenPath" -type f -print0 | xargs -0 bash ${cleanup}
+          echo oldGenNum=$oldGenNum
+          echo newGenNum=$newGenNum
+          echo oldGenPath=$oldGenPath
+          echo newGenPath=$newGenPath
+          echo newGenProfilePath=$newGenProfilePath
+          echo newGenGcPath=$newGenGcPath
+
+          function linkNewGen() {
+            local newGenFiles
+            newGenFiles="$(readlink -e "$newGenPath/home-files")"
+            find "$newGenFiles" -type f -print0 \
+              | xargs -0 bash ${link} "$newGenFiles"
+          }
+
+          function cleanOldGen() {
+            if [[ -z "$oldGenPath" ]] ; then
+              return
             fi
+
+            echo "Cleaning up orphan links from $HOME"
+
+            local newGenFiles oldGenFiles
+            newGenFiles="$(readlink -e "$newGenPath/home-files")"
+            oldGenFiles="$(readlink -e "$oldGenPath/home-files")"
+            find "$oldGenFiles" -type f -print0 \
+              | xargs -0 bash ${cleanup} "$newGenFiles" "$oldGenFiles"
+          }
+
+          if [[ "$oldGenPath" != "$newGenPath" ]] ; then
+            ln -Tsfv "$newGenPath" "$newGenProfilePath"
+            ln -Tsfv "$newGenPath" "$newGenGcPath"
+            linkNewGen
+            cleanOldGen
           else
             echo "Same home files as previous generation ... doing nothing"
           fi
@@ -290,14 +315,32 @@ in
 
           ${activationCmds}
         '';
+
+        home-files = pkgs.stdenv.mkDerivation {
+          name = "home-manager-files";
+
+          phases = [ "installPhase" ];
+
+          installPhase =
+            concatStringsSep "\n" (
+              mapAttrsToList (name: value:
+                "install -v -D -m${value.mode} ${value.source} $out/${value.target}"
+              ) cfg.file
+            );
+        };
       in
         pkgs.stdenv.mkDerivation {
-          name = "activate-home";
+          name = "home-manager-generation";
 
           phases = [ "installPhase" ];
 
           installPhase = ''
-            install -v -D -m755 ${sf} $out/libexec/home-activate
+            install -v -D -m755 ${sf} $out/activate
+
+            substituteInPlace $out/activate \
+              --subst-var-by GENERATION_DIR $out
+
+            ln -vs ${home-files} $out/home-files
           '';
         };
 
