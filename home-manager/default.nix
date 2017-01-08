@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, modulesPath ? "$HOME/.nixpkgs/home-manager/modules" }:
 
 let
 
@@ -28,6 +28,7 @@ pkgs.stdenv.mkDerivation {
 
     substituteInPlace $out/bin/home-manager \
       --subst-var-by bash "${pkgs.bash}" \
+      --subst-var-by MODULES_PATH '${modulesPath}' \
       --subst-var-by HOME_MANAGER_EXPR_PATH "${homeManagerExpr}"
   '';
 

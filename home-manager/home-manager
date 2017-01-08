@@ -14,7 +14,7 @@ function doRebuild() {
 
     nix-build --show-trace \
         "@HOME_MANAGER_EXPR_PATH@" \
-        --argstr modulesPath "$HOME/.nixpkgs/home-manager/modules" \
+        --argstr modulesPath "@MODULES_PATH@" \
         --argstr confPath "$confFile" \
         -A activation-script \
         -o "$wrkdir/generation"
