@@ -34,7 +34,7 @@ in
       };
 
       Install = {
-        WantedBy = [ "xorg.target" ];
+        WantedBy = [ "graphical-session.target" ];
       };
 
       Service = {
@@ -53,6 +53,14 @@ in
       };
     };
 
+    # A basic graphical session target. Apparently this will come
+    # standard in future Systemd versions.
+    systemd.user.targets.graphical-session = {
+      Unit = {
+        Description = "Graphical session";
+      };
+    };
+
     home.file.".xsession" = {
       mode = "555";
       text = ''
@@ -64,13 +72,13 @@ in
         systemctl --user import-environment SSH_AUTH_SOCK
         systemctl --user import-environment XDG_DATA_DIRS
         systemctl --user import-environment XDG_RUNTIME_DIR
-        systemctl --user start xorg.target
+        systemctl --user start graphical-session.target
 
         ${cfg.initExtra}
 
         ${cfg.windowManager}
 
-        systemctl --user stop xorg.target
+        systemctl --user stop graphical-session.target
       '';
     };
   };

@@ -22,7 +22,7 @@ with lib;
         };
 
         Install = {
-          WantedBy = [ "xorg.target" ];
+          WantedBy = [ "graphical-session.target" ];
         };
 
         Service = {

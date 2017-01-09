@@ -34,7 +34,7 @@ in
         };
 
         Install = {
-          WantedBy = [ "xorg.target" ];
+          WantedBy = [ "graphical-session.target" ];
         };
     };
   };
