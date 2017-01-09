@@ -174,6 +174,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    home.packages = [ pkgs.gnome3.gnome_terminal ];
+
     home.activation.gnome-terminal =
       let
         sf = pkgs.writeText "gnome-terminal.ini" (toINI (buildIniSet cfg));
