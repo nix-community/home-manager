@@ -70,6 +70,7 @@ in
         systemctl --user import-environment DBUS_SESSION_BUS_ADDRESS
         systemctl --user import-environment DISPLAY
         systemctl --user import-environment SSH_AUTH_SOCK
+        systemctl --user import-environment XAUTHORITY
         systemctl --user import-environment XDG_DATA_DIRS
         systemctl --user import-environment XDG_RUNTIME_DIR
         systemctl --user start graphical-session.target
