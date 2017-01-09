@@ -103,20 +103,20 @@ in
         local sugg=""
 
         if [[ -n "''${toRestart[@]}" ]] ; then
-          sugg="$sugg\nsystemctl --user restart ''${toRestart[@]}"
+          sugg="''${sugg}systemctl --user restart ''${toRestart[@]}\n"
         fi
 
         if [[ -n "''${toStop[@]}" ]] ; then
-          sugg="$sugg\nsystemctl --user stop ''${toStop[@]}"
+          sugg="''${sugg}systemctl --user stop ''${toStop[@]}\n"
         fi
 
         if [[ -n "''${toStart[@]}" ]] ; then
-          sugg="$sugg\nsystemctl --user start ''${toStart[@]}"
+          sugg="''${sugg}systemctl --user start ''${toStart[@]}\n"
         fi
 
         if [[ -n "$sugg" ]] ; then
           echo "Suggested commands:"
-          echo -e "$sugg"
+          echo -n -e "$sugg"
         fi
       }
 
