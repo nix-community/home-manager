@@ -45,6 +45,12 @@ in
         description = "Definition of systemd per-user service units.";
       };
 
+      targets = mkOption {
+        default = {};
+        type = types.attrs;
+        description = "Definition of systemd per-user targets";
+      };
+
       timers = mkOption {
         default = {};
         type = types.attrs;
@@ -57,6 +63,8 @@ in
     home.file =
       listToAttrs (
         (buildServices "service" config.systemd.user.services)
+        ++
+        (buildServices "target" config.systemd.user.targets)
         ++
         (buildServices "timer" config.systemd.user.timers)
       );
