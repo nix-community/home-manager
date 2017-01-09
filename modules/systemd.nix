@@ -79,8 +79,8 @@ in
           --new-line-format='+%L' \
           --old-line-format='-%L' \
           --unchanged-line-format=' %L' \
-          <(basename -a $(echo "$oldUserServicePath/*.service") | sort) \
-          <(basename -a $(echo "$newUserServicePath/*.service") | sort) \
+          <(basename -a $(echo "$oldUserServicePath/"*.service) | sort) \
+          <(basename -a $(echo "$newUserServicePath/"*.service) | sort) \
           > $servicesDiffFile
 
         local -a maybeRestart=( $(grep '^ ' $servicesDiffFile | cut -c2-) )
