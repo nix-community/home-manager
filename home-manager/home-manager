@@ -12,14 +12,14 @@ function doRebuild() {
     local wrkdir
     wrkdir="$(mktemp -d)"
 
-    nix-build --show-trace \
-        "@HOME_MANAGER_EXPR_PATH@" \
-        --argstr modulesPath "@MODULES_PATH@" \
-        --argstr confPath "$confFile" \
-        -A activation-script \
-        -o "$wrkdir/generation"
-
-    "$wrkdir/generation/activate"
+    if nix-build --show-trace \
+                 "@HOME_MANAGER_EXPR_PATH@" \
+                 --argstr modulesPath "@MODULES_PATH@" \
+                 --argstr confPath "$confFile" \
+                 -A activation-script \
+                 -o "$wrkdir/generation" ; then
+        "$wrkdir/generation/activate"
+    fi
 
     rm -r "$wrkdir"
 }
