@@ -11,6 +11,7 @@ let
     ./programs/beets.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
+    ./programs/firefox.nix
     ./programs/git.nix
     ./programs/gnome-terminal.nix
     ./programs/lesspipe.nix
