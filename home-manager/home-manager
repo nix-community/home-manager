@@ -1,23 +1,33 @@
 #!@bash@/bin/bash
 
-function doRebuild() {
-    if [[ -z "$1" ]] ; then
+function doBuild() {
+    if [[ -z "$1" ]]; then
         echo "Need to provide path to configuration file."
         exit 1
     fi
 
-    local confFile
-    confFile="$(realpath "$1")"
+    if [[ -z "$2" ]]; then
+        echo "Need to provide generation output path."
+        exit 1
+    fi
 
+    local confFile output
+    confFile="$(realpath "$1")"
+    output="$(realpath "$2")"
+
+    nix-build --show-trace \
+              "@HOME_MANAGER_EXPR_PATH@" \
+              --argstr modulesPath "@MODULES_PATH@" \
+              --argstr confPath "$confFile" \
+              -A activation-script \
+              -o "$output"
+}
+
+function doRebuild() {
     local wrkdir
     wrkdir="$(mktemp -d)"
 
-    if nix-build --show-trace \
-                 "@HOME_MANAGER_EXPR_PATH@" \
-                 --argstr modulesPath "@MODULES_PATH@" \
-                 --argstr confPath "$confFile" \
-                 -A activation-script \
-                 -o "$wrkdir/generation" ; then
+    if doBuild "$1" "$wrkdir/generation" ; then
         "$wrkdir/generation/activate"
     fi
 
@@ -42,16 +52,21 @@ function doListPackages() {
 }
 
 function doHelp() {
-    echo "Usage: $0 {help | rebuild CONF | generations | packages}"
+    echo "Usage: $0 {help | build CONF | rebuild CONF"
+    echo "          | generations | packages}"
     echo
     echo "Commands"
     echo "  help        Print this help"
-    echo "  rebuild     Rebuild the current environment"
+    echo "  build       Build configuration into result directory"
+    echo "  rebuild     Build and activate environment"
     echo "  generations List all home environment generations"
     echo "  packages    List all packages installed in home-manager-path"
 }
 
 case "$1" in
+    build)
+        doBuild "$2" "result"
+        ;;
     rebuild)
         doRebuild "$2"
         ;;
