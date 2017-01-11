@@ -23,7 +23,7 @@ function doBuild() {
               -o "$output"
 }
 
-function doRebuild() {
+function doSwitch() {
     local wrkdir
     wrkdir="$(mktemp -d)"
 
@@ -58,7 +58,7 @@ function doHelp() {
     echo "Commands"
     echo "  help        Print this help"
     echo "  build       Build configuration into result directory"
-    echo "  rebuild     Build and activate environment"
+    echo "  switch      Build and activate configuration"
     echo "  generations List all home environment generations"
     echo "  packages    List all packages installed in home-manager-path"
 }
@@ -67,8 +67,8 @@ case "$1" in
     build)
         doBuild "$2" "result"
         ;;
-    rebuild)
-        doRebuild "$2"
+    switch)
+        doSwitch "$2"
         ;;
     generations)
         doListGens
