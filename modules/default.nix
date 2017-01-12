@@ -27,6 +27,7 @@ let
     ./services/udiskie.nix
     ./services/xscreensaver.nix
     ./systemd.nix
+    ./xresources.nix
     ./xsession.nix
   ];
 
