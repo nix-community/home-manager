@@ -52,15 +52,14 @@ function doListPackages() {
 }
 
 function doHelp() {
-    echo "Usage: $0 {help | build CONF | rebuild CONF"
-    echo "          | generations | packages}"
+    echo "Usage: $0 COMMAND"
     echo
     echo "Commands"
-    echo "  help        Print this help"
-    echo "  build       Build configuration into result directory"
-    echo "  switch      Build and activate configuration"
-    echo "  generations List all home environment generations"
-    echo "  packages    List all packages installed in home-manager-path"
+    echo "  help         Print this help"
+    echo "  build CONF   Build configuration into result directory"
+    echo "  switch CONF  Build and activate configuration"
+    echo "  generations  List all home environment generations"
+    echo "  packages     List all packages installed in home-manager-path"
 }
 
 case "$1" in
