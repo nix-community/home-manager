@@ -38,6 +38,6 @@ in
     home.file.".Xresources".text =
       concatStringsSep "\n" (
         mapAttrsToList formatLine cfg.properties
-      );
+      ) + "\n";
   };
 }
