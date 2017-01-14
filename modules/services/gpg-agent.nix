@@ -57,7 +57,7 @@ in
 
       Service = {
         Type = "forking";
-        ExecStart = "${pkgs.gnupg}/bin/gpg-agent --daemon --use-standard-socket";
+        ExecStart = "${pkgs.gnupg}/bin/gpg-agent --daemon";
         Restart = "on-abort";
       };
 
