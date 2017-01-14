@@ -11,6 +11,11 @@ function doBuild() {
         exit 1
     fi
 
+    if [[ -e "$2" ]]; then
+        echo "The output path $2 already exists."
+        exit 1
+    fi
+
     local confFile output
     confFile="$(realpath "$1")"
     output="$(realpath "$2")"
