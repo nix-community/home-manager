@@ -18,7 +18,16 @@ function doBuild() {
 
     local confFile output
     confFile="$(realpath "$1")"
+
+    if [[ $? -ne 0 ]]; then
+        exit 1
+    fi
+
     output="$(realpath "$2")"
+
+    if [[ $? -ne 0 ]]; then
+        exit 1
+    fi
 
     nix-build --show-trace \
               "@HOME_MANAGER_EXPR_PATH@" \
