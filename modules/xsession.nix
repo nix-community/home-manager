@@ -53,6 +53,14 @@ in
       };
     };
 
+    # For stuff that needs to start just before a graphical session
+    # starts.
+    systemd.user.targets.graphical-session-pre = {
+      Unit = {
+        Description = "Pre-graphical session";
+      };
+    };
+
     # A basic graphical session target. Apparently this will come
     # standard in future Systemd versions.
     systemd.user.targets.graphical-session = {
@@ -73,13 +81,21 @@ in
         systemctl --user import-environment XAUTHORITY
         systemctl --user import-environment XDG_DATA_DIRS
         systemctl --user import-environment XDG_RUNTIME_DIR
-        systemctl --user start graphical-session.target
+
+        systemctl --user restart graphical-session-pre.target
+        systemctl --user restart graphical-session.target
 
         ${cfg.initExtra}
 
         ${cfg.windowManager}
 
         systemctl --user stop graphical-session.target
+        systemctl --user stop graphical-session-pre.target
+
+        # Wait until the units actually stop.
+        while [[ -n "$(systemctl --user --no-legend --state=deactivating list-units)" ]]; do
+          sleep 0.5
+        done
       '';
     };
   };
