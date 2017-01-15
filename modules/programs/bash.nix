@@ -38,6 +38,7 @@ in
       historyIgnore = mkOption {
         type = types.listOf types.str;
         default = [];
+        example = [ "ls" "cd" "exit" ];
         description = "List of commands that should not be saved to the history list.";
       };
 

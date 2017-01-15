@@ -14,7 +14,10 @@ in
       settings = mkOption {
         type = types.attrs;
         default = {};
-        description = "Configuration written to ~/.config/beets/config.yaml";
+        description = ''
+          Configuration written to
+          <filename>~/.config/beets/config.yaml</filename>
+        '';
       };
     };
   };

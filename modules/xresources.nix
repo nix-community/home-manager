@@ -21,15 +21,14 @@ in
     xresources.properties = mkOption {
       type = types.nullOr types.attrs;
       default = null;
-      example = ''
-        {
-          "XTerm*faceName" = "dejavu sans mono";
-          "Emacs*toolBar" = 0;
-        }
-      '';
+      example = {
+        "XTerm*faceName" = "dejavu sans mono";
+        "Emacs*toolBar" = 0;
+      };
       description = ''
-        X server resources that should be set. If null, then this
-        feature is disabled and no ~/.Xresources link is produced.
+        X server resources that should be set. If <code>null</code>,
+        then this feature is disabled and no
+        <filename>~/.Xresources</filename> link is produced.
       '';
     };
   };

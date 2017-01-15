@@ -100,7 +100,9 @@ in
           options = {
             target = mkOption {
               type = types.str;
-              description = "Path to target file relative to $HOME.";
+              description = ''
+                Path to target file relative to <envar>HOME</envar>.
+              '';
             };
 
             text = mkOption {
@@ -147,6 +149,7 @@ in
     home.sessionVariables = mkOption {
       default = {};
       type = types.attrs;
+      example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
       description = "Environment variables to always set at login.";
     };
 

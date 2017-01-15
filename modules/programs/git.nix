@@ -26,7 +26,7 @@ let
         gpgPath = mkOption {
           type = types.str;
           default = "${pkgs.gnupg}/bin/gpg2";
-          defaultText = "''${pkgs.gnupg}/bin/gpg2";
+          defaultText = "\${pkgs.gnupg}/bin/gpg2";
           description = "Path to GnuPG binary to use.";
         };
       };

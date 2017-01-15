@@ -169,6 +169,7 @@ in
       profile = mkOption {
         default = {};
         type = types.loaOf profileSubModule;
+        description = "A set of Gnome Terminal profiles.";
       };
     };
   };
