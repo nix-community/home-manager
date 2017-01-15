@@ -66,22 +66,55 @@ function doListPackages() {
 }
 
 function doHelp() {
-    echo "Usage: $0 COMMAND"
+    echo "Usage: $0 [OPTION] COMMAND"
+    echo
+    echo "Options"
+    echo
+    echo "  -f FILE      The home configuration file. Default is ~/.nixpkgs/home.nix"
+    echo "  -n           Do a dry run, only prints what actions would be taken"
+    echo "  -h           Print this help"
     echo
     echo "Commands"
     echo "  help         Print this help"
-    echo "  build CONF   Build configuration into result directory"
-    echo "  switch CONF  Build and activate configuration"
+    echo "  build        Build configuration into result directory"
+    echo "  switch       Build and activate configuration"
     echo "  generations  List all home environment generations"
     echo "  packages     List all packages installed in home-manager-path"
 }
 
-case "$1" in
+CONFIG_FILE="$HOME/.nixpkgs/home.nix"
+
+while getopts f:nh opt; do
+    case $opt in
+        f)
+            CONFIG_FILE=$OPTARG
+            ;;
+        n)
+            export DRY_RUN=1
+            ;;
+        h)
+            doHelp
+            exit 0
+            ;;
+        *)
+            echo "Unknown option -$OPTARG" >&2
+            doHelp >&2
+            exit 1
+            ;;
+    esac
+done
+
+# Get rid of the options.
+shift "$((OPTIND-1))"
+
+cmd="$*"
+
+case "$cmd" in
     build)
-        doBuild "$2" "result"
+        doBuild "$CONFIG_FILE" "result"
         ;;
     switch)
-        doSwitch "$2"
+        doSwitch "$CONFIG_FILE"
         ;;
     generations)
         doListGens
@@ -93,8 +126,8 @@ case "$1" in
         doHelp
         ;;
     *)
-        echo "Unknown command: $1"
-        doHelp
+        echo "Unknown command: $cmd"
+        doHelp >&2
         exit 1
         ;;
 esac

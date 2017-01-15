@@ -119,8 +119,17 @@ First create a file `~/.nixpkgs/home.nix` containing
 To activate this configuration you can then run
 
 ```
-$ home-manager switch ~/.nixpkgs/home.nix
+$ home-manager switch
 ```
+
+or if you are not feeling so lucky,
+
+```
+$ home-manager build
+```
+
+which will create a `result` link to a directory containing an
+activation script and the generated home directory files.
 
 [Nix]: https://nixos.org/nix/
 [NixOS]: https://nixos.org/
