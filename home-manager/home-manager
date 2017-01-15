@@ -23,6 +23,11 @@ function doBuild() {
         exit 1
     fi
 
+    if [[ ! -r "$confFile" ]]; then
+        echo "No such configuration file: $1"
+        exit 1
+    fi
+
     output="$(realpath "$2")"
 
     if [[ $? -ne 0 ]]; then
