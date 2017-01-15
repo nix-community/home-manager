@@ -120,7 +120,7 @@ in
         fi
       }
 
-      systemctl --user daemon-reload
+      $DRY_RUN_CMD systemctl --user daemon-reload
       systemdPostReload
     '';
   };

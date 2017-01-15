@@ -183,7 +183,11 @@ in
         dconfPath = "/org/gnome/terminal/legacy/";
       in
         ''
-          ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${sf}
+          if [[ $DRY_RUN ]]; then
+            echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${sf}
+          else
+            ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${sf}
+          fi
         '';
   };
 }

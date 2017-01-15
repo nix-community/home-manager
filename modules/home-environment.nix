@@ -168,7 +168,15 @@ in
       internal = true;
       default = {};
       type = types.attrs;
-      description = "Activation scripts for the home environment.";
+      description = ''
+        Activation scripts for the home environment.
+        </para><para>
+        Any script should respect the <varname>DRY_RUN</varname>
+        variable, if it is set then no actual action should be taken.
+        The variable <varname>DRY_RUN_CMD</varname> is set to
+        <code>echo</code> if dry run is enabled. Thus, many cases you
+        can use the idiom <code>$DRY_RUN_CMD rm -rf /</code>.
+      '';
     };
 
     home.activationPackage = mkOption {
@@ -202,8 +210,8 @@ in
           for sourcePath in "$@" ; do
             relativePath="$(realpath --relative-to "$newGenFiles" "$sourcePath")"
             targetPath="$HOME/$relativePath"
-            mkdir -vp "$(dirname "$targetPath")"
-            ln -vsf "$sourcePath" "$targetPath"
+            $DRY_RUN_CMD mkdir -vp "$(dirname "$targetPath")"
+            $DRY_RUN_CMD ln -vsf "$sourcePath" "$targetPath"
           done
         '';
 
@@ -219,8 +227,8 @@ in
               echo "  exists"
             else
               echo "  gone (deleting)"
-              rm -v "$targetPath"
-              rmdir --ignore-fail-on-non-empty -v -p "$(dirname "$targetPath")"
+              $DRY_RUN_CMD rm -v "$targetPath"
+              $DRY_RUN_CMD rmdir --ignore-fail-on-non-empty -v -p "$(dirname "$targetPath")"
             fi
           done
         '';
@@ -284,8 +292,8 @@ in
           }
 
           if [[ "$oldGenPath" != "$newGenPath" ]] ; then
-            ln -Tsfv "$newGenPath" "$newGenProfilePath"
-            ln -Tsfv "$newGenPath" "$newGenGcPath"
+            $DRY_RUN_CMD ln -Tsfv "$newGenPath" "$newGenProfilePath"
+            $DRY_RUN_CMD ln -Tsfv "$newGenPath" "$newGenGcPath"
             linkNewGen
             cleanOldGen
           else
@@ -315,6 +323,14 @@ in
 
         sf = pkgs.writeText "activation-script" ''
           #!${pkgs.stdenv.shell}
+
+          if [[ $DRY_RUN ]] ; then
+            echo "Performing dry run"
+            export DRY_RUN_CMD=echo
+          else
+            echo "Performing live run"
+            unset DRY_RUN_CMD
+          fi
 
           ${activationCmds}
         '';
