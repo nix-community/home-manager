@@ -7,6 +7,7 @@ let
 
   modules = [
     ./home-environment.nix
+    ./manual.nix
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/eclipse.nix
@@ -29,10 +30,12 @@ let
     ./systemd.nix
     ./xresources.nix
     ./xsession.nix
+    <nixpkgs/nixos/modules/misc/meta.nix>
   ];
 
   pkgsModule = {
     config._module.args.pkgs = lib.mkForce pkgs;
+    config._module.args.baseModules = modules;
   };
 
   module = lib.evalModules {
