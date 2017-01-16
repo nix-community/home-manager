@@ -69,7 +69,7 @@ in
         (buildServices "timer" config.systemd.user.timers)
       );
 
-    home.activation.reloadSystemD = stringAfter ["linkages"] ''
+    home.activation.reloadSystemD = ''
       function systemdPostReload() {
         local servicesDiffFile="$(mktemp)"
         local oldUserServicePath="$oldGenPath/home-files/.config/systemd/user"

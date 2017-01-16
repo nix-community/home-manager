@@ -202,7 +202,7 @@ in
         //
         (maybeSet "LC_TIME" cfg.language.time);
 
-    home.activation.linkages =
+    home.activation.linkGeneration =
       let
         link = pkgs.writeText "link" ''
           newGenFiles="$1"
@@ -234,42 +234,6 @@ in
         '';
       in
         ''
-          function setupVars() {
-            local profilesPath="/nix/var/nix/profiles/per-user/$(whoami)"
-            local gcPath="/nix/var/nix/gcroots/per-user/$(whoami)"
-            local greatestGenNum=( \
-              $(find "$profilesPath" -name 'home-manager-*-link' \
-                | sed 's/^.*-\([0-9]*\)-link$/\1/' \
-                | sort -rn \
-                | head -1) \
-            )
-
-            if [[ -n "$greatestGenNum" ]] ; then
-              oldGenNum=$greatestGenNum
-              newGenNum=$(($oldGenNum + 1))
-            else
-              newGenNum=1
-            fi
-
-            if [[ -e "$gcPath/current-home" ]] ; then
-              oldGenPath="$(readlink -e "$gcPath/current-home")"
-            fi
-
-            newGenPath="@GENERATION_DIR@";
-            newGenProfilePath="$profilesPath/home-manager-$newGenNum-link"
-            newGenGcPath="$gcPath/current-home"
-          }
-
-          # Set some vars, these can be used later on as well.
-          setupVars
-
-          echo oldGenNum=$oldGenNum
-          echo newGenNum=$newGenNum
-          echo oldGenPath=$oldGenPath
-          echo newGenPath=$newGenPath
-          echo newGenProfilePath=$newGenProfilePath
-          echo newGenGcPath=$newGenGcPath
-
           function linkNewGen() {
             local newGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
@@ -324,13 +288,9 @@ in
         sf = pkgs.writeText "activation-script" ''
           #!${pkgs.stdenv.shell}
 
-          if [[ $DRY_RUN ]] ; then
-            echo "Performing dry run"
-            export DRY_RUN_CMD=echo
-          else
-            echo "Performing live run"
-            unset DRY_RUN_CMD
-          fi
+          set -e
+
+          ${builtins.readFile ./activation-init.sh}
 
           ${activationCmds}
         '';
