@@ -127,7 +127,8 @@ in
       home.file.".profile".text = ''
         # -*- mode: sh -*-
 
-        ${envVarsStr}
+        ${optionalString (config.home.sessionVariableSetter == "bash")
+          envVarsStr}
 
         ${cfg.profileExtra}
       '';

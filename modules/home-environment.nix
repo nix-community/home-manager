@@ -150,7 +150,24 @@ in
       default = {};
       type = types.attrs;
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
-      description = "Environment variables to always set at login.";
+      description = ''
+        Environment variables to always set at login.
+      '';
+    };
+
+    home.sessionVariableSetter = mkOption {
+      default = "pam";
+      type = types.enum [ "pam" "bash" ];
+      example = "bash";
+      description = ''
+        Identifies the module that should set the session variables.
+        </para><para>
+        If "bash" is set then <varname>config.bash.enable</varname>
+        must also be enabled.
+        </para><para>
+        If "pam" is set then PAM must be used to set the system
+        environment.
+      '';
     };
 
     home.packages = mkOption {

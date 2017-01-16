@@ -72,8 +72,12 @@ in
     home.file.".xsession" = {
       mode = "555";
       text = ''
-        # Rely on Bash to set session variables.
-        . "$HOME/.profile"
+        ${
+          # If we want bash to set the session variables then we need
+          # to pull in .profile since that's where they are.
+          optionalString (config.home.sessionVariableSetter == "bash")
+            ". \"$HOME/.profile\""
+        }
 
         systemctl --user import-environment DBUS_SESSION_BUS_ADDRESS
         systemctl --user import-environment DISPLAY
