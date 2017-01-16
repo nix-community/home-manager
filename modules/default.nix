@@ -8,6 +8,7 @@ let
   modules = [
     ./home-environment.nix
     ./manual.nix
+    ./misc/gtk.nix
     ./misc/pam.nix
     ./programs/bash.nix
     ./programs/beets.nix
