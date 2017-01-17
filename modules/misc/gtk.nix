@@ -104,7 +104,7 @@ in
     };
   };
 
-  config = mkIf (cfg.enable != null) (
+  config = mkIf cfg.enable (
     let
       ini =
         optionalAttrs (cfg.fontName != null)
