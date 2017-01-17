@@ -319,6 +319,7 @@ in
           phases = [ "installPhase" ];
 
           installPhase =
+            "mkdir -pv $out\n" +
             concatStringsSep "\n" (
               mapAttrsToList (name: value:
                 "install -v -D -m${value.mode} ${value.source} $out/${value.target}"
