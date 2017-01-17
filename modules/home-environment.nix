@@ -156,9 +156,9 @@ in
     };
 
     home.sessionVariableSetter = mkOption {
-      default = "pam";
+      default = "bash";
       type = types.enum [ "pam" "bash" ];
-      example = "bash";
+      example = "pam";
       description = ''
         Identifies the module that should set the session variables.
         </para><para>
@@ -166,7 +166,8 @@ in
         must also be enabled.
         </para><para>
         If "pam" is set then PAM must be used to set the system
-        environment.
+        environment. Also mind that typical environment variables
+        might not be set by the time PAM starts up.
       '';
     };
 
