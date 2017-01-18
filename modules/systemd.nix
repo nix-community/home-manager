@@ -71,16 +71,42 @@ in
 
     home.activation.reloadSystemD = ''
       function systemdPostReload() {
-        local servicesDiffFile="$(mktemp)"
+        local workDir
+        workDir="$(mktemp -d)"
+
         local oldUserServicePath="$oldGenPath/home-files/.config/systemd/user"
         local newUserServicePath="$newGenPath/home-files/.config/systemd/user"
+        local oldServiceFiles="$workDir/old-files"
+        local newServiceFiles="$workDir/new-files"
+        local servicesDiffFile="$workDir/diff-files"
+
+        if [[ ! -d "$oldUserServicePath" && ! -d "$newUserServicePath" ]]; then
+          return
+        fi
+
+        if [[ ! -d "$oldUserServicePath" ]]; then
+          touch "$oldServiceFiles"
+        else
+          find "$oldUserServicePath" \
+            -maxdepth 1 -name '*.service' -exec basename '{}' ';' \
+            | sort \
+            > "$oldServiceFiles"
+        fi
+
+        if [[ ! -d "$newUserServicePath" ]]; then
+          touch "$newServiceFiles"
+        else
+          find "$newUserServicePath" \
+            -maxdepth 1 -name '*.service' -exec basename '{}' ';' \
+            | sort \
+            > "$newServiceFiles"
+        fi
 
         diff \
           --new-line-format='+%L' \
           --old-line-format='-%L' \
           --unchanged-line-format=' %L' \
-          <(basename -a $(echo "$oldUserServicePath/"*.service) | sort) \
-          <(basename -a $(echo "$newUserServicePath/"*.service) | sort) \
+          "$oldServiceFiles" "$newServiceFiles" \
           > $servicesDiffFile
 
         local -a maybeRestart=( $(grep '^ ' $servicesDiffFile | cut -c2-) )
@@ -98,7 +124,7 @@ in
           fi
         done
 
-        rm $servicesDiffFile
+        rm -r $workDir
 
         local sugg=""
 
