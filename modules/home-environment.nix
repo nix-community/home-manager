@@ -228,8 +228,8 @@ in
           for sourcePath in "$@" ; do
             relativePath="$(realpath --relative-to "$newGenFiles" "$sourcePath")"
             targetPath="$HOME/$relativePath"
-            $DRY_RUN_CMD mkdir -vp "$(dirname "$targetPath")"
-            $DRY_RUN_CMD ln -vsf "$sourcePath" "$targetPath"
+            $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
+            $DRY_RUN_CMD ln -sf $VERBOSE_ARG "$sourcePath" "$targetPath"
           done
         '';
 
@@ -245,8 +245,9 @@ in
               echo "  exists"
             else
               echo "  gone (deleting)"
-              $DRY_RUN_CMD rm -v "$targetPath"
-              $DRY_RUN_CMD rmdir --ignore-fail-on-non-empty -v -p "$(dirname "$targetPath")"
+              $DRY_RUN_CMD rm $VERBOSE_ARG "$targetPath"
+              $DRY_RUN_CMD rmdir --ignore-fail-on-non-empty \
+                  $VERBOSE_ARG -p "$(dirname "$targetPath")"
             fi
           done
         '';
@@ -274,8 +275,8 @@ in
           }
 
           if [[ "$oldGenPath" != "$newGenPath" ]] ; then
-            $DRY_RUN_CMD ln -Tsfv "$newGenPath" "$newGenProfilePath"
-            $DRY_RUN_CMD ln -Tsfv "$newGenPath" "$newGenGcPath"
+            $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenProfilePath"
+            $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"
             linkNewGen
             cleanOldGen
           else

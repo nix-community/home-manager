@@ -29,18 +29,26 @@ setupVars
 
 echo "Starting home manager activation"
 
-if [[ $DRY_RUN ]] ; then
-  echo "This is a dry run"
-  export DRY_RUN_CMD=echo
+if [[ $VERBOSE ]]; then
+    export VERBOSE_ECHO=echo
+    export VERBOSE_ARG="--verbose"
 else
-  echo "This is a live run"
-  unset DRY_RUN_CMD
+    export VERBOSE_ECHO=true
+    unset VERBOSE_ARG
 fi
 
-echo "Activation variables:"
-echo "  oldGenNum=$oldGenNum"
-echo "  newGenNum=$newGenNum"
-echo "  oldGenPath=$oldGenPath"
-echo "  newGenPath=$newGenPath"
-echo "  newGenProfilePath=$newGenProfilePath"
-echo "  newGenGcPath=$newGenGcPath"
+if [[ $DRY_RUN ]] ; then
+    $VERBOSE_ECHO "This is a dry run"
+    export DRY_RUN_CMD=echo
+else
+    $VERBOSE_ECHO "This is a live run"
+    unset DRY_RUN_CMD
+fi
+
+$VERBOSE_ECHO "Activation variables:"
+$VERBOSE_ECHO "  oldGenNum=$oldGenNum"
+$VERBOSE_ECHO "  newGenNum=$newGenNum"
+$VERBOSE_ECHO "  oldGenPath=$oldGenPath"
+$VERBOSE_ECHO "  newGenPath=$newGenPath"
+$VERBOSE_ECHO "  newGenProfilePath=$newGenProfilePath"
+$VERBOSE_ECHO "  newGenGcPath=$newGenGcPath"

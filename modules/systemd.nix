@@ -119,7 +119,6 @@ in
              && ! cmp --quiet \
                  "$oldUserServicePath/$f" \
                  "$newUserServicePath/$f" ; then
-            echo "Adding '$f' to restart list";
             toRestart+=("$f")
           fi
         done
