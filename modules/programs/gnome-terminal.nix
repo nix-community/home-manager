@@ -177,7 +177,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.gnome3.gnome_terminal ];
 
-    home.activation.gnome-terminal =
+    home.activation.gnomeTerminal =
       let
         sf = pkgs.writeText "gnome-terminal.ini" (toINI (buildIniSet cfg));
         dconfPath = "/org/gnome/terminal/legacy/";
