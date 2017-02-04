@@ -87,7 +87,7 @@ enables the user gpg-agent service.
 First create a file `~/.nixpkgs/home.nix` containing
 
 ```nix
-{ pkgs }:
+{ pkgs, ... }:
 
 {
   home.packages = [
