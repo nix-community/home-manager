@@ -182,7 +182,8 @@ in
         sf = pkgs.writeText "gnome-terminal.ini" (toINI (buildIniSet cfg));
         dconfPath = "/org/gnome/terminal/legacy/";
       in
-        ''
+        # The dconf service needs to be installed and prepared.
+        stringAfter [ "installPackages" ] ''
           if [[ $DRY_RUN ]]; then
             echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${sf}
           else
