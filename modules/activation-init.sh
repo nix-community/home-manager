@@ -20,6 +20,7 @@ function setupVars() {
         oldGenPath="$(readlink -e "$gcPath/current-home")"
     fi
 
+    genProfilePath="$profilesPath/home-manager"
     newGenPath="@GENERATION_DIR@";
     newGenProfilePath="$profilesPath/home-manager-$newGenNum-link"
     newGenGcPath="$gcPath/current-home"
@@ -52,3 +53,4 @@ $VERBOSE_ECHO "  oldGenPath=$oldGenPath"
 $VERBOSE_ECHO "  newGenPath=$newGenPath"
 $VERBOSE_ECHO "  newGenProfilePath=$newGenProfilePath"
 $VERBOSE_ECHO "  newGenGcPath=$newGenGcPath"
+$VERBOSE_ECHO "  genProfilePath=$genProfilePath"

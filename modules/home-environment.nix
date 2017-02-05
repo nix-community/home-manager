@@ -276,6 +276,7 @@ in
 
           if [[ "$oldGenPath" != "$newGenPath" ]] ; then
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenProfilePath"
+            $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenProfilePath" "$genProfilePath"
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"
             linkNewGen
             cleanOldGen
