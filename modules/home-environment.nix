@@ -286,7 +286,7 @@ in
 
     home.activation.installPackages =
       ''
-        nix-env -i ${cfg.path}
+        $DRY_RUN_CMD nix-env -i ${cfg.path}
       '';
 
     home.activationPackage =
