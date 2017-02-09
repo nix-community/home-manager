@@ -240,11 +240,10 @@ in
           for sourcePath in "$@" ; do
             relativePath="$(realpath --relative-to "$oldGenFiles" "$sourcePath")"
             targetPath="$HOME/$relativePath"
-            echo -n "Checking $targetPath"
             if [[ -f "$newGenFiles/$relativePath" ]] ; then
-              echo "  exists"
+              $VERBOSE_ECHO "Checking $targetPath  exists"
             else
-              echo "  gone (deleting)"
+              echo "Checking $targetPath  gone (deleting)"
               $DRY_RUN_CMD rm $VERBOSE_ARG "$targetPath"
               $DRY_RUN_CMD rmdir --ignore-fail-on-non-empty \
                   $VERBOSE_ARG -p "$(dirname "$targetPath")"
@@ -321,10 +320,10 @@ in
           phases = [ "installPhase" ];
 
           installPhase =
-            "mkdir -pv $out\n" +
+            "mkdir -p $out\n" +
             concatStringsSep "\n" (
               mapAttrsToList (name: value:
-                "install -v -D -m${value.mode} ${value.source} $out/${value.target}"
+                "install -D -m${value.mode} ${value.source} $out/${value.target}"
               ) cfg.file
             );
         };
@@ -335,12 +334,12 @@ in
           phases = [ "installPhase" ];
 
           installPhase = ''
-            install -v -D -m755 ${sf} $out/activate
+            install -D -m755 ${sf} $out/activate
 
             substituteInPlace $out/activate \
               --subst-var-by GENERATION_DIR $out
 
-            ln -vs ${home-files} $out/home-files
+            ln -s ${home-files} $out/home-files
           '';
         };
 
