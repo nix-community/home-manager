@@ -71,7 +71,7 @@ in
 
       extraConfig = mkOption {
         type = types.lines;
-        default = null;
+        default = "";
         description = "Additional configuration to add.";
       };
     };
