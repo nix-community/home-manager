@@ -13,7 +13,6 @@ let
       options = {
         key = mkOption {
           type = types.str;
-          default = null;
           description = "The default GPG signing key fingerprint.";
         };
 
