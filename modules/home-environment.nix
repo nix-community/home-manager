@@ -9,7 +9,8 @@ let
   languageSubModule = types.submodule {
     options = {
       base = mkOption {
-        type = types.str;
+        default = null;
+        type = types.nullOr types.str;
         description = ''
           The language to use unless overridden by a more specific option.
         '';
