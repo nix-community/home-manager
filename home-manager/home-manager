@@ -34,7 +34,13 @@ function doBuild() {
         exit 1
     fi
 
-    nix-build --show-trace \
+    local extraArgs
+
+    for p in "${EXTRA_NIX_PATH[@]}"; do
+        extraArgs="$extraArgs -I $p"
+    done
+
+    nix-build --show-trace $extraArgs \
               "@HOME_MANAGER_EXPR_PATH@" \
               --argstr modulesPath "@MODULES_PATH@" \
               --argstr confPath "$confFile" \
@@ -76,6 +82,7 @@ function doHelp() {
     echo "Options"
     echo
     echo "  -f FILE      The home configuration file. Default is ~/.nixpkgs/home.nix"
+    echo "  -I PATH      Add a path to the Nix expression search path."
     echo "  -v           Verbose output"
     echo "  -n           Do a dry run, only prints what actions would be taken"
     echo "  -h           Print this help"
@@ -89,11 +96,15 @@ function doHelp() {
 }
 
 CONFIG_FILE="$HOME/.nixpkgs/home.nix"
+EXTRA_NIX_PATH=()
 
-while getopts f:vnh opt; do
+while getopts f:I:vnh opt; do
     case $opt in
         f)
             CONFIG_FILE=$OPTARG
+            ;;
+        I)
+            EXTRA_NIX_PATH+=("$OPTARG")
             ;;
         v)
             export VERBOSE=1
