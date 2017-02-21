@@ -3,6 +3,8 @@
 , lib ? pkgs.stdenv.lib
 }:
 
+with lib;
+
 let
 
   modules = [
@@ -33,17 +35,38 @@ let
     ./systemd.nix
     ./xresources.nix
     ./xsession.nix
+    <nixpkgs/nixos/modules/misc/assertions.nix>
     <nixpkgs/nixos/modules/misc/meta.nix>
   ];
+
+  collectFailed = cfg:
+    map (x: x.message) (filter (x: !x.assertion) cfg.assertions);
+
+  showWarnings = res:
+    let
+      f = w: x: builtins.trace "[1;31mwarning: ${w}[0m" x;
+    in
+      fold f res res.config.warnings;
 
   pkgsModule = {
     config._module.args.pkgs = lib.mkForce pkgs;
     config._module.args.baseModules = modules;
   };
 
-  module = lib.evalModules {
-    modules = [ configuration ] ++ modules ++ [ pkgsModule ];
-  };
+  module = showWarnings (
+    let
+      mod = lib.evalModules {
+        modules = [ configuration ] ++ modules ++ [ pkgsModule ];
+      };
+
+      failed = collectFailed mod.config;
+
+      failedStr = concatStringsSep "\n" (map (x: "- ${x}") failed);
+    in
+      if failed == []
+      then mod
+      else throw "\nFailed assertions:\n${failedStr}"
+  );
 
 in
 
