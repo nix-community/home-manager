@@ -213,8 +213,8 @@ in
     assertions = [
       (let
         badFiles =
-          filter (hasPrefix ".")
-          (map (v: baseNameOf (toString v.source))
+          filter (f: hasPrefix "." (baseNameOf f))
+          (map (v: toString v.source)
           (attrValues cfg.file));
         badFilesStr = toString badFiles;
       in
