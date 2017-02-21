@@ -40,7 +40,11 @@ function doBuild() {
         extraArgs="$extraArgs -I $p"
     done
 
-    nix-build --show-trace $extraArgs \
+    if [[ $VERBOSE ]]; then
+        extraArgs="$extraArgs --show-trace"
+    fi
+
+    nix-build $extraArgs \
               "@HOME_MANAGER_EXPR_PATH@" \
               --argstr modulesPath "@MODULES_PATH@" \
               --argstr confPath "$confFile" \
