@@ -114,7 +114,11 @@ in
 
             source = mkOption {
               type = types.path;
-              description = "Path of the source file.";
+              description = ''
+                Path of the source file. Note, the file name must not
+                start with a period since Nix will not allow such
+                names in the Nix store.
+              '';
             };
 
             mode = mkOption {
@@ -206,6 +210,20 @@ in
   };
 
   config = {
+    assertions = [
+      (let
+        badFiles =
+          filter (hasPrefix ".")
+          (map (v: baseNameOf (toString v.source))
+          (attrValues cfg.file));
+        badFilesStr = toString badFiles;
+      in
+        {
+          assertion = badFiles == [];
+          message = "Source file names must not start with '.': ${badFilesStr}";
+        })
+    ];
+
     home.sessionVariables =
       let
         maybeSet = name: value:
