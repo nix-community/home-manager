@@ -115,9 +115,11 @@ in
             source = mkOption {
               type = types.path;
               description = ''
-                Path of the source file. Note, the file name must not
-                start with a period since Nix will not allow such
-                names in the Nix store.
+                Path of the source file. The file name must not start
+                with a period since Nix will not allow such names in
+                the Nix store.
+                </para><para>
+                This may refer to a directory.
               '';
             };
 
@@ -245,10 +247,10 @@ in
           newGenFiles="$1"
           shift
           for sourcePath in "$@" ; do
-            relativePath="$(realpath --relative-to "$newGenFiles" "$sourcePath")"
+            relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
             $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
-            $DRY_RUN_CMD ln -sf $VERBOSE_ARG "$sourcePath" "$targetPath"
+            $DRY_RUN_CMD ln -nsf $VERBOSE_ARG "$sourcePath" "$targetPath"
           done
         '';
 
@@ -257,9 +259,9 @@ in
           oldGenFiles="$2"
           shift 2
           for sourcePath in "$@" ; do
-            relativePath="$(realpath --relative-to "$oldGenFiles" "$sourcePath")"
+            relativePath="''${sourcePath#$oldGenFiles/}"
             targetPath="$HOME/$relativePath"
-            if [[ -f "$newGenFiles/$relativePath" ]] ; then
+            if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath  exists"
             else
               echo "Checking $targetPath  gone (deleting)"
@@ -274,7 +276,7 @@ in
           function linkNewGen() {
             local newGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
-            find "$newGenFiles" -type f -print0 \
+            find "$newGenFiles" -type f -print0 -or -type l -print0 \
               | xargs -0 bash ${link} "$newGenFiles"
           }
 
@@ -288,7 +290,7 @@ in
             local newGenFiles oldGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
             oldGenFiles="$(readlink -e "$oldGenPath/home-files")"
-            find "$oldGenFiles" -type f -print0 \
+            find "$oldGenFiles" -type f -print0 -or -type l -print0 \
               | xargs -0 bash ${cleanup} "$newGenFiles" "$oldGenFiles"
           }
 
@@ -341,8 +343,15 @@ in
           installPhase =
             "mkdir -p $out\n" +
             concatStringsSep "\n" (
-              mapAttrsToList (name: value:
-                "install -D -m${value.mode} ${value.source} $out/${value.target}"
+              mapAttrsToList (n: v:
+                ''
+                  if [ -d "${v.source}" ]; then
+                    mkdir -pv "$(dirname "$out/${v.target}")"
+                    ln -sv "${v.source}" "$out/${v.target}"
+                  else
+                    install -D -m${v.mode} "${v.source}" "$out/${v.target}"
+                  fi
+                ''
               ) cfg.file
             );
         };
