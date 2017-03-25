@@ -40,7 +40,7 @@ function doBuild() {
         extraArgs="$extraArgs -I $p"
     done
 
-    if [[ $VERBOSE ]]; then
+    if [[ -v VERBOSE ]]; then
         extraArgs="$extraArgs --show-trace"
     fi
 

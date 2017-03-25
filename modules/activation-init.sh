@@ -30,20 +30,20 @@ setupVars
 
 echo "Starting home manager activation"
 
-if [[ $VERBOSE ]]; then
+if [[ -v VERBOSE ]]; then
     export VERBOSE_ECHO=echo
     export VERBOSE_ARG="--verbose"
 else
     export VERBOSE_ECHO=true
-    unset VERBOSE_ARG
+    export VERBOSE_ARG=""
 fi
 
-if [[ $DRY_RUN ]] ; then
+if [[ -v DRY_RUN ]] ; then
     $VERBOSE_ECHO "This is a dry run"
     export DRY_RUN_CMD=echo
 else
     $VERBOSE_ECHO "This is a live run"
-    unset DRY_RUN_CMD
+    export DRY_RUN_CMD=""
 fi
 
 $VERBOSE_ECHO "Activation variables:"

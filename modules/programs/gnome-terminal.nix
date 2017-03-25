@@ -184,7 +184,7 @@ in
       in
         # The dconf service needs to be installed and prepared.
         stringAfter [ "installPackages" ] ''
-          if [[ $DRY_RUN ]]; then
+          if [[ -v DRY_RUN ]]; then
             echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${sf}
           else
             ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${sf}

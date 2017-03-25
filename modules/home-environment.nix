@@ -328,7 +328,8 @@ in
         sf = pkgs.writeText "activation-script" ''
           #!${pkgs.stdenv.shell}
 
-          set -e
+          set -eu
+          set -o pipefail
 
           ${builtins.readFile ./activation-init.sh}
 
