@@ -74,17 +74,21 @@ in
         local workDir
         workDir="$(mktemp -d)"
 
-        local oldUserServicePath="$oldGenPath/home-files/.config/systemd/user"
+        if [[ -v oldGenPath ]] ; then
+          local oldUserServicePath="$oldGenPath/home-files/.config/systemd/user"
+        fi
+
         local newUserServicePath="$newGenPath/home-files/.config/systemd/user"
         local oldServiceFiles="$workDir/old-files"
         local newServiceFiles="$workDir/new-files"
         local servicesDiffFile="$workDir/diff-files"
 
-        if [[ ! -d "$oldUserServicePath" && ! -d "$newUserServicePath" ]]; then
+        if [[ ! (-v oldUserServicePath && -d "$oldUserServicePath") \
+            && ! -d "$newUserServicePath" ]]; then
           return
         fi
 
-        if [[ ! -d "$oldUserServicePath" ]]; then
+        if [[ ! (-v oldUserServicePath && -d "$oldUserServicePath") ]]; then
           touch "$oldServiceFiles"
         else
           find "$oldUserServicePath" \

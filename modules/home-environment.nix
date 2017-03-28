@@ -281,7 +281,7 @@ in
           }
 
           function cleanOldGen() {
-            if [[ -z "$oldGenPath" ]] ; then
+            if [[ ! -v oldGenPath ]] ; then
               return
             fi
 
@@ -294,7 +294,7 @@ in
               | xargs -0 bash ${cleanup} "$newGenFiles" "$oldGenFiles"
           }
 
-          if [[ "$oldGenPath" != "$newGenPath" ]] ; then
+          if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenProfilePath"
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenProfilePath" "$genProfilePath"
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"

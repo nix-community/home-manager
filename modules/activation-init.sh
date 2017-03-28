@@ -47,10 +47,15 @@ else
 fi
 
 $VERBOSE_ECHO "Activation variables:"
-$VERBOSE_ECHO "  oldGenNum=$oldGenNum"
-$VERBOSE_ECHO "  newGenNum=$newGenNum"
-$VERBOSE_ECHO "  oldGenPath=$oldGenPath"
+if [[ -v oldGenNum ]] ; then
+    $VERBOSE_ECHO "  oldGenNum=$oldGenNum"
+    $VERBOSE_ECHO "  oldGenPath=$oldGenPath"
+else
+    $VERBOSE_ECHO "  oldGenNum undefined (first run?)"
+    $VERBOSE_ECHO "  oldGenPath undefined (first run?)"
+fi
 $VERBOSE_ECHO "  newGenPath=$newGenPath"
+$VERBOSE_ECHO "  newGenNum=$newGenNum"
 $VERBOSE_ECHO "  newGenProfilePath=$newGenProfilePath"
 $VERBOSE_ECHO "  newGenGcPath=$newGenGcPath"
 $VERBOSE_ECHO "  genProfilePath=$genProfilePath"
