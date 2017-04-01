@@ -28,13 +28,14 @@ So, if you already have a wonderful, painstakingly created
 `~/.gitconfig` it will be gone. Home Manager will _not_ attempt to
 backup the previous `~/.gitconfig` file.
 
-Further, Home Manager has only ever been used on [NixOS][] version
-16.09 (the stable version), it may or may not work on other Linux
-distributions and NixOS versions.
+Further, Home Manager targets [NixOS][] version 17.03 (the current
+stable version), it may or may not work on other Linux distributions
+and NixOS versions.
 
-Finally, the `home-manager` tool does not support rollbacks at the
-moment so if your home directory gets messed up you'll have to fix it
-yourself.
+Finally, the `home-manager` tool does not explicitly support rollbacks
+at the moment so if your home directory gets messed up you'll have to
+fix it yourself (you can attempt to run the activation script for the
+desired generation).
 
 Now when your expectations have been built up and you are eager to try
 all this out you can go ahead and read the rest of this text.
