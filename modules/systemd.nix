@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 
 with lib;
+with import ./lib/dag.nix;
 
 let
 
@@ -69,7 +70,7 @@ in
         (buildServices "timer" config.systemd.user.timers)
       );
 
-    home.activation.reloadSystemD = ''
+    home.activation.reloadSystemD = dagEntryAfter ["linkGeneration"] ''
       function systemdPostReload() {
         local workDir
         workDir="$(mktemp -d)"

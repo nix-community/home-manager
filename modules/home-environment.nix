@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 
 with lib;
+with import ./lib/dag.nix;
 
 let
 
@@ -241,7 +242,11 @@ in
         //
         (maybeSet "LC_TIME" cfg.language.time);
 
-    home.activation.linkGeneration =
+    # A dummy entry acting as a boundary between the activation
+    # script's "check" and the "write" phases.
+    home.activation.writeBoundary = dagEntryAnywhere "";
+
+    home.activation.linkGeneration = dagEntryAfter ["writeBoundary"] (
       let
         link = pkgs.writeText "link" ''
           newGenFiles="$1"
@@ -303,27 +308,26 @@ in
           else
             echo "Same home files as previous generation ... doing nothing"
           fi
-        '';
+        ''
+    );
 
-    home.activation.installPackages =
-      ''
-        $DRY_RUN_CMD nix-env -i ${cfg.path}
-      '';
+    home.activation.installPackages = dagEntryAfter ["writeBoundary"] ''
+      $DRY_RUN_CMD nix-env -i ${cfg.path}
+    '';
 
     home.activationPackage =
       let
-        addHeader = n: v:
-          v // {
-            text = ''
-              echo Activating ${n}
-              ${v.text}
-            '';
-          };
-        toDepString = n: v: if isString v then noDepEntry v else v;
-        activationWithDeps =
-          mapAttrs addHeader (mapAttrs toDepString cfg.activation);
+        mkCmd = res: ''
+            echo Activating ${res.name}
+            ${res.data}
+          '';
+        sortedCommands = dagTopoSort cfg.activation;
         activationCmds =
-          textClosureMap id activationWithDeps (attrNames activationWithDeps);
+          if sortedCommands ? result then
+            concatStringsSep "\n" (map mkCmd sortedCommands.result)
+          else
+            abort ("Dependency cycle in activation script: "
+              + builtins.toJSON sortedCommands);
 
         sf = pkgs.writeText "activation-script" ''
           #!${pkgs.stdenv.shell}
