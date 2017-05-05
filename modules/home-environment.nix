@@ -246,6 +246,37 @@ in
     # script's "check" and the "write" phases.
     home.activation.writeBoundary = dagEntryAnywhere "";
 
+    # This verifies that the links we are about to create will not
+    # overwrite an existing file.
+    home.activation.checkLinkTargets = dagEntryBefore ["writeBoundary"] (
+      let
+        pattern = "-home-manager-files/";
+        check = pkgs.writeText "check" ''
+          newGenFiles="$1"
+          shift
+          for sourcePath in "$@" ; do
+            relativePath="''${sourcePath#$newGenFiles/}"
+            targetPath="$HOME/$relativePath"
+            if [[ -e "$targetPath" \
+                && ! "$(readlink -e "$targetPath")" =~ "${pattern}" ]] ; then
+              echo -e "Existing file '$targetPath' is in the way"
+              collision=1
+            fi
+          done
+
+          if [[ -v collision ]] ; then
+            echo -e "Please move the above files and try again"
+            exit 1
+          fi
+        '';
+      in
+      ''
+        newGenFiles="$(readlink -e "$newGenPath/home-files")"
+        find "$newGenFiles" -type f -print0 -or -type l -print0 \
+                | xargs -0 bash ${check} "$newGenFiles"
+      ''
+    );
+
     home.activation.linkGeneration = dagEntryAfter ["writeBoundary"] (
       let
         link = pkgs.writeText "link" ''
