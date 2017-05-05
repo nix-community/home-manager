@@ -300,14 +300,16 @@ in
           }
 
           if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
+            echo "Creating profile generation $newGenNum"
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenProfilePath"
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenProfilePath" "$genProfilePath"
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"
-            linkNewGen
-            cleanOldGen
           else
-            echo "Same home files as previous generation ... doing nothing"
+            echo "No change so reusing latest profile generation $oldGenNum"
           fi
+
+          linkNewGen
+          cleanOldGen
         ''
     );
 
