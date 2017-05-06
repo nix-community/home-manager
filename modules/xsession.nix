@@ -14,8 +14,15 @@ in
       enable = mkEnableOption "X Session";
 
       windowManager = mkOption {
-        default = {};
         type = types.str;
+        example = literalExample ''
+          let
+            xmonad = pkgs.xmonad-with-packages.override {
+              packages = self: [ self.xmonad-contrib self.taffybar ];
+            };
+          in
+            "''${xmonad}/bin/xmonad";
+        '';
         description = "Path to window manager to exec.";
       };
 
