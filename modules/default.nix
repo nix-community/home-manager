@@ -20,6 +20,7 @@ let
     ./programs/git.nix
     ./programs/gnome-terminal.nix
     ./programs/lesspipe.nix
+    ./programs/ssh.nix
     ./programs/texlive.nix
     ./services/dunst.nix
     ./services/gnome-keyring.nix
