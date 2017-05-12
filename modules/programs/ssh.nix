@@ -8,8 +8,15 @@ let
 
   yn = flag: if flag then "yes" else "no";
 
-  hostModule = types.submodule ({...}: {
+  matchBlockModule = types.submodule ({...}: {
     options = {
+      host = mkOption {
+        type = types.str;
+        example = "*.example.org";
+        description = ''
+          The host pattern used by this conditional block.
+        '';
+      };
 
       port = mkOption {
         type = types.nullOr types.int;
@@ -80,8 +87,8 @@ let
     };
   });
 
-  hostStr = host: cf: concatStringsSep "\n" (
-    ["Host ${host}"]
+  matchBlockStr = cf: concatStringsSep "\n" (
+    ["Host ${cf.host}"]
     ++ optional (cf.port != null)         "  Port ${toString cf.port}"
     ++ optional cf.forwardX11             "  ForwardX11 yes"
     ++ optional cf.forwardX11Trusted      "  ForwardX11Trusted yes"
@@ -125,9 +132,9 @@ in
       '';
     };
 
-    hosts = mkOption {
-      type = types.attrsOf hostModule;
-      default = {};
+    matchBlocks = mkOption {
+      type = types.listOf matchBlockModule;
+      default = [];
       description = ''
         Specify per-host settings.
       '';
@@ -140,7 +147,7 @@ in
       ControlMaster ${cfg.controlMaster}
       ControlPath ${cfg.controlPath}
 
-      ${concatStringsSep "\n\n" (mapAttrsToList hostStr cfg.hosts)}
+      ${concatStringsSep "\n\n" (map matchBlockStr cfg.matchBlocks)}
     '';
   };
 }
