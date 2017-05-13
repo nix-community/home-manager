@@ -89,6 +89,12 @@ let
           <filename>known_hosts</filename> file.
         '';
       };
+
+      proxyCommand = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The command to use to connect to the server.";
+      };
     };
   };
 
@@ -104,6 +110,7 @@ let
     ++ optional (cf.serverAliveInterval != 0)
          "  ServerAliveInterval ${toString cf.serverAliveInterval}"
     ++ optional (!cf.checkHostIP)         "  CheckHostIP no"
+    ++ optional (cf.proxyCommand != null) "  ProxyCommand ${cf.proxyCommand}"
   );
 
 in
