@@ -55,7 +55,7 @@ let
       };
 
       identityFile = mkOption {
-        type = types.nullOr types.string;
+        type = types.nullOr types.str;
         default = null;
         description = ''
           Specifies a file from which the user identity is read.
@@ -63,13 +63,13 @@ let
       };
 
       user = mkOption {
-        type = types.nullOr types.string;
+        type = types.nullOr types.str;
         default = null;
         description = "Specifies the user to log in as.";
       };
 
       hostname = mkOption {
-        type = types.nullOr types.string;
+        type = types.nullOr types.str;
         default = null;
         description = "Specifies the real host name to log into.";
       };
@@ -137,7 +137,7 @@ in
     };
 
     controlPath = mkOption {
-      type = types.string;
+      type = types.str;
       default = "~/.ssh/master-%r@%h:%p";
       description = ''
         Specify path to the control socket used for connection sharing.
