@@ -252,6 +252,8 @@ in
       let
         pattern = "-home-manager-files/";
         check = pkgs.writeText "check" ''
+          . ${./lib-bash/color-echo.sh}
+
           newGenFiles="$1"
           shift
           for sourcePath in "$@" ; do
@@ -259,13 +261,13 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
                 && ! "$(readlink -e "$targetPath")" =~ "${pattern}" ]] ; then
-              echo -e "Existing file '$targetPath' is in the way"
+              errorEcho "Existing file '$targetPath' is in the way"
               collision=1
             fi
           done
 
           if [[ -v collision ]] ; then
-            echo -e "Please move the above files and try again"
+            errorEcho "Please move the above files and try again"
             exit 1
           fi
         '';
@@ -356,7 +358,7 @@ in
     home.activationPackage =
       let
         mkCmd = res: ''
-            echo Activating ${res.name}
+            noteEcho Activating ${res.name}
             ${res.data}
           '';
         sortedCommands = dagTopoSort cfg.activation;
@@ -373,7 +375,9 @@ in
           set -eu
           set -o pipefail
 
-          ${builtins.readFile ./activation-init.sh}
+          . ${./lib-bash/color-echo.sh}
+
+          ${builtins.readFile ./lib-bash/activation-init.sh}
 
           ${activationCmds}
         '';
