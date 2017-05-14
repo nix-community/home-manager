@@ -1,5 +1,7 @@
 #!@bash@/bin/bash
 
+set -euo pipefail
+
 function doBuild() {
     if [[ -z "$1" ]]; then
         echo "Need to provide path to configuration file."
@@ -35,6 +37,7 @@ function doBuild() {
     fi
 
     local extraArgs
+    extraArgs=""
 
     for p in "${EXTRA_NIX_PATH[@]}"; do
         extraArgs="$extraArgs -I $p"
