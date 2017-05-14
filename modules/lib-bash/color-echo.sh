@@ -1,3 +1,6 @@
+# The check for terminal output and color support is heavily inspired
+# by https://unix.stackexchange.com/a/10065.
+
 function setupColors() {
     normalColor=""
     errorColor=""
