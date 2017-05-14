@@ -271,9 +271,14 @@ in
         '';
       in
       ''
-        newGenFiles="$(readlink -e "$newGenPath/home-files")"
-        find "$newGenFiles" -type f -print0 -or -type l -print0 \
-                | xargs -0 bash ${check} "$newGenFiles"
+        function checkNewGenCollision() {
+          local newGenFiles
+          newGenFiles="$(readlink -e "$newGenPath/home-files")"
+          find "$newGenFiles" -type f -print0 -or -type l -print0 \
+                  | xargs -0 bash ${check} "$newGenFiles"
+        }
+
+        checkNewGenCollision || exit 1
       ''
     );
 
