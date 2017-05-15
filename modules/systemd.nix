@@ -5,6 +5,10 @@ with import ./lib/dag.nix;
 
 let
 
+  cfg = config.systemd.user;
+
+  enabled = cfg.services != {} || cfg.targets != {} || cfg.timers != {};
+
   toSystemdIni = (import lib/generators.nix).toINI {
     mkKeyValue = key: value:
       let
@@ -60,98 +64,117 @@ in
     };
   };
 
-  config = {
-    home.file =
-      listToAttrs (
-        (buildServices "service" config.systemd.user.services)
-        ++
-        (buildServices "target" config.systemd.user.targets)
-        ++
-        (buildServices "timer" config.systemd.user.timers)
-      );
+  config = mkMerge [
+    {
+      assertions = [
+        {
+          assertion = enabled -> pkgs.stdenv.isLinux;
+          message =
+            let
+              names = concatStringsSep ", " (
+                  attrNames (cfg.services // cfg.targets // cfg.timers)
+              );
+            in
+              "Must use Linux for modules that require systemd: " + names;
+        }
+      ];
+    }
 
-    home.activation.reloadSystemD = dagEntryAfter ["linkGeneration"] ''
-      function systemdPostReload() {
-        local workDir
-        workDir="$(mktemp -d)"
+    # If we run under a Linux system we assume that systemd is
+    # available, in particular we assume that systemctl is in PATH.
+    (mkIf pkgs.stdenv.isLinux {
+      home.file =
+        listToAttrs (
+          (buildServices "service" cfg.services)
+          ++
+          (buildServices "target" cfg.targets)
+          ++
+          (buildServices "timer" cfg.timers)
+        );
 
-        if [[ -v oldGenPath ]] ; then
-          local oldUserServicePath="$oldGenPath/home-files/.config/systemd/user"
-        fi
+      home.activation.reloadSystemD = dagEntryAfter ["linkGeneration"] ''
+        function systemdPostReload() {
+          local workDir
+          workDir="$(mktemp -d)"
 
-        local newUserServicePath="$newGenPath/home-files/.config/systemd/user"
-        local oldServiceFiles="$workDir/old-files"
-        local newServiceFiles="$workDir/new-files"
-        local servicesDiffFile="$workDir/diff-files"
-
-        if [[ ! (-v oldUserServicePath && -d "$oldUserServicePath") \
-            && ! -d "$newUserServicePath" ]]; then
-          return
-        fi
-
-        if [[ ! (-v oldUserServicePath && -d "$oldUserServicePath") ]]; then
-          touch "$oldServiceFiles"
-        else
-          find "$oldUserServicePath" \
-            -maxdepth 1 -name '*.service' -exec basename '{}' ';' \
-            | sort \
-            > "$oldServiceFiles"
-        fi
-
-        if [[ ! -d "$newUserServicePath" ]]; then
-          touch "$newServiceFiles"
-        else
-          find "$newUserServicePath" \
-            -maxdepth 1 -name '*.service' -exec basename '{}' ';' \
-            | sort \
-            > "$newServiceFiles"
-        fi
-
-        diff \
-          --new-line-format='+%L' \
-          --old-line-format='-%L' \
-          --unchanged-line-format=' %L' \
-          "$oldServiceFiles" "$newServiceFiles" \
-          > $servicesDiffFile
-
-        local -a maybeRestart=( $(grep '^ ' $servicesDiffFile | cut -c2-) )
-        local -a toStop=( $(grep '^-' $servicesDiffFile | cut -c2-) )
-        local -a toStart=( $(grep '^+' $servicesDiffFile | cut -c2-) )
-        local -a toRestart=( )
-
-        for f in ''${maybeRestart[@]} ; do
-          if systemctl --quiet --user is-active "$f" \
-             && ! cmp --quiet \
-                 "$oldUserServicePath/$f" \
-                 "$newUserServicePath/$f" ; then
-            toRestart+=("$f")
+          if [[ -v oldGenPath ]] ; then
+            local oldUserServicePath="$oldGenPath/home-files/.config/systemd/user"
           fi
-        done
 
-        rm -r $workDir
+          local newUserServicePath="$newGenPath/home-files/.config/systemd/user"
+          local oldServiceFiles="$workDir/old-files"
+          local newServiceFiles="$workDir/new-files"
+          local servicesDiffFile="$workDir/diff-files"
 
-        local sugg=""
+          if [[ ! (-v oldUserServicePath && -d "$oldUserServicePath") \
+              && ! -d "$newUserServicePath" ]]; then
+            return
+          fi
 
-        if [[ -n "''${toRestart[@]}" ]] ; then
-          sugg="''${sugg}systemctl --user restart ''${toRestart[@]}\n"
-        fi
+          if [[ ! (-v oldUserServicePath && -d "$oldUserServicePath") ]]; then
+            touch "$oldServiceFiles"
+          else
+            find "$oldUserServicePath" \
+              -maxdepth 1 -name '*.service' -exec basename '{}' ';' \
+              | sort \
+              > "$oldServiceFiles"
+          fi
 
-        if [[ -n "''${toStop[@]}" ]] ; then
-          sugg="''${sugg}systemctl --user stop ''${toStop[@]}\n"
-        fi
+          if [[ ! -d "$newUserServicePath" ]]; then
+            touch "$newServiceFiles"
+          else
+            find "$newUserServicePath" \
+              -maxdepth 1 -name '*.service' -exec basename '{}' ';' \
+              | sort \
+              > "$newServiceFiles"
+          fi
 
-        if [[ -n "''${toStart[@]}" ]] ; then
-          sugg="''${sugg}systemctl --user start ''${toStart[@]}\n"
-        fi
+          diff \
+            --new-line-format='+%L' \
+            --old-line-format='-%L' \
+            --unchanged-line-format=' %L' \
+            "$oldServiceFiles" "$newServiceFiles" \
+            > $servicesDiffFile
 
-        if [[ -n "$sugg" ]] ; then
-          echo "Suggested commands:"
-          echo -n -e "$sugg"
-        fi
-      }
+          local -a maybeRestart=( $(grep '^ ' $servicesDiffFile | cut -c2-) )
+          local -a toStop=( $(grep '^-' $servicesDiffFile | cut -c2-) )
+          local -a toStart=( $(grep '^+' $servicesDiffFile | cut -c2-) )
+          local -a toRestart=( )
 
-      $DRY_RUN_CMD systemctl --user daemon-reload
-      systemdPostReload
-    '';
-  };
+          for f in ''${maybeRestart[@]} ; do
+            if systemctl --quiet --user is-active "$f" \
+               && ! cmp --quiet \
+                   "$oldUserServicePath/$f" \
+                   "$newUserServicePath/$f" ; then
+              toRestart+=("$f")
+            fi
+          done
+
+          rm -r $workDir
+
+          local sugg=""
+
+          if [[ -n "''${toRestart[@]}" ]] ; then
+            sugg="''${sugg}systemctl --user restart ''${toRestart[@]}\n"
+          fi
+
+          if [[ -n "''${toStop[@]}" ]] ; then
+            sugg="''${sugg}systemctl --user stop ''${toStop[@]}\n"
+          fi
+
+          if [[ -n "''${toStart[@]}" ]] ; then
+            sugg="''${sugg}systemctl --user start ''${toStart[@]}\n"
+          fi
+
+          if [[ -n "$sugg" ]] ; then
+            echo "Suggested commands:"
+            echo -n -e "$sugg"
+          fi
+        }
+
+        $DRY_RUN_CMD systemctl --user daemon-reload
+        systemdPostReload
+      '';
+    })
+  ];
 }
