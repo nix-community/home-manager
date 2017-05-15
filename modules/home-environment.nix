@@ -375,6 +375,11 @@ in
           set -eu
           set -o pipefail
 
+          # This code explicitly requires GNU Core Utilities and Bash.
+          # We therefore need to ensure they are prioritized over any
+          # other similarly named tools on the system.
+          export PATH="${pkgs.coreutils}/bin:${pkgs.bash}/bin:$PATH"
+
           . ${./lib-bash/color-echo.sh}
 
           ${builtins.readFile ./lib-bash/activation-init.sh}
