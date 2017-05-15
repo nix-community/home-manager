@@ -375,6 +375,9 @@ in
           set -eu
           set -o pipefail
 
+          # We assume coreutils command and Bash.
+          export PATH="${pkgs.coreutils}/bin:${pkgs.bash}/bin/bash:$PATH"
+
           . ${./lib-bash/color-echo.sh}
 
           ${builtins.readFile ./lib-bash/activation-init.sh}
