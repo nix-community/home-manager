@@ -1,5 +1,7 @@
 #!@bash@/bin/bash
 
+PATH=@coreutils@/bin:$PATH
+
 set -euo pipefail
 
 function doBuild() {
