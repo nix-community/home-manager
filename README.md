@@ -36,15 +36,23 @@ Installation
 
 Currently the easiest way to install Home Manager is as follows:
 
- 1. Make sure you have a working Nix installation.
+1.  Make sure you have a working Nix installation. If you are not
+    using NixOS then you may here have to run
 
- 2. Clone the Home Manager repository into the `~/.nixpkgs` directory:
+    ```
+    $ mkdir -m 0755 -p /nix/var/nix/{profiles,gcroots}/per-user/$USER
+    ```
+
+    since Home Manager uses these directories to manage your profile
+    generations. On NixOS these should already be available.
+
+2.  Clone the Home Manager repository into the `~/.nixpkgs` directory:
 
     ```
     $ git clone https://github.com/rycee/home-manager ~/.nixpkgs/home-manager
     ```
 
- 3. Add Home Manager to your user's Nixpkgs, for example by adding it
+3.  Add Home Manager to your user's Nixpkgs, for example by adding it
     to the `packageOverrides` section in your `~/.nixpkgs/config.nix`
     file:
 
@@ -56,7 +64,7 @@ Currently the easiest way to install Home Manager is as follows:
     }
     ```
 
- 4. Install the `home-manager` package:
+4.  Install the `home-manager` package:
 
     ```
     $ nix-env -f '<nixpkgs>' -iA home-manager
