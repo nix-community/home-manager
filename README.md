@@ -131,8 +131,8 @@ $ home-manager build
 which will create a `result` link to a directory containing an
 activation script and the generated home directory files.
 
-File safety
------------
+Keeping your ~ safe from harm
+-----------------------------
 
 To configure programs and services the Home Manager must write various
 things to your home directory. To prevent overwriting any existing
