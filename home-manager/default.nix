@@ -1,4 +1,4 @@
-{ pkgs, modulesPath ? "$HOME/.nixpkgs/home-manager/modules" }:
+{ pkgs, modulesPath ? "$HOME/.config/nixpkgs/home-manager/modules" }:
 
 let
 

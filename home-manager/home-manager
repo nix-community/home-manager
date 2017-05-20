@@ -7,35 +7,61 @@ PATH=@coreutils@/bin:$PATH
 
 set -euo pipefail
 
-function doBuild() {
-    if [[ -z "$1" ]]; then
-        echo "Need to provide path to configuration file."
-        exit 1
+# Attempts to set the HOME_MANAGER_CONFIG global variable.
+#
+# If no configuration file can be found then this function will print
+# an error message and exit with an error code.
+function setConfigFile() {
+    if [[ -v HOME_MANAGER_CONFIG ]] ; then
+        if [[ ! -e "$HOME_MANAGER_CONFIG" ]] ; then
+            echo "No configure file found at $HOME_MANAGER_CONFIG"
+            exit 1
+        fi
+
+        HOME_MANAGER_CONFIG="$(realpath "$HOME_MANAGER_CONFIG")"
+        return
     fi
 
-    if [[ -z "$2" ]]; then
+    local confFile
+    for confFile in "$HOME/.config/nixpkgs/home.nix" \
+                    "$HOME/.nixpkgs/home.nix" ; do
+        if [[ -e "$confFile" ]] ; then
+            HOME_MANAGER_CONFIG="$confFile"
+            return
+        fi
+    done
+
+    echo "No configuration file found. " \
+         "Please create one at ~/.config/nixpkgs/home.nix"
+    exit 1
+}
+
+function setHomeManagerModulesPath() {
+    local modulesPath
+    for modulesPath in "@MODULES_PATH@" \
+                       "$HOME/.nixpkgs/home-manager/modules" ; do
+        if [[ -e "$modulesPath" ]] ; then
+            export NIX_PATH="$NIX_PATH${NIX_PATH:+:}home-manager=$modulesPath"
+            return
+        fi
+    done
+}
+
+function doBuild() {
+    if [[ -z "$1" ]]; then
         echo "Need to provide generation output path."
         exit 1
     fi
 
-    if [[ -e "$2" ]]; then
-        echo "The output path $2 already exists."
+    if [[ -e "$1" ]]; then
+        echo "The output path $1 already exists."
         exit 1
     fi
 
-    local confFile output
-    confFile="$(realpath "$1")"
+    setConfigFile
+    setHomeManagerModulesPath
 
-    if [[ $? -ne 0 ]]; then
-        exit 1
-    fi
-
-    if [[ ! -r "$confFile" ]]; then
-        echo "No such configuration file: $1"
-        exit 1
-    fi
-
-    output="$(realpath "$2")"
+    output="$(realpath "$1")"
 
     if [[ $? -ne 0 ]]; then
         exit 1
@@ -56,7 +82,7 @@ function doBuild() {
 
     nix-build $extraArgs \
               "@HOME_MANAGER_EXPR_PATH@" \
-              --argstr confPath "$confFile" \
+              --argstr confPath "$HOME_MANAGER_CONFIG" \
               -A activation-script \
               -o "$output"
 }
@@ -65,7 +91,7 @@ function doSwitch() {
     local wrkdir
     wrkdir="$(mktemp -d)"
 
-    if doBuild "$1" "$wrkdir/generation" ; then
+    if doBuild "$wrkdir/generation" ; then
         "$wrkdir/generation/activate"
     fi
 
@@ -94,7 +120,8 @@ function doHelp() {
     echo
     echo "Options"
     echo
-    echo "  -f FILE      The home configuration file. Default is ~/.nixpkgs/home.nix"
+    echo "  -f FILE      The home configuration file."
+    echo "               Default is '~/.config/nixpkgs/home.nix'."
     echo "  -I PATH      Add a path to the Nix expression search path."
     echo "  -v           Verbose output"
     echo "  -n           Do a dry run, only prints what actions would be taken"
@@ -108,13 +135,12 @@ function doHelp() {
     echo "  packages     List all packages installed in home-manager-path"
 }
 
-CONFIG_FILE="$HOME/.nixpkgs/home.nix"
 EXTRA_NIX_PATH=()
 
 while getopts f:I:vnh opt; do
     case $opt in
         f)
-            CONFIG_FILE=$OPTARG
+            HOME_MANAGER_CONFIG="$OPTARG"
             ;;
         I)
             EXTRA_NIX_PATH+=("$OPTARG")
@@ -144,10 +170,10 @@ cmd="$*"
 
 case "$cmd" in
     build)
-        doBuild "$CONFIG_FILE" "result"
+        doBuild "result"
         ;;
     switch)
-        doSwitch "$CONFIG_FILE"
+        doSwitch
         ;;
     generations)
         doListGens
