@@ -41,6 +41,8 @@ function doBuild() {
         exit 1
     fi
 
+    export NIX_PATH="$NIX_PATH${NIX_PATH:+:}home-manager=@MODULES_PATH@"
+
     local extraArgs
     extraArgs=""
 
@@ -54,7 +56,6 @@ function doBuild() {
 
     nix-build $extraArgs \
               "@HOME_MANAGER_EXPR_PATH@" \
-              --argstr modulesPath "@MODULES_PATH@" \
               --argstr confPath "$confFile" \
               -A activation-script \
               -o "$output"
