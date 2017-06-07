@@ -1,12 +1,12 @@
-{ pkgs, modulesPath ? "$HOME/.nixpkgs/home-manager/modules" }:
+{ pkgs, modulesPath ? "$HOME/.config/nixpkgs/home-manager/modules" }:
 
 let
 
   homeManagerExpr = pkgs.writeText "home-manager.nix" ''
-    { pkgs ? import <nixpkgs> {}, confPath, modulesPath }:
+    { pkgs ? import <nixpkgs> {}, confPath }:
 
     let
-      env = import modulesPath {
+      env = import <home-manager> {
         configuration = import confPath;
         pkgs = pkgs;
       };

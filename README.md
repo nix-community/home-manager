@@ -46,15 +46,16 @@ Currently the easiest way to install Home Manager is as follows:
     since Home Manager uses these directories to manage your profile
     generations. On NixOS these should already be available.
 
-2.  Clone the Home Manager repository into the `~/.nixpkgs` directory:
+2.  Clone the Home Manager repository into the `~/.config/nixpkgs`
+    directory:
 
     ```
-    $ git clone https://github.com/rycee/home-manager ~/.nixpkgs/home-manager
+    $ git clone https://github.com/rycee/home-manager ~/.config/nixpkgs/home-manager
     ```
 
 3.  Add Home Manager to your user's Nixpkgs, for example by adding it
-    to the `packageOverrides` section in your `~/.nixpkgs/config.nix`
-    file:
+    to the `packageOverrides` section in your
+    `~/.config/nixpkgs/config.nix` file:
 
     ```nix
     {
@@ -84,7 +85,7 @@ the htop and fortune packages, installs Emacs with a few extra
 packages enabled, installs Firefox with Adobe Flash enabled, and
 enables the user gpg-agent service.
 
-First create a file `~/.nixpkgs/home.nix` containing
+First create a file `~/.config/nixpkgs/home.nix` containing
 
 ```nix
 { pkgs, ... }:
