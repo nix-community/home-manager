@@ -14,6 +14,7 @@ let
     ./misc/pam.nix
     ./programs/bash.nix
     ./programs/beets.nix
+    ./programs/browserpass.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
     ./programs/firefox.nix
