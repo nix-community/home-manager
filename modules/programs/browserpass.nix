@@ -16,7 +16,7 @@ in {
       enable = mkEnableOption "the browserpass extension host application";
 
       browsers = mkOption {
-        type = types.listOf types.str;
+        type = types.listOf (types.enum (builtins.attrNames browsers));
         default = builtins.attrNames browsers;
         example = [ "firefox" ];
         description = "Which browsers to install browserpass for";
@@ -29,10 +29,6 @@ in {
       {
         assertion = pkgs.stdenv.is64bit;
         message = "Only 64-bit is supported";
-      }
-      {
-        assertion = builtins.all (x: builtins.any (y: x == y) (builtins.attrNames browsers)) config.programs.browserpass.browsers;
-        message = "Unsupported browser, must be one of: ${toString (builtins.attrNames browsers)}";
       }
       {
         assertion = (builtins.getEnv "USER") != "root";
@@ -81,7 +77,7 @@ in {
           mv * $out/
         '';
       });
-    in dagEntryBefore ["writeBoundary"] (builtins.concatStringsSep "" (map (browser: ''
+    in dagEntryAfter ["writeBoundary"] (builtins.concatStringsSep "" (map (browser: ''
       $DRY_RUN_CMD ${browserpass}/install.sh <<EOF
       ${toString browsers.${browser}}
       EOF
