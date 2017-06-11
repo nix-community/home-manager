@@ -41,22 +41,22 @@ in {
         package = with pkgs.stdenv; if isLinux then
             {
               system = "linux64";
-              sha256 = "1h1figz97jgzfykrq2kr8ywxzbbrfk9haqhalc65w6n7cks0wgx8";
+              sha256 = "1swq91rzvah9jindclgsszsc17kk6mak434469szmdvg9cfp1ll1";
             }
           else if isDarwin then
             {
               system = "darwinx64";
-              sha256 = "199zr0nvrm9pz0f39dzfz67m85b0k3c4l6hf98377w89vdcp28r5";
+              sha256 = "0n1w8skzi15djacw7d6sh31qjq1wsrgynfcy973dirjz1d8a5xkn";
             }
           else if isOpenBSD then
             {
               system = "openbsd64";
-              sha256 = "1yi861wgx1mwzkxc9qyhx3s8g0cyvsdac9f1la2knhfgr3g9rr7h";
+              sha256 = "0s47hbd1xbjxnpjknc3k7slsvvdh5427n71w73sliah81f4xda3b";
             }
           else abort "${currentSystem} not supported";
       in rec {
         name = "browserpass-${version}-bin_for-home-manager";
-        version = "1.0.4";
+        version = "1.0.5";
 
         src = pkgs.fetchzip {
           inherit (package) sha256;
