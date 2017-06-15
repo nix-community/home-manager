@@ -19,9 +19,9 @@ will write to your dconf store and cannot tell whether a configuration
 that it is about to be overwrite was from a previous Home Manager
 generation or from manual configuration.
 
-Home Manager targets [NixOS][] version 17.03 (the current stable
-version), it may or may not work on other Linux distributions and
-NixOS versions.
+Home Manager targets [NixOS][] unstable and NixOS version 17.03 (the
+current stable version), it may or may not work on other Linux
+distributions and NixOS versions.
 
 Also, the `home-manager` tool does not explicitly support rollbacks at
 the moment so if your home directory gets messed up you'll have to fix
@@ -50,8 +50,17 @@ Currently the easiest way to install Home Manager is as follows:
     directory:
 
     ```
-    $ git clone https://github.com/rycee/home-manager ~/.config/nixpkgs/home-manager
+    $ git clone -b master https://github.com/rycee/home-manager ~/.config/nixpkgs/home-manager
     ```
+
+    or
+
+    ```
+    $ git clone -b release-17.03 https://github.com/rycee/home-manager ~/.config/nixpkgs/home-manager
+    ```
+
+    depending on whether you are tracking Nixpkgs unstable or version
+    17.03.
 
 3.  Add Home Manager to your user's Nixpkgs, for example by adding it
     to the `packageOverrides` section in your
