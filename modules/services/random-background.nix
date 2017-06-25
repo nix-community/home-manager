@@ -46,7 +46,7 @@ in
 
           Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.feh}/bin/feh --randomize --bg-fill %h/backgrounds/";
+            ExecStart = "${pkgs.feh}/bin/feh --randomize --bg-fill ${cfg.imageDirectory}";
             IOSchedulingClass = "idle";
           };
 
