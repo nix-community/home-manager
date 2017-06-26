@@ -13,8 +13,6 @@ with lib;
     systemd.user.services.udiskie = {
         Unit = {
           Description = "Udiskie mount daemon";
-          Requires = [ "taffybar.service" ];
-          After = [ "taffybar.service" ];
         };
 
         Service = {
