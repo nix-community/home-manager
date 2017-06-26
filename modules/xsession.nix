@@ -38,6 +38,8 @@ in
     systemd.user.services.setxkbmap = {
       Unit = {
         Description = "Set up keyboard in X";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
       };
 
       Install = {

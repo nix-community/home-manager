@@ -27,6 +27,8 @@ in
     systemd.user.services.taffybar = {
         Unit = {
           Description = "Taffybar desktop bar";
+          After = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session.target" ];
         };
 
         Service = {

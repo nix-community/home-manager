@@ -13,6 +13,8 @@ with lib;
     systemd.user.services.xscreensaver = {
         Unit = {
           Description = "XScreenSaver";
+          After = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session.target" ];
         };
 
         Service = {

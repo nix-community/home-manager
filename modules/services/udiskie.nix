@@ -13,6 +13,8 @@ with lib;
     systemd.user.services.udiskie = {
         Unit = {
           Description = "Udiskie mount daemon";
+          After = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session.target" ];
         };
 
         Service = {
