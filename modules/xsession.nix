@@ -63,7 +63,7 @@ in
     };
 
     # A basic graphical session target for Home Manager.
-    systemd.user.targets.he-graphical-session = {
+    systemd.user.targets.hm-graphical-session = {
       Unit = {
         Description = "Home Manager X session";
         Requires = [ "graphical-session-pre.target" ];
@@ -88,7 +88,7 @@ in
         systemctl --user import-environment XDG_DATA_DIRS
         systemctl --user import-environment XDG_RUNTIME_DIR
 
-        systemctl --user start he-graphical-session.target
+        systemctl --user start hm-graphical-session.target
 
         ${cfg.initExtra}
 
