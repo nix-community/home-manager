@@ -7,7 +7,10 @@ let
 
   cfg = config.systemd.user;
 
-  enabled = cfg.services != {} || cfg.targets != {} || cfg.timers != {};
+  enabled = cfg.services != {}
+      || cfg.sockets != {}
+      || cfg.targets != {}
+      || cfg.timers != {};
 
   toSystemdIni = (import lib/generators.nix).toINI {
     mkKeyValue = key: value:
@@ -50,6 +53,12 @@ in
         description = "Definition of systemd per-user service units.";
       };
 
+      sockets = mkOption {
+        default = {};
+        type = types.attrs;
+        description = "Definition of systemd per-user sockets";
+      };
+
       targets = mkOption {
         default = {};
         type = types.attrs;
@@ -72,7 +81,9 @@ in
           message =
             let
               names = concatStringsSep ", " (
-                  attrNames (cfg.services // cfg.targets // cfg.timers)
+                  attrNames (
+                      cfg.services // cfg.sockets // cfg.targets // cfg.timers
+                  )
               );
             in
               "Must use Linux for modules that require systemd: " + names;
@@ -86,6 +97,8 @@ in
       home.file =
         listToAttrs (
           (buildServices "service" cfg.services)
+          ++
+          (buildServices "socket" cfg.sockets)
           ++
           (buildServices "target" cfg.targets)
           ++
