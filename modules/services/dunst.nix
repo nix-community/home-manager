@@ -22,8 +22,8 @@ with lib;
     systemd.user.services.dunst = {
       Unit = {
         Description = "Dunst notification daemon";
-        Requires = "graphical-session.target";
-        After = "graphical-session.target";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
       };
 
       Service = {

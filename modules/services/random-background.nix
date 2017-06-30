@@ -42,11 +42,13 @@ in
         systemd.user.services.random-background = {
           Unit = {
             Description = "Set random desktop background using feh";
+            After = [ "graphical-session-pre.target" ];
+            PartOf = [ "graphical-session.target" ];
           };
 
           Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.feh}/bin/feh --randomize --bg-fill %h/backgrounds/";
+            ExecStart = "${pkgs.feh}/bin/feh --randomize --bg-fill ${cfg.imageDirectory}";
             IOSchedulingClass = "idle";
           };
 

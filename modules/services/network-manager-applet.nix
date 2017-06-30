@@ -13,6 +13,8 @@ with lib;
     systemd.user.services.network-manager-applet = {
         Unit = {
           Description = "Network Manager applet";
+          After = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session.target" ];
         };
 
         Install = {

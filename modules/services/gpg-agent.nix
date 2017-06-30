@@ -29,41 +29,89 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    home.file.".gnupg/gpg-agent.conf".text = concatStringsSep "\n" (
-      optional cfg.enableSshSupport
-        "enable-ssh-support"
-      ++
-      optional (cfg.defaultCacheTtl != null)
-        "default-cache-ttl ${toString cfg.defaultCacheTtl}"
-    );
+  config = mkIf cfg.enable (mkMerge [
+    {
+      home.file.".gnupg/gpg-agent.conf".text = concatStringsSep "\n" (
+        optional cfg.enableSshSupport
+          "enable-ssh-support"
+        ++
+        optional (cfg.defaultCacheTtl != null)
+          "default-cache-ttl ${toString cfg.defaultCacheTtl}"
+      );
 
-    home.sessionVariables =
-      optionalAttrs cfg.enableSshSupport {
-        SSH_AUTH_SOCK = "\${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh";
+      home.sessionVariables =
+        optionalAttrs cfg.enableSshSupport {
+          SSH_AUTH_SOCK = "\${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh";
+        };
+
+      programs.bash.initExtra = ''
+        GPG_TTY="$(tty)"
+        export GPG_TTY
+        gpg-connect-agent updatestartuptty /bye > /dev/null
+      '';
+    }
+
+    # The systemd units below are direct translations of the
+    # descriptions in the
+    #
+    #   ${pkgs.gnupg}/share/doc/gnupg/examples/systemd-user
+    #
+    # directory.
+    {
+      systemd.user.services.gpg-agent = {
+        Unit = {
+          Description = "GnuPG cryptographic agent and passphrase cache";
+          Documentation = "man:gpg-agent(1)";
+          Requires = "gpg-agent.socket";
+          After = "gpg-agent.socket";
+          # This is a socket-activated service:
+          RefuseManualStart = true;
+        };
+
+        Service = {
+          ExecStart = "${pkgs.gnupg}/bin/gpg-agent --supervised";
+          ExecReload = "${pkgs.gnupg}/bin/gpgconf --reload gpg-agent";
+        };
       };
 
-    programs.bash.initExtra = ''
-      GPG_TTY="$(tty)"
-      export GPG_TTY
-      gpg-connect-agent updatestartuptty /bye > /dev/null
-    '';
+      systemd.user.sockets.gpg-agent = {
+        Unit = {
+          Description = "GnuPG cryptographic agent and passphrase cache";
+          Documentation = "man:gpg-agent(1)";
+        };
 
-    systemd.user.services.gpg-agent = {
-      Unit = {
-        Description = "GnuPG private key agent";
-        IgnoreOnIsolate = true;
-      };
+        Socket = {
+          ListenStream = "%t/gnupg/S.gpg-agent";
+          FileDescriptorName = "std";
+          SocketMode = "0600";
+          DirectoryMode = "0700";
+        };
 
-      Service = {
-        Type = "forking";
-        ExecStart = "${pkgs.gnupg}/bin/gpg-agent --daemon";
-        Restart = "on-abort";
+        Install = {
+          WantedBy = [ "sockets.target" ];
+        };
       };
+    }
 
-      Install = {
-        WantedBy = [ "default.target" ];
+    (mkIf cfg.enableSshSupport {
+      systemd.user.sockets.gpg-agent-ssh = {
+        Unit = {
+          Description = "GnuPG cryptographic agent (ssh-agent emulation)";
+          Documentation = "man:gpg-agent(1) man:ssh-add(1) man:ssh-agent(1) man:ssh(1)";
+        };
+
+        Socket = {
+          ListenStream = "%t/gnupg/S.gpg-agent.ssh";
+          FileDescriptorName = "ssh";
+          Service = "gpg-agent.service";
+          SocketMode = "0600";
+          DirectoryMode = "0700";
+        };
+
+        Install = {
+          WantedBy = [ "sockets.target" ];
+        };
       };
-    };
-  };
+    })
+  ]);
 }

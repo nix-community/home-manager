@@ -13,6 +13,8 @@ with lib;
     systemd.user.services.keepassx = {
         Unit = {
           Description = "KeePassX password manager";
+          After = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session.target" ];
         };
 
         Install = {

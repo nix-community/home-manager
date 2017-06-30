@@ -28,6 +28,7 @@ in
     systemd.user.services.gnome-keyring = {
       Unit = {
         Description = "GNOME Keyring";
+        PartOf = [ "graphical-session-pre.target" ];
       };
 
       Service = {
@@ -45,7 +46,7 @@ in
       };
 
       Install = {
-        WantedBy = [ "graphical-session.target" ];
+        WantedBy = [ "graphical-session-pre.target" ];
       };
     };
   };

@@ -286,6 +286,8 @@ in
 
     home.activation.linkGeneration = dagEntryAfter ["writeBoundary"] (
       let
+        pattern = "-home-manager-files/";
+
         link = pkgs.writeText "link" ''
           newGenFiles="$1"
           shift
@@ -298,6 +300,8 @@ in
         '';
 
         cleanup = pkgs.writeText "cleanup" ''
+          . ${./lib-bash/color-echo.sh}
+
           newGenFiles="$1"
           oldGenFiles="$2"
           shift 2
@@ -306,6 +310,8 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath  exists"
+            elif [[ ! "$(readlink -e "$targetPath")" =~ "${pattern}" ]] ; then
+              warnEcho "Path '$targetPath' not link into Home Manager generation. Skipping delete."
             else
               echo "Checking $targetPath  gone (deleting)"
               $DRY_RUN_CMD rm $VERBOSE_ARG "$targetPath"

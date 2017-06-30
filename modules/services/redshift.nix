@@ -99,6 +99,8 @@ in {
     systemd.user.services.redshift = {
       Unit = {
         Description = "Redshift colour temperature adjuster";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
       };
 
       Install = {

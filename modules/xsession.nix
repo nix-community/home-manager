@@ -38,6 +38,8 @@ in
     systemd.user.services.setxkbmap = {
       Unit = {
         Description = "Set up keyboard in X";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
       };
 
       Install = {
@@ -60,19 +62,12 @@ in
       };
     };
 
-    # For stuff that needs to start just before a graphical session
-    # starts.
-    systemd.user.targets.graphical-session-pre = {
+    # A basic graphical session target for Home Manager.
+    systemd.user.targets.hm-graphical-session = {
       Unit = {
-        Description = "Pre-graphical session";
-      };
-    };
-
-    # A basic graphical session target. Apparently this will come
-    # standard in future Systemd versions.
-    systemd.user.targets.graphical-session = {
-      Unit = {
-        Description = "Graphical session";
+        Description = "Home Manager X session";
+        Requires = [ "graphical-session-pre.target" ];
+        BindsTo = [ "graphical-session.target" ];
       };
     };
 
@@ -83,6 +78,9 @@ in
           . "$HOME/.profile"
         fi
 
+        # If there are any running services from a previous session.
+        systemctl --user stop graphical-session.target graphical-session-pre.target
+
         systemctl --user import-environment DBUS_SESSION_BUS_ADDRESS
         systemctl --user import-environment DISPLAY
         systemctl --user import-environment SSH_AUTH_SOCK
@@ -90,8 +88,7 @@ in
         systemctl --user import-environment XDG_DATA_DIRS
         systemctl --user import-environment XDG_RUNTIME_DIR
 
-        systemctl --user restart graphical-session-pre.target
-        systemctl --user restart graphical-session.target
+        systemctl --user start hm-graphical-session.target
 
         ${cfg.initExtra}
 
