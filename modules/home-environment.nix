@@ -260,7 +260,7 @@ in
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
-                && ! "$(readlink -e "$targetPath")" =~ "${pattern}" ]] ; then
+                && ! "$(readlink "$targetPath")" =~ "${pattern}" ]] ; then
               errorEcho "Existing file '$targetPath' is in the way"
               collision=1
             fi
