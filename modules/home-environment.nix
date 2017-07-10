@@ -251,8 +251,36 @@ in
     home.activation.checkLinkTargets = dagEntryBefore ["writeBoundary"] (
       let
         pattern = "-home-manager-files/";
-        check = pkgs.writeText "check" ''
+        diff = "${pkgs.diffutils}/bin/diff -r --suppress-common-lines --color=always";
+        pager = "${pkgs.less}/bin/less -R";
+        ls = "${pkgs.exa}/bin/exa --color=always";
+        check = pkgs.writeScript "check" ''
           . ${./lib-bash/color-echo.sh}
+
+          handleCollision () {
+            printf "`errorEcho 'Existing file '`"
+            printf "`${ls} $targetPath`"
+            errorEcho " is in the way"
+            while : ; do
+              printf "`warnEcho 'Overwrite? [y]es, [N]o, [v]iew, [d]iff '`"
+              read < /dev/tty
+              if [ "$REPLY" = v ] || [ "$REPLY" = V ] ; then
+                if [ -d "$targetPath" ] ; then
+                  ${ls} -l "$targetPath/" | ${pager} || true
+                else
+                  ${pager} "$targetPath" || true
+                fi
+              elif [ "$REPLY" = d ] || [ "$REPLY" = D ] ; then
+                ${diff} "$targetPath" "$newGenFiles/$relativePath" | ${pager} || true
+              elif [ "$REPLY" = y ] || [ "$REPLY" = Y ] ; then
+                rm -rf "$file"
+                break
+              else
+                errorEcho "Please move the above files and try again"
+                exit 1
+              fi
+            done
+          }
 
           newGenFiles="$1"
           shift
@@ -261,15 +289,9 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
                 && ! "$(readlink "$targetPath")" =~ "${pattern}" ]] ; then
-              errorEcho "Existing file '$targetPath' is in the way"
-              collision=1
+                handleCollision "$targetPath"
             fi
           done
-
-          if [[ -v collision ]] ; then
-            errorEcho "Please move the above files and try again"
-            exit 1
-          fi
         '';
       in
       ''
@@ -277,7 +299,7 @@ in
           local newGenFiles
           newGenFiles="$(readlink -e "$newGenPath/home-files")"
           find "$newGenFiles" -type f -print0 -or -type l -print0 \
-                  | xargs -0 bash ${check} "$newGenFiles"
+                  | xargs -0 ${check} "$newGenFiles"
         }
 
         checkNewGenCollision || exit 1
