@@ -67,8 +67,6 @@ function doBuild() {
         exit 1
     fi
 
-    export NIX_PATH="$NIX_PATH${NIX_PATH:+:}home-manager=@MODULES_PATH@"
-
     local extraArgs
     extraArgs=""
 
