@@ -1,4 +1,10 @@
-{ pkgs, modulesPath ? "$HOME/.config/nixpkgs/home-manager/modules" }:
+{ pkgs
+
+  # Extra path to the Home Manager modules. If set then this path will
+  # be tried before `$HOME/.config/nixpkgs/home-manager/modules` and
+  # `$HOME/.nixpkgs/home-manager/modules`.
+, modulesPath ? null
+}:
 
 let
 
@@ -16,6 +22,8 @@ let
       }
   '';
 
+  modulesPathStr = if modulesPath == null then "" else modulesPath;
+
 in
 
 pkgs.stdenv.mkDerivation {
@@ -29,7 +37,7 @@ pkgs.stdenv.mkDerivation {
     substituteInPlace $out/bin/home-manager \
       --subst-var-by bash "${pkgs.bash}" \
       --subst-var-by coreutils "${pkgs.coreutils}" \
-      --subst-var-by MODULES_PATH '${modulesPath}' \
+      --subst-var-by MODULES_PATH '${modulesPathStr}' \
       --subst-var-by HOME_MANAGER_EXPR_PATH "${homeManagerExpr}"
   '';
 
