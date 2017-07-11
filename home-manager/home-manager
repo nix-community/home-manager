@@ -110,6 +110,10 @@ function doListPackages() {
     fi
 }
 
+function doShowNews() {
+    echo "Not implemented yet"
+}
+
 function doHelp() {
     echo "Usage: $0 [OPTION] COMMAND"
     echo
@@ -181,6 +185,9 @@ case "$cmd" in
         ;;
     packages)
         doListPackages
+        ;;
+    news)
+        doShowNews
         ;;
     help|--help)
         doHelp

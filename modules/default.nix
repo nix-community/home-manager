@@ -11,6 +11,7 @@ let
     ./home-environment.nix
     ./manual.nix
     ./misc/gtk.nix
+    ./misc/news.nix
     ./misc/pam.nix
     ./programs/bash.nix
     ./programs/beets.nix
