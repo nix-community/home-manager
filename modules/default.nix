@@ -31,6 +31,7 @@ let
     ./services/network-manager-applet.nix
     ./services/random-background.nix
     ./services/redshift.nix
+    ./services/syncthing.nix
     ./services/taffybar.nix
     ./services/tahoe-lafs.nix
     ./services/udiskie.nix
