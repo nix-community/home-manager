@@ -315,8 +315,17 @@ in
             else
               echo "Checking $targetPath  gone (deleting)"
               $DRY_RUN_CMD rm $VERBOSE_ARG "$targetPath"
-              $DRY_RUN_CMD rmdir --ignore-fail-on-non-empty \
-                  $VERBOSE_ARG -p "$(dirname "$targetPath")"
+              targetDir="$(dirname "$targetPath")"
+
+              # Recursively remove the containing directory. We only
+              # do this if the containing folder is not $HOME since
+              # running rmdir on $HOME will result in a harmless but
+              # unpleasant error message.
+              if [[ "$targetDir" != "$HOME" ]] ; then
+                $DRY_RUN_CMD rmdir $VERBOSE_ARG \
+                    -p --ignore-fail-on-non-empty \
+                    "$targetDir"
+              fi
             fi
           done
         '';
