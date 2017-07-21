@@ -60,9 +60,19 @@ in
   };
 
   config = mkIf config.manual.manpages.enable {
-    # To fix error during manpage build.
-    meta.doc = builtins.toFile "nothingness" "<para></para>";
-
     home.packages = [ homeEnvironmentManPages ];
   };
+
+  # To fix error during manpage build.
+  meta.doc = builtins.toFile "nothingness" ''
+    <chapter xmlns="http://docbook.org/ns/docbook"
+             xmlns:xlink="http://www.w3.org/1999/xlink"
+             xmlns:xi="http://www.w3.org/2001/XInclude"
+             version="5.0"
+             xml:id="sec-nothing">
+      <title>this is just to make the docs compile</title>
+      <para xml:id="sec-grsecurity"></para>
+      <para xml:id="sec-emacs-docbook-xml"></para>
+    </chapter>
+  '';
 }
