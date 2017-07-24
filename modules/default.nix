@@ -20,6 +20,7 @@ let
     ./programs/git.nix
     ./programs/gnome-terminal.nix
     ./programs/home-manager.nix
+    ./programs/htop.nix
     ./programs/info.nix
     ./programs/lesspipe.nix
     ./programs/ssh.nix
