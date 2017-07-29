@@ -144,6 +144,15 @@ in
       '';
     };
 
+    controlPersist = mkOption {
+      type = types.str;
+      default = "no";
+      example = "10m";
+      description = ''
+        Whether control socket should remain open in the background.
+      '';
+    };
+
     matchBlocks = mkOption {
       type = types.listOf matchBlockModule;
       default = [];
@@ -158,6 +167,7 @@ in
       ForwardAgent ${yn cfg.forwardAgent}
       ControlMaster ${cfg.controlMaster}
       ControlPath ${cfg.controlPath}
+      ControlPersist ${cfg.controlPersist}
 
       ${concatStringsSep "\n\n" (map matchBlockStr cfg.matchBlocks)}
     '';
