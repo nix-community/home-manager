@@ -41,7 +41,7 @@ in
 
       home.sessionVariables =
         optionalAttrs cfg.enableSshSupport {
-          SSH_AUTH_SOCK = "\${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh";
+          SSH_AUTH_SOCK = "\$XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh";
         };
 
       programs.bash.initExtra = ''
