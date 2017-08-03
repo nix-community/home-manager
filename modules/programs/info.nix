@@ -60,7 +60,7 @@ in
     }];
 
     home.sessionVariables.INFOPATH =
-      "${cfg.homeInfoDirLocation}\${INFOPATH:+:}\${INFOPATH}";
+      "${cfg.homeInfoDirLocation}\$INFOPATH:+:\$INFOPATH";
 
     home.activation.createHomeInfoDir = dagEntryAfter ["installPackages"] ''
       $DRY_RUN_CMD mkdir -p "${cfg.homeInfoDirLocation}"

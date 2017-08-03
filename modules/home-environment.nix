@@ -164,13 +164,13 @@ in
     };
 
     home.sessionVariableSetter = mkOption {
-      default = "bash";
-      type = types.enum [ "pam" "bash" ];
+      default = "shell";
+      type = types.enum [ "pam" "shell" "bash" ];
       example = "pam";
       description = ''
         Identifies the module that should set the session variables.
         </para><para>
-        If "bash" is set then <varname>config.bash.enable</varname>
+        If "shell" is set then <varname>config.bash.enable</varname>
         must also be enabled.
         </para><para>
         If "pam" is set then PAM must be used to set the system

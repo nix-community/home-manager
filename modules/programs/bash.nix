@@ -110,9 +110,6 @@ in
       histControlStr = concatStringsSep ":" cfg.historyControl;
       histIgnoreStr = concatStringsSep ":" cfg.historyIgnore;
 
-      envVarsStr = concatStringsSep "\n" (
-        mapAttrsToList export config.home.sessionVariables
-      );
     in mkIf cfg.enable {
       home.file.".bash_profile".text = ''
         # -*- mode: sh -*-
@@ -127,8 +124,9 @@ in
       home.file.".profile".text = ''
         # -*- mode: sh -*-
 
-        ${optionalString (config.home.sessionVariableSetter == "bash")
-          envVarsStr}
+        ${optionalString (config.home.sessionVariableSetter == "shell"
+	  || config.home.sessionVariableSetter == "bash")
+          "~/.local/share/home-manager/env.sh"}
 
         ${cfg.profileExtra}
       '';
