@@ -26,6 +26,7 @@ let
     ./programs/lesspipe.nix
     ./programs/ssh.nix
     ./programs/texlive.nix
+    ./programs/zsh.nix
     ./services/dunst.nix
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix

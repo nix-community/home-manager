@@ -165,7 +165,7 @@ in
 
     home.sessionVariableSetter = mkOption {
       default = "bash";
-      type = types.enum [ "pam" "bash" ];
+      type = types.enum [ "pam" "bash" "zsh" ];
       example = "pam";
       description = ''
         Identifies the module that should set the session variables.
