@@ -39,7 +39,7 @@ else
 fi
 
 if [[ -v DRY_RUN ]] ; then
-    $VERBOSE_ECHO "This is a dry run"
+    echo "This is a dry run"
     export DRY_RUN_CMD=echo
 else
     $VERBOSE_ECHO "This is a live run"
