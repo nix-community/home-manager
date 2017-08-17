@@ -317,15 +317,11 @@ in
               $DRY_RUN_CMD rm $VERBOSE_ARG "$targetPath"
               targetDir="$(dirname "$targetPath")"
 
-              # Recursively remove the containing directory. We only
-              # do this if the containing folder is not $HOME since
-              # running rmdir on $HOME will result in a harmless but
-              # unpleasant error message.
-              if [[ "$targetDir" != "$HOME" ]] ; then
-                $DRY_RUN_CMD rmdir $VERBOSE_ARG \
-                    -p --ignore-fail-on-non-empty \
-                    "$targetDir"
-              fi
+              # Recursively remove empty parent directories.
+              while [[ "$targetDir" != "$HOME" && ! "$(ls -A "$targetDir")" ]]; do
+                $DRY_RUN_CMD rmdir $VERBOSE_ARG "$targetDir"
+                targetDir="$(dirname "$targetDir")"
+              done
             fi
           done
         '';
