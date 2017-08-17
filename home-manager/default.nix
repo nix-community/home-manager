@@ -9,11 +9,13 @@
 let
 
   homeManagerExpr = pkgs.writeText "home-manager.nix" ''
-    { pkgs ? import <nixpkgs> {}, confPath }:
+    { pkgs ? import <nixpkgs> {}, confPath, confAttr }:
 
     let
       env = import <home-manager> {
-        configuration = import confPath;
+        configuration = let conf = import confPath;
+                        in if (builtins.stringLength confAttr) == 0
+                           then conf else conf.''${confAttr};
         pkgs = pkgs;
       };
     in
