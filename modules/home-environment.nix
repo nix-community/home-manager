@@ -313,7 +313,7 @@ in
             elif [[ ! "$(readlink "$targetPath")" =~ "${pattern}" ]] ; then
               warnEcho "Path '$targetPath' not link into Home Manager generation. Skipping delete."
             else
-              echo "Checking $targetPath  gone (deleting)"
+              $VERBOSE_ECHO "Checking $targetPath  gone (deleting)"
               $DRY_RUN_CMD rm $VERBOSE_ARG "$targetPath"
 
               # Recursively delete empty parent directories.
