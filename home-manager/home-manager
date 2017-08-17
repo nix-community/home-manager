@@ -91,11 +91,13 @@ function doSwitch() {
     local wrkdir
     wrkdir="$(mktemp -d)"
 
-    if doBuild "$wrkdir/generation" ; then
-        "$wrkdir/generation/activate"
-    fi
+    local exitCode=0
+    doBuild "$wrkdir/generation" && "$wrkdir/generation/activate" || exitCode=1
 
+    # Because the previous command never fails, the script keeps running and
+    # $wrkdir is always removed.
     rm -r "$wrkdir"
+    return $exitCode
 }
 
 function doListGens() {
