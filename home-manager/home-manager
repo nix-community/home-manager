@@ -82,6 +82,7 @@ function doBuild() {
     nix-build $extraArgs \
               "@HOME_MANAGER_EXPR_PATH@" \
               --argstr confPath "$HOME_MANAGER_CONFIG" \
+              --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE" \
               -A activation-script \
               -o "$output"
 }
@@ -121,6 +122,8 @@ function doHelp() {
     echo
     echo "  -f FILE      The home configuration file."
     echo "               Default is '~/.config/nixpkgs/home.nix'."
+    echo "  -A ATTRIBUTE Optional attribute that selects the configuration "
+    echo "               expression in the configuration file."
     echo "  -I PATH      Add a path to the Nix expression search path."
     echo "  -v           Verbose output"
     echo "  -n           Do a dry run, only prints what actions would be taken"
@@ -135,14 +138,18 @@ function doHelp() {
 }
 
 EXTRA_NIX_PATH=()
+HOME_MANAGER_CONFIG_ATTRIBUTE=
 
-while getopts f:I:vnh opt; do
+while getopts f:I:A:vnh opt; do
     case $opt in
         f)
             HOME_MANAGER_CONFIG="$OPTARG"
             ;;
         I)
             EXTRA_NIX_PATH+=("$OPTARG")
+            ;;
+        A)
+            HOME_MANAGER_CONFIG_ATTRIBUTE="$OPTARG"
             ;;
         v)
             export VERBOSE=1
