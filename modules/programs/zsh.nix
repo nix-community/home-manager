@@ -44,12 +44,6 @@ in
         '';
       };
 
-      profileExtra = mkOption {
-        default = "";
-        type = types.lines;
-        description = "Extra commands that should be added to .zprofile.";
-      };
-
       initExtra = mkOption {
         default = "";
         type = types.lines;
@@ -78,11 +72,9 @@ in
       home.packages = [ pkgs.zsh ]
         ++ optional cfg.enableCompletion pkgs.nix-zsh-completions;
 
-      home.file.".zprofile".text = ''
+      home.file.".zshenv".text = ''
         ${optionalString (config.home.sessionVariableSetter == "zsh")
           envVarsStr}
-
-        ${cfg.profileExtra}
       '';
 
       home.file.".zshrc".text = ''
