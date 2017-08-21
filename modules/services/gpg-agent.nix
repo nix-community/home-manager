@@ -5,6 +5,11 @@ with lib;
 let
 
   cfg = config.services.gpg-agent;
+  gpgInitStr =  ''
+    GPG_TTY="$(tty)"
+    export GPG_TTY
+    gpg-connect-agent updatestartuptty /bye > /dev/null
+  '';
 
 in
 
@@ -44,11 +49,8 @@ in
           SSH_AUTH_SOCK = "\${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh";
         };
 
-      programs.bash.initExtra = ''
-        GPG_TTY="$(tty)"
-        export GPG_TTY
-        gpg-connect-agent updatestartuptty /bye > /dev/null
-      '';
+      programs.bash.initExtra = gpgInitStr;
+      programs.zsh.initExtra = gpgInitStr;
     }
 
     # The systemd units below are direct translations of the
