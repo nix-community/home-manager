@@ -18,7 +18,7 @@ with lib;
         };
 
         Service = {
-          ExecStart = "${pkgs.pythonPackages.udiskie}/bin/udiskie -2 -A -n -s";
+          ExecStart = "${pkgs.pythonPackages.udiskie}/bin/udiskie -2 -A -n -s -f ${pkgs.xdg_utils}/bin/xdg-open";
         };
 
         Install = {
