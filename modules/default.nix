@@ -26,6 +26,7 @@ let
     ./programs/lesspipe.nix
     ./programs/oh-my-zsh.nix
     ./programs/ssh.nix
+    ./programs/termite.nix
     ./programs/texlive.nix
     ./programs/zsh.nix
     ./services/dunst.nix
