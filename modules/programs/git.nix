@@ -8,29 +8,27 @@ let
 
   toINI = (import ../lib/generators.nix).toINI {};
 
-  signModule = types.submodule (
-    { ... }: {
-      options = {
-        key = mkOption {
-          type = types.str;
-          description = "The default GPG signing key fingerprint.";
-        };
-
-        signByDefault = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether commits should be signed by default.";
-        };
-
-        gpgPath = mkOption {
-          type = types.str;
-          default = "${pkgs.gnupg}/bin/gpg2";
-          defaultText = "\${pkgs.gnupg}/bin/gpg2";
-          description = "Path to GnuPG binary to use.";
-        };
+  signModule = types.submodule {
+    options = {
+      key = mkOption {
+        type = types.str;
+        description = "The default GPG signing key fingerprint.";
       };
-    }
-  );
+
+      signByDefault = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Whether commits should be signed by default.";
+      };
+
+      gpgPath = mkOption {
+        type = types.str;
+        default = "${pkgs.gnupg}/bin/gpg2";
+        defaultText = "\${pkgs.gnupg}/bin/gpg2";
+        description = "Path to GnuPG binary to use.";
+      };
+    };
+  };
 
 in
 
