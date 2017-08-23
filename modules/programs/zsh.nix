@@ -6,18 +6,43 @@ let
 
   cfg = config.programs.zsh;
 
+  historyModule = types.submodule {
+    options = {
+      size = mkOption {
+        type = types.int;
+        default = 10000;
+        description = "Number of history lines to keep.";
+      };
+
+      path = mkOption {
+        type = types.str;
+        default = "$HOME/.zsh_history";
+        description = "History file location";
+      };
+
+      ignoreDups = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Do not enter command lines into the history list
+          if they are duplicates of the previous event.
+        '';
+      };
+
+      share = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Share command history between zsh sessions.";
+      };
+    };
+  };
+
 in
 
 {
   options = {
     programs.zsh = {
       enable = mkEnableOption "Z shell (Zsh)";
-
-      historySize = mkOption {
-        type = types.int;
-        default = 10000;
-        description = "Number of history lines to keep.";
-      };
 
       shellAliases = mkOption {
         default = {};
@@ -31,17 +56,19 @@ in
 
       enableCompletion = mkOption {
         default = true;
-        description = ''
-          Enable zsh completion.
-        '';
+        description = "Enable zsh completion.";
         type = types.bool;
       };
 
       enableAutosuggestions = mkOption {
         default = false;
-        description = ''
-          Enable zsh autosuggestions
-        '';
+        description = "Enable zsh autosuggestions";
+      };
+
+      history = mkOption {
+        type = historyModule;
+        default = {};
+        description = "Options related to commands history configuration.";
       };
 
       initExtra = mkOption {
@@ -59,11 +86,6 @@ in
       );
 
       export = n: v: "export ${n}=\"${toString v}\"";
-      exportIfNonNull = n: v: optionalString (v != null) (export n v);
-      exportIfNonEmpty = n: v: optionalString (v != "") (export n v);
-
-      histControlStr = concatStringsSep ":" cfg.historyControl;
-      histIgnoreStr = concatStringsSep ":" cfg.historyIgnore;
 
       envVarsStr = concatStringsSep "\n" (
         mapAttrsToList export config.home.sessionVariables
@@ -78,7 +100,12 @@ in
       '';
 
       home.file.".zshrc".text = ''
-        ${export "HISTSIZE" cfg.historySize}
+        ${export "HISTSIZE" cfg.history.size}
+        ${export "HISTFILE" cfg.history.path}
+
+        setopt HIST_FCNTL_LOCK
+        ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
+        ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
 
         ${if cfg.enableCompletion then "autoload -U compinit && compinit" else ""}
         ${optionalString (cfg.enableAutosuggestions)
