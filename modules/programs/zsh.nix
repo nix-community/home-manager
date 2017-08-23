@@ -112,6 +112,8 @@ in
           fpath+=($p/share/zsh/site-functions $p/share/zsh/$ZSH_VERSION/functions)
         done
 
+        HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
+
         ${if cfg.enableCompletion then "autoload -U compinit && compinit" else ""}
         ${optionalString (cfg.enableAutosuggestions)
           "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
