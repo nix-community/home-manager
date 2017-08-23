@@ -147,7 +147,7 @@ in
             --old-line-format='-%L' \
             --unchanged-line-format=' %L' \
             "$oldServiceFiles" "$newServiceFiles" \
-            > $servicesDiffFile
+            > $servicesDiffFile || true
 
           local -a maybeRestart=( $(grep '^ ' $servicesDiffFile | cut -c2-) )
           local -a toStop=( $(grep '^-' $servicesDiffFile | cut -c2-) )
