@@ -42,7 +42,7 @@ in
       enable = mkEnableOption "GNU Info";
 
       homeInfoDirLocation = mkOption {
-        default = "$HOME/.cache/info";
+        default = "\${XDG_CACHE_HOME:-$HOME/.cache}/info";
         description = ''
           Directory in which to store the info <filename>dir</filename>
           file within your home.
