@@ -439,6 +439,7 @@ in
               --subst-var-by GENERATION_DIR $out
 
             ln -s ${home-files} $out/home-files
+            ln -s ${cfg.path} $out/home-path
           '';
         };
 
