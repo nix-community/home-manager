@@ -1,6 +1,9 @@
 { configuration
 , pkgs
 , lib ? pkgs.stdenv.lib
+
+  # Whether to check that each option has a matching declaration.
+, check ? true
 }:
 
 with lib;
@@ -64,6 +67,7 @@ let
   pkgsModule = {
     config._module.args.pkgs = lib.mkForce pkgs;
     config._module.args.baseModules = modules;
+    config._module.check = check;
   };
 
   module = showWarnings (
@@ -90,4 +94,10 @@ in
 
   # For backwards compatibility. Please use activationPackage instead.
   activation-script = module.config.home.activationPackage;
+
+  newsDisplay = module.config.news.display;
+  newsEntries =
+    sort (a: b: a.time > b.time) (
+      filter (a: a.condition) module.config.news.entries
+    );
 }

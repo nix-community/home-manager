@@ -23,6 +23,7 @@ pkgs.stdenv.mkDerivation {
     substituteInPlace $out/bin/home-manager \
       --subst-var-by bash "${pkgs.bash}" \
       --subst-var-by coreutils "${pkgs.coreutils}" \
+      --subst-var-by less "${pkgs.less}" \
       --subst-var-by MODULES_PATH '${modulesPathStr}' \
       --subst-var-by HOME_MANAGER_EXPR_PATH "${./home-manager.nix}"
   '';

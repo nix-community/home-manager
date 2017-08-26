@@ -3,12 +3,12 @@
 # This code explicitly requires GNU Core Utilities and we therefore
 # need to ensure they are prioritized over any other similarly named
 # tools on the system.
-PATH=@coreutils@/bin:$PATH
+PATH=@coreutils@/bin:@less@/bin${PATH:+:}$PATH
 
 set -euo pipefail
 
 function errorEcho() {
-    >&2 echo "$*"
+    echo $* >&2
 }
 
 # Attempts to set the HOME_MANAGER_CONFIG global variable.
@@ -52,12 +52,11 @@ function setHomeManagerModulesPath() {
     done
 }
 
-function doBuild() {
+function doBuildAttr() {
     setConfigFile
     setHomeManagerModulesPath
 
-    local extraArgs
-    extraArgs="$1"
+    local extraArgs="$*"
 
     for p in "${EXTRA_NIX_PATH[@]}"; do
         extraArgs="$extraArgs -I $p"
@@ -67,11 +66,51 @@ function doBuild() {
         extraArgs="$extraArgs --show-trace"
     fi
 
-    nix-build $extraArgs \
-              "@HOME_MANAGER_EXPR_PATH@" \
-              --argstr confPath "$HOME_MANAGER_CONFIG" \
-              --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE" \
-              -A activationPackage
+    nix-build \
+        "@HOME_MANAGER_EXPR_PATH@" \
+        $extraArgs \
+        --argstr confPath "$HOME_MANAGER_CONFIG" \
+        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+}
+
+function presentNews() {
+    local infoFile
+    infoFile=$(doBuildNews -A newsInfo) || return 1
+
+    # shellcheck source=/dev/null
+    . "$infoFile"
+
+    if [[ $newsNumUnread -eq 0 ]]; then
+        return
+    elif [[ "$newsDisplay" == "notify" ]]; then
+        local msg
+        if [[ $newsNumUnread -eq 1 ]]; then
+            msg="There is an unread and relevant news item.\n"
+            msg+="Read it by running the command '$(basename "$0") news'."
+        else
+            msg="There are $newsNumUnread unread and relevant news items.\n"
+            msg+="Read them by running the command '$(basename "$0") news'."
+        fi
+
+        # Not actually an error but here stdout is reserved for
+        # nix-build output.
+        errorEcho
+        errorEcho -e "$msg"
+        errorEcho
+
+        if [[ -v DISPLAY ]] && type -P notify-send > /dev/null; then
+            notify-send "Home Manager" "$msg"
+        fi
+    elif [[ "$newsDisplay" == "show" ]]; then
+        doShowNews --unread
+    else
+        errorEcho "Unknown 'news.display' setting '$newsDisplay'."
+    fi
+}
+
+function doBuild() {
+    doBuildAttr -A activationPackage
+    presentNews
 }
 
 function doSwitch() {
@@ -84,11 +123,16 @@ function doSwitch() {
     # prevents an unfortunately timed GC from removing the generation
     # before activation completes.
     wrkdir="$(mktemp -d)"
-    generation=$(doBuild "-o $wrkdir/result") && $generation/activate || exitCode=1
+    generation=$(doBuildAttr -o "$wrkdir/result" -A activationPackage) \
+        && $generation/activate || exitCode=1
 
     # Because the previous command never fails, the script keeps
     # running and $wrkdir is always removed.
     rm -r "$wrkdir"
+
+    if [[ $exitCode -eq 0 ]]; then
+        presentNews
+    fi
 
     return $exitCode
 }
@@ -110,8 +154,54 @@ function doListPackages() {
     fi
 }
 
+function newsReadIdsFile() {
+    local dataDir="${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
+    local path="$dataDir/news-read-ids"
+
+    # If the path doesn't exist then we should create it, otherwise
+    # Nix will error out when we attempt to use builtins.readFile.
+    if [[ ! -f "$path" ]]; then
+        mkdir -p "$dataDir"
+        touch "$path"
+    fi
+
+    echo "$path"
+}
+
+function doBuildNews() {
+    doBuildAttr "$*" \
+                --no-out-link \
+                --arg check false \
+                --argstr newsReadIdsFile "$(newsReadIdsFile)"
+}
+
 function doShowNews() {
-    echo "Not implemented yet"
+    local infoFile
+    infoFile=$(doBuildNews -A newsInfo) || return 1
+
+    # shellcheck source=/dev/null
+    . "$infoFile"
+
+    case $1 in
+        --all)
+            ${PAGER:-less} "$newsFileAll"
+            ;;
+        --unread)
+            ${PAGER:-less} "$newsFileUnread"
+            ;;
+        *)
+            echo "Unknown argument $1"
+            return 1
+    esac
+
+    local newsReadIdsFile
+    newsReadIdsFile="$(newsReadIdsFile)"
+
+    local tempNewReadIdsFile
+    tempNewReadIdsFile="$(mktemp -t hm-news-read-ids.XXXXXXXXXX)"
+
+    sort -u "$newsReadIdsFile" "$newsUnreadIdsFile" > "$tempNewReadIdsFile"
+    mv -f "$tempNewReadIdsFile" "$newsReadIdsFile"
 }
 
 function doHelp() {
@@ -134,6 +224,7 @@ function doHelp() {
     echo "  switch       Build and activate configuration"
     echo "  generations  List all home environment generations"
     echo "  packages     List all packages installed in home-manager-path"
+    echo "  news         Show news entries in a pager"
 }
 
 EXTRA_NIX_PATH=()
@@ -175,7 +266,7 @@ cmd="$*"
 
 case "$cmd" in
     build)
-        doBuild ""
+        doBuild
         ;;
     switch)
         doSwitch
@@ -187,7 +278,7 @@ case "$cmd" in
         doListPackages
         ;;
     news)
-        doShowNews
+        doShowNews --all
         ;;
     help|--help)
         doHelp
