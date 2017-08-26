@@ -34,6 +34,7 @@ let
     ./services/gpg-agent.nix
     ./services/keepassx.nix
     ./services/network-manager-applet.nix
+    ./services/owncloud-client.nix
     ./services/random-background.nix
     ./services/redshift.nix
     ./services/syncthing.nix
