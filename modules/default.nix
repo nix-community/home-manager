@@ -83,6 +83,6 @@ in
 {
   inherit (module) options config;
 
-  activation-script = module.config.home.activationPackage;
+  activationPackage = module.config.home.activationPackage;
   home-path = module.config.home.path;
 }
