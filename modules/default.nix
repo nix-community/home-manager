@@ -84,4 +84,5 @@ in
   inherit (module) options config;
 
   activationPackage = module.config.home.activationPackage;
+  activation-script = module.config.home.activationPackage;
 }
