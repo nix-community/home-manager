@@ -22,7 +22,7 @@ let
       };
     in
       {
-        inherit (env) activation-script;
+        inherit (env) activationPackage;
       }
   '';
 

@@ -67,7 +67,7 @@ function doBuild() {
               "@HOME_MANAGER_EXPR_PATH@" \
               --argstr confPath "$HOME_MANAGER_CONFIG" \
               --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE" \
-              -A activation-script
+              -A activationPackage
 }
 
 function doSwitch() {
