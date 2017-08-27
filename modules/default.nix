@@ -79,5 +79,4 @@ in
   inherit (module) options config;
 
   activationPackage = module.config.home.activationPackage;
-  home-path = module.config.home.path;
 }
