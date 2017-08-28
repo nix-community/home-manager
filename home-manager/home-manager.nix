@@ -6,7 +6,7 @@ let
       let
         conf = import confPath;
       in
-        if confAttr == "" then conf else conf.''${confAttr};
+        if confAttr == "" then conf else conf.${confAttr};
     pkgs = pkgs;
   };
 in
