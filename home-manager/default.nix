@@ -8,24 +8,6 @@
 
 let
 
-  homeManagerExpr = pkgs.writeText "home-manager.nix" ''
-    { pkgs ? import <nixpkgs> {}, confPath, confAttr }:
-
-    let
-      env = import <home-manager> {
-        configuration =
-          let
-            conf = import confPath;
-          in
-            if confAttr == "" then conf else conf.''${confAttr};
-        pkgs = pkgs;
-      };
-    in
-      {
-        inherit (env) activationPackage;
-      }
-  '';
-
   modulesPathStr = if modulesPath == null then "" else modulesPath;
 
 in
@@ -42,7 +24,7 @@ pkgs.stdenv.mkDerivation {
       --subst-var-by bash "${pkgs.bash}" \
       --subst-var-by coreutils "${pkgs.coreutils}" \
       --subst-var-by MODULES_PATH '${modulesPathStr}' \
-      --subst-var-by HOME_MANAGER_EXPR_PATH "${homeManagerExpr}"
+      --subst-var-by HOME_MANAGER_EXPR_PATH "${./home-manager.nix}"
   '';
 
   meta = with pkgs.stdenv.lib; {
