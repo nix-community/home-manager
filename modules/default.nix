@@ -28,6 +28,7 @@ let
     ./programs/ssh.nix
     ./programs/termite.nix
     ./programs/texlive.nix
+    ./programs/vim.nix
     ./programs/zsh.nix
     ./services/dunst.nix
     ./services/gnome-keyring.nix
