@@ -7,6 +7,10 @@ PATH=@coreutils@/bin:$PATH
 
 set -euo pipefail
 
+function errorEcho() {
+    >&2 echo "$*"
+}
+
 # Attempts to set the HOME_MANAGER_CONFIG global variable.
 #
 # If no configuration file can be found then this function will print
@@ -14,7 +18,7 @@ set -euo pipefail
 function setConfigFile() {
     if [[ -v HOME_MANAGER_CONFIG ]] ; then
         if [[ ! -e "$HOME_MANAGER_CONFIG" ]] ; then
-            echo "No configure file found at $HOME_MANAGER_CONFIG"
+            errorEcho "No configure file found at $HOME_MANAGER_CONFIG"
             exit 1
         fi
 
@@ -31,7 +35,7 @@ function setConfigFile() {
         fi
     done
 
-    echo "No configuration file found. " \
+    errorEcho "No configuration file found." \
          "Please create one at ~/.config/nixpkgs/home.nix"
     exit 1
 }
@@ -92,7 +96,7 @@ function doListPackages() {
     if [[ -n "$outPath" ]] ; then
         nix-store -q --references "$outPath" | sed 's/[^-]*-//'
     else
-        echo "No home-manager packages seem to be installed."
+        errorEcho "No home-manager packages seem to be installed."
     fi
 }
 
@@ -143,7 +147,7 @@ while getopts f:I:A:vnh opt; do
             exit 0
             ;;
         *)
-            echo "Unknown option -$OPTARG" >&2
+            errorEcho "Unknown option -$OPTARG"
             doHelp >&2
             exit 1
             ;;
@@ -172,7 +176,7 @@ case "$cmd" in
         doHelp
         ;;
     *)
-        echo "Unknown command: $cmd"
+        errorEcho "Unknown command: $cmd"
         doHelp >&2
         exit 1
         ;;
