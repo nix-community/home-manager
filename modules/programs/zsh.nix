@@ -107,11 +107,6 @@ in
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
         ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
 
-        # Tell zsh how to find installed completions
-        for p in ''${(z)NIX_PROFILES}; do
-          fpath+=($p/share/zsh/site-functions $p/share/zsh/$ZSH_VERSION/functions)
-        done
-
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
 
         ${if cfg.enableCompletion then "autoload -U compinit && compinit" else ""}
