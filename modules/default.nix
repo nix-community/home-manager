@@ -17,6 +17,7 @@ let
     ./programs/browserpass.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
+    ./programs/feh.nix
     ./programs/firefox.nix
     ./programs/git.nix
     ./programs/gnome-terminal.nix
