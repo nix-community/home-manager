@@ -61,8 +61,13 @@ let
     ) env.newsEntries
   );
 
+  # File where each line corresponds to an unread news entry
+  # identifier. If non-empty then the file ends in "\n".
   newsUnreadIdsFile = pkgs.writeText "news-unread-ids" (
-    concatMapStringsSep "\n" (entry: entry.id) newsFiltered
+    let
+      text = concatMapStringsSep "\n" (entry: entry.id) newsFiltered;
+    in
+      text + optionalString (text != "") "\n"
   );
 
   newsInfo = pkgs.writeText "news-info.sh" ''

@@ -194,14 +194,11 @@ function doShowNews() {
             return 1
     esac
 
-    local newsReadIdsFile
-    newsReadIdsFile="$(newsReadIdsFile)"
-
-    local tempNewReadIdsFile
-    tempNewReadIdsFile="$(mktemp -t hm-news-read-ids.XXXXXXXXXX)"
-
-    sort -u "$newsReadIdsFile" "$newsUnreadIdsFile" > "$tempNewReadIdsFile"
-    mv -f "$tempNewReadIdsFile" "$newsReadIdsFile"
+    if [[ -s "$newsUnreadIdsFile" ]]; then
+        local newsReadIdsFile
+        newsReadIdsFile="$(newsReadIdsFile)"
+        cat "$newsUnreadIdsFile" >> "$newsReadIdsFile"
+    fi
 }
 
 function doHelp() {
