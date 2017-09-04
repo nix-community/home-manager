@@ -21,10 +21,14 @@ let
 
   newsReadIds =
     if newsReadIdsFile == null
-    then []
-    else splitString "\n" (fileContents newsReadIdsFile);
+    then {}
+    else
+      let
+        ids = splitString "\n" (fileContents newsReadIdsFile);
+      in
+        builtins.listToAttrs (map (id: { name = id; value = null; }) ids);
 
-  newsIsRead = entry: builtins.elem entry.id newsReadIds;
+  newsIsRead = entry: builtins.hasAttr entry.id newsReadIds;
 
   newsFiltered =
     let
