@@ -77,8 +77,18 @@ function doBuild() {
 function doSwitch() {
     local generation
     local exitCode=0
+    local wrkdir
 
-    generation=$(doBuild "--no-out-link") && $generation/activate || exitCode=1
+    # Build the generation and run the activate script. Note, we
+    # specify an output link si that it is treated as a GC root. This
+    # prevents an unfortunately timed GC from removing the generation
+    # before activation completes.
+    wrkdir="$(mktemp -d)"
+    generation=$(doBuild "-o $wrkdir/result") && $generation/activate || exitCode=1
+
+    # Because the previous command never fails, the script keeps
+    # running and $wrkdir is always removed.
+    rm -r "$wrkdir"
 
     return $exitCode
 }
