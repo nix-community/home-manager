@@ -37,6 +37,36 @@ let
     };
   };
 
+  pluginModule = types.submodule ({ config, ... }: {
+    options = {
+      src = mkOption {
+        type = types.path;
+        description = ''
+          Path to the plugin folder.
+
+          Will be added to <envar>fpath</envar> and <envar>PATH</envar>.
+        '';
+      };
+
+      name = mkOption {
+        type = types.str;
+        description = ''
+          The name of the plugin.
+
+          Don't forget to add <option>file</option>
+          if the script name does not follow convention.
+        '';
+      };
+
+      file = mkOption {
+        type = types.str;
+        description = "The plugin script to source.";
+      };
+    };
+
+    config.file = mkDefault "${config.name}.plugin.zsh";
+  });
+
 in
 
 {
@@ -74,13 +104,43 @@ in
       initExtra = mkOption {
         default = "";
         type = types.lines;
-        description = "Extra commands that should be added to .zshrc.";
+        description = "Extra commands that should be added to <filename>.zshrc</filename>.";
+      };
+
+      plugins = mkOption {
+        type = types.listOf pluginModule;
+        default = [];
+        example = literalExample ''
+          [
+            {
+              # will source zsh-autosuggestions.plugin.zsh
+              name = "zsh-autosuggestions";
+              src = pkgs.fetchFromGitHub {
+                owner = "zsh-users";
+                repo = "zsh-autosuggestions";
+                rev = "v0.4.0";
+                sha256 = "0z6i9wjjklb4lvr7zjhbphibsyx51psv50gm07mbb0kj9058j6kc";
+              };
+            }
+            {
+              name = "enhancd";
+              file = "init.sh";
+              src = pkgs.fetchFromGitHub {
+                owner = "b4b4r07";
+                repo = "enhancd";
+                rev = "v2.2.1";
+                sha256 = "0iqa9j09fwm6nj5rpip87x3hnvbbz9w9ajgm6wkrd5fls8fn8i5g";
+              };
+            }
+          ]
+        '';
+        description = "Plugins to source in <filename>.zshrc</filename>.";
       };
     };
   };
 
-  config = (
-    let
+  config = mkMerge [
+    (let
       aliasesStr = concatStringsSep "\n" (
         mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
       );
@@ -109,15 +169,34 @@ in
 
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
 
-        ${if cfg.enableCompletion then "autoload -U compinit && compinit" else ""}
+        ${concatStrings (map (plugin: ''
+          path+="$HOME/.zsh/plugins/${plugin.name}"
+          fpath+="$HOME/.zsh/plugins/${plugin.name}"
+        '') cfg.plugins)}
+
+        ${optionalString cfg.enableCompletion "autoload -U compinit && compinit"}
         ${optionalString (cfg.enableAutosuggestions)
           "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
         }
+
+        ${concatStrings (map (plugin: ''
+          source "$HOME/.zsh/plugins/${plugin.name}/${plugin.file}"
+        '') cfg.plugins)}
 
         ${aliasesStr}
 
         ${cfg.initExtra}
       '';
-    }
-  );
+    })
+    (mkIf (cfg.plugins != []) {
+      # Many plugins require compinit to be called
+      # but allow the user to opt out.
+      programs.zsh.enableCompletion = mkDefault true;
+
+      home.file = map (plugin: {
+        target = ".zsh/plugins/${plugin.name}";
+        source = plugin.src;
+      }) cfg.plugins;
+    })
+  ];
 }
