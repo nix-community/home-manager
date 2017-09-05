@@ -208,6 +208,9 @@ in
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
         ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
 
+        fpath+="$HOME/.nix-profile/share/zsh/site-functions"
+        fpath+="$HOME/.nix-profile/share/zsh/$ZSH_VERSION/functions"
+
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
 
         ${concatStrings (map (plugin: ''
