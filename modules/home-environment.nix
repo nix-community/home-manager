@@ -124,18 +124,21 @@ in
               '';
             };
 
-            mode = mkOption {
-              type = types.str;
-              default = "444";
-              description = "The permissions to apply to the file.";
+            executable = mkOption {
+              type = types.bool;
+              default = false;
+              description = "Make file executable.";
             };
           };
 
           config = {
             target = mkDefault name;
-            source = mkIf (config.text != null) (
-              mkDefault (pkgs.writeText "home-file" config.text)
-            );
+            source = mkIf (config.text != null)
+                       (mkDefault (pkgs.writeTextFile {
+                          name = "home-file";
+                          text = config.text;
+                          executable = config.executable;
+                        }));
           };
         })
       );
@@ -419,7 +422,7 @@ in
                     mkdir -pv "$(dirname "$out/${v.target}")"
                     ln -sv "${v.source}" "$out/${v.target}"
                   else
-                    install -D -m${v.mode} "${v.source}" "$out/${v.target}"
+                    install -D -m${if v.executable then "+x" else "-x"} "${v.source}" "$out/${v.target}"
                   fi
                 ''
               ) cfg.file
