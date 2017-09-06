@@ -72,7 +72,7 @@ in
     };
 
     home.file.".xsession" = {
-      mode = "555";
+      executable = true;
       text = ''
         if [[ -e "$HOME/.profile" ]]; then
           . "$HOME/.profile"

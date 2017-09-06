@@ -90,6 +90,8 @@ let
     };
   };
 
+  homeFilePattern = "-home-manager-files/";
+
 in
 
 {
@@ -124,19 +126,21 @@ in
               '';
             };
 
-            mode = mkOption {
-              type = types.str;
-              default = "444";
-              description = "The permissions to apply to the file.";
+            executable = mkOption {
+              type = types.bool;
+              default = false;
+              description = "Set file as executable.";
             };
           };
 
           config = {
             target = mkDefault name;
-            source = mkIf (config.text != null) (
-              let name' = "user-etc-" + baseNameOf name;
-              in mkDefault (pkgs.writeText name' config.text)
-            );
+            source = mkIf (config.text != null)
+                       (mkDefault (pkgs.writeTextFile {
+                          name = "home-file";
+                          text = config.text;
+                          executable = config.executable;
+                        }));
           };
         })
       );
@@ -250,7 +254,6 @@ in
     # overwrite an existing file.
     home.activation.checkLinkTargets = dagEntryBefore ["writeBoundary"] (
       let
-        pattern = "-home-manager-files/";
         check = pkgs.writeText "check" ''
           . ${./lib-bash/color-echo.sh}
 
@@ -260,7 +263,7 @@ in
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
-                && ! "$(readlink "$targetPath")" =~ "${pattern}" ]] ; then
+                && ! "$(readlink "$targetPath")" =~ "${homeFilePattern}" ]] ; then
               errorEcho "Existing file '$targetPath' is in the way"
               collision=1
             fi
@@ -286,8 +289,6 @@ in
 
     home.activation.linkGeneration = dagEntryAfter ["writeBoundary"] (
       let
-        pattern = "-home-manager-files/";
-
         link = pkgs.writeText "link" ''
           newGenFiles="$1"
           shift
@@ -310,7 +311,7 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" =~ "${pattern}" ]] ; then
+            elif [[ ! "$(readlink "$targetPath")" =~ "${homeFilePattern}" ]] ; then
               warnEcho "Path '$targetPath' not link into Home Manager generation. Skipping delete."
             else
               $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
@@ -388,7 +389,7 @@ in
             abort ("Dependency cycle in activation script: "
               + builtins.toJSON sortedCommands);
 
-        sf = pkgs.writeText "activation-script" ''
+        activationScript = pkgs.writeScript "activation-script" ''
           #!${pkgs.stdenv.shell}
 
           set -eu
@@ -406,22 +407,44 @@ in
           ${activationCmds}
         '';
 
+        # Make file that gets linked into $HOME.
+        # Copy the file if it doesn't have the required execute permissions,
+        # otherwise link to it.
+        makeHomeFile = file:
+          if file.text != null then
+            # File was created internally and already has the right execute bit.
+            file.source
+          else
+            pkgs.stdenv.mkDerivation {
+              name = "home-file";
+
+              inherit (file) source executable;
+
+              buildCommand = ''
+                if [[ -d $source ]]; then
+                  ln -s $source $out
+                else
+                  [[ -x $source ]] && isExecutable=1 || isExecutable=""
+                  if [[ $isExecutable == executable ]]; then
+                    ln $source $out
+                  else
+                    cp $source $out
+                    chmod ${if file.executable then "+x" else "-x"} $out
+                  fi
+                fi
+              '';
+            };
+
         home-files = pkgs.stdenv.mkDerivation {
           name = "home-manager-files";
 
-          phases = [ "installPhase" ];
-
-          installPhase =
+          buildCommand =
             "mkdir -p $out\n" +
             concatStringsSep "\n" (
               mapAttrsToList (n: v:
                 ''
-                  if [ -d "${v.source}" ]; then
-                    mkdir -pv "$(dirname "$out/${v.target}")"
-                    ln -sv "${v.source}" "$out/${v.target}"
-                  else
-                    install -D -m${v.mode} "${v.source}" "$out/${v.target}"
-                  fi
+                  mkdir -p "$(dirname "$out/${v.target}")"
+                  ln -s $(realpath ${makeHomeFile v}) "$out/${v.target}"
                 ''
               ) cfg.file
             );
@@ -430,10 +453,8 @@ in
         pkgs.stdenv.mkDerivation {
           name = "home-manager-generation";
 
-          phases = [ "installPhase" ];
-
-          installPhase = ''
-            install -D -m755 ${sf} $out/activate
+          buildCommand = ''
+            install -D ${activationScript} $out/activate
 
             substituteInPlace $out/activate \
               --subst-var-by GENERATION_DIR $out

@@ -15,9 +15,7 @@ in
 pkgs.stdenv.mkDerivation {
   name = "home-manager";
 
-  phases = [ "installPhase" ];
-
-  installPhase = ''
+  buildCommand = ''
     install -v -D -m755 ${./home-manager} $out/bin/home-manager
 
     substituteInPlace $out/bin/home-manager \
