@@ -75,7 +75,7 @@ function doBuildAttr() {
 
 function presentNews() {
     local infoFile
-    infoFile=$(doBuildNews -A newsInfo) || return 1
+    infoFile=$(buildNews) || return 1
 
     # shellcheck source=/dev/null
     . "$infoFile"
@@ -170,8 +170,15 @@ function newsReadIdsFile() {
     echo "$path"
 }
 
-function doBuildNews() {
-    doBuildAttr "$*" \
+# Builds news meta information to be sourced into this script.
+#
+# Note, we suppress build output to remove unnecessary verbosity. We
+# also use "no out link" to avoid the need for a build directory
+# (although this exposes the risk of GC removing the result before we
+# manage to source it).
+function buildNews() {
+    doBuildAttr --quiet \
+                --attr newsInfo \
                 --no-out-link \
                 --arg check false \
                 --argstr newsReadIdsFile "$(newsReadIdsFile)"
@@ -179,7 +186,7 @@ function doBuildNews() {
 
 function doShowNews() {
     local infoFile
-    infoFile=$(doBuildNews -A newsInfo) || return 1
+    infoFile=$(buildNews) || return 1
 
     # shellcheck source=/dev/null
     . "$infoFile"
