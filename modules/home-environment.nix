@@ -134,8 +134,7 @@ in
           config = {
             target = mkDefault name;
             source = mkIf (config.text != null) (
-              let name' = "user-etc-" + baseNameOf name;
-              in mkDefault (pkgs.writeText name' config.text)
+              mkDefault (pkgs.writeText "home-file" config.text)
             );
           };
         })
