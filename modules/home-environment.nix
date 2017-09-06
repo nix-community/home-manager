@@ -90,6 +90,8 @@ let
     };
   };
 
+  homeFilePattern = "-home-manager-files/";
+
 in
 
 {
@@ -252,7 +254,6 @@ in
     # overwrite an existing file.
     home.activation.checkLinkTargets = dagEntryBefore ["writeBoundary"] (
       let
-        pattern = "-home-manager-files/";
         check = pkgs.writeText "check" ''
           . ${./lib-bash/color-echo.sh}
 
@@ -262,7 +263,7 @@ in
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
-                && ! "$(readlink "$targetPath")" =~ "${pattern}" ]] ; then
+                && ! "$(readlink "$targetPath")" =~ "${homeFilePattern}" ]] ; then
               errorEcho "Existing file '$targetPath' is in the way"
               collision=1
             fi
@@ -288,8 +289,6 @@ in
 
     home.activation.linkGeneration = dagEntryAfter ["writeBoundary"] (
       let
-        pattern = "-home-manager-files/";
-
         link = pkgs.writeText "link" ''
           newGenFiles="$1"
           shift
@@ -312,7 +311,7 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" =~ "${pattern}" ]] ; then
+            elif [[ ! "$(readlink "$targetPath")" =~ "${homeFilePattern}" ]] ; then
               warnEcho "Path '$targetPath' not link into Home Manager generation. Skipping delete."
             else
               $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
