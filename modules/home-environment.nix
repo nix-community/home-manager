@@ -407,6 +407,34 @@ in
           ${activationCmds}
         '';
 
+        # Make file that gets linked into $HOME.
+        # Copy the file if it doesn't have the required execute permissions,
+        # otherwise link to it.
+        makeHomeFile = file:
+          if file.text != null then
+            # File was created internally and already has the right execute bit.
+            file.source
+          else
+            pkgs.stdenv.mkDerivation {
+              name = "home-file";
+
+              inherit (file) source executable;
+
+              buildCommand = ''
+                if [[ -d $source ]]; then
+                  ln -s $source $out
+                else
+                  [[ -x $source ]] && isExecutable=1 || isExecutable=""
+                  if [[ $isExecutable == executable ]]; then
+                    ln $source $out
+                  else
+                    cp $source $out
+                    chmod ${if file.executable then "+x" else "-x"} $out
+                  fi
+                fi
+              '';
+            };
+
         home-files = pkgs.stdenv.mkDerivation {
           name = "home-manager-files";
 
@@ -415,12 +443,8 @@ in
             concatStringsSep "\n" (
               mapAttrsToList (n: v:
                 ''
-                  if [ -d "${v.source}" ]; then
-                    mkdir -pv "$(dirname "$out/${v.target}")"
-                    ln -sv "${v.source}" "$out/${v.target}"
-                  else
-                    install -D -m${if v.executable then "+x" else "-x"} "${v.source}" "$out/${v.target}"
-                  fi
+                  mkdir -p "$(dirname "$out/${v.target}")"
+                  ln -s $(realpath ${makeHomeFile v}) "$out/${v.target}"
                 ''
               ) cfg.file
             );
