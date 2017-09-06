@@ -411,17 +411,37 @@ in
           name = "home-manager-files";
 
           buildCommand =
-            "mkdir -p $out\n" +
+          # Symlink directories, hardlink files that have the right execute bit
+          # and copy files that need their execute bit changed.
+            ''
+              mkdir -p $out
+
+              function insertFile() {
+                local src=$1
+                local dest="$2"
+                local executable=$3
+
+                mkdir -p "$(dirname "$dest")"
+                if [[ -d $src ]]; then
+                  ln -s $src "$dest"
+                else
+                  [[ -x $src ]] && isExecutable=1 || isExecutable=""
+                  if [[ $isExecutable == $executable ]]; then
+                    ln $src "$dest"
+                  else
+                    cp $src "$dest"
+                    if [[ $executable ]]; then
+                      chmod +x "$dest"
+                    else
+                      chmod -x "$dest"
+                    fi
+                  fi
+                fi
+              }
+            '' +
             concatStringsSep "\n" (
               mapAttrsToList (n: v:
-                ''
-                  if [ -d "${v.source}" ]; then
-                    mkdir -pv "$(dirname "$out/${v.target}")"
-                    ln -sv "${v.source}" "$out/${v.target}"
-                  else
-                    install -D -m${if v.executable then "+x" else "-x"} "${v.source}" "$out/${v.target}"
-                  fi
-                ''
+                ''insertFile ${v.source} "$out/${v.target}" ${builtins.toString v.executable}''
               ) cfg.file
             );
         };
