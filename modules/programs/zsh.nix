@@ -241,9 +241,9 @@ in
           source "$HOME/.zsh/plugins/${plugin.name}/${plugin.file}"
         '') cfg.plugins)}
 
-        ${aliasesStr}
-
         ${cfg.initExtra}
+
+        ${aliasesStr}
       '';
     })
     (mkIf cfg.oh-my-zsh.enable {

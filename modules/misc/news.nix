@@ -108,6 +108,19 @@ in
   config = {
     news.entries = [
       {
+        time = "2017-09-12T13:11:48+00:00";
+        condition = (
+          config.programs.zsh.enable &&
+          config.programs.zsh.shellAliases != {}
+        );
+        message = ''
+          Aliases defined in 'programs.zsh.shellAliases'
+          are now have the highest priority. Such aliases will
+          not be redefined by the code in 'programs.zsh.initExtra'
+          or any external plugins.
+        '';
+      }
+      {
         time = "2017-09-10T22:15:19+00:00";
         condition = config.programs.zsh.enable;
         message = ''
