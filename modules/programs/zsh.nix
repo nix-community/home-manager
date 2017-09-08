@@ -41,12 +41,21 @@ let
     options = {
       src = mkOption {
         type = types.path;
-        description = "Path to the plugin folder. Will be added to <envar>fpath</envar> and <envar>PATH</envar>.";
+        description = ''
+          Path to the plugin folder.
+
+          Will be added to <envar>fpath</envar> and <envar>PATH</envar>.
+        '';
       };
 
       name = mkOption {
         type = types.str;
-        description = "The name of the plugin. Use <option>file</option> instead if the script name does not follow convention.";
+        description = ''
+          The name of the plugin.
+
+          Don't forget to add <option>file</option>
+          if the script name does not follow convention.
+        '';
       };
 
       file = mkOption {
@@ -148,6 +157,7 @@ in
               };
             }
             {
+              name = "enhancd";
               file = "init.sh";
               src = pkgs.fetchFromGitHub {
                 owner = "b4b4r07";
@@ -201,11 +211,11 @@ in
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
 
         ${concatStrings (map (plugin: ''
-          path+="${plugin.src}"
-          fpath+="${plugin.src}"
+          path+="$HOME/.zsh/plugins/${plugin.name}"
+          fpath+="$HOME/.zsh/plugins/${plugin.name}"
         '') cfg.plugins)}
 
-        ${optionalString cfg.enableCompletion "autoload -U compinit && compinit -C"}
+        ${optionalString cfg.enableCompletion "autoload -U compinit && compinit"}
         ${optionalString (cfg.enableAutosuggestions)
           "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
         }
@@ -228,7 +238,7 @@ in
         ''}
 
         ${concatStrings (map (plugin: ''
-          source "${plugin.src}/${plugin.file}"
+          source "$HOME/.zsh/plugins/${plugin.name}/${plugin.file}"
         '') cfg.plugins)}
 
         ${aliasesStr}
@@ -237,10 +247,20 @@ in
       '';
     })
     (mkIf cfg.oh-my-zsh.enable {
+      # Oh-My-Zsh calls compinit already,
+      # calling it twice causes significant slowdown
+      # as all $fpath entries will be traversed again.
       programs.zsh.enableCompletion = mkForce false;
     })
-    (mkIf (builtins.length cfg.plugins > 0) {
+    (mkIf (cfg.plugins != []) {
+      # Many plugins require compinit to be called
+      # but allow the user to opt out.
       programs.zsh.enableCompletion = mkDefault true;
+
+      home.file = map (plugin: {
+        target = ".zsh/plugins/${plugin.name}";
+        source = plugin.src;
+      }) cfg.plugins;
     })
   ];
 }
