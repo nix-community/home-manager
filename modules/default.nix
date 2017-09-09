@@ -70,18 +70,17 @@ let
     config._module.check = check;
   };
 
+  rawModule = lib.evalModules {
+    modules = [ configuration ] ++ modules ++ [ pkgsModule ];
+  };
+
   module = showWarnings (
     let
-      mod = lib.evalModules {
-        modules = [ configuration ] ++ modules ++ [ pkgsModule ];
-      };
-
-      failed = collectFailed mod.config;
-
+      failed = collectFailed rawModule.config;
       failedStr = concatStringsSep "\n" (map (x: "- ${x}") failed);
     in
       if failed == []
-      then mod
+      then rawModule
       else throw "\nFailed assertions:\n${failedStr}"
   );
 
@@ -95,9 +94,9 @@ in
   # For backwards compatibility. Please use activationPackage instead.
   activation-script = module.config.home.activationPackage;
 
-  newsDisplay = module.config.news.display;
+  newsDisplay = rawModule.config.news.display;
   newsEntries =
     sort (a: b: a.time > b.time) (
-      filter (a: a.condition) module.config.news.entries
+      filter (a: a.condition) rawModule.config.news.entries
     );
 }
