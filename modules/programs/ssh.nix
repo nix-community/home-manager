@@ -8,7 +8,7 @@ let
 
   yn = flag: if flag then "yes" else "no";
 
-  matchBlockModule = types.submodule {
+  matchBlockModule = types.submodule ({ name, ... }: {
     options = {
       host = mkOption {
         type = types.str;
@@ -96,7 +96,9 @@ let
         description = "The command to use to connect to the server.";
       };
     };
-  };
+
+    config.host = mkDefault name;
+  });
 
   matchBlockStr = cf: concatStringsSep "\n" (
     ["Host ${cf.host}"]
@@ -154,10 +156,27 @@ in
     };
 
     matchBlocks = mkOption {
-      type = types.listOf matchBlockModule;
+      type = types.loaOf matchBlockModule;
       default = [];
+      example = literalExample ''
+        {
+          "john.example.com" = {
+            hostname = "example.com";
+            user = "john";
+          };
+          foo = {
+            hostname = "example.com";
+            identityFile = "/home/john/.ssh/foo_rsa";
+          };
+        };
+      '';
       description = ''
-        Specify per-host settings.
+        Specify per-host settings. Note, if the order of rules matter
+        then this must be a list. See
+        <citerefentry>
+          <refentrytitle>ssh_config</refentrytitle>
+          <manvolnum>5</manvolnum>
+        </citerefentry>.
       '';
     };
   };
@@ -169,7 +188,9 @@ in
       ControlPath ${cfg.controlPath}
       ControlPersist ${cfg.controlPersist}
 
-      ${concatStringsSep "\n\n" (map matchBlockStr cfg.matchBlocks)}
+      ${concatStringsSep "\n\n" (
+        map matchBlockStr (
+        builtins.attrValues cfg.matchBlocks))}
     '';
   };
 }
