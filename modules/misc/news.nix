@@ -106,35 +106,13 @@ in
   };
 
   config = {
+    # Add news entries in chronological order (i.e., latest time
+    # should be at the bottom of the list). The time should be
+    # formatted as given in the output of
+    #
+    #     date --iso-8601=second --universal
+    #
     news.entries = [
-      {
-        time = "2017-09-12T14:22:18+00:00";
-        message = ''
-          A new service is available: 'services.blueman-applet'.
-        '';
-      }
-      {
-        time = "2017-09-12T13:11:48+00:00";
-        condition = (
-          config.programs.zsh.enable &&
-          config.programs.zsh.shellAliases != {}
-        );
-        message = ''
-          Aliases defined in 'programs.zsh.shellAliases'
-          are now have the highest priority. Such aliases will
-          not be redefined by the code in 'programs.zsh.initExtra'
-          or any external plugins.
-        '';
-      }
-      {
-        time = "2017-09-10T22:15:19+00:00";
-        condition = config.programs.zsh.enable;
-        message = ''
-          Home Manager now offers its own minimal zsh plugin manager
-          under the 'programs.zsh.plugins' option path. By statically
-          sourcing your plugins it achieves no startup overhead.
-        '';
-      }
       {
         time = "2017-09-01T10:56:28+00:00";
         message = ''
@@ -167,6 +145,37 @@ in
           Since this is an experimental feature any positive or
           negative feedback would be greatly appreciated. For example,
           by commenting in https://git.io/v5BJL.
+        '';
+      }
+
+      {
+        time = "2017-09-10T22:15:19+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          Home Manager now offers its own minimal zsh plugin manager
+          under the 'programs.zsh.plugins' option path. By statically
+          sourcing your plugins it achieves no startup overhead.
+        '';
+      }
+
+      {
+        time = "2017-09-12T13:11:48+00:00";
+        condition = (
+          config.programs.zsh.enable &&
+          config.programs.zsh.shellAliases != {}
+        );
+        message = ''
+          Aliases defined in 'programs.zsh.shellAliases'
+          are now have the highest priority. Such aliases will
+          not be redefined by the code in 'programs.zsh.initExtra'
+          or any external plugins.
+        '';
+      }
+
+      {
+        time = "2017-09-12T14:22:18+00:00";
+        message = ''
+          A new service is available: 'services.blueman-applet'.
         '';
       }
     ];
