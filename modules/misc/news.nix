@@ -108,6 +108,15 @@ in
   config = {
     news.entries = [
       {
+        time = "2017-09-10T22:15:19+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          Home Manager now offers its own minimal zsh plugin manager
+          under the 'programs.zsh.plugins' option path. By statically
+          sourcing your plugins it achieves no startup overhead.
+        '';
+      }
+      {
         time = "2017-09-01T10:56:28+00:00";
         message = ''
           Hello! This is a news entry and it represents an

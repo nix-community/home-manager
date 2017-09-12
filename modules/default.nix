@@ -29,7 +29,6 @@ let
     ./programs/htop.nix
     ./programs/info.nix
     ./programs/lesspipe.nix
-    ./programs/oh-my-zsh.nix
     ./programs/ssh.nix
     ./programs/termite.nix
     ./programs/texlive.nix
