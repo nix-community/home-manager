@@ -34,6 +34,7 @@ let
     ./programs/texlive.nix
     ./programs/vim.nix
     ./programs/zsh.nix
+    ./services/blueman-applet.nix
     ./services/dunst.nix
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix
