@@ -6,6 +6,12 @@ let
 
   cfg = config.programs.zsh;
 
+  relToDotDir = file: (optionalString (cfg.dotDir != null) (cfg.dotDir + "/")) + file;
+
+  pluginsDir = if cfg.dotDir != null then
+    relToDotDir "plugins" else ".zsh/plugins";
+
+
   historyModule = types.submodule {
     options = {
       size = mkOption {
@@ -16,7 +22,8 @@ let
 
       path = mkOption {
         type = types.str;
-        default = "$HOME/.zsh_history";
+        default = relToDotDir ".zsh_history";
+        defaultText = ".zsh_history"; # Manual fails to build without this
         description = "History file location";
       };
 
@@ -108,6 +115,17 @@ in
     programs.zsh = {
       enable = mkEnableOption "Z shell (Zsh)";
 
+      dotDir = mkOption {
+        default = null;
+        example = ".config/zsh";
+        description = ''
+          Directory where the zsh configuration and more should be located,
+          relative to the users home directory. The default is the home
+          directory.
+        '';
+        type = types.nullOr types.str;
+      };
+
       shellAliases = mkOption {
         default = {};
         example = { ll = "ls -l"; ".." = "cd .."; };
@@ -190,19 +208,25 @@ in
       envVarsStr = concatStringsSep "\n" (
         mapAttrsToList export config.home.sessionVariables
       );
+
+      zdotdir = if cfg.dotDir == null then null else "$HOME/" + cfg.dotDir;
     in mkIf cfg.enable {
       home.packages = with pkgs; [ zsh ]
         ++ optional cfg.enableCompletion nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
 
+      home.sessionVariables.${if cfg.dotDir != null then "ZDOTDIR" else null} = zdotdir;
+
       home.file.".zshenv".text = ''
         ${optionalString (config.home.sessionVariableSetter == "zsh")
           envVarsStr}
+        ${optionalString (cfg.dotDir != null && config.home.sessionVariableSetter != "zsh")
+          (export "ZDOTDIR" zdotdir)}
       '';
 
-      home.file.".zshrc".text = ''
+      home.file."${relToDotDir ".zshrc"}".text = ''
         ${export "HISTSIZE" cfg.history.size}
-        ${export "HISTFILE" cfg.history.path}
+        ${export "HISTFILE" ("$HOME/" + cfg.history.path)}
 
         setopt HIST_FCNTL_LOCK
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
@@ -214,12 +238,12 @@ in
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
 
         ${concatStrings (map (plugin: ''
-          path+="$HOME/.zsh/plugins/${plugin.name}"
-          fpath+="$HOME/.zsh/plugins/${plugin.name}"
+          path+="$HOME/${pluginsDir}/${plugin.name}"
+          fpath+="$HOME/${pluginsDir}/${plugin.name}"
         '') cfg.plugins)}
 
         ${optionalString cfg.enableCompletion "autoload -U compinit && compinit"}
-        ${optionalString (cfg.enableAutosuggestions)
+        ${optionalString cfg.enableAutosuggestions
           "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
         }
 
@@ -241,7 +265,7 @@ in
         ''}
 
         ${concatStrings (map (plugin: ''
-          source "$HOME/.zsh/plugins/${plugin.name}/${plugin.file}"
+          source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
         '') cfg.plugins)}
 
         ${cfg.initExtra}
@@ -261,7 +285,7 @@ in
       programs.zsh.enableCompletion = mkDefault true;
 
       home.file = map (plugin: {
-        target = ".zsh/plugins/${plugin.name}";
+        target = "${pluginsDir}/${plugin.name}";
         source = plugin.src;
       }) cfg.plugins;
     })
