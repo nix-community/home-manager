@@ -108,6 +108,12 @@ in
   config = {
     news.entries = [
       {
+        time = "2017-09-12T14:22:18+00:00";
+        message = ''
+          New service is available: 'services.blueman-applet'.
+        '';
+      }
+      {
         time = "2017-09-12T13:11:48+00:00";
         condition = (
           config.programs.zsh.enable &&
