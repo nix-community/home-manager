@@ -35,6 +35,7 @@ let
     ./programs/vim.nix
     ./programs/zsh.nix
     ./services/blueman-applet.nix
+    ./services/compton.nix
     ./services/dunst.nix
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix
