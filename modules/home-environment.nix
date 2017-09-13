@@ -416,11 +416,19 @@ in
             concatStringsSep "\n" (
               mapAttrsToList (n: v:
                 ''
+                  target="$(realpath -m "$out/${v.target}")"
+
+                  # Target file must be within $HOME.
+                  if [[ ! "$target" =~ "$out" ]] ; then
+                    echo "Error installing file '${v.target}' outside \$HOME" >&2
+                    exit 1
+                  fi
+
                   if [ -d "${v.source}" ]; then
                     mkdir -pv "$(dirname "$out/${v.target}")"
-                    ln -sv "${v.source}" "$out/${v.target}"
+                    ln -sv "${v.source}" "$target"
                   else
-                    install -D -m${v.mode} "${v.source}" "$out/${v.target}"
+                    install -D -m${v.mode} "${v.source}" "$target"
                   fi
                 ''
               ) cfg.file
