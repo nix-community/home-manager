@@ -46,6 +46,12 @@ in
         '';
         description = "Custom .vimrc lines";
       };
+
+      package = mkOption {
+        type = types.package;
+        description = "Resulting customized vim package";
+        readOnly = true;
+      };
     };
   };
 
@@ -71,7 +77,8 @@ in
       };
 
     in mkIf cfg.enable {
-      home.packages = [ vim ];
+      programs.vim.package = vim;
+      home.packages = [ cfg.package ];
     }
   );
 }
