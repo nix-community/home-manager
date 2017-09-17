@@ -11,6 +11,19 @@ let
   pluginsDir = if cfg.dotDir != null then
     relToDotDir "plugins" else ".zsh/plugins";
 
+  export = n: v: "export ${n}=\"${toString v}\"";
+
+  toEnvVarsStr = vars: concatStringsSep "\n" (
+    mapAttrsToList export vars
+  );
+
+  envVarsStr = toEnvVarsStr config.home.sessionVariables;
+
+  aliasesStr = concatStringsSep "\n" (
+    mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
+  );
+
+  zdotdir = "$HOME/" + cfg.dotDir;
 
   historyModule = types.submodule {
     options = {
@@ -197,32 +210,12 @@ in
     };
   };
 
-  config = mkMerge [
-    (let
-      aliasesStr = concatStringsSep "\n" (
-        mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
-      );
-
-      export = n: v: "export ${n}=\"${toString v}\"";
-
-      envVarsStr = concatStringsSep "\n" (
-        mapAttrsToList export config.home.sessionVariables
-      );
-
-      zdotdir = if cfg.dotDir == null then null else "$HOME/" + cfg.dotDir;
-    in mkIf cfg.enable {
+  config = mkIf cfg.enable (mkMerge [
+    {
       home.packages = with pkgs; [ zsh ]
         ++ optional cfg.enableCompletion nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
 
-      home.sessionVariables.${if cfg.dotDir != null then "ZDOTDIR" else null} = zdotdir;
-
-      home.file.".zshenv".text = ''
-        ${optionalString (config.home.sessionVariableSetter == "zsh")
-          envVarsStr}
-        ${optionalString (cfg.dotDir != null && config.home.sessionVariableSetter != "zsh")
-          (export "ZDOTDIR" zdotdir)}
-      '';
 
       home.file."${relToDotDir ".zshrc"}".text = ''
         ${export "HISTSIZE" cfg.history.size}
@@ -272,6 +265,29 @@ in
 
         ${aliasesStr}
       '';
+    }
+    (mkIf (cfg.dotDir != null) {
+      home.sessionVariables.ZDOTDIR = zdotdir;
+    })
+    (mkIf (config.home.sessionVariableSetter == "zsh" && cfg.dotDir == null) {
+      home.file.".zshenv".text = ''
+        ${envVarsStr}
+      '';
+    })
+    (mkIf (config.home.sessionVariableSetter == "zsh" && cfg.dotDir != null) {
+      # When dotDir is set, only use ~/.zshenv to export ZDOTDIR,
+      # $ZDOTDIR/.zshenv for the rest. This is so that if ZDOTDIR happens to be
+      # already set correctly (by e.g. spawning a zsh inside a zsh), all env
+      # vars still get exported
+      home.file.".zshenv".text = ''
+        ${export "ZDOTDIR" zdotdir}
+        source ${zdotdir}/.zshenv
+      '';
+
+      home.file."${relToDotDir ".zshenv"}".text = ''
+        ${toEnvVarsStr
+          (builtins.removeAttrs config.home.sessionVariables [ "ZDOTDIR" ])}
+      '';
     })
     (mkIf cfg.oh-my-zsh.enable {
       # Oh-My-Zsh calls compinit during initialization,
@@ -289,5 +305,5 @@ in
         source = plugin.src;
       }) cfg.plugins;
     })
-  ];
+  ]);
 }
