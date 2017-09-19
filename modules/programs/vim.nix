@@ -19,7 +19,6 @@ in
         default = null;
         description = "Whether to show line numbers.";
       };
-
       tabSize = mkOption {
         type = types.nullOr types.int;
         default = null; 
@@ -57,7 +56,7 @@ in
 
   config = (
     let
-      optionalBoolean = name: val: optionalString (val != null) (if val then "set ${name}" else "unset ${name}");
+      optionalBoolean = name: val: optionalString (val != null) (if val then "set ${name}" else "set no${name}");
       optionalInteger = name: val: optionalString (val != null) "set ${name}=${toString val}";
       customRC = ''
         ${optionalBoolean "number" cfg.lineNumbers}
