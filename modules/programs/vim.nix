@@ -19,6 +19,11 @@ in
         default = null;
         description = "Whether to show line numbers.";
       };
+      expandTab = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = "Whether to convert tabs into spaces.";
+      };
       tabSize = mkOption {
         type = types.nullOr types.int;
         default = null; 
@@ -60,6 +65,7 @@ in
       optionalInteger = name: val: optionalString (val != null) "set ${name}=${toString val}";
       customRC = ''
         ${optionalBoolean "number" cfg.lineNumbers}
+        ${optionalBoolean "expandtab" cfg.expandTab}
         ${optionalInteger "tabstop" cfg.tabSize}
         ${optionalInteger "shiftwidth" cfg.tabSize}
 
