@@ -87,6 +87,7 @@ in
         systemctl --user import-environment XAUTHORITY
         systemctl --user import-environment XDG_DATA_DIRS
         systemctl --user import-environment XDG_RUNTIME_DIR
+        systemctl --user import-environment XDG_SESSION_ID
 
         systemctl --user start hm-graphical-session.target
 

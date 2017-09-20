@@ -185,6 +185,13 @@ in
           A new service is available: 'services.compton'.
         '';
       }
+
+      {
+        time = "2017-09-20T14:47:14+00:00";
+        message = ''
+          A new service is available: 'services.screen-locker'.
+        '';
+      }
     ];
   };
 }
