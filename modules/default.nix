@@ -44,6 +44,7 @@ let
     ./services/owncloud-client.nix
     ./services/random-background.nix
     ./services/redshift.nix
+    ./services/screen-locker.nix
     ./services/syncthing.nix
     ./services/taffybar.nix
     ./services/tahoe-lafs.nix
