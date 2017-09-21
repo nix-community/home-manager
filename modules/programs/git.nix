@@ -65,34 +65,51 @@ in
       };
 
       extraConfig = mkOption {
-        type = types.lines;
-        default = "";
+        type = types.either types.attrs types.lines;
+        default = {};
         description = "Additional configuration to add.";
+      };
+
+      iniContent = mkOption {
+        type = types.attrsOf types.attrs;
+        internal = true;
       };
     };
   };
 
   config = mkIf cfg.enable (
-    let
-      ini = {
-        user = {
-          name = cfg.userName;
-          email = cfg.userEmail;
-        } // optionalAttrs (cfg.signing != null) {
-          signingKey = cfg.signing.key;
-        };
-      } // optionalAttrs (cfg.signing != null) {
-        commit.gpgSign = cfg.signing.signByDefault;
-        gpg.program = cfg.signing.gpgPath;
-      } // optionalAttrs (cfg.aliases != {}) {
-        alias = cfg.aliases;
-      };
-    in
+    mkMerge [
       {
         home.packages = [ cfg.package ];
 
+        programs.git.iniContent.user = {
+          name = cfg.userName;
+          email = cfg.userEmail;
+        };
+
         home.file.".gitconfig".text =
-          generators.toINI {} ini + "\n" + cfg.extraConfig;
+          generators.toINI {} cfg.iniContent;
       }
+
+      (mkIf (cfg.signing != null) {
+        programs.git.iniContent = {
+          user.signingKey = cfg.signing.key;
+          commit.gpgSign = cfg.signing.signByDefault;
+          gpg.program = cfg.signing.gpgPath;
+        };
+      })
+
+      (mkIf (cfg.aliases != {}) {
+        programs.git.iniContent.alias = cfg.aliases;
+      })
+
+      (mkIf (lib.isAttrs cfg.extraConfig) {
+        programs.git.iniContent = cfg.extraConfig;
+      })
+
+      (mkIf (lib.isString cfg.extraConfig) {
+        home.file.".gitconfig".text = cfg.extraConfig;
+      })
+    ]
   );
 }

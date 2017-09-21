@@ -192,6 +192,34 @@ in
           A new service is available: 'services.screen-locker'.
         '';
       }
+
+      {
+        time = "2017-09-22T12:09:01+00:00";
+        condition = isString config.programs.git.extraConfig;
+        message = ''
+          The 'programs.git.extraConfig' parameter now accepts
+          attributes instead of strings which allows more flexible
+          configuration.
+
+          The string parameter type will be deprecated in the future,
+          please change your configuration file accordingly.
+
+          For example, if your configuration includes
+
+              programs.git.extraConfig = '''
+                [core]
+                editor = vim
+              ''';
+
+          then you can now change it to
+
+              programs.git.extraConfig = {
+                core = {
+                  editor = "vim";
+                };
+              };
+        '';
+      }
     ];
   };
 }
