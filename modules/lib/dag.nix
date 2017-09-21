@@ -7,9 +7,9 @@
 #  - the addition of the function `dagEntryBefore` indicating a
 #    "wanted by" relationship.
 
-with import <nixpkgs/lib/strings.nix>;
-with import <nixpkgs/lib/attrsets.nix>;
-with import <nixpkgs/lib/lists.nix>;
+{ lib }:
+
+with lib;
 
 rec {
 

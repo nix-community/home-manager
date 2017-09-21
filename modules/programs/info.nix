@@ -21,7 +21,7 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-with import ../lib/dag.nix;
+with import ../lib/dag.nix { inherit lib; };
 
 let
   cfg = config.programs.info;
