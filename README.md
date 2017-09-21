@@ -141,6 +141,13 @@ $ home-manager build
 which will create a `result` link to a directory containing an
 activation script and the generated home directory files.
 
+To see available configuration options with descriptions
+and usage examples run
+
+```
+$ man home-configuration.nix
+```
+
 Keeping your ~ safe from harm
 -----------------------------
 
