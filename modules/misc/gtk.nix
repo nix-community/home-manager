@@ -8,7 +8,7 @@ let
   cfg2 = config.gtk.gtk2;
   cfg3 = config.gtk.gtk3;
 
-  toGtk3Ini = (import ../lib/generators.nix).toINI {
+  toGtk3Ini = generators.toINI {
     mkKeyValue = key: value:
       let
         value' =

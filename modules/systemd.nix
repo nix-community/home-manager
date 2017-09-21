@@ -12,7 +12,7 @@ let
       || cfg.targets != {}
       || cfg.timers != {};
 
-  toSystemdIni = (import lib/generators.nix).toINI {
+  toSystemdIni = generators.toINI {
     mkKeyValue = key: value:
       let
         value' =

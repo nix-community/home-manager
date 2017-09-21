@@ -90,7 +90,7 @@ let
     }
   );
 
-  toINI = (import ../lib/generators.nix).toINI { mkKeyValue = mkIniKeyValue; };
+  toDconfIni = generators.toINI { mkKeyValue = mkIniKeyValue; };
 
   mkIniKeyValue = key: value:
     let
@@ -181,14 +181,15 @@ in
     # The dconf service needs to be installed and prepared.
     home.activation.gnomeTerminal = dagEntryAfter ["installPackages"] (
       let
-        sf = pkgs.writeText "gnome-terminal.ini" (toINI (buildIniSet cfg));
+        iniText = toDconfIni (buildIniSet cfg);
+        iniFile = pkgs.writeText "gnome-terminal.ini" iniText;
         dconfPath = "/org/gnome/terminal/legacy/";
       in
         ''
           if [[ -v DRY_RUN ]]; then
-            echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${sf}
+            echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${iniFile}
           else
-            ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${sf}
+            ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}
           fi
         ''
     );

@@ -6,8 +6,6 @@ let
 
   cfg = config.programs.git;
 
-  toINI = (import ../lib/generators.nix).toINI {};
-
   signModule = types.submodule {
     options = {
       key = mkOption {
@@ -93,7 +91,8 @@ in
       {
         home.packages = [ cfg.package ];
 
-        home.file.".gitconfig".text = toINI ini + "\n" + cfg.extraConfig;
+        home.file.".gitconfig".text =
+          generators.toINI {} ini + "\n" + cfg.extraConfig;
       }
   );
 }
