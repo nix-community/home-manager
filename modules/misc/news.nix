@@ -418,6 +418,13 @@ in
           directory.
         '';
       }
+
+      {
+        time = "2017-10-31T11:46:07+00:00";
+        message = ''
+          A new window manager module is available: 'xsession.windowManager.i3'.
+        '';
+      }
     ];
   };
 }
