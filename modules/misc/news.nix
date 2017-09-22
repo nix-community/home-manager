@@ -232,10 +232,27 @@ in
           tool in that NIX_AUTO_INSTALL is not supported.
         '';
       }
+
       {
         time = "2017-09-28T12:39:36+00:00";
         message = ''
           A new program module is available: 'programs.rofi';
+        '';
+      }
+
+      {
+        time = "2017-09-28T21:39:45+00:00";
+        condition =
+          config.xsession.enable
+          && config.xsession.windowManager.usesDeprecated;
+        message = ''
+          The 'xsession.windowManager' option is now deprecated,
+          please use 'xsession.windowManager.command' instead.
+
+          This change was made to prepare for window manager modules
+          under the 'xsession.windowManager' namespace. For example,
+          'xsession.windowManager.xmonad' and
+          'xsession.windowManager.i3'.
         '';
       }
     ];
