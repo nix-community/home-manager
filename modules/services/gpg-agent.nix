@@ -29,10 +29,44 @@ in
         '';
       };
 
+      defaultCacheTtlSsh = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Set the time a cache entry used for SSH keys is valid to the given number of seconds.
+        '';
+      };
+
       enableSshSupport = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether to use the GnuPG key agent for SSH keys.";
+        description = ''
+          Whether to use the GnuPG key agent for SSH keys.
+        '';
+      };
+
+      noGrab = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Tell the pinentry not to grab the keyboard and mouse. This option should in general not be used to avoid X-sniffing attacks.
+        '';
+      };
+
+      disableScDaemon = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Do not make use of the scdaemon tool. This option has the effect of disabling the ability to do smartcard operations.
+        '';
+      };
+
+      writeEnvFile = mkOption {
+        type = types.nullOr types.string;
+        default = null;
+        description = ''
+          Often it is required to connect to the agent from a process not being an inferior of gpg-agent and thus the environment variable with the socket name is not available. To help setting up those variables in other sessions, this option may be used to write the information into file
+        '';
       };
     };
   };
@@ -43,8 +77,20 @@ in
         optional cfg.enableSshSupport
           "enable-ssh-support"
         ++
+        optional cfg.noGrab
+          "no-grab"
+        ++
+        optional cfg.disableScDaemon
+          "disable-scdaemon"
+        ++
         optional (cfg.defaultCacheTtl != null)
           "default-cache-ttl ${toString cfg.defaultCacheTtl}"
+        ++
+        optional (cfg.defaultCacheTtlSsh != null)
+          "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
+        ++
+        optional (cfg.writeEnvFile != null)
+          "write-env-file ${toString cfg.writeEnvFile}"
       );
 
       home.sessionVariables =
