@@ -62,16 +62,11 @@ Currently the easiest way to install Home Manager is as follows:
     depending on whether you are tracking Nixpkgs unstable or version
     17.03.
 
-3.  Add Home Manager to your user's Nixpkgs, for example by adding it
-    to the `packageOverrides` section in your
-    `~/.config/nixpkgs/config.nix` file:
+3.  Add Home Manager to your user's Nixpkgs, for example by symlinking the
+    overlay to `~/.config/nixpkgs/overlays`:
 
-    ```nix
-    {
-      packageOverrides = pkgs: rec {
-        home-manager = import ./home-manager { inherit pkgs; };
-      };
-    }
+    ```console
+    ln -s ~/.config/nixpkgs/home-manager/overlay.nix ~/.config/nixpkgs/overlays/home-manager.nix
     ```
 
 4.  Install the `home-manager` package:
