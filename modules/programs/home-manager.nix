@@ -44,8 +44,8 @@ in
         if nix-env -q | grep -q '^home-manager$' ; then
           $DRY_RUN_CMD nix-env -e home-manager
 
-          echo "You can now remove the 'home-manager' entry in"
-          echo "'~/.config/nixpkgs/config.nix', if you want."
+          echo "You can now remove the 'home-manager' packageOverride"
+          echo "or overlay in '~/.config/nixpkgs/', if you want."
         fi
       '';
   };
