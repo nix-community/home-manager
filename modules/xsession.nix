@@ -9,6 +9,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     xsession = {
       enable = mkEnableOption "X Session";

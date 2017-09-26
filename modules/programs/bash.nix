@@ -9,6 +9,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     programs.bash = {
       enable = mkEnableOption "GNU Bourne-Again SHell";

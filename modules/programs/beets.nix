@@ -9,6 +9,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     programs.beets = {
       settings = mkOption {

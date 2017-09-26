@@ -45,6 +45,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     systemd.user = {
       services = mkOption {

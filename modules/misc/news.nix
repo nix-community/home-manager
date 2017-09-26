@@ -48,6 +48,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     news = {
       display = mkOption {

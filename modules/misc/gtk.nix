@@ -30,6 +30,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     gtk = {
       enable = mkEnableOption "GTK 2/3 configuration";

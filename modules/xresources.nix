@@ -17,6 +17,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     xresources.properties = mkOption {
       type = types.nullOr types.attrs;

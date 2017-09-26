@@ -9,6 +9,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {};
 
   config = mkIf (homeCfg.sessionVariableSetter == "pam") {

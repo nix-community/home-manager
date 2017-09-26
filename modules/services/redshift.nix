@@ -8,7 +8,10 @@ let
 
   cfg = config.services.redshift;
 
-in {
+in
+
+{
+  meta.maintainers = [ maintainers.rycee ];
 
   options.services.redshift = {
     enable = mkOption {

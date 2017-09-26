@@ -3,6 +3,8 @@
 with lib;
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     services.dunst = {
       enable = mkEnableOption "the dunst notification daemon";

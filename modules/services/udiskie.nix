@@ -3,6 +3,8 @@
 with lib;
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     services.udiskie = {
       enable = mkEnableOption "Udiskie mount daemon";

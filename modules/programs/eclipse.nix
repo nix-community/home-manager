@@ -9,6 +9,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     programs.eclipse = {
       enable = mkEnableOption "Eclipse";

@@ -3,6 +3,8 @@
 with lib;
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     services.keepassx = {
       enable = mkEnableOption "the KeePassX password manager";

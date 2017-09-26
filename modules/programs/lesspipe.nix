@@ -3,6 +3,8 @@
 with lib;
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     programs.lesspipe = {
       enable = mkEnableOption "lesspipe preprocessor for less";

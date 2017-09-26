@@ -93,6 +93,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     home.file = mkOption {
       description = "Attribute set of files to link into the user home.";

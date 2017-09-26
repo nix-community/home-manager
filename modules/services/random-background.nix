@@ -9,6 +9,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     services.random-background = {
       enable = mkEnableOption "random desktop background";

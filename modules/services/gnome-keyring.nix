@@ -9,6 +9,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     services.gnome-keyring = {
       enable = mkEnableOption "GNOME Keyring";

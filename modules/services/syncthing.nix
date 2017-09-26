@@ -3,6 +3,8 @@
 with lib;
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     services.syncthing = {
       enable = mkEnableOption "Syncthing continuous file synchronization";

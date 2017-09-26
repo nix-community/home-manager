@@ -31,6 +31,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     programs.git = {
       enable = mkEnableOption "Git";

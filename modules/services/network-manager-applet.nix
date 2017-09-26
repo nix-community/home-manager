@@ -3,6 +3,8 @@
 with lib;
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     services.network-manager-applet = {
       enable = mkEnableOption "the Network Manager applet";

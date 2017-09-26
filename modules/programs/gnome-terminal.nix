@@ -157,6 +157,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     programs.gnome-terminal = {
       enable = mkEnableOption "Gnome Terminal";

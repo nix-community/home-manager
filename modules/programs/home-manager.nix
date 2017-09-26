@@ -10,6 +10,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     programs.home-manager = {
       enable = mkEnableOption "Home Manager";

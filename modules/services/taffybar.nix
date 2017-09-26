@@ -9,6 +9,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     services.taffybar = {
       enable = mkEnableOption "Taffybar";

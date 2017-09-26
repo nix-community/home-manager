@@ -118,6 +118,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options.programs.ssh = {
     enable = mkEnableOption "SSH client configuration";
 

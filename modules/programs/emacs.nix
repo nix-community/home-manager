@@ -13,6 +13,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     programs.emacs = {
       enable = mkEnableOption "Emacs";

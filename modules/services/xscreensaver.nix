@@ -3,6 +3,8 @@
 with lib;
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     services.xscreensaver = {
       enable = mkEnableOption "XScreenSaver";

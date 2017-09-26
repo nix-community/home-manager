@@ -15,6 +15,8 @@ let
 in
 
 {
+  meta.maintainers = [ maintainers.rycee ];
+
   options = {
     services.gpg-agent = {
       enable = mkEnableOption "GnuPG private key agent";
