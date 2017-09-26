@@ -222,6 +222,16 @@ in
               };
         '';
       }
+
+      {
+        time = "2017-09-27T07:28:54+00:00";
+        message = ''
+          A new program module is available: 'programs.command-not-found'.
+
+          Note, this differs from the NixOS system command-not-found
+          tool in that NIX_AUTO_INSTALL is not supported.
+        '';
+      }
     ];
   };
 }
