@@ -19,6 +19,7 @@ let
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/browserpass.nix
+    ./programs/command-not-found/command-not-found.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
     ./programs/feh.nix
