@@ -39,7 +39,7 @@ Currently the easiest way to install Home Manager is as follows:
 1.  Make sure you have a working Nix installation. If you are not
     using NixOS then you may here have to run
 
-    ```
+    ```console
     $ mkdir -m 0755 -p /nix/var/nix/{profiles,gcroots}/per-user/$USER
     ```
 
@@ -49,13 +49,13 @@ Currently the easiest way to install Home Manager is as follows:
 2.  Clone the Home Manager repository into the `~/.config/nixpkgs`
     directory:
 
-    ```
+    ```console
     $ git clone -b master https://github.com/rycee/home-manager ~/.config/nixpkgs/home-manager
     ```
 
     or
 
-    ```
+    ```console
     $ git clone -b release-17.03 https://github.com/rycee/home-manager ~/.config/nixpkgs/home-manager
     ```
 
@@ -71,7 +71,7 @@ Currently the easiest way to install Home Manager is as follows:
 
 4.  Install the `home-manager` package:
 
-    ```
+    ```console
     $ nix-env -f '<nixpkgs>' -iA home-manager
     installing ‘home-manager’
     ```
@@ -123,13 +123,13 @@ First create a file `~/.config/nixpkgs/home.nix` containing
 
 To activate this configuration you can then run
 
-```
+```console
 $ home-manager switch
 ```
 
 or if you are not feeling so lucky,
 
-```
+```console
 $ home-manager build
 ```
 
@@ -139,7 +139,7 @@ activation script and the generated home directory files.
 To see available configuration options with descriptions
 and usage examples run
 
-```
+```console
 $ man home-configuration.nix
 ```
 
@@ -173,7 +173,7 @@ For example, suppose you have a wonderful, painstakingly created
 to your configuration. Attempting to switch to the generation will
 then result in
 
-```
+```console
 $ home-manager switch
 …
 Activating checkLinkTargets
