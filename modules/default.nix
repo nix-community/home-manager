@@ -30,6 +30,7 @@ let
     ./programs/htop.nix
     ./programs/info.nix
     ./programs/lesspipe.nix
+    ./programs/rofi.nix
     ./programs/ssh.nix
     ./programs/termite.nix
     ./programs/texlive.nix

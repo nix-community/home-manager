@@ -232,6 +232,12 @@ in
           tool in that NIX_AUTO_INSTALL is not supported.
         '';
       }
+      {
+        time = "2017-09-28T12:39:36+00:00";
+        message = ''
+          A new program module is available: 'programs.rofi';
+        '';
+      }
     ];
   };
 }
