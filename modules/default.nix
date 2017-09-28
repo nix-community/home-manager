@@ -35,6 +35,7 @@ let
     ./programs/texlive.nix
     ./programs/vim.nix
     ./programs/zsh.nix
+    ./programs/rofi.nix
     ./services/blueman-applet.nix
     ./services/compton.nix
     ./services/dunst.nix
