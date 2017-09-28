@@ -288,6 +288,13 @@ in
           to your Home Manager configuration.
         '';
       }
+
+      {
+        time = "2017-10-04T18:36:07+00:00";
+        message = ''
+          A new module is available: 'xsession.windowManager.xmonad'.
+        '';
+      }
     ];
   };
 }
