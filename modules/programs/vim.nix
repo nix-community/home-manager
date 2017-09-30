@@ -32,8 +32,8 @@ in
         default = defaultPlugins;
         example = [ "YankRing" ];
         description = ''
-          List of vim plugins to install.
-          For supported plugins see: https://github.com/NixOS/nixpkgs/blob/master/pkgs/misc/vim-plugins/vim-plugin-names
+          List of vim plugins to install. For supported plugins see:
+          <link xlink:href="https://github.com/NixOS/nixpkgs/blob/master/pkgs/misc/vim-plugins/vim-plugin-names"/>.
         '';
       };
 

@@ -105,8 +105,9 @@ let
         type = types.str;
         example = "$HOME/my_customizations";
         description = ''
-          Path to a custom oh-my-zsh package to override config of oh-my-zsh.
-          See: https://github.com/robbyrussell/oh-my-zsh/wiki/Customization
+          Path to a custom oh-my-zsh package to override config of
+          oh-my-zsh. See <link xlink:href="https://github.com/robbyrussell/oh-my-zsh/wiki/Customization"/>
+          for more information.
         '';
       };
 
