@@ -158,7 +158,7 @@ in
       default = null;
       type = types.nullOr types.string;
       example = "Droid Sans Mono 14";
-      description = "Font to use";
+      description = "Font to use.";
     };
 
     scrollbar = mkOption {
@@ -186,7 +186,13 @@ in
     cycle = mkOption {
       default = null;
       type = types.nullOr types.bool;
-      description = "Whether to cycle through the results list";
+      description = "Whether to cycle through the results list.";
+    };
+
+    fullscreen = mkOption {
+      default = null;
+      type = types.nullOr types.bool;
+      description = "Whether to run rofi fullscreen.";
     };
 
     colors = mkOption {
@@ -251,6 +257,7 @@ in
       )}
       ${setOption "terminal" cfg.terminal}
       ${setOption "cycle" cfg.cycle}
+      ${setOption "fullscreen" cfg.fullscreen}
 
       ${setColorScheme cfg.colors}
 
