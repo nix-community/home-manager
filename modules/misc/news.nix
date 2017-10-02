@@ -274,6 +274,20 @@ in
             'programs.vim.settings.shiftwidth'.
         '';
       }
+
+      {
+        time = "2017-10-02T11:15:03+00:00";
+        condition = config.services.udiskie.enable;
+        message = ''
+          The udiskie service now defaults to automatically mounting
+          new devices. Previous behavior was to not automatically
+          mount. To restore this previous behavior add
+
+              services.udiskie.automount = false;
+
+          to your Home Manager configuration.
+        '';
+      }
     ];
   };
 }
