@@ -146,7 +146,7 @@ $ man home-configuration.nix
 Keeping your ~ safe from harm
 -----------------------------
 
-To configure programs and services the Home Manager must write various
+To configure programs and services Home Manager must write various
 things to your home directory. To prevent overwriting any existing
 files when switching to a new generation, Home Manager will attempt to
 detect collisions between existing files and generated files. If any
@@ -207,7 +207,7 @@ in your system configuration and
   # …
 
   xsession.enable = true;
-  xsession.windowManager = "…";
+  xsession.windowManager.command = "…";
 
   # …
 }
