@@ -257,6 +257,13 @@ in
       }
 
       {
+        time = "2017-09-29T12:28:31+00:00";
+        message = ''
+          A new module is available: 'xsession.windowManager.xmonad'.
+        '';
+      }
+
+      {
         time = "2017-09-30T09:44:18+00:00";
         condition = with config.programs.vim;
           enable && (tabSize != null || lineNumbers != null);

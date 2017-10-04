@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 
 with lib;
+with import ./lib/dag.nix { inherit lib; };
 
 let
 
@@ -32,6 +33,9 @@ let
     };
   };
 
+  xmonadModule =
+    import ./services/window-managers/xmonad.nix { inherit pkgs; };
+
 in
 
 {
@@ -46,7 +50,7 @@ in
           types.coercedTo
             types.str
             (command: { inherit command; usesDeprecated = true; })
-            (types.submodule wmBaseModule);
+            (types.submodule [ wmBaseModule xmonadModule ]);
         description = ''
           Window manager start command. DEPRECATED: Use
           <varname>xsession.windowManager.command</varname> instead.
@@ -67,6 +71,28 @@ in
         ("xsession.windowManager is deprecated, "
           + "please use xsession.windowManager.command")
       ];
+    })
+
+    (mkIf (cfg.windowManager.xmonad.enable
+        && cfg.windowManager.xmonad.config != null) {
+      home.file.".xmonad/xmonad.hs".source = cfg.windowManager.xmonad.config;
+
+      home.activation.checkXMonad = dagEntryBefore [ "linkGeneration" ] ''
+        if ! cmp --quiet \
+            "${cfg.windowManager.xmonad.config}" \
+            "$HOME/.xmonad/xmonad.hs"; then
+          _XMONAD_CHANGED=1
+        fi
+      '';
+
+      home.activation.applyXMonad = dagEntryAfter [ "linkGeneration" ] ''
+        if [[ -v _XMONAD_CHANGED ]]; then
+          echo Recompiling Xmonad
+          ${cfg.windowManager.command} --recompile
+          echo Restarting Xmonad
+          ${cfg.windowManager.command} --restart
+        fi
+      '';
     })
 
     {
