@@ -55,6 +55,7 @@ let
     ./systemd.nix
     ./xresources.nix
     ./xsession.nix
+    ./xmonad.nix
     <nixpkgs/nixos/modules/misc/assertions.nix>
     <nixpkgs/nixos/modules/misc/meta.nix>
   ];
