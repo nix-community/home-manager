@@ -19,7 +19,7 @@ will write to your dconf store and cannot tell whether a configuration
 that it is about to be overwrite was from a previous Home Manager
 generation or from manual configuration.
 
-Home Manager targets [NixOS][] unstable and NixOS version 17.03 (the
+Home Manager targets [NixOS][] unstable and NixOS version 17.09 (the
 current stable version), it may or may not work on other Linux
 distributions and NixOS versions.
 
@@ -56,11 +56,11 @@ Currently the easiest way to install Home Manager is as follows:
     or
 
     ```console
-    $ git clone -b release-17.03 https://github.com/rycee/home-manager ~/.config/nixpkgs/home-manager
+    $ git clone -b release-17.09 https://github.com/rycee/home-manager ~/.config/nixpkgs/home-manager
     ```
 
     depending on whether you are tracking Nixpkgs unstable or version
-    17.03.
+    17.09.
 
 3.  Add Home Manager to your user's Nixpkgs, for example by symlinking the
     overlay to `~/.config/nixpkgs/overlays`:
