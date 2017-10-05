@@ -6,6 +6,7 @@ with import ./lib/dag.nix { inherit lib; };
 let
 
   cfg = config.home.file;
+  homeDirectory = config.home.homeDirectory;
 
 in
 
@@ -19,6 +20,7 @@ in
           options = {
             target = mkOption {
               type = types.str;
+              apply = removePrefix (homeDirectory + "/");
               description = ''
                 Path to target file relative to <envar>HOME</envar>.
               '';
