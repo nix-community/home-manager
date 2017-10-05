@@ -96,6 +96,20 @@ in
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
+    home.username = mkOption {
+      type = types.str;
+      defaultText = "$USER";
+      readOnly = true;
+      description = "The user's username";
+    };
+
+    home.homeDirectory = mkOption {
+      type = types.path;
+      defaultText = "$HOME";
+      readOnly = true;
+      description = "The user's home directory";
+    };
+
     home.language = mkOption {
       type = languageSubModule;
       default = {};
@@ -167,6 +181,20 @@ in
   };
 
   config = {
+    assertions = [
+      {
+        assertion = config.home.username != "";
+        message = "Username could not be determined";
+      }
+      {
+        assertion = config.home.homeDirectory != "";
+        message = "Home directory could not be determined";
+      }
+    ];
+
+    home.username = mkDefault (builtins.getEnv "USER");
+    home.homeDirectory = mkDefault (builtins.getEnv "HOME");
+
     home.sessionVariables =
       let
         maybeSet = name: value:
