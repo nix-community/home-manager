@@ -1,0 +1,139 @@
+{ config, lib, pkgs, ... }:
+
+with lib;
+with import ../lib/dag.nix { inherit lib; };
+
+let
+
+  cfg = config.services.polybar;
+
+  configFile = pkgs.writeText "polybar.conf"
+    (generators.toINI {} cfg.config + "\n" + cfg.extraConfig);
+
+  script = ''
+    #!${pkgs.stdenv.shell}
+
+    ${cfg.script}
+  '';
+
+in
+
+{
+  options = {
+    services.polybar = {
+      enable = mkEnableOption "Polybar status bar";
+
+      package = mkOption {
+        type = types.package;
+        default = pkgs.polybar;
+        defaultText = "pkgs.polybar";
+        description = "Polybar package to install.";
+        example =  literalExample ''
+          pkgs.polybar.override {
+            i3GapsSupport = true;
+            alsaSupport = true;
+            iwSupport = true;
+            githubSupport = true;
+          }
+        '';
+      };
+
+      config = mkOption {
+        type = types.coercedTo
+          types.path
+          (p: { "section/base" = { include-file = "${p}"; }; })
+          (types.attrsOf types.attrs);
+        description = ''
+          Polybar configuration. Can be either path to a file, or set of attibutes
+          that will be used to create the final configuration.
+        '';
+        default = {};
+        example = literalExample ''
+          {
+            "bar/top" = {
+              monitor = "\''${env:MONITOR:eDP1}";
+              width = "100%";
+              height = "3%";
+              radius = 0;
+              modules-center = "date";
+            };
+
+            "module/date" = {
+              type = "internal/date";
+              internal = 5;
+              date = "%d.%m.%y";
+              time = "%H:%M";
+              label = "%time%  %date%";
+            };
+          }
+        '';
+      };
+
+      extraConfig = mkOption {
+        type = types.lines;
+        description = "Additional configuration to add.";
+        default = "";
+        example = ''
+          [module/date]
+          type = internal/date
+          interval = 5
+          date = "%d.%m.%y"
+          time = %H:%M
+          format-prefix-foreground = \''${colors.foreground-alt}
+          label = %time%  %date%
+        '';
+      };
+
+      script = mkOption {
+        type = types.lines;
+        description = ''
+          This script will be used to start the polybars.
+          Set all necessary environment variables here and start all bars.
+          It can be assumed that <command>polybar</command> executable is in the <envar>PATH</envar>.
+
+          Note, this script must start all bars in the background and then terminate.
+        '';
+        example = "polybar bar &";
+      };
+    };
+  };
+
+  config = mkIf cfg.enable {
+    home.packages = [ cfg.package ];
+    home.file.".config/polybar/config".source = configFile;
+
+    systemd.user.services.polybar = {
+      Unit = {
+        Description = "Polybar status bar";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "forking";
+        Environment = "PATH=${cfg.package}/bin";
+        ExecStart = ''${pkgs.writeScriptBin "polybar-start" script}/bin/polybar-start'';
+      };
+
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+    };
+
+    home.activation.checkPolybar = dagEntryBefore [ "linkGeneration" ] ''
+      if ! cmp --quiet \
+          "${configFile}" \
+          "$HOME/.config/polybar/config"; then
+        polybarChanged=1
+      fi
+    '';
+
+    home.activation.applyPolybar = dagEntryAfter [ "reloadSystemD" ] ''
+      if [[ -v polybarChanged && -v DISPLAY ]]; then
+        echo "Restarting polybar"
+        systemctl --user restart polybar.service
+      fi
+    '';
+  };
+
+}

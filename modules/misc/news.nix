@@ -295,6 +295,13 @@ in
           A new module is available: 'xsession.windowManager.xmonad'.
         '';
       }
+
+      {
+        time = "2017-10-06T08:21:43+00:00";
+        message = ''
+          A new service is available: 'services.polybar'.
+        '';
+      }
     ];
   };
 }
