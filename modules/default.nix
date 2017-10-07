@@ -16,6 +16,7 @@ let
     ./misc/gtk.nix
     ./misc/news.nix
     ./misc/pam.nix
+    ./config/fonts.nix
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/browserpass.nix
