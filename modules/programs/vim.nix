@@ -9,11 +9,16 @@ let
 
   knownSettings = {
     background = types.enum [ "dark" "light" ];
+    copyindent = types.bool;
     expandtab = types.bool;
+    hidden = types.bool;
     history = types.int;
+    ignorecase = types.bool;
+    modeline = types.bool;
     number = types.bool;
     relativenumber = types.bool;
     shiftwidth = types.int;
+    smartcase = types.bool;
     tabstop = types.int;
   };
 
