@@ -302,6 +302,21 @@ in
           A new service is available: 'services.polybar'.
         '';
       }
+
+      {
+        time = "2017-10-09T16:38:34+00:00";
+        message = ''
+          A new module is available: 'fonts.fontconfig'.
+
+          In particular, the Boolean option
+
+              fonts.fontconfig.enableProfileFonts
+
+          was added for those who do not use NixOS and want to install
+          font packages using 'nix-env' or 'home.packages'. If you are
+          using NixOS then you do not need to enable this option.
+        '';
+      }
     ];
   };
 }
