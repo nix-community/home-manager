@@ -7,8 +7,19 @@ let
 
   cfg = config.services.polybar;
 
+  toPolybarIni = generators.toINI {
+    mkKeyValue = key: value:
+    let
+      value' =
+        if isBool value then (if value then "true" else "false")
+        else if isString value then "\"${value}\""
+        else toString value;
+    in
+      "${key}=${value'}";
+  };
+
   configFile = pkgs.writeText "polybar.conf"
-    (generators.toINI {} cfg.config + "\n" + cfg.extraConfig);
+    (toPolybarIni cfg.config + "\n" + cfg.extraConfig);
 
   script = ''
     #!${pkgs.stdenv.shell}
