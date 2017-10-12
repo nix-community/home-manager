@@ -317,6 +317,17 @@ in
           using NixOS then you do not need to enable this option.
         '';
       }
+
+      {
+        time = "2017-10-12T11:21:45+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          A new option in zsh module is available: 'programs.zsh.sessionVariables'.
+
+          This option can be used to set zsh specific session variables which
+          will be set only on zsh launch.
+        '';
+      }
     ];
   };
 }
