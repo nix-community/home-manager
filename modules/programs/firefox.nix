@@ -36,7 +36,7 @@ in
       enableIcedtea = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether to enable the unfree Google Talk plugin.";
+        description = "Whether to enable the java applet plugin.";
       };
     };
   };
