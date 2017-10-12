@@ -64,6 +64,15 @@ in
         description = "Shell options to set.";
       };
 
+      sessionVariables = mkOption {
+        default = {};
+        type = types.attrs;
+        example = { MAILCHECK = 30; };
+        description = ''
+          Environment variables that will be set for the Bash session.
+        '';
+      };
+
       shellAliases = mkOption {
         default = {};
         example = { ll = "ls -l"; ".." = "cd .."; };
@@ -112,8 +121,16 @@ in
       histControlStr = concatStringsSep ":" cfg.historyControl;
       histIgnoreStr = concatStringsSep ":" cfg.historyIgnore;
 
+      # If Bash is the session variable setter then this is the
+      # attribute set of global session variables, otherwise it is an
+      # empty set.
+      globalEnvVars =
+        optionalAttrs
+          (config.home.sessionVariableSetter == "bash")
+          config.home.sessionVariables;
+
       envVarsStr = concatStringsSep "\n" (
-        mapAttrsToList export config.home.sessionVariables
+        mapAttrsToList export (cfg.sessionVariables // globalEnvVars)
       );
     in mkIf cfg.enable {
       home.file.".bash_profile".text = ''
@@ -129,8 +146,7 @@ in
       home.file.".profile".text = ''
         # -*- mode: sh -*-
 
-        ${optionalString (config.home.sessionVariableSetter == "bash")
-          envVarsStr}
+        ${envVarsStr}
 
         ${cfg.profileExtra}
       '';
