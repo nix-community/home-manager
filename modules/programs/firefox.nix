@@ -33,7 +33,7 @@ in
         default = false;
         description = "Whether to enable the unfree Google Talk plugin.";
       };
-      enableIcedtea = mkOption {
+      enableIcedTea = mkOption {
         type = types.bool;
         default = false;
         description = "Whether to enable the java applet plugin.";
