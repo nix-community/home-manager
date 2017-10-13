@@ -51,7 +51,7 @@ in
         fcfg = setAttrByPath [browserName] {
           enableAdobeFlash = cfg.enableAdobeFlash;
           enableGoogleTalkPlugin = cfg.enableGoogleTalk;
-          icedtea = cfg.enableIcedtea;
+          icedtea = cfg.enableIcedTea;
         };
 
         wrapper = pkgs.wrapFirefox.override {
