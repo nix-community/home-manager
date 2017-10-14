@@ -568,6 +568,52 @@ in
           GTK configurations.
         '';
       }
+
+      {
+        time = "2018-02-06T20:23:34+00:00";
+        message = ''
+          It is now possible to use Home Manager as a NixOS module.
+          This allows you to prepare user environments from the system
+          configuration file, which often is more convenient than
+          using the 'home-manager' tool. It also opens up additional
+          possibilities, for example, to automatically configure user
+          environments in NixOS declarative containers or on systems
+          deployed through NixOps.
+
+          This feature should be considered experimental for now and
+          some critial limitations apply. For example, it is currently
+          not possible to use 'nixos-rebuild build-vm' when using the
+          Home Manager NixOS module. That said, it should be
+          reasonably robust and stable for simpler use cases.
+
+          To make Home Manager available in your NixOS system
+          configuration you can add
+
+              imports = [
+                "''${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
+              ];
+
+          to your 'configuration.nix' file. This will introduce a new
+          NixOS option called 'home-manager.users' whose type is an
+          attribute set mapping user names to Home Manager
+          configurations.
+
+          For example, a NixOS configuration may include the lines
+
+              users.users.eve.isNormalUser = true;
+              home-manager.users.eve = {
+                home.packages = [ pkgs.atool pkgs.httpie ];
+                programs.bash.enable = true;
+              };
+
+          and after a 'nixos-rebuild switch' the user eve's
+          environment should include a basic Bash configuration and
+          the packages atool and httpie.
+
+          More detailed documentation on the intricacies of this new
+          feature is slowly forthcoming.
+        '';
+      }
     ];
   };
 }

@@ -291,6 +291,7 @@ in
     # script's "check" and the "write" phases.
     home.activation.writeBoundary = dag.entryAnywhere "";
 
+    # Install packages to the user environment.
     home.activation.installPackages = dag.entryAfter ["writeBoundary"] ''
       $DRY_RUN_CMD nix-env -i ${cfg.path}
     '';

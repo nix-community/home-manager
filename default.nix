@@ -9,4 +9,6 @@ rec {
   install = import ./home-manager/install.nix {
     inherit home-manager pkgs;
   };
+
+  nixos = import ./nixos;
 }

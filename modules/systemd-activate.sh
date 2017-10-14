@@ -1,14 +1,14 @@
-systemctlPath:
-''
+#!/usr/bin/env bash
+
 function isStartable() {
   local service="$1"
-  [[ $(${systemctlPath} --user show -p RefuseManualStart "$service") == *=no ]]
+  [[ $(systemctl --user show -p RefuseManualStart "$service") == *=no ]]
 }
 
 function isStoppable() {
   if [[ -v oldGenPath ]] ; then
     local service="$1"
-    [[ $(${systemctlPath} --user show -p RefuseManualStop "$service") == *=no ]]
+    [[ $(systemctl --user show -p RefuseManualStop "$service") == *=no ]]
   fi
 }
 
@@ -53,19 +53,19 @@ function systemdPostReload() {
     --old-line-format='-%L' \
     --unchanged-line-format=' %L' \
     "$oldServiceFiles" "$newServiceFiles" \
-    > $servicesDiffFile || true
+    > "$servicesDiffFile" || true
 
-  local -a maybeRestart=( $(grep '^ ' $servicesDiffFile | cut -c2-) )
-  local -a maybeStop=( $(grep '^-' $servicesDiffFile | cut -c2-) )
-  local -a maybeStart=( $(grep '^+' $servicesDiffFile | cut -c2-) )
+  local -a maybeRestart=( $(grep '^ ' "$servicesDiffFile" | cut -c2-) )
+  local -a maybeStop=( $(grep '^-' "$servicesDiffFile" | cut -c2-) )
+  local -a maybeStart=( $(grep '^+' "$servicesDiffFile" | cut -c2-) )
   local -a toRestart=( )
   local -a toStop=( )
   local -a toStart=( )
 
-  for f in ''${maybeRestart[@]} ; do
+  for f in "${maybeRestart[@]}" ; do
     if isStoppable "$f" \
         && isStartable "$f" \
-        && ${systemctlPath} --quiet --user is-active "$f" \
+        && systemctl --quiet --user is-active "$f" \
         && ! cmp --quiet \
             "$oldUserServicePath/$f" \
             "$newUserServicePath/$f" ; then
@@ -73,32 +73,32 @@ function systemdPostReload() {
     fi
   done
 
-  for f in ''${maybeStop[@]} ; do
+  for f in "${maybeStop[@]}" ; do
     if isStoppable "$f" ; then
       toStop+=("$f")
     fi
   done
 
-  for f in ''${maybeStart[@]} ; do
+  for f in "${maybeStart[@]}" ; do
     if isStartable "$f" ; then
       toStart+=("$f")
     fi
   done
 
-  rm -r $workDir
+  rm -r "$workDir"
 
   local sugg=""
 
-  if [[ -n "''${toRestart[@]}" ]] ; then
-    sugg="''${sugg}systemctl --user restart ''${toRestart[@]}\n"
+  if [[ -n "${toRestart[@]}" ]] ; then
+    sugg="${sugg}systemctl --user restart ${toRestart[@]}\n"
   fi
 
-  if [[ -n "''${toStop[@]}" ]] ; then
-    sugg="''${sugg}systemctl --user stop ''${toStop[@]}\n"
+  if [[ -n "${toStop[@]}" ]] ; then
+    sugg="${sugg}systemctl --user stop ${toStop[@]}\n"
   fi
 
-  if [[ -n "''${toStart[@]}" ]] ; then
-    sugg="''${sugg}systemctl --user start ''${toStart[@]}\n"
+  if [[ -n "${toStart[@]}" ]] ; then
+    sugg="${sugg}systemctl --user start ${toStart[@]}\n"
   fi
 
   if [[ -n "$sugg" ]] ; then
@@ -107,6 +107,8 @@ function systemdPostReload() {
   fi
 }
 
-$DRY_RUN_CMD ${systemctlPath} --user daemon-reload
+oldGenPath="$1"
+newGenPath="$2"
+
+$DRY_RUN_CMD systemctl --user daemon-reload
 systemdPostReload
-''
