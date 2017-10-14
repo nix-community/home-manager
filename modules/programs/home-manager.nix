@@ -45,7 +45,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && !config.nixosSubmodule) {
     assertions = [{
       assertion = cfg.path == null || cfg.modulesPath == null;
       message = "Cannot simultaneously use "

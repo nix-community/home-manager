@@ -117,7 +117,9 @@ in
           ++
           (buildServices "timer" cfg.timers)
         );
+    })
 
+    (mkIf (pkgs.stdenv.isLinux && !config.nixosSubmodule) {
       home.activation.reloadSystemD = dagEntryAfter ["linkGeneration"] ''
         function systemdPostReload() {
           local workDir

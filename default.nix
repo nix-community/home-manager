@@ -11,4 +11,6 @@ rec {
       "home-manager-install"
       { propagatedBuildInputs = [ home-manager ]; }
       "";
+
+  nixos = import ./nixos;
 }
