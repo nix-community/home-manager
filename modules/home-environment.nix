@@ -187,6 +187,17 @@ in
       description = "The set of packages to appear in the user environment.";
     };
 
+    home.extraOutputsToInstall = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      example = [ "doc" "info" "devdoc" ];
+      description = ''
+        List of additional package outputs of the packages
+        <varname>home.packages</varname> that should be installed into
+        the user environment.
+      '';
+    };
+
     home.path = mkOption {
       internal = true;
       description = "The derivation installing the user packages.";
@@ -457,6 +468,7 @@ in
       name = "home-manager-path";
 
       paths = cfg.packages;
+      inherit (cfg) extraOutputsToInstall;
 
       meta = {
         description = "Environment of packages installed through home-manager";
