@@ -12,6 +12,7 @@ let
 
   modules = [
     ./home-environment.nix
+    ./files.nix
     ./manual.nix
     ./misc/fontconfig.nix
     ./misc/gtk.nix
