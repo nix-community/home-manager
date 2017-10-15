@@ -31,6 +31,7 @@ let
     ./programs/htop.nix
     ./programs/info.nix
     ./programs/lesspipe.nix
+    ./programs/man.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
     ./programs/termite.nix

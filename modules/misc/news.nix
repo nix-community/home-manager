@@ -328,6 +328,16 @@ in
           will be set only on zsh launch.
         '';
       }
+
+      {
+        time = "2017-10-15T13:59:47+00:00";
+        message = ''
+          A new module is available: 'programs.man'.
+
+          This module is enabled by default and makes sure that manual
+          pages are installed for packages in 'home.packages'.
+        '';
+      }
     ];
   };
 }
