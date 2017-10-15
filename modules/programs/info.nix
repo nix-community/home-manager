@@ -24,6 +24,7 @@ with lib;
 with import ../lib/dag.nix { inherit lib; };
 
 let
+
   cfg = config.programs.info;
 
   # Indexes info files found in this location
@@ -72,6 +73,8 @@ in
       fi
     '';
 
-    home.packages = [infoPkg];
+    home.packages = [ infoPkg ];
+
+    home.extraOutputsToInstall = [ "info" ];
   };
 }
