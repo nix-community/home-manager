@@ -31,7 +31,7 @@ pkgs.stdenv.mkDerivation {
   meta = with pkgs.stdenv.lib; {
     description = "A user environment configurator";
     maintainers = [ maintainers.rycee ];
-    platforms = platforms.linux;
+    platforms = platforms.unix;
     license = licenses.mit;
   };
 }
