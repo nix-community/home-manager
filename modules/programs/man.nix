@@ -16,7 +16,7 @@ with lib;
   };
 
   config = mkIf config.programs.man.enable {
-    home.packages = [ pkgs.man-db ];
+    home.packages = [ pkgs.man ];
     home.extraOutputsToInstall = [ "man" ];
   };
 }
