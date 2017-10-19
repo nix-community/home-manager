@@ -243,16 +243,20 @@ in
             abort ("Dependency cycle in activation script: "
               + builtins.toJSON sortedCommands);
 
+        # Programs that always should be available on the activation
+        # script's PATH.
+        activationBinPaths = lib.makeBinPath [
+          pkgs.bash
+          pkgs.coreutils
+        ];
+
         sf = pkgs.writeText "activation-script" ''
           #!${pkgs.stdenv.shell}
 
           set -eu
           set -o pipefail
 
-          # This code explicitly requires GNU Core Utilities and Bash.
-          # We therefore need to ensure they are prioritized over any
-          # other similarly named tools on the system.
-          export PATH="${pkgs.coreutils}/bin:${pkgs.bash}/bin:$PATH"
+          export PATH="${activationBinPaths}:$PATH"
 
           . ${./lib-bash/color-echo.sh}
 
