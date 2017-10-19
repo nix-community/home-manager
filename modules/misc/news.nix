@@ -338,6 +338,19 @@ in
           pages are installed for packages in 'home.packages'.
         '';
       }
+
+      {
+        time = "2017-10-19T09:33:10+00:00";
+        condition =
+          config.xsession.enable
+          && config.xsession.windowManager.usesDeprecated;
+        message = ''
+          The 'xsession.windowManager' option is deprecated and will
+          be removed on October 31, 2017. To avoid evaluation errors
+          you must change to using 'xsession.windowManager.command'
+          before that date.
+        '';
+      }
     ];
   };
 }
