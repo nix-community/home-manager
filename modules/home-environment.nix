@@ -248,6 +248,12 @@ in
         activationBinPaths = lib.makeBinPath [
           pkgs.bash
           pkgs.coreutils
+          pkgs.diffutils        # For `cmp` and `diff`.
+          pkgs.findutils
+          pkgs.gnugrep
+          pkgs.gnused
+          pkgs.ncurses          # For `tput`.
+          pkgs.nix
         ];
 
         sf = pkgs.writeText "activation-script" ''

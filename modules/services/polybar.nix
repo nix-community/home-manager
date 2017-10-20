@@ -142,7 +142,7 @@ in
     home.activation.applyPolybar = dagEntryAfter [ "reloadSystemD" ] ''
       if [[ -v polybarChanged && -v DISPLAY ]]; then
         echo "Restarting polybar"
-        systemctl --user restart polybar.service
+        ${config.systemd.user.systemctlPath} --user restart polybar.service
       fi
     '';
   };

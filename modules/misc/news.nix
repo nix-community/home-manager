@@ -351,6 +351,25 @@ in
           before that date.
         '';
       }
+
+      {
+        time = "2017-10-20T12:15:27+00:00";
+        condition = with config.systemd.user;
+          services != {} || sockets != {} || targets != {} || timers != {};
+        message = ''
+          Home Manager's interaction with systemd is now done using
+          'systemctl' from Nixpkgs, not the 'systemctl' in '$PATH'.
+
+          If you are using a distribution whose systemd is
+          incompatible with the version in Nixpkgs then you can
+          override this behavior by adding
+
+              systemd.user.systemctlPath = "/usr/bin/systemctl"
+
+          to your configuration. Home Manager will then use your
+          chosen version.
+        '';
+      }
     ];
   };
 }

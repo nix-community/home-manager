@@ -49,6 +49,17 @@ in
 
   options = {
     systemd.user = {
+      systemctlPath = mkOption {
+        default = "${pkgs.systemd}/bin/systemctl";
+        defaultText = "\${pkgs.systemd}/bin/systemctl";
+        type = types.str;
+        description = ''
+          Absolute path to the <command>systemctl</command> tool. This
+          option may need to be set if running Home Manager on a
+          non-NixOS distribution.
+        '';
+      };
+
       services = mkOption {
         default = {};
         type = types.attrs;
@@ -157,7 +168,7 @@ in
           local -a toRestart=( )
 
           for f in ''${maybeRestart[@]} ; do
-            if systemctl --quiet --user is-active "$f" \
+            if ${cfg.systemctlPath} --quiet --user is-active "$f" \
                && ! cmp --quiet \
                    "$oldUserServicePath/$f" \
                    "$newUserServicePath/$f" ; then
@@ -187,7 +198,7 @@ in
           fi
         }
 
-        $DRY_RUN_CMD systemctl --user daemon-reload
+        $DRY_RUN_CMD ${cfg.systemctlPath} --user daemon-reload
         systemdPostReload
       '';
     })

@@ -64,6 +64,8 @@ in
       "${cfg.homeInfoDirLocation}\${INFOPATH:+:}\${INFOPATH}";
 
     home.activation.createHomeInfoDir = dagEntryAfter ["installPackages"] ''
+      oPATH=$PATH
+      export PATH="${lib.makeBinPath [ pkgs.gzip ]}''${PATH:+:}$PATH"
       $DRY_RUN_CMD mkdir -p "${cfg.homeInfoDirLocation}"
       $DRY_RUN_CMD rm -f "${cfg.homeInfoDirLocation}/dir"
       if [[ -d "${homeInfoPath}" ]]; then
@@ -71,6 +73,8 @@ in
           -exec $DRY_RUN_CMD ${infoPkg}/bin/install-info '{}' \
           "${cfg.homeInfoDirLocation}/dir" \;
       fi
+      export PATH="$oPATH"
+      unset oPATH
     '';
 
     home.packages = [ infoPkg ];
