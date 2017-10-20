@@ -189,6 +189,15 @@ in
       type = types.package;
       description = "The package containing the complete activation script.";
     };
+
+    home.extraBuilderCommands = mkOption {
+      type = types.lines;
+      default = "";
+      internal = true;
+      description = ''
+        Extra commands to run in the Home Manager generation builder.
+      '';
+    };
   };
 
   config = {
@@ -284,6 +293,8 @@ in
 
             ln -s ${config.home-files} $out/home-files
             ln -s ${cfg.path} $out/home-path
+
+            ${cfg.extraBuilderCommands}
           '';
         };
 
