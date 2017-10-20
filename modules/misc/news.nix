@@ -410,6 +410,18 @@ in
           automatically whenever you do a switch.
         '';
       }
+
+      {
+        time = "2017-10-23T23:26:17+00:00";
+        message = ''
+          A new module is available: 'nixpkgs'.
+
+          Like the identically named NixOS module, this allows you to
+          set Nixpkgs options and define Nixpkgs overlays. Note, the
+          changes you make here will not automatically apply to Nix
+          commands run outside Home Manager.
+        '';
+      }
     ];
   };
 }
