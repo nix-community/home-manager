@@ -33,6 +33,11 @@ in
         default = false;
         description = "Whether to enable the unfree Google Talk plugin.";
       };
+      enableIcedTea = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Whether to enable the java applet plugin.";
+      };
     };
   };
 
@@ -46,6 +51,7 @@ in
         fcfg = setAttrByPath [browserName] {
           enableAdobeFlash = cfg.enableAdobeFlash;
           enableGoogleTalkPlugin = cfg.enableGoogleTalk;
+          icedtea = cfg.enableIcedTea;
         };
 
         wrapper = pkgs.wrapFirefox.override {
