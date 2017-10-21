@@ -58,6 +58,12 @@ in
         '';
       };
 
+      profileExtra = mkOption {
+        type = types.lines;
+        default = "";
+        description = "Extra shell commands to run before session start.";
+      };
+
       initExtra = mkOption {
         type = types.lines;
         default = "";
@@ -139,14 +145,14 @@ in
         };
       };
 
-      home.file.".xsession" = {
-        mode = "555";
-        text = ''
+      home.file.".xprofile".text = ''
           if [[ -e "$HOME/.profile" ]]; then
             . "$HOME/.profile"
           fi
 
           # If there are any running services from a previous session.
+          # Need to run this in xprofile because the NixOS xsession
+          # script starts up graphical-session.target.
           systemctl --user stop graphical-session.target graphical-session-pre.target
 
           systemctl --user import-environment DBUS_SESSION_BUS_ADDRESS
@@ -156,6 +162,19 @@ in
           systemctl --user import-environment XDG_DATA_DIRS
           systemctl --user import-environment XDG_RUNTIME_DIR
           systemctl --user import-environment XDG_SESSION_ID
+
+          ${cfg.profileExtra}
+
+          export HM_XPROFILE_SOURCED=1
+      '';
+
+      home.file.".xsession" = {
+        mode = "555";
+        text = ''
+          if [[ ! -v HM_XPROFILE_SOURCED ]]; then
+            . ~/.xprofile
+          fi
+          unset HM_XPROFILE_SOURCED
 
           systemctl --user start hm-graphical-session.target
 
