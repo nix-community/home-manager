@@ -9,7 +9,7 @@ with pkgs.lib;
 
 let
 
-  env = import <home-manager> {
+  env = import <home-manager/modules> {
     configuration =
       let
         conf = import confPath;

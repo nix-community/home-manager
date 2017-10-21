@@ -370,6 +370,46 @@ in
           chosen version.
         '';
       }
+
+      {
+        time = "2017-10-23T22:54:33+00:00";
+        condition = config.programs.home-manager.modulesPath != null;
+        message = ''
+          The 'programs.home-manager.modulesPath' option is now
+          deprecated and will be removed on November 24, 2017. Please
+          use the option 'programs.home-manager.path' instead.
+        '';
+      }
+
+      {
+        time = "2017-10-23T23:10:29+00:00";
+        condition = !config.programs.home-manager.enable;
+        message = ''
+          Unfortunately, due to some internal restructuring it is no
+          longer possible to install the home-manager command when
+          having
+
+              home-manager = import ./home-manager { inherit pkgs; };
+
+          in the '~/.config/nixpkgs/config.nix' package override
+          section. Attempting to use the above override will now
+          result in the error "cannot coerce a set to a string".
+
+          To resolve this please delete the override from the
+          'config.nix' file and either link the Home Manager overlay
+
+              $ ln -s ~/.config/nixpkgs/home-manager/overlay.nix \
+                      ~/.config/nixpkgs/overlays/home-manager.nix
+
+          or add
+
+              programs.home-manager.enable = true;
+
+          to your Home Manager configuration. The latter is
+          recommended as the home-manager tool then is updated
+          automatically whenever you do a switch.
+        '';
+      }
     ];
   };
 }

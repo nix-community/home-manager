@@ -40,13 +40,13 @@ function setConfigFile() {
     exit 1
 }
 
-function setHomeManagerModulesPath() {
-    local modulesPath
-    for modulesPath in "@MODULES_PATH@" \
-                       "$HOME/.config/nixpkgs/home-manager/modules" \
-                       "$HOME/.nixpkgs/home-manager/modules" ; do
-        if [[ -e "$modulesPath" ]] ; then
-            export NIX_PATH="$NIX_PATH${NIX_PATH:+:}home-manager=$modulesPath"
+function setHomeManagerNixPath() {
+    local path
+    for path in "@HOME_MANAGER_PATH@" \
+                "$HOME/.config/nixpkgs/home-manager" \
+                "$HOME/.nixpkgs/home-manager" ; do
+        if [[ -e "$path" || "$path" =~ ^https?:// ]] ; then
+            export NIX_PATH="$NIX_PATH${NIX_PATH:+:}home-manager=$path"
             return
         fi
     done
@@ -54,7 +54,7 @@ function setHomeManagerModulesPath() {
 
 function doBuildAttr() {
     setConfigFile
-    setHomeManagerModulesPath
+    setHomeManagerNixPath
 
     local extraArgs="$*"
 
@@ -67,7 +67,7 @@ function doBuildAttr() {
     fi
 
     nix-build \
-        "@HOME_MANAGER_EXPR_PATH@" \
+        "<home-manager/home-manager/home-manager.nix>" \
         $extraArgs \
         --argstr confPath "$HOME_MANAGER_CONFIG" \
         --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
