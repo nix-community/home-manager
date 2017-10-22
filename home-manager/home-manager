@@ -18,7 +18,7 @@ function errorEcho() {
 function setConfigFile() {
     if [[ -v HOME_MANAGER_CONFIG ]] ; then
         if [[ ! -e "$HOME_MANAGER_CONFIG" ]] ; then
-            errorEcho "No configure file found at $HOME_MANAGER_CONFIG"
+            errorEcho "No configuration file found at $HOME_MANAGER_CONFIG"
             exit 1
         fi
 
