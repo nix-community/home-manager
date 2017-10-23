@@ -46,50 +46,62 @@ Currently the easiest way to install Home Manager is as follows:
     since Home Manager uses these directories to manage your profile
     generations. On NixOS these should already be available.
 
-2.  Clone the Home Manager repository into the `~/.config/nixpkgs`
-    directory:
+2.  Assign a temporary variable holding the URL to the appropriate
+    archive. Typically this is
 
     ```console
-    $ git clone -b master https://github.com/rycee/home-manager ~/.config/nixpkgs/home-manager
+    $ HM_PATH=https://github.com/rycee/home-manager/archive/master.tar.gz
     ```
 
     or
 
     ```console
-    $ git clone -b release-17.09 https://github.com/rycee/home-manager ~/.config/nixpkgs/home-manager
+    $ HM_PATH=https://github.com/rycee/home-manager/archive/release-17.09.tar.gz
     ```
 
-    depending on whether you are tracking Nixpkgs unstable or version
-    17.09.
+    depending on whether you follow Nixpkgs unstable or version 17.09.
 
-3.  Add Home Manager to your user's Nixpkgs, for example by symlinking the
-    overlay to `~/.config/nixpkgs/overlays`:
+2.  Create an initial Home Manager configuration file:
 
     ```console
-    $ ln -s ~/.config/nixpkgs/home-manager/overlay.nix ~/.config/nixpkgs/overlays/home-manager.nix
+    $ cat > ~/.config/nixpkgs/home.nix <<EOF
+    {
+      programs.home-manager.enable = true;
+      programs.home-manager.path = $HM_PATH;
+    }
+    EOF
     ```
 
-4.  Install the `home-manager` package:
+3.  Create the first Home Manager generation:
 
     ```console
-    $ nix-env -f '<nixpkgs>' -iA home-manager
-    installing ‘home-manager’
+    $ nix-shell $HM_PATH -A install --run 'home-manager switch'
     ```
+
+    Home Manager should now be active and available in your user
+    environment.
+
+Note, because the `HM_PATH` variable above points to the live Home
+Manager repository you will automatically get updates whenever you
+build a new generation. If you dislike automatic updates then perform
+a Git clone of the desired branch and set `programs.home-manager.path`
+to the absolute path of your clone.
 
 Usage
 -----
 
-The `home-manager` package installs a tool that is conveniently called
-`home-manager`. This tool can apply configurations to your home
+Home Manager is typically managed through the `home-manager` tool.
+This tool can, for example, apply configurations to your home
 directory, list user packages installed by the tool, and list the
 configuration generations.
 
-As an example, let us set up a very simple configuration that installs
-the htop and fortune packages, installs Emacs with a few extra
-packages enabled, installs Firefox with Adobe Flash enabled, and
-enables the user gpg-agent service.
+As an example, let us expand the initial configuration file from the
+installation above to install the htop and fortune packages, install
+Emacs with a few extra packages enabled, install Firefox with Adobe
+Flash enabled, and enable the user gpg-agent service.
 
-First create a file `~/.config/nixpkgs/home.nix` containing
+To satisfy the above setup we should elaborate the
+`~/.config/nixpkgs/home.nix` file as follows:
 
 ```nix
 { pkgs, ... }:
@@ -118,6 +130,11 @@ First create a file `~/.config/nixpkgs/home.nix` containing
     defaultCacheTtl = 1800;
     enableSshSupport = true;
   };
+
+  programs.home-manager = {
+    enable = true;
+    path = "…";
+  };
 }
 ```
 
@@ -136,8 +153,8 @@ $ home-manager build
 which will create a `result` link to a directory containing an
 activation script and the generated home directory files.
 
-To see available configuration options with descriptions
-and usage examples run
+To see available configuration options with descriptions and usage
+examples run
 
 ```console
 $ man home-configuration.nix
