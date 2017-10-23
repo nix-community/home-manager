@@ -72,14 +72,19 @@ let
     in
       fold f res res.config.warnings;
 
+  pluginModule = import (builtins.toPath (builtins.getEnv "HOME_MANAGER_PLUGINS"));
+  pluginArgs =  { inherit pkgs lib; };
+  pluginPkgs = lib.mapAttrs (k: v: v pluginArgs) pluginModule;
+  pluginModules = lib.mapAttrsFlatten (k: v: v.module) pluginPkgs;
+
   pkgsModule = {
-    config._module.args.pkgs = lib.mkForce pkgs;
+    config._module.args.pkgs = lib.mkForce pkgs // pluginPkgs;
     config._module.args.baseModules = modules;
     config._module.check = check;
   };
 
   rawModule = lib.evalModules {
-    modules = [ configuration ] ++ modules ++ [ pkgsModule ];
+    modules = [ configuration ] ++ modules ++ [ pkgsModule ] ++ pluginModules;
   };
 
   module = showWarnings (
