@@ -133,7 +133,7 @@ function doSwitch() {
     local wrkdir
 
     # Build the generation and run the activate script. Note, we
-    # specify an output link si that it is treated as a GC root. This
+    # specify an output link so that it is treated as a GC root. This
     # prevents an unfortunately timed GC from removing the generation
     # before activation completes.
     wrkdir="$(mktemp -d)"
