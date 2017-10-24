@@ -27,7 +27,7 @@ in
   config = mkIf (cfg.settings != {}) {
     home.packages = [ pkgs.beets ];
 
-    home.file.".config/beets/config.yaml".text =
+    xdg.configFile."beets/config.yaml".text =
         builtins.toJSON config.programs.beets.settings;
   };
 }

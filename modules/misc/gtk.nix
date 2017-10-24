@@ -124,10 +124,10 @@ in
             mapAttrsToList formatGtk2Option ini
           ) + "\n" + cfg2.extraConfig;
 
-        home.file.".config/gtk-3.0/settings.ini".text =
+        xdg.configFile."gtk-3.0/settings.ini".text =
           toGtk3Ini { Settings = ini // cfg3.extraConfig; };
 
-        home.file.".config/gtk-3.0/gtk.css".text = cfg3.extraCss;
+        xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
       }
     );
 }

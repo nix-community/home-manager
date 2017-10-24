@@ -111,7 +111,7 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    home.file.".config/polybar/config".source = configFile;
+    xdg.configFile."polybar/config".source = configFile;
 
     systemd.user.services.polybar = {
       Unit = {

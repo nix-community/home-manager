@@ -28,12 +28,12 @@ let
 
       wantedBy = target:
         {
-          name = ".config/systemd/user/${target}.wants/${name}.${style}";
+          name = "systemd/user/${target}.wants/${name}.${style}";
           value = { inherit source; };
         };
     in
       singleton {
-        name = ".config/systemd/user/${name}.${style}";
+        name = "systemd/user/${name}.${style}";
         value = { inherit source; };
       }
       ++
@@ -107,7 +107,7 @@ in
     # If we run under a Linux system we assume that systemd is
     # available, in particular we assume that systemctl is in PATH.
     (mkIf pkgs.stdenv.isLinux {
-      home.file =
+      xdg.configFile =
         listToAttrs (
           (buildServices "service" cfg.services)
           ++
