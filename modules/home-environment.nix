@@ -271,6 +271,8 @@ in
           set -eu
           set -o pipefail
 
+          cd $HOME
+
           export PATH="${activationBinPaths}:$PATH"
 
           . ${./lib-bash/color-echo.sh}
