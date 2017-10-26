@@ -67,7 +67,7 @@ in
     # Without this a file collision error will be printed.
     home.activation.uninstallHomeManager =
       dagEntryBetween [ "installPackages" ] [ "writeBoundary" ] ''
-        if nix-env -q | grep -q '^home-manager$' ; then
+        if nix-env -q | grep -q "^home-manager$" ; then
           $DRY_RUN_CMD nix-env -e home-manager
 
           echo "You can now remove the 'home-manager' packageOverride"
