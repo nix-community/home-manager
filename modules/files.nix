@@ -226,8 +226,8 @@ in
               fi
 
               if [ -d "${v.source}" ]; then
-                mkdir -pv "$(dirname "$out/${v.target}")"
-                ln -sv "${v.source}" "$target"
+                mkdir -p "$(dirname "$out/${v.target}")"
+                ln -s "${v.source}" "$target"
               else
                 install -D -m${v.mode} "${v.source}" "$target"
               fi
