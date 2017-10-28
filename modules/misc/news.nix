@@ -422,6 +422,31 @@ in
           commands run outside Home Manager.
         '';
       }
+
+      {
+        time = "2017-10-28T23:39:55+00:00";
+        message = ''
+          A new module is available: 'xdg'.
+
+          If enabled, this module allows configuration of the XDG base
+          directory paths.
+
+          Whether the module is enabled or not, it also offers the
+          option 'xdg.configFile', which acts much like 'home.file'
+          except the target path is relative to the XDG configuration
+          directory. That is, unless `XDG_CONFIG_HOME` is configured
+          otherwise, the assignment
+
+              xdg.configFile.hello.text = "hello world";
+
+          will result in a file '$HOME/.config/hello'.
+
+          Most modules in Home Manager that previously were hard coded
+          to write configuration to '$HOME/.config' now use this
+          option and will therefore honor the XDG configuration
+          directory.
+        '';
+      }
     ];
   };
 }
