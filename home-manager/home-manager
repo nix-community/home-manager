@@ -26,8 +26,9 @@ function setConfigFile() {
         return
     fi
 
+    local defaultConfFile="${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home.nix"
     local confFile
-    for confFile in "$HOME/.config/nixpkgs/home.nix" \
+    for confFile in "$defaultConfFile" \
                     "$HOME/.nixpkgs/home.nix" ; do
         if [[ -e "$confFile" ]] ; then
             HOME_MANAGER_CONFIG="$confFile"
@@ -36,14 +37,14 @@ function setConfigFile() {
     done
 
     errorEcho "No configuration file found." \
-         "Please create one at ~/.config/nixpkgs/home.nix"
+         "Please create one at $defaultConfFile"
     exit 1
 }
 
 function setHomeManagerNixPath() {
     local path
     for path in "@HOME_MANAGER_PATH@" \
-                "$HOME/.config/nixpkgs/home-manager" \
+                "${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home-manager" \
                 "$HOME/.nixpkgs/home-manager" ; do
         if [[ -e "$path" || "$path" =~ ^https?:// ]] ; then
             export NIX_PATH="$NIX_PATH${NIX_PATH:+:}home-manager=$path"
