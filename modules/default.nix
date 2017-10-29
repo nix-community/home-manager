@@ -19,6 +19,7 @@ let
     ./misc/news.nix
     ./misc/nixpkgs.nix
     ./misc/pam.nix
+    ./misc/xdg.nix
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/browserpass.nix

@@ -310,7 +310,7 @@ in
       optionalString = name: val: lib.optionalString (val != null) "${name} = ${val}";
     in mkIf cfg.enable {
       home.packages = [ pkgs.termite ];
-      home.file.".config/termite/config".text = ''
+      xdg.configFile."termite/config".text = ''
         [options]
         ${optionalBoolean "allow_bold" cfg.allowBold}
         ${optionalBoolean "audible_bell" cfg.audibleBell}

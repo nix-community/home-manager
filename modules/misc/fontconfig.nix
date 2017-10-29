@@ -29,7 +29,7 @@ in
   };
 
   config = mkIf cfg.enableProfileFonts {
-    home.file.".config/fontconfig/conf.d/10-nix-profile-fonts.conf".text = ''
+    xdg.configFile."fontconfig/conf.d/10-nix-profile-fonts.conf".text = ''
       <?xml version='1.0'?>
       <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
       <fontconfig>

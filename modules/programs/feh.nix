@@ -30,7 +30,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.feh ];
 
-    home.file.".config/feh/keys".text = ''
+    xdg.configFile."feh/keys".text = ''
       # Disable default keybindings
       ${concatStringsSep "\n" (mapAttrsToList disableBinding cfg.keybindings)}
 

@@ -71,7 +71,7 @@ in
       }
 
       (mkIf (cfg.settings != {}) {
-        home.file.".config/dunst/dunstrc".text = toDunstIni cfg.settings;
+        xdg.configFile."dunst/dunstrc".text = toDunstIni cfg.settings;
       })
     ]
   );

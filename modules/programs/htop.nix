@@ -290,7 +290,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.htop ];
 
-    home.file.".config/htop/htoprc".text = let
+    xdg.configFile."htop/htoprc".text = let
       leftMeters = map (m: m.kind) cfg.meters.left;
       leftModes = map (m: m.mode) cfg.meters.left;
       rightMeters = map (m: m.kind) cfg.meters.right;
