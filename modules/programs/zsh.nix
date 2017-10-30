@@ -236,6 +236,7 @@ in
       };
 
       home.file."${relToDotDir ".zshenv"}".text = ''
+        typeset -U fpath
         ${envVarsStr}
       '';
 
