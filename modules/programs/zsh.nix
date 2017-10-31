@@ -186,6 +186,24 @@ in
         description = "Extra commands that should be added to <filename>.zshrc</filename>.";
       };
 
+      profileExtra = mkOption {
+        default = "";
+        type = types.lines;
+        description = "Extra commands that should be added to <filename>.zprofile</filename>.";
+      };
+
+      loginExtra = mkOption {
+        default = "";
+        type = types.lines;
+        description = "Extra commands that should be added to <filename>.zlogin</filename>.";
+      };
+
+      logoutExtra = mkOption {
+        default = "";
+        type = types.lines;
+        description = "Extra commands that should be added to <filename>.zlogout</filename>.";
+      };
+
       plugins = mkOption {
         type = types.listOf pluginModule;
         default = [];
@@ -289,6 +307,18 @@ in
         ZSH = "${pkgs.oh-my-zsh}/share/oh-my-zsh";
         ZSH_CACHE_DIR = "\${XDG_CACHE_HOME:-$HOME/.cache}/oh-my-zsh";
       };
+    })
+
+    (mkIf (cfg.profileExtra != "") {
+      home.file."${relToDotDir ".zprofile"}".text = cfg.profileExtra;
+    })
+
+    (mkIf (cfg.loginExtra != "") {
+      home.file."${relToDotDir ".zlogin"}".text = cfg.loginExtra;
+    })
+
+    (mkIf (cfg.logoutExtra != "") {
+      home.file."${relToDotDir ".zlogout"}".text = cfg.logoutExtra;
     })
 
     (mkIf (cfg.dotDir != null) {
