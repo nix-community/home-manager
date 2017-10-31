@@ -6,14 +6,14 @@ let
 
   cfg = config.xdg;
 
-  fileType = basePath: (types.loaOf (types.submodule (
+  fileType = basePathDesc: basePath: (types.loaOf (types.submodule (
     { name, config, ... }: {
       options = {
         target = mkOption {
           type = types.str;
-          apply = p: "${cfg.configHome}/${p}";
+          apply = p: "${basePath}/${p}";
           description = ''
-            Path to target file relative to <varname>${basePath}</varname>.
+            Path to target file relative to <varname>${basePathDesc}</varname>.
           '';
         };
 
@@ -81,7 +81,7 @@ in
     };
 
     configFile = mkOption {
-      type = fileType "xdg.configHome";
+      type = fileType "xdg.configHome" cfg.configHome;
       default = {};
       description = ''
         Attribute set of files to link into the user's XDG
