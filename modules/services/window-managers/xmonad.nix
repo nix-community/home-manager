@@ -1,10 +1,11 @@
-{ pkgs }: { config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
+with import ../../lib/dag.nix { inherit lib; };
 
 let
 
-  cfg = config.xmonad;
+  cfg = config.xsession.windowManager.xmonad;
 
   xmonad = pkgs.xmonad-with-packages.override {
     ghcWithPackages = cfg.haskellPackages.ghcWithPackages;
@@ -19,7 +20,7 @@ in
 
 {
   options = {
-    xmonad = {
+    xsession.windowManager.xmonad = {
       enable = mkEnableOption "xmonad window manager";
 
       haskellPackages = mkOption {
@@ -80,7 +81,32 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    command = "${xmonad}/bin/xmonad";
-  };
+  config = mkIf cfg.enable (mkMerge [
+    {
+      xsession.windowManager.command = "${xmonad}/bin/xmonad";
+    }
+
+    (mkIf (cfg.config != null) {
+      home.file.".xmonad/xmonad.hs".source = cfg.config;
+
+      home.activation.checkXmonad = dagEntryBefore [ "linkGeneration" ] ''
+        if ! cmp --quiet "${cfg.config}" "$HOME/.xmonad/xmonad.hs"; then
+          xmonadChanged=1
+        fi
+      '';
+
+      home.activation.applyXmonad = dagEntryAfter [ "linkGeneration" ] ''
+        if [[ -v xmonadChanged ]]; then
+          echo "Recompiling xmonad"
+          ${config.xsession.windowManager.command} --recompile
+
+          # Attempt to restart xmonad if X is running.
+          if [[ -v DISPLAY ]] ; then
+            echo "Restarting xmonad"
+            ${config.xsession.windowManager.command} --restart
+          fi
+        fi
+      '';
+    })
+  ]);
 }

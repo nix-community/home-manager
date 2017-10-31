@@ -57,6 +57,7 @@ let
     ./services/taffybar.nix
     ./services/tahoe-lafs.nix
     ./services/udiskie.nix
+    ./services/window-managers/xmonad.nix
     ./services/xscreensaver.nix
     ./systemd.nix
     ./xresources.nix

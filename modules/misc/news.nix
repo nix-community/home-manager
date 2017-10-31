@@ -241,22 +241,6 @@ in
       }
 
       {
-        time = "2017-09-28T21:39:45+00:00";
-        condition =
-          config.xsession.enable
-          && config.xsession.windowManager.usesDeprecated;
-        message = ''
-          The 'xsession.windowManager' option is now deprecated,
-          please use 'xsession.windowManager.command' instead.
-
-          This change was made to prepare for window manager modules
-          under the 'xsession.windowManager' namespace. For example,
-          'xsession.windowManager.xmonad' and
-          'xsession.windowManager.i3'.
-        '';
-      }
-
-      {
         time = "2017-09-30T09:44:18+00:00";
         condition = with config.programs.vim;
           enable && (tabSize != null || lineNumbers != null);
@@ -336,19 +320,6 @@ in
 
           This module is enabled by default and makes sure that manual
           pages are installed for packages in 'home.packages'.
-        '';
-      }
-
-      {
-        time = "2017-10-19T09:33:10+00:00";
-        condition =
-          config.xsession.enable
-          && config.xsession.windowManager.usesDeprecated;
-        message = ''
-          The 'xsession.windowManager' option is deprecated and will
-          be removed on October 31, 2017. To avoid evaluation errors
-          you must change to using 'xsession.windowManager.command'
-          before that date.
         '';
       }
 
