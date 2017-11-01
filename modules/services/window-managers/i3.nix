@@ -549,12 +549,12 @@ in
     {
       home.packages = [ cfg.package ];
       xsession.windowManager.command = "${cfg.package}/bin/i3";
-      home.file.".config/i3/config".source = configFile;
+      xdg.configFile."i3/config".source = configFile;
 
       home.activation.checkI3 = dagEntryBefore [ "linkGeneration" ] ''
         if ! cmp --quiet \
             "${configFile}" \
-            "$HOME/.config/i3/config"; then
+            "${config.xdg.configHome}/i3/config"; then
           i3Changed=1
         fi
       '';
