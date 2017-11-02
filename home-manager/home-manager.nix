@@ -11,10 +11,9 @@ let
 
   env = import <home-manager/modules> {
     configuration =
-      let
-        conf = import confPath;
-      in
-        if confAttr == "" then conf else conf.${confAttr};
+      if confAttr == ""
+      then confPath
+      else (import confPath).${confAttr};
     pkgs = pkgs;
     check = check;
   };
