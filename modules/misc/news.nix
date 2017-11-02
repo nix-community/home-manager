@@ -442,6 +442,12 @@ in
           December 6, 2017.
         '';
       }
+      {
+        time = "2017-11-12T00:18:59+00:00";
+        message = ''
+          A new program module is available: 'programs.neovim'.
+        '';
+      }
     ];
   };
 }
