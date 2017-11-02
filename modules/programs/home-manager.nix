@@ -46,6 +46,11 @@ in
   };
 
   config = mkIf cfg.enable {
+    warnings = mkIf (cfg.modulesPath != null) [
+      ("'programs.home-manager.modulesPath' is deprecated, "
+        + "please use 'programs.home-manager.path")
+    ];
+
     assertions = [{
       assertion = cfg.path == null || cfg.modulesPath == null;
       message = "Cannot simultaneously use "
