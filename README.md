@@ -46,6 +46,14 @@ Currently the easiest way to install Home Manager is as follows:
     since Home Manager uses these directories to manage your profile
     generations. On NixOS these should already be available.
 
+    Also make sure that your user is able to build and install Nix
+    packages. For example, you should be able to successfully run a
+    command like `nix-instantiate '<nixpkgs>' -A hello`. For a
+    multi-user install of Nix this means that your user must be
+    covered by the [`allowed-users`][nixAllowedUsers] Nix option. On
+    NixOS you can control this option using the
+    [`nix.allowedUsers`][nixosAllowedUsers] system option.
+
 2.  Assign a temporary variable holding the URL to the appropriate
     archive. Typically this is
 
@@ -61,7 +69,7 @@ Currently the easiest way to install Home Manager is as follows:
 
     depending on whether you follow Nixpkgs unstable or version 17.09.
 
-2.  Create an initial Home Manager configuration file:
+3.  Create an initial Home Manager configuration file:
 
     ```console
     $ cat > ~/.config/nixpkgs/home.nix <<EOF
@@ -72,7 +80,7 @@ Currently the easiest way to install Home Manager is as follows:
     EOF
     ```
 
-3.  Create the first Home Manager generation:
+4.  Create the first Home Manager generation:
 
     ```console
     $ nix-shell $HM_PATH -A install --run 'home-manager switch'
@@ -235,3 +243,5 @@ in your Home Manager configuration.
 [Nix]: https://nixos.org/nix/
 [NixOS]: https://nixos.org/
 [Nixpkgs]: https://nixos.org/nixpkgs/
+[nixAllowedUsers]: https://nixos.org/nix/manual/#conf-allowed-users
+[nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
