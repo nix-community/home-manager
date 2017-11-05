@@ -113,6 +113,11 @@ function presentNews() {
 }
 
 function doBuild() {
+    if [[ ! -w . ]]; then
+        errorEcho "Cannot run build in read-only directory";
+        return 1
+    fi
+
     local newsInfo
     newsInfo=$(buildNews)
 
