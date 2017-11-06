@@ -265,7 +265,7 @@ in
           pkgs.nix
         ];
 
-        sf = pkgs.writeText "activation-script" ''
+        activationScript = pkgs.writeScript "activation-script" ''
           #!${pkgs.stdenv.shell}
 
           set -eu
@@ -286,7 +286,9 @@ in
           phases = [ "installPhase" ];
 
           installPhase = ''
-            install -D -m755 ${sf} $out/activate
+            mkdir -p $out
+
+            cp ${activationScript} $out/activate
 
             substituteInPlace $out/activate \
               --subst-var-by GENERATION_DIR $out
