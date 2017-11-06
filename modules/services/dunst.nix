@@ -16,6 +16,35 @@ let
       "${key}=${value'}";
   };
 
+  themeType = types.submodule {
+    options = {
+      package = mkOption {
+        type = types.package;
+        example = literalExample "pkgs.gnome3.adwaita-icon-theme";
+        description = "Package providing the theme.";
+      };
+
+      name = mkOption {
+        type = types.str;
+        example = "Adwaita";
+        description = "The name of the theme within the package.";
+      };
+
+      size = mkOption {
+        type = types.str;
+        default = "32x32";
+        example = "16x16";
+        description = "The desired icon size.";
+      };
+    };
+  };
+
+  hicolorTheme = {
+    package = pkgs.hicolor_icon_theme;
+    name = "hicolor";
+    size = "32x32";
+  };
+
 in
 
 {
@@ -24,6 +53,12 @@ in
   options = {
     services.dunst = {
       enable = mkEnableOption "the dunst notification daemon";
+
+      iconTheme = mkOption {
+        type = themeType;
+        default = hicolorTheme;
+        description = "Set the icon theme.";
+      };
 
       settings = mkOption {
         type = types.attrsOf types.attrs;
@@ -54,6 +89,52 @@ in
       {
         home.file.".local/share/dbus-1/services/org.knopwob.dunst.service".source =
           "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
+
+        services.dunst.settings.global.icon_folders =
+          let
+            useCustomTheme =
+              cfg.iconTheme.package != hicolorTheme.package
+              || cfg.iconTheme.name != hicolorTheme.name
+              || cfg.iconTheme.size != hicolorTheme.size;
+
+            basePaths = [
+              "/run/current-system/sw"
+              "${config.home.homeDirectory}/.nix-profile"
+              cfg.iconTheme.package
+            ] ++ optional useCustomTheme hicolorTheme.package;
+
+            themes =
+              [
+                cfg.iconTheme
+              ] ++ optional useCustomTheme (
+                hicolorTheme // { size = cfg.iconTheme.size; }
+              );
+
+            categories = [
+              "actions"
+              "animations"
+              "apps"
+              "categories"
+              "devices"
+              "emblems"
+              "emotes"
+              "filesystem"
+              "intl"
+              "mimetypes"
+              "places"
+              "status"
+              "stock"
+            ];
+          in
+            concatStringsSep ":" (
+              concatMap (theme:
+                concatMap (basePath:
+                  map (category:
+                    "${basePath}/share/icons/${theme.name}/${theme.size}/${category}"
+                  ) categories
+                ) basePaths
+              ) themes
+            );
 
         systemd.user.services.dunst = {
           Unit = {
