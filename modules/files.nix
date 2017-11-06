@@ -264,9 +264,7 @@ in
     home-files = pkgs.stdenv.mkDerivation {
       name = "home-manager-files";
 
-      phases = [ "installPhase" ];
-
-      installPhase =
+      buildCommand =
         "mkdir -p $out\n" +
         concatStringsSep "\n" (
           mapAttrsToList (n: v:

@@ -283,9 +283,7 @@ in
         pkgs.stdenv.mkDerivation {
           name = "home-manager-generation";
 
-          phases = [ "installPhase" ];
-
-          installPhase = ''
+          buildCommand = ''
             mkdir -p $out
 
             cp ${activationScript} $out/activate
