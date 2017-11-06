@@ -264,36 +264,57 @@ in
     home-files = pkgs.stdenv.mkDerivation {
       name = "home-manager-files";
 
-      buildCommand =
-        "mkdir -p $out\n" +
-        concatStringsSep "\n" (
-          mapAttrsToList (n: v:
-            let
-              mode =
-                if v.mode != null
-                then v.mode
-                else
-                  if v.executable != null
-                  then (if v.executable then "+x" else "-x")
-                  else "+r";    # Acts as a no-op.
-            in ''
-              target="$(realpath -m "$out/${v.target}")"
+      # Symlink directories and files that have the right execute bit.
+      # Copy files that need their execute bit changed or use the
+      # deprecated 'mode' option.
+      buildCommand = ''
+        mkdir -p $out
 
-              # Target file must be within $HOME.
-              if [[ ! "$target" =~ "$out" ]] ; then
-                echo "Error installing file '${v.target}' outside \$HOME" >&2
-                exit 1
-              fi
+        function insertFile() {
+          local source="$1"
+          local relTarget="$2"
+          local executable="$3"
+          local mode="$4"     # For backwards compatibility.
 
-              if [ -d "${v.source}" ]; then
-                mkdir -p "$(dirname "$out/${v.target}")"
-                ln -s "${v.source}" "$target"
+          # Figure out the real absolute path to the target.
+          local target
+          target="$(realpath -m "$out/$relTarget")"
+
+          # Target path must be within $HOME.
+          if [[ ! $target =~ $out ]] ; then
+            echo "Error installing file '$relTarget' outside \$HOME" >&2
+            exit 1
+          fi
+
+          mkdir -p "$(dirname "$target")"
+          if [[ -d $source ]]; then
+            ln -s "$source" "$target"
+          elif [[ $mode ]]; then
+            install -m "$mode" "$source" "$target"
+          else
+            [[ -x $source ]] && isExecutable=1 || isExecutable=""
+            if [[ $executable == symlink || $isExecutable == $executable ]]; then
+              ln -s "$source" "$target"
+            else
+              cp "$source" "$target"
+              if [[ $executable ]]; then
+                chmod +x "$target"
               else
-                install -D -m${mode} "${v.source}" "$target"
+                chmod -x "$target"
               fi
-            ''
-          ) cfg
-        );
+            fi
+          fi
+        }
+      '' + concatStrings (
+        mapAttrsToList (n: v: ''
+          insertFile "${v.source}" \
+                     "${v.target}" \
+                     "${if v.executable == null
+                        then "symlink"
+                        else builtins.toString v.executable}" \
+                     "${builtins.toString v.mode}"
+        '') cfg
+      );
     };
   };
 }
