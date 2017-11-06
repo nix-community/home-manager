@@ -186,6 +186,8 @@ in
     home-files = pkgs.stdenv.mkDerivation {
       name = "home-manager-files";
 
+      nativeBuildInputs = [ pkgs.xlibs.lndir ];
+
       # Symlink directories and files that have the right execute bit.
       # Copy files that need their execute bit changed or use the
       # deprecated 'mode' option.
@@ -197,6 +199,7 @@ in
           local relTarget="$2"
           local executable="$3"
           local mode="$4"     # For backwards compatibility.
+          local recursive="$5"
 
           # Figure out the real absolute path to the target.
           local target
@@ -210,7 +213,12 @@ in
 
           mkdir -p "$(dirname "$target")"
           if [[ -d $source ]]; then
-            ln -s "$source" "$target"
+            if [[ $recursive ]]; then
+              mkdir -p "$target"
+              lndir -silent "$source" "$target"
+            else
+              ln -s "$source" "$target"
+            fi
           elif [[ $mode ]]; then
             install -m "$mode" "$source" "$target"
           else
@@ -234,7 +242,8 @@ in
                      "${if v.executable == null
                         then "symlink"
                         else builtins.toString v.executable}" \
-                     "${builtins.toString v.mode}"
+                     "${builtins.toString v.mode}" \
+                     "${builtins.toString v.recursive}"
         '') cfg
       );
     };

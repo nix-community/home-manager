@@ -89,6 +89,23 @@ in
             for files created through the <varname>text</varname> option.
           '';
         };
+
+        recursive = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            If the file source is a directory, then this option
+            determines whether the directory should be recursively
+            linked to the target location. This option has no effect
+            if the source is a file.
+            </para><para>
+            If <literal>false</literal> (the default) then the target
+            will be a symbolic link to the source directory. If
+            <literal>true</literal> then the target will be a
+            directory structure matching the source's but whose leafs
+            are symbolic links to the files of the source directory.
+          '';
+        };
       };
 
       config = {
