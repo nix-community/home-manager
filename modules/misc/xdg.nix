@@ -126,13 +126,7 @@ in
     })
 
     {
-      home.file =
-        let
-          f = n: v: {
-            inherit (v) source target;
-            mode = if v.executable then "777" else "444";
-          };
-        in mapAttrsToList f cfg.configFile;
+      home.file = cfg.configFile;
     }
   ];
 }

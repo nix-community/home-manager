@@ -105,7 +105,7 @@ in
     '';
 
     home.file.".xsession" = {
-      mode = "555";
+      executable = true;
       text = ''
         if [[ ! -v HM_XPROFILE_SOURCED ]]; then
           . ~/.xprofile

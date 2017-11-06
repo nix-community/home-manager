@@ -67,16 +67,34 @@ in
             };
 
             mode = mkOption {
-              type = types.str;
-              default = "444";
-              description = "The permissions to apply to the file.";
+              type = types.nullOr types.str;
+              default = null;
+              description = ''
+                The permissions to apply to the file.
+                </para><para>
+                DEPRECATED: use <varname>home.file.&lt;name?&gt;.executable</varname>
+                instead.
+              '';
+            };
+
+            executable = mkOption {
+              type = types.nullOr types.bool;
+              default = null;
+              description = ''
+                Set the execute bit. If <literal>null</literal>, defaults to the mode
+                of the <varname>source</varname> file or to <literal>false</literal>
+                for files created through the <varname>text</varname> option.
+              '';
             };
           };
 
           config = {
             target = mkDefault name;
             source = mkIf (config.text != null) (
-              mkDefault (pkgs.writeText (storeFileName name) config.text)
+              mkDefault (pkgs.writeTextFile {
+                inherit (config) executable text;
+                name = storeFileName name;
+              })
             );
           };
         })
@@ -104,6 +122,19 @@ in
           message = "Source file names must not start with '.': ${badFilesStr}";
         })
     ];
+
+    warnings =
+      let
+        badFiles =
+          map (f: f.target)
+          (filter (f: f.mode != null)
+          (attrValues cfg));
+        badFilesStr = toString badFiles;
+      in
+        mkIf (badFiles != []) [
+          ("The 'mode' field is deprecated for 'home.file', "
+            + "use 'executable' instead: ${badFilesStr}")
+        ];
 
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
@@ -238,7 +269,15 @@ in
         "mkdir -p $out\n" +
         concatStringsSep "\n" (
           mapAttrsToList (n: v:
-            ''
+            let
+              mode =
+                if v.mode != null
+                then v.mode
+                else
+                  if v.executable != null
+                  then (if v.executable then "+x" else "-x")
+                  else "+r";    # Acts as a no-op.
+            in ''
               target="$(realpath -m "$out/${v.target}")"
 
               # Target file must be within $HOME.
@@ -251,7 +290,7 @@ in
                 mkdir -p "$(dirname "$out/${v.target}")"
                 ln -s "${v.source}" "$target"
               else
-                install -D -m${v.mode} "${v.source}" "$target"
+                install -D -m${mode} "${v.source}" "$target"
               fi
             ''
           ) cfg

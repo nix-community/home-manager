@@ -425,6 +425,23 @@ in
           A new window manager module is available: 'xsession.windowManager.i3'.
         '';
       }
+
+      {
+        time = "2017-11-06T13:23:17+00:00";
+        condition = any (f: f.mode != null) (attrValues config.home.file);
+        message = ''
+          The
+
+              home.file.<name?>.mode
+
+          option is now deprecated. Please use
+
+              home.file.<name?>.executable
+
+          instead. The 'mode' option will be completely removed
+          December 6, 2017.
+        '';
+      }
     ];
   };
 }
