@@ -6,55 +6,10 @@ let
 
   cfg = config.xdg;
 
-  fileType = basePathDesc: basePath: (types.loaOf (types.submodule (
-    { name, config, ... }: {
-      options = {
-        target = mkOption {
-          type = types.str;
-          apply = p: "${basePath}/${p}";
-          description = ''
-            Path to target file relative to <varname>${basePathDesc}</varname>.
-          '';
-        };
-
-        text = mkOption {
-          default = null;
-          type = types.nullOr types.lines;
-          description = "Text of the file.";
-        };
-
-        source = mkOption {
-          type = types.path;
-          description = ''
-            Path of the source file. The file name must not start
-            with a period since Nix will not allow such names in
-            the Nix store.
-            </para><para>
-            This may refer to a directory.
-          '';
-        };
-
-        executable = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether the file should be executable.";
-        };
-      };
-
-      config = {
-        target = mkDefault name;
-        source = mkIf (config.text != null) (
-          let
-            file = pkgs.writeTextFile {
-              inherit (config) text executable;
-              name = "user-etc-" + baseNameOf name;
-            };
-          in
-            mkDefault file
-        );
-      };
-    }
-  )));
+  fileType = (import ../lib/file-type.nix {
+    inherit (config.home) homeDirectory;
+    inherit lib pkgs;
+  }).fileType;
 
   defaultCacheHome = "${config.home.homeDirectory}/.cache";
   defaultConfigHome = "${config.home.homeDirectory}/.config";
@@ -81,7 +36,7 @@ in
     };
 
     configFile = mkOption {
-      type = fileType "xdg.configHome" cfg.configHome;
+      type = fileType "<varname>xdg.configHome</varname>" cfg.configHome;
       default = {};
       description = ''
         Attribute set of files to link into the user's XDG
