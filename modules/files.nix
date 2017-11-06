@@ -6,7 +6,16 @@ with import ./lib/dag.nix { inherit lib; };
 let
 
   cfg = config.home.file;
+
   homeDirectory = config.home.homeDirectory;
+
+  fileType = (import lib/file-type.nix {
+    inherit homeDirectory lib pkgs;
+  }).fileType;
+
+  # A symbolic link whose target path matches this pattern will be
+  # considered part of a Home Manager generation.
+  homeFilePattern = "${builtins.storeDir}/*-home-manager-files/*";
 
 in
 
@@ -15,50 +24,7 @@ in
     home.file = mkOption {
       description = "Attribute set of files to link into the user home.";
       default = {};
-      type = types.loaOf (types.submodule (
-        { name, config, ... }: {
-          options = {
-            target = mkOption {
-              type = types.str;
-              apply = removePrefix (homeDirectory + "/");
-              description = ''
-                Path to target file relative to <envar>HOME</envar>.
-              '';
-            };
-
-            text = mkOption {
-              default = null;
-              type = types.nullOr types.lines;
-              description = "Text of the file.";
-            };
-
-            source = mkOption {
-              type = types.path;
-              description = ''
-                Path of the source file. The file name must not start
-                with a period since Nix will not allow such names in
-                the Nix store.
-                </para><para>
-                This may refer to a directory.
-              '';
-            };
-
-            mode = mkOption {
-              type = types.str;
-              default = "444";
-              description = "The permissions to apply to the file.";
-            };
-          };
-
-          config = {
-            target = mkDefault name;
-            source = mkIf (config.text != null) (
-              let name' = "user-etc-" + baseNameOf name;
-              in mkDefault (pkgs.writeText name' config.text)
-            );
-          };
-        })
-      );
+      type = fileType "<envar>HOME</envar>" homeDirectory;
     };
 
     home-files = mkOption {
@@ -83,11 +49,23 @@ in
         })
     ];
 
+    warnings =
+      let
+        badFiles =
+          map (f: f.target)
+          (filter (f: f.mode != null)
+          (attrValues cfg));
+        badFilesStr = toString badFiles;
+      in
+        mkIf (badFiles != []) [
+          ("The 'mode' field is deprecated for 'home.file', "
+            + "use 'executable' instead: ${badFilesStr}")
+        ];
+
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
     home.activation.checkLinkTargets = dagEntryBefore ["writeBoundary"] (
       let
-        pattern = "-home-manager-files/";
         check = pkgs.writeText "check" ''
           . ${./lib-bash/color-echo.sh}
 
@@ -97,7 +75,7 @@ in
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
-                && ! "$(readlink "$targetPath")" =~ "${pattern}" ]] ; then
+                && ! "$(readlink "$targetPath")" == ${homeFilePattern} ]] ; then
               errorEcho "Existing file '$targetPath' is in the way"
               collision=1
             fi
@@ -123,8 +101,6 @@ in
 
     home.activation.linkGeneration = dagEntryAfter ["writeBoundary"] (
       let
-        pattern = "-home-manager-files/";
-
         link = pkgs.writeText "link" ''
           newGenFiles="$1"
           shift
@@ -147,7 +123,7 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" =~ "${pattern}" ]] ; then
+            elif [[ ! "$(readlink "$targetPath")" == ${homeFilePattern} ]] ; then
               warnEcho "Path '$targetPath' not link into Home Manager generation. Skipping delete."
             else
               $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
@@ -210,30 +186,57 @@ in
     home-files = pkgs.stdenv.mkDerivation {
       name = "home-manager-files";
 
-      phases = [ "installPhase" ];
+      # Symlink directories and files that have the right execute bit.
+      # Copy files that need their execute bit changed or use the
+      # deprecated 'mode' option.
+      buildCommand = ''
+        mkdir -p $out
 
-      installPhase =
-        "mkdir -p $out\n" +
-        concatStringsSep "\n" (
-          mapAttrsToList (n: v:
-            ''
-              target="$(realpath -m "$out/${v.target}")"
+        function insertFile() {
+          local source="$1"
+          local relTarget="$2"
+          local executable="$3"
+          local mode="$4"     # For backwards compatibility.
 
-              # Target file must be within $HOME.
-              if [[ ! "$target" =~ "$out" ]] ; then
-                echo "Error installing file '${v.target}' outside \$HOME" >&2
-                exit 1
-              fi
+          # Figure out the real absolute path to the target.
+          local target
+          target="$(realpath -m "$out/$relTarget")"
 
-              if [ -d "${v.source}" ]; then
-                mkdir -p "$(dirname "$out/${v.target}")"
-                ln -s "${v.source}" "$target"
+          # Target path must be within $HOME.
+          if [[ ! $target =~ $out ]] ; then
+            echo "Error installing file '$relTarget' outside \$HOME" >&2
+            exit 1
+          fi
+
+          mkdir -p "$(dirname "$target")"
+          if [[ -d $source ]]; then
+            ln -s "$source" "$target"
+          elif [[ $mode ]]; then
+            install -m "$mode" "$source" "$target"
+          else
+            [[ -x $source ]] && isExecutable=1 || isExecutable=""
+            if [[ $executable == symlink || $isExecutable == $executable ]]; then
+              ln -s "$source" "$target"
+            else
+              cp "$source" "$target"
+              if [[ $executable ]]; then
+                chmod +x "$target"
               else
-                install -D -m${v.mode} "${v.source}" "$target"
+                chmod -x "$target"
               fi
-            ''
-          ) cfg
-        );
+            fi
+          fi
+        }
+      '' + concatStrings (
+        mapAttrsToList (n: v: ''
+          insertFile "${v.source}" \
+                     "${v.target}" \
+                     "${if v.executable == null
+                        then "symlink"
+                        else builtins.toString v.executable}" \
+                     "${builtins.toString v.mode}"
+        '') cfg
+      );
     };
   };
 }
