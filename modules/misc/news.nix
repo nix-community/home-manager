@@ -467,6 +467,33 @@ in
             i3.config.focus.mouseWarping
         '';
       }
+
+      {
+        time = "2017-11-23T00:31:12+00:00";
+        condition =
+          config.gtk.fontName != "_mkMergedOptionModule"
+          || config.gtk.themeName != "_mkMergedOptionModule"
+          || config.gtk.iconThemeName != "_mkMergedOptionModule";
+        message = ''
+          The options
+
+              gtk.fontName, gtk.themeName, and gtk.iconThemeName
+
+          are deprecated and will be removed on December 23, 2017.
+
+          Please use
+
+              gtk.font.name, gtk.theme.name, and gtk.iconTheme.name
+
+          instead. You can find information about these in the manual
+          page.
+
+          This change was made to introduce the options
+          'gtk.font.package', 'gtk.theme.package', and
+          'gtk.iconTheme.package', which allow you to specify the
+          package that provides the font or theme.
+        '';
+      }
     ];
   };
 }

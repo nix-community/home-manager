@@ -27,6 +27,50 @@ let
     in
       "${n} = ${v'}";
 
+  fontType = types.submodule {
+    options = {
+      package = mkOption {
+        type = types.nullOr types.package;
+        default = null;
+        example = literalExample "pkgs.dejavu_fonts";
+        description = ''
+          Package providing the font. This package will be installed
+          to your profile. If <literal>null</literal> then the font
+          is assumed to already be available in your profile.
+        '';
+      };
+
+      name = mkOption {
+        type = types.str;
+        example = "DejaVu Sans 8";
+        description = ''
+          The family name and size of the font within the package.
+        '';
+      };
+    };
+  };
+
+  themeType = types.submodule {
+    options = {
+      package = mkOption {
+        type = types.nullOr types.package;
+        default = null;
+        example = literalExample "pkgs.gnome3.gnome_themes_standard";
+        description = ''
+          Package providing the theme. This package will be installed
+          to your profile. If <literal>null</literal> then the theme
+          is assumed to already be available in your profile.
+        '';
+      };
+
+      name = mkOption {
+        type = types.str;
+        example = "Adwaita";
+        description = "The name of the theme within the package.";
+      };
+    };
+  };
+
 in
 
 {
@@ -36,27 +80,24 @@ in
     gtk = {
       enable = mkEnableOption "GTK 2/3 configuration";
 
-      fontName = mkOption {
-        type = types.nullOr types.str;
+      font = mkOption {
+        type = types.nullOr fontType;
         default = null;
-        example = "DejaVu Sans 8";
         description = ''
           The font to use in GTK+ 2/3 applications.
         '';
       };
 
-      themeName = mkOption {
-        type = types.nullOr types.str;
+      iconTheme = mkOption {
+        type = types.nullOr themeType;
         default = null;
-        example = "Vertex-Dark";
-        description = "The name of the GTK+2/3 theme to use.";
+        description = "The icon theme to use.";
       };
 
-      iconThemeName = mkOption {
-        type = types.nullOr types.str;
+      theme = mkOption {
+        type = types.nullOr themeType;
         default = null;
-        example = "Tango";
-        description = "The name of the icon theme to use.";
+        description = "The GTK+2/3 theme to use.";
       };
 
       gtk2 = mkOption {
@@ -110,15 +151,24 @@ in
     let
       ini =
         optionalAttrs (cfg.fontName != null)
-          { gtk-font-name = cfg.fontName; }
+          { gtk-font-name = cfg.font.name; }
         //
-        optionalAttrs (cfg.themeName != null)
-          { gtk-theme-name = cfg.themeName; }
+        optionalAttrs (cfg.theme != null)
+          { gtk-theme-name = cfg.theme.name; }
         //
-        optionalAttrs (cfg.iconThemeName != null)
-          { gtk-icon-theme-name = cfg.iconThemeName; };
+        optionalAttrs (cfg.iconTheme != null)
+          { gtk-icon-theme-name = cfg.iconTheme.name; };
+
+      optionalPackage = opt:
+        optional (opt != null && opt.package != null) opt.package;
     in
       {
+
+        home.packages =
+          optionalPackage cfg.font
+          ++ optionalPackage cfg.theme
+          ++ optionalPackage cfg.iconTheme;
+
         home.file.".gtkrc-2.0".text =
           concatStringsSep "\n" (
             mapAttrsToList formatGtk2Option ini
@@ -130,4 +180,21 @@ in
         xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
       }
     );
+
+    imports =
+      let
+        name = n: [ "gtk" n ];
+      in [
+        (mkChangedOptionModule (name "fontName") (name "font") (
+          config: { name = getAttrFromPath (name "fontName") config; }
+        ))
+
+        (mkChangedOptionModule (name "themeName") (name "theme") (
+          config: { name = getAttrFromPath (name "themeName") config; }
+        ))
+
+        (mkChangedOptionModule (name "iconThemeName") (name "iconTheme") (
+          config: { name = getAttrFromPath (name "iconThemeName") config; }
+        ))
+      ];
 }
