@@ -52,6 +52,15 @@ in
       '';
     };
 
+    dataFile = mkOption {
+      type = fileType "<varname>xdg.dataHome</varname>" cfg.dataHome;
+      default = {};
+      description = ''
+        Attribute set of files to link into the user's XDG
+        data home.
+      '';
+    };
+
     dataHome = mkOption {
       type = types.path;
       defaultText = "~/.local/share";
@@ -81,7 +90,7 @@ in
     })
 
     {
-      home.file = cfg.configFile;
+      home.file = mkMerge [ cfg.configFile cfg.dataFile ];
     }
   ];
 }
