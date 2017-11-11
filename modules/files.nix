@@ -225,11 +225,26 @@ in
             install -m "$mode" "$source" "$target"
           else
             [[ -x $source ]] && isExecutable=1 || isExecutable=""
-            if [[ $executable == inherit || $isExecutable == $executable ]]; then
+
+            # Link the file into the home file directory if possible,
+            # i.e., if the executable bit of the source is the same we
+            # expect for the target. Otherwise, we copy the file and
+            # set the executable bit to the expected value.
+            #
+            # Note, as a special case we always copy systemd units
+            # because it derives the unit name from the ultimate link
+            # target, which may be a store path with the hash
+            # included.
+            if [[ ($executable == inherit || $isExecutable == $executable) \
+                && $relTarget != *"/systemd/user/"* ]]; then
               ln -s "$source" "$target"
             else
               cp "$source" "$target"
-              if [[ $executable ]]; then
+
+              if [[ $executable == inherit ]]; then
+                # Don't change file mode if it should match the source.
+                :
+              elif [[ $executable ]]; then
                 chmod +x "$target"
               else
                 chmod -x "$target"
