@@ -225,7 +225,7 @@ in
             install -m "$mode" "$source" "$target"
           else
             [[ -x $source ]] && isExecutable=1 || isExecutable=""
-            if [[ $executable == symlink || $isExecutable == $executable ]]; then
+            if [[ $executable == inherit || $isExecutable == $executable ]]; then
               ln -s "$source" "$target"
             else
               cp "$source" "$target"
@@ -242,7 +242,7 @@ in
           insertFile "${v.source}" \
                      "${v.target}" \
                      "${if v.executable == null
-                        then "symlink"
+                        then "inherit"
                         else builtins.toString v.executable}" \
                      "${builtins.toString v.mode}" \
                      "${builtins.toString v.recursive}"
