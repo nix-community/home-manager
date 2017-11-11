@@ -116,10 +116,8 @@ in
           . ${./lib-bash/color-echo.sh}
 
           newGenFiles="$1"
-          oldGenFiles="$2"
-          shift 2
-          for sourcePath in "$@" ; do
-            relativePath="''${sourcePath#$oldGenFiles/}"
+          shift 1
+          for relativePath in "$@" ; do
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath: exists"
@@ -165,8 +163,12 @@ in
             local newGenFiles oldGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
             oldGenFiles="$(readlink -e "$oldGenPath/home-files")"
-            find "$oldGenFiles" -type f -print0 -or -type l -print0 \
-              | xargs -0 bash ${cleanup} "$newGenFiles" "$oldGenFiles"
+
+            # Apply the cleanup script on each leaf in the old
+            # generation. The find command below will print the
+            # relative path of the entry.
+            find "$oldGenFiles" '(' -type f -or -type l ')' -printf '%P\0' \
+              | xargs -0 bash ${cleanup} "$newGenFiles"
           }
 
           if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
