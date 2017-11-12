@@ -76,6 +76,13 @@ in
         type = types.attrsOf types.attrs;
         internal = true;
       };
+
+      ignores = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = [ "*~" "*.swp" ];
+        description = "List of paths that should be globally ignored.";
+      };
     };
   };
 
@@ -89,8 +96,13 @@ in
           email = cfg.userEmail;
         };
 
-        xdg.configFile."git/config".text =
-          generators.toINI {} cfg.iniContent;
+        xdg.configFile = {
+          "git/config".text = generators.toINI {} cfg.iniContent;
+
+          "git/ignore" = mkIf (cfg.ignores != []) {
+            text = concatStringsSep "\n" cfg.ignores + "\n";
+          };
+        };
       }
 
       (mkIf (cfg.signing != null) {
