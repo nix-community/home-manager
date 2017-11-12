@@ -296,6 +296,15 @@ function doHelp() {
 EXTRA_NIX_PATH=()
 HOME_MANAGER_CONFIG_ATTRIBUTE=""
 
+# As a special case, if the user has given --help anywhere on the
+# command line then print help and exit.
+for arg in "$@"; do
+    if [[ $arg == "--help" ]]; then
+        doHelp
+        exit 0
+    fi
+done
+
 while getopts f:I:A:vnh opt; do
     case $opt in
         f)
