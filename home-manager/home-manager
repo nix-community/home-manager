@@ -163,6 +163,39 @@ function doListGens() {
     popd > /dev/null
 }
 
+# Removes linked generations. Takes as arguments identifiers of
+# generations to remove.
+function doRmGenerations() {
+    if [[ -v VERBOSE ]]; then
+        export VERBOSE_ARG="--verbose"
+    else
+        export VERBOSE_ARG=""
+    fi
+
+    if [[ -v DRY_RUN ]] ; then
+        export DRY_RUN_CMD=echo
+    else
+        export DRY_RUN_CMD=""
+    fi
+
+    pushd "/nix/var/nix/profiles/per-user/$USER" > /dev/null
+
+    for generationId in "$@"; do
+        local linkName="home-manager-$generationId-link"
+
+        if [[ ! -e $linkName ]]; then
+            errorEcho "No generation with ID $generationId"
+        elif [[ $linkName == $(readlink home-manager) ]]; then
+            errorEcho "Cannot remove the current generation $generationId"
+        else
+            echo Removing generation $generationId
+            $DRY_RUN_CMD rm $VERBOSE_ARG $linkName
+        fi
+    done
+
+    popd > /dev/null
+}
+
 function doListPackages() {
     local outPath
     outPath="$(nix-env -q --out-path | grep -o '/.*home-manager-path$')"
@@ -242,11 +275,21 @@ function doHelp() {
     echo "  -h           Print this help"
     echo
     echo "Commands"
+    echo
     echo "  help         Print this help"
+    echo
     echo "  build        Build configuration into result directory"
+    echo
     echo "  switch       Build and activate configuration"
+    echo
     echo "  generations  List all home environment generations"
+    echo
+    echo "  remove-generations ID..."
+    echo "      Remove indicated generations. Use 'generations' command to"
+    echo "      find suitable generation numbers."
+    echo
     echo "  packages     List all packages installed in home-manager-path"
+    echo
     echo "  news         Show news entries in a pager"
 }
 
@@ -285,7 +328,8 @@ done
 # Get rid of the options.
 shift "$((OPTIND-1))"
 
-cmd="$*"
+cmd="$1"
+shift 1
 
 case "$cmd" in
     build)
@@ -296,6 +340,9 @@ case "$cmd" in
         ;;
     generations)
         doListGens
+        ;;
+    remove-generations)
+        doRmGenerations "$@"
         ;;
     packages)
         doListPackages
