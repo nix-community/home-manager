@@ -35,6 +35,7 @@ let
     ./programs/info.nix
     ./programs/lesspipe.nix
     ./programs/man.nix
+    ./programs/neovim.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
     ./programs/termite.nix
