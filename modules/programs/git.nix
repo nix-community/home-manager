@@ -76,6 +76,13 @@ in
         type = types.attrsOf types.attrs;
         internal = true;
       };
+
+      ignores = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = [ "*~" "*.swp" ];
+        description = "List of paths that should be globally gitingnore'd.";
+      };
     };
   };
 
@@ -111,6 +118,10 @@ in
 
       (mkIf (lib.isString cfg.extraConfig) {
         xdg.configFile."git/config".text = cfg.extraConfig;
+      })
+
+      (mkIf (cfg.ignores != []) {
+        xdg.configFile."git/ignore".text = builtins.concatStringsSep "\n" cfg.ignores + "\n";
       })
     ]
   );
