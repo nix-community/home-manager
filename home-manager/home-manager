@@ -158,7 +158,8 @@ function doSwitch() {
 function doListGens() {
     pushd "/nix/var/nix/profiles/per-user/$USER" > /dev/null
     ls --color=yes -gG --sort time home-manager-*-link \
-        | cut -d' ' -f 4-
+        | cut -d' ' -f 4- \
+        | sed -E 's/home-manager-([[:digit:]]*)-link/id \1/'
     popd > /dev/null
 }
 
