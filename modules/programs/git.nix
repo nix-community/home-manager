@@ -89,7 +89,7 @@ in
           email = cfg.userEmail;
         };
 
-        home.file.".gitconfig".text =
+        xdg.configFile."git/config".text =
           generators.toINI {} cfg.iniContent;
       }
 
@@ -110,7 +110,7 @@ in
       })
 
       (mkIf (lib.isString cfg.extraConfig) {
-        home.file.".gitconfig".text = cfg.extraConfig;
+        xdg.configFile."git/config".text = cfg.extraConfig;
       })
     ]
   );
