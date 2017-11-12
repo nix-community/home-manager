@@ -29,9 +29,8 @@ in
 
       extraPackages = mkOption {
         default = self: [];
-        example = literalExample ''
-          epkgs: [ epkgs.emms epkgs.magit ]
-        '';
+        defaultText = "epkgs: []";
+        example = literalExample "epkgs: [ epkgs.emms epkgs.magit ]";
         description = "Extra packages available to Emacs.";
       };
     };
