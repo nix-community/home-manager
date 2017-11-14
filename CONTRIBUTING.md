@@ -68,6 +68,15 @@ description if you wish.
 In addition to the above commit message guidelines, try to follow the
 [seven rules][] as much as possible.
 
+### Style guidelines ###
+
+The code in Home Manager should follow the [Nixpkgs syntax
+guidelines][]. Note, we prefer `lowerCamelCase` for variable and
+attribute names with the accepted exception of variables directly
+referencing packages in Nixpkgs which use a hyphenated style. For
+example, the Home Manager option `services.gpg-agent.enableSshSupport`
+references the `gpg-agent` package in Nixpkgs.
+
 ### News ###
 
 Home Manager includes a system for presenting news to the user. When
@@ -125,3 +134,4 @@ If you do have a change worthy of a news entry then please add one in
 [create a pull request]: https://help.github.com/articles/creating-a-pull-request/
 [seven rules]: https://chris.beams.io/posts/git-commit/#seven-rules
 [`news.nix`]: https://github.com/rycee/home-manager/blob/master/modules/misc/news.nix
+[Nixpkgs syntax guidelines]: https://nixos.org/nixpkgs/manual/#sec-syntax
