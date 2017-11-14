@@ -448,6 +448,20 @@ in
           A new program module is available: 'programs.neovim'.
         '';
       }
+      {
+        time = "2017-11-14T19:56:49+00:00";
+        condition = with config.xsession.windowManager; (
+          i3.enable && i3.config != null && i3.config.startup != []
+        );
+        message = ''
+          A new 'notification' option was added to
+          xsession.windowManager.i3.startup submodule.
+
+          Startup commands are now executed with the startup-notification
+          support enabled by default. Please, set 'notification' to false
+          where --no-startup-id option is necessary.
+        '';
+      }
     ];
   };
 }

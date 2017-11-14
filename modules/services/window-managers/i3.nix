@@ -20,6 +20,15 @@ let
         description = "Whether to run command on each i3 restart.";
       };
 
+      notification = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to enable startup-notification support for the command.
+          See <option>--no-startup-id</option> option description in the i3 user guide.
+        '';
+      };
+
       workspace = mkOption {
         type = types.nullOr types.string;
         default = null;
@@ -388,8 +397,8 @@ let
         '';
         example = literalExample ''
           [
-            { command = "systemctl --user restart polybar"; always = true; }
-            { command = "dropbox start"; }
+            { command = "systemctl --user restart polybar"; always = true; notification = false; }
+            { command = "dropbox start"; notification = false; }
             { command = "firefox"; workspace = "1: web"; }
           ];
         '';
@@ -479,8 +488,10 @@ let
 
   floatingCriteriaStr = criteria: "for_window ${criteriaStr criteria} floating enable";
 
-  startupEntryStr = { command, always, workspace, ... }: ''
-    ${if always then "exec_always" else "exec"} --no-startup-id ${
+  startupEntryStr = { command, always, notification, workspace, ... }: ''
+    ${if always then "exec_always" else "exec"} ${
+      if (notification && workspace == null) then "" else "--no-startup-id"
+    } ${
       if (workspace == null) then
         command
       else
