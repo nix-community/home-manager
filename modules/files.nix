@@ -99,6 +99,27 @@ in
       ''
     );
 
+    # This activation script will
+    #
+    # 1. Remove files from the old generation that are not in the new
+    #    generation.
+    #
+    # 2. Switch over the Home Manager gcroot and current profile
+    #    links.
+    #
+    # 3. Symlink files from the new generation into $HOME.
+    #
+    # This order is needed to ensure that we always know which links
+    # belong to which generation. Specifically, if we're moving from
+    # generation A to generation B having sets of home file links FA
+    # and FB, respectively then cleaning before linking produces state
+    # transitions similar to
+    #
+    #      FA   →   FA ∩ FB   →   (FA ∩ FB) ∪ FB = FB
+    #
+    # and a failure during the intermediate state FA ∩ FB will not
+    # result in lost links because this set of links are in both the
+    # source and target generation.
     home.activation.linkGeneration = dagEntryAfter ["writeBoundary"] (
       let
         link = pkgs.writeText "link" ''
@@ -171,6 +192,8 @@ in
               | xargs -0 bash ${cleanup} "$newGenFiles"
           }
 
+          cleanOldGen
+
           if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
             echo "Creating profile generation $newGenNum"
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenProfilePath"
@@ -181,7 +204,6 @@ in
           fi
 
           linkNewGen
-          cleanOldGen
         ''
     );
 
