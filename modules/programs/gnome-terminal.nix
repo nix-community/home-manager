@@ -146,7 +146,7 @@ let
     {
       "profiles:" = {
         default = head (attrNames (filterAttrs (n: v: v.default) cfg.profile));
-        list = attrNames cfg.profile; #mapAttrsToList (n: v: n) cfg.profile;
+        list = attrNames cfg.profile;
       };
     }
     //
