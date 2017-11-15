@@ -8,6 +8,35 @@ let
 
   dag = config.lib.dag;
 
+  mailAccount = types.submodule (
+    { ... }: {
+      options = {
+        userName = mkOption {
+          type = types.str;
+          description = "The foreground color.";
+        };
+
+         address = mkOption {
+          type = types.str;
+          example = "luke@tatooine.com";
+          description = "Your mail address";
+        };
+
+        # might be hard to abstract
+        # passwordRetrieval = mkOption {
+        #   default = null;
+        #   type = types.nullOr types.str;
+        #   description = "The bold color, null to use same as foreground.";
+        # };
+
+        store = mkOption {
+          type = types.path;
+          description = "Where to store mail for this account";
+        };
+      };
+    }
+  );
+
   languageSubModule = types.submodule {
     options = {
       base = mkOption {
@@ -113,6 +142,12 @@ in
       type = types.str;
       defaultText = "$USER";
       description = "The user's username.";
+    };
+
+    home.mailAccounts = mkOption {
+          type = types.listOf mailAccount;
+          # type = types.attrsOf mailAccount;
+          description = "List your email accounts.";
     };
 
     home.homeDirectory = mkOption {
