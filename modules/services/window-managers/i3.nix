@@ -175,7 +175,7 @@ let
         type = types.submodule {
           options = {
             newWindow = mkOption {
-              type =types.enum [ "smart" "urgent" "focus" "none" ];
+              type = types.enum [ "smart" "urgent" "focus" "none" ];
               default = "smart";
               description = ''
                 This option modifies focus behavior on new window activation.
