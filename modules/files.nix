@@ -168,6 +168,8 @@ in
       in
         ''
           function linkNewGen() {
+            echo "Creating home file links in $HOME"
+
             local newGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
             find "$newGenFiles" -type f -print0 -or -type l -print0 \
