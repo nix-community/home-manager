@@ -83,7 +83,7 @@ Currently the easiest way to install Home Manager is as follows:
 4.  Create the first Home Manager generation:
 
     ```console
-    $ nix-shell $HM_PATH -A install --run 'home-manager switch'
+    $ $(nix-build $HM_PATH --no-out-link)/bin/home-manager switch
     ```
 
     Home Manager should now be active and available in your user
