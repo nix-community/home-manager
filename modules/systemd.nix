@@ -119,6 +119,18 @@ in
         );
 
       home.activation.reloadSystemD = dagEntryAfter ["linkGeneration"] ''
+        function isStartable() {
+          local service="$1"
+          [[ $(systemctl --user show -p RefuseManualStart "$service") == *=no ]]
+        }
+
+        function isStoppable() {
+          if [[ -v oldGenPath ]] ; then
+            local service="$1"
+            [[ $(systemctl --user show -p RefuseManualStop "$service") == *=no ]]
+          fi
+        }
+
         function systemdPostReload() {
           local workDir
           workDir="$(mktemp -d)"
@@ -163,16 +175,32 @@ in
             > $servicesDiffFile || true
 
           local -a maybeRestart=( $(grep '^ ' $servicesDiffFile | cut -c2-) )
-          local -a toStop=( $(grep '^-' $servicesDiffFile | cut -c2-) )
-          local -a toStart=( $(grep '^+' $servicesDiffFile | cut -c2-) )
+          local -a maybeStop=( $(grep '^-' $servicesDiffFile | cut -c2-) )
+          local -a maybeStart=( $(grep '^+' $servicesDiffFile | cut -c2-) )
           local -a toRestart=( )
+          local -a toStop=( )
+          local -a toStart=( )
 
           for f in ''${maybeRestart[@]} ; do
-            if ${cfg.systemctlPath} --quiet --user is-active "$f" \
-               && ! cmp --quiet \
-                   "$oldUserServicePath/$f" \
-                   "$newUserServicePath/$f" ; then
+            if isStoppable "$f" \
+                && isStartable "$f" \
+                && ${cfg.systemctlPath} --quiet --user is-active "$f" \
+                && ! cmp --quiet \
+                    "$oldUserServicePath/$f" \
+                    "$newUserServicePath/$f" ; then
               toRestart+=("$f")
+            fi
+          done
+
+          for f in ''${maybeStop[@]} ; do
+            if isStoppable "$f" ; then
+              toStop+=("$f")
+            fi
+          done
+
+          for f in ''${maybeStart[@]} ; do
+            if isStartable "$f" ; then
+              toStart+=("$f")
             fi
           done
 
