@@ -462,6 +462,18 @@ in
           where --no-startup-id option is necessary.
         '';
       }
+      {
+        time = "2017-11-17T10:36:10+00:00";
+        condition = config.xsession.windowManager.i3.enable;
+        message = ''
+          The i3 window manager module has been extended with the following options:
+
+            i3.config.keycodebindings
+            i3.config.window.commands
+            i3.config.window.hideEdgeBorders
+            i3.config.focus.mouseWarping
+        '';
+      }
     ];
   };
 }
