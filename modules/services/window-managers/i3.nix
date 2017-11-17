@@ -433,12 +433,11 @@ let
 
             smartBorders = mkOption {
               type = types.enum [ "on" "off" "no_gaps" ];
-              default = null;
+              default = "off";
               description = ''
                 This option controls whether to disable container borders on
                 workspace with a single container.
               '';
-              example = true;
             };
           };
         });
