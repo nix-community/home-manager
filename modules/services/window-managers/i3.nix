@@ -163,7 +163,7 @@ let
               type = types.listOf criteriaModule;
               default = [];
               description = "List of criteria for windows that should be opened in a floating mode.";
-              example = [ "title='Steam - Update News'" "class='Pavucontrol'" ];
+              example = [ {"title" = "Steam - Update News";} {"class" = "Pavucontrol";} ];
             };
           };
         };
