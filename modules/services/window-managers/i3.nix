@@ -101,6 +101,22 @@ let
     };
   };
 
+  windowCommandModule = types.submodule {
+    options = {
+      command = mkOption {
+        type = types.string;
+        description = "i3wm command to execute.";
+        example = "border pixel 1";
+      };
+
+      criteria = mkOption {
+        type = criteriaModule;
+        description = "Criteria of the windows on which command should be executed.";
+        example = { title = "x200: ~/work"; };
+      };
+    };
+  };
+
   criteriaModule = types.attrs;
 
   configModule = types.submodule {
@@ -129,6 +145,22 @@ let
               type = types.int;
               default = 2;
               description = "Window border width.";
+            };
+
+            hideEdgeBorders = mkOption {
+              type = types.enum [ "none" "vertical" "horizontal" "both" "smart" ];
+              default = "none";
+              description = "Hide window borders adjacent to the screen edges.";
+            };
+
+            commands = mkOption {
+              type = types.listOf windowCommandModule;
+              default = [];
+              description = ''
+                List of commands that should be executed on specific windows.
+                See <option>for_window</option> i3wm option documentation.
+              '';
+              example = [ { command = "border pixel 1"; criteria = { class = "XTerm"; }; } ];
             };
           };
         };
@@ -198,6 +230,15 @@ let
                 Whether to force focus wrapping in tabbed or stacked container.
 
                 See <link xlink:href="https://i3wm.org/docs/userguide.html#_focus_wrapping"/>
+              '';
+            };
+
+            mouseWarping = mkOption {
+              type = types.bool;
+              default = true;
+              description = ''
+                Whether mouse cursor should be warped to the center of the window when switching focus
+                to a window on a different output.
               '';
             };
           };
@@ -271,9 +312,8 @@ let
         };
         defaultText = "Default i3 keybindings.";
         description = ''
-          An attribute set that assignes keypress to an action.
-          Only basic keybinding is supported (bindsym keycomb action),
-          for more advanced setup use 'i3.extraConfig'.
+          An attribute set that assignes key press to an action using key symbol.
+          See <link xlink:href="https://i3wm.org/docs/userguide.html#keybindings"/>.
         '';
         example = literalExample ''
           {
@@ -282,6 +322,16 @@ let
             "Mod1+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
           }
         '';
+      };
+
+      keycodebindings = mkOption {
+        type = types.attrs;
+        default = {};
+        description = ''
+          An attribute set that assignes keypress to an action using key code.
+          See <link xlink:href="https://i3wm.org/docs/userguide.html#keybindings"/>.
+        '';
+        example = { "214" = "exec --no-startup-id /bin/script.sh"; };
       };
 
       colors = mkOption {
@@ -454,6 +504,10 @@ let
     mapAttrsToList (keycomb: action: "bindsym ${keycomb} ${action}") keybindings
   );
 
+  keycodebindingsStr = keycodebindings: concatStringsSep "\n" (
+    mapAttrsToList (keycomb: action: "bindcode ${keycomb} ${action}") keycodebindings
+  );
+
   colorSetStr = c: concatStringsSep " " [ c.border c.background c.text c.indicator c.childBorder ];
 
   criteriaStr = criteria: "[${concatStringsSep " " (mapAttrsToList (k: v: ''${k}="${v}"'') criteria)}]";
@@ -486,6 +540,7 @@ let
   '';
 
   floatingCriteriaStr = criteria: "for_window ${criteriaStr criteria} floating enable";
+  windowCommandsStr = { command, criteria, ... }: "for_window ${criteriaStr criteria} ${command}";
 
   startupEntryStr = { command, always, notification, workspace, ... }: ''
     ${if always then "exec_always" else "exec"} ${
@@ -503,9 +558,11 @@ let
     floating_modifier ${floating.modifier}
     new_window ${if window.titlebar then "normal" else "pixel"} ${toString window.border}
     new_float ${if floating.titlebar then "normal" else "pixel"} ${toString floating.border}
+    hide_edge_borders ${window.hideEdgeBorders}
     force_focus_wrapping ${if focus.forceWrapping then "yes" else "no"}
     focus_follows_mouse ${if focus.followMouse then "yes" else "no"}
     focus_on_window_activation ${focus.newWindow}
+    mouse_warping ${if focus.mouseWarping then "output" else "none"}
 
     client.focused ${colorSetStr colors.focused}
     client.focused_inactive ${colorSetStr colors.focusedInactive}
@@ -515,11 +572,13 @@ let
     client.background ${colors.background}
 
     ${keybindingsStr keybindings}
+    ${keycodebindingsStr keycodebindings}
     ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
     ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
     ${concatStringsSep "\n" (map barStr bars)}
     ${optionalString (gaps != null) gapsStr}
     ${concatStringsSep "\n" (map floatingCriteriaStr floating.criteria)}
+    ${concatStringsSep "\n" (map windowCommandsStr window.commands)}
     ${concatStringsSep "\n" (map startupEntryStr startup)}
   '' else "") + "\n" + cfg.extraConfig);
 
