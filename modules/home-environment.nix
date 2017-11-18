@@ -16,7 +16,25 @@ let
           description = "The foreground color.";
         };
 
-         address = mkOption {
+        realname = mkOption {
+          type = types.str;
+          description = "Name displayed when sending mails.";
+        };
+
+        signature = mkOption {
+          type = types.str;
+          default = "default signature";
+          example = "luke@tatooine.com";
+          description = "Your signature";
+        };
+
+        address = mkOption {
+          type = types.str;
+          example = "luke@tatooine.com";
+          description = "Your mail address";
+        };
+
+        key = mkOption {
           type = types.str;
           example = "luke@tatooine.com";
           description = "Your mail address";
@@ -145,9 +163,9 @@ in
     };
 
     home.mailAccounts = mkOption {
-          type = types.listOf mailAccount;
-          # type = types.attrsOf mailAccount;
-          description = "List your email accounts.";
+      type = types.listOf mailAccount;
+      # type = types.attrsOf mailAccount;
+      description = "List your email accounts.";
     };
 
     home.homeDirectory = mkOption {
