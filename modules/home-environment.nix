@@ -40,6 +40,12 @@ let
           description = "Your mail address";
         };
 
+        sendHost = mkOption {
+          type = types.str;
+          example = "luke@tatooine.com";
+          description = "Your mail address";
+        };
+
         # might be hard to abstract
         # passwordRetrieval = mkOption {
         #   default = null;
