@@ -368,6 +368,7 @@ let
             "Up" = "resize shrink height 10 px or 10 ppt";
             "Right" = "resize grow width 10 px or 10 ppt";
             "Escape" = "mode default";
+            "Return" = "mode default";
           };
         };
         description = ''
