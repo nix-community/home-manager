@@ -462,6 +462,14 @@ in
           where --no-startup-id option is necessary.
         '';
       }
+      {
+        time = "2017-11-21T23:27:22+00:00";
+        message = ''
+          A new module is available: 'services.kbfs'.
+
+          A new module is available: 'services.keybase'.
+        '';
+      }
     ];
   };
 }
