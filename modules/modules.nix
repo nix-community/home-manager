@@ -46,7 +46,9 @@ let
     ./services/dunst.nix
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix
+    ./services/kbfs.nix
     ./services/keepassx.nix
+    ./services/keybase.nix
     ./services/network-manager-applet.nix
     ./services/owncloud-client.nix
     ./services/polybar.nix

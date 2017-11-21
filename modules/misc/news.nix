@@ -494,6 +494,15 @@ in
           package that provides the font or theme.
         '';
       }
+
+      {
+        time = "2017-11-26T21:57:23+00:00";
+        message = ''
+          Two new modules are available:
+
+              'services.kbfs' and 'services.keybase'
+        '';
+      }
     ];
   };
 }
