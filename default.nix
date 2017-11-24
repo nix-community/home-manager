@@ -6,9 +6,7 @@ rec {
     path = toString ./.;
   };
 
-  install =
-    pkgs.runCommand
-      "home-manager-install"
-      { propagatedBuildInputs = [ home-manager ]; }
-      "";
+  install = import ./home-manager/install.nix {
+    inherit home-manager pkgs;
+  };
 }

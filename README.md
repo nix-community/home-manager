@@ -80,10 +80,10 @@ Currently the easiest way to install Home Manager is as follows:
     EOF
     ```
 
-4.  Create the first Home Manager generation:
+4.  Install Home Manager and create the first Home Manager generation:
 
     ```console
-    $ nix-shell $HM_PATH -A install --run 'home-manager switch'
+    $ nix-shell $HM_PATH -A install
     ```
 
     Home Manager should now be active and available in your user
