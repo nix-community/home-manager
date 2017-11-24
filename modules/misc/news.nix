@@ -343,16 +343,6 @@ in
       }
 
       {
-        time = "2017-10-23T22:54:33+00:00";
-        condition = config.programs.home-manager.modulesPath != null;
-        message = ''
-          The 'programs.home-manager.modulesPath' option is now
-          deprecated and will be removed on November 24, 2017. Please
-          use the option 'programs.home-manager.path' instead.
-        '';
-      }
-
-      {
         time = "2017-10-23T23:10:29+00:00";
         condition = !config.programs.home-manager.enable;
         message = ''

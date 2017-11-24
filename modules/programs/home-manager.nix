@@ -28,43 +28,14 @@ in
           attempted.
         '';
       };
-
-      modulesPath = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        example = "$HOME/devel/home-manager/modules";
-        description = ''
-          The default path to use for Home Manager modules. If this
-          path does not exist then
-          <filename>$HOME/.config/nixpkgs/home-manager/modules</filename>
-          and <filename>$HOME/.nixpkgs/home-manager/modules</filename>
-          will be attempted. DEPRECATED: Use
-          <varname>programs.home-manager.path</varname> instead.
-        '';
-      };
     };
   };
 
   config = mkIf cfg.enable {
-    warnings = mkIf (cfg.modulesPath != null) [
-      ("'programs.home-manager.modulesPath' is deprecated, "
-        + "please use 'programs.home-manager.path")
-    ];
-
-    assertions = [{
-      assertion = cfg.path == null || cfg.modulesPath == null;
-      message = "Cannot simultaneously use "
-        + "'programs.home-manager.path' and "
-        + "'programs.home-manager.modulesPath'.";
-    }];
-
     home.packages = [
       (import ../../home-manager {
         inherit pkgs;
-        path =
-          if cfg.modulesPath != null
-          then "$(dirname ${cfg.modulesPath})"
-          else cfg.path;
+        inherit (cfg) path;
       })
     ];
 
