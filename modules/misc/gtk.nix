@@ -150,7 +150,7 @@ in
   config = mkIf cfg.enable (
     let
       ini =
-        optionalAttrs (cfg.fontName != null)
+        optionalAttrs (cfg.font != null)
           { gtk-font-name = cfg.font.name; }
         //
         optionalAttrs (cfg.theme != null)
