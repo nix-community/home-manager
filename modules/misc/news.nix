@@ -501,6 +501,7 @@ in
           A new module is available: 'services.kbfs'.
 
           A new module is available: 'services.keybase'.
+        '';
       }
     ];
   };
