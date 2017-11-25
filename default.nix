@@ -3,7 +3,7 @@
 rec {
   home-manager = import ./home-manager {
     inherit pkgs;
-    path = ./.;
+    path = toString ./.;
   };
 
   install =

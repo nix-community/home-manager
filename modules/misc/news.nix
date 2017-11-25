@@ -343,16 +343,6 @@ in
       }
 
       {
-        time = "2017-10-23T22:54:33+00:00";
-        condition = config.programs.home-manager.modulesPath != null;
-        message = ''
-          The 'programs.home-manager.modulesPath' option is now
-          deprecated and will be removed on November 24, 2017. Please
-          use the option 'programs.home-manager.path' instead.
-        '';
-      }
-
-      {
         time = "2017-10-23T23:10:29+00:00";
         condition = !config.programs.home-manager.enable;
         message = ''
@@ -442,12 +432,14 @@ in
           December 6, 2017.
         '';
       }
+
       {
         time = "2017-11-12T00:18:59+00:00";
         message = ''
           A new program module is available: 'programs.neovim'.
         '';
       }
+
       {
         time = "2017-11-14T19:56:49+00:00";
         condition = with config.xsession.windowManager; (
@@ -462,13 +454,53 @@ in
           where --no-startup-id option is necessary.
         '';
       }
+
       {
-        time = "2017-11-21T23:27:22+00:00";
+        time = "2017-11-17T10:36:10+00:00";
+        condition = config.xsession.windowManager.i3.enable;
+        message = ''
+          The i3 window manager module has been extended with the following options:
+
+            i3.config.keycodebindings
+            i3.config.window.commands
+            i3.config.window.hideEdgeBorders
+            i3.config.focus.mouseWarping
+        '';
+      }
+
+      {
+        time = "2017-11-23T00:31:12+00:00";
+        condition =
+          config.gtk.fontName != "_mkMergedOptionModule"
+          || config.gtk.themeName != "_mkMergedOptionModule"
+          || config.gtk.iconThemeName != "_mkMergedOptionModule";
+        message = ''
+          The options
+
+              gtk.fontName, gtk.themeName, and gtk.iconThemeName
+
+          are deprecated and will be removed on December 23, 2017.
+
+          Please use
+
+              gtk.font.name, gtk.theme.name, and gtk.iconTheme.name
+
+          instead. You can find information about these in the manual
+          page.
+
+          This change was made to introduce the options
+          'gtk.font.package', 'gtk.theme.package', and
+          'gtk.iconTheme.package', which allow you to specify the
+          package that provides the font or theme.
+        '';
+      }
+
+      {
+        time = "2017-11-25T07:19:51+00:00";
         message = ''
           A new module is available: 'services.kbfs'.
 
           A new module is available: 'services.keybase'.
-        '';
       }
     ];
   };
