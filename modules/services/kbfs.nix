@@ -17,7 +17,7 @@ in
         type = types.str;
         default = "keybase";
         description = ''
-          Mountpoint for the Keybase filesystem, relative to $HOME.
+          Mount point for the Keybase filesystem, relative to <envar>HOME</envar>.
         '';
       };
 
