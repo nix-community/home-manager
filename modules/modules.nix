@@ -24,6 +24,7 @@ let
     ./misc/qt.nix
     ./misc/xdg.nix
     ./programs/autorandr.nix
+    ./programs/alot.nix
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/browserpass.nix
@@ -41,9 +42,11 @@ let
     ./programs/lesspipe.nix
     ./programs/man.nix
     ./programs/mercurial.nix
+    ./programs/msmtp.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/pidgin.nix
+    ./programs/notmuch.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
     ./programs/termite.nix

@@ -35,12 +35,12 @@ in
   options = {
     programs.alot = {
       enable = mkEnableOption "Alot";
-    };
 
-    extraConfig = mkOption {
-      type = types.lines;
-      default = "";
-      description = "Extra configuration lines to add to ~/.config/alot/config.";
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
+        description = "Extra configuration lines to add to ~/.config/alot/config.";
+      };
     };
   };
 

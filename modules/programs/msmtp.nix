@@ -5,7 +5,7 @@ with import ../lib/dag.nix { inherit lib; };
 
 let
 
-  cfg = config.programs.alot;
+  cfg = config.programs.msmtp;
   sendCommand = account:
     "msmtp --account=${account.userName} -t";
 
@@ -43,12 +43,12 @@ in
   options = {
     programs.msmtp = {
       enable = mkEnableOption "Msmtp";
-    };
 
-    extraConfig = mkOption {
-      type = types.lines;
-      default = "";
-      description = "Extra configuration lines to add to .msmtprc.";
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
+        description = "Extra configuration lines to add to .msmtprc.";
+      };
     };
   };
 
