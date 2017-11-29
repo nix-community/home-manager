@@ -61,6 +61,7 @@ in
       };
     };
 
+    home.packages = [ pkgs.kbfs ];
     services.keybase.enable = true;
   };
 }
