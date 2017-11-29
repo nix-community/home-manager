@@ -83,6 +83,7 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
+      home.packages = [ xmonad ];
       xsession.windowManager.command = "${xmonad}/bin/xmonad";
     }
 
