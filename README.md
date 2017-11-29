@@ -92,8 +92,8 @@ Currently the easiest way to install Home Manager is as follows:
 Note, because the `HM_PATH` variable above points to the live Home
 Manager repository you will automatically get updates whenever you
 build a new generation. If you dislike automatic updates then perform
-a Git clone of the desired branch and set `programs.home-manager.path`
-to the absolute path of your clone.
+a Git clone of the desired branch and instead do the above steps with
+`HM_PATH` set to the _absolute path_ of your clone.
 
 Usage
 -----
