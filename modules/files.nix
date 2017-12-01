@@ -9,15 +9,16 @@ let
 
   homeDirectory = config.home.homeDirectory;
 
-  fileType = (import lib/file-type.nix {
-    inherit homeDirectory storeFileName lib pkgs;
-  }).fileType;
+  # A unique name prefix to distinguish Home Manager files in $HOME from regular files.
+  homeFilePrefix = "c9V2_home_file_";
 
   # A symbolic link whose target path matches this pattern will be
   # considered part of a Home Manager generation.
-  homeFilePattern = "${builtins.storeDir}/*-home-manager-files/*";
+  # Include old 'home-manager-files/' pattern for backwards compability.
+  homeFilePattern = "${builtins.storeDir}/*-+(${homeFilePrefix}|home-manager-files/)*";
 
-  # Figures out a valid Nix store name for the given path.
+  # Creates a valid Nix store name for the given path,
+  # prefixed with `homeFilePrefix`
   storeFileName = path:
     let
       # All characters that are considered safe. Note "-" is not
@@ -37,7 +38,11 @@ let
 
       safeName = replaceStrings unsafeInName (empties unsafeInName) path;
     in
-      "home_file_" + safeName;
+      homeFilePrefix + safeName;
+
+  fileType = (import lib/file-type.nix {
+    inherit homeDirectory storeFileName lib pkgs;
+  }).fileType;
 
 in
 
@@ -165,7 +170,7 @@ in
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
             $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
-            $DRY_RUN_CMD ln -nsf $VERBOSE_ARG "$sourcePath" "$targetPath"
+            $DRY_RUN_CMD ln -nsf $VERBOSE_ARG "$(readlink "$sourcePath")" "$targetPath"
           done
         '';
 
@@ -245,84 +250,71 @@ in
         ''
     );
 
-    home-files = pkgs.stdenv.mkDerivation {
-      name = "home-manager-files";
-
-      nativeBuildInputs = [ pkgs.xlibs.lndir ];
-
-      # Symlink directories and files that have the right execute bit.
-      # Copy files that need their execute bit changed or use the
-      # deprecated 'mode' option.
-      buildCommand = ''
-        mkdir -p $out
-
-        function insertFile() {
-          local source="$1"
-          local relTarget="$2"
-          local executable="$3"
-          local mode="$4"     # For backwards compatibility.
-          local recursive="$5"
-
-          # Figure out the real absolute path to the target.
-          local target
-          target="$(realpath -m "$out/$relTarget")"
-
-          # Target path must be within $HOME.
-          if [[ ! $target == $out* ]] ; then
-            echo "Error installing file '$relTarget' outside \$HOME" >&2
-            exit 1
-          fi
-
-          mkdir -p "$(dirname "$target")"
-          if [[ -d $source ]]; then
-            if [[ $recursive ]]; then
-              mkdir -p "$target"
-              lndir -silent "$source" "$target"
-            else
-              ln -s "$source" "$target"
-            fi
-          elif [[ $mode ]]; then
-            install -m "$mode" "$source" "$target"
+    home-files =
+      let
+        # Make file that gets linked into $HOME.
+        # Symlink directories and files that have the right execute bit.
+        # Copy files that need their execute bit changed or use the
+        # deprecated `mode` option.
+        # Prefix the file name with `homeFilePrefix`.
+        makeHomeFile = file:
+          if file.text != null then
+            # File was created internally and already has the right name and
+            # execute bit
+            file.source
           else
-            [[ -x $source ]] && isExecutable=1 || isExecutable=""
+            pkgs.stdenv.mkDerivation {
+              name = storeFileName (baseNameOf file.target);
 
-            # Link the file into the home file directory if possible,
-            # i.e., if the executable bit of the source is the same we
-            # expect for the target. Otherwise, we copy the file and
-            # set the executable bit to the expected value.
-            #
-            # Note, as a special case we always copy systemd units
-            # because it derives the unit name from the ultimate link
-            # target, which may be a store path with the hash
-            # included.
-            if [[ ($executable == inherit || $isExecutable == $executable) \
-                && $relTarget != *"/systemd/user/"* ]]; then
-              ln -s "$source" "$target"
-            else
-              cp "$source" "$target"
+              nativeBuildInputs = [ pkgs.xlibs.lndir ];
 
-              if [[ $executable == inherit ]]; then
-                # Don't change file mode if it should match the source.
-                :
-              elif [[ $executable ]]; then
-                chmod +x "$target"
-              else
-                chmod -x "$target"
+              inherit (file) source recursive mode;
+              executable = if file.executable == null then "inherit" else file.executable;
+
+              buildCommand = ''
+                [[ -d $source ]] && isDir=1 || isDir=""
+
+                if [[ $isDir && $recursive ]]; then
+                  mkdir $out
+                  lndir -silent $source $out
+                elif [[ $mode ]]; then
+                  install -m "$mode" $source $out
+                elif [[ $executable == inherit \
+                        || $isDir \
+                        || $([[ -x $source ]] && echo 1) == $executable ]]; then
+                  ln -s $source $out
+                else
+                  cp $source $out
+                  chmod ${if file.executable == true then "+x" else "-x"} $out
+                fi
+              '';
+            };
+      in
+        pkgs.stdenv.mkDerivation {
+          name = "home-manager-files";
+
+          buildCommand = ''
+            mkdir -p $out
+
+            function insertFile() {
+              local source="$1"
+              local relTarget="$2"
+              local target
+              target="$(realpath -m "$out/$relTarget")"
+
+              # Target path must be within $HOME.
+              if [[ ! $target == $out* ]] ; then
+                echo "Error installing file '$relTarget' outside \$HOME" >&2
+                exit 1
               fi
-            fi
-          fi
-        }
-      '' + concatStrings (
-        map (v: ''
-          insertFile "${v.source}" \
-                     "${v.target}" \
-                     "${if v.executable == null
-                        then "inherit"
-                        else builtins.toString v.executable}" \
-                     "${builtins.toString v.mode}" \
-                     "${builtins.toString v.recursive}"
-        '') files
-      );
-    };
+
+              mkdir -p "$(dirname "$target")"
+              ln -s $source "$target"
+            }
+          '' +
+          (concatStrings (map (f: ''
+             insertFile ${makeHomeFile f} "${f.target}"
+           '') files));
+        };
   };
 }

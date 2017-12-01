@@ -24,17 +24,17 @@ let
 
   buildService = style: name: serviceCfg:
     let
-      source = pkgs.writeText "${name}.${style}" (toSystemdIni serviceCfg);
+      text = toSystemdIni serviceCfg;
 
       wantedBy = target:
         {
           name = "systemd/user/${target}.wants/${name}.${style}";
-          value = { inherit source; };
+          value = { inherit text; };
         };
     in
       singleton {
         name = "systemd/user/${name}.${style}";
-        value = { inherit source; };
+        value = { inherit text; };
       }
       ++
       map wantedBy (serviceCfg.Install.WantedBy or []);
