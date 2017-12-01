@@ -5,7 +5,7 @@ with import ./lib/dag.nix { inherit lib; };
 
 let
 
-  cfg = config.home.file;
+  files = config.home-file-defs;
 
   homeDirectory = config.home.homeDirectory;
 
@@ -27,6 +27,12 @@ in
       type = fileType "<envar>HOME</envar>" homeDirectory;
     };
 
+    home-file-defs = mkOption {
+      type = with types; listOf attrs;
+      internal = true;
+      description = "All home file definitions, each having kind <literal>fileType</literal>";
+    };
+
     home-files = mkOption {
       type = types.package;
       internal = true;
@@ -40,7 +46,7 @@ in
         badFiles =
           filter (f: hasPrefix "." (baseNameOf f))
           (map (v: toString v.source)
-          (attrValues cfg));
+          files);
         badFilesStr = toString badFiles;
       in
         {
@@ -54,13 +60,15 @@ in
         badFiles =
           map (f: f.target)
           (filter (f: f.mode != null)
-          (attrValues cfg));
+          files);
         badFilesStr = toString badFiles;
       in
         mkIf (badFiles != []) [
           ("The 'mode' field is deprecated for 'home.file', "
             + "use 'executable' instead: ${badFilesStr}")
         ];
+
+    home-file-defs = builtins.attrValues config.home.file;
 
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
@@ -277,7 +285,7 @@ in
           fi
         }
       '' + concatStrings (
-        mapAttrsToList (n: v: ''
+        map (v: ''
           insertFile "${v.source}" \
                      "${v.target}" \
                      "${if v.executable == null
@@ -285,7 +293,7 @@ in
                         else builtins.toString v.executable}" \
                      "${builtins.toString v.mode}" \
                      "${builtins.toString v.recursive}"
-        '') cfg
+        '') files
       );
     };
   };

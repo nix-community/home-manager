@@ -90,7 +90,9 @@ in
     })
 
     {
-      home.file = mkMerge [ cfg.configFile cfg.dataFile ];
+      home-file-defs =
+        (builtins.attrValues cfg.configFile) ++
+        (builtins.attrValues cfg.dataFile);
     }
   ];
 }
