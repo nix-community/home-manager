@@ -85,10 +85,10 @@ with lib;
       config = {
         target = mkDefault name;
         source = mkIf (config.text != null) (
-          mkDefault (pkgs.writeTextFile {
+          pkgs.writeTextFile {
             inherit (config) executable text;
             name = storeFileName name;
-          })
+          }
         );
       };
     }
