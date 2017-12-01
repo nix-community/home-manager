@@ -232,7 +232,7 @@ in
           target="$(realpath -m "$out/$relTarget")"
 
           # Target path must be within $HOME.
-          if [[ ! $target =~ $out ]] ; then
+          if [[ ! $target == $out* ]] ; then
             echo "Error installing file '$relTarget' outside \$HOME" >&2
             exit 1
           fi
