@@ -38,6 +38,12 @@ in
       internal = true;
       description = "Package to contain all home files";
     };
+
+    homeManager.fileType = mkOption {
+      default = fileType;
+      readOnly = true;
+      internal = true;
+    };
   };
 
   config = {

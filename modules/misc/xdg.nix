@@ -6,10 +6,7 @@ let
 
   cfg = config.xdg;
 
-  fileType = (import ../lib/file-type.nix {
-    inherit (config.home) homeDirectory;
-    inherit lib pkgs;
-  }).fileType;
+  fileType = config.homeManager.fileType;
 
   defaultCacheHome = "${config.home.homeDirectory}/.cache";
   defaultConfigHome = "${config.home.homeDirectory}/.config";
