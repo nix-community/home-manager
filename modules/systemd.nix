@@ -24,16 +24,19 @@ let
 
   buildService = style: name: serviceCfg:
     let
-      source = pkgs.writeText "${name}.${style}" (toSystemdIni serviceCfg);
+      filename = "${name}.${style}";
+
+      # Needed because systemd derives unit names from the ultimate link target
+      source = "${pkgs.writeTextDir filename (toSystemdIni serviceCfg)}/${filename}";
 
       wantedBy = target:
         {
-          name = "systemd/user/${target}.wants/${name}.${style}";
+          name = "systemd/user/${target}.wants/${filename}";
           value = { inherit source; };
         };
     in
       singleton {
-        name = "systemd/user/${name}.${style}";
+        name = "systemd/user/${filename}";
         value = { inherit source; };
       }
       ++

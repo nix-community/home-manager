@@ -254,13 +254,7 @@ in
             # i.e., if the executable bit of the source is the same we
             # expect for the target. Otherwise, we copy the file and
             # set the executable bit to the expected value.
-            #
-            # Note, as a special case we always copy systemd units
-            # because it derives the unit name from the ultimate link
-            # target, which may be a store path with the hash
-            # included.
-            if [[ ($executable == inherit || $isExecutable == $executable) \
-                && $relTarget != *"/systemd/user/"* ]]; then
+            if [[ $executable == inherit || $isExecutable == $executable ]]; then
               ln -s "$source" "$target"
             else
               cp "$source" "$target"
