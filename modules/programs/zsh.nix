@@ -322,7 +322,7 @@ in
     })
 
     (mkIf (cfg.dotDir != null) {
-      programs.zsh.sessionVariables.ZDOTDIR = zdotdir;
+      programs.zsh.sessionVariables.ZDOTDIR = if config.home.sessionVariableSetter == "pam" then "@{HOME}/" + cfg.dotDir else zdotdir;
 
       # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
       # This is so that if ZDOTDIR happens to be
