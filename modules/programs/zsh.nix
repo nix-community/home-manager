@@ -27,7 +27,7 @@ let
     mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
   );
 
-  zdotdir = "$HOME/" + cfg.dotDir;
+  zdotdir = config.home.homeDirectory + "/" + cfg.dotDir;
 
   historyModule = types.submodule {
     options = {
