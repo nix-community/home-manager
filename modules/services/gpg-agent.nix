@@ -29,10 +29,38 @@ in
         '';
       };
 
+      defaultCacheTtlSsh = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Set the time a cache entry used for SSH keys is valid to the given number of seconds.
+        '';
+      };
+
       enableSshSupport = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether to use the GnuPG key agent for SSH keys.";
+        description = ''
+          Whether to use the GnuPG key agent for SSH keys.
+        '';
+      };
+
+      grabKeyboardAndMouse = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Tell the pinentry to grab the keyboard and mouse. This option should in general be used to avoid X-sniffing attacks.
+          When disabled, this option passes 'no-grab' setting to gpg-agent.
+        '';
+      };
+
+      enableScDaemon = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Make use of the scdaemon tool. This option has the effect of enabling the ability to do smartcard operations.
+          When disabled, this option passes 'disable-scdaemon' setting to gpg-agent.
+        '';
       };
     };
   };
@@ -40,11 +68,15 @@ in
   config = mkIf cfg.enable (mkMerge [
     {
       home.file.".gnupg/gpg-agent.conf".text = concatStringsSep "\n" (
-        optional cfg.enableSshSupport
-          "enable-ssh-support"
+        optional (cfg.enableSshSupport) "enable-ssh-support"
         ++
-        optional (cfg.defaultCacheTtl != null)
-          "default-cache-ttl ${toString cfg.defaultCacheTtl}"
+        optional (!cfg.grabKeyboardAndMouse) "no-grab"
+        ++
+        optional (!cfg.enableScDaemon) "disable-scdaemon"
+        ++
+        optional (cfg.defaultCacheTtl != null) "default-cache-ttl ${toString cfg.defaultCacheTtl}"
+        ++
+        optional (cfg.defaultCacheTtlSsh != null) "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
       );
 
       home.sessionVariables =
