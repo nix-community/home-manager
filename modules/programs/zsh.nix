@@ -27,7 +27,7 @@ let
     mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
   );
 
-  zdotdir = "$HOME/" + cfg.dotDir;
+  zdotdir = config.home.homeDirectory + "/" + cfg.dotDir;
 
   historyModule = types.submodule {
     options = {
@@ -322,7 +322,7 @@ in
     })
 
     (mkIf (cfg.dotDir != null) {
-      programs.zsh.sessionVariables.ZDOTDIR = if config.home.sessionVariableSetter == "pam" then "@{HOME}/" + cfg.dotDir else zdotdir;
+      programs.zsh.sessionVariables.ZDOTDIR = zdotdir;
 
       # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
       # This is so that if ZDOTDIR happens to be
