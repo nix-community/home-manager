@@ -1,11 +1,12 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-with import ./lib/dag.nix { inherit lib; };
 
 let
 
   cfg = config.systemd.user;
+
+  dag = config.lib.dag;
 
   enabled = cfg.services != {}
       || cfg.sockets != {}
@@ -144,7 +145,7 @@ in
           (buildServices "timer" cfg.timers)
         );
 
-      home.activation.reloadSystemD = dagEntryAfter ["linkGeneration"] (
+      home.activation.reloadSystemD = dag.entryAfter ["linkGeneration"] (
         if cfg.startServices then
           ''
             PATH=${dirOf cfg.systemctlPath} \

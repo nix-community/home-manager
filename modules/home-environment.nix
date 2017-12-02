@@ -1,11 +1,12 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-with import ./lib/dag.nix { inherit lib; };
 
 let
 
   cfg = config.home;
+
+  dag = config.lib.dag;
 
   languageSubModule = types.submodule {
     options = {
@@ -241,9 +242,9 @@ in
 
     # A dummy entry acting as a boundary between the activation
     # script's "check" and the "write" phases.
-    home.activation.writeBoundary = dagEntryAnywhere "";
+    home.activation.writeBoundary = dag.entryAnywhere "";
 
-    home.activation.installPackages = dagEntryAfter ["writeBoundary"] ''
+    home.activation.installPackages = dag.entryAfter ["writeBoundary"] ''
       $DRY_RUN_CMD nix-env -i ${cfg.path}
     '';
 
@@ -253,7 +254,7 @@ in
             noteEcho Activating ${res.name}
             ${res.data}
           '';
-        sortedCommands = dagTopoSort cfg.activation;
+        sortedCommands = dag.topoSort cfg.activation;
         activationCmds =
           if sortedCommands ? result then
             concatStringsSep "\n" (map mkCmd sortedCommands.result)

@@ -1,11 +1,12 @@
 { pkgs, config, lib, ... }:
 
 with lib;
-with import ./lib/dag.nix { inherit lib; };
 
 let
 
   cfg = config.home.file;
+
+  dag = config.lib.dag;
 
   homeDirectory = config.home.homeDirectory;
 
@@ -51,7 +52,7 @@ in
 
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
-    home.activation.checkLinkTargets = dagEntryBefore ["writeBoundary"] (
+    home.activation.checkLinkTargets = dag.entryBefore ["writeBoundary"] (
       let
         check = pkgs.writeText "check" ''
           . ${./lib-bash/color-echo.sh}
@@ -107,7 +108,7 @@ in
     # and a failure during the intermediate state FA ∩ FB will not
     # result in lost links because this set of links are in both the
     # source and target generation.
-    home.activation.linkGeneration = dagEntryAfter ["writeBoundary"] (
+    home.activation.linkGeneration = dag.entryAfter ["writeBoundary"] (
       let
         link = pkgs.writeText "link" ''
           newGenFiles="$1"

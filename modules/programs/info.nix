@@ -21,11 +21,12 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-with import ../lib/dag.nix { inherit lib; };
 
 let
 
   cfg = config.programs.info;
+
+  dag = config.lib.dag;
 
   # Indexes info files found in this location
   homeInfoPath = "$HOME/.nix-profile/share/info";
@@ -63,7 +64,7 @@ in
     home.sessionVariables.INFOPATH =
       "${cfg.homeInfoDirLocation}\${INFOPATH:+:}\${INFOPATH}";
 
-    home.activation.createHomeInfoDir = dagEntryAfter ["installPackages"] ''
+    home.activation.createHomeInfoDir = dag.entryAfter ["installPackages"] ''
       oPATH=$PATH
       export PATH="${lib.makeBinPath [ pkgs.gzip ]}''${PATH:+:}$PATH"
       $DRY_RUN_CMD mkdir -p "${cfg.homeInfoDirLocation}"

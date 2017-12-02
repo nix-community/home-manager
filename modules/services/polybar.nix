@@ -1,11 +1,12 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-with import ../lib/dag.nix { inherit lib; };
 
 let
 
   cfg = config.services.polybar;
+
+  dag = config.lib.dag;
 
   toPolybarIni = generators.toINI {
     mkKeyValue = key: value:
@@ -131,7 +132,7 @@ in
       };
     };
 
-    home.activation.checkPolybar = dagEntryBefore [ "linkGeneration" ] ''
+    home.activation.checkPolybar = dag.entryBefore [ "linkGeneration" ] ''
       if ! cmp --quiet \
           "${configFile}" \
           "$HOME/.config/polybar/config"; then
@@ -139,7 +140,7 @@ in
       fi
     '';
 
-    home.activation.applyPolybar = dagEntryAfter [ "reloadSystemD" ] ''
+    home.activation.applyPolybar = dag.entryAfter [ "reloadSystemD" ] ''
       if [[ -v polybarChanged && -v DISPLAY ]]; then
         echo "Restarting polybar"
         ${config.systemd.user.systemctlPath} --user restart polybar.service
