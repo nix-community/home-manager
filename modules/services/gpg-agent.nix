@@ -45,27 +45,21 @@ in
         '';
       };
 
-      noGrab = mkOption {
+      grabKeyboardAndMouse = mkOption {
         type = types.bool;
-        default = false;
+        default = true;
         description = ''
-          Tell the pinentry not to grab the keyboard and mouse. This option should in general not be used to avoid X-sniffing attacks.
+          Tell the pinentry to grab the keyboard and mouse. This option should in general be used to avoid X-sniffing attacks.
+          When disabled, this option passes 'no-grab' setting to gpg-agent.
         '';
       };
 
-      disableScDaemon = mkOption {
+      enableScDaemon = mkOption {
         type = types.bool;
-        default = false;
+        default = true;
         description = ''
-          Do not make use of the scdaemon tool. This option has the effect of disabling the ability to do smartcard operations.
-        '';
-      };
-
-      writeEnvFile = mkOption {
-        type = types.nullOr types.string;
-        default = null;
-        description = ''
-          Often it is required to connect to the agent from a process not being an inferior of gpg-agent and thus the environment variable with the socket name is not available. To help setting up those variables in other sessions, this option may be used to write the information into file
+          Make use of the scdaemon tool. This option has the effect of enabling the ability to do smartcard operations.
+          When disabled, this option passes 'disable-scdaemon' setting to gpg-agent.
         '';
       };
     };
@@ -74,23 +68,15 @@ in
   config = mkIf cfg.enable (mkMerge [
     {
       home.file.".gnupg/gpg-agent.conf".text = concatStringsSep "\n" (
-        optional cfg.enableSshSupport
-          "enable-ssh-support"
+        optional (cfg.enableSshSupport) "enable-ssh-support"
         ++
-        optional cfg.noGrab
-          "no-grab"
+        optional (!cfg.grabKeyboardAndMouse) "no-grab"
         ++
-        optional cfg.disableScDaemon
-          "disable-scdaemon"
+        optional (!cfg.enableScDaemon) "disable-scdaemon"
         ++
-        optional (cfg.defaultCacheTtl != null)
-          "default-cache-ttl ${toString cfg.defaultCacheTtl}"
+        optional (cfg.defaultCacheTtl != null) "default-cache-ttl ${toString cfg.defaultCacheTtl}"
         ++
-        optional (cfg.defaultCacheTtlSsh != null)
-          "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
-        ++
-        optional (cfg.writeEnvFile != null)
-          "write-env-file ${toString cfg.writeEnvFile}"
+        optional (cfg.defaultCacheTtlSsh != null) "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
       );
 
       home.sessionVariables =
