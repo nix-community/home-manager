@@ -5,17 +5,10 @@ with lib;
 let
 
   cfg = config.services.gpg-agent;
-
-  gpgInitStr = ''
-    GPG_TTY="$(tty)"
-    export GPG_TTY
-    ${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
-  '';
-
 in
 
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ maintainers.rycee maintainers.rvolosatovs ];
 
   options = {
     services.gpg-agent = {
@@ -71,7 +64,15 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = let
+    gpgInitStr = ''
+        export GPG_TTY=$(tty)
+      '' + (optionalString cfg.enableSshSupport ''
+        ${pkgs.gnupg}/bin/gpg-connect-agent --quiet updatestartuptty /bye > /dev/null
+        [ -z "$SSH_AUTH_SOCK" ] && export SSH_AUTH_SOCK=`${pkgs.gnupg}/bin/gpgconf --list-dirs agent-ssh-socket`
+      '');
+    in
+  mkIf cfg.enable (mkMerge [
     {
       home.file.".gnupg/gpg-agent.conf".text = concatStringsSep "\n" (
         optional (cfg.enableSshSupport) "enable-ssh-support"
@@ -87,13 +88,9 @@ in
           "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
       );
 
-      home.sessionVariables =
-        optionalAttrs cfg.enableSshSupport {
-          SSH_AUTH_SOCK = "\${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh";
-        };
-
       programs.bash.initExtra = gpgInitStr;
       programs.zsh.initExtra = gpgInitStr;
+      xsession.initExtra = gpgInitStr;
     }
 
     # The systemd units below are direct translations of the
