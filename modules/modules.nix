@@ -67,6 +67,7 @@ let
     ./xsession.nix
     <nixpkgs/nixos/modules/misc/assertions.nix>
     <nixpkgs/nixos/modules/misc/meta.nix>
+    <nixpkgs/nixos/modules/misc/lib.nix>
   ];
 
   pkgsModule = {
