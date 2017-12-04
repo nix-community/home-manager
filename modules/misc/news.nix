@@ -493,6 +493,18 @@ in
           A new module is available: 'services.parcellite'
         '';
       }
+
+      {
+        time = "2017-12-11T17:23:12+00:00";
+        condition = config.home.activation ? reloadSystemD;
+        message = ''
+          The Boolean option 'systemd.user.startServices' is now
+          available. When enabled the current naive systemd unit
+          reload logic is replaced by a more sophisticated one that
+          attempts to automatically start, stop, and restart units as
+          necessary.
+        '';
+      }
     ];
   };
 }
