@@ -42,6 +42,8 @@ let
   buildServices = style: serviceCfgs:
     concatLists (mapAttrsToList (buildService style) serviceCfgs);
 
+  servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
+
 in
 
 {
@@ -83,6 +85,22 @@ in
         type = types.attrs;
         description = "Definition of systemd per-user timers";
       };
+
+      startServices = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''
+          Start all services that are wanted by active targets. Additionally,
+          stop obsolete services from the previous generation.
+        '';
+      };
+
+      servicesStartTimeoutMs = mkOption {
+        default = 0;
+        type = types.int;
+        description =
+          "How long to wait for started services to fail until their start is considered sucessful.";
+      };
     };
   };
 
@@ -119,7 +137,13 @@ in
         );
 
       home.activation.reloadSystemD = dagEntryAfter ["linkGeneration"]
-        (import ./systemd-activate.nix cfg.systemctlPath);
+        (if cfg.startServices then
+           ''PATH=${dirOf cfg.systemctlPath} ${pkgs.ruby}/bin/ruby ${./systemd-activate.rb} \
+             "''${oldGenPath=}" "$newGenPath" "${servicesStartTimeoutMs}"
+           ''
+         else
+           import ./systemd-activate.nix cfg.systemctlPath
+        );
     })
   ];
 }
