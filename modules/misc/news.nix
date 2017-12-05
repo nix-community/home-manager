@@ -503,6 +503,13 @@ in
               'services.kbfs' and 'services.keybase'
         '';
       }
+
+      {
+        time = "2017-12-07T22:23:11+00:00";
+        message = ''
+          A new module is available: 'services.parcellite'
+        '';
+      }
     ];
   };
 }
