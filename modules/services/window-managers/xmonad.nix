@@ -83,7 +83,7 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ xmonad ];
+      home.packages = [ (lowPrio xmonad) ];
       xsession.windowManager.command = "${xmonad}/bin/xmonad";
     }
 
