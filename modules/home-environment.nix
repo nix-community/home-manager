@@ -169,6 +169,17 @@ in
       description = "The derivation installing the user packages.";
     };
 
+    home.emptyActivationPath = mkOption {
+      internal = true;
+      default = false;
+      type = types.bool;
+      description = ''
+        Whether the activation script should start with an empty
+        <envvar>PATH</envvar> variable. When <literal>false</literal>
+        then the user's <envvar>PATH</envvar> will be used.
+      '';
+    };
+
     home.activation = mkOption {
       internal = true;
       default = {};
@@ -263,7 +274,8 @@ in
           pkgs.gnused
           pkgs.ncurses          # For `tput`.
           pkgs.nix
-        ];
+        ]
+        + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
         activationScript = pkgs.writeScript "activation-script" ''
           #!${pkgs.stdenv.shell}
@@ -271,7 +283,7 @@ in
           set -eu
           set -o pipefail
 
-          export PATH="${activationBinPaths}:$PATH"
+          export PATH="${activationBinPaths}"
 
           . ${./lib-bash/color-echo.sh}
 
