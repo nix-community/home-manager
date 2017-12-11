@@ -69,17 +69,6 @@ in
           '';
         };
 
-        mode = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = ''
-            The permissions to apply to the file.
-            </para><para>
-            DEPRECATED: use <varname>home.file.&lt;name?&gt;.executable</varname>
-            instead.
-          '';
-        };
-
         executable = mkOption {
           type = types.nullOr types.bool;
           default = null;

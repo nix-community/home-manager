@@ -49,19 +49,6 @@ in
         })
     ];
 
-    warnings =
-      let
-        badFiles =
-          map (f: f.target)
-          (filter (f: f.mode != null)
-          (attrValues cfg));
-        badFilesStr = toString badFiles;
-      in
-        mkIf (badFiles != []) [
-          ("The 'mode' field is deprecated for 'home.file', "
-            + "use 'executable' instead: ${badFilesStr}")
-        ];
-
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
     home.activation.checkLinkTargets = dagEntryBefore ["writeBoundary"] (
@@ -215,8 +202,7 @@ in
       nativeBuildInputs = [ pkgs.xlibs.lndir ];
 
       # Symlink directories and files that have the right execute bit.
-      # Copy files that need their execute bit changed or use the
-      # deprecated 'mode' option.
+      # Copy files that need their execute bit changed.
       buildCommand = ''
         mkdir -p $out
 
@@ -224,8 +210,7 @@ in
           local source="$1"
           local relTarget="$2"
           local executable="$3"
-          local mode="$4"     # For backwards compatibility.
-          local recursive="$5"
+          local recursive="$4"
 
           # Figure out the real absolute path to the target.
           local target
@@ -245,8 +230,6 @@ in
             else
               ln -s "$source" "$target"
             fi
-          elif [[ $mode ]]; then
-            install -m "$mode" "$source" "$target"
           else
             [[ -x $source ]] && isExecutable=1 || isExecutable=""
 
@@ -283,7 +266,6 @@ in
                      "${if v.executable == null
                         then "inherit"
                         else builtins.toString v.executable}" \
-                     "${builtins.toString v.mode}" \
                      "${builtins.toString v.recursive}"
         '') cfg
       );
