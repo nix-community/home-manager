@@ -121,13 +121,13 @@ in
       home.activation.reloadSystemD = dagEntryAfter ["linkGeneration"] ''
         function isStartable() {
           local service="$1"
-          [[ $(systemctl --user show -p RefuseManualStart "$service") == *=no ]]
+          [[ $(${cfg.systemctlPath} --user show -p RefuseManualStart "$service") == *=no ]]
         }
 
         function isStoppable() {
           if [[ -v oldGenPath ]] ; then
             local service="$1"
-            [[ $(systemctl --user show -p RefuseManualStop "$service") == *=no ]]
+            [[ $(${cfg.systemctlPath} --user show -p RefuseManualStop "$service") == *=no ]]
           fi
         }
 
