@@ -80,4 +80,4 @@ let
 
 in
 
-  map import modules ++ [ pkgsModule ]
+  modules ++ [ pkgsModule ]
