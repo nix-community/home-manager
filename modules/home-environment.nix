@@ -99,15 +99,13 @@ in
     home.username = mkOption {
       type = types.str;
       defaultText = "$USER";
-      readOnly = true;
-      description = "The user's username";
+      description = "The user's username.";
     };
 
     home.homeDirectory = mkOption {
       type = types.path;
       defaultText = "$HOME";
-      readOnly = true;
-      description = "The user's home directory";
+      description = "The user's home directory.";
     };
 
     home.language = mkOption {
