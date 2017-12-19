@@ -32,6 +32,10 @@ in
   };
 
   config = mkIf (cfg.users != {}) {
+    users.users = mapAttrs (username: usercfg: {
+      packages = usercfg.home.packages;
+    }) cfg.users;
+
     systemd.services = mapAttrs' (username: usercfg:
       nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
         description = "Home Manager environment for ${username}";

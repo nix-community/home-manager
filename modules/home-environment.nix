@@ -299,9 +299,31 @@ in
     home.activation.writeBoundary = dag.entryAnywhere "";
 
     # Install packages to the user environment.
-    home.activation.installPackages = dag.entryAfter ["writeBoundary"] ''
-      $DRY_RUN_CMD nix-env -i ${cfg.path}
-    '';
+    #
+    # Note, if we are running as a NixOS module then we cannot rely on
+    # `nix-env -i` because our target may not allow modification of
+    # the Nix store. We will instead use the
+    # `users.users.<name?>.packages` NixOS option. We still need this
+    # activation command, however, since some modules need to ensure
+    # that their activation commands are run after packages are
+    # guaranteed to be installed.
+    #
+    # In case the user has moved from a user-install of Home Manager
+    # to one managed through the NixOS module we attempt to uninstall
+    # the `home-manager-path` package if it is installed.
+    home.activation.installPackages = dag.entryAfter ["writeBoundary"] (
+      if config.nixosSubmodule
+      then
+        ''
+          if nix-env -q | grep '^home-manager-path$'; then
+            nix-env -e home-manager-path
+          fi
+        ''
+      else
+        ''
+          $DRY_RUN_CMD nix-env -i ${cfg.path}
+        ''
+    );
 
     home.activationPackage =
       let
