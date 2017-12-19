@@ -269,7 +269,11 @@ in
     home.username = mkDefault (builtins.getEnv "USER");
     home.homeDirectory = mkDefault (builtins.getEnv "HOME");
 
-    home.profileDirectory = cfg.homeDirectory + "/.nix-profile";
+    home.profileDirectory =
+      if config.submoduleSupport.enable
+        && config.submoduleSupport.externalPackageInstall
+      then config.home.path
+      else cfg.homeDirectory + "/.nix-profile";
 
     home.sessionVariables =
       let
@@ -307,9 +311,33 @@ in
     home.activation.writeBoundary = dag.entryAnywhere "";
 
     # Install packages to the user environment.
-    home.activation.installPackages = dag.entryAfter ["writeBoundary"] ''
-      $DRY_RUN_CMD nix-env -i ${cfg.path}
-    '';
+    #
+    # Note, sometimes our target may not allow modification of the Nix
+    # store and then we cannot rely on `nix-env -i`. This is the case,
+    # for example, if we are running as a NixOS module and building a
+    # virtual machine. Then we must instead rely on an external
+    # mechanism for installing packages, which in NixOS is provided by
+    # the `users.users.<name?>.packages` option. The activation
+    # command is still needed since some modules need to run their
+    # activation commands after the packages are guaranteed to be
+    # installed.
+    #
+    # In case the user has moved from a user-install of Home Manager
+    # to a submodule managed one we attempt to uninstall the
+    # `home-manager-path` package if it is installed.
+    home.activation.installPackages = dag.entryAfter ["writeBoundary"] (
+      if config.submoduleSupport.externalPackageInstall
+      then
+        ''
+          if nix-env -q | grep '^home-manager-path$'; then
+            $DRY_RUN_CMD nix-env -e home-manager-path
+          fi
+        ''
+      else
+        ''
+          $DRY_RUN_CMD nix-env -i ${cfg.path}
+        ''
+    );
 
     home.activationPackage =
       let
