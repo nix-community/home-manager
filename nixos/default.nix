@@ -12,6 +12,12 @@ let
     config = {
       submoduleSupport.enable = true;
       submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+
+      # The per-user directory inside /etc/profiles is not known by
+      # fontconfig by default.
+      fonts.fontconfig.enableProfileFonts =
+        cfg.useUserPackages && config.fonts.fontconfig.enable;
+
       home.username = config.users.users.${name}.name;
       home.homeDirectory = config.users.users.${name}.home;
     };
