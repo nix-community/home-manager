@@ -28,14 +28,32 @@ in
     };
   };
 
-  config = mkIf cfg.enableProfileFonts {
-    xdg.configFile."fontconfig/conf.d/10-nix-profile-fonts.conf".text = ''
-      <?xml version='1.0'?>
-      <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
-      <fontconfig>
-        <dir>~/.nix-profile/lib/X11/fonts</dir>
-        <dir>~/.nix-profile/share/fonts</dir>
-      </fontconfig>
-    '';
-  };
+  config = mkMerge [
+    (mkIf cfg.enableProfileFonts {
+      xdg.configFile."fontconfig/conf.d/10-nix-profile-fonts.conf".text = ''
+        <?xml version='1.0'?>
+        <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
+        <fontconfig>
+          <dir>~/.nix-profile/lib/X11/fonts</dir>
+          <dir>~/.nix-profile/share/fonts</dir>
+        </fontconfig>
+      '';
+    })
+
+    # If we are inside a NixOS system configuration then packages are
+    # installed through the NixOS `users.users.<name?>.packages`
+    # option. Unfortunately fontconfig does not know about the
+    # per-user installation directory so we have to add that directory
+    # in a extra configuration file.
+    (mkIf config.nixosSubmodule {
+      xdg.configFile."fontconfig/conf.d/10-nix-per-user-fonts.conf".text = ''
+        <?xml version='1.0'?>
+        <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
+        <fontconfig>
+          <dir>/etc/per-user-pkgs/${config.home.username}/lib/X11/fonts</dir>
+          <dir>/etc/per-user-pkgs/${config.home.username}/share/fonts</dir>
+        </fontconfig>
+      '';
+    })
+  ];
 }
