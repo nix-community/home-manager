@@ -180,21 +180,4 @@ in
         xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
       }
     );
-
-    imports =
-      let
-        name = n: [ "gtk" n ];
-      in [
-        (mkChangedOptionModule (name "fontName") (name "font") (
-          config: { name = getAttrFromPath (name "fontName") config; }
-        ))
-
-        (mkChangedOptionModule (name "themeName") (name "theme") (
-          config: { name = getAttrFromPath (name "themeName") config; }
-        ))
-
-        (mkChangedOptionModule (name "iconThemeName") (name "iconTheme") (
-          config: { name = getAttrFromPath (name "iconThemeName") config; }
-        ))
-      ];
 }
