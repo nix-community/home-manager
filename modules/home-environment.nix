@@ -128,6 +128,15 @@ in
       description = ''
         Environment variables to always set at login.
         </para><para>
+        The values may refer to other environment variables using
+        POSIX.2 style variable references. For example, a variable
+        <varname>parameter</varname> may be referenced as
+        <code>$parameter</code> or <code>''${parameter}</code>. A
+        default value <literal>foo</literal> may be given as per
+        <code>''${parameter:-foo}</code> and, similarly, an alternate
+        value <literal>bar</literal> can be given as per
+        <code>''${parameter:+bar}</code>.
+        </para><para>
         Note, these variables may be set in any order so no session
         variable may have a runtime dependency on another session
         variable. In particular code like
