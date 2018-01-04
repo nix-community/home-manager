@@ -159,8 +159,8 @@ in
     };
 
     home.sessionVariableSetter = mkOption {
-      default = "bash";
-      type = types.enum [ "pam" "bash" "zsh" ];
+      default = null;
+      type = types.nullOr (types.enum [ "pam" "bash" "zsh" ]);
       example = "pam";
       description = ''
         Identifies the module that should set the session variables.
@@ -171,6 +171,9 @@ in
         If "pam" is set then PAM must be used to set the system
         environment. Also mind that typical environment variables
         might not be set by the time PAM starts up.
+        </para><para>
+        This option is DEPRECATED, the shell modules are now
+        automatically setting the session variables when enabled.
       '';
     };
 

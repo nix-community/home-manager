@@ -478,6 +478,60 @@ in
           necessary.
         '';
       }
+
+      {
+        time = "2018-01-08T20:39:56+00:00";
+        condition = config.home.sessionVariableSetter != null;
+        message =
+          let
+            opts = {
+              bash = ''
+                Instead the 'programs.bash' module will, when enabled,
+                automatically set session variables. You can safely
+                remove the 'home.sessionVariableSetter' option from your
+                configuration.
+              '';
+
+              zsh = ''
+                Instead the 'programs.zsh' module will, when enabled,
+                automatically set session variables. You can safely
+                remove the 'home.sessionVariableSetter' option from your
+                configuration.
+              '';
+
+              pam = ''
+                Unfortunately setting general session variables using
+                PAM will not be directly supported after this date. The
+                primary reason for this change is its limited support
+                for variable expansion.
+
+                To continue setting session variables from the Home
+                Manager configuration you must either use the
+                'programs.bash' or 'programs.zsh' modules or manually
+                source the session variable file
+
+                    $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
+
+                within your shell configuration, see the README file for
+                more information. This file requires a Bourne-like shell
+                such as Bash or Z shell but hopefully other shells
+                will be supported in the future.
+
+                If you specifically need to set a session variable using
+                PAM then the new option 'pam.sessionVariables' can be
+                used. It works much the same as 'home.sessionVariables'
+                but its attribute values must be valid within the PAM
+                environment file.
+              '';
+            };
+          in
+            ''
+              The 'home.sessionVariableSetter' option is now deprecated
+              and will be removed on February 8, 2018.
+
+              ${opts.${config.home.sessionVariableSetter}}
+            '';
+      }
     ];
   };
 }
