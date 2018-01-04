@@ -11,11 +11,7 @@ let
   pluginsDir = if cfg.dotDir != null then
     relToDotDir "plugins" else ".zsh/plugins";
 
-  envVars = cfg.sessionVariables // (
-    if config.home.sessionVariableSetter == "zsh" then config.home.sessionVariables else {}
-  );
-
-  envVarsStr = config.lib.shell.exportAll envVars;
+  envVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
 
   aliasesStr = concatStringsSep "\n" (
     mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
@@ -249,6 +245,9 @@ in
 
       home.file."${relToDotDir ".zshenv"}".text = ''
         typeset -U fpath
+        ${optionalString (config.home.sessionVariableSetter != "pam") ''
+          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        ''}
         ${envVarsStr}
       '';
 
