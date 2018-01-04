@@ -11,17 +11,11 @@ let
   pluginsDir = if cfg.dotDir != null then
     relToDotDir "plugins" else ".zsh/plugins";
 
-  export = n: v: "export ${n}=\"${toString v}\"";
-
-  toEnvVarsStr = vars: concatStringsSep "\n" (
-    mapAttrsToList export vars
-  );
-
   envVars = cfg.sessionVariables // (
     if config.home.sessionVariableSetter == "zsh" then config.home.sessionVariables else {}
   );
 
-  envVarsStr = toEnvVarsStr envVars;
+  envVarsStr = config.lib.shell.exportAll envVars;
 
   aliasesStr = concatStringsSep "\n" (
     mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
