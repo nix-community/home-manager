@@ -131,12 +131,6 @@ in
         map (v: "shopt -s ${v}") cfg.shellOptions
       );
 
-      export = n: v: "export ${n}=\"${toString v}\"";
-      setIfNonEmpty = n: v: optionalString (v != "") "${n}=${toString v}";
-
-      histControlStr = concatStringsSep ":" cfg.historyControl;
-      histIgnoreStr = concatStringsSep ":" cfg.historyIgnore;
-
       # If Bash is the session variable setter then this is the
       # attribute set of global session variables, otherwise it is an
       # empty set.
@@ -145,17 +139,27 @@ in
           (config.home.sessionVariableSetter == "bash")
           config.home.sessionVariables;
 
-      envVarsStr = concatStringsSep "\n" (
-        mapAttrsToList export (cfg.sessionVariables // globalEnvVars)
-      );
+      envVarsStr =
+        config.lib.shell.exportAll (cfg.sessionVariables // globalEnvVars);
+
+      historyControlStr =
+        concatStringsSep "\n" (mapAttrsToList (n: v: "${n}=${v}") (
+          {
+            HISTSIZE = toString cfg.historySize;
+            HISTFILESIZE = toString cfg.historyFileSize;
+          }
+          // optionalAttrs (cfg.historyControl != []) {
+            HISTCONTROL = concatStringsSep ":" cfg.historyControl;
+          }
+          // optionalAttrs (cfg.historyIgnore != []) {
+            HISTIGNORE = concatStringsSep ":" cfg.historyIgnore;
+          }
+        ));
     in mkIf cfg.enable {
       programs.bash.bashrcExtra = ''
         # Commands that should be applied only for interactive shells.
         if [[ -n $PS1 ]]; then
-          HISTSIZE=${toString cfg.historySize}
-          HISTFILESIZE=${toString cfg.historyFileSize}
-          ${setIfNonEmpty "HISTCONTROL" histControlStr}
-          ${setIfNonEmpty "HISTIGNORE" histIgnoreStr}
+          ${historyControlStr}
 
           ${shoptsStr}
 
