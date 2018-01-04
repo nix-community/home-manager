@@ -131,16 +131,7 @@ in
         map (v: "shopt -s ${v}") cfg.shellOptions
       );
 
-      # If Bash is the session variable setter then this is the
-      # attribute set of global session variables, otherwise it is an
-      # empty set.
-      globalEnvVars =
-        optionalAttrs
-          (config.home.sessionVariableSetter == "bash")
-          config.home.sessionVariables;
-
-      envVarsStr =
-        config.lib.shell.exportAll (cfg.sessionVariables // globalEnvVars);
+      sessionVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
 
       historyControlStr =
         concatStringsSep "\n" (mapAttrsToList (n: v: "${n}=${v}") (
@@ -185,7 +176,11 @@ in
       home.file.".profile".text = ''
         # -*- mode: sh -*-
 
-        ${envVarsStr}
+        ${optionalString (config.home.sessionVariableSetter != "pam") ''
+          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        ''}
+
+        ${sessionVarsStr}
 
         ${cfg.profileExtra}
       '';
