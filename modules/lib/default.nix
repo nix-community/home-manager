@@ -15,4 +15,6 @@
         entryAfter = d.dagEntryAfter;
         entryBefore = d.dagEntryBefore;
       };
+
+  shell = import ./shell.nix { inherit lib; };
 }
