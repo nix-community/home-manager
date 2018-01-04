@@ -267,6 +267,23 @@ in
         //
         (maybeSet "LC_TIME" cfg.language.time);
 
+    home.packages = [
+      # Provide a file holding all session variables.
+      (
+        pkgs.writeTextFile {
+          name = "hm-session-vars.sh";
+          destination = "/etc/profile.d/hm-session-vars.sh";
+          text = ''
+            # Only source this once.
+            if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+            export __HM_SESS_VARS_SOURCED=1
+
+            ${config.lib.shell.exportAll cfg.sessionVariables}
+          '';
+        }
+      )
+    ];
+
     # A dummy entry acting as a boundary between the activation
     # script's "check" and the "write" phases.
     home.activation.writeBoundary = dag.entryAnywhere "";
