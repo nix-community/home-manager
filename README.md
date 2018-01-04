@@ -89,6 +89,24 @@ Currently the easiest way to install Home Manager is as follows:
     Home Manager should now be active and available in your user
     environment.
 
+5.  If you do not plan on having Home Manager manage your shell
+    configuration then you must source the
+
+    ```
+    "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+    ```
+
+    file in your shell configuration. Unfortunately, we currently only
+    support POSIX.2-like shells such as [Bash][] or [Z shell][].
+
+    For example, if you use Bash then add
+
+    ```bash
+    . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+    ```
+
+    to your `~/.profile` file.
+
 Note, because the `HM_PATH` variable above points to the live Home
 Manager repository you will automatically get updates whenever you
 build a new generation. If you dislike automatic updates then perform
@@ -240,8 +258,10 @@ in your system configuration and
 
 in your Home Manager configuration.
 
+[Bash]: https://www.gnu.org/software/bash/
 [Nix]: https://nixos.org/nix/
 [NixOS]: https://nixos.org/
 [Nixpkgs]: https://nixos.org/nixpkgs/
 [nixAllowedUsers]: https://nixos.org/nix/manual/#conf-allowed-users
 [nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
+[Z shell]: http://zsh.sourceforge.net/
