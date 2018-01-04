@@ -127,6 +127,25 @@ in
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
       description = ''
         Environment variables to always set at login.
+        </para><para>
+        Note, these variables may be set in any order so no session
+        variable may have a runtime dependency on another session
+        variable. In particular code like
+        <programlisting>
+          home.sessionVariables = {
+            FOO = "Hello";
+            BAR = "$FOO World!";
+          };
+        </programlisting>
+        may not work as expected. If you need to reference another
+        session variable, then do so inside Nix instead. The above
+        example then becomes
+        <programlisting>
+          home.sessionVariables = {
+            FOO = "Hello";
+            BAR = "''${config.home.sessionVariables.FOO} World!";
+          };
+        </programlisting>
       '';
     };
 
