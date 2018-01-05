@@ -227,8 +227,7 @@ in
 
     home.sessionVariables =
       let
-        maybeSet = name: value:
-          listToAttrs (optional (value != null) { inherit name value; });
+        maybeSet = n: v: optionalAttrs (v != null) { ${n} = v; };
       in
         (maybeSet "LANG" cfg.language.base)
         //
