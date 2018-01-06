@@ -21,6 +21,12 @@ in
         description = "Number of history lines to keep in memory.";
       };
 
+      historyFile = mkOption {
+        type = types.str;
+        default = "$HOME/.bash_history";
+        description = "Location of the bash history file.";
+      };
+
       historyFileSize = mkOption {
         type = types.int;
         default = 100000;
@@ -136,8 +142,9 @@ in
       historyControlStr =
         concatStringsSep "\n" (mapAttrsToList (n: v: "${n}=${v}") (
           {
-            HISTSIZE = toString cfg.historySize;
+            HISTFILE = "\"${cfg.historyFile}\"";
             HISTFILESIZE = toString cfg.historyFileSize;
+            HISTSIZE = toString cfg.historySize;
           }
           // optionalAttrs (cfg.historyControl != []) {
             HISTCONTROL = concatStringsSep ":" cfg.historyControl;
