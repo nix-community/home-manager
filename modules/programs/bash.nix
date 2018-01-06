@@ -148,15 +148,6 @@ in
 
         ${envVarsStr}
 
-        ${cfg.profileExtra}
-      '';
-
-      home.file.".bashrc".text = ''
-        # -*- mode: sh -*-
-
-        # Skip if not running interactively.
-        [ -z "$PS1" ] && return
-
         ${export "HISTSIZE" cfg.historySize}
         ${export "HISTFILESIZE" cfg.historyFileSize}
         ${exportIfNonEmpty "HISTCONTROL" histControlStr}
@@ -166,10 +157,16 @@ in
 
         ${aliasesStr}
 
-        ${cfg.initExtra}
+        ${cfg.profileExtra}
 
         ${optionalString cfg.enableAutojump
           ". ${pkgs.autojump}/share/autojump/autojump.bash"}
+      '';
+
+      home.file.".bashrc".text = ''
+        # -*- mode: sh -*-
+
+        ${cfg.initExtra}
       '';
 
       home.packages =
