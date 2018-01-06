@@ -21,6 +21,12 @@ in
         description = "Number of history lines to keep in memory.";
       };
 
+      historyFile = mkOption {
+        type = types.path;
+        default = ~/.bash_history;
+        description = "Location of the bash history file.";
+      };
+
       historyFileSize = mkOption {
         type = types.int;
         default = 100000;
@@ -153,6 +159,7 @@ in
         # Commands that should be applied only for interactive shells.
         if [[ -n $PS1 ]]; then
           HISTSIZE=${toString cfg.historySize}
+          HISTFILE=${toString cfg.historyFile}
           HISTFILESIZE=${toString cfg.historyFileSize}
           ${setIfNonEmpty "HISTCONTROL" histControlStr}
           ${setIfNonEmpty "HISTIGNORE" histIgnoreStr}
