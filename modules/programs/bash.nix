@@ -132,8 +132,7 @@ in
       );
 
       export = n: v: "export ${n}=\"${toString v}\"";
-      exportIfNonNull = n: v: optionalString (v != null) (export n v);
-      exportIfNonEmpty = n: v: optionalString (v != "") (export n v);
+      setIfNonEmpty = n: v: optionalString (v != "") "${n}=${toString v}";
 
       histControlStr = concatStringsSep ":" cfg.historyControl;
       histIgnoreStr = concatStringsSep ":" cfg.historyIgnore;
@@ -153,10 +152,10 @@ in
       programs.bash.bashrcExtra = ''
         # Commands that should be applied only for interactive shells.
         if [[ -n $PS1 ]]; then
-          ${export "HISTSIZE" cfg.historySize}
-          ${export "HISTFILESIZE" cfg.historyFileSize}
-          ${exportIfNonEmpty "HISTCONTROL" histControlStr}
-          ${exportIfNonEmpty "HISTIGNORE" histIgnoreStr}
+          HISTSIZE=${toString cfg.historySize}
+          HISTFILESIZE=${toString cfg.historyFileSize}
+          ${setIfNonEmpty "HISTCONTROL" histControlStr}
+          ${setIfNonEmpty "HISTIGNORE" histIgnoreStr}
 
           ${shoptsStr}
 
