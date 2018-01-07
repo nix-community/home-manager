@@ -93,13 +93,19 @@ in
       profileExtra = mkOption {
         default = "";
         type = types.lines;
-        description = "Extra commands that should be added to .profile.";
+        description = ''
+          Extra commands that should be run when initializing a login
+          shell.
+        '';
       };
 
       initExtra = mkOption {
         default = "";
         type = types.lines;
-        description = "Extra commands that should be added to .bashrc.";
+        description = ''
+          Extra commands that should be run when initializing an
+          interactive shell.
+        '';
       };
     };
   };
