@@ -99,6 +99,17 @@ in
         '';
       };
 
+      bashrcExtra = mkOption {
+        # Hide for now, may want to rename in the future.
+        visible = false;
+        default = "";
+        type = types.lines;
+        description = ''
+          Extra commands that should be added to
+          <filename>~/.bashrc</filename>.
+        '';
+      };
+
       initExtra = mkOption {
         default = "";
         type = types.lines;
@@ -139,6 +150,25 @@ in
         mapAttrsToList export (cfg.sessionVariables // globalEnvVars)
       );
     in mkIf cfg.enable {
+      programs.bash.bashrcExtra = ''
+        # Commands that should be applied only for interactive shells.
+        if [[ -n $PS1 ]]; then
+          ${export "HISTSIZE" cfg.historySize}
+          ${export "HISTFILESIZE" cfg.historyFileSize}
+          ${exportIfNonEmpty "HISTCONTROL" histControlStr}
+          ${exportIfNonEmpty "HISTIGNORE" histIgnoreStr}
+
+          ${shoptsStr}
+
+          ${aliasesStr}
+
+          ${cfg.initExtra}
+
+          ${optionalString cfg.enableAutojump
+            ". ${pkgs.autojump}/share/autojump/autojump.bash"}
+        fi
+      '';
+
       home.file.".bash_profile".text = ''
         # -*- mode: sh -*-
 
@@ -160,22 +190,7 @@ in
       home.file.".bashrc".text = ''
         # -*- mode: sh -*-
 
-        # Skip if not running interactively.
-        [ -z "$PS1" ] && return
-
-        ${export "HISTSIZE" cfg.historySize}
-        ${export "HISTFILESIZE" cfg.historyFileSize}
-        ${exportIfNonEmpty "HISTCONTROL" histControlStr}
-        ${exportIfNonEmpty "HISTIGNORE" histIgnoreStr}
-
-        ${shoptsStr}
-
-        ${aliasesStr}
-
-        ${cfg.initExtra}
-
-        ${optionalString cfg.enableAutojump
-          ". ${pkgs.autojump}/share/autojump/autojump.bash"}
+        ${cfg.bashrcExtra}
       '';
 
       home.packages =
