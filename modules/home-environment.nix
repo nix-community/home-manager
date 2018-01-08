@@ -127,12 +127,40 @@ in
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
       description = ''
         Environment variables to always set at login.
+        </para><para>
+        The values may refer to other environment variables using
+        POSIX.2 style variable references. For example, a variable
+        <varname>parameter</varname> may be referenced as
+        <code>$parameter</code> or <code>''${parameter}</code>. A
+        default value <literal>foo</literal> may be given as per
+        <code>''${parameter:-foo}</code> and, similarly, an alternate
+        value <literal>bar</literal> can be given as per
+        <code>''${parameter:+bar}</code>.
+        </para><para>
+        Note, these variables may be set in any order so no session
+        variable may have a runtime dependency on another session
+        variable. In particular code like
+        <programlisting>
+          home.sessionVariables = {
+            FOO = "Hello";
+            BAR = "$FOO World!";
+          };
+        </programlisting>
+        may not work as expected. If you need to reference another
+        session variable, then do so inside Nix instead. The above
+        example then becomes
+        <programlisting>
+          home.sessionVariables = {
+            FOO = "Hello";
+            BAR = "''${config.home.sessionVariables.FOO} World!";
+          };
+        </programlisting>
       '';
     };
 
     home.sessionVariableSetter = mkOption {
-      default = "bash";
-      type = types.enum [ "pam" "bash" "zsh" ];
+      default = null;
+      type = types.nullOr (types.enum [ "pam" "bash" "zsh" ]);
       example = "pam";
       description = ''
         Identifies the module that should set the session variables.
@@ -143,6 +171,9 @@ in
         If "pam" is set then PAM must be used to set the system
         environment. Also mind that typical environment variables
         might not be set by the time PAM starts up.
+        </para><para>
+        This option is DEPRECATED, the shell modules are now
+        automatically setting the session variables when enabled.
       '';
     };
 
@@ -238,6 +269,23 @@ in
         (maybeSet "LC_PAPER" cfg.language.paper)
         //
         (maybeSet "LC_TIME" cfg.language.time);
+
+    home.packages = [
+      # Provide a file holding all session variables.
+      (
+        pkgs.writeTextFile {
+          name = "hm-session-vars.sh";
+          destination = "/etc/profile.d/hm-session-vars.sh";
+          text = ''
+            # Only source this once.
+            if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+            export __HM_SESS_VARS_SOURCED=1
+
+            ${config.lib.shell.exportAll cfg.sessionVariables}
+          '';
+        }
+      )
+    ];
 
     # A dummy entry acting as a boundary between the activation
     # script's "check" and the "write" phases.

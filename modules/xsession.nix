@@ -82,6 +82,9 @@ in
     };
 
     home.file.".xprofile".text = ''
+        ${optionalString (config.home.sessionVariableSetter != "pam")
+          ''. "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"''}
+
         if [[ -e "$HOME/.profile" ]]; then
           . "$HOME/.profile"
         fi
