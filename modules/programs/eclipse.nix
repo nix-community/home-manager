@@ -15,6 +15,16 @@ in
     programs.eclipse = {
       enable = mkEnableOption "Eclipse";
 
+      enableLombok = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Whether to enable the Lombok Java Agent in Eclipse. This is
+          necessary to use the Lombok class annotations.
+        '';
+      };
+
       jvmArgs = mkOption {
         type = types.listOf types.str;
         default = [];
@@ -33,7 +43,10 @@ in
     home.packages = [
       (pkgs.eclipses.eclipseWithPlugins {
         eclipse = pkgs.eclipses.eclipse-platform;
-        jvmArgs = cfg.jvmArgs;
+        jvmArgs =
+          cfg.jvmArgs
+          ++ optional cfg.enableLombok
+              "-javaagent:${pkgs.lombok}/share/java/lombok.jar";
         plugins = cfg.plugins;
       })
     ];
