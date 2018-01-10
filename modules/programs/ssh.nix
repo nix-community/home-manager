@@ -95,6 +95,12 @@ let
         default = null;
         description = "The command to use to connect to the server.";
       };
+
+      extraOptions = mkOption {
+        type = types.attrsOf types.str;
+        default = {};
+        description = "Extra configuration options for the host.";
+      };
     };
 
     config.host = mkDefault name;
@@ -113,6 +119,7 @@ let
          "  ServerAliveInterval ${toString cf.serverAliveInterval}"
     ++ optional (!cf.checkHostIP)         "  CheckHostIP no"
     ++ optional (cf.proxyCommand != null) "  ProxyCommand ${cf.proxyCommand}"
+    ++ mapAttrsToList (k: x: "  ${k} ${x}") cf.extraOptions
   );
 
 in
@@ -157,6 +164,14 @@ in
       '';
     };
 
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Extra configuration.
+      '';
+    };
+
     matchBlocks = mkOption {
       type = types.loaOf matchBlockModule;
       default = [];
@@ -189,6 +204,8 @@ in
       ControlMaster ${cfg.controlMaster}
       ControlPath ${cfg.controlPath}
       ControlPersist ${cfg.controlPersist}
+
+      ${cfg.extraConfig}
 
       ${concatStringsSep "\n\n" (
         map matchBlockStr (
