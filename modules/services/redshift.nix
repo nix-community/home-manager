@@ -87,6 +87,15 @@ in
       '';
     };
 
+    tray = mkOption {
+      type = types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Start the redshift-gtk tray applet.
+      '';
+    };
+
     extraOptions = mkOption {
       type = types.listOf types.str;
       default = [];
@@ -118,8 +127,9 @@ in
               "-t ${toString cfg.temperature.day}:${toString cfg.temperature.night}"
               "-b ${toString cfg.brightness.day}:${toString cfg.brightness.night}"
             ] ++ cfg.extraOptions;
+            command = if cfg.tray then "redshift-gtk" else "redshift";
           in
-            "${cfg.package}/bin/redshift ${concatStringsSep " " args}";
+            "${cfg.package}/bin/${command} ${concatStringsSep " " args}";
         RestartSec = 3;
         Restart = "always";
       };
