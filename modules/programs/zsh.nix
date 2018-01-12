@@ -238,11 +238,6 @@ in
         ++ optional cfg.enableCompletion nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
 
-      programs.zsh.sessionVariables = {
-        HISTSIZE = cfg.history.size;
-        HISTFILE = "$HOME/" + cfg.history.path;
-      };
-
       home.file."${relToDotDir ".zshenv"}".text = ''
         typeset -U fpath
         ${optionalString (config.home.sessionVariableSetter != "pam") ''
@@ -288,6 +283,11 @@ in
         ${concatStrings (map (plugin: ''
           source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
         '') cfg.plugins)}
+
+        # HISTSIZE, HISTFILE have to be set in .zshrc and after oh-my-zsh sourcing
+        # see https://github.com/rycee/home-manager/issues/177
+        HISTSIZE="${toString cfg.history.size}"
+        HISTFILE="$HOME/${cfg.history.path}"
 
         ${cfg.initExtra}
 
