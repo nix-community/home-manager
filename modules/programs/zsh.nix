@@ -19,12 +19,19 @@ let
 
   zdotdir = "$HOME/" + cfg.dotDir;
 
-  historyModule = types.submodule {
+  historyModule = types.submodule ({ config, ... }: {
     options = {
       size = mkOption {
         type = types.int;
         default = 10000;
         description = "Number of history lines to keep.";
+      };
+
+      save = mkOption {
+        type = types.int;
+        defaultText = 10000;
+        default = config.size;
+        description = "Number of history lines to save.";
       };
 
       path = mkOption {
@@ -49,7 +56,7 @@ let
         description = "Share command history between zsh sessions.";
       };
     };
-  };
+  });
 
   pluginModule = types.submodule ({ config, ... }: {
     options = {
@@ -247,10 +254,6 @@ in
       '';
 
       home.file."${relToDotDir ".zshrc"}".text = ''
-        setopt HIST_FCNTL_LOCK
-        ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
-        ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
-
         fpath+="$HOME/.nix-profile/share/zsh/site-functions"
         fpath+="$HOME/.nix-profile/share/zsh/$ZSH_VERSION/functions"
 
@@ -284,10 +287,15 @@ in
           source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
         '') cfg.plugins)}
 
-        # HISTSIZE, HISTFILE have to be set in .zshrc and after oh-my-zsh sourcing
-        # see https://github.com/rycee/home-manager/issues/177
+        # History options should be set in .zshrc and after oh-my-zsh sourcing.
+        # See https://github.com/rycee/home-manager/issues/177.
         HISTSIZE="${toString cfg.history.size}"
         HISTFILE="$HOME/${cfg.history.path}"
+        SAVEHIST="${toString cfg.history.save}"
+
+        setopt HIST_FCNTL_LOCK
+        ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
+        ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
 
         ${cfg.initExtra}
 
