@@ -81,6 +81,12 @@ let
           "Set timeout in seconds after which response will be requested.";
       };
 
+      compression = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Specifies whether to use compression.";
+      };
+
       checkHostIP = mkOption {
         type = types.bool;
         default = true;
@@ -117,6 +123,7 @@ let
     ++ optional (cf.hostname != null)     "  HostName ${cf.hostname}"
     ++ optional (cf.serverAliveInterval != 0)
          "  ServerAliveInterval ${toString cf.serverAliveInterval}"
+    ++ optional cf.compression            "  Compression yes"
     ++ optional (!cf.checkHostIP)         "  CheckHostIP no"
     ++ optional (cf.proxyCommand != null) "  ProxyCommand ${cf.proxyCommand}"
     ++ mapAttrsToList (n: v: "  ${n} ${v}") cf.extraOptions
@@ -136,6 +143,37 @@ in
       description = ''
         Whether connection to authentication agent (if any) will be forwarded
         to remote machine.
+      '';
+    };
+
+    compression = mkOption {
+      default = false;
+      type = types.bool;
+      description = "Specifies whether to use compression.";
+    };
+
+    serverAliveInterval = mkOption {
+      type = types.int;
+      default = 0;
+      description =
+        "Set default timeout in seconds after which response will be requested.";
+    };
+
+    hashKnownHosts = mkOption {
+      default = false;
+      type = types.bool;
+      description = ''
+        Indicates  that ssh(1) should hash host names and addresses when they
+        are added to the known hosts file.
+      '';
+    };
+
+    userKnownHostsFile = mkOption {
+      type = types.str;
+      default = "~/.ssh/known_hosts";
+      description = ''
+        Specifies one or more files to use for the user host key database,
+        separated by whitespace. The default is ~/.ssh/known_hosts.
       '';
     };
 
@@ -201,6 +239,10 @@ in
   config = mkIf cfg.enable {
     home.file.".ssh/config".text = ''
       ForwardAgent ${yn cfg.forwardAgent}
+      Compression ${yn cfg.compression}
+      ServerAliveInterval ${toString cfg.serverAliveInterval}
+      HashKnownHosts ${yn cfg.hashKnownHosts}
+      UserKnownHostsFile ${cfg.userKnownHostsFile}
       ControlMaster ${cfg.controlMaster}
       ControlPath ${cfg.controlPath}
       ControlPersist ${cfg.controlPersist}
