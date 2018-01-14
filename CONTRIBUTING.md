@@ -41,6 +41,27 @@ descriptive name. Perform your changes on this branch and when you are
 happy with the result push the branch to GitHub and
 [create a pull request][].
 
+Assuming your clone is at `$HOME/devel/home-manager` then you can make
+the `home-manager` command use it by either
+
+1.  overriding the default path by using the `-I` command line option:
+
+        home-manager -I home-manager=$HOME/devel/home-manager
+
+    or
+
+2.  changing the default path by ensuring your configuration includes
+
+        programs.home-manager.enable = true;
+        programs.home-manager.path = "$HOME/devel/home-manager";
+
+    and running `home-manager switch` to activate the change.
+    Afterwards, `home-manager build` and `home-manager switch` will
+    use your cloned repository.
+
+The first option is good if you only temporarily want to use your
+clone.
+
 ### Commits ###
 
 The commits in your pull request should be reasonably self-contained,
