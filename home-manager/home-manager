@@ -48,7 +48,7 @@ function setHomeManagerNixPath() {
                 "${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home-manager" \
                 "$HOME/.nixpkgs/home-manager" ; do
         if [[ -e "$path" || "$path" =~ ^https?:// ]] ; then
-            export NIX_PATH="$NIX_PATH${NIX_PATH:+:}home-manager=$path"
+            export NIX_PATH="home-manager=$path${NIX_PATH:+:}$NIX_PATH"
             return
         fi
     done
