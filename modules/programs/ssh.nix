@@ -82,9 +82,12 @@ let
       };
 
       compression = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Specifies whether to use compression.";
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          Specifies whether to use compression. Omitted from the host
+          block when <literal>null</literal>.
+        '';
       };
 
       checkHostIP = mkOption {
@@ -123,7 +126,7 @@ let
     ++ optional (cf.hostname != null)     "  HostName ${cf.hostname}"
     ++ optional (cf.serverAliveInterval != 0)
          "  ServerAliveInterval ${toString cf.serverAliveInterval}"
-    ++ optional cf.compression            "  Compression yes"
+    ++ optional (cf.compression != null)  "  Compression ${yn cf.compression}"
     ++ optional (!cf.checkHostIP)         "  CheckHostIP no"
     ++ optional (cf.proxyCommand != null) "  ProxyCommand ${cf.proxyCommand}"
     ++ mapAttrsToList (n: v: "  ${n} ${v}") cf.extraOptions
