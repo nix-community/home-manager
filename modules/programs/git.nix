@@ -108,7 +108,7 @@ in
       (mkIf (cfg.signing != null) {
         programs.git.iniContent = {
           user.signingKey = cfg.signing.key;
-          commit.gpgSign = cfg.signing.signByDefault;
+          commit.gpgsign = cfg.signing.signByDefault;
           gpg.program = cfg.signing.gpgPath;
         };
       })
