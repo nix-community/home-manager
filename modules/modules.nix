@@ -56,6 +56,7 @@ let
     ./services/random-background.nix
     ./services/redshift.nix
     ./services/screen-locker.nix
+    ./services/qsyncthingtray.nix
     ./services/syncthing.nix
     ./services/taffybar.nix
     ./services/tahoe-lafs.nix
