@@ -53,6 +53,7 @@ let
     ./services/owncloud-client.nix
     ./services/parcellite.nix
     ./services/polybar.nix
+    ./services/qsyncthingtray.nix
     ./services/random-background.nix
     ./services/redshift.nix
     ./services/screen-locker.nix
