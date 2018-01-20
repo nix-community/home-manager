@@ -531,6 +531,14 @@ in
 
               ${opts.${config.home.sessionVariableSetter}}
             '';
+
+      }
+
+      {
+        time = "2018-01-20T10:36:12+00:00";
+        message = ''
+          A new module is available: 'services.qsyncthingtray'
+        '';
       }
 
       {
