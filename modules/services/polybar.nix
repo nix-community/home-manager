@@ -13,7 +13,7 @@ let
     let
       value' =
         if isBool value then (if value then "true" else "false")
-        else if isString value then "\"${value}\""
+        else if (isString value && key != "include-file") then ''"${value}"''
         else toString value;
     in
       "${key}=${value'}";
