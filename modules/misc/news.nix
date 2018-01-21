@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, options, pkgs, ... }:
 
 with lib;
 
@@ -534,9 +534,13 @@ in
       }
 
       {
-        time = "2018-01-20T10:36:12+00:00";
+        time = "2018-01-25T11:35:08+00:00";
+        condition = options.services.qsyncthingtray.enable.isDefined;
         message = ''
-          A new module is available: 'services.qsyncthingtray'
+          'services.qsyncthingtray' has been merged into 'services.syncthing'.
+          Please, use 'services.syncthing.tray' option to activate the tray service.
+
+          The old module will be removed on February 25, 2018.
         '';
       }
     ];
