@@ -337,6 +337,11 @@ done
 # Get rid of the options.
 shift "$((OPTIND-1))"
 
+if [[ $# -eq 0 ]]; then
+    doHelp >&2
+    exit 1
+fi
+
 cmd="$1"
 shift 1
 
