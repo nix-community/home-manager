@@ -543,6 +543,16 @@ in
           The old module will be removed on February 25, 2018.
         '';
       }
+
+      {
+        time = "2018-01-25T11:35:08+00:00";
+        message = ''
+          'services.qsyncthingtray' has been merged into 'services.syncthing'.
+          Please, use 'services.syncthing.tray' option to activate the tray service.
+
+          The old module will be removed on February 25, 2018.
+        '';
+      }
     ];
   };
 }
