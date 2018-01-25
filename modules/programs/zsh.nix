@@ -171,10 +171,8 @@ in
       sessionVariables = mkOption {
         default = {};
         type = types.attrs;
-        example = { ZSH_CACHE_DIR = "$HOME/.cache/zsh"; };
-        description = ''
-          Environment variables that will be set for zsh session.
-        '';
+        example = { MAILCHECK = 30; };
+        description = "Environment variables that will be set for zsh session.";
       };
 
       initExtra = mkOption {
@@ -240,20 +238,46 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
+    (mkIf (cfg.profileExtra != "") {
+      home.file."${relToDotDir ".zprofile"}".text = cfg.profileExtra;
+    })
+
+    (mkIf (cfg.loginExtra != "") {
+      home.file."${relToDotDir ".zlogin"}".text = cfg.loginExtra;
+    })
+
+    (mkIf (cfg.logoutExtra != "") {
+      home.file."${relToDotDir ".zlogout"}".text = cfg.logoutExtra;
+    })
+
+    (mkIf cfg.oh-my-zsh.enable {
+      home.file."${relToDotDir ".zshenv"}".text = ''
+        ZSH="${pkgs.oh-my-zsh}/share/oh-my-zsh";
+        ZSH_CACHE_DIR="''${XDG_CACHE_HOME:-''$HOME/.cache}/oh-my-zsh";
+      '';
+    })
+
+    (mkIf (cfg.dotDir != null) {
+      home.file."${relToDotDir ".zshenv"}".text = ''
+        ZDOTDIR=${zdotdir}
+      '';
+
+      # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
+      # This is so that if ZDOTDIR happens to be
+      # already set correctly (by e.g. spawning a zsh inside a zsh), all env
+      # vars still get exported
+      home.file.".zshenv".text = ''
+        source ${zdotdir}/.zshenv
+      '';
+    })
+
     {
       home.packages = with pkgs; [ zsh ]
         ++ optional cfg.enableCompletion nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
 
-      home.file."${relToDotDir ".zshenv"}".text = ''
-        typeset -U fpath
-        ${optionalString (config.home.sessionVariableSetter != "pam") ''
-          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-        ''}
-        ${envVarsStr}
-      '';
-
       home.file."${relToDotDir ".zshrc"}".text = ''
+        typeset -U path cdpath fpath manpath
         fpath+="$HOME/.nix-profile/share/zsh/site-functions"
         fpath+="$HOME/.nix-profile/share/zsh/$ZSH_VERSION/functions"
 
@@ -299,40 +323,16 @@ in
 
         ${cfg.initExtra}
 
+        # Environment variables
+        ${optionalString (config.home.sessionVariableSetter != "pam") ''
+          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        ''}
+        ${envVarsStr}
+
+        # Aliases
         ${aliasesStr}
       '';
     }
-
-    (mkIf cfg.oh-my-zsh.enable {
-      programs.zsh.sessionVariables = {
-        ZSH = "${pkgs.oh-my-zsh}/share/oh-my-zsh";
-        ZSH_CACHE_DIR = "\${XDG_CACHE_HOME:-$HOME/.cache}/oh-my-zsh";
-      };
-    })
-
-    (mkIf (cfg.profileExtra != "") {
-      home.file."${relToDotDir ".zprofile"}".text = cfg.profileExtra;
-    })
-
-    (mkIf (cfg.loginExtra != "") {
-      home.file."${relToDotDir ".zlogin"}".text = cfg.loginExtra;
-    })
-
-    (mkIf (cfg.logoutExtra != "") {
-      home.file."${relToDotDir ".zlogout"}".text = cfg.logoutExtra;
-    })
-
-    (mkIf (cfg.dotDir != null) {
-      programs.zsh.sessionVariables.ZDOTDIR = zdotdir;
-
-      # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
-      # This is so that if ZDOTDIR happens to be
-      # already set correctly (by e.g. spawning a zsh inside a zsh), all env
-      # vars still get exported
-      home.file.".zshenv".text = ''
-        source ${zdotdir}/.zshenv
-      '';
-    })
 
     (mkIf cfg.oh-my-zsh.enable {
       # Oh-My-Zsh calls compinit during initialization,
