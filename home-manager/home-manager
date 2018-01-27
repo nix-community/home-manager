@@ -8,6 +8,7 @@ PATH=@coreutils@/bin:@less@/bin${PATH:+:}$PATH
 set -euo pipefail
 
 function errorEcho() {
+    # shellcheck disable=2048,2086
     echo $* >&2
 }
 
@@ -67,6 +68,7 @@ function doBuildAttr() {
         extraArgs="$extraArgs --show-trace"
     fi
 
+    # shellcheck disable=2086
     nix-build \
         "<home-manager/home-manager/home-manager.nix>" \
         $extraArgs \
@@ -82,6 +84,7 @@ function presentNews() {
     # shellcheck source=/dev/null
     . "$infoFile"
 
+    # shellcheck disable=2154
     if [[ $newsNumUnread -eq 0 ]]; then
         return
     elif [[ "$newsDisplay" == "silent" ]]; then
@@ -157,6 +160,7 @@ function doSwitch() {
 
 function doListGens() {
     pushd "/nix/var/nix/profiles/per-user/$USER" > /dev/null
+    # shellcheck disable=2012
     ls --color=yes -gG --time-style=long-iso --sort time home-manager-*-link \
         | cut -d' ' -f 4- \
         | sed -E 's/home-manager-([[:digit:]]*)-link/: id \1/'
@@ -241,6 +245,7 @@ function doShowNews() {
     # shellcheck source=/dev/null
     . "$infoFile"
 
+    # shellcheck disable=2154
     case $1 in
         --all)
             ${PAGER:-less} "$newsFileAll"
@@ -253,6 +258,7 @@ function doShowNews() {
             return 1
     esac
 
+    # shellcheck disable=2154
     if [[ -s "$newsUnreadIdsFile" ]]; then
         local newsReadIdsFile
         newsReadIdsFile="$(newsReadIdsFile)"
