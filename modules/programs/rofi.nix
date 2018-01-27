@@ -195,6 +195,24 @@ in
       description = "Whether to run rofi fullscreen.";
     };
 
+    location = mkOption {
+      default = null;
+      type = types.nullOr types.int;
+      description = "Location on screen (1-8)";
+    };
+
+    xoffset = mkOption {
+      default = null;
+      type = types.nullOr types.int;
+      description = "Offset in x-axis from chosen location";
+    };
+
+    yoffset = mkOption {
+      default = null;
+      type = types.nullOr types.int;
+      description = "Offset in y-asxis from chosen location";
+    };
+
     colors = mkOption {
       default = null;
       type = types.nullOr colorsSubmodule;
@@ -258,6 +276,9 @@ in
       ${setOption "terminal" cfg.terminal}
       ${setOption "cycle" cfg.cycle}
       ${setOption "fullscreen" cfg.fullscreen}
+      ${setOption "location" cfg.location}
+      ${setOption "xoffset" cfg.xoffset}
+      ${setOption "yoffset" cfg.yoffset}
 
       ${setColorScheme cfg.colors}
 
