@@ -51,7 +51,7 @@ with lib;
         qsyncthingtray = {
           Unit = {
             Description = "QSyncthingTray";
-            After = [ "graphical-session-pre.target" ];
+            After = [ "graphical-session-pre.target" "polybar.service" "taffybar.service" ];
             PartOf = [ "graphical-session.target" ];
           };
 
