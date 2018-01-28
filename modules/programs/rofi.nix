@@ -196,21 +196,32 @@ in
     };
 
     location = mkOption {
-      default = null;
-      type = types.nullOr types.int;
-      description = "Location on screen (1-8)";
+      default = 0;
+      type = types.enum (range 0 8);
+      description = ''
+        Location on the screen following the pattern: 
+        <informaltable frame="none">
+        <tgroup cols="1"><tbody>
+          <row><entry>1 (top left)</entry><entry>2 (top)</entry><entry>3 (top right)</entry></row>
+          <row><entry>8 (left)</entry><entry>0 (center)</entry><entry>4 (right)</entry></row>
+          <row><entry>7 (bottom left)</entry><entry>6 (bottom)</entry><entry>5 (bottom right)</entry></row>
+          </tbody>
+        </tgroup>
+        </informaltable>
+        '';
+
     };
 
     xoffset = mkOption {
-      default = null;
-      type = types.nullOr types.int;
-      description = "Offset in x-axis from chosen location";
+      default = 0;
+      type = types.int;
+      description = "Offset in the x-axis in pixels relative to the chosen location";
     };
 
     yoffset = mkOption {
-      default = null;
-      type = types.nullOr types.int;
-      description = "Offset in y-asxis from chosen location";
+      default = 0;
+      type = types.int;
+      description = "Offset in y-axis in pixels relative to the chosen location";
     };
 
     colors = mkOption {
