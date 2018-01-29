@@ -153,7 +153,13 @@ in
 
       enableCompletion = mkOption {
         default = true;
-        description = "Enable zsh completion.";
+        description = ''
+          Enable zsh completion. Don't forget to add
+          <programlisting>
+            environment.pathsToLink = [ "/share/zsh" ];
+          </programlisting>
+          to your system configuration to get completion for system packages (e.g. systemd).
+        '';
         type = types.bool;
       };
 
@@ -278,8 +284,10 @@ in
 
       home.file."${relToDotDir ".zshrc"}".text = ''
         typeset -U path cdpath fpath manpath
-        fpath+="$HOME/.nix-profile/share/zsh/site-functions"
-        fpath+="$HOME/.nix-profile/share/zsh/$ZSH_VERSION/functions"
+
+        for profile in ''${(z)NIX_PROFILES}; do
+          fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
+        done
 
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
 
