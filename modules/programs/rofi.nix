@@ -225,6 +225,13 @@ in
       '';
     };
 
+    theme = mkOption {
+      default = null;
+      type = types.nullOr types.string;
+      description = "Name of theme to use";
+      example = "Arc";
+    };
+
     configPath = mkOption {
       default = ".config/rofi/config";
       type = types.string;
@@ -240,6 +247,7 @@ in
   };
 
   config = mkIf cfg.enable {
+    warnings = optional (cfg.theme != null && cfg.colors != null) "rofi: colors shouldn't be set when using themes";
     home.packages = [ pkgs.rofi ];
 
     home.file."${cfg.configPath}".text = ''
@@ -260,6 +268,7 @@ in
       ${setOption "fullscreen" cfg.fullscreen}
 
       ${setColorScheme cfg.colors}
+      ${setOption "theme" cfg.theme}
 
       ${cfg.extraConfig}
     '';
