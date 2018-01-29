@@ -239,6 +239,15 @@ in
         Extra commands to run in the Home Manager generation builder.
       '';
     };
+
+    home.show_program_enable_warnings = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to show when packages can be installed with
+        <literal>programs.*.enable = true</literal>.
+      '';
+    };
   };
 
   config = {
@@ -252,6 +261,12 @@ in
         message = "Home directory could not be determined";
       }
     ];
+    warnings = optionals cfg.show_program_enable_warnings
+      (map (x: concatStrings ["home-environment: " x " can be installed using programs." x ".enable = true"])
+      (filter (x: !attrByPath [x "enable"] false config.programs)
+      (filter (x: hasAttrByPath [x] config.programs)
+      (map (x: (builtins.parseDrvName x).name)
+      (map (x: x.name) config.home.packages)))));
 
     home.username = mkDefault (builtins.getEnv "USER");
     home.homeDirectory = mkDefault (builtins.getEnv "HOME");
