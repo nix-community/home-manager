@@ -560,6 +560,23 @@ in
           feature is slowly forthcoming.
         '';
       }
+
+      {
+        time = "2018-02-09T21:14:42+00:00";
+        condition = with config.programs.rofi; enable && colors != null;
+        message = ''
+          The new and preferred way to configure the rofi theme is
+          using rasi themes through the 'programs.rofi.theme' option.
+          This option can take as value either the name of a
+          pre-installed theme or the path to a theme file.
+
+          A rasi theme can be generated from an Xresources config
+          using 'rofi -dump-theme'.
+
+          The option 'programs.rofi.colors' is still supported but may
+          become deprecated and removed in the future.
+        '';
+      }
     ];
   };
 }

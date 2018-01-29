@@ -124,6 +124,14 @@ let
     bottom-left  = 7;
     left         = 8;
   };
+
+  themeName =
+    if (cfg.theme == null) then null
+    else if (lib.isString cfg.theme) then cfg.theme
+    else lib.removeSuffix ".rasi" (baseNameOf cfg.theme);
+
+  themePath = if (lib.isString cfg.theme) then null else cfg.theme;
+
 in
 
 {
@@ -232,8 +240,10 @@ in
       default = null;
       type = types.nullOr colorsSubmodule;
       description = ''
-        Color scheme settings.
-        Colors can be specified in CSS color formats.
+        Color scheme settings. Colors can be specified in CSS color
+        formats. This option may become deprecated in the future and
+        therefore the <varname>programs.rofi.theme</varname> option
+        should be used whenever possible.
       '';
       example = literalExample ''
         colors = {
@@ -258,6 +268,17 @@ in
       '';
     };
 
+    theme = mkOption {
+      default = null;
+      type = with types; nullOr (either string path);
+      example = "Arc";
+      description = ''
+        Name of theme or path to theme file in rasi format. Available
+        named themes can be viewed using the
+        <command>rofi-theme-selector</command> tool.
+      '';
+    };
+
     configPath = mkOption {
       default = ".config/rofi/config";
       type = types.string;
@@ -273,6 +294,15 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.theme == null || cfg.colors == null;
+        message = ''
+          Cannot use the rofi options 'theme' and 'colors' simultaneously.
+        '';
+      }
+    ];
+
     home.packages = [ pkgs.rofi ];
 
     home.file."${cfg.configPath}".text = ''
@@ -296,8 +326,13 @@ in
       ${setOption "yoffset" cfg.yoffset}
 
       ${setColorScheme cfg.colors}
+      ${setOption "theme" themeName}
 
       ${cfg.extraConfig}
     '';
+
+    xdg.dataFile = mkIf (themePath != null) {
+      "rofi/themes/${themeName}.rasi".source =  themePath;
+    };
   };
 }
