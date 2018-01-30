@@ -23,8 +23,8 @@ with lib;
     };
   };
 
-  config = mkIf config.services.syncthing.enable (mkMerge [
-    {
+  config = mkMerge [
+    (mkIf config.services.syncthing.enable {
       systemd.user.services = {
         syncthing = {
           Unit = {
@@ -45,7 +45,8 @@ with lib;
           };
         };
       };
-    }
+    })
+
     (mkIf config.services.syncthing.tray {
       systemd.user.services = {
         qsyncthingtray = {
@@ -65,5 +66,5 @@ with lib;
         };
       };
     })
-  ]);
+  ];
 }
