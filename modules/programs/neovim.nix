@@ -58,6 +58,28 @@ in
           List here Python 3 packages required for your plugins to work.
         '';
       };
+
+      configure = mkOption {
+        type = types.nullOr types.attrs;
+        default = null;
+        example = literalExample ''
+          configure = {
+              customRC = $''''
+              " here your custom configuration goes!
+              $'''';
+              packages.myVimPackage = with pkgs.vimPlugins; {
+                # loaded on launch
+                start = [ fugitive ];
+                # manually loadable by calling `:packadd $plugin-name`
+                opt = [ ];
+              };
+            };
+        '';
+        description = ''
+          Generate your init file from your list of plugins and custom commands, 
+          and loads it from the store via <command>nvim -u /nix/store/hash-vimrc</command>
+        '';
+      };
     };
   };
 
@@ -67,7 +89,7 @@ in
         inherit (cfg)
           extraPython3Packages withPython3
           extraPythonPackages withPython
-          withRuby;
+          withRuby configure;
       })
     ];
   };
