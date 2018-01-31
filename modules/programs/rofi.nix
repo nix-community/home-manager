@@ -113,6 +113,17 @@ let
         (rowsColorsToString colors.rows)}
   '';
 
+  locationsMap = {
+    "center"       = 0;
+    "top-left"     = 1;
+    "top"          = 2;
+    "top-right"    = 3;
+    "right"        = 4;
+    "bottom-right" = 5;
+    "bottom"       = 6;
+    "bottom-left"  = 7;
+    "left"         = 8;
+  };
 in
 
 {
@@ -196,20 +207,9 @@ in
     };
 
     location = mkOption {
-      default = 0;
-      type = types.enum (range 0 8);
-      description = ''
-        Location on the screen following the pattern: 
-        <informaltable frame="none">
-        <tgroup cols="1"><tbody>
-          <row><entry>1 (top left)</entry><entry>2 (top)</entry><entry>3 (top right)</entry></row>
-          <row><entry>8 (left)</entry><entry>0 (center)</entry><entry>4 (right)</entry></row>
-          <row><entry>7 (bottom left)</entry><entry>6 (bottom)</entry><entry>5 (bottom right)</entry></row>
-          </tbody>
-        </tgroup>
-        </informaltable>
-        '';
-
+      default = "center";
+      type = types.enum (builtins.attrNames locationsMap);
+      description = "The location rofi appears on the screen.";
     };
 
     xoffset = mkOption {
@@ -287,7 +287,7 @@ in
       ${setOption "terminal" cfg.terminal}
       ${setOption "cycle" cfg.cycle}
       ${setOption "fullscreen" cfg.fullscreen}
-      ${setOption "location" cfg.location}
+      ${setOption "location" (builtins.getAttr cfg.location locationsMap)}
       ${setOption "xoffset" cfg.xoffset}
       ${setOption "yoffset" cfg.yoffset}
 
