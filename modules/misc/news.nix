@@ -543,6 +543,13 @@ in
           The old module will be removed on February 25, 2018.
         '';
       }
+
+      {
+        time = "2018-02-02T11:15:00+00:00";
+        message = ''
+          A new program configuration is available: 'programs.mercurial'
+        '';
+      }
     ];
   };
 }
