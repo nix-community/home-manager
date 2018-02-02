@@ -39,7 +39,10 @@ in
       type = types.nullOr cursorType;
       default = null;
       description = ''
-        The X cursor theme to use.
+        The X cursor theme and settings. There package pkgs.xorg.xcursorthemes
+        contains cursors named whiteglass, redglass, and handhelds. The package
+        pkgs.vanilla-dmz contains cursors named Vanilla-DMZ and Vanilla-DMZ-AA.
+        Note: handhelds does not seem to work at custom sizes.
       '';
     };
   };
