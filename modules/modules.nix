@@ -64,6 +64,7 @@ let
     ./services/window-managers/xmonad.nix
     ./services/xscreensaver.nix
     ./systemd.nix
+    ./xcursor.nix
     ./xresources.nix
     ./xsession.nix
     <nixpkgs/nixos/modules/misc/assertions.nix>
