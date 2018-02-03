@@ -548,6 +548,12 @@ in
         time = "2018-02-02T11:15:00+00:00";
         message = ''
           A new program configuration is available: 'programs.mercurial'
+      }
+
+      {
+        time = "2018-02-03T10:00:00+00:00";
+        message = ''
+          A new module is available: 'services.stalonetray'
         '';
       }
     ];
