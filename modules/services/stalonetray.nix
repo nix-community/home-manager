@@ -6,8 +6,6 @@ let
 
   cfg = config.services.stalonetray;
 
-  package = pkgs.stalonetray;
-
 in
 
 {
@@ -35,7 +33,7 @@ in
             decorations = null;
             icon_size = 30;
             sticky = true;
-            background = ''"#cccccc"'';
+            background = "#cccccc";
           };
       };
     
@@ -56,7 +54,7 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ pkgs.stalonetray ];
+      home.packages = [ cfg.package ];
 
       systemd.user.services.stalonetray = {
         Unit = {
@@ -70,7 +68,7 @@ in
         };
 
         Service = {
-          ExecStart = "${package}/bin/stalonetray";
+          ExecStart = "${cfg.package}/bin/stalonetray";
           Restart = "on-failure";
         };
       };
@@ -82,7 +80,7 @@ in
           valueToString = v:
             if isBool v then (if v then "true" else "false")
             else if (v==null) then "none"
-            else toString v;
+            else ''"${toString v}"'';
         in
           concatStrings (
             mapAttrsToList (k: v: "${k} ${valueToString v}\n") cfg.config
