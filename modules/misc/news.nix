@@ -566,6 +566,7 @@ in
           allows specifying the pointer cursor theme and size. The
           settings will be applied in the xsession, Xresources, and
           GTK configuration.
+        '';
       }
     ];
   };
