@@ -543,6 +543,17 @@ in
           The old module will be removed on February 25, 2018.
         '';
       }
+
+      {
+        time = "2018-02-04T22:58:49+00:00";
+        condition = config.xsession.enable;
+        message = ''
+          A new option 'xsession.pointerCursor' is now available. It
+          allows specifying the pointer cursor theme and size. The
+          settings will be applied in the xsession, Xresources, and
+          GTK configuration.
+        '';
+      }
     ];
   };
 }

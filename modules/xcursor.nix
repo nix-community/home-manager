@@ -4,7 +4,7 @@ with lib;
 
 let
 
-  cfg = config.xcursor;
+  cfg = config.xsession.pointerCursor;
 
   cursorType = types.submodule {
     options = {
@@ -35,14 +35,16 @@ in
   meta.maintainers = [ maintainers.league ];
 
   options = {
-    xcursor = mkOption {
+    xsession.pointerCursor = mkOption {
       type = types.nullOr cursorType;
       default = null;
       description = ''
-        The X cursor theme and settings. There package pkgs.xorg.xcursorthemes
-        contains cursors named whiteglass, redglass, and handhelds. The package
-        pkgs.vanilla-dmz contains cursors named Vanilla-DMZ and Vanilla-DMZ-AA.
-        Note: handhelds does not seem to work at custom sizes.
+        The X cursor theme and settings. The package
+        <varname>xorg.xcursorthemes</varname> contains cursors named
+        whiteglass, redglass, and handhelds. The package
+        <varname>vanilla-dmz</varname> contains cursors named Vanilla-DMZ
+        and Vanilla-DMZ-AA. Note: handhelds does not seem to work at
+        custom sizes.
       '';
     };
   };
@@ -69,7 +71,6 @@ in
       "gtk-cursor-theme-name" = cfg.name;
       "gtk-cursor-theme-size" = cfg.size;
     };
-
 
   };
 }
