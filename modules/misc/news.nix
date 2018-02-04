@@ -545,6 +545,20 @@ in
       }
 
       {
+        time = "2018-02-02T11:15:00+00:00";
+        message = ''
+          A new program configuration is available: 'programs.mercurial'
+        '';
+      }
+
+      {
+        time = "2018-02-03T10:00:00+00:00";
+        message = ''
+          A new module is available: 'services.stalonetray'
+        '';
+      }
+
+      {
         time = "2018-02-04T22:58:49+00:00";
         condition = config.xsession.enable;
         message = ''
@@ -552,7 +566,6 @@ in
           allows specifying the pointer cursor theme and size. The
           settings will be applied in the xsession, Xresources, and
           GTK configuration.
-        '';
       }
     ];
   };

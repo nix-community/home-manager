@@ -34,6 +34,7 @@ let
     ./programs/info.nix
     ./programs/lesspipe.nix
     ./programs/man.nix
+    ./programs/mercurial.nix
     ./programs/neovim.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
@@ -56,6 +57,7 @@ let
     ./services/random-background.nix
     ./services/redshift.nix
     ./services/screen-locker.nix
+    ./services/stalonetray.nix
     ./services/syncthing.nix
     ./services/taffybar.nix
     ./services/tahoe-lafs.nix

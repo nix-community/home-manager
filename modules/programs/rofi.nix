@@ -113,6 +113,17 @@ let
         (rowsColorsToString colors.rows)}
   '';
 
+  locationsMap = {
+    center       = 0;
+    top-left     = 1;
+    top          = 2;
+    top-right    = 3;
+    right        = 4;
+    bottom-right = 5;
+    bottom       = 6;
+    bottom-left  = 7;
+    left         = 8;
+  };
 in
 
 {
@@ -195,6 +206,28 @@ in
       description = "Whether to run rofi fullscreen.";
     };
 
+    location = mkOption {
+      default = "center";
+      type = types.enum (builtins.attrNames locationsMap);
+      description = "The location rofi appears on the screen.";
+    };
+
+    xoffset = mkOption {
+      default = 0;
+      type = types.int;
+      description = ''
+        Offset in the x-axis in pixels relative to the chosen location.
+      '';
+    };
+
+    yoffset = mkOption {
+      default = 0;
+      type = types.int;
+      description = ''
+        Offset in the y-axis in pixels relative to the chosen location.
+      '';
+    };
+
     colors = mkOption {
       default = null;
       type = types.nullOr colorsSubmodule;
@@ -258,6 +291,9 @@ in
       ${setOption "terminal" cfg.terminal}
       ${setOption "cycle" cfg.cycle}
       ${setOption "fullscreen" cfg.fullscreen}
+      ${setOption "location" (builtins.getAttr cfg.location locationsMap)}
+      ${setOption "xoffset" cfg.xoffset}
+      ${setOption "yoffset" cfg.yoffset}
 
       ${setColorScheme cfg.colors}
 
