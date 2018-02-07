@@ -201,6 +201,7 @@ in
       description = ''
         Color scheme settings.
         Colors can be specified in CSS color formats.
+        DEPRECATED: Use <varname>programs.rofi.theme</varname>.
       '';
       example = literalExample ''
         colors = {
@@ -253,7 +254,6 @@ in
     in
     mkMerge [
       {
-        warnings = optional (cfg.theme != null && cfg.colors != null) "rofi: colors shouldn't be set when using themes";
         home.packages = [ pkgs.rofi ];
 
         home.file."${cfg.configPath}".text = ''
@@ -273,7 +273,6 @@ in
           ${setOption "cycle" cfg.cycle}
           ${setOption "fullscreen" cfg.fullscreen}
 
-          ${setColorScheme cfg.colors}
           ${setOption "theme" themeName}
 
           ${cfg.extraConfig}

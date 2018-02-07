@@ -543,6 +543,21 @@ in
           The old module will be removed on February 25, 2018.
         '';
       }
+      {
+        time = "2018-02-07T18:00:00+00:00";
+        condition = with config.programs.rofi; enable && colors != null;
+        message = ''
+          The options 'programs.rofi.colours' have been been deprecated and
+          will be removed in the near future.
+
+          The new and preferred way to configure the theme is using rasi themes
+          through the 'programs.rofi.theme' option which can take either a name
+          of a pre-installed theme or a path to a theme to install.
+
+          A rasi theme can be generated from an Xresources config using
+          `rofi -dump-theme`.
+        '';
+      }
     ];
   };
 }
