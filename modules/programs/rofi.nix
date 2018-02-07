@@ -226,10 +226,10 @@ in
     };
 
     theme = mkOption {
-      default = null;
-      type = types.nullOr types.string;
-      description = "Name of theme to use";
-      example = "Arc";
+      default = "Arc";
+      type = types.either types.string types.path;
+      description = "Name of theme or path to theme to use";
+      example = ~/theme.rasi;
     };
 
     configPath = mkOption {
@@ -246,31 +246,42 @@ in
 
   };
 
-  config = mkIf cfg.enable {
-    warnings = optional (cfg.theme != null && cfg.colors != null) "rofi: colors shouldn't be set when using themes";
-    home.packages = [ pkgs.rofi ];
+  config = mkIf cfg.enable (
+    let
+    themeName = if (lib.isString cfg.theme) then cfg.theme else lib.removeSuffix ".rasi" (baseNameOf cfg.theme);
+    themePath = if (lib.isString cfg.theme) then null else cfg.theme;
+    in
+    mkMerge [
+      {
+        warnings = optional (cfg.theme != null && cfg.colors != null) "rofi: colors shouldn't be set when using themes";
+        home.packages = [ pkgs.rofi ];
 
-    home.file."${cfg.configPath}".text = ''
-      ${setOption "width" cfg.width}
-      ${setOption "lines" cfg.lines}
-      ${setOption "font" cfg.font}
-      ${setOption "bw" cfg.borderWidth}
-      ${setOption "eh" cfg.rowHeight}
-      ${setOption "padding" cfg.padding}
-      ${setOption "separator-style" cfg.separator}
-      ${setOption "hide-scrollbar" (
-        if (cfg.scrollbar != null)
-        then (! cfg.scrollbar)
-        else cfg.scrollbar
-      )}
-      ${setOption "terminal" cfg.terminal}
-      ${setOption "cycle" cfg.cycle}
-      ${setOption "fullscreen" cfg.fullscreen}
+        home.file."${cfg.configPath}".text = ''
+          ${setOption "width" cfg.width}
+          ${setOption "lines" cfg.lines}
+          ${setOption "font" cfg.font}
+          ${setOption "bw" cfg.borderWidth}
+          ${setOption "eh" cfg.rowHeight}
+          ${setOption "padding" cfg.padding}
+          ${setOption "separator-style" cfg.separator}
+          ${setOption "hide-scrollbar" (
+            if (cfg.scrollbar != null)
+            then (! cfg.scrollbar)
+            else cfg.scrollbar
+          )}
+          ${setOption "terminal" cfg.terminal}
+          ${setOption "cycle" cfg.cycle}
+          ${setOption "fullscreen" cfg.fullscreen}
 
-      ${setColorScheme cfg.colors}
-      ${setOption "theme" cfg.theme}
+          ${setColorScheme cfg.colors}
+          ${setOption "theme" themeName}
 
-      ${cfg.extraConfig}
-    '';
-  };
+          ${cfg.extraConfig}
+        '';
+      }
+      (mkIf (themePath != null) {
+        home.file.".local/share/rofi/themes/${themeName}.rasi".source = themePath;
+      })
+      ]
+    );
 }
