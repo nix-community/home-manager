@@ -89,10 +89,7 @@ in
 
       home.sessionVariables =
         optionalAttrs cfg.enableSshSupport {
-          SSH_AUTH_SOCK =
-            if config.home.sessionVariableSetter == "pam"
-            then "\${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh"
-            else "$(${pkgs.gnupg}/bin/gpgconf --list-dirs agent-ssh-socket)";
+          SSH_AUTH_SOCK = "$(${pkgs.gnupg}/bin/gpgconf --list-dirs agent-ssh-socket)";
         };
 
       programs.bash.initExtra = gpgInitStr;

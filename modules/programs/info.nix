@@ -54,13 +54,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [{
-      assertion = config.home.sessionVariableSetter != "pam";
-      message = ''
-        The info module does not work with PAM as a session variable setter.
-      '';
-    }];
-
     home.sessionVariables.INFOPATH =
       "${cfg.homeInfoDirLocation}\${INFOPATH:+:}\${INFOPATH}";
 

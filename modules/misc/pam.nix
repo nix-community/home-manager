@@ -4,11 +4,7 @@ with lib;
 
 let
 
-  homeCfg = config.home;
-
-  vars =
-    optionalAttrs (homeCfg.sessionVariableSetter == "pam") homeCfg.sessionVariables
-    // config.pam.sessionVariables;
+  vars = config.pam.sessionVariables;
 
 in
 

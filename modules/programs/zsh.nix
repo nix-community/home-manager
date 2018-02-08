@@ -332,9 +332,7 @@ in
         ${cfg.initExtra}
 
         # Environment variables
-        ${optionalString (config.home.sessionVariableSetter != "pam") ''
-          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-        ''}
+        . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
         ${envVarsStr}
 
         # Aliases

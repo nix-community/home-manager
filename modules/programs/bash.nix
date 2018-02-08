@@ -183,9 +183,7 @@ in
       home.file.".profile".text = ''
         # -*- mode: sh -*-
 
-        ${optionalString (config.home.sessionVariableSetter != "pam") ''
-          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-        ''}
+        . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
         ${sessionVarsStr}
 

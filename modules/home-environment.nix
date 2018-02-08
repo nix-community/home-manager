@@ -96,6 +96,18 @@ in
 {
   meta.maintainers = [ maintainers.rycee ];
 
+  imports = [
+    (mkRemovedOptionModule [ "home" "sessionVariableSetter" ] ''
+      Session variables are now always set through the shell. This is
+      done automatically if the shell configuration is managed by Home
+      Manager. If not, then you must source the
+
+        ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+
+      file yourself.
+    '')
+  ];
+
   options = {
     home.username = mkOption {
       type = types.str;
@@ -155,25 +167,6 @@ in
             BAR = "''${config.home.sessionVariables.FOO} World!";
           };
         </programlisting>
-      '';
-    };
-
-    home.sessionVariableSetter = mkOption {
-      default = null;
-      type = types.nullOr (types.enum [ "pam" "bash" "zsh" ]);
-      example = "pam";
-      description = ''
-        Identifies the module that should set the session variables.
-        </para><para>
-        If "bash" is set then <varname>config.bash.enable</varname>
-        must also be enabled.
-        </para><para>
-        If "pam" is set then PAM must be used to set the system
-        environment. Also mind that typical environment variables
-        might not be set by the time PAM starts up.
-        </para><para>
-        This option is DEPRECATED, the shell modules are now
-        automatically setting the session variables when enabled.
       '';
     };
 
