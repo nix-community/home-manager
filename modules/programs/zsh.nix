@@ -120,6 +120,18 @@ let
           Name of the theme to be used by oh-my-zsh.
         '';
       };
+
+      extraConfig = mkOption {
+        default = "";
+        example = ''
+          # Configuration of the per-directory-history plugin
+          HISTORY_BASE="$HOME/.zsh/per-directory-history"
+        '';
+        type = types.lines;
+        description = ''
+          Commands to be run before loading oh-my-zsh, such as plugin configuration.
+        '';
+      };
     };
   };
 
@@ -312,6 +324,7 @@ in
             ${optionalString (cfg.oh-my-zsh.theme != "")
               "ZSH_THEME=\"${cfg.oh-my-zsh.theme}\""
             }
+            ${cfg.oh-my-zsh.extraConfig}
             source $ZSH/oh-my-zsh.sh
         ''}
 
