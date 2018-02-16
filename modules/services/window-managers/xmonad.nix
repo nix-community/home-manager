@@ -90,23 +90,14 @@ in
 
     (mkIf (cfg.config != null) {
       home.file.".xmonad/xmonad.hs".source = cfg.config;
+      home.file.".xmonad/xmonad.hs".onChange = ''
+        echo "Recompiling xmonad"
+        ${config.xsession.windowManager.command} --recompile
 
-      home.activation.checkXmonad = dag.entryBefore [ "linkGeneration" ] ''
-        if ! cmp --quiet "${cfg.config}" "$HOME/.xmonad/xmonad.hs"; then
-          xmonadChanged=1
-        fi
-      '';
-
-      home.activation.applyXmonad = dag.entryAfter [ "linkGeneration" ] ''
-        if [[ -v xmonadChanged ]]; then
-          echo "Recompiling xmonad"
-          ${config.xsession.windowManager.command} --recompile
-
-          # Attempt to restart xmonad if X is running.
-          if [[ -v DISPLAY ]] ; then
-            echo "Restarting xmonad"
-            ${config.xsession.windowManager.command} --restart
-          fi
+        # Attempt to restart xmonad if X is running.
+        if [[ -v DISPLAY ]] ; then
+          echo "Restarting xmonad"
+          ${config.xsession.windowManager.command} --restart
         fi
       '';
     })

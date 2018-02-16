@@ -197,6 +197,36 @@ in
         ''
     );
 
+    home.activation.checkFilesChanged = dag.entryBefore ["linkGeneration"] (
+      ''
+        declare -A changed_files
+      '' + concatStrings (
+        mapAttrsToList (n: v: ''
+
+          cmp --quiet \
+          "${v.source}" \
+          "${v.target}"
+          changed_files["${v.target}"]=$?
+        '')
+        (filterAttrs (n: v: v.onChange != null)
+        cfg)
+      )
+    );
+
+    home.activation.onFilesChange = dag.entryAfter [ "linkGeneration" ] (
+      concatStrings (
+        # TODO: find nicer way to escape variable substitution
+        mapAttrsToList (n: v: ''
+
+          if [ ${"$\{changed_files"}["${v.target}"]} -eq 1 ]; then
+          ${v.onChange}
+          fi
+        '')
+        (filterAttrs (n: v: v.onChange != null)
+        cfg)
+      )
+    );
+
     home-files = pkgs.stdenv.mkDerivation {
       name = "home-manager-files";
 

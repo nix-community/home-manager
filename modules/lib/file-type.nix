@@ -95,6 +95,14 @@ in
             are symbolic links to the files of the source directory.
           '';
         };
+
+        onChange = mkOption {
+          type = types.nullOr types.lines;
+          default = null;
+          description = ''
+            Script to run when file has changed between generations.
+          '';
+        };
       };
 
       config = {
