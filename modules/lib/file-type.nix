@@ -95,6 +95,17 @@ in
             are symbolic links to the files of the source directory.
           '';
         };
+
+        onChange = mkOption {
+          type = types.lines;
+          default = "";
+          description = ''
+            Shell commands to run when file has changed between
+            generations. The script will be run
+            <emphasis>after</emphasis> the new files have been linked
+            into place.
+          '';
+        };
       };
 
       config = {

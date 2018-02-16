@@ -771,23 +771,16 @@ in
     {
       home.packages = [ cfg.package ];
       xsession.windowManager.command = "${cfg.package}/bin/i3";
-      xdg.configFile."i3/config".source = configFile;
-
-      home.activation.checkI3 = dag.entryBefore [ "linkGeneration" ] ''
-        if ! cmp --quiet \
-            "${configFile}" \
-            "${config.xdg.configHome}/i3/config"; then
-          i3Changed=1
-        fi
-      '';
-
-      home.activation.reloadI3 = dag.entryAfter [ "linkGeneration" ] ''
-        SOCKET=''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*
-        if [ -v i3Changed ] && [ -S $SOCKET ]; then
-          echo "Reloading i3"
-          ${cfg.package}/bin/i3-msg -s $SOCKET reload 1>/dev/null
-        fi
-      '';
+      xdg.configFile."i3/config" = {
+        source = configFile;
+        onChange = ''
+          i3Socket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*
+          if [ -S $i3Socket ]; then
+            echo "Reloading i3"
+            $DRY_RUN_CMD ${cfg.package}/bin/i3-msg -s $i3Socket reload 1>/dev/null
+          fi
+        '';
+      };
     }
 
     (mkIf (cfg.config != null) {
