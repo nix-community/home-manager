@@ -38,6 +38,25 @@ let
     };
   };
 
+  barColorSetModule = types.submodule {
+    options = {
+      border = mkOption {
+        type = types.string;
+        visible = false;
+      };
+
+      background = mkOption {
+        type = types.string;
+        visible = false;
+      };
+
+      text = mkOption {
+        type = types.string;
+        visible = false;
+      };
+    };
+  };
+
   colorSetModule = types.submodule {
     options = {
       border = mkOption {
@@ -69,6 +88,16 @@ let
 
   barModule = types.submodule {
     options = {
+      id = mkOption {
+        type = types.nullOr types.string;
+        default = null;
+        description = ''
+          Specifies the bar ID for the configured bar instance.
+          If this option is missing, the ID is set to bar-x, where x corresponds
+          to the position of the embedding bar block in the config file.
+        '';
+      };
+
       mode = mkOption {
         type = types.enum [ "dock" "hide" "invisible" ];
         default = "dock";
@@ -93,12 +122,98 @@ let
         description = "Whether workspace buttons should be shown or not.";
       };
 
+      workspaceNumbers = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether workspace numbers should be displayed within the workspace buttons.";
+      };
+
+      command = mkOption {
+        type = types.string;
+        default = "${cfg.package}/bin/i3bar";
+        defaultText = "i3bar";
+        description = "Command that will be used to start a bar.";
+        example = "${pkgs.i3-gaps}/bin/i3bar -t";
+      };
+
       statusCommand = mkOption {
         type = types.string;
         default = "${pkgs.i3status}/bin/i3status";
         description = "Command that will be used to get status lines.";
       };
 
+      colors = mkOption {
+        type = types.submodule {
+          options = {
+            background = mkOption {
+              type = types.string;
+              default = "#000000";
+              description = "Background color of the bar.";
+            };
+
+            statusline = mkOption {
+              type = types.string;
+              default = "#ffffff";
+              description = "Text color to be used for the statusline.";
+            };
+
+            separator = mkOption {
+              type = types.string;
+              default = "#666666";
+              description = "Text color to be used for the separator.";
+            };
+
+            focusedWorkspace = mkOption {
+              type = barColorSetModule;
+              default = { border = "#4c7899"; background = "#285577"; text = "#ffffff"; };
+              description = ''
+                Border, background and text color for a workspace button when the workspace has focus.
+              '';
+            };
+
+            activeWorkspace = mkOption {
+              type = barColorSetModule;
+              default = { border = "#333333"; background = "#5f676a"; text = "#ffffff"; };
+              description = ''
+                Border, background and text color for a workspace button when the workspace is active.
+              '';
+            };
+
+            inactiveWorkspace = mkOption {
+              type = barColorSetModule;
+              default = { border = "#333333"; background = "#222222"; text = "#888888"; };
+              description = ''
+                Border, background and text color for a workspace button when the workspace does not
+                have focus and is not active.
+              '';
+            };
+
+            urgentWorkspace = mkOption {
+              type = barColorSetModule;
+              default = { border = "#2f343a"; background = "#900000"; text = "#ffffff"; };
+              description = ''
+                Border, background and text color for a workspace button when the workspace contains
+                a window with the urgency hint set.
+              '';
+            };
+
+            bindingMode = mkOption {
+              type = barColorSetModule;
+              default = { border = "#2f343a"; background = "#900000"; text = "#ffffff"; };
+              description = "Border, background and text color for the binding mode indicator";
+            };
+          };
+        };
+        default = {};
+        description = ''
+          Bar color settings. All color classes can be specified using submodules
+          with 'border', 'background', 'text', fields and RGB color hex-codes as values.
+          See default values for the reference.
+          Note that 'background', 'status', and 'separator' parameters take a single RGB value.
+
+          See <link xlink:href="https://i3wm.org/docs/userguide.html#_colors"/>.
+        '';
+      };
     };
   };
 
@@ -511,6 +626,7 @@ let
   );
 
   colorSetStr = c: concatStringsSep " " [ c.border c.background c.text c.indicator c.childBorder ];
+  barColorSetStr = c: concatStringsSep " " [ c.border c.background c.text ];
 
   criteriaStr = criteria: "[${concatStringsSep " " (mapAttrsToList (k: v: ''${k}="${v}"'') criteria)}]";
 
@@ -524,13 +640,29 @@ let
     map (c: "assign ${criteriaStr c} ${workspace}") criteria
   );
 
-  barStr = { mode, hiddenState, position, workspaceButtons, statusCommand, ... }: ''
+  barStr = {
+    id, mode, hiddenState, position, workspaceButtons,
+    workspaceNumbers, command, statusCommand, colors, ...
+  }: ''
     bar {
+      ${optionalString (id != null) "id ${id}"}
       mode ${mode}
       hidden_state ${hiddenState}
       position ${position}
       status_command ${statusCommand}
+      i3bar_command ${command}
       workspace_buttons ${if workspaceButtons then "yes" else "no"}
+      strip_workspace_numbers ${if !workspaceNumbers then "yes" else "no"}
+      colors {
+        background ${colors.background}
+        statusline ${colors.statusline}
+        separator ${colors.separator}
+        focused_workspace ${barColorSetStr colors.focusedWorkspace}
+        active_workspace ${barColorSetStr colors.activeWorkspace}
+        inactive_workspace ${barColorSetStr colors.inactiveWorkspace}
+        urgent_workspace ${barColorSetStr colors.urgentWorkspace}
+        binding_mode ${barColorSetStr colors.bindingMode}
+      }
     }
   '';
 
