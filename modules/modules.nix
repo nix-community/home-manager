@@ -39,6 +39,7 @@ let
     ./programs/man.nix
     ./programs/mercurial.nix
     ./programs/neovim.nix
+    ./programs/pidgin.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
     ./programs/termite.nix

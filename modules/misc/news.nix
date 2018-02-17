@@ -560,6 +560,13 @@ in
           feature is slowly forthcoming.
         '';
       }
+
+      {
+        time = "2018-02-19T21:45:26+00:00";
+        message = ''
+          A new module is available: 'programs.pidgin'
+        '';
+      }
     ];
   };
 }
