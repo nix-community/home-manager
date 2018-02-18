@@ -580,6 +580,13 @@ in
           A new module is available: 'services.unclutter'
         '';
       }
+
+      {
+        time = "2018-03-07T21:38:27+00:00";
+        message = ''
+          A new module is available: 'programs.fzf'.
+        '';
+      }
     ];
   };
 }
