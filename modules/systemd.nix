@@ -159,14 +159,16 @@ in
           legacyReloadCmd = ''
             bash ${./systemd-activate.sh} "''${oldGenPath=}" "$newGenPath"
           '';
+
+          ensureRuntimeDir = "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$(id -u)}";
         in
           ''
-            if who | grep -q '^${config.home.username} '; then
-              XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)} \
+            if ${ensureRuntimeDir} ${cfg.systemctlPath} --quiet --user is-system-running 2> /dev/null; then
+              ${ensureRuntimeDir} \
               PATH=${dirOf cfg.systemctlPath}:$PATH \
                 ${if cfg.startServices then autoReloadCmd else legacyReloadCmd}
             else
-              echo "User ${config.home.username} not logged in. Skipping."
+              echo "User systemd daemon not running. Skipping reload."
             fi
           ''
       );
