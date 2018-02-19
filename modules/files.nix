@@ -203,10 +203,11 @@ in
       '' + concatStrings (
         mapAttrsToList (n: v: ''
 
-          cmp --quiet \
-          "${v.source}" \
-          "${v.target}"
-          changed_files["${v.target}"]=$?
+        changed_files["${v.target}"]=0
+        cmp --quiet \
+        "${v.source}" \
+        "${v.target}" \
+        || changed_files["${v.target}"]=1
         '')
         (filterAttrs (n: v: v.onChange != null)
         cfg)
