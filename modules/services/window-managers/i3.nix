@@ -133,7 +133,7 @@ let
         default = "${cfg.package}/bin/i3bar";
         defaultText = "i3bar";
         description = "Command that will be used to start a bar.";
-        example = "${pkgs.i3-gaps}/bin/i3bar -t";
+        example = literalExample "${pkgs.i3-gaps}/bin/i3bar -t";
       };
 
       statusCommand = mkOption {
