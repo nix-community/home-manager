@@ -3,12 +3,6 @@
 with lib;
 
 {
-  imports = [
-    (mkRenamedOptionModule
-      [ "services" "qsyncthingtray" "enable" ]
-      [ "services" "syncthing" "tray" ])
-  ];
-
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
