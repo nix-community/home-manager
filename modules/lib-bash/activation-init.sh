@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 function setupVars() {
     local profilesPath="/nix/var/nix/profiles/per-user/$USER"
     local gcPath="/nix/var/nix/gcroots/per-user/$USER"
@@ -44,6 +46,11 @@ if [[ -v DRY_RUN ]] ; then
 else
     $VERBOSE_ECHO "This is a live run"
     export DRY_RUN_CMD=""
+fi
+
+if [[ -v VERBOSE ]]; then
+    echo -n "Using Nix version: "
+    nix-env --version
 fi
 
 $VERBOSE_ECHO "Activation variables:"
