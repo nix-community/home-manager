@@ -17,7 +17,7 @@ let
     mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
   );
 
-  zdotdir = "$HOME/" + cfg.dotDir;
+  zdotdir = cfg.dotDir;
 
   historyModule = types.submodule ({ config, ... }: {
     options = {
@@ -340,7 +340,7 @@ in
         # History options should be set in .zshrc and after oh-my-zsh sourcing.
         # See https://github.com/rycee/home-manager/issues/177.
         HISTSIZE="${toString cfg.history.size}"
-        HISTFILE="$HOME/${cfg.history.path}"
+        HISTFILE="${cfg.history.path}"
         SAVEHIST="${toString cfg.history.save}"
 
         setopt HIST_FCNTL_LOCK
