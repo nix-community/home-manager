@@ -12,6 +12,9 @@ with lib;
   };
 
   config = mkIf config.services.xscreensaver.enable {
+    # To make the xscreensaver-command tool available.
+    home.packages = [ pkgs.xscreensaver ];
+
     systemd.user.services.xscreensaver = {
         Unit = {
           Description = "XScreenSaver";
