@@ -159,9 +159,15 @@ function doSwitch() {
 }
 
 function doListGens() {
+    # Whether to colorize the generations output.
+    local color="never"
+    if [[ -t 1 ]]; then
+        color="always"
+    fi
+
     pushd "/nix/var/nix/profiles/per-user/$USER" > /dev/null
     # shellcheck disable=2012
-    ls --color=yes -gG --time-style=long-iso --sort time home-manager-*-link \
+    ls --color=$color -gG --time-style=long-iso --sort time home-manager-*-link \
         | cut -d' ' -f 4- \
         | sed -E 's/home-manager-([[:digit:]]*)-link/: id \1/'
     popd > /dev/null
