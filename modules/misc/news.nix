@@ -573,6 +573,13 @@ in
           A new module is available: 'programs.pidgin'
         '';
       }
+
+      {
+        time = "2018-03-04T06:54:26+00:00";
+        message = ''
+          A new module is available: 'services.unclutter'
+        '';
+      }
     ];
   };
 }
