@@ -9,8 +9,9 @@ let
   gpgInitStr = ''
     GPG_TTY="$(tty)"
     export GPG_TTY
-    ${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
-  '';
+  ''
+  + optionalString cfg.enableSshSupport
+      "${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null";
 
 in
 
