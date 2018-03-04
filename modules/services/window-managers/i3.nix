@@ -378,53 +378,79 @@ let
         '';
       };
 
+      modifier = mkOption {
+        type = types.enum [ "Shift" "Control" "Mod1" "Mod2" "Mod3" "Mod4" "Mod5" ];
+        default = "Mod1";
+        description = "Modifier key that is used for all keybindings.";
+        example = "Mod4";
+      };
+
+      extraKeybindings = mkOption {
+        type = types.attrs;
+        default = {};
+        defaultText = "Additional i3 keybindings.";
+        description = ''
+          An attribute set that assignes key press to an action using key symbol.
+          See <link xlink:href="https://i3wm.org/docs/userguide.html#keybindings"/>.
+          This should be used if you want to use the default keybindings and
+          just add some more.
+        '';
+        example = literalExample ''
+          {
+            "${cfg.config.modifier}+Return" = "exec i3-sensible-terminal";
+            "${cfg.config.modifier}+Shift+q" = "kill";
+            "${cfg.config.modifier}+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
+          }
+        '';
+      };
+
       keybindings = mkOption {
         type = types.attrs;
         default = {
-          "Mod1+Return" = "exec i3-sensible-terminal";
-          "Mod1+Shift+q" = "kill";
-          "Mod1+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
+          "${cfg.config.modifier}+Return" = "exec i3-sensible-terminal";
+          "${cfg.config.modifier}+Shift+q" = "kill";
+          "${cfg.config.modifier}+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
 
-          "Mod1+Left" = "focus left";
-          "Mod1+Down" = "focus down";
-          "Mod1+Up" = "focus up";
-          "Mod1+Right" = "focus right";
+          "${cfg.config.modifier}+Left" = "focus left";
+          "${cfg.config.modifier}+Down" = "focus down";
+          "${cfg.config.modifier}+Up" = "focus up";
+          "${cfg.config.modifier}+Right" = "focus right";
 
-          "Mod1+h" = "split h";
-          "Mod1+v" = "split v";
-          "Mod1+f" = "fullscreen toggle";
+          "${cfg.config.modifier}+h" = "split h";
+          "${cfg.config.modifier}+v" = "split v";
+          "${cfg.config.modifier}+f" = "fullscreen toggle";
 
-          "Mod1+s" = "layout stacking";
-          "Mod1+w" = "layout tabbed";
-          "Mod1+e" = "layout toggle split";
+          "${cfg.config.modifier}+s" = "layout stacking";
+          "${cfg.config.modifier}+w" = "layout tabbed";
+          "${cfg.config.modifier}+e" = "layout toggle split";
 
-          "Mod1+Shift+space" = "floating toggle";
+          "${cfg.config.modifier}+Shift+space" = "floating toggle";
 
-          "Mod1+1" = "workspace 1";
-          "Mod1+2" = "workspace 2";
-          "Mod1+3" = "workspace 3";
-          "Mod1+4" = "workspace 4";
-          "Mod1+5" = "workspace 5";
-          "Mod1+6" = "workspace 6";
-          "Mod1+7" = "workspace 7";
-          "Mod1+8" = "workspace 8";
-          "Mod1+9" = "workspace 9";
+          "${cfg.config.modifier}+1" = "workspace 1";
+          "${cfg.config.modifier}+2" = "workspace 2";
+          "${cfg.config.modifier}+3" = "workspace 3";
+          "${cfg.config.modifier}+4" = "workspace 4";
+          "${cfg.config.modifier}+5" = "workspace 5";
+          "${cfg.config.modifier}+6" = "workspace 6";
+          "${cfg.config.modifier}+7" = "workspace 7";
+          "${cfg.config.modifier}+8" = "workspace 8";
+          "${cfg.config.modifier}+9" = "workspace 9";
 
-          "Mod1+Shift+1" = "move container to workspace 1";
-          "Mod1+Shift+2" = "move container to workspace 2";
-          "Mod1+Shift+3" = "move container to workspace 3";
-          "Mod1+Shift+4" = "move container to workspace 4";
-          "Mod1+Shift+5" = "move container to workspace 5";
-          "Mod1+Shift+6" = "move container to workspace 6";
-          "Mod1+Shift+7" = "move container to workspace 7";
-          "Mod1+Shift+8" = "move container to workspace 8";
-          "Mod1+Shift+9" = "move container to workspace 9";
+          "${cfg.config.modifier}+Shift+1" = "move container to workspace 1";
+          "${cfg.config.modifier}+Shift+2" = "move container to workspace 2";
+          "${cfg.config.modifier}+Shift+3" = "move container to workspace 3";
+          "${cfg.config.modifier}+Shift+4" = "move container to workspace 4";
+          "${cfg.config.modifier}+Shift+5" = "move container to workspace 5";
+          "${cfg.config.modifier}+Shift+6" = "move container to workspace 6";
+          "${cfg.config.modifier}+Shift+7" = "move container to workspace 7";
+          "${cfg.config.modifier}+Shift+8" = "move container to workspace 8";
+          "${cfg.config.modifier}+Shift+9" = "move container to workspace 9";
 
-          "Mod1+Shift+c" = "reload";
-          "Mod1+Shift+r" = "restart";
-          "Mod1+Shift+e" = "exec i3-nagbar -t warning -m 'Do you want to exit i3?' -b 'Yes' 'i3-msg exit'";
+          "${cfg.config.modifier}+Shift+c" = "reload";
+          "${cfg.config.modifier}+Shift+r" = "restart";
+          "${cfg.config.modifier}+Shift+e" = "exec i3-nagbar -t warning -m 'Do you want to exit i3?' -b 'Yes' 'i3-msg exit'";
 
-          "Mod1+r" = "mode resize";
+          "${cfg.config.modifier}+r" = "mode resize";
         };
         defaultText = "Default i3 keybindings.";
         description = ''
@@ -433,9 +459,9 @@ let
         '';
         example = literalExample ''
           {
-            "Mod1+Return" = "exec i3-sensible-terminal";
-            "Mod1+Shift+q" = "kill";
-            "Mod1+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
+            "${cfg.config.modifier}+Return" = "exec i3-sensible-terminal";
+            "${cfg.config.modifier}+Shift+q" = "kill";
+            "${cfg.config.modifier}+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
           }
         '';
       };
@@ -705,7 +731,7 @@ let
     client.placeholder ${colorSetStr colors.placeholder}
     client.background ${colors.background}
 
-    ${keybindingsStr keybindings}
+    ${keybindingsStr (keybindings // extraKeybindings)}
     ${keycodebindingsStr keycodebindings}
     ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
     ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
