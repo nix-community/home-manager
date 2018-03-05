@@ -22,13 +22,18 @@ in
         '';
         description = "Extra packages available to Texlive.";
       };
+
+      package = mkOption {
+        type = types.package;
+        description = "Resulting customized Texlive package.";
+        readOnly = true;
+      };
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [
-      (pkgs.texlive.combine (cfg.extraPackages pkgs.texlive))
-    ];
-
+    home.packages = [ cfg.package ];
+    programs.texlive.package =
+      pkgs.texlive.combine (cfg.extraPackages pkgs.texlive);
   };
 }
