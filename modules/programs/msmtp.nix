@@ -11,27 +11,27 @@ let
 
   accountStr = {userName, address, realname, ...} @ account:
     ''
-      [[${userName}]]
-      address=${address}
-      realname=${realname}
-
-      sendmail_command = ${sendCommand account}
+defaults
+tls on
+#tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile ~/.msmtp.log
 
 account gmail
-host smtp.gmail.com
-from username@gmail.com
+host ${account.sendHost}
+from ${address}
 auth on
-user username@gmail.com
+user ${account.login}
 tls_certcheck off
 port 587
+
       '';
 
   # ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
-  configFile = mailAccounts: pkgs.writeText "msmtp.conf" (  ''
-  [accounts]
+  configFile = mailAccounts: pkgs.writeText "msmtp" (  ''
 
     ${concatStringsSep "\n" (map accountStr mailAccounts)}
 
+    account default : gmail
   '' 
   # + cfg.extraConfig
   );
@@ -61,7 +61,7 @@ in
       # '';
 
       # ca s appelle notmuchrc plutot
-      xdg.configFile.".msmtprc".source = configFile config.home.mailAccounts;
+      home.file.".msmtprc".source = configFile config.home.mailAccounts;
       # ''
       # '';
   };
