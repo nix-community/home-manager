@@ -7,7 +7,7 @@ let
 
   cfg = config.programs.msmtp;
   sendCommand = account:
-    "msmtp --account=${account.userName} -t";
+    "msmtp --account=${account.name} -t";
 
   accountStr = {userName, address, realname, ...} @ account:
     ''
@@ -16,11 +16,11 @@ tls on
 #tls_trust_file /etc/ssl/certs/ca-certificates.crt
 logfile ~/.msmtp.log
 
-account gmail
+account ${account.name}
 host ${account.sendHost}
 from ${address}
 auth on
-user ${account.login}
+user ${account.userName}
 tls_certcheck off
 port 587
 
@@ -31,6 +31,7 @@ port 587
 
     ${concatStringsSep "\n" (map accountStr mailAccounts)}
 
+    # TODO fix pick one
     account default : gmail
   '' 
   # + cfg.extraConfig

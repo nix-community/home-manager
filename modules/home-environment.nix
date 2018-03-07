@@ -11,6 +11,11 @@ let
   mailAccount = types.submodule (
     { ... }: {
       options = {
+
+        name = mkOption {
+          type = types.str;
+          description = "Just to identify the account";
+        };
         userName = mkOption {
           type = types.str;
           description = "The foreground color.";
@@ -47,7 +52,7 @@ let
         };
 
         # might be hard to abstract
-        # passwordRetrieval = mkOption {
+        # getPassCommand = mkOption {
         #   default = null;
         #   type = types.nullOr types.str;
         #   description = "The bold color, null to use same as foreground.";

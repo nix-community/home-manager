@@ -7,7 +7,7 @@ let
 
   cfg = config.programs.alot;
   sendCommand = account:
-    "msmtp --account=${account.userName} -t";
+    "msmtp --account=${account.name} -t";
 
   accountStr = {userName, address, realname, ...} @ account:
     ''
