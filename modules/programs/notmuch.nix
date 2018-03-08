@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, mailAccounts, ... } @ top:
 
 with lib;
 with import ../lib/dag.nix { inherit lib; };
@@ -7,12 +7,11 @@ let
 
   cfg = config.programs.notmuch;
 
-
   accountStr = {userName, address, realname, ...} @ account:
     ''
 [user]
-name=matt
-primary_email=mattator@gmail.com
+name=${userName}
+primary_email=${address}
 # other_email=
 
 [new]
@@ -27,28 +26,27 @@ synchronize_flags=true
 '';
 
   # TODO run notmuch new instead ?
-  configFile = mailAccounts:
-  # ((if cfg.config != null then with cfg.config; 
+  configFile = mailAccount:
   ''
       [database]
-      # todo use account name instead
-      # create the folder or ?
       # todo make it configurable
       path=${config.home.homeDirectory}/maildir
 
-    ${concatStringsSep "\n" (map accountStr mailAccounts)}
-
+      ${accountStr mailAccount}
   '';
-  # else "") + "\n" );
-    # ${keybindingsStr keybindings}
-    # ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
-    # ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
-    # ${concatStringsSep "\n" (map barStr bars)}
-    # ${optionalString (gaps != null) gapsStr}
-    # ${concatStringsSep "\n" (map floatingCriteriaStr floating.criteria)}
-    # ${concatStringsSep "\n" (map startupEntryStr startup)}
-in
 
+  mails = top.config.home.mailAccounts;
+  # mails = [];
+  genRc = {userName, address, realname, ...} @ account:
+  {
+    xdg.configFile."notmuch/${userName}".text = configFile account; 
+  };
+
+  notmuchRcFiles = mailAccounts:
+    lib.lists.foldr (a: b: a // genRc b ) {} mailAccounts;
+
+  toto = notmuchRcFiles  mails;
+in
 {
 # TODO per account specifics
 # [new]
@@ -62,12 +60,11 @@ in
     };
   };
 
-
-
-
-
-  config = mkIf cfg.enable {
+  # use listToAttrs
+  config = mkIf cfg.enable ({
     home.packages = [ pkgs.notmuch ];
+
+    # mapAttrs
 
     # create folder where to store mails
       # home.activation.createMailStore = dagEntryBefore [ "linkGeneration" ] ''
@@ -80,8 +77,7 @@ in
       # '';
 
       # ca s appelle notmuchrc plutot
-      xdg.configFile."notmuch/notmuchrc".text = configFile config.home.mailAccounts;
-  };
+  } // toto);
 }
 
 

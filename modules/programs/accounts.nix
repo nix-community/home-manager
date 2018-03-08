@@ -1,28 +1,28 @@
 
-{ config, lib, pkgs, ... }:
+# { config, lib, pkgs, ... }:
 
-with lib;
-# with import ../lib/dag.nix { inherit lib; };
+# with lib;
+# # with import ../lib/dag.nix { inherit lib; };
 
-let
+# let
 
-  cfg = config.programs.mailaccounts;
+#   cfg = config.programs.mailaccounts;
 
-in
+# in
 
-{
+# {
 
-  options = {
-    programs.notmuch = {
-      enable = mkEnableOption "Notmuch";
+#   options = {
+#     programs.notmuch = {
+#       enable = mkEnableOption "Notmuch";
 
-    };
+#     };
 
-  };
+#   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ notmuch ];
-  };
-}
+#   config = mkIf cfg.enable {
+#     home.packages = [ notmuch ];
+#   };
+# }
 
 
