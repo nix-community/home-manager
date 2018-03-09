@@ -34,37 +34,18 @@ synchronize_flags=true
 
       ${accountStr mailAccount}
   '';
-
-  mails = top.config.home.mailAccounts;
-  # mails = [];
-  genRc = {userName, address, realname, ...} @ account:
-  {
-    xdg.configFile."notmuch/${userName}".text = configFile account; 
-  };
-
-  notmuchRcFiles = mailAccounts:
-    lib.lists.foldr (a: b: a // genRc b ) {} mailAccounts;
-
-  toto = notmuchRcFiles  mails;
 in
 {
-# TODO per account specifics
-# [new]
-# tags=unread;inbox;
-# ignore=
 
   options = {
     programs.notmuch = {
       enable = mkEnableOption "Notmuch";
-
     };
   };
 
-  # use listToAttrs
-  config = mkIf cfg.enable ({
+  config = mkIf cfg.enable {
     home.packages = [ pkgs.notmuch ];
 
-    # mapAttrs
 
     # create folder where to store mails
       # home.activation.createMailStore = dagEntryBefore [ "linkGeneration" ] ''
@@ -75,9 +56,11 @@ in
       #   #   i3Changed=1
       #   # fi
       # '';
-
-      # ca s appelle notmuchrc plutot
-  } // toto);
+      xdg.configFile = map (account: {
+        target = "notmuch/notmuch_${account.name}";
+        text = configFile account; 
+      }) top.config.home.mailAccounts;
+  };
 }
 
 
