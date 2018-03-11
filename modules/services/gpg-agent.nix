@@ -48,6 +48,23 @@ in
         '';
       };
 
+      enableExtraSocket = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to enable extra socket of the GnuPG key agent (useful for GPG
+          Agent forwarding).
+        '';
+      };
+
+      verbose = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to produce verbose output.
+        '';
+      };
+
       grabKeyboardAndMouse = mkOption {
         type = types.bool;
         default = true;
@@ -115,7 +132,8 @@ in
         };
 
         Service = {
-          ExecStart = "${pkgs.gnupg}/bin/gpg-agent --supervised";
+          ExecStart = "${pkgs.gnupg}/bin/gpg-agent --supervised"
+            + optionalString cfg.verbose " --verbose";
           ExecReload = "${pkgs.gnupg}/bin/gpgconf --reload gpg-agent";
         };
       };
@@ -149,6 +167,27 @@ in
         Socket = {
           ListenStream = "%t/gnupg/S.gpg-agent.ssh";
           FileDescriptorName = "ssh";
+          Service = "gpg-agent.service";
+          SocketMode = "0600";
+          DirectoryMode = "0700";
+        };
+
+        Install = {
+          WantedBy = [ "sockets.target" ];
+        };
+      };
+    })
+
+    (mkIf cfg.enableExtraSocket {
+      systemd.user.sockets.gpg-agent-extra = {
+        Unit = {
+          Description = "GnuPG cryptographic agent and passphrase cache (restricted)";
+          Documentation = "man:gpg-agent(1) man:ssh(1)";
+        };
+
+        Socket = {
+          ListenStream = "%t/gnupg/S.gpg-agent.extra";
+          FileDescriptorName = "extra";
           Service = "gpg-agent.service";
           SocketMode = "0600";
           DirectoryMode = "0700";
