@@ -12,6 +12,8 @@ let
     { ... }: {
       options = {
 
+        # should be unque across mailAccounts => use it as key ?
+        # but it is used
         name = mkOption {
           type = types.str;
           description = "Just to identify the account";
@@ -39,10 +41,11 @@ let
           description = "Your mail address";
         };
 
+        # pgp key
         key = mkOption {
-          type = types.str;
-          example = "luke@tatooine.com";
-          description = "Your mail address";
+          type = types.path;
+          example = null;
+          description = "Your PGP key/file";
         };
 
         sendHost = mkOption {
@@ -60,8 +63,10 @@ let
 
         store = mkOption {
           type = types.path;
+          default = "${config.home.homeDirectory}/maildir/${name}";
           description = "Where to store mail for this account";
         };
+
       };
     }
   );

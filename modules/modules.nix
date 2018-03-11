@@ -45,6 +45,7 @@ let
     ./programs/msmtp.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
+    ./programs/offlineimap.nix
     ./programs/pidgin.nix
     ./programs/notmuch.nix
     ./programs/rofi.nix
