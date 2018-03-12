@@ -55,6 +55,14 @@ in
         Whether to enable Bash integration.
       '';
     };
+
+    enableZshIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Zsh integration.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -73,6 +81,11 @@ in
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       . ${pkgs.fzf}/share/fzf/completion.bash
       . ${pkgs.fzf}/share/fzf/key-bindings.bash
+    '';
+
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      . ${pkgs.fzf}/share/fzf/completion.zsh
+      . ${pkgs.fzf}/share/fzf/key-bindings.zsh
     '';
   };
 }
