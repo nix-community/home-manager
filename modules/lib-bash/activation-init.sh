@@ -11,26 +11,37 @@ function setupVars() {
             | sort -rn \
             | head -1)
 
-    if [[ -n "$greatestGenNum" ]] ; then
+    if [[ -n $greatestGenNum ]] ; then
         oldGenNum=$greatestGenNum
         newGenNum=$((oldGenNum + 1))
     else
         newGenNum=1
     fi
 
-    if [[ -e "$gcPath/current-home" ]] ; then
+    if [[ -e $gcPath/current-home ]] ; then
         oldGenPath="$(readlink -e "$gcPath/current-home")"
     fi
+
+    $VERBOSE_ECHO "Sanity checking oldGenNum and oldGenPath"
+    if [[ -v oldGenNum && ! -v oldGenPath
+            || ! -v oldGenNum && -v oldGenPath ]]; then
+        errorEcho "Invalid profile number and GC root values! These must be"
+        errorEcho "either both empty or both set but are now set to"
+        errorEcho "    '${oldGenNum:-}' and '${oldGenPath:-}'"
+        errorEcho "If you don't mind losing previous profile generations then"
+        errorEcho "the easiest solution is probably to run"
+        errorEcho "   rm $profilesPath/home-manager*"
+        errorEcho "   rm $gcPath/current-home"
+        errorEcho "and trying home-manager switch again. Good luck!"
+        exit 1
+    fi
+
 
     genProfilePath="$profilesPath/home-manager"
     newGenPath="@GENERATION_DIR@";
     newGenProfilePath="$profilesPath/home-manager-$newGenNum-link"
     newGenGcPath="$gcPath/current-home"
 }
-
-setupVars
-
-echo "Starting home manager activation"
 
 if [[ -v VERBOSE ]]; then
     export VERBOSE_ECHO=echo
@@ -39,6 +50,10 @@ else
     export VERBOSE_ECHO=true
     export VERBOSE_ARG=""
 fi
+
+echo "Starting home manager activation"
+
+setupVars
 
 if [[ -v DRY_RUN ]] ; then
     echo "This is a dry run"
