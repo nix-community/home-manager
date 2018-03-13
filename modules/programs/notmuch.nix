@@ -1,4 +1,4 @@
-{ config, lib, pkgs, mailAccounts, ... } @ top:
+{ config, lib, pkgs, ... } @ top:
 
 with lib;
 with import ../lib/dag.nix { inherit lib; };
@@ -6,6 +6,24 @@ with import ../lib/dag.nix { inherit lib; };
 let
 
   cfg = config.programs.notmuch;
+
+  postSyncCommand = account:
+    "notmuch --config=$XDG_CONFIG_HOME/notmuch/notmuch_${account.name} new";
+  # TODO test simple
+  # command = 'notmuch address --format=json date:1Y..'
+  # TODO might need to add the database too
+  # or add --config ?
+  # account:
+  findContactCommand =  if cfg.contactCompletion == "notmuch address" then ''
+command = '${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients date:1Y.. AND from:my@address.org'
+regexp = '\[?{"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"}[,\]]?'
+shellcommand_external_filtering = False
+  '' else if cfg.contactCompletion == "notmuch address simple" then
+  "command = '${pkgs.notmuch}/bin/notmuch address --format=json date:1Y..'"
+  else 
+    "";
+
+
 
   accountStr = {userName, address, realname, ...} @ account:
     ''
@@ -23,13 +41,10 @@ exclude_tags=deleted;spam;
 
 [maildir]
 synchronize_flags=true
+
+${cfg.contactCompletionCommand}
 ''
 # tODO need to pass the actual config
-  + lib.optionalString (cf.contactCompletion == "notmuch address") ''
-command = 'notmuch address --format=json --output=recipients date:1Y.. AND from:my@address.org'
-regexp = '\[?{"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"}[,\]]?'
-shellcommand_external_filtering = False
-  ''
   ;
 
 
@@ -53,18 +68,40 @@ in
 
       # rename getHooksFolder
       getHooks = mkOption {
+        type = types.nullOr types.path; # precise a folder ?
         # type = types.function;
-        default = account: account.store.".notmuch/hooks";
+        default = null;
+        # account: account.store.".notmuch/hooks";
         description = "path to the hooks folder to use for a specific account";
       };
-      # rename getHooksFolder
+
+      # see http://alot.readthedocs.io/en/latest/configuration/contacts_completion.html
       contactCompletion = mkOption {
-        type = types.enum [ "notmuch address" ];
-        # type = types.function;
+        type = types.enum [ "notmuch address simple" "notmuch address" ];
         default = "notmuch address";
         description = "path to the hooks folder to use for a specific account";
       };
-    # function that returns specific hooks
+
+      # TODO make it a function of the account
+      contactCompletionCommand = mkOption {
+        type = types.str;
+        default = findContactCommand;
+        description = "Can override what is decided in contactCompletion";
+      };
+
+      # tags = mkOption {
+      #   types.attrsOf
+      #   type = types.listOf types.string;
+      #   types.attr
+      #   default = findContactCommand;
+      #   description = "Command to find contact";
+      # };
+
+      postSyncHook = mkOption {
+        default = postSyncCommand;
+        description = "Command to run after MRA";
+      };
+
       extraConfig = mkOption {
         type = types.str;
         default = "";
@@ -79,28 +116,32 @@ in
 
 
     # create folder where to store mails
+        # ${map (account: (account.store.".notmuch/hooks".source = getHooks account)
+        # # {
+        # #   target = "";
+        # #   text = "";
+        # # }
+        #   )  top.config.mail.accounts}
+        # to print advice
+      # ${map (hccount: ('VERBOSE_ECHO "you can generate"')) top.config.home.mailAccounts}
+        
       home.activation.createMailStores = dagEntryBefore [ "linkGeneration" ] ''
         echo 'hello world, notmuch link activation'
-        # if ! cmp --quiet \
-        #     "${configFile}" \
-        #     "${config.xdg.configHome}/i3/config"; then
-        #   i3Changed=1
-        # Link the hooks in their respective stores
-        # our own hook folders
-        ${map (account: (account.store.".notmuch/hooks".source = getHooks account)
-        # {
-        #   target = "";
-        #   text = "";
-        # }
-          )  top.config.home.mailAccounts}
-      '';
+      '' 
+      # we need to create the store folders 
+        # + (concatMapStrings (account: ''
+        # mkdir -vf ${account.store}
+        # '') home.mailAccounts)
+      ;
+
+      # TODO need to add the hooks
 
       # Hooks  are  scripts  (or arbitrary executables or symlinks to such) that notmuch invokes before and after certain actions. These scripts reside in the .notmuch/hooks
        # directory within the database directory and must have executable permissions 
       xdg.configFile = map (account: {
         target = "notmuch/notmuch_${account.name}";
         text = configFile account; 
-      }) top.config.home.mailAccounts;
+      }) top.config.mail.accounts;
   };
 }
 

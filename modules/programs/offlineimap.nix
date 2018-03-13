@@ -8,6 +8,11 @@ let
 
   cfg = config.programs.offlineimap;
 
+  # TODO account.mta.postSyncHookCommand
+  postSyncHookCommand = account: pkgs.writeText "postSyncHook.sh" (
+  if (account.postSyncHook != null) then account.postSyncHook else if (config.programs.notmuch.enable) then config.programs.notmuch.postSyncHook else ""
+  );
+
   # TODO add postsynchook only if notmuch enabled ?
   # TODO allow for user customisation
   # make the path towards config a function ?
@@ -26,8 +31,8 @@ maxage=10
 synclabels= yes
 # presynchook=imapfilter
 # TODO write a function
-${if (config.programs.notmuch.enable && cfg.postSyncHook == null) then "postsynchook= notmuch --config=$XDG_CONFIG_HOME/notmuch/notmuch_${name} new" else cfg.postSyncHook}
 # labelsheader = X-Keywords
+postsynchook=${postSyncHookCommand account}
 
 [Repository ${name}-local]
 type = GmailMaildir
@@ -101,9 +106,9 @@ in
 
       # run on finish
       # TODO should be per account
-      postSyncHook = mkOption {
-        type = types.str;
-        default = null;
+      postSyncHookCommand = mkOption {
+        # type = types.str;
+        default = account: "";
         description = "function accepting a mail account as parameter";
       };
 
@@ -149,7 +154,7 @@ in
     '';
 
     # ca s appelle notmuchrc plutot
-    xdg.configFile."offlineimap/config".source = configFile config.home.mailAccounts;
+    xdg.configFile."offlineimap/config".source = configFile config.mail.accounts;
   };
 }
 

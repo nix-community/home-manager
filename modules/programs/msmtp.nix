@@ -6,8 +6,13 @@ with import ../lib/dag.nix { inherit lib; };
 let
 
   cfg = config.programs.msmtp;
-  sendCommand = account:
-    "msmtp --account=${account.name} -t";
+
+  sendMsmtpCommand = account:
+      if config.programs.msmtp.offlineSendMethod == "native" then
+        "${pkgs.msmtp}/bin/msmtp-queue --account=${account.name} -t"
+      # "none"
+      else
+        "${pkgs.msmtp}/bin/msmtp --account=${account.name} -t";
 
   accountStr = {userName, address, realname, ...} @ account:
     ''
@@ -42,8 +47,27 @@ in
 {
 
   options = {
-    programs.msmtp = {
+    programs.msmtp = rec {
       enable = mkEnableOption "Msmtp";
+
+      offlineSendMethod = mkOption {
+        # https://wiki.archlinux.org/index.php/Msmtp#Using_msmtp_offline
+        # see for a list of methodds 
+        # https://github.com/pazz/alot/wiki/Tips,-Tricks-and-other-cool-Hacks
+        type = types.enum [ "none" "native" ];
+        default = "native";
+        description = "Extra configuration lines to add to .msmtprc.";
+      };
+
+      sendCommand = mkOption {
+        # https://wiki.archlinux.org/index.php/Msmtp#Using_msmtp_offline
+        # see for a list of methodds 
+        # https://github.com/pazz/alot/wiki/Tips,-Tricks-and-other-cool-Hacks
+        # type = types.str;
+        default = sendMsmtpCommand ;
+        description = "Extra configuration lines to add to .msmtprc.";
+      };
+
 
       extraConfig = mkOption {
         type = types.lines;
@@ -62,7 +86,7 @@ in
       # '';
 
       # ca s appelle notmuchrc plutot
-      home.file.".msmtprc".source = configFile config.home.mailAccounts;
+      home.file.".msmtprc".source = configFile config.mail.accounts;
       # ''
       # '';
   };

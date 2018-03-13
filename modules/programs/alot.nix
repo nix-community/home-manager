@@ -6,11 +6,11 @@ with import ../lib/dag.nix { inherit lib; };
 let
 
   cfg = config.programs.alot;
-  sendCommand = account:
-    "msmtp --account=${account.name} -t";
 
   # alot_hooks=
-
+  # TODO should depend on MTA but for now we have only msmtp
+  sendCommand = config.programs.msmtp.sendCommand;
+    
   accountStr = {name,userName, address, realname, ...} @ account:
     ''
       [[${name}]]
@@ -19,6 +19,11 @@ let
 
       sendmail_command = ${sendCommand account}
       '';
+
+    bindingStr = ''
+      # TODO if offlineimap configured, run offlineimap
+      G = call hooks.getmail(ui)
+    '';
 
   # ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
   # should we set themes_dir as well ?
@@ -31,11 +36,11 @@ auto_remove_unread = True
 ask_subject = False
 #auto_replyto_mailinglist
 # launch sequence of commands separated by ;
-initial_command = search tag:inbox AND NOT tag:killed AND NOT tag:ietf ; 
+initial_command = search tag:inbox AND NOT tag:killed;
 input_timeout=0.3
 # list of adresses
-mailinglists = lisp@ietf.org, taps@ietf.org 
 prefer_plaintext = True
+
   [accounts]
 
     ${concatStringsSep "\n" (map accountStr mailAccounts)}
@@ -67,13 +72,13 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.alot ];
 
-    # create folder where to store mails
-      # home.activation.createAlotConfig = dagEntryBefore [ "linkGeneration" ] ''
-      #   #     "${config.xdg.configHome}/i3/config"; then
-      # '';
+      # programs.zsh.shellAliases = lib.optional cfg.createAliases 
+      # # (map {} )
+      # (zipAttrsWith (account: )  home.mail.accounts)
+      # ;
 
       # ca s appelle notmuchrc plutot
-      xdg.configFile."alot/config".source = configFile config.home.mailAccounts;
+      xdg.configFile."alot/config".source = configFile config.mail.accounts;
 
       xdg.configFile."alot/hm_hooks".text = ''
         # Home-manager custom hooks

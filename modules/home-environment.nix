@@ -8,69 +8,6 @@ let
 
   dag = config.lib.dag;
 
-  mailAccount = types.submodule (
-    { ... }: {
-      options = {
-
-        # should be unque across mailAccounts => use it as key ?
-        # but it is used
-        name = mkOption {
-          type = types.str;
-          description = "Just to identify the account";
-        };
-        userName = mkOption {
-          type = types.str;
-          description = "The foreground color.";
-        };
-
-        realname = mkOption {
-          type = types.str;
-          description = "Name displayed when sending mails.";
-        };
-
-        signature = mkOption {
-          type = types.str;
-          default = "default signature";
-          example = "luke@tatooine.com";
-          description = "Your signature";
-        };
-
-        address = mkOption {
-          type = types.str;
-          example = "luke@tatooine.com";
-          description = "Your mail address";
-        };
-
-        # pgp key
-        key = mkOption {
-          type = types.path;
-          example = null;
-          description = "Your PGP key/file";
-        };
-
-        sendHost = mkOption {
-          type = types.str;
-          example = "luke@tatooine.com";
-          description = "Your mail address";
-        };
-
-        # might be hard to abstract
-        # getPassCommand = mkOption {
-        #   default = null;
-        #   type = types.nullOr types.str;
-        #   description = "The bold color, null to use same as foreground.";
-        # };
-
-        store = mkOption {
-          type = types.path;
-          default = "${config.home.homeDirectory}/maildir/${name}";
-          description = "Where to store mail for this account";
-        };
-
-      };
-    }
-  );
-
   languageSubModule = types.submodule {
     options = {
       base = mkOption {
@@ -176,12 +113,6 @@ in
       type = types.str;
       defaultText = "$USER";
       description = "The user's username.";
-    };
-
-    home.mailAccounts = mkOption {
-      type = types.listOf mailAccount;
-      # type = types.attrsOf mailAccount;
-      description = "List your email accounts.";
     };
 
     home.homeDirectory = mkOption {

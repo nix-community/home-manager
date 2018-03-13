@@ -15,6 +15,7 @@ let
   modules = [
     ./files.nix
     ./home-environment.nix
+    ./mail.nix
     ./manual.nix
     ./misc/fontconfig.nix
     ./misc/gtk.nix
