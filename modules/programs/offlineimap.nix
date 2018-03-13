@@ -13,6 +13,7 @@ let
   if (account.postSyncHook != null) then account.postSyncHook else if (config.programs.notmuch.enable) then config.programs.notmuch.postSyncHook else ""
   );
 
+  # TODO maybe generate one config per account and load it with -c ?
   # TODO add postsynchook only if notmuch enabled ?
   # TODO allow for user customisation
   # make the path towards config a function ?
@@ -35,12 +36,14 @@ synclabels= yes
 postsynchook=${postSyncHookCommand account}
 
 [Repository ${name}-local]
-type = GmailMaildir
+# HACK
+type = ${if account.imapHost != null then "IMAP" else "GmailMaildir"}
 localfolders = ${account.store}
 
 [Repository ${name}-remote]
-type = Gmail
+type = ${if account.imapHost != null then "IMAP" else "Gmail"}
 # TODO user getLogin / getPass defined in module
+${if account.imapHost != null then "remotehost = "+ account.imapHost else ""}
 remoteusereval = ${cfg.getLogin account}
 remotepasseval = ${cfg.getPass account}
 realdelete = yes
@@ -81,7 +84,7 @@ folderfilter = lambda foldername: foldername not in ['[Gmail]/All Mail','[Gmail]
     ${concatStringsSep "\n" (map accountStr mailAccounts)}
 
   '' 
-  # + cfg.extraConfig
+  + cfg.extraConfig
   );
 
 in
