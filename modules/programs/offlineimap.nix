@@ -11,9 +11,9 @@ let
 
   # TODO move to lib account.mta.postSyncHookCommand
   postSyncHookCommand = account: 
-    pkgs.writeText "postSyncHook.sh" (
+    pkgs.writeScript "postSyncHook.sh" (
 
-  lib.optionalString config.programs.notmuch.enable config.programs.notmuch.postSyncHook
+    lib.optionalString config.programs.notmuch.enable (config.programs.notmuch.postSyncHook account)
    + lib.optionalString (account.postSyncHook != null) account.postSyncHook
   );
   # if (account.postSyncHook != null) then account.postSyncHook else if (config.programs.notmuch.enable) then config.programs.notmuch.postSyncHook else ""
@@ -43,7 +43,7 @@ postsynchook= ${postSyncHookCommand account}
 
 [Repository ${name}-local]
 # HACK
-type = ${if account.imapHost != null then "IMAP" else "GmailMaildir"}
+type = ${if account.imapHost != null then "Maildir" else "GmailMaildir"}
 localfolders = ${getStore account}
 
 [Repository ${name}-remote]

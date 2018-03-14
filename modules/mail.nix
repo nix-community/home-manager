@@ -76,7 +76,8 @@ let
 
         # depend if notmuch is enabled or not
         postSyncHook = mkOption {
-          type = types.nullOr types.path;
+          # should be a function ?
+          # type = types.nullOr types.path;
           # ${name}
           default = null;
           # default = "${cfg.maildir}/${name}";
@@ -188,9 +189,7 @@ in
       programs.bash.shellAliases = 
       let 
         genAliasesList = mailAccounts:
-          map  (account: { name = "alot-${account.name}"; value = "${pkgs.alot} -n ${config.xdg.configHome}/notmuch/notmuch_${account.name}"; }) mailAccounts ;
-        listToAttrs = list: (foldr // {} list);
-          # builtins.listToAttrs
+          map  (account: { name = "alot-${account.name}"; value = "${pkgs.alot}/bin/alot -n ${config.xdg.configHome}/notmuch/notmuch_${account.name}"; }) mailAccounts ;
         in
         {
           alot_test="echo 'test successful'";
@@ -201,13 +200,21 @@ in
       );
 
       # todo check mta/mua creation process
-      home.activation.createMailStores = dag.entryBefore [ "linkGeneration" ] (
-        concatStringsSep ";" (map (account: "mkdir ${getStore account}") cfg.accounts)
+      home.activation.createMailStores = 
+      let 
+        # -p to remove errors but might be 
+        # add a hook home.activation dat.after["createMailStores"]
+        createMailStore = account:
+          "mkdir -p ${getStore account}";
+      in 
+      dag.entryBefore [ "linkGeneration" ] (
+        concatStringsSep ";" (map createMailStore cfg.accounts)
       );
       # need to create the maildirs !
     }
     # )
-  ];
+  ]
+  ;
 
 }
 

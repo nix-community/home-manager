@@ -5,5 +5,7 @@
 
 
   getNotmuchConfig = account:
-    "${config.xdg.configFile}/notmuch/notmuch_${account.name}";
+    # "${config.xdg.configFile}/notmuch/notmuch_${account.name}";
+
+    "$XDG_CONFIG_HOME/notmuch/notmuch_${account.name}";
 }

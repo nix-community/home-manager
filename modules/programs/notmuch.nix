@@ -8,16 +8,13 @@ let
 
   cfg = config.programs.notmuch;
 
-  getNotmuchConfig = account: 
-    "$XDG_CONFIG_HOME/notmuch/notmuch_${account.name}";
-
   # best to  so that tags can use it
   postSyncCommand = account:
     ''
       # we export so that hooks use the correct DB
       # (not sure it would work with --config)
       export NOTMUCH_CONFIG=${getNotmuchConfig account}
-      notmuch new
+      ${pkgs.notmuch}/bin/notmuch new
     '';
 
   # TODO test simple
@@ -118,23 +115,9 @@ in
     home.packages = [ pkgs.notmuch ];
 
 
-    # create folder where to store mails
-        # ${map (account: (account.store.".notmuch/hooks".source = getHooks account)
-        # # {
-        # #   target = "";
-        # #   text = "";
-        # # }
-        #   )  top.config.mail.accounts}
-        # to print advice
-      # ${map (hccount: ('VERBOSE_ECHO "you can generate"')) top.config.home.mailAccounts}
-        
       home.activation.createMailStores = dagEntryBefore [ "linkGeneration" ] ''
         echo 'hello world, notmuch link activation'
       '' 
-      # we need to create the store folders 
-        # + (concatMapStrings (account: ''
-        # mkdir -vf ${account.store}
-        # '') home.mailAccounts)
       ;
 
       # TODO need to add the hooks
