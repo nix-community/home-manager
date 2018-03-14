@@ -2,13 +2,24 @@
 
 with lib;
 with import ../lib/dag.nix { inherit lib; };
+with import ../lib/mail.nix { inherit lib config; };
 
 let
 
   cfg = config.programs.notmuch;
 
+  getNotmuchConfig = account: 
+    "$XDG_CONFIG_HOME/notmuch/notmuch_${account.name}";
+
+  # best to  so that tags can use it
   postSyncCommand = account:
-    "notmuch --config=$XDG_CONFIG_HOME/notmuch/notmuch_${account.name} new";
+    ''
+      # we export so that hooks use the correct DB
+      # (not sure it would work with --config)
+      export NOTMUCH_CONFIG=${getNotmuchConfig account}
+      notmuch new
+    '';
+
   # TODO test simple
   # command = 'notmuch address --format=json date:1Y..'
   # TODO might need to add the database too
@@ -53,7 +64,7 @@ ${cfg.contactCompletionCommand}
   ''
       [database]
       # todo make it configurable
-      path=${mailAccount.store}
+      path=${getStore mailAccount}
 
       ${accountStr mailAccount}
   ''
@@ -88,14 +99,6 @@ in
         default = findContactCommand;
         description = "Can override what is decided in contactCompletion";
       };
-
-      # tags = mkOption {
-      #   types.attrsOf
-      #   type = types.listOf types.string;
-      #   types.attr
-      #   default = findContactCommand;
-      #   description = "Command to find contact";
-      # };
 
       postSyncHook = mkOption {
         default = postSyncCommand;

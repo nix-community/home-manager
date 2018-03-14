@@ -3,15 +3,21 @@
 
 with lib;
 with import ../lib/dag.nix { inherit lib; };
+with import ../lib/mail.nix { inherit lib config; };
 
 let
 
   cfg = config.programs.offlineimap;
 
-  # TODO account.mta.postSyncHookCommand
-  postSyncHookCommand = account: pkgs.writeText "postSyncHook.sh" (
-  if (account.postSyncHook != null) then account.postSyncHook else if (config.programs.notmuch.enable) then config.programs.notmuch.postSyncHook else ""
+  # TODO move to lib account.mta.postSyncHookCommand
+  postSyncHookCommand = account: 
+    pkgs.writeText "postSyncHook.sh" (
+
+  lib.optionalString config.programs.notmuch.enable config.programs.notmuch.postSyncHook
+   + lib.optionalString (account.postSyncHook != null) account.postSyncHook
   );
+  # if (account.postSyncHook != null) then account.postSyncHook else if (config.programs.notmuch.enable) then config.programs.notmuch.postSyncHook else ""
+  # );
 
   # TODO maybe generate one config per account and load it with -c ?
   # TODO add postsynchook only if notmuch enabled ?
@@ -33,12 +39,12 @@ synclabels= yes
 # presynchook=imapfilter
 # TODO write a function
 # labelsheader = X-Keywords
-postsynchook=${postSyncHookCommand account}
+postsynchook= ${postSyncHookCommand account}
 
 [Repository ${name}-local]
 # HACK
 type = ${if account.imapHost != null then "IMAP" else "GmailMaildir"}
-localfolders = ${account.store}
+localfolders = ${getStore account}
 
 [Repository ${name}-remote]
 type = ${if account.imapHost != null then "IMAP" else "Gmail"}
