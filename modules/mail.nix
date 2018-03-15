@@ -34,11 +34,17 @@ let
           description = "Name displayed when sending mails.";
         };
 
+        # make into a submodule ? attach signature ?
         signature = mkOption {
           type = types.str;
           default = "default signature";
           example = "luke@tatooine.com";
           description = "Your signature";
+        };
+
+        attachSignature = mkOption {
+          type = types.bool;
+          default = false;
         };
 
         address = mkOption {
@@ -65,6 +71,18 @@ let
           type = types.str;
           example = "luke@tatooine.com";
           description = "MSMTP host to use to send mails";
+        };
+
+        mta = mkOption {
+          type =  types.enum [ config.programs.msmtp ];
+          default = [ config.programs.msmtp ];
+          description = "Mail Transfer Agent to use";
+        };
+
+        MUAs = mkOption {
+          type = types.listOf (types.enum [ config.programs.alot config.programs.astroid ]);
+          default = [ config.programs.alot ];
+          description = "List of Mail User Agents to take into account";
         };
 
         # might be hard to abstract
@@ -166,14 +184,6 @@ in
       description = ''
         Generate one shell alias per (program/account). For instance, if alot is enabled and an account is defined with name gmail, then it will generate alot-gmail
       '';
-
-      # generateDesktopFiles = mkOption {
-      #   default = true;
-      #   type = types.bool;
-      #   description = ''
-      #     Generate .desktop files if MUA has already a desktop.
-      #   '';
-      # };
     };
   };
 
@@ -185,11 +195,12 @@ in
       };
 
       # TODO might neeed to generate several aliases depending on mua
-
       programs.bash.shellAliases = 
       let 
+        genAccountAliases = account:
+          map (mua.generateAliases account) account.MUAs;
         genAliasesList = mailAccounts:
-          map  (account: { name = "alot-${account.name}"; value = "${pkgs.alot}/bin/alot -n ${config.xdg.configHome}/notmuch/notmuch_${account.name}"; }) mailAccounts ;
+          map genAccountAliases mailAccounts ;
         in
         {
           alot_test="echo 'test successful'";
@@ -210,9 +221,7 @@ in
       dag.entryBefore [ "linkGeneration" ] (
         concatStringsSep ";" (map createMailStore cfg.accounts)
       );
-      # need to create the maildirs !
     }
-    # )
   ]
   ;
 

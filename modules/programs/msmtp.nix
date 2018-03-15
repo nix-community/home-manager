@@ -28,18 +28,14 @@ auth on
 user ${account.userName}
 tls_certcheck off
 port 587
-
       '';
 
-  # ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
+    # TODO fix pick one
+    # account default : gmail
   configFile = mailAccounts: pkgs.writeText "msmtp" (  ''
 
     ${concatStringsSep "\n" (map accountStr mailAccounts)}
-
-    # TODO fix pick one
-    account default : gmail
   '' 
-  # + cfg.extraConfig
   );
 
 in
@@ -77,17 +73,10 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ pkgs.msmtp ];
-
-    # create folder where to store mails
-      # home.activation.createAlotConfig = dagEntryBefore [ "linkGeneration" ] ''
-      #   #     "${config.xdg.configHome}/i3/config"; then
-      # '';
-
-      # ca s appelle notmuchrc plutot
+  config = mkMerge [
+    mkIf cfg.enable { home.packages = [ pkgs.msmtp ]; }
+    {
       home.file.".msmtprc".source = configFile config.mail.accounts;
-      # ''
-      # '';
-  };
+    }
+    ];
 }

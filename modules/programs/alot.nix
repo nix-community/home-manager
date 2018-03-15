@@ -7,49 +7,42 @@ let
 
   cfg = config.programs.alot;
 
-  # alot_hooks=
-  # TODO should depend on MTA but for now we have only msmtp
-  sendCommand = config.programs.msmtp.sendCommand;
-    
+  generateNotmuchAlias = account:
+  {
+    name = "alot-${account.name}";
+    value = "${pkgs.alot}/bin/alot -n ${config.xdg.configHome}/notmuch/notmuch_${account.name}"; 
+  }
+ 
+
   accountStr = {name,userName, address, realname, ...} @ account:
     ''
       [[${name}]]
       address=${address}
       realname=${realname}
 
-      sendmail_command = ${sendCommand account}
-      '';
-
-    bindingStr = ''
-      # TODO if offlineimap configured, run offlineimap
-      G = call hooks.getmail(ui)
+      sendmail_command = ${account.mta.sendCommand account}
     '';
 
-  # ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
-  # should we set themes_dir as well ?
+    # TODO use
+    # bindingStr = ''
+    #   # TODO if offlineimap configured, run offlineimap
+    #   G = call hooks.getmail(ui)
+    # '';
+
 # alot hooks use default for now
 # hooksfile = ${xdg.configFile."alot/hm_hooks"}
-  configFile = mailAccounts: pkgs.writeText "alot.conf" (  ''
+  configFile = mailAccounts: pkgs.writeText "alot.conf" (''
 
-theme = "solarized_dark"
-auto_remove_unread = True
-ask_subject = False
-#auto_replyto_mailinglist
-# launch sequence of commands separated by ;
-initial_command = search tag:inbox AND NOT tag:killed;
-input_timeout=0.3
-# list of adresses
-prefer_plaintext = True
+    theme = ${cfg.theme}
+    ${cfg.extraConfig}
 
-  [accounts]
+    [accounts]
 
     ${concatStringsSep "\n" (map accountStr mailAccounts)}
 
-  '' 
-  );
+  '');
 
 in
-
 {
 
   options = {
@@ -61,9 +54,30 @@ in
         default = false;
         description = "create alias alot_\${account.name}";
       };
+
+      theme = mkOption {
+        type = types.enum [ "solarized_dark" ];
+        default = "solarized_dark";
+        description = "default theme";
+      };
+
+      generateAliases = mkOption {
+        # type = types.enum [ "solarized_dark" ];
+        default = generateNotmuchAlias;
+        description = "default theme";
+      };
+
+
       extraConfig = mkOption {
         type = types.lines;
-        default = "";
+        default = ''
+          auto_remove_unread = True
+          ask_subject = False
+          # launch sequence of commands separated by ;
+          initial_command = search tag:inbox AND NOT tag:killed;
+          input_timeout=0.3
+          prefer_plaintext = True
+        '';
         description = "Extra configuration lines to add to ~/.config/alot/config.";
       };
     };
