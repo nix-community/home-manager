@@ -61,10 +61,28 @@ in
         The configuration of the Nix Packages collection. (For
         details, see the Nixpkgs documentation.) It allows you to set
         package configuration options.
+
         </para><para>
+
         If <literal>null</literal>, then configuration is taken from
         the fallback location, for example,
         <filename>~/.config/nixpkgs/config.nix</filename>.
+
+        </para><para>
+
+        Note, this option will not apply outside your Home Manager
+        configuration like when installing manually through
+        <command>nix-env</command>. If you want to apply it both
+        inside and outside Home Manager you can put it in a separate
+        file and include something like
+
+        <programlisting>
+          nixpkgs.config = import ./nixpkgs-config.nix;
+          xdg.configFile."nixpkgs/config.nix".source =
+              ./nixpkgs-config.nix;
+        </programlisting>
+
+        in your Home Manager configuration.
       '';
     };
 
@@ -89,10 +107,19 @@ in
         an argument the <emphasis>original</emphasis> Nixpkgs. The
         first argument should be used for finding dependencies, and
         the second should be used for overriding recipes.
+
         </para><para>
+
         If <literal>null</literal>, then the overlays are taken from
         the fallback location, for example,
         <filename>~/.config/nixpkgs/overlays</filename>.
+
+        </para><para>
+
+        Like <varname>nixpkgs.config</varname> this option only
+        applies within the Home Manager configuration. See
+        <varname>nixpkgs.config</varname> for a suggested setup that
+        works both internally and externally.
       '';
     };
 
