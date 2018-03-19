@@ -11,7 +11,7 @@ let
   {
     name = "alot-${account.name}";
     value = "${pkgs.alot}/bin/alot -n ${config.xdg.configHome}/notmuch/notmuch_${account.name}"; 
-  }
+  };
  
 
   accountStr = {name,userName, address, realname, ...} @ account:

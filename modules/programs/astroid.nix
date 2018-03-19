@@ -14,6 +14,7 @@ let
     value = "${pkgs.astroid}/bin/alot -c ${config.xdg.configHome}/notmuch/notmuch_${account.name}"; 
   }
  
+
     
   accountStr = {name,userName, address, realname, ...} @ account:
     ''

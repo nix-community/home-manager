@@ -47,6 +47,11 @@ let
           default = false;
         };
 
+        gpgKey = mkOption {
+          type = types.path;
+          default = false;
+        };
+
         address = mkOption {
           type = types.str;
           example = "luke@tatooine.com";
@@ -73,9 +78,12 @@ let
           description = "MSMTP host to use to send mails";
         };
 
+        # can have only one mta
         mta = mkOption {
-          type =  types.enum [ config.programs.msmtp ];
-          default = [ config.programs.msmtp ];
+          type =  types.enum [ "msmtp" ];
+          default = "msmtp";
+          # type =  types.enum [config.programs.msmtp];
+          # default = config.programs.msmtp;
           description = "Mail Transfer Agent to use";
         };
 
@@ -197,8 +205,10 @@ in
       # TODO might neeed to generate several aliases depending on mua
       programs.bash.shellAliases = 
       let 
+        # return a list of [ {name=; value;} ]
         genAccountAliases = account:
-          map (mua.generateAliases account) account.MUAs;
+          map (mua: mua.generateAliases account) account.MUAs;
+        # 
         genAliasesList = mailAccounts:
           map genAccountAliases mailAccounts ;
         in
@@ -206,7 +216,7 @@ in
           alot_test="echo 'test successful'";
         }
         // (lib.optionalAttrs cfg.generateAliases (
-          builtins.listToAttrs (genAliasesList cfg.accounts) 
+          builtins.listToAttrs trace (genAliasesList cfg.accounts) 
         )
       );
 

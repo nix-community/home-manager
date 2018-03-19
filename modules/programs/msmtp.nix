@@ -7,12 +7,12 @@ let
 
   cfg = config.programs.msmtp;
 
-  sendMsmtpCommand = account:
-      if config.programs.msmtp.offlineSendMethod == "native" then
-        "${pkgs.msmtp}/bin/msmtp-queue --account=${account.name} -t"
-      # "none"
-      else
-        "${pkgs.msmtp}/bin/msmtp --account=${account.name} -t";
+  # sendMsmtpCommand = account:
+  #     if cfg.offlineSendMethod == "native" then
+  #       "${pkgs.msmtp}/bin/msmtp-queue --account=${account.name} -t"
+  #     # "none"
+  #     else
+  #       "${pkgs.msmtp}/bin/msmtp --account=${account.name} -t";
 
   accountStr = {userName, address, realname, ...} @ account:
     ''
@@ -43,7 +43,7 @@ in
 {
 
   options = {
-    programs.msmtp = rec {
+    programs.msmtp = {
       enable = mkEnableOption "Msmtp";
 
       offlineSendMethod = mkOption {
@@ -60,7 +60,7 @@ in
         # see for a list of methodds 
         # https://github.com/pazz/alot/wiki/Tips,-Tricks-and-other-cool-Hacks
         # type = types.str;
-        default = sendMsmtpCommand ;
+        # default = sendMsmtpCommand ;
         description = "Extra configuration lines to add to .msmtprc.";
       };
 
@@ -72,11 +72,10 @@ in
       };
     };
   };
-
   config = mkMerge [
     mkIf cfg.enable { home.packages = [ pkgs.msmtp ]; }
     {
       home.file.".msmtprc".source = configFile config.mail.accounts;
     }
-    ];
+  ];
 }
