@@ -80,7 +80,7 @@ let
       };
 
       file = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
         description = "The plugin script to source.";
       };
     };
@@ -319,7 +319,7 @@ in
             source $ZSH/oh-my-zsh.sh
         ''}
 
-        ${concatStrings (map (plugin: ''
+        ${concatStrings (map (plugin: lib.optionalString (plugin.file != null) ''
           source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
         '') cfg.plugins)}
 
