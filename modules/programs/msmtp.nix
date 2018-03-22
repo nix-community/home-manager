@@ -7,12 +7,12 @@ let
 
   cfg = config.programs.msmtp;
 
-  # sendMsmtpCommand = account:
-  #     if cfg.offlineSendMethod == "native" then
-  #       "${pkgs.msmtp}/bin/msmtp-queue --account=${account.name} -t"
-  #     # "none"
-  #     else
-  #       "${pkgs.msmtp}/bin/msmtp --account=${account.name} -t";
+  sendMsmtpCommand = account:
+      if cfg.offlineSendMethod == "native" then
+        "${pkgs.msmtp}/bin/msmtp-queue --account=${account.name} -t"
+      # "none"
+      else
+        "${pkgs.msmtp}/bin/msmtp --account=${account.name} -t";
 
   accountStr = {userName, address, realname, ...} @ account:
     ''
@@ -42,40 +42,39 @@ in
 
 {
 
-  options = {
-    programs.msmtp = {
-      enable = mkEnableOption "Msmtp";
+  options.programs.msmtp = {
+    enable = mkEnableOption "Msmtp";
 
-      offlineSendMethod = mkOption {
-        # https://wiki.archlinux.org/index.php/Msmtp#Using_msmtp_offline
-        # see for a list of methodds 
-        # https://github.com/pazz/alot/wiki/Tips,-Tricks-and-other-cool-Hacks
-        type = types.enum [ "none" "native" ];
-        default = "native";
-        description = "Extra configuration lines to add to .msmtprc.";
-      };
+    offlineSendMethod = mkOption {
+      # https://wiki.archlinux.org/index.php/Msmtp#Using_msmtp_offline
+      # see for a list of methodds 
+      # https://github.com/pazz/alot/wiki/Tips,-Tricks-and-other-cool-Hacks
+      type = types.enum [ "none" "native" ];
+      default = "native";
+      description = "Extra configuration lines to add to .msmtprc.";
+    };
 
-      sendCommand = mkOption {
-        # https://wiki.archlinux.org/index.php/Msmtp#Using_msmtp_offline
-        # see for a list of methodds 
-        # https://github.com/pazz/alot/wiki/Tips,-Tricks-and-other-cool-Hacks
-        # type = types.str;
-        # default = sendMsmtpCommand ;
-        description = "Extra configuration lines to add to .msmtprc.";
-      };
+    sendCommand = mkOption {
+      # https://wiki.archlinux.org/index.php/Msmtp#Using_msmtp_offline
+      # see for a list of methodds 
+      # https://github.com/pazz/alot/wiki/Tips,-Tricks-and-other-cool-Hacks
+      # type = types.str;
+      default = sendMsmtpCommand ;
+      description = "Extra configuration lines to add to .msmtprc.";
+    };
 
 
-      extraConfig = mkOption {
-        type = types.lines;
-        default = "";
-        description = "Extra configuration lines to add to .msmtprc.";
-      };
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      description = "Extra configuration lines to add to .msmtprc.";
     };
   };
+
   config = mkMerge [
-    mkIf cfg.enable { home.packages = [ pkgs.msmtp ]; }
+    (mkIf cfg.enable { home.packages = [ pkgs.msmtp ]; })
     {
-      home.file.".msmtprc".source = configFile config.mail.accounts;
+      home.file.".msmtprc".source =  configFile config.mail.accounts;
     }
   ];
 }

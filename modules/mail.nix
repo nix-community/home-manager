@@ -45,11 +45,13 @@ let
         attachSignature = mkOption {
           type = types.bool;
           default = false;
+          description = "wether to attach signature";
         };
 
         gpgKey = mkOption {
           type = types.path;
           default = false;
+          description = "your gpg key";
         };
 
         address = mkOption {
@@ -80,15 +82,16 @@ let
 
         # can have only one mta
         mta = mkOption {
-          type =  types.enum [ "msmtp" ];
-          default = "msmtp";
-          # type =  types.enum [config.programs.msmtp];
-          # default = config.programs.msmtp;
+          # type =  types.enum [ "msmtp" ];
+          # default = "msmtp";
+          type =  types.enum [config.programs.msmtp];
+          default = config.programs.msmtp;
           description = "Mail Transfer Agent to use";
         };
 
         MUAs = mkOption {
-          type = types.listOf (types.enum [ config.programs.alot config.programs.astroid ]);
+          # TODO add astroid
+          type = types.listOf (types.enum [ config.programs.alot  ]);
           default = [ config.programs.alot ];
           description = "List of Mail User Agents to take into account";
         };
@@ -211,14 +214,22 @@ in
         # 
         genAliasesList = mailAccounts:
           map genAccountAliases mailAccounts ;
+          # fold genAccountAliases [] mailAccounts ;
         in
         {
           alot_test="echo 'test successful'";
         }
-        // (lib.optionalAttrs cfg.generateAliases (
-          builtins.listToAttrs trace (genAliasesList cfg.accounts) 
-        )
-      );
+        // (lib.optionalAttrs cfg.generateAliases 
+        # lib.traceShowVal
+              (
+                builtins.listToAttrs (
+                builtins.concatLists (
+                # [ [] ]
+                genAliasesList cfg.accounts
+                ) 
+                )
+              )
+              );
 
       # todo check mta/mua creation process
       home.activation.createMailStores = 

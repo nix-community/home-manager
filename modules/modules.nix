@@ -26,6 +26,7 @@ let
     ./misc/xdg.nix
     ./programs/autorandr.nix
     ./programs/alot.nix
+    # ./programs/astroid.nix
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/browserpass.nix
@@ -43,7 +44,7 @@ let
     ./programs/lesspipe.nix
     ./programs/man.nix
     ./programs/mercurial.nix
-    # ./programs/msmtp.nix
+    ./programs/msmtp.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/offlineimap.nix
