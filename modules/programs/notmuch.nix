@@ -75,8 +75,8 @@ in
       enable = mkEnableOption "Notmuch";
 
       # rename getHooksFolder
-      getHooks = mkOption {
-        type = types.nullOr types.path; # precise a folder ?
+      getHooksFolder = mkOption {
+        # type = types.nullOr types.path; # precise a folder ?
         # type = types.function;
         default = null;
         # account: account.store.".notmuch/hooks";
@@ -114,20 +114,45 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.notmuch ];
 
+    home.activation.createNotmuchHooks =
+    let
+      wrapHook = account: ''
+        mkdir -p ${getStore account}/.notmuch
+        for hookName in post-new pre-new
+        do
+          
+          local originalHook=${account.configStore}/.notmuch/$hook
+          local destHook=${getStore account}/.notmuch/$hookName
+          if [ -f "$originalHook" ] && [ ! -f "" ; then
+            makeWrapper "$originalHook" \
+              \
+            --set NOTMUCH_CONFIG ${getNotmuchConfig account}
+          fi
 
-      home.activation.createMailStores = dagEntryBefore [ "linkGeneration" ] ''
-        echo 'hello world, notmuch link activation'
-      '' 
-      ;
+        done
 
-      # TODO need to add the hooks
+        --prefix PATH : "$out/bin"
+        concatStringsSep ";" (map createMailStore cfg.accounts)
 
-      # Hooks  are  scripts  (or arbitrary executables or symlinks to such) that notmuch invokes before and after certain actions. These scripts reside in the .notmuch/hooks
-       # directory within the database directory and must have executable permissions 
-      xdg.configFile = map (account: {
-        target = "notmuch/notmuch_${account.name}";
-        text = configFile account; 
-      }) top.config.mail.accounts;
+        '';
+    in 
+    dagEntryAfter [ "createMailStores" ] (
+    
+   concatStringsSep ";" (map wrapHook config.mail.accounts) 
+   )
+        # ''
+      # ''
+    ;
+
+    # TODO need to add the hooks
+
+    # Hooks  are  scripts  (or arbitrary executables or symlinks to such) that notmuch invokes before and after certain actions. These scripts reside in the .notmuch/hooks
+      # directory within the database directory and must have executable permissions 
+
+    xdg.configFile = map (account: {
+      target = "notmuch/notmuch_${account.name}";
+      text = configFile account; 
+    }) top.config.mail.accounts;
   };
 }
 

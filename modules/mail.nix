@@ -49,8 +49,8 @@ let
         };
 
         gpgKey = mkOption {
-          type = types.path;
-          default = false;
+          type = types.nullOr types.path;
+          default = null;
           description = "your gpg key";
         };
 
@@ -59,13 +59,6 @@ let
           example = "luke@tatooine.com";
           description = "Your mail address";
         };
-
-        # pgp key
-        # key = mkOption {
-        #   type = types.path;
-        #   example = null;
-        #   description = "Your PGP key/file";
-        # };
 
         imapHost = mkOption {
           type = types.nullOr types.str;
@@ -81,9 +74,12 @@ let
         };
 
         # can have only one mta
+        mra = mkOption {
+          type =  types.enum [config.programs.offlineimap];
+          default = config.programs.offlineimap;
+          description = "Mail Retrieval Agent to use";
+        };
         mta = mkOption {
-          # type =  types.enum [ "msmtp" ];
-          # default = "msmtp";
           type =  types.enum [config.programs.msmtp];
           default = config.programs.msmtp;
           description = "Mail Transfer Agent to use";
@@ -161,6 +157,23 @@ let
           description = "Where to store mail for this account";
         };
 
+        configStore = mkOption {
+          type = types.nullOr types.path;
+          default = ./.;
+          # default = "${cfg.maildir}/${name.value}";
+          description = ''
+            path to additionnal per-program configuration, for instance notmuch hooks. It should follow a specific structure
+          '';
+        };
+
+        # store = mkOption {
+        #   # path
+        #   type = types.nullOr types.path;
+        #   default = null;
+        #   # default = "${cfg.maildir}/${name.value}";
+        #   description = "Where to store mail for this account";
+        # };
+
       };
     };
 
@@ -186,6 +199,7 @@ in
       # type = types.attrsOf mailAccount;
       description = "List your email accounts.";
     };
+
 
 
     generateAliases = mkOption {
