@@ -35,16 +35,17 @@ let
         };
 
         # make into a submodule ? attach signature ?
-        signature = mkOption {
-          type = types.str;
-          default = "default signature";
-          example = "luke@tatooine.com";
-          description = "Your signature";
+        signatureFilename = mkOption {
+          type = types.nullOr types.path;
+          default = null;
+          example = "";
+          description = "Path to signature";
         };
 
-        attachSignature = mkOption {
-          type = types.bool;
-          default = false;
+        showSignature = mkOption {
+          # TODO enum attach/append
+          type = types.enum [ "append" "attach" "no" ];
+          default = "no";
           description = "wether to attach signature";
         };
 
@@ -71,6 +72,14 @@ let
           type = types.str;
           example = "luke@tatooine.com";
           description = "MSMTP host to use to send mails";
+        };
+
+        # see http://alot.readthedocs.io/en/latest/configuration/contacts_completion.html
+        contactCompletion = mkOption {
+          # TODO add it only if notmuch available ?
+          type = types.enum [ "notmuch address simple" "notmuch address" ];
+          default = "notmuch address";
+          description = "path to the hooks folder to use for a specific account";
         };
 
         # can have only one mta
@@ -150,7 +159,7 @@ let
 
         # keep it for now ?
         store = mkOption {
-          # path
+          # TODO default to maildir
           type = types.nullOr types.path;
           default = null;
           # default = "${cfg.maildir}/${name.value}";
@@ -158,8 +167,8 @@ let
         };
 
         configStore = mkOption {
-          type = types.nullOr types.path;
-          default = ./.;
+          type = types.nullOr types.str;
+          default = null;
           # default = "${cfg.maildir}/${name.value}";
           description = ''
             path to additionnal per-program configuration, for instance notmuch hooks. It should follow a specific structure
@@ -212,6 +221,7 @@ in
     };
   };
 
+  # TODO assert on an unset store ?
   config = mkMerge [
     {
     # mkIf cfg.enable {

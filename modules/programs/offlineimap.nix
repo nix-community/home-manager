@@ -166,6 +166,3 @@ in
     xdg.configFile."offlineimap/config".source = configFile config.mail.accounts;
   };
 }
-
-
-

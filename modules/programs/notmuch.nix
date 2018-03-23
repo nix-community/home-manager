@@ -17,22 +17,7 @@ let
       ${pkgs.notmuch}/bin/notmuch new
     '';
 
-  # TODO test simple
-  # command = 'notmuch address --format=json date:1Y..'
-  # TODO might need to add the database too
-  # or add --config ?
-  # account:
-  findContactCommand =  if cfg.contactCompletion == "notmuch address" then ''
-command = '${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients date:1Y.. AND from:my@address.org'
-regexp = '\[?{"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"}[,\]]?'
-shellcommand_external_filtering = False
-  '' else if cfg.contactCompletion == "notmuch address simple" then
-  "command = '${pkgs.notmuch}/bin/notmuch address --format=json date:1Y..'"
-  else 
-    "";
-
-
-
+  # accepts both user.name = ... or [user] name=...
   accountStr = {userName, address, realname, ...} @ account:
     ''
 [user]
@@ -47,12 +32,11 @@ ignore=
 [search]
 exclude_tags=deleted;spam;
 
-[maildir]
-synchronize_flags=true
 
-${cfg.contactCompletionCommand}
+${cfg.extraConfig}
 ''
 # tODO need to pass the actual config
+# ${cfg.contactCompletionCommand}
   ;
 
 
@@ -83,19 +67,6 @@ in
         description = "path to the hooks folder to use for a specific account";
       };
 
-      # see http://alot.readthedocs.io/en/latest/configuration/contacts_completion.html
-      contactCompletion = mkOption {
-        type = types.enum [ "notmuch address simple" "notmuch address" ];
-        default = "notmuch address";
-        description = "path to the hooks folder to use for a specific account";
-      };
-
-      # TODO make it a function of the account
-      contactCompletionCommand = mkOption {
-        type = types.str;
-        default = findContactCommand;
-        description = "Can override what is decided in contactCompletion";
-      };
 
       postSyncHook = mkOption {
         default = postSyncCommand;
@@ -104,7 +75,10 @@ in
 
       extraConfig = mkOption {
         type = types.str;
-        default = "";
+        default = ''
+            [maildir]
+            synchronize_flags=true
+          '';
         description = "string that will be appended to the config";
       };
     };
@@ -117,30 +91,29 @@ in
     home.activation.createNotmuchHooks =
     let
       wrapHook = account: ''
-        mkdir -p ${getStore account}/.notmuch
-        for hookName in post-new pre-new
+        mkdir -p ${getStore account}/.notmuch/hooks
+        ''
+        + lib.optionalString  (account.configStore != null) ''
+    # buildInputs = [makeWrapper];
+          source ${pkgs.makeWrapper}/nix-support/setup-hook
+
+        for hookName in post-new pre-new post-insert
         do
-          
-          local originalHook=${account.configStore}/.notmuch/$hook
-          local destHook=${getStore account}/.notmuch/$hookName
-          if [ -f "$originalHook" ] && [ ! -f "" ; then
+          originalHook=${account.configStore}/$hookName
+          destHook=${getStore account}/.notmuch/hooks/$hookName
+          if [ -f "$originalHook" ] && [ ! -f "$destHook" ]; then
             makeWrapper "$originalHook" \
-              \
+              "$destHook" \
             --set NOTMUCH_CONFIG ${getNotmuchConfig account}
           fi
 
         done
-
-        --prefix PATH : "$out/bin"
-        concatStringsSep ";" (map createMailStore cfg.accounts)
-
-        '';
+    '';
     in 
     dagEntryAfter [ "createMailStores" ] (
-    
-   concatStringsSep ";" (map wrapHook config.mail.accounts) 
-   )
-        # ''
+      concatStrings  (map wrapHook config.mail.accounts) 
+    )
+      # ''
       # ''
     ;
 
