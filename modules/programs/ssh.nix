@@ -220,9 +220,18 @@ in
       '';
     };
 
+    extraOptionOverrides = mkOption {
+      type = types.attrsOf types.str;
+      default = {};
+      description = ''
+        Extra SSH configuration options that take precedence over any
+        host specific configuration.
+      '';
+    };
+
     matchBlocks = mkOption {
       type = types.loaOf matchBlockModule;
-      default = [];
+      default = {};
       example = literalExample ''
         {
           "john.example.com" = {
@@ -248,20 +257,24 @@ in
 
   config = mkIf cfg.enable {
     home.file.".ssh/config".text = ''
-      ForwardAgent ${yn cfg.forwardAgent}
-      Compression ${yn cfg.compression}
-      ServerAliveInterval ${toString cfg.serverAliveInterval}
-      HashKnownHosts ${yn cfg.hashKnownHosts}
-      UserKnownHostsFile ${cfg.userKnownHostsFile}
-      ControlMaster ${cfg.controlMaster}
-      ControlPath ${cfg.controlPath}
-      ControlPersist ${cfg.controlPersist}
-
-      ${cfg.extraConfig}
+      ${concatStringsSep "\n" (
+        mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)}
 
       ${concatStringsSep "\n\n" (
         map matchBlockStr (
         builtins.attrValues cfg.matchBlocks))}
+
+      Host *
+        ForwardAgent ${yn cfg.forwardAgent}
+        Compression ${yn cfg.compression}
+        ServerAliveInterval ${toString cfg.serverAliveInterval}
+        HashKnownHosts ${yn cfg.hashKnownHosts}
+        UserKnownHostsFile ${cfg.userKnownHostsFile}
+        ControlMaster ${cfg.controlMaster}
+        ControlPath ${cfg.controlPath}
+        ControlPersist ${cfg.controlPersist}
+
+        ${replaceStrings ["\n"] ["\n  "] cfg.extraConfig}
     '';
   };
 }

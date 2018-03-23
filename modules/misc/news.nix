@@ -587,6 +587,24 @@ in
           A new module is available: 'programs.fzf'.
         '';
       }
+
+      {
+        time = "2018-03-25T06:49:57+00:00";
+        condition = with config.programs.ssh; enable && matchBlocks != {};
+        message = ''
+          Options set through the 'programs.ssh' module are now placed
+          at the end of the SSH configuration file. This was done to
+          make it possible to override global options such as
+          'ForwardAgent' or 'Compression' inside a host match block.
+
+          If you truly need to override an SSH option across all match
+          blocks then the new option
+
+              programs.ssh.extraOptionOverrides
+
+          can be used.
+        '';
+      }
     ];
   };
 }
