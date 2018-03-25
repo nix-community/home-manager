@@ -14,11 +14,12 @@ let
       else
         "${pkgs.msmtp}/bin/msmtp --account=${account.name} -t";
 
+  # TODO support passwordeval if needed
   accountStr = {userName, address, realname, ...} @ account:
     ''
 defaults
 tls on
-#tls_trust_file /etc/ssl/certs/ca-certificates.crt
+tls_trust_file ${config.mail.certificate}
 logfile ~/.msmtp.log
 
 account ${account.name}

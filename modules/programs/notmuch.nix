@@ -8,37 +8,35 @@ let
 
   cfg = config.programs.notmuch;
 
-  # best to  so that tags can use it
-  postSyncCommand = account:
-    ''
-      # we export so that hooks use the correct DB
-      # (not sure it would work with --config)
-      export NOTMUCH_CONFIG=${getNotmuchConfig account}
-      ${pkgs.notmuch}/bin/notmuch new
+    # best to  so that tags can use it
+    postSyncCommand = account:
+      ''
+        # we export so that hooks use the correct DB
+        # (not sure it would work with --config)
+        export NOTMUCH_CONFIG=${getNotmuchConfig account}
+        ${pkgs.notmuch}/bin/notmuch new
+      '';
+
+    # accepts both user.name = ... or [user] name=...
+    accountStr = {userName, address, realname, ...} @ account:
+      ''
+      [user]
+      name=${userName}
+      primary_email=${address}
+
+      # TODO move that to extraConfig
+      [new]
+      tags=unread;inbox;
+      ignore=
+
+      [search]
+      exclude_tags=deleted;spam;
+
     '';
 
-  # accepts both user.name = ... or [user] name=...
-  accountStr = {userName, address, realname, ...} @ account:
-    ''
-[user]
-name=${userName}
-primary_email=${address}
-# other_email=
-
-[new]
-tags=unread;inbox;
-ignore=
-
-[search]
-exclude_tags=deleted;spam;
-
-
-${cfg.extraConfig}
-''
-# tODO need to pass the actual config
-# ${cfg.contactCompletionCommand}
-  ;
-
+  extraConfigStr = entries: concatStringsSep "\n" (
+    mapAttrsToList (key: val: "${key} = ${val}") entries
+  );
 
   # TODO run notmuch new instead ?
   configFile = mailAccount:
@@ -49,7 +47,7 @@ ${cfg.extraConfig}
 
       ${accountStr mailAccount}
   ''
-  + cfg.extraConfig
+  + extraConfigStr cfg.extraConfig
   ;
 in
 {
@@ -74,11 +72,11 @@ in
       };
 
       extraConfig = mkOption {
-        type = types.str;
-        default = ''
-            [maildir]
-            synchronize_flags=true
-          '';
+        # attr of attrs ?
+        type = types.attrs;
+        default = {
+            "maildir.synchronize_flags" = "True";
+          };
         description = "string that will be appended to the config";
       };
     };
@@ -86,7 +84,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.notmuch ];
+    home.packages = [ pkgs.notmuch pkgs.makeWrapper ];
 
     home.activation.createNotmuchHooks =
     let

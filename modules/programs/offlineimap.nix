@@ -19,6 +19,9 @@ let
   # if (account.postSyncHook != null) then account.postSyncHook else if (config.programs.notmuch.enable) then config.programs.notmuch.postSyncHook else ""
   # );
 
+  generateOfflineimapAlias = account:
+    
+
   # TODO maybe generate one config per account and load it with -c ?
   # TODO add postsynchook only if notmuch enabled ?
   # TODO allow for user customisation
@@ -26,7 +29,7 @@ let
   accountStr = {name, userName, address, realname, ...} @ account:
     ''
 
-[Account ${name}]# {{{
+[Account ${name}]
 localrepository = ${name}-local
 remoterepository = ${name}-remote
 # interval between updates (in minutes)
@@ -36,19 +39,15 @@ maxsize=2000000
 # in daysA
 maxage=10
 synclabels= yes
-# presynchook=imapfilter
-# TODO write a function
-# labelsheader = X-Keywords
 postsynchook= ${postSyncHookCommand account}
 
 [Repository ${name}-local]
 # HACK
-type = ${if account.imapHost != null then "Maildir" else "GmailMaildir"}
+type = ${if (isGmail account) then "Maildir" else "GmailMaildir"}
 localfolders = ${getStore account}
 
 [Repository ${name}-remote]
 type = ${if account.imapHost != null then "IMAP" else "Gmail"}
-# TODO user getLogin / getPass defined in module
 ${if account.imapHost != null then "remotehost = "+ account.imapHost else ""}
 remoteusereval = ${cfg.getLogin account}
 remotepasseval = ${cfg.getPass account}
@@ -60,7 +59,6 @@ sslcacertfile= /etc/ssl/certs/ca-certificates.crt
 # newer offlineimap > 6.5.4 needs this
 # cert_fingerprint = 89091347184d41768bfc0da9fad94bfe882dd358
 # name translations would need to be done in both repositories, but reverse
-#nametrans = lambda foldername: foldername.replace('bar', 'BAR')
 # prevent sync with All mail folder since it duplicates mail
 folderfilter = lambda foldername: foldername not in ['[Gmail]/All Mail','[Gmail]/Spam','[Gmail]/Important']
       '';
@@ -113,6 +111,18 @@ in
         description = "function accepting a mail account as parameter";
       };
 
+      # generateAliases = mkOption {
+      #   default = generateOfflineimapAlias;
+      #   description = "default theme";
+      # };
+
+      fetchMailCommand = mkOption {
+        default = account: 
+          "offlineimap -a ${account.name}"
+        ;
+        description = "default theme";
+      };
+
       # run on finish
       # TODO should be per account
       postSyncHookCommand = mkOption {
@@ -140,12 +150,9 @@ in
         # propagatedBuildInputs = with pkgs.python3Packages; oldAttrs.propagatedBuildInputs ++ ;
       # }))
       pythonEnv
-
-      # pkgs.libsecret 
     ];
 
     # create script to retrieve keyring
-    # 
     # "${config.xdg.configHome}/offlineimap/get_settings.py"
     home.activation.createAlotScript = dagEntryBefore [ "linkGeneration" ] ''
 

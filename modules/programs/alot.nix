@@ -32,7 +32,12 @@ let
       "");
 
 
-
+  # todo should run the mra
+  bindingsStr = account:
+    ''[bindings]
+      # '/home/pazz/bin/pullmail.sh'
+    % = "shellescape ${account.mra.fetchMailCommand account} ; refresh"
+  '';
 
   # TODO add contact completion
   # https://alot.readthedocs.io/en/latest/configuration/contacts_completion.html
@@ -49,6 +54,7 @@ let
 
       # contact completion
       ${contactCompletionStr account} 
+      ${bindingsStr account} 
         
     '';
 
@@ -61,10 +67,15 @@ let
 # alot hooks use default for now
 # hooksfile = ${xdg.configFile."alot/hm_hooks"}
 # mailinglists
-  configFile = mailAccounts: pkgs.writeText "alot.conf" (''
+configFile = let
+  extraConfigStr = entries: concatStringsSep "\n" (
+    mapAttrsToList (key: val: "${key} = ${val}") entries
+  );
+in
+      mailAccounts: pkgs.writeText "alot.conf" (''
 
     theme = ${cfg.theme}
-    ${cfg.extraConfig}
+    ${extraConfigStr cfg.extraConfig}
     
     # TODO we should prepare our own hooks file
     # hooksfile
@@ -94,33 +105,28 @@ in
       };
 
       generateAliases = mkOption {
-        # type = types.enum [ "solarized_dark" ];
         default = generateNotmuchAlias;
         description = "default theme";
       };
 
-      # TODO make it a function of the account
       contactCompletionCommand = mkOption {
-        # type = types.str;
         default = contactCompletionStr;
         description = "Can override what is decided in contactCompletion";
       };
 
       # what about editor/editor_spawn
-      # terminal_cmd
-      # themes_dir
       extraConfig = mkOption {
-        type = types.lines;
-        default = ''
-          auto_remove_unread = True
-          ask_subject = False
-          handle_mouse = True
-          # launch sequence of commands separated by ;
-          initial_command = search tag:inbox AND NOT tag:killed;
-          input_timeout=0.3
-          prefer_plaintext = True
-          thread_indent_replies = 4
-        '';
+        type = types.attrs;
+        default = {
+          auto_remove_unread = "True";
+          ask_subject = "False";
+          handle_mouse = "True";
+          # launch sequence of commands separated by ;;
+          initial_command = "search tag:inbox AND NOT tag:killed";
+          input_timeout=0.3;
+          prefer_plaintext = "True";
+          thread_indent_replies = 4;
+        };
         description = "Extra configuration lines to add to ~/.config/alot/config.";
       };
     };

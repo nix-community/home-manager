@@ -206,15 +206,29 @@ in
     accounts = mkOption {
       type = types.listOf mailAccount;
       # type = types.attrsOf mailAccount;
+      example = literalExample ''
+        {
+          name = "gmail";
+          userName = "Luke";
+          realname = "Luke skywalker";
+          address = "luke.skywalker@gmail.com";
+          sendHost = "smtp.gmail.com";
+          contactCompletion = "notmuch address";
+        }'';
       description = "List your email accounts.";
     };
 
+    certificates = mkOption {
+      type = types.path;
+      default = config.security.pki.certificateFiles
+      description = ''
+        Path towards the certificates files.
+      '';
+    } 
 
-
-    generateAliases = mkOption {
+    generateShellAliases = mkOption {
       default = true;
       type = types.bool;
-      # todo let it a function ?
       description = ''
         Generate one shell alias per (program/account). For instance, if alot is enabled and an account is defined with name gmail, then it will generate alot-gmail
       '';
@@ -234,7 +248,8 @@ in
       let 
         # return a list of [ {name=; value;} ]
         genAccountAliases = account:
-          map (mua: mua.generateAliases account) account.MUAs;
+        (map (mua: mua.generateShellAliases account) account.MUAs)
+          ++ [ account.mra.generateShellAliases account ];
         # 
         genAliasesList = mailAccounts:
           map genAccountAliases mailAccounts ;
@@ -243,8 +258,7 @@ in
         {
           alot_test="echo 'test successful'";
         }
-        // (lib.optionalAttrs cfg.generateAliases 
-        # lib.traceShowVal
+        // (lib.optionalAttrs cfg.generateShellAliases 
               (
                 builtins.listToAttrs (
                 builtins.concatLists (
