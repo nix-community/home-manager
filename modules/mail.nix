@@ -249,8 +249,8 @@ in
         # return a list of [ {name=; value;} ]
         genAccountAliases = account:
         (map (mua: mua.generateShellAliases account) account.MUAs)
-          ++ [ account.mra.generateShellAliases account ];
-        # 
+          # ++ [ account.mra.generateShellAliases account ]
+          ;
         genAliasesList = mailAccounts:
           map genAccountAliases mailAccounts ;
           # fold genAccountAliases [] mailAccounts ;
