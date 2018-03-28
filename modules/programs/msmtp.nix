@@ -15,11 +15,12 @@ let
         "${pkgs.msmtp}/bin/msmtp --account=${account.name} -t";
 
   # TODO support passwordeval if needed
+  # TODO restore 
   accountStr = {userName, address, realname, ...} @ account:
     ''
 defaults
 tls on
-tls_trust_file ${config.mail.certificate}
+tls_trust_file ${config.mail.certificateStore}
 logfile ~/.msmtp.log
 
 account ${account.name}

@@ -99,10 +99,10 @@ in
         do
           originalHook=${account.configStore}/$hookName
           destHook=${getStore account}/.notmuch/hooks/$hookName
+          echo "If hook $originalHook exists, create [$destHook] wrapper"
           if [ -f "$originalHook" ] && [ ! -f "$destHook" ]; then
             makeWrapper "$originalHook" \
-              "$destHook" \
-            --set NOTMUCH_CONFIG ${getNotmuchConfig account}
+              "$destHook" --set NOTMUCH_CONFIG "${getNotmuchConfig account}"
           fi
 
         done

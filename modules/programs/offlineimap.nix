@@ -6,6 +6,7 @@ with import ../lib/dag.nix { inherit lib; };
 with import ../lib/mail.nix { inherit lib config; };
 
 let
+  pythonEnv = pkgs.python3.withPackages(ps: with ps; [ secretstorage keyring pygobject3 pkgs.offlineimap]);
 
   cfg = config.programs.offlineimap;
 
@@ -18,8 +19,8 @@ let
   );
   # if (account.postSyncHook != null) then account.postSyncHook else if (config.programs.notmuch.enable) then config.programs.notmuch.postSyncHook else ""
   # );
-
   generateOfflineimapAlias = account:
+    "alias offlineimap-${account.name}='${cfg.fetchMailCommand account}'";
     
 
   # TODO maybe generate one config per account and load it with -c ?
@@ -111,14 +112,15 @@ in
         description = "function accepting a mail account as parameter";
       };
 
-      # generateAliases = mkOption {
-      #   default = generateOfflineimapAlias;
-      #   description = "default theme";
-      # };
+      generateShellAliases = mkOption {
+        default = generateOfflineimapAlias;
+        description = "default theme";
+      };
 
+      # needs to be an option to be accessible by mra.fetchMailCommand
       fetchMailCommand = mkOption {
         default = account: 
-          "offlineimap -a ${account.name}"
+          "${pythonEnv}/bin/offlineimap -a${account.name}"
         ;
         description = "default theme";
       };
@@ -141,14 +143,7 @@ in
 
   config = mkIf cfg.enable {
 
-    home.packages = let
-      pythonEnv = pkgs.python3.withPackages(ps: with ps; [ secretstorage keyring pygobject3 pkgs.offlineimap]);
-      in [
-      # pkgs.offlineimap 
-      # pkgs.python3Packages.toPythonApplication (pkgs.offlineimap.overrideAttrs (oldAttrs: {
-        # USERNAME 	echo " nix-shell -p python3Packages.secretstorage -p python36Packages.keyring -p python36Packages.pygobject3"
-        # propagatedBuildInputs = with pkgs.python3Packages; oldAttrs.propagatedBuildInputs ++ ;
-      # }))
+    home.packages =  [
       pythonEnv
     ];
 

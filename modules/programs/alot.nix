@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, ... } @ top:
 
 with lib;
 with import ../lib/dag.nix { inherit lib; };
@@ -7,10 +7,11 @@ let
 
   cfg = config.programs.alot;
 
-  generateNotmuchAlias = account:
+  generateNotmuchAlias = {name, ...} @ account:
   {
-    name = "alot-${account.name}";
-    value = "${pkgs.alot}/bin/alot -n ${config.xdg.configHome}/notmuch/notmuch_${account.name}"; 
+    name = "alot-${name}";
+    # -c $XDG_CONFIG_HOME/alot/alot-${name}
+    value = "${pkgs.alot}/bin/alot -n $XDG_CONFIG_HOME/notmuch/notmuch_${name}"; 
   };
  
   # TODO test simple
@@ -32,41 +33,32 @@ let
       "");
 
 
-  # todo should run the mra
-  bindingsStr = account:
-    ''[bindings]
-      # '/home/pazz/bin/pullmail.sh'
+  bindingsStr = fetchMailCommand:
+  ''
+    [bindings]
     % = "shellescape ${account.mra.fetchMailCommand account} ; refresh"
   '';
 
   # TODO add contact completion
   # https://alot.readthedocs.io/en/latest/configuration/contacts_completion.html
   # signature = ${if account?signatureFilename or ""}
+  # gpg_key = ${account.gpgKey}  D7D6C5AA
   accountStr = {name, userName, address, realname, ...} @ account:
     ''
       [[${name}]]
       address=${address}
       realname=${realname}
-      # gpg_key = D7D6C5AA
-      # gpg_key
       sendmail_command = ${account.mta.sendCommand account}
       signature_as_attachment = ${if account.showSignature == "attach" then "True" else "False"}
 
       # contact completion
       ${contactCompletionStr account} 
-      ${bindingsStr account} 
+
         
     '';
 
-    # TODO use
-    # bindingStr = ''
-    #   # TODO if offlineimap configured, run offlineimap
-    #   G = call hooks.getmail(ui)
-    # '';
-
 # alot hooks use default for now
 # hooksfile = ${xdg.configFile."alot/hm_hooks"}
-# mailinglists
 configFile = let
   extraConfigStr = entries: concatStringsSep "\n" (
     mapAttrsToList (key: val: "${key} = ${val}") entries
@@ -76,7 +68,9 @@ in
 
     theme = ${cfg.theme}
     ${extraConfigStr cfg.extraConfig}
-    
+
+    [bindings] 
+
     # TODO we should prepare our own hooks file
     # hooksfile
     [accounts]
@@ -104,13 +98,23 @@ in
         description = "default theme";
       };
 
-      generateAliases = mkOption {
+      generateShellAliases = mkOption {
         default = generateNotmuchAlias;
         description = "default theme";
       };
 
       contactCompletionCommand = mkOption {
         default = contactCompletionStr;
+        description = "Can override what is decided in contactCompletion";
+      };
+
+      bindings = mkOption {
+        type = types.attrs;
+        default = {
+          # TODO it should
+    # % = "shellescape ${account.mra.fetchMailCommand account} ; refresh"
+           "%" = "refresh";
+        };
         description = "Can override what is decided in contactCompletion";
       };
 
@@ -141,7 +145,17 @@ in
       # ;
 
       # ca s appelle notmuchrc plutot
-      xdg.configFile."alot/config".source = configFile config.mail.accounts;
+    xdg.configFile."alot/config".source = configFile config.mail.accounts;
+    # xdg.configFile = (map (account: {
+    #   target = "alot/alot-${account.name}";
+    #   text = configFile account; 
+    # }) top.config.mail.accounts)
+    # ++ [
+    #   { target = "alot/hm_hooks";
+    #     text = ''
+    #     # Home-manager custom hooks
+    #     '';
+    #   } ]
 
       xdg.configFile."alot/hm_hooks".text = ''
         # Home-manager custom hooks

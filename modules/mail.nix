@@ -218,13 +218,13 @@ in
       description = "List your email accounts.";
     };
 
-    certificates = mkOption {
+    certificateStore = mkOption {
       type = types.path;
-      default = config.security.pki.certificateFiles
+      default =  "/etc/ssl/certs/ca-certificates.crt";
       description = ''
         Path towards the certificates files.
       '';
-    } 
+    };
 
     generateShellAliases = mkOption {
       default = true;
