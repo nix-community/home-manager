@@ -605,6 +605,13 @@ in
           can be used.
         '';
       }
+
+      {
+        time = "2018-04-19T07:42:01+00:00";
+        message = ''
+          A new module is available: 'programs.autorandr'.
+        '';
+      }
     ];
   };
 }

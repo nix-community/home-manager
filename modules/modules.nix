@@ -22,6 +22,7 @@ let
     ./misc/nixpkgs.nix
     ./misc/pam.nix
     ./misc/xdg.nix
+    ./programs/autorandr.nix
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/browserpass.nix
