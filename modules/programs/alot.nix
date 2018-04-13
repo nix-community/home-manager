@@ -13,7 +13,8 @@ let
   {
     name = "alot-${name}";
     # -c $XDG_CONFIG_HOME/alot/alot-${name}
-    value = "${pkgs.alot}/bin/alot -n ${notmuchConfig account}"; 
+    #  -n ${notmuchConfig account}
+    value = "export NOTMUCH_CONFIG=${notmuchConfig account}; ${pkgs.alot}/bin/alot"; 
   };
  
   # TODO test simple
@@ -23,6 +24,7 @@ let
   contactCompletionStr = let
     
       # command="";
+      # --config ${notmuchConfig account}
     in
     account: 
     ''
@@ -30,7 +32,7 @@ let
       type = shellcommand
       command = '' + (
     if account.contactCompletion == "notmuch address" then ''
-      '${pkgs.bash}/bin/bash -c "${pkgs.notmuch}/bin/notmuch --config ${notmuchConfig account} address --format=json --output=recipients  date:1Y.."'
+      '${pkgs.bash}/bin/bash -c "${pkgs.notmuch}/bin/notmuch  address --format=json --output=recipients  date:1Y.."'
     regexp = '\[?{"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"}[,\]]?'
     shellcommand_external_filtering = False
     '' else if account.contactCompletion == "notmuch --config ${notmuchConfig account} address simple" then
