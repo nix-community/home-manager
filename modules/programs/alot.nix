@@ -7,27 +7,33 @@ let
 
   cfg = config.programs.alot;
 
+  notmuchConfig = account: "$XDG_CONFIG_HOME/notmuch/notmuch_${account.name}";
+
   generateNotmuchAlias = {name, ...} @ account:
   {
     name = "alot-${name}";
     # -c $XDG_CONFIG_HOME/alot/alot-${name}
-    value = "${pkgs.alot}/bin/alot -n $XDG_CONFIG_HOME/notmuch/notmuch_${name}"; 
+    value = "${pkgs.alot}/bin/alot -n ${notmuchConfig account}"; 
   };
  
   # TODO test simple
   # command = 'notmuch address --format=json date:1Y..'
   # TODO might need to add the database too
   # or add --config ?
-  contactCompletionStr = account: 
+  contactCompletionStr = let
+    
+      # command="";
+    in
+    account: 
     ''
       [[[abook]]]
       type = shellcommand
       command = '' + (
     if account.contactCompletion == "notmuch address" then ''
-      '${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients date:1Y.. AND from:my@address.org'
-  regexp = '\[?{"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"}[,\]]?'
-  shellcommand_external_filtering = False
-    '' else if account.contactCompletion == "notmuch address simple" then
+      '${pkgs.bash}/bin/bash -c "${pkgs.notmuch}/bin/notmuch --config ${notmuchConfig account} address --format=json --output=recipients  date:1Y.."'
+    regexp = '\[?{"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"}[,\]]?'
+    shellcommand_external_filtering = False
+    '' else if account.contactCompletion == "notmuch --config ${notmuchConfig account} address simple" then
     "'${pkgs.notmuch}/bin/notmuch address --format=json date:1Y..'"
     else 
       "");
@@ -43,6 +49,8 @@ let
   # https://alot.readthedocs.io/en/latest/configuration/contacts_completion.html
   # signature = ${if account?signatureFilename or ""}
   # gpg_key = ${account.gpgKey}  D7D6C5AA
+  # 
+  # gpg_key ID 
   accountStr = {name, userName, address, realname, ...} @ account:
     ''
       [[${name}]]
@@ -53,9 +61,11 @@ let
 
       # contact completion
       ${contactCompletionStr account} 
-
+      ${if account.showSignature == "attach" then "gpg_key = {account." else ""}
         
-    '';
+    ''
+    
+    ;
 
 # alot hooks use default for now
 # hooksfile = ${xdg.configFile."alot/hm_hooks"}

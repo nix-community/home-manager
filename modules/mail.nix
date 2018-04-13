@@ -49,8 +49,9 @@ let
           description = "wether to attach signature";
         };
 
+        # identity ? at least of alot
         gpgKey = mkOption {
-          type = types.nullOr types.path;
+          type = types.nullOr types.string;
           default = null;
           description = "your gpg key";
         };

@@ -1,18 +1,21 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, ... } @ top:
 
 with lib;
-with import ../lib/dag.nix { inherit lib; };
+with builtins;
+# with import ../lib/dag.nix { inherit lib; };
 
 let
 
   cfg = config.programs.msmtp;
 
+  # TODO pass a custom config with  
   sendMsmtpCommand = account:
       if cfg.offlineSendMethod == "native" then
-        "${pkgs.msmtp}/bin/msmtp-queue --account=${account.name} -t"
+        # TODO check msmtp-queue sends the mail
+        "${pkgs.msmtp}/bin/msmtpq -C $XDG_CONFIG_HOME/msmtp/config --account=${account.name} -t"
       # "none"
       else
-        "${pkgs.msmtp}/bin/msmtp --account=${account.name} -t";
+        "${pkgs.msmtp}/bin/msmtp $XDG_CONFIG_HOME/msmtp/config --account=${account.name} -t";
 
   # TODO support passwordeval if needed
   # TODO restore 
@@ -28,7 +31,7 @@ host ${account.sendHost}
 from ${address}
 auth on
 user ${account.userName}
-tls_certcheck off
+tls_certcheck on
 port 587
       '';
 
@@ -56,6 +59,7 @@ in
       description = "Extra configuration lines to add to .msmtprc.";
     };
 
+
     sendCommand = mkOption {
       # https://wiki.archlinux.org/index.php/Msmtp#Using_msmtp_offline
       # see for a list of methodds 
@@ -76,7 +80,18 @@ in
   config = mkMerge [
     (mkIf cfg.enable { home.packages = [ pkgs.msmtp ]; })
     {
-      home.file.".msmtprc".source =  configFile config.mail.accounts;
+      xdg.configFile."msmtp/config".source =  configFile config.mail.accounts;
+      # TODO wrap msmtpq with  MSMTP_QUEUE/MSMTP_LOG set instead
+      home.sessionVariables =  {
+        MSMTP_QUEUE = "$XDG_DATA_HOME/msmtp/";
+        MSMTP_LOG = "$XDG_DATA_HOME/msmtp/log";
+      };
+      # getXdgDir
+      xdg.dataFile."msmtp/fake".text = "";
     }
+    (mkIf (cfg.offlineSendMethod  == "native" ) {
+      # home.packages = [ pkgs.msmtp ]; 
+      # TODO launch a service
+    })
   ];
 }

@@ -38,7 +38,7 @@ autorefresh=0
 # in bytes
 maxsize=2000000
 # in daysA
-maxage=10
+maxage=30
 synclabels= yes
 postsynchook= ${postSyncHookCommand account}
 
