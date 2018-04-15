@@ -94,7 +94,7 @@ in {
       default = [ (-15) (-15) ];
       example = [ (-10) (-15) ];
       description = ''
-        Left and right offset for shadows (in pixels).
+        Horizontal and vertical offsets for shadows (in pixels).
       '';
     };
 
