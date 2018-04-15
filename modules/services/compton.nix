@@ -24,7 +24,15 @@ let
       shadow-offset-y = ${toString (elemAt cfg.shadowOffsets 1)};
       shadow-opacity  = ${cfg.shadowOpacity};
       shadow-exclude  = ${toJSON cfg.shadowExclude};
+    '' + 
+    optionalString cfg.blur ''
+
+      # blur
+      blur-background         = true;
+      blur-background-exclude = ${toJSON cfg.blurExclude};
+      no-dock-blur            = ${toString cfg.noDockBlur};
     '' + ''
+
       # opacity
       active-opacity   = ${cfg.activeOpacity};
       inactive-opacity = ${cfg.inactiveOpacity};
@@ -41,6 +49,35 @@ in {
 
   options.services.compton = {
     enable = mkEnableOption "Compton X11 compositor";
+
+    blur = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Enable background blur on transparent windows.
+      '';
+    };
+
+    noDockBlur = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Avoid blur on docks.
+      '';
+    };
+
+    blurExclude = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      example = [
+        "class_g = 'slop'"
+        "class_i = 'polybar'"
+      ];
+      description = ''
+        List of windows to exclude background blur.
+        See <literal>compton(1)</literal> man page for more examples.
+      '';
+    };
 
     fade = mkOption {
       type = types.bool;
