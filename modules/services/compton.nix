@@ -29,6 +29,7 @@ let
       active-opacity   = ${cfg.activeOpacity};
       inactive-opacity = ${cfg.inactiveOpacity};
       menu-opacity     = ${cfg.menuOpacity};
+      opacity-rule     = ${toJSON cfg.opacityRule};
 
       # other options
       backend = ${toJSON cfg.backend};
@@ -145,6 +146,19 @@ in {
       example = "0.8";
       description = ''
         Opacity of dropdown and popup menu.
+      '';
+    };
+
+    opacityRule = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      example = [
+        "87:class_i ?= 'scratchpad'"
+        "91:class_i ?= 'xterm'"
+      ];
+      description = ''
+        List of opacity rules.
+        See <literal>compton(1)</literal> man page for more examples.
       '';
     };
 
