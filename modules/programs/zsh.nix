@@ -320,7 +320,9 @@ in
         ''}
 
         ${concatStrings (map (plugin: ''
-          source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
+          if [ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]; then
+            source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
+          fi
         '') cfg.plugins)}
 
         # History options should be set in .zshrc and after oh-my-zsh sourcing.
