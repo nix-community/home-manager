@@ -48,7 +48,7 @@ in
         let
           mountPoint = "\"%h/${cfg.mountPoint}\"";
         in {
-          Environment = "PATH=/run/wrappers KEYBASE_SYSTEMD=1";
+          Environment = "PATH=/run/wrappers/bin KEYBASE_SYSTEMD=1";
           ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mountPoint}";
           ExecStart ="${pkgs.kbfs}/bin/kbfsfuse ${toString cfg.extraFlags} ${mountPoint}";
           ExecStopPost = "/run/wrappers/bin/fusermount -u ${mountPoint}";
