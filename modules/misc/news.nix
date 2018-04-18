@@ -605,6 +605,28 @@ in
           can be used.
         '';
       }
+
+      {
+        time = "2018-04-18T21:34:12+00:00";
+        condition = config.programs.git.enable;
+        message = ''
+          A new option 'programs.git.includes' is available. Additional
+          Git configuration files may be included via
+
+              programs.git.includes = [
+                { path = "~/path/to/config.inc"; }
+              ];
+
+          or conditionally via
+
+              programs.git.includes = [
+                { path = "~/path/to/config.inc"; condition = "gitdir:~/src/"; }
+              ];
+
+          and the corresponding '[include]' or '[includeIf]' sections will be
+          appended to the main Git configuration file.
+        '';
+      }
     ];
   };
 }
