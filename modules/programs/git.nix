@@ -28,6 +28,28 @@ let
     };
   };
 
+  includeModule = types.submodule {
+    options = {
+      condition = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Include this configuration only when <varname>condition</varname>
+          matches. Allowed conditions are described in
+          <citerefentry>
+            <refentrytitle>git-config</refentrytitle>
+            <manvolnum>1</manvolnum>
+          </citerefentry>.
+        '';
+      };
+
+      path = mkOption {
+        type = types.str;
+        description = "Path of the configuration file to include.";
+      };
+    };
+  };
+
 in
 
 {
@@ -83,6 +105,21 @@ in
         example = [ "*~" "*.swp" ];
         description = "List of paths that should be globally ignored.";
       };
+
+      includes = mkOption {
+        type = types.listOf includeModule;
+        default = [];
+        example = literalExample ''
+          [
+            { path = "~/path/to/config.inc"; }
+            {
+              path = "~/path/to/conditional.inc";
+              condition = "gitdir:~/src/dir";
+            }
+          ]
+        '';
+        description = "List of configuration files to include.";
+      };
     };
   };
 
@@ -123,6 +160,16 @@ in
 
       (mkIf (lib.isString cfg.extraConfig) {
         xdg.configFile."git/config".text = cfg.extraConfig;
+      })
+
+      (mkIf (cfg.includes != []) {
+        xdg.configFile."git/config".text = mkAfter
+          (concatMapStringsSep "\n"
+            (i: with i; ''
+              [${if (condition == null) then "include" else "includeIf \"${condition}\""}]
+              path = ${path}
+            '')
+            cfg.includes);
       })
     ]
   );
