@@ -41,11 +41,11 @@ let
       "");
 
 
-  bindingsStr = fetchMailCommand:
-  ''
-    [bindings]
-    % = "shellescape ${account.mra.fetchMailCommand account} ; refresh"
-  '';
+  # bindingsStr = fetchMailCommand:
+  # ''
+  #   [bindings]
+  #   % = "shellescape ${account.mra.fetchMailCommand account} ; refresh"
+  # '';
 
   # TODO add contact completion
   # https://alot.readthedocs.io/en/latest/configuration/contacts_completion.html
@@ -66,7 +66,6 @@ let
       ${if account.showSignature == "attach" then "gpg_key = {account." else ""}
         
     ''
-    
     ;
 
 # alot hooks use default for now
@@ -82,6 +81,7 @@ in
     ${extraConfigStr cfg.extraConfig}
 
     [bindings] 
+    ${cfg.bindings}
 
     # TODO we should prepare our own hooks file
     # hooksfile
@@ -121,12 +121,17 @@ in
       };
 
       bindings = mkOption {
-        type = types.attrs;
-        default = {
-          # TODO it should
-    # % = "shellescape ${account.mra.fetchMailCommand account} ; refresh"
-           "%" = "refresh";
-        };
+        # type = types.submoduleOf
+        # type = types.attrs;
+        # default = {
+        #   # TODO it should
+    # # % = "shellescape ${account.mra.fetchMailCommand account} ; refresh"
+        #    "%" = "refresh";
+        # };
+        type = types.lines;
+        default = ''
+          % = refresh;
+        '';
         description = "Can override what is decided in contactCompletion";
       };
 
