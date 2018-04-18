@@ -8,22 +8,52 @@ let
   # astroid has no man but astroid --help shows some settings
   cfg = config.programs.astroid;
 
-  generateNotmuchAlias = account:
+  generateAlias = account:
   {
     name = "alot-${account.name}";
-    value = "${pkgs.astroid}/bin/alot -c ${config.xdg.configHome}/notmuch/notmuch_${account.name}"; 
+    value = "${pkgs.astroid}/bin/astroid -c ${config.xdg.configHome}/notmuch/notmuch_${account.name}"; 
   }
  
+  astroidConfig = account: "$XDG_CONFIG_HOME/astroid/astroid_${account.name}";
 
+  # toJSON
+    # "accounts": {
+    #     "charlie": {
+    #         "name": "Charlie Root",
+    #         "email": "root@localhost",
+    #         "gpgkey": "",
+    #         "sendmail": "msmtp -t",
+    #         "default": "true",
+    #         "save_sent": "false",
+    #         "save_sent_to": "\/home\/root\/Mail\/sent\/cur\/",
+    #         "additional_sent_tags": "",
+    #         "save_drafts_to": "\/home\/root\/Mail\/drafts\/",
+    #         "signature_file": "",
+    #         "signature_default_on": "true",
+    #         "signature_attach": "false",
+    #         "always_gpg_sign": "false",
+    #         "signature_separate": "false",
+    #         "select_query": ""
+    #     }
+    # },
     
   accountStr = {name,userName, address, realname, ...} @ account:
-    ''
-      [[${name}]]
-      address=${address}
-      realname=${realname}
-
-      sendmail_command = ${sendCommand account}
-      '';
+  builtins.toJSON (builtins.removeAttrs account [ "gpgkey" ] // {
+            "gpgkey" = account.gpgKey;
+            "sendmail" = account.mra.fetchMailCommand account;
+            "default": "true",
+            "save_sent": "false",
+            "save_sent_to": "\/home\/root\/Mail\/sent\/cur\/",
+            "additional_sent_tags": "",
+            "save_drafts_to": config.mailstore + "/drafts\/",
+            "signature_file": "",
+            "signature_default_on": "true",
+            "signature_attach" = account.showSignature == "attach";
+            "always_gpg_sign": "false",
+            "signature_separate": "false",
+            "select_query": ""
+  })
+  ;
 
     bindingStr = ''
       # TODO if offlineimap configured, run offlineimap
@@ -35,6 +65,9 @@ let
 # alot hooks use default for now
 # hooksfile = ${xdg.configFile."alot/hm_hooks"}
 # toJSON
+
+  # TODO load a template
+
 
   accountsJson = accounts:
     map ( toJSON account: 
@@ -56,7 +89,23 @@ let
             # "select_query": ""
         }) accounts;
 
-  configFile = mailAccounts: pkgs.writeText "astroid.conf" (  ''
+
+  # load a template with importJSON
+  # notmuchConfig = account: "$XDG_CONFIG_HOME/notmuch/notmuch_${account.name}";
+  configFile = mailAccounts:
+  let
+    # TODO recursiveUpdate old/ new
+    tpl = builtins.removeAttrs ( builtins.importJSON ./astroid.tpl);
+
+    tpl_updated = recursiveUpdate tpl {
+      # astroid.notmuch_config = ;
+    };
+
+  in 
+  pkgs.writeText "astroid.conf" (
+    builtins.toJSON
+      {}
+    ''
 
   accounts = {
 
