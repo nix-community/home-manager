@@ -612,6 +612,28 @@ in
           A new module is available: 'programs.autorandr'.
         '';
       }
+
+      {
+        time = "2018-04-19T15:44:55+00:00";
+        condition = config.programs.git.enable;
+        message = ''
+          A new option 'programs.git.includes' is available. Additional
+          Git configuration files may be included via
+
+              programs.git.includes = [
+                { path = "~/path/to/config.inc"; }
+              ];
+
+          or conditionally via
+
+              programs.git.includes = [
+                { path = "~/path/to/config.inc"; condition = "gitdir:~/src/"; }
+              ];
+
+          and the corresponding '[include]' or '[includeIf]' sections will be
+          appended to the main Git configuration file.
+        '';
+      }
     ];
   };
 }
