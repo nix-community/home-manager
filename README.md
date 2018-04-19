@@ -19,7 +19,7 @@ will write to your dconf store and cannot tell whether a configuration
 that it is about to be overwrite was from a previous Home Manager
 generation or from manual configuration.
 
-Home Manager targets [NixOS][] unstable and NixOS version 17.09 (the
+Home Manager targets [NixOS][] unstable and NixOS version 18.03 (the
 current stable version), it may or may not work on other Linux
 distributions and NixOS versions.
 
@@ -64,10 +64,10 @@ Currently the easiest way to install Home Manager is as follows:
     or
 
     ```console
-    $ HM_PATH=https://github.com/rycee/home-manager/archive/release-17.09.tar.gz
+    $ HM_PATH=https://github.com/rycee/home-manager/archive/release-18.03.tar.gz
     ```
 
-    depending on whether you follow Nixpkgs unstable or version 17.09.
+    depending on whether you follow Nixpkgs unstable or version 18.03.
 
 3.  Create an initial Home Manager configuration file:
 
