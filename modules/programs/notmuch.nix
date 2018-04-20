@@ -88,22 +88,24 @@ in
 
     home.activation.createNotmuchHooks =
     let
+      # for now we don't wrap them and instead NOTMUCH_CONFIG
       wrapHook = account: ''
         mkdir -p ${getStore account}/.notmuch/hooks
         ''
         + lib.optionalString  (account.configStore != null) ''
     # buildInputs = [makeWrapper];
-          source ${pkgs.makeWrapper}/nix-support/setup-hook
+          # source ${pkgs.makeWrapper}/nix-support/setup-hook
 
         for hookName in post-new pre-new post-insert
         do
           originalHook=${account.configStore}/$hookName
+          # mauvaise destination ?
           destHook=${getStore account}/.notmuch/hooks/$hookName
           echo "If hook $originalHook exists, create [$destHook] wrapper"
-          # if [ -f "$originalHook" ] && [ ! -f "$destHook" ]; then
-            makeWrapper "$originalHook" \
-              "$destHook" --set NOTMUCH_CONFIG "${getNotmuchConfig account}"
-          # fi
+          if [ -f "$originalHook" ] && [ ! -f "$destHook" ]; then
+            ln -s "$originalHook" "$destHook"
+            # makeWrapper "$originalHook"  "$destHook" --set NOTMUCH_CONFIG "${getNotmuchConfig account}"
+          fi
 
         done
     '';
