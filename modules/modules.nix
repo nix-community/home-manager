@@ -56,6 +56,7 @@ let
     ./services/kbfs.nix
     ./services/keepassx.nix
     ./services/keybase.nix
+    ./services/mbsync.nix
     ./services/network-manager-applet.nix
     ./services/owncloud-client.nix
     ./services/parcellite.nix
