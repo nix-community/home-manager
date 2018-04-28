@@ -624,7 +624,7 @@ in
       xdg.configFile."i3/config".onChange = ''
         if [[ -v DISPLAY ]]; then
           echo "Reloading i3"
-          ${cfg.package}/bin/i3-msg reload 1>/dev/null
+          $DRY_RUN_CMD ${cfg.package}/bin/i3-msg reload 1>/dev/null
         fi
       '';
     }

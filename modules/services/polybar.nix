@@ -136,7 +136,7 @@ in
     xdg.configFile."polybar/config".onChange = ''
       if [[ -v DISPLAY ]]; then
         echo "Restarting polybar"
-        ${config.systemd.user.systemctlPath} --user restart polybar.service
+        $DRY_RUN_CMD ${config.systemd.user.systemctlPath} --user restart polybar.service
       fi
     '';
   };

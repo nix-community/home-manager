@@ -97,7 +97,7 @@ in
         # Attempt to restart xmonad if X is running.
         if [[ -v DISPLAY ]] ; then
           echo "Restarting xmonad"
-          ${config.xsession.windowManager.command} --restart
+          $DRY_RUN_CMD ${config.xsession.windowManager.command} --restart
         fi
       '';
     })
