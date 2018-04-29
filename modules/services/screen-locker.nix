@@ -26,6 +26,23 @@ in {
         See <link xlink:href="https://linux.die.net/man/1/xautolock"/>.
       '';
     };
+
+    xautolockExtraOptions = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = ''
+        Extra command-line arguments to pass to <command>xautolock</command>.
+      '';
+    };
+
+    xssLockExtraOptions = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = ''
+        Extra command-line arguments to pass to <command>xss-lock</command>.
+      '';
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -45,7 +62,8 @@ in {
           ${pkgs.xautolock}/bin/xautolock \
           -detectsleep \
           -time ${toString cfg.inactiveInterval} \
-          -locker '${pkgs.systemd}/bin/loginctl lock-session $XDG_SESSION_ID'
+          -locker '${pkgs.systemd}/bin/loginctl lock-session $XDG_SESSION_ID' \
+          ${concatStringsSep " " cfg.xautolockExtraOptions}
         '';
       };
     };
@@ -53,7 +71,7 @@ in {
     # xss-lock will run specified screen locker when the session is locked via loginctl
     # can't be started as a systemd service,
     # see https://bitbucket.org/raymonad/xss-lock/issues/13/allow-operation-as-systemd-user-unit
-    xsession.initExtra = "${pkgs.xss-lock}/bin/xss-lock -- ${cfg.lockCmd} &";
+    xsession.initExtra = "${pkgs.xss-lock}/bin/xss-lock ${concatStringsSep " " cfg.xssLockExtraOptions} -- ${cfg.lockCmd} &";
   };
 
 }
