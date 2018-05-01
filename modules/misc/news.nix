@@ -634,6 +634,13 @@ in
           appended to the main Git configuration file.
         '';
       }
+
+      {
+        time = "2018-04-26T21:33:56+00:00";
+        message = ''
+          A new module is available: 'services.mbsync'.
+        '';
+      }
     ];
   };
 }
