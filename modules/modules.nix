@@ -51,6 +51,7 @@ let
     ./services/blueman-applet.nix
     ./services/compton.nix
     ./services/dunst.nix
+    ./services/flameshot.nix
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix
     ./services/kbfs.nix

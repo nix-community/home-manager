@@ -641,6 +641,12 @@ in
           A new module is available: 'services.mbsync'.
         '';
       }
+      {
+        time = "2018-05-03T12:34:47+00:00";
+        message = ''
+          A new module is available: 'services.flameshot'.
+        '';
+      }
     ];
   };
 }
