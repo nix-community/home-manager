@@ -54,6 +54,7 @@ with lib;
           };
 
           Service = {
+            Environment = "PATH=%h/.nix-profile/bin";
             ExecStart = "${pkgs.qsyncthingtray}/bin/QSyncthingTray";
           };
 
