@@ -26,6 +26,13 @@ let
         example = 64;
         description = "The cursor size.";
       };
+
+      cursor = mkOption {
+        type = types.str;
+        default = "X_cursor";
+        example = "left_ptr";
+        description = "The default cursor file to use within the package.";
+      };
     };
   };
 
@@ -54,7 +61,7 @@ in
     home.packages = [cfg.package];
 
     xsession.initExtra = ''
-      ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cfg.package}/share/icons/${cfg.name}/cursors/X_cursor ${toString cfg.size}
+      ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cfg.package}/share/icons/${cfg.name}/cursors/${cfg.cursor} ${toString cfg.size}
     '';
 
     xresources.properties = {
