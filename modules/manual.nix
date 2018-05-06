@@ -9,7 +9,7 @@ let
     It isn't perfect, but it seems to cover a vast majority of use cases.
     Caveat: even if the package is reached by a different means,
     the path above will be shown and not e.g. `${config.services.foo.package}`. */
-  homeManagerManual = import <home-manager/doc> {
+  homeManagerManual = import ../doc {
     inherit pkgs config;
     version = "0.1";
     revision = "release-0.1";
