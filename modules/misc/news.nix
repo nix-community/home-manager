@@ -588,6 +588,20 @@ in
           can be used.
         '';
       }
+
+      {
+        time = "2018-05-06T20:36:51+00:00";
+        message = ''
+          The 17.09 branch of Home Manager is unmaintained and will
+          not receive any further updates.
+
+          The current stable branch of Home Manager is now
+          release-18.03 and matches (as the name suggest) the NixOS
+          and Nixpkgs 18.03 versions.
+
+          Thanks for using Home Manager!
+        '';
+      }
     ];
   };
 }
