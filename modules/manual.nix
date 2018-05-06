@@ -9,14 +9,14 @@ let
     It isn't perfect, but it seems to cover a vast majority of use cases.
     Caveat: even if the package is reached by a different means,
     the path above will be shown and not e.g. `${config.services.foo.package}`. */
-  nixosManual = import <nixpkgs/nixos/doc/manual> {
+  homeManagerManual = import <home-manager/doc> {
     inherit pkgs config;
     version = "0.1";
     revision = "release-0.1";
     options =
       let
         scrubbedEval = evalModules {
-          modules = [ { nixpkgs.system = pkgs.stdenv.system; } ] ++ baseModules;
+          modules = [ { nixpkgs.localSystem = config.nixpkgs.localSystem; } ] ++ baseModules;
           args = (config._module.args) // { modules = [ ]; };
           specialArgs = { pkgs = scrubDerivations "pkgs" pkgs; };
         };
@@ -31,14 +31,6 @@ let
           pkgSet;
       in scrubbedEval.options;
   };
-
-  homeEnvironmentManPages = pkgs.runCommand "home-environment-manpages" {
-      allowedReferences = [ "out" ];
-    } ''
-      install -v -D -m444 \
-        ${nixosManual.manpages}/share/man/man5/configuration.nix.5 \
-        $out/share/man/man5/home-configuration.nix.5
-    '';
 
 in
 
@@ -60,22 +52,12 @@ in
   };
 
   config = mkIf config.manual.manpages.enable {
-    home.packages = [ homeEnvironmentManPages ];
+    home.packages = [ homeManagerManual.manpages ];
   };
 
   # To fix error during manpage build.
   meta = {
     maintainers = [ maintainers.rycee ];
-    doc = builtins.toFile "nothingness" ''
-      <chapter xmlns="http://docbook.org/ns/docbook"
-               xmlns:xlink="http://www.w3.org/1999/xlink"
-               xmlns:xi="http://www.w3.org/2001/XInclude"
-               version="5.0"
-               xml:id="sec-nothing">
-        <title>this is just to make the docs compile</title>
-        <para xml:id="sec-grsecurity"></para>
-        <para xml:id="sec-emacs-docbook-xml"></para>
-      </chapter>
-    '';
+    doc = builtins.toFile "nothingness" "";
   };
 }
