@@ -257,7 +257,7 @@ in
           # fold genAccountAliases [] mailAccounts ;
         in
         {
-          alot_test="echo 'test successful'";
+          # alot_test="echo 'test successful'";
         }
         // (lib.optionalAttrs cfg.generateShellAliases 
               (
