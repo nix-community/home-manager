@@ -50,6 +50,10 @@ let
 
   servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
 
+  attrsRecursivelyMerged = types.attrs // {
+    merge = loc: foldl' (res: def: recursiveUpdate res def.value) {};
+  };
+
 in
 
 {
@@ -70,26 +74,38 @@ in
 
       services = mkOption {
         default = {};
-        type = types.attrs;
-        description = "Definition of systemd per-user service units.";
+        type = attrsRecursivelyMerged;
+        description = ''
+          Definition of systemd per-user service units. Attributes are
+          merged recursively.
+        '';
       };
 
       sockets = mkOption {
         default = {};
-        type = types.attrs;
-        description = "Definition of systemd per-user sockets";
+        type = attrsRecursivelyMerged;
+        description = ''
+          Definition of systemd per-user sockets. Attributes are
+          merged recursively.
+        '';
       };
 
       targets = mkOption {
         default = {};
-        type = types.attrs;
-        description = "Definition of systemd per-user targets";
+        type = attrsRecursivelyMerged;
+        description = ''
+          Definition of systemd per-user targets. Attributes are
+          merged recursively.
+        '';
       };
 
       timers = mkOption {
         default = {};
-        type = types.attrs;
-        description = "Definition of systemd per-user timers";
+        type = attrsRecursivelyMerged;
+        description = ''
+          Definition of systemd per-user timers. Attributes are merged
+          recursively.
+        '';
       };
 
       startServices = mkOption {
