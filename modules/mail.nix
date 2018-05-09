@@ -83,12 +83,21 @@ let
           description = "path to the hooks folder to use for a specific account";
         };
 
+        # default actions
+        defaultActions = mkOption {
+          # TODO add it only if notmuch available ?
+          type = types.listOf (types.enum [ "cryptoSign" "cipher" "appendSignature" "attachSignature" ]);
+          default = false;
+          description = "Wether to sign messages";
+        };
+
         # can have only one mta
         mra = mkOption {
           type =  types.enum [config.programs.offlineimap];
           default = config.programs.offlineimap;
           description = "Mail Retrieval Agent to use";
         };
+
         mta = mkOption {
           type =  types.enum [config.programs.msmtp];
           default = config.programs.msmtp;
