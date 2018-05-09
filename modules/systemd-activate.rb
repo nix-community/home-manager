@@ -14,7 +14,7 @@ UnitsDir = 'home-files/.config/systemd/user'
 #    that failed to start. This helps debugging quickly failing services.
 #
 # Whenever service failures are detected, show the output of
-# 'systemd --home status' for the affected services.
+# 'systemd --user status' for the affected services.
 #
 def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
   start_timeout_ms = start_timeout_ms_string.to_i
@@ -27,6 +27,7 @@ def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
 
   exit if old_services.empty? && new_services.empty?
 
+  # These services should be running when this script is finished
   services_to_run = get_services_to_run(new_units_path)
   maybe_changed_services = services_to_run & old_services
 
