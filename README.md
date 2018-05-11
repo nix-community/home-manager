@@ -179,8 +179,9 @@ $ home-manager build
 which will create a `result` link to a directory containing an
 activation script and the generated home directory files.
 
-To see available configuration options with descriptions and usage
-examples run
+Documentation of available configuration options, including
+descriptions and usage examples, is available in the [Home Manager
+manual][configuration options] or offline by running
 
 ```console
 $ man home-configuration.nix
@@ -299,3 +300,4 @@ in your Home Manager configuration.
 [nixAllowedUsers]: https://nixos.org/nix/manual/#conf-allowed-users
 [nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
 [Z shell]: http://zsh.sourceforge.net/
+[configuration options]: https://rycee.github.io/home-manager/options.html
