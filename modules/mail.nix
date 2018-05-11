@@ -253,17 +253,18 @@ in
         MAILDIR = cfg.maildir;
       };
 
+
       # TODO might neeed to generate several aliases depending on mua
+      # TODO best to generate wrappers the since aliases need to be reloaded
+      # home.activation.wrapMUAs = 
       programs.bash.shellAliases = 
       let 
         # return a list of [ {name=; value;} ]
         genAccountAliases = account:
         (map (mua: mua.generateShellAliases account) account.MUAs)
-          # ++ [ account.mra.generateShellAliases account ]
           ;
         genAliasesList = mailAccounts:
           map genAccountAliases mailAccounts ;
-          # fold genAccountAliases [] mailAccounts ;
         in
         {
           # alot_test="echo 'test successful'";

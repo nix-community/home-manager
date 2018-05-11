@@ -112,16 +112,16 @@ in
     in 
     dagEntryAfter [ "createMailStores" ] (
       concatStrings  (map wrapHook config.mail.accounts) 
-    )
-      # ''
-      # ''
-    ;
+    );
 
-    # TODO need to add the hooks
+
+    # TODO target the hookFolder
+    # xdg.homeFile = map (account: {
+    #   config.mail.accounts) 
+    # }) 
 
     # Hooks  are  scripts  (or arbitrary executables or symlinks to such) that notmuch invokes before and after certain actions. These scripts reside in the .notmuch/hooks
       # directory within the database directory and must have executable permissions 
-
     xdg.configFile = map (account: {
       target = "notmuch/notmuch_${account.name}";
       text = configFile account; 
