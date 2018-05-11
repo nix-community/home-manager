@@ -59,7 +59,7 @@ let
   #
   # E.g. if some `options` came from modules in ${pkgs.customModules}/nix,
   # you'd need to include `extraSources = [ pkgs.customModules ]`
-  prefixesToStrip = map (p: "${toString p}/") ([ ../../.. ] ++ extraSources);
+  prefixesToStrip = map (p: "${toString p}/") ([ ./.. ] ++ extraSources);
   stripAnyPrefixes = lib.flip (lib.fold lib.removePrefix) prefixesToStrip;
 
   # Custom "less" that pushes up all the things ending in ".enable*"
@@ -78,19 +78,17 @@ let
   # Convert the list of options into an XML file.
   optionsXML = builtins.toFile "options.xml" (builtins.toXML optionsList);
 
-  optionsDocBook = runCommand "options-db.xml" {} ''
-    optionsXML=${optionsXML}
-    if grep /home--manager/modules $optionsXML; then
-      echo "The manual appears to depend on the location of Home Manager, which is bad"
-      echo "since this prevents sharing via the NixOS channel.  This is typically"
-      echo "caused by an option default that refers to a relative path (see above"
-      echo "for hints about the offending path)."
-      exit 1
-    fi
-    ${buildPackages.libxslt.bin}/bin/xsltproc \
-      --stringparam revision '${revision}' \
-      -o $out ${<nixpkgs/nixos/doc/manual/options-to-docbook.xsl>} $optionsXML
-  '';
+  optionsDocBook = runCommand "options-db.xml"
+    {
+      nativeBuildInputs = [ buildPackages.libxslt.bin ];
+    }
+    ''
+      optionsXML=${optionsXML}
+      xsltproc \
+        --stringparam program 'home-manager' \
+        --stringparam revision '${revision}' \
+        -o $out ${./options-to-docbook.xsl} $optionsXML
+    '';
 
   sources = lib.sourceFilesBySuffices ./. [".xml"];
 
@@ -268,8 +266,8 @@ in rec {
       mkdir -p $dst/images/callouts
       cp ${docbook5_xsl}/xml/xsl/docbook/images/callouts/*.svg $dst/images/callouts/
 
-      cp ${../../../doc/style.css} $dst/style.css
-      cp ${../../../doc/overrides.css} $dst/overrides.css
+      cp ${./style.css} $dst/style.css
+      cp ${./overrides.css} $dst/overrides.css
       cp -r ${pkgs.documentation-highlighter} $dst/highlightjs
 
       mkdir -p $out/nix-support

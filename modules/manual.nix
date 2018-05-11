@@ -12,7 +12,7 @@ let
   homeManagerManual = import ../doc {
     inherit pkgs config;
     version = "0.1";
-    revision = "release-0.1";
+    revision = "master";
     options =
       let
         scrubbedEval = evalModules {

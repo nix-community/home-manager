@@ -2,27 +2,19 @@
       xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:xi="http://www.w3.org/2001/XInclude"
       version="5.0"
-      xml:id="book-nixos-manual">
+      xml:id="book-home-manager-manual">
  <info>
   <title>Home Manager Manual</title>
  </info>
  <preface>
   <title>Preface</title>
   <para>
-   This manual will eventually describes how to install, use and
+   This manual will eventually describes how to install, use, and
    extend Home Manager.
   </para>
   <para>
-   If you encounter problems, please report them on the
-   <literal
-    xlink:href="https://groups.google.com/forum/#!forum/nix-devel">nix-devel</literal>
-   mailing list or on the <link
-    xlink:href="irc://irc.freenode.net/#nixos">
-   <literal>#nixos</literal> channel on Freenode</link>. Bugs should be
-   reported in
-   <link
-    xlink:href="https://github.com/NixOS/nixpkgs/issues">NixOS’
-   GitHub issue tracker</link>.
+   If you encounter problems or bugs then please report them on the
+   <link xlink:href="https://github.com/rycee/home-manager/issues">Home Manager issue tracker</link>.
   </para>
   <note>
    <para>
@@ -34,7 +26,6 @@
  </preface>
  <appendix xml:id="ch-options">
   <title>Configuration Options</title>
-  <xi:include href="./generated/options-db.xml"
-                xpointer="configuration-variable-list" />
+  <xi:include href="./generated/options-db.xml" xpointer="configuration-variable-list" />
  </appendix>
 </book>
