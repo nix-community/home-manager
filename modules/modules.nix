@@ -21,6 +21,7 @@ let
     ./misc/news.nix
     ./misc/nixpkgs.nix
     ./misc/pam.nix
+    ./misc/qt.nix
     ./misc/xdg.nix
     ./programs/autorandr.nix
     ./programs/bash.nix

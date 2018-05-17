@@ -647,6 +647,16 @@ in
           A new module is available: 'services.flameshot'.
         '';
       }
+
+      {
+        time = "2018-05-18T18:34:15+00:00";
+        message = ''
+          A new module is available: 'qt'
+
+          At the moment this module allows you to set up Qt to use the
+          GTK+ theme, and not much else.
+        '';
+      }
     ];
   };
 }
