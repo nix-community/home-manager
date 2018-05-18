@@ -4,6 +4,8 @@ with lib;
 
 let
 
+  cfg = config.manual;
+
   /* For the purpose of generating docs, evaluate options with each derivation
     in `pkgs` (recursively) replaced by a fake with path "\${pkgs.attribute.path}".
     It isn't perfect, but it seems to cover a vast majority of use cases.
@@ -32,10 +34,42 @@ let
       in scrubbedEval.options;
   };
 
+  manualHtmlRoot = "${homeManagerManual.manual}/share/doc/home-manager/index.html";
+
+  helpScript = pkgs.writeScriptBin "home-manager-help" ''
+    #!${pkgs.bash}/bin/bash -e
+
+    if [ -z "$BROWSER" ]; then
+      for candidate in xdg-open open w3m; do
+        BROWSER="$(type -P $candidate || true)"
+        if [ -x "$BROWSER" ]; then
+          break;
+        fi
+      done
+    fi
+
+    if [ -z "$BROWSER" ]; then
+      echo "$0: unable to start a web browser; please set \$BROWSER"
+      exit 1
+    fi
+
+    exec "$BROWSER" ${manualHtmlRoot}
+  '';
+
 in
 
 {
   options = {
+    manual.html.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to install the HTML manual. This also installs the
+        <command>home-manager-help</command> tool, which opens a local
+        copy of the Home Manager manual in the system web browser.
+      '';
+    };
+
     manual.manpages.enable = mkOption {
       type = types.bool;
       default = true;
@@ -51,8 +85,12 @@ in
     };
   };
 
-  config = mkIf config.manual.manpages.enable {
-    home.packages = [ homeManagerManual.manpages ];
+  config = {
+    home.packages = mkMerge [
+      (mkIf cfg.html.enable [ helpScript homeManagerManual.manual  ])
+
+      (mkIf cfg.manpages.enable [ homeManagerManual.manpages ])
+    ];
   };
 
   # To fix error during manpage build.
