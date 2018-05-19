@@ -33,6 +33,7 @@ in
       };
 
       Service = {
+        Environment = "PATH=%h/.nix-profile/bin";
         ExecStart = "${package}/bin/flameshot";
         Restart = "on-abort";
       };
