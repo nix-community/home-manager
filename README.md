@@ -61,13 +61,13 @@ Currently the easiest way to install Home Manager is as follows:
     $ HM_PATH=https://github.com/rycee/home-manager/archive/master.tar.gz
     ```
 
-    or
+    if you are following Nixpkgs master or an unstable channel and
 
     ```console
     $ HM_PATH=https://github.com/rycee/home-manager/archive/release-18.03.tar.gz
     ```
 
-    depending on whether you follow Nixpkgs unstable or version 18.03.
+    if you follow a Nixpkgs version 18.03 channel.
 
 3.  Create an initial Home Manager configuration file:
 
