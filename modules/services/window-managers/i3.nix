@@ -763,9 +763,10 @@ in
       '';
 
       home.activation.reloadI3 = dag.entryAfter [ "linkGeneration" ] ''
-        if [[ -v i3Changed && -v DISPLAY ]]; then
+        SOCKET=''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*
+        if [ -v i3Changed ] && [ -S $SOCKET ]; then
           echo "Reloading i3"
-          ${cfg.package}/bin/i3-msg reload 1>/dev/null
+          ${cfg.package}/bin/i3-msg -s $SOCKET reload 1>/dev/null
         fi
       '';
     }
