@@ -33,7 +33,11 @@ let
       workspace = mkOption {
         type = types.nullOr types.string;
         default = null;
-        description = "Launch application on a particular workspace.";
+        description = ''
+          Launch application on a particular workspace.
+          DEPRECATED: Use i3.config.assigns instead.
+          See https://github.com/rycee/home-manager/issues/265.
+        '';
       };
     };
   };
@@ -775,6 +779,14 @@ in
       xsession.windowManager.i3.package = mkDefault (
         if (cfg.config.gaps != null) then pkgs.i3-gaps else pkgs.i3
       );
+    })
+
+    (mkIf (cfg.config != null && (any (s: s.workspace != null) cfg.config.startup)) {
+      warnings = [
+        ("'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
+          + "use 'xsession.windowManager.i3.config.assigns' instead."
+          + "See https://github.com/rycee/home-manager/issues/265.")
+      ];
     })
   ]);
 }
