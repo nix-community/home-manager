@@ -130,7 +130,7 @@ in
   config = (
     let
       aliasesStr = concatStringsSep "\n" (
-        mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
+        mapAttrsToList (k: v: "alias ${k}=${escapeShellArg v}") cfg.shellAliases
       );
 
       shoptsStr = concatStringsSep "\n" (
