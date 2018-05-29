@@ -750,6 +750,13 @@ in
           using this option.
         '';
       }
+
+      {
+        time = "2018-08-19T20:46:09+00:00";
+        message = ''
+          A new modules is available: 'programs.chromium'.
+        '';
+      }
     ];
   };
 }

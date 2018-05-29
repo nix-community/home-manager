@@ -28,6 +28,7 @@ let
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/browserpass.nix
+    ./programs/chromium.nix
     ./programs/command-not-found/command-not-found.nix
     ./programs/direnv.nix
     ./programs/eclipse.nix
