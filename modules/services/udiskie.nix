@@ -73,7 +73,7 @@ in
         };
 
         Service = {
-          ExecStart = "${pkgs.pythonPackages.udiskie}/bin/udiskie -2 ${commandArgs}";
+          ExecStart = "${pkgs.udiskie}/bin/udiskie -2 ${commandArgs}";
         };
 
         Install = {
