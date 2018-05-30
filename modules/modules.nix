@@ -43,6 +43,7 @@ let
     ./programs/info.nix
     ./programs/lesspipe.nix
     ./programs/man.nix
+    ./programs/mbsync.nix
     ./programs/mercurial.nix
     ./programs/msmtp.nix
     ./programs/neovim.nix

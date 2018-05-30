@@ -93,7 +93,7 @@ let
 
         # can have only one mta
         mra = mkOption {
-          type =  types.enum [config.programs.offlineimap];
+          type =  types.enum [config.programs.mbsync config.programs.offlineimap];
           default = config.programs.offlineimap;
           description = "Mail Retrieval Agent to use";
         };
