@@ -50,8 +50,8 @@ in
         <?xml version='1.0'?>
         <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
         <fontconfig>
-          <dir>/etc/per-user-pkgs/${config.home.username}/lib/X11/fonts</dir>
-          <dir>/etc/per-user-pkgs/${config.home.username}/share/fonts</dir>
+          <dir>/etc/profiles/per-user/${config.home.username}/lib/X11/fonts</dir>
+          <dir>/etc/profiles/per-user/${config.home.username}/share/fonts</dir>
         </fontconfig>
       '';
     })
