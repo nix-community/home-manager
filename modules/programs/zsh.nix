@@ -19,6 +19,8 @@ let
 
   zdotdir = "$HOME/" + cfg.dotDir;
 
+  profileDir = if config.nixosSubmodule then "${config.home.path}" else "$HOME/.nix-profile";
+
   historyModule = types.submodule ({ config, ... }: {
     options = {
       size = mkOption {
@@ -302,7 +304,7 @@ in
         }
 
         # Environment variables
-        . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        . "${profileDir}/etc/profile.d/hm-session-vars.sh"
         ${envVarsStr}
 
         ${optionalString cfg.oh-my-zsh.enable ''

@@ -1,8 +1,11 @@
 { config, lib, pkgs, ... }:
 
 with lib;
+let
 
-{
+  profileDir = if config.nixosSubmodule then "${config.home.path}" else "%h/.nix-profile";
+
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -54,7 +57,7 @@ with lib;
           };
 
           Service = {
-            Environment = "PATH=%h/.nix-profile/bin";
+            Environment = "PATH=${profileDir}/bin";
             ExecStart = "${pkgs.qsyncthingtray}/bin/QSyncthingTray";
           };
 

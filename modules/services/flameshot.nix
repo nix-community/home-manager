@@ -6,6 +6,7 @@ let
 
   cfg = config.services.flameshot;
   package = pkgs.flameshot;
+  profileDir = if config.nixosSubmodule then "${config.home.path}" else "%h/.nix-profile";
 
 in
 
@@ -33,7 +34,7 @@ in
       };
 
       Service = {
-        Environment = "PATH=%h/.nix-profile/bin";
+        Environment = "PATH=${profileDir}/bin";
         ExecStart = "${package}/bin/flameshot";
         Restart = "on-abort";
       };

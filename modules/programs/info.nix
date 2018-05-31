@@ -28,8 +28,10 @@ let
 
   dag = config.lib.dag;
 
+  profileDir = if config.nixosSubmodule then "${config.home.path}" else "$HOME/.nix-profile";
+
   # Indexes info files found in this location
-  homeInfoPath = "$HOME/.nix-profile/share/info";
+  homeInfoPath = "${profileDir}/share/info";
 
   # Installs this package -- the interactive just means that it
   # includes the curses `info` program. We also use `install-info`
