@@ -34,9 +34,9 @@ let
         type = types.nullOr types.string;
         default = null;
         description = ''
-          Launch application on a particular workspace.
-          DEPRECATED: Use i3.config.assigns instead.
-          See https://github.com/rycee/home-manager/issues/265.
+          Launch application on a particular workspace. DEPRECATED:
+          Use <varname><link linkend="opt-xsession.windowManager.i3.config.assigns">xsession.windowManager.i3.config.assigns</link></varname>
+          instead. See <link xlink:href="https://github.com/rycee/home-manager/issues/265"/>.
         '';
       };
     };
