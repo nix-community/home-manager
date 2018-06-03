@@ -18,7 +18,7 @@ with lib;
       };
 
       Service = {
-        Environment = "PATH=%h/.nix-profile/bin";
+        Environment = "PATH=${config.qt.systemdServicePath}";
         ExecStart = "${pkgs.owncloud-client}/bin/owncloud";
       };
 

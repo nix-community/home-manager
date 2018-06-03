@@ -24,6 +24,22 @@ in
           settings.
         '';
       };
+
+      systemdServicePath = mkOption {
+        type = types.envVar;
+        default = lib.makeSearchPath "bin" [
+          "/etc/profiles/per-user/%u"
+          "%h/.nix-profile"
+          "/nix/var/nix/profiles/default"
+          "/run/current-system/sw"
+        ];
+        visible = false;
+        description = ''
+          Path to use for systemd services that run Qt 5 applications.
+          This is to ensure that the application is able to locate any
+          necessary Qt plugins.
+        '';
+      };
     };
   };
 
