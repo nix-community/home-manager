@@ -30,6 +30,8 @@ in
   config = mkIf (cfg.enable && cfg.useGtkTheme) {
     home.sessionVariables.QT_QPA_PLATFORMTHEME = "gtk2";
     home.packages = [ pkgs.libsForQt5.qtstyleplugins ];
+    xsession.profileExtra =
+      "systemctl --user import-environment QT_QPA_PLATFORMTHEME";
 
     home.activation.useGtkThemeInQt4 = dag.entryAfter ["writeBoundary"] ''
       $DRY_RUN_CMD ${pkgs.crudini}/bin/crudini $VERBOSE_ARG \
