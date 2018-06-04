@@ -657,6 +657,14 @@ in
           GTK+ theme, and not much else.
         '';
       }
+
+      {
+        time = "2018-06-05T01:36:45+00:00";
+        message = ''
+          A new module is available: 'services.kdeconnect'.
+        '';
+      }
+
     ];
   };
 }
