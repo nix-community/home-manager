@@ -56,6 +56,7 @@ let
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix
     ./services/kbfs.nix
+    ./services/kdeconnect.nix
     ./services/keepassx.nix
     ./services/keybase.nix
     ./services/mbsync.nix
