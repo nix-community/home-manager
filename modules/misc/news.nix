@@ -665,6 +665,13 @@ in
         '';
       }
 
+      {
+        time = "2018-06-09T09:11:59+00:00";
+        message = ''
+          A new module is available: `programs.newsboat`.
+        '';
+      }
+
     ];
   };
 }

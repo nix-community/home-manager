@@ -42,6 +42,7 @@ let
     ./programs/man.nix
     ./programs/mercurial.nix
     ./programs/neovim.nix
+    ./programs/newsboat.nix
     ./programs/pidgin.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
