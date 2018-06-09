@@ -11,7 +11,7 @@ in
 {
   options = {
     programs.newsboat = {
-      enable = mkEnableOption "the Newsboat feed reader.";
+      enable = mkEnableOption "the Newsboat feed reader";
 
       urls = mkOption {
         type = types.listOf types.attrs;
