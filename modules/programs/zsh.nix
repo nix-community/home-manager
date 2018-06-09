@@ -53,13 +53,13 @@ let
       expireDuplicatesFirst = mkOption {
         type = types.bool;
         default = false;
-        description = "Expire duplicates first";
+        description = "Expire duplicates first.";
       };
 
       extended = mkOption {
         type = types.bool;
         default = false;
-        description = "Save timestamp into the history file";
+        description = "Save timestamp into the history file.";
       };
 
       share = mkOption {
