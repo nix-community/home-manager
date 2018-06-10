@@ -878,6 +878,13 @@ in
           A new module is available: 'programs.vscode'.
         '';
       }
+
+      {
+        time = "2018-11-26T20:42:42+00:00";
+        message = ''
+          A new module is available: 'programs.neomutt'.
+        '';
+      }
     ];
   };
 }

@@ -52,6 +52,7 @@ let
     ./programs/mbsync.nix
     ./programs/mercurial.nix
     ./programs/msmtp.nix
+    ./programs/neomutt.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/noti.nix
