@@ -43,6 +43,7 @@ let
     ./programs/man.nix
     ./programs/mbsync.nix
     ./programs/mercurial.nix
+    ./programs/neomutt.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/notmuch.nix
