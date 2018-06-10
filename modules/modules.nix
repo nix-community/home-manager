@@ -41,6 +41,7 @@ let
     ./programs/lesspipe.nix
     ./programs/man.nix
     ./programs/mercurial.nix
+    ./programs/neomutt.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/pidgin.nix

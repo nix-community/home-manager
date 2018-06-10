@@ -672,6 +672,13 @@ in
         '';
       }
 
+      {
+        time = "2018-06-10T20:33:16+00:00";
+        message = ''
+          A new module is available: `programs.neomutt`.
+        '';
+      }
+
     ];
   };
 }
