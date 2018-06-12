@@ -44,6 +44,7 @@ let
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/pidgin.nix
+    ./programs/procmail.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
     ./programs/termite.nix

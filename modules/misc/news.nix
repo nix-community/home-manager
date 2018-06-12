@@ -672,6 +672,13 @@ in
         '';
       }
 
+      {
+        time = "2018-06-12T18:11:59+00:00";
+        message = ''
+          A new module is available: `programs.procmail`.
+        '';
+      }
+
     ];
   };
 }
