@@ -54,6 +54,7 @@ let
     ./services/compton.nix
     ./services/dunst.nix
     ./services/flameshot.nix
+    ./services/getmail.nix
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix
     ./services/kbfs.nix

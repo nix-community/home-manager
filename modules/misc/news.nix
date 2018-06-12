@@ -672,6 +672,13 @@ in
         '';
       }
 
+      {
+        time = "2018-06-12T19:11:59+00:00";
+        message = ''
+          A new module is available: `services.getmail`.
+        '';
+      }
+
     ];
   };
 }
