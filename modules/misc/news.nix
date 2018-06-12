@@ -1122,6 +1122,14 @@ in
           'foo.conf.bck'.
         '';
       }
+
+      {
+        time = "2019-06-19T17:49:29+00:00";
+        message = ''
+          A new module is available: `services.getmail`.
+        '';
+      }
+
     ];
   };
 }

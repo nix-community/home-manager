@@ -99,6 +99,7 @@ let
     (loadModule ./services/gnome-keyring.nix { })
     (loadModule ./services/gpg-agent.nix { })
     (loadModule ./services/imapnotify.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./services/getmail.nix { })
     (loadModule ./services/kbfs.nix { })
     (loadModule ./services/kdeconnect.nix { })
     (loadModule ./services/keepassx.nix { })
