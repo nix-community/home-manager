@@ -75,7 +75,12 @@ in {
       ];
       description = ''
         List of windows to exclude background blur.
-        See <literal>compton(1)</literal> man page for more examples.
+        See the
+        <citerefentry>
+          <refentrytitle>compton</refentrytitle>
+          <manvolnum>1</manvolnum>
+        </citerefentry>
+        man page for more examples.
       '';
     };
 
@@ -115,7 +120,12 @@ in {
       ];
       description = ''
         List of conditions of windows that should not be faded.
-        See <literal>compton(1)</literal> man page for more examples.
+        See the
+        <citerefentry>
+          <refentrytitle>compton</refentrytitle>
+          <manvolnum>1</manvolnum>
+        </citerefentry>
+        man page for more examples.
       '';
     };
 
@@ -155,7 +165,12 @@ in {
       ];
       description = ''
         List of conditions of windows that should have no shadow.
-        See <literal>compton(1)</literal> man page for more examples.
+        See the
+        <citerefentry>
+          <refentrytitle>compton</refentrytitle>
+          <manvolnum>1</manvolnum>
+        </citerefentry>
+        man page for more examples.
       '';
     };
 
@@ -195,7 +210,12 @@ in {
       ];
       description = ''
         List of opacity rules.
-        See <literal>compton(1)</literal> man page for more examples.
+        See the
+        <citerefentry>
+          <refentrytitle>compton</refentrytitle>
+          <manvolnum>1</manvolnum>
+        </citerefentry>
+        man page for more examples.
       '';
     };
 
@@ -208,13 +228,18 @@ in {
     };
 
     vSync = mkOption {
-     type = types.str;
-     default = "none";
-     example = "opengl-swc";
-     description = ''
-       Enable vertical synchronization using the specified method.
-       See <literal>compton(1)</literal> man page available methods.
-     '';
+      type = types.str;
+      default = "none";
+      example = "opengl-swc";
+      description = ''
+        Enable vertical synchronization using the specified method.
+        See the
+        <citerefentry>
+          <refentrytitle>compton</refentrytitle>
+          <manvolnum>1</manvolnum>
+        </citerefentry>
+        man page for available methods.
+      '';
     };
 
     refreshRate = mkOption {
