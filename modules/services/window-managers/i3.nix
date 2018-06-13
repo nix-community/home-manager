@@ -637,11 +637,11 @@ let
   };
 
   keybindingsStr = keybindings: concatStringsSep "\n" (
-    mapAttrsToList (keycomb: action: "bindsym ${keycomb} ${action}") keybindings
+    mapAttrsToList (keycomb: action: optionalString (action != null) "bindsym ${keycomb} ${action}") keybindings
   );
 
   keycodebindingsStr = keycodebindings: concatStringsSep "\n" (
-    mapAttrsToList (keycomb: action: "bindcode ${keycomb} ${action}") keycodebindings
+    mapAttrsToList (keycomb: action: optionalString (action != null) "bindcode ${keycomb} ${action}") keycodebindings
   );
 
   colorSetStr = c: concatStringsSep " " [ c.border c.background c.text c.indicator c.childBorder ];
