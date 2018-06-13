@@ -58,6 +58,8 @@ function doBuildAttr() {
     setConfigFile
     setHomeManagerNixPath
 
+    local subCommand="$1"
+    shift
     local extraArgs="$*"
 
     for p in "${EXTRA_NIX_PATH[@]}"; do
@@ -69,11 +71,25 @@ function doBuildAttr() {
     fi
 
     # shellcheck disable=2086
-    nix-build \
-        "<home-manager/home-manager/home-manager.nix>" \
-        $extraArgs \
-        --argstr confPath "$HOME_MANAGER_CONFIG" \
-        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+    if [[ -v USE_NIX2_COMMAND ]]; then
+        if [[ $subCommand == 'eval' ]]; then
+            extraArgs="$extraArgs --raw"
+        fi
+        nix $subCommand \
+            -f "<home-manager/home-manager/home-manager.nix>" \
+            $extraArgs \
+            --argstr confPath "$HOME_MANAGER_CONFIG" \
+            --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+    else
+        if [[ $subCommand == 'eval' ]]; then
+            extraArgs="$extraArgs --no-out-link"
+        fi
+        nix-build \
+            "<home-manager/home-manager/home-manager.nix>" \
+            $extraArgs \
+            --argstr confPath "$HOME_MANAGER_CONFIG" \
+            --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+    fi
 }
 
 # Presents news to the user. Takes as argument the path to a "news
@@ -125,8 +141,14 @@ function doBuild() {
     newsInfo=$(buildNews)
 
     local exitCode
-    doBuildAttr -A activationPackage \
-        && exitCode=0 || exitCode=1
+
+    if [[ -v USE_NIX2_COMMAND ]]; then
+        doBuildAttr build activationPackage \
+            && exitCode=0 || exitCode=1
+    else
+        doBuildAttr build --attr activationPackage \
+            && exitCode=0 || exitCode=1
+    fi
 
     presentNews "$newsInfo"
 
@@ -145,9 +167,21 @@ function doSwitch() {
     # specify an output link so that it is treated as a GC root. This
     # prevents an unfortunately timed GC from removing the generation
     # before activation completes.
-    wrkdir="$(mktemp -d)"
-    generation=$(doBuildAttr -o "$wrkdir/result" -A activationPackage) \
-        && $generation/activate || exitCode=1
+    wrkdir="$(mktemp -d home-manager-build.XXXXXXXXXX)"
+    generation="$wrkdir/result"
+
+    if [[ -v USE_NIX2_COMMAND ]]; then
+        doBuildAttr build \
+                    --out-link "$generation" \
+                    activationPackage \
+            && "$generation/activate" || exitCode=1
+    else
+        doBuildAttr build \
+                    --out-link "$generation" \
+                    --no-build-output \
+                    --attr activationPackage > /dev/null \
+            && "$generation/activate" || exitCode=1
+    fi
 
     # Because the previous command never fails, the script keeps
     # running and $wrkdir is always removed.
@@ -237,11 +271,19 @@ function newsReadIdsFile() {
 # (although this exposes the risk of GC removing the result before we
 # manage to source it).
 function buildNews() {
-    doBuildAttr --quiet \
-                --attr newsInfo \
-                --no-out-link \
-                --arg check false \
-                --argstr newsReadIdsFile "$(newsReadIdsFile)"
+    if [[ -v USE_NIX2_COMMAND ]]; then
+        doBuildAttr eval \
+                    --quiet \
+                    --arg check false \
+                    --argstr newsReadIdsFile "$(newsReadIdsFile)" \
+                    newsInfo
+    else
+        doBuildAttr eval \
+                    --quiet \
+                    --arg check false \
+                    --argstr newsReadIdsFile "$(newsReadIdsFile)" \
+                    --attr newsInfo
+    fi
 }
 
 function doShowNews() {
@@ -317,8 +359,11 @@ for arg in "$@"; do
     fi
 done
 
-while getopts f:I:A:vnh opt; do
+while getopts 2f:I:A:vnh opt; do
     case $opt in
+        2)
+            USE_NIX2_COMMAND=1
+            ;;
         f)
             HOME_MANAGER_CONFIG="$OPTARG"
             ;;
