@@ -72,6 +72,13 @@ let
         default = "";
         example = "1.0:0.909:0.833";
       };
+
+      rotate = mkOption {
+        type = types.nullOr (types.enum ["normal" "left" "right" "inverted"]);
+        description = "Output rotate configuration.";
+        default = null;
+        example = "left";
+      };
     };
   };
 
@@ -142,6 +149,7 @@ let
     ${optionalString (config.gamma != "") "gamma ${config.gamma}"}
     ${optionalString (config.mode != "") "mode ${config.mode}"}
     ${optionalString (config.rate != "") "rate ${config.rate}"}
+    ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
   '' else ''
     output ${name}
     off
@@ -206,6 +214,7 @@ in
                   mode = "3840x2160";
                   gamma = "1.0:0.909:0.833";
                   rate = "60.00";
+                  rotate = "left";
                 };
               };
               hooks.postswitch = readFile ./work-postswitch.sh;
