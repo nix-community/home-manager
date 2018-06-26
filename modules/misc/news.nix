@@ -690,6 +690,13 @@ in
           appreciated, both positive and negative.
         '';
       }
+
+      {
+        time = "2018-07-01T16:07:04+00:00";
+        message = ''
+          A new module is available: 'programs.mbsync'.
+        '';
+      }
     ];
   };
 }
