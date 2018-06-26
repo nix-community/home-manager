@@ -672,6 +672,24 @@ in
         '';
       }
 
+      {
+        time = "2018-07-01T14:33:15+00:00";
+        message = ''
+          A new module is available: 'accounts.email'.
+
+          As the name suggests, this new module offers a number of
+          options for configuring email accounts. This, for example,
+          includes the email address and owner's real name but also
+          server settings for IMAP and SMTP.
+
+          The intent is to have a central location for account
+          specific configuration that other modules can use.
+
+          Note, this module is still somewhat experimental and its
+          structure should not be seen as final. Feedback is greatly
+          appreciated, both positive and negative.
+        '';
+      }
     ];
   };
 }

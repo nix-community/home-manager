@@ -13,6 +13,7 @@ with lib;
 let
 
   modules = [
+    ./accounts/email.nix
     ./files.nix
     ./home-environment.nix
     ./manual.nix
