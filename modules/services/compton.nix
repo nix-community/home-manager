@@ -30,7 +30,7 @@ let
       # blur
       blur-background         = true;
       blur-background-exclude = ${toJSON cfg.blurExclude};
-      no-dock-blur            = ${toString cfg.noDockBlur};
+      no-dock-blur            = ${toJSON cfg.noDockBlur};
     '' + ''
 
       # opacity
