@@ -219,6 +219,8 @@ in
 
     home.packages = [ cfg.package ];
 
+    programs.notmuch.new.ignore = [ ".uidvalidity" ".mbsyncstate" ];
+
     home.file.".mbsyncrc".text =
       let
         accountsConfig = map genAccountConfig mbsyncAccounts;

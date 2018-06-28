@@ -697,6 +697,13 @@ in
           A new module is available: 'programs.mbsync'.
         '';
       }
+
+      {
+        time = "2018-07-01T16:12:20+00:00";
+        message = ''
+          A new module is available: 'programs.notmuch'.
+        '';
+      }
     ];
   };
 }
