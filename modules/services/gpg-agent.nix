@@ -40,6 +40,28 @@ in
         '';
       };
 
+      maxCacheTtl = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Set the maximum time a cache entry is valid to n seconds. After this
+          time a cache entry will be expired even if it has been accessed
+          recently or has been set using gpg-preset-passphrase. The default is
+          2 hours (7200 seconds).
+        '';
+      };
+
+      maxCacheTtlSsh = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Set the maximum time a cache entry used for SSH keys is valid to n
+          seconds. After this time a cache entry will be expired even if it has
+          been accessed recently or has been set using gpg-preset-passphrase.
+          The default is 2 hours (7200 seconds).
+        '';
+      };
+
       enableSshSupport = mkOption {
         type = types.bool;
         default = false;
@@ -103,6 +125,12 @@ in
         ++
         optional (cfg.defaultCacheTtlSsh != null)
           "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
+        ++
+        optional (cfg.maxCacheTtl != null)
+          "max-cache-ttl ${toString cfg.maxCacheTtl}"
+        ++
+        optional (cfg.maxCacheTtlSsh != null)
+          "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
       );
 
       home.sessionVariables =
