@@ -11,7 +11,8 @@ let
   enabled = cfg.services != {}
       || cfg.sockets != {}
       || cfg.targets != {}
-      || cfg.timers != {};
+      || cfg.timers != {}
+      || cfg.paths != {};
 
   toSystemdIni = generators.toINI {
     mkKeyValue = key: value:
@@ -108,6 +109,15 @@ in
         '';
       };
 
+      paths = mkOption {
+        default = {};
+        type = attrsRecursivelyMerged;
+        description = ''
+          Definition of systemd per-user path units. Attributes are
+          merged recursively.
+        '';
+      };
+
       startServices = mkOption {
         default = false;
         type = types.bool;
@@ -138,7 +148,7 @@ in
             let
               names = concatStringsSep ", " (
                   attrNames (
-                      cfg.services // cfg.sockets // cfg.targets // cfg.timers
+                      cfg.services // cfg.sockets // cfg.targets // cfg.timers // cfg.paths
                   )
               );
             in
@@ -159,6 +169,8 @@ in
           (buildServices "target" cfg.targets)
           ++
           (buildServices "timer" cfg.timers)
+          ++
+          (buildServices "path" cfg.paths)
         );
 
       # Run systemd service reload if user is logged in. If we're
