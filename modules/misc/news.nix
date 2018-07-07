@@ -704,6 +704,13 @@ in
           A new module is available: 'programs.notmuch'.
         '';
       }
+
+      {
+        time = "2018-07-07T15:48:56+00:00";
+        message = ''
+          A new module is available: 'xsession.windowManager.awesome'.
+        '';
+      }
     ];
   };
 }
