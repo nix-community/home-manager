@@ -77,6 +77,7 @@ let
     ./services/tahoe-lafs.nix
     ./services/udiskie.nix
     ./services/unclutter.nix
+    ./services/window-managers/awesome.nix
     ./services/window-managers/i3.nix
     ./services/window-managers/xmonad.nix
     ./services/xscreensaver.nix
