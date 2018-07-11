@@ -32,7 +32,7 @@ function setConfigFile() {
     for confFile in "$defaultConfFile" \
                     "$HOME/.nixpkgs/home.nix" ; do
         if [[ -e "$confFile" ]] ; then
-            HOME_MANAGER_CONFIG="$confFile"
+            HOME_MANAGER_CONFIG="$(realpath "$confFile")"
             return
         fi
     done
