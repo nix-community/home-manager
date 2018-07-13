@@ -25,18 +25,33 @@ in
     };
 
     latitude = mkOption {
-      type = types.str;
+      type = types.nullOr types.str;
+      default = null;
       description = ''
         Your current latitude, between
-        <literal>-90.0</literal> and <literal>90.0</literal>.
+        <literal>-90.0</literal> and <literal>90.0</literal>. Must be provided
+        along with longitude.
       '';
     };
 
     longitude = mkOption {
-      type = types.str;
+      type = types.nullOr types.str;
+      default = null;
       description = ''
         Your current longitude, between
-        between <literal>-180.0</literal> and <literal>180.0</literal>.
+        <literal>-180.0</literal> and <literal>180.0</literal>. Must be provided
+        along with latitude.
+      '';
+    };
+
+    provider = mkOption {
+      type = types.enum [ "manual" "geoclue2" ];
+      default = "manual";
+      description = ''
+        The location provider to use for determining your location. If set to
+        <literal>manual</literal> you must also provide latitude/longitude.
+        If set to <literal>geoclue2</literal>, you must also enable the global
+        geoclue2 service.
       '';
     };
 
@@ -108,7 +123,14 @@ in
   };
 
   config = mkIf cfg.enable {
-    systemd.user.services.redshift = {
+    systemd.user.services.redshift =
+    let
+      providerString =
+        if cfg.provider == "manual"
+        then "${cfg.latitude}:${cfg.longitude}"
+        else cfg.provider;
+    in
+    {
       Unit = {
         Description = "Redshift colour temperature adjuster";
         After = [ "graphical-session-pre.target" ];
@@ -123,7 +145,7 @@ in
         ExecStart =
           let
             args = [
-              "-l ${cfg.latitude}:${cfg.longitude}"
+              "-l ${providerString}"
               "-t ${toString cfg.temperature.day}:${toString cfg.temperature.night}"
               "-b ${toString cfg.brightness.day}:${toString cfg.brightness.night}"
             ] ++ cfg.extraOptions;
