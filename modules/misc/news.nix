@@ -711,6 +711,13 @@ in
           A new module is available: 'xsession.windowManager.awesome'.
         '';
       }
+
+      {
+        time = "2018-07-15T06:30:15+00:00";
+        message = ''
+          A new module is available: 'services.mpd'.
+        '';
+      }
     ];
   };
 }
