@@ -718,6 +718,13 @@ in
           A new module is available: 'services.mpd'.
         '';
       }
+
+      {
+        time = "2018-07-31T13:33:39+00:00";
+        message = ''
+          A new module is available: 'services.status-notifier-watcher'.
+        '';
+      }
     ];
   };
 }
