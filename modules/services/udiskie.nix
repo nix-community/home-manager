@@ -13,6 +13,7 @@ let
         (if cfg.notify then "n" else "N")
         ({ always = "t"; auto = "s"; never = "T"; }.${cfg.tray})
       ]
+      ++ optional cfg.sni "--appindicator"
     );
 
 in
@@ -34,6 +35,12 @@ in
         type = types.bool;
         default = true;
         description = "Whether to show pop-up notifications.";
+      };
+
+      sni = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Whether to enable sni (appindicator) support.";
       };
 
       tray = mkOption {
