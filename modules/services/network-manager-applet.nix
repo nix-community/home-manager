@@ -2,12 +2,27 @@
 
 with lib;
 
+let
+
+  cfg = config.services.network-manager-applet;
+
+in
+
 {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
     services.network-manager-applet = {
       enable = mkEnableOption "the Network Manager applet";
+
+      sni = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Start on SNI mode (appindicator support).
+        '';
+      };
     };
   };
 
@@ -24,7 +39,7 @@ with lib;
         };
 
         Service = {
-          ExecStart = "${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable";
+          ExecStart = "${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable ${if cfg.sni then "--indicator" else ""}";
         };
     };
   };
