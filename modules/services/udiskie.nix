@@ -36,6 +36,12 @@ in
         description = "Whether to show pop-up notifications.";
       };
 
+      sni = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Whether to enable sni (appindicator) support.";
+      };
+
       tray = mkOption {
         type = types.enum [ "always" "auto" "never" ];
         default = "auto";
@@ -73,7 +79,7 @@ in
         };
 
         Service = {
-          ExecStart = "${pkgs.udiskie}/bin/udiskie -2 ${commandArgs}";
+          ExecStart = "${pkgs.udiskie}/bin/udiskie -2 ${commandArgs} ${if cfg.sni then "--appindicator" else ""}";
         };
 
         Install = {
