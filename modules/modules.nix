@@ -13,6 +13,7 @@ with lib;
 let
 
   modules = [
+    ./accounts/email.nix
     ./files.nix
     ./home-environment.nix
     ./manual.nix
@@ -21,7 +22,9 @@ let
     ./misc/news.nix
     ./misc/nixpkgs.nix
     ./misc/pam.nix
+    ./misc/qt.nix
     ./misc/xdg.nix
+    ./programs/autorandr.nix
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/browserpass.nix
@@ -30,6 +33,7 @@ let
     ./programs/emacs.nix
     ./programs/feh.nix
     ./programs/firefox.nix
+    ./programs/fzf.nix
     ./programs/git.nix
     ./programs/gnome-terminal.nix
     ./programs/home-manager.nix
@@ -37,8 +41,12 @@ let
     ./programs/info.nix
     ./programs/lesspipe.nix
     ./programs/man.nix
+    ./programs/mbsync.nix
     ./programs/mercurial.nix
     ./programs/neovim.nix
+    ./programs/newsboat.nix
+    ./programs/notmuch.nix
+    ./programs/pidgin.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
     ./programs/termite.nix
@@ -48,11 +56,15 @@ let
     ./services/blueman-applet.nix
     ./services/compton.nix
     ./services/dunst.nix
+    ./services/flameshot.nix
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix
     ./services/kbfs.nix
+    ./services/kdeconnect.nix
     ./services/keepassx.nix
     ./services/keybase.nix
+    ./services/mbsync.nix
+    ./services/mpd.nix
     ./services/network-manager-applet.nix
     ./services/owncloud-client.nix
     ./services/parcellite.nix
@@ -65,6 +77,8 @@ let
     ./services/taffybar.nix
     ./services/tahoe-lafs.nix
     ./services/udiskie.nix
+    ./services/unclutter.nix
+    ./services/window-managers/awesome.nix
     ./services/window-managers/i3.nix
     ./services/window-managers/xmonad.nix
     ./services/xscreensaver.nix

@@ -19,7 +19,7 @@ will write to your dconf store and cannot tell whether a configuration
 that it is about to be overwrite was from a previous Home Manager
 generation or from manual configuration.
 
-Home Manager targets [NixOS][] unstable and NixOS version 17.09 (the
+Home Manager targets [NixOS][] unstable and NixOS version 18.03 (the
 current stable version), it may or may not work on other Linux
 distributions and NixOS versions.
 
@@ -61,13 +61,13 @@ Currently the easiest way to install Home Manager is as follows:
     $ HM_PATH=https://github.com/rycee/home-manager/archive/master.tar.gz
     ```
 
-    or
+    if you are following Nixpkgs master or an unstable channel and
 
     ```console
-    $ HM_PATH=https://github.com/rycee/home-manager/archive/release-17.09.tar.gz
+    $ HM_PATH=https://github.com/rycee/home-manager/archive/release-18.03.tar.gz
     ```
 
-    depending on whether you follow Nixpkgs unstable or version 17.09.
+    if you follow a Nixpkgs version 18.03 channel.
 
 3.  Create an initial Home Manager configuration file:
 
@@ -179,8 +179,9 @@ $ home-manager build
 which will create a `result` link to a directory containing an
 activation script and the generated home directory files.
 
-To see available configuration options with descriptions and usage
-examples run
+Documentation of available configuration options, including
+descriptions and usage examples, is available in the [Home Manager
+manual][configuration options] or offline by running
 
 ```console
 $ man home-configuration.nix
@@ -299,3 +300,4 @@ in your Home Manager configuration.
 [nixAllowedUsers]: https://nixos.org/nix/manual/#conf-allowed-users
 [nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
 [Z shell]: http://zsh.sourceforge.net/
+[configuration options]: https://rycee.github.io/home-manager/options.html

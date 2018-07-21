@@ -11,7 +11,8 @@ let
   enabled = cfg.services != {}
       || cfg.sockets != {}
       || cfg.targets != {}
-      || cfg.timers != {};
+      || cfg.timers != {}
+      || cfg.paths != {};
 
   toSystemdIni = generators.toINI {
     mkKeyValue = key: value:
@@ -50,6 +51,10 @@ let
 
   servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
 
+  attrsRecursivelyMerged = types.attrs // {
+    merge = loc: foldl' (res: def: recursiveUpdate res def.value) {};
+  };
+
 in
 
 {
@@ -70,26 +75,47 @@ in
 
       services = mkOption {
         default = {};
-        type = types.attrs;
-        description = "Definition of systemd per-user service units.";
+        type = attrsRecursivelyMerged;
+        description = ''
+          Definition of systemd per-user service units. Attributes are
+          merged recursively.
+        '';
       };
 
       sockets = mkOption {
         default = {};
-        type = types.attrs;
-        description = "Definition of systemd per-user sockets";
+        type = attrsRecursivelyMerged;
+        description = ''
+          Definition of systemd per-user sockets. Attributes are
+          merged recursively.
+        '';
       };
 
       targets = mkOption {
         default = {};
-        type = types.attrs;
-        description = "Definition of systemd per-user targets";
+        type = attrsRecursivelyMerged;
+        description = ''
+          Definition of systemd per-user targets. Attributes are
+          merged recursively.
+        '';
       };
 
       timers = mkOption {
         default = {};
-        type = types.attrs;
-        description = "Definition of systemd per-user timers";
+        type = attrsRecursivelyMerged;
+        description = ''
+          Definition of systemd per-user timers. Attributes are merged
+          recursively.
+        '';
+      };
+
+      paths = mkOption {
+        default = {};
+        type = attrsRecursivelyMerged;
+        description = ''
+          Definition of systemd per-user path units. Attributes are
+          merged recursively.
+        '';
       };
 
       startServices = mkOption {
@@ -122,7 +148,7 @@ in
             let
               names = concatStringsSep ", " (
                   attrNames (
-                      cfg.services // cfg.sockets // cfg.targets // cfg.timers
+                      cfg.services // cfg.sockets // cfg.targets // cfg.timers // cfg.paths
                   )
               );
             in
@@ -143,6 +169,8 @@ in
           (buildServices "target" cfg.targets)
           ++
           (buildServices "timer" cfg.timers)
+          ++
+          (buildServices "path" cfg.paths)
         );
 
       # Run systemd service reload if user is logged in. If we're
@@ -159,14 +187,16 @@ in
           legacyReloadCmd = ''
             bash ${./systemd-activate.sh} "''${oldGenPath=}" "$newGenPath"
           '';
+
+          ensureRuntimeDir = "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$(id -u)}";
         in
           ''
-            if who | grep -q '^${config.home.username} '; then
-              XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)} \
+            if ${ensureRuntimeDir} ${cfg.systemctlPath} --quiet --user is-system-running 2> /dev/null; then
+              ${ensureRuntimeDir} \
               PATH=${dirOf cfg.systemctlPath}:$PATH \
                 ${if cfg.startServices then autoReloadCmd else legacyReloadCmd}
             else
-              echo "User ${config.home.username} not logged in. Skipping."
+              echo "User systemd daemon not running. Skipping reload."
             fi
           ''
       );

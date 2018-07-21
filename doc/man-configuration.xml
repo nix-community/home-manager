@@ -1,0 +1,34 @@
+<refentry xmlns="http://docbook.org/ns/docbook"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:xi="http://www.w3.org/2001/XInclude">
+ <refmeta>
+  <refentrytitle><filename>home-configuration.nix</filename></refentrytitle>
+  <manvolnum>5</manvolnum>
+  <refmiscinfo class="source">Home Manager</refmiscinfo>
+<!-- <refmiscinfo class="version"><xi:include href="version.txt" parse="text"/></refmiscinfo> -->
+ </refmeta>
+
+ <refnamediv>
+  <refname><filename>home-configuration.nix</filename></refname>
+  <refpurpose>Home Manager configuration specification</refpurpose>
+ </refnamediv>
+
+ <refsection>
+  <title>Description</title>
+  <para>
+   The file <filename>~/.config/nixpkgs/home.nix</filename> contains
+   the declarative specification of your Home Manager configuration.
+   The command <command>home-manager</command> takes this file and
+   realises the user environment configuration specified therein.
+  </para>
+ </refsection>
+
+ <refsection>
+  <title>Options</title>
+  <para>
+   You can use the following options in
+   <filename>home-configuration.nix</filename>:
+  </para>
+  <xi:include href="./generated/options-db.xml" xpointer="configuration-variable-list" />
+ </refsection>
+</refentry>

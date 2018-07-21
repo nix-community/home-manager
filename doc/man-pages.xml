@@ -1,0 +1,16 @@
+<reference xmlns="http://docbook.org/ns/docbook"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           xmlns:xi="http://www.w3.org/2001/XInclude">
+ <title>Home Manager Reference Pages</title>
+ <info>
+  <author>
+   <personname>Home Manager contributors</personname>
+   <contrib>Author</contrib>
+  </author>
+  <copyright>
+   <year>2017-2018</year><holder>Home Manager contributors</holder>
+  </copyright>
+ </info>
+ <xi:include href="man-configuration.xml" />
+ <xi:include href="man-home-manager.xml" />
+</reference>

@@ -33,7 +33,30 @@ let
       workspace = mkOption {
         type = types.nullOr types.string;
         default = null;
-        description = "Launch application on a particular workspace.";
+        description = ''
+          Launch application on a particular workspace. DEPRECATED:
+          Use <varname><link linkend="opt-xsession.windowManager.i3.config.assigns">xsession.windowManager.i3.config.assigns</link></varname>
+          instead. See <link xlink:href="https://github.com/rycee/home-manager/issues/265"/>.
+        '';
+      };
+    };
+  };
+
+  barColorSetModule = types.submodule {
+    options = {
+      border = mkOption {
+        type = types.string;
+        visible = false;
+      };
+
+      background = mkOption {
+        type = types.string;
+        visible = false;
+      };
+
+      text = mkOption {
+        type = types.string;
+        visible = false;
       };
     };
   };
@@ -69,6 +92,16 @@ let
 
   barModule = types.submodule {
     options = {
+      id = mkOption {
+        type = types.nullOr types.string;
+        default = null;
+        description = ''
+          Specifies the bar ID for the configured bar instance.
+          If this option is missing, the ID is set to bar-x, where x corresponds
+          to the position of the embedding bar block in the config file.
+        '';
+      };
+
       mode = mkOption {
         type = types.enum [ "dock" "hide" "invisible" ];
         default = "dock";
@@ -93,12 +126,98 @@ let
         description = "Whether workspace buttons should be shown or not.";
       };
 
+      workspaceNumbers = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether workspace numbers should be displayed within the workspace buttons.";
+      };
+
+      command = mkOption {
+        type = types.string;
+        default = "${cfg.package}/bin/i3bar";
+        defaultText = "i3bar";
+        description = "Command that will be used to start a bar.";
+        example = "\${pkgs.i3-gaps}/bin/i3bar -t";
+      };
+
       statusCommand = mkOption {
         type = types.string;
         default = "${pkgs.i3status}/bin/i3status";
         description = "Command that will be used to get status lines.";
       };
 
+      colors = mkOption {
+        type = types.submodule {
+          options = {
+            background = mkOption {
+              type = types.string;
+              default = "#000000";
+              description = "Background color of the bar.";
+            };
+
+            statusline = mkOption {
+              type = types.string;
+              default = "#ffffff";
+              description = "Text color to be used for the statusline.";
+            };
+
+            separator = mkOption {
+              type = types.string;
+              default = "#666666";
+              description = "Text color to be used for the separator.";
+            };
+
+            focusedWorkspace = mkOption {
+              type = barColorSetModule;
+              default = { border = "#4c7899"; background = "#285577"; text = "#ffffff"; };
+              description = ''
+                Border, background and text color for a workspace button when the workspace has focus.
+              '';
+            };
+
+            activeWorkspace = mkOption {
+              type = barColorSetModule;
+              default = { border = "#333333"; background = "#5f676a"; text = "#ffffff"; };
+              description = ''
+                Border, background and text color for a workspace button when the workspace is active.
+              '';
+            };
+
+            inactiveWorkspace = mkOption {
+              type = barColorSetModule;
+              default = { border = "#333333"; background = "#222222"; text = "#888888"; };
+              description = ''
+                Border, background and text color for a workspace button when the workspace does not
+                have focus and is not active.
+              '';
+            };
+
+            urgentWorkspace = mkOption {
+              type = barColorSetModule;
+              default = { border = "#2f343a"; background = "#900000"; text = "#ffffff"; };
+              description = ''
+                Border, background and text color for a workspace button when the workspace contains
+                a window with the urgency hint set.
+              '';
+            };
+
+            bindingMode = mkOption {
+              type = barColorSetModule;
+              default = { border = "#2f343a"; background = "#900000"; text = "#ffffff"; };
+              description = "Border, background and text color for the binding mode indicator";
+            };
+          };
+        };
+        default = {};
+        description = ''
+          Bar color settings. All color classes can be specified using submodules
+          with 'border', 'background', 'text', fields and RGB color hex-codes as values.
+          See default values for the reference.
+          Note that 'background', 'status', and 'separator' parameters take a single RGB value.
+
+          See <link xlink:href="https://i3wm.org/docs/userguide.html#_colors"/>.
+        '';
+      };
     };
   };
 
@@ -187,7 +306,8 @@ let
 
             modifier = mkOption {
               type = types.enum [ "Shift" "Control" "Mod1" "Mod2" "Mod3" "Mod4" "Mod5" ];
-              default = "Mod1";
+              default = cfg.config.modifier;
+              defaultText = "i3.config.modifier";
               description = "Modifier key that can be used to drag floating windows.";
               example = "Mod4";
             };
@@ -263,64 +383,78 @@ let
         '';
       };
 
+      modifier = mkOption {
+        type = types.enum [ "Shift" "Control" "Mod1" "Mod2" "Mod3" "Mod4" "Mod5" ];
+        default = "Mod1";
+        description = "Modifier key that is used for all default keybindings.";
+        example = "Mod4";
+      };
+
       keybindings = mkOption {
         type = types.attrs;
         default = {
-          "Mod1+Return" = "exec i3-sensible-terminal";
-          "Mod1+Shift+q" = "kill";
-          "Mod1+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
+          "${cfg.config.modifier}+Return" = "exec i3-sensible-terminal";
+          "${cfg.config.modifier}+Shift+q" = "kill";
+          "${cfg.config.modifier}+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
 
-          "Mod1+Left" = "focus left";
-          "Mod1+Down" = "focus down";
-          "Mod1+Up" = "focus up";
-          "Mod1+Right" = "focus right";
+          "${cfg.config.modifier}+Left" = "focus left";
+          "${cfg.config.modifier}+Down" = "focus down";
+          "${cfg.config.modifier}+Up" = "focus up";
+          "${cfg.config.modifier}+Right" = "focus right";
 
-          "Mod1+h" = "split h";
-          "Mod1+v" = "split v";
-          "Mod1+f" = "fullscreen toggle";
+          "${cfg.config.modifier}+h" = "split h";
+          "${cfg.config.modifier}+v" = "split v";
+          "${cfg.config.modifier}+f" = "fullscreen toggle";
 
-          "Mod1+s" = "layout stacking";
-          "Mod1+w" = "layout tabbed";
-          "Mod1+e" = "layout toggle split";
+          "${cfg.config.modifier}+s" = "layout stacking";
+          "${cfg.config.modifier}+w" = "layout tabbed";
+          "${cfg.config.modifier}+e" = "layout toggle split";
 
-          "Mod1+Shift+space" = "floating toggle";
+          "${cfg.config.modifier}+Shift+space" = "floating toggle";
 
-          "Mod1+1" = "workspace 1";
-          "Mod1+2" = "workspace 2";
-          "Mod1+3" = "workspace 3";
-          "Mod1+4" = "workspace 4";
-          "Mod1+5" = "workspace 5";
-          "Mod1+6" = "workspace 6";
-          "Mod1+7" = "workspace 7";
-          "Mod1+8" = "workspace 8";
-          "Mod1+9" = "workspace 9";
+          "${cfg.config.modifier}+1" = "workspace 1";
+          "${cfg.config.modifier}+2" = "workspace 2";
+          "${cfg.config.modifier}+3" = "workspace 3";
+          "${cfg.config.modifier}+4" = "workspace 4";
+          "${cfg.config.modifier}+5" = "workspace 5";
+          "${cfg.config.modifier}+6" = "workspace 6";
+          "${cfg.config.modifier}+7" = "workspace 7";
+          "${cfg.config.modifier}+8" = "workspace 8";
+          "${cfg.config.modifier}+9" = "workspace 9";
 
-          "Mod1+Shift+1" = "move container to workspace 1";
-          "Mod1+Shift+2" = "move container to workspace 2";
-          "Mod1+Shift+3" = "move container to workspace 3";
-          "Mod1+Shift+4" = "move container to workspace 4";
-          "Mod1+Shift+5" = "move container to workspace 5";
-          "Mod1+Shift+6" = "move container to workspace 6";
-          "Mod1+Shift+7" = "move container to workspace 7";
-          "Mod1+Shift+8" = "move container to workspace 8";
-          "Mod1+Shift+9" = "move container to workspace 9";
+          "${cfg.config.modifier}+Shift+1" = "move container to workspace 1";
+          "${cfg.config.modifier}+Shift+2" = "move container to workspace 2";
+          "${cfg.config.modifier}+Shift+3" = "move container to workspace 3";
+          "${cfg.config.modifier}+Shift+4" = "move container to workspace 4";
+          "${cfg.config.modifier}+Shift+5" = "move container to workspace 5";
+          "${cfg.config.modifier}+Shift+6" = "move container to workspace 6";
+          "${cfg.config.modifier}+Shift+7" = "move container to workspace 7";
+          "${cfg.config.modifier}+Shift+8" = "move container to workspace 8";
+          "${cfg.config.modifier}+Shift+9" = "move container to workspace 9";
 
-          "Mod1+Shift+c" = "reload";
-          "Mod1+Shift+r" = "restart";
-          "Mod1+Shift+e" = "exec i3-nagbar -t warning -m 'Do you want to exit i3?' -b 'Yes' 'i3-msg exit'";
+          "${cfg.config.modifier}+Shift+c" = "reload";
+          "${cfg.config.modifier}+Shift+r" = "restart";
+          "${cfg.config.modifier}+Shift+e" = "exec i3-nagbar -t warning -m 'Do you want to exit i3?' -b 'Yes' 'i3-msg exit'";
 
-          "Mod1+r" = "mode resize";
+          "${cfg.config.modifier}+r" = "mode resize";
         };
         defaultText = "Default i3 keybindings.";
         description = ''
-          An attribute set that assignes key press to an action using key symbol.
+          An attribute set that assigns a key press to an action using a key symbol.
           See <link xlink:href="https://i3wm.org/docs/userguide.html#keybindings"/>.
+          </para><para>
+          Consider to use <code>lib.mkOptionDefault</code> function to extend or override
+          default keybindings instead of specifying all of them from scratch.
         '';
         example = literalExample ''
-          {
-            "Mod1+Return" = "exec i3-sensible-terminal";
-            "Mod1+Shift+q" = "kill";
-            "Mod1+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
+          let
+            modifier = xsession.windowManager.i3.config.modifier;
+          in
+
+          lib.mkOptionDefault {
+            "''${modifier}+Return" = "exec i3-sensible-terminal";
+            "''${modifier}+Shift+q" = "kill";
+            "''${modifier}+d" = "exec \${pkgs.dmenu}/bin/dmenu_run";
           }
         '';
       };
@@ -503,14 +637,15 @@ let
   };
 
   keybindingsStr = keybindings: concatStringsSep "\n" (
-    mapAttrsToList (keycomb: action: "bindsym ${keycomb} ${action}") keybindings
+    mapAttrsToList (keycomb: action: optionalString (action != null) "bindsym ${keycomb} ${action}") keybindings
   );
 
   keycodebindingsStr = keycodebindings: concatStringsSep "\n" (
-    mapAttrsToList (keycomb: action: "bindcode ${keycomb} ${action}") keycodebindings
+    mapAttrsToList (keycomb: action: optionalString (action != null) "bindcode ${keycomb} ${action}") keycodebindings
   );
 
   colorSetStr = c: concatStringsSep " " [ c.border c.background c.text c.indicator c.childBorder ];
+  barColorSetStr = c: concatStringsSep " " [ c.border c.background c.text ];
 
   criteriaStr = criteria: "[${concatStringsSep " " (mapAttrsToList (k: v: ''${k}="${v}"'') criteria)}]";
 
@@ -524,13 +659,29 @@ let
     map (c: "assign ${criteriaStr c} ${workspace}") criteria
   );
 
-  barStr = { mode, hiddenState, position, workspaceButtons, statusCommand, ... }: ''
+  barStr = {
+    id, mode, hiddenState, position, workspaceButtons,
+    workspaceNumbers, command, statusCommand, colors, ...
+  }: ''
     bar {
+      ${optionalString (id != null) "id ${id}"}
       mode ${mode}
       hidden_state ${hiddenState}
       position ${position}
       status_command ${statusCommand}
+      i3bar_command ${command}
       workspace_buttons ${if workspaceButtons then "yes" else "no"}
+      strip_workspace_numbers ${if !workspaceNumbers then "yes" else "no"}
+      colors {
+        background ${colors.background}
+        statusline ${colors.statusline}
+        separator ${colors.separator}
+        focused_workspace ${barColorSetStr colors.focusedWorkspace}
+        active_workspace ${barColorSetStr colors.activeWorkspace}
+        inactive_workspace ${barColorSetStr colors.inactiveWorkspace}
+        urgent_workspace ${barColorSetStr colors.urgentWorkspace}
+        binding_mode ${barColorSetStr colors.bindingMode}
+      }
     }
   '';
 
@@ -625,7 +776,6 @@ in
         if [[ -v DISPLAY ]]; then
           echo "Reloading i3"
           $DRY_RUN_CMD ${cfg.package}/bin/i3-msg reload 1>/dev/null
-        fi
       '';
     }
 
@@ -633,6 +783,14 @@ in
       xsession.windowManager.i3.package = mkDefault (
         if (cfg.config.gaps != null) then pkgs.i3-gaps else pkgs.i3
       );
+    })
+
+    (mkIf (cfg.config != null && (any (s: s.workspace != null) cfg.config.startup)) {
+      warnings = [
+        ("'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
+          + "use 'xsession.windowManager.i3.config.assigns' instead."
+          + "See https://github.com/rycee/home-manager/issues/265.")
+      ];
     })
   ]);
 }

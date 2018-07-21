@@ -480,17 +480,6 @@ in
       }
 
       {
-        time = "2018-01-25T11:35:08+00:00";
-        condition = options.services.qsyncthingtray.enable.isDefined;
-        message = ''
-          'services.qsyncthingtray' has been merged into 'services.syncthing'.
-          Please, use 'services.syncthing.tray' option to activate the tray service.
-
-          The old module will be removed on February 25, 2018.
-        '';
-      }
-
-      {
         time = "2018-02-02T11:15:00+00:00";
         message = ''
           A new program configuration is available: 'programs.mercurial'
@@ -575,6 +564,158 @@ in
 
           The option 'programs.rofi.colors' is still supported but may
           become deprecated and removed in the future.
+        '';
+      }
+
+      {
+        time = "2018-02-19T21:45:26+00:00";
+        message = ''
+          A new module is available: 'programs.pidgin'
+        '';
+      }
+
+      {
+        time = "2018-03-04T06:54:26+00:00";
+        message = ''
+          A new module is available: 'services.unclutter'
+        '';
+      }
+
+      {
+        time = "2018-03-07T21:38:27+00:00";
+        message = ''
+          A new module is available: 'programs.fzf'.
+        '';
+      }
+
+      {
+        time = "2018-03-25T06:49:57+00:00";
+        condition = with config.programs.ssh; enable && matchBlocks != {};
+        message = ''
+          Options set through the 'programs.ssh' module are now placed
+          at the end of the SSH configuration file. This was done to
+          make it possible to override global options such as
+          'ForwardAgent' or 'Compression' inside a host match block.
+
+          If you truly need to override an SSH option across all match
+          blocks then the new option
+
+              programs.ssh.extraOptionOverrides
+
+          can be used.
+        '';
+      }
+
+      {
+        time = "2018-04-19T07:42:01+00:00";
+        message = ''
+          A new module is available: 'programs.autorandr'.
+        '';
+      }
+
+      {
+        time = "2018-04-19T15:44:55+00:00";
+        condition = config.programs.git.enable;
+        message = ''
+          A new option 'programs.git.includes' is available. Additional
+          Git configuration files may be included via
+
+              programs.git.includes = [
+                { path = "~/path/to/config.inc"; }
+              ];
+
+          or conditionally via
+
+              programs.git.includes = [
+                { path = "~/path/to/config.inc"; condition = "gitdir:~/src/"; }
+              ];
+
+          and the corresponding '[include]' or '[includeIf]' sections will be
+          appended to the main Git configuration file.
+        '';
+      }
+
+      {
+        time = "2018-05-01T20:49:31+00:00";
+        message = ''
+          A new module is available: 'services.mbsync'.
+        '';
+      }
+      {
+        time = "2018-05-03T12:34:47+00:00";
+        message = ''
+          A new module is available: 'services.flameshot'.
+        '';
+      }
+
+      {
+        time = "2018-05-18T18:34:15+00:00";
+        message = ''
+          A new module is available: 'qt'
+
+          At the moment this module allows you to set up Qt to use the
+          GTK+ theme, and not much else.
+        '';
+      }
+
+      {
+        time = "2018-06-05T01:36:45+00:00";
+        message = ''
+          A new module is available: 'services.kdeconnect'.
+        '';
+      }
+
+      {
+        time = "2018-06-09T09:11:59+00:00";
+        message = ''
+          A new module is available: `programs.newsboat`.
+        '';
+      }
+
+      {
+        time = "2018-07-01T14:33:15+00:00";
+        message = ''
+          A new module is available: 'accounts.email'.
+
+          As the name suggests, this new module offers a number of
+          options for configuring email accounts. This, for example,
+          includes the email address and owner's real name but also
+          server settings for IMAP and SMTP.
+
+          The intent is to have a central location for account
+          specific configuration that other modules can use.
+
+          Note, this module is still somewhat experimental and its
+          structure should not be seen as final. Feedback is greatly
+          appreciated, both positive and negative.
+        '';
+      }
+
+      {
+        time = "2018-07-01T16:07:04+00:00";
+        message = ''
+          A new module is available: 'programs.mbsync'.
+        '';
+      }
+
+      {
+        time = "2018-07-01T16:12:20+00:00";
+        message = ''
+          A new module is available: 'programs.notmuch'.
+        '';
+      }
+
+      {
+        time = "2018-07-07T15:48:56+00:00";
+        message = ''
+          A new module is available: 'xsession.windowManager.awesome'.
+        '';
+      }
+
+      {
+        time = "2018-07-18T20:14:11+00:00";
+        message = ''
+          A new module is available: 'services.mpd'.
         '';
       }
     ];

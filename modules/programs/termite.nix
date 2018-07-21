@@ -150,7 +150,11 @@ in
         type = types.nullOr types.bool;
         description = ''
           Emit escape sequences for extra keys,
-          like the modifyOtherKeys resource for xterm(1).
+          like the modifyOtherKeys resource for
+          <citerefentry>
+            <refentrytitle>xterm</refentrytitle>
+            <manvolnum>1</manvolnum>
+          </citerefentry>.
         '';
       };
 

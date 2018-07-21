@@ -1,0 +1,31 @@
+<book xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      version="5.0"
+      xml:id="book-home-manager-manual">
+ <info>
+  <title>Home Manager Manual</title>
+ </info>
+ <preface>
+  <title>Preface</title>
+  <para>
+   This manual will eventually describes how to install, use, and
+   extend Home Manager.
+  </para>
+  <para>
+   If you encounter problems or bugs then please report them on the
+   <link xlink:href="https://github.com/rycee/home-manager/issues">Home Manager issue tracker</link>.
+  </para>
+  <note>
+   <para>
+    Commands prefixed with <literal>#</literal> have to be run as root, either
+    requiring to login as root user or temporarily switching to it using
+    <literal>sudo</literal> for example.
+   </para>
+  </note>
+ </preface>
+ <appendix xml:id="ch-options">
+  <title>Configuration Options</title>
+  <xi:include href="./generated/options-db.xml" xpointer="configuration-variable-list" />
+ </appendix>
+</book>

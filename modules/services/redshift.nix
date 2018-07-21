@@ -25,18 +25,33 @@ in
     };
 
     latitude = mkOption {
-      type = types.str;
+      type = types.nullOr types.str;
+      default = null;
       description = ''
-        Your current latitude, between
-        <literal>-90.0</literal> and <literal>90.0</literal>.
+        Your current latitude, between <literal>-90.0</literal> and
+        <literal>90.0</literal>. Must be provided along with
+        longitude.
       '';
     };
 
     longitude = mkOption {
-      type = types.str;
+      type = types.nullOr types.str;
+      default = null;
       description = ''
-        Your current longitude, between
-        between <literal>-180.0</literal> and <literal>180.0</literal>.
+        Your current longitude, between <literal>-180.0</literal> and
+        <literal>180.0</literal>. Must be provided along with
+        latitude.
+      '';
+    };
+
+    provider = mkOption {
+      type = types.enum [ "manual" "geoclue2" ];
+      default = "manual";
+      description = ''
+        The location provider to use for determining your location. If set to
+        <literal>manual</literal> you must also provide latitude/longitude.
+        If set to <literal>geoclue2</literal>, you must also enable the global
+        geoclue2 service.
       '';
     };
 
@@ -122,11 +137,17 @@ in
       Service = {
         ExecStart =
           let
+           providerString =
+             if cfg.provider == "manual"
+             then "${cfg.latitude}:${cfg.longitude}"
+             else cfg.provider;
+
             args = [
-              "-l ${cfg.latitude}:${cfg.longitude}"
+              "-l ${providerString}"
               "-t ${toString cfg.temperature.day}:${toString cfg.temperature.night}"
               "-b ${toString cfg.brightness.day}:${toString cfg.brightness.night}"
             ] ++ cfg.extraOptions;
+
             command = if cfg.tray then "redshift-gtk" else "redshift";
           in
             "${cfg.package}/bin/${command} ${concatStringsSep " " args}";

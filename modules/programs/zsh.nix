@@ -50,6 +50,18 @@ let
         '';
       };
 
+      expireDuplicatesFirst = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Expire duplicates first.";
+      };
+
+      extended = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Save timestamp into the history file.";
+      };
+
       share = mkOption {
         type = types.bool;
         default = true;
@@ -320,7 +332,9 @@ in
         ''}
 
         ${concatStrings (map (plugin: ''
-          source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
+          if [ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]; then
+            source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
+          fi
         '') cfg.plugins)}
 
         # History options should be set in .zshrc and after oh-my-zsh sourcing.
@@ -331,7 +345,9 @@ in
 
         setopt HIST_FCNTL_LOCK
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
+        ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
         ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
+        ${if cfg.history.extended then "setopt" else "unsetopt"} EXTENDED_HISTORY
 
         ${cfg.initExtra}
 

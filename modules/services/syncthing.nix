@@ -3,12 +3,6 @@
 with lib;
 
 {
-  imports = [
-    (mkRenamedOptionModule
-      [ "services" "qsyncthingtray" "enable" ]
-      [ "services" "syncthing" "tray" ])
-  ];
-
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -60,6 +54,7 @@ with lib;
           };
 
           Service = {
+            Environment = "PATH=%h/.nix-profile/bin";
             ExecStart = "${pkgs.qsyncthingtray}/bin/QSyncthingTray";
           };
 

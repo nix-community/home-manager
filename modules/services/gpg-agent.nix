@@ -9,8 +9,9 @@ let
   gpgInitStr = ''
     GPG_TTY="$(tty)"
     export GPG_TTY
-    ${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
-  '';
+  ''
+  + optionalString cfg.enableSshSupport
+      "${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null";
 
 in
 
@@ -39,11 +40,50 @@ in
         '';
       };
 
+      maxCacheTtl = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Set the maximum time a cache entry is valid to n seconds. After this
+          time a cache entry will be expired even if it has been accessed
+          recently or has been set using gpg-preset-passphrase. The default is
+          2 hours (7200 seconds).
+        '';
+      };
+
+      maxCacheTtlSsh = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Set the maximum time a cache entry used for SSH keys is valid to n
+          seconds. After this time a cache entry will be expired even if it has
+          been accessed recently or has been set using gpg-preset-passphrase.
+          The default is 2 hours (7200 seconds).
+        '';
+      };
+
       enableSshSupport = mkOption {
         type = types.bool;
         default = false;
         description = ''
           Whether to use the GnuPG key agent for SSH keys.
+        '';
+      };
+
+      enableExtraSocket = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to enable extra socket of the GnuPG key agent (useful for GPG
+          Agent forwarding).
+        '';
+      };
+
+      verbose = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to produce verbose output.
         '';
       };
 
@@ -85,6 +125,12 @@ in
         ++
         optional (cfg.defaultCacheTtlSsh != null)
           "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
+        ++
+        optional (cfg.maxCacheTtl != null)
+          "max-cache-ttl ${toString cfg.maxCacheTtl}"
+        ++
+        optional (cfg.maxCacheTtlSsh != null)
+          "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
       );
 
       home.sessionVariables =
@@ -114,7 +160,8 @@ in
         };
 
         Service = {
-          ExecStart = "${pkgs.gnupg}/bin/gpg-agent --supervised";
+          ExecStart = "${pkgs.gnupg}/bin/gpg-agent --supervised"
+            + optionalString cfg.verbose " --verbose";
           ExecReload = "${pkgs.gnupg}/bin/gpgconf --reload gpg-agent";
         };
       };
@@ -148,6 +195,27 @@ in
         Socket = {
           ListenStream = "%t/gnupg/S.gpg-agent.ssh";
           FileDescriptorName = "ssh";
+          Service = "gpg-agent.service";
+          SocketMode = "0600";
+          DirectoryMode = "0700";
+        };
+
+        Install = {
+          WantedBy = [ "sockets.target" ];
+        };
+      };
+    })
+
+    (mkIf cfg.enableExtraSocket {
+      systemd.user.sockets.gpg-agent-extra = {
+        Unit = {
+          Description = "GnuPG cryptographic agent and passphrase cache (restricted)";
+          Documentation = "man:gpg-agent(1) man:ssh(1)";
+        };
+
+        Socket = {
+          ListenStream = "%t/gnupg/S.gpg-agent.extra";
+          FileDescriptorName = "extra";
           Service = "gpg-agent.service";
           SocketMode = "0600";
           DirectoryMode = "0700";
