@@ -36,6 +36,8 @@ in
       nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
         description = "Home Manager environment for ${username}";
         wantedBy = [ "multi-user.target" ];
+        wants = [ "nix-daemon.socket" ];
+        after = [ "nix-daemon.socket" ];
 
         serviceConfig = {
           User = username;
