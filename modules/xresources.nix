@@ -8,11 +8,16 @@ let
 
   formatLine = n: v:
     let
-      v' =
+      formatValue = v:
         if isBool v then (if v then "true" else "false")
+        else if isList v then concatStringsSep ", " 
+          (map (x: if isList x 
+            then throw "can not convert 2-dimensional lists to Xresources format"
+            else formatValue x)
+          v)
         else toString v;
     in
-      "${n}: ${v'}";
+      "${n}: ${formatValue v}";
 
 in
 
@@ -24,11 +29,16 @@ in
       type = types.nullOr types.attrs;
       default = null;
       example = {
-        "XTerm*faceName" = "dejavu sans mono";
         "Emacs*toolBar" = 0;
+        "XTerm*faceName" = "dejavu sans mono";
+        "XTerm*charClass" = [ "37:48" "45-47:48" "58:48" "64:48" "126:48" ];
       };
       description = ''
         X server resources that should be set.
+        Booleans are formatted as "true" or "false" respectively.
+        List elements are recursively formatted as a string and joined by commas.
+        All other values are directly formatted using builtins.toString. 
+        Note, that 2-dimensional lists are not supported and specifying one will throw an exception.
         If this and all other xresources options are
         <code>null</code>, then this feature is disabled and no
         <filename>~/.Xresources</filename> link is produced.
