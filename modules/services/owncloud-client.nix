@@ -2,7 +2,11 @@
 
 with lib;
 
-{
+let
+
+  profileDir = if config.nixosSubmodule then "${config.home.path}" else "%h/.nix-profile";
+
+in {
   options = {
     services.owncloud-client = {
       enable = mkEnableOption "Owncloud Client";
@@ -18,7 +22,7 @@ with lib;
       };
 
       Service = {
-        Environment = "PATH=%h/.nix-profile/bin";
+        Environment = "PATH=${profileDir}/bin";
         ExecStart = "${pkgs.owncloud-client}/bin/owncloud";
       };
 

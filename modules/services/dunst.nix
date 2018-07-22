@@ -99,7 +99,7 @@ in
 
             basePaths = [
               "/run/current-system/sw"
-              "${config.home.homeDirectory}/.nix-profile"
+              (if config.nixosSubmodule then "${config.home.path}" else "${config.home.homeDirectory}/.nix-profile")
               cfg.iconTheme.package
             ] ++ optional useCustomTheme hicolorTheme.package;
 

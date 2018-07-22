@@ -5,6 +5,7 @@ with lib;
 let
 
   cfg = config.xsession;
+  profileDir = if config.nixosSubmodule then "${config.home.path}" else "$HOME/.nix-profile";
 
 in
 
@@ -82,7 +83,7 @@ in
     };
 
     home.file.".xprofile".text = ''
-        . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        . "${profileDir}/etc/profile.d/hm-session-vars.sh"
 
         if [[ -e "$HOME/.profile" ]]; then
           . "$HOME/.profile"

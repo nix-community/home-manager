@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.bash;
 
+  profileDir = if config.nixosSubmodule then "${config.home.path}" else "$HOME/.nix-profile";
+
 in
 
 {
@@ -182,7 +184,7 @@ in
       home.file.".profile".text = ''
         # -*- mode: sh -*-
 
-        . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        . "${profileDir}/etc/profile.d/hm-session-vars.sh"
 
         ${sessionVarsStr}
 
