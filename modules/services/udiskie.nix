@@ -12,6 +12,8 @@ let
         (if cfg.automount then "a" else "A")
         (if cfg.notify then "n" else "N")
         ({ always = "t"; auto = "s"; never = "T"; }.${cfg.tray})
+      ] ++ [
+        (if cfg.sni then "--appindicator" else "")
       ]
     );
 
@@ -79,7 +81,7 @@ in
         };
 
         Service = {
-          ExecStart = "${pkgs.udiskie}/bin/udiskie -2 ${commandArgs} ${if cfg.sni then "--appindicator" else ""}";
+          ExecStart = "${pkgs.udiskie}/bin/udiskie -2 ${commandArgs}";
         };
 
         Install = {
