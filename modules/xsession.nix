@@ -30,6 +30,17 @@ in
         '';
       };
 
+      preferStatusNotifierItems = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Whether tray applets should prefer using the Status Notifier
+          Items (SNI) protocol, commonly called App Indicators. Note,
+          not all tray applets or status bars support SNI.
+        '';
+      };
+
       profileExtra = mkOption {
         type = types.lines;
         default = "";
