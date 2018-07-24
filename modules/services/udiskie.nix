@@ -13,13 +13,23 @@ let
         (if cfg.notify then "n" else "N")
         ({ always = "t"; auto = "s"; never = "T"; }.${cfg.tray})
       ]
-      ++ optional cfg.sni "--appindicator"
+      ++ optional config.xsession.preferStatusNotifierItems "--appindicator"
     );
 
 in
 
 {
   meta.maintainers = [ maintainers.rycee ];
+
+  imports = [
+    (mkRemovedOptionModule [ "services" "udiskie" "sni" ] ''
+      Support for Status Notifier Items is now configured globally through the
+
+        xsession.preferStatusNotifierItems
+
+      option. Please change to use that instead.
+    '')
+  ];
 
   options = {
     services.udiskie = {
@@ -35,12 +45,6 @@ in
         type = types.bool;
         default = true;
         description = "Whether to show pop-up notifications.";
-      };
-
-      sni = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether to enable sni (appindicator) support.";
       };
 
       tray = mkOption {
