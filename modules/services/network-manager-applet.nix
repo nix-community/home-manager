@@ -2,6 +2,12 @@
 
 with lib;
 
+let
+
+  cfg = config.services.network-manager-applet;
+
+in
+
 {
   meta.maintainers = [ maintainers.rycee ];
 
@@ -11,7 +17,7 @@ with lib;
     };
   };
 
-  config = mkIf config.services.network-manager-applet.enable {
+  config = mkIf cfg.enable {
     systemd.user.services.network-manager-applet = {
         Unit = {
           Description = "Network Manager applet";
@@ -24,7 +30,12 @@ with lib;
         };
 
         Service = {
-          ExecStart = "${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable";
+          ExecStart = toString (
+            [
+              "${pkgs.networkmanagerapplet}/bin/nm-applet"
+              "--sm-disable"
+            ] ++ optional config.xsession.preferStatusNotifierItems "--indicator"
+          );
         };
     };
   };
