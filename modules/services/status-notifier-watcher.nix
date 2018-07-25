@@ -25,7 +25,7 @@ in
     };
   };
 
-  config = mkIf config.services.status-notifier-watcher.enable {
+  config = mkIf cfg.enable {
     systemd.user.services.status-notifier-watcher = {
         Unit = {
           Description = "SNI watcher";
