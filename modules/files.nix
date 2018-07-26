@@ -199,18 +199,18 @@ in
 
     home.activation.checkFilesChanged = dag.entryBefore ["linkGeneration"] (
       ''
-        declare -A changed_files
+        declare -A changedFiles
       '' + concatMapStrings (v: ''
         cmp --quiet "${v.source}" "${v.target}" \
-          && changed_files["${v.target}"]=0 \
-          || changed_files["${v.target}"]=1
+          && changedFiles["${v.target}"]=0 \
+          || changedFiles["${v.target}"]=1
       '')
       (filter (v: v.onChange != "") (attrValues cfg))
     );
 
     home.activation.onFilesChange = dag.entryAfter [ "linkGeneration" ] (
     concatMapStrings (v: ''
-          if [ ${"$\{changed_files"}["${v.target}"]} -eq 1 ]; then
+          if [ ${"$\{changedFiles"}["${v.target}"]} -eq 1 ]; then
           ${v.onChange}
           fi
     '')
