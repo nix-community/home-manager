@@ -132,11 +132,18 @@ in
       };
     };
 
-    # TODO: should be after reloadSystemD
-    xdg.configFile."polybar/config".onChange = ''
-      if [[ -v DISPLAY ]]; then
+    home.activation.checkPolybar = dag.entryBefore [ "linkGeneration" ] ''
+      if ! cmp --quiet \
+          "${configFile}" \
+          "$HOME/.config/polybar/config"; then
+        polybarChanged=1
+      fi
+    '';
+
+    home.activation.applyPolybar = dag.entryAfter [ "reloadSystemD" ] ''
+      if [[ -v polybarChanged && -v DISPLAY ]]; then
         echo "Restarting polybar"
-        $DRY_RUN_CMD ${config.systemd.user.systemctlPath} --user restart polybar.service
+        ${config.systemd.user.systemctlPath} --user restart polybar.service
       fi
     '';
   };
