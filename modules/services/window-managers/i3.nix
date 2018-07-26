@@ -776,6 +776,7 @@ in
         if [[ -v DISPLAY ]]; then
           echo "Reloading i3"
           $DRY_RUN_CMD ${cfg.package}/bin/i3-msg reload 1>/dev/null
+        fi
       '';
     }
 
