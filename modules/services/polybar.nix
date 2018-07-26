@@ -119,6 +119,7 @@ in
         Description = "Polybar status bar";
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
+        X-Restart-Triggers = [ config.xdg.configFile."polybar/config".source ];
       };
 
       Service = {
@@ -131,21 +132,6 @@ in
         WantedBy = [ "graphical-session.target" ];
       };
     };
-
-    home.activation.checkPolybar = dag.entryBefore [ "linkGeneration" ] ''
-      if ! cmp --quiet \
-          "${configFile}" \
-          "$HOME/.config/polybar/config"; then
-        polybarChanged=1
-      fi
-    '';
-
-    home.activation.applyPolybar = dag.entryAfter [ "reloadSystemD" ] ''
-      if [[ -v polybarChanged && -v DISPLAY ]]; then
-        echo "Restarting polybar"
-        ${config.systemd.user.systemctlPath} --user restart polybar.service
-      fi
-    '';
   };
 
 }
