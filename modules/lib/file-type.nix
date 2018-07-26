@@ -97,8 +97,8 @@ in
         };
 
         onChange = mkOption {
-          type = types.nullOr types.lines;
-          default = null;
+          type = types.lines;
+          default = "";
           description = ''
             Script to run when file has changed between generations.
           '';

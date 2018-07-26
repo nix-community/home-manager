@@ -200,32 +200,21 @@ in
     home.activation.checkFilesChanged = dag.entryBefore ["linkGeneration"] (
       ''
         declare -A changed_files
-      '' + concatStrings (
-        mapAttrsToList (n: v: ''
-
-        changed_files["${v.target}"]=0
-        cmp --quiet \
-        "${v.source}" \
-        "${v.target}" \
-        || changed_files["${v.target}"]=1
-        '')
-        (filterAttrs (n: v: v.onChange != null)
-        cfg)
-      )
+      '' + concatMapStrings (v: ''
+        cmp --quiet "${v.source}" "${v.target}" \
+          && changed_files["${v.target}"]=0 \
+          || changed_files["${v.target}"]=1
+      '')
+      (filter (v: v.onChange != "") (attrValues cfg))
     );
 
     home.activation.onFilesChange = dag.entryAfter [ "linkGeneration" ] (
-      concatStrings (
-        # TODO: find nicer way to escape variable substitution
-        mapAttrsToList (n: v: ''
-
+    concatMapStrings (v: ''
           if [ ${"$\{changed_files"}["${v.target}"]} -eq 1 ]; then
           ${v.onChange}
           fi
-        '')
-        (filterAttrs (n: v: v.onChange != null)
-        cfg)
-      )
+    '')
+    (filter (v: v.onChange != "") (attrValues cfg))
     );
 
     home-files = pkgs.stdenv.mkDerivation {
