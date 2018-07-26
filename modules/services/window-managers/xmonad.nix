@@ -92,7 +92,7 @@ in
       home.file.".xmonad/xmonad.hs".source = cfg.config;
       home.file.".xmonad/xmonad.hs".onChange = ''
         echo "Recompiling xmonad"
-        ${config.xsession.windowManager.command} --recompile
+        $DRY_RUN_CMD ${config.xsession.windowManager.command} --recompile
 
         # Attempt to restart xmonad if X is running.
         if [[ -v DISPLAY ]] ; then
