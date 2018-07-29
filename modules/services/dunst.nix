@@ -99,7 +99,7 @@ in
 
             basePaths = [
               "/run/current-system/sw"
-              "${config.home.homeDirectory}/.nix-profile"
+              config.home.profileDirectory
               cfg.iconTheme.package
             ] ++ optional useCustomTheme hicolorTheme.package;
 

@@ -121,6 +121,17 @@ in
       description = "The user's home directory.";
     };
 
+    home.profileDirectory = mkOption {
+      type = types.path;
+      defaultText = "~/.nix-profile";
+      internal = true;
+      readOnly = true;
+      description = ''
+        The profile directory where Home Manager generations are
+        installed.
+      '';
+    };
+
     home.language = mkOption {
       type = languageSubModule;
       default = {};
@@ -248,6 +259,8 @@ in
 
     home.username = mkDefault (builtins.getEnv "USER");
     home.homeDirectory = mkDefault (builtins.getEnv "HOME");
+
+    home.profileDirectory = cfg.homeDirectory + "/.nix-profile";
 
     home.sessionVariables =
       let
