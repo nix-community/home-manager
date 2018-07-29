@@ -131,13 +131,13 @@ in {
         After = [ "network.target" "sound.target" ];
         Description = "Music Player Daemon";
       };
- 
+
       Install = {
         WantedBy = [ "default.target" ];
       };
 
       Service = {
-        Environment = "PATH=%h/.nix-profile/bin";
+        Environment = "PATH=${config.home.profileDirectory}/bin";
         ExecStart = "${pkgs.mpd}/bin/mpd --no-daemon ${mpdConf}";
         Type = "notify";
         ExecStartPre = ''${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';

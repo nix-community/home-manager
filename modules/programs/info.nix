@@ -29,7 +29,7 @@ let
   dag = config.lib.dag;
 
   # Indexes info files found in this location
-  homeInfoPath = "$HOME/.nix-profile/share/info";
+  homeInfoPath = "${config.home.profileDirectory}/share/info";
 
   # Installs this package -- the interactive just means that it
   # includes the curses `info` program. We also use `install-info`
