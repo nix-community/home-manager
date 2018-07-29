@@ -93,7 +93,7 @@ in
     };
 
     home.file.".xprofile".text = ''
-        . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
         if [[ -e "$HOME/.profile" ]]; then
           . "$HOME/.profile"

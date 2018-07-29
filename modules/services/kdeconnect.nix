@@ -41,7 +41,7 @@ in
         };
 
         Service = {
-          Environment = "PATH=%h/.nix-profile/bin";
+          Environment = "PATH=${config.home.profileDirectory}/bin";
           ExecStart = "${package}/lib/libexec/kdeconnectd";
           Restart = "on-abort";
         };
@@ -64,7 +64,7 @@ in
         };
 
         Service = {
-          Environment = "PATH=%h/.nix-profile/bin";
+          Environment = "PATH=${config.home.profileDirectory}/bin";
           ExecStart = "${package}/bin/kdeconnect-indicator";
           Restart = "on-abort";
         };

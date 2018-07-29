@@ -33,8 +33,8 @@ in
       <?xml version='1.0'?>
       <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
       <fontconfig>
-        <dir>~/.nix-profile/lib/X11/fonts</dir>
-        <dir>~/.nix-profile/share/fonts</dir>
+        <dir>${config.home.profileDirectory}/lib/X11/fonts</dir>
+        <dir>${config.home.profileDirectory}/share/fonts</dir>
       </fontconfig>
     '';
   };

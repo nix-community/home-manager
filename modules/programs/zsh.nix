@@ -314,7 +314,7 @@ in
         }
 
         # Environment variables
-        . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
         ${envVarsStr}
 
         ${optionalString cfg.oh-my-zsh.enable ''

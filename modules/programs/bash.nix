@@ -182,7 +182,7 @@ in
       home.file.".profile".text = ''
         # -*- mode: sh -*-
 
-        . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
         ${sessionVarsStr}
 
