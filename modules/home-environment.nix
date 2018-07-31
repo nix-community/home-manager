@@ -349,6 +349,9 @@ in
         pkgs.stdenv.mkDerivation {
           name = "home-manager-generation";
 
+          preferLocalBuild = true;
+          allowSubstitutes = false;
+
           buildCommand = ''
             mkdir -p $out
 

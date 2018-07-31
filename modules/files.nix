@@ -220,6 +220,9 @@ in
 
       nativeBuildInputs = [ pkgs.xlibs.lndir ];
 
+      preferLocalBuild = true;
+      allowSubstitutes = false;
+
       # Symlink directories and files that have the right execute bit.
       # Copy files that need their execute bit changed.
       buildCommand = ''

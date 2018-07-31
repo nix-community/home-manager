@@ -4,6 +4,8 @@ pkgs.runCommand
   "home-manager-install"
   {
     propagatedBuildInputs = [ home-manager ];
+    preferLocalBuild = true;
+    allowSubstitutes = false;
     shellHook = ''
       echo
       echo "Creating initial Home Manager generation..."
