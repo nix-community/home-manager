@@ -31,6 +31,7 @@ in
           Description = "SNI watcher";
           After = [ "graphical-session-pre.target" ];
           PartOf = [ "graphical-session.target" ];
+          Before = [ "taffybar.service" ];
         };
 
         Service = {
@@ -38,7 +39,10 @@ in
         };
 
         Install = {
-          WantedBy = [ "graphical-session.target" ];
+          WantedBy = [ 
+            "graphical-session.target"
+            "graphical-session-pre.target"
+          ];
         };
     };
   };
