@@ -73,6 +73,7 @@ let
     ./services/redshift.nix
     ./services/screen-locker.nix
     ./services/stalonetray.nix
+    ./services/status-notifier-watcher.nix
     ./services/syncthing.nix
     ./services/taffybar.nix
     ./services/tahoe-lafs.nix
