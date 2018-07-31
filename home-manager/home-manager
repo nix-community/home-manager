@@ -12,6 +12,14 @@ function errorEcho() {
     echo $* >&2
 }
 
+function setWorkDir() {
+    if [[ ! -v WORK_DIR ]]; then
+        WORK_DIR="$(mktemp --tmpdir -d home-manager-build.XXXXXXXXXX)"
+        # shellcheck disable=2064
+        trap "rm -r '$WORK_DIR'" EXIT
+    fi
+}
+
 # Attempts to set the HOME_MANAGER_CONFIG global variable.
 #
 # If no configuration file can be found then this function will print
@@ -58,8 +66,6 @@ function doBuildAttr() {
     setConfigFile
     setHomeManagerNixPath
 
-    local subCommand="$1"
-    shift
     local extraArgs="$*"
 
     for p in "${EXTRA_NIX_PATH[@]}"; do
@@ -72,18 +78,12 @@ function doBuildAttr() {
 
     # shellcheck disable=2086
     if [[ -v USE_NIX2_COMMAND ]]; then
-        if [[ $subCommand == 'eval' ]]; then
-            extraArgs="$extraArgs --raw"
-        fi
-        nix $subCommand \
+        nix build \
             -f "<home-manager/home-manager/home-manager.nix>" \
             $extraArgs \
             --argstr confPath "$HOME_MANAGER_CONFIG" \
             --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
     else
-        if [[ $subCommand == 'eval' ]]; then
-            extraArgs="$extraArgs --no-out-link"
-        fi
         nix-build \
             "<home-manager/home-manager/home-manager.nix>" \
             $extraArgs \
@@ -143,10 +143,10 @@ function doBuild() {
     local exitCode
 
     if [[ -v USE_NIX2_COMMAND ]]; then
-        doBuildAttr build activationPackage \
+        doBuildAttr activationPackage \
             && exitCode=0 || exitCode=1
     else
-        doBuildAttr build --attr activationPackage \
+        doBuildAttr --attr activationPackage \
             && exitCode=0 || exitCode=1
     fi
 
@@ -156,36 +156,32 @@ function doBuild() {
 }
 
 function doSwitch() {
+    setWorkDir
+
     local newsInfo
     newsInfo=$(buildNews)
 
     local generation
     local exitCode=0
-    local wrkdir
 
     # Build the generation and run the activate script. Note, we
     # specify an output link so that it is treated as a GC root. This
     # prevents an unfortunately timed GC from removing the generation
     # before activation completes.
-    wrkdir="$(mktemp -d home-manager-build.XXXXXXXXXX)"
-    generation="$wrkdir/result"
+    generation="$WORK_DIR/generation"
 
     if [[ -v USE_NIX2_COMMAND ]]; then
-        doBuildAttr build \
+        doBuildAttr \
                     --out-link "$generation" \
                     activationPackage \
             && "$generation/activate" || exitCode=1
     else
-        doBuildAttr build \
+        doBuildAttr \
                     --out-link "$generation" \
                     --no-build-output \
                     --attr activationPackage > /dev/null \
             && "$generation/activate" || exitCode=1
     fi
-
-    # Because the previous command never fails, the script keeps
-    # running and $wrkdir is always removed.
-    rm -r "$wrkdir"
 
     presentNews "$newsInfo"
 
@@ -267,26 +263,36 @@ function newsReadIdsFile() {
 # Builds news meta information to be sourced into this script.
 #
 # Note, we suppress build output to remove unnecessary verbosity. We
-# also use "no out link" to avoid the need for a build directory
-# (although this exposes the risk of GC removing the result before we
-# manage to source it).
+# put the output in the work directory to avoid the risk of an
+# unfortunately timed GC removing it.
 function buildNews() {
+    local output
+    output="$WORK_DIR/news-info.sh"
+
     if [[ -v USE_NIX2_COMMAND ]]; then
-        doBuildAttr eval \
+        doBuildAttr \
+                    --out-link "$output" \
                     --quiet \
                     --arg check false \
                     --argstr newsReadIdsFile "$(newsReadIdsFile)" \
                     newsInfo
     else
-        doBuildAttr eval \
+        doBuildAttr \
+                    --out-link "$output" \
+                    --no-build-output \
                     --quiet \
                     --arg check false \
                     --argstr newsReadIdsFile "$(newsReadIdsFile)" \
-                    --attr newsInfo
+                    --attr newsInfo \
+                    > /dev/null
     fi
+
+    echo "$output"
 }
 
 function doShowNews() {
+    setWorkDir
+
     local infoFile
     infoFile=$(buildNews) || return 1
 
