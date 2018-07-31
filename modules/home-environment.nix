@@ -259,6 +259,9 @@ in
 
     home.username = mkDefault (builtins.getEnv "USER");
     home.homeDirectory = mkDefault (builtins.getEnv "HOME");
+    home.profileDirectory = mkDefault (if config.nixosSubmodule
+      then config.home.path
+      else cfg.homeDirectory + "/.nix-profile");
 
     home.profileDirectory = cfg.homeDirectory + "/.nix-profile";
 
