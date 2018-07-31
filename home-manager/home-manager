@@ -137,6 +137,8 @@ function doBuild() {
         return 1
     fi
 
+    setWorkDir
+
     local newsInfo
     newsInfo=$(buildNews)
 
