@@ -29,6 +29,7 @@ in
     systemd.user.services.taffybar = {
         Unit = {
           Description = "Taffybar desktop bar";
+          Wanted = [ "graphical-session-pre.target" ];
           After = [ 
             "graphical-session-pre.target" 
             "status-notifier-watcher.service"
