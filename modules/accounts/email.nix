@@ -121,9 +121,6 @@ let
     };
   });
 
-  # gpgModule = types.submodule {
-  # };
-
   mailAccountOpts = { name, config, ... }: {
     options = {
       name = mkOption {
@@ -145,7 +142,7 @@ let
       };
 
       flavor = mkOption {
-        type = types.enum [ "plain" "runbox.com" ];
+        type = types.enum [ "plain" "gmail.com" "runbox.com" ];
         default = "plain";
         description = ''
           Some email providers have peculiar behavior that require
@@ -262,6 +259,19 @@ let
         name = name;
         maildir = mkOptionDefault { path = "${name}"; };
       }
+
+      (mkIf (config.flavor == "gmail.com") {
+        userName = mkDefault config.address;
+
+        imap = {
+          host = "imap.gmail.com";
+        };
+
+        smtp = {
+          host = "smtp.gmail.com";
+          port = 587;
+        };
+      })
 
       (mkIf (config.flavor == "runbox.com") {
         imap = {
