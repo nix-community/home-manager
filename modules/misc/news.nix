@@ -815,6 +815,12 @@ in
         '';
       }
 
+      {
+        time = "2018-09-28T21:38:48+00:00";
+        message = ''
+          A new module is available: 'programs.alot'.
+        '';
+      }
     ];
   };
 }
