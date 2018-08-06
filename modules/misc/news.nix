@@ -765,6 +765,12 @@ in
           A new module is available: 'programs.msmtp'.
         '';
       }
+      {
+        time = "2018-08-21T17:25:13+00:00";
+        message = ''
+          A new module is available: 'programs.offlineimap'.
+        '';
+      }
     ];
   };
 }
