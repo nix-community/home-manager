@@ -45,6 +45,7 @@ let
     ./programs/man.nix
     ./programs/mbsync.nix
     ./programs/mercurial.nix
+    ./programs/msmtp.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/notmuch.nix

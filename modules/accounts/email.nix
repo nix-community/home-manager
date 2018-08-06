@@ -318,6 +318,7 @@ in
       type = types.attrsOf (types.submodule [
         mailAccountOpts
         (import ../programs/mbsync-accounts.nix)
+        (import ../programs/msmtp-accounts.nix)
         (import ../programs/notmuch-accounts.nix)
       ]);
       default = {};
