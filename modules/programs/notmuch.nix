@@ -86,6 +86,24 @@ in
         '';
       };
 
+      contactCompletion = mkOption {
+        type = types.enum [ "address" "simple" ];
+        default = "address";
+        apply = val:
+
+          if val == "address" then ''
+            ${pkgs.bash}/bin/bash -c "${pkgs.notmuch}/bin/notmuch  address --format=json --output=recipients  date:1Y.."'
+            regexp = '\[?{"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"}[,\]]?' ''
+          else if val == "config" then
+            "'${pkgs.notmuch}/bin/notmuch address --format=json date:1Y..'"
+          else "";
+
+        description = ''
+          A list of tags that will be added to all messages
+          incorporated by <command>notmuch new</command>.
+        '';
+      };
+
       extraConfig = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = {
