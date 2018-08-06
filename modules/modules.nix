@@ -24,6 +24,7 @@ let
     ./misc/pam.nix
     ./misc/qt.nix
     ./misc/xdg.nix
+    ./programs/alot.nix
     ./programs/autorandr.nix
     ./programs/bash.nix
     ./programs/beets.nix
@@ -44,9 +45,11 @@ let
     ./programs/man.nix
     ./programs/mbsync.nix
     ./programs/mercurial.nix
+    ./programs/msmtp.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/notmuch.nix
+    ./programs/offlineimap.nix
     ./programs/pidgin.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
