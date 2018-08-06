@@ -320,6 +320,7 @@ in
         (import ../programs/mbsync-accounts.nix)
         (import ../programs/msmtp-accounts.nix)
         (import ../programs/notmuch-accounts.nix)
+        (import ../programs/offlineimap-accounts.nix)
       ]);
       default = {};
       description = "List of email accounts.";

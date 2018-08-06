@@ -772,6 +772,13 @@ in
           A new module is available: 'services.pasystray'.
         '';
       }
+
+      {
+        time = "2018-08-29T20:27:04+00:00";
+        message = ''
+          A new module is available: 'programs.offlineimap'.
+        '';
+      }
     ];
   };
 }

@@ -49,6 +49,7 @@ let
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/notmuch.nix
+    ./programs/offlineimap.nix
     ./programs/pidgin.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
