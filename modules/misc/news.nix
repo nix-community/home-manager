@@ -807,6 +807,13 @@ in
           A new module is available: 'programs.go'.
         '';
       }
+
+      {
+        time = "2018-09-26T19:36:06+00:00";
+        message = ''
+          A new module is available: 'programs.alot'.
+        '';
+      }
     ];
   };
 }
