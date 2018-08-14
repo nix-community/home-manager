@@ -732,6 +732,13 @@ in
           A new module is available: 'programs.direnv'.
         '';
       }
+
+      {
+        time = "2018-08-17T20:30:14+00:00";
+        message = ''
+          A new module is available: 'programs.fish'.
+        '';
+      }
     ];
   };
 }

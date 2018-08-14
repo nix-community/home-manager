@@ -34,6 +34,7 @@ let
     ./programs/emacs.nix
     ./programs/feh.nix
     ./programs/firefox.nix
+    ./programs/fish.nix
     ./programs/fzf.nix
     ./programs/git.nix
     ./programs/gnome-terminal.nix
