@@ -123,7 +123,7 @@ let
   # gpgModule = types.submodule {
   # };
 
-  mailAccount = types.submodule ({ name, config, ... }: {
+  mailAccountOpts = { name, config, ... }: {
     options = {
       name = mkOption {
         type = types.str;
@@ -272,7 +272,7 @@ let
         };
       })
     ];
-  });
+  };
 
 in
 
@@ -294,7 +294,11 @@ in
     };
 
     accounts = mkOption {
-      type = types.attrsOf mailAccount;
+      type = types.attrsOf (types.submodule [
+        mailAccountOpts
+        (import ../programs/mbsync-accounts.nix)
+        (import ../programs/notmuch-accounts.nix)
+      ]);
       default = {};
       description = "List of email accounts.";
     };

@@ -129,16 +129,6 @@ in
         };
       };
     };
-
-    accounts.email.accounts = mkOption {
-      options = [
-        {
-          notmuch = {
-            enable = mkEnableOption "notmuch indexing";
-          };
-        }
-      ];
-    };
   };
 
   config = mkIf cfg.enable {
