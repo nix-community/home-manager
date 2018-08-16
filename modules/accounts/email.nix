@@ -25,8 +25,9 @@ let
       };
 
       certificatesFile = mkOption {
-        type = types.nullOr types.path;
-        default = null;
+        type = types.path;
+        default = config.accounts.email.certificatesFile;
+        defaultText = "config.accounts.email.certificatesFile";
         description = ''
           Path to file containing certificate authorities that should
           be used to validate the connection authenticity. If
@@ -278,6 +279,16 @@ in
 
 {
   options.accounts.email = {
+    certificatesFile = mkOption {
+      type = types.path;
+      default = "/etc/ssl/certs/ca-certificates.crt";
+      description = ''
+        Path to default file containing certificate authorities that
+        should be used to validate the connection authenticity. This
+        path may be overridden on a per-account basis.
+      '';
+    };
+
     maildirBasePath = mkOption {
       type = types.str;
       default = "${config.home.homeDirectory}/Maildir";
