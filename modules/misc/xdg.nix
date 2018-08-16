@@ -6,6 +6,8 @@ let
 
   cfg = config.xdg;
 
+  dag = config.lib.dag;
+
   fileType = (import ../lib/file-type.nix {
     inherit (config.home) homeDirectory;
     inherit lib pkgs;
@@ -91,6 +93,9 @@ in
 
     {
       home.file = mkMerge [ cfg.configFile cfg.dataFile ];
+      home.activation.xdgCreateCache = dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD mkdir $VERBOSE_ARG -m0700 -p "${config.xdg.cacheHome}"
+      '';
     }
   ];
 }
