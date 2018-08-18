@@ -739,6 +739,17 @@ in
           A new module is available: 'programs.fish'.
         '';
       }
+
+      {
+        time = "2018-08-18T19:03:42+00:00";
+        condition = config.services.gpg-agent.enable;
+        message = ''
+          A new option is available: 'services.gpg-agent.extraConfig'.
+
+          Extra lines may be appended to $HOME/.gnupg/gpg-agent.conf
+          using this option.
+        '';
+      }
     ];
   };
 }
