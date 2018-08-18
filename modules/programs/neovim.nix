@@ -13,6 +13,22 @@ in
     programs.neovim = {
       enable = mkEnableOption "Neovim";
 
+      viAlias = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Symlink `vi` to `nvim` binary.
+        '';
+      };
+
+      vimAlias = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Symlink `vim` to `nvim` binary.
+        '';
+      };
+
       withPython = mkOption {
         type = types.bool;
         default = true;
@@ -89,7 +105,7 @@ in
         inherit (cfg)
           extraPython3Packages withPython3
           extraPythonPackages withPython
-          withRuby configure;
+          withRuby viAlias vimAlias configure;
       })
     ];
   };
