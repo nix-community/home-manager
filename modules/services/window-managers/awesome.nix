@@ -8,7 +8,7 @@ let
   awesome = cfg.package;
   getLuaPath = lib: dir: "${lib}/${dir}/lua/${pkgs.luaPackages.lua.luaversion}";
   makeSearchPath = lib.concatMapStrings (path:
-    " --search ${getLuaPath path "share"}"
+    " --search ${getLuaPath path "share"}" +
     " --search ${getLuaPath path "lib"}"
   );
 
