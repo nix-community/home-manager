@@ -800,6 +800,13 @@ in
           A new module is available: 'programs.noti'.
         '';
       }
+
+      {
+        time = "2018-09-20T22:10:45+00:00";
+        message = ''
+          A new module is available: 'programs.go'.
+        '';
+      }
     ];
   };
 }
