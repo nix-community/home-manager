@@ -108,6 +108,19 @@ in
           <option>disable-scdaemon</option> setting to gpg-agent.
         '';
       };
+
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
+        example = ''
+          allow-emacs-pinentry
+          allow-loopback-pinentry
+        '';
+        description = ''
+          Extra configuration lines to append to the gpg-agent
+          configuration file.
+        '';
+      };
     };
   };
 
@@ -131,6 +144,8 @@ in
         ++
         optional (cfg.maxCacheTtlSsh != null)
           "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
+        ++
+        [ cfg.extraConfig ]
       );
 
       home.sessionVariables =
