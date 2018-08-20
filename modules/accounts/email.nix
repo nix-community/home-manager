@@ -182,8 +182,8 @@ let
         apply = p: if isString p then splitString " " p else p;
         example = "secret-tool lookup email me@example.org";
         description = ''
-          A command that writes the account password on standard
-          output followed by a newline when it is run.
+          A command, which when run writes the account password on
+          standard output.
         '';
       };
 
