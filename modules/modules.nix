@@ -28,7 +28,6 @@ let
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/browserpass.nix
-    ./programs/chromium.nix
     ./programs/command-not-found/command-not-found.nix
     ./programs/direnv.nix
     ./programs/eclipse.nix
@@ -93,7 +92,9 @@ let
     <nixpkgs/nixos/modules/misc/assertions.nix>
     <nixpkgs/nixos/modules/misc/lib.nix>
     <nixpkgs/nixos/modules/misc/meta.nix>
-  ];
+  ]
+  ++
+  optional pkgs.stdenv.isLinux ./programs/chromium.nix;
 
   pkgsModule = {
     options.nixosSubmodule = mkOption {

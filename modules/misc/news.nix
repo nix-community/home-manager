@@ -753,6 +753,7 @@ in
 
       {
         time = "2018-08-19T20:46:09+00:00";
+        condition = pkgs.stdenv.isLinux;
         message = ''
           A new modules is available: 'programs.chromium'.
         '';
