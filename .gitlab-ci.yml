@@ -1,0 +1,14 @@
+image: nixos/nix:latest
+
+pages:
+  script:
+    - mkdir -p ~/.config/nixpkgs
+    - echo '{ manual.html.enable = true; }' > ~/.config/nixpkgs/home.nix
+    - nix-shell . -A install
+    - mkdir public
+    - cp -r ~/.nix-profile/share/doc/home-manager/* public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
