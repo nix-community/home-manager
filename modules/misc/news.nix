@@ -765,6 +765,13 @@ in
           A new module is available: 'programs.msmtp'.
         '';
       }
+
+      {
+        time = "2018-08-21T20:13:50+00:00";
+        message = ''
+          A new module is available: 'services.pasystray'.
+        '';
+      }
     ];
   };
 }
