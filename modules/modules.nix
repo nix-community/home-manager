@@ -71,6 +71,7 @@ let
     ./services/network-manager-applet.nix
     ./services/owncloud-client.nix
     ./services/parcellite.nix
+    ./services/pasystray.nix
     ./services/polybar.nix
     ./services/random-background.nix
     ./services/redshift.nix
