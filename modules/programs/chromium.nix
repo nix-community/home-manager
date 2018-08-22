@@ -48,7 +48,7 @@ let
   browserConfig = cfg:
     let
 
-      browser = (builtins.parseDrvName cfg.package).name;
+      browser = (builtins.parseDrvName cfg.package.name).name;
 
       darwinDirs = {
         chromium = "Chromium";
