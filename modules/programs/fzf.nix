@@ -25,7 +25,7 @@ in
     defaultOptions = mkOption {
       type = types.listOf types.str;
       default = [];
-      example = [ "--height 40%" "--border" ];
+      example = "--height 40% --border";
       description = ''
         Extra command line options given to fzf by default.
       '';
@@ -44,7 +44,7 @@ in
     fileWidgetOptions = mkOption {
       type = types.listOf types.str;
       default = [];
-      example = [ "--preview 'head {}'" ];
+      example = [ "--preview" "'head {}'" ];
       description = ''
         Command line options for the CTRL-T keybinding.
       '';
