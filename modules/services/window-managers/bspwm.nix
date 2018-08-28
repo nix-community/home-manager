@@ -7,6 +7,24 @@ let
 	cfg = config.xsession.windowManager.bspwm;
 	bspwm = cfg.package;
 
+	monitor = types.submodule {
+		options = {
+			name = mkOption {
+				type = types.nullOr types.string;
+				default = null;
+				description = "The name or id of the monitor (MONITOR_SEL).";
+				example = "HDMI-0";
+			};
+
+			desktops = mkOption {
+				type = types.listOf types.string;
+				default = [];
+				description = "The desktops that the monitor is going to hold";
+				example = [ "web" "terminal" "III" "IV" ];
+			};
+		};
+	};
+
 	formatConfig = n: v:
     let
       formatList = x:
@@ -21,8 +39,14 @@ let
     in
       "bspc config ${n} ${formatValue v}";
 
+	formatMonitors = n:
+		map(s: 
+			"bscp monitor " + (if (s.name != null) then (s.name + " ") else "") + "-d ${concatStringsSep " " s.desktops}" 
+		) n;
+
 	formatStartupPrograms = n:
 		map(s: s + " &") n;
+
 in
 
 {
@@ -34,10 +58,8 @@ in
 				type = types.package;
 				default = pkgs.bspwm;
 				defaultText = "pkgs.bspwm";
+				description = "bspwm package to use.";
 				example = "pkgs.bspwm-unstable";
-				description = ''
-					bspwm package to use.
-				'';
 		};
 
 		config = mkOption {
@@ -64,6 +86,20 @@ in
 			'';
 		};
 
+		monitors = mkOption {
+			type = types.listOf monitor;
+			default = [];
+			description = "bspc monitor configurations";
+			example = ''
+				[
+					{
+						name = "HDMI-0";
+						desktops = [ "web" "terminal" "III" "IV" ];
+					}
+				];
+			'';
+		};
+
 		startupPrograms = mkOption {
 			type = types.listOf types.string;
 			default = [];
@@ -72,7 +108,7 @@ in
 				[
 					"numlockx on"
 					"tilda"
-				]
+				];
 			'';
 		};
 	};
@@ -89,6 +125,8 @@ in
 				executable = true;
 				text = "#!/bin/sh\n\n" + 
 				concatStringsSep "\n" ([]
+					++ (optionals (cfg.monitors != []) (formatMonitors cfg.monitors))
+					++ [ "" ]
 					++ (optionals (cfg.config != null) (mapAttrsToList formatConfig cfg.config))
 					++ [ "" ]
 					++ (optional (cfg.extraConfig != "") cfg.extraConfig)
