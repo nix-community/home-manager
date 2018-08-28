@@ -1295,6 +1295,14 @@ in
           A new module is available: 'services.cbatticon'.
         '';
       }
+
+      {
+        time = "2020-01-26T12:42:33+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xsession.windowManager.bspwm'.
+        '';
+      }
     ];
   };
 }
