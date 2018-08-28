@@ -29,6 +29,14 @@ in
         Whether to enable Zsh integration.
       '';
     };
+
+    enableFishIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Fish integration.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -45,6 +53,10 @@ in
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
+    '';
+
+    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
+      eval (${pkgs.direnv}/bin/direnv hook fish)
     '';
   };
 }

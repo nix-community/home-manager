@@ -180,8 +180,7 @@ function doSwitch() {
     else
         doBuildAttr \
                     --out-link "$generation" \
-                    --no-build-output \
-                    --attr activationPackage > /dev/null \
+                    --attr activationPackage \
             && "$generation/activate" || exitCode=1
     fi
 
