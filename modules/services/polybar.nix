@@ -20,7 +20,7 @@ let
         if isBool value then (if value then "true" else "false")
         else if (isString value && key != "include-file") then quoted value
         else toString value;
-    in
+     in
       "${key}=${value'}";
   };
 
