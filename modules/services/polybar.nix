@@ -10,18 +10,18 @@ let
 
   toPolybarIni = generators.toINI {
     mkKeyValue = key: value:
-    let
-      quoted = v:
-        if hasPrefix " " v || hasSuffix " " v
-        then ''"${v}"''
-        else v;
+      let
+        quoted = v:
+          if hasPrefix " " v || hasSuffix " " v
+          then ''"${v}"''
+          else v;
 
-      value' =
-        if isBool value then (if value then "true" else "false")
-        else if (isString value && key != "include-file") then quoted value
-        else toString value;
-    in
-      "${key}=${value'}";
+        value' =
+          if isBool value then (if value then "true" else "false")
+          else if (isString value && key != "include-file") then quoted value
+          else toString value;
+      in
+        "${key}=${value'}";
   };
 
   configFile = pkgs.writeText "polybar.conf"
