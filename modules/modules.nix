@@ -84,7 +84,7 @@ let
     ./services/udiskie.nix
     ./services/unclutter.nix
     ./services/window-managers/awesome.nix
-    ./services/window-managers/bspwm.nix
+    ./services/window-managers/bspwm/default.nix
     ./services/window-managers/i3.nix
     ./services/window-managers/xmonad.nix
     ./services/xscreensaver.nix
