@@ -33,10 +33,13 @@ let
   genSection = header: entries:
     let
       escapeValue = escape [ "\"" ];
+      hasSpace = v: builtins.match ".* .*" v != null;
       genValue = v:
         if isList v
         then concatMapStringsSep " " genValue v
-        else "\"${escapeValue v}\"";
+        else if isInt v then toString v
+        else if (hasSpace v) then "\"${escapeValue v}\""
+        else v;
     in
       ''
         ${header}
@@ -70,19 +73,22 @@ let
           Inbox = "${maildir.absPath}/${folders.inbox}";
           SubFolders = "Verbatim";
         }
-        //
-        optionalAttrs (mbsync.flatten != null) { Flatten = mbsync.flatten; }
+        // optionalAttrs (mbsync.flatten != null) { Flatten = mbsync.flatten; }
+        // mbsync.extraConfig.local
       )
       + "\n"
-      + genSection "Channel ${name}" {
-        Master = ":${name}-remote:";
-        Slave = ":${name}-local:";
-        Patterns = mbsync.patterns;
-        Create = masterSlaveMapping.${mbsync.create};
-        Remove = masterSlaveMapping.${mbsync.remove};
-        Expunge = masterSlaveMapping.${mbsync.expunge};
-        SyncState = "*";
-      }
+      + genSection "Channel ${name}" (
+        {
+          Master = ":${name}-remote:";
+          Slave = ":${name}-local:";
+          Patterns = mbsync.patterns;
+          Create = masterSlaveMapping.${mbsync.create};
+          Remove = masterSlaveMapping.${mbsync.remove};
+          Expunge = masterSlaveMapping.${mbsync.expunge};
+          SyncState = "*";
+        }
+        // mbsync.extraConfig.remote
+      )
       + "\n";
 
   genGroupConfig = name: channels:
