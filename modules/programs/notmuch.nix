@@ -89,7 +89,7 @@ in
       extraConfig = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = {
-          maildir = { synchronize_flags = "True"; };
+          maildir = { synchronize_flags = "true"; };
         };
         description = ''
           Options that should be appended to the notmuch configuration file.
