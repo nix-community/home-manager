@@ -269,7 +269,7 @@ let
 
         smtp = {
           host = "smtp.gmail.com";
-          port = 587;
+          port = if config.smtp.tls.useStartTls then 587 else 465;
         };
       })
 
