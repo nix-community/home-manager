@@ -8,6 +8,18 @@ let
 
   dag = config.lib.dag;
 
+  commonOptions = {
+    fonts = mkOption {
+      type = types.listOf types.string;
+      default = ["monospace 8"];
+      description = ''
+        Font list used for window titles. Only FreeType fonts are supported.
+        The order here is improtant (e.g. icons font should go before the one used for text).
+      '';
+      example = [ "FontAwesome 10" "Terminus 10" ];
+    };
+  };
+
   startupModule = types.submodule {
     options = {
       command = mkOption {
@@ -92,6 +104,8 @@ let
 
   barModule = types.submodule {
     options = {
+      inherit (commonOptions) fonts;
+
       id = mkOption {
         type = types.nullOr types.string;
         default = null;
@@ -241,15 +255,7 @@ let
 
   configModule = types.submodule {
     options = {
-      fonts = mkOption {
-        type = types.listOf types.string;
-        default = ["monospace 8"];
-        description = ''
-          Font list used for window titles. Only FreeType fonts are supported.
-          The order here is improtant (e.g. icons font should go before the one used for text).
-        '';
-        example = [ "FontAwesome 10" "Terminus 10" ];
-      };
+      inherit (commonOptions) fonts;
 
       window = mkOption {
         type = types.submodule {
@@ -660,11 +666,12 @@ let
   );
 
   barStr = {
-    id, mode, hiddenState, position, workspaceButtons,
+    id, fonts, mode, hiddenState, position, workspaceButtons,
     workspaceNumbers, command, statusCommand, colors, ...
   }: ''
     bar {
       ${optionalString (id != null) "id ${id}"}
+      font pango:${concatStringsSep ", " fonts}
       mode ${mode}
       hidden_state ${hiddenState}
       position ${position}
