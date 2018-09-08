@@ -6,6 +6,52 @@ let
 
   cfg = config.accounts.email;
 
+  gpgModule = types.submodule {
+    options = {
+      key = mkOption {
+        type = types.str;
+        description = ''
+          The key to use as listed in <command>gpg --list-keys</command>.
+        '';
+      };
+
+      signByDefault = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Sign messages by default.";
+      };
+
+      encryptByDefault = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Encrypt outgoing messages by default.";
+      };
+    };
+  };
+
+  signatureModule = types.submodule {
+    options = {
+      text = mkOption {
+        type = types.str;
+        default = "";
+        example = ''
+          --
+          Luke Skywalker
+          May the force be with you.
+        '';
+        description = ''
+          Signature content.
+        '';
+      };
+
+      showSignature = mkOption {
+        type = types.enum [ "append" "attach" "none" ];
+        default = "none";
+        description = "Method to communicate the signature.";
+      };
+    };
+  };
+
   tlsModule = types.submodule {
     options = {
       enable = mkOption {
@@ -234,6 +280,22 @@ let
         default = null;
         description = ''
           The IMAP configuration to use for this account.
+        '';
+      };
+
+      signature = mkOption {
+        type = signatureModule;
+        default = {};
+        description = ''
+          Signature configuration.
+        '';
+      };
+
+      gpg = mkOption {
+        type = types.nullOr gpgModule;
+        default = null;
+        description = ''
+          GPG configuration.
         '';
       };
 
