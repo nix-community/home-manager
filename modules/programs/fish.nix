@@ -79,7 +79,10 @@ in
       # ~/.config/fish/config.fish: DO NOT EDIT -- this file has been generated automatically.
       # if we haven't sourced the general config, do it
       if not set -q __fish_general_config_sourced
-        
+        set fish_function_path ${pkgs.fish-foreign-env}/share/fish-foreign-env/functions $fish_function_path
+        fenv source ${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh > /dev/null
+        set -e fish_function_path[1]
+
         ${cfg.shellInit}
         # and leave a note so we don't source this config section again from
         # this very shell (children will source the general config anew)
