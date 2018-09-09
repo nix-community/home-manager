@@ -59,7 +59,7 @@ in
       extraPythonPackages = mkOption {
         type = with types; either extraPythonPackageType (listOf package);
         default = (_: []);
-        example = literalExample "(ps: [ pandas jedi ])";
+        example = literalExample "(ps: with ps; [ pandas jedi ])";
         description = ''
           A function in python.withPackages format, which returns a 
           list of Python 2 packages required for your plugins to work.
@@ -86,7 +86,7 @@ in
       extraPython3Packages = mkOption {
         type = with types; either extraPython3PackageType (listOf package);
         default = (_: []);
-        example = literalExample "(ps: [ python-language-server ])";
+        example = literalExample "(ps: with ps; [ python-language-server ])";
         description = ''
           A function in python.withPackages format, which returns a 
           list of Python 3 packages required for your plugins to work.
