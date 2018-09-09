@@ -24,12 +24,13 @@ in
       shellAliases = mkOption {
         default = {};
         description = ''
-          Set of aliases for fish shell. See <option>environment.shellAliases</option>
-          for an option format description.
+          Set of aliases for fish shell. See
+          <option>environment.shellAliases</option> for an option
+          format description.
         '';
         type = types.attrs;
       };
-      
+
       shellAbbrs = mkOption {
         default = {};
         description = ''
@@ -99,13 +100,13 @@ in
       end
       # if we haven't sourced the interactive config, do it
       status --is-interactive; and not set -q __fish_interactive_config_sourced
-      and begin    
+      and begin
         # Abbrs
         ${abbrsStr}
-  
+
         # Aliases
         ${aliasesStr}
-        
+
         ${cfg.promptInit}
         ${cfg.interactiveShellInit}
         # and leave a note so we don't source this config section again from
