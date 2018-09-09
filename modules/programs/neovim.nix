@@ -76,8 +76,8 @@ in
       };
 
       configure = mkOption {
-        type = types.nullOr types.attrs;
-        default = null;
+        type = types.attrs;
+        default = {};
         example = literalExample ''
           configure = {
               customRC = $''''
@@ -103,9 +103,10 @@ in
     home.packages = [
       (pkgs.neovim.override {
         inherit (cfg)
-          extraPython3Packages withPython3
-          extraPythonPackages withPython
+          withPython3 withPython
           withRuby viAlias vimAlias configure;
+	  extraPython3Packages = (_: cfg.extraPython3Packages);
+	  extraPythonPackages = (_: cfg.extraPythonPackages);
       })
     ];
   };
