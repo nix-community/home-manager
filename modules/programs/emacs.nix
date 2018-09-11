@@ -33,10 +33,19 @@ in
         example = literalExample "epkgs: [ epkgs.emms epkgs.magit ]";
         description = "Extra packages available to Emacs.";
       };
+
+      finalPackage = mkOption {
+        type = types.package;
+        internal = true;
+        readOnly = true;
+        description = "The Emacs package including any extra packages.";
+      };
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ (emacsWithPackages cfg.extraPackages) ];
+    home.packages = [ cfg.finalPackage ];
+
+    programs.emacs.finalPackage = emacsWithPackages cfg.extraPackages;
   };
 }
