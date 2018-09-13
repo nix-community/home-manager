@@ -786,6 +786,13 @@ in
           A new module is available: 'programs.taskwarrior'.
         '';
       }
+
+      {
+        time = "2018-09-18T21:43:54+00:00";
+        message = ''
+          A new module is available: 'programs.zathura'.
+        '';
+      }
     ];
   };
 }
