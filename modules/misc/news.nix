@@ -779,6 +779,12 @@ in
           A new module is available: 'programs.offlineimap'.
         '';
       }
+
+      { time = "2018-09-13T16:21:00+00:00";
+        message = ''
+	  A new module is available: 'programs.zathura'.
+	'';
+      }
     ];
   };
 }

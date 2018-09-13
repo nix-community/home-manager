@@ -56,6 +56,7 @@ let
     ./programs/termite.nix
     ./programs/texlive.nix
     ./programs/vim.nix
+    ./programs/zathura.nix
     ./programs/zsh.nix
     ./services/blueman-applet.nix
     ./services/compton.nix
