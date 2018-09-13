@@ -53,6 +53,7 @@ let
     ./programs/pidgin.nix
     ./programs/rofi.nix
     ./programs/ssh.nix
+    ./programs/taskwarrior.nix
     ./programs/termite.nix
     ./programs/texlive.nix
     ./programs/vim.nix
