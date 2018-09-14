@@ -31,7 +31,7 @@ in
         <citerefentry>
           <refentrytitle>zathurarc</refentrytitle>
           <manvolnum>5</manvolnum>
-        </cityrefentry>
+        </citerefentry>
         to see the full list of options
       '';
       example = {default-bg = "#000000"; default-fg = "#FFFFFF";};
