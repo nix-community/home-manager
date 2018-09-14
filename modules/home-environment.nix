@@ -243,6 +243,15 @@ in
         Extra commands to run in the Home Manager generation builder.
       '';
     };
+
+    home.extraProfileCommands = mkOption {
+      type = types.lines;
+      default = "";
+      internal = true;
+      description = ''
+        Extra commands to run in the Home Manager profile builder.
+      '';
+    };
   };
 
   config = {
@@ -372,6 +381,8 @@ in
 
       paths = cfg.packages;
       inherit (cfg) extraOutputsToInstall;
+
+      postBuild = cfg.extraProfileCommands;
 
       meta = {
         description = "Environment of packages installed through home-manager";
