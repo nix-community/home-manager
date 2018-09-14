@@ -61,6 +61,7 @@ let
     ./programs/taskwarrior.nix
     ./programs/termite.nix
     ./programs/texlive.nix
+    ./programs/tmux.nix
     ./programs/urxvt.nix
     ./programs/vim.nix
     ./programs/zathura.nix
