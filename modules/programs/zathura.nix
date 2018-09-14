@@ -40,9 +40,7 @@ in
       type = types.lines;
       default = "";
       description = ''
-      Additional commands for zathura the zathurarc file.  If this and all
-      other zathura options are <code>null</code>, then this feature is
-      disabled and no <filename>zathurarc</filename> link is produced.
+        Additional commands for zathura the zathurarc file.
       '';
     };
   };
