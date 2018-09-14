@@ -23,8 +23,8 @@ in
       Zathura, a highly customizable and funtional document viewer
       focused on keyboard interaction '';
     options = mkOption {
-      default = null;
-      type = types.nullOr types.attrs;
+      default = {};
+      type = with types; attrsOf (either str (either bool int));
       description = ''
       Add :set command options to zathura and make them permanent.
       Run <code>man zathura</code> to see the full list of options
