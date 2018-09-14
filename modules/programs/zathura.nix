@@ -26,12 +26,15 @@ in
       default = {};
       type = with types; attrsOf (either str (either bool int));
       description = ''
-      Add :set command options to zathura and make them permanent.
-      Run <code>man zathura</code> to see the full list of options
+        Add :set command options to zathura and make them permanent.
+        See
+        <citerefentry>
+          <refentrytitle>zathurarc</refentrytitle>
+          <manvolnum>5</manvolnum>
+        </cityrefentry>
+        to see the full list of options
       '';
-      example = literalExample ''
-        {default-bg = "#000000"; default-fg = "#FFFFFF";}
-      '';
+      example = {default-bg = "#000000"; default-fg = "#FFFFFF";};
     };
     extraConfig = mkOption {
       type = types.lines;
