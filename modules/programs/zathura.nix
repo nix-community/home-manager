@@ -48,8 +48,9 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.zathura ];
     xdg.configFile."zathura/zathurarc".text =
-    concatStringsSep "\n" ([]
-      ++ (optional (cfg.extraConfig != "") cfg.extraConfig)
-      ++ (optionals (cfg.options != null) (mapAttrsToList formatLine cfg.options))) + "\n";
+      concatStringsSep "\n" ([]
+        ++ (optional (cfg.extraConfig != "") cfg.extraConfig)
+        ++ (optionals (cfg.options != null) (mapAttrsToList formatLine cfg.options))
+      ) + "\n";
   };
 }
