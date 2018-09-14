@@ -19,8 +19,9 @@ in
   meta.maintainers = [maintainers.rprospero];
 
   options.programs.zathura = {
-    enable = mkEnableOption ''Zathura is a highly customizable and funtional
-      document viewer focused on keyboard interaction.'';
+    enable = mkEnableOption ''
+      Zathura, a highly customizable and funtional document viewer
+      focused on keyboard interaction '';
     options = mkOption {
       default = null;
       type = types.nullOr types.attrs;
