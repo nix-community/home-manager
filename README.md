@@ -48,10 +48,11 @@ Currently the easiest way to install Home Manager is as follows:
 
     Also make sure that your user is able to build and install Nix
     packages. For example, you should be able to successfully run a
-    command like `nix-instantiate '<nixpkgs>' -A hello`. For a
-    multi-user install of Nix this means that your user must be
-    covered by the [`allowed-users`][nixAllowedUsers] Nix option. On
-    NixOS you can control this option using the
+    command like `nix-instantiate '<nixpkgs>' -A hello` without having
+    to switch to the root user. For a multi-user install of Nix this
+    means that your user must be covered by the
+    [`allowed-users`][nixAllowedUsers] Nix option. On NixOS you can
+    control this option using the
     [`nix.allowedUsers`][nixosAllowedUsers] system option.
 
 2.  Add the appropriate Home Manager channel. Typically this is
@@ -83,7 +84,7 @@ Currently the easiest way to install Home Manager is as follows:
     configuration then you must source the
 
     ```
-    "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+    $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
     ```
 
     file in your shell configuration. Unfortunately, we currently only
