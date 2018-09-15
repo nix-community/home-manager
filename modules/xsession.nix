@@ -15,6 +15,16 @@ in
     xsession = {
       enable = mkEnableOption "X Session";
 
+      scriptPath = mkOption {
+        type = types.str;
+        default = ".xsession";
+        example = ".xsession-hm";
+        description = ''
+          Path, relative <envar>HOME</envar>, where Home Manager
+          should write the X session script.
+        '';
+      };
+
       windowManager.command = mkOption {
         type = types.str;
         example = literalExample ''
@@ -117,7 +127,7 @@ in
         export HM_XPROFILE_SOURCED=1
     '';
 
-    home.file.".xsession" = {
+    home.file.${cfg.scriptPath} = {
       executable = true;
       text = ''
         if [[ ! -v HM_XPROFILE_SOURCED ]]; then
