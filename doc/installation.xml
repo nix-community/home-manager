@@ -1,0 +1,149 @@
+<chapter xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      version="5.0"
+      xml:id="ch-installation">
+ <title>Installing Home Manager</title>
+ <para>
+  Home Manager can be used in three primary ways:
+  <orderedlist>
+   <listitem>
+    <para>
+     Using the standalone <command>home-manager</command> tool. For platforms
+     other than NixOS and Darwin, this is the only available choice. It is also
+     recommended for people on NixOS or Darwin that want to manage their home
+     directory independent of the system as a whole. See
+     <xref linkend="sec-install-standalone"/> for instructions on how to
+     perform this installation.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     As a module within a NixOS system configuration. This allows the user
+     profiles to be built together with the system when running
+     <command>nixos-rebuild</command>. See
+     <xref linkend="sec-install-nixos-module"/> for a description of this
+     setup.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     As a module within a
+     <link xlink:href="https://github.com/LnL7/nix-darwin/">nix-darwin</link>
+     system configuration. This allows the user profiles to be built together
+     with the system when running <command>darwin-rebuild</command>. See
+     <xref linkend="sec-install-nix-darwin-module"/> for a description of this
+     setup.
+    </para>
+   </listitem>
+  </orderedlist>
+ </para>
+ <section xml:id="sec-install-standalone">
+  <title>Standalone installation</title>
+
+  <orderedlist>
+   <listitem>
+    <para>
+     Make sure you have a working Nix installation. If you are not using NixOS
+     then it may be necessary to run
+    </para>
+<programlisting>
+$ mkdir -m 0755 -p /nix/var/nix/{profiles,gcroots}/per-user/$USER
+</programlisting>
+    <para>
+     since Home Manager uses these directories to manage your profile
+     generations. On NixOS these should already be available.
+    </para>
+    <para>
+     Also make sure that your user is able to build and install Nix packages.
+     For example, you should be able to successfully run a command like
+     <literal>nix-instantiate '&lt;nixpkgs&gt;' -A hello</literal> without
+     having to switch to the root user. For a multi-user install of Nix this
+     means that your user must be covered by the
+     <link xlink:href="https://nixos.org/nix/manual/#conf-allowed-users"><literal>allowed-users</literal></link>
+     Nix option. On NixOS you can control this option using the
+     <link xlink:href="https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers"><literal>nix.allowedUsers</literal></link>
+     system option.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Add the Home Manager channel that you wish to follow. This is done by
+     running
+    </para>
+<programlisting>
+$ nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
+$ nix-channel --update
+</programlisting>
+    <para>
+     if you are following Nixpkgs master or an unstable channel and
+    </para>
+<programlisting>
+$ nix-channel --add https://github.com/rycee/home-manager/archive/release-18.09.tar.gz home-manager
+$ nix-channel --update
+</programlisting>
+    <para>
+     if you follow a Nixpkgs version 18.09 channel.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Run the Home Manager installation command and create the first Home
+     Manager generation:
+    </para>
+<programlisting>
+$ nix-shell '&lt;home-manager&gt;' -A install
+</programlisting>
+    <para>
+     Once finished, Home Manager should be active and available in your user
+     environment.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     If you do not plan on having Home Manager manage your shell configuration
+     then you must source the
+    </para>
+<programlisting>
+$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
+</programlisting>
+    <para>
+     file in your shell configuration. Unfortunately, we currently only support
+     POSIX.2-like shells such as
+     <link xlink:href="https://www.gnu.org/software/bash/">Bash</link> or
+     <link xlink:href="http://zsh.sourceforge.net/">Z shell</link>.
+    </para>
+    <para>
+     For example, if you use Bash then add
+    </para>
+<programlisting language="bash">
+. &quot;$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh&quot;
+</programlisting>
+    <para>
+     to your <literal>~/.profile</literal> file.
+    </para>
+   </listitem>
+  </orderedlist>
+
+  <para>
+   If instead of using channels you want to run Home Manager from a Git
+   checkout of the repository then you can use the
+   <literal>programs.home-manager.path</literal> option to specify the absolute
+   path to the repository.
+  </para>
+ </section>
+ <section xml:id="sec-install-nixos-module">
+  <title>NixOS module</title>
+
+  <para>
+   To be done.
+  </para>
+ </section>
+ <section xml:id="sec-install-nix-darwin-module">
+  <title>nix-darwin module</title>
+
+  <para>
+   To be done.
+  </para>
+ </section>
+</chapter>

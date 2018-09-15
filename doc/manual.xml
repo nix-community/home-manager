@@ -24,6 +24,7 @@
    </para>
   </note>
  </preface>
+ <xi:include href="installation.xml" />
  <appendix xml:id="ch-options">
   <title>Configuration Options</title>
   <xi:include href="./generated/options-db.xml" xpointer="configuration-variable-list" />
