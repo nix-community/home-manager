@@ -49,8 +49,8 @@ in
     home.packages = [ pkgs.zathura ];
     xdg.configFile."zathura/zathurarc".text =
       concatStringsSep "\n" ([]
-        ++ (optional (cfg.extraConfig != "") cfg.extraConfig)
-        ++ (optionals (cfg.options != null) (mapAttrsToList formatLine cfg.options))
+        ++ optional (cfg.extraConfig != "") cfg.extraConfig
+        ++ mapAttrsToList formatLine cfg.options
       ) + "\n";
   };
 }
