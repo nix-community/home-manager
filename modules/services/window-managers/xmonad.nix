@@ -6,8 +6,6 @@ let
 
   cfg = config.xsession.windowManager.xmonad;
 
-  dag = config.lib.dag;
-
   xmonad = pkgs.xmonad-with-packages.override {
     ghcWithPackages = cfg.haskellPackages.ghcWithPackages;
     packages = self:
