@@ -6,8 +6,6 @@ let
 
   cfg = config.xsession.windowManager.i3;
 
-  dag = config.lib.dag;
-
   commonOptions = {
     fonts = mkOption {
       type = types.listOf types.string;

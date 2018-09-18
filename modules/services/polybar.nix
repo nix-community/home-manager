@@ -6,8 +6,6 @@ let
 
   cfg = config.services.polybar;
 
-  dag = config.lib.dag;
-
   toPolybarIni = generators.toINI {
     mkKeyValue = key: value:
       let

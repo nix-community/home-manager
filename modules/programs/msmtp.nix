@@ -6,8 +6,6 @@ let
 
   cfg = config.programs.msmtp;
 
-  dag = config.lib.dag;
-
   msmtpAccounts = filter (a: a.msmtp.enable)
     (attrValues config.accounts.email.accounts);
 

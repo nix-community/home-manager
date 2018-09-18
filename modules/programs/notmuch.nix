@@ -4,8 +4,6 @@ with lib;
 
 let
 
-  dag = config.lib.dag;
-
   cfg = config.programs.notmuch;
 
   mkIniKeyValue = key: value:
@@ -24,12 +22,12 @@ let
         database = {
           path = config.accounts.email.maildirBasePath;
         };
-    
+
         new = {
           ignore = cfg.new.ignore;
           tags = cfg.new.tags;
         };
-    
+
         user =
           let
             accounts =
@@ -42,7 +40,7 @@ let
             primary_email = catAttrs "address" primary;
             other_email = catAttrs "address" secondaries;
           };
-    
+
         search = {
           exclude_tags = [ "deleted" "spam" ];
         };
@@ -168,7 +166,7 @@ in
               export PATH="${pkgs.notmuch}/bin''${PATH:+:}$PATH"
               export NOTMUCH_CONFIG="${config.xdg.configHome}/notmuch/notmuchrc"
               export NMBGIT="${config.xdg.dataHome}/notmuch/nmbug"
-    
+
               ${cmds}
             '';
             executable = true;
