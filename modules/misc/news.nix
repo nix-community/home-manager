@@ -793,6 +793,12 @@ in
           A new module is available: 'programs.zathura'.
         '';
       }
+      {
+        time = "2018-09-19T14:00:00+00:00";
+        message = ''
+          A new module is available: 'programs.noti'.
+        '';
+      }
     ];
   };
 }
