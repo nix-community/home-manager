@@ -15,6 +15,20 @@ in
     xsession = {
       enable = mkEnableOption "X Session";
 
+      scriptPath = mkOption {
+        type = types.str;
+        default = ".xsession";
+        example = ".xsession-hm";
+        visible = false;
+        description = ''
+          Name of X session script. The default value will make NixOS
+          unconditionally use Home Manager for the graphical session.
+          To allow other sessions this must be set to a non-default
+          value, however then some system level configuration is
+          necessary to add Home Manager as a session manager.
+        '';
+      };
+
       windowManager.command = mkOption {
         type = types.str;
         example = literalExample ''
@@ -117,7 +131,7 @@ in
         export HM_XPROFILE_SOURCED=1
     '';
 
-    home.file.".xsession" = {
+    home.file.${cfg.scriptPath} = {
       executable = true;
       text = ''
         if [[ ! -v HM_XPROFILE_SOURCED ]]; then
