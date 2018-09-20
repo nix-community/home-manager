@@ -38,6 +38,7 @@ let
     ./programs/fzf.nix
     ./programs/git.nix
     ./programs/gnome-terminal.nix
+    ./programs/go.nix
     ./programs/home-manager.nix
     ./programs/htop.nix
     ./programs/info.nix
