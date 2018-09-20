@@ -27,19 +27,19 @@ in
 
   config = mkIf config.services.taffybar.enable {
     systemd.user.services.taffybar = {
-        Unit = {
-          Description = "Taffybar desktop bar";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
+      Unit = {
+        Description = "Taffybar desktop bar";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
 
-        Service = {
-          ExecStart = "${cfg.package}/bin/taffybar";
-        };
+      Service = {
+        ExecStart = "${cfg.package}/bin/taffybar";
+      };
 
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }
