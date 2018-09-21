@@ -27,7 +27,8 @@ in
         default = {};
         example = literalExample ''
           {
-            "golang.org/x/time/rate" = builtins.fetchGit "https://go.googlesource.com/text";
+            "golang.org/x/text" = builtins.fetchGit "https://go.googlesource.com/text";
+            "golang.org/x/time" = builtins.fetchGit "https://go.googlesource.com/time";
           }
         '';
         description = "Packages to add to GOPATH.";
