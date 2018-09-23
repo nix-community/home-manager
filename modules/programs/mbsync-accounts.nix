@@ -2,6 +2,9 @@
 
 with lib;
 
+let
+  extraConfigType = with lib.types; attrsOf (either (either str int) bool);
+in
 {
   options.mbsync = {
     enable = mkEnableOption "synchronization using mbsync";
@@ -51,6 +54,28 @@ with lib;
       default = [ "*" ];
       description = ''
         Pattern of mailboxes to synchronize.
+      '';
+    };
+
+    extraConfig.local = mkOption {
+      type = extraConfigType;
+      default = {};
+      description = ''
+        Per store extra config.
+      '';
+    };
+
+    extraConfig.remote = mkOption {
+      type = extraConfigType;
+      default = {};
+      example = literalExample ''
+        {
+          MaxMessages = 10000;
+          MaxSize = 1m;
+        };
+      '';
+      description = ''
+        Per channel extra config.
       '';
     };
   };
