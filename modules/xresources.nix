@@ -72,8 +72,8 @@ in
     home.file.".Xresources" = {
       text =
         concatStringsSep "\n" ([]
-          ++ (optional (cfg.extraConfig != "") cfg.extraConfig)
-          ++ (optionals (cfg.properties != null) (mapAttrsToList formatLine cfg.properties))
+          ++ optional (cfg.extraConfig != "") cfg.extraConfig
+          ++ optionals (cfg.properties != null) (mapAttrsToList formatLine cfg.properties)
         ) + "\n";
       onChange = ''
         if [[ -v DISPLAY ]] ; then
