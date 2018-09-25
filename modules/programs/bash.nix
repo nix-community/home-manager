@@ -155,7 +155,7 @@ in
     in mkIf cfg.enable {
       programs.bash.bashrcExtra = ''
         # Commands that should be applied only for interactive shells.
-        if [[ -n $PS1 ]]; then
+        if [[ $- == *i* ]]; then
           ${historyControlStr}
 
           ${shoptsStr}
