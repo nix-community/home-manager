@@ -7,163 +7,6 @@ let
   cfg = config.xsession.windowManager.bspwm;
   bspwm = cfg.package;
 
-  monitor = types.submodule {
-    options = {
-      name = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "The name or id of the monitor (MONITOR_SEL).";
-        example = "HDMI-0";
-      };
-
-      desktops = mkOption {
-        type = types.listOf types.str;
-        default = [];
-        description = "The desktops that the monitor is going to hold";
-        example = [ "web" "terminal" "III" "IV" ];
-      };
-    };
-  };
-
-  rule = types.submodule {
-    options = {
-      className = mkOption {
-        type = types.str;
-        default = "";
-        description = "The class name of the program you want to apply the rule";
-        example = "Firefox";
-      };
-
-      instanceName = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "The particular instance name of a program";
-        example = "Navigator";
-      };
-
-      monitor = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "The monitor where the rule should be applied";
-        example = "HDMI-0";
-      };
-
-      desktop = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "The desktop where the rule should be applied";
-        example = "^8";
-      };
-
-      # AAHFUIOEHFUIWEHFWUIEHFUIWEH
-      node = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "The node where the rule should be applied";
-      };
-
-      state = mkOption {
-        type = types.nullOr (types.enum [ "tiled" "pseudo_tiled" "floating" "fullscreen" ]);
-        default = null;
-        description = "The state in where the window should be spawned";
-        example = "floating";
-      };
-
-      layer = mkOption {
-        type = types.nullOr (types.enum [ "below" "normal" "above" ]);
-        default = null;
-        description = "The layer where the window should be spawned";
-        example = "above";
-      };
-
-      splitDir = mkOption {
-        type = types.nullOr (types.enum [ "north" "west" "south" "east" ]);
-        default = null;
-        description = "The direction where the container is going to be splitted";
-        example = "south";
-      };
-
-      # splitRatio = mkOption {
-      #   type = types.nullOr types.float;
-      #   default = null;
-      #   description = "The ratio between the new window and the previous existing window in the desktop";
-      #   example = 0.65;
-      # };
-
-      hidden = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "If it's set to true, the node isn't going to occupy any space";
-        example = true;
-      };
-
-      sticky = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "If it's set to true, the node is going to stay in the focused desktop of its monitor";
-        example = true;
-      };
-
-      private = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "If it's set to true, the node is going to try to stay in the same tiling position and size";
-        example = true;
-      };
-
-      locked = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "If it's set to true, the node is going to ignore the 'node --close' messae";
-        example = true;
-      };
-
-      marked = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "If it's set to true, the node is going to be marked for deferred actions";
-        example = true;
-      };
-
-      # AIOFGHIEUWHGWUIEHGUIWEGHUIWE
-      center = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "";
-        example = true;
-      };
-
-      follow = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "If it's set to true, the previous focused node is going to stay focused";
-        example = true;
-      };
-
-      # GVWIOERHGIOWERHGOWIERGHWIOEHGWIOEHGIOWERHGWO
-      manage = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "";
-        example = true;
-      };
-
-      focus = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "If it's set to true, the new node is going to gain the focus";
-        example = true;
-      };
-
-      border = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "If it's set to true, the new node is going to have border";
-        example = true;
-      };
-    };
-  };
-
   formatConfig = n: v:
     let
       formatList = x:
@@ -196,9 +39,9 @@ let
     in
     map(s:
       "bspc rule -a " +
-        (if (builtins.hasAttr "instanceName" s) then ("'${s.className}:${s.instanceName}'") else (s.className)) +
+        (if (s.instanceName != null) then ("'${s.className}:${s.instanceName}'") else (s.className)) +
         builtins.concatStringsSep " " (map (n:
-          (if n != "className" && n != "instanceName" then (formatDirective n s.${n}) else (""))
+          (if n != "className" && n != "instanceName" && n != null then (formatDirective n s.${n}) else (""))
         ) (builtins.attrNames s))
   ) n;
 
@@ -208,7 +51,7 @@ let
 in
 
 {
-  options = import .options.nix{};
+  options = import ./options.nix { inherit pkgs; inherit lib; };
 
   config = mkIf cfg.enable (mkMerge [
     {
@@ -225,7 +68,7 @@ in
           ++ [ "" ]
           ++ (optionals (cfg.config != null) (mapAttrsToList formatConfig cfg.config))
           ++ [ "" ]
-          ++ (optionals (cfg.rules != []) (formatRules cfg.rules))
+          # ++ (optionals (cfg.rules != []) (formatRules cfg.rules))
           ++ [ "" ]
           ++ (optional (cfg.extraConfig != "") cfg.extraConfig)
           ++ (optionals (cfg.startupPrograms != null) (formatStartupPrograms cfg.startupPrograms))
