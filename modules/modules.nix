@@ -51,6 +51,7 @@ let
     ./programs/newsboat.nix
     ./programs/noti.nix
     ./programs/notmuch.nix
+    ./programs/obs-studio.nix
     ./programs/offlineimap.nix
     ./programs/pidgin.nix
     ./programs/rofi.nix

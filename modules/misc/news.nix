@@ -807,6 +807,14 @@ in
           A new module is available: 'programs.go'.
         '';
       }
+
+      {
+        time = "2018-09-27T17:48:08+00:00";
+        message = ''
+          A new module is available: 'programs.obs-studio'.
+        '';
+      }
+
     ];
   };
 }
