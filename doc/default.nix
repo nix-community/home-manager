@@ -6,7 +6,7 @@ let
   lib = pkgs.lib;
 
   # Remove invisible and internal options.
-  optionsListVisible = lib.filter (opt: opt.visible && !opt.internal) (lib.optionAttrSetToDocList options);
+  optionsListVisible = lib.filter (opt: opt.visible && !opt.internal && opt.name != "lib") (lib.optionAttrSetToDocList options);
 
   # Replace functions by the string <function>
   substFunction = x:
