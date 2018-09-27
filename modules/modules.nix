@@ -19,6 +19,7 @@ let
     ./manual.nix
     ./misc/fontconfig.nix
     ./misc/gtk.nix
+    ./misc/lib.nix
     ./misc/news.nix
     ./misc/nixpkgs.nix
     ./misc/pam.nix
@@ -98,7 +99,6 @@ let
     ./xresources.nix
     ./xsession.nix
     <nixpkgs/nixos/modules/misc/assertions.nix>
-    <nixpkgs/nixos/modules/misc/lib.nix>
     <nixpkgs/nixos/modules/misc/meta.nix>
   ]
   ++
