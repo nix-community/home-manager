@@ -9,7 +9,7 @@ with lib;
       description = ''
         Command to send a mail. If msmtp is enabled for the account,
         then this is set to
-        <command>msmtpq --account=&lt;name&gt; -t</command>.
+        <command>msmtpq --read-envelope-from --read-recipients</command>.
       '';
     };
   };
@@ -17,7 +17,7 @@ with lib;
   config = mkIf config.notmuch.enable {
     alot.sendMailCommand = mkOptionDefault (
       if config.msmtp.enable
-      then "msmtpq --account=${config.name} -t"
+      then "msmtpq --read-envelope-from --read-recipients"
       else null
     );
   };
