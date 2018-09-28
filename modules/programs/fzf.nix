@@ -122,13 +122,17 @@ in
       );
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      . ${pkgs.fzf}/share/fzf/completion.bash
-      . ${pkgs.fzf}/share/fzf/key-bindings.bash
+      if [ "$TERM" != "dumb" ]; then
+        . ${pkgs.fzf}/share/fzf/completion.bash
+        . ${pkgs.fzf}/share/fzf/key-bindings.bash
+      fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      . ${pkgs.fzf}/share/fzf/completion.zsh
-      . ${pkgs.fzf}/share/fzf/key-bindings.zsh
+      if [ "$TERM" != "dumb" ]; then
+        . ${pkgs.fzf}/share/fzf/completion.zsh
+        . ${pkgs.fzf}/share/fzf/key-bindings.zsh
+      fi
     '';
   };
 }
