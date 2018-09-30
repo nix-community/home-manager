@@ -63,10 +63,6 @@ in
     sendCommand = mkOption {
       type = types.str;
       default = "msmtpq --read-envelope-from --read-recipients";
-      # apply = p:
-      #   if hasPrefix "/" p
-      #   then p
-      #   else "${config.home.homeDirectory}/${p}";
       description = ''
         Default command to use to send mail.
       '';
