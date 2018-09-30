@@ -816,6 +816,13 @@ in
           A new module is available: 'programs.tmux'.
         '';
       }
+
+      {
+        time = "2018-11-18T18:55:15+00:00";
+        message = ''
+          A new module is available: 'programs.astroid'.
+        '';
+      }
     ];
   };
 }
