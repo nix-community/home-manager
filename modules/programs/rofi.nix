@@ -280,7 +280,7 @@ in
     };
 
     configPath = mkOption {
-      default = ".config/rofi/config";
+      default = "${config.xdg.configHome}/rofi/config";
       type = types.string;
       description = "Path where to put generated configuration file.";
     };
