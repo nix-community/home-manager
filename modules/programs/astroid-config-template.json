@@ -1,0 +1,136 @@
+{
+    "astroid": {
+        "config": {
+            "version": "11"
+        },
+        "notmuch_config": "\/home\/teto\/.notmuch-config",
+        "debug": {
+            "dryrun_sending": "false"
+        },
+        "hints": {
+            "level": "0"
+        },
+        "log": {
+            "syslog": "false",
+            "stdout": "true",
+            "level": "info"
+        }
+    },
+    "accounts": {
+        "charlie": {
+            "name": "Charlie Root",
+            "email": "root@localhost",
+            "gpgkey": "",
+            "always_gpg_sign": "false",
+            "sendmail": "msmtp -i -t",
+            "default": "true",
+            "save_sent": "false",
+            "save_sent_to": "\/home\/root\/Mail\/sent\/cur\/",
+            "additional_sent_tags": "",
+            "save_drafts_to": "\/home\/root\/Mail\/drafts\/",
+            "signature_separate": "false",
+            "signature_file": "",
+            "signature_file_markdown": "",
+            "signature_default_on": "true",
+            "signature_attach": "false",
+            "select_query": ""
+        }
+    },
+    "startup": {
+        "queries": {
+            "inbox": "tag:inbox"
+        }
+    },
+    "terminal": {
+        "height": "10",
+        "font_description": "default"
+    },
+    "thread_index": {
+        "page_jump_rows": "6",
+        "sort_order": "newest",
+        "cell": {
+            "font_description": "default",
+            "line_spacing": "2",
+            "date_length": "10",
+            "message_count_length": "4",
+            "authors_length": "20",
+            "subject_color": "#807d74",
+            "subject_color_selected": "#000000",
+            "background_color_selected": "",
+            "background_color_marked": "#fff584",
+            "background_color_marked_selected": "#bcb559",
+            "tags_length": "80",
+            "tags_upper_color": "#e5e5e5",
+            "tags_lower_color": "#333333",
+            "tags_alpha": "0.5",
+            "hidden_tags": "attachment,flagged,unread"
+        }
+    },
+    "general": {
+        "time": {
+            "clock_format": "local",
+            "same_year": "%b %-e",
+            "diff_year": "%x"
+        }
+    },
+    "editor": {
+        "cmd": "\/nix\/store\/svbc11jg7aq9c2mdz233cadxnqnqdckx-vim-8.1.0146\/bin\/vim -g --servername %2 --socketid %3 -f -c 'set ft=mail' '+set fileencoding=utf-8' '+set ff=unix' '+set enc=utf-8' '+set fo+=w' %1",
+        "external_editor": "false",
+        "charset": "utf-8",
+        "save_draft_on_force_quit": "true",
+        "attachment_words": "attach",
+        "attachment_directory": "~",
+        "markdown_processor": "marked"
+    },
+    "mail": {
+        "reply": {
+            "quote_line": "Excerpts from %1's message of %2:",
+            "mailinglist_reply_to_sender": "true"
+        },
+        "forward": {
+            "quote_line": "Forwarding %1's message of %2:",
+            "disposition": "inline"
+        },
+        "sent_tags": "sent",
+        "message_id_fqdn": "",
+        "message_id_user": "",
+        "user_agent": "default",
+        "send_delay": "2",
+        "close_on_success": "false",
+        "format_flowed": "false"
+    },
+    "poll": {
+        "interval": "60",
+        "always_full_refresh": "false"
+    },
+    "attachment": {
+        "external_open_cmd": "xdg-open"
+    },
+    "thread_view": {
+        "open_html_part_external": "false",
+        "preferred_type": "plain",
+        "preferred_html_only": "false",
+        "allow_remote_when_encrypted": "false",
+        "open_external_link": "xdg-open",
+        "default_save_directory": "~",
+        "indent_messages": "false",
+        "gravatar": {
+            "enable": "true"
+        },
+        "mark_unread_delay": "0.5",
+        "expand_flagged": "true"
+    },
+    "crypto": {
+        "gpg": {
+            "path": "gpg2",
+            "always_trust": "true",
+            "enabled": "true"
+        }
+    },
+    "saved_searches": {
+        "show_on_startup": "false",
+        "save_history": "true",
+        "history_lines_to_show": "15",
+        "history_lines": "1000"
+    }
+}
