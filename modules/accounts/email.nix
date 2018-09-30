@@ -380,6 +380,7 @@ in
       type = types.attrsOf (types.submodule [
         mailAccountOpts
         (import ../programs/alot-accounts.nix)
+        (import ../programs/astroid-accounts.nix)
         (import ../programs/mbsync-accounts.nix)
         (import ../programs/msmtp-accounts.nix)
         (import ../programs/notmuch-accounts.nix)
