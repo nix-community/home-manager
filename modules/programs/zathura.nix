@@ -21,7 +21,7 @@ in
 
   options.programs.zathura = {
     enable = mkEnableOption ''
-      Zathura, a highly customizable and funtional document viewer
+      Zathura, a highly customizable and functional document viewer
       focused on keyboard interaction'';
 
     options = mkOption {

@@ -376,7 +376,7 @@ let
         type = types.attrsOf (types.listOf criteriaModule);
         default = {};
         description = ''
-          An attribute set that assignes applications to workspaces based
+          An attribute set that assigns applications to workspaces based
           on criteria.
         '';
         example = literalExample ''
@@ -473,7 +473,7 @@ let
         type = types.attrs;
         default = {};
         description = ''
-          An attribute set that assignes keypress to an action using key code.
+          An attribute set that assigns keypress to an action using key code.
           See <link xlink:href="https://i3wm.org/docs/userguide.html#keybindings"/>.
         '';
         example = { "214" = "exec --no-startup-id /bin/script.sh"; };

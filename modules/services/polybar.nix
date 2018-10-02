@@ -59,7 +59,7 @@ in
           (p: { "section/base" = { include-file = "${p}"; }; })
           (types.attrsOf types.attrs);
         description = ''
-          Polybar configuration. Can be either path to a file, or set of attibutes
+          Polybar configuration. Can be either path to a file, or set of attributes
           that will be used to create the final configuration.
         '';
         default = {};
