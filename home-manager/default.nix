@@ -21,6 +21,8 @@ pkgs.stdenv.mkDerivation {
     substituteInPlace $out/bin/home-manager \
       --subst-var-by bash "${pkgs.bash}" \
       --subst-var-by coreutils "${pkgs.coreutils}" \
+      --subst-var-by findutils "${pkgs.findutils}" \
+      --subst-var-by gnused "${pkgs.gnused}" \
       --subst-var-by less "${pkgs.less}" \
       --subst-var-by HOME_MANAGER_PATH '${pathStr}'
   '';

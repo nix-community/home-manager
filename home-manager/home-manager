@@ -1,9 +1,7 @@
 #!@bash@/bin/bash
 
-# This code explicitly requires GNU Core Utilities and we therefore
-# need to ensure they are prioritized over any other similarly named
-# tools on the system.
-PATH=@coreutils@/bin:@less@/bin${PATH:+:}$PATH
+# Prepare to use tools from Nixpkgs.
+PATH=@coreutils@/bin:@findutils@/bin:@gnused@/bin:@less@/bin${PATH:+:}$PATH
 
 set -euo pipefail
 
@@ -237,6 +235,23 @@ function doRmGenerations() {
     popd > /dev/null
 }
 
+function doExpireGenerations() {
+    local profileDir="/nix/var/nix/profiles/per-user/$USER"
+
+    local generations
+    generations="$( \
+        find "$profileDir" -name 'home-manager-*-link' -not -newermt "$1" \
+        | sed 's/^.*-\([0-9]*\)-link$/\1/' \
+    )"
+
+    if [[ -n $generations ]]; then
+        # shellcheck disable=2086
+        doRmGenerations $generations
+    elif [[ -v VERBOSE ]]; then
+        echo "No generations to expire"
+    fi
+}
+
 function doListPackages() {
     local outPath
     outPath="$(nix-env -q --out-path | grep -o '/.*home-manager-path$')"
@@ -349,6 +364,11 @@ function doHelp() {
     echo "      Remove indicated generations. Use 'generations' command to"
     echo "      find suitable generation numbers."
     echo
+    echo "  expire-generations TIMESTAMP"
+    echo "      Remove generations older than TIMESTAMP where TIMESTAMP is"
+    echo "      interpreted as in the -d argument of the date tool. For"
+    echo "      example \"-30 days\" or \"2018-01-01\"."
+    echo
     echo "  packages     List all packages installed in home-manager-path"
     echo
     echo "  news         Show news entries in a pager"
@@ -421,6 +441,9 @@ case "$cmd" in
         ;;
     remove-generations)
         doRmGenerations "$@"
+        ;;
+    expire-generations)
+        doExpireGenerations "$@"
         ;;
     packages)
         doListPackages
