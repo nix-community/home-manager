@@ -60,6 +60,7 @@ let
         }
         // genTlsConfig imap.tls
         // optionalAttrs (imap.port != null) { Port = toString imap.port; }
+        // mbsync.extraConfig.account
       )
       + "\n"
       + genSection "IMAPStore ${name}-remote" (
