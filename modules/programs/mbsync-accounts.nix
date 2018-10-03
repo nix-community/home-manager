@@ -89,5 +89,19 @@ in
         Remote store extra configuration.
       '';
     };
+
+    extraConfig.account = mkOption {
+      type = extraConfigType;
+      default = {};
+      example = literalExample ''
+        {
+          PipelineDepth = 10;
+          Timeout = 60;
+        };
+      '';
+      description = ''
+        Account section extra configuration.
+      '';
+    };
   };
 }
