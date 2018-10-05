@@ -162,7 +162,13 @@ in
 
   options = {
     programs.gnome-terminal = {
-      enable = mkEnableOption "Gnome Terminal";
+      enable = mkEnableOption ''Gnome Terminal
+        </para><para>
+        You should also use the following option:
+        <programlisting>
+        systemd.user.startServices = true;
+        </programlisting>
+      '';
 
       showMenubar = mkOption {
         default = true;
@@ -182,19 +188,26 @@ in
     home.packages = [ pkgs.gnome3.gnome_terminal ];
 
     # The dconf service needs to be installed and prepared.
-    home.activation.gnomeTerminal = dag.entryAfter ["installPackages"] (
+    systemd.user.services."gnome-terminal" =
       let
         iniText = toDconfIni (buildIniSet cfg);
         iniFile = pkgs.writeText "gnome-terminal.ini" iniText;
         dconfPath = "/org/gnome/terminal/legacy/";
-      in
-        ''
-          if [[ -v DRY_RUN ]]; then
-            echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${iniFile}
-          else
-            ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}
-          fi
-        ''
-    );
+      in {
+        Unit = {
+          Description = "GNOME Terminal daemon";
+          Requires = [ "dbus.socket" ];
+        };
+
+        Service = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = "${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}";
+        };
+
+        Install = {
+          WantedBy = [ "default.target" ];
+        };
+      };
   };
 }
