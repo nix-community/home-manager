@@ -5,6 +5,12 @@ with lib;
 let
 
   cfg = config.programs.direnv;
+  configFile = config:
+    pkgs.runCommand "config.toml" { buildInputs = [ pkgs.remarshal ]; } ''
+      remarshal -if json -of toml \
+        < ${pkgs.writeText "config.json" (builtins.toJSON config)} \
+        > $out
+    '';
 
 in
 
@@ -14,11 +20,28 @@ in
   options.programs.direnv = {
     enable = mkEnableOption "direnv, the environment switcher";
 
+    config = mkOption {
+      type = types.attrs;
+      default = {};
+      description = ''
+        Configuration written to
+        <filename>~/.config/direnv/config.toml</filename>.
+        </para><para>
+        See
+        <citerefentry>
+          <refentrytitle>direnv.toml</refentrytitle>
+          <manvolnum>1</manvolnum>
+        </citerefentry>.
+        for the full list of options.
+      '';
+    };
+
     stdlib = mkOption {
       type = types.lines;
       default = "";
       description = ''
-        Custom stdlib written to <filename>~/.config/direnv/direnvrc</filename>.
+        Custom stdlib written to
+        <filename>~/.config/direnv/direnvrc</filename>.
       '';
     };
 
@@ -49,6 +72,10 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.direnv ];
+
+    xdg.configFile."direnv/config.toml" = mkIf (cfg.config != {}) {
+      source = configFile cfg.config;
+    };
 
     xdg.configFile."direnv/direnvrc" = mkIf (cfg.stdlib != "") {
       text = cfg.stdlib;
