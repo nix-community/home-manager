@@ -14,6 +14,14 @@ in
   options.programs.direnv = {
     enable = mkEnableOption "direnv, the environment switcher";
 
+    stdlib = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Custom stdlib written to <filename>~/.config/direnv/direnvrc</filename>.
+      '';
+    };
+
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
@@ -41,6 +49,10 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.direnv ];
+
+    xdg.configFile."direnv/direnvrc" = mkIf (cfg.stdlib != "") {
+      text = cfg.stdlib;
+    };
 
     programs.bash.initExtra =
       mkIf cfg.enableBashIntegration (
