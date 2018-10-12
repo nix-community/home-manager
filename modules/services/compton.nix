@@ -24,13 +24,14 @@ let
       shadow-offset-y = ${toString (elemAt cfg.shadowOffsets 1)};
       shadow-opacity  = ${cfg.shadowOpacity};
       shadow-exclude  = ${toJSON cfg.shadowExclude};
+      no-dock-shadow  = ${toJSON cfg.noDockShadow};
+      no-dnd-shadow   = ${toJSON cfg.noDNDShadow};
     '' + 
     optionalString cfg.blur ''
 
       # blur
       blur-background         = true;
       blur-background-exclude = ${toJSON cfg.blurExclude};
-      no-dock-blur            = ${toJSON cfg.noDockBlur};
     '' + ''
 
       # opacity
@@ -55,14 +56,6 @@ in {
       default = false;
       description = ''
         Enable background blur on transparent windows.
-      '';
-    };
-
-    noDockBlur = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Avoid blur on docks.
       '';
     };
 
@@ -171,6 +164,22 @@ in {
           <manvolnum>1</manvolnum>
         </citerefentry>
         man page for more examples.
+      '';
+    };
+
+    noDockShadow = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Avoid shadow on docks.
+      '';
+    };
+
+    noDNDShadow = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Avoid shadow on drag-and-drop windows.
       '';
     };
 
