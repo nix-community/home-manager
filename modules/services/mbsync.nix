@@ -87,7 +87,7 @@ in
       };
 
       Service = {
-        Type = "simple";
+        Type = "oneshot";
         ExecStart = "${cfg.package}/bin/mbsync ${concatStringsSep " " mbsyncOptions}";
       } // (optionalAttrs (cfg.postExec != null) { ExecStartPost = cfg.postExec; })
         // (optionalAttrs (cfg.preExec  != null) { ExecStartPre  = cfg.preExec;  });
