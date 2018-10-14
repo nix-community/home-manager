@@ -821,6 +821,13 @@ in
           A new module is available: 'programs.alot'.
         '';
       }
+
+      {
+        time = "2018-10-20T09:30:57+00:00";
+        message = ''
+          A new module is available: 'programs.urxvt'.
+        '';
+      }
     ];
   };
 }
