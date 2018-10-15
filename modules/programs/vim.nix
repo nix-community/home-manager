@@ -9,17 +9,25 @@ let
 
   knownSettings = {
     background = types.enum [ "dark" "light" ];
+    backupdir = types.listOf types.str;
     copyindent = types.bool;
+    directory = types.listOf types.str;
     expandtab = types.bool;
     hidden = types.bool;
     history = types.int;
     ignorecase = types.bool;
     modeline = types.bool;
+    mouse = types.enum [ "n" "v" "i" "c" "h" "a" "r" ];
+    mousefocus = types.bool;
+    mousehide = types.bool;
+    mousemodel = types.enum [ "extend" "popup" "popup_setpos" ];
     number = types.bool;
     relativenumber = types.bool;
     shiftwidth = types.int;
     smartcase = types.bool;
     tabstop = types.int;
+    undodir = types.listOf types.str;
+    undofile = types.bool;
   };
 
   vimSettingsType = types.submodule {
@@ -38,7 +46,12 @@ let
     let
       v =
         if isBool value then (if value then "" else "no") + name
-        else name + "=" + toString value;
+        else
+          "${name}=${
+            if isList value
+            then concatStringsSep "," value
+            else toString value
+          }";
     in
       optionalString (value != null) ("set " + v);
 
