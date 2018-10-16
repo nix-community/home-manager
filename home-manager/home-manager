@@ -238,31 +238,19 @@ function doRmGenerations() {
 }
 
 function doExpireGenerations() {
-    local before
-    before=$(date -d "$@" +%s)
+    local profileDir="/nix/var/nix/profiles/per-user/$USER"
 
     local generations
-    generations=$(doListGens)
+    generations="$( \
+        find "$profileDir" -name 'home-manager-*-link' -not -newermt "$1" \
+        | sed 's/^.*-\([0-9]*\)-link$/\1/' \
+    )"
 
-    local count=0
-    for current in $(echo "$generations" | awk '{ print $1" "$2 }' | xargs -i date -d {} +%s); do
-        if [[ "$current" -ge "$before" ]]; then
-            count=$(( count + 1 ))
-        else
-            break
-        fi
-    done
-
-    if [[ "$count" -le "1" ]]; then
-        count=2
-    fi
-
-    if [ "$count" -lt $(echo "$generations" | wc -l) ]; then
-        doRmGenerations $(echo "$generations" | awk '{ print $5 }' | sed -n "$(( count + 1 )),$ p")
-    else
-        if [[ -v VERBOSE ]]; then
-            echo "No generations to expire"
-        fi
+    if [[ -n $generations ]]; then
+        # shellcheck disable=2086
+        doRmGenerations $generations
+    elif [[ -v VERBOSE ]]; then
+        echo "No generations to expire"
     fi
 }
 
