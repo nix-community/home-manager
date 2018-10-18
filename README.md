@@ -300,4 +300,4 @@ in your Home Manager configuration.
 [nixAllowedUsers]: https://nixos.org/nix/manual/#conf-allowed-users
 [nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
 [Z shell]: http://zsh.sourceforge.net/
-[configuration options]: https://rycee.github.io/home-manager/options.html
+[configuration options]: https://rycee.gitlab.io/home-manager/options.html
