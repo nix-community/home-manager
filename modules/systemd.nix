@@ -55,6 +55,25 @@ let
     merge = loc: foldl' (res: def: recursiveUpdate res def.value) {};
   };
 
+  unitDescription = type: ''
+    Definition of systemd per-user ${type} units.  Attributes are merged
+    recursively.
+
+    Note that the attributes follow the capitalization and naming used by
+    systemd.  More details can be found in the man pages found at:
+    https://freedesktop.org/software/systemd/man/.
+  '';
+
+  unitExample = type: ''
+    {
+      Unit = {
+        Description = "Example Description";
+      };
+
+      ${type} = {};
+    };
+  '';
+
 in
 
 {
@@ -76,46 +95,36 @@ in
       services = mkOption {
         default = {};
         type = attrsRecursivelyMerged;
-        description = ''
-          Definition of systemd per-user service units. Attributes are
-          merged recursively.
-        '';
+        description = unitDescription "service";
+        example = unitExample "Service";
       };
 
       sockets = mkOption {
         default = {};
         type = attrsRecursivelyMerged;
-        description = ''
-          Definition of systemd per-user sockets. Attributes are
-          merged recursively.
-        '';
+        description = unitDescription "socket";
+        example = unitExample "Socket";
       };
 
       targets = mkOption {
         default = {};
         type = attrsRecursivelyMerged;
-        description = ''
-          Definition of systemd per-user targets. Attributes are
-          merged recursively.
-        '';
+        description = unitDescription "target";
+        example = unitExample "Target";
       };
 
       timers = mkOption {
         default = {};
         type = attrsRecursivelyMerged;
-        description = ''
-          Definition of systemd per-user timers. Attributes are merged
-          recursively.
-        '';
+        description = unitDescription "timer";
+        example = unitExample "Timer";
       };
 
       paths = mkOption {
         default = {};
         type = attrsRecursivelyMerged;
-        description = ''
-          Definition of systemd per-user path units. Attributes are
-          merged recursively.
-        '';
+        description = unitDescription "path";
+        example = unitExample "Path";
       };
 
       startServices = mkOption {
