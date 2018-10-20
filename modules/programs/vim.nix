@@ -49,27 +49,6 @@ in
     programs.vim = {
       enable = mkEnableOption "Vim";
 
-      lineNumbers = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = ''
-          Whether to show line numbers. DEPRECATED: Use
-          <varname>programs.vim.settings.number</varname>.
-        '';
-      };
-
-      tabSize = mkOption {
-        type = types.nullOr types.int;
-        default = null;
-        example = 4;
-        description = ''
-          Set tab size and shift width to a specified number of
-          spaces. DEPRECATED: Use
-          <varname>programs.vim.settings.tabstop</varname> and
-          <varname>programs.vim.settings.shiftwidth</varname>.
-        '';
-      };
-
       plugins = mkOption {
         type = types.listOf types.str;
         default = defaultPlugins;
@@ -150,31 +129,9 @@ in
         ];
       };
 
-    in mkIf cfg.enable (mkMerge [
-      {
-        programs.vim.package = vim;
-        home.packages = [ cfg.package ];
-      }
-
-      (mkIf (cfg.lineNumbers != null) {
-        warnings = [
-          ("'programs.vim.lineNumbers' is deprecated, "
-            + "use 'programs.vim.settings.number'")
-        ];
-
-        programs.vim.settings.number = cfg.lineNumbers;
-      })
-
-      (mkIf (cfg.tabSize != null) {
-        warnings = [
-          ("'programs.vim.tabSize' is deprecated, use "
-            + "'programs.vim.settings.tabstop' and "
-            + "'programs.vim.settings.shiftwidth'")
-        ];
-
-        programs.vim.settings.tabstop = cfg.tabSize;
-        programs.vim.settings.shiftwidth = cfg.tabSize;
-      })
-    ])
+    in mkIf cfg.enable {
+      programs.vim.package = vim;
+      home.packages = [ cfg.package ];
+    }
   );
 }
