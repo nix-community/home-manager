@@ -36,8 +36,7 @@ let
 
       path = mkOption {
         type = types.str;
-        default = relToDotDir ".zsh_history";
-        defaultText = ".zsh_history";
+        default = ".zsh_history";
         description = "History file location";
       };
 
@@ -339,6 +338,7 @@ in
 
         # History options should be set in .zshrc and after oh-my-zsh sourcing.
         # See https://github.com/rycee/home-manager/issues/177.
+        mkdir -p `dirname ${cfg.history.path}`
         HISTSIZE="${toString cfg.history.size}"
         HISTFILE="$HOME/${cfg.history.path}"
         SAVEHIST="${toString cfg.history.save}"
