@@ -242,8 +242,7 @@ in
 
       {
         time = "2017-09-30T09:44:18+00:00";
-        condition = with config.programs.vim;
-          enable && (tabSize != null || lineNumbers != null);
+        condition = with config.programs.vim; enable;
         message = ''
           The options 'programs.vim.tabSize' and 'programs.vim.lineNumbers' have
           been deprecated and will be removed in the near future.
