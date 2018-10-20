@@ -90,14 +90,7 @@ in
 
   options = {
     gtk = {
-      enable = mkEnableOption ''GTK 2/3 configuration
-        </para><para>
-        In case of Wayland you should also use the
-        following option:
-        <programlisting>
-        systemd.user.startServices = true;
-        </programlisting>
-      '';
+      enable = mkEnableOption "GTK 2/3 configuration";
 
       font = mkOption {
         type = types.nullOr fontType;
@@ -160,6 +153,21 @@ in
                 <filename>~/.config/gtk-3.0/gtk.css</filename>.
               '';
             };
+
+            waylandSupport = mkOption {
+              type = types.bool;
+              default = false;
+              description = ''
+                Support GSettings provider (dconf) in addition to
+                GtkSettings (INI file). This is needed for Wayland.
+                </para><para>
+                Note, on NixOS the following line must be in the
+                system configuration:
+                <programlisting>
+                services.dbus.packages = [ pkgs.gnome3.dconf ];
+                </programlisting>
+              '';
+            };
           };
         };
       };
@@ -208,29 +216,22 @@ in
 
         xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
 
-        # Support GSettings provider (dconf) in addition to
-        # GtkSettings (INI file). This is needed for Wayland.
-        systemd.user.services.gtk3 =
-          let
-            iniText = toDconfIni { "/" = dconfIni; };
-            iniFile = pkgs.writeText "gtk3.ini" iniText;
-            dconfPath = "/org/gnome/desktop/interface/";
-          in {
-            Unit = {
-              Description = "GTK3 daemon";
-              Requires = [ "dbus.socket" ];
-            };
-
-            Service = {
-              Type = "oneshot";
-              RemainAfterExit = true;
-              ExecStart = "${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}";
-            };
-
-            Install = {
-              WantedBy = [ "default.target" ];
-            };
-          };
+        home.activation = mkIf cfg3.waylandSupport {
+          gtk3 = dag.entryAfter ["installPackages"] (
+            let
+              iniText = toDconfIni { "/" = dconfIni; };
+              iniFile = pkgs.writeText "gtk3.ini" iniText;
+              dconfPath = "/org/gnome/desktop/interface/";
+            in
+              ''
+                if [[ -v DRY_RUN ]]; then
+                  echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${iniFile}
+                else
+                  ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}
+                fi
+              ''
+          );
+        };
       }
     );
 }
