@@ -95,6 +95,7 @@ let
     ./services/window-managers/i3.nix
     ./services/window-managers/xmonad.nix
     ./services/xscreensaver.nix
+    ./dbus.nix
     ./systemd.nix
     ./xcursor.nix
     ./xresources.nix

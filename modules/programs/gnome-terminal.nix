@@ -6,8 +6,6 @@ let
 
   cfg = config.programs.gnome-terminal;
 
-  dag = config.lib.dag;
-
   profileColorsSubModule = types.submodule (
     { ... }: {
       options = {
@@ -182,7 +180,7 @@ in
     home.packages = [ pkgs.gnome3.gnome_terminal ];
 
     # The dconf service needs to be installed and prepared.
-    home.activation.gnomeTerminal = dag.entryAfter ["installPackages"] (
+    dbus.activation.gnomeTerminal =
       let
         iniText = toDconfIni (buildIniSet cfg);
         iniFile = pkgs.writeText "gnome-terminal.ini" iniText;
@@ -194,7 +192,6 @@ in
           else
             ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}
           fi
-        ''
-    );
+        '';
   };
 }
