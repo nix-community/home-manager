@@ -241,24 +241,6 @@ in
       }
 
       {
-        time = "2017-09-30T09:44:18+00:00";
-        condition = with config.programs.vim; enable;
-        message = ''
-          The options 'programs.vim.tabSize' and 'programs.vim.lineNumbers' have
-          been deprecated and will be removed in the near future.
-
-          The new and preferred way to configure tab size and line numbers is to
-          use the more general 'programs.vim.settings' option. Specifically,
-          instead of
-
-          - 'programs.vim.lineNumbers' use 'programs.vim.settings.number', and
-
-          - 'programs.vim.tabSize' use 'programs.vim.settings.tabstop' and
-            'programs.vim.settings.shiftwidth'.
-        '';
-      }
-
-      {
         time = "2017-10-02T11:15:03+00:00";
         condition = config.services.udiskie.enable;
         message = ''
