@@ -8,8 +8,6 @@ let
   cfg2 = config.gtk.gtk2;
   cfg3 = config.gtk.gtk3;
 
-  dag = config.lib.dag;
-
   toGtk3Ini = generators.toINI {
     mkKeyValue = key: value:
       let
@@ -28,16 +26,6 @@ let
         else toString v;
     in
       "${n} = ${v'}";
-
-  toDconfIni = generators.toINI {
-    mkKeyValue = key: value:
-      let
-        tweakVal = v:
-          if isString v then "'${v}'"
-          else toString v;
-      in
-        "${key}=${tweakVal value}";
-  };
 
   fontType = types.submodule {
     options = {
@@ -216,21 +204,8 @@ in
 
         xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
 
-        home.activation = mkIf cfg3.waylandSupport {
-          gtk3 = dag.entryAfter ["installPackages"] (
-            let
-              iniText = toDconfIni { "/" = dconfIni; };
-              iniFile = pkgs.writeText "gtk3.ini" iniText;
-              dconfPath = "/org/gnome/desktop/interface/";
-            in
-              ''
-                if [[ -v DRY_RUN ]]; then
-                  echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${iniFile}
-                else
-                  ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}
-                fi
-              ''
-          );
+        dconf.settings = mkIf cfg3.waylandSupport {
+          "org/gnome/desktop/interface" = dconfIni;
         };
       }
     );
