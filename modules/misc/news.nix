@@ -904,6 +904,13 @@ in
           A new module is available: 'programs.jq'.
         '';
       }
+
+      {
+        time = "2018-12-24T16:26:16+00:00";
+        message = ''
+          A new module is available: 'dconf'.
+        '';
+      }
     ];
   };
 }

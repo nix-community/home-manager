@@ -25,6 +25,7 @@ let
     (loadModule ./files.nix { })
     (loadModule ./home-environment.nix { })
     (loadModule ./manual.nix { })
+    (loadModule ./misc/dconf.nix { })
     (loadModule ./misc/fontconfig.nix { })
     (loadModule ./misc/gtk.nix { })
     (loadModule ./misc/lib.nix { })
