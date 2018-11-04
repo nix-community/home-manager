@@ -39,17 +39,5 @@ in
         inherit (cfg) path;
       })
     ];
-
-    # Uninstall manually installed home-manager, if such exists.
-    # Without this a file collision error will be printed.
-    home.activation.uninstallHomeManager =
-      dag.entryBetween [ "installPackages" ] [ "writeBoundary" ] ''
-        if nix-env -q | grep -q "^home-manager$" ; then
-          $DRY_RUN_CMD nix-env -e home-manager
-
-          echo "You can now remove the 'home-manager' packageOverride"
-          echo "or overlay in '~/.config/nixpkgs/', if you want."
-        fi
-      '';
   };
 }
