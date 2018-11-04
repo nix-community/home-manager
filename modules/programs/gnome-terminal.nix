@@ -6,8 +6,6 @@ let
 
   cfg = config.programs.gnome-terminal;
 
-  dag = config.lib.dag;
-
   profileColorsSubModule = types.submodule (
     { ... }: {
       options = {
@@ -91,19 +89,6 @@ let
     }
   );
 
-  toDconfIni = generators.toINI { mkKeyValue = mkIniKeyValue; };
-
-  mkIniKeyValue = key: value:
-    let
-      tweakVal = v:
-        if isString v then "'${v}'"
-        else if isList v then "[" + concatStringsSep "," (map tweakVal v) + "]"
-        else if isBool v && v then "true"
-        else if isBool v && !v then "false"
-        else toString v;
-    in
-      "${key}=${tweakVal value}";
-
   buildProfileSet = pcfg:
     {
       visible-name = pcfg.visibleName;
@@ -136,25 +121,6 @@ let
       )
     );
 
-  buildIniSet = cfg:
-    {
-      "/" = {
-        default-show-menubar = cfg.showMenubar;
-        schema-version = 3;
-      };
-    }
-    //
-    {
-      "profiles:" = {
-        default = head (attrNames (filterAttrs (n: v: v.default) cfg.profile));
-        list = attrNames cfg.profile;
-      };
-    }
-    //
-    mapAttrs' (name: value:
-      nameValuePair ("profiles:/:${name}") (buildProfileSet value)
-    ) cfg.profile;
-
 in
 
 {
@@ -181,20 +147,23 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.gnome3.gnome_terminal ];
 
-    # The dconf service needs to be installed and prepared.
-    home.activation.gnomeTerminal = dag.entryAfter ["installPackages"] (
+    dconf.settings =
       let
-        iniText = toDconfIni (buildIniSet cfg);
-        iniFile = pkgs.writeText "gnome-terminal.ini" iniText;
-        dconfPath = "/org/gnome/terminal/legacy/";
+        dconfPath = "org/gnome/terminal/legacy";
       in
-        ''
-          if [[ -v DRY_RUN ]]; then
-            echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${iniFile}
-          else
-            ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}
-          fi
-        ''
-    );
+        {
+          "${dconfPath}" = {
+            default-show-menubar = cfg.showMenubar;
+            schema-version = 3;
+          };
+
+          "${dconfPath}/profiles:" = {
+            default = head (attrNames (filterAttrs (n: v: v.default) cfg.profile));
+            list = attrNames cfg.profile;
+          };
+        }
+        // mapAttrs' (n: v:
+          nameValuePair ("${dconfPath}/profiles:/:${n}") (buildProfileSet v)
+        ) cfg.profile;
   };
 }
