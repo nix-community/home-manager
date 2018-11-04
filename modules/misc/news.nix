@@ -904,6 +904,13 @@ in
           A new module is available: 'programs.vscode'.
         '';
       }
+
+      {
+        time = "2019-01-14T17:37:23+00:00";
+        message = ''
+          A new module is available: 'dconf'.
+        '';
+      }
     ];
   };
 }
