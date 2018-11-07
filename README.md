@@ -79,6 +79,13 @@ Currently the easiest way to install Home Manager is as follows:
     }
     EOF
     ```
+    
+    Or, if you wish to manage it with a Git repository:
+    
+    ```console
+    $ mkdir -p ~/.config/nixpkgs
+    $ ln -s /path/to/home.nix ~/.config/nixpkgs/home.nix
+    ```
 
 4.  Install Home Manager and create the first Home Manager generation:
 
