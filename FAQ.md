@@ -64,3 +64,39 @@ adding
 
 to your `.profile` and `.zshrc` files, respectively. The
 `hm-session-vars.sh` file should work in most Bourne-like shells.
+
+How do I switch configs based on architecture/machine?
+------------------------------------------------------
+
+Typically this would be done by having separate "top-level" files for your
+different systems. I usually name these based on the hostname (and the username
+if I have multiple users on the system) like `atlantis-rycee.nix`, for
+example. Then for each user you can set up a symbolic link from
+`~/.config/nixpkgs/home.nix` to the appropriate top level file.
+
+So, if you have three machines, you might create three files
+
+- `nixos.nix`
+- `debian.nix`
+- `darwin.nix`
+
+each of these would follow the format
+
+```nix
+{ ... }:
+
+{
+  imports = [ ./common.nix ];
+
+  # Various options that are specific for this machine/user.
+}
+```
+
+where the `common.nix` file contains configuration shared across the three
+systems. Of course, instead of just a single `common.nix` file you can have
+multiple ones, even one per program or service.
+
+You can get some inspiration from the [Post your home-manager home.nix
+file!][1] Reddit thread.
+
+[1]: https://www.reddit.com/r/NixOS/comments/9bb9h9/post_your_homemanager_homenix_file/
