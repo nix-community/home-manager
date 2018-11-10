@@ -26,6 +26,7 @@ let
     ./misc/qt.nix
     ./misc/xdg.nix
     ./programs/alot.nix
+    ./programs/afew.nix
     ./programs/autorandr.nix
     ./programs/astroid.nix
     ./programs/bash.nix

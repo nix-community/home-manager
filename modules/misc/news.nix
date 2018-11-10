@@ -823,6 +823,13 @@ in
           A new module is available: 'programs.astroid'.
         '';
       }
+
+      {
+        time = "2018-11-18T21:41:51+00:00";
+        message = ''
+          A new module is available: 'programs.afew'.
+        '';
+      }
     ];
   };
 }
