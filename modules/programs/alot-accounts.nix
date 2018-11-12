@@ -25,7 +25,7 @@ with lib;
   config = mkIf config.notmuch.enable {
     alot.sendMailCommand = mkOptionDefault (
       if config.msmtp.enable
-      then cfg.msmtp.sendCommand
+      then "msmtpq --read-envelope-from --read-recipients"
       else null
     );
   };

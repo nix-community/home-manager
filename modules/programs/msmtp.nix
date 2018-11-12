@@ -60,14 +60,6 @@ in
         '';
       };
     };
-    sendCommand = mkOption {
-      type = types.str;
-      default = "msmtpq --read-envelope-from --read-recipients";
-      description = ''
-        Default command to use to send mail.
-      '';
-    };
-
   };
 
   config = mkIf cfg.enable {

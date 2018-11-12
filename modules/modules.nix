@@ -27,7 +27,6 @@ let
     ./misc/xdg.nix
     ./programs/alot.nix
     ./programs/autorandr.nix
-    ./programs/astroid.nix
     ./programs/bash.nix
     ./programs/beets.nix
     ./programs/browserpass.nix
