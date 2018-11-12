@@ -13,14 +13,7 @@ let
 in
 {
   options.programs.afew = {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
-      description = ''
-        Whether to enable the Afew initial tagging script for Notmuch.
-      '';
-    };
+    enable = mkEnableOption "the Afew initial tagging script for Notmuch";
 
     extraConfig = mkOption {
       type = types.lines;
