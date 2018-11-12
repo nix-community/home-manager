@@ -31,6 +31,17 @@ in
         [ArchiveSentMailsFilter]
         [InboxFilter]
       '';
+      example = ''
+        # see more examples at https://afew.readthedocs.io/en/latest/configuration.html
+        [SpamFilter]
+
+        [Filter.0]
+        query = from:pointyheaded@boss.com
+        tags = -new;+boss
+        message = Message from above
+
+        [InboxFilter]
+      '';
       description = ''
         Extra lines added to afew configuration file.
       '';
