@@ -809,6 +809,13 @@ in
           A new module is available: 'programs.urxvt'.
         '';
       }
+
+      {
+        time = "2018-11-12T18:06:54+00:00";
+        message = ''
+          A new module is available: 'programs.afew'.
+        '';
+      }
     ];
   };
 }
