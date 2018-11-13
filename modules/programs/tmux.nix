@@ -3,6 +3,7 @@
 with lib;
 
 let
+
   cfg = config.programs.tmux;
 
   mkChildPackageType = name:
@@ -14,7 +15,7 @@ let
           type = types.package;
           default = pkgs.${name};
           defaultText = "pkgs.${name}";
-          description = "Also install ${name}.";
+          description = "The ${name} package to install.";
         };
       };
     };
@@ -39,44 +40,52 @@ let
       };
     };
   };
+
 in
+
 {
   options = {
-
     programs.tmux = {
-      enable = mkEnableOption "Tmux";
+      enable = mkEnableOption "tmux";
 
       package = mkOption {
         type = types.package;
         default = pkgs.tmux;
         defaultText = "pkgs.tmux";
         example = literalExample "pkgs.tmux";
-        description = "tmux";
+        description = "The tmux package to install";
       };
 
       sensibleOnTop = mkOption {
         type = types.bool;
         default = true;
-        description = "run the sensible plugin at the top of your .conf (this allows you to overwrite sensible configs)";
+        description = ''
+          Run the sensible plugin at the top of the configuration. It
+          is possible to override the sensible settings using the
+          <option>programs.tmux.extraConfig</option> option.
+        '';
       };
 
       tmuxp = mkOption {
         type = tmuxpModule;
         default = {};
-        description = "Options to configure Tmuxp";
+        description = "Options to configure tmuxp.";
       };
 
       tmuxinator = mkOption {
         type = tmuxinatorModule;
         default = {};
-        description = "Options to configure Tmuxinator";
+        description = "Options to configure tmuxinator.";
       };
 
       plugins = mkOption {
-        type = types.listOf (types.either types.package pluginModule);
+        type = with types;
+          listOf (either package pluginModule)
+          // { description = "list of plugin packages or submodules"; };
         description = ''
-          List of tmux plugins to be included at the end of your .tmux.conf
-          (the sensible plugin, however, is defaulted to run at the top of your tmux.conf).
+          List of tmux plugins to be included at the end of your tmux
+          configuration. The sensible plugin, however, is defaulted to
+          run at the top of your configuration.
         '';
         default = [ ];
         example = literalExample ''
@@ -93,14 +102,17 @@ in
                 set -g @continuum-save-interval '60' # minutes
               ''';
             }
-          ];
+          ]
         '';
       };
 
       extraConfig = mkOption {
         type = types.lines;
-        description = "Additional configuration to add.";
         default = "";
+        description = ''
+          Additional configuration to add to
+          <filename>tmux.conf</filename>.
+        '';
       };
     };
   };
@@ -111,47 +123,50 @@ in
         home.packages = [ cfg.package ]
           ++ optional cfg.tmuxinator.enable cfg.tmuxinator.package
           ++ optional cfg.tmuxp.enable      cfg.tmuxp.package;
+
+          home.file.".tmux.conf".text = cfg.extraConfig;
       }
 
-      (mkIf (cfg.extraConfig != "") {
-        home.file.".tmux.conf".text = cfg.extraConfig;
-      })
-
-      (mkIf (cfg.sensibleOnTop) {
+      (mkIf cfg.sensibleOnTop {
         home.file.".tmux.conf".text = mkBefore ''
-        # ============================================= #
-        # Start with defaults from the Sensible plugin  #
-        # --------------------------------------------- #
-        run-shell ${pkgs.tmuxPlugins.sensible.rtp}
-        # ============================================= #
+          # ============================================= #
+          # Start with defaults from the Sensible plugin  #
+          # --------------------------------------------- #
+          run-shell ${pkgs.tmuxPlugins.sensible.rtp}
+          # ============================================= #
         '';
       })
-      (mkIf (cfg.plugins != []) {
-        assertions = [
-          (let
-            not = x: if x then false else true;
-            badPlugins = filter (p: not (hasPrefix "tmuxplugin" (pluginName p))) cfg.plugins;
-            in
-          {
-            assertion = badPlugins == [];
-            message = "Invalid Tmux plugin (not prefixed with tmuxPlugins): "
-                  + concatMapStringsSep ", " pluginName badPlugins;
-          })
-        ];
-        home.file.".tmux.conf".text = mkAfter ''
-        # ============================================= #
-        # Load plugins with home-manager                #
-        # --------------------------------------------- #
-        ${(concatMapStringsSep "\n\n" (p: ''
-            # ${pluginName p}
-            # ---------------------
-            ${if hasAttr "extraConfig" p then p.extraConfig else ""}
-            run-shell ${if types.package.check p
-                then p.rtp
-                else p.plugin.rtp}
-        '') cfg.plugins)}
 
-        # ============================================= #
+      (mkIf (cfg.plugins != []) {
+        assertions = [(
+          let
+            hasBadPluginName = p: !(hasPrefix "tmuxplugin" (pluginName p));
+            badPlugins = filter hasBadPluginName cfg.plugins;
+          in
+            {
+              assertion = badPlugins == [];
+              message =
+                "Invalid tmux plugin (not prefixed with \"tmuxplugins\"): "
+                + concatMapStringsSep ", " pluginName badPlugins;
+            }
+        )];
+
+        home.file.".tmux.conf".text = mkAfter ''
+          # ============================================= #
+          # Load plugins with Home Manager                #
+          # --------------------------------------------- #
+
+          ${(concatMapStringsSep "\n\n" (p: ''
+              # ${pluginName p}
+              # ---------------------
+              ${p.extraConfig or ""}
+              run-shell ${
+                if types.package.check p
+                then p.rtp
+                else p.plugin.rtp
+              }
+          '') cfg.plugins)}
+          # ============================================= #
         '';
       })
     ]
