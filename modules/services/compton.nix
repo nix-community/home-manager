@@ -302,6 +302,10 @@ in {
           ExecStart = "${cfg.package}/bin/compton --config ${configFile}";
           Restart = "always";
           RestartSec = 3;
+        }
+        // optionalAttrs (cfg.backend == "glx") {
+          # Temporarily fixes corrupt colours with Mesa 18.
+          Environment = [ "allow_rgb10_configs=false" ];
         };
     };
   };
