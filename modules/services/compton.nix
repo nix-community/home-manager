@@ -284,29 +284,28 @@ in {
   };
 
   config = mkIf cfg.enable {
-
     home.packages = [ cfg.package ];
 
     systemd.user.services.compton = {
-        Unit = {
-          Description = "Compton X11 compositor";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
+      Unit = {
+        Description = "Compton X11 compositor";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
 
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
-        Service = {
-          ExecStart = "${cfg.package}/bin/compton --config ${configFile}";
-          Restart = "always";
-          RestartSec = 3;
-        }
-        // optionalAttrs (cfg.backend == "glx") {
-          # Temporarily fixes corrupt colours with Mesa 18.
-          Environment = [ "allow_rgb10_configs=false" ];
-        };
+      Service = {
+        ExecStart = "${cfg.package}/bin/compton --config ${configFile}";
+        Restart = "always";
+        RestartSec = 3;
+      }
+      // optionalAttrs (cfg.backend == "glx") {
+        # Temporarily fixes corrupt colours with Mesa 18.
+        Environment = [ "allow_rgb10_configs=false" ];
+      };
     };
   };
 }
