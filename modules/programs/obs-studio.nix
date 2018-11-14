@@ -12,13 +12,18 @@ let
       pluginDirs = map (pkg: "${pkg}/share/obs/obs-plugins") packages;
       plugins = concatMapStringsSep " " (p: "${p}/*") pluginDirs;
     in
-      pkgs.runCommand "obs-studio-plugins" {} ''
-        mkdir $out
-        [[ '${plugins}' ]] || exit 0
-        for plugin in ${plugins}; do
-          ln -s "$plugin" $out/
-        done
-      '';
+      pkgs.runCommand "obs-studio-plugins"
+        {
+          preferLocalBuild = true;
+          allowSubstitutes = false;
+        }
+        ''
+          mkdir $out
+          [[ '${plugins}' ]] || exit 0
+          for plugin in ${plugins}; do
+            ln -s "$plugin" $out/
+          done
+        '';
 
 in
 

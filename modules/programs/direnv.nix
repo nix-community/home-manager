@@ -6,11 +6,17 @@ let
 
   cfg = config.programs.direnv;
   configFile = config:
-    pkgs.runCommand "config.toml" { buildInputs = [ pkgs.remarshal ]; } ''
-      remarshal -if json -of toml \
-        < ${pkgs.writeText "config.json" (builtins.toJSON config)} \
-        > $out
-    '';
+    pkgs.runCommand "config.toml"
+      {
+         buildInputs = [ pkgs.remarshal ];
+         preferLocalBuild = true;
+         allowSubstitutes = false;
+      }
+      ''
+        remarshal -if json -of toml \
+          < ${pkgs.writeText "config.json" (builtins.toJSON config)} \
+          > $out
+      '';
 
 in
 
