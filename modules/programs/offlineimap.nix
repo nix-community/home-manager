@@ -88,7 +88,8 @@ let
           localrepository = "${name}-local";
           remoterepository = "${name}-remote";
         }
-        // postSyncHook;
+        // postSyncHook
+        // offlineimap.extraConfig.account;
 
         "Repository ${name}-local" = {
           type = localType;
