@@ -35,7 +35,7 @@ in
     system.activationScripts.extraActivation.text =
       lib.concatStringsSep "\n" (lib.mapAttrsToList (username: usercfg: ''
         echo Activating home-manager configuration for ${username}
-        ${usercfg.home.activationPackage}/activate
+        sudo -u ${username} ${usercfg.home.activationPackage}/activate
       '') cfg.users);
   };
 }
