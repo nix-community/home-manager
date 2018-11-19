@@ -871,6 +871,13 @@ in
           A new module is available: 'services.nextcloud-client'.
         '';
       }
+
+      {
+        time = "2018-11-25T22:55:12+00:00";
+        message = ''
+          A new module is available: 'programs.vscode'.
+        '';
+      }
     ];
   };
 }

@@ -67,6 +67,7 @@ let
     ./programs/tmux.nix
     ./programs/urxvt.nix
     ./programs/vim.nix
+    ./programs/vscode.nix
     ./programs/zathura.nix
     ./programs/zsh.nix
     ./services/blueman-applet.nix
