@@ -895,6 +895,13 @@ in
           A new module is available: 'programs.jq'.
         '';
       }
+
+      {
+        time = "2019-01-07T17:35:19+00:00";
+        message = ''
+          A new module is available: 'programs.vscode'.
+        '';
+      }
     ];
   };
 }
