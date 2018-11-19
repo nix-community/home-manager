@@ -12,6 +12,17 @@ in
   options.offlineimap = {
     enable = mkEnableOption "OfflineIMAP";
 
+    extraConfig.account = mkOption {
+      type = extraConfigType;
+      default = {};
+      example = {
+        autorefresh = 20;
+      };
+      description = ''
+        Extra configuration options to add to the account section.
+      '';
+    };
+
     extraConfig.local = mkOption {
       type = extraConfigType;
       default = {};
