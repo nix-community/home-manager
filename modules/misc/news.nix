@@ -830,6 +830,17 @@ in
           A new module is available: 'programs.afew'.
         '';
       }
+
+      {
+        time = "2018-11-19T00:40:34+00:00";
+        message = ''
+          A new nix-darwin module is available. Use it the same way the NixOS
+          module is used. A major limitation is that home-manager services don't
+          work, as they depend explicitly on Linux and systemd user services.
+          However, 'home.file' and 'home.packages' do work. Everything else is
+          untested at this time.
+        '';
+      }
     ];
   };
 }
