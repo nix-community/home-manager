@@ -6,6 +6,13 @@ let
 
   cfg = config.programs.termite;
 
+  vteInitStr = ''
+    # See https://github.com/thestinger/termite#id1
+    if [[ $TERM == xterm-termite ]]; then
+      . ${pkgs.gnome3.vte-ng}/etc/profile.d/vte.sh
+    fi
+  '';
+
 in
 
 {
@@ -363,6 +370,9 @@ in
 
         ${cfg.hintsExtra}
       '';
+
+      programs.bash.initExtra = vteInitStr;
+      programs.zsh.initExtra = vteInitStr;
     }
   );
 }
