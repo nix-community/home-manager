@@ -127,5 +127,7 @@ in
         ${cfg.pollScript}
       '';
     };
+
+    programs.notmuch.extraConfig.maildir.synchronize_flags = mkDefault "true";
   };
 }
