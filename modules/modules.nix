@@ -24,6 +24,7 @@ let
     ./misc/nixpkgs.nix
     ./misc/pam.nix
     ./misc/qt.nix
+    ./misc/version.nix
     ./misc/xdg.nix
     ./programs/afew.nix
     ./programs/alot.nix

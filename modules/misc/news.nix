@@ -841,6 +841,29 @@ in
           untested at this time.
         '';
       }
+
+      {
+        time = "2018-11-24T16:22:19+00:00";
+        message = ''
+          A new option 'home.stateVersion' is available. Its function
+          is much like the 'system.stateVersion' option in NixOS.
+
+          Briefly, the state version indicates a stable set of option
+          defaults. In the future, whenever Home Manager changes an
+          option default in a way that may cause program breakage it
+          will do so only for the unstable state version, currently
+          19.03. Once 19.03 becomes the stable version only backwards
+          compatible changes will be made and 19.09 becomes the
+          unstable state version.
+
+          The default value for this option is 18.09 but it may still
+          be a good idea to explicitly add
+
+              home.stateVersion = "18.09";
+
+          to your Home Manager configuration.
+        '';
+      }
     ];
   };
 }
