@@ -864,6 +864,13 @@ in
           to your Home Manager configuration.
         '';
       }
+
+      {
+        time = "2018-11-25T22:10:15+00:00";
+        message = ''
+          A new module is available: 'services.nextcloud-client'.
+        '';
+      }
     ];
   };
 }
