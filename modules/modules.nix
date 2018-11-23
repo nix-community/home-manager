@@ -81,6 +81,7 @@ let
     ./services/mbsync.nix
     ./services/mpd.nix
     ./services/network-manager-applet.nix
+    ./services/nextcloud-client.nix
     ./services/owncloud-client.nix
     ./services/parcellite.nix
     ./services/pasystray.nix
