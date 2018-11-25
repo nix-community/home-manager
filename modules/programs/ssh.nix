@@ -8,7 +8,7 @@ let
 
   yn = flag: if flag then "yes" else "no";
 
-  join = builtins.concatStringsSep;
+  unwords = builtins.concatStringsSep " ";
 
   matchBlockModule = types.submodule ({ name, ... }: {
     options = {
@@ -142,7 +142,7 @@ let
     ++ optional (cf.user != null)         "  User ${cf.user}"
     ++ optional (cf.identityFile != null) "  IdentityFile ${cf.identityFile}"
     ++ optional (cf.hostname != null)     "  HostName ${cf.hostname}"
-    ++ optional (cf.sendEnv != [])        "  SendEnv ${join " " cf.sendEnv}"
+    ++ optional (cf.sendEnv != [])        "  SendEnv ${unwords cf.sendEnv}"
     ++ optional (cf.serverAliveInterval != 0)
          "  ServerAliveInterval ${toString cf.serverAliveInterval}"
     ++ optional (cf.compression != null)  "  Compression ${yn cf.compression}"
