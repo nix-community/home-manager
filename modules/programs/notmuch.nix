@@ -11,7 +11,7 @@ let
       tweakVal = v:
         if isString v then v
         else if isList v then concatMapStringsSep ";" tweakVal v
-        else if isBool v then toJSON v
+        else if isBool v then (if v then "true" else "false")
         else toString v;
     in
       "${key}=${tweakVal value}";
