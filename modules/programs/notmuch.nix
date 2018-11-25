@@ -23,6 +23,10 @@ let
           path = config.accounts.email.maildirBasePath;
         };
 
+        maildir = {
+          synchronize_flags = cfg.maildir.synchronizeFlags;
+        };
+
         new = {
           ignore = cfg.new.ignore;
           tags = cfg.new.tags;
@@ -86,9 +90,7 @@ in
 
       extraConfig = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
-        default = {
-          maildir = { synchronize_flags = "true"; };
-        };
+        default = {};
         description = ''
           Options that should be appended to the notmuch configuration file.
         '';
@@ -123,6 +125,16 @@ in
           description = ''
             Bash statements run after a message has been inserted
             into the database and initial tags have been applied.
+          '';
+        };
+      };
+
+      maildir = {
+        synchronizeFlags = mkOption {
+          type = types.bool;
+          default = true;
+          description = ''
+            Whether to synchronize Maildir flags.
           '';
         };
       };
