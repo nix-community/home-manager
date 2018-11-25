@@ -8,8 +8,6 @@ let
 
   yn = flag: if flag then "yes" else "no";
 
-  inherit (builtins) length;
-
   join = builtins.concatStringsSep;
 
   matchBlockModule = types.submodule ({ name, ... }: {
@@ -144,7 +142,7 @@ let
     ++ optional (cf.user != null)         "  User ${cf.user}"
     ++ optional (cf.identityFile != null) "  IdentityFile ${cf.identityFile}"
     ++ optional (cf.hostname != null)     "  HostName ${cf.hostname}"
-    ++ optional (length cf.sendEnv > 0)   "  SendEnv ${join " " cf.sendEnv}"
+    ++ optional (cf.sendEnv != [])        "  SendEnv ${join " " cf.sendEnv}"
     ++ optional (cf.serverAliveInterval != 0)
          "  ServerAliveInterval ${toString cf.serverAliveInterval}"
     ++ optional (cf.compression != null)  "  Compression ${yn cf.compression}"
