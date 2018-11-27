@@ -16,6 +16,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    home.packages = [ pkgs.keybase ];
+
     systemd.user.services.keybase = {
       Unit = {
         Description = "Keybase service";
