@@ -31,5 +31,7 @@ in
         WantedBy = [ "default.target" ];
       };
     };
+
+    home.packages = [ pkgs.keybase ];
   };
 }
