@@ -47,6 +47,15 @@ in
         '';
       };
 
+      withNodeJs = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Enable node provider. Set to <literal>true</literal> to
+          use Node plugins.
+        '';
+      };
+
       withPython = mkOption {
         type = types.bool;
         default = true;
@@ -62,7 +71,7 @@ in
         defaultText = "ps: []";
         example = literalExample "(ps: with ps; [ pandas jedi ])";
         description = ''
-          A function in python.withPackages format, which returns a 
+          A function in python.withPackages format, which returns a
           list of Python 2 packages required for your plugins to work.
         '';
       };
@@ -90,7 +99,7 @@ in
         defaultText = "ps: []";
         example = literalExample "(ps: with ps; [ python-language-server ])";
         description = ''
-          A function in python.withPackages format, which returns a 
+          A function in python.withPackages format, which returns a
           list of Python 3 packages required for your plugins to work.
         '';
       };
@@ -125,7 +134,7 @@ in
         inherit (cfg)
           extraPython3Packages withPython3
           extraPythonPackages withPython
-          withRuby viAlias vimAlias configure;
+          withNodeJs withRuby viAlias vimAlias configure;
       })
     ];
   };
