@@ -219,7 +219,7 @@ in
 
     controlPath = mkOption {
       type = types.str;
-      default = "~/.ssh/master-%r@%h:%p";
+      default = "~/.ssh/master-%r@%n:%p";
       description = ''
         Specify path to the control socket used for connection sharing.
       '';
