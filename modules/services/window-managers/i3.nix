@@ -230,6 +230,12 @@ let
           See <link xlink:href="https://i3wm.org/docs/userguide.html#_colors"/>.
         '';
       };
+
+      trayOutput = mkOption {
+        type = types.string;
+        default = "primary";
+        description = "Where to output tray.";
+      };
     };
   };
 
@@ -671,7 +677,7 @@ let
 
   barStr = {
     id, fonts, mode, hiddenState, position, workspaceButtons,
-    workspaceNumbers, command, statusCommand, colors, ...
+    workspaceNumbers, command, statusCommand, colors, trayOutput, ...
   }: ''
     bar {
       ${optionalString (id != null) "id ${id}"}
@@ -683,6 +689,7 @@ let
       i3bar_command ${command}
       workspace_buttons ${if workspaceButtons then "yes" else "no"}
       strip_workspace_numbers ${if !workspaceNumbers then "yes" else "no"}
+      tray_output ${trayOutput}
       colors {
         background ${colors.background}
         statusline ${colors.statusline}
