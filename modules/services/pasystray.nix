@@ -24,6 +24,11 @@ with lib;
         };
 
         Service = {
+          Environment =
+            let
+              toolPaths = makeBinPath [ pkgs.paprefs pkgs.pavucontrol ];
+            in
+              [ "PATH=${toolPaths}" ];
           ExecStart = "${pkgs.pasystray}/bin/pasystray";
         };
     };
