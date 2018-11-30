@@ -125,6 +125,14 @@ let
         description = "The command to use to connect to the server.";
       };
 
+      certificateFile = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Specifies a file from which the user certificate is read.
+        '';
+      };
+
       extraOptions = mkOption {
         type = types.attrsOf types.str;
         default = {};
@@ -144,6 +152,7 @@ let
     ++ optional cf.identitiesOnly         "  IdentitiesOnly yes"
     ++ optional (cf.user != null)         "  User ${cf.user}"
     ++ optional (cf.identityFile != null) "  IdentityFile ${cf.identityFile}"
+    ++ optional (cf.certificateFile != null) "  CertificateFile ${cf.certificateFile}"
     ++ optional (cf.hostname != null)     "  HostName ${cf.hostname}"
     ++ optional (cf.sendEnv != [])        "  SendEnv ${unwords cf.sendEnv}"
     ++ optional (cf.serverAliveInterval != 0)
@@ -231,6 +240,14 @@ in
       example = "10m";
       description = ''
         Whether control socket should remain open in the background.
+      '';
+    };
+
+    certificateFile = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Specifies a file from which the user certificate is read.
       '';
     };
 
