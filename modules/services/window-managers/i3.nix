@@ -394,6 +394,13 @@ let
         example = "Mod4";
       };
 
+      workspaceLayout = mkOption {
+        type = types.enum [ "default" "stacked" "tabbed" ];
+        default = "default";
+        description = "This option determines in which mode new containers on workspace level will start.";
+        example = "tabbed";
+      };
+
       keybindings = mkOption {
         type = types.attrs;
         default = {
@@ -727,6 +734,7 @@ let
     focus_follows_mouse ${if focus.followMouse then "yes" else "no"}
     focus_on_window_activation ${focus.newWindow}
     mouse_warping ${if focus.mouseWarping then "output" else "none"}
+    workspace_layout ${workspaceLayout}
 
     client.focused ${colorSetStr colors.focused}
     client.focused_inactive ${colorSetStr colors.focusedInactive}
