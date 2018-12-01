@@ -252,6 +252,14 @@ in
         Extra commands to run in the Home Manager profile builder.
       '';
     };
+
+    extraModules = mkOption {
+      type = types.list;
+      default = [];
+      description = ''
+        Extra modules to include from the userfile
+      '';
+    };
   };
 
   config = {
@@ -266,6 +274,7 @@ in
       }
     ];
 
+    extraModules = cfg.extraModules;
     home.username = mkDefault (builtins.getEnv "USER");
     home.homeDirectory = mkDefault (builtins.getEnv "HOME");
 

@@ -22,6 +22,7 @@ let
   rawModule = lib.evalModules {
     modules =
       [ configuration ]
+      ++ (import configuration { inherit lib pkgs; }).extraModules
       ++ (import ./modules.nix { inherit check lib pkgs; });
   };
 
