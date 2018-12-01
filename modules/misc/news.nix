@@ -878,6 +878,15 @@ in
           A new module is available: 'programs.vscode'.
         '';
       }
+
+      {
+        time = "2018-12-01T22:00:45+00:00";
+        message = ''
+          User defineable modules are now available.
+
+          It is now possible to write and configure custom services.
+        '';
+      }
     ];
   };
 }
