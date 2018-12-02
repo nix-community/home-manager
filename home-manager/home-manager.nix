@@ -9,7 +9,7 @@ with pkgs.lib;
 
 let
 
-  env = import <home-manager/modules> {
+  env = import ../modules {
     configuration =
       if confAttr == ""
       then confPath
