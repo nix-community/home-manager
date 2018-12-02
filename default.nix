@@ -11,4 +11,6 @@ rec {
   };
 
   nixos = import ./nixos;
+
+  nix-darwin = import ./nix-darwin;
 }
