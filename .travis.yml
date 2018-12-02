@@ -4,10 +4,16 @@ os:
   - linux
   - osx
 
-before_script:
-  - mkdir -m 0755 -p /nix/var/nix/{profiles,gcroots}/per-user/$USER
-  - mkdir -p ~/.config/nixpkgs
-  - echo "{}" > ~/.config/nixpkgs/home.nix
-
-script:
-  nix-shell . -A install
+jobs:
+  include:
+    - stage: test
+      script:
+        - mkdir -m 0755 -p /nix/var/nix/{profiles,gcroots}/per-user/$USER
+        - mkdir -p ~/.config/nixpkgs
+        - echo "{}" > ~/.config/nixpkgs/home.nix
+        - nix-shell . -A install
+    - script:
+        - mkdir -m 0755 -p /nix/var/nix/{profiles,gcroots}/per-user/$USER
+        - mkdir -p ~/.config/nixpkgs
+        - echo "{...}: {}" > ~/.config/nixpkgs/home.nix
+        - nix-shell . -A install
