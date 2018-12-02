@@ -254,7 +254,7 @@ in
     };
 
     extraModules = mkOption {
-      type = types.list;
+      type = types.listOf types.attrs;
       default = [];
       description = ''
         Extra modules to include from the userfile
