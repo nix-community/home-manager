@@ -1,5 +1,4 @@
 language: nix
-
 os:
   - linux
   - osx
