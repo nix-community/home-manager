@@ -249,6 +249,14 @@ function doRmGenerations() {
 function doExpireGenerations() {
     local profileDir="/nix/var/nix/profiles/per-user/$USER"
 
+    if ! [[ -d "${profileDir}" ]]; then
+        if [[ -v VERBOSE ]]; then
+            echo "No generations to expire"
+        fi
+
+        return
+    fi
+
     local generations
     generations="$( \
         find "$profileDir" -name 'home-manager-*-link' -not -newermt "$1" \
