@@ -5,17 +5,19 @@ function setupVars() {
     local gcPath="/nix/var/nix/gcroots/per-user/$USER"
     local greatestGenNum
 
-    greatestGenNum=$( \
-        find "$profilesPath" -name 'home-manager-*-link' \
-            | sed 's/^.*-\([0-9]*\)-link$/\1/' \
-            | sort -rn \
-            | head -1)
+    newGenNum=1
 
-    if [[ -n $greatestGenNum ]] ; then
-        oldGenNum=$greatestGenNum
-        newGenNum=$((oldGenNum + 1))
-    else
-        newGenNum=1
+    if [[ -d "${profilesPath}" ]]; then
+        greatestGenNum=$( \
+            find "$profilesPath" -name 'home-manager-*-link' \
+                | sed 's/^.*-\([0-9]*\)-link$/\1/' \
+                | sort -rn \
+                | head -1)
+
+        if [[ -n $greatestGenNum ]] ; then
+            oldGenNum=$greatestGenNum
+            newGenNum=$((oldGenNum + 1))
+        fi
     fi
 
     if [[ -e $gcPath/current-home ]] ; then
