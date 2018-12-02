@@ -126,7 +126,7 @@ let
       };
 
       certificateFile = mkOption {
-        type = types.nullOr types.str;
+        type = types.nullOr types.path;
         default = null;
         description = ''
           Specifies a file from which the user certificate is read.
