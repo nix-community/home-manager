@@ -10,6 +10,10 @@ with lib;
 
 let
 
+  objectConfiguration = import configuration;
+  functionConfiguration = import configuration { inherit lib pkgs; };
+  fModule = if (lib.hasAttr "extraModules" functionConfiguration) then functionConfiguration.extraModules else [];
+
   collectFailed = cfg:
     map (x: x.message) (filter (x: !x.assertion) cfg.assertions);
 
@@ -22,7 +26,7 @@ let
   rawModule = lib.evalModules {
     modules =
       [ configuration ]
-      ++ (import configuration { inherit lib pkgs; }).extraModules
+      ++ (if (lib.isFunction objectConfiguration) then fModule else [])
       ++ (import ./modules.nix { inherit check lib pkgs; });
   };
 
