@@ -7,6 +7,23 @@ pkgs.runCommand
     preferLocalBuild = true;
     allowSubstitutes = false;
     shellHook = ''
+      confFile="''${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home.nix"
+
+      if [[ ! -e $confFile ]]; then
+        echo
+        echo "Creating initial Home Manager configuration..."
+
+        mkdir -p "$(dirname "$confFile")"
+        cat > $confFile <<EOF
+      { config, pkgs, ... }:
+
+      {
+        # Let Home Manager install and manage itself.
+        programs.home-manager.enable = true;
+      }
+      EOF
+      fi
+
       echo
       echo "Creating initial Home Manager generation..."
       echo
@@ -17,7 +34,7 @@ pkgs.runCommand
       All done! The home-manager tool should now be installed and you
       can edit
 
-          ''${XDG_CONFIG_HOME:-~/.config}/nixpkgs/home.nix
+          $confFile
 
       to configure Home Manager. Run 'man home-configuration.nix' to
       see all available options.

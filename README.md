@@ -54,42 +54,32 @@ Currently the easiest way to install Home Manager is as follows:
     NixOS you can control this option using the
     [`nix.allowedUsers`][nixosAllowedUsers] system option.
 
-2.  Assign a temporary variable holding the URL to the appropriate
-    archive. Typically this is
+2.  Add the appropriate Home Manager channel. Typically this is
 
     ```console
-    $ HM_PATH=https://github.com/rycee/home-manager/archive/master.tar.gz
+    $ nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
+    $ nix-channel --update
     ```
 
     if you are following Nixpkgs master or an unstable channel and
 
     ```console
-    $ HM_PATH=https://github.com/rycee/home-manager/archive/release-18.09.tar.gz
+    $ nix-channel --add https://github.com/rycee/home-manager/archive/release-18.09.tar.gz home-manager
+    $ nix-channel --update
     ```
 
     if you follow a Nixpkgs version 18.09 channel.
 
-3.  Create an initial Home Manager configuration file:
+3.  Install Home Manager and create the first Home Manager generation:
 
     ```console
-    $ cat > ~/.config/nixpkgs/home.nix <<EOF
-    {
-      programs.home-manager.enable = true;
-      programs.home-manager.path = $HM_PATH;
-    }
-    EOF
+    $ nix-shell '<home-manager>' -A install
     ```
 
-4.  Install Home Manager and create the first Home Manager generation:
+    Once finished, Home Manager should be active and available in your
+    user environment.
 
-    ```console
-    $ nix-shell $HM_PATH -A install
-    ```
-
-    Home Manager should now be active and available in your user
-    environment.
-
-5.  If you do not plan on having Home Manager manage your shell
+3.  If you do not plan on having Home Manager manage your shell
     configuration then you must source the
 
     ```
@@ -107,11 +97,10 @@ Currently the easiest way to install Home Manager is as follows:
 
     to your `~/.profile` file.
 
-Note, because the `HM_PATH` variable above points to the live Home
-Manager repository you will automatically get updates whenever you
-build a new generation. If you dislike automatic updates then perform
-a Git clone of the desired branch and instead do the above steps with
-`HM_PATH` set to the _absolute path_ of your clone.
+If instead of using channels you want to run Home Manager from a Git
+checkout of the repository then you can use the
+`programs.home-manager.path` option to specify the absolute path to
+the repository.
 
 Usage
 -----
