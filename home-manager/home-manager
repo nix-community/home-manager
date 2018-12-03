@@ -129,6 +129,17 @@ function presentNews() {
     fi
 }
 
+function doEdit() {
+    if [[ ! -v EDITOR || -z $EDITOR ]]; then
+        errorEcho "Please set the \$EDITOR environment variable"
+        return 1
+    fi
+
+    setConfigFile
+
+    exec "$EDITOR" "$HOME_MANAGER_CONFIG"
+}
+
 function doBuild() {
     if [[ ! -w . ]]; then
         errorEcho "Cannot run build in read-only directory";
@@ -354,6 +365,8 @@ function doHelp() {
     echo
     echo "  help         Print this help"
     echo
+    echo "  edit         Open the home configuration in \$EDITOR"
+    echo
     echo "  build        Build configuration into result directory"
     echo
     echo "  switch       Build and activate configuration"
@@ -430,6 +443,9 @@ cmd="$1"
 shift 1
 
 case "$cmd" in
+    edit)
+        doEdit
+        ;;
     build)
         doBuild
         ;;
