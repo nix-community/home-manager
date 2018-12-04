@@ -243,14 +243,6 @@ in
       '';
     };
 
-    certificateFile = mkOption {
-      type = types.nullOr types.path;
-      default = null;
-      description = ''
-        Specifies a file from which the user certificate is read.
-      '';
-    };
-
     extraConfig = mkOption {
       type = types.lines;
       default = "";
