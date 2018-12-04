@@ -137,20 +137,20 @@ let
 
   matchBlockStr = cf: concatStringsSep "\n" (
     ["Host ${cf.host}"]
-    ++ optional (cf.port != null)         "  Port ${toString cf.port}"
-    ++ optional (cf.forwardAgent != null) "  ForwardAgent ${yn cf.forwardAgent}"
-    ++ optional cf.forwardX11             "  ForwardX11 yes"
-    ++ optional cf.forwardX11Trusted      "  ForwardX11Trusted yes"
-    ++ optional cf.identitiesOnly         "  IdentitiesOnly yes"
-    ++ optional (cf.user != null)         "  User ${cf.user}"
-    ++ optional (cf.identityFile != null) "  IdentityFile ${cf.identityFile}"
-    ++ optional (cf.hostname != null)     "  HostName ${cf.hostname}"
-    ++ optional (cf.sendEnv != [])        "  SendEnv ${unwords cf.sendEnv}"
+    ++ optional (cf.port != null)            "  Port ${toString cf.port}"
+    ++ optional (cf.forwardAgent != null)    "  ForwardAgent ${yn cf.forwardAgent}"
+    ++ optional cf.forwardX11                "  ForwardX11 yes"
+    ++ optional cf.forwardX11Trusted         "  ForwardX11Trusted yes"
+    ++ optional cf.identitiesOnly            "  IdentitiesOnly yes"
+    ++ optional (cf.user != null)            "  User ${cf.user}"
+    ++ optional (cf.identityFile != null)    "  IdentityFile ${cf.identityFile}"
+    ++ optional (cf.hostname != null)        "  HostName ${cf.hostname}"
+    ++ optional (cf.sendEnv != [])           "  SendEnv ${unwords cf.sendEnv}"
     ++ optional (cf.serverAliveInterval != 0)
          "  ServerAliveInterval ${toString cf.serverAliveInterval}"
-    ++ optional (cf.compression != null)  "  Compression ${yn cf.compression}"
-    ++ optional (!cf.checkHostIP)         "  CheckHostIP no"
-    ++ optional (cf.proxyCommand != null) "  ProxyCommand ${cf.proxyCommand}"
+    ++ optional (cf.compression != null)     "  Compression ${yn cf.compression}"
+    ++ optional (!cf.checkHostIP)            "  CheckHostIP no"
+    ++ optional (cf.proxyCommand != null)    "  ProxyCommand ${cf.proxyCommand}"
     ++ mapAttrsToList (n: v: "  ${n} ${v}") cf.extraOptions
   );
 
