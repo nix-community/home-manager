@@ -133,6 +133,14 @@ let
         '';
       };
 
+      addressFamily = mkOption {
+        default = null;
+        type = types.nullOr (types.enum ["any" "inet" "inet6"]);
+        description = ''
+          Specifies which address family to use when connecting.
+        '';
+      };
+
       extraOptions = mkOption {
         type = types.attrsOf types.str;
         default = {};
@@ -154,6 +162,7 @@ let
     ++ optional (cf.identityFile != null)    "  IdentityFile ${cf.identityFile}"
     ++ optional (cf.certificateFile != null) "  CertificateFile ${cf.certificateFile}"
     ++ optional (cf.hostname != null)        "  HostName ${cf.hostname}"
+    ++ optional (cf.addressFamily != null)   "  AddressFamily ${cf.addressFamily}"
     ++ optional (cf.sendEnv != [])           "  SendEnv ${unwords cf.sendEnv}"
     ++ optional (cf.serverAliveInterval != 0)
          "  ServerAliveInterval ${toString cf.serverAliveInterval}"
