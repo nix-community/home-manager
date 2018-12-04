@@ -127,7 +127,7 @@ let
 
       addressFamily = mkOption {
         default = null;
-        type = types.enum [null "any" "inet" "inet6"];
+        type = types.nullOr (types.enum ["any" "inet" "inet6"]);
         description = ''
           Specifies which address family to use when connecting.
         '';
