@@ -9,7 +9,7 @@ let
   profileModule = types.submodule {
     options = {
       fingerprint = mkOption {
-        type = types.attrsOf types.string;
+        type = types.attrsOf types.str;
         description = ''
           Output name to EDID mapping.
           Use <code>autorandr --fingerprint</code> to get current setup values.
@@ -46,28 +46,28 @@ let
       };
 
       position = mkOption {
-        type = types.string;
+        type = types.str;
         description = "Output position";
         default = "";
         example = "5760x0";
       };
 
       mode = mkOption {
-        type = types.string;
+        type = types.str;
         description = "Output resolution.";
         default = "";
         example = "3840x2160";
       };
 
       rate = mkOption {
-        type = types.string;
+        type = types.str;
         description = "Output framerate.";
         default = "";
         example = "60.00";
       };
 
       gamma = mkOption {
-        type = types.string;
+        type = types.str;
         description = "Output gamma configuration.";
         default = "";
         example = "1.0:0.909:0.833";
