@@ -90,7 +90,7 @@ in
         xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
           "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
 
-        services.dunst.settings.global.icon_folders =
+        services.dunst.settings.global.icon_path =
           let
             useCustomTheme =
               cfg.iconTheme.package != hicolorTheme.package
