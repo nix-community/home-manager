@@ -8,7 +8,7 @@ let
   cfg = config.programs.rofi;
 
   colorOption = description: mkOption {
-    type = types.string;
+    type = types.str;
     description = description;
   };
 
@@ -175,7 +175,7 @@ in
 
     font = mkOption {
       default = null;
-      type = types.nullOr types.string;
+      type = types.nullOr types.str;
       example = "Droid Sans Mono 14";
       description = "Font to use.";
     };
@@ -188,7 +188,7 @@ in
 
     terminal = mkOption {
       default = null;
-      type = types.nullOr types.string;
+      type = types.nullOr types.str;
       description = ''
         Path to the terminal which will be used to run console applications
       '';
@@ -282,7 +282,7 @@ in
     configPath = mkOption {
       default = "${config.xdg.configHome}/rofi/config";
       defaultText = "$XDG_CONFIG_HOME/rofi/config";
-      type = types.string;
+      type = types.str;
       description = "Path where to put generated configuration file.";
     };
 
