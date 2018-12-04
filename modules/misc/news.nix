@@ -878,6 +878,23 @@ in
           A new module is available: 'programs.vscode'.
         '';
       }
+
+      {
+        time = "2018-12-04T21:54:38+00:00";
+        condition = config.programs.beets.settings != {};
+        message = ''
+          A new option 'programs.beets.enable' has been added.
+          Starting with state version 19.03 this option defaults to
+          false. For earlier versions it defaults to true if
+          'programs.beets.settings' is non-empty.
+
+          It is recommended to explicitly add
+
+              programs.beets.enable = true;
+
+          to your configuration.
+        '';
+      }
     ];
   };
 }
