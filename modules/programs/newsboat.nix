@@ -45,13 +45,13 @@ in
       };
 
       browser = mkOption {
-        type = types.string;
+        type = types.str;
         default = "${pkgs.xdg_utils}/bin/xdg-open";
         description = "External browser to use.";
       };
 
       queries = mkOption {
-        type = types.attrsOf types.string;
+        type = types.attrsOf types.str;
         default = {};
         example = {
           "foo" = "rssurl =~ \"example.com\"";
