@@ -5,6 +5,9 @@ with lib;
 let
 
   cfg = config.services.dunst;
+
+  eitherStrBoolIntList = with types; either str (either bool (either int (listOf str)));
+
   toDunstIni = generators.toINI {
     mkKeyValue = key: value:
     let
@@ -61,7 +64,7 @@ in
       };
 
       settings = mkOption {
-        type = types.attrsOf types.attrs;
+        type = with types; attrsOf (attrsOf eitherStrBoolIntList);
         default = {};
         description = "Configuration written to ~/.config/dunstrc";
         example = literalExample ''
