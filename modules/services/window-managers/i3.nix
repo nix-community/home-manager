@@ -255,7 +255,7 @@ let
     };
   };
 
-  criteriaModule = types.attrs;
+  criteriaModule = types.attrsOf types.str;
 
   configModule = types.submodule {
     options = {
@@ -411,7 +411,7 @@ let
       };
 
       keybindings = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.str;
         default = {
           "${cfg.config.modifier}+Return" = "exec i3-sensible-terminal";
           "${cfg.config.modifier}+Shift+q" = "kill";
@@ -486,7 +486,7 @@ let
       };
 
       keycodebindings = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.str;
         default = {};
         description = ''
           An attribute set that assigns keypress to an action using key code.
@@ -571,7 +571,7 @@ let
       };
 
       modes = mkOption {
-        type = types.attrsOf types.attrs;
+        type = types.attrsOf (types.attrsOf types.str);
         default = {
           resize = {
             "Left" = "resize shrink width 10 px or 10 ppt";
