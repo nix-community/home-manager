@@ -6,6 +6,8 @@ let
 
   cfg = config.services.polybar;
 
+  eitherStrBoolIntList = with types; either str (either bool (either int (listOf str)));
+
   toPolybarIni = generators.toINI {
     mkKeyValue = key: value:
       let
@@ -57,7 +59,7 @@ in
         type = types.coercedTo
           types.path
           (p: { "section/base" = { include-file = "${p}"; }; })
-          (types.attrsOf types.attrs);
+          (types.attrsOf (types.attrsOf eitherStrBoolIntList));
         description = ''
           Polybar configuration. Can be either path to a file, or set of attributes
           that will be used to create the final configuration.
