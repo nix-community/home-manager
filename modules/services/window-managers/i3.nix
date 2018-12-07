@@ -412,7 +412,7 @@ let
 
       keybindings = mkOption {
         type = types.attrsOf types.str;
-        default = {
+        default = mapAttrs (n: v: mkOptionDefault v) {
           "${cfg.config.modifier}+Return" = "exec i3-sensible-terminal";
           "${cfg.config.modifier}+Shift+q" = "kill";
           "${cfg.config.modifier}+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
