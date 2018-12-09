@@ -47,6 +47,7 @@ let
     ./programs/home-manager.nix
     ./programs/htop.nix
     ./programs/info.nix
+    ./programs/jq.nix
     ./programs/lesspipe.nix
     ./programs/man.nix
     ./programs/mbsync.nix
