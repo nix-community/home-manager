@@ -895,6 +895,13 @@ in
           to your configuration.
         '';
       }
+
+      {
+        time = "2018-12-12T21:02:05+00:00";
+        message = ''
+          A new module is available: 'programs.jq'.
+        '';
+      }
     ];
   };
 }
