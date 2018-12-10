@@ -8,4 +8,5 @@ before_script:
   - mkdir -m 0755 -p /nix/var/nix/{profiles,gcroots}/per-user/$USER
 
 script:
-  nix-shell . -A install
+  - nix-shell . -A install
+  - nix-shell . -A tests.run.all
