@@ -223,7 +223,7 @@ such collision is detected the activation will terminate before
 changing anything on your computer.
 
 For example, suppose you have a wonderful, painstakingly created
-`~/.gitconfig` and add
+`~/.config/git/config` and add
 
 ```nix
 {
