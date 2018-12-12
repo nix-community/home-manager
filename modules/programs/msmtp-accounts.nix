@@ -21,5 +21,13 @@ with lib;
         primary account will be used.
       '';
     };
+    extraConfig = mkOption {
+      type = types.attrsOf types.str;
+      default = { auth="on"; };
+      description = ''
+        Extra configuration options to add to <filename>~/.msmtprc</filename>.
+        See <link xlink:href="https://marlam.de/msmtp/msmtprc.txt"/> for examples.
+      '';
+    };
   };
 }
