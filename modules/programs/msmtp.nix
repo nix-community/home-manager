@@ -31,6 +31,7 @@ let
           # msmtp requires the password to finish with a newline.
           passwordeval = ''${pkgs.bash}/bin/bash -c "${toString passwordCommand}; echo"'';
         }
+        // msmtp.extraConfig
       )
       ++ optional primary "\naccount default : ${name}"
     );
