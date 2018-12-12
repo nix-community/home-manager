@@ -3,12 +3,14 @@
 with lib;
 
 let
+
   cfg = config.programs.jq;
 
   colorType = mkOption {
     type = types.str;
     description = "ANSI color definition";
     example = "1;31";
+    visible = false;
   };
 
   colorsType = types.submodule {
@@ -29,21 +31,25 @@ in
   options = {
     programs.jq = {
       enable = mkEnableOption "jq command-line JSON processor";
+
       colors = mkOption {
         description = ''
-          The colors used in colored JSON output.
+          The colors used in colored JSON output.</para>
 
-          See <link xlink:href="https://stedolan.github.io/jq/manual/#Colors"/>
+          <para>See <link xlink:href="https://stedolan.github.io/jq/manual/#Colors"/>.
         '';
-        example = {
-          null    = "1;30";
-          false   = "0;31";
-          true    = "0;32";
-          numbers = "0;36";
-          strings = "0;33";
-          arrays  = "1;35";
-          objects = "1;37";
-        };
+
+        example = literalExample ''
+          {
+            null    = "1;30";
+            false   = "0;31";
+            true    = "0;32";
+            numbers = "0;36";
+            strings = "0;33";
+            arrays  = "1;35";
+            objects = "1;37";
+          }'';
+
         default = {
           null    = "1;30";
           false   = "0;39";
@@ -53,6 +59,7 @@ in
           arrays  = "1;39";
           objects = "1;39";
         };
+
         type = colorsType;
       };
     };
