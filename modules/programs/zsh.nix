@@ -11,7 +11,7 @@ let
   pluginsDir = if cfg.dotDir != null then
     relToDotDir "plugins" else ".zsh/plugins";
 
-  envVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
+  envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
 
   aliasesStr = concatStringsSep "\n" (
     mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
