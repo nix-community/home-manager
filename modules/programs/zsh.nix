@@ -12,6 +12,7 @@ let
     relToDotDir "plugins" else ".zsh/plugins";
 
   envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
+  localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
 
   aliasesStr = concatStringsSep "\n" (
     mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
@@ -265,6 +266,15 @@ in
         default = {};
         description = "Options to configure oh-my-zsh.";
       };
+
+      localVariables = mkOption {
+        type = types.attrs;
+        default = {};
+        example = { POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=["dir" "vcs"]; };
+        description = ''
+          Extra local variables defined at the top of <filename>.zshrc</filename>.
+        '';
+      };
     };
   };
 
@@ -320,6 +330,8 @@ in
           # Use ${cfg.defaultKeymap} keymap as the default.
           ${getAttr cfg.defaultKeymap bindkeyCommands}
         ''}
+
+        ${localVarsStr}
 
         ${concatStrings (map (plugin: ''
           path+="$HOME/${pluginsDir}/${plugin.name}"
