@@ -17,4 +17,5 @@
       };
 
   shell = import ./shell.nix { inherit lib; };
+  zsh = import ./zsh.nix { inherit lib; };
 }
