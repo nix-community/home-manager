@@ -162,7 +162,14 @@ in
 
   options = {
     programs.gnome-terminal = {
-      enable = mkEnableOption "Gnome Terminal";
+      enable = mkEnableOption ''Gnome Terminal
+        </para><para>
+        Note, on NixOS the following line must be in the
+        system configuration:
+        <programlisting>
+        services.dbus.packages = [ pkgs.gnome3.dconf ];
+        </programlisting>
+      '';
 
       showMenubar = mkOption {
         default = true;
@@ -190,9 +197,9 @@ in
       in
         ''
           if [[ -v DRY_RUN ]]; then
-            echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${iniFile}
+            echo ${pkgs.dbus}/bin/dbus-run-session ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${iniFile}
           else
-            ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}
+            ${pkgs.dbus}/bin/dbus-run-session ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}
           fi
         ''
     );
