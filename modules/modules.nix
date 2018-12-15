@@ -36,6 +36,7 @@ let
     (loadModule ./misc/version.nix { })
     (loadModule ./misc/xdg.nix { })
     (loadModule ./programs/afew.nix { })
+    (loadModule ./programs/alacritty.nix { })
     (loadModule ./programs/alot.nix { })
     (loadModule ./programs/astroid.nix { })
     (loadModule ./programs/autorandr.nix { })
