@@ -6,6 +6,8 @@ let
 
   cfg = config.news;
 
+  hostPlatform = pkgs.stdenv.hostPlatform;
+
   entryModule = types.submodule ({ config, ... }: {
     options = {
       id = mkOption {
@@ -734,7 +736,7 @@ in
 
       {
         time = "2018-08-19T20:46:09+00:00";
-        condition = pkgs.stdenv.isLinux;
+        condition = hostPlatform.isLinux;
         message = ''
           A new modules is available: 'programs.chromium'.
         '';
