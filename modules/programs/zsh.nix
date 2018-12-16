@@ -19,6 +19,12 @@ let
 
   zdotdir = "$HOME/" + cfg.dotDir;
 
+  bindkeyCommands = {
+    emacs = "bindkey -e";
+    viins = "bindkey -v";
+    vicmd = "bindkey -a";
+  };
+
   historyModule = types.submodule ({ config, ... }: {
     options = {
       size = mkOption {
@@ -186,6 +192,13 @@ in
         description = "Options related to commands history configuration.";
       };
 
+      defaultKeymap = mkOption {
+        type = types.nullOr (types.enum [ "emacs" "viins" "vicmd" ]);
+        default = null;
+        example = "emacs";
+        description = "The default base keymap to use";
+      };
+
       sessionVariables = mkOption {
         default = {};
         type = types.attrs;
@@ -302,6 +315,9 @@ in
         done
 
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
+
+        ${if cfg.defaultKeymap != null && hasAttr cfg.defaultKeymap bindkeyCommands
+          then getAttr cfg.defaultKeymap bindkeyCommands else ""}
 
         ${concatStrings (map (plugin: ''
           path+="$HOME/${pluginsDir}/${plugin.name}"
