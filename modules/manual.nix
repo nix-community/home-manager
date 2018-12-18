@@ -1,4 +1,4 @@
-{ config, lib, pkgs, baseModules, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -6,55 +6,7 @@ let
 
   cfg = config.manual;
 
-  /* For the purpose of generating docs, evaluate options with each derivation
-    in `pkgs` (recursively) replaced by a fake with path "\${pkgs.attribute.path}".
-    It isn't perfect, but it seems to cover a vast majority of use cases.
-    Caveat: even if the package is reached by a different means,
-    the path above will be shown and not e.g. `${config.services.foo.package}`. */
-  homeManagerManual = import ../doc {
-    inherit pkgs config;
-    version = "0.1";
-    revision = "master";
-    options =
-      let
-        scrubbedEval = evalModules {
-          modules = [ { nixpkgs.localSystem = config.nixpkgs.localSystem; } ] ++ baseModules;
-          args = (config._module.args) // { modules = [ ]; };
-          specialArgs = { pkgs = scrubDerivations "pkgs" pkgs; };
-        };
-        scrubDerivations = namePrefix: pkgSet: mapAttrs
-          (name: value:
-            let wholeName = "${namePrefix}.${name}"; in
-            if isAttrs value then
-              scrubDerivations wholeName value
-              // (optionalAttrs (isDerivation value) { outPath = "\${${wholeName}}"; })
-            else value
-          )
-          pkgSet;
-      in scrubbedEval.options;
-  };
-
-  manualHtmlRoot = "${homeManagerManual.manual}/share/doc/home-manager/index.html";
-
-  helpScript = pkgs.writeShellScriptBin "home-manager-help" ''
-    #!${pkgs.bash}/bin/bash -e
-
-    if [ -z "$BROWSER" ]; then
-      for candidate in xdg-open open w3m; do
-        BROWSER="$(type -P $candidate || true)"
-        if [ -x "$BROWSER" ]; then
-          break;
-        fi
-      done
-    fi
-
-    if [ -z "$BROWSER" ]; then
-      echo "$0: unable to start a web browser; please set \$BROWSER"
-      exit 1
-    fi
-
-    exec "$BROWSER" ${manualHtmlRoot}
-  '';
+  docs = import ../doc { inherit pkgs; };
 
 in
 
@@ -100,15 +52,10 @@ in
 
   config = {
     home.packages = mkMerge [
-      (mkIf cfg.html.enable [ helpScript homeManagerManual.manual  ])
-      (mkIf cfg.manpages.enable [ homeManagerManual.manpages ])
-      (mkIf cfg.json.enable [ homeManagerManual.optionsJSON ])
+      (mkIf cfg.html.enable [ docs.manual.html docs.manual.htmlOpenTool ])
+      (mkIf cfg.manpages.enable [ docs.manPages ])
+      (mkIf cfg.json.enable [ docs.options.json ])
     ];
   };
 
-  # To fix error during manpage build.
-  meta = {
-    maintainers = [ maintainers.rycee ];
-    doc = builtins.toFile "nothingness" "";
-  };
 }

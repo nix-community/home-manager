@@ -28,7 +28,7 @@
  <xi:include href="installation.xml" />
  <appendix xml:id="ch-options">
   <title>Configuration Options</title>
-  <xi:include href="./generated/options-db.xml" xpointer="configuration-variable-list" />
+  <xi:include href="./nmd-result/home-manager-options.xml" />
  </appendix>
  <appendix xml:id="ch-tools">
   <title>Tools</title>
