@@ -71,6 +71,15 @@ Currently the easiest way to install Home Manager is as follows:
 
     if you follow a Nixpkgs version 18.09 channel.
 
+    On NixOS you may need to log out and back in for the channel to
+    become available. On non-NixOS you may have to add
+
+    ```shell
+    export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
+    ```
+
+    to your shell (see [nix#2033](https://github.com/NixOS/nix/issues/2033)).
+
 3.  Install Home Manager and create the first Home Manager generation:
 
     ```console
