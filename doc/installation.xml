@@ -85,6 +85,15 @@ $ nix-channel --update
     <para>
      if you follow a Nixpkgs version 18.09 channel.
     </para>
+    <para>
+     On NixOS you may need to log out and back in for the channel to
+     become available. On non-NixOS you may have to add
+<programlisting>
+export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
+</programlisting>
+     to your shell (see
+     <link xlink:href="https://github.com/NixOS/nix/issues/2033">nix#2033</link>).
+    </para>
    </listitem>
    <listitem>
     <para>
