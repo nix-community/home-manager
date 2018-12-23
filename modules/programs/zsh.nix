@@ -193,10 +193,10 @@ in
       };
 
       defaultKeymap = mkOption {
-        type = types.nullOr (types.enum [ "emacs" "viins" "vicmd" ]);
+        type = types.nullOr (types.enum (attrNames bindkeyCommands));
         default = null;
         example = "emacs";
-        description = "The default base keymap to use";
+        description = "The default base keymap to use.";
       };
 
       sessionVariables = mkOption {
@@ -316,8 +316,10 @@ in
 
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
 
-        ${if cfg.defaultKeymap != null && hasAttr cfg.defaultKeymap bindkeyCommands
-          then getAttr cfg.defaultKeymap bindkeyCommands else ""}
+        ${optionalString (cfg.defaultKeymap != null) ''
+          # Use ${cfg.defaultKeymap} keymap as the default.
+          ${getAttr cfg.defaultKeymap bindkeyCommands}
+        ''}
 
         ${concatStrings (map (plugin: ''
           path+="$HOME/${pluginsDir}/${plugin.name}"
