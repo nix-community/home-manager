@@ -59,6 +59,9 @@ in
   };
 
   config = mkIf (cfg.enable && cfg.settings != {}) {
+    xdg.dataFile."dbus-1/services/ca.desrt.dconf.service".source =
+        "${pkgs.gnome3.dconf}/share/dbus-1/services/ca.desrt.dconf.service";
+
     home.activation.dconfSettings = dag.entryAfter ["installPackages"] (
       let
         iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
