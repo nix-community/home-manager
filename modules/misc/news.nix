@@ -909,6 +909,17 @@ in
         time = "2019-01-14T17:37:23+00:00";
         message = ''
           A new module is available: 'dconf'.
+
+          Note, on NixOS you may need to add
+
+              services.dbus.packages = with pkgs; [ gnome3.dconf ];
+
+          to the system configuration for this module to work as
+          expected. In particular if you get the error message
+
+              The name ca.desrt.dconf was not provided by any .service files
+
+          when activating your Home Manager configuration.
         '';
       }
     ];
