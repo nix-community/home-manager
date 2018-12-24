@@ -8,8 +8,6 @@ let
   cfg2 = config.gtk.gtk2;
   cfg3 = config.gtk.gtk3;
 
-  dag = config.lib.dag;
-
   toGtk3Ini = generators.toINI {
     mkKeyValue = key: value:
       let
@@ -28,16 +26,6 @@ let
         else toString v;
     in
       "${n} = ${v'}";
-
-  toDconfIni = generators.toINI {
-    mkKeyValue = key: value:
-      let
-        tweakVal = v:
-          if isString v then "'${v}'"
-          else toString v;
-      in
-        "${key}=${tweakVal value}";
-  };
 
   fontType = types.submodule {
     options = {
@@ -88,6 +76,12 @@ in
 {
   meta.maintainers = [ maintainers.rycee ];
 
+  imports = [
+    (mkRemovedOptionModule ["gtk" "gtk3" "waylandSupport"] ''
+      This options is not longer needed and can be removed.
+    '')
+  ];
+
   options = {
     gtk = {
       enable = mkEnableOption "GTK 2/3 configuration";
@@ -112,63 +106,36 @@ in
         description = "The GTK+2/3 theme to use.";
       };
 
-      gtk2 = mkOption {
-        description = "Options specific to GTK+ 2";
-        default = {};
-        type = types.submodule {
-          options = {
-            extraConfig = mkOption {
-              type = types.lines;
-              default = "";
-              example = "gtk-can-change-accels = 1";
-              description = ''
-                Extra configuration lines to add verbatim to
-                <filename>~/.gtkrc-2.0</filename>.
-              '';
-            };
-          };
+      gtk2 = {
+        extraConfig = mkOption {
+          type = types.lines;
+          default = "";
+          example = "gtk-can-change-accels = 1";
+          description = ''
+            Extra configuration lines to add verbatim to
+            <filename>~/.gtkrc-2.0</filename>.
+          '';
         };
       };
 
-      gtk3 = mkOption {
-        description = "Options specific to GTK+ 3";
-        default = {};
-        type = types.submodule {
-          options = {
-            extraConfig = mkOption {
-              type = types.attrs;
-              default = {};
-              example = { gtk-cursor-blink = false; gtk-recent-files-limit = 20; };
-              description = ''
-                Extra configuration options to add to
-                <filename>~/.config/gtk-3.0/settings.ini</filename>.
-              '';
-            };
+      gtk3 = {
+        extraConfig = mkOption {
+          type = types.attrs;
+          default = {};
+          example = { gtk-cursor-blink = false; gtk-recent-files-limit = 20; };
+          description = ''
+            Extra configuration options to add to
+            <filename>~/.config/gtk-3.0/settings.ini</filename>.
+          '';
+        };
 
-            extraCss = mkOption {
-              type = types.lines;
-              default = "";
-              description = ''
-                Extra configuration lines to add verbatim to
-                <filename>~/.config/gtk-3.0/gtk.css</filename>.
-              '';
-            };
-
-            waylandSupport = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Support GSettings provider (dconf) in addition to
-                GtkSettings (INI file). This is needed for Wayland.
-                </para><para>
-                Note, on NixOS the following line must be in the
-                system configuration:
-                <programlisting>
-                services.dbus.packages = [ pkgs.gnome3.dconf ];
-                </programlisting>
-              '';
-            };
-          };
+        extraCss = mkOption {
+          type = types.lines;
+          default = "";
+          description = ''
+            Extra configuration lines to add verbatim to
+            <filename>~/.config/gtk-3.0/gtk.css</filename>.
+          '';
         };
       };
     };
@@ -200,7 +167,6 @@ in
         optional (opt != null && opt.package != null) opt.package;
     in
       {
-
         home.packages =
           optionalPackage cfg.font
           ++ optionalPackage cfg.theme
@@ -216,22 +182,7 @@ in
 
         xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
 
-        home.activation = mkIf cfg3.waylandSupport {
-          gtk3 = dag.entryAfter ["installPackages"] (
-            let
-              iniText = toDconfIni { "/" = dconfIni; };
-              iniFile = pkgs.writeText "gtk3.ini" iniText;
-              dconfPath = "/org/gnome/desktop/interface/";
-            in
-              ''
-                if [[ -v DRY_RUN ]]; then
-                  echo ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} "<" ${iniFile}
-                else
-                  ${pkgs.gnome3.dconf}/bin/dconf load ${dconfPath} < ${iniFile}
-                fi
-              ''
-          );
-        };
+        dconf.settings."org/gnome/desktop/interface" = dconfIni;
       }
     );
 }
