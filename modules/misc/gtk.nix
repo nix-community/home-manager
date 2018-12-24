@@ -100,63 +100,51 @@ in
         description = "The GTK+2/3 theme to use.";
       };
 
-      gtk2 = mkOption {
-        description = "Options specific to GTK+ 2";
-        default = {};
-        type = types.submodule {
-          options = {
-            extraConfig = mkOption {
-              type = types.lines;
-              default = "";
-              example = "gtk-can-change-accels = 1";
-              description = ''
-                Extra configuration lines to add verbatim to
-                <filename>~/.gtkrc-2.0</filename>.
-              '';
-            };
-          };
+      gtk2 = {
+        extraConfig = mkOption {
+          type = types.lines;
+          default = "";
+          example = "gtk-can-change-accels = 1";
+          description = ''
+            Extra configuration lines to add verbatim to
+            <filename>~/.gtkrc-2.0</filename>.
+          '';
         };
       };
 
-      gtk3 = mkOption {
-        description = "Options specific to GTK+ 3";
-        default = {};
-        type = types.submodule {
-          options = {
-            extraConfig = mkOption {
-              type = types.attrs;
-              default = {};
-              example = { gtk-cursor-blink = false; gtk-recent-files-limit = 20; };
-              description = ''
-                Extra configuration options to add to
-                <filename>~/.config/gtk-3.0/settings.ini</filename>.
-              '';
-            };
+      gtk3 = {
+        extraConfig = mkOption {
+          type = types.attrs;
+          default = {};
+          example = { gtk-cursor-blink = false; gtk-recent-files-limit = 20; };
+          description = ''
+            Extra configuration options to add to
+            <filename>~/.config/gtk-3.0/settings.ini</filename>.
+          '';
+        };
 
-            extraCss = mkOption {
-              type = types.lines;
-              default = "";
-              description = ''
-                Extra configuration lines to add verbatim to
-                <filename>~/.config/gtk-3.0/gtk.css</filename>.
-              '';
-            };
+        extraCss = mkOption {
+          type = types.lines;
+          default = "";
+          description = ''
+            Extra configuration lines to add verbatim to
+            <filename>~/.config/gtk-3.0/gtk.css</filename>.
+          '';
+        };
 
-            waylandSupport = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Support GSettings provider (dconf) in addition to
-                GtkSettings (INI file). This is needed for Wayland.
-                </para><para>
-                Note, on NixOS the following line must be in the
-                system configuration:
-                <programlisting>
-                services.dbus.packages = [ pkgs.gnome3.dconf ];
-                </programlisting>
-              '';
-            };
-          };
+        waylandSupport = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Support GSettings provider (dconf) in addition to
+            GtkSettings (INI file). This is needed for Wayland.
+            </para><para>
+            Note, on NixOS the following line must be in the
+            system configuration:
+            <programlisting>
+            services.dbus.packages = [ pkgs.gnome3.dconf ];
+            </programlisting>
+          '';
         };
       };
     };
