@@ -76,6 +76,12 @@ in
 {
   meta.maintainers = [ maintainers.rycee ];
 
+  imports = [
+    (mkRemovedOptionModule ["gtk" "gtk3" "waylandSupport"] ''
+      This options is not longer needed and can be removed.
+    '')
+  ];
+
   options = {
     gtk = {
       enable = mkEnableOption "GTK 2/3 configuration";
@@ -131,21 +137,6 @@ in
             <filename>~/.config/gtk-3.0/gtk.css</filename>.
           '';
         };
-
-        waylandSupport = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Support GSettings provider (dconf) in addition to
-            GtkSettings (INI file). This is needed for Wayland.
-            </para><para>
-            Note, on NixOS the following line must be in the
-            system configuration:
-            <programlisting>
-            services.dbus.packages = [ pkgs.gnome3.dconf ];
-            </programlisting>
-          '';
-        };
       };
     };
   };
@@ -176,7 +167,6 @@ in
         optional (opt != null && opt.package != null) opt.package;
     in
       {
-
         home.packages =
           optionalPackage cfg.font
           ++ optionalPackage cfg.theme
@@ -192,9 +182,7 @@ in
 
         xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
 
-        dconf.settings = mkIf cfg3.waylandSupport {
-          "org/gnome/desktop/interface" = dconfIni;
-        };
+        dconf.settings."org/gnome/desktop/interface" = dconfIni;
       }
     );
 }
