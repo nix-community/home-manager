@@ -3,6 +3,7 @@
 with lib;
 
 let
+  defaults = import ./default-config.nix;
   cfg = config.programs.alacritty;
 
   mapAttrNamesRecursive' = f: set:
@@ -228,7 +229,6 @@ in {
         tmp = filterAttrsRecursive (n: v: v != null && v != "" && v != [] && n != "extraConfig") cfg;
         merged = recursiveUpdate tmp cfg.extraConfig;
         set = mapAttrNamesRecursive' toSnakeCase merged;
-      in builtins.toJSON set;
+      in replaceStrings ["\\\\u"] ["\\u"] (builtins.toJSON (recursiveUpdate defaults set));
   };
 }
-
