@@ -922,6 +922,13 @@ in
           when activating your Home Manager configuration.
         '';
       }
+
+      {
+        time = "2018-12-28T12:32:30+00:00";
+        message = ''
+          A new module is available: 'programs.opam'.
+        '';
+      }
     ];
   };
 }
