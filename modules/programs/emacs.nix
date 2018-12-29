@@ -3,6 +3,7 @@
 with lib;
 
 let
+  types = lib.types // import ../lib/types.nix { inherit lib; };
 
   cfg = config.programs.emacs;
 
@@ -34,6 +35,7 @@ in
 
       extraPackages = mkOption {
         default = self: [];
+        type = types.selectorFunction;
         defaultText = "epkgs: []";
         example = literalExample "epkgs: [ epkgs.emms epkgs.magit ]";
         description = "Extra packages available to Emacs.";
@@ -41,6 +43,7 @@ in
 
       overrides = mkOption {
         default = self: super: {};
+        type = types.overlayFunction;
         defaultText = "self: super: {}";
         example = literalExample ''
           self: super: rec {
