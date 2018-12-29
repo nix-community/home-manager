@@ -951,6 +951,21 @@ in
           A new module is available: 'programs.irssi'.
         '';
       }
+
+      {
+        time = "2019-02-09T14:09:58+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.emacs'.
+
+          This module provides a user service that runs the Emacs
+          configured in
+
+              programs.emacs
+
+          as an Emacs daemon.
+        '';
+      }
     ];
   };
 }
