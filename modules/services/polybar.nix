@@ -129,7 +129,7 @@ in
 
       Service = {
         Type = "forking";
-        Environment = "PATH=${cfg.package}/bin";
+        Environment = "PATH=${cfg.package}/bin:/run/wrappers/bin";
         ExecStart = ''${pkgs.writeScriptBin "polybar-start" script}/bin/polybar-start'';
       };
 
