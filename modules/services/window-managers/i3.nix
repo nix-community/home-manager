@@ -416,6 +416,18 @@ let
         '';
       };
 
+      workspaceAutoBackAndForth = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Assume you are on workspace "1: www" and switch to "2: IM" using
+          mod+2 because somebody sent you a message. You don’t need to remember
+          where you came from now, you can just press $mod+2 again to switch
+          back to "1: www".
+        '';
+      };
+
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
         default = mapAttrs (n: mkOptionDefault) {
@@ -752,6 +764,7 @@ let
     focus_on_window_activation ${focus.newWindow}
     mouse_warping ${if focus.mouseWarping then "output" else "none"}
     workspace_layout ${workspaceLayout}
+    workspace_auto_back_and_forth ${if workspaceAutoBackAndForth then "yes" else "no"}
 
     client.focused ${colorSetStr colors.focused}
     client.focused_inactive ${colorSetStr colors.focusedInactive}
