@@ -6,6 +6,11 @@ let
 
   cfg = config.programs.gnome-terminal;
 
+  vteInitStr = ''
+    # gnome-terminal: Show current directory in the terminal window title.
+    . ${pkgs.gnome3.vte}/etc/profile.d/vte.sh
+  '';
+
   profileColorsSubModule = types.submodule (
     { ... }: {
       options = {
@@ -165,5 +170,8 @@ in
         // mapAttrs' (n: v:
           nameValuePair ("${dconfPath}/profiles:/:${n}") (buildProfileSet v)
         ) cfg.profile;
+
+    programs.bash.initExtra = mkBefore vteInitStr;
+    programs.zsh.initExtra = vteInitStr;
   };
 }
