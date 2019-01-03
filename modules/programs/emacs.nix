@@ -55,9 +55,11 @@ in
 
       finalPackage = mkOption {
         type = types.package;
-        internal = true;
+        visible = false;
         readOnly = true;
-        description = "The Emacs package including any extra packages.";
+        description = ''
+          The Emacs package including any overrides and extra packages.
+        '';
       };
     };
   };
