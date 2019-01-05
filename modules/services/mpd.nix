@@ -4,8 +4,6 @@ with lib;
 
 let
 
-  name = "mpd";
-
   cfg = config.services.mpd;
 
   mpdConf = cfg': pkgs.writeText "mpd.conf" ''
@@ -25,7 +23,31 @@ let
     ${cfg'.extraConfig}
   '';
 
-  mpdOptions = cfg: {
+  mpdDaemon = { name, ... } @ args: let cfg' = args.config; in { options = {
+
+    enable = mkEnableOption "this instance" // {
+      default = cfg'.name == "default" && cfg.enable;
+      defaultText = literalExample ''name == "default" && config.services.mpd.enable'';
+    };
+
+    name = mkOption {
+      type = types.str;
+      default = name;
+      example = "nas";
+      description = ''
+        The name of this instance. Defaults to the attribute name.
+      '';
+    };
+
+    default = mkOption {
+      type = types.bool;
+      default = cfg'.name == "default";
+      defaultText = literalExample ''name == "default"'';
+      description = ''
+        Whether this instance is the default, and thus uses a service named just
+        <literal>mpd.service</literal>.
+      '';
+    };
 
     package = mkOption {
       type = types.package;
@@ -44,6 +66,15 @@ let
       '';
     };
 
+    serviceName = mkOption {
+      type = types.str;
+      default = if cfg'.default then "mpd" else "mpd-${cfg'.name}";
+      defaultText = literalExample ''if default then "mpd" else "mpd-''${name}"'';
+      description = ''
+        The name of this instance's service and data directory.
+      '';
+    };
+
     musicDirectory = mkOption {
       type = with types; either path (strMatching "(http|https|nfs|smb)://.+");
       default = "${config.home.homeDirectory}/music";
@@ -56,8 +87,8 @@ let
 
     playlistDirectory = mkOption {
       type = with types; either path str;
-      default = "${cfg.dataDir}/playlists";
-      defaultText = ''''${dataDir}/playlists'';
+      default = "${cfg'.dataDir}/playlists";
+      defaultText = "\${dataDir}/playlists";
       apply = toString;       # Prevent copies to Nix store.
       description = ''
         The directory where mpd stores playlists.
@@ -81,8 +112,8 @@ let
 
     dataDir = mkOption {
       type = with types; either path str;
-      default = "${config.xdg.dataHome}/${name}";
-      defaultText = "$XDG_DATA_HOME/mpd";
+      default = "${config.xdg.dataHome}/${cfg'.serviceName}";
+      defaultText = "$XDG_DATA_HOME/\${serviceName}";
       apply = toString;       # Prevent copies to Nix store.
       description = ''
         The directory where MPD stores its state, tag cache,
@@ -121,7 +152,7 @@ let
 
     dbFile = mkOption {
       type = types.nullOr types.str;
-      default = "${cfg.dataDir}/tag_cache";
+      default = "${cfg'.dataDir}/tag_cache";
       defaultText = ''''${dataDir}/tag_cache'';
       description = ''
         The path to MPD's database. If set to
@@ -130,7 +161,7 @@ let
       '';
     };
 
-  };
+  }; };
 
   mpdService = cfg': {
     Unit = {
@@ -176,20 +207,84 @@ in {
 
     services.mpd = {
 
-      enable = mkEnableOption "MPD, the music player daemon";
+      enable = mkEnableOption "MPD, the music player daemon" // {
+        default = true;
+        example = false;
+      };
 
-    } // mpdOptions cfg;
+      daemons = mkOption {
+        description = ''
+          Each attribute of this option defines a systemd user service that runs
+          an MPD instance. All options default to the primary configuration. The
+          name of each systemd service is
+          <literal>mpd-<replaceable>name</replaceable>.service</literal>,
+          where <replaceable>name</replaceable> is the corresponding attribute
+          name, except for up to one attribute that may have the
+          <literal>default</literal> option set and is named
+          <literal>mpd.service</literal>.
+        
+          For most setups, configuring <literal>daemons.default</literal> is all
+          that's needed.
+        '';
+        default = { default = { }; };
+        defaultText = literalExample ''{ default = { }; }'';
+        example = literalExample ''
+          {
+            default = {
+              enable = true;
+              extraConfig = '''
+                audio_output {
+                  type "pulse"
+                  name "PulseAudio"
+                }
+              ''';
+            };
+          }
+        '';
+        type = types.attrsOf (types.submodule mpdDaemon);
+      };
+
+    };
 
   };
+
+  imports = let
+    old = path: [ "services" "mpd" ] ++ path;
+    new = path: [ "services" "mpd" "daemons" "default" ] ++ path;
+    defaultRename = f: path: f (old path) (new path);
+  in [
+    (defaultRename mkRenamedOptionModule [ "package" ])
+    (defaultRename mkRenamedOptionModule [ "musicDirectory" ])
+    (defaultRename mkRenamedOptionModule [ "playlistDirectory" ])
+    (defaultRename mkRenamedOptionModule [ "extraConfig" ])
+    (defaultRename mkRenamedOptionModule [ "dataDir" ])
+    (defaultRename mkRenamedOptionModule [ "network" "listenAddress" ])
+    (defaultRename mkRenamedOptionModule [ "network" "port" ])
+    (defaultRename mkRenamedOptionModule [ "dbFile" ])
+  ];
 
 
   ###### implementation
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && cfg.daemons != { default = { }; }) {
 
-    systemd.user.services.mpd = mpdService cfg;
+    assertions = let
+      defaultCount = count (cfg': cfg'.default) (attrValues cfg.daemons);
+    in [
+      { assertion = defaultCount <= 1; message = ''
+        At most 1 MPD instance can be the default, but ${toString defaultCount} are specified.
+      ''; }
+    ];
 
-    systemd.user.sockets.mpd = mpdSocket cfg;
+    systemd.user.services = flip mapAttrs' cfg.daemons (_: daemon: {
+      name = daemon.serviceName;
+      value = mpdService daemon;
+    });
+
+    systemd.user.sockets = flip mapAttrs' cfg.daemons (_: daemon: {
+      name = daemon.serviceName;
+      value = mpdSocket daemon;
+    });
 
   };
 
