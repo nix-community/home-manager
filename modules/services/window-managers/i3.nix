@@ -411,7 +411,7 @@ let
       };
 
       keybindings = mkOption {
-        type = types.attrsOf types.str;
+        type = types.attrsOf (types.nullOr types.str);
         default = mapAttrs (n: mkOptionDefault) {
           "${cfg.config.modifier}+Return" = "exec i3-sensible-terminal";
           "${cfg.config.modifier}+Shift+q" = "kill";
@@ -486,7 +486,7 @@ let
       };
 
       keycodebindings = mkOption {
-        type = types.attrsOf types.str;
+        type = types.attrsOf (types.nullOr types.str);
         default = {};
         description = ''
           An attribute set that assigns keypress to an action using key code.
