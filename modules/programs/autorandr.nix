@@ -79,6 +79,34 @@ let
         default = null;
         example = "left";
       };
+
+      transform = with types;
+        let
+          transformType = let
+            list3 = elemType: addCheck (listOf elemType) (l: length l == 3);
+          in
+            uniq (list3 (list3 float))
+            // { description = "3×3 matrix of floating point numbers"; };
+        in
+        mkOption {
+          type = nullOr transformType;
+          description  = ''
+            Refer to
+            <citerefentry>
+              <refentrytitle>xrandr</refentrytitle>
+              <manvolnum>1</manvolnum>
+            </citerefentry>
+            for the documentation of the transform matrix.
+          '';
+          default = null;
+          example = literalExample ''
+            [
+              [ 0.6 0.0 0.0 ]
+              [ 0.0 0.6 0.0 ]
+              [ 0.0 0.0 1.0 ]
+            ]
+          '';
+        };
     };
   };
 
@@ -150,6 +178,9 @@ let
     ${optionalString (config.mode != "") "mode ${config.mode}"}
     ${optionalString (config.rate != "") "rate ${config.rate}"}
     ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
+    ${optionalString (config.transform != null)
+      (concatMapStringsSep "," toString (flatten config.transform)
+    )}
   '' else ''
     output ${name}
     off
