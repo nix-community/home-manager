@@ -6,6 +6,21 @@ let
 
   cfg = config.programs.autorandr;
 
+  matrixOf = n: m: elemType: mkOptionType rec {
+    name = "matrixOf";
+    description = "${toString n}×${toString m} matrix of ${elemType.description}s";
+    check = xss:
+      let
+        listOfSize = l: xs: isList xs && length xs == l;
+      in
+        listOfSize n xss && all (xs: listOfSize m xs && all elemType.check xs) xss;
+    merge = mergeOneOption;
+    getSubOptions = prefix: elemType.getSubOptions (prefix ++ ["*" "*"]);
+    getSubModules = elemType.getSubModules;
+    substSubModules = mod: matrixOf n m (elemType.substSubModules mod);
+    functor = (defaultFunctor name) // { wrapped = elemType; };
+  };
+
   profileModule = types.submodule {
     options = {
       fingerprint = mkOption {
@@ -79,6 +94,26 @@ let
         default = null;
         example = "left";
       };
+
+      transform = mkOption {
+        type = types.nullOr (matrixOf 3 3 types.float);
+        default = null;
+        example = literalExample ''
+          [
+            [ 0.6 0.0 0.0 ]
+            [ 0.0 0.6 0.0 ]
+            [ 0.0 0.0 1.0 ]
+          ]
+        '';
+        description = ''
+          Refer to
+          <citerefentry>
+            <refentrytitle>xrandr</refentrytitle>
+            <manvolnum>1</manvolnum>
+          </citerefentry>
+          for the documentation of the transform matrix.
+        '';
+      };
     };
   };
 
@@ -150,6 +185,9 @@ let
     ${optionalString (config.mode != "") "mode ${config.mode}"}
     ${optionalString (config.rate != "") "rate ${config.rate}"}
     ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
+    ${optionalString (config.transform != null) (
+      "transform " + concatMapStringsSep "," toString (flatten config.transform)
+    )}
   '' else ''
     output ${name}
     off
