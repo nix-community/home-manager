@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.texlive;
 
+  texlivePkgs = cfg.extraPackages pkgs.texlive;
+
 in
 
 {
@@ -16,7 +18,8 @@ in
       enable = mkEnableOption "Texlive";
 
       extraPackages = mkOption {
-        default = self: {};
+        default = tpkgs: { inherit (tpkgs) collection-basic; };
+        defaultText = "tpkgs: { inherit (tpkgs) collection-basic; }";
         example = literalExample ''
           tpkgs: { inherit (tpkgs) collection-fontsrecommended algorithms; }
         '';
@@ -32,8 +35,16 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = texlivePkgs != {};
+        message = "Must provide at least one extra package in"
+          + " 'programs.texlive.extraPackages'.";
+      }
+    ];
+
     home.packages = [ cfg.package ];
-    programs.texlive.package =
-      pkgs.texlive.combine (cfg.extraPackages pkgs.texlive);
+
+    programs.texlive.package = pkgs.texlive.combine texlivePkgs;
   };
 }
