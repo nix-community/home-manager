@@ -18,6 +18,7 @@ import nmt {
   tests = {
     "git/with-most-options" = ./modules/programs/git.nix;
     "git/with-str-extra-config" = ./modules/programs/git-with-str-extra-config.nix;
+    texlive-minimal = ./modules/programs/texlive-minimal.nix;
     xresources = ./modules/xresources.nix;
   };
 }
