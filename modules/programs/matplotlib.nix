@@ -6,13 +6,15 @@ let
 
   cfg = config.programs.matplotlib;
 
-  formatLine = n: v:
+  formatLine = o: n: v:
     let
       formatValue = v:
         if isBool v then (if v then "True" else "False")
         else toString v;
     in
-      "${n}: ${formatValue v}";
+      if isAttrs v
+      then concatStringsSep "\n" ([] ++ mapAttrsToList (formatLine "${o}${n}.") v)
+      else "${o}${n}: ${formatValue v}";
 in
 
 {
@@ -24,7 +26,7 @@ in
 
       rc = mkOption {
         default = {};
-        type = with types; attrsOf (either str (either bool int));
+        type = with types; attrsOf (either attrs (either str (either bool int)));
         description = ''
           Add terms to the matplotlibrc file, control the default matplotlib dehavior'';
         example = { backend = "Qt5Agg"; axes.grid = true;};
@@ -42,7 +44,7 @@ in
     config = mkIf cfg.enable {
       xdg.configFile."matplotlib/matplotlibrc".text =
       concatStringsSep "\n" ([]
-        ++ mapAttrsToList formatLine cfg.rc
+        ++ mapAttrsToList (formatLine "") cfg.rc
         ++ optional (cfg.extraConfig != "") cfg.extraConfig
       ) + "\n";
   };
