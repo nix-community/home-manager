@@ -60,6 +60,7 @@ let
     (loadModule ./programs/jq.nix { })
     (loadModule ./programs/lesspipe.nix { })
     (loadModule ./programs/man.nix { })
+    (loadModule ./programs/matplotlib.nix { })
     (loadModule ./programs/mbsync.nix { })
     (loadModule ./programs/mercurial.nix { })
     (loadModule ./programs/msmtp.nix { })
