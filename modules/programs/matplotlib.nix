@@ -29,7 +29,15 @@ in
         type = with types; attrsOf (either attrs (either str (either bool int)));
         description = ''
           Add terms to the matplotlibrc file, control the default matplotlib dehavior'';
-        example = { backend = "Qt5Agg"; axes.grid = true;};
+        example = {
+          backend = "Qt5Agg";
+          axes = {
+            grid = true;
+            facecolor = "black";
+            edgecolor = "FF9900";
+          };
+          grid.color = "FF9900";
+        };
       };
 
       extraConfig = mkOption {
