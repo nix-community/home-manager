@@ -929,6 +929,13 @@ in
           A new module is available: 'programs.opam'.
         '';
       }
+
+      {
+        time = "2019-01-11T15:21:30+00:00";
+        message = ''
+          A new module is available: 'programs.matplotlib'.
+        '';
+      }
     ];
   };
 }
