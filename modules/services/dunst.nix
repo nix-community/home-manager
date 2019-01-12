@@ -157,6 +157,7 @@ in
 
       (mkIf (cfg.settings != {}) {
         xdg.configFile."dunst/dunstrc".text = toDunstIni cfg.settings;
+        systemd.user.services.dunst.Unit.X-Restart-Triggers = [ config.xdg.configFile."dunst/dunstrc".source ];
       })
     ]
   );
