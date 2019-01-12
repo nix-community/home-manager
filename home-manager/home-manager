@@ -1,7 +1,7 @@
 #!@bash@/bin/bash
 
 # Prepare to use tools from Nixpkgs.
-PATH=@coreutils@/bin:@findutils@/bin:@gnused@/bin:@less@/bin${PATH:+:}$PATH
+PATH=@coreutils@/bin:@findutils@/bin:@gnused@/bin:@less@/bin:@nix@/bin${PATH:+:}$PATH
 
 set -euo pipefail
 

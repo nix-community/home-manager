@@ -24,6 +24,7 @@ pkgs.stdenv.mkDerivation {
       --subst-var-by findutils "${pkgs.findutils}" \
       --subst-var-by gnused "${pkgs.gnused}" \
       --subst-var-by less "${pkgs.less}" \
+      --subst-var-by nix "${pkgs.nix}" \
       --subst-var-by HOME_MANAGER_PATH '${pathStr}'
   '';
 
