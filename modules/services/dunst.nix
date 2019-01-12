@@ -150,6 +150,7 @@ in
             Type = "dbus";
             BusName = "org.freedesktop.Notifications";
             ExecStart = "${pkgs.dunst}/bin/dunst";
+            ExecStop = "${pkgs.procps}/bin/pkill -u $USER dunst";
           };
         };
       }
