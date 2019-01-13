@@ -162,7 +162,7 @@ in
             if [[ -v VERBOSE ]]; then
               pkillVerbose="-e"
             fi
-            $DRY_RUN_CMD ${pkgs.procps}/bin/pkill -u $USER $pkillVerbose dunst
+            $DRY_RUN_CMD ${pkgs.procps}/bin/pkill -u $USER $pkillVerbose dunst || true
             unset pkillVerbose
           '';
         };
