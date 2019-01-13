@@ -155,7 +155,17 @@ in
       }
 
       (mkIf (cfg.settings != {}) {
-        xdg.configFile."dunst/dunstrc".text = toDunstIni cfg.settings;
+        xdg.configFile."dunst/dunstrc" = {
+          text = toDunstIni cfg.settings;
+          onChange = ''
+            pkillVerbose=""
+            if [[ -v VERBOSE ]]; then
+              pkillVerbose="-e"
+            fi
+            $DRY_RUN_CMD ${pkgs.procps}/bin/pkill -u $USER $pkillVerbose dunst
+            unset pkillVerbose
+          '';
+        };
       })
     ]
   );
