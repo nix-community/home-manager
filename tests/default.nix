@@ -5,8 +5,8 @@ let
   nmt = pkgs.fetchFromGitLab {
     owner = "rycee";
     repo = "nmt";
-    rev = "4d7b4bb34ed9df333b5aa54509e50881f3a59939";
-    sha256 = "1rha4n5xafxwa5gbrjwnm63z944jr27gv71krkzzmb5wapi1r36m";
+    rev = "2ed3897e22ee0e1d343ba2c33122d57d888dedfe";
+    sha256 = "1k4qapinsvrf40ccpva6rfp11b90h413xrf5h57v84m88fcgac7n";
   };
 
 in
