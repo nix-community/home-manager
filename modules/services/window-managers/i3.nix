@@ -104,6 +104,12 @@ let
     options = {
       inherit (commonOptions) fonts;
 
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
+        description = "Extra configuration lines for this bar.";
+      };
+
       id = mkOption {
         type = types.nullOr types.string;
         default = null;
@@ -687,7 +693,7 @@ let
 
   barStr = {
     id, fonts, mode, hiddenState, position, workspaceButtons,
-    workspaceNumbers, command, statusCommand, colors, trayOutput, ...
+    workspaceNumbers, command, statusCommand, colors, trayOutput, extraConfig, ...
   }: ''
     bar {
       ${optionalString (id != null) "id ${id}"}
@@ -710,6 +716,7 @@ let
         urgent_workspace ${barColorSetStr colors.urgentWorkspace}
         binding_mode ${barColorSetStr colors.bindingMode}
       }
+      ${extraConfig}
     }
   '';
 
