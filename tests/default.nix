@@ -20,5 +20,7 @@ import nmt {
     "git/with-str-extra-config" = ./modules/programs/git-with-str-extra-config.nix;
     texlive-minimal = ./modules/programs/texlive-minimal.nix;
     xresources = ./modules/xresources.nix;
+  } // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+    "i3/keybindings" = ./modules/services/window-managers/i3-keybindings.nix;
   };
 }
