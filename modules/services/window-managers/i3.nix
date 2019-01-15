@@ -8,7 +8,7 @@ let
 
   commonOptions = {
     fonts = mkOption {
-      type = types.listOf types.string;
+      type = types.listOf types.str;
       default = ["monospace 8"];
       description = ''
         Font list used for window titles. Only FreeType fonts are supported.
@@ -21,7 +21,7 @@ let
   startupModule = types.submodule {
     options = {
       command = mkOption {
-        type = types.string;
+        type = types.str;
         description = "Command that will be executed on startup.";
       };
 
@@ -41,7 +41,7 @@ let
       };
 
       workspace = mkOption {
-        type = types.nullOr types.string;
+        type = types.nullOr types.str;
         default = null;
         description = ''
           Launch application on a particular workspace. DEPRECATED:
@@ -55,17 +55,17 @@ let
   barColorSetModule = types.submodule {
     options = {
       border = mkOption {
-        type = types.string;
+        type = types.str;
         visible = false;
       };
 
       background = mkOption {
-        type = types.string;
+        type = types.str;
         visible = false;
       };
 
       text = mkOption {
-        type = types.string;
+        type = types.str;
         visible = false;
       };
     };
@@ -74,27 +74,27 @@ let
   colorSetModule = types.submodule {
     options = {
       border = mkOption {
-        type = types.string;
+        type = types.str;
         visible = false;
       };
 
       childBorder = mkOption {
-        type = types.string;
+        type = types.str;
         visible = false;
       };
 
       background = mkOption {
-        type = types.string;
+        type = types.str;
         visible = false;
       };
 
       text = mkOption {
-        type = types.string;
+        type = types.str;
         visible = false;
       };
 
       indicator = mkOption {
-        type = types.string;
+        type = types.str;
         visible = false;
       };
     };
@@ -111,7 +111,7 @@ let
       };
 
       id = mkOption {
-        type = types.nullOr types.string;
+        type = types.nullOr types.str;
         default = null;
         description = ''
           Specifies the bar ID for the configured bar instance.
@@ -151,7 +151,7 @@ let
       };
 
       command = mkOption {
-        type = types.string;
+        type = types.str;
         default = "${cfg.package}/bin/i3bar";
         defaultText = "i3bar";
         description = "Command that will be used to start a bar.";
@@ -159,7 +159,7 @@ let
       };
 
       statusCommand = mkOption {
-        type = types.string;
+        type = types.str;
         default = "${pkgs.i3status}/bin/i3status";
         description = "Command that will be used to get status lines.";
       };
@@ -168,19 +168,19 @@ let
         type = types.submodule {
           options = {
             background = mkOption {
-              type = types.string;
+              type = types.str;
               default = "#000000";
               description = "Background color of the bar.";
             };
 
             statusline = mkOption {
-              type = types.string;
+              type = types.str;
               default = "#ffffff";
               description = "Text color to be used for the statusline.";
             };
 
             separator = mkOption {
-              type = types.string;
+              type = types.str;
               default = "#666666";
               description = "Text color to be used for the separator.";
             };
@@ -238,7 +238,7 @@ let
       };
 
       trayOutput = mkOption {
-        type = types.string;
+        type = types.str;
         default = "primary";
         description = "Where to output tray.";
       };
@@ -248,7 +248,7 @@ let
   windowCommandModule = types.submodule {
     options = {
       command = mkOption {
-        type = types.string;
+        type = types.str;
         description = "i3wm command to execute.";
         example = "border pixel 1";
       };
@@ -505,7 +505,7 @@ let
         type = types.submodule {
           options = {
             background = mkOption {
-              type = types.string;
+              type = types.str;
               default = "#ffffff";
               description = ''
                 Background color of the window. Only applications which do not cover
