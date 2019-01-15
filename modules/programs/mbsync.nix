@@ -49,9 +49,6 @@ let
       '';
 
   genAccountConfig = account: with account;
-    if (imap == null || maildir == null)
-    then ""
-    else
       genSection "IMAPAccount ${name}" (
         {
           Host = imap.host;

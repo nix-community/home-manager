@@ -18,6 +18,15 @@ let
   # considered part of a Home Manager generation.
   homeFilePattern = "${builtins.storeDir}/*-home-manager-files/*";
 
+  # Errors if the path starts with a "." (see
+  # https://github.com/NixOS/nix/issues/912)
+  # This is not in the form of an assertion, to work
+  # around https://github.com/rycee/home-manager/issues/538
+  checkPath = path:
+    if hasPrefix "." (baseNameOf (toString path))
+    then throw "Source file names must not start with '.': ${toString path}"
+    else path;
+
 in
 
 {
@@ -36,20 +45,6 @@ in
   };
 
   config = {
-    assertions = [
-      (let
-        badFiles =
-          filter (f: hasPrefix "." (baseNameOf f))
-          (map (v: toString v.source)
-          (attrValues cfg));
-        badFilesStr = toString badFiles;
-      in
-        {
-          assertion = badFiles == [];
-          message = "Source file names must not start with '.': ${badFilesStr}";
-        })
-    ];
-
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
     home.activation.checkLinkTargets = dag.entryBefore ["writeBoundary"] (
@@ -277,7 +272,7 @@ in
         }
       '' + concatStrings (
         mapAttrsToList (n: v: ''
-          insertFile "${v.source}" \
+          insertFile "${checkPath v.source}" \
                      "${v.target}" \
                      "${if v.executable == null
                         then "inherit"
