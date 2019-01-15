@@ -34,24 +34,24 @@ let
     let
       escapeValue = escape [ "\"" ];
       hasSpace = v: builtins.match ".* .*" v != null;
-      genValue = v:
+      genValue = n: v:
         if isList v
-        then concatMapStringsSep " " genValue v
+        then concatMapStringsSep " " (genValue n) v
         else if isBool v then (if v then "yes" else "no")
         else if isInt v then toString v
-        else if hasSpace v then "\"${escapeValue v}\""
-        else v;
+        else if isString v && hasSpace v then "\"${escapeValue v}\""
+        else if isString v then v
+        else
+          let prettyV = lib.generators.toPretty {} v;
+          in  throw "mbsync: unexpected value for option ${n}: '${prettyV}'";
     in
       ''
         ${header}
         ${concatStringsSep "\n"
-          (mapAttrsToList (n: v: "${n} ${genValue v}") entries)}
+          (mapAttrsToList (n: v: "${n} ${genValue n v}") entries)}
       '';
 
   genAccountConfig = account: with account;
-    if (imap == null || maildir == null)
-    then ""
-    else
       genSection "IMAPAccount ${name}" (
         {
           Host = imap.host;
@@ -144,29 +144,23 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      (
-        let
-          badAccounts = filter (a: a.maildir == null) mbsyncAccounts;
-        in
-          {
+    assertions =
+      let
+        checkAccounts = pred: msg:
+          let
+            badAccounts = filter pred mbsyncAccounts;
+          in {
             assertion = badAccounts == [];
-            message = "mbsync: Missing maildir configuration for accounts: "
+            message = "mbsync: ${msg} for accounts: "
               + concatMapStringsSep ", " (a: a.name) badAccounts;
-          }
-      )
-
-      (
-        let
-          badAccounts = filter (a: a.imap == null) mbsyncAccounts;
-        in
-          {
-            assertion = badAccounts == [];
-            message = "mbsync: Missing IMAP configuration for accounts: "
-              + concatMapStringsSep ", " (a: a.name) badAccounts;
-          }
-      )
-    ];
+          };
+      in
+        [
+          (checkAccounts (a: a.maildir == null) "Missing maildir configuration")
+          (checkAccounts (a: a.imap == null) "Missing IMAP configuration")
+          (checkAccounts (a: a.passwordCommand == null) "Missing passwordCommand")
+          (checkAccounts (a: a.userName == null) "Missing username")
+        ];
 
     home.packages = [ cfg.package ];
 
