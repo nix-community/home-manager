@@ -125,6 +125,12 @@ let
         description = "The command to use to connect to the server.";
       };
 
+      proxyJump = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The proxy host to use to connect to the server.";
+      };
+
       certificateFile = mkOption {
         type = types.nullOr types.path;
         default = null;
@@ -169,6 +175,7 @@ let
     ++ optional (cf.compression != null)     "  Compression ${yn cf.compression}"
     ++ optional (!cf.checkHostIP)            "  CheckHostIP no"
     ++ optional (cf.proxyCommand != null)    "  ProxyCommand ${cf.proxyCommand}"
+    ++ optional (cf.proxyJump != null)       "  ProxyJump ${cf.proxyJump}"
     ++ mapAttrsToList (n: v: "  ${n} ${v}") cf.extraOptions
   );
 
