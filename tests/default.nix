@@ -16,6 +16,10 @@ import nmt {
   modules = import ../modules/modules.nix { inherit pkgs; lib = pkgs.lib; };
   testedAttrPath = [ "home" "activationPackage" ];
   tests = {
+    files-executable = ./modules/files/executable.nix;
+    files-hidden-source = ./modules/files/hidden-source.nix;
+    files-source-with-spaces = ./modules/files/source-with-spaces.nix;
+    files-text = ./modules/files/text.nix;
     git-with-most-options = ./modules/programs/git.nix;
     git-with-str-extra-config = ./modules/programs/git-with-str-extra-config.nix;
     texlive-minimal = ./modules/programs/texlive-minimal.nix;
