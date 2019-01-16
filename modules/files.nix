@@ -14,6 +14,15 @@ let
     inherit homeDirectory lib pkgs;
   }).fileType;
 
+  sourceStorePath = file:
+    let
+      sourcePath = toString file.source;
+      sourceName = config.lib.strings.storeFileName (baseNameOf sourcePath);
+    in
+      if builtins.hasContext sourcePath
+      then file.source
+      else builtins.path { path = file.source; name = sourceName; };
+
   # A symbolic link whose target path matches this pattern will be
   # considered part of a Home Manager generation.
   homeFilePattern = "${builtins.storeDir}/*-home-manager-files/*";
@@ -36,20 +45,6 @@ in
   };
 
   config = {
-    assertions = [
-      (let
-        badFiles =
-          filter (f: hasPrefix "." (baseNameOf f))
-          (map (v: toString v.source)
-          (attrValues cfg));
-        badFilesStr = toString badFiles;
-      in
-        {
-          assertion = badFiles == [];
-          message = "Source file names must not start with '.': ${badFilesStr}";
-        })
-    ];
-
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
     home.activation.checkLinkTargets = dag.entryBefore ["writeBoundary"] (
@@ -201,7 +196,7 @@ in
       ''
         declare -A changedFiles
       '' + concatMapStrings (v: ''
-        cmp --quiet "${v.source}" "${config.home.homeDirectory}/${v.target}" \
+        cmp --quiet "${sourceStorePath v}" "${homeDirectory}/${v.target}" \
           && changedFiles["${v.target}"]=0 \
           || changedFiles["${v.target}"]=1
       '') (filter (v: v.onChange != "") (attrValues cfg))
@@ -277,7 +272,7 @@ in
         }
       '' + concatStrings (
         mapAttrsToList (n: v: ''
-          insertFile "${v.source}" \
+          insertFile "${sourceStorePath v}" \
                      "${v.target}" \
                      "${if v.executable == null
                         then "inherit"
