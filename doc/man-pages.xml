@@ -6,7 +6,7 @@
   <author><personname>Home Manager contributors</personname>
    <contrib>Author</contrib>
   </author>
-  <copyright><year>2017-2018</year><holder>Home Manager contributors</holder>
+  <copyright><year>2017–2019</year><holder>Home Manager contributors</holder>
   </copyright>
  </info>
  <xi:include href="man-configuration.xml" />
