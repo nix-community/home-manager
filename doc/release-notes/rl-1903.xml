@@ -1,0 +1,67 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0"
+         xml:id="sec-release-19.03">
+ <title>Release 19.03 (unstable)</title>
+
+ <para>
+  This is the current unstable branch and the information in this section is
+  therefore not final.
+ </para>
+
+ <para>
+  Scheduled released is March, 2019.
+ </para>
+
+ <section xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0"
+         xml:id="sec-release-19.03-highlights">
+  <title>Highlights</title>
+
+  <para>
+   This release has the following notable changes:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     The <option>home.file.&lt;name?&gt;.source</option> now allows source
+     files to be hidden, that is, having a name starting with the
+     <literal>.</literal> character. It also allows the source file name to
+     contain characters not typically allowed for Nix store paths. For example,
+     your configuration can now contain things such as
+<programlisting>
+home.file."my file".source = ./. + "/file with spaces!";
+</programlisting>
+    </para>
+   </listitem>
+  </itemizedlist>
+ </section>
+
+ <section xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0"
+         xml:id="sec-release-19.03-state-version-changes">
+  <title>State Version Changes</title>
+
+  <para>
+   The state version in this release includes the changes below. These changes
+   are only active if the <option>home.stateVersion</option> option is set to
+   "19.03" or later.
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     There is now an option <option>programs.beets.enable</option> that
+     defaults to <literal>false</literal>. Before the module would be active if
+     the <option>programs.beets.settings</option> option was non-empty.
+    </para>
+   </listitem>
+  </itemizedlist>
+ </section>
+</section>
