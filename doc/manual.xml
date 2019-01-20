@@ -29,4 +29,5 @@
   <title>Configuration Options</title>
   <xi:include href="./generated/options-db.xml" xpointer="configuration-variable-list" />
  </appendix>
+ <xi:include href="./release-notes/release-notes.xml" />
 </book>
