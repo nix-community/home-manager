@@ -7,22 +7,19 @@
   <refmiscinfo class="source">Home Manager</refmiscinfo>
 <!-- <refmiscinfo class="version"><xi:include href="version.txt" parse="text"/></refmiscinfo> -->
  </refmeta>
-
  <refnamediv>
   <refname><filename>home-configuration.nix</filename></refname>
   <refpurpose>Home Manager configuration specification</refpurpose>
  </refnamediv>
-
  <refsection>
   <title>Description</title>
   <para>
-   The file <filename>~/.config/nixpkgs/home.nix</filename> contains
-   the declarative specification of your Home Manager configuration.
-   The command <command>home-manager</command> takes this file and
-   realises the user environment configuration specified therein.
+   The file <filename>~/.config/nixpkgs/home.nix</filename> contains the
+   declarative specification of your Home Manager configuration. The command
+   <command>home-manager</command> takes this file and realises the user
+   environment configuration specified therein.
   </para>
  </refsection>
-
  <refsection>
   <title>Options</title>
   <para>
