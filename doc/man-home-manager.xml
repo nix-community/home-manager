@@ -7,54 +7,71 @@
   <refmiscinfo class="source">Home Manager</refmiscinfo>
 <!-- <refmiscinfo class="version"><xi:include href="version.txt" parse="text"/></refmiscinfo> -->
  </refmeta>
-
  <refnamediv>
   <refname><command>home-manager</command></refname>
   <refpurpose>reconfigure a user environment</refpurpose>
  </refnamediv>
-
  <refsynopsisdiv>
   <cmdsynopsis>
-   <command>home-manager</command>
-    <group choice='req'>
-     <arg choice='plain'><option>help</option></arg>
-     <arg choice='plain'><option>build</option></arg>
-     <arg choice='plain'><option>switch</option></arg>
-     <arg choice='plain'><option>generations</option></arg>
-     <arg choice='plain'><option>remove-generations</option></arg>
-     <arg choice='plain'><option>packages</option></arg>
-     <arg choice='plain'><option>news</option></arg>
+   <command>home-manager</command> <group choice="req"> 
+   <arg choice="plain">
+    <option>help</option>
+   </arg>
+    
+   <arg choice="plain">
+    <option>build</option>
+   </arg>
+    
+   <arg choice="plain">
+    <option>switch</option>
+   </arg>
+    
+   <arg choice="plain">
+    <option>generations</option>
+   </arg>
+    
+   <arg choice="plain">
+    <option>remove-generations</option>
+   </arg>
+    
+   <arg choice="plain">
+    <option>packages</option>
+   </arg>
+    
+   <arg choice="plain">
+    <option>news</option>
+   </arg>
     </group>
   </cmdsynopsis>
  </refsynopsisdiv>
-
  <refsection>
   <title>Description</title>
   <para>
-   This command updates the user environment so that it corresponds to the configuration
-   specified in <filename>~/.config/nixpkgs/home.nix</filename>.
+   This command updates the user environment so that it corresponds to the
+   configuration specified in <filename>~/.config/nixpkgs/home.nix</filename>.
   </para>
  </refsection>
-
  <refsection>
   <title>Files</title>
   <variablelist>
    <varlistentry>
-    <term><filename>~/.local/share/home-manager/news-read-ids</filename></term>
+    <term>
+     <filename>~/.local/share/home-manager/news-read-ids</filename>
+    </term>
     <listitem>
      <para>
-      Identifiers of news items that have been shown. Can be deleted
-      to reset the read news indicator.
+      Identifiers of news items that have been shown. Can be deleted to reset
+      the read news indicator.
      </para>
     </listitem>
    </varlistentry>
   </variablelist>
  </refsection>
-
  <refsection>
   <title>Bugs</title>
   <para>
-   Please report any bugs on the <link
+   Please report any bugs on the
+   <link
    xlink:href="https://github.com/rycee/home-manager/issues">project
    issue tracker</link>.
   </para>

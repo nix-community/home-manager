@@ -9,12 +9,13 @@
  <preface>
   <title>Preface</title>
   <para>
-   This manual will eventually describes how to install, use, and
-   extend Home Manager.
+   This manual will eventually describes how to install, use, and extend Home
+   Manager.
   </para>
   <para>
    If you encounter problems or bugs then please report them on the
-   <link xlink:href="https://github.com/rycee/home-manager/issues">Home Manager issue tracker</link>.
+   <link xlink:href="https://github.com/rycee/home-manager/issues">Home Manager
+   issue tracker</link>.
   </para>
   <note>
    <para>
