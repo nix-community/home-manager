@@ -63,7 +63,10 @@ in
         type = types.package;
         default = pkgs.git;
         defaultText = "pkgs.git";
-        description = "Git package to install.";
+        description = ''
+          Git package to install. Use <option>pkgs.gitAndTools.gitFull</option> 
+          to gain access to <command>git send-email</command> for instance.
+        '';
       };
 
       userName = mkOption {
@@ -74,6 +77,15 @@ in
       userEmail = mkOption {
         type = types.str;
         description = "Default user email to use.";
+      };
+
+      sendemail.identity = mkOption {
+        type = types.nullOr types.str;
+        default = let
+            primary = filter (a: a.primary) (attrValues config.accounts.email.accounts);
+          in if primary == [] then null else head primary;
+
+        description = "<command>git send-mail</command> default identity.";
       };
 
       aliases = mkOption {
@@ -149,6 +161,25 @@ in
           gpg.program = cfg.signing.gpgPath;
         };
       })
+
+      {
+        programs.git.iniContent = let
+          genIdentity = name: account:
+            with account;
+            (nameValuePair "sendemail.${name}"
+               {
+                smtpEncryption = if smtp.tls.enable then "tls" else "";
+                smtpServer = smtp.host;
+                smtpUser = address;
+                smtpServerPort = smtp.port;
+                from = address;
+              });
+        in (mapAttrs' genIdentity config.accounts.email.accounts)
+        // optionalAttrs (cfg.sendemail.identity  != null) {
+          sendemail.identity = cfg.sendemail.identity;
+        };
+      }
+
 
       (mkIf (cfg.aliases != {}) {
         programs.git.iniContent.alias = cfg.aliases;
