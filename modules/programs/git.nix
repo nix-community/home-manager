@@ -63,7 +63,10 @@ in
         type = types.package;
         default = pkgs.git;
         defaultText = "pkgs.git";
-        description = "Git package to install.";
+        description = ''
+          Git package to install. Use <varname>pkgs.gitAndTools.gitFull</varname>
+          to gain access to <command>git send-email</command> for instance.
+        '';
       };
 
       userName = mkOption {
@@ -140,6 +143,26 @@ in
             text = concatStringsSep "\n" cfg.ignores + "\n";
           };
         };
+      }
+
+      {
+        programs.git.iniContent =
+          let
+            hasSmtp = name: account: account.smtp != null;
+
+            genIdentity = name: account: with account;
+              nameValuePair "sendemail.${name}" ({
+                smtpEncryption = if smtp.tls.enable then "tls" else "";
+                smtpServer = smtp.host;
+                smtpUser = userName;
+                from = address;
+              }
+              // optionalAttrs (smtp.port != null) {
+                smtpServerPort = smtp.port;
+              });
+          in
+            mapAttrs' genIdentity
+              (filterAttrs hasSmtp config.accounts.email.accounts);
       }
 
       (mkIf (cfg.signing != null) {
