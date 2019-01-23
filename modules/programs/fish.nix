@@ -7,7 +7,7 @@ let
   cfg = config.programs.fish;
 
   abbrsStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: "abbr --add ${k} '${v}'") cfg.shellAbbrs
+    mapAttrsToList (k: v: "abbr --add --global ${k} '${v}'") cfg.shellAbbrs
   );
 
   aliasesStr = concatStringsSep "\n" (
