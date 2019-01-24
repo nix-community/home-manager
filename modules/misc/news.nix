@@ -944,6 +944,13 @@ in
           A new module is available: 'services.xembed-sni-proxy'.
         '';
       }
+
+      {
+        time = "2019-01-28T23:36:10+00:00";
+        message = ''
+          A new module is available: 'programs.irssi'.
+        '';
+      }
     ];
   };
 }
