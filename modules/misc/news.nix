@@ -936,6 +936,13 @@ in
           A new module is available: 'programs.matplotlib'.
         '';
       }
+      
+      {
+        time = "2019-01-25T00:08:57+00:00";
+        message = ''
+          A new module is available: 'programs.irssi'.
+        '';
+      }
     ];
   };
 }
