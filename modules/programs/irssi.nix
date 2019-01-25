@@ -185,6 +185,12 @@ in
     home.packages = [ pkgs.irssi ];
 
     home.file.".irssi/config".text = ''
+      settings = {
+        core = {
+          settings_autosave = "no";
+        };
+      };
+
       aliases = {
       ${assignFormat cfg.aliases} 
       };
