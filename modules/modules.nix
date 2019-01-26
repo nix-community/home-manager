@@ -114,6 +114,7 @@ let
     (loadModule ./services/window-managers/awesome.nix { })
     (loadModule ./services/window-managers/i3.nix { })
     (loadModule ./services/window-managers/xmonad.nix { })
+    (loadModule ./services/xembed-sni-proxy.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xscreensaver.nix { })
     (loadModule ./systemd.nix { })
     (loadModule ./xcursor.nix { })

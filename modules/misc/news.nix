@@ -936,6 +936,14 @@ in
           A new module is available: 'programs.matplotlib'.
         '';
       }
+
+      {
+        time = "2019-01-26T13:20:37+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.xembed-sni-proxy'.
+        '';
+      }
     ];
   };
 }
