@@ -7,12 +7,13 @@ let
   cfg = config.programs.irssi;
 
   ifToYesNo = b: if b then "yes" else "no";
+  quoteStr = s: escape ["\""] s;
 
   assignFormat =
     set:
       concatStringsSep "\n"
         (
-          mapAttrsToList (k: v: "  ${k} = \"${v}\";") set
+        mapAttrsToList (k: v: "  ${k} = \"${quoteStr v}\";") set
         );
 
   chatnetString =
@@ -21,11 +22,11 @@ let
         (k: v: ''
           ${k} = {
             type = "${v.type}";
-            nick = "${v.nick}";
-            autosendcmd = "${concatStringsSep ";" v.autoCmd}";
+            nick = "${quoteStr v.nick}";
+            autosendcmd = "${concatMapStringsSep ";" quoteStr v.autoCommands}";
           };
         '')
-        cfg.chatnets
+        cfg.networks
       );
 
   serversString =
@@ -36,11 +37,11 @@ let
           chatnet = "${k}";
           address = "${v.server.address}";
           port = "${toString v.server.port}";
-          use_ssl = "${ifToYesNo v.server.useSSL}";
-          ssl_verify = "${ifToYesNo v.server.verifySSL}";
-          autoconnect = "${ifToYesNo v.server.autoconnect}";
+          use_ssl = "${ifToYesNo v.server.ssl.enable}";
+          ssl_verify = "${ifToYesNo v.server.ssl.verify}";
+          autoconnect = "${ifToYesNo v.server.autoConnect}";
         }'')
-        cfg.chatnets
+        cfg.networks
       );
 
   channelString =
@@ -52,11 +53,11 @@ let
             {
               chatnet = "${k}";
               name = "${c}";
-              autojoin = "${ifToYesNo cv.autojoin}";
+              autojoin = "${ifToYesNo cv.autoJoin}";
             }'')
             v.channels)
         )
-        cfg.chatnets
+        cfg.networks
       );
 
   serverType =
@@ -65,50 +66,55 @@ let
         options = {
           address = mkOption {
             type = types.str;
-            description = "Address of the Chat server.";
+            description = "Address of the chat server.";
           };
+
           port = mkOption {
             type = types.int;
             default = 6667;
-            description = "Port of the Chat server.";
+            description = "Port of the chat server.";
           };
-          useSSL = mkOption {
-            type = types.bool;
-            default = true;
-            description = "Whether SSL should be used.";
+
+          ssl = {
+            enable = mkOption {
+              type = types.bool;
+              default = true;
+              description = "Whether SSL should be used.";
+            };
+
+            verify = mkOption {
+              type = types.bool;
+              default = true;
+              description = "Whether the SSL certificate should be verified.";
+            };
           };
-          verifySSL = mkOption {
-            type = types.bool;
-            default = true;
-            description = "Whether the SSL Certificate should be verified.";
-          };
-          autoconnect = mkOption {
+
+          autoConnect = mkOption {
             type = types.bool;
             default = false;
-            description = "Whether irssi connects to the server on launch.";
+            description = "Whether Irssi connects to the server on launch.";
           };
         };
       }
     );
 
   channelType =
-    types.submodule (
-      {name, ...}: {
-        options = {
-          name = mkOption {
-            type = types.str;
-            visible = false;
-            default = name;
-            description = "Name of the channel.";
-          };
-          autojoin = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Whether to join this channel on connect.";
-          };
+    types.submodule {
+      options = {
+        name = mkOption {
+          type = types.nullOr types.str;
+          visible = false;
+          default = null;
+          description = "Name of the channel.";
         };
-      }
-    );
+
+        autoJoin = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Whether to join this channel on connect.";
+        };
+      };
+    };
 
 in
 
@@ -116,16 +122,11 @@ in
 
   options = {
     programs.irssi = {
-      enable = mkOption {
-        type = types.bool;
-        default = false;
-        defaultText = "false";
-        description = "Whether to enable the irssi chat client.";
-      };
+      enable = mkEnableOption "the Irssi chat client";
 
       extraConfig = mkOption {
         default = "";
-        description = "These lines are appended to the irssi config.";
+        description = "These lines are appended to the Irssi config.";
         type = types.str;
       };
 
@@ -136,10 +137,10 @@ in
         type = types.attrs;
       };
 
-      chatnets = mkOption {
+      networks = mkOption {
         default = {};
         description = "An attribute set of chat networks.";
-        type = types.loaOf (
+        type = types.attrsOf (
           types.submodule (
             { name, ...}: {
               options = {
@@ -148,30 +149,33 @@ in
                   default = name;
                   type = types.str;
                 };
+
                 nick = mkOption {
                   type = types.str;
-                  description = "Nickname in that chat network.";
+                  description = "Nickname in that network.";
                 };
+
                 type = mkOption {
                   type = types.str;
-                  description = "Type of the chat network.";
+                  description = "Type of the network.";
                   default = "IRC";
                 };
-                autoCmd = mkOption {
+
+                autoCommands = mkOption {
                   type = types.listOf types.str;
                   default = [];
                   description = "List of commands to execute on connect.";
                 };
 
                 server = mkOption {
-                  description = "Server settings for the given Chatnet.";
+                  description = "Server settings for the given network.";
                   type = serverType;
                 };
 
                 channels = mkOption {
-                  description = "Channels for the given Chatnet.";
-                  type = types.loaOf channelType;
-                  default = [];
+                  description = "Channels for the given network.";
+                  type = types.attrsOf channelType;
+                  default = {};
                 };
               };
             }
