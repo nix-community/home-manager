@@ -24,7 +24,12 @@ in
     systemd.user.services.flameshot = {
       Unit = {
         Description = "Powerful yet simple to use screenshot software";
-        After = [ "graphical-session-pre.target" ];
+        After = [
+          "graphical-session-pre.target"
+          "polybar.service"
+          "stalonetray.service"
+          "taffybar.service"
+        ];
         PartOf = [ "graphical-session.target" ];
       };
 
