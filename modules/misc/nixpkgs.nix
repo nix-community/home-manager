@@ -144,7 +144,7 @@ in
   config = {
     _module.args = {
       pkgs = _pkgs;
-      pkgs_i686 = if _pkgs.stdenv.isLinux then _pkgs.pkgsi686Linux else {};
+      pkgs_i686 = if (_pkgs.stdenv.isLinux && _pkgs.stdenv.isi686) then _pkgs.pkgsi686Linux else {};
     };
   };
 }
