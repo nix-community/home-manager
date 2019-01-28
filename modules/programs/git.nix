@@ -79,15 +79,6 @@ in
         description = "Default user email to use.";
       };
 
-      sendemail.identity = mkOption {
-        type = types.nullOr types.str;
-        default = let
-            primary = filter (a: a.primary) (attrValues config.accounts.email.accounts);
-          in if primary == [] then null else head primary;
-
-        description = "<command>git send-mail</command> default identity.";
-      };
-
       aliases = mkOption {
         type = types.attrs;
         default = {};
@@ -174,10 +165,7 @@ in
                 smtpServerPort = smtp.port;
                 from = address;
               });
-        in (mapAttrs' genIdentity config.accounts.email.accounts)
-        // optionalAttrs (cfg.sendemail.identity  != null) {
-          sendemail.identity = cfg.sendemail.identity;
-        };
+        in (mapAttrs' genIdentity config.accounts.email.accounts);
       }
 
 
