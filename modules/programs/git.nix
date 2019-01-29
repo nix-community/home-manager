@@ -151,7 +151,7 @@ in
             hasSmtp = name: account: account.smtp != null;
 
             genIdentity = name: account: with account;
-              nameValuePair "sendemail.${name}" ({
+              nameValuePair "sendemail \"${name}\"" ({
                 smtpEncryption = if smtp.tls.enable then "tls" else "";
                 smtpServer = smtp.host;
                 smtpUser = userName;
