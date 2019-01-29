@@ -34,7 +34,7 @@ let
     };
   };
 
-  includeModule = types.submodule {
+  includeModule = types.submodule ({ config, ... }: {
     options = {
       condition = mkOption {
         type = types.nullOr types.str;
@@ -53,8 +53,18 @@ let
         type = types.str;
         description = "Path of the configuration file to include.";
       };
+
+      contents = mkOption {
+        type = types.attrs;
+        default = {};
+        description = "Configuration to include.";
+      };
     };
-  };
+
+    config.path = mkIf (config.contents != {}) (
+      mkDefault (toString (pkgs.writeText "contents" (generators.toINI {} config.contents)))
+    );
+  });
 
 in
 

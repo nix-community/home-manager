@@ -1,6 +1,22 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
+
+let
+  gitInclude = {
+    user = {
+      name = "John Doe";
+      email = "user@example.org";
+    };
+  };
+
+  substituteExpected = path: pkgs.substituteAll {
+    src = path;
+
+    git_include_path = pkgs.writeText "contents" (generators.toINI {} gitInclude);
+  };
+
+in
 
 {
   config = {
@@ -23,6 +39,10 @@ with lib;
             path = "~/path/to/conditional.inc";
             condition = "gitdir:~/src/dir";
           }
+          {
+            condition = "gitdir:~/src/dir";
+            contents = gitInclude;
+          }
         ];
         signing = {
           gpgPath = "path-to-gpg";
@@ -43,7 +63,7 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-files/.config/git/config
-      assertFileContent home-files/.config/git/config ${./git-expected.conf}
+      assertFileContent home-files/.config/git/config ${substituteExpected ./git-expected.conf}
     '';
   };
 }
