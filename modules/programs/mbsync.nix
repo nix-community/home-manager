@@ -176,7 +176,7 @@ in
           ++ accountsConfig
           ++ groupsConfig
           ++ optional (cfg.extraConfig != "") cfg.extraConfig
-        );
+        ) + "\n";
 
     home.activation.createMaildir =
       dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
