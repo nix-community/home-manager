@@ -6,6 +6,12 @@ let
 
   cfg = config.programs.git;
 
+  gitIniType = with types;
+    let
+      primitiveType = either bool (either int str);
+    in
+      attrsOf (attrsOf primitiveType);
+
   signModule = types.submodule {
     options = {
       key = mkOption {
@@ -80,8 +86,9 @@ in
       };
 
       aliases = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.str;
         default = {};
+        example = { co = "checkout"; };
         description = "Git aliases to define.";
       };
 
@@ -92,13 +99,16 @@ in
       };
 
       extraConfig = mkOption {
-        type = types.either types.attrs types.lines;
+        type = types.either types.lines gitIniType;
         default = {};
+        example = {
+          core = { whitespace = "trailing-space,space-before-tab"; };
+        };
         description = "Additional configuration to add.";
       };
 
       iniContent = mkOption {
-        type = types.attrsOf types.attrs;
+        type = gitIniType;
         internal = true;
       };
 
