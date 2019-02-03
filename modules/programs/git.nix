@@ -133,6 +133,20 @@ in
         '';
         description = "List of configuration files to include.";
       };
+
+      lfs = {
+        enable = mkEnableOption "Git Large File Storage";
+
+        skipSmudge = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Skip automatic downloading of objects on clone or pull.
+            This requires a manual <command>git lfs pull</command>
+            every time a new commit is checked out on your repository.
+          '';
+        };
+      };
     };
   };
 
@@ -203,6 +217,25 @@ in
               path = ${path}
             '')
             cfg.includes);
+      })
+
+      (mkIf cfg.lfs.enable {
+        home.packages = [ pkgs.git-lfs ];
+
+        programs.git.iniContent."filter \"lfs\"" =
+          let
+            skipArg = optional cfg.lfs.skipSmudge "--skip";
+          in
+            {
+              clean = "git-lfs clean -- %f";
+              process = concatStringsSep " " (
+                [ "git-lfs" "filter-process" ] ++ skipArg
+              );
+              required = true;
+              smudge = concatStringsSep " " (
+                [ "git-lfs" "smudge" ] ++ skipArg ++ [ "--" "%f" ]
+              );
+            };
       })
     ]
   );
