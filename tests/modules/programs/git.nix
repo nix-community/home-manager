@@ -31,6 +31,7 @@ with lib;
         };
         userEmail = "user@example.org";
         userName = "John Doe";
+        lfs.enable = true;
       }
 
       {
