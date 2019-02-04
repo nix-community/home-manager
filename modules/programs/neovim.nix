@@ -104,6 +104,13 @@ in
         '';
       };
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.neovim-unwrapped;
+        defaultText = "pkgs.neovim-unwrapped";
+        description = "The package to use for the neovim binary.";
+      };
+
       configure = mkOption {
         type = types.attrs;
         default = {};
@@ -130,7 +137,7 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [
-      (pkgs.neovim.override {
+      (pkgs.wrapNeovim cfg.package {
         inherit (cfg)
           extraPython3Packages withPython3
           extraPythonPackages withPython
