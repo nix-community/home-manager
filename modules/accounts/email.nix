@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -379,7 +379,7 @@ in
     accounts = mkOption {
       type = types.attrsOf (types.submodule [
         mailAccountOpts
-        (import ../programs/alot-accounts.nix)
+        (import ../programs/alot-accounts.nix pkgs)
         (import ../programs/astroid-accounts.nix)
         (import ../programs/mbsync-accounts.nix)
         (import ../programs/msmtp-accounts.nix)
