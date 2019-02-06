@@ -62,7 +62,15 @@ let
         type = types.str;
         example = "*.example.org";
         description = ''
-          The host pattern used by this conditional block.
+          Pattern used by this conditional block.
+        '';
+      };
+
+      matchType = mkOption {
+        type = types.nullOr (types.enum ["canonical" "exec" "host" "originalhost" "user" "localuser"]);
+        default = null;
+        description = ''
+          Use Match condition instead of the default Host condition.
         '';
       };
 
@@ -266,7 +274,9 @@ let
   });
 
   matchBlockStr = cf: concatStringsSep "\n" (
-    ["Host ${cf.host}"]
+    let
+      matchType = if cf.matchType != null then "Match ${cf.matchType} ${cf.host}" else "Host ${cf.host}";
+    in [ "${matchType}" ]
     ++ optional (cf.port != null)            "  Port ${toString cf.port}"
     ++ optional (cf.forwardAgent != null)    "  ForwardAgent ${yn cf.forwardAgent}"
     ++ optional cf.forwardX11                "  ForwardX11 yes"
