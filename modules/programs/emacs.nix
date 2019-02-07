@@ -70,25 +70,5 @@ in
       home.packages = [ cfg.finalPackage ];
       programs.emacs.finalPackage = emacsWithPackages cfg.extraPackages;
     }
-
-    (mkIf cfg.service {
-      systemd.user.services.emacs = {
-        Unit = {
-          Description = "Emacs: the extensible, self-documenting text editor";
-          Documentation = "info:emacs man:emacs(1) https://gnu.org/software/emacs/";
-        };
-
-        Service = {
-          Type = "simple";
-          ExecStart = "${pkgs.stdenv.shell} -l -c 'exec ${cfg.finalPackage}/bin/emacs --fg-daemon'";
-          ExecStop = "${cfg.finalPackage}/bin/emacsclient --eval '(kill-emacs)'";
-          Restart = "on-failure";
-        };
-
-        Install = {
-          WantedBy = [ "default.target" ];
-        };
-      };
-    })
   ]);
 }
