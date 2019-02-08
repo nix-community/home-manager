@@ -87,7 +87,7 @@ let
     (loadModule ./services/blueman-applet.nix { })
     (loadModule ./services/compton.nix { })
     (loadModule ./services/dunst.nix { })
-    (loadModule ./services/emacs.nix { })
+    (loadModule ./services/emacs.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/flameshot.nix { })
     (loadModule ./services/gnome-keyring.nix { })
     (loadModule ./services/gpg-agent.nix { })
