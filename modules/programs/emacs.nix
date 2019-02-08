@@ -64,10 +64,8 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      home.packages = [ cfg.finalPackage ];
-      programs.emacs.finalPackage = emacsWithPackages cfg.extraPackages;
-    }
-  ]);
+  config = mkIf cfg.enable {
+    home.packages = [ cfg.finalPackage ];
+    programs.emacs.finalPackage = emacsWithPackages cfg.extraPackages;
+  };
 }
