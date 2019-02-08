@@ -23,7 +23,6 @@ in
   options = {
     programs.emacs = {
       enable = mkEnableOption "Emacs";
-      service = mkEnableOption "Emacs daemon systemd service";
 
       package = mkOption {
         type = types.package;
