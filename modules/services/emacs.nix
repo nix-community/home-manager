@@ -10,7 +10,7 @@ let
 in
 {
   options.services.emacs = {
-    enable = mkEnableOption "Emacs daemon systemd service";
+    enable = mkEnableOption "the Emacs daemon";
   };
 
   config = mkIf cfg.enable {
