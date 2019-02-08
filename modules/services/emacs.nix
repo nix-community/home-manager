@@ -21,7 +21,6 @@ in
       };
 
       Service = {
-        Type = "simple";
         ExecStart = "${pkgs.stdenv.shell} -l -c 'exec ${emacs.finalPackage}/bin/emacs --fg-daemon'";
         ExecStop = "${emacs.finalPackage}/bin/emacsclient --eval '(kill-emacs)'";
         Restart = "on-failure";
