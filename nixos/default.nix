@@ -38,7 +38,7 @@ in
         after = [ "nix-daemon.socket" ];
 
         serviceConfig = {
-          User = username;
+          User = usercfg.home.username;
           Type = "oneshot";
           RemainAfterExit = "yes";
           SyslogIdentifier = "hm-activate-${username}";
