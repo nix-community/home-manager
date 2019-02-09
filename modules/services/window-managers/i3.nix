@@ -238,8 +238,9 @@ let
       };
 
       trayOutput = mkOption {
-        type = types.str;
-        default = "primary";
+        type = types.nullOr types.str;
+        default = null;
+        example = "primary";
         description = "Where to output tray.";
       };
     };
@@ -705,7 +706,7 @@ let
       i3bar_command ${command}
       workspace_buttons ${if workspaceButtons then "yes" else "no"}
       strip_workspace_numbers ${if !workspaceNumbers then "yes" else "no"}
-      tray_output ${trayOutput}
+      ${optionalString (trayOutput != null) "tray_output ${trayOutput}"}
       colors {
         background ${colors.background}
         statusline ${colors.statusline}
