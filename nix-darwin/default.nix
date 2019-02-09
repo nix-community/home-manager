@@ -7,12 +7,10 @@ let
   cfg = config.home-manager;
 
   hmModule = types.submodule ({name, ...}: {
-    imports = import ../modules/modules.nix {
-      inherit lib pkgs;
-      nixosSubmodule = true;
-    };
+    imports = import ../modules/modules.nix { inherit lib pkgs; };
 
     config = {
+      submoduleSupport.enable = true;
       home.username = config.users.users.${name}.name;
       home.homeDirectory = config.users.users.${name}.home;
     };
