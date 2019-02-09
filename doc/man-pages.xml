@@ -3,9 +3,7 @@
            xmlns:xi="http://www.w3.org/2001/XInclude">
  <title>Home Manager Reference Pages</title>
  <info>
-  <author><personname>Home Manager contributors</personname>
-   <contrib>Author</contrib>
-  </author>
+  <author><personname>Home Manager contributors</personname></author>
   <copyright><year>2017–2019</year><holder>Home Manager contributors</holder>
   </copyright>
  </info>
