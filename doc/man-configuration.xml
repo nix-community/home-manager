@@ -28,4 +28,10 @@
   </para>
   <xi:include href="./generated/options-db.xml" xpointer="configuration-variable-list" />
  </refsection>
+ <refsection>
+   <title>See also</title>
+   <para>
+     home-manager(8)
+   </para>
+ </refsection>
 </refentry>
