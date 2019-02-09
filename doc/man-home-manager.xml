@@ -76,4 +76,13 @@
    issue tracker</link>.
   </para>
  </refsection>
+ <refsection>
+   <title>See also</title>
+   <para>
+     <citerefentry>
+       <refentrytitle>home-configuration.nix</refentrytitle>
+       <manvolnum>5</manvolnum>
+     </citerefentry>
+   </para>
+ </refsection>
 </refentry>
