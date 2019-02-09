@@ -3,9 +3,6 @@
 
   # Whether to enable module type checking.
 , check ? true
-
-  # Whether these modules are inside a NixOS submodule.
-, nixosSubmodule ? false
 }:
 
 with lib;
@@ -33,6 +30,7 @@ let
     (loadModule ./misc/nixpkgs.nix { })
     (loadModule ./misc/pam.nix { })
     (loadModule ./misc/qt.nix { })
+    (loadModule ./misc/submodule-support.nix { })
     (loadModule ./misc/version.nix { })
     (loadModule ./misc/xdg.nix { })
     (loadModule ./programs/afew.nix { })
@@ -129,17 +127,10 @@ let
   modules = map (getAttr "file") (filter (getAttr "condition") allModules);
 
   pkgsModule = {
-    options.nixosSubmodule = mkOption {
-      type = types.bool;
-      internal = true;
-      readOnly = true;
-    };
-
     config._module.args.baseModules = modules;
     config._module.args.pkgs = lib.mkDefault pkgs;
     config._module.check = check;
     config.lib = import ./lib { inherit lib; };
-    config.nixosSubmodule = nixosSubmodule;
     config.nixpkgs.system = mkDefault pkgs.system;
   };
 
