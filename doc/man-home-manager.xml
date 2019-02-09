@@ -3,7 +3,7 @@
           xmlns:xi="http://www.w3.org/2001/XInclude">
  <refmeta>
   <refentrytitle><command>home-manager</command></refentrytitle>
-  <manvolnum>8</manvolnum>
+  <manvolnum>1</manvolnum>
   <refmiscinfo class="source">Home Manager</refmiscinfo>
 <!-- <refmiscinfo class="version"><xi:include href="version.txt" parse="text"/></refmiscinfo> -->
  </refmeta>
