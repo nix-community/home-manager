@@ -239,7 +239,10 @@ let
 
       trayOutput = mkOption {
         type = types.nullOr types.str;
-        default = null;
+        default =
+          if versionAtLeast config.home.stateVersion "19.03"
+          then null
+          else "primary";
         example = "primary";
         description = "Where to output tray.";
       };
