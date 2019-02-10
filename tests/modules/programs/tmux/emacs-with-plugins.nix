@@ -16,14 +16,20 @@ in {
       aggressiveResize = true;
       clock24 = true;
       enable = true;
-      keyMode = "vi";
+      keyMode = "emacs";
       newSession = true;
       reverseSplit = true;
+
+      plugins = with pkgs.tmuxPlugins; [
+        logging
+        prefix-highlight
+        fzf-tmux-url
+      ];
     };
 
     nmt.script = ''
       if assertFileExists home-files/.tmux.conf; then
-        assertFileContent home-files/.tmux.conf ${substituteExpected ./vi-all-true.conf}
+        assertFileContent home-files/.tmux.conf ${substituteExpected ./emacs-with-plugins.conf}
       fi
     '';
   };
