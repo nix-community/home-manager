@@ -24,6 +24,8 @@ import nmt {
     git-with-most-options = ./modules/programs/git.nix;
     git-with-str-extra-config = ./modules/programs/git-with-str-extra-config.nix;
     mbsync = ./modules/programs/mbsync.nix;
+    # tmux-vi-all-true = ./modules/programs/tmux/vi-all-true.nix;
+    # tmux-not-enabled = ./modules/programs/tmux/not-enabled.nix;
     texlive-minimal = ./modules/programs/texlive-minimal.nix;
     xresources = ./modules/xresources.nix;
   } // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
