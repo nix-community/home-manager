@@ -25,11 +25,8 @@ import nmt {
     git-with-str-extra-config = ./modules/programs/git-with-str-extra-config.nix;
     mbsync = ./modules/programs/mbsync.nix;
     texlive-minimal = ./modules/programs/texlive-minimal.nix;
-    tmux-emacs-with-plugins = ./modules/programs/tmux/emacs-with-plugins.nix;
-    tmux-not-enabled = ./modules/programs/tmux/not-enabled.nix;
-    tmux-vi-all-true = ./modules/programs/tmux/vi-all-true.nix;
     xresources = ./modules/xresources.nix;
   } // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     i3-keybindings = ./modules/services/window-managers/i3-keybindings.nix;
-  };
+  } // (import ./modules/programs/tmux);
 }
