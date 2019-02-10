@@ -28,5 +28,5 @@ import nmt {
     xresources = ./modules/xresources.nix;
   } // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     i3-keybindings = ./modules/services/window-managers/i3-keybindings.nix;
-  };
+  } // import ./modules/programs/tmux;
 }

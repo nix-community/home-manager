@@ -23,12 +23,135 @@ let
     };
   };
 
+  defaultKeyMode  = "emacs";
+  defaultResize   = 5;
+  defaultShortcut = "b";
+  defaultTerminal = "screen";
+
+  boolToStr = value: if value then "on" else "off";
+
+  tmuxConf = ''
+    set  -g default-terminal "${cfg.terminal}"
+    set  -g base-index      ${toString cfg.baseIndex}
+    setw -g pane-base-index ${toString cfg.baseIndex}
+
+    ${optionalString cfg.newSession "new-session"}
+
+    ${optionalString cfg.reverseSplit ''
+      bind v split-window -h
+      bind s split-window -v
+    ''}
+
+    set -g status-keys ${cfg.keyMode}
+    set -g mode-keys   ${cfg.keyMode}
+
+    ${optionalString (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
+      bind h select-pane -L
+      bind j select-pane -D
+      bind k select-pane -U
+      bind l select-pane -R
+
+      bind -r H resize-pane -L ${toString cfg.resizeAmount}
+      bind -r J resize-pane -D ${toString cfg.resizeAmount}
+      bind -r K resize-pane -U ${toString cfg.resizeAmount}
+      bind -r L resize-pane -R ${toString cfg.resizeAmount}
+    ''}
+
+    ${optionalString (cfg.shortcut != defaultShortcut) ''
+      # rebind main key: C-${cfg.shortcut}
+      unbind C-${defaultShortcut}
+      set -g prefix C-${cfg.shortcut}
+      bind ${cfg.shortcut} send-prefix
+      bind C-${cfg.shortcut} last-window
+    ''}
+
+    setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
+    setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
+    set  -s escape-time       ${toString cfg.escapeTime}
+    set  -g history-limit     ${toString cfg.historyLimit}
+
+    ${cfg.extraConfig}
+  '';
+
 in
 
 {
   options = {
     programs.tmux = {
+      aggressiveResize = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''
+          Resize the window to the size of the smallest session for
+          which it is the current window.
+        '';
+      };
+
+      baseIndex = mkOption {
+        default = 0;
+        example = 1;
+        type = types.ints.unsigned;
+        description = "Base index for windows and panes.";
+      };
+
+      clock24 = mkOption {
+        default = false;
+        type = types.bool;
+        description = "Use 24 hour clock.";
+      };
+
+      customPaneNavigationAndResize = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''
+          Override the hjkl and HJKL bindings for pane navigation and
+          resizing in VI mode.
+        '';
+      };
+
       enable = mkEnableOption "tmux";
+
+      escapeTime = mkOption {
+        default = 500;
+        example = 0;
+        type = types.ints.unsigned;
+        description = ''
+          Time in milliseconds for which tmux waits after an escape is
+          input.
+       '';
+      };
+
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
+        description = ''
+          Additional configuration to add to
+          <filename>tmux.conf</filename>.
+        '';
+      };
+
+      historyLimit = mkOption {
+        default = 2000;
+        example = 5000;
+        type = types.ints.positive;
+        description = "Maximum number of lines held in window history.";
+      };
+
+      keyMode = mkOption {
+        default = defaultKeyMode;
+        example = "vi";
+        type = types.enum [ "emacs" "vi" ];
+        description = "VI or Emacs style shortcuts.";
+      };
+
+      newSession = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''
+          Automatically spawn a session if trying to attach and none
+          are running.
+        '';
+      };
 
       package = mkOption {
         type = types.package;
@@ -38,6 +161,19 @@ in
         description = "The tmux package to install";
       };
 
+      reverseSplit = mkOption {
+        default = false;
+        type = types.bool;
+        description = "Reverse the window split shortcuts.";
+      };
+
+      resizeAmount = mkOption {
+        default = defaultResize;
+        example = 10;
+        type = types.ints.positive;
+        description = "Number of lines/columns when resizing.";
+      };
+
       sensibleOnTop = mkOption {
         type = types.bool;
         default = true;
@@ -45,6 +181,32 @@ in
           Run the sensible plugin at the top of the configuration. It
           is possible to override the sensible settings using the
           <option>programs.tmux.extraConfig</option> option.
+        '';
+      };
+
+      shortcut = mkOption {
+        default = defaultShortcut;
+        example = "a";
+        type = types.str;
+        description = ''
+          CTRL following by this key is used as the main shortcut.
+        '';
+      };
+
+      terminal = mkOption {
+        default = defaultTerminal;
+        example = "screen-256color";
+        type = types.str;
+        description = "Set the $TERM variable.";
+      };
+
+      secureSocket = mkOption {
+        default = true;
+        type = types.bool;
+        description = ''
+          Store tmux socket under <filename>/run</filename>, which is more
+          secure than <filename>/tmp</filename>, but as a downside it doesn't
+          survive user logout.
         '';
       };
 
@@ -79,15 +241,6 @@ in
           ]
         '';
       };
-
-      extraConfig = mkOption {
-        type = types.lines;
-        default = "";
-        description = ''
-          Additional configuration to add to
-          <filename>tmux.conf</filename>.
-        '';
-      };
     };
   };
 
@@ -98,7 +251,7 @@ in
           ++ optional cfg.tmuxinator.enable pkgs.tmuxinator
           ++ optional cfg.tmuxp.enable      pkgs.tmuxp;
 
-          home.file.".tmux.conf".text = cfg.extraConfig;
+          home.file.".tmux.conf".text = tmuxConf;
       }
 
       (mkIf cfg.sensibleOnTop {
