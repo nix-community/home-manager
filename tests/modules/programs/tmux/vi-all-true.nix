@@ -22,9 +22,8 @@ in {
     };
 
     nmt.script = ''
-      if assertFileExists home-files/.tmux.conf; then
-        assertFileContent home-files/.tmux.conf ${substituteExpected ./vi-all-true.conf}
-      fi
+      assertFileExists home-files/.tmux.conf
+      assertFileContent home-files/.tmux.conf ${substituteExpected ./vi-all-true.conf}
     '';
   };
 }

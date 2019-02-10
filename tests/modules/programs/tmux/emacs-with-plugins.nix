@@ -28,9 +28,8 @@ in {
     };
 
     nmt.script = ''
-      if assertFileExists home-files/.tmux.conf; then
-        assertFileContent home-files/.tmux.conf ${substituteExpected ./emacs-with-plugins.conf}
-      fi
+      assertFileExists home-files/.tmux.conf
+      assertFileContent home-files/.tmux.conf ${substituteExpected ./emacs-with-plugins.conf}
     '';
   };
 }
