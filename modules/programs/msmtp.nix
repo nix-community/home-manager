@@ -66,7 +66,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.msmtp ];
 
-    home.file.".msmtprc".text = configFile msmtpAccounts;
+    xdg.configFile."msmtp/config".text = configFile msmtpAccounts;
 
     home.sessionVariables =  {
       MSMTP_QUEUE = "${config.xdg.dataHome}/msmtp/queue";
