@@ -114,6 +114,20 @@ let
           for the documentation of the transform matrix.
         '';
       };
+
+      dpi = mkOption {
+        type = types.nullOr types.int;
+        description = "Output DPI configuration.";
+        default = null;
+        example = 96;
+      };
+
+      scale = mkOption {
+        type = types.str;
+        description = "Output scale configuration.";
+        default = "";
+        example = "1.25x1.25";
+      };
     };
   };
 
@@ -181,10 +195,12 @@ let
     output ${name}
     ${optionalString (config.position != "") "pos ${config.position}"}
     ${optionalString config.primary "primary"}
+    ${optionalString (config.dpi != null) "dpi ${toString config.dpi}"}
     ${optionalString (config.gamma != "") "gamma ${config.gamma}"}
     ${optionalString (config.mode != "") "mode ${config.mode}"}
     ${optionalString (config.rate != "") "rate ${config.rate}"}
     ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
+    ${optionalString (config.scale != "") "scale ${config.scale}"}
     ${optionalString (config.transform != null) (
       "transform " + concatMapStringsSep "," toString (flatten config.transform)
     )}
