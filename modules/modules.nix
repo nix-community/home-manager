@@ -38,6 +38,7 @@ let
     (loadModule ./programs/astroid.nix { })
     (loadModule ./programs/autorandr.nix { })
     (loadModule ./programs/bash.nix { })
+    (loadModule ./programs/bat.nix { })
     (loadModule ./programs/beets.nix { })
     (loadModule ./programs/browserpass.nix { })
     (loadModule ./programs/chromium.nix { condition = hostPlatform.isLinux; })
