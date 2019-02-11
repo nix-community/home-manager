@@ -998,6 +998,13 @@ in
           A new service is available: 'services.mpdris2'.
         '';
       }
+
+      {
+        time = "2019-03-19T22:56:20+00:00";
+        message = ''
+          A new module is available: 'programs.bat'.
+        '';
+      }
     ];
   };
 }
