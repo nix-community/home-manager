@@ -114,6 +114,61 @@ let
           for the documentation of the transform matrix.
         '';
       };
+
+      dpi = mkOption {
+        type = types.nullOr types.ints.positive;
+        description = "Output DPI configuration.";
+        default = null;
+        example = 96;
+      };
+
+      scale = mkOption {
+        type = types.nullOr (types.submodule {
+          options = {
+            method = mkOption {
+              type = types.enum ["factor" "pixel" ];
+              description = "Output scaling method.";
+              default = "factor";
+              example = "pixel";
+            };
+
+            x = mkOption {
+              type = types.either types.float types.ints.positive;
+              description = "Horizontal scaling factor/pixels.";
+            };
+
+            y = mkOption {
+              type = types.either types.float types.ints.positive;
+              description = "Vertical scaling factor/pixels.";
+            };
+          };
+        });
+        description = ''
+          Output scale configuration.
+          </para><para>
+          Either configure by pixels or a scaling factor. When using pixel method the
+          <citerefentry>
+            <refentrytitle>xrandr</refentrytitle>
+            <manvolnum>1</manvolnum>
+          </citerefentry>
+          option
+          <parameter class="command">--scale-from</parameter>
+          will be used; when using factor method the option
+          <parameter class="command">--scale</parameter>
+          will be used.
+          </para><para>
+          This option is a shortcut version of the transform option and they are mutually
+          exclusive.
+        '';
+        default = null;
+        example = literalExample ''
+          {
+            method = "factor";
+            x = 1.25;
+            y = 1.25;
+          }
+        '';
+      };
     };
   };
 
@@ -181,10 +236,15 @@ let
     output ${name}
     ${optionalString (config.position != "") "pos ${config.position}"}
     ${optionalString config.primary "primary"}
+    ${optionalString (config.dpi != null) "dpi ${toString config.dpi}"}
     ${optionalString (config.gamma != "") "gamma ${config.gamma}"}
     ${optionalString (config.mode != "") "mode ${config.mode}"}
     ${optionalString (config.rate != "") "rate ${config.rate}"}
     ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
+    ${optionalString (config.scale != null) (
+      (if config.scale.method == "factor" then "scale" else "scale-from")
+      + " ${toString config.scale.x}x${toString config.scale.y}"
+    )}
     ${optionalString (config.transform != null) (
       "transform " + concatMapStringsSep "," toString (flatten config.transform)
     )}
@@ -264,6 +324,19 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = flatten (mapAttrsToList (
+      profile: { config, ... }: mapAttrsToList (
+        output: opts: {
+          assertion = opts.scale == null || opts.transform == null;
+          message = ''
+            Cannot use the profile output options 'scale' and 'transform' simultaneously.
+            Check configuration for: programs.autorandr.profiles.${profile}.config.${output}
+          '';
+        })
+        config
+    )
+    cfg.profiles);
+
     home.packages = [ pkgs.autorandr ];
     xdg.configFile = mkMerge ([
       (mapAttrs' (hookToFile "postswitch.d") cfg.hooks.postswitch)
