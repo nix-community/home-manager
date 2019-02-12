@@ -123,10 +123,24 @@ let
       };
 
       scale = mkOption {
-        type = types.str;
+        type = types.nullOr (types.submodule {
+          options = {
+            x = mkOption {
+              type = types.float;
+              description = "Horizontal scaling factor.";
+            };
+            y = mkOption {
+              type = types.float;
+              description = "Vertical scaling factor.";
+            };
+          };
+        });
         description = "Output scale configuration.";
-        default = "";
-        example = "1.25x1.25";
+        default = null;
+        example = {
+          x = 1.25;
+          y = 1.25;
+        };
       };
     };
   };
@@ -200,7 +214,7 @@ let
     ${optionalString (config.mode != "") "mode ${config.mode}"}
     ${optionalString (config.rate != "") "rate ${config.rate}"}
     ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
-    ${optionalString (config.scale != "") "scale ${config.scale}"}
+    ${optionalString (config.scale != null) "scale ${toString config.scale.x}x${toString config.scale.y}"}
     ${optionalString (config.transform != null) (
       "transform " + concatMapStringsSep "," toString (flatten config.transform)
     )}
