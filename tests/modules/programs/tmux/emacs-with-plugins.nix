@@ -7,7 +7,10 @@ let
   substituteExpected = path: pkgs.substituteAll {
     src = path;
 
-    sensible_rtp = pkgs.tmuxPlugins.sensible.rtp;
+    tmuxplugin_fzf_tmux_url = pkgs.tmuxPlugins.fzf-tmux-url;
+    tmuxplugin_logging = pkgs.tmuxPlugins.logging;
+    tmuxplugin_prefix_highlight = pkgs.tmuxPlugins.prefix-highlight;
+    tmuxplugin_sensible_rtp = pkgs.tmuxPlugins.sensible.rtp;
   };
 
 in {
