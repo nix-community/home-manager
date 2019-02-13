@@ -35,17 +35,17 @@ let
     set  -g base-index      ${toString cfg.baseIndex}
     setw -g pane-base-index ${toString cfg.baseIndex}
 
-    ${if cfg.newSession then "new-session" else ""}
+    ${optionalString cfg.newSession "new-session"}
 
-    ${if cfg.reverseSplit then ''
-    bind v split-window -h
-    bind s split-window -v
-    '' else ""}
+    ${optionalString cfg.reverseSplit ''
+      bind v split-window -h
+      bind s split-window -v
+    ''}
 
     set -g status-keys ${cfg.keyMode}
     set -g mode-keys   ${cfg.keyMode}
 
-    ${if cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize then ''
+    ${optionalString (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
     bind h select-pane -L
     bind j select-pane -D
     bind k select-pane -U
@@ -55,15 +55,15 @@ let
     bind -r J resize-pane -D ${toString cfg.resizeAmount}
     bind -r K resize-pane -U ${toString cfg.resizeAmount}
     bind -r L resize-pane -R ${toString cfg.resizeAmount}
-    '' else ""}
+    ''}
 
-    ${if (cfg.shortcut != defaultShortcut) then ''
+    ${optionalString (cfg.shortcut != defaultShortcut) ''
     # rebind main key: C-${cfg.shortcut}
     unbind C-${defaultShortcut}
     set -g prefix C-${cfg.shortcut}
     bind ${cfg.shortcut} send-prefix
     bind C-${cfg.shortcut} last-window
-    '' else ""}
+    ''}
 
     setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
     setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
@@ -89,7 +89,7 @@ in
       baseIndex = mkOption {
         default = 0;
         example = 1;
-        type = types.int;
+        type = types.ints.unsigned;
         description = "Base index for windows and panes.";
       };
 
@@ -110,7 +110,7 @@ in
       escapeTime = mkOption {
         default = 500;
         example = 0;
-        type = types.int;
+        type = types.ints.unsigned;
         description = "Time in milliseconds for which tmux waits after an escape is input.";
       };
 
@@ -126,7 +126,7 @@ in
       historyLimit = mkOption {
         default = 2000;
         example = 5000;
-        type = types.int;
+        type = types.ints.positive;
         description = "Maximum number of lines held in window history.";
       };
 
@@ -160,7 +160,7 @@ in
       resizeAmount = mkOption {
         default = defaultResize;
         example = 10;
-        type = types.int;
+        type = types.ints.positive;
         description = "Number of lines/columns when resizing.";
       };
 
@@ -192,8 +192,9 @@ in
         default = true;
         type = types.bool;
         description = ''
-          Store tmux socket under /run, which is more secure than /tmp, but as a
-          downside it doesn't survive user logout.
+          Store tmux socket under <filename>/run</filename>, which is more
+          secure than <filename>/tmp</filename>, but as a downside it doesn't
+          survive user logout.
         '';
       };
 
