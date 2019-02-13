@@ -125,13 +125,20 @@ let
       scale = mkOption {
         type = types.nullOr (types.submodule {
           options = {
+            method = mkOption {
+              type = types.enum ["factor" "pixel" ];
+              description = "Output scaling method.";
+              default = "factor";
+              example = "pixel";
+            };
+
             x = mkOption {
-              type = types.float;
-              description = "Horizontal scaling factor.";
+              type = types.either types.float types.int;
+              description = "Horizontal scaling factor/pixels.";
             };
             y = mkOption {
-              type = types.float;
-              description = "Vertical scaling factor.";
+              type = types.either types.float types.int;
+              description = "Vertical scaling factor/pixels.";
             };
           };
         });
@@ -214,7 +221,10 @@ let
     ${optionalString (config.mode != "") "mode ${config.mode}"}
     ${optionalString (config.rate != "") "rate ${config.rate}"}
     ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
-    ${optionalString (config.scale != null) "scale ${toString config.scale.x}x${toString config.scale.y}"}
+    ${optionalString (config.scale != null) (
+      (if config.scale.method == "factor" then "scale" else "scale-from") +
+      " ${toString config.scale.x}x${toString config.scale.y}"
+    )}
     ${optionalString (config.transform != null) (
       "transform " + concatMapStringsSep "," toString (flatten config.transform)
     )}
