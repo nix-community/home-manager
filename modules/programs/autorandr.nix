@@ -142,7 +142,20 @@ let
             };
           };
         });
-        description = "Output scale configuration.";
+        description = ''
+          Output scale configuration.
+
+          Either configure by pixels or a scaling factor. When using pixel method the
+          <citerefentry>
+            <refentrytitle>xrandr</refentrytitle>
+            <manvolnum>1</manvolnum>
+          </citerefentry>
+          option --scale-from will be used; when using factor method the option --scale
+          will be used.
+
+          This option is a shortcut version of the transform option and they are mutually
+          exclusive. If you have configured transform this configuration will be ignored.
+        '';
         default = null;
         example = {
           x = 1.25;
@@ -221,7 +234,7 @@ let
     ${optionalString (config.mode != "") "mode ${config.mode}"}
     ${optionalString (config.rate != "") "rate ${config.rate}"}
     ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
-    ${optionalString (config.scale != null) (
+    ${optionalString (config.transform == null && config.scale != null) (
       (if config.scale.method == "factor" then "scale" else "scale-from") +
       " ${toString config.scale.x}x${toString config.scale.y}"
     )}
