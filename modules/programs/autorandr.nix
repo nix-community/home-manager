@@ -157,7 +157,7 @@ let
           will be used.
           </para><para>
           This option is a shortcut version of the transform option and they are mutually
-          exclusive. If you have configured transform this configuration will be ignored.
+          exclusive.
         '';
         default = null;
         example = {
