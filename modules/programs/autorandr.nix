@@ -326,7 +326,7 @@ in
           assertion = opts.scale == null || opts.transform == null;
           message = ''
             Cannot use the profile output options 'scale' and 'transform' simultaneously.
-            Check configuration for profile ${profile} and output ${output}.
+            Check configuration for: programs.autorandr.profiles.${profile}.config.${output}
           '';
         })
         config
