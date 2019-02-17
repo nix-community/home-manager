@@ -163,7 +163,6 @@ let
         default = null;
         example = literalExample ''
           {
-            method = "factor";
             x = 1.25;
             y = 1.25;
           }
