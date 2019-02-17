@@ -984,6 +984,13 @@ in
           is necessary if you want to use 'nixos-rebuild build-vm'.
         '';
       }
+
+      {
+        time = "2019-02-17T21:11:24+00:00";
+        message = ''
+          A new module is available: 'programs.keychain'.
+        '';
+      }
     ];
   };
 }
