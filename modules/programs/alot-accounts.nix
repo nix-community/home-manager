@@ -1,4 +1,5 @@
-{ config, lib, pkgs, ... }:
+pkgs:
+{ config, lib, ... }:
 
 with lib;
 
@@ -21,6 +22,12 @@ with lib;
         regexp = '''\[?{"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"}[,\]]?''\''';
         shellcommand_external_filtering = "False";
       };
+      defaultText = literalExample ''{
+        type = "shellcommand";
+        command = "'notmuch address --format=json --output=recipients  date:6M..'";
+        regexp = ''\'''\''\[?{"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"}[,\]]?''\'''\'''\';
+        shellcommand_external_filtering = "False";
+      }'';
       example = literalExample ''
         {
           type = "shellcommand";

@@ -33,12 +33,10 @@ let
             boolStr (signature.showSignature == "attach");
         }
       )
-      ++ optionals (alot.contactCompletion != null) (
-       [ "[[[abook]]]" ]
+      ++ [ "[[[abook]]]" ]
       ++ mapAttrsToList (n: v: n + "=" + v) (
         alot.contactCompletion
         )
-       )
     )
     + "\n"
     + alot.extraConfig;
