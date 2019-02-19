@@ -27,11 +27,17 @@ let
   buildService = style: name: serviceCfg:
     let
       filename = "${name}.${style}";
+      pathSafeName = lib.replaceChars ["@" ":" "\\" "[" "]"]
+                                      ["-" "-" "-"  ""  "" ]
+                                      filename;
 
       # Needed because systemd derives unit names from the ultimate
       # link target.
-      source = pkgs.writeTextDir filename (toSystemdIni serviceCfg)
-        + "/" + filename;
+      source = pkgs.writeTextFile {
+        name = pathSafeName;
+        text = toSystemdIni serviceCfg;
+        destination = "/${filename}";
+      } + "/${filename}";
 
       wantedBy = target:
         {
