@@ -991,6 +991,13 @@ in
           A new module is available: 'programs.keychain'.
         '';
       }
+
+      {
+        time = "2019-02-24T00:32:23+00:00";
+        message = ''
+          A new service is available: 'services.mpdris2'.
+        '';
+      }
     ];
   };
 }
