@@ -42,7 +42,7 @@ in
     system.activationScripts.postActivation.text =
       concatStringsSep "\n" (mapAttrsToList (username: usercfg: ''
         echo Activating home-manager configuration for ${username}
-        sudo -u ${username} ${usercfg.home.activationPackage}/activate
+        sudo -u ${username} -i ${usercfg.home.activationPackage}/activate
       '') cfg.users);
   };
 }
