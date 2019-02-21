@@ -11,6 +11,8 @@ let
 
     config = {
       submoduleSupport.enable = true;
+      submoduleSupport.externalPackageInstall = true;
+
       home.username = config.users.users.${name}.name;
       home.homeDirectory = config.users.users.${name}.home;
     };
