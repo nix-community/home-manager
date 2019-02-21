@@ -62,7 +62,7 @@ if [[ -v VERBOSE ]]; then
 fi
 
 $VERBOSE_ECHO "Activation variables:"
-if [[ -v oldGenNum ]] ; then
+if [[ -v oldGenNum ]] && [[ "${oldGenNum}" -gt 0 ]] ; then
     $VERBOSE_ECHO "  oldGenNum=$oldGenNum"
     $VERBOSE_ECHO "  oldGenPath=$oldGenPath"
 else
