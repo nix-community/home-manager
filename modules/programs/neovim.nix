@@ -141,7 +141,7 @@ in
         inherit (cfg)
           extraPython3Packages withPython3
           extraPythonPackages withPython
-          withNodeJs withRuby viAlias vimAlias configure;
+          withNodeJs withNodeJs withRuby viAlias vimAlias configure;
       })
     ];
   };
