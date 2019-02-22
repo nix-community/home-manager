@@ -51,7 +51,7 @@ let
 in
 
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with maintainers; [ rycee ma27 ];
 
   options = {
     services.dunst = {
@@ -61,6 +61,15 @@ in
         type = themeType;
         default = hicolorTheme;
         description = "Set the icon theme.";
+      };
+
+      dunstrc = mkOption {
+        type = types.nullOr types.path;
+        default = null;
+        description = ''
+          Path to <literal>.dunstrc</literal>.
+          Mutually exclusive with <literal>services.dunst.settings</literal>.
+        '';
       };
 
       settings = mkOption {
@@ -87,86 +96,93 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    mkMerge [
+  config = mkIf cfg.enable {
+    assertions = [
       {
-        xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
-          "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
-
-        services.dunst.settings.global.icon_path =
-          let
-            useCustomTheme =
-              cfg.iconTheme.package != hicolorTheme.package
-              || cfg.iconTheme.name != hicolorTheme.name
-              || cfg.iconTheme.size != hicolorTheme.size;
-
-            basePaths = [
-              "/run/current-system/sw"
-              config.home.profileDirectory
-              cfg.iconTheme.package
-            ] ++ optional useCustomTheme hicolorTheme.package;
-
-            themes =
-              [
-                cfg.iconTheme
-              ] ++ optional useCustomTheme (
-                hicolorTheme // { size = cfg.iconTheme.size; }
-              );
-
-            categories = [
-              "actions"
-              "animations"
-              "apps"
-              "categories"
-              "devices"
-              "emblems"
-              "emotes"
-              "filesystem"
-              "intl"
-              "mimetypes"
-              "places"
-              "status"
-              "stock"
-            ];
-          in
-            concatStringsSep ":" (
-              concatMap (theme:
-                concatMap (basePath:
-                  map (category:
-                    "${basePath}/share/icons/${theme.name}/${theme.size}/${category}"
-                  ) categories
-                ) basePaths
-              ) themes
-            );
-
-        systemd.user.services.dunst = {
-          Unit = {
-            Description = "Dunst notification daemon";
-            After = [ "graphical-session-pre.target" ];
-            PartOf = [ "graphical-session.target" ];
-          };
-
-          Service = {
-            Type = "dbus";
-            BusName = "org.freedesktop.Notifications";
-            ExecStart = "${pkgs.dunst}/bin/dunst";
-          };
-        };
+        assertion = cfg.dunstrc != null -> cfg.settings == {};
+        message = ''
+          The options `services.dunst.settings` and `services.dunst.dunstrc`
+          are mutually exclusive.
+        '';
       }
+    ];
 
-      (mkIf (cfg.settings != {}) {
-        xdg.configFile."dunst/dunstrc" = {
-          text = toDunstIni cfg.settings;
-          onChange = ''
-            pkillVerbose=""
-            if [[ -v VERBOSE ]]; then
-              pkillVerbose="-e"
-            fi
-            $DRY_RUN_CMD ${pkgs.procps}/bin/pkill -u $USER $pkillVerbose dunst || true
-            unset pkillVerbose
-          '';
-        };
-      })
-    ]
-  );
+    xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
+      "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
+
+    services.dunst = mkIf (cfg.dunstrc == null) {
+      settings.global.icon_path = let
+        useCustomTheme =
+          cfg.iconTheme.package != hicolorTheme.package
+          || cfg.iconTheme.name != hicolorTheme.name
+          || cfg.iconTheme.size != hicolorTheme.size;
+
+        basePaths = [
+          "/run/current-system/sw"
+          config.home.profileDirectory
+          cfg.iconTheme.package
+        ] ++ optional useCustomTheme hicolorTheme.package;
+
+        themes =
+          [
+            cfg.iconTheme
+          ] ++ optional useCustomTheme (
+            hicolorTheme // { size = cfg.iconTheme.size; }
+          );
+
+        categories = [
+          "actions"
+          "animations"
+          "apps"
+          "categories"
+          "devices"
+          "emblems"
+          "emotes"
+          "filesystem"
+          "intl"
+          "mimetypes"
+          "places"
+          "status"
+          "stock"
+        ];
+      in
+        concatStringsSep ":" (
+          concatMap (theme:
+            concatMap (basePath:
+              map (category:
+                "${basePath}/share/icons/${theme.name}/${theme.size}/${category}"
+              ) categories
+            ) basePaths
+          ) themes
+        );
+    };
+
+    systemd.user.services.dunst = {
+      Unit = {
+        Description = "Dunst notification daemon";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "dbus";
+        BusName = "org.freedesktop.Notifications";
+        ExecStart = "${pkgs.dunst}/bin/dunst";
+      };
+    };
+
+    xdg.configFile."dunst/dunstrc" = {
+      text = if cfg.dunstrc != null
+        then builtins.readFile cfg.dunstrc
+        else toDunstIni cfg.settings;
+      onChange = ''
+        pkillVerbose=""
+        if [[ -v VERBOSE ]]; then
+          pkillVerbose="-e"
+        fi
+        $DRY_RUN_CMD ${pkgs.procps}/bin/pkill -u $USER $pkillVerbose dunst || true
+        unset pkillVerbose
+      '';
+    };
+  };
 }
