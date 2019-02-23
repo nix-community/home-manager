@@ -11,8 +11,4 @@ rec {
   };
 
   nixos = import ./nixos;
-
-  tests = import ./tests {
-    inherit pkgs;
-  };
 }

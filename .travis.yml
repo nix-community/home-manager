@@ -9,4 +9,4 @@ before_script:
 
 script:
   - nix-shell . -A install
-  - nix-shell . -A tests.run.all
+  - nix-shell tests -A run.all
