@@ -3,16 +3,17 @@
 with lib;
 
 let
+
   cfg = config.services.mpdris2;
 
   toIni = generators.toINI {
     mkKeyValue = key: value:
-    let
-      value' =
-        if isBool value then (if value then "True" else "False")
-        else toString value;
-    in
-      "${key} = ${value'}";
+      let
+        value' =
+          if isBool value then (if value then "True" else "False")
+          else toString value;
+      in
+        "${key} = ${value'}";
   };
 
   mpdris2Conf = {
@@ -29,39 +30,44 @@ let
   };
 
 in
+
 {
   meta.maintainers = [ maintainers.pjones ];
 
   options.services.mpdris2 = {
-    enable = mkEnableOption "mpDris2 the mpd to MPRIS2 bridge";
-    notifications = mkEnableOption "Song change notifications.";
-    multimediaKeys = mkEnableOption "Respond to multimedia keys.";
+    enable = mkEnableOption "mpDris2 the MPD to MPRIS2 bridge";
+    notifications = mkEnableOption "song change notifications";
+    multimediaKeys = mkEnableOption "multimedia key support";
 
     package = mkOption {
       type = types.package;
       default = pkgs.mpdris2;
-      example = literalExample "pkgs.mpdris2";
+      defaultText = "pkgs.mpdris2";
       description = "The mpDris2 package to use.";
     };
-
 
     mpd = {
       host = mkOption {
         type = types.str;
         default = config.services.mpd.network.listenAddress;
+        defaultText = "config.services.mpd.network.listenAddress";
         example = "192.168.1.1";
-        description = "The address where mpd is listening for connections.";
+        description = "The address where MPD is listening for connections.";
       };
 
       port = mkOption {
         type = types.ints.positive;
         default = config.services.mpd.network.port;
-        description = "The port number where mpd is listening for connections.";
+        defaultText = "config.services.mpd.network.port";
+        description = ''
+          The port number where MPD is listening for connections.
+        '';
       };
 
       musicDirectory = mkOption {
         type = types.nullOr types.path;
         default = config.services.mpd.musicDirectory;
+        defaultText = "config.services.mpd.musicDirectory";
         description = ''
           If set, mpDris2 will use this directory to access music artwork.
         '';
@@ -70,11 +76,18 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = config.services.mpd.enable;
+        message = "The mpdris2 module requires 'services.mpd.enable = true'.";
+      }
+    ];
+
     xdg.configFile."mpDris2/mpDris2.conf".text = toIni mpdris2Conf;
 
     systemd.user.services.mpdris2 = {
       Unit = {
-        Description = "MPRIS 2 support for mpd";
+        Description = "MPRIS 2 support for MPD";
         After = [ "graphical-session-pre.target" "mpd.service" ];
         PartOf = [ "graphical-session.target" ];
       };
