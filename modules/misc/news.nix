@@ -2304,6 +2304,14 @@ in
           A new module is available: 'programs.navi'.
         '';
       }
+
+      {
+        time = "2021-12-11T16:07:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.gromit-mpx'.
+        '';
+      }
     ];
   };
 }

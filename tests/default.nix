@@ -132,6 +132,7 @@ import nmt {
     ./modules/services/fnott
     ./modules/services/git-sync
     ./modules/services/gpg-agent
+    ./modules/services/gromit-mpx
     ./modules/services/kanshi
     ./modules/services/lieer
     ./modules/services/pantalaimon

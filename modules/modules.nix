@@ -176,6 +176,7 @@ let
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix
     ./services/grobi.nix
+    ./services/gromit-mpx.nix
     ./services/hound.nix
     ./services/imapnotify.nix
     ./services/kanshi.nix
