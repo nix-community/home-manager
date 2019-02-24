@@ -998,6 +998,13 @@ in
           A new service is available: 'services.mpdris2'.
         '';
       }
+
+      {
+        time = "2019-02-24T19:31:15+00:00";
+        message = ''
+          A new service is available: 'services.gromit-mpx'.
+        '';
+      }
     ];
   };
 }
