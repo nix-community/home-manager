@@ -141,6 +141,12 @@ in
         description = "Whether to show the menubar by default";
       };
 
+      themeVariant = mkOption {
+        default = "default";
+        type = types.enum [ "default" "light" "dark" ];
+        description = "The theme variation to request";
+      };
+
       profile = mkOption {
         default = {};
         type = types.attrsOf profileSubModule;
@@ -159,6 +165,7 @@ in
         {
           "${dconfPath}" = {
             default-show-menubar = cfg.showMenubar;
+            theme-variant = cfg.themeVariant;
             schema-version = 3;
           };
 
