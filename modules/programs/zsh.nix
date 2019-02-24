@@ -174,7 +174,7 @@ in
         default = true;
         description = ''
           Enable zsh completion. Don't forget to add
-          <programlisting>
+          <programlisting language="nix">
             environment.pathsToLink = [ "/share/zsh" ];
           </programlisting>
           to your system configuration to get completion for system packages (e.g. systemd).

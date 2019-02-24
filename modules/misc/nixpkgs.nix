@@ -80,7 +80,7 @@ in
         inside and outside Home Manager you can put it in a separate
         file and include something like
 
-        <programlisting>
+        <programlisting language="nix">
           nixpkgs.config = import ./nixpkgs-config.nix;
           xdg.configFile."nixpkgs/config.nix".source =
               ./nixpkgs-config.nix;

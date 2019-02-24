@@ -88,7 +88,7 @@
     <para>
      On NixOS you may need to log out and back in for the channel to become
      available. On non-NixOS you may have to add
-<programlisting>
+<programlisting language="bash">
 export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
 </programlisting>
      to your shell (see
@@ -113,7 +113,7 @@ export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
      If you do not plan on having Home Manager manage your shell configuration
      then you must source the
     </para>
-<programlisting>
+<programlisting language="bash">
 $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
 </programlisting>
     <para>

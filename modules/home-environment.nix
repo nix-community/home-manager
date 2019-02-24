@@ -163,7 +163,7 @@ in
         Note, these variables may be set in any order so no session
         variable may have a runtime dependency on another session
         variable. In particular code like
-        <programlisting>
+        <programlisting language="nix">
           home.sessionVariables = {
             FOO = "Hello";
             BAR = "$FOO World!";
@@ -172,7 +172,7 @@ in
         may not work as expected. If you need to reference another
         session variable, then do so inside Nix instead. The above
         example then becomes
-        <programlisting>
+        <programlisting language="nix">
           home.sessionVariables = {
             FOO = "Hello";
             BAR = "''${config.home.sessionVariables.FOO} World!";
