@@ -43,35 +43,38 @@ in
     };
   };
 
-  config = mkIf (cfg.users != {}) {
-    users.users = mkIf cfg.useUserPackages (
-      mapAttrs (username: usercfg: {
-        packages = usercfg.home.packages;
-      }) cfg.users
-    );
+  config = mkIf (cfg.users != {}) (mkMerge [
+    (mkIf cfg.useUserPackages {
+      users.users =
+        mapAttrs (username: usercfg: {
+          packages = usercfg.home.packages;
+        }) cfg.users;
+    })
 
-    systemd.services = mapAttrs' (username: usercfg:
-      nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
-        description = "Home Manager environment for ${username}";
-        wantedBy = [ "multi-user.target" ];
-        wants = [ "nix-daemon.socket" ];
-        after = [ "nix-daemon.socket" ];
+    {
+      systemd.services = mapAttrs' (username: usercfg:
+        nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
+          description = "Home Manager environment for ${username}";
+          wantedBy = [ "multi-user.target" ];
+          wants = [ "nix-daemon.socket" ];
+          after = [ "nix-daemon.socket" ];
 
-        serviceConfig = {
-          User = usercfg.home.username;
-          Type = "oneshot";
-          RemainAfterExit = "yes";
-          SyslogIdentifier = "hm-activate-${username}";
+          serviceConfig = {
+            User = usercfg.home.username;
+            Type = "oneshot";
+            RemainAfterExit = "yes";
+            SyslogIdentifier = "hm-activate-${username}";
 
-          # The activation script is run by a login shell to make sure
-          # that the user is given a sane Nix environment.
-          ExecStart = pkgs.writeScript "activate-${username}" ''
-            #! ${pkgs.stdenv.shell} -el
-            echo Activating home-manager configuration for ${username}
-            exec ${usercfg.home.activationPackage}/activate
-          '';
-        };
-      }
-    ) cfg.users;
-  };
+            # The activation script is run by a login shell to make sure
+            # that the user is given a sane Nix environment.
+            ExecStart = pkgs.writeScript "activate-${username}" ''
+              #! ${pkgs.stdenv.shell} -el
+              echo Activating home-manager configuration for ${username}
+              exec ${usercfg.home.activationPackage}/activate
+            '';
+          };
+        }
+      ) cfg.users;
+    }
+  ]);
 }
