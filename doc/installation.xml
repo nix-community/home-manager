@@ -145,8 +145,86 @@ $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
   <title>NixOS module</title>
 
   <para>
-   To be done.
+   Home Manager provides a NixOS module that allows you to prepare user
+   environments directly from the system configuration file, which often is
+   more convenient than using the <command>home-manager</command> tool. It also
+   opens up additional possibilities, for example, to automatically configure
+   user environments in NixOS declarative containers or on systems deployed
+   through NixOps.
   </para>
+
+  <para>
+   To make the NixOS module available for use you must <option>import</option>
+   it into your system configuration. This is most conveniently done by adding
+   a Home Manager channel, for example
+  </para>
+
+<screen>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --update</userinput>
+</screen>
+
+  <para>
+   if you are following Nixpkgs master or an unstable channel and
+  </para>
+
+<screen>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-18.09.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --update</userinput>
+</screen>
+
+  <para>
+   if you follow a Nixpkgs version 18.09 channel.
+  </para>
+
+  <para>
+   It is then possible to add
+  </para>
+
+<programlisting language="nix">
+imports = [ &lt;home-manager/nixos&gt; ];
+</programlisting>
+
+  <para>
+   to your system <filename>configuration.nix</filename> file, which will
+   introduce a new NixOS option called <option>home-manager.users</option>
+   whose type is an attribute set that maps user names to Home Manager
+   configurations.
+  </para>
+
+  <para>
+   For example, a NixOS configuration may include the lines
+  </para>
+
+<programlisting language="nix">
+users.users.eve.isNormalUser = true;
+home-manager.users.eve = { pkgs, ... }: {
+  home.packages = [ pkgs.atool pkgs.httpie ];
+  programs.bash.enable = true;
+};
+</programlisting>
+
+  <para>
+   and after a <command>nixos-rebuild switch</command> the user eve's
+   environment should include a basic Bash configuration and the packages atool
+   and httpie.
+  </para>
+
+  <note>
+   <para>
+    By default packages will be installed to
+    <filename>$HOME/.nix-profile</filename> but they can be installed to
+    <filename>/etc/profiles</filename> if
+   </para>
+<programlisting language="nix">
+home-manager.useUserPackages = true;
+</programlisting>
+   <para>
+    is added to the system configuration. This is necessary if, for example,
+    you wish to use <command>nixos-rebuild build-vm</command>. This option may
+    become the default value in the future.
+   </para>
+  </note>
  </section>
  <section xml:id="sec-install-nix-darwin-module">
   <title>nix-darwin module</title>
