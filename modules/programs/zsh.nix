@@ -15,7 +15,7 @@ let
   localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
 
   aliasesStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
+    mapAttrsToList (k: v: "alias ${k}=${lib.escapeShellArg v}") cfg.shellAliases
   );
 
   zdotdir = "$HOME/" + cfg.dotDir;
