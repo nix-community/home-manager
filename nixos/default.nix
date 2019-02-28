@@ -44,6 +44,16 @@ in
   };
 
   config = mkIf (cfg.users != {}) {
+    assertions =
+      flatten (flip mapAttrsToList cfg.users (user: config:
+        flip map config.assertions (assertion:
+          {
+            inherit (assertion) assertion;
+            message = "${user} profile: ${assertion.message}";
+          }
+        )
+      ));
+
     users.users = mkIf cfg.useUserPackages (
       mapAttrs (username: usercfg: {
         packages = usercfg.home.packages;
