@@ -30,7 +30,7 @@ in
   config = mkIf (vars != {}) {
     home.file.".pam_environment".text =
       concatStringsSep "\n" (
-        mapAttrsToList (n: v: "${n} OVERRIDE=${toString v}") vars
+        mapAttrsToList (n: v: "${n} OVERRIDE=\"${toString v}\"") vars
       ) + "\n";
   };
 }
