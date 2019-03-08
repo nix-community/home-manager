@@ -6,21 +6,86 @@ let
 
   cfg = config.programs.afew;
 
+  mkIniKeyValue = key: value:
+    let
+      tweakVal = v:
+        if isString v then v
+        else if isList v then concatMapStringsSep ";" tweakVal v
+        else if isBool v then (if v then "true" else "false")
+        else toString v;
+    in
+      "${key}=${tweakVal value}";
+
+  /* Return a list of name value pairs where name is "class.index" and value is
+     an attribute set of arbitrary afew options.
+
+     Example:
+       filters = [
+            { class="Class", q="a"; }
+            { q = "b"}
+          ]
+      => [{ name = "Class.1"; value = { "q" = "a"; }; } { name = "Filter.2"; value = { "q" = "b"; }; }]
+  */
+  processAfewFilters = afewFilters:
+    let
+      getClass = attrs:
+        attrByPath ["class"] "Filter" attrs;
+      removeClass = attrs:
+        filterAttrs (n: v: n != "class") attrs;
+      indexed = xs:
+        imap0 (i: v: v // { class = "${getClass v}.${toString (i+1000)}"; }) xs;
+      toPair = mkKey: mkValue: attrs:
+        nameValuePair (mkKey attrs) (mkValue attrs);
+    in
+      map (toPair getClass removeClass) (indexed afewFilters);
+
+  /* Convert a list of name value pairs to a list of INI sections */
+  toOrderedINI = {
+    mkKeyValue ? mkKeyValueDefault {} "="
+  }: afewFilters:
+    let
+      mkSection = pair: ''
+        ${mkSectionName pair}
+        ${toKV pair.value}'';
+      mkSectionName = pair: "[${pair.name}]";
+      toKV = attrs: generators.toKeyValue { inherit mkKeyValue; } attrs;
+    in
+      concatStringsSep "\n" (map mkSection afewFilters);
+
 in
 
 {
   options.programs.afew = {
     enable = mkEnableOption "the afew initial tagging script for Notmuch";
 
+    filters = mkOption {
+      type = types.listOf (types.attrs);
+      default = [
+        { class = "SpamFilter"; }
+        { class = "KillThreadsFilter"; }
+        { class = "ListMailsFilter"; }
+        { class = "ArchiveSentMailsFilter"; }
+        { class = "InboxFilter"; }
+      ];
+      description = ''
+        Filters added to afew configuration file. Available configuration
+        options are described in the afew manual: <link
+        xlink:href="https://afew.readthedocs.io/en/latest/configuration.html" />.
+      '';
+      example = ''[
+        { class = "SpamFilter"; }
+
+        { query = "frompointyheaded@boss.com";
+          tags = ["-new" "+boss"];
+          message = "Message from above"; }
+
+        { class = "InboxFilter"; }
+      ]'';
+    };
+
     extraConfig = mkOption {
       type = types.lines;
-      default = ''
-        [SpamFilter]
-        [KillThreadsFilter]
-        [ListMailsFilter]
-        [ArchiveSentMailsFilter]
-        [InboxFilter]
-      '';
+      default = "";
       example = ''
         [SpamFilter]
 
@@ -32,9 +97,9 @@ in
         [InboxFilter]
       '';
       description = ''
-        Extra lines added to afew configuration file. Available
-        configuration options are described in the afew manual:
-        <link xlink:href="https://afew.readthedocs.io/en/latest/configuration.html" />.
+        Extra lines prepended to afew configuration file. Available
+        configuration options are described in the afew manual: <link
+        xlink:href="https://afew.readthedocs.io/en/latest/configuration.html" />.
       '';
     };
   };
@@ -47,6 +112,8 @@ in
       # See https://afew.readthedocs.io/
 
       ${cfg.extraConfig}
+      ${toOrderedINI { mkKeyValue = mkIniKeyValue; } (processAfewFilters (cfg.filters))}
     '';
+
   };
 }
