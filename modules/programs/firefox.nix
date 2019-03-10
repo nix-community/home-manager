@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.firefox;
 
+  extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
+
 in
 
 {
@@ -20,6 +22,23 @@ in
         default = pkgs.firefox-unwrapped;
         defaultText = "pkgs.firefox-unwrapped";
         description = "The unwrapped Firefox package to use.";
+      };
+
+      extensions = mkOption {
+        type = types.listOf types.package;
+        default = [];
+        example = literalExample ''
+          with pkgs.firefox-addons; [
+            https-everywhere
+            privacy-badger
+          ]
+        '';
+        description = ''
+          List of Firefox add-on packages to install. Note, it is
+          necessary to manually enable these extensions inside Firefox
+          after the first installation.
+        '';
+        visible = false;
       };
 
       enableAdobeFlash = mkOption {
@@ -60,5 +79,18 @@ in
         };
       in
         [ (wrapper cfg.package { }) ];
+
+    home.file.".mozilla/${extensionPath}" = mkIf (cfg.extensions != []) (
+      let
+        extensionsEnv = pkgs.buildEnv {
+          name = "hm-firefox-extensions";
+          paths = cfg.extensions;
+        };
+      in
+        {
+          source = "${extensionsEnv}/share/mozilla/${extensionPath}";
+          recursive = true;
+        }
+    );
   };
 }
