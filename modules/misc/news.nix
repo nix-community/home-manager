@@ -1058,6 +1058,13 @@ in
           A new module is available: 'programs.skim'.
         '';
       }
+
+      {
+        time = "2019-04-22T12:43:20+00:00";
+        message = ''
+          A new module is available: 'programs.alacritty'.
+        '';
+      }
     ];
   };
 }
