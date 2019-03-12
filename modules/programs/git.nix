@@ -6,21 +6,45 @@ let
 
   cfg = config.programs.git;
 
+  # create [section "subsection"] keys from "section.subsection" attrset names
+  mkSectionName = name:
+  let
+    containsQuote = length (splitString ''"'' name) > 1;
+    sections = splitString "." name;
+    section = head sections;
+    subsections = tail sections;
+    subsection = concatStringsSep "." subsections;
+  in if containsQuote || length subsections == 0
+    then name
+    else "${section} \"${subsection}\"";
+
   # generation for multiple ini values
   mkKeyValue = k: v:
   let
     mkKeyValue = generators.mkKeyValueDefault {} "=" k;
   in concatStringsSep "\n" (map mkKeyValue (toList v));
 
-  gitToINI = generators.toINI { inherit mkKeyValue; };
+  # converts { a.b.c = 5; } to { "a.b".c = 5; } for toINI
+  gitFlattenAttrs = let
+    recurse = path: value:
+    if isAttrs value
+      then mapAttrsToList (name: value: recurse ([name] ++ path) value) value
+    else if length path > 1
+      then { ${concatStringsSep "." (reverseList (tail path))}.${head path} = value; }
+    else { ${head path} = value; };
+  in attrs: foldl recursiveUpdate {} (flatten (recurse [] attrs));
+
+  gitToINI = attrs:
+    generators.toINI { inherit mkKeyValue mkSectionName; } (gitFlattenAttrs attrs);
 
   gitIniType = with types;
     let
       primitiveType = foldl either str [bool int];
       multipleType = either primitiveType (listOf primitiveType);
       sectionType = attrsOf multipleType;
+      supersectionType = attrsOf (either multipleType sectionType);
     in
-      attrsOf sectionType;
+      attrsOf supersectionType;
 
   signModule = types.submodule {
     options = {
@@ -125,6 +149,7 @@ in
         default = {};
         example = {
           core = { whitespace = "trailing-space,space-before-tab"; };
+          url."ssh://git@host".insteadOf = "otherhost";
         };
         description = "Additional configuration to add.";
       };
@@ -197,7 +222,7 @@ in
             hasSmtp = name: account: account.smtp != null;
 
             genIdentity = name: account: with account;
-              nameValuePair "sendemail \"${name}\"" ({
+              nameValuePair "sendemail.${name}" ({
                 smtpEncryption = if smtp.tls.enable then "tls" else "";
                 smtpServer = smtp.host;
                 smtpUser = userName;
@@ -232,19 +257,17 @@ in
       })
 
       (mkIf (cfg.includes != []) {
-        xdg.configFile."git/config".text = mkAfter
-          (concatMapStringsSep "\n"
-            (i: with i; ''
-              [${if (condition == null) then "include" else "includeIf \"${condition}\""}]
-              path = ${path}
-            '')
-            cfg.includes);
+        xdg.configFile."git/config".text = let
+          include = i: with i; if condition != null
+            then { includeIf.${condition}.path = "${path}"; }
+            else { include.path = "${path}"; };
+        in mkAfter (concatStringsSep "\n" (map gitToINI (map include cfg.includes)));
       })
 
       (mkIf cfg.lfs.enable {
         home.packages = [ pkgs.git-lfs ];
 
-        programs.git.iniContent."filter \"lfs\"" =
+        programs.git.iniContent.filter.lfs =
           let
             skipArg = optional cfg.lfs.skipSmudge "--skip";
           in
