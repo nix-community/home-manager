@@ -6,11 +6,21 @@ let
 
   cfg = config.programs.git;
 
+  # generation for multiple ini values
+  mkKeyValue = k: v:
+  let
+    mkKeyValue = generators.mkKeyValueDefault {} "=" k;
+  in concatStringsSep "\n" (map mkKeyValue (toList v));
+
+  gitToINI = generators.toINI { inherit mkKeyValue; };
+
   gitIniType = with types;
     let
-      primitiveType = either bool (either int str);
+      primitiveType = foldl either str [bool int];
+      multipleType = either primitiveType (listOf primitiveType);
+      sectionType = attrsOf multipleType;
     in
-      attrsOf (attrsOf primitiveType);
+      attrsOf sectionType;
 
   signModule = types.submodule {
     options = {
@@ -64,7 +74,7 @@ let
     };
 
     config.path = mkIf (config.contents != {}) (
-      mkDefault (pkgs.writeText "contents" (generators.toINI {} config.contents))
+      mkDefault (pkgs.writeText "contents" (gitToINI config.contents))
     );
   });
 
@@ -173,7 +183,7 @@ in
         };
 
         xdg.configFile = {
-          "git/config".text = generators.toINI {} cfg.iniContent;
+          "git/config".text = gitToINI cfg.iniContent;
 
           "git/ignore" = mkIf (cfg.ignores != []) {
             text = concatStringsSep "\n" cfg.ignores + "\n";
