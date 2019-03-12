@@ -31,6 +31,7 @@ in
         extraConfig = {
           extra = {
             name = "value";
+            multiple = [1];
           };
         };
         ignores = [ "*~" "*.swp" ];
@@ -59,6 +60,7 @@ in
         aliases.a2 = mkForce "baz";
         extraConfig.extra.boolean = true;
         extraConfig.extra.integer = 38;
+        extraConfig.extra.multiple = [2];
       }
     ];
 
