@@ -1005,6 +1005,13 @@ in
           A new module is available: 'programs.bat'.
         '';
       }
+
+      {
+        time = "2019-03-19T23:07:34+00:00";
+        message = ''
+          A new module is available: 'programs.lsd'.
+        '';
+      }
     ];
   };
 }
