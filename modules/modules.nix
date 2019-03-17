@@ -59,6 +59,7 @@ let
     (loadModule ./programs/jq.nix { })
     (loadModule ./programs/keychain.nix { })
     (loadModule ./programs/lesspipe.nix { })
+    (loadModule ./programs/lsd.nix { })
     (loadModule ./programs/man.nix { })
     (loadModule ./programs/matplotlib.nix { })
     (loadModule ./programs/mbsync.nix { })
