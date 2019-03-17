@@ -998,6 +998,17 @@ in
           A new service is available: 'services.mpdris2'.
         '';
       }
+
+      {
+        time = "2019-03-17T13:37:00+00:00";
+        condition = config.programs.vscode.enable;
+        message = ''
+          A new module is available: 'programs.vscode.haskell'.
+
+          Enable for adding Haskell IDE Engine and syntax highlighting
+          support to your VSCode.
+        '';
+      }
     ];
   };
 }
