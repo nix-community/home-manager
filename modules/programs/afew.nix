@@ -21,19 +21,19 @@ let
 
      Example:
        filters = [
-            { class="Class", q="a"; }
-            { q = "b"}
-          ]
-      => [{ name = "Class.1"; value = { "q" = "a"; }; } { name = "Filter.2"; value = { "q" = "b"; }; }]
+         { class="Class", q="a"; }
+         { q = "b"}
+       ]
+      => [{ name = "Class.1"; value = { "q" = "a"; }; }
+          { name = "Filter.2"; value = { "q" = "b"; }; }]
   */
   processAfewFilters = afewFilters:
     let
-      getClass = attrs:
-        attrByPath ["class"] "Filter" attrs;
-      removeClass = attrs:
-        filterAttrs (n: v: n != "class") attrs;
-      indexed = xs:
-        imap0 (i: v: v // { class = "${getClass v}.${toString (i+1000)}"; }) xs;
+      getClass = attrs: attrs.class or "Filter";
+      removeClass = filterAttrs (n: v: n != "class");
+      indexed = imap0 (i: v:
+        v // { class = "${getClass v}.${toString (i+1000)}"; }
+      );
       toPair = mkKey: mkValue: attrs:
         nameValuePair (mkKey attrs) (mkValue attrs);
     in
@@ -72,15 +72,17 @@ in
         options are described in the afew manual: <link
         xlink:href="https://afew.readthedocs.io/en/latest/configuration.html" />.
       '';
-      example = ''[
-        { class = "SpamFilter"; }
+      example = literalExample ''
+        [
+          { class = "SpamFilter"; }
 
-        { query = "frompointyheaded@boss.com";
-          tags = ["-new" "+boss"];
-          message = "Message from above"; }
+          { query = "frompointyheaded@boss.com";
+            tags = ["-new" "+boss"];
+            message = "Message from above"; }
 
-        { class = "InboxFilter"; }
-      ]'';
+          { class = "InboxFilter"; }
+        ]
+      '';
     };
 
     extraConfig = mkOption {
@@ -97,7 +99,7 @@ in
         [InboxFilter]
       '';
       description = ''
-        Extra lines prepended to afew configuration file. Available
+        Extra lines prepended to the afew configuration file. Available
         configuration options are described in the afew manual: <link
         xlink:href="https://afew.readthedocs.io/en/latest/configuration.html" />.
       '';
