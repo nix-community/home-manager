@@ -66,10 +66,15 @@ let
       };
 
       identityFile = mkOption {
-        type = types.nullOr types.str;
-        default = null;
+        type = with types; either (listOf str) (nullOr str);
+        default = [];
+        apply = p:
+          if p == null then []
+          else if isString p then [p]
+          else p;
         description = ''
-          Specifies a file from which the user identity is read.
+          Specifies files from which the user identity is read.
+          Identities will be tried in the given order.
         '';
       };
 
@@ -165,7 +170,6 @@ let
     ++ optional cf.forwardX11Trusted         "  ForwardX11Trusted yes"
     ++ optional cf.identitiesOnly            "  IdentitiesOnly yes"
     ++ optional (cf.user != null)            "  User ${cf.user}"
-    ++ optional (cf.identityFile != null)    "  IdentityFile ${cf.identityFile}"
     ++ optional (cf.certificateFile != null) "  CertificateFile ${cf.certificateFile}"
     ++ optional (cf.hostname != null)        "  HostName ${cf.hostname}"
     ++ optional (cf.addressFamily != null)   "  AddressFamily ${cf.addressFamily}"
@@ -176,6 +180,7 @@ let
     ++ optional (!cf.checkHostIP)            "  CheckHostIP no"
     ++ optional (cf.proxyCommand != null)    "  ProxyCommand ${cf.proxyCommand}"
     ++ optional (cf.proxyJump != null)       "  ProxyJump ${cf.proxyJump}"
+    ++ map (file: "  IdentityFile ${file}") cf.identityFile
     ++ mapAttrsToList (n: v: "  ${n} ${v}") cf.extraOptions
   );
 
