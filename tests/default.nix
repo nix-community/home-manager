@@ -26,7 +26,9 @@ import nmt {
     mbsync = ./modules/programs/mbsync.nix;
     texlive-minimal = ./modules/programs/texlive-minimal.nix;
     xresources = ./modules/xresources.nix;
-  } // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  }
+  // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     i3-keybindings = ./modules/services/window-managers/i3-keybindings.nix;
-  };
+  }
+  // import ./modules/programs/ssh;
 }
