@@ -228,6 +228,14 @@ in
         the known hosts file.
       '';
     };
+    
+    host = mkOption {
+      default = "*";
+      type = types.str;
+      description = ''
+        The host pattern used by the main configuration block.
+      '';
+    }
 
     userKnownHostsFile = mkOption {
       type = types.str;
@@ -316,7 +324,7 @@ in
         map matchBlockStr (
         builtins.attrValues cfg.matchBlocks))}
 
-      Host *
+      Host ${yn cfg.host}
         ForwardAgent ${yn cfg.forwardAgent}
         Compression ${yn cfg.compression}
         ServerAliveInterval ${toString cfg.serverAliveInterval}
