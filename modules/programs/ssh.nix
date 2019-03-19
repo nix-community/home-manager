@@ -235,7 +235,7 @@ in
       description = ''
         The host pattern used by the main configuration block.
       '';
-    }
+    };
 
     userKnownHostsFile = mkOption {
       type = types.str;
