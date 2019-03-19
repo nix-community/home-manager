@@ -324,7 +324,7 @@ in
         map matchBlockStr (
         builtins.attrValues cfg.matchBlocks))}
 
-      Host ${yn cfg.host}
+      Host ${cfg.host}
         ForwardAgent ${yn cfg.forwardAgent}
         Compression ${yn cfg.compression}
         ServerAliveInterval ${toString cfg.serverAliveInterval}
