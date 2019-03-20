@@ -36,7 +36,7 @@ let
 
   manualHtmlRoot = "${homeManagerManual.manual}/share/doc/home-manager/index.html";
 
-  helpScript = pkgs.writeScriptBin "home-manager-help" ''
+  helpScript = pkgs.writeShellScriptBin "home-manager-help" ''
     #!${pkgs.bash}/bin/bash -e
 
     if [ -z "$BROWSER" ]; then
