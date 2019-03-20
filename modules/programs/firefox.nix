@@ -28,7 +28,7 @@ in
         type = types.listOf types.package;
         default = [];
         example = literalExample ''
-          with pkgs.firefox-addons; [
+          with pkgs.nur.repos.rycee.firefox-addons; [
             https-everywhere
             privacy-badger
           ]
@@ -38,7 +38,6 @@ in
           necessary to manually enable these extensions inside Firefox
           after the first installation.
         '';
-        visible = false;
       };
 
       enableAdobeFlash = mkOption {
