@@ -60,6 +60,7 @@ let
     (loadModule ./programs/info.nix { })
     (loadModule ./programs/irssi.nix { })
     (loadModule ./programs/jq.nix { })
+    (loadModule ./programs/kakoune.nix { })
     (loadModule ./programs/keychain.nix { })
     (loadModule ./programs/lesspipe.nix { })
     (loadModule ./programs/lsd.nix { })
