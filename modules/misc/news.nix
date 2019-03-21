@@ -1145,6 +1145,13 @@ in
           A new module is available: 'services.taskwarrior-sync'.
         '';
       }
+
+      {
+        time = "2019-07-17T20:05:29+00:00";
+        message = ''
+          A new module is available: 'programs.kakoune'.
+        '';
+      }
     ];
   };
 }
