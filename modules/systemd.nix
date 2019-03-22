@@ -12,7 +12,8 @@ let
       || cfg.sockets != {}
       || cfg.targets != {}
       || cfg.timers != {}
-      || cfg.paths != {};
+      || cfg.paths != {}
+      || cfg.sessionVariables != {};
 
   toSystemdIni = generators.toINI {
     mkKeyValue = key: value:
@@ -85,6 +86,13 @@ let
     }
   '';
 
+  sessionVariables = mkIf (cfg.sessionVariables != {}) {
+    "environment.d/10-home-manager.conf".text =
+      concatStringsSep "\n" (
+        mapAttrsToList (n: v: "${n}=${toString v}") cfg.sessionVariables
+      ) + "\n";
+    };
+
 in
 
 {
@@ -156,6 +164,20 @@ in
           start is considered successful.
         '';
       };
+
+      sessionVariables = mkOption {
+        default = {};
+        type = with types; attrsOf (either int str);
+        example = { EDITOR = "vim"; };
+        description = ''
+          Environment variables that will be set for the user session.
+          The variable values must be as described in
+          <citerefentry>
+            <refentrytitle>environment.d</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry>.
+        '';
+      };
     };
   };
 
@@ -168,7 +190,7 @@ in
             let
               names = concatStringsSep ", " (
                   attrNames (
-                      cfg.services // cfg.sockets // cfg.targets // cfg.timers // cfg.paths
+                      cfg.services // cfg.sockets // cfg.targets // cfg.timers // cfg.paths // cfg.sessionVariables
                   )
               );
             in
@@ -180,8 +202,8 @@ in
     # If we run under a Linux system we assume that systemd is
     # available, in particular we assume that systemctl is in PATH.
     (mkIf pkgs.stdenv.isLinux {
-      xdg.configFile =
-        listToAttrs (
+      xdg.configFile = mkMerge [
+        (listToAttrs (
           (buildServices "service" cfg.services)
           ++
           (buildServices "socket" cfg.sockets)
@@ -191,7 +213,10 @@ in
           (buildServices "timer" cfg.timers)
           ++
           (buildServices "path" cfg.paths)
-        );
+          ))
+
+          sessionVariables
+        ];
 
       # Run systemd service reload if user is logged in. If we're
       # running this from the NixOS module then XDG_RUNTIME_DIR is not
