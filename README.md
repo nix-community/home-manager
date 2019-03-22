@@ -31,6 +31,11 @@ on how to manually perform a rollback.
 Now when your expectations have been built up and you are eager to try
 all this out you can go ahead and read the rest of this text.
 
+Contact
+-------
+
+You can chat with us on IRC in the channel [#home-manager][].
+
 Installation
 ------------
 
@@ -301,3 +306,4 @@ in your Home Manager configuration.
 [nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
 [Z shell]: http://zsh.sourceforge.net/
 [configuration options]: https://rycee.gitlab.io/home-manager/options.html
+[#home-manager]: https://webchat.freenode.net/?url=irc%3A%2F%2Firc.freenode.net%2Fhome-manager
