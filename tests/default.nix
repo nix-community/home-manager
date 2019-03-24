@@ -27,9 +27,12 @@ import nmt {
     texlive-minimal = ./modules/programs/texlive-minimal.nix;
     xresources = ./modules/xresources.nix;
   }
-  // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-    i3-keybindings = ./modules/services/window-managers/i3-keybindings.nix;
-  }
-  // import ./modules/programs/tmux
-  // import ./modules/programs/ssh;
+  // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux (
+    {
+      i3-keybindings = ./modules/services/window-managers/i3-keybindings.nix;
+    }
+    // import ./modules/systemd
+  )
+  // import ./modules/programs/ssh
+  // import ./modules/programs/tmux;
 }
