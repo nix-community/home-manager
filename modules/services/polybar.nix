@@ -27,12 +27,6 @@ let
   configFile = pkgs.writeText "polybar.conf"
     (toPolybarIni cfg.config + "\n" + cfg.extraConfig);
 
-  script = ''
-    #!${pkgs.stdenv.shell}
-
-    ${cfg.script}
-  '';
-
 in
 
 {
@@ -130,7 +124,11 @@ in
       Service = {
         Type = "forking";
         Environment = "PATH=${cfg.package}/bin:/run/wrappers/bin";
-        ExecStart = ''${pkgs.writeScriptBin "polybar-start" script}/bin/polybar-start'';
+        ExecStart =
+          let
+            scriptPkg = pkgs.writeShellScriptBin "polybar-start" cfg.script;
+          in
+            "${scriptPkg}/bin/polybar-start";
       };
 
       Install = {

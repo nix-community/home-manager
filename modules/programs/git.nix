@@ -88,12 +88,14 @@ in
       };
 
       userName = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
+        default = null;
         description = "Default user name to use.";
       };
 
       userEmail = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
+        default = null;
         description = "Default user email to use.";
       };
 
@@ -168,8 +170,8 @@ in
         home.packages = [ cfg.package ];
 
         programs.git.iniContent.user = {
-          name = cfg.userName;
-          email = cfg.userEmail;
+          name = mkIf (cfg.userName != null) cfg.userName;
+          email = mkIf (cfg.userEmail != null) cfg.userEmail;
         };
 
         xdg.configFile = {

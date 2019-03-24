@@ -104,3 +104,18 @@ You can get some inspiration from the [Post your home-manager home.nix
 file!][1] Reddit thread.
 
 [1]: https://www.reddit.com/r/NixOS/comments/9bb9h9/post_your_homemanager_homenix_file/
+
+Why do I get an error message about `ca.desrt.dconf`?
+-----------------------------------------------------
+
+You are most likely trying to configure the GTK or Gnome Terminal but
+the DBus session is not aware of the dconf service. The full error you
+might get is
+
+    error: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name ca.desrt.dconf was not provided by any .service files
+
+The solution on NixOS is to add
+
+    services.dbus.packages = with pkgs; [ gnome3.dconf ];
+
+to your system configuration.

@@ -12,11 +12,20 @@ let
 
 in
 
-pkgs.stdenv.mkDerivation {
-  name = "home-manager";
-
-  buildCommand = ''
-    install -v -D -m755 ${./home-manager} $out/bin/home-manager
+pkgs.runCommand
+  "home-manager"
+  {
+    preferLocalBuild = true;
+    allowSubstitutes = false;
+    meta = with pkgs.stdenv.lib; {
+      description = "A user environment configurator";
+      maintainers = [ maintainers.rycee ];
+      platforms = platforms.unix;
+      license = licenses.mit;
+    };
+  }
+  ''
+    install -v -D -m755  ${./home-manager} $out/bin/home-manager
 
     substituteInPlace $out/bin/home-manager \
       --subst-var-by bash "${pkgs.bash}" \
@@ -25,12 +34,4 @@ pkgs.stdenv.mkDerivation {
       --subst-var-by gnused "${pkgs.gnused}" \
       --subst-var-by less "${pkgs.less}" \
       --subst-var-by HOME_MANAGER_PATH '${pathStr}'
-  '';
-
-  meta = with pkgs.stdenv.lib; {
-    description = "A user environment configurator";
-    maintainers = [ maintainers.rycee ];
-    platforms = platforms.unix;
-    license = licenses.mit;
-  };
-}
+  ''
