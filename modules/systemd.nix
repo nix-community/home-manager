@@ -167,7 +167,7 @@ in
 
       sessionVariables = mkOption {
         default = {};
-        type = types.attrs;
+        type = with types; attrsOf (either bool (either int str));
         example = { EDITOR = "vim"; };
         description = ''
           Environment variables that will be set for the user session.
@@ -202,7 +202,7 @@ in
     # If we run under a Linux system we assume that systemd is
     # available, in particular we assume that systemctl is in PATH.
     (mkIf pkgs.stdenv.isLinux {
-      xdg.configFile =
+      xdg.configFile = mkMerge [
         (listToAttrs (
           (buildServices "service" cfg.services)
           ++
@@ -213,7 +213,10 @@ in
           (buildServices "timer" cfg.timers)
           ++
           (buildServices "path" cfg.paths)
-        )) // sessionVariables;
+          ))
+
+          sessionVariables
+        ];
 
       # Run systemd service reload if user is logged in. If we're
       # running this from the NixOS module then XDG_RUNTIME_DIR is not
