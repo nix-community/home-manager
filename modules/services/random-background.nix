@@ -17,22 +17,22 @@ in
 
       imageDirectory = mkOption {
         type = types.str;
-        description =
-          ''
-            The directory of images from which a background should be
-            chosen. Should be formatted in a way understood by
-            systemd, e.g., '%h' is the home directory.
-          '';
+        example = "%h/backgrounds";
+        description = ''
+          The directory of images from which a background should be
+          chosen. Should be formatted in a way understood by systemd,
+          e.g., '%h' is the home directory.
+        '';
       };
 
       interval = mkOption {
         default = null;
         type = types.nullOr types.str;
+        example = "1h";
         description = ''
           The duration between changing background image, set to null
-          to only set background when logging in.
-
-          Should be formatted as a duration understood by systemd.
+          to only set background when logging in. Should be formatted
+          as a duration understood by systemd.
         '';
       };
     };
