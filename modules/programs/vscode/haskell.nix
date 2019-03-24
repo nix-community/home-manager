@@ -1,102 +1,66 @@
 { pkgs, config, lib, ... }:
 let
 
-  defaultHieNixSourceParams = {
-    owner = "domenkozar";
-    repo = "hie-nix";
-    rev = "6794005f909600679d0b7894d0e7140985920775";
-    sha256 = "0pc90ns0xcsa6b630d8kkq5zg8yzszbgd7qmnylkqpa0l58zvnpn";
-  };
-  defaultHieNixSource = pkgs.fetchFromGitHub defaultHieNixSourceParams;
-
-  defaultHieNixExe = hie-nix.hies + "/bin/hie-wrapper";
-  defaultHieNixExeText = ''hie-nix.hies + "/bin/hie-wrapper"'';
-
   inherit (pkgs.vscode-utils) buildVscodeMarketplaceExtension;
   inherit (lib) types;
   cfg = config.programs.vscode.haskell;
 
-  hieNixArgs = lib.optionalAttrs (!cfg.hieNixUsePinnedPkgs) {
-    inherit pkgs;
-  };
-  hie-nix = import cfg.hieNixSource hieNixArgs;
+  defaultHieNixExe = hie-nix.hies + "/bin/hie-wrapper";
+  defaultHieNixExeText = ''pkgs.hie-nix.hies + "/bin/hie-wrapper"'';
+
+  hie-nix = pkgs.hie-nix or (abort ''
+    pkgs.hie-nix was not found. Please add an overlay like the following:
+    ${exampleOverlay}
+  '');
+
+  exampleOverlay = ''
+    nixpkgs.overlays = [ (self: super: {
+      hie-nix = import ~/src/hie-nix {};
+    ];
+  '';
 
 in
 {
   options.programs.vscode.haskell.enable = lib.mkEnableOption "Haskell integration for Visual Studio Code";
 
-  options.programs.vscode.haskell.hieNixSource = lib.mkOption {
-    type = lib.types.path;
-    default = defaultHieNixSource;
-    defaultText = lib.literalExample ''
-      pkgs.fetchFromGitHub
-        ${lib.generators.toPretty {} defaultHieNixSourceParams}
-    '';
-    example = lib.literalExample ''
-      ~/src/haskell-ide-engine
-    '';
-    description = ''
-      A version of the <link xlink:href="https://github.com/domenkozar/hie-nix/">hie-nix sources</link>.
-    '';
+  options.programs.vscode.haskell.hie.enable = lib.mkOption {
+    type = lib.types.bool;
+    default = true;
+    description = "Enable Haskell IDE engine integration";
   };
 
-  options.programs.vscode.haskell.hieExecutablePath = lib.mkOption {
+  options.programs.vscode.haskell.hie.executablePath = lib.mkOption {
     type = lib.types.path;
     default = defaultHieNixExe;
     defaultText = lib.literalExample defaultHieNixExeText;
     description = ''
-      The path to the <code>hie</code> executable.
-    '';
-  };
+      The path to the Haskell IDE Engine executable.
 
-  options.programs.vscode.haskell.hieNixUsePinnedPkgs = lib.mkOption {
-    type = lib.types.bool;
-    default = true;
-    defaultText = lib.literalExample defaultHieNixExeText;
-    description = ''
-      Whether to use the nixpkgs pin in hie-nix to build hie-nix.
+      Because hie-nix is not packaged in Nixpkgs, you need to add it as an
+      overlay or set this option. Example overlay configuration:
 
-      By leaving this enabled, you can avoid building a very large set
-      of Haskell packages. See
-      <link xlink:href="https://hie-nix.cachix.org/">hie-nix.cachix.org</link>.
+      <code>${exampleOverlay}</code>
     '';
+    example = lib.literalExample ''
+      # First, run cachix use hie-nix
+      (import ~/src/haskell-ide-engine {}).hies + "/bin/hie-wrapper";
+    '';
+
   };
 
   config = lib.mkIf cfg.enable {
 
-    programs.vscode.userSettings = {
+    programs.vscode.userSettings = lib.mkIf cfg.hie.enable {
       "languageServerHaskell.enableHIE" = true;
       "languageServerHaskell.hieExecutablePath" =
-        cfg.hieExecutablePath;
+        cfg.hie.executablePath;
     };
 
     programs.vscode.extensions = [
-      (pkgs.vscode-extensions.alanz.vscode-hie-server or
-        (buildVscodeMarketplaceExtension {
-          mktplcRef = {
-            name = "vscode-hie-server";
-            publisher = "alanz";
-            version = "0.0.25";
-            sha256 = "0m21w03v94qxm0i54ki5slh6rg7610zfxinfpngr0hfpgw2nnxvc";
-          };
-          meta = {
-            license = pkgs.stdenv.lib.licenses.mit;
-          };
-        })
-      )
-      (pkgs.vscode-extensions.justusadam.language-haskell or
-        (buildVscodeMarketplaceExtension {
-          mktplcRef = {
-            name = "language-haskell";
-            publisher = "justusadam";
-            version = "2.5.0";
-            sha256 = "10jqj8qw5x6da9l8zhjbra3xcbrwb4cpwc3ygsy29mam5pd8g6b3";
-          };
-          meta = {
-            license = pkgs.stdenv.lib.licenses.bsd3;
-          };
-        })
-      )
-    ];
+        pkgs.vscode-extensions.justusadam.language-haskell
+      ] ++
+      lib.optional cfg.hie.enable
+        pkgs.vscode-extensions.alanz.vscode-hie-server
+    ;
   };
 }
