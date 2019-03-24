@@ -6,8 +6,13 @@ let
 
   cfg = config.programs.vscode.haskell;
 
-  defaultHieNixExe = pkgs.hie-nix.hies + "/bin/hie-wrapper";
+  defaultHieNixExe = hie-nix.hies + "/bin/hie-wrapper";
   defaultHieNixExeText = "\${pkgs.hie-nix.hies}/bin/hie-wrapper";
+
+  hie-nix = pkgs.hie-nix or (abort ''
+    vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
+    ${exampleOverlay}
+  '');
 
   exampleOverlay = ''
     nixpkgs.overlays = [
@@ -48,17 +53,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = hasAttr "hie-nix" pkgs;
-        message = ''
-          vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
-
-          ${exampleOverlay}
-        '';
-      }
-    ];
-
     programs.vscode.userSettings = mkIf cfg.hie.enable {
       "languageServerHaskell.enableHIE" = true;
       "languageServerHaskell.hieExecutablePath" =
