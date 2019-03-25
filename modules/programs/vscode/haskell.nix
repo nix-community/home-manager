@@ -7,7 +7,8 @@ let
   cfg = config.programs.vscode.haskell;
 
   defaultHieNixExe = hie-nix.hies + "/bin/hie-wrapper";
-  defaultHieNixExeText = "\${pkgs.hie-nix.hies}/bin/hie-wrapper";
+  defaultHieNixExeText = literalExample
+    "\"\${pkgs.hie-nix.hies}/bin/hie-wrapper\"";
 
   hie-nix = pkgs.hie-nix or (abort ''
     vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
