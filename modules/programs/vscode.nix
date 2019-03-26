@@ -34,8 +34,12 @@ in
         example = literalExample ''
           [
             {
-              "key": "ctrl+h",
-              "command": "workbench.action.navigateLeft"
+              "key" = "ctrl+h";
+              "command" = "workbench.action.navigateLeft";
+            }
+            {
+              "key" = "ctrl+l";
+              "command" = "workbench.action.navigateRight";
             }
           ]
         '';
