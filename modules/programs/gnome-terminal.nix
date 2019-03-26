@@ -30,10 +30,41 @@ let
           description = "The bold color, null to use same as foreground.";
         };
 
+        allowBold = mkOption {
+          default = null;
+          type = types.nullOr types.bool;
+          description = "If true, allow applications in the terminal to make text boldface.";
+        };
+
         palette = mkOption {
           type = types.listOf types.str;
           description = "The terminal palette.";
         };
+
+        cursorForegroundColor = mkOption {
+          default = null;
+          type = types.nullOr types.str;
+          description = "The color for the foreground of the text character at the terminal’s cursor position.";
+        };
+
+        cursorBackgroundColor = mkOption {
+          default = null;
+          type = types.nullOr types.str;
+          description = "The color of the background of the terminal’s cursor.";
+        };
+
+        highlightForegroundColor = mkOption {
+          default = null;
+          type = types.nullOr types.str;
+          description = "The color for the foreground of the text character at the terminal’s highlight position.";
+        };
+
+        highlightBackgroundColor = mkOption {
+          default = null;
+          type = types.nullOr types.str;
+          description = "The color of the background of the terminal’s highlight.";
+        };
+
       };
     }
   );
@@ -95,7 +126,14 @@ let
   );
 
   buildProfileSet = pcfg:
-    {
+    let
+      inherit optionalAttrs;
+
+      cursorColorsSet = pcfg.colors != null && (pcfg.colors.cursorForegroundColor != null || pcfg.colors.cursorBackgroundColor != null);
+
+      highlightColorsSet = pcfg.colors != null && (pcfg.colors.highlightForegroundColor != null || pcfg.colors.highlightBackgroundColor != null);
+
+    in {
       visible-name = pcfg.visibleName;
       scrollbar-policy = if pcfg.showScrollbar then "always" else "never";
       scrollback-lines = pcfg.scrollbackLines;
@@ -116,11 +154,30 @@ let
           palette = pcfg.colors.palette;
         }
         // (
+          optionalAttrs (pcfg.colors.allowBold != null) {
+            allow-bold = pcfg.colors.allowBold;
+          }
+        )
+        // (
           if (pcfg.colors.boldColor == null)
           then { bold-color-same-as-fg = true; }
           else {
             bold-color-same-as-fg = false;
             bold-color = pcfg.colors.boldColor;
+          }
+        )
+        // (
+          optionalAttrs (cursorColorsSet) {
+            cursor-colors-set = true;
+            cursor-foreground-color = pcfg.colors.cursorForegroundColor;
+            cursor-background-color = pcfg.colors.cursorBackgroundColor;
+          }
+        )
+        // (
+          optionalAttrs (highlightColorsSet) {
+            highlight-colors-set = true;
+            highlight-foreground-color = pcfg.colors.highlightForegroundColor;
+            highlight-background-color = pcfg.colors.highlightBackgroundColor;
           }
         )
       )
