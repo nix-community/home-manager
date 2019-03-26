@@ -28,6 +28,23 @@ in
         '';
       };
 
+      userKeybindings = mkOption {
+        type = types.listOf types.attrs;
+        default = [];
+        example = literalExample ''
+          [
+            {
+              "key": "ctrl+h",
+              "command": "workbench.action.navigateLeft"
+            }
+          ]
+        '';
+        description = ''
+          Configuration written to
+          <filename>~/.config/Code/User/keybindings.json</filename>.
+        '';
+      };
+
       extensions = mkOption {
         type = types.listOf types.package;
         default = [];
@@ -48,5 +65,8 @@ in
 
     xdg.configFile."Code/User/settings.json".text =
       builtins.toJSON cfg.userSettings;
+
+    xdg.configFile."Code/User/keybindings.json".text =
+      builtins.toJSON cfg.userKeybindings;
   };
 }
