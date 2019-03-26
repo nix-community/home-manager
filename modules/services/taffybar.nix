@@ -35,6 +35,7 @@ in
 
       Service = {
         ExecStart = "${cfg.package}/bin/taffybar";
+        Restart = "on-failure";
       };
 
       Install = {
