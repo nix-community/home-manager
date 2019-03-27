@@ -35,7 +35,7 @@ in
 
     home.activation.useGtkThemeInQt4 = dag.entryAfter ["writeBoundary"] ''
       $DRY_RUN_CMD ${pkgs.crudini}/bin/crudini $VERBOSE_ARG \
-        --set $HOME/.config/Trolltech.conf Qt style GTK+
+        --set ${config.xdg.configHome}/Trolltech.conf Qt style GTK+
     '';
   };
 }
