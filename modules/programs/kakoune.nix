@@ -336,6 +336,68 @@ let
           User-defined key mappings.
         '';
       };
+
+      hooks = mkOption {
+        type = types.listOf (types.submodule {
+          options = {
+            name = mkOption {
+              type = types.enum [
+                "NormalBegin" "NormalIdle" "NormalEnd" "NormalKey"
+                "InsertBegin" "InsertIdle" "InsertEnd" "InsertKey" "InsertChar" "InsertDelete" "InsertMove" 
+                "WinCreate" "WinClose" "WinResize" "WinDisplay" "WinSetOption"
+                "BufSetOption" "BufNewFile" "BufOpenFile" "BufCreate" "BufWritePre" "BufWritePost"
+                "BufReload" "BufClose" "BufOpenFifo" "BufReadFifo" "BufCloseFifo"
+                "RuntimeError" "ModeChange" "PromptIdle" "GlobalSetOption"
+                "KakBegin" "KakEnd" "FocusIn" "FocusOut" "RawKey"
+                "InsertCompletionShow" "InsertCompletionHide" "InsertCompletionSelect"
+              ];
+
+              description = ''
+                The name of the hook. For a description, see
+                https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc#default-hooks. 
+              '';
+            };
+
+            once = mkOption {
+              type = types.bool;
+              default = false;
+              description = ''
+                Remove the hook after running it once.
+              '';
+            };
+
+            group = mkOption {
+              type = types.nullOr types.string;
+              default = null;
+              description = ''
+                Add the hook to the named group.
+              '';
+            };
+
+            option = mkOption {
+              type = types.nullOr types.string;
+              default = null;
+              description = ''
+                Additional option to pass to the hook.
+              '';
+            };
+
+            commands = mkOption {
+              type = types.lines;
+              default = "";
+              description = ''
+                Commands to run when the hook is activated.
+              '';
+            };
+          };
+        });
+
+        default = [];
+        description = ''
+          Global hooks. For documentation, see
+          https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc.
+        '';
+      };
     };
   };
 
@@ -365,6 +427,13 @@ let
           "${km.mode} ${km.key} '${km.effect}'"
           "${optionalString (km.docstring != null) "-docstring '${km.docstring}'"}"
         ];
+
+        hookString = h: concatStringsSep " " [
+          "hook" "${optionalString (h.group != null) "-group ${group}"}"
+          "${optionalString (h.once) "-once"}" "global"
+          "${h.name}" "${optionalString (h.option != null) h.option}"
+          "%{ ${h.commands} }"
+        ];
     in  ''
     ${optionalString (tabStop != null) "set-option global tabstop ${toString tabStop}"}
     ${optionalString (indentWidth != null) "set-option global indentwidth ${toString indentWidth}"}
@@ -381,6 +450,7 @@ let
       "set-option global scrolloff ${toString scrollOff.lines},${toString scrollOff.columns}"}
     ${optionalString (ui != null) "set-option global ui_options ${uiOptions}"}
     ${concatStringsSep "\n" (map keyMappingString keyMappings)}
+    ${concatStringsSep "\n" (map hookString hooks)}
   '' else "") + "\n" + cfg.extraConfig);
 
 in
