@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.afew;
 
+  dag = config.lib.dag;
+
   mkIniKeyValue = key: value:
     let
       tweakVal = v:
@@ -16,41 +18,44 @@ let
     in
       "${key}=${tweakVal value}";
 
-  /* Return a list of name value pairs where name is "class.index" and value is
-     an attribute set of arbitrary afew options.
-
-     Example:
-       filters = [
-         { class="Class", q="a"; }
-         { q = "b"}
-       ]
-      => [{ name = "Class.1"; value = { "q" = "a"; }; }
-          { name = "Filter.2"; value = { "q" = "b"; }; }]
-  */
-  processAfewFilters = afewFilters:
+  mkDag = filters:
     let
-      getClass = attrs: attrs.class or "Filter";
-      removeClass = filterAttrs (n: v: n != "class");
-      indexed = imap0 (i: v:
-        v // { class = "${getClass v}.${toString (i+1000)}"; }
-      );
-      toPair = mkKey: mkValue: attrs:
-        nameValuePair (mkKey attrs) (mkValue attrs);
+      mkNode = nodeName: filter:
+        let
+          before = (filter.before or cfg.defaultBefore);
+          after = (filter.after or cfg.defaultAfter);
+          filterName = (filter.class or "Filter");
+          filterKV = (removeAttrs filter ["after" "before" "class"]) // {
+            "#nodeName" = nodeName;
+            "#before" = before;
+            "#after" = after;
+          };
+        in
+          dag.entryBetween before after (nameValuePair filterName filterKV);
     in
-      map (toPair getClass removeClass) (indexed afewFilters);
+      mapAttrs mkNode filters;
 
-  /* Convert a list of name value pairs to a list of INI sections */
+  /* Return a topologically sorted list of DAG entries encapsulating
+     name value pairs.
+  */
+  reorderFilters = filters:
+    (dag.topoSort (mkDag filters)).result;
+
+  /* Convert a topologically sorted list of DAG nodes to a list of INI
+     sections.  The section name is appended with an index number to
+     prevent clashes, as is required by afew.
+  */
   toOrderedINI = {
     mkKeyValue ? mkKeyValueDefault {} "="
-  }: afewFilters:
+  }: filters:
     let
-      mkSection = pair: ''
-        ${mkSectionName pair}
-        ${toKV pair.value}'';
-      mkSectionName = pair: "[${pair.name}]";
+      mkSection = iota: node: ''
+        [${node.data.name}.${toString iota}]
+        ${toKV node.data.value}
+      '';
       toKV = attrs: generators.toKeyValue { inherit mkKeyValue; } attrs;
     in
-      concatStringsSep "\n" (map mkSection afewFilters);
+      concatStringsSep "\n" (imap0 mkSection filters);
 
 in
 
@@ -58,30 +63,71 @@ in
   options.programs.afew = {
     enable = mkEnableOption "the afew initial tagging script for Notmuch";
 
+    defaultBefore = mkOption {
+      type = types.listOf types.string;
+      default = ["@end"];
+      description = ''
+        List of node names in the DAG that filters should appear
+        before by default.
+      '';
+    };
+
+    defaultAfter = mkOption {
+      type = types.listOf types.string;
+      default = ["@begin"];
+      description = ''
+        List of node names in the DAG that filters should appear after
+        by default.
+      '';
+    };
+
+    defaultFilters = mkOption {
+      type = types.attrsOf types.attrs;
+      default = {
+        "@begin" = { message = "BEGIN"; after = []; before = []; };
+        "@end" = { message = "END"; after = ["@begin"]; before = []; };
+      };
+      description = ''
+        An initial value for the filters DAG. It should only contain
+        "dummy" nodes. Those dummy nodes are conventionally prefixed
+        with @.
+      '';
+    };
+
     filters = mkOption {
-      type = types.listOf (types.attrs);
-      default = [
-        { class = "SpamFilter"; }
-        { class = "KillThreadsFilter"; }
-        { class = "ListMailsFilter"; }
-        { class = "ArchiveSentMailsFilter"; }
-        { class = "InboxFilter"; }
-      ];
+      type = types.attrsOf types.attrs;
+      default = {
+        spam = { class = "SpamFilter"; before = ["@begin"]; after = []; };
+        killThreads = { class = "KillThreadsFilter"; before = ["@begin"]; after = []; };
+        listMails = { class = "ListMailsFilter"; before = ["@begin"]; after = []; };
+        archiveSentMails = { class = "ArchiveSentMailsFilter"; before = ["@begin"]; after = []; };
+        inbox = { class = "InboxFilter"; after = ["@end"]; before = []; };
+      };
       description = ''
         Filters added to afew configuration file. Available configuration
         options are described in the afew manual: <link
         xlink:href="https://afew.readthedocs.io/en/latest/configuration.html" />.
       '';
       example = literalExample ''
-        [
-          { class = "SpamFilter"; }
+        {
+          spam = {
+            class = "SpamFilter";
+            before = ["@begin"];
+            after = [];
+          };
 
-          { query = "frompointyheaded@boss.com";
+          boss = {
+            query = "from:pointyheaded@boss.com";
             tags = ["-new" "+boss"];
-            message = "Message from above"; }
+            message = "Message from above";
+          };
 
-          { class = "InboxFilter"; }
-        ]
+          inbox = {
+            class = "InboxFilter";
+            before = [];
+            after = ["@end"];
+          };
+        }
       '';
     };
 
@@ -99,6 +145,8 @@ in
         [InboxFilter]
       '';
       description = ''
+        This option is deprecated if you use filters as you won't be
+        able to control the order of the filters.
         Extra lines prepended to the afew configuration file. Available
         configuration options are described in the afew manual: <link
         xlink:href="https://afew.readthedocs.io/en/latest/configuration.html" />.
@@ -114,7 +162,7 @@ in
       # See https://afew.readthedocs.io/
 
       ${cfg.extraConfig}
-      ${toOrderedINI { mkKeyValue = mkIniKeyValue; } (processAfewFilters (cfg.filters))}
+      ${toOrderedINI { mkKeyValue = mkIniKeyValue; } (reorderFilters (cfg.defaultFilters // cfg.filters))}
     '';
 
   };
