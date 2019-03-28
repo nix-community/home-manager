@@ -9,19 +9,19 @@ let
     options = {
 
       tabStop = mkOption {
-        type = types.ints.unsigned;
-        default = 8;
+        type = types.nullOr types.ints.unsigned;
+        default = null;
         description = ''
-          The width of a tab
+          The width of a tab.
         '';
       };
 
       indentWidth = mkOption {
-        type = types.ints.unsigned;
-        default = 4;
+        type = types.nullOr types.ints.unsigned;
+        default = null;
         description = ''
           Width of an indentation in spaces.
-          If this is 0, a tab will be used instead
+          If this is 0, a tab will be used instead.
         '';
       };
 
@@ -29,7 +29,7 @@ let
         type = types.bool;
         default = true;
         description = ''
-          Whether to execute a search as it is being typed
+          Whether to execute a search as it is being typed.
         '';
       };
 
@@ -37,42 +37,42 @@ let
         type = types.bool;
         default = false;
         description = ''
-          Whether to use tabs for the align command
+          Whether to use tabs for the align command.
         '';
       };
 
       autoInfo = mkOption {
-        type = types.listOf (types.enum [ "command" "onkey" "normal" ]);
-        default = [ "command" "onkey" ];
+        type = types.nullOr (types.listOf (types.enum [ "command" "onkey" "normal" ]));
+        default = null;
         description = ''
-          Contexts in which to display automatic information box
+          Contexts in which to display automatic information box.
         '';
       };
 
       autoComplete = mkOption {
-        type = types.listOf (types.enum [  "insert" "prompt" ]);
-        default = [ "insert" "prompt" ];
+        type = types.nullOr(types.listOf (types.enum [  "insert" "prompt" ]));
+        default = null;
         description = ''
-          Modes in which to display possible completions
+          Modes in which to display possible completions.
         '';
       };
 
       autoReload = mkOption {
-        type = types.enum [ "yes" "no" "ask" ];
-        default = "ask";
+        type = types.nullOr (types.enum [ "yes" "no" "ask" ]);
+        default = null;
         description = ''
-          Whether to reload buffers when an external modification is detected
+          Whether to reload buffers when an external modification is detected.
         '';
       };
 
       scrollOff = mkOption {
-        type = types.submodule {
+        type = types.nullOr (types.submodule {
           options = {
             lines = mkOption {
               type = types.ints.unsigned;
               default = 0;
               description = ''
-                The number of lines to keep visible around the cursor
+                The number of lines to keep visible around the cursor.
               '';
             };
 
@@ -80,19 +80,16 @@ let
               type = types.ints.unsigned;
               default = 0;
               description = ''
-                The number of columns to keep visible around the cursor
+                The number of columns to keep visible around the cursor.
               '';
             };
           };
-        };
+        });
 
-        default = {
-          lines = 0;
-          columns = 0;
-        };
+        default = null;
 
         description = ''
-          How many lines and columns to keep visible around the cursor
+          How many lines and columns to keep visible around the cursor.
         '';
       };
 
@@ -103,7 +100,7 @@ let
               type = types.bool;
               default = false;
               description = ''
-                Whether to change the title of the terminal emulator
+                Whether to change the title of the terminal emulator.
               '';
             };
 
@@ -111,7 +108,7 @@ let
               type = types.enum [ "top" "bottom" ];
               default = "bottom";
               description = ''
-                Where to display the status line
+                Where to display the status line.
               '';
             };
 
@@ -119,7 +116,7 @@ let
               type = types.enum [ "clippy" "cat" "dilbert" "none" ];
               default = "clippy";
               description = ''
-                The assistant displayed in info boxes
+                The assistant displayed in info boxes.
               '';
             };
 
@@ -127,7 +124,7 @@ let
               type = types.bool;
               default = false;
               description = ''
-                Whether to enable mouse support
+                Whether to enable mouse support.
               '';
             };
           };
@@ -135,7 +132,7 @@ let
 
         default = null;
         description = ''
-          Settings for the ncurses interface
+          Settings for the ncurses interface.
         '';
       };
 
@@ -204,7 +201,7 @@ let
               type = types.bool;
               default = false;
               description = ''
-                Show line numbers relative to the main cursor line
+                Show line numbers relative to the main cursor line.
               '';
             };
 
@@ -212,7 +209,7 @@ let
               type = types.bool;
               default = false;
               description = ''
-                Highlight the cursor with a separate face
+                Highlight the cursor with a separate face.
               '';
             };
 
@@ -221,7 +218,7 @@ let
               default = null;
               description = ''
                 String that separates the line number column from the buffer contents.
-                Defaults to "|"
+                Defaults to "|".
               '';
             };
           };
@@ -229,7 +226,7 @@ let
         
         default = null;
         description = ''
-          Settings for the line numbering highlighter
+          Settings for the line numbering highlighter.
         '';
       };
 
@@ -242,7 +239,7 @@ let
               type = types.nullOr types.string;
               default = null;
               description = ''
-                The character to display for line feeds
+                The character to display for line feeds.
               '';
             };
 
@@ -250,7 +247,7 @@ let
               type = types.nullOr types.string;
               default = null;
               description = ''
-                The character to display for spaces
+                The character to display for spaces.
               '';
             };
 
@@ -258,7 +255,7 @@ let
               type = types.nullOr types.string;
               default = null;
               description = ''
-                The character to display for non-breakable spaces
+                The character to display for non-breakable spaces.
               '';
             };
 
@@ -266,7 +263,7 @@ let
               type = types.nullOr types.string;
               default = null;
               description = ''
-                The character to display for tabs
+                The character to display for tabs.
               '';
             };
 
@@ -274,24 +271,33 @@ let
               type = types.nullOr types.string;
               default = null;
               description = ''
-                The character to append to tabs to reach the width of a tabstop
+                The character to append to tabs to reach the width of a tabstop.
               '';
             };
           };
         });
         default = null;
         description = ''
-          Settings for the show_whitespaces highlighter
+          Settings for the show_whitespaces highlighter.
+          By default, spaces will be shown as "·", non-breaking
+          spaces as "⍽", line breaks as "¬", and tabs as "→".
         '';
       };
     };
   };
+
   configFile = pkgs.writeText "kakrc" ((if cfg.config != null then with cfg.config;
-    let wrapOptions = with wrapLines; ''
-          ${optionalString word " -word"}${optionalString indent " -indent"}${optionalString (marker != null) " -marker ${marker}"}${optionalString (maxWidth != null) " -width ${toString maxWidth}"}'';
-        numberLinesOptions = with numberLines; ''
-          ${optionalString relative " -relative "}${optionalString highlightCursor " -hlcursor"}${optionalString (separator != null) " -separator ${separator}"}
-        ''; 
+    let wrapOptions = with wrapLines; concatStrings [
+          "${optionalString word " -word"}"
+          "${optionalString indent " -indent"}"
+          "${optionalString (marker != null) " -marker ${marker}"}"
+          "${optionalString (maxWidth != null) " -width ${toString maxWidth}"}"
+        ];
+        numberLinesOptions = with numberLines; concatStrings [
+          "${optionalString relative " -relative "}"
+          "${optionalString highlightCursor " -hlcursor"}"
+          "${optionalString (separator != null) " -separator ${separator}"}"
+        ]; 
         uiOptions = with ui; concatStringsSep " " (map (s: "ncurses_"+ s) [
           "set_title=${if setTitle then "true" else "false"}"
           "status_on_top=${if (statusLine == "top") then "true" else "false"}"
@@ -299,17 +305,19 @@ let
           "enable_mouse=${if enableMouse then "true" else "false"}"
         ]);
     in  ''
-    ${optionalString (tabStop != 8) "set-option global tabstop ${toString tabStop}"}
-    ${optionalString (indentWidth != 4) "set-option global indentwidth ${toString indentWidth}"}
+    ${optionalString (tabStop != null) "set-option global tabstop ${toString tabStop}"}
+    ${optionalString (indentWidth != null) "set-option global indentwidth ${toString indentWidth}"}
     ${optionalString (!incrementalSearch) "set-option global incsearch false"}
     ${optionalString (alignWithTabs) "set-option global aligntab true"}
-    ${"set-option global autoinfo ${concatStringsSep "|" autoInfo}"}
-    ${"set-option global autocomplete ${concatStringsSep "|" autoComplete}"}
-    ${optionalString (autoReload != "ask") "set-option global/ autoreload ${autoReload}"}
+    ${optionalString (autoInfo != null) "set-option global autoinfo ${concatStringsSep "|" autoInfo}"}
+    ${optionalString (autoComplete != null) "set-option global autocomplete ${concatStringsSep "|" autoComplete}"}
+    ${optionalString (autoReload != null) "set-option global/ autoreload ${autoReload}"}
     ${optionalString (wrapLines != null && wrapLines.enable) "add-highlighter global/ wrap${wrapOptions}"}
-    ${optionalString (numberLines != null && numberLines.enable) "add-highlighter global/ number-lines${numberLinesOptions}"}
+    ${optionalString (numberLines != null && numberLines.enable)
+      "add-highlighter global/ number-lines${numberLinesOptions}"}
     ${optionalString showMatching "add-highlighter global/ show-matching"}
-    ${optionalString (scrollOff.lines != 0 || scrollOff.columns != 0) "set-option global scrolloff ${toString scrollOff.lines},${toString scrollOff.columns}"}
+    ${optionalString (scrollOff != null)
+      "set-option global scrolloff ${toString scrollOff.lines},${toString scrollOff.columns}"}
     ${optionalString (ui != null) "set-option global ui_options ${uiOptions}"}
   '' else "") + "\n" + cfg.extraConfig);
 
