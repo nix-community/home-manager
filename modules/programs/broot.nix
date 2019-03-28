@@ -100,15 +100,34 @@ in
       ];
       description = ''
         Define new verbs.
-
+        </para><para>
         The possible attributes are:
+        </para>
 
-        - invocation (mandatory): how the verb is called by the user, with placeholders for arguments
-        - execution (mandatory): how the verb is executed
-        - shortcut (optional): an alternate way to call the verb (without the arguments part)
-        - leave_broot (optional): whether to quit broot on execution (default: true)
-        - from_shell (optional): whether the verb must be executed from the parent shell (needs br, default: false)
+        <para><variablelist>
+          <varlistentry>
+            <term><literal>invocation</literal> (mandatory)</term>
+            <listitem><para>how the verb is called by the user, with placeholders for arguments</para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><literal>execution</literal> (mandatory)</term>
+            <listitem><para>how the verb is executed</para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><literal>shortcut</literal> (optional)</term>
+            <listitem><para>an alternate way to call the verb (without the arguments part)</para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><literal>leave_broot</literal> (optional)</term>
+            <listitem><para>whether to quit broot on execution (default: <literal>true</literal>)</para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><literal>from_shell</literal> (optional)</term>
+            <listitem><para>whether the verb must be executed from the parent shell (needs br, default: <literal>false</literal>)</para></listitem>
+          </varlistentry>
+        </variablelist>
       '';
+
     };
 
     skin = mkOption {
@@ -132,31 +151,35 @@ in
       };
       description = ''
         Change the colors.
-
+        </para><para>
         Complete list of keys (expected to change before the v1 of broot)
+        </para>
 
-        - char_match
-        - code
-        - directory
-        - file
-        - file_error
-        - flag_label
-        - flag_value
-        - exe
-        - input
-        - link
-        - permissions
-        - selected_line
-        - size_bar_full
-        - size_bar_void
-        - size_text
-        - spinner
-        - status_error
-        - status_normal
-        - table_border
-        - tree
-        - unlisted
+        <para><itemizedlist>
+          <listitem><para><literal>char_match</literal></para></listitem>
+          <listitem><para><literal>code</literal></para></listitem>
+          <listitem><para><literal>directory</literal></para></listitem>
+          <listitem><para><literal>file</literal></para></listitem>
+          <listitem><para><literal>file_error</literal></para></listitem>
+          <listitem><para><literal>flag_label</literal></para></listitem>
+          <listitem><para><literal>flag_value</literal></para></listitem>
+          <listitem><para><literal>exe</literal></para></listitem>
+          <listitem><para><literal>input</literal></para></listitem>
+          <listitem><para><literal>link</literal></para></listitem>
+          <listitem><para><literal>permissions</literal></para></listitem>
+          <listitem><para><literal>selected_line</literal></para></listitem>
+          <listitem><para><literal>size_bar_full</literal></para></listitem>
+          <listitem><para><literal>size_bar_void</literal></para></listitem>
+          <listitem><para><literal>size_text</literal></para></listitem>
+          <listitem><para><literal>spinner</literal></para></listitem>
+          <listitem><para><literal>status_error</literal></para></listitem>
+          <listitem><para><literal>status_normal</literal></para></listitem>
+          <listitem><para><literal>table_border</literal></para></listitem>
+          <listitem><para><literal>tree</literal></para></listitem>
+          <listitem><para><literal>unlisted</literal></para></listitem>
+        </itemizedlist></para>
 
+        <para>
         Add _fg for a foreground color while _bg is for background colors.
       '';
     };
