@@ -20,7 +20,7 @@ let
       '';
 
   brootConf = {
-    verbs = cfg.verbs;
+    verbs = (mapAttrsToList (name: value: value // { invocation = name; }) cfg.verbs);
     skin = cfg.skin;
   };
 
@@ -59,45 +59,23 @@ in
     };
 
     verbs = mkOption {
-      type = types.listOf types.attrs;
-      default = [
-        {
-          invocation = "p";
-          execution = ":parent";
-        }
-        {
-          invocation = "edit";
-          shortcut = "e";
-          execution = "$EDITOR {file}";
-        }
-        {
-          invocation = "create {subpath}";
-          execution = "$EDITOR {directory}/{subpath}";
-        }
-        {
-          invocation = "view";
-          execution = "less {file}";
-        }
-      ];
-      example = [
-        {
-          invocation = "p";
-          execution = ":parent";
-        }
-        {
-          invocation = "edit";
-          shortcut = "e";
-          execution = "$EDITOR {file}";
-        }
-        {
-          invocation = "create {subpath}";
-          execution = "$EDITOR {directory}/{subpath}";
-        }
-        {
-          invocation = "view";
-          execution = "less {file}";
-        }
-      ];
+      type = types.attrsOf types.attrs;
+      default = {
+        "p" = { execution = ":parent"; };
+        "edit" = { shortcut = "e"; execution = "$EDITOR {file}" ; };
+        "create {subpath}" = { execution = "$EDITOR {directory}/{subpath}"; };
+        "view" = { execution = "less {file}"; };
+      };
+      example = {
+        "p" = { execution = ":parent"; };
+        "edit" = { shortcut = "e"; execution = "$EDITOR {file}" ; };
+        "create {subpath}" = { execution = "$EDITOR {directory}/{subpath}"; };
+        "view" = { execution = "less {file}"; };
+        "blop {name}\\.{type}" = {
+          execution = "/bin/mkdir {parent}/{type} && /usr/bin/nvim {parent}/{type}/{name}.{type}";
+          from_shell = true;
+        };
+      };
       description = ''
         Define new verbs.
         </para><para>
