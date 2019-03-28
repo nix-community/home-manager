@@ -31,7 +31,7 @@ in
 
   options.programs.broot = {
     enable = mkEnableOption ''
-      A better way to navigate directories.
+      Broot, a better way to navigate directories
     '';
 
     enableBashIntegration = mkOption {
