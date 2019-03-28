@@ -283,6 +283,59 @@ let
           spaces as "⍽", line breaks as "¬", and tabs as "→".
         '';
       };
+
+      keyMappings = mkOption {
+        type = types.listOf (types.submodule {
+          options = {
+            mode = mkOption {
+              type = types.enum [
+                "insert"
+                "normal"
+                "prompt"
+                "menu"
+                "user"
+                "goto"
+                "view"
+                "object"
+              ];
+
+              description = ''
+                The mode in which the mapping takes effect.
+              '';
+            };
+            
+            docstring = mkOption {
+              type = types.nullOr types.string;
+              default = null;
+              description = ''
+                Optional documentation text to display
+                in info boxes.
+              '';
+            };
+
+            key = mkOption {
+              type = types.string;
+              description = ''
+                The key to be mapped. See
+                https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc#mappable-keys
+                for possible values.
+              '';
+            };
+
+            effect = mkOption {
+              type = types.string;
+              description = ''
+                The sequence of keys to be mapped.
+              '';
+            };
+          };
+        });
+
+        default = [];
+        description = ''
+          User-defined key mappings.
+        '';
+      };
     };
   };
 
@@ -293,17 +346,25 @@ let
           "${optionalString (marker != null) " -marker ${marker}"}"
           "${optionalString (maxWidth != null) " -width ${toString maxWidth}"}"
         ];
+
         numberLinesOptions = with numberLines; concatStrings [
           "${optionalString relative " -relative "}"
           "${optionalString highlightCursor " -hlcursor"}"
           "${optionalString (separator != null) " -separator ${separator}"}"
         ]; 
+
         uiOptions = with ui; concatStringsSep " " (map (s: "ncurses_"+ s) [
           "set_title=${if setTitle then "true" else "false"}"
           "status_on_top=${if (statusLine == "top") then "true" else "false"}"
           "assistant=${assistant}"
           "enable_mouse=${if enableMouse then "true" else "false"}"
         ]);
+
+        keyMappingString = km: concatStringsSep " " [
+          "map global"
+          "${km.mode} ${km.key} '${km.effect}'"
+          "${optionalString (km.docstring != null) "-docstring '${km.docstring}'"}"
+        ];
     in  ''
     ${optionalString (tabStop != null) "set-option global tabstop ${toString tabStop}"}
     ${optionalString (indentWidth != null) "set-option global indentwidth ${toString indentWidth}"}
@@ -319,6 +380,7 @@ let
     ${optionalString (scrollOff != null)
       "set-option global scrolloff ${toString scrollOff.lines},${toString scrollOff.columns}"}
     ${optionalString (ui != null) "set-option global ui_options ${uiOptions}"}
+    ${concatStringsSep "\n" (map keyMappingString keyMappings)}
   '' else "") + "\n" + cfg.extraConfig);
 
 in
