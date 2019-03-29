@@ -11,6 +11,22 @@ let
     . ${pkgs.gnome3.vte}/etc/profile.d/vte.sh
   '';
 
+  backForeSubModule = types.submodule (
+    { ... }: {
+      options = {
+        foreground = mkOption {
+          type = types.str;
+          description = "The foreground color.";
+        };
+
+        background = mkOption {
+          type = types.str;
+          description = "The background color.";
+        };
+      };
+    }
+  );
+
   profileColorsSubModule = types.submodule (
     { ... }: {
       options = {
@@ -30,39 +46,21 @@ let
           description = "The bold color, null to use same as foreground.";
         };
 
-        allowBold = mkOption {
-          default = null;
-          type = types.nullOr types.bool;
-          description = "If true, allow applications in the terminal to make text boldface.";
-        };
-
         palette = mkOption {
           type = types.listOf types.str;
           description = "The terminal palette.";
         };
 
-        cursorForegroundColor = mkOption {
+        cursor = mkOption {
           default = null;
-          type = types.nullOr types.str;
-          description = "The color for the foreground of the text character at the terminal’s cursor position.";
+          type = types.nullOr backForeSubModule;
+          description = "The color for the terminal cursor.";
         };
 
-        cursorBackgroundColor = mkOption {
+        highlight = mkOption {
           default = null;
-          type = types.nullOr types.str;
-          description = "The color of the background of the terminal’s cursor.";
-        };
-
-        highlightForegroundColor = mkOption {
-          default = null;
-          type = types.nullOr types.str;
-          description = "The color for the foreground of the text character at the terminal’s highlight position.";
-        };
-
-        highlightBackgroundColor = mkOption {
-          default = null;
-          type = types.nullOr types.str;
-          description = "The color of the background of the terminal’s highlight.";
+          type = types.nullOr backForeSubModule;
+          description = "The colors for the terminal’s highlighted area.";
         };
 
       };
@@ -101,6 +99,14 @@ let
           description = "The font name, null to use system default.";
         };
 
+        allowBold = mkOption {
+          default = null;
+          type = types.nullOr types.bool;
+          description = ''
+            If true, allow applications in the terminal to make text boldface.
+          '';
+        };
+
         scrollOnOutput = mkOption {
           default = true;
           type = types.bool;
@@ -129,9 +135,9 @@ let
     let
       inherit optionalAttrs;
 
-      cursorColorsSet = pcfg.colors != null && (pcfg.colors.cursorForegroundColor != null || pcfg.colors.cursorBackgroundColor != null);
+      cursorColorsSet = pcfg.colors != null && pcfg.colors.cursor != null;
 
-      highlightColorsSet = pcfg.colors != null && (pcfg.colors.highlightForegroundColor != null || pcfg.colors.highlightBackgroundColor != null);
+      highlightColorsSet = pcfg.colors != null && pcfg.colors.highlight != null;
 
     in {
       visible-name = pcfg.visibleName;
@@ -153,11 +159,9 @@ let
           background-color = pcfg.colors.backgroundColor;
           palette = pcfg.colors.palette;
         }
-        // (
-          optionalAttrs (pcfg.colors.allowBold != null) {
-            allow-bold = pcfg.colors.allowBold;
-          }
-        )
+        // optionalAttrs (pcfg.allowBold != null) {
+             allow-bold = pcfg.allowBold;
+           }
         // (
           if (pcfg.colors.boldColor == null)
           then { bold-color-same-as-fg = true; }
@@ -166,20 +170,16 @@ let
             bold-color = pcfg.colors.boldColor;
           }
         )
-        // (
-          optionalAttrs (cursorColorsSet) {
-            cursor-colors-set = true;
-            cursor-foreground-color = pcfg.colors.cursorForegroundColor;
-            cursor-background-color = pcfg.colors.cursorBackgroundColor;
-          }
-        )
-        // (
-          optionalAttrs (highlightColorsSet) {
-            highlight-colors-set = true;
-            highlight-foreground-color = pcfg.colors.highlightForegroundColor;
-            highlight-background-color = pcfg.colors.highlightBackgroundColor;
-          }
-        )
+        // optionalAttrs (cursorColorsSet) {
+             cursor-colors-set = true;
+             cursor-foreground-color = pcfg.colors.cursor.foreground;
+             cursor-background-color = pcfg.colors.cursor.background;
+           }
+        // optionalAttrs (highlightColorsSet) {
+             highlight-colors-set = true;
+             highlight-foreground-color = pcfg.colors.highlight.foreground;
+             highlight-background-color = pcfg.colors.highlight.background;
+           }
       )
     );
 
