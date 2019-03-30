@@ -21,7 +21,7 @@ let
         default = null;
         description = ''
           Width of an indentation in spaces.
-          If this is 0, a tab will be used instead.
+          If <literal>0</literal>, a tab will be used instead.
         '';
       };
 
@@ -46,7 +46,9 @@ let
         default = null;
         description = ''
           Contexts in which to display automatic information box.
+          The kakoune default is <literal>[ "command" "onkey" ]</literal>
         '';
+        example = [ "command" "normal" ];
       };
 
       autoComplete = mkOption {
@@ -54,6 +56,7 @@ let
         default = null;
         description = ''
           Modes in which to display possible completions.
+          The kakoune default is <literal>[ "insert" "prompt" ]</literal>
         '';
       };
 
@@ -62,6 +65,7 @@ let
         default = null;
         description = ''
           Whether to reload buffers when an external modification is detected.
+          The kakoune default is <literal>"ask"</literal>.
         '';
       };
 
@@ -180,8 +184,10 @@ let
                default = null;
                description = ''
                  Prefix wrapped lines with marker text.
-                 If indent = true, the marker text will be displayed in the indentation if possible.
+                 If <literal>true</literal>,
+                 the marker text will be displayed in the indentation if possible.
                '';
+               example = "⏎";
              };
           };
         });
@@ -218,7 +224,7 @@ let
               default = null;
               description = ''
                 String that separates the line number column from the buffer contents.
-                Defaults to "|".
+                The kakoune default is <literal>"|"</literal>.
               '';
             };
           };
@@ -240,6 +246,7 @@ let
               default = null;
               description = ''
                 The character to display for line feeds.
+                The kakoune default is <literal>"¬"</literal>.
               '';
             };
 
@@ -248,14 +255,16 @@ let
               default = null;
               description = ''
                 The character to display for spaces.
+                The kakoune default is <literal>"·"</literal>.
               '';
             };
 
-            nonBreakableSpace = mkOption {
+            nonBreakingSpace = mkOption {
               type = types.nullOr types.string;
               default = null;
               description = ''
-                The character to display for non-breakable spaces.
+                The character to display for non-breaking spaces.
+                The kakoune default is <literal>"⍽"</literal>.
               '';
             };
 
@@ -264,6 +273,7 @@ let
               default = null;
               description = ''
                 The character to display for tabs.
+                The kakoune default is <literal>"→"</literal>.
               '';
             };
 
@@ -272,6 +282,7 @@ let
               default = null;
               description = ''
                 The character to append to tabs to reach the width of a tabstop.
+                The kakoune default is <literal>" "</literal>.
               '';
             };
           };
@@ -279,8 +290,6 @@ let
         default = null;
         description = ''
           Settings for the show_whitespaces highlighter.
-          By default, spaces will be shown as "·", non-breaking
-          spaces as "⍽", line breaks as "¬", and tabs as "→".
         '';
       };
 
@@ -302,6 +311,7 @@ let
               description = ''
                 The mode in which the mapping takes effect.
               '';
+              example = "user";
             };
             
             docstring = mkOption {
@@ -320,6 +330,7 @@ let
                 https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc#mappable-keys
                 for possible values.
               '';
+              example = "<a-x>";
             };
 
             effect = mkOption {
@@ -327,6 +338,7 @@ let
               description = ''
                 The sequence of keys to be mapped.
               '';
+              example = ":wq<ret>";
             };
           };
         });
@@ -356,6 +368,7 @@ let
                 The name of the hook. For a description, see
                 https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc#default-hooks. 
               '';
+              example = "SetOption";
             };
 
             once = mkOption {
@@ -380,6 +393,7 @@ let
               description = ''
                 Additional option to pass to the hook.
               '';
+              example = "filetype=latex";
             };
 
             commands = mkOption {
@@ -387,6 +401,9 @@ let
               default = "";
               description = ''
                 Commands to run when the hook is activated.
+              '';
+              example = ''
+                set-option window indentwidth 2
               '';
             };
           };
