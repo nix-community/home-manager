@@ -167,7 +167,7 @@ in
           An attribute set that maps aliases (the top level attribute names in
           this option) to command strings or directly to build outputs.
         '';
-        type = types.attrs;
+        type = types.attrsOf types.str;
       };
 
       enableCompletion = mkOption {
@@ -202,7 +202,7 @@ in
 
       sessionVariables = mkOption {
         default = {};
-        type = types.attrs;
+        type = with types; attrsOf (either int str);
         example = { MAILCHECK = 30; };
         description = "Environment variables that will be set for zsh session.";
       };
