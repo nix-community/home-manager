@@ -17,7 +17,7 @@ in
 
     keybindings = mkOption {
       default = {};
-      type = types.attrs;
+      type = types.attrsOf types.str;
       example = { zoom_in = "plus"; zoom_out = "minus"; };
       description = ''
         Set keybindings.
