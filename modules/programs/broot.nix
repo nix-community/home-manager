@@ -20,7 +20,7 @@ let
       '';
 
   brootConf = {
-    verbs = (mapAttrsToList (name: value: value // { invocation = name; }) cfg.verbs);
+    verbs = mapAttrsToList (name: value: value // { invocation = name; }) cfg.verbs;
     skin = cfg.skin;
   };
 
