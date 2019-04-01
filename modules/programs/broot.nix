@@ -109,7 +109,7 @@ in
     };
 
     skin = mkOption {
-      type = types.attrs;
+      type = types.attrsOf types.str;
       default = {};
       example = {
         status_normal_fg = "grayscale(18)";
