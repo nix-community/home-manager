@@ -12,20 +12,19 @@ in
 {
   meta.maintainers = [ maintainers.rycee ];
 
+  imports = [
+    (mkChangedOptionModule
+      [ "qt" "useGtkTheme" ]
+      [ "qt" "platformTheme" ]
+      (config:
+        if getAttrFromPath [ "qt" "useGtkTheme" ] config
+        then "gtk"
+        else null))
+  ];
+
   options = {
     qt = {
       enable = mkEnableOption "Qt 4 and 5 configuration";
-
-      useGtkTheme = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether Qt 4 and 5 should be set up to use the GTK theme
-          settings. DEPRECATED:
-          Use <varname><link linkend="opt-qt.platformTheme">qt.platformTheme</link></varname>
-          instead.
-        '';
-      };
 
       platformTheme = mkOption {
         type = types.nullOr (types.enum [ "gtk" "gnome" ]);
@@ -57,18 +56,7 @@ in
     };
   };
 
-  config = mkIf (cfg.enable && (cfg.useGtkTheme || cfg.platformTheme != null)) {
-    assertions = [
-      {
-        assertion = cfg.platformTheme == null || !cfg.useGtkTheme;
-        message = "qt: Only use 'qt.platformTheme' or 'qt.useGtkTheme', not both.";
-      }
-    ];
-
-    warnings = mkIf cfg.useGtkTheme [
-      "'qt.useGtkTheme' is deprecated, use 'qt.platformTheme' instead."
-    ];
-
+  config = mkIf (cfg.enable && cfg.platformTheme != null) {
     home.sessionVariables.QT_QPA_PLATFORMTHEME =
       if cfg.platformTheme == "gnome" then "gnome" else "gtk2";
 
