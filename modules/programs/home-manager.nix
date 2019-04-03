@@ -34,8 +34,7 @@ in
 
   config = mkIf (cfg.enable && !config.submoduleSupport.enable) {
     home.packages = [
-      (import ../../home-manager {
-        inherit pkgs;
+      (pkgs.callPackage ../../home-manager {
         inherit (cfg) path;
       })
     ];

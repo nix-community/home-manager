@@ -1,6 +1,5 @@
 self: super: {
-  home-manager = import ./home-manager {
-    pkgs = self;
+  home-manager = super.callPackage ./home-manager {
     path = toString ./.;
   };
 }

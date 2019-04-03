@@ -1,13 +1,12 @@
 { pkgs ? import <nixpkgs> {} }:
 
 rec {
-  home-manager = import ./home-manager {
-    inherit pkgs;
+  home-manager = pkgs.callPackage ./home-manager {
     path = toString ./.;
   };
 
-  install = import ./home-manager/install.nix {
-    inherit home-manager pkgs;
+  install = pkgs.callPackage ./home-manager/install.nix {
+    inherit home-manager;
   };
 
   nixos = import ./nixos;

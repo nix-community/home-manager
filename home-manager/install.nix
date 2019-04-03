@@ -1,6 +1,6 @@
-{ home-manager, pkgs }:
+{ home-manager, runCommand }:
 
-pkgs.runCommand
+runCommand
   "home-manager-install"
   {
     propagatedBuildInputs = [ home-manager ];
