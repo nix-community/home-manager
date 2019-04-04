@@ -12,7 +12,8 @@ let
         type = types.nullOr types.ints.unsigned;
         default = null;
         description = ''
-          The width of a tab.
+          The width of a tab in spaces.
+          The kakoune default is <literal>6</literal>.
         '';
       };
 
@@ -20,7 +21,8 @@ let
         type = types.nullOr types.ints.unsigned;
         default = null;
         description = ''
-          Width of an indentation in spaces.
+          The width of an indentation in spaces.
+          The kakoune default is <literal>4</literal>.
           If <literal>0</literal>, a tab will be used instead.
         '';
       };
@@ -29,7 +31,7 @@ let
         type = types.bool;
         default = true;
         description = ''
-          Whether to execute a search as it is being typed.
+          Execute a search as it is being typed.
         '';
       };
 
@@ -37,7 +39,7 @@ let
         type = types.bool;
         default = false;
         description = ''
-          Whether to use tabs for the align command.
+          Use tabs for the align command.
         '';
       };
 
@@ -46,7 +48,7 @@ let
         default = null;
         description = ''
           Contexts in which to display automatic information box.
-          The kakoune default is <literal>[ "command" "onkey" ]</literal>
+          The kakoune default is <literal>[ "command" "onkey" ]</literal>.
         '';
         example = [ "command" "normal" ];
       };
@@ -56,7 +58,7 @@ let
         default = null;
         description = ''
           Modes in which to display possible completions.
-          The kakoune default is <literal>[ "insert" "prompt" ]</literal>
+          The kakoune default is <literal>[ "insert" "prompt" ]</literal>.
         '';
       };
 
@@ -64,7 +66,7 @@ let
         type = types.nullOr (types.enum [ "yes" "no" "ask" ]);
         default = null;
         description = ''
-          Whether to reload buffers when an external modification is detected.
+          Reload buffers when an external modification is detected.
           The kakoune default is <literal>"ask"</literal>.
         '';
       };
@@ -104,7 +106,7 @@ let
               type = types.bool;
               default = false;
               description = ''
-                Whether to change the title of the terminal emulator.
+                Change the title of the terminal emulator.
               '';
             };
 
@@ -128,7 +130,7 @@ let
               type = types.bool;
               default = false;
               description = ''
-                Whether to enable mouse support.
+                Enable mouse support.
               '';
             };
           };
@@ -153,7 +155,7 @@ let
       wrapLines = mkOption {
         type = types.nullOr (types.submodule {
           options = {
-             enable = mkEnableOption "Wrap lines";
+             enable = mkEnableOption "the wrap lines highlighter";
 
              word = mkOption {
                type = types.bool;
@@ -180,11 +182,11 @@ let
              };
 
              marker = mkOption {
-               type = types.nullOr types.string;
+               type = types.nullOr types.str;
                default = null;
                description = ''
                  Prefix wrapped lines with marker text.
-                 If <literal>true</literal>,
+                 If not <literal>null</literal>,
                  the marker text will be displayed in the indentation if possible.
                '';
                example = "⏎";
@@ -194,14 +196,14 @@ let
 
         default = null;
         description = ''
-          Settings for the line wrapping highlighter.
+          Settings for the wrap lines highlighter.
         '';
       };
 
       numberLines = mkOption {
         type = types.nullOr (types.submodule {
           options = {
-            enable = mkEnableOption "Show line numbers";
+            enable = mkEnableOption "the number lines highlighter";
            
             relative = mkOption {
               type = types.bool;
@@ -215,12 +217,12 @@ let
               type = types.bool;
               default = false;
               description = ''
-                Highlight the cursor with a separate face.
+                Highlight the cursor line with a separate face.
               '';
             };
 
             separator = mkOption {
-              type = types.nullOr types.string;
+              type = types.nullOr types.str;
               default = null;
               description = ''
                 String that separates the line number column from the buffer contents.
@@ -232,17 +234,17 @@ let
         
         default = null;
         description = ''
-          Settings for the line numbering highlighter.
+          Settings for the number lines highlighter.
         '';
       };
 
       showWhitespace = mkOption {
         type = types.nullOr (types.submodule {
           options = {
-            enable = mkEnableOption "Show whitespace";
+            enable = mkEnableOption "the show whitespace highlighter";
        
             lineFeed = mkOption {
-              type = types.nullOr types.string;
+              type = types.nullOr types.str;
               default = null;
               description = ''
                 The character to display for line feeds.
@@ -251,7 +253,7 @@ let
             };
 
             space = mkOption {
-              type = types.nullOr types.string;
+              type = types.nullOr types.str;
               default = null;
               description = ''
                 The character to display for spaces.
@@ -260,7 +262,7 @@ let
             };
 
             nonBreakingSpace = mkOption {
-              type = types.nullOr types.string;
+              type = types.nullOr types.str;
               default = null;
               description = ''
                 The character to display for non-breaking spaces.
@@ -269,7 +271,7 @@ let
             };
 
             tab = mkOption {
-              type = types.nullOr types.string;
+              type = types.nullOr types.str;
               default = null;
               description = ''
                 The character to display for tabs.
@@ -278,7 +280,7 @@ let
             };
 
             tabStop = mkOption {
-              type = types.nullOr types.string;
+              type = types.nullOr types.str;
               default = null;
               description = ''
                 The character to append to tabs to reach the width of a tabstop.
@@ -289,7 +291,7 @@ let
         });
         default = null;
         description = ''
-          Settings for the show_whitespaces highlighter.
+          Settings for the show whitespaces highlighter.
         '';
       };
 
@@ -315,7 +317,7 @@ let
             };
             
             docstring = mkOption {
-              type = types.nullOr types.string;
+              type = types.nullOr types.str;
               default = null;
               description = ''
                 Optional documentation text to display
@@ -324,17 +326,19 @@ let
             };
 
             key = mkOption {
-              type = types.string;
+              type = types.str;
               description = ''
                 The key to be mapped. See
-                https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc#mappable-keys
+                <link xlink:href=
+                "https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc#mappable-keys"
+                />
                 for possible values.
               '';
               example = "<a-x>";
             };
 
             effect = mkOption {
-              type = types.string;
+              type = types.str;
               description = ''
                 The sequence of keys to be mapped.
               '';
@@ -366,7 +370,9 @@ let
 
               description = ''
                 The name of the hook. For a description, see
-                https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc#default-hooks. 
+                <link xlink:href=
+                "https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc#default-hooks"
+                />. 
               '';
               example = "SetOption";
             };
@@ -380,7 +386,7 @@ let
             };
 
             group = mkOption {
-              type = types.nullOr types.string;
+              type = types.nullOr types.str;
               default = null;
               description = ''
                 Add the hook to the named group.
@@ -388,7 +394,7 @@ let
             };
 
             option = mkOption {
-              type = types.nullOr types.string;
+              type = types.nullOr types.str;
               default = null;
               description = ''
                 Additional option to pass to the hook.
@@ -402,9 +408,7 @@ let
               description = ''
                 Commands to run when the hook is activated.
               '';
-              example = ''
-                set-option window indentwidth 2
-              '';
+              example = "set-option window indentwidth 2";
             };
           };
         });
@@ -412,7 +416,9 @@ let
         default = [];
         description = ''
           Global hooks. For documentation, see
-          https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc.
+          <link xlink:href=
+          "https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc"
+          />.
         '';
       };
     };
@@ -474,7 +480,7 @@ in
 {
   options = {
     programs.kakoune = {
-      enable = mkEnableOption "kakoune text editor.";
+      enable = mkEnableOption "the kakoune text editor";
  
       config = mkOption {
         type = types.nullOr configModule;
@@ -485,7 +491,10 @@ in
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = "Extra configuration lines to add to ~/.config/kak/kakrc.";
+        description = ''
+          Extra configuration lines to add to
+          <filename>~/.config/kak/kakrc</filename>.
+        '';
       };
     };
   };
