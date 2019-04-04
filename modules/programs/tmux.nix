@@ -251,7 +251,7 @@ in
           ++ optional cfg.tmuxinator.enable pkgs.tmuxinator
           ++ optional cfg.tmuxp.enable      pkgs.tmuxp;
 
-          home.file.".tmux.conf".text = tmuxConf;
+        home.file.".tmux.conf".text = tmuxConf;
       }
 
       (mkIf cfg.sensibleOnTop {
@@ -262,6 +262,12 @@ in
           run-shell ${pkgs.tmuxPlugins.sensible.rtp}
           # ============================================= #
         '';
+      })
+
+      (mkIf cfg.secureSocket {
+        home.sessionVariables = {
+          TMUX_TMPDIR = ''''${XDG_RUNTIME_DIR:-"/run/user/\$(id -u)"}'';
+        };
       })
 
       (mkIf (cfg.plugins != []) {
