@@ -109,6 +109,7 @@ let
     ./programs/k9s.nix
     ./programs/kakoune.nix
     ./programs/keychain.nix
+    ./programs/khal.nix
     ./programs/kitty.nix
     ./programs/kodi.nix
     ./programs/lazygit.nix
@@ -196,6 +197,7 @@ let
     ./programs/topgrade.nix
     ./programs/translate-shell.nix
     ./programs/urxvt.nix
+    ./programs/vdirsyncer.nix
     ./programs/vim.nix
     ./programs/vim-vint.nix
     ./programs/vscode.nix
