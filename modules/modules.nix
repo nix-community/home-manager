@@ -19,6 +19,8 @@ let
 
   allModules = [
     (loadModule ./accounts/email.nix { })
+    (loadModule ./accounts/calendar.nix { })
+    (loadModule ./accounts/contacts.nix { })
     (loadModule ./files.nix { })
     (loadModule ./home-environment.nix { })
     (loadModule ./manual.nix { })
@@ -63,6 +65,7 @@ let
     (loadModule ./programs/irssi.nix { })
     (loadModule ./programs/jq.nix { })
     (loadModule ./programs/keychain.nix { })
+    (loadModule ./programs/khal.nix { })
     (loadModule ./programs/lesspipe.nix { })
     (loadModule ./programs/lsd.nix { })
     (loadModule ./programs/man.nix { })
@@ -87,6 +90,7 @@ let
     (loadModule ./programs/texlive.nix { })
     (loadModule ./programs/tmux.nix { })
     (loadModule ./programs/urxvt.nix { })
+    (loadModule ./programs/vdirsyncer.nix { })
     (loadModule ./programs/vim.nix { })
     (loadModule ./programs/vscode.nix { })
     (loadModule ./programs/vscode/haskell.nix { })
@@ -126,6 +130,7 @@ let
     (loadModule ./services/tahoe-lafs.nix { })
     (loadModule ./services/udiskie.nix { })
     (loadModule ./services/unclutter.nix { })
+    (loadModule ./services/vdirsyncer.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/window-managers/awesome.nix { })
     (loadModule ./services/window-managers/i3.nix { })
     (loadModule ./services/window-managers/xmonad.nix { })
