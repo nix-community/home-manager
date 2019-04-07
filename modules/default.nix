@@ -23,6 +23,9 @@ let
     modules =
       [ configuration ]
       ++ (import ./modules.nix { inherit check lib pkgs; });
+    specialArgs = {
+      modulesPath = builtins.toString ./.;
+    };
   };
 
   module = showWarnings (
