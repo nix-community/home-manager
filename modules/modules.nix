@@ -85,6 +85,7 @@ let
     (loadModule ./programs/texlive.nix { })
     (loadModule ./programs/tmux.nix { })
     (loadModule ./programs/urxvt.nix { })
+    (loadModule ./programs/vdirsyncer.nix { })
     (loadModule ./programs/vim.nix { })
     (loadModule ./programs/vscode.nix { })
     (loadModule ./programs/vscode/haskell.nix { })
