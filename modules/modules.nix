@@ -129,6 +129,7 @@ let
     (loadModule ./programs/zoxide.nix { })
     (loadModule ./programs/zplug.nix { })
     (loadModule ./programs/zsh.nix { })
+    (loadModule ./programs/zsh/prezto.nix { })
     (loadModule ./services/blueman-applet.nix { })
     (loadModule ./services/cbatticon.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/clipmenu.nix { condition = hostPlatform.isLinux; })
