@@ -105,10 +105,39 @@ let
         description = "User name for authentication.";
       };
 
+      userNameCommand = mkOption {
+        type = types.nullOr (types.listOf types.str);
+        default = null;
+        example = [ "~/get-username.sh" ];
+        description = ''
+          A command that prints the user name to standard
+          output.
+        '';
+      };
       password = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = "Password for authentication.";
+      };
+
+      passwordCommand = mkOption {
+        type = types.nullOr (types.listOf types.str);
+        default = null;
+        example = [ "pass" "caldav" ];
+        description = ''
+          A command that prints the password to standard
+          output.
+        '';
+      };
+
+      passwordPrompt = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "Password for CalDAV";
+        description = ''
+          Show a prompt for the password with the specified
+          text.
+        '';
       };
 
       verify = mkOption {
@@ -191,6 +220,30 @@ let
           By default, an error message is printed.
         '';
       };
+
+      partialSync = mkOption {
+        type = types.nullOr (types.enum [ "revert" "error" "ignore" ]);
+        default = null;
+        description = ''
+          What should happen if synchronization in one direction
+          is impossible due to one storage being read-only.
+          Defaults to <literal>"revert"</literal>.</para>
+
+          <para>See
+          <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#pair-section"/>
+          for more information.
+        '';
+      };
+
+      metadata = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = [ "color" "displayname" ];
+        description = ''
+          Metadata keys that should be synchronized
+          when vdirsyncer metasync is executed.
+        '';
+      };
     };
   };
 
@@ -212,12 +265,22 @@ let
                          else ''conflict_resolution = ${mkList (map wrapString (["command"] ++ cr))}''
       );
 
+      metadataString = md: optionalString (md != []) ''
+        metadata = ${mkList (map wrapString md)}
+      '';
+
+      partialSyncString = ps: optionalString (ps != null) ''
+        partial_sync = "${ps}"
+      '';
+      
       pairString = n: p: ''
         [pair ${n}]
         a = "${p.a}"
         b = "${p.b}"
         collections = ${collectionsString p.collections}
         ${conflictResolutionString p.conflictResolution}
+        ${partialSyncString p.partialSync}
+        ${metadataString p.metadata}
       '';
 
       formatOption = n: v:
@@ -236,7 +299,16 @@ let
         item_types = ${mkList (map wrapString v)}
       ''
       else if (n == "userName") then ''username = "${v}"''
+      else if (n == "userNameCommand") then ''
+        username.fetch = ${mkList (map wrapString (["command"] ++ v))}
+      ''
       else if (n == "password") then ''password = "${v}"''
+      else if (n == "passwordCommand") then ''
+        password.fetch = ${mkList (map wrapString (["command"] ++ v))}
+      ''
+      else if (n == "passwordPrompt") then ''
+        password.fetch = ["prompt", "${v}"]
+      ''
       else if (n == "verify") then ''
         verify = ${if v then "true" else "false"}
       ''
@@ -255,7 +327,10 @@ let
 
       storageString = n: s: ''
         [storage ${n}]
-        ${concatStringsSep "\n" (mapAttrsToList formatOption (filterAttrs (_: v: v != null) s))}
+        type = "${s.type}"
+        ${concatStringsSep "\n" (
+          filter (x: x != "") (mapAttrsToList formatOption (removeAttrs s ["type"])) 
+        )}
       '';
 
     in ''
@@ -333,7 +408,10 @@ in
       allowedOptions = let
         remoteOptions = [
           "userName"
+          "userNameCommand"
           "password"
+          "passwordCommand"
+          "passwordPrompt"
           "verify"
           "verifyFingerprint"
           "auth"
@@ -352,7 +430,24 @@ in
       else [];
 
       assertStorage = n: v:
-      let required = requiredOptions v.type;
+      [
+        {
+          assertion = length (filter (x: x != null) [v.password v.passwordCommand v.passwordPrompt]) < 2;
+          message = ''
+            Only one of password, passwordCommand, passwordPrompt can be set
+            for storage ${n}.
+          '';
+        }
+
+        {
+          assertion = v.userName == null || v.userNameCommand == null;
+          message = ''
+            Only one of userName, userNameCommand can be set
+            for storage ${n}.
+          '';
+        }
+      ] ++
+      (let required = requiredOptions v.type;
           allowed = allowedOptions v.type;
       in mapAttrsToList (
         a: v': [
@@ -372,7 +467,7 @@ in
             '';
           }
         ]
-      ) (removeAttrs v ["type" "_module"]);
+      ) (removeAttrs v ["type" "_module"]));
 
       storageAssertions = flatten (mapAttrsToList assertStorage cfg.config.storages);
 
