@@ -11,6 +11,7 @@ let
   storageType = types.enum [
     "caldav" "carddav" "http"
     "filesystem" "singlefile"
+    "google_calendar" "google_contacts"
   ];
 
   storage = types.submodule {
@@ -183,6 +184,41 @@ let
           Defaults to <literal>"vdirsyncer"</literal>.
         '';
       };
+
+      ## Options for google storages
+
+      tokenFile = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          A file path where access tokens
+          are stored.
+        '';
+      };
+
+      clientId = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          OAuth credentials, obtained from the Google API Manager.</para>
+
+          <para> See
+          <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#google"/>
+          for more information.
+        '';
+      };
+      
+      clientSecret = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          OAuth credentials, obtained from the Google API Manager.</para>
+
+          <para> See
+          <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#google"/>
+          for more information.
+        '';
+      };
     };
   };
   
@@ -283,7 +319,7 @@ let
         ${metadataString p.metadata}
       '';
 
-      formatOption = n: v:
+      optionString = n: v:
       if v == null then ""
       else if (n == "type") then ''type = "${v}"''
       else if (n == "path") then ''path = "${v}"''
@@ -323,13 +359,16 @@ let
         auth_cert = ${mkList (map wrapString v)}
       ''
       else if (n == "userAgent") then ''useragent = "${v}"''
-      else "";
+      else if (n == "tokenFile") then ''token_file = "${v}"''
+      else if (n == "clientId") then ''client_id = "${v}"''
+      else if (n == "clientSecret") then ''client_secret = "${v}"''
+      else throw "Unrecognized option: ${n}";
 
       storageString = n: s: ''
         [storage ${n}]
         type = "${s.type}"
         ${concatStringsSep "\n" (
-          filter (x: x != "") (mapAttrsToList formatOption (removeAttrs s ["type"])) 
+          filter (x: x != "") (mapAttrsToList optionString (removeAttrs s ["type" "_module"])) 
         )}
       '';
 
@@ -366,7 +405,7 @@ in
 
             statusPath = mkOption {
               type = types.str;
-              default = "$HOME/.vdirsyncer/status";
+              default = "$XDG_DATA_HOME/vdirsyncer/status";
               description = ''
                 A directory where vdirsyncer will store some additional data for the next sync.
                 </para>
@@ -403,7 +442,9 @@ in
       if (t == "caldav" || t == "carddav" || t == "http") then [ "url" ]
       else if (t == "filesystem") then [ "path" "fileext" ]
       else if (t == "singlefile") then [ "path" ]
-      else [];
+      else if (t == "google_calendar" || t == "google_contacts") then
+        [ "tokenFile" "clientId" "clientSecret" ]
+      else throw "Unrecognized storage type: ${t}";
 
       allowedOptions = let
         remoteOptions = [
@@ -427,7 +468,10 @@ in
         then [ "fileExt" "encoding" "postHook" ]
       else if (t == "singlefile")
         then [ "encoding" ]
-      else [];
+      else if (t == "google_calendar") then
+        [ "timeRange" "itemTypes"]
+      else if (t == "google_contacts") then []
+      else throw "Unrecognized storage type: ${t}";
 
       assertStorage = n: v:
       [
