@@ -424,7 +424,6 @@ while getopts 2f:I:A:vnh opt; do
             exit 0
             ;;
         *)
-            errorEcho "Unknown option -$OPTARG"
             doHelp >&2
             exit 1
             ;;
