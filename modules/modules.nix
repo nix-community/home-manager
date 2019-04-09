@@ -96,6 +96,7 @@ let
     (loadModule ./services/flameshot.nix { })
     (loadModule ./services/gnome-keyring.nix { })
     (loadModule ./services/gpg-agent.nix { })
+    (loadModule ./services/imapnotify.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/kbfs.nix { })
     (loadModule ./services/kdeconnect.nix { })
     (loadModule ./services/keepassx.nix { })
