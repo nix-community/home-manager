@@ -58,9 +58,14 @@ let
 
   servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
 
-  attrsRecursivelyMerged = types.attrs // {
-    merge = loc: foldl' (res: def: recursiveUpdate res def.value) {};
-  };
+  unitType = unitKind: with types;
+    let
+      primitive = either bool (either int str);
+    in
+      attrsOf (attrsOf (attrsOf (either primitive (listOf primitive))))
+      // {
+        description = "systemd ${unitKind} unit configuration";
+      };
 
   unitDescription = type: ''
     Definition of systemd per-user ${type} units. Attributes are
@@ -78,6 +83,7 @@ let
     {
       Unit = {
         Description = "Example description";
+        Documentation = [ "man:example(1)" "man:example(5)" ];
       };
 
       ${type} = {
@@ -113,35 +119,35 @@ in
 
       services = mkOption {
         default = {};
-        type = attrsRecursivelyMerged;
+        type = unitType "service";
         description = unitDescription "service";
         example = unitExample "Service";
       };
 
       sockets = mkOption {
         default = {};
-        type = attrsRecursivelyMerged;
+        type = unitType "socket";
         description = unitDescription "socket";
         example = unitExample "Socket";
       };
 
       targets = mkOption {
         default = {};
-        type = attrsRecursivelyMerged;
+        type = unitType "target";
         description = unitDescription "target";
         example = unitExample "Target";
       };
 
       timers = mkOption {
         default = {};
-        type = attrsRecursivelyMerged;
+        type = unitType "timer";
         description = unitDescription "timer";
         example = unitExample "Timer";
       };
 
       paths = mkOption {
         default = {};
-        type = attrsRecursivelyMerged;
+        type = unitType "path";
         description = unitDescription "path";
         example = unitExample "Path";
       };

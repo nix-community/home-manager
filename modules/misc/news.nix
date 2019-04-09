@@ -1019,6 +1019,36 @@ in
           A new module is available: 'services.xcape'.
         '';
       }
+
+      {
+        time = "2019-04-11T22:50:10+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          The type used for the systemd unit options under
+
+              systemd.user.services, systemd.user.sockets, etc.
+
+          has been changed to offer more robust merging of configurations.
+
+          If you don't override values within systemd units then you are not
+          affected by this change. Unfortunately, if you do override unit values
+          you may encounter errors due to this change.
+
+          In particular, if you get an error saying that a "unique option" is
+          "defined multiple times" then you need to use 'lib.mkForce'. For
+          example,
+
+              systemd.user.services.foo.Service.ExecStart = "/foo/bar";
+
+          becomes
+
+              systemd.user.services.foo.Service.ExecStart = lib.mkForce "/foo/bar";
+
+          We had to make this change because the old merging was causing too
+          many confusing situations for people. Apologies for potentially
+          breaking your configuration!
+        '';
+      }
     ];
   };
 }
