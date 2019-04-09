@@ -1012,6 +1012,13 @@ in
           A new module is available: 'programs.lsd'.
         '';
       }
+
+      {
+        time = "2019-04-09T20:10:22+00:00";
+        message = ''
+          A new module is available: 'services.xcape'.
+        '';
+      }
     ];
   };
 }
