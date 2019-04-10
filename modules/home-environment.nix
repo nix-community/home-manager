@@ -139,9 +139,12 @@ in
     };
 
     home.keyboard = mkOption {
-      type = keyboardSubModule;
+      type = types.nullOr keyboardSubModule;
       default = {};
-      description = "Keyboard configuration.";
+      description = ''
+        Keyboard configuration. Set to <literal>null</literal> to
+        disable Home Manager keyboard management.
+      '';
     };
 
     home.sessionVariables = mkOption {
