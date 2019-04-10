@@ -22,6 +22,9 @@ let
           sendmail_command =
             optionalString (alot.sendMailCommand != null) alot.sendMailCommand;
         }
+        // optionalAttrs (aliases != []) {
+          aliases = concatStringsSep "," aliases;
+        }
         // optionalAttrs (gpg != null) {
           gpg_key = gpg.key;
           encrypt_by_default = if gpg.encryptByDefault then "all" else "none";

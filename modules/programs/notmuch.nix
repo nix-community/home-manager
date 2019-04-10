@@ -42,7 +42,9 @@ let
           in {
             name = catAttrs "realName" primary;
             primary_email = catAttrs "address" primary;
-            other_email = catAttrs "address" secondaries;
+            other_email = catAttrs "aliases" primary
+              ++ catAttrs "address" secondaries
+              ++ catAttrs "aliases" secondaries;
           };
 
         search = {
