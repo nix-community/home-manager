@@ -207,6 +207,13 @@ let
         description = "The email address of this account.";
       };
 
+      aliases = mkOption {
+        type = types.listOf (types.strMatching ".*@.*");
+        default = [];
+        example = [ "webmaster@example.org" "admin@example.org" ];
+        description = "Alternative email addresses of this account.";
+      };
+
       realName = mkOption {
         type = types.str;
         example = "Jane Doe";
