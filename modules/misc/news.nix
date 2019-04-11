@@ -994,6 +994,7 @@ in
 
       {
         time = "2019-02-24T00:32:23+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new service is available: 'services.mpdris2'.
         '';
@@ -1015,6 +1016,7 @@ in
 
       {
         time = "2019-04-09T20:10:22+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.xcape'.
         '';
