@@ -14,13 +14,13 @@ let
     mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
   );
 
-  fileType = types.submodule (
+  fileType = textGen: types.submodule (
     { name, config, ... }: {
       options = {
         body = mkOption {
           default = null;
           type = types.nullOr types.lines;
-          description = "Body of the function.";
+          description = "Body of the file.";
         };
 
         source = mkOption {
@@ -36,11 +36,7 @@ let
         source = mkIf (config.body != null) (
           mkDefault (pkgs.writeTextFile {
             inherit name;
-            text = ''
-            function ${name}
-              ${config.body}
-            end
-            '';
+            text = textGen name config.body;
             executable = true;
           })
         );
@@ -125,10 +121,22 @@ in
     };
 
     programs.fish.functions = mkOption {
-      type = types.attrsOf fileType;
+      type = types.attrsOf (fileType (name: body: ''
+            function ${name}
+              ${body}
+            end
+            ''));
       default = {};
       description = ''
         Functions to add to fish.
+      '';
+    };
+
+    programs.fish.completions = mkOption {
+      type = types.attrsOf (fileType (name: body: body));
+      default = {};
+      description = ''
+        Completions to add to fish.
       '';
     };
   };
