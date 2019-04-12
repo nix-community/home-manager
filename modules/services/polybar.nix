@@ -118,7 +118,9 @@ in
         Description = "Polybar status bar";
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
-        X-Restart-Triggers = [ config.xdg.configFile."polybar/config".source ];
+        X-Restart-Triggers = [
+          "${config.xdg.configFile."polybar/config".source}"
+        ];
       };
 
       Service = {
