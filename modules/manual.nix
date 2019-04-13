@@ -83,13 +83,26 @@ in
         Thanks!
       '';
     };
+
+    manual.json.enable = mkOption {
+      type = types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to install a JSON formatted list of all Home Manager
+        options. This can be located at
+        <filename>&lt;profile directory&gt;/share/doc/home-manager/options.json</filename>,
+        and may be used for navigating definitions, auto-completing,
+        and other miscellaneous tasks.
+      '';
+    };
   };
 
   config = {
     home.packages = mkMerge [
       (mkIf cfg.html.enable [ helpScript homeManagerManual.manual  ])
-
       (mkIf cfg.manpages.enable [ homeManagerManual.manpages ])
+      (mkIf cfg.json.enable [ homeManagerManual.optionsJSON ])
     ];
   };
 
