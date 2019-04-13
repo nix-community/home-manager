@@ -83,13 +83,25 @@ in
         Thanks!
       '';
     };
+    
+    manual.optionList.enable = mkOption {
+      type = types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to install a list of all Home Manager options (as JSON).
+        This can be located at <filename>$HOME/.nix-profile/share/doc/home-manager/options.json</filename>,
+        and may be used for navigating definitions, autocompleting, and other miscellaneous tasks.
+      '';
+    };
+    
   };
 
   config = {
     home.packages = mkMerge [
       (mkIf cfg.html.enable [ helpScript homeManagerManual.manual  ])
-
       (mkIf cfg.manpages.enable [ homeManagerManual.manpages ])
+      (mkIf cfg.optionList.enable [ homeManagerManual.optionsJSON ])
     ];
   };
 
