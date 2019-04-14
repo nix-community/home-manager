@@ -75,6 +75,7 @@ let
     (loadModule ./programs/opam.nix { })
     (loadModule ./programs/pidgin.nix { })
     (loadModule ./programs/rofi.nix { })
+    (loadModule ./programs/skim.nix { })
     (loadModule ./programs/ssh.nix { })
     (loadModule ./programs/taskwarrior.nix { })
     (loadModule ./programs/termite.nix { })

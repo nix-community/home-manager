@@ -1051,6 +1051,13 @@ in
           breaking your configuration!
         '';
       }
+
+      {
+        time = "2019-04-14T15:35:16+00:00";
+        message = ''
+          A new module is available: 'programs.skim'.
+        '';
+      }
     ];
   };
 }
