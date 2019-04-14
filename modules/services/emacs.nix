@@ -28,6 +28,10 @@ in
       Unit = {
         Description = "Emacs: the extensible, self-documenting text editor";
         Documentation = "info:emacs man:emacs(1) https://gnu.org/software/emacs/";
+
+        # Avoid killing the Emacs session, which may be full of
+        # unsaved buffers.
+        X-RestartIfChanged = false;
       };
 
       Service = {
