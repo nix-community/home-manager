@@ -6,68 +6,52 @@ let
 
   cfg = config.services.imapnotify;
 
-  configType = types.submodule {
-    options = {
-      host = mkOption {
-        type = types.str;
-        example = "imap.gmail.com";
-        description = "IMAP server host.";
+  imapnotifyAccounts =
+    filter (a: a.imapnotify.enable) (attrValues config.accounts.email.accounts);
+
+  genAccountUnit = account: {
+    name = "imapnotify@${account.address}";
+    value = {
+      Unit = {
+        Description = "Execute scripts on IMAP mailbox changes (new/deleted/updated messages) using IDLE for %i";
+        PartOf = [ "network-online.target" ];
       };
 
-      port = mkOption {
-        type = types.int;
-        example = "993";
-        description = "IMAP server port.";
+      Service = {
+        ExecStart = "${pkgs.imapnotify}/bin/imapnotify -c %E/imap_inotify/%i-config.js";
       };
 
-      tls = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Whether to use TLS or not.";
+      Install = {
+        WantedBy = [ "default.target" ];
       };
+    };
+  };
 
-      tlsOptions = mkOption {
-        type = types.attrs;
-        default = {};
-        example = { rejectUnauthorized = false; };
-        description = "Additional TLS options.";
-      };
+  genAccountConfig = account: {
+    name = "imap_inotify/${account.address}-config.js";
+    value = {
+      text =
+        let
+          port = if account.imap.port != null
+                   then account.imap.port
+                   else if account.imap.tls.enable then 993 else 143;
+        in ''
+          var child_process = require('child_process');
 
-      username = mkOption {
-        type = types.str;
-        example = "<user>@gmail.com";
-        description = "IMAP server username.";
-      };
+          function getStdout(cmd) {
+              var stdout = child_process.execSync(cmd);
+              return stdout.toString().trim();
+          }
 
-      password = mkOption {
-        type = types.str;
-        description = "IMAP server password.";
-      };
-
-      passwordCmd = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        example = "\${pkgs.pass}/bin/pass gmail";
-        description = "Shell command to get IMAP server password.";
-      };
-
-      onNotify = mkOption {
-        type = types.either types.str types.attrs;
-        example = "\${pkgs.mbsync}/bin/mbsync test-%s";
-        description = "Shell commands to run on any event.";
-      };
-
-      onNotifyPost = mkOption {
-        type = types.either types.str types.attrs;
-        example = { mail = "\${pkgs.notmuch}/bin/notmuch new && \${pkgs.libnotify}/bin/notify-send 'New mail arrived'"; };
-        description = "Shell commands to run after onNotify event.";
-      };
-
-      boxes = mkOption {
-        type = types.listOf types.str;
-        example = [ "Inbox" "[Gmail]/MyLabel" ];
-        description = "IMAP folders to watch.";
-      };
+          exports.host = "${account.imap.host}"
+          exports.port = ${toString port};
+          exports.tls = ${if account.imap.tls.enable then "true" else "false"};
+          exports.username = "${account.userName}";
+          exports.password = getStdout("${toString account.passwordCommand}");
+          exports.onNotify = ${builtins.toJSON account.imapnotify.onNotify};
+          exports.onNotifyPost = ${builtins.toJSON account.imapnotify.onNotifyPost};
+          exports.boxes = ${builtins.toJSON account.imapnotify.boxes};
+        '';
     };
   };
 
@@ -79,70 +63,32 @@ in
   options = {
     services.imapnotify = {
       enable = mkEnableOption "imapnotify";
-
-      settings = mkOption {
-        type = configType;
-        default = {};
-        description = "Configuration written to ~/.config/imap_inotify/config.json";
-        example = literalExample ''
-          {
-            host = "imap.gmail.com";
-            port = 993;
-            tls = true;
-            tlsOptions = { rejectUnauthorized = false; };
-            username = "";
-            password = "";
-            onNotify = "/usr/bin/mbsync test-%s";
-            onNotifyPost = { mail = "''${pkgs.notmuch}/bin/notmuch new && ''${pkgs.libnotify}/bin/notify-send 'New mail arrived'"; };
-            boxes = [ "Inbox" "[Gmail]/MyLabel" ];
-          }
-        '';
-      };
     };
   };
 
-  config = mkIf cfg.enable (
-    let jsConfig = cfg.settings.passwordCmd != null;
-    in mkMerge [
-      {
-        systemd.user.services.imapnotify = {
-          Unit = {
-            Description = "Execute scripts on IMAP mailbox changes (new/deleted/updated messages) using IDLE";
-            PartOf = [ "network-online.target" ];
+  config = mkIf cfg.enable {
+      assertions =
+        let
+          checkAccounts = pred: msg:
+          let
+            badAccounts = filter pred imapnotifyAccounts;
+          in {
+            assertion = badAccounts == [];
+            message = "imapnotify: ${msg} for accounts: "
+              + concatMapStringsSep ", " (a: a.name) badAccounts;
           };
+        in
+          [
+            (checkAccounts (a: a.maildir == null) "Missing maildir configuration")
+            (checkAccounts (a: a.imap == null) "Missing IMAP configuration")
+            (checkAccounts (a: a.passwordCommand == null) "Missing passwordCommand")
+            (checkAccounts (a: a.userName == null) "Missing username")
+          ];
 
-          Service = {
-            ExecStart = "${pkgs.imapnotify}/bin/imapnotify"
-              + optionalString jsConfig " -c %E/imap_inotify/config.js";
-          };
-        };
-      }
+      systemd.user.services =
+        listToAttrs (map genAccountUnit imapnotifyAccounts);
 
-      (mkIf (cfg.settings != {} && !jsConfig) {
-        xdg.configFile."imap_inotify/config.json".text = builtins.toJSON
-          (attrsets.filterAttrs (n: v: n != "_module") cfg.settings);
-      })
-
-      (mkIf (cfg.settings != {} && jsConfig) {
-        xdg.configFile."imap_inotify/config.js".text = ''
-          var child_process = require('child_process');
-
-          function getStdout(cmd) {
-              var stdout = child_process.execSync(cmd);
-              return stdout.toString().trim();
-          }
-
-          exports.host = "${cfg.settings.host}"
-          exports.port = ${toString cfg.settings.port};
-          exports.tls = ${if cfg.settings.tls then "true" else "false"};
-          exports.tlsOptions = ${builtins.toJSON cfg.settings.tlsOptions};
-          exports.username = "${cfg.settings.username}";
-          exports.password = getStdout("${cfg.settings.passwordCmd}");
-          exports.onNotify = ${builtins.toJSON cfg.settings.onNotify};
-          exports.onNotifyPost = ${builtins.toJSON cfg.settings.onNotifyPost};
-          exports.boxes = ${builtins.toJSON cfg.settings.boxes};
-        '';
-      })
-    ]
-  );
+      xdg.configFile =
+        listToAttrs (map genAccountConfig imapnotifyAccounts);
+  };
 }
