@@ -58,8 +58,8 @@ in {
           target = (if isDarwin
             then "Library/Application Support/Mozilla/NativeMessagingHosts"
             else ".mozilla/native-messaging-hosts")
-            + "/com.dannyvankooten.browserpass.json";
-          source = "${pkgs.browserpass}/lib/mozilla/native-messaging-hosts/com.dannyvankooten.browserpass.json";
+            + "/com.github.browserpass.native.json";
+          source = "${pkgs.browserpass}/lib/mozilla/native-messaging-hosts/com.github.browserpass.native.json";
         } ]
       else if x == "vivaldi" then
         let dir = if isDarwin
