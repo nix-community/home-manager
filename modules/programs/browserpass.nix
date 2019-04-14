@@ -31,11 +31,11 @@ in {
           else ".config/google-chrome/NativeMessagingHosts";
         in [
           {
-            target = "${dir}/com.dannyvankooten.browserpass.json";
+            target = "${dir}/com.github.browserpass.native.json";
             source = "${pkgs.browserpass}/etc/chrome-host.json";
           }
           {
-            target = "${dir}/../policies/managed/com.dannyvankooten.browserpass.json";
+            target = "${dir}/../policies/managed/com.github.browserpass.native.json";
             source = "${pkgs.browserpass}/etc/chrome-policy.json";
           }
         ]
@@ -45,11 +45,11 @@ in {
           else ".config/chromium/NativeMessagingHosts";
         in [
           {
-            target = "${dir}/com.dannyvankooten.browserpass.json";
+            target = "${dir}/com.github.browserpass.native.json";
             source = "${pkgs.browserpass}/etc/chrome-host.json";
           }
           {
-            target = "${dir}/../policies/managed/com.dannyvankooten.browserpass.json";
+            target = "${dir}/../policies/managed/com.github.browserpass.native.json";
             source = "${pkgs.browserpass}/etc/chrome-policy.json";
           }
         ]
@@ -58,8 +58,8 @@ in {
           target = (if isDarwin
             then "Library/Application Support/Mozilla/NativeMessagingHosts"
             else ".mozilla/native-messaging-hosts")
-            + "/com.dannyvankooten.browserpass.json";
-          source = "${pkgs.browserpass}/lib/mozilla/native-messaging-hosts/com.dannyvankooten.browserpass.json";
+            + "/com.github.browserpass.native.json";
+          source = "${pkgs.browserpass}/lib/mozilla/native-messaging-hosts/com.github.browserpass.native.json";
         } ]
       else if x == "vivaldi" then
         let dir = if isDarwin
@@ -67,11 +67,11 @@ in {
           else ".config/vivaldi/NativeMessagingHosts";
         in [
           {
-            target = "${dir}/com.dannyvankooten.browserpass.json";
+            target = "${dir}/com.github.browserpass.native.json";
             source = "${pkgs.browserpass}/etc/chrome-host.json";
           }
           {
-            target = "${dir}/../policies/managed/com.dannyvankooten.browserpass.json";
+            target = "${dir}/../policies/managed/com.github.browserpass.native.json";
             source = "${pkgs.browserpass}/etc/chrome-policy.json";
           }
         ]
