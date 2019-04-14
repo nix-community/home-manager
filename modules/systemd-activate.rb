@@ -41,10 +41,12 @@ def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
   raise "daemon-reload failed" unless run_cmd('systemctl --user daemon-reload')
 
   # Exclude services that aren't allowed to be manually started or stopped
-  no_manual_start, no_manual_stop = get_restricted_units(to_stop + to_restart + to_start)
-  to_stop -= no_manual_stop
-  to_restart -= no_manual_stop + no_manual_start
+  no_manual_start, no_manual_stop, no_restart = get_restricted_units(to_stop + to_restart + to_start)
+  to_stop -= no_manual_stop + no_restart
+  to_restart -= no_manual_stop + no_manual_start + no_restart
   to_start -= no_manual_start
+
+  puts "Not restarting: #{no_restart.join(' ')}" unless no_restart.empty?
 
   if to_stop.empty? && to_start.empty? && to_restart.empty?
     print_service_msg("All services are already running", services_to_run)
@@ -154,6 +156,7 @@ def get_restricted_units(units)
   units = units.to_a
   infos = `systemctl --user show -p RefuseManualStart -p RefuseManualStop #{units.shelljoin}`
           .split("\n\n")
+  no_restart = []
   no_manual_start = []
   no_manual_stop = []
   infos.zip(units).each do |info, unit|
@@ -161,7 +164,15 @@ def get_restricted_units(units)
     no_manual_start << unit if no_start.end_with?('yes')
     no_manual_stop << unit if no_stop.end_with?('yes')
   end
-  [no_manual_start, no_manual_stop]
+  # Regular expression that indicates that a service should not be
+  # restarted even if a change has been detected.
+  restartRe = /^[ \t]*X-RestartIfChanged[ \t]*=[ \t]*false[ \t]*(?:#.*)?$/
+  units.each do |unit|
+    if `systemctl --user cat #{unit.shellescape}` =~ restartRe
+      no_restart << unit
+    end
+  end
+  [no_manual_start, no_manual_stop, no_restart]
 end
 
 def wait_and_get_failed_services(services, start_timeout_ms)
