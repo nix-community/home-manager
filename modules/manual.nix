@@ -84,7 +84,7 @@ in
       '';
     };
     
-    manual.optionList.enable = mkOption {
+    manual.json.enable = mkOption {
       type = types.bool;
       default = false;
       example = true;
