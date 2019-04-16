@@ -45,7 +45,7 @@ let
 
           exports.host = "${account.imap.host}"
           exports.port = ${toString port};
-          exports.tls = ${if account.imap.tls.enable then "true" else "false"};
+          exports.tls = ${builtins.toJSON account.imap.tls.enable};
           exports.username = "${account.userName}";
           exports.password = getStdout("${toString account.passwordCommand}");
           exports.onNotify = ${builtins.toJSON account.imapnotify.onNotify};
