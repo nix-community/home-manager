@@ -19,7 +19,7 @@ let
     in
       "${key}=${tweakVal value}";
 
-  primitive = with types; either bool (either int str);
+  primitive = with types; either bool (either int (either float str));
 
 in
 
