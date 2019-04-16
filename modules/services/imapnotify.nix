@@ -6,19 +6,21 @@ let
 
   cfg = config.services.imapnotify;
 
+  safeName = lib.replaceChars ["@" ":" "\\" "[" "]"] ["-" "-" "-" "" ""];
+
   imapnotifyAccounts =
     filter (a: a.imapnotify.enable) (attrValues config.accounts.email.accounts);
 
   genAccountUnit = account: {
-    name = "imapnotify@${account.address}";
+    name = "imapnotify@${safeName account.name}";
     value = {
       Unit = {
         Description = "Execute scripts on IMAP mailbox changes (new/deleted/updated messages) using IDLE for %i";
-        PartOf = [ "network-online.target" ];
+        After = [ "gpg-agent.service" ];
       };
 
       Service = {
-        ExecStart = "${pkgs.imapnotify}/bin/imapnotify -c %E/imap_inotify/%i-config.js";
+        ExecStart = "${pkgs.imapnotify}/bin/imapnotify -c ${genAccountConfig account}";
       };
 
       Install = {
@@ -27,10 +29,8 @@ let
     };
   };
 
-  genAccountConfig = account: {
-    name = "imap_inotify/${account.address}-config.js";
-    value = {
-      text =
+  genAccountConfig = account:
+    pkgs.writeText "imapnotify-${safeName account.name}-config.js" (
         let
           port = if account.imap.port != null
                    then account.imap.port
@@ -51,9 +51,7 @@ let
           exports.onNotify = ${builtins.toJSON account.imapnotify.onNotify};
           exports.onNotifyPost = ${builtins.toJSON account.imapnotify.onNotifyPost};
           exports.boxes = ${builtins.toJSON account.imapnotify.boxes};
-        '';
-    };
-  };
+        '');
 
 in
 
@@ -87,8 +85,5 @@ in
 
       systemd.user.services =
         listToAttrs (map genAccountUnit imapnotifyAccounts);
-
-      xdg.configFile =
-        listToAttrs (map genAccountConfig imapnotifyAccounts);
   };
 }
