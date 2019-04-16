@@ -7,7 +7,7 @@ with lib;
     enable = mkEnableOption "imapnotify";
 
     onNotify = mkOption {
-      type = types.either types.str types.attrs;
+      type = with types; either str (attrsOf str);
       default = "";
       example = "\${pkgs.mbsync}/bin/mbsync test-%s";
       description = "Shell commands to run on any event.";
