@@ -14,7 +14,7 @@ with lib;
     };
 
     onNotifyPost = mkOption {
-      type = types.either types.str types.attrs;
+      type = with types; either str (attrsOf str);
       default = "";
       example = { mail = "\${pkgs.notmuch}/bin/notmuch new && \${pkgs.libnotify}/bin/notify-send 'New mail arrived'"; };
       description = "Shell commands to run after onNotify event.";
