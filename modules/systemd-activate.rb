@@ -1,5 +1,6 @@
 require 'set'
 require 'open3'
+require 'shellwords'
 
 @dry_run = ENV['DRY_RUN']
 @verbose = ENV['VERBOSE']
@@ -143,14 +144,15 @@ end
 def get_units_by_activity(units, active)
   return [] if units.empty?
   units = units.to_a
-  is_active = `systemctl --user is-active #{units.join(' ')}`.split
+  is_active = `systemctl --user is-active #{units.shelljoin}`.split
   units.select.with_index do |_, i|
     (is_active[i] == 'active') == active
   end
 end
 
 def get_restricted_units(units)
-  infos = `systemctl --user show -p RefuseManualStart -p RefuseManualStop #{units.to_a.join(' ')}`
+  units = units.to_a
+  infos = `systemctl --user show -p RefuseManualStart -p RefuseManualStop #{units.shelljoin}`
           .split("\n\n")
   no_manual_start = []
   no_manual_stop = []
@@ -173,7 +175,7 @@ end
 def show_failed_services_status(services)
   puts
   services.each do |service|
-    run_cmd("systemctl --user status #{service}")
+    run_cmd("systemctl --user status #{service.shellescape}")
     puts
   end
 end
