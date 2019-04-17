@@ -59,8 +59,12 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
                 && ! "$(readlink "$targetPath")" == ${homeFilePattern} ]] ; then
-              errorEcho "Existing file '$targetPath' is in the way"
-              collision=1
+              backup="''${targetPath}.hm-bak"
+              warnEcho "Existing file '$targetPath' is in the way - moving to $backup"
+              if ! mv "$targetPath" "$backup"; then
+                errorEcho "Moving '$targetPath' failed!"
+                collision=1
+              fi
             fi
           done
 
