@@ -1106,6 +1106,22 @@ in
           A new module is available: 'programs.gpg'.
         '';
       }
+
+      {
+        time = "2019-06-09T12:19:18+00:00";
+        message = ''
+          Collisions between unmanaged and managed files can now be
+          automatically resolved by moving the target file to a new
+          path instead of failing the switch operation. To enable
+          this, use the new '-b' command line argument. For example,
+
+              home-manager -b bck switch
+
+          where 'bck' is the suffix to give the moved file. In this
+          case a colliding file 'foo.conf' will be moved to
+          'foo.conf.bck'.
+        '';
+      }
     ];
   };
 }

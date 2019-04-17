@@ -416,6 +416,7 @@ function doHelp() {
     echo "  -A ATTRIBUTE Optional attribute that selects a configuration"
     echo "               expression in the configuration file."
     echo "  -I PATH      Add a path to the Nix expression search path."
+    echo "  -b EXT       Move existing files to new path rather than fail."
     echo "  -v           Verbose output"
     echo "  -n           Do a dry run, only prints what actions would be taken"
     echo "  -h           Print this help"
@@ -460,7 +461,7 @@ for arg in "$@"; do
     fi
 done
 
-while getopts 2f:I:A:vnh opt; do
+while getopts 2f:I:A:b:vnh opt; do
     case $opt in
         2)
             USE_NIX2_COMMAND=1
@@ -473,6 +474,9 @@ while getopts 2f:I:A:vnh opt; do
             ;;
         A)
             HOME_MANAGER_CONFIG_ATTRIBUTE="$OPTARG"
+            ;;
+        b)
+            export HOME_MANAGER_BACKUP_EXT="$OPTARG"
             ;;
         v)
             export VERBOSE=1

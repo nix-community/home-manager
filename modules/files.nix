@@ -59,13 +59,23 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
                 && ! "$(readlink "$targetPath")" == ${homeFilePattern} ]] ; then
-              errorEcho "Existing file '$targetPath' is in the way"
-              collision=1
+              if [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
+                backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
+                if [[ -e "$backup" ]]; then
+                  errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath'"
+                  collision=1
+                else
+                  warnEcho "Existing file '$targetPath' is in the way, will be moved to '$backup'"
+                fi
+              else
+                errorEcho "Existing file '$targetPath' is in the way"
+                collision=1
+              fi
             fi
           done
 
           if [[ -v collision ]] ; then
-            errorEcho "Please move the above files and try again"
+            errorEcho "Please move the above files and try again or use -b <ext> to move automatically."
             exit 1
           fi
         '';
@@ -111,6 +121,10 @@ in
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
+            if [[ -e "$targetPath" && ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
+              backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
+              $DRY_RUN_CMD mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
+            fi
             $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
             $DRY_RUN_CMD ln -nsf $VERBOSE_ARG "$sourcePath" "$targetPath"
           done
