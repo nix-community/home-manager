@@ -385,7 +385,6 @@ in
         (import ../programs/msmtp-accounts.nix)
         (import ../programs/notmuch-accounts.nix)
         (import ../programs/offlineimap-accounts.nix)
-        (import ../services/imapnotify-accounts.nix)
       ]);
       default = {};
       description = "List of email accounts.";
