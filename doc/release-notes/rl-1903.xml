@@ -3,15 +3,10 @@
          xmlns:xi="http://www.w3.org/2001/XInclude"
          version="5.0"
          xml:id="sec-release-19.03">
- <title>Release 19.03 (unstable)</title>
+ <title>Release 19.03</title>
 
  <para>
-  This is the current unstable branch and the information in this section is
-  therefore not final.
- </para>
-
- <para>
-  Scheduled released is March, 2019.
+  The 19.03 release branch became the stable branch in April, 2019.
  </para>
 
  <section xmlns="http://docbook.org/ns/docbook"
