@@ -59,17 +59,22 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
                 && ! "$(readlink "$targetPath")" == ${homeFilePattern} ]] ; then
-              backup="''${targetPath}.hm-bak"
-              warnEcho "Existing file '$targetPath' is in the way - moving to $backup"
-              if ! mv "$targetPath" "$backup"; then
-                errorEcho "Moving '$targetPath' failed!"
+              if [[ -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
+                backup="''${targetPath}''${HOME_MANAGER_BACKUP_EXT}"
+                warnEcho "Existing file '$targetPath' is in the way - moving to $backup"
+                if ! mv "$targetPath" "$backup"; then
+                  errorEcho "Moving '$targetPath' failed!"
+                  collision=1
+                fi
+              else
+                errorEcho "Existing file '$targetPath' is in the way"
                 collision=1
               fi
             fi
           done
 
           if [[ -v collision ]] ; then
-            errorEcho "Please move the above files and try again"
+            errorEcho "Please move the above files and try again or use -b to move automatically."
             exit 1
           fi
         '';

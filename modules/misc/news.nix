@@ -1062,8 +1062,9 @@ in
       {
         time = "2019-04-17T19:12:34+00:00";
         message = ''
-          Managed file collisions are now handled by moving the target file to
-          a new path instead of failing the switch command.
+          Managed file collisions can now be handled by moving the target file to
+          a new path instead of failing the switch command by passing -b <ext> to
+          home-manager.
         '';
       }
     ];
