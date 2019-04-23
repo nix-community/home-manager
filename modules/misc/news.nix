@@ -984,6 +984,19 @@ in
           is necessary if you want to use 'nixos-rebuild build-vm'.
         '';
       }
+
+      {
+        time = "2019-04-23T19:15:07+00:00";
+        message = ''
+          As of May 1, 2019 the release-18.09 branch of Home Manager
+          will no longer be supported. You are encouraged to switch to
+          the release-19.03 branch as soon as possible.
+
+          Some brief notes about the 19.03 branch is available at
+
+            https://rycee.gitlab.io/home-manager/release-notes.html#sec-release-19.03
+        '';
+      }
     ];
   };
 }
