@@ -4,7 +4,7 @@ with lib;
 
 {
   options.imapnotify = {
-    enable = mkEnableOption "ImapNotify";
+    enable = mkEnableOption "imapnotify";
 
     onNotify = mkOption {
       type = with types; either str (attrsOf str);

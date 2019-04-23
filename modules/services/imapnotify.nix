@@ -20,7 +20,7 @@ let
         name = "imapnotify-${name}";
         value = {
           Unit = {
-            Description = "ImapNotify for ${name}";
+            Description = "imapnotify for ${name}";
           };
 
           Service = {
@@ -69,7 +69,7 @@ in
 
   options = {
     services.imapnotify = {
-      enable = mkEnableOption "ImapNotify";
+      enable = mkEnableOption "imapnotify";
     };
 
     accounts.email.accounts = mkOption {
