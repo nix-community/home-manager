@@ -55,7 +55,7 @@ let
           exports.port = ${toJSON port};
           exports.tls = ${toJSON account.imap.tls.enable};
           exports.username = ${toJSON account.userName};
-          exports.password = getStdout(${toJSON account.passwordCommand});
+          exports.password = getStdout("${toString account.passwordCommand}");
           exports.onNotify = ${toJSON account.imapnotify.onNotify};
           exports.onNotifyPost = ${toJSON account.imapnotify.onNotifyPost};
           exports.boxes = ${toJSON account.imapnotify.boxes};
