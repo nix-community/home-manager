@@ -3,15 +3,10 @@
          xmlns:xi="http://www.w3.org/2001/XInclude"
          version="5.0"
          xml:id="sec-release-19.03">
- <title>Release 19.03 (unstable)</title>
+ <title>Release 19.03</title>
 
  <para>
-  This is the current unstable branch and the information in this section is
-  therefore not final.
- </para>
-
- <para>
-  Scheduled released is March, 2019.
+  The 19.03 release branch became the stable branch in April, 2019.
  </para>
 
  <section xmlns="http://docbook.org/ns/docbook"
@@ -36,6 +31,32 @@
 <programlisting>
 home.file."my file".source = ./. + "/file with spaces!";
 </programlisting>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The type used for the systemd unit options under
+     <option>systemd.user.services</option>,
+     <option>systemd.user.sockets</option>, etc. has been changed to offer more
+     robust merging of configurations. If you don't override values within
+     systemd units then you are not affected by this change. Unfortunately, if
+     you do override unit values you may encounter errors.
+    </para>
+    <para>
+     In particular, if you get an error saying that a <quote>unique
+     option</quote> is <quote>defined multiple times</quote> then you need to
+     use the
+     <code xlink:href="https://nixos.org/nixos/manual/#sec-option-definitions-setting-priorities">mkForce</code>
+     function. For example,
+<programlisting language="nix">
+systemd.user.services.foo.Service.ExecStart = "/foo/bar";
+</programlisting>
+     becomes
+<programlisting language="nix">
+systemd.user.services.foo.Service.ExecStart = lib.mkForce "/foo/bar";
+</programlisting>
+     We had to make this change because the old merging was causing too many
+     confusing situations for people.
     </para>
    </listitem>
   </itemizedlist>

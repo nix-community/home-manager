@@ -5,7 +5,7 @@ with lib;
 {
   options = {
     home.stateVersion = mkOption {
-      type = types.enum [ "18.09" "19.03" ];
+      type = types.enum [ "18.09" "19.03" "19.09" ];
       default = "18.09";
       description = ''
         It is occasionally necessary for Home Manager to change

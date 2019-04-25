@@ -1,5 +1,6 @@
 require 'set'
 require 'open3'
+require 'shellwords'
 
 @dry_run = ENV['DRY_RUN']
 @verbose = ENV['VERBOSE']
@@ -40,10 +41,12 @@ def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
   raise "daemon-reload failed" unless run_cmd('systemctl --user daemon-reload')
 
   # Exclude services that aren't allowed to be manually started or stopped
-  no_manual_start, no_manual_stop = get_restricted_units(to_stop + to_restart + to_start)
-  to_stop -= no_manual_stop
-  to_restart -= no_manual_stop + no_manual_start
+  no_manual_start, no_manual_stop, no_restart = get_restricted_units(to_stop + to_restart + to_start)
+  to_stop -= no_manual_stop + no_restart
+  to_restart -= no_manual_stop + no_manual_start + no_restart
   to_start -= no_manual_start
+
+  puts "Not restarting: #{no_restart.join(' ')}" unless no_restart.empty?
 
   if to_stop.empty? && to_start.empty? && to_restart.empty?
     print_service_msg("All services are already running", services_to_run)
@@ -143,15 +146,17 @@ end
 def get_units_by_activity(units, active)
   return [] if units.empty?
   units = units.to_a
-  is_active = `systemctl --user is-active #{units.join(' ')}`.split
+  is_active = `systemctl --user is-active #{units.shelljoin}`.split
   units.select.with_index do |_, i|
     (is_active[i] == 'active') == active
   end
 end
 
 def get_restricted_units(units)
-  infos = `systemctl --user show -p RefuseManualStart -p RefuseManualStop #{units.to_a.join(' ')}`
+  units = units.to_a
+  infos = `systemctl --user show -p RefuseManualStart -p RefuseManualStop #{units.shelljoin}`
           .split("\n\n")
+  no_restart = []
   no_manual_start = []
   no_manual_stop = []
   infos.zip(units).each do |info, unit|
@@ -159,7 +164,15 @@ def get_restricted_units(units)
     no_manual_start << unit if no_start.end_with?('yes')
     no_manual_stop << unit if no_stop.end_with?('yes')
   end
-  [no_manual_start, no_manual_stop]
+  # Regular expression that indicates that a service should not be
+  # restarted even if a change has been detected.
+  restartRe = /^[ \t]*X-RestartIfChanged[ \t]*=[ \t]*false[ \t]*(?:#.*)?$/
+  units.each do |unit|
+    if `systemctl --user cat #{unit.shellescape}` =~ restartRe
+      no_restart << unit
+    end
+  end
+  [no_manual_start, no_manual_stop, no_restart]
 end
 
 def wait_and_get_failed_services(services, start_timeout_ms)
@@ -173,7 +186,7 @@ end
 def show_failed_services_status(services)
   puts
   services.each do |service|
-    run_cmd("systemctl --user status #{service}")
+    run_cmd("systemctl --user status #{service.shellescape}")
     puts
   end
 end
