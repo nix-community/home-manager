@@ -72,7 +72,7 @@ in
 
       sessionVariables = mkOption {
         default = {};
-        type = with types; attrsOf (either int str);
+        type = types.attrs;
         example = { MAILCHECK = 30; };
         description = ''
           Environment variables that will be set for the Bash session.
