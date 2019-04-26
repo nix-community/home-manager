@@ -149,7 +149,7 @@ in
 
     home.sessionVariables = mkOption {
       default = {};
-      type = with types; attrsOf (either int str);
+      type = types.attrs;
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
       description = ''
         Environment variables to always set at login.
@@ -167,19 +167,19 @@ in
         variable may have a runtime dependency on another session
         variable. In particular code like
         <programlisting language="nix">
-          home.sessionVariables = {
-            FOO = "Hello";
-            BAR = "$FOO World!";
-          };
+        home.sessionVariables = {
+          FOO = "Hello";
+          BAR = "$FOO World!";
+        };
         </programlisting>
         may not work as expected. If you need to reference another
         session variable, then do so inside Nix instead. The above
         example then becomes
         <programlisting language="nix">
-          home.sessionVariables = {
-            FOO = "Hello";
-            BAR = "''${config.home.sessionVariables.FOO} World!";
-          };
+        home.sessionVariables = {
+          FOO = "Hello";
+          BAR = "''${config.home.sessionVariables.FOO} World!";
+        };
         </programlisting>
       '';
     };

@@ -14,7 +14,7 @@ in
   options = {
     pam.sessionVariables = mkOption {
       default = {};
-      type = with types; attrsOf (either int str);
+      type = types.attrs;
       example = { EDITOR = "vim"; };
       description = ''
         Environment variables that will be set for the PAM session.
