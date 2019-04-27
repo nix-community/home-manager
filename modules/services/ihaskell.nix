@@ -14,8 +14,8 @@ let
     sha256 = "0h5hpdfa3daabf1ijl7y5qnpy60yrf7h0ws2n3v5przfmgr8phv5";
   };
   ihaskellResult = (import (ihaskellSrc + /release.nix) {
-    compiler = "ghc864";
-    packages = self: cfg.extraPackages self;
+    compiler = cfg.compiler;
+    packages = cfg.extraPackages;
   });
 
 in
@@ -27,6 +27,16 @@ in
     enable = mkOption {
       default = false;
       description = "Autostart an IHaskell notebook service.";
+    };
+
+    compiler = mkOption {
+      default = "ghc864";
+      example = literalExample ''
+        ghc864
+      '';
+      description = ''
+        The Haskell compiler to use
+      '';
     };
 
     notebooksPath = mkOption {
