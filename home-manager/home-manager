@@ -10,6 +10,20 @@ function errorEcho() {
     echo $* >&2
 }
 
+function setVerboseAndDryRun() {
+    if [[ -v VERBOSE ]]; then
+        export VERBOSE_ARG="--verbose"
+    else
+        export VERBOSE_ARG=""
+    fi
+
+    if [[ -v DRY_RUN ]] ; then
+        export DRY_RUN_CMD=echo
+    else
+        export DRY_RUN_CMD=""
+    fi
+}
+
 function setWorkDir() {
     if [[ ! -v WORK_DIR ]]; then
         WORK_DIR="$(mktemp --tmpdir -d home-manager-build.XXXXXXXXXX)"
@@ -216,17 +230,7 @@ function doListGens() {
 # Removes linked generations. Takes as arguments identifiers of
 # generations to remove.
 function doRmGenerations() {
-    if [[ -v VERBOSE ]]; then
-        export VERBOSE_ARG="--verbose"
-    else
-        export VERBOSE_ARG=""
-    fi
-
-    if [[ -v DRY_RUN ]] ; then
-        export DRY_RUN_CMD=echo
-    else
-        export DRY_RUN_CMD=""
-    fi
+    setVerboseAndDryRun
 
     pushd "/nix/var/nix/profiles/per-user/$USER" > /dev/null
 
@@ -244,6 +248,11 @@ function doRmGenerations() {
     done
 
     popd > /dev/null
+}
+
+function doRmAllGenerations() {
+    $DRY_RUN_CMD rm $VERBOSE_ARG \
+        "/nix/var/nix/profiles/per-user/$USER/home-manager"*
 }
 
 function doExpireGenerations() {
@@ -347,6 +356,56 @@ function doShowNews() {
     fi
 }
 
+function doUninstall() {
+    setVerboseAndDryRun
+
+    echo "This will remove Home Manager from your system."
+
+    if [[ -v DRY_RUN ]]; then
+        echo "This is a dry run, nothing will actually be uninstalled."
+    fi
+
+    local confirmation
+    read -r -n 1 -p "Really uninstall Home Manager? [y/n] " confirmation
+    echo
+
+    case $confirmation in
+        y|Y)
+            echo "Switching to empty Home Manager configuration..."
+            HOME_MANAGER_CONFIG="$(mktemp --tmpdir home-manager.XXXXXXXXXX)"
+            echo "{}" > "$HOME_MANAGER_CONFIG"
+            doSwitch
+            rm "$HOME_MANAGER_CONFIG"
+            $DRY_RUN_CMD rm $VERBOSE_ARG -r \
+                "${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
+            $DRY_RUN_CMD rm $VERBOSE_ARG \
+                "/nix/var/nix/gcroots/per-user/$USER/current-home"
+            ;;
+        *)
+            echo "Yay!"
+            exit 0
+            ;;
+    esac
+
+    local deleteProfiles
+    read -r -n 1 \
+         -p 'Remove all Home Manager generations? [y/n] ' \
+         deleteProfiles
+    echo
+
+    case $deleteProfiles in
+        y|Y)
+            doRmAllGenerations
+            echo "All generations are now eligible for garbage collection."
+            ;;
+        *)
+            echo "Leaving generations but they may still be garbage collected."
+            ;;
+    esac
+
+    echo "Home Manager is uninstalled but your home.nix is left untouched."
+}
+
 function doHelp() {
     echo "Usage: $0 [OPTION] COMMAND"
     echo
@@ -385,6 +444,8 @@ function doHelp() {
     echo "  packages     List all packages installed in home-manager-path"
     echo
     echo "  news         Show news entries in a pager"
+    echo
+    echo "  uninstall    Remove Home Manager"
 }
 
 EXTRA_NIX_PATH=()
@@ -465,6 +526,9 @@ case "$cmd" in
         ;;
     news)
         doShowNews --all
+        ;;
+    uninstall)
+        doUninstall
         ;;
     help|--help)
         doHelp
