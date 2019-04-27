@@ -49,13 +49,33 @@ in
       enableGoogleTalk = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether to enable the unfree Google Talk plugin.";
+        description = ''
+          Whether to enable the unfree Google Talk plugin. This option
+          is <emphasis>deprecated</emphasis> and will only work if
+
+          <programlisting language="nix">
+          programs.firefox.package = pkgs.firefox-esr-52-unwrapped;
+          </programlisting>
+
+          and the <option>plugin.load_flash_only</option> Firefox
+          option has been disabled.
+        '';
       };
 
       enableIcedTea = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether to enable the Java applet plugin.";
+        description = ''
+          Whether to enable the Java applet plugin. This option is
+          <emphasis>deprecated</emphasis> and will only work if
+
+          <programlisting language="nix">
+          programs.firefox.package = pkgs.firefox-esr-52-unwrapped;
+          </programlisting>
+
+          and the <option>plugin.load_flash_only</option> Firefox
+          option has been disabled.
+        '';
       };
     };
   };
