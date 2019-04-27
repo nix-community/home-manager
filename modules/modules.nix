@@ -95,6 +95,7 @@ let
     (loadModule ./services/flameshot.nix { })
     (loadModule ./services/gnome-keyring.nix { })
     (loadModule ./services/gpg-agent.nix { })
+    (loadModule ./services/ihaskell.nix { })
     (loadModule ./services/kbfs.nix { })
     (loadModule ./services/kdeconnect.nix { })
     (loadModule ./services/keepassx.nix { })
