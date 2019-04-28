@@ -63,6 +63,31 @@ in
         in <varname>haskellPackages</varname> as the sole argument.
       '';
     };
+
+    pythonPackages = mkOption {
+      default = self: [];
+      example = literalExample ''
+        pythonPackages: [
+          pythonPackages.numpy
+          pythonPackages.z3
+        ]
+      '';
+      description = ''
+        Extra Python packages available when running ihaskell.
+      '';
+    };
+    
+    systemPackages = mkOption {
+      default = self: [];
+      example = literalExample ''
+        ps: with ps; [
+          z3
+        ]
+      '';
+      description = ''
+        Extra system packages available when running ihaskell.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
