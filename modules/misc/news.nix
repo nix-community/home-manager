@@ -1076,6 +1076,14 @@ in
           support to your VSCode.
         '';
       }
+
+      {
+        time = "2019-05-04T23:56:39+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.rsibreak'.
+        '';
+      }
     ];
   };
 }
