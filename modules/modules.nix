@@ -116,6 +116,7 @@ let
     (loadModule ./services/stalonetray.nix { })
     (loadModule ./services/status-notifier-watcher.nix { })
     (loadModule ./services/syncthing.nix { })
+    (loadModule ./services/rsibreak.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/taffybar.nix { })
     (loadModule ./services/tahoe-lafs.nix { })
     (loadModule ./services/udiskie.nix { })
