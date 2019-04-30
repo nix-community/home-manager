@@ -94,7 +94,7 @@ in
     systemd.user.services.ihaskell = {
       Unit = {
         Description = "iHaskell notebook instance";
-        After = [ "network.target" ];
+        After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
