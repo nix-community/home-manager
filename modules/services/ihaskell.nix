@@ -16,6 +16,8 @@ let
   ihaskellResult = (import (ihaskellSrc + /release.nix) {
     compiler = cfg.compiler;
     packages = cfg.extraPackages;
+    pythonPackages = cfg.pythonPackages;
+    systemPackages = cfg.systemPackages;
   });
 
 in
