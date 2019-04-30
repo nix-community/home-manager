@@ -50,7 +50,7 @@ in
       EOF
 
       ${getBin pkgs.fontconfig}/bin/fc-cache -f
-      rm $out/lib/fontconfig/cache/CACHEDIR.TAG
+      rm -f $out/lib/fontconfig/cache/CACHEDIR.TAG
 
       unset FONTCONFIG_FILE
     '';
