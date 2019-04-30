@@ -24,22 +24,21 @@ in
   meta.maintainers = [ maintainers.rycee ];
 
   options.services.ihaskell = {
-    enable = mkOption {
-      default = false;
-      description = "Autostart an IHaskell notebook service.";
-    };
+    enable = mkEnableOption "IHaskell notebook";
 
     compiler = mkOption {
+      type = types.str;
       default = "ghc864";
       example = literalExample ''
         ghc864
       '';
       description = ''
-        The Haskell compiler to use
+        The Haskell compiler to use.
       '';
     };
 
     notebooksPath = mkOption {
+      type = types.str;
       default = "$HOME/ihaskell";
       example = literalExample ''
         $HOME/projects/ihaskell-notebooks
