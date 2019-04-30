@@ -1084,6 +1084,13 @@ in
           A new module is available: 'services.rsibreak'.
         '';
       }
+
+      {
+        time = "2019-05-07T20:49:29+00:00";
+        message = ''
+          A new module is available: 'programs.mpv'.
+        '';
+      }
     ];
   };
 }
