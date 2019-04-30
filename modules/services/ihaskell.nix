@@ -39,12 +39,11 @@ in
 
     notebooksPath = mkOption {
       type = types.str;
-      default = "$HOME/ihaskell";
       example = literalExample ''
-        $HOME/projects/ihaskell-notebooks
+        $HOME/ihaskell
       '';
       description = ''
-        Directory where iHaskell will store notebooks
+        Directory where iHaskell will store notebooks.
       '';
     };
 
