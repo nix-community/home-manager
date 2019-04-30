@@ -1080,7 +1080,7 @@ in
       {
         time = "2019-04-27T16:41:50+00:00";
         message = ''
-          A new services is available: 'services.ihaskell'.
+          A new service is available: 'services.ihaskell'.
         '';
       }
     ];
