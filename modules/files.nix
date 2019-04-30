@@ -74,7 +74,7 @@ in
         function checkNewGenCollision() {
           local newGenFiles
           newGenFiles="$(readlink -e "$newGenPath/home-files")"
-          find "$newGenFiles" -type f -or -type l \
+          find "$newGenFiles" \( -type f -or -type l \) \
               -exec bash ${check} "$newGenFiles" {} +
         }
 
@@ -155,7 +155,7 @@ in
 
             local newGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
-            find "$newGenFiles" -type f -or -type l \
+            find "$newGenFiles" \( -type f -or -type l \) \
               -exec bash ${link} "$newGenFiles" {} +
           }
 
