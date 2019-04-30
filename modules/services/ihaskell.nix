@@ -45,7 +45,7 @@ in
         $HOME/ihaskell
       '';
       description = ''
-        Directory where iHaskell will store notebooks.
+        Directory where IHaskell will store notebooks.
       '';
     };
 
@@ -93,7 +93,7 @@ in
   config = mkIf cfg.enable {
     systemd.user.services.ihaskell = {
       Unit = {
-        Description = "iHaskell notebook instance";
+        Description = "IHaskell notebook instance";
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
       };
