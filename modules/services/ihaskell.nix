@@ -21,7 +21,7 @@ let
 in
 
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ maintainers.srid ];
 
   options.services.ihaskell = {
     enable = mkEnableOption "IHaskell notebook";
