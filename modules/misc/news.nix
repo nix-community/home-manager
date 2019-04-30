@@ -1078,6 +1078,13 @@ in
       }
 
       {
+        time = "2019-04-30T01:28:03+00:00";
+        message = ''
+          A new module is available: 'programs.mpv'.
+        '';
+      }
+
+      {
         time = "2019-05-04T23:56:39+00:00";
         condition = hostPlatform.isLinux;
         message = ''
