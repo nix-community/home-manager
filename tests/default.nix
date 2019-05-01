@@ -25,6 +25,7 @@ import nmt {
     git-with-most-options = ./modules/programs/git.nix;
     git-with-str-extra-config = ./modules/programs/git-with-str-extra-config.nix;
     mbsync = ./modules/programs/mbsync.nix;
+    getmail = ./modules/programs/getmail.nix;
     texlive-minimal = ./modules/programs/texlive-minimal.nix;
     xresources = ./modules/xresources.nix;
   }
