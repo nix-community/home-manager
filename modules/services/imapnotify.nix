@@ -25,6 +25,8 @@ let
 
           Service = {
             ExecStart = "${pkgs.imapnotify}/bin/imapnotify -c ${genAccountConfig account}";
+          } // optionalAttrs account.notmuch.enable {
+            Environment = "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/notmuchrc";
           };
 
           Install = {
