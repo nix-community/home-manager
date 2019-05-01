@@ -23,7 +23,7 @@ in
 
     systemd.user.services.flameshot = {
       Unit = {
-        Description = "Powerful yet simple to use screenshot software";
+        Description = "Flameshot screenshot tool";
         After = [
           "graphical-session-pre.target"
           "polybar.service"
