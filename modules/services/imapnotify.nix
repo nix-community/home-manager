@@ -24,6 +24,7 @@ let
           };
 
           Service = {
+            Environment = "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/notmuchrc";
             ExecStart = "${pkgs.imapnotify}/bin/imapnotify -c ${genAccountConfig account}";
           };
 
