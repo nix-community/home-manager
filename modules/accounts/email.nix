@@ -388,6 +388,7 @@ in
         mailAccountOpts
         (import ../programs/alot-accounts.nix pkgs)
         (import ../programs/astroid-accounts.nix)
+        (import ../programs/getmail-accounts.nix)
         (import ../programs/mbsync-accounts.nix)
         (import ../programs/msmtp-accounts.nix)
         (import ../programs/notmuch-accounts.nix)
