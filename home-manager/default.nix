@@ -34,4 +34,7 @@ runCommand
       --subst-var-by gnused "${gnused}" \
       --subst-var-by less "${less}" \
       --subst-var-by HOME_MANAGER_PATH '${pathStr}'
+
+    install -D -m755 ${./completion.bash} \
+      $out/share/bash-completion/completions/home-manager
   ''
