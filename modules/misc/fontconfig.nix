@@ -36,10 +36,29 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.extraProfileCommands = ''
-      export FONTCONFIG_FILE=$(pwd)/fonts.conf
+    # Create two dummy files in /lib/fontconfig to make sure that
+    # buildEnv creates a real directory path. These files are removed
+    # in home.extraProfileCommands below so the packages will not
+    # become "runtime" dependencies.
+    home.packages = [
+      (pkgs.writeTextFile {
+        name = "hm-dummy1";
+        destination = "/lib/fontconfig/hm-dummy1";
+        text = "dummy";
+      })
 
-      cat > $FONTCONFIG_FILE << EOF
+      (pkgs.writeTextFile {
+        name = "hm-dummy2";
+        destination = "/lib/fontconfig/hm-dummy2";
+        text = "dummy";
+      })
+    ];
+
+    home.extraProfileCommands = ''
+      if [[ -d $out/lib/X11/fonts || -d $out/share/fonts ]]; then
+        export FONTCONFIG_FILE="$(pwd)/fonts.conf"
+
+        cat > $FONTCONFIG_FILE << EOF
       <?xml version='1.0'?>
       <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
       <fontconfig>
@@ -49,10 +68,17 @@ in
       </fontconfig>
       EOF
 
-      ${getBin pkgs.fontconfig}/bin/fc-cache -f
-      rm -f $out/lib/fontconfig/cache/CACHEDIR.TAG
+        ${getBin pkgs.fontconfig}/bin/fc-cache -f
+        rm -f $out/lib/fontconfig/cache/CACHEDIR.TAG
+        rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig/cache
 
-      unset FONTCONFIG_FILE
+        rm "$FONTCONFIG_FILE"
+        unset FONTCONFIG_FILE
+      fi
+
+      # Remove hacky dummy files.
+      rm $out/lib/fontconfig/hm-dummy?
+      rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig
     '';
 
     xdg.configFile = {

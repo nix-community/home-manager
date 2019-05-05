@@ -35,6 +35,7 @@ import nmt {
     // import ./modules/systemd
   )
   // import ./modules/home-environment
+  // import ./modules/misc/fontconfig
   // import ./modules/programs/bash
   // import ./modules/programs/ssh
   // import ./modules/programs/tmux
