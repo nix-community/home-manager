@@ -72,7 +72,7 @@ in
       description = ''
         An initial value for the filters DAG. It should only contain
         "dummy" nodes. Those dummy nodes are conventionally prefixed
-        with @.
+        with <literal>@</literal>.
       '';
     };
 
