@@ -22,8 +22,8 @@ let
     let
       mkNode = nodeName: filter:
         let
-          before = (filter.before or cfg.defaultBefore);
-          after = (filter.after or cfg.defaultAfter);
+          before = (filter.before or ["@end"]);
+          after = (filter.after or ["@begin"]);
           filterName = (filter.class or "Filter");
           filterKV = (removeAttrs filter ["after" "before" "class"]) // {
             "#nodeName" = nodeName;
@@ -62,24 +62,6 @@ in
 {
   options.programs.afew = {
     enable = mkEnableOption "the afew initial tagging script for Notmuch";
-
-    defaultBefore = mkOption {
-      type = types.listOf types.string;
-      default = ["@end"];
-      description = ''
-        List of node names in the DAG that filters should appear
-        before by default.
-      '';
-    };
-
-    defaultAfter = mkOption {
-      type = types.listOf types.string;
-      default = ["@begin"];
-      description = ''
-        List of node names in the DAG that filters should appear after
-        by default.
-      '';
-    };
 
     defaultFilters = mkOption {
       type = types.attrsOf types.attrs;
