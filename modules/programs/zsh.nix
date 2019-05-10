@@ -149,6 +149,14 @@ in
     programs.zsh = {
       enable = mkEnableOption "Z shell (Zsh)";
 
+      autocd = mkOption {
+        default = null;
+        description = ''
+          Automatically enter into a directory if typed directly into shell.
+        '';
+        type = types.nullOr types.bool;
+      };
+
       dotDir = mkOption {
         default = null;
         example = ".config/zsh";
@@ -378,6 +386,7 @@ in
         ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
         ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
         ${if cfg.history.extended then "setopt" else "unsetopt"} EXTENDED_HISTORY
+        ${if cfg.autocd != null then "${if cfg.autocd then "setopt" else "unsetopt"} autocd" else ""}
 
         ${cfg.initExtra}
 
