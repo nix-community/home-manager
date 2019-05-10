@@ -77,7 +77,11 @@ in
     };
 
     filters = mkOption {
-      type = types.attrsOf types.attrs;
+      type = with types;
+        let
+          primitive = either bool (either int str);
+        in
+          attrsOf (attrsOf (either primitive (listOf primitive)));
       default = {
         spam = { class = "SpamFilter"; before = ["@begin"]; after = []; };
         killThreads = { class = "KillThreadsFilter"; before = ["@begin"]; after = []; };
