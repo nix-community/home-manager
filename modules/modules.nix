@@ -84,6 +84,7 @@ let
     (loadModule ./programs/opam.nix { })
     (loadModule ./programs/pidgin.nix { })
     (loadModule ./programs/rofi.nix { })
+    (loadModule ./programs/rtorrent.nix { })
     (loadModule ./programs/skim.nix { })
     (loadModule ./programs/starship.nix { })
     (loadModule ./programs/ssh.nix { })
