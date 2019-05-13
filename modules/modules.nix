@@ -20,6 +20,7 @@ let
   allModules = [
     (loadModule ./accounts/email.nix { })
     (loadModule ./accounts/calendar.nix { })
+    (loadModule ./accounts/contacts.nix { })
     (loadModule ./files.nix { })
     (loadModule ./home-environment.nix { })
     (loadModule ./manual.nix { })

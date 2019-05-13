@@ -7,7 +7,10 @@ let
   cfg = config.programs.vdirsyncer;
   
   vdirsyncerAccounts =
-    filterAttrs (_: v: v.vdirsyncer.enable) config.accounts.calendar.accounts;
+    filterAttrs (_: v: v.vdirsyncer.enable)
+    ((mapAttrs' (n: v: nameValuePair ("calendar_" + n) v)  (config.accounts.calendar.accounts))
+      // (mapAttrs' (n: v: nameValuePair ("contacts_" + n) v)  (config.accounts.contact.accounts))
+      );
 
   wrap = s: ''"${s}"'';
 
@@ -206,7 +209,7 @@ in
         then [ "encoding" ]
       else if (t == "google_calendar") then
         [ "timeRange" "itemTypes" "clientIdCommand" "clientSecretCommand" ]
-      else if (t == "google_contacts") then []
+      else if (t == "google_contacts") then [ "clientIdCommand" "clientSecretCommand" ]
       else throw "Unrecognized storage type: ${t}";
 
       assertStorage = n: v:
