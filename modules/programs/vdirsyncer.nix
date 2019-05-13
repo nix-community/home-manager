@@ -39,7 +39,9 @@ let
     "userAgent"
     "tokenFile"
     "clientId"
+    "clientIdCommand"
     "clientSecret"
+    "clientSecretCommand"
     "timeRange"
    ] a.vdirsyncer.remote);
 
@@ -93,7 +95,13 @@ let
   else if (n == "userAgent") then ''useragent = "${v}"''
   else if (n == "tokenFile") then ''token_file = "${v}"''
   else if (n == "clientId") then ''client_id = "${v}"''
+  else if (n == "clientIdCommand") then ''
+    client_id.fetch = ${listString (map wrap (["command"] ++ v))}
+  ''
   else if (n == "clientSecret") then ''client_secret = "${v}"''
+  else if (n == "clientSecretCommand") then ''
+    client_secret.fetch = ${listString (map wrap (["command"] ++ v))}
+  ''
   else if (n == "metadata") then ''metadata = ${listString (map wrap v)}''
   else if (n == "partialSync") then ''partial_sync = "${v}"''
   else if (n == "collections") then
@@ -171,7 +179,7 @@ in
       else if (t == "filesystem") then [ "path" "fileExt" ]
       else if (t == "singlefile") then [ "path" ]
       else if (t == "google_calendar" || t == "google_contacts") then
-        [ "tokenFile" "clientId" "clientSecret" ]
+      [ "tokenFile" "clientId" "clientSecret"]
       else throw "Unrecognized storage type: ${t}";
 
       allowedOptions = let
@@ -197,7 +205,7 @@ in
       else if (t == "singlefile")
         then [ "encoding" ]
       else if (t == "google_calendar") then
-        [ "timeRange" "itemTypes"]
+        [ "timeRange" "itemTypes" "clientIdCommand" "clientSecretCommand" ]
       else if (t == "google_contacts") then []
       else throw "Unrecognized storage type: ${t}";
 
@@ -234,7 +242,7 @@ in
             '';
           }
         ] ++
-        (let required = requiredOptions v.type;
+        (let required = filter (a: !hasAttr "${a}Command" v) (requiredOptions v.type);
          in map (a: [{
                 assertion = hasAttr a v;
                 message = ''

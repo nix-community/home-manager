@@ -165,10 +165,42 @@ let
         '';
       };
 
+      clientIdCommand = mkOption {
+        type = types.nullOr (types.listOf types.str);
+        default = null;
+        example = [ "pass" "client_id" ];
+        description = ''
+          A command that prints the OAuth credentials to standard
+          output.
+          
+          OAuth credentials, obtained from the Google API Manager.</para>
+
+          <para> See
+          <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#google"/>
+          for more information.
+        '';
+      };
+
       clientSecret = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = ''
+          OAuth credentials, obtained from the Google API Manager.</para>
+
+          <para> See
+          <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#google"/>
+          for more information.
+        '';
+      };
+      
+      clientSecretCommand = mkOption {
+        type = types.nullOr (types.listOf types.str);
+        default = null;
+        example = [ "pass" "client_secret" ];
+        description = ''
+          A command that prints the OAuth credentials to standard
+          output.
+          
           OAuth credentials, obtained from the Google API Manager.</para>
 
           <para> See
