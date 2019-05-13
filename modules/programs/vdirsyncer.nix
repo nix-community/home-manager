@@ -45,7 +45,7 @@ let
 
   pair = a:
   with a.vdirsyncer;
-  filterAttrs (_: v: v != null && v != [])
+  filterAttrs (k: v: k == "collections" || (v != null && v != []))
   (getAttrs [ "collections" "conflictResolution" "metadata" "partialSync" ] a.vdirsyncer);
 
   pairs = mapAttrs (_: v: pair v) vdirsyncerAccounts;
@@ -100,8 +100,8 @@ let
     let 
            contents = map (c: if (isString c) 
                           then ''"${c}"''
-                          else mkList (map wrapString c)) cs;
-    in ''collections = ${listString contents}''
+                          else mkList (map wrapString c)) v;
+    in ''collections = ${if ((isNull v) || v == []) then "null" else listString contents}''
   else if (n == "conflictResolution") then 
     if (isString v)
       then ''conflict_resolution = "${v}"''
