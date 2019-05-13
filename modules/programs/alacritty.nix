@@ -41,10 +41,13 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ pkgs.alacritty ];
+  config = mkMerge [
+    (mkIf cfg.enable {
+      home.packages = [ pkgs.alacritty ];
 
-    xdg.configFile."alacritty/alacritty.yml".text =
-      replaceStrings ["\\\\"] ["\\"] (builtins.toJSON cfg.settings);
-  };
+      xdg.configFile."alacritty/alacritty.yml" = mkIf (cfg.settings != {}) {
+        text = replaceStrings ["\\\\"] ["\\"] (builtins.toJSON cfg.settings);
+      };
+    })
+  ];
 }
