@@ -63,6 +63,7 @@ let
     (loadModule ./programs/irssi.nix { })
     (loadModule ./programs/jq.nix { })
     (loadModule ./programs/keychain.nix { })
+    (loadModule ./programs/khal.nix { })
     (loadModule ./programs/lesspipe.nix { })
     (loadModule ./programs/lsd.nix { })
     (loadModule ./programs/man.nix { })
