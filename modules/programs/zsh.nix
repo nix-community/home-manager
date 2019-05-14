@@ -152,7 +152,7 @@ in
       autocd = mkOption {
         default = false;
         description = ''
-        automatically enter into a directory if typed directly into shell.
+          Automatically enter into a directory if typed directly into shell.
         '';
         type = types.bool;
       };
