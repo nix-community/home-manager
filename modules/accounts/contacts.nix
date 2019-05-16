@@ -19,12 +19,10 @@ let
     };
 
     config = mkMerge [
-      { name = name; }
-
-      # infinite recursion
-      # (mkIf (config.khal.enable && isNull config.khal.type) {
-      #   khal.type = "birthdays" ;
-      # })
+      {
+        name = name;
+        khal.type = mkOptionDefault "birthdays";
+      }
     ];
   };
 

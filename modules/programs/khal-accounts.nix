@@ -11,7 +11,6 @@ with lib;
       type = types.nullOr (types.enum [ "calendar" "birthdays" "discover"]);
       description = ''
       '';
-      default = null;
     };
 
     readOnly = mkOption {

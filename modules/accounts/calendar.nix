@@ -27,7 +27,12 @@ let
       };
     };
 
-    config = mkMerge [ { name = name; } ];
+    config = mkMerge [
+      { 
+        name = name;
+        khal.type = mkOptionDefault null;
+      }
+    ];
   };
 
 in
