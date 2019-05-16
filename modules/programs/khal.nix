@@ -26,7 +26,7 @@ in
     ++ (mapAttrsToList (name: value: concatStringsSep "\n"
       ([
         ''[[${name}]]''
-        ''path = ${value.vdirsyncer.local.path + (if value.khal.type == "discover" then "/*" else "/")}''
+        ''path = ${value.vdirsyncer.local.path + "/" + (optionalString (value.khal.type == "discover") value.khal.glob)}''
       ]
       ++ optional (value.khal.readOnly) "readonly = True"
       ++ optional (!isNull value.khal.type) "type = ${value.khal.type}"

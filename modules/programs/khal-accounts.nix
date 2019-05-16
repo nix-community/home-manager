@@ -17,8 +17,18 @@ with lib;
     readOnly = mkOption {
       type = types.bool;
       description = ''
+        Keep khal from making any changes to this calendar.
       '';
       default = false;
+    };
+
+    glob = mkOption {
+      type = types.str;
+      default = "*";
+      description = ''
+        The glob expansation to be searched for events or birthdays when type
+        is set to discover.
+      '';
     };
   };
 

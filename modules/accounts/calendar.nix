@@ -3,19 +3,19 @@
 with lib;
 
 let
- 
+
   cfg = config.accounts.calendar;
 
   calendarOpts = { name, config, ... }: {
     options = {
-      # name = mkOption {
-      #   type = types.str;
-      #   readOnly = true;
-      #   description = ''
-      #     Unique identifier of the calendar. This is set to the
-      #     attribute name of the calendar configuration.
-      #   '';
-      # };
+      name = mkOption {
+        type = types.str;
+        readOnly = true;
+        description = ''
+          Unique identifier of the calendar. This is set to the
+          attribute name of the calendar configuration.
+        '';
+      };
 
       primary = mkOption {
         type = types.bool;
@@ -65,12 +65,21 @@ in
           {
             assertion = length primaries == 1;
             message =
-              "Must have exactly one primary mail account but found "
+              "Must have exactly one primary calendar account but found "
               + toString (length primaries)
               + optionalString (length primaries > 1)
                   (", namely " + concatStringsSep ", " primaries);
           }
       )
-    ];
+    ] ++
+      map (a:
+          {
+            assertion = a.khal.type != "birthdays";
+            message =
+              a.name
+              + " is a calendar account so type can't be birthdays";
+            })
+            (filter (a: a.khal.enable)
+            (attrValues cfg.accounts));
   };
 }
