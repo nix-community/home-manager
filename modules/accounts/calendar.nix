@@ -17,6 +17,12 @@ let
         '';
       };
 
+      path = mkOption {
+        type = types.str;
+        default = "${cfg.basePath}/${name}";
+        description = "The path of the storage.";
+      };
+
       primary = mkOption {
         type = types.bool;
         default = false;

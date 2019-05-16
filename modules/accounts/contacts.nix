@@ -16,6 +16,12 @@ let
           attribute name of the contact configuration.
         '';
       };
+
+      path = mkOption {
+        type = types.str;
+        default = "${cfg.basePath}/${name}";
+        description = "The path of the storage.";
+      };
     };
 
     config = mkMerge [

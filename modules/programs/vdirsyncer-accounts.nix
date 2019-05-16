@@ -218,12 +218,6 @@ let
         description = "The type of the storage.";
       };
 
-      path = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "The path of the storage.";
-      };
-
       fileExt = mkOption {
         type = types.nullOr types.str;
         default = null;

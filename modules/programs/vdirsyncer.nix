@@ -21,7 +21,9 @@ let
   localStorage = a:
   with a.vdirsyncer.local;
   filterAttrs (_: v: v != null)
-  (getAttrs [ "type" "path" "fileExt" "encoding" "postHook"] a.vdirsyncer.local);
+  (getAttrs [ "type" "fileExt" "encoding" "postHook"] a.vdirsyncer.local) // {
+    path = a.path;
+  };
 
   remoteStorage = a:
   with a.vdirsyncer.remote;

@@ -67,10 +67,8 @@ in
 
       Service = {
         Type = "oneshot";
-        # TODO `vdirsyncer discover`. I think another package managed to automate this.
-        # User interaction during first run?
+        # TODO `vdirsyncer discover`
         ExecStart = "${cfg.package}/bin/vdirsyncer sync ${concatStringsSep " " vdirsyncerOptions}";
-        Environment="PATH=${pkgs.pass}/bin";
       };
     };
 

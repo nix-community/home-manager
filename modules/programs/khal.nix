@@ -26,7 +26,7 @@ in
     ++ (mapAttrsToList (name: value: concatStringsSep "\n"
       ([
         ''[[${name}]]''
-        ''path = ${value.vdirsyncer.local.path + "/" + (optionalString (value.khal.type == "discover") value.khal.glob)}''
+        ''path = ${value.path + "/" + (optionalString (value.khal.type == "discover") value.khal.glob)}''
       ]
       ++ optional (value.khal.readOnly) "readonly = True"
       ++ optional (!isNull value.khal.type) "type = ${value.khal.type}"
@@ -37,7 +37,7 @@ in
     [
     (generators.toINI {} {
       default = {
-        default_calendar = head (mapAttrsToList (n: v: baseNameOf v.vdirsyncer.local.path) (filterAttrs (_: a: a.primary) khalAccounts));
+        default_calendar = head (mapAttrsToList (n: v: baseNameOf v.path) (filterAttrs (_: a: a.primary) khalAccounts));
       };
 
       locale = {
