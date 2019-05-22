@@ -36,7 +36,7 @@ in
     ++
     [
     (generators.toINI {} {
-      default = {
+      default = optionalAttrs (length (attrNames khalAccounts) > 0) {
         default_calendar = head (mapAttrsToList (n: v: baseNameOf v.path) (filterAttrs (_: a: a.primary) khalAccounts));
       };
 
