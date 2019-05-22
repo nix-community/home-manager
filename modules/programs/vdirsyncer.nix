@@ -250,6 +250,6 @@ in
 
     in storageAssertions; 
     home.packages = [ cfg.package ];
-    xdg.configFile."vdirsyncer/config.test".source = configFile;
+    xdg.configFile."vdirsyncer/config".source = configFile;
   };
 }
