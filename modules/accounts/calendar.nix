@@ -31,10 +31,25 @@ let
           set as primary.
         '';
       };
+
+      primaryCollection = mkOption {
+        type = types.str;
+        default = if (config.vdirsyncer.collections == null || config.vdirsyncer.collections == []) then
+          name
+          else if isString config.vdirsyncer.collections then
+          config.vdirsyncer.collections
+          else
+          head config.vdirsyncer.collections;
+
+        description = ''
+          The primary collection of the account. Required when an account has
+          multiple collections.
+        '';
+      };
     };
 
     config = mkMerge [
-      { 
+      {
         name = name;
         khal.type = mkOptionDefault null;
       }

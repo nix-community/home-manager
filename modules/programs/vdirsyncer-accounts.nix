@@ -253,6 +253,7 @@ in
 
     collections = mkOption {
       type = types.nullOr (types.listOf collection);
+      default = null;
       description = ''
         The collections to synchronize between the storages.
       '';

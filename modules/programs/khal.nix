@@ -11,7 +11,7 @@ let
     (config.accounts.calendar.accounts);
 
   primaryAccount = findSingle (a: a.primary) null null
-    (mapAttrsToList (n: v: v) khalAccounts);
+    (mapAttrsToList (n: v: v // {name= n;}) khalAccounts);
 in
 
 {
@@ -40,7 +40,7 @@ in
     [
     (generators.toINI {} {
       default = optionalAttrs (!isNull primaryAccount) {
-	default_calendar = primaryAccount.path;
+	default_calendar = if isNull primaryAccount.primaryCollection then primaryAccount.name else primaryAccount.primaryCollection;
       };
 
       locale = {
