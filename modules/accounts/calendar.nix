@@ -74,12 +74,12 @@ in
             (attrValues cfg.accounts));
         in
           {
-            assertion = length primaries == 1;
+            assertion = length primaries <= 1;
             message =
-              "Must have exactly one primary calendar account but found "
+              "Must have exactly one or zero primary calendar accounts but found "
               + toString (length primaries)
-              + optionalString (length primaries > 1)
-                  (", namely " + concatStringsSep ", " primaries);
+              + ", namely "
+              + concatStringsSep ", " primaries;
           }
       )
     ] ++
