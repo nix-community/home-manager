@@ -72,6 +72,7 @@ let
     (loadModule ./programs/newsboat.nix { })
     (loadModule ./programs/noti.nix { })
     (loadModule ./programs/notmuch.nix { })
+    (loadModule ./programs/npm.nix { })
     (loadModule ./programs/obs-studio.nix { })
     (loadModule ./programs/offlineimap.nix { })
     (loadModule ./programs/opam.nix { })
