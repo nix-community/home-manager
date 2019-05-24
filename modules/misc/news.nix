@@ -1099,6 +1099,13 @@ in
           A new module is available: 'services.xsuspender'.
         '';
       }
+
+      {
+        time = "2019-06-03T21:47:10+00:00";
+        message = ''
+          A new module is available: 'programs.gpg'.
+        '';
+      }
     ];
   };
 }
