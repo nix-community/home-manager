@@ -58,6 +58,7 @@ let
     (loadModule ./programs/htop.nix { })
     (loadModule ./programs/info.nix { })
     (loadModule ./programs/irssi.nix { })
+    (loadModule ./programs/i3status.nix { })
     (loadModule ./programs/jq.nix { })
     (loadModule ./programs/keychain.nix { })
     (loadModule ./programs/lesspipe.nix { })
