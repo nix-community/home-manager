@@ -8,6 +8,29 @@ let
 
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
 
+  profiles =
+    (flip mapAttrs' cfg.profiles (_: profile:
+      nameValuePair "Profile${toString profile.id}" {
+        Name = profile.name;
+        Path = profile.path;
+        IsRelative = 1;
+        Default = if profile.isDefault then 1 else 0;
+      })) // {
+        General = {
+          StartWithLastProfile = 1;
+        };
+      };
+
+  profilesINI = generators.toINI {} profiles;
+
+  mkUserJS = prefs: extraPrefs: ''
+    ${concatStrings (mapAttrsToList (name: value: ''
+    user_pref("${name}", ${builtins.toJSON value});
+    '') prefs)}
+
+    ${extraPrefs}
+  '';
+
 in
 
 {
@@ -38,6 +61,78 @@ in
           necessary to manually enable these extensions inside Firefox
           after the first installation.
         '';
+      };
+
+      profiles = mkOption {
+        type = types.attrsOf (types.submodule ({config, name, ...}: {
+          options = {
+            name = mkOption {
+              type = types.str;
+              default = name;
+              description = "Profile name.";
+            };
+
+            id = mkOption {
+              type = types.int;
+              default = 0;
+              description = "Profile ID.";
+            };
+
+            preferences = mkOption {
+              type = types.attrs;
+              default = {};
+              example = {
+                "browser.startup.homepage" = "https://nixos.org";
+                "browser.search.region" = "GB";
+                "browser.search.isUS" = false;
+                "distribution.searchplugins.defaultLocale" = "en-GB";
+                "general.useragent.locale" = "en-GB";
+                "browser.bookmarks.showMobileBookmarks" = true;
+              };
+              description = "Attribute set of firefox preferences.";
+            };
+
+            extraPreferences = mkOption {
+              type = types.lines;
+              default = "";
+              description = "Extra preferences";
+            };
+
+            customCSS = mkOption {
+              type = types.lines;
+              default = "";
+              description = "Custom firefox CSS.";
+              example = ''
+                /* Hide tab bar in FF Quantum */
+                @-moz-document url("chrome://browser/content/browser.xul") {
+                  #TabsToolbar {
+                    visibility: collapse !important;
+                    margin-bottom: 21px !important;
+                  }
+
+                  #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
+                    visibility: collapse !important;
+                  }
+                }
+              '';
+            };
+
+            path = mkOption {
+              type = types.str;
+              default = name;
+              description = "Profile path.";
+            };
+
+            isDefault = mkOption {
+              type = types.bool;
+              default = config.id == 0;
+              defaultText = "true if profile ID is 0";
+              description = "Whether this is a default profile.";
+            };
+          };
+        }));
+        default = {};
+        description = "Attribute set of firefox profiles.";
       };
 
       enableAdobeFlash = mkOption {
@@ -81,6 +176,20 @@ in
   };
 
   config = mkIf cfg.enable {
+	assertions = [(
+      let
+        defaults =
+          catAttrs "name" (filter (a: a.isDefault) (attrValues cfg.profiles));
+      in {
+        assertion = length defaults == 1;
+        message =
+          "Must have exactly one default firefox profile but found "
+          + toString (length defaults)
+          + optionalString (length defaults > 1)
+              (", namely " + concatStringsSep ", " defaults);
+      }
+    )];
+
     home.packages =
       let
         # A bit of hackery to force a config into the wrapper.
@@ -99,17 +208,29 @@ in
       in
         [ (wrapper cfg.package { }) ];
 
-    home.file.".mozilla/${extensionPath}" = mkIf (cfg.extensions != []) (
-      let
-        extensionsEnv = pkgs.buildEnv {
-          name = "hm-firefox-extensions";
-          paths = cfg.extensions;
-        };
-      in
-        {
+    home.file = mkMerge ([{
+      ".mozilla/${extensionPath}" = mkIf (cfg.extensions != []) (
+        let
+          extensionsEnv = pkgs.buildEnv {
+            name = "hm-firefox-extensions";
+            paths = cfg.extensions;
+          };
+        in {
           source = "${extensionsEnv}/share/mozilla/${extensionPath}";
-          recursive = true;
         }
-    );
+      );
+
+      ".mozilla/firefox/profiles.ini" = mkIf (cfg.profiles != {}) {
+        text = profilesINI;
+      };
+    }] ++ (flip mapAttrsToList cfg.profiles (_: profile: {
+      ".mozilla/firefox/${profile.path}/chrome/userChrome.css" = mkIf (profile.customCSS != "") {
+        text = profile.customCSS;
+      };
+
+      ".mozilla/firefox/${profile.path}/user.js" = mkIf (profile.preferences != {} || profile.extraPreferences != "") {
+        text = mkUserJS profile.preferences profile.extraPreferences;
+      };
+    })));
   };
 }
