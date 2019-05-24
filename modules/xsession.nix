@@ -57,6 +57,13 @@ in
         description = "Extra shell commands to run before session start.";
       };
 
+      lockCmd = mkOption {
+        type = types.str;
+        description = "Command to use to lock the screen";
+        default = "${pkgs.xscreensaver}/bin/xscreensaver";
+        defaultText = "\${pkgs.xscreensaver}/bin/screensaver";
+      };
+
       initExtra = mkOption {
         type = types.lines;
         default = "";

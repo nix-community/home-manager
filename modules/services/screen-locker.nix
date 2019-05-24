@@ -13,6 +13,7 @@ in {
 
     lockCmd = mkOption {
       type = types.str;
+      default = config.xsession.lockCmd;
       description = "Locker command to run.";
       example = "\${pkgs.i3lock}/bin/i3lock -n -c 000000";
     };
