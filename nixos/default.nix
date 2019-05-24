@@ -60,7 +60,9 @@ in
       }) cfg.users
     );
 
-    systemd.services = mapAttrs' (username: usercfg:
+    systemd.services = mapAttrs' (_: usercfg: let
+      username = usercfg.home.username;
+    in
       nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
         description = "Home Manager environment for ${username}";
         wantedBy = [ "multi-user.target" ];
