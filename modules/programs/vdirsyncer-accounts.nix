@@ -9,7 +9,7 @@ let
   remoteModule = types.submodule {
     options = {
       type = mkOption {
-        type = types.enum [ "caldav" "http" "google_calendar" "google_contacts" ];
+        type = types.enum [ "caldav" "carddav" "http" "google_calendar" "google_contacts" ];
         description = "The type of the storage.";
       };
 

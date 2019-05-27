@@ -68,45 +68,34 @@ let
   else if (n == "url") then ''url = "${v}"''
   else if (n == "timeRange") then ''
     start_date = "${v.start}"
-    end_date = "${v.end}"
-  ''
+    end_date = "${v.end}"''
   else if (n == "itemTypes") then ''
-    item_types = ${listString (map wrap v)}
-  ''
+    item_types = ${listString (map wrap v)}''
   else if (n == "userName") then ''username = "${v}"''
   else if (n == "userNameCommand") then ''
-    username.fetch = ${listString (map wrap (["command"] ++ v))}
-  ''
+    username.fetch = ${listString (map wrap (["command"] ++ v))}''
   else if (n == "password") then ''password = "${v}"''
   else if (n == "passwordCommand") then ''
-    password.fetch = ${listString (map wrap (["command"] ++ v))}
-  ''
+    password.fetch = ${listString (map wrap (["command"] ++ v))}''
   else if (n == "passwordPrompt") then ''
-    password.fetch = ["prompt", "${v}"]
-  ''
+    password.fetch = ["prompt", "${v}"]''
   else if (n == "verify") then ''
-    verify = ${if v then "true" else "false"}
-  ''
+    verify = ${if v then "true" else "false"}''
   else if (n == "verifyFingerprint") then ''
-    verify_fingerprint = "${v}"
-  ''
+    verify_fingerprint = "${v}"''
   else if (n == "auth") then ''auth = "${v}"''
   else if (n == "authCert" && isString(v)) then ''
-    auth_cert = "${v}"
-  ''
+    auth_cert = "${v}"''
   else if (n == "authCert") then ''
-    auth_cert = ${listString (map wrap v)}
-  ''
+    auth_cert = ${listString (map wrap v)}''
   else if (n == "userAgent") then ''useragent = "${v}"''
   else if (n == "tokenFile") then ''token_file = "${v}"''
   else if (n == "clientId") then ''client_id = "${v}"''
   else if (n == "clientIdCommand") then ''
-    client_id.fetch = ${listString (map wrap (["command"] ++ v))}
-  ''
+    client_id.fetch = ${listString (map wrap (["command"] ++ v))}''
   else if (n == "clientSecret") then ''client_secret = "${v}"''
   else if (n == "clientSecretCommand") then ''
-    client_secret.fetch = ${listString (map wrap (["command"] ++ v))}
-  ''
+    client_secret.fetch = ${listString (map wrap (["command"] ++ v))}''
   else if (n == "metadata") then ''metadata = ${listString (map wrap v)}''
   else if (n == "partialSync") then ''partial_sync = "${v}"''
   else if (n == "collections") then
@@ -140,11 +129,11 @@ let
 
     ### Local storages
 
-    ${concatStringsSep "\n" (mapAttrsToList (n: v: "[storage ${n}_local]" + "\n" + attrsString v) localStorages)}
+    ${concatStringsSep "\n\n" (mapAttrsToList (n: v: "[storage ${n}_local]" + "\n" + attrsString v) localStorages)}
 
     ### Remote storages
 
-    ${concatStringsSep "\n" (mapAttrsToList (n: v: "[storage ${n}_remote]" + "\n" + attrsString v) remoteStorages)}
+    ${concatStringsSep "\n\n" (mapAttrsToList (n: v: "[storage ${n}_remote]" + "\n" + attrsString v) remoteStorages)}
   '';
 in
 
