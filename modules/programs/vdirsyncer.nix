@@ -153,7 +153,8 @@ in
 
       statusPath = mkOption {
         type = types.str;
-        default = "$XDG_DATA_HOME/vdirsyncer/status";
+        default = "${config.xdg.dataHome}/vdirsyncer/status";
+        defaultText = "$XDG_DATA_HOME/vdirsyncer/status";
         description = ''
           A directory where vdirsyncer will store some additional data for the next sync.
           </para>
