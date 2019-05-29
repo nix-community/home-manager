@@ -25,6 +25,12 @@ in
         '';
       };
 
+      display = mkOption {
+        type = types.enum [ "center" "fill" "max" "scale" "tile" ];
+        default = "fill";
+        description = "Display background images according to this option.";
+      };
+
       interval = mkOption {
         default = null;
         type = types.nullOr types.str;
@@ -50,7 +56,7 @@ in
 
           Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.feh}/bin/feh --randomize --bg-fill ${cfg.imageDirectory}";
+            ExecStart = "${pkgs.feh}/bin/feh --randomize --bg-${cfg.display} ${cfg.imageDirectory}";
             IOSchedulingClass = "idle";
           };
 
