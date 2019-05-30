@@ -128,7 +128,7 @@ let
     (loadModule ./services/xcape.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xembed-sni-proxy.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xscreensaver.nix { })
-    (loadModule ./services/xsuspender.nix { })
+    (loadModule ./services/xsuspender.nix { condition = hostPlatform.isLinux; })
     (loadModule ./systemd.nix { })
     (loadModule ./xcursor.nix { })
     (loadModule ./xresources.nix { })
