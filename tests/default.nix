@@ -16,6 +16,7 @@ import nmt {
   modules = import ../modules/modules.nix { inherit pkgs; lib = pkgs.lib; };
   testedAttrPath = [ "home" "activationPackage" ];
   tests = {
+    browserpass = ./modules/programs/browserpass.nix;
     files-executable = ./modules/files/executable.nix;
     files-hidden-source = ./modules/files/hidden-source.nix;
     files-source-with-spaces = ./modules/files/source-with-spaces.nix;
