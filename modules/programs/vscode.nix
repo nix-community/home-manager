@@ -31,6 +31,7 @@ in
       extensions = mkOption {
         type = types.listOf types.package;
         default = [];
+        example = literalExample "[ pkgs.vscode-extensions.bbenoist.Nix ]";
         description = ''
           The extensions Visual Studio Code should be started with.
           These will override but not delete manually installed ones.
