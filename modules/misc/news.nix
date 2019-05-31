@@ -1814,6 +1814,13 @@ in
           A new module is available: 'services.plan9port'.
         '';
       }
+
+      {
+        time = "2021-01-23T20:14:39+00:00";
+        message = ''
+          A new module is available: 'programs.screen'.
+        '';
+      }
     ];
   };
 }
