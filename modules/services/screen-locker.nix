@@ -58,13 +58,12 @@ in {
       };
 
       Service = {
-        ExecStart = ''
-          ${pkgs.xautolock}/bin/xautolock \
-          -detectsleep \
-          -time ${toString cfg.inactiveInterval} \
-          -locker '${pkgs.systemd}/bin/loginctl lock-session $XDG_SESSION_ID' \
-          ${concatStringsSep " " cfg.xautolockExtraOptions}
-        '';
+        ExecStart = concatStringsSep " " ([
+          "${pkgs.xautolock}/bin/xautolock"
+          "-detectsleep"
+          "-time ${toString cfg.inactiveInterval}"
+          "-locker '${pkgs.systemd}/bin/loginctl lock-session $XDG_SESSION_ID'"
+        ] ++ cfg.xautolockExtraOptions);
       };
     };
 
