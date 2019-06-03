@@ -7,8 +7,13 @@ let
 
   cfg = config.programs.khal;
 
-  khalAccounts = filterAttrs (_: a: a.khal.enable)
+  khalCalendarAccounts = filterAttrs (_: a: a.khal.enable)
     (config.accounts.calendar.accounts);
+
+  khalContactAccounts = filterAttrs (_: a: a.khal.enable)
+    (config.accounts.contact.accounts);
+    
+  khalAccounts = khalCalendarAccounts // khalContactAccounts;
 
   primaryAccount = findSingle (a: a.primary) null null
     (mapAttrsToList (n: v: v // {name= n;}) khalAccounts);
@@ -20,6 +25,22 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = 
+      (map (a: {
+          assertion = a.khal.type != "birthdays";
+          message =
+            a.name
+            + " is a calendar account so type can't be birthdays";
+      })
+      (attrValues khalCalendarAccounts)) ++ 
+      (map (a: {
+            assertion = a.khal.type == "birthdays";
+            message =
+              a.name
+              + " is a contact account so type must be birthdays";
+      })
+      (attrValues khalContactAccounts));
+    
     home.packages =  [ pkgs.khal ];
 
     xdg.configFile."khal/config".text = concatStringsSep "\n" (

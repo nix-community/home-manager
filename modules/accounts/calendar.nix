@@ -34,13 +34,6 @@ let
 
       primaryCollection = mkOption {
         type = types.str;
-        default = if (config.vdirsyncer.collections == null || config.vdirsyncer.collections == []) then
-          name
-          else if isString config.vdirsyncer.collections then
-          config.vdirsyncer.collections
-          else
-          head config.vdirsyncer.collections;
-
         description = ''
           The primary collection of the account. Required when an account has
           multiple collections.
@@ -80,32 +73,20 @@ in
     };
   };
   config = mkIf (cfg.accounts != {}) {
-    assertions = [
-      (
-        let
-          primaries =
-            catAttrs "name"
-            (filter (a: a.primary)
-            (attrValues cfg.accounts));
-        in
-          {
-            assertion = length primaries <= 1;
-            message =
-              "Must have exactly one or zero primary calendar accounts but found "
-              + toString (length primaries)
-              + ", namely "
-              + concatStringsSep ", " primaries;
-          }
-      )
-    ] ++
-      map (a:
-          {
-            assertion = a.khal.type != "birthdays";
-            message =
-              a.name
-              + " is a calendar account so type can't be birthdays";
-            })
-            (filter (a: a.khal.enable)
-            (attrValues cfg.accounts));
+    assertions =
+      let
+        primaries =
+          catAttrs "name"
+          (filter (a: a.primary)
+          (attrValues cfg.accounts));
+      in
+        [{
+          assertion = length primaries <= 1;
+          message =
+            "Must have at most one primary calendar accounts but found "
+            + toString (length primaries)
+            + ", namely "
+            + concatStringsSep ", " primaries;
+        }];
   };
 }

@@ -56,15 +56,5 @@ in
     };
   };
   config = mkIf (cfg.accounts != {}) {
-    assertions =
-      map (a:
-          {
-            assertion = a.khal.type == "birthdays";
-            message =
-              a.name
-              + " is a contact account so type must be birthdays";
-            })
-            (filter (a: a.khal.enable)
-            (attrValues cfg.accounts));
   };
 }

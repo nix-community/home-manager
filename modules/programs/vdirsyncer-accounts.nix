@@ -101,7 +101,7 @@ let
       verify = mkOption {
         type = types.nullOr types.bool;
         default = null;
-        description = "Verify SSL certificate. Defaults to <literal>true</literal>.";
+        description = "Verify SSL certificate.";
       };
 
       verifyFingerprint = mkOption {
