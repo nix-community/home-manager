@@ -65,6 +65,11 @@ let
       bind C-${cfg.shortcut} last-window
     ''}
 
+    ${optionalString cfg.disableConfirmationPrompt ''
+      bind-key & kill-window
+      bind-key x kill-pane
+    ''}
+
     setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
     setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
     set  -s escape-time       ${toString cfg.escapeTime}
@@ -106,6 +111,14 @@ in
         description = ''
           Override the hjkl and HJKL bindings for pane navigation and
           resizing in VI mode.
+        '';
+      };
+
+      disableConfirmationPrompt = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''
+          Disable confirmation prompt before killing a pane or window
         '';
       };
 
