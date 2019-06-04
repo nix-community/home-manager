@@ -5,8 +5,8 @@ let
   nmt = pkgs.fetchFromGitLab {
     owner = "rycee";
     repo = "nmt";
-    rev = "b6ab61e707ec1ca3839fef42f9960a1179d543c4";
-    sha256 = "097fm1hmsyhy8chf73wwrvafcxny37414fna3haxf0q5fvpv4jfb";
+    rev = "89fb12a2aaa8ec671e22a033162c7738be714305";
+    sha256 = "07yc1jkgw8vhskzk937k9hfba401q8rn4sgj9baw3fkjl9zrbcyf";
   };
 
 in
@@ -31,8 +31,13 @@ import nmt {
     {
       i3-keybindings = ./modules/services/window-managers/i3-keybindings.nix;
     }
+    // import ./modules/misc/pam
     // import ./modules/systemd
   )
+  // import ./modules/home-environment
+  // import ./modules/programs/alacritty
+  // import ./modules/programs/bash
   // import ./modules/programs/ssh
-  // import ./modules/programs/tmux;
+  // import ./modules/programs/tmux
+  // import ./modules/programs/zsh;
 }

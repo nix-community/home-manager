@@ -1,0 +1,6 @@
+# Only source this once.
+if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+export __HM_SESS_VARS_SOURCED=1
+
+export V1="v1"
+export V2="v2-v1"

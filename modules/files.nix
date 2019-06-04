@@ -83,8 +83,8 @@ in
         function checkNewGenCollision() {
           local newGenFiles
           newGenFiles="$(readlink -e "$newGenPath/home-files")"
-          find "$newGenFiles" -type f -print0 -or -type l -print0 \
-                  | xargs -0 bash ${check} "$newGenFiles"
+          find "$newGenFiles" \( -type f -or -type l \) \
+              -exec bash ${check} "$newGenFiles" {} +
         }
 
         checkNewGenCollision || exit 1
@@ -164,8 +164,8 @@ in
 
             local newGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
-            find "$newGenFiles" -type f -print0 -or -type l -print0 \
-              | xargs -0 bash ${link} "$newGenFiles"
+            find "$newGenFiles" \( -type f -or -type l \) \
+              -exec bash ${link} "$newGenFiles" {} +
           }
 
           function cleanOldGen() {
