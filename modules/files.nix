@@ -62,10 +62,6 @@ in
               if [[ -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 backup="''${targetPath}''${HOME_MANAGER_BACKUP_EXT}"
                 warnEcho "Existing file '$targetPath' is in the way - moving to $backup"
-                if ! mv "$targetPath" "$backup"; then
-                  errorEcho "Moving '$targetPath' failed!"
-                  collision=1
-                fi
               else
                 errorEcho "Existing file '$targetPath' is in the way"
                 collision=1
@@ -120,6 +116,10 @@ in
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
+            if [[ -e "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
+              backup="''${targetPath}''${HOME_MANAGER_BACKUP_EXT}"
+              $DRY_RUN_CMD mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
+            fi
             $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
             $DRY_RUN_CMD ln -nsf $VERBOSE_ARG "$sourcePath" "$targetPath"
           done
