@@ -60,8 +60,13 @@ in
             if [[ -e "$targetPath" \
                 && ! "$(readlink "$targetPath")" == ${homeFilePattern} ]] ; then
               if [[ -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
-                backup="''${targetPath}''${HOME_MANAGER_BACKUP_EXT}"
-                warnEcho "Existing file '$targetPath' is in the way - moving to $backup"
+                backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
+                if [[ -e "$backup" ]]; then
+                  errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath'"
+                  collision=1
+                else
+                  warnEcho "Existing file '$targetPath' is in the way - moving to $backup"
+                fi
               else
                 errorEcho "Existing file '$targetPath' is in the way"
                 collision=1
@@ -70,7 +75,7 @@ in
           done
 
           if [[ -v collision ]] ; then
-            errorEcho "Please move the above files and try again or use -b to move automatically."
+            errorEcho "Please move the above files and try again or use -b <ext> to move automatically."
             exit 1
           fi
         '';
@@ -116,7 +121,7 @@ in
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
-            if [[ -e "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
+            if [[ -e "$targetPath" && ! -L $targetPath && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
               backup="''${targetPath}''${HOME_MANAGER_BACKUP_EXT}"
               $DRY_RUN_CMD mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
             fi
