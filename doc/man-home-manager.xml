@@ -2,46 +2,121 @@
           xmlns:xlink="http://www.w3.org/1999/xlink"
           xmlns:xi="http://www.w3.org/2001/XInclude">
  <refmeta>
-  <refentrytitle><command>home-manager</command></refentrytitle>
-  <manvolnum>1</manvolnum>
+  <refentrytitle><command>home-manager</command>
+  </refentrytitle><manvolnum>1</manvolnum>
   <refmiscinfo class="source">Home Manager</refmiscinfo>
-<!-- <refmiscinfo class="version"><xi:include href="version.txt" parse="text"/></refmiscinfo> -->
  </refmeta>
  <refnamediv>
-  <refname><command>home-manager</command></refname>
-  <refpurpose>reconfigure a user environment</refpurpose>
+  <refname><command>home-manager</command>
+  </refname><refpurpose>reconfigure a user environment</refpurpose>
  </refnamediv>
  <refsynopsisdiv>
   <cmdsynopsis>
    <command>home-manager</command> <group choice="req"> 
    <arg choice="plain">
-    <option>help</option>
+    build
    </arg>
     
    <arg choice="plain">
-    <option>build</option>
+    edit
    </arg>
     
    <arg choice="plain">
-    <option>switch</option>
+    expire-generations <replaceable>timestamp</replaceable>
    </arg>
     
    <arg choice="plain">
-    <option>generations</option>
+    generations
    </arg>
     
    <arg choice="plain">
-    <option>remove-generations</option>
+    help
    </arg>
     
    <arg choice="plain">
-    <option>packages</option>
+    news
    </arg>
     
    <arg choice="plain">
-    <option>news</option>
+    packages
+   </arg>
+    
+   <arg choice="plain">
+    remove-generations <replaceable>ID …</replaceable>
+   </arg>
+    
+   <arg choice="plain">
+    switch
+   </arg>
+    
+   <arg choice="plain">
+    uninstall
    </arg>
     </group>
+   <sbr />
+   <arg>
+    -A <replaceable>attrPath</replaceable>
+   </arg>
+    
+   <arg>
+    -I <replaceable>path</replaceable>
+   </arg>
+    
+   <arg>
+    -b <replaceable>ext</replaceable>
+   </arg>
+    
+   <arg>
+    <group choice="req"> 
+    <arg choice="plain">
+     -f
+    </arg>
+     
+    <arg choice="plain">
+     --file
+    </arg>
+     </group> <replaceable>path</replaceable>
+   </arg>
+    
+   <arg>
+    <group choice="req"> 
+    <arg choice="plain">
+     -h
+    </arg>
+     
+    <arg choice="plain">
+     --help
+    </arg>
+     </group>
+   </arg>
+    
+   <arg>
+    <group choice="req"> 
+    <arg choice="plain">
+     -n
+    </arg>
+     
+    <arg choice="plain">
+     --dry-run
+    </arg>
+     </group>
+   </arg>
+    
+   <arg>
+    --show-trace
+   </arg>
+    
+   <arg>
+    <group choice="req"> 
+    <arg choice="plain">
+     -v
+    </arg>
+     
+    <arg choice="plain">
+     --verbose
+    </arg>
+     </group>
+   </arg>
   </cmdsynopsis>
  </refsynopsisdiv>
  <refsection>
@@ -50,6 +125,261 @@
    This command updates the user environment so that it corresponds to the
    configuration specified in <filename>~/.config/nixpkgs/home.nix</filename>.
   </para>
+  <para>
+   All operations using this tool expects a sub-command that indicates the
+   operation to perform. It must be one of
+   <variablelist>
+    <varlistentry>
+     <term>
+      <option>build</option>
+     </term>
+     <listitem>
+      <para>
+       Build configuration into a <filename>result</filename> directory.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>edit</option>
+     </term>
+     <listitem>
+      <para>
+       Open the home configuration using the editor indicated by
+       <envar>EDITOR</envar>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>expire-generations <replaceable>timestamp</replaceable></option>
+     </term>
+     <listitem>
+      <para>
+       Remove generations older than <replaceable>timestamp</replaceable> where
+       <replaceable>timestamp</replaceable> is interpreted as in the
+       <option>-d</option> argument of the <citerefentry>
+       <refentrytitle>date</refentrytitle>
+       <manvolnum>1</manvolnum> </citerefentry> tool. For example <literal>-30
+       days</literal> or <literal>2018-01-01</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>generations</option>
+     </term>
+     <listitem>
+      <para>
+       List all home environment generations.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>help</option>
+     </term>
+     <listitem>
+      <para>
+       Print tool help.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>news</option>
+     </term>
+     <listitem>
+      <para>
+       Show news entries in a pager.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>packages</option>
+     </term>
+     <listitem>
+      <para>
+       List all packages installed in <varname>home-manager-path</varname>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>remove-generations <replaceable>ID …</replaceable></option>
+     </term>
+     <listitem>
+      <para>
+       Remove indicated generations. Use the <option>generations</option>
+       sub-command to find suitable generation numbers.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>switch</option>
+     </term>
+     <listitem>
+      <para>
+       Build and activate the configuration.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>uninstall</option>
+     </term>
+     <listitem>
+      <para>
+       Remove Home Manager from the user environment. This will
+       <itemizedlist>
+        <listitem>
+         <para>
+          remove all managed files from the home directory,
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          remove packages installed through Home Manager from the user profile,
+          and
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          optionally remove all Home Manager generations and make them
+          available for immediate garbage collection.
+         </para>
+        </listitem>
+       </itemizedlist>
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </para>
+ </refsection>
+ <refsection>
+  <title>Options</title>
+  <para>
+   The tool accepts the options
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term>
+     <option>-A <replaceable>attrPath</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Optional attribute that selects a configuration expression in the
+      configuration file. That is, if <filename>home.nix</filename> contains
+<programlisting language="nix">
+{
+  joe-at-work = {pkgs, ...}: { home.packages = [ pkgs.fortune ]; };
+  joe-at-home = {pkgs, ...}: { home.packages = [ pkgs.cowsay ]; };
+}
+</programlisting>
+      then the command <command>home-manager switch -A joe-at-work</command>
+      will activate the profile containing the fortune program.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>-I <replaceable>path</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Add a path to the Nix expression search path. For example, to build a
+      Home Manager profile using a specific Nixpkgs run <command>home-manager
+      -I nixpkgs=/absolute/path/to/nixpkgs build</command>. By default
+      <literal>&lt;nixpkgs&gt;</literal> is used.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>-b <replaceable>extension</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Enabled automatic resolution of collisions between unmanaged and managed
+      files. The name of the original file will be suffixed by the given
+      extension. For example,
+<screen>
+<prompt>$</prompt> <userinput>home-manager -b bck switch</userinput>
+</screen>
+      will cause a colliding file <filename>~/.config/foo.conf</filename> to be
+      moved to <filename>~/.config/foo.conf.bck</filename>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>-f <replaceable>path</replaceable></option>
+    </term>
+    <term>
+     <option>--file <replaceable>path</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Indicates the path to the Home Manager configuration file. If not given,
+      <filename>~/.config/nixpkgs/home.nix</filename> is used.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>-h</option>
+    </term>
+    <term>
+     <option>--help</option>
+    </term>
+    <listitem>
+     <para>
+      Prints usage information for the <command>home-manager</command> tool.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>-n</option>
+    </term>
+    <term>
+     <option>--dry-run</option>
+    </term>
+    <listitem>
+     <para>
+      Perform a dry-run of the given operation, only prints what actions would
+      be taken.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--show-trace</option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>-v</option>
+    </term>
+    <term>
+     <option>--verbose</option>
+    </term>
+    <listitem>
+     <para>
+      Activates verbose output.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
  </refsection>
  <refsection>
   <title>Files</title>
@@ -77,12 +407,11 @@
   </para>
  </refsection>
  <refsection>
-   <title>See also</title>
-   <para>
-     <citerefentry>
-       <refentrytitle>home-configuration.nix</refentrytitle>
-       <manvolnum>5</manvolnum>
-     </citerefentry>
-   </para>
+  <title>See also</title>
+  <para>
+   <citerefentry>
+   <refentrytitle>home-configuration.nix</refentrytitle>
+   <manvolnum>5</manvolnum> </citerefentry>
+  </para>
  </refsection>
 </refentry>

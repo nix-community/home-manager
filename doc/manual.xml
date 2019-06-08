@@ -30,5 +30,9 @@
   <title>Configuration Options</title>
   <xi:include href="./generated/options-db.xml" xpointer="configuration-variable-list" />
  </appendix>
+ <appendix xml:id="ch-tools">
+  <title>Tools</title>
+  <xi:include href="./man-home-manager.xml" />
+ </appendix>
  <xi:include href="./release-notes/release-notes.xml" />
 </book>

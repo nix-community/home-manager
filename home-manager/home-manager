@@ -93,12 +93,14 @@ function doBuildAttr() {
         nix build \
             -f "<home-manager/home-manager/home-manager.nix>" \
             $extraArgs \
+            ${PASSTHROUGH_OPTS[*]} \
             --argstr confPath "$HOME_MANAGER_CONFIG" \
             --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
     else
         nix-build \
             "<home-manager/home-manager/home-manager.nix>" \
             $extraArgs \
+            ${PASSTHROUGH_OPTS[*]} \
             --argstr confPath "$HOME_MANAGER_CONFIG" \
             --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
     fi
@@ -451,62 +453,69 @@ function doHelp() {
 
 EXTRA_NIX_PATH=()
 HOME_MANAGER_CONFIG_ATTRIBUTE=""
+PASSTHROUGH_OPTS=()
+COMMAND=""
+COMMAND_ARGS=()
 
-# As a special case, if the user has given --help anywhere on the
-# command line then print help and exit.
-for arg in "$@"; do
-    if [[ $arg == "--help" ]]; then
-        doHelp
-        exit 0
-    fi
-done
-
-while getopts 2f:I:A:b:vnh opt; do
+while [[ $# -gt 0 ]]; do
+    opt="$1"
+    shift
     case $opt in
-        2)
+        build|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
+            COMMAND="$opt"
+            ;;
+        -2)
             USE_NIX2_COMMAND=1
             ;;
-        f)
-            HOME_MANAGER_CONFIG="$OPTARG"
+        -A)
+            HOME_MANAGER_CONFIG_ATTRIBUTE="$1"
+            shift
             ;;
-        I)
-            EXTRA_NIX_PATH+=("$OPTARG")
+        -I)
+            EXTRA_NIX_PATH+=("$1")
+            shift
             ;;
-        A)
-            HOME_MANAGER_CONFIG_ATTRIBUTE="$OPTARG"
+        -b)
+            export HOME_MANAGER_BACKUP_EXT="$1"
+            shift
             ;;
-        b)
-            export HOME_MANAGER_BACKUP_EXT="$OPTARG"
+        -f|--file)
+            HOME_MANAGER_CONFIG="$1"
+            shift
             ;;
-        v)
-            export VERBOSE=1
+        -h|--help)
+            doHelp
             ;;
-        n)
+        -n|--dry-run)
             export DRY_RUN=1
             ;;
-        h)
-            doHelp
-            exit 0
+        --show-trace)
+            PASSTHROUGH_OPTS+=("$opt")
+            ;;
+        -v|--verbose)
+            export VERBOSE=1
             ;;
         *)
-            doHelp >&2
-            exit 1
+            case $COMMAND in
+                expire-generations|remove-generations)
+                    COMMAND_ARGS+=("$opt")
+                    ;;
+                *)
+                    errorEcho "$0: unknown option '$opt'"
+                    errorEcho "Run '$0 --help' for usage help"
+                    exit 1
+                    ;;
+            esac
             ;;
     esac
 done
 
-# Get rid of the options.
-shift "$((OPTIND-1))"
-
-if [[ $# -eq 0 ]]; then
+if [[ -z $COMMAND ]]; then
     doHelp >&2
     exit 1
 fi
 
-cmd="$1"
-shift 1
-
-case "$cmd" in
+case $COMMAND in
     edit)
         doEdit
         ;;
@@ -520,10 +529,15 @@ case "$cmd" in
         doListGens
         ;;
     remove-generations)
-        doRmGenerations "$@"
+        doRmGenerations "${COMMAND_ARGS[@]}"
         ;;
     expire-generations)
-        doExpireGenerations "$@"
+        if [[ ${#COMMAND_ARGS[@]} != 1 ]]; then
+            errorEcho "expire-generations expects one argument, got ${#COMMAND_ARGS[@]}."
+            exit 1
+        else
+            doExpireGenerations "${COMMAND_ARGS[@]}"
+        fi
         ;;
     packages)
         doListPackages
@@ -534,11 +548,11 @@ case "$cmd" in
     uninstall)
         doUninstall
         ;;
-    help|--help)
+    help)
         doHelp
         ;;
     *)
-        errorEcho "Unknown command: $cmd"
+        errorEcho "Unknown command: $COMMAND"
         doHelp >&2
         exit 1
         ;;

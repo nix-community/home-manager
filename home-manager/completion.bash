@@ -49,9 +49,13 @@
 # -A
 # -I
 # -f
+# --file
 # -h
+# --help
 # -n
+# --dry-run
 # -v
+# --verbose
 # build
 # edit
 # expire-generations
@@ -61,6 +65,7 @@
 # packages
 # remove-generations
 # switch
+# uninstall
 
 # $ home-manager e<TAB>
 #
@@ -88,15 +93,21 @@
 #   expire-generations
 #   packages
 #   news
+#   uninstall
 
 # « home-manager » Options:
 #
+#   -b EXT
 #   -f FILE
+#   --file FILE
 #   -A ATTRIBUTE
 #   -I PATH
 #   -v
+#   --verbose
 #   -n
+#   --dry-run
 #   -h
+#   --help
 
 # $ home-manager
 #
@@ -109,6 +120,7 @@
 #   -A ATTRIBUTE Optional attribute that selects a configuration
 #                expression in the configuration file.
 #   -I PATH      Add a path to the Nix expression search path.
+#   -b EXT       Move existing files to new path rather than fail.
 #   -v           Verbose output
 #   -n           Do a dry run, only prints what actions would be taken
 #   -h           Print this help
@@ -138,7 +150,8 @@
 #
 #   news         Show news entries in a pager
 #
-
+#   uninstall    Remove Home Manager
+#
 ##################################################
 # Dependencies:
 
@@ -265,14 +278,14 @@ _home-manager_completions ()
     #--------------------------#
 
     local Subcommands
-    Subcommands=( "help" "edit" "build" "switch" "generations" "remove-generations" "expire-generations" "packages" "news" )
+    Subcommands=( "help" "edit" "build" "switch" "generations" "remove-generations" "expire-generations" "packages" "news" "uninstall" )
 
     # ^ « home-manager »'s subcommands.
 
     #--------------------------#
 
     local Options
-    Options=( "-f" "-A" "-I" "-h" "-n" "-v" )
+    Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" "--verbose" "--show-trace" )
 
     # ^ « home-manager »'s options.
 
@@ -304,7 +317,7 @@ _home-manager_completions ()
 
     case "$PreviousWord" in
 
-        "-f")
+        "-f"|"--file")
 
             COMPREPLY+=( $( compgen -A file -- "$CurrentWord") )
             ;;
