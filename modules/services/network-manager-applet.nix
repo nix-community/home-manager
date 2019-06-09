@@ -19,24 +19,24 @@ in
 
   config = mkIf cfg.enable {
     systemd.user.services.network-manager-applet = {
-        Unit = {
-          Description = "Network Manager applet";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
+      Unit = {
+        Description = "Network Manager applet";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
 
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
-        Service = {
-          ExecStart = toString (
-            [
-              "${pkgs.networkmanagerapplet}/bin/nm-applet"
-              "--sm-disable"
-            ] ++ optional config.xsession.preferStatusNotifierItems "--indicator"
-          );
-        };
+      Service = {
+        ExecStart = toString (
+          [
+            "${pkgs.networkmanagerapplet}/bin/nm-applet"
+            "--sm-disable"
+          ] ++ optional config.xsession.preferStatusNotifierItems "--indicator"
+        );
+      };
     };
   };
 }
