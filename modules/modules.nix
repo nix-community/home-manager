@@ -42,6 +42,7 @@ let
     (loadModule ./programs/bat.nix { })
     (loadModule ./programs/beets.nix { })
     (loadModule ./programs/browserpass.nix { })
+    (loadModule ./programs/calcurse.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/chromium.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/command-not-found/command-not-found.nix { })
     (loadModule ./programs/direnv.nix { })
