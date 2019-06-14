@@ -25,7 +25,7 @@ let
 
   defaultKeyMode  = "emacs";
   defaultResize   = 5;
-  defaultShortcut = "b";
+  defaultShortcut = "C-b";
   defaultTerminal = "screen";
 
   boolToStr = value: if value then "on" else "off";
@@ -58,11 +58,10 @@ let
     ''}
 
     ${optionalString (cfg.shortcut != defaultShortcut) ''
-      # rebind main key: C-${cfg.shortcut}
-      unbind C-${defaultShortcut}
-      set -g prefix C-${cfg.shortcut}
-      bind ${cfg.shortcut} send-prefix
-      bind C-${cfg.shortcut} last-window
+      # rebind main key: ${cfg.shortcut}
+      unbind ${defaultShortcut}
+      set -g prefix ${cfg.shortcut}
+      bind ${cfg.nestedShortcut} send-prefix
     ''}
 
     ${optionalString cfg.disableConfirmationPrompt ''
@@ -157,6 +156,15 @@ in
         description = "VI or Emacs style shortcuts.";
       };
 
+      nestedShortcut = mkOption {
+        default = defaultShortcut;
+        example = "M-a";
+        type = types.str;
+        description = ''
+          This keybinding is used as the nested session shortcut.
+        '';
+      };
+
       newSession = mkOption {
         default = false;
         type = types.bool;
@@ -199,10 +207,10 @@ in
 
       shortcut = mkOption {
         default = defaultShortcut;
-        example = "a";
+        example = "C-a";
         type = types.str;
         description = ''
-          CTRL following by this key is used as the main shortcut.
+          This keybinding is used as the main shortcut.
         '';
       };
 
