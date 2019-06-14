@@ -23,6 +23,114 @@ let
     };
   };
 
+  statusModule = types.submodule {
+    options = {
+      currentWindowFormat = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Current window status formatting.
+        '';
+      };
+
+      currentWindowStyle = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Current window style.
+        '';
+      };
+
+      justification = mkOption {
+        default = "centre";
+        type = types.str;
+        description = ''
+          How to justify statusbar info.
+        '';
+      };
+
+      keyMode = mkOption {
+        default = defaultKeyMode;
+        type = types.str;
+        description = ''
+          VI or Emacs style shortcuts.
+        '';
+      };
+
+      leftFormat = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Left status part formatting.
+        '';
+      };
+
+      leftLength = mkOption {
+        default = 30;
+        type = types.int;
+        description = ''
+          Length of left status part.
+        '';
+      };
+
+      messageStyle = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Message area style.
+        '';
+      };
+
+      rightFormat = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Left status part formatting.
+        '';
+      };
+
+      rightLength = mkOption {
+        default = 140;
+        type = types.int;
+        description = ''
+          Length of right status part.
+        '';
+      };
+
+      style = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Style.
+        '';
+      };
+
+      updateInterval = mkOption {
+        default = 1;
+        type = types.int;
+        description = ''
+          Seconds to pass between statusbar updates.
+        '';
+      };
+
+      windowFormat = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Window status formatting.
+        '';
+      };
+
+      windowStyle = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Current style.
+        '';
+      };
+    };
+  };
+
   defaultKeyMode  = "emacs";
   defaultResize   = 5;
   defaultShortcut = "C-b";
@@ -231,6 +339,13 @@ in
         '';
       };
 
+
+      status = mkOption {
+        default = null;
+        type = types.nullOr statusModule;
+        description = "Statusbar settings.";
+      };
+
       tmuxp.enable = mkEnableOption "tmuxp";
 
       tmuxinator.enable = mkEnableOption "tmuxinator";
@@ -282,6 +397,40 @@ in
           # --------------------------------------------- #
           run-shell ${pkgs.tmuxPlugins.sensible.rtp}
           # ============================================= #
+        '';
+      })
+
+      (mkIf (cfg.status != null) {
+        home.file.".tmux.conf".text = mkOrder 1000 ''
+          set -g status on
+
+          set -g status-interval ${builtins.toString cfg.status.updateInterval}
+          set -g status-justify ${cfg.status.justification}
+          set -g status-left-length ${builtins.toString cfg.status.leftLength}
+          set -g status-right-length ${builtins.toString cfg.status.rightLength}
+
+          ${optionalString (cfg.status.currentWindowFormat != "")
+                           "setw -g window-status-current-format '${cfg.status.currentWindowFormat}'"}
+          ${optionalString (cfg.status.windowFormat != "")
+                           "setw -g window-status-format '${cfg.status.windowFormat}'"}
+          ${optionalString (cfg.status.leftFormat != "")
+                           "set -g status-left '${cfg.status.leftFormat}'"}
+          ${optionalString (cfg.status.rightFormat != "")
+                           "set -g status-right '${cfg.status.rightFormat}'"}
+          ${optionalString (cfg.status.style != "")
+                           "set -g status-style '${cfg.status.style}'"}
+          ${optionalString (cfg.status.windowStyle != "")
+                           "setw -g window-status-style '${cfg.status.windowStyle}'"}
+          ${optionalString (cfg.status.currentWindowStyle != "")
+                           "setw -g window-status-current-style '${cfg.status.currentWindowStyle}'"}
+          ${optionalString (cfg.status.messageStyle != "")
+                           "setw -g message-style '${cfg.status.messageStyle}'"}
+        '';
+      })
+
+      (mkIf (cfg.status == null) {
+        home.file.".tmux.conf".text = mkOrder 1000 ''
+          set -g status off
         '';
       })
 
