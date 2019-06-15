@@ -133,12 +133,14 @@ let
 
   defaultKeyMode  = "emacs";
   defaultResize   = 5;
+  defaultShell = "${pkgs.bash}/bin/bash";
   defaultShortcut = "C-b";
   defaultTerminal = "screen";
 
   boolToStr = value: if value then "on" else "off";
 
   tmuxConf = ''
+    set  -g default-shell "${cfg.shell}"
     set  -g default-terminal "${cfg.terminal}"
     set  -g base-index      ${toString cfg.baseIndex}
     setw -g pane-base-index ${toString cfg.baseIndex}
@@ -152,6 +154,11 @@ let
 
     set -g status-keys ${cfg.keyMode}
     set -g mode-keys   ${cfg.keyMode}
+
+    ${optionalString (cfg.activeBorderStyle != "")
+                     "set -g pane-active-border-style ${cfg.activeBorderStyle}"}
+    ${optionalString (cfg.inactiveBorderStyle != "")
+                     "set -g pane-border-style ${cfg.inactiveBorderStyle}"}
 
     ${optionalString (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
       bind h select-pane -L
@@ -190,6 +197,14 @@ in
 {
   options = {
     programs.tmux = {
+      activeBorderStyle = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Active pane border style.
+        '';
+      };
+
       aggressiveResize = mkOption {
         default = false;
         type = types.bool;
@@ -255,6 +270,22 @@ in
         example = 5000;
         type = types.ints.positive;
         description = "Maximum number of lines held in window history.";
+      };
+
+      hooks = mkOption {
+        default = { };
+        type = types.attrs;
+        description = ''
+          Various hooks.
+        '';
+      };
+
+      inactiveBorderStyle = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Inactive panes border style.
+        '';
       };
 
       keyMode = mkOption {
@@ -339,6 +370,12 @@ in
         '';
       };
 
+      shell = mkOption {
+        default = defaultShell;
+        example = "bash";
+        type = types.str;
+        description = "Default shell for new panes.";
+      };
 
       status = mkOption {
         default = null;
@@ -431,6 +468,15 @@ in
       (mkIf (cfg.status == null) {
         home.file.".tmux.conf".text = mkOrder 1000 ''
           set -g status off
+        '';
+      })
+
+      (mkIf (cfg.hooks != {}) {
+        home.file.".tmux.conf".text = mkOrder 1100 ''
+          ${builtins.concatStringsSep "\n\n"
+            (lib.mapAttrsToList (key: value: ''
+              set-hook -g ${key} "${value}"
+            '' cfg.hooks))}
         '';
       })
 
