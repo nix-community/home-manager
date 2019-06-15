@@ -8,6 +8,36 @@ let
 
   pluginName = p: if types.package.check p then p.name else p.plugin.name;
 
+  bindingsModule = types.submodule {
+    options = {
+      copyMode = mkOption {
+        type = types.attrs;
+        description = "copy-mode bindings.";
+        default = {};
+      };
+      joinPaneMode = mkOption {
+        type = types.attrs;
+        description = "join-pnae mode bindings.";
+        default = {};
+      };
+      prefixed = mkOption {
+        type = types.attrs;
+        description = "Bindings used with ${cfg.shortcut}.";
+        default = {};
+      };
+      root = mkOption {
+        type = types.attrs;
+        description = "Unprefixed bindings, used as is.";
+        default = {};
+      };
+      viCopyMode = mkOption {
+        type = types.attrs;
+        description = "copy-mode-vi bindings.";
+        default = {};
+      };
+    };
+  };
+
   pluginModule = types.submodule {
     options = {
       plugin = mkOption {
@@ -219,6 +249,12 @@ in
         example = 1;
         type = types.ints.unsigned;
         description = "Base index for windows and panes.";
+      };
+
+      bindings = mkOption {
+        default = null;
+        type = types.nullOr bindingsModule;
+        description = "Custom bindings.";
       };
 
       clock24 = mkOption {
@@ -477,6 +513,36 @@ in
             (lib.mapAttrsToList (key: value: ''
               set-hook -g ${key} "${value}"
             '' cfg.hooks))}
+        '';
+      })
+
+      (mkIf (cfg.bindings != null) {
+        home.file.".tmux.conf".text = mkOrder 1200 ''
+          ${optionalString (cfg.bindings.copyMode != {})
+                           (builtins.concatStringsSep "\n"
+                             (lib.mapAttrsToList (key: command: ''
+                               bind -T copy-mode ${key} ${command}
+                             '') cfg.bindings.copyMode))}
+          ${optionalString (cfg.bindings.viCopyMode != {})
+                           (builtins.concatStringsSep "\n"
+                             (lib.mapAttrsToList (key: command: ''
+                               bind -T copy-mode-vi ${key} ${command}
+                             '') cfg.bindings.viCopyMode))}
+          ${optionalString (cfg.bindings.joinPaneMode != {})
+                           (builtins.concatStringsSep "\n"
+                             (lib.mapAttrsToList (key: command: ''
+                               bind -T join-pane ${key} ${command}
+                             '') cfg.bindings.joinPaneMode))}
+          ${optionalString (cfg.bindings.prefixed != {})
+                           (builtins.concatStringsSep "\n\n"
+                             (lib.mapAttrsToList (key: command: ''
+                               bind -T prefix ${key} ${command}
+                             '') cfg.bindings.prefixed))}
+          ${optionalString (cfg.bindings.root != {})
+                           (builtins.concatStringsSep "\n\n"
+                             (lib.mapAttrsToList (key: command: ''
+                                 bind -T root ${key} ${command}
+                             '') cfg.bindings.root))}
         '';
       })
 
