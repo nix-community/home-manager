@@ -9,7 +9,7 @@ let
 
     sensible_rtp = pkgs.tmuxPlugins.sensible.rtp;
   };
-  
+
 in
 
 {
@@ -18,7 +18,7 @@ in
       enable = true;
       disableConfirmationPrompt = true;
     };
-  
+
     nmt.script = ''
       assertFileExists home-files/.tmux.conf
       assertFileContent home-files/.tmux.conf \
