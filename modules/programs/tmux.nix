@@ -184,10 +184,10 @@ let
     set -g status-keys ${cfg.keyMode}
     set -g mode-keys   ${cfg.keyMode}
 
-    ${optionalString (cfg.activeBorderStyle != "")
-                     "set -g pane-active-border-style ${cfg.activeBorderStyle}"}
-    ${optionalString (cfg.inactiveBorderStyle != "")
-                     "set -g pane-border-style ${cfg.inactiveBorderStyle}"}
+    ${optionalString (cfg.borderStyle.active != "")
+                     "set -g pane-active-border-style ${cfg.borderStyle.active}"}
+    ${optionalString (cfg.borderStyle.inactive != "")
+                     "set -g pane-border-style ${cfg.borderStyle.inactive}"}
 
     ${optionalString (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
       bind h select-pane -L
@@ -293,14 +293,6 @@ in
 {
   options = {
     programs.tmux = {
-      activeBorderStyle = mkOption {
-        default = "";
-        type = types.str;
-        description = ''
-          Active pane border style.
-        '';
-      };
-
       aggressiveResize = mkOption {
         default = false;
         type = types.bool;
@@ -321,6 +313,22 @@ in
         default = null;
         type = types.nullOr bindingsModule;
         description = "Custom bindings.";
+      };
+
+      borderStyle.active = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Active pane border style.
+        '';
+      };
+
+      borderStyle.inactive = mkOption {
+        default = "";
+        type = types.str;
+        description = ''
+          Inactive panes border style.
+        '';
       };
 
       clock24 = mkOption {
@@ -379,14 +387,6 @@ in
         type = types.attrs;
         description = ''
           Various hooks.
-        '';
-      };
-
-      inactiveBorderStyle = mkOption {
-        default = "";
-        type = types.str;
-        description = ''
-          Inactive panes border style.
         '';
       };
 
