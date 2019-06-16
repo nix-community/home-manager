@@ -159,7 +159,8 @@ let
   defaultKeyMode  = "emacs";
   defaultResize   = 5;
   defaultShell = "${pkgs.bash}/bin/bash";
-  defaultShortcut = "C-b";
+  defaultShortcut = if versionAtLeast config.home.stateVersion "19.09"
+                    then "C-b" else "b";
   defaultTerminal = "screen";
 
   boolToStr = value: if value then "on" else "off";
@@ -197,11 +198,19 @@ let
       bind -r L resize-pane -R ${toString cfg.resizeAmount}
     ''}
 
-    ${optionalString (cfg.shortcut != defaultShortcut) ''
-      # rebind main key: ${cfg.shortcut}
-      unbind ${defaultShortcut}
-      set -g prefix ${cfg.shortcut}
-      bind ${cfg.nestedShortcut} send-prefix
+    ${if versionAtLeast config.home.stateVersion "19.09" then ''
+        # rebind main key: ${cfg.shortcut}
+        unbind ${defaultShortcut}
+        set -g prefix ${cfg.shortcut}
+        bind ${cfg.nestedShortcut} send-prefix
+    '' else ''
+      ${optionalString (cfg.shortcut != defaultShortcut) ''
+        # rebind main key: C-${cfg.shortcut}
+        unbind C-${defaultShortcut}
+        set -g prefix C-${cfg.shortcut}
+        bind ${cfg.shortcut} send-prefix
+        bind C-${cfg.shortcut} last-window
+      ''}
     ''}
 
     ${optionalString cfg.disableConfirmationPrompt ''
