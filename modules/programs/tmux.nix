@@ -161,7 +161,7 @@ let
 
   defaultKeyMode  = "emacs";
   defaultResize   = 5;
-  defaultShell = "${pkgs.bash}/bin/bash";
+  defaultShell    = "$SHELL";
   defaultShortcut = if versionAtLeast config.home.stateVersion "19.09"
                     then "C-b" else "b";
   defaultTerminal = "screen";
@@ -479,7 +479,7 @@ in
 
       shell = mkOption {
         default = defaultShell;
-        example = "bash";
+        example = "zsh";
         type = types.str;
         description = "Default shell for new panes.";
       };
