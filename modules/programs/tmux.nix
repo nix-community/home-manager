@@ -30,11 +30,6 @@ let
         description = "Unprefixed bindings, used as is.";
         default = {};
       };
-      viCopyMode = mkOption {
-        type = types.attrs;
-        description = "copy-mode-vi bindings.";
-        default = {};
-      };
     };
   };
 
@@ -521,13 +516,8 @@ in
           ${optionalString (cfg.bindings.copyMode != {})
                            (builtins.concatStringsSep "\n"
                              (lib.mapAttrsToList (key: command: ''
-                               bind -T copy-mode ${key} ${command}
+                               bind -T ${if cfg.keyMode == "emacs" then "copy-mode" else "copy-mode-vi"} ${key} ${command}
                              '') cfg.bindings.copyMode))}
-          ${optionalString (cfg.bindings.viCopyMode != {})
-                           (builtins.concatStringsSep "\n"
-                             (lib.mapAttrsToList (key: command: ''
-                               bind -T copy-mode-vi ${key} ${command}
-                             '') cfg.bindings.viCopyMode))}
           ${optionalString (cfg.bindings.joinPaneMode != {})
                            (builtins.concatStringsSep "\n"
                              (lib.mapAttrsToList (key: command: ''
