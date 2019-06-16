@@ -17,7 +17,7 @@ let
       };
       joinPaneMode = mkOption {
         type = types.attrs;
-        description = "join-pnae mode bindings.";
+        description = "join-pane mode bindings.";
         default = {};
       };
       prefixed = mkOption {
