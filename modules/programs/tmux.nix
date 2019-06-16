@@ -223,6 +223,65 @@ let
     set  -s escape-time       ${toString cfg.escapeTime}
     set  -g history-limit     ${toString cfg.historyLimit}
 
+    ${if cfg.status != null then ''
+      set -g status on
+
+      set -g status-interval ${builtins.toString cfg.status.updateInterval}
+      set -g status-justify ${cfg.status.justification}
+      set -g status-left-length ${builtins.toString cfg.status.leftLength}
+      set -g status-right-length ${builtins.toString cfg.status.rightLength}
+
+      ${optionalString (cfg.status.currentWindowFormat != "")
+                       "setw -g window-status-current-format '${cfg.status.currentWindowFormat}'"}
+      ${optionalString (cfg.status.windowFormat != "")
+                       "setw -g window-status-format '${cfg.status.windowFormat}'"}
+      ${optionalString (cfg.status.leftFormat != "")
+                       "set -g status-left '${cfg.status.leftFormat}'"}
+      ${optionalString (cfg.status.rightFormat != "")
+                       "set -g status-right '${cfg.status.rightFormat}'"}
+      ${optionalString (cfg.status.style != "")
+                       "set -g status-style '${cfg.status.style}'"}
+      ${optionalString (cfg.status.windowStyle != "")
+                       "setw -g window-status-style '${cfg.status.windowStyle}'"}
+      ${optionalString (cfg.status.currentWindowStyle != "")
+                       "setw -g window-status-current-style '${cfg.status.currentWindowStyle}'"}
+      ${optionalString (cfg.status.messageStyle != "")
+                       "setw -g message-style '${cfg.status.messageStyle}'"}
+    '' else ''
+        set -g status off
+    ''}
+
+    ${optionalString (cfg.hooks != []) ''
+      ${builtins.concatStringsSep "\n\n"
+        (lib.mapAttrsToList (key: value: ''
+          set-hook -g ${key} "${value}"
+        '') cfg.hooks)}
+    ''}
+
+    ${optionalString (cfg.bindings != null) ''
+      ${optionalString (cfg.bindings.copyMode != {})
+                       (builtins.concatStringsSep "\n"
+                         (lib.mapAttrsToList (key: command: ''
+                           bind -T ${if cfg.keyMode == "emacs" then "copy-mode" else "copy-mode-vi"} ${key} ${command}
+                         '') cfg.bindings.copyMode))}
+      ${optionalString (cfg.bindings.joinPaneMode != {})
+                       (builtins.concatStringsSep "\n"
+                         (lib.mapAttrsToList (key: command: ''
+                           bind -T join-pane ${key} ${command}
+                         '') cfg.bindings.joinPaneMode))}
+      ${optionalString (cfg.bindings.prefixed != {})
+                       (builtins.concatStringsSep "\n\n"
+                         (lib.mapAttrsToList (key: command: ''
+                           bind -T prefix ${key} ${command}
+                         '') cfg.bindings.prefixed))}
+      ${optionalString (cfg.bindings.root != {})
+                       (builtins.concatStringsSep "\n\n"
+                         (lib.mapAttrsToList (key: command: ''
+                             bind -T root ${key} ${command}
+                         '') cfg.bindings.root))}
+
+    ''}
+
     ${cfg.extraConfig}
   '';
 
@@ -474,74 +533,6 @@ in
           # --------------------------------------------- #
           run-shell ${pkgs.tmuxPlugins.sensible.rtp}
           # ============================================= #
-        '';
-      })
-
-      (mkIf (cfg.status != null) {
-        home.file.".tmux.conf".text = mkOrder 1000 ''
-          set -g status on
-
-          set -g status-interval ${builtins.toString cfg.status.updateInterval}
-          set -g status-justify ${cfg.status.justification}
-          set -g status-left-length ${builtins.toString cfg.status.leftLength}
-          set -g status-right-length ${builtins.toString cfg.status.rightLength}
-
-          ${optionalString (cfg.status.currentWindowFormat != "")
-                           "setw -g window-status-current-format '${cfg.status.currentWindowFormat}'"}
-          ${optionalString (cfg.status.windowFormat != "")
-                           "setw -g window-status-format '${cfg.status.windowFormat}'"}
-          ${optionalString (cfg.status.leftFormat != "")
-                           "set -g status-left '${cfg.status.leftFormat}'"}
-          ${optionalString (cfg.status.rightFormat != "")
-                           "set -g status-right '${cfg.status.rightFormat}'"}
-          ${optionalString (cfg.status.style != "")
-                           "set -g status-style '${cfg.status.style}'"}
-          ${optionalString (cfg.status.windowStyle != "")
-                           "setw -g window-status-style '${cfg.status.windowStyle}'"}
-          ${optionalString (cfg.status.currentWindowStyle != "")
-                           "setw -g window-status-current-style '${cfg.status.currentWindowStyle}'"}
-          ${optionalString (cfg.status.messageStyle != "")
-                           "setw -g message-style '${cfg.status.messageStyle}'"}
-        '';
-      })
-
-      (mkIf (cfg.status == null) {
-        home.file.".tmux.conf".text = mkOrder 1000 ''
-          set -g status off
-        '';
-      })
-
-      (mkIf (cfg.hooks != {}) {
-        home.file.".tmux.conf".text = mkOrder 1100 ''
-          ${builtins.concatStringsSep "\n\n"
-            (lib.mapAttrsToList (key: value: ''
-              set-hook -g ${key} "${value}"
-            '' cfg.hooks))}
-        '';
-      })
-
-      (mkIf (cfg.bindings != null) {
-        home.file.".tmux.conf".text = mkOrder 1200 ''
-          ${optionalString (cfg.bindings.copyMode != {})
-                           (builtins.concatStringsSep "\n"
-                             (lib.mapAttrsToList (key: command: ''
-                               bind -T ${if cfg.keyMode == "emacs" then "copy-mode" else "copy-mode-vi"} ${key} ${command}
-                             '') cfg.bindings.copyMode))}
-          ${optionalString (cfg.bindings.joinPaneMode != {})
-                           (builtins.concatStringsSep "\n"
-                             (lib.mapAttrsToList (key: command: ''
-                               bind -T join-pane ${key} ${command}
-                             '') cfg.bindings.joinPaneMode))}
-          ${optionalString (cfg.bindings.prefixed != {})
-                           (builtins.concatStringsSep "\n\n"
-                             (lib.mapAttrsToList (key: command: ''
-                               bind -T prefix ${key} ${command}
-                             '') cfg.bindings.prefixed))}
-          ${optionalString (cfg.bindings.root != {})
-                           (builtins.concatStringsSep "\n\n"
-                             (lib.mapAttrsToList (key: command: ''
-                                 bind -T root ${key} ${command}
-                             '') cfg.bindings.root))}
         '';
       })
 
