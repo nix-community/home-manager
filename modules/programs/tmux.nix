@@ -15,16 +15,19 @@ let
         description = "copy-mode bindings.";
         default = {};
       };
+
       joinPaneMode = mkOption {
         type = types.attrs;
         description = "join-pane mode bindings.";
         default = {};
       };
+
       prefixed = mkOption {
         type = types.attrs;
         description = "Bindings used with ${cfg.shortcut}.";
         default = {};
       };
+
       root = mkOption {
         type = types.attrs;
         description = "Unprefixed bindings, used as is.";
