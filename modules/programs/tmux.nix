@@ -11,25 +11,25 @@ let
   bindingsModule = types.submodule {
     options = {
       copyMode = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.str;
         description = "copy-mode bindings.";
         default = {};
       };
 
       joinPaneMode = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.str;
         description = "join-pane mode bindings.";
         default = {};
       };
 
       prefixed = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.str;
         description = "Bindings used with ${cfg.shortcut}.";
         default = {};
       };
 
       root = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.str;
         description = "Unprefixed bindings, used as is.";
         default = {};
       };
@@ -384,7 +384,12 @@ in
 
       hooks = mkOption {
         default = { };
-        type = types.attrs;
+        example = literalExample ''
+          {
+            "after-select-pane" = "<command>";
+          }
+        '';
+        type = types.attrsOf types.str;
         description = ''
           Various hooks.
         '';
