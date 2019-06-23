@@ -42,5 +42,7 @@ in
         WantedBy = [ "graphical-session.target" ];
       };
     };
+
+    xsession.importedVariables = [ "GDK_PIXBUF_MODULE_FILE" ];
   };
 }

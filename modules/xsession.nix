@@ -62,10 +62,31 @@ in
         default = "";
         description = "Extra shell commands to run during initialization.";
       };
+
+      importedVariables = mkOption {
+        type = types.listOf (types.strMatching "[a-zA-Z_][a-zA-Z0-9_]*");
+        example = [ "GDK_PIXBUF_ICON_LOADER" ];
+        visible = false;
+        description = ''
+          Environment variables to import into the user systemd
+          session. The will be available for use by graphical
+          services.
+        '';
+      };
     };
   };
 
   config = mkIf cfg.enable {
+    xsession.importedVariables = [
+      "DBUS_SESSION_BUS_ADDRESS"
+      "DISPLAY"
+      "SSH_AUTH_SOCK"
+      "XAUTHORITY"
+      "XDG_DATA_DIRS"
+      "XDG_RUNTIME_DIR"
+      "XDG_SESSION_ID"
+    ];
+
     systemd.user = {
       services = mkIf (config.home.keyboard != null) {
         setxkbmap =  {
@@ -118,13 +139,10 @@ in
         # script starts up graphical-session.target.
         systemctl --user stop graphical-session.target graphical-session-pre.target
 
-        systemctl --user import-environment DBUS_SESSION_BUS_ADDRESS
-        systemctl --user import-environment DISPLAY
-        systemctl --user import-environment SSH_AUTH_SOCK
-        systemctl --user import-environment XAUTHORITY
-        systemctl --user import-environment XDG_DATA_DIRS
-        systemctl --user import-environment XDG_RUNTIME_DIR
-        systemctl --user import-environment XDG_SESSION_ID
+        ${optionalString (cfg.importedVariables != []) (
+          "systemctl --user import-environment "
+            + toString (unique cfg.importedVariables)
+        )}
 
         ${cfg.profileExtra}
 

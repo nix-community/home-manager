@@ -1,0 +1,3 @@
+{
+  xsession-basic = ./basic.nix;
+}

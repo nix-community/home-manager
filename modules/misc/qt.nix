@@ -65,8 +65,7 @@ in
       then [ pkgs.qgnomeplatform ]
       else [ pkgs.libsForQt5.qtstyleplugins ];
 
-    xsession.profileExtra =
-      "systemctl --user import-environment QT_QPA_PLATFORMTHEME";
+    xsession.importedVariables = [ "QT_QPA_PLATFORMTHEME" ];
 
     # Enable GTK+ style for Qt4 in either case.
     # It doesn’t support the platform theme packages.
