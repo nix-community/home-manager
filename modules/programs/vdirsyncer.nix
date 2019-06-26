@@ -5,12 +5,16 @@ with lib;
 let
 
   cfg = config.programs.vdirsyncer;
-  
-  vdirsyncerAccounts =
+
+  vdirsyncerCalendarAccounts = 
     filterAttrs (_: v: v.vdirsyncer.enable)
-    ((mapAttrs' (n: v: nameValuePair ("calendar_" + n) v)  (config.accounts.calendar.accounts))
-      // (mapAttrs' (n: v: nameValuePair ("contacts_" + n) v)  (config.accounts.contact.accounts))
-      );
+    (mapAttrs' (n: v: nameValuePair ("calendar_" + n) v)  config.accounts.calendar.accounts);
+
+  vdirsyncerContactAccounts = 
+    filterAttrs (_: v: v.vdirsyncer.enable)
+    (mapAttrs' (n: v: nameValuePair ("contacts_" + n) v)  config.accounts.contact.accounts);
+
+  vdirsyncerAccounts = vdirsyncerCalendarAccounts // vdirsyncerContactAccounts;
 
   wrap = s: ''"${s}"'';
 
@@ -19,24 +23,29 @@ let
   boolString = b: if b then "true" else "false";
 
   localStorage = a:
-  with a.vdirsyncer.local;
   filterAttrs (_: v: v != null)
-  (getAttrs [ "type" "fileExt" "encoding" "postHook"] a.vdirsyncer.local) // {
-    path = a.path;
-  };
+  ((getAttrs [ "type" "fileExt" "encoding" ] a.local) // {
+    path = a.local.path;
+    postHook = if a.vdirsyncer == null
+      then null
+      else a.vdirsyncer.postHook;
+  });
 
   remoteStorage = a:
-  with a.vdirsyncer.remote;
   filterAttrs (_: v: v != null)
-  (getAttrs [
+  ((getAttrs [
     "type"
     "url"
-    "itemTypes"
     "userName"
     "userNameCommand"
     "password"
     "passwordCommand"
     "passwordPrompt"
+  ] a.remote) //
+  (if a.vdirsyncer == null
+   then {}
+   else getAttrs [
+    "itemTypes"
     "verify"
     "verifyFingerprint"
     "auth"
@@ -48,7 +57,7 @@ let
     "clientSecret"
     "clientSecretCommand"
     "timeRange"
-   ] a.vdirsyncer.remote);
+   ] a.vdirsyncer));
 
   pair = a:
   with a.vdirsyncer;
@@ -105,8 +114,10 @@ let
                           else mkList (map wrapString c)) v;
     in ''collections = ${if ((isNull v) || v == []) then "null" else listString contents}''
   else if (n == "conflictResolution") then 
-    if (isString v)
-      then ''conflict_resolution = "${v}"''
+    if v == "remote wins"
+      then ''conflict_resolution = "a wins"''
+      else if v == "local wins"
+      then ''conflict_resolution = "b wins"''
       else ''conflict_resolution = ${mkList (map wrapString (["command"] ++ v))}''
   else throw "Unrecognized option: ${n}";
 

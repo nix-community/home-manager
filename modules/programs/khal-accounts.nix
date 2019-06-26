@@ -6,17 +6,10 @@ with lib;
   options.khal = {
     enable = lib.mkEnableOption "khal access";
 
-    type = mkOption {
-      # todo default/assert only birthdays for contacts
-      type = types.nullOr (types.enum [ "calendar" "birthdays" "discover"]);
-      description = ''
-      '';
-    };
-
     readOnly = mkOption {
       type = types.bool;
       description = ''
-        Keep khal from making any changes to this calendar.
+        Keep khal from making any changes to this account.
       '';
       default = false;
     };
@@ -25,7 +18,7 @@ with lib;
       type = types.str;
       default = "*";
       description = ''
-        The glob expansation to be searched for events or birthdays when type
+        The glob expansion to be searched for events or birthdays when type
         is set to discover.
       '';
     };

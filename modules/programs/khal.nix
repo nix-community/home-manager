@@ -10,8 +10,9 @@ let
   khalCalendarAccounts = filterAttrs (_: a: a.khal.enable)
     (config.accounts.calendar.accounts);
 
-  khalContactAccounts = filterAttrs (_: a: a.khal.enable)
-    (config.accounts.contact.accounts);
+  khalContactAccounts = mapAttrs (_: v: v // {type = "birthdays";})
+  (filterAttrs (_: a: a.khal.enable)
+  (config.accounts.contact.accounts));
     
   khalAccounts = khalCalendarAccounts // khalContactAccounts;
 
@@ -25,22 +26,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = 
-      (map (a: {
-          assertion = a.khal.type != "birthdays";
-          message =
-            a.name
-            + " is a calendar account so type can't be birthdays";
-      })
-      (attrValues khalCalendarAccounts)) ++ 
-      (map (a: {
-            assertion = a.khal.type == "birthdays";
-            message =
-              a.name
-              + " is a contact account so type must be birthdays";
-      })
-      (attrValues khalContactAccounts));
-    
     home.packages =  [ pkgs.khal ];
 
     xdg.configFile."khal/config".text = concatStringsSep "\n" (
@@ -50,7 +35,7 @@ in
     ++ (mapAttrsToList (name: value: concatStringsSep "\n"
       ([
         ''[[${name}]]''
-        ''path = ${value.path + "/" + (optionalString (value.khal.type == "discover") value.khal.glob)}''
+        ''path = ${value.local.path + "/" + (optionalString (value.khal.type == "discover") value.khal.glob)}''
       ]
       ++ optional (value.khal.readOnly) "readonly = True"
       ++ optional (!isNull value.khal.type) "type = ${value.khal.type}"

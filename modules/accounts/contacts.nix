@@ -6,28 +6,125 @@ let
 
   cfg = config.accounts.contact;
 
+  localModule = name: types.submodule {
+    options = {
+      path = mkOption {
+        type = types.str;
+        default = "${cfg.basePath}/${name}";
+        description = "The path of the storage.";
+      };
+
+      type = mkOption {
+        type = types.enum [ "filesystem" "singlefile" ];
+        description = "The type of the storage.";
+      };
+
+      fileExt = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The file extension to use.";
+      };
+
+      encoding = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          File encoding for items, both content and file name.
+          Defaults to UTF-8.
+        '';
+      };
+    };                  
+  };
+
+  remoteModule = types.submodule {
+    options = {
+      type = mkOption {
+        type = types.enum [ "carddav" "http" "google_contacts" ];
+        description = "The type of the storage.";
+      };
+
+      url = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The url of the storage.";
+      };
+
+      userName = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "User name for authentication.";
+      };
+
+      userNameCommand = mkOption {
+        type = types.nullOr (types.listOf types.str);
+        default = null;
+        example = [ "~/get-username.sh" ];
+        description = ''
+          A command that prints the user name to standard
+          output.
+        '';
+      };
+
+      password = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Password for authentication.";
+      };
+
+      passwordCommand = mkOption {
+        type = types.nullOr (types.listOf types.str);
+        default = null;
+        example = [ "pass" "caldav" ];
+        description = ''
+          A command that prints the password to standard
+          output.
+        '';
+      };
+
+      passwordPrompt = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "Password for CalDAV";
+        description = ''
+          Show a prompt for the password with the specified
+          text.
+        '';
+      };
+
+    };
+  };
+
   contactOpts = { name, config, ... }: {
     options = {
       name = mkOption {
         type = types.str;
         readOnly = true;
         description = ''
-          Unique identifier of the contact. This is set to the
+          Unique identifier of the contact account. This is set to the
           attribute name of the contact configuration.
         '';
       };
 
-      path = mkOption {
-        type = types.str;
-        default = "${cfg.basePath}/${name}";
-        description = "The path of the storage.";
+      local = mkOption {
+        type = types.nullOr (localModule name);
+        default = null;
+        description = ''
+          Local configuration for the contacts.
+        '';
+      };
+
+      remote = mkOption {
+        type = types.nullOr remoteModule;
+        default = null;
+        description = ''
+          Remote configuration for the contacts.
+        '';
       };
     };
 
     config = mkMerge [
       {
         name = name;
-        khal.type = mkOptionDefault "birthdays";
       }
     ];
   };
