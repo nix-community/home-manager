@@ -1125,6 +1125,7 @@ in
 
       {
         time = "2019-06-19T17:49:29+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: `services.getmail`.
         '';

@@ -51,7 +51,7 @@ let
     (loadModule ./programs/firefox.nix { })
     (loadModule ./programs/fish.nix { })
     (loadModule ./programs/fzf.nix { })
-    (loadModule ./programs/getmail.nix { })
+    (loadModule ./programs/getmail.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/git.nix { })
     (loadModule ./programs/gnome-terminal.nix { })
     (loadModule ./programs/go.nix { })
