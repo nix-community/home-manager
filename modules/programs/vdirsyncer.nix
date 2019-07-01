@@ -6,11 +6,11 @@ let
 
   cfg = config.programs.vdirsyncer;
 
-  vdirsyncerCalendarAccounts = 
+  vdirsyncerCalendarAccounts =
     filterAttrs (_: v: v.vdirsyncer.enable)
     (mapAttrs' (n: v: nameValuePair ("calendar_" + n) v)  config.accounts.calendar.accounts);
 
-  vdirsyncerContactAccounts = 
+  vdirsyncerContactAccounts =
     filterAttrs (_: v: v.vdirsyncer.enable)
     (mapAttrs' (n: v: nameValuePair ("contacts_" + n) v)  config.accounts.contact.accounts);
 
@@ -19,7 +19,7 @@ let
   wrap = s: ''"${s}"'';
 
   listString = l: ''[${concatStringsSep ", " l}]'';
-  
+
   boolString = b: if b then "true" else "false";
 
   localStorage = a:
@@ -108,12 +108,12 @@ let
   else if (n == "metadata") then ''metadata = ${listString (map wrap v)}''
   else if (n == "partialSync") then ''partial_sync = "${v}"''
   else if (n == "collections") then
-    let 
-           contents = map (c: if (isString c) 
+    let
+           contents = map (c: if (isString c)
                           then ''"${c}"''
                           else mkList (map wrapString c)) v;
     in ''collections = ${if ((isNull v) || v == []) then "null" else listString contents}''
-  else if (n == "conflictResolution") then 
+  else if (n == "conflictResolution") then
     if v == "remote wins"
       then ''conflict_resolution = "a wins"''
       else if v == "local wins"
@@ -262,7 +262,7 @@ in
                           ++ flatten (mapAttrsToList assertStorage remoteStorages);
 
 
-    in storageAssertions; 
+    in storageAssertions;
     home.packages = [ cfg.package ];
     xdg.configFile."vdirsyncer/config".source = configFile;
   };

@@ -13,7 +13,7 @@ let
   khalContactAccounts = mapAttrs (_: v: v // {type = "birthdays";})
   (filterAttrs (_: a: a.khal.enable)
   (config.accounts.contact.accounts));
-    
+
   khalAccounts = khalCalendarAccounts // khalContactAccounts;
 
   primaryAccount = findSingle (a: a.primary) null null

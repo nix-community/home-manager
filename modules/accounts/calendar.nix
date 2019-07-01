@@ -33,7 +33,7 @@ let
           Defaults to UTF-8.
         '';
       };
-    };                  
+    };
   };
 
   remoteModule = types.submodule {

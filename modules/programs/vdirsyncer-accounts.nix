@@ -130,7 +130,7 @@ in
 
     userAgent = mkOption {
       type = types.nullOr types.str;
-      default = null;  
+      default = null;
       description = ''
         The user agent to report to the server.
         Defaults to <literal>"vdirsyncer"</literal>.
@@ -177,7 +177,7 @@ in
       description = ''
         A command that prints the OAuth credentials to standard
         output.
-        
+
         OAuth credentials, obtained from the Google API Manager.</para>
 
         <para> See
@@ -197,7 +197,7 @@ in
         for more information.
       '';
     };
-    
+
     clientSecretCommand = mkOption {
       type = types.nullOr (types.listOf types.str);
       default = null;
@@ -205,7 +205,7 @@ in
       description = ''
         A command that prints the OAuth credentials to standard
         output.
-        
+
         OAuth credentials, obtained from the Google API Manager.</para>
 
         <para> See
