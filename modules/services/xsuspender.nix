@@ -162,7 +162,7 @@ in
         };
       in
         {
-          default = mkSection cfg.defaults;
+          Default = mkSection cfg.defaults;
         }
         // mapAttrs (_: mkSection) cfg.rules;
 
