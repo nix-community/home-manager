@@ -150,12 +150,16 @@ in
     services.xsuspender.iniContent =
       let
         mkSection = values: filterAttrs (_: v: v != null) {
+          match_wm_class_contains = values.matchWmClassContains;
+          match_wm_class_group_contains = values.matchWmClassGroupContains;
+          match_wm_name_contains = values.matchWmNameContains;
           suspend_delay = values.suspendDelay;
           resume_every = values.resumeEvery;
           resume_for = values.resumeFor;
           exec_suspend = values.execSuspend;
           exec_resume = values.execResume;
           send_signals = values.sendSignals;
+          suspend_subtree_pattern = values.suspendSubtreePattern;
           only_on_battery = values.onlyOnBattery;
           auto_suspend_on_battery = values.autoSuspendOnBattery;
           downclock_on_battery = values.downclockOnBattery;
