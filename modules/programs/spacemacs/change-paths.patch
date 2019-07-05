@@ -1,0 +1,92 @@
+diff --git a/core/core-configuration-layer.el b/core/core-configuration-layer.el
+index 4e373e590..2f592be2a 100644
+--- a/core/core-configuration-layer.el
++++ b/core/core-configuration-layer.el
+@@ -28,7 +28,7 @@
+   "Configuration layer templates directory.")
+ 
+ (defconst configuration-layer-directory
+-  (expand-file-name (concat spacemacs-start-directory "layers/"))
++  (expand-file-name (concat spacemacs-immutable-directory "layers/"))
+   "Spacemacs contribution layers base directory.")
+ 
+ (defconst configuration-layer-private-directory
+diff --git a/core/core-dotspacemacs.el b/core/core-dotspacemacs.el
+index dba0489c1..b67c0f7ac 100644
+--- a/core/core-dotspacemacs.el
++++ b/core/core-dotspacemacs.el
+@@ -36,14 +36,7 @@ SPACEMACSDIR environment variable. If neither of these
+ directories exist, this variable will be nil.")
+ 
+   (defvar dotspacemacs-filepath
+-    (let ((spacemacs-dir-init (when dotspacemacs-directory
+-                                 (concat dotspacemacs-directory
+-                                         "init.el"))))
+-      (cond
+-       (env-init)
+-       ((file-exists-p default-init) default-init)
+-       ((and dotspacemacs-directory (file-exists-p spacemacs-dir-init)) spacemacs-dir-init)
+-       (t default-init)))
++    "@spacemacs@"
+     "Filepath to the installed dotfile. If SPACEMACSDIR is given
+ then SPACEMACSDIR/init.el is used. Otherwise, if ~/.spacemacs
+ exists, then this is used. If ~/.spacemacs does not exist, then
+diff --git a/core/core-load-paths.el b/core/core-load-paths.el
+index 3e17d4ec4..89ec5a6e0 100644
+--- a/core/core-load-paths.el
++++ b/core/core-load-paths.el
+@@ -20,7 +20,7 @@
+   user-emacs-directory
+   "Spacemacs start directory.")
+ (defconst spacemacs-core-directory
+-  (expand-file-name (concat spacemacs-start-directory "core/"))
++  (expand-file-name (concat spacemacs-immutable-directory "core/"))
+   "Spacemacs core directory.")
+ (defconst spacemacs-info-directory
+   (expand-file-name (concat spacemacs-core-directory "info/"))
+@@ -48,16 +48,16 @@
+   (expand-file-name (concat spacemacs-cache-directory "auto-save/"))
+   "Spacemacs auto-save directory")
+ (defconst spacemacs-docs-directory
+-  (expand-file-name (concat spacemacs-start-directory "doc/"))
++  (expand-file-name (concat spacemacs-immutable-directory "doc/"))
+   "Spacemacs documentation directory.")
+ (defconst spacemacs-news-directory
+-  (expand-file-name (concat spacemacs-start-directory "news/"))
++  (expand-file-name (concat spacemacs-immutable-directory "news/"))
+   "Spacemacs News directory.")
+ (defconst spacemacs-assets-directory
+-  (expand-file-name (concat spacemacs-start-directory "assets/"))
++  (expand-file-name (concat spacemacs-immutable-directory "assets/"))
+   "Spacemacs assets directory.")
+ (defconst spacemacs-test-directory
+-  (expand-file-name (concat spacemacs-start-directory "tests/"))
++  (expand-file-name (concat spacemacs-immutable-directory "tests/"))
+   "Spacemacs tests directory.")
+ 
+ (defconst user-home-directory
+@@ -80,4 +80,3 @@
+ ;; themes
+ (add-to-list 'custom-theme-load-path (concat spacemacs-core-directory
+                                              "libs/spacemacs-theme/"))
+-
+diff --git a/init.el b/init.el
+index e2aaff131..154130fb1 100644
+--- a/init.el
++++ b/init.el
+@@ -23,11 +23,13 @@
+     (error (concat "Your version of Emacs (%s) is too old. "
+                    "Spacemacs requires Emacs version %s or above.")
+            emacs-version spacemacs-emacs-min-version)
+-  (load-file (concat (file-name-directory load-file-name)
++  (defvar spacemacs-immutable-directory
++    (file-name-directory load-file-name))
++  (load-file (concat spacemacs-immutable-directory
+                      "core/core-load-paths.el"))
+   (require 'core-spacemacs)
+   (spacemacs/init)
+-  (configuration-layer/sync)
++  (configuration-layer/sync 'no-install)
+   (spacemacs-buffer/display-startup-note)
+   (spacemacs/setup-startup-hook)
+   (require 'server)
