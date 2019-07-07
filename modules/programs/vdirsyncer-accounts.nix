@@ -138,8 +138,8 @@ in
     };
 
     postHook = mkOption {
-      type = types.nullOr types.str;
-      default = null;
+      type = types.lines;
+      default = "";
       description = ''
         Command to call for each item creation and modification.
         The command will be called with the path of the new/updated
@@ -158,18 +158,6 @@ in
       '';
     };
 
-    clientId = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      description = ''
-        OAuth credentials, obtained from the Google API Manager.</para>
-
-        <para> See
-        <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#google"/>
-        for more information.
-      '';
-    };
-
     clientIdCommand = mkOption {
       type = types.nullOr (types.listOf types.str);
       default = null;
@@ -178,18 +166,6 @@ in
         A command that prints the OAuth credentials to standard
         output.
 
-        OAuth credentials, obtained from the Google API Manager.</para>
-
-        <para> See
-        <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#google"/>
-        for more information.
-      '';
-    };
-
-    clientSecret = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      description = ''
         OAuth credentials, obtained from the Google API Manager.</para>
 
         <para> See

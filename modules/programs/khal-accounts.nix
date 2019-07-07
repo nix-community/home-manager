@@ -23,7 +23,4 @@ with lib;
       '';
     };
   };
-
-  config = mkIf config.khal.enable {
-  };
 }

@@ -65,12 +65,6 @@ let
         '';
       };
 
-      password = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "Password for authentication.";
-      };
-
       passwordCommand = mkOption {
         type = types.nullOr (types.listOf types.str);
         default = null;
@@ -80,17 +74,6 @@ let
           output.
         '';
       };
-
-      passwordPrompt = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        example = "Password for CalDAV";
-        description = ''
-          Show a prompt for the password with the specified
-          text.
-        '';
-      };
-
     };
   };
 

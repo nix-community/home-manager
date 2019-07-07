@@ -26,9 +26,9 @@ let
   filterAttrs (_: v: v != null)
   ((getAttrs [ "type" "fileExt" "encoding" ] a.local) // {
     path = a.local.path;
-    postHook = if a.vdirsyncer == null
-      then null
-      else a.vdirsyncer.postHook;
+    postHook =
+      pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook
+      + "/bin/post-hook";
   });
 
   remoteStorage = a:
@@ -36,11 +36,8 @@ let
   ((getAttrs [
     "type"
     "url"
-    "userName"
     "userNameCommand"
-    "password"
     "passwordCommand"
-    "passwordPrompt"
   ] a.remote) //
   (if a.vdirsyncer == null
    then {}
@@ -52,9 +49,7 @@ let
     "authCert"
     "userAgent"
     "tokenFile"
-    "clientId"
     "clientIdCommand"
-    "clientSecret"
     "clientSecretCommand"
     "timeRange"
    ] a.vdirsyncer));
