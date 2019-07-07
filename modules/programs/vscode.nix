@@ -6,6 +6,12 @@ let
 
   cfg = config.programs.vscode;
 
+  configFilePath =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "Library/Application Support/Code/User/settings.json"
+    else
+      "${config.xdg.configHome}/Code/User/settings.json";
+
 in
 
 {
@@ -23,8 +29,8 @@ in
           }
         '';
         description = ''
-          Configuration written to
-          <filename>~/.config/Code/User/settings.json</filename>.
+          Configuration written to Visual Studio Code's
+          <filename>settings.json</filename>.
         '';
       };
 
@@ -47,7 +53,6 @@ in
       })
     ];
 
-    xdg.configFile."Code/User/settings.json".text =
-      builtins.toJSON cfg.userSettings;
+    home.file."${configFilePath}".text = builtins.toJSON cfg.userSettings;
   };
 }
