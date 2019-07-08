@@ -211,29 +211,10 @@ in
       else throw "Unrecognized storage type: ${t}";
 
       assertStorage = n: v:
-      [
-        {
-          assertion = length (filter (x: x) [
-                                (hasAttr "password" v)
-                                (hasAttr "passwordCommand" v)
-                                (hasAttr "passwordPrompt" v)
-                              ]) < 2;
-          message = ''
-            Only one of password, passwordCommand, passwordPrompt can be set
-            for storage ${n}.
-          '';
-        }
-
-        {
-          assertion = !(hasAttr "userName" v && hasAttr "userNameCommand" v);
-          message = ''
-            Only one of userName, userNameCommand can be set
-            for storage ${n}.
-          '';
-        }
-      ] ++
-      (let allowed = allowedOptions v.type ++ (requiredOptions v.type);
-      in mapAttrsToList (
+      let
+        allowed = allowedOptions v.type ++ (requiredOptions v.type);
+      in
+        mapAttrsToList (
         a: v': [
           {
             assertion = (elem a allowed);
@@ -251,7 +232,7 @@ in
                   option ${a} is not set.
                 '';
               }]) required)
-      ) (removeAttrs v ["type" "_module"]));
+      ) (removeAttrs v ["type" "_module"]);
 
       storageAssertions = flatten (mapAttrsToList assertStorage localStorages)
                           ++ flatten (mapAttrsToList assertStorage remoteStorages);
