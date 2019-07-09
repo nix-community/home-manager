@@ -11,6 +11,7 @@ let
       path = mkOption {
         type = types.str;
         default = "${cfg.basePath}/${name}";
+        defaultText = "‹accounts.contact.basePath›/‹name›";
         description = "The path of the storage.";
       };
 
@@ -46,7 +47,7 @@ let
       url = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = "The url of the storage.";
+        description = "The URL of the storage.";
       };
 
       userName = mkOption {
@@ -55,23 +56,21 @@ let
         description = "User name for authentication.";
       };
 
-      userNameCommand = mkOption {
-        type = types.nullOr (types.listOf types.str);
-        default = null;
-        example = [ "~/get-username.sh" ];
-        description = ''
-          A command that prints the user name to standard
-          output.
-        '';
-      };
+      # userNameCommand = mkOption {
+      #   type = types.nullOr (types.listOf types.str);
+      #   default = null;
+      #   example = [ "~/get-username.sh" ];
+      #   description = ''
+      #     A command that prints the user name to standard output.
+      #   '';
+      # };
 
       passwordCommand = mkOption {
         type = types.nullOr (types.listOf types.str);
         default = null;
         example = [ "pass" "caldav" ];
         description = ''
-          A command that prints the password to standard
-          output.
+          A command that prints the password to standard output.
         '';
       };
     };
@@ -88,7 +87,6 @@ let
         '';
       };
 
-
       primary = mkOption {
         type = types.bool;
         default = false;
@@ -101,14 +99,13 @@ let
       primaryCollection = mkOption {
         type = types.str;
         description = ''
-          The primary collection of the account. Required when an account has
-          multiple collections.
+          The primary collection of the account. Required when an
+          account has multiple collections.
         '';
       };
 
       local = mkOption {
         type = types.nullOr (localModule name);
-
         default = null;
         description = ''
           Local configuration for the calendar.
@@ -117,7 +114,6 @@ let
 
       remote = mkOption {
         type = types.nullOr remoteModule;
-
         default = null;
         description = ''
           Remote configuration for the calendar.
@@ -125,12 +121,9 @@ let
       };
     };
 
-    config = mkMerge [
-      {
-        name = name;
-        khal.type = mkOptionDefault null;
-      }
-    ];
+    config = {
+      name = name;
+    };
   };
 
 in
@@ -139,10 +132,14 @@ in
   options.accounts.calendar = {
     basePath = mkOption {
       type = types.str;
-      default = "${config.home.homeDirectory}/.calendars/";
-      defaultText = "$HOME/.calendars";
+      apply = p:
+        if hasPrefix "/" p
+        then p
+        else "${config.home.homeDirectory}/${p}";
       description = ''
-        The base directory in which to save calendars.
+        The base directory in which to save calendars. May be a
+        relative path, in which case it is relative the home
+        directory.
       '';
     };
 
@@ -168,7 +165,7 @@ in
         [{
           assertion = length primaries <= 1;
           message =
-            "Must have at most one primary calendar accounts but found "
+            "Must have at most one primary calendar account but found "
             + toString (length primaries)
             + ", namely "
             + concatStringsSep ", " primaries;
