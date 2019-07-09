@@ -11,6 +11,7 @@ let
       path = mkOption {
         type = types.str;
         default = "${cfg.basePath}/${name}";
+        defaultText = "‹accounts.contact.basePath›/‹name›";
         description = "The path of the storage.";
       };
 
@@ -46,7 +47,7 @@ let
       url = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = "The url of the storage.";
+        description = "The URL of the storage.";
       };
 
       userName = mkOption {
@@ -55,23 +56,21 @@ let
         description = "User name for authentication.";
       };
 
-      userNameCommand = mkOption {
-        type = types.nullOr (types.listOf types.str);
-        default = null;
-        example = [ "~/get-username.sh" ];
-        description = ''
-          A command that prints the user name to standard
-          output.
-        '';
-      };
+      # userNameCommand = mkOption {
+      #   type = types.nullOr (types.listOf types.str);
+      #   default = null;
+      #   example = [ "~/get-username.sh" ];
+      #   description = ''
+      #     A command that prints the user name to standard output.
+      #   '';
+      # };
 
       passwordCommand = mkOption {
         type = types.nullOr (types.listOf types.str);
         default = null;
         example = [ "pass" "caldav" ];
         description = ''
-          A command that prints the password to standard
-          output.
+          A command that prints the password to standard output.
         '';
       };
     };
@@ -105,11 +104,9 @@ let
       };
     };
 
-    config = mkMerge [
-      {
-        name = name;
-      }
-    ];
+    config = {
+      name = name;
+    };
   };
 
 in
@@ -118,10 +115,14 @@ in
   options.accounts.contact = {
     basePath = mkOption {
       type = types.str;
-      default = "${config.home.homeDirectory}/.contacts/";
-      defaultText = "$HOME/.contacts";
+      apply = p:
+        if hasPrefix "/" p
+        then p
+        else "${config.home.homeDirectory}/${p}";
       description = ''
-        The base directory in which to save contacts.
+        The base directory in which to save contacts. May be a
+        relative path, in which case it is relative the home
+        directory.
       '';
     };
 
@@ -134,7 +135,5 @@ in
       default = {};
       description = "List of contacts.";
     };
-  };
-  config = mkIf (cfg.accounts != {}) {
   };
 }
