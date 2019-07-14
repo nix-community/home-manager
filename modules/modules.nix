@@ -124,6 +124,7 @@ let
     (loadModule ./services/syncthing.nix { })
     (loadModule ./services/taffybar.nix { })
     (loadModule ./services/tahoe-lafs.nix { })
+    (loadModule ./services/taskwarrior-sync.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/udiskie.nix { })
     (loadModule ./services/unclutter.nix { })
     (loadModule ./services/window-managers/awesome.nix { })
