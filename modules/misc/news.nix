@@ -1260,6 +1260,14 @@ in
           A new module is available: 'services.password-store-sync'.
         '';
       }
+
+      {
+        time = "2019-11-29T22:46:49+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.unison'.
+        '';
+      }
     ];
   };
 }
