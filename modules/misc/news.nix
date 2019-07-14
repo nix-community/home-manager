@@ -1137,6 +1137,14 @@ in
           A new module is available: 'programs.broot'.
         '';
       }
+
+      {
+        time = "2019-07-17T19:30:29+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.taskwarrior-sync'.
+        '';
+      }
     ];
   };
 }
