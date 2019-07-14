@@ -126,6 +126,7 @@ let
     (loadModule ./services/tahoe-lafs.nix { })
     (loadModule ./services/udiskie.nix { })
     (loadModule ./services/unclutter.nix { })
+    (loadModule ./services/unison.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/window-managers/awesome.nix { })
     (loadModule ./services/window-managers/i3.nix { })
     (loadModule ./services/window-managers/xmonad.nix { })
