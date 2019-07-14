@@ -1245,6 +1245,21 @@ in
           A new module is available: 'services.spotifyd'.
         '';
       }
+
+      {
+        time = "2019-11-29T21:18:48+00:00";
+        message = ''
+          A new module is available: 'programs.password-store'.
+        '';
+      }
+
+      {
+        time = "2019-11-29T21:18:48+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.password-store-sync'.
+        '';
+      }
     ];
   };
 }
