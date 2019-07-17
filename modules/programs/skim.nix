@@ -107,7 +107,7 @@ in
           SKIM_CTRL_T_COMMAND = cfg.fileWidgetCommand;
           SKIM_CTRL_T_OPTS = cfg.fileWidgetOptions;
           SKIM_DEFAULT_COMMAND = cfg.defaultCommand;
-          SKIM_DEFAULT_OPTS = cfg.defaultOptions;
+          SKIM_DEFAULT_OPTIONS = cfg.defaultOptions;
         }
       );
 
