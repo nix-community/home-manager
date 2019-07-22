@@ -112,6 +112,7 @@ let
     (loadModule ./services/mbsync.nix { })
     (loadModule ./services/mpd.nix { })
     (loadModule ./services/mpdris2.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./services/muchsync.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/network-manager-applet.nix { })
     (loadModule ./services/nextcloud-client.nix { })
     (loadModule ./services/owncloud-client.nix { })
