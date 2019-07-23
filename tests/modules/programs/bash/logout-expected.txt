@@ -1,0 +1,4 @@
+# -*- mode: sh -*-
+
+clear-console
+
