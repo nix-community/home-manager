@@ -215,6 +215,12 @@ in
         description = "Environment variables that will be set for zsh session.";
       };
 
+      initExtraBeforeCompInit = mkOption {
+        default = "";
+        type = types.lines;
+        description = "Extra commands that should be added to <filename>.zshrc</filename> before compinit.";
+      };
+
       initExtra = mkOption {
         default = "";
         type = types.lines;
@@ -340,6 +346,8 @@ in
         ''}
 
         ${localVarsStr}
+
+        ${cfg.initExtraBeforeCompInit}
 
         ${concatStrings (map (plugin: ''
           path+="$HOME/${pluginsDir}/${plugin.name}"
