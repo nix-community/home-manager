@@ -230,7 +230,81 @@ home-manager.useUserPackages = true;
   <title>nix-darwin module</title>
 
   <para>
-   To be done.
+   Home Manager provides a module that allows you to prepare user
+   environments directly from the nix-darwin configuration file, which often is
+   more convenient than using the <command>home-manager</command> tool.
   </para>
+
+  <para>
+   To make the NixOS module available for use you must <option>import</option>
+   it into your system configuration. This is most conveniently done by adding
+   a Home Manager channel, for example
+  </para>
+
+<screen>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --update</userinput>
+</screen>
+
+  <para>
+   if you are following Nixpkgs master or an unstable channel and
+  </para>
+
+<screen>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.03.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --update</userinput>
+</screen>
+
+  <para>
+   if you follow a Nixpkgs version 19.03 channel.
+  </para>
+
+  <para>
+   It is then possible to add
+  </para>
+
+<programlisting language="nix">
+imports = [ &lt;home-manager/nix-darwin&gt; ];
+</programlisting>
+
+  <para>
+   to your nix-darwin <filename>configuration.nix</filename> file, which will
+   introduce a new NixOS option called <option>home-manager</option> whose type
+   is an attribute set that maps user names to Home Manager configurations.
+  </para>
+
+  <para>
+   For example, a nix-darwin configuration may include the lines
+  </para>
+
+<programlisting language="nix">
+home-manager.users.eve = { pkgs, ... }: {
+  home.packages = [ pkgs.atool pkgs.httpie ];
+  programs.bash.enable = true;
+};
+</programlisting>
+
+  <para>
+   and after a <command>darwin-rebuild --switch</command> the user eve's
+   environment should include a basic Bash configuration and the packages atool
+   and httpie.
+  </para>
+
+  <note>
+   <para>
+    By default user packages will not be ignored in favor of
+    <option>environment.systemPackages</option>, but they will be intalled to
+    <option>/etc/profiles/per-user/$USERNAME</option> if
+   </para>
+
+<programlisting language="nix">
+home-manager.useUserPackages = true;
+</programlisting>
+
+   <para>
+    is added to the nix-darwin configuration. This option may become the default
+    value in the future.
+   </para>
+  </note>
  </section>
 </chapter>
