@@ -227,6 +227,12 @@ in
         description = "Extra commands that should be added to <filename>.zshrc</filename>.";
       };
 
+      envExtra = mkOption {
+        default = "";
+        type = types.lines;
+        description = "Extra commands that should be added to <filename>.zshenv</filename>.";
+      };
+
       profileExtra = mkOption {
         default = "";
         type = types.lines;
@@ -293,6 +299,10 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
+    (mkIf (cfg.envExtra != "") {
+      home.file."${relToDotDir ".zshenv"}".text = cfg.envExtra;
+    })
+
     (mkIf (cfg.profileExtra != "") {
       home.file."${relToDotDir ".zprofile"}".text = cfg.profileExtra;
     })
