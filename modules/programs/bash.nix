@@ -123,6 +123,15 @@ in
           interactive shell.
         '';
       };
+
+      logoutExtra = mkOption {
+        default = "";
+        type = types.lines;
+        description = ''
+          Extra commands that should be run when logging out of an
+          interactive shell.
+        '';
+      };
     };
   };
 
@@ -194,6 +203,14 @@ in
 
         ${cfg.bashrcExtra}
       '';
+
+      home.file.".bash_logout" = mkIf (cfg.logoutExtra != "") {
+        text = ''
+          # -*- mode: sh -*-
+
+          ${cfg.logoutExtra}
+        '';
+      };
 
       home.packages =
         optional (cfg.enableAutojump) pkgs.autojump;
