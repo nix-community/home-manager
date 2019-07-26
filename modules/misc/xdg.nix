@@ -92,10 +92,13 @@ in
     })
 
     {
-      home.file = mkMerge [ cfg.configFile cfg.dataFile ];
-      home.activation.xdgCreateCache = dag.entryAfter [ "writeBoundary" ] ''
-        $DRY_RUN_CMD mkdir $VERBOSE_ARG -m0700 -p "${config.xdg.cacheHome}"
-      '';
+      home.file = mkMerge [
+        cfg.configFile
+        cfg.dataFile
+        {
+          "${config.xdg.cacheHome}/.keep".text = "";
+        }
+      ];
     }
   ];
 }
