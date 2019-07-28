@@ -34,7 +34,6 @@ in
     systemd.user.services.taskwarrior-sync = {
       Unit = {
         Description = "Taskwarrior sync";
-        PartOf = [ "network-online.target" ];
       };
       Service = {
         CPUSchedulingPolicy = "idle";

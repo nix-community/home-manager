@@ -83,7 +83,6 @@ in
     systemd.user.services.mbsync = {
       Unit = {
         Description = "mbsync mailbox synchronization";
-        PartOf = [ "network-online.target" ];
       };
 
       Service = {
