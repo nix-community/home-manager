@@ -20,6 +20,10 @@ let
     findSingle (a: a.primary) null null
     (mapAttrsToList (n: v: v // {name= n;}) khalAccounts);
 
+  toKeyValueListIfDefined = attrs:
+    mapAttrsToList (n: v: "${n} = ${toString v}")
+      (filterAttrs (_: v: !isNull v) attrs);
+
   genCalendarStr = name: value:
     concatStringsSep "\n" (
       [
@@ -27,7 +31,7 @@ let
         "path = ${value.local.path + "/" + (optionalString (value.khal.type == "discover") value.khal.glob)}"
       ]
       ++ optional (value.khal.readOnly) "readonly = True"
-      ++ optional (!isNull value.khal.type) "type = ${value.khal.type}"
+      ++ toKeyValueListIfDefined (getAttrs [ "type" "color" "priority" ] value.khal)
       ++ ["\n"]
     );
 
@@ -52,7 +56,6 @@ in
           default = optionalAttrs (!isNull primaryAccount) {
             default_calendar = if isNull primaryAccount.primaryCollection then primaryAccount.name else primaryAccount.primaryCollection;
           };
-
           locale = {
             timeformat = "%H:%M";
             dateformat = "%Y-%m-%d";
