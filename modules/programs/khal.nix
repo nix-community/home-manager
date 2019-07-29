@@ -18,6 +18,11 @@ let
 
   primaryAccount = findSingle (a: a.primary) null null
     (mapAttrsToList (n: v: v // {name= n;}) khalAccounts);
+
+  toKeyValueListIfDefined = attrs:
+    mapAttrsToList (n: v: "${n} = ${toString v}")
+      (filterAttrs (_: v: !isNull v) attrs);
+
 in
 
 {
@@ -37,8 +42,8 @@ in
         ''[[${name}]]''
         ''path = ${value.local.path + "/" + (optionalString (value.khal.type == "discover") value.khal.glob)}''
       ]
-      ++ optional (value.khal.readOnly) "readonly = True"
-      ++ optional (!isNull value.khal.type) "type = ${value.khal.type}"
+      ++ optional value.khal.readOnly "readonly = True"
+      ++ toKeyValueListIfDefined (getAttrs [ "type" "color" "priority" ] value.khal)
       ++ ["\n"]
       )
       ) khalAccounts)
