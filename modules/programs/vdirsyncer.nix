@@ -36,7 +36,8 @@ let
   ((getAttrs [
     "type"
     "url"
-    "userNameCommand"
+    "userName"
+    #"userNameCommand"
     "passwordCommand"
   ] a.remote) //
   (if a.vdirsyncer == null
