@@ -18,6 +18,15 @@ in
   options = {
     programs.vscode = {
       enable = mkEnableOption "Visual Studio Code";
+      
+      package = mkOption {
+        type = types.package;
+        default = pkgs.vscode;
+        example = literalExample "pkgs.vscodium";
+        description = ''
+          Version of Visual Studio Code to install
+        '';
+      };
 
       userSettings = mkOption {
         type = types.attrs;
@@ -47,12 +56,16 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [
-      (pkgs.vscode-with-extensions.override {
-        vscodeExtensions = cfg.extensions;
-      })
-    ];
+    home.packages = [ cfg.package ];
 
     home.file."${configFilePath}".text = builtins.toJSON cfg.userSettings;
+    #adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
+    home.activation.vscExtensions = dag.entryAfter ["installPackages"] ''
+        EXT_DIR=${config.home.homeDirectory}/.vscode/extensions
+        $DRY_RUN_CMD mkdir -p $EXT_DIR
+        for x in ${lib.concatMapStringsSep " " toString cfg.extensions}; do
+            $DRY_RUN_CMD ln -sf $x/share/vscode/extensions/* $EXT_DIR/
+        done
+    '';
   };
 }
