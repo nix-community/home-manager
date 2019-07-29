@@ -5,6 +5,7 @@ with lib;
 let
 
   cfg = config.programs.vscode;
+  dag = config.lib.dag;
 
   configFilePath =
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -64,7 +65,7 @@ in
         EXT_DIR=${config.home.homeDirectory}/.vscode/extensions
         $DRY_RUN_CMD mkdir -p $EXT_DIR
         for x in ${lib.concatMapStringsSep " " toString cfg.extensions}; do
-            $DRY_RUN_CMD ln -sf $x/share/vscode/extensions/* $EXT_DIR/
+            $DRY_RUN_CMD ln -s $x/share/vscode/extensions/* $EXT_DIR/
         done
     '';
   };
