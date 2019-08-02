@@ -10,7 +10,7 @@ in
       xsession.numlock.enable = mkEnableOption "Numlock";
     };
 
-    config = mkIf (cfg != null) {
+    config = mkIf (cfg.enable) {
 
       xsession.profileExtra = ''
         ${pkgs.numlockx}/bin/numlockx
