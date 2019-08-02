@@ -1152,6 +1152,14 @@ in
           A new module is available: 'programs.kakoune'.
         '';
       }
+
+      {
+        time = "2019-08-02T09:07:43+00:00";
+        message = ''
+          A new module is available: 'services.hound'.
+        '';
+      }
+
     ];
   };
 }
