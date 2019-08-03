@@ -33,6 +33,7 @@ import nmt {
       getmail = ./modules/programs/getmail.nix;
       i3-keybindings = ./modules/services/window-managers/i3-keybindings.nix;
     }
+    // import ./modules/misc/nix-channels
     // import ./modules/misc/pam
     // import ./modules/misc/xsession
     // import ./modules/systemd

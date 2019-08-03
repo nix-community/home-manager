@@ -1,0 +1,2 @@
+https://nixos.org/channels/nixos-19.03 nixos
+https://nixos.org/channels/nixos-unstable unstable

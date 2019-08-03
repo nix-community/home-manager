@@ -27,6 +27,7 @@ let
     (loadModule ./misc/gtk.nix { })
     (loadModule ./misc/lib.nix { })
     (loadModule ./misc/news.nix { })
+    (loadModule ./misc/nix-channels.nix { })
     (loadModule ./misc/nixpkgs.nix { })
     (loadModule ./misc/pam.nix { })
     (loadModule ./misc/qt.nix { })
