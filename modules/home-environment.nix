@@ -232,6 +232,20 @@ in
       '';
     };
 
+    home.activationExtra = mkOption {
+      default = "";
+      type = types.lines;
+      description = ''
+        Custom activation scripts for the home environment.
+        </para><para>
+        Any script should respect the <varname>DRY_RUN</varname>
+        variable, if it is set then no actual action should be taken.
+        The variable <varname>DRY_RUN_CMD</varname> is set to
+        <code>echo</code> if dry run is enabled. Thus, many cases you
+        can use the idiom <code>$DRY_RUN_CMD rm -rf /</code>.
+      '';
+    };
+
     home.activationPackage = mkOption {
       internal = true;
       type = types.package;
@@ -341,6 +355,8 @@ in
           $DRY_RUN_CMD nix-env -i ${cfg.path}
         ''
     );
+
+    home.activation.activationExtra = dag.entryAfter ["installPackages"] cfg.activationExtra;
 
     home.activationPackage =
       let
