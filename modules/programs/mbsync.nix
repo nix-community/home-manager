@@ -20,7 +20,7 @@ let
     }
     //
     optionalAttrs (tls.enable && tls.certificatesFile != null) {
-      CertificateFile = tls.certificatesFile;
+      CertificateFile = toString tls.certificatesFile;
     };
 
   masterSlaveMapping = {
