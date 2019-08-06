@@ -22,6 +22,17 @@ with lib;
       '';
     };
 
+    tls.fingerprint = mkOption {
+      type = types.nullOr (types.strMatching "([[:alnum:]]{2}\:)+[[:alnum:]]{2}");
+      default = null;
+      example = "my:SH:a2:56:ha:sh";
+      description = ''
+        Fingerprint of a trusted TLS certificate.
+        The fingerprint can be obtained by executing
+        <command>msmtp --serverinfo --tls --tls-certcheck=off</command>.
+      '';
+    };
+
     extraConfig = mkOption {
       type = types.attrsOf types.str;
       default = { };

@@ -24,6 +24,9 @@ let
           tls_starttls = onOff smtp.tls.useStartTls;
           tls_trust_file = smtp.tls.certificatesFile;
         }
+        // optionalAttrs (msmtp.tls.fingerprint != null) {
+          tls_fingerprint = msmtp.tls.fingerprint;
+        }
         // optionalAttrs (smtp.port != null) {
           port = toString smtp.port;
         }
