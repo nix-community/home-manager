@@ -76,7 +76,7 @@ def get_services(dir)
 end
 
 def get_service_files(dir)
-  Dir.chdir(dir) { Dir['*.service'] }
+  Dir.chdir(dir) { Dir['*.{service,socket}'] }
 end
 
 def get_changed_services(dir_a, dir_b, services)
