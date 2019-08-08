@@ -7,7 +7,7 @@ let
 in
   {
     options = {
-      xsession.numlock.enable = mkEnableOption "Numlock";
+      xsession.numlock.enable = mkEnableOption "Num Lock";
     };
 
     config = mkIf (cfg.enable) {
