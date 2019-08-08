@@ -294,7 +294,7 @@ in
     (mkIf cfg.oh-my-zsh.enable {
       home.file."${relToDotDir ".zshenv"}".text = ''
         ZSH="${pkgs.oh-my-zsh}/share/oh-my-zsh";
-        ZSH_CACHE_DIR="''${XDG_CACHE_HOME:-''$HOME/.cache}/oh-my-zsh";
+        ZSH_CACHE_DIR="${config.xdg.cacheHome}/oh-my-zsh";
       '';
     })
 
@@ -391,6 +391,10 @@ in
       # calling it twice causes sight start up slowdown
       # as all $fpath entries will be traversed again.
       programs.zsh.enableCompletion = mkForce false;
+
+      # Make sure we create a cache directory since some plugins expect it to exist
+      # See: https://github.com/rycee/home-manager/issues/761
+      home.file."${config.xdg.cacheHome}/oh-my-zsh/.keep".text = "";
     })
 
     (mkIf (cfg.plugins != []) {
