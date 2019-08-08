@@ -21,6 +21,8 @@ let
           realname = realName;
           sendmail_command =
             optionalString (alot.sendMailCommand != null) alot.sendMailCommand;
+          sent_box = "maildir" + "://" + maildir.absPath + "/" + folders.sent;
+          draft_box = "maildir" + "://"+ maildir.absPath + "/" + folders.drafts;
         }
         // optionalAttrs (aliases != []) {
           aliases = concatStringsSep "," aliases;
