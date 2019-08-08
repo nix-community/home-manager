@@ -12,8 +12,21 @@ in
 
     config = mkIf cfg.enable {
 
-      xsession.profileExtra = ''
-        ${pkgs.numlockx}/bin/numlockx
-      '';
+      systemd.user.services.numlockx = {
+        Unit = {
+          Description = "NumLockX";
+          After = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session.target" ];
+        };
+
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.numlockx}/bin/numlockx";
+        };
+
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+      };
     };
   }
