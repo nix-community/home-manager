@@ -23,6 +23,14 @@ let
     };
   });
 
+  serviceEnvironment =
+    optionalAttrs (cfg.backupFileExtension != null) {
+      HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
+    } //
+    optionalAttrs cfg.verbose {
+      VERBOSE = "1";
+    };
+
 in
 
 {
@@ -32,6 +40,17 @@ in
         installation of user packages through the
         <option>users.users.&lt;name?&gt;.packages</option> option.
       '';
+
+      backupFileExtension = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "backup";
+        description = ''
+          On activation move existing files to new path rather than fail.
+        '';
+      };
+
+      verbose = mkEnableOption "verbose output on activation";
 
       users = mkOption {
         type = types.attrsOf hmModule;
@@ -69,6 +88,8 @@ in
           wantedBy = [ "multi-user.target" ];
           wants = [ "nix-daemon.socket" ];
           after = [ "nix-daemon.socket" ];
+
+          environment = serviceEnvironment;
 
           serviceConfig = {
             User = usercfg.home.username;
