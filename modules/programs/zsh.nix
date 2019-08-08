@@ -346,7 +346,13 @@ in
           fpath+="$HOME/${pluginsDir}/${plugin.name}"
         '') cfg.plugins)}
 
-        ${optionalString cfg.enableCompletion "autoload -U compinit && compinit"}
+        # Oh-My-Zsh calls compinit during initialization,
+        # calling it twice causes sight start up slowdown
+        # as all $fpath entries will be traversed again.
+        ${optionalString (cfg.enableCompletion && !cfg.oh-my-zsh.enable)
+          "autoload -U compinit && compinit"
+        }
+
         ${optionalString cfg.enableAutosuggestions
           "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
         }
@@ -396,11 +402,6 @@ in
     }
 
     (mkIf cfg.oh-my-zsh.enable {
-      # Oh-My-Zsh calls compinit during initialization,
-      # calling it twice causes sight start up slowdown
-      # as all $fpath entries will be traversed again.
-      programs.zsh.enableCompletion = mkForce false;
-
       # Make sure we create a cache directory since some plugins expect it to exist
       # See: https://github.com/rycee/home-manager/issues/761
       home.file."${config.xdg.cacheHome}/oh-my-zsh/.keep".text = "";
