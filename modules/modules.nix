@@ -33,7 +33,7 @@ let
     (loadModule ./misc/submodule-support.nix { })
     (loadModule ./misc/version.nix { })
     (loadModule ./misc/xdg.nix { })
-    (loadModule ./numlock.nix { })
+    (loadModule ./numlock.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/afew.nix { })
     (loadModule ./programs/alacritty.nix { })
     (loadModule ./programs/alot.nix { })
