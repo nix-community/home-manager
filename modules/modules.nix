@@ -98,6 +98,7 @@ let
     (loadModule ./services/blueman-applet.nix { })
     (loadModule ./services/compton.nix { })
     (loadModule ./services/dunst.nix { })
+    (loadModule ./services/dwm-status.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/emacs.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/flameshot.nix { })
     (loadModule ./services/getmail.nix { condition = hostPlatform.isLinux; })
