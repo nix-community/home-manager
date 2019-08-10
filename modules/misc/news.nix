@@ -1168,6 +1168,14 @@ in
           A new module is available: 'services.muchsync'.
         '';
       }
+
+      {
+        time = "2019-08-18T14:22:41+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.dwm-status'.
+        '';
+      }
     ];
   };
 }
