@@ -111,6 +111,13 @@ in
         description = "The package to use for the neovim binary.";
       };
 
+      finalPackage = mkOption {
+        type = types.package;
+        visible = false;
+        readOnly = true;
+        description = "Resulting customized neovim package.";
+      };
+
       configure = mkOption {
         type = types.attrs;
         default = {};
@@ -136,13 +143,13 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [
-      (pkgs.wrapNeovim cfg.package {
-        inherit (cfg)
-          extraPython3Packages withPython3
-          extraPythonPackages withPython
-          withNodeJs withRuby viAlias vimAlias configure;
-      })
-    ];
+    home.packages = [ cfg.finalPackage ];
+
+    programs.neovim.finalPackage = (pkgs.wrapNeovim cfg.package {
+      inherit (cfg)
+        extraPython3Packages withPython3
+        extraPythonPackages withPython
+        withNodeJs withRuby viAlias vimAlias configure;
+    });
   };
 }
