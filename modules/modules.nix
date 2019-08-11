@@ -120,7 +120,7 @@ let
     (loadModule ./services/redshift.nix { })
     (loadModule ./services/rsibreak.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/screen-locker.nix { })
-    (loadModule ./services/slack.nix { })
+    (loadModule ./services/slack.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/stalonetray.nix { })
     (loadModule ./services/status-notifier-watcher.nix { })
     (loadModule ./services/syncthing.nix { })
