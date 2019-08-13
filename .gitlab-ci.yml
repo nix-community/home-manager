@@ -1,6 +1,18 @@
 image: nixos/nix:latest
 
-pages:
+stages:
+  - test
+  - deploy
+
+Run tests:
+  stage: test
+  script:
+    - nix-shell tests -A run.all
+  only:
+    - master
+
+Deploy manual:
+  stage: deploy
   script:
     - mkdir -p ~/.config/nixpkgs
     - echo '{ manual.html.enable = true; }' > ~/.config/nixpkgs/home.nix
