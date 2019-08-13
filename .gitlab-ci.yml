@@ -24,3 +24,14 @@ Deploy manual:
       - public
   only:
     - master
+
+Deploy NUR:
+  stage: deploy
+  variables:
+    HM_BRANCH: $CI_COMMIT_REF_NAME
+    HM_COMMIT_SHA: $CI_COMMIT_SHA
+  trigger:
+    project: rycee/nur-expressions
+    branch: master
+  only:
+    - release-19.03
