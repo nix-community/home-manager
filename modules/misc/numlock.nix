@@ -23,6 +23,7 @@ in
 
       Service = {
         Type = "oneshot";
+        RemainAfterExit = true;
         ExecStart = "${pkgs.numlockx}/bin/numlockx";
       };
 
