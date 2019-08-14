@@ -102,6 +102,7 @@ in
 
           Service = {
             Type = "oneshot";
+            RemainAfterExit = true;
             ExecStart =
               let
                 args = concatStringsSep " " (
