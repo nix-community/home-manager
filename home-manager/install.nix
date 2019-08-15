@@ -6,6 +6,7 @@ runCommand
     propagatedBuildInputs = [ home-manager ];
     preferLocalBuild = true;
     allowSubstitutes = false;
+    shellHookOnly = true;
     shellHook = ''
       confFile="''${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home.nix"
 
@@ -53,4 +54,7 @@ runCommand
       fi
     '';
   }
-  ""
+  ''
+    echo This derivation is not buildable, instead run it using nix-shell.
+    exit 1
+  ''
