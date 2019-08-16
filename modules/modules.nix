@@ -109,6 +109,7 @@ let
     (loadModule ./services/kdeconnect.nix { })
     (loadModule ./services/keepassx.nix { })
     (loadModule ./services/keybase.nix { })
+    (loadModule ./services/lorri.nix { })
     (loadModule ./services/mbsync.nix { })
     (loadModule ./services/mpd.nix { })
     (loadModule ./services/mpdris2.nix { condition = hostPlatform.isLinux; })
