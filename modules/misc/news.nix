@@ -1160,6 +1160,14 @@ in
           A new module is available: 'services.hound'.
         '';
       }
+
+      {
+        time = "2019-08-17T12:24:58+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.muchsync'.
+        '';
+      }
     ];
   };
 }
