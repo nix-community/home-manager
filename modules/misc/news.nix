@@ -1176,6 +1176,15 @@ in
           A new module is available: 'services.dwm-status'.
         '';
       }
+
+      {
+        time = "2019-08-18T14:35:39+00:00";
+        condition = config.programs.vim.enable;
+        message = ''
+          The 'programs.vim.plugins' option now accepts packages. Specifying them as
+          strings is deprecated.
+        '';
+      }
     ];
   };
 }
