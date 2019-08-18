@@ -42,7 +42,7 @@ in
 
         Service = {
           Environment = "PATH=${config.home.profileDirectory}/bin";
-          ExecStart = "${package}/lib/libexec/kdeconnectd";
+          ExecStart = "${package}/libexec/kdeconnectd";
           Restart = "on-abort";
         };
       };
