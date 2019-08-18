@@ -64,6 +64,13 @@ in
   };
 
   config = mkIf (cfg.users != {}) {
+    warnings =
+      flatten (flip mapAttrsToList cfg.users (user: config:
+        flip map config.warnings (warning:
+          "${user} profile: ${warning}"
+        )
+      ));
+
     assertions =
       flatten (flip mapAttrsToList cfg.users (user: config:
         flip map config.assertions (assertion:
