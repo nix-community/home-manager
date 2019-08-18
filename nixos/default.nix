@@ -15,7 +15,7 @@ let
 
       # The per-user directory inside /etc/profiles is not known by
       # fontconfig by default.
-      fonts.fontconfig.enableProfileFonts =
+      fonts.fontconfig.enable =
         cfg.useUserPackages && config.fonts.fontconfig.enable;
 
       home.username = config.users.users.${name}.name;
