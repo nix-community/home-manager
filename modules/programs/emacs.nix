@@ -36,7 +36,11 @@ in
         default = self: [];
         defaultText = "epkgs: []";
         example = literalExample "epkgs: [ epkgs.emms epkgs.magit ]";
-        description = "Extra packages available to Emacs.";
+        description = ''
+          Extra packages available to Emacs. To get a list of
+          available packages run:
+          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A emacsPackagesNg</command>.
+        '';
       };
 
       overrides = mkOption {
