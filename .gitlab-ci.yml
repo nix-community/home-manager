@@ -7,7 +7,7 @@ stages:
 Run tests:
   stage: test
   script:
-    - nix-shell tests -A run.all
+    - nix-shell tests -A run.files-text
   only:
     - master
 
