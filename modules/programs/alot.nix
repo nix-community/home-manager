@@ -38,11 +38,10 @@ let
             boolStr (signature.showSignature == "attach");
         }
       )
+      ++ [ alot.extraConfig ]
       ++ [ "[[[abook]]]" ]
       ++ mapAttrsToList (n: v: n + "=" + v) alot.contactCompletion
-    )
-    + "\n"
-    + alot.extraConfig;
+    );
 
   configFile =
     let
