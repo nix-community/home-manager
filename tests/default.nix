@@ -35,6 +35,7 @@ import nmt {
     }
     // import ./modules/misc/pam
     // import ./modules/misc/xsession
+    // import ./modules/programs/firefox
     // import ./modules/systemd
   )
   // import ./modules/home-environment

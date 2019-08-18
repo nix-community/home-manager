@@ -45,9 +45,16 @@ in
 
       package = mkOption {
         type = types.package;
-        default = pkgs.firefox-unwrapped;
-        defaultText = "pkgs.firefox-unwrapped";
-        description = "The unwrapped Firefox package to use.";
+        default =
+          if versionAtLeast config.home.stateVersion "19.09"
+          then pkgs.firefox
+          else pkgs.firefox-unwrapped;
+        defaultText = "pkgs.firefox";
+        description = ''
+          The Firefox package to use. If state version ≥ 19.09 then
+          this should be a wrapped Firefox package. For earlier state
+          versions it should be an unwrapped Firefox package.
+        '';
       };
 
       extensions = mkOption {
@@ -220,21 +227,26 @@ in
 
     home.packages =
       let
-        # A bit of hackery to force a config into the wrapper.
-        browserName = cfg.package.browserName
-          or (builtins.parseDrvName cfg.package.name).name;
-
-        fcfg = setAttrByPath [browserName] {
+        # The configuration expected by the Firefox wrapper.
+        fcfg = {
           enableAdobeFlash = cfg.enableAdobeFlash;
           enableGoogleTalkPlugin = cfg.enableGoogleTalk;
           icedtea = cfg.enableIcedTea;
         };
 
-        wrapper = pkgs.wrapFirefox.override {
-          config = fcfg;
-        };
+        # A bit of hackery to force a config into the wrapper.
+        browserName = cfg.package.browserName
+          or (builtins.parseDrvName cfg.package.name).name;
+
+        # The configuration expected by the Firefox wrapper builder.
+        bcfg = setAttrByPath [browserName] fcfg;
+
+        package =
+          if versionAtLeast config.home.stateVersion "19.09"
+          then cfg.package.override { cfg = fcfg; }
+          else (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
       in
-        [ (wrapper cfg.package { }) ];
+        [ package ];
 
     home.file = mkMerge (
       [{

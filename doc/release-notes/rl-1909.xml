@@ -9,4 +9,27 @@
   This is the current unstable branch and the information in this section is
   therefore not final.
  </para>
+
+ <section xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0"
+         xml:id="sec-release-19.09-state-version-changes">
+  <title>State Version Changes</title>
+
+  <para>
+   The state version in this release includes the changes below. These changes
+   are only active if the <option>home.stateVersion</option> option is set to
+   "19.09" or later.
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     The <option>programs.firefox.package</option> option now expects a wrapped
+     Firefox package and defaults to <code>pkgs.firefox</code>.
+    </para>
+   </listitem>
+  </itemizedlist>
+ </section>
 </section>
