@@ -101,7 +101,7 @@ let
         };
 
         port = mkOption {
-          type = types.int;
+          type = types.port;
           default = 6667;
           description = "Port of the chat server.";
         };

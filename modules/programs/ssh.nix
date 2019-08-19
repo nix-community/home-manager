@@ -21,7 +21,7 @@ let
       };
 
       port = mkOption {
-        type = types.nullOr types.int;
+        type = types.nullOr types.port;
         default = null;
         description = "Specifies port number to connect on remote host.";
       };
