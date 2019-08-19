@@ -95,7 +95,7 @@ let
       };
 
       port = mkOption {
-        type = types.nullOr types.ints.positive;
+        type = types.nullOr types.port;
         default = null;
         example = 993;
         description = ''
@@ -125,7 +125,7 @@ let
       };
 
       port = mkOption {
-        type = types.nullOr types.ints.positive;
+        type = types.nullOr types.port;
         default = null;
         example = 465;
         description = ''

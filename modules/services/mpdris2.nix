@@ -56,7 +56,7 @@ in
       };
 
       port = mkOption {
-        type = types.ints.positive;
+        type = types.port;
         default = config.services.mpd.network.port;
         defaultText = "config.services.mpd.network.port";
         description = ''

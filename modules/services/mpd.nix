@@ -98,7 +98,7 @@ in {
         };
 
         port = mkOption {
-          type = types.ints.positive;
+          type = types.port;
           default = 6600;
           description = ''
             The TCP port on which the the daemon will listen.
