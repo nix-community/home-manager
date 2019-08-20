@@ -23,6 +23,8 @@ with lib;
     nmt.script = ''
       assertFileExists home-files/bar/foopg/gpg.conf
       assertFileContent home-files/bar/foopg/gpg.conf ${./override-defaults-expected.conf}
+
+      assertFileNotRegex activate "^unset GNUPGHOME keyId importTrust$"
     '';
   };
 }
