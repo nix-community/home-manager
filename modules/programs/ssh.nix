@@ -6,26 +6,39 @@ let
 
   cfg = config.programs.ssh;
 
+  isPath = x: builtins.substring 0 1 (toString x) == "/";
+
+  addressPort = entry:
+    if isPath entry.address
+    then " ${entry.address}"
+    else " [${entry.address}]:${toString entry.port}";
+
   yn = flag: if flag then "yes" else "no";
 
   unwords = builtins.concatStringsSep " ";
 
-  localForwardModule = types.submodule ({ ... }: {
-    options = {
-      bind = {
-        address = mkOption {
-          type = types.str;
-          default = "localhost";
-          example = "example.org";
-          description = "The address where to bind the port.";
-        };
+  bindOptions = {
+    address = mkOption {
+      type = types.str;
+      default = "localhost";
+      example = "example.org";
+      description = "The address where to bind the port.";
+    };
 
-        port = mkOption {
-          type = types.port;
-          example = 8080;
-          description = "Specifies port number to bind on bind address.";
-        };
-      };
+    port = mkOption {
+      type = types.port;
+      example = 8080;
+      description = "Specifies port number to bind on bind address.";
+    };
+  };
+
+  dynamicForwardModule = types.submodule {
+    options = bindOptions;
+  };
+
+  forwardModule = types.submodule {
+    options = {
+      bind = bindOptions;
 
       host = {
         address = mkOption {
@@ -41,7 +54,7 @@ let
         };
       };
     };
-  });
+  };
 
   matchBlockModule = types.submodule ({ name, ... }: {
     options = {
@@ -186,7 +199,7 @@ let
       };
 
       localForwards = mkOption {
-        type = types.listOf localForwardModule;
+        type = types.listOf forwardModule;
         default = [];
         example = literalExample ''
           [
@@ -202,7 +215,43 @@ let
           <citerefentry>
             <refentrytitle>ssh_config</refentrytitle>
             <manvolnum>5</manvolnum>
-          </citerefentry> for LocalForward.
+          </citerefentry> for <literal>LocalForward</literal>.
+        '';
+      };
+
+      remoteForwards = mkOption {
+        type = types.listOf forwardModule;
+        default = [];
+        example = literalExample ''
+          [
+            {
+              bind.port = 8080;
+              host.address = "10.0.0.13";
+              host.port = 80;
+            }
+          ];
+        '';
+        description = ''
+          Specify remote port forwardings. See
+          <citerefentry>
+            <refentrytitle>ssh_config</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry> for <literal>RemoteForward</literal>.
+        '';
+      };
+
+      dynamicForwards = mkOption {
+        type = types.listOf dynamicForwardModule;
+        default = [];
+        example = literalExample ''
+          [ { port = 8080; } ];
+        '';
+        description = ''
+          Specify dynamic port forwardings. See
+          <citerefentry>
+            <refentrytitle>ssh_config</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry> for <literal>DynamicForward</literal>.
         '';
       };
 
@@ -235,14 +284,9 @@ let
     ++ optional (cf.proxyCommand != null)    "  ProxyCommand ${cf.proxyCommand}"
     ++ optional (cf.proxyJump != null)       "  ProxyJump ${cf.proxyJump}"
     ++ map (file: "  IdentityFile ${file}") cf.identityFile
-    ++ map (f:
-      let
-        addressPort = entry: " [${entry.address}]:${toString entry.port}";
-      in
-        "  LocalForward"
-        + addressPort f.bind
-        + addressPort f.host
-    ) cf.localForwards
+    ++ map (f: "  LocalForward" + addressPort f.bind + addressPort f.host) cf.localForwards
+    ++ map (f: "  RemoteForward" + addressPort f.bind + addressPort f.host) cf.remoteForwards
+    ++ map (f: "  DynamicForward" + addressPort f) cf.dynamicForwards
     ++ mapAttrsToList (n: v: "  ${n} ${v}") cf.extraOptions
   );
 
@@ -370,6 +414,25 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion =
+          let
+            # `builtins.any`/`lib.lists.any` does not return `true` if there are no elements.
+            any' = pred: items: if items == [] then true else any pred items;
+            # Check that if `entry.address` is defined, and is a path, that `entry.port` has not
+            # been defined.
+            noPathWithPort =  entry: entry ? address && isPath entry.address -> !(entry ? port);
+            checkDynamic = block: any' noPathWithPort block.dynamicForwards;
+            checkBindAndHost = fwd: noPathWithPort fwd.bind && noPathWithPort fwd.host;
+            checkLocal = block: any' checkBindAndHost block.localForwards;
+            checkRemote = block: any' checkBindAndHost block.remoteForwards;
+            checkMatchBlock = block: all (fn: fn block) [ checkLocal checkRemote checkDynamic ];
+          in any' checkMatchBlock (builtins.attrValues cfg.matchBlocks);
+        message = "Forwarded paths cannot have ports.";
+      }
+    ];
+
     home.file.".ssh/config".text = ''
       ${concatStringsSep "\n" (
         mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)}
