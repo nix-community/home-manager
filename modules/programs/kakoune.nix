@@ -453,7 +453,7 @@ let
         default = [];
         description = ''
           User-defined key mappings. For documentation, see
-          <link xlink:href="https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc"/>
+          <link xlink:href="https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc"/>.
         '';
       };
 
