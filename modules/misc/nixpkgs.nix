@@ -82,8 +82,7 @@ in
 
         <programlisting language="nix">
           nixpkgs.config = import ./nixpkgs-config.nix;
-          xdg.configFile."nixpkgs/config.nix".source =
-              ./nixpkgs-config.nix;
+          xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
         </programlisting>
 
         in your Home Manager configuration.
