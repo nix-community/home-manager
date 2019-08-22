@@ -35,7 +35,7 @@ in
       };
 
       Service = {
-        ExecStart = "${pkgs.stdenv.shell} -l -c 'exec ${emacsBinPath}/emacs --fg-daemon'";
+        ExecStart = "${pkgs.runtimeShell} -l -c 'exec ${emacsBinPath}/emacs --fg-daemon'";
         ExecStop = "${emacsBinPath}/emacsclient --eval '(kill-emacs)'";
         Restart = "on-failure";
       };
