@@ -188,7 +188,7 @@ in
           {
             target = "${notmuchIni.database.path}/.notmuch/hooks/${name}";
             source = pkgs.writeScript name ''
-              #!${pkgs.stdenv.shell}
+              #!${pkgs.runtimeShell}
 
               export PATH="${pkgs.notmuch}/bin''${PATH:+:}$PATH"
               export NOTMUCH_CONFIG="${config.xdg.configHome}/notmuch/notmuchrc"
