@@ -1,0 +1,4 @@
+[[sec-release-18.09]]
+== Release 18.09
+
+The 18.09 release branch became the stable branch in September, 2018.

@@ -1,0 +1,59 @@
+[[sec-release-19.03]]
+== Release 19.03
+
+The 19.03 release branch became the stable branch in April, 2019.
+
+[[sec-release-19.03-highlights]]
+=== Highlights
+:opt-home-file-source: opt-home.file._name__.source
+
+This release has the following notable changes:
+
+* The <<{opt-home-file-source}>> option now allows source files to be
+hidden, that is, having a name starting with the `.` character. It
+also allows the source file name to contain characters not typically
+allowed for Nix store paths. For example, your configuration can now
+contain things such as
++
+[source,nix]
+----
+home.file."my file".source = ./. + "/file with spaces!";
+----
+
+* The type used for the systemd unit options under
+<<opt-systemd.user.services>>, <<opt-systemd.user.sockets>>, etc. has
+been changed to offer more robust merging of configurations. If you
+don't override values within systemd units then you are not affected
+by this change. Unfortunately, if you do override unit values you may
+encounter errors.
++
+In particular, if you get an error saying that a ``unique option'' is
+``defined multiple times'' then you need to use the
+https://nixos.org/nixos/manual/#sec-option-definitions-setting-priorities[`mkForce`]
+function. For example,
++
+[source,nix]
+----
+systemd.user.services.foo.Service.ExecStart = "/foo/bar";
+----
++
+becomes
++
+[source,nix]
+----
+systemd.user.services.foo.Service.ExecStart = lib.mkForce "/foo/bar";
+----
++
+We had to make this change because the old merging was causing too
+many confusing situations for people.
+
+[[sec-release-19.03-state-version-changes]]
+=== State Version Changes
+
+The state version in this release includes the changes below. These
+changes are only active if the <<opt-home.stateVersion>> option is set
+to ``19.03'' or later.
+
+* There is now an option <<opt-programs.beets.enable>> that defaults
+to `false`. Before the module would be active if the
+<<opt-programs.beets.settings>> option was non-empty.
