@@ -318,7 +318,7 @@
     </term>
     <listitem>
      <para>
-      Enabled automatic resolution of collisions between unmanaged and managed
+      Enable automatic resolution of collisions between unmanaged and managed
       files. The name of the original file will be suffixed by the given
       extension. For example,
 <screen>
