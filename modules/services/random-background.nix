@@ -7,7 +7,11 @@ let
   cfg = config.services.random-background;
 
   flags = lib.concatStringsSep " " (
-    [ "--randomize" "--bg-${cfg.display}" ]
+    [
+      "--bg-${cfg.display}"
+      "--no-fehbg"
+      "--randomize"
+    ]
     ++ lib.optional (!cfg.enableXinerama) "--no-xinerama"
   );
 
