@@ -485,6 +485,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         -h|--help)
             doHelp
+            exit 0
             ;;
         -n|--dry-run)
             export DRY_RUN=1
