@@ -103,6 +103,22 @@
    </arg>
     
    <arg>
+    --cores <replaceable>number</replaceable>
+   </arg>
+    
+   <arg>
+    --max-jobs <replaceable>number</replaceable>
+   </arg>
+    
+   <arg>
+    --keep-failed
+   </arg>
+    
+   <arg>
+    --keep-going
+   </arg>
+    
+   <arg>
     --show-trace
    </arg>
     
@@ -351,6 +367,54 @@
      <para>
       Perform a dry-run of the given operation, only prints what actions would
       be taken.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--cores <replaceable>number</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--max-jobs <replaceable>number</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--keep-failed</option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--keep-going</option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>.
      </para>
     </listitem>
    </varlistentry>
