@@ -49,7 +49,7 @@ in
           if versionAtLeast config.home.stateVersion "19.09"
           then pkgs.firefox
           else pkgs.firefox-unwrapped;
-        defaultText = "pkgs.firefox";
+        defaultText = literalExample "pkgs.firefox";
         description = ''
           The Firefox package to use. If state version ≥ 19.09 then
           this should be a wrapped Firefox package. For earlier state

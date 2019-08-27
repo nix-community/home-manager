@@ -781,8 +781,8 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.i3;
-        defaultText = "pkgs.i3";
-        example = "pkgs.i3-gaps";
+        defaultText = literalExample "pkgs.i3";
+        example = literalExample "pkgs.i3-gaps";
         description = ''
           i3 package to use.
           If 'i3.config.gaps' settings are specified, 'pkgs.i3-gaps' will be set as a default package.

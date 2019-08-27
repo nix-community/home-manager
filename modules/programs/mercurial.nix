@@ -17,7 +17,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.mercurial;
-        defaultText = "pkgs.mercurial";
+        defaultText = literalExample "pkgs.mercurial";
         description = "Mercurial package to install.";
       };
 

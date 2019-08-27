@@ -37,7 +37,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.polybar;
-        defaultText = "pkgs.polybar";
+        defaultText = literalExample "pkgs.polybar";
         description = "Polybar package to install.";
         example =  literalExample ''
           pkgs.polybar.override {

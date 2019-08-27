@@ -13,7 +13,7 @@ in {
       description = "unclutter derivation to use.";
       type = types.package;
       default = pkgs.unclutter-xfixes;
-      defaultText = "pkgs.unclutter-xfixes";
+      defaultText = literalExample "pkgs.unclutter-xfixes";
     };
 
     timeout = mkOption {

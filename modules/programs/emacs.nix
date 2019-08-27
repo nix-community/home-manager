@@ -29,7 +29,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.emacs;
-        defaultText = "pkgs.emacs";
+        defaultText = literalExample "pkgs.emacs";
         example = literalExample "pkgs.emacs25-nox";
         description = "The Emacs package to use.";
       };

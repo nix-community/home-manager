@@ -169,7 +169,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.tmux;
-        defaultText = "pkgs.tmux";
+        defaultText = literalExample "pkgs.tmux";
         example = literalExample "pkgs.tmux";
         description = "The tmux package to install";
       };

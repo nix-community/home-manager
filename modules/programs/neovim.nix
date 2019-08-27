@@ -107,7 +107,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.neovim-unwrapped;
-        defaultText = "pkgs.neovim-unwrapped";
+        defaultText = literalExample "pkgs.neovim-unwrapped";
         description = "The package to use for the neovim binary.";
       };
 

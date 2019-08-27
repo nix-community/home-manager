@@ -17,7 +17,7 @@ in
 
       package = mkOption {
         default = pkgs.taffybar;
-        defaultText = "pkgs.taffybar";
+        defaultText = literalExample "pkgs.taffybar";
         type = types.package;
         example = literalExample "pkgs.taffybar";
         description = "The package to use for the Taffybar binary.";

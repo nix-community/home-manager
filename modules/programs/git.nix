@@ -122,7 +122,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.git;
-        defaultText = "pkgs.git";
+        defaultText = literalExample "pkgs.git";
         description = ''
           Git package to install. Use <varname>pkgs.gitAndTools.gitFull</varname>
           to gain access to <command>git send-email</command> for instance.

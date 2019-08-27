@@ -22,7 +22,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.awesome;
-        defaultText = "pkgs.awesome";
+        defaultText = literalExample "pkgs.awesome";
         description = "Package to use for running the Awesome WM.";
       };
 

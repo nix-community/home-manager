@@ -23,7 +23,7 @@ in
 
       package = mkOption {
         default = pkgs.fish;
-        defaultText = "pkgs.fish";
+        defaultText = literalExample "pkgs.fish";
         description = ''
           The fish package to install. May be used to change the version.
         '';

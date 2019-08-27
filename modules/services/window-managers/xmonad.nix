@@ -24,7 +24,7 @@ in
 
       haskellPackages = mkOption {
         default = pkgs.haskellPackages;
-        defaultText = "pkgs.haskellPackages";
+        defaultText = literalExample "pkgs.haskellPackages";
         example = literalExample "pkgs.haskell.packages.ghc784";
         description = ''
           The <varname>haskellPackages</varname> used to build xmonad
