@@ -7,14 +7,29 @@ let
   nmdSrc = pkgs.fetchFromGitLab {
     owner = "rycee";
     repo = "nmd";
-    rev = "b57fc6657b6645086a286e62a05a1795f258daa6";
-    sha256 = "1b6bdgn6d4awxi8al5hbw8vycxp4laf63l29rjrvxi2j2g69rgvc";
+    rev = "9751ca5ef6eb2ef27470010208d4c0a20e89443d";
+    sha256 = "0rbx10n8kk0bvp1nl5c8q79lz1w0p1b8103asbvwps3gmqd070hi";
   };
 
   nmd = import nmdSrc { inherit pkgs; };
 
+  # Make sure the used package is scrubbed to avoid actually
+  # instantiating derivations.
+  scrubbedPkgsModule = {
+    imports = [
+      {
+        _module.args = {
+          pkgs = lib.mkForce (nmd.scrubDerivations "pkgs" pkgs);
+          pkgs_i686 = lib.mkForce { };
+        };
+      }
+    ];
+  };
+
   hmModulesDocs = nmd.buildModulesDocs {
-    modules = import ../modules/modules.nix { inherit lib pkgs; };
+    modules =
+      import ../modules/modules.nix { inherit lib pkgs; }
+      ++ [ scrubbedPkgsModule ];
     moduleRootPaths = [ ./.. ];
     mkModuleUrl = path:
       "https://github.com/rycee/home-manager/blob/master/${path}#blob-path";
