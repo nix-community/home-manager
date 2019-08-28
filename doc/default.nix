@@ -5,6 +5,7 @@ let
   lib = pkgs.lib;
 
   nmdSrc = pkgs.fetchFromGitLab {
+    name = "nmd";
     owner = "rycee";
     repo = "nmd";
     rev = "9751ca5ef6eb2ef27470010208d4c0a20e89443d";
@@ -55,6 +56,7 @@ let
 in
 
 {
+  inherit nmdSrc;
 
   options = {
     json = hmModulesDocs.json.override {
@@ -67,5 +69,4 @@ in
   manual = {
     inherit (docs) html htmlOpenTool;
   };
-
 }
