@@ -182,7 +182,10 @@ in
 
         home.packages = [ cfg.package ];
 
-        programs.vim.package = vim;
+        programs.vim = {
+          package = vim;
+          plugins = defaultPlugins;
+        };
       }
   );
 }
