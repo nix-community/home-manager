@@ -429,6 +429,7 @@ function doHelp() {
     echo "  --keep-failed"
     echo "  --keep-going"
     echo "  --max-jobs NUM"
+    echo "  --option NAME VALUE"
     echo "  --show-trace"
     echo
     echo "Commands"
@@ -497,6 +498,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -n|--dry-run)
             export DRY_RUN=1
+            ;;
+        --option)
+            PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
+            shift 2
             ;;
         --max-jobs|--cores)
             PASSTHROUGH_OPTS+=("$opt" "$1")

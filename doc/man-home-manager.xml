@@ -103,6 +103,10 @@
    </arg>
     
    <arg>
+    --option <replaceable>name</replaceable> <replaceable>value</replaceable>
+   </arg>
+    
+   <arg>
     --cores <replaceable>number</replaceable>
    </arg>
     
@@ -367,6 +371,18 @@
      <para>
       Perform a dry-run of the given operation, only prints what actions would
       be taken.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--option <replaceable>name</replaceable> <replaceable>value</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>.
      </para>
     </listitem>
    </varlistentry>
