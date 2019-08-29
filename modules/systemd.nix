@@ -81,15 +81,17 @@ let
 
   unitExample = type: literalExample ''
     {
-      Unit = {
-        Description = "Example description";
-        Documentation = [ "man:example(1)" "man:example(5)" ];
-      };
+      ${toLower type}-name = {
+        Unit = {
+          Description = "Example description";
+          Documentation = [ "man:example(1)" "man:example(5)" ];
+        };
 
-      ${type} = {
-        …
-      };
-    }
+        ${type} = {
+          …
+        };
+      }
+    };
   '';
 
   sessionVariables = mkIf (cfg.sessionVariables != {}) {
