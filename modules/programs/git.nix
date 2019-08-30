@@ -161,7 +161,10 @@ in
           core = { whitespace = "trailing-space,space-before-tab"; };
           url."ssh://git@host".insteadOf = "otherhost";
         };
-        description = "Additional configuration to add.";
+        description = ''
+          Additional configuration to add. The use of string values is
+          deprecated and will be removed in the future.
+        '';
       };
 
       iniContent = mkOption {
@@ -263,6 +266,14 @@ in
       })
 
       (mkIf (lib.isString cfg.extraConfig) {
+        warnings = [
+          ''
+            Using programs.git.extraConfig as a string option is
+            deprecated and will be removed in the future. Please
+            change to using it as an attribute set instead.
+          ''
+        ];
+
         xdg.configFile."git/config".text = cfg.extraConfig;
       })
 
