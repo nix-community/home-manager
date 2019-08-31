@@ -60,6 +60,13 @@ in
     programs.notmuch = {
       enable = mkEnableOption "Notmuch mail indexer";
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.notmuch;
+        defaultText = literalExample "pkgs.notmuch";
+        description = "The notmuch package to use.";
+      };
+
       new = mkOption {
         type = types.submodule {
           options = {
@@ -168,7 +175,7 @@ in
       }
     ];
 
-    home.packages = [ pkgs.notmuch ];
+    home.packages = [ cfg.package ];
 
     home.sessionVariables = {
       NOTMUCH_CONFIG = "${config.xdg.configHome}/notmuch/notmuchrc";
