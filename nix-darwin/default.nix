@@ -25,7 +25,7 @@ in
     home-manager = {
       useUserPackages = mkEnableOption ''
         installation of user packages through the
-        <option>users.users.&lt;name?&gt;.packages</option> option.
+        <option>users.users.‹name?›.packages</option> option.
       '';
 
       users = mkOption {

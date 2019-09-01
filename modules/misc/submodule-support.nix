@@ -25,7 +25,7 @@ with lib;
         installed separately from the Home Manager activation script.
         In NixOS, for example, this may be accomplished by installing
         the packages through
-        <option>users.users.&lt;name?&gt;.packages</option>.
+        <option>users.users.‹name?›.packages</option>.
       '';
     };
   };

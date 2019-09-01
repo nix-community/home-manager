@@ -23,8 +23,8 @@
   <itemizedlist>
    <listitem>
     <para>
-     The <option>home.file.&lt;name?&gt;.source</option> now allows source
-     files to be hidden, that is, having a name starting with the
+     The <option>home.file.‹name?›.source</option> now allows source files
+     to be hidden, that is, having a name starting with the
      <literal>.</literal> character. It also allows the source file name to
      contain characters not typically allowed for Nix store paths. For example,
      your configuration can now contain things such as
