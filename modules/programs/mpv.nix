@@ -54,6 +54,15 @@ in {
     programs.mpv = {
       enable = mkEnableOption "mpv";
 
+      scripts = mkOption {
+        type = types.listOf types.package;
+        default = [];
+        example = literalExample "[ pkgs.mpvScripts.mpris ]";
+        description = ''
+          List of scripts to use with mpv.
+        '';
+      };
+
       config = mkOption {
         description = ''
           Configuration written to
@@ -122,7 +131,11 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ pkgs.mpv ];
+      home.packages = [(
+        if cfg.scripts == []
+        then pkgs.mpv
+        else pkgs.mpv-with-scripts.override { scripts = cfg.scripts; }
+      )];
     }
     (mkIf (cfg.config != {} || cfg.profiles != {}) {
       xdg.configFile."mpv/mpv.conf".text = ''
