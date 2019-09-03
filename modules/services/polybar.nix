@@ -131,6 +131,7 @@ in
             scriptPkg = pkgs.writeShellScriptBin "polybar-start" cfg.script;
           in
             "${scriptPkg}/bin/polybar-start";
+        Restart = "on-failure";
       };
 
       Install = {
