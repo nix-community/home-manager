@@ -270,7 +270,7 @@ in
 
     theme = mkOption {
       default = null;
-      type = with types; nullOr (either string path);
+      type = with types; nullOr (either str path);
       example = "Arc";
       description = ''
         Name of theme or path to theme file in rasi format. Available
