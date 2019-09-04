@@ -104,16 +104,14 @@ in
             Type = "oneshot";
             RemainAfterExit = true;
             ExecStart =
+              with config.home.keyboard;
               let
-                args = concatStringsSep " " (
-                  [
-                    "-layout '${config.home.keyboard.layout}'"
-                    "-variant '${config.home.keyboard.variant}'"
-                  ] ++
-                  (map (v: "-option '${v}'") config.home.keyboard.options)
-                );
+                args =
+                  optional (layout != null) "-layout '${layout}'"
+                  ++ optional (variant != null) "-variant '${variant}'"
+                  ++ map (v: "-option '${v}'") options;
               in
-                "${pkgs.xorg.setxkbmap}/bin/setxkbmap ${args}";
+                "${pkgs.xorg.setxkbmap}/bin/setxkbmap ${toString args}";
           };
         };
       };

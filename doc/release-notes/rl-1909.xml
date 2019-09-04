@@ -30,6 +30,14 @@
      Firefox package and defaults to <code>pkgs.firefox</code>.
     </para>
    </listitem>
+   <listitem>
+    <para>
+     The options <option>home.keyboard.layout</option> and
+     <option>home.keyboard.variant</option> now default to
+     <literal>null</literal>, which indicates that the system value should be
+     used.
+    </para>
+   </listitem>
   </itemizedlist>
  </section>
 </section>
