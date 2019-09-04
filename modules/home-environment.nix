@@ -71,8 +71,8 @@ let
       };
 
       model = mkOption {
-        type = types.str;
-        default = "pc104";
+        type = with types; nullOr str;
+        default = null;
         example = "presario";
         description = ''
           Keyboard model.
