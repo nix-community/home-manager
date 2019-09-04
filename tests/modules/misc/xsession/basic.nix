@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -25,6 +25,13 @@ with lib;
         home-files/.xsession \
         ${./basic-xsession-expected.txt}
 
+      assertFileExists home-files/.config/systemd/user/setxkbmap.service
+      assertFileContent \
+        home-files/.config/systemd/user/setxkbmap.service \
+        ${pkgs.substituteAll {
+          src = ./basic-setxkbmap-expected.service;
+          inherit (pkgs.xorg) setxkbmap;
+        }}
     '';
   };
 }
