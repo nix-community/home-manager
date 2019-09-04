@@ -1325,6 +1325,14 @@ in
           A new module is available: 'programs.kitty'.
         '';
       }
+
+      {
+        time = "2020-02-26T21:20:55+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'wayland.windowManager.sway'
+        '';
+      }
     ];
   };
 }
