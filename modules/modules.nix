@@ -34,6 +34,7 @@ let
     (loadModule ./misc/submodule-support.nix { })
     (loadModule ./misc/version.nix { })
     (loadModule ./misc/xdg.nix { })
+    (loadModule ./misc/xdg-user-dirs.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/afew.nix { })
     (loadModule ./programs/alacritty.nix { })
     (loadModule ./programs/alot.nix { })
