@@ -15,12 +15,16 @@ let
         if isString v then "'${v}'"
         else if isList v then tweakList v
         else if isBool v then (if v then "true" else "false")
+        else if isAttrs v && hasAttr "tuple" v then tweakTuple v.tuple
         else toString v;
 
       # Assume empty list is a list of strings, see #769
       tweakList = v:
         if v == [] then "@as []"
         else "[" + concatMapStringsSep "," tweakVal v + "]";
+
+      # Render a tuple
+      tweakTuple = v: "(" + concatMapStringsSep "," tweakVal v + ")";
 
     in
       "${key}=${tweakVal value}";
@@ -45,7 +49,18 @@ in
 
       settings = mkOption {
         type = with types;
-          attrsOf (attrsOf (either primitive (listOf primitive)));
+          let
+            tuple = {
+              options = {
+                tuple = mkOption {
+                  type = listOf primitive;
+                  description = "Elements of a dconf tuple";
+                };
+              };
+            };
+            basetype = either primitive (submodule tuple);
+          in
+          attrsOf (attrsOf (either basetype (listOf basetype)));
         default = {};
         example = literalExample ''
           {
@@ -55,6 +70,9 @@ in
               base = 10;
               word-size = 64;
             };
+            "org/gnome/desktop/input-sources" = {
+              sources = [{ tuple = ["xkb" "us"] }];
+            }
           }
         '';
         description = ''
