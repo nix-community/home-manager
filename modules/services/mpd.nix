@@ -16,7 +16,6 @@ let
     ''}
     state_file          "${cfg.dataDir}/state"
     sticker_file        "${cfg.dataDir}/sticker.sql"
-    log_file            "syslog"
 
     ${optionalString (cfg.network.listenAddress != "any")
       ''bind_to_address "${cfg.network.listenAddress}"''}
