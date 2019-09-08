@@ -10,6 +10,7 @@ with lib;
       settings = {
         no-comments = false;
         s2k-cipher-algo = "AES128";
+        throw-keyids = true;
       };
     };
 

@@ -51,7 +51,6 @@ in {
       with-fingerprint = mkDefault true;
       require-cross-certification = mkDefault true;
       no-symkey-cache = mkDefault true;
-      throw-keyids = mkDefault true;
       use-agent = mkDefault true;
     };
 
