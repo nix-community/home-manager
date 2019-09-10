@@ -9,7 +9,7 @@ with lib;
     onNotify = mkOption {
       type = with types; either str (attrsOf str);
       default = "";
-      example = "\${pkgs.mbsync}/bin/mbsync test-%s";
+      example = "\${pkgs.isync}/bin/mbsync test-%s";
       description = "Shell commands to run on any event.";
     };
 
