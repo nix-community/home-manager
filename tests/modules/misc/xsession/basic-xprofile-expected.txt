@@ -1,6 +1,6 @@
 . "/test-home/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
-if [[ -e "$HOME/.profile" ]]; then
+if [ -e "$HOME/.profile" ]; then
   . "$HOME/.profile"
 fi
 
