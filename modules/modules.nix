@@ -128,6 +128,7 @@ let
     (loadModule ./services/screen-locker.nix { })
     (loadModule ./services/stalonetray.nix { })
     (loadModule ./services/status-notifier-watcher.nix { })
+    (loadModule ./services/sxhkd.nix { })
     (loadModule ./services/syncthing.nix { })
     (loadModule ./services/taffybar.nix { })
     (loadModule ./services/tahoe-lafs.nix { })
