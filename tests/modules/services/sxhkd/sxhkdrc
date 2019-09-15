@@ -1,0 +1,13 @@
+super + Shift + b
+  run command b
+
+super + a
+  run command a
+
+
+super + c
+  call command c
+
+# comment
+super + d
+  call command d
