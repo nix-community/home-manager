@@ -38,6 +38,7 @@ import nmt {
     // import ./modules/misc/xsession
     // import ./modules/programs/firefox
     // import ./modules/programs/rofi
+    // import ./modules/services/sxhkd
     // import ./modules/systemd
   )
   // import ./modules/home-environment

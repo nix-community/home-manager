@@ -1185,6 +1185,14 @@ in
           Specifying them as strings is deprecated.
         '';
       }
+
+      {
+        time = "2019-09-17T19:33:49+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.sxhkd'.
+        '';
+      }
     ];
   };
 }
