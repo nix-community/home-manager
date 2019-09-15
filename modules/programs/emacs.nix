@@ -4,6 +4,8 @@ with lib;
 
 let
 
+  hmTypes = import ../lib/types.nix { inherit lib; };
+
   cfg = config.programs.emacs;
 
   # Copied from all-packages.nix, with modifications to support
@@ -27,20 +29,26 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.emacs;
-        defaultText = "pkgs.emacs";
+        defaultText = literalExample "pkgs.emacs";
         example = literalExample "pkgs.emacs25-nox";
         description = "The Emacs package to use.";
       };
 
       extraPackages = mkOption {
         default = self: [];
+        type = hmTypes.selectorFunction;
         defaultText = "epkgs: []";
         example = literalExample "epkgs: [ epkgs.emms epkgs.magit ]";
-        description = "Extra packages available to Emacs.";
+        description = ''
+          Extra packages available to Emacs. To get a list of
+          available packages run:
+          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A emacsPackagesNg</command>.
+        '';
       };
 
       overrides = mkOption {
         default = self: super: {};
+        type = hmTypes.overlayFunction;
         defaultText = "self: super: {}";
         example = literalExample ''
           self: super: rec {

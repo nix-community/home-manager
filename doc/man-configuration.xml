@@ -26,7 +26,7 @@
    You can use the following options in
    <filename>home-configuration.nix</filename>:
   </para>
-  <xi:include href="./generated/options-db.xml" xpointer="configuration-variable-list" />
+  <xi:include href="./nmd-result/home-manager-options.xml" />
  </refsection>
  <refsection>
    <title>See also</title>

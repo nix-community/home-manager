@@ -120,7 +120,7 @@ in
 
       gtk3 = {
         extraConfig = mkOption {
-          type = types.attrs;
+          type = with types; attrsOf (either bool (either int str));
           default = {};
           example = { gtk-cursor-blink = false; gtk-recent-files-limit = 20; };
           description = ''

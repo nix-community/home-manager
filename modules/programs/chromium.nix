@@ -21,7 +21,7 @@ let
           inherit visible;
           type = types.package;
           default = defaultPkg;
-          defaultText = "pkgs.${browser}";
+          defaultText = literalExample "pkgs.${browser}";
           description = "The ${name} package to use.";
         };
 

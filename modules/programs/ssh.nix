@@ -10,6 +10,39 @@ let
 
   unwords = builtins.concatStringsSep " ";
 
+  localForwardModule = types.submodule ({ ... }: {
+    options = {
+      bind = {
+        address = mkOption {
+          type = types.str;
+          default = "localhost";
+          example = "example.org";
+          description = "The address where to bind the port.";
+        };
+
+        port = mkOption {
+          type = types.port;
+          example = 8080;
+          description = "Specifies port number to bind on bind address.";
+        };
+      };
+
+      host = {
+        address = mkOption {
+          type = types.str;
+          example = "example.org";
+          description = "The address where to forward the traffic to.";
+        };
+
+        port = mkOption {
+          type = types.port;
+          example = 80;
+          description = "Specifies port number to forward the traffic to.";
+        };
+      };
+    };
+  });
+
   matchBlockModule = types.submodule ({ name, ... }: {
     options = {
       host = mkOption {
@@ -21,7 +54,7 @@ let
       };
 
       port = mkOption {
-        type = types.nullOr types.int;
+        type = types.nullOr types.port;
         default = null;
         description = "Specifies port number to connect on remote host.";
       };
@@ -152,6 +185,27 @@ let
         '';
       };
 
+      localForwards = mkOption {
+        type = types.listOf localForwardModule;
+        default = [];
+        example = literalExample ''
+          [
+            {
+              bind.port = 8080;
+              host.address = "10.0.0.13";
+              host.port = 80;
+            }
+          ];
+        '';
+        description = ''
+          Specify local port forwardings. See
+          <citerefentry>
+            <refentrytitle>ssh_config</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry> for LocalForward.
+        '';
+      };
+
       extraOptions = mkOption {
         type = types.attrsOf types.str;
         default = {};
@@ -181,6 +235,14 @@ let
     ++ optional (cf.proxyCommand != null)    "  ProxyCommand ${cf.proxyCommand}"
     ++ optional (cf.proxyJump != null)       "  ProxyJump ${cf.proxyJump}"
     ++ map (file: "  IdentityFile ${file}") cf.identityFile
+    ++ map (f:
+      let
+        addressPort = entry: " [${entry.address}]:${toString entry.port}";
+      in
+        "  LocalForward"
+        + addressPort f.bind
+        + addressPort f.host
+    ) cf.localForwards
     ++ mapAttrsToList (n: v: "  ${n} ${v}") cf.extraOptions
   );
 

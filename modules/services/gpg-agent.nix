@@ -70,6 +70,14 @@ in
         '';
       };
 
+      sshKeys = mkOption {
+        type = types.nullOr (types.listOf types.str);
+        default = null;
+        description = ''
+          Which GPG keys (by keygrip) to expose as SSH keys.
+        '';
+      };
+
       enableExtraSocket = mkOption {
         type = types.bool;
         default = false;
@@ -156,6 +164,11 @@ in
       programs.bash.initExtra = gpgInitStr;
       programs.zsh.initExtra = gpgInitStr;
     }
+
+    (mkIf (cfg.sshKeys != null) {
+      # Trailing newlines are important
+      home.file.".gnupg/sshcontrol".text = concatMapStrings (s: "${s}\n") cfg.sshKeys;
+    })
 
     # The systemd units below are direct translations of the
     # descriptions in the

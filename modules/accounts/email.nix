@@ -95,7 +95,7 @@ let
       };
 
       port = mkOption {
-        type = types.nullOr types.ints.positive;
+        type = types.nullOr types.port;
         default = null;
         example = 993;
         description = ''
@@ -125,7 +125,7 @@ let
       };
 
       port = mkOption {
-        type = types.nullOr types.ints.positive;
+        type = types.nullOr types.port;
         default = null;
         example = 465;
         description = ''
@@ -205,6 +205,13 @@ let
         type = types.strMatching ".*@.*";
         example = "jane.doe@example.org";
         description = "The email address of this account.";
+      };
+
+      aliases = mkOption {
+        type = types.listOf (types.strMatching ".*@.*");
+        default = [];
+        example = [ "webmaster@example.org" "admin@example.org" ];
+        description = "Alternative email addresses of this account.";
       };
 
       realName = mkOption {
@@ -381,6 +388,7 @@ in
         mailAccountOpts
         (import ../programs/alot-accounts.nix pkgs)
         (import ../programs/astroid-accounts.nix)
+        (import ../programs/getmail-accounts.nix)
         (import ../programs/mbsync-accounts.nix)
         (import ../programs/msmtp-accounts.nix)
         (import ../programs/notmuch-accounts.nix)

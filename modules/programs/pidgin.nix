@@ -18,7 +18,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.pidgin;
-        defaultText = "pkgs.pidgin";
+        defaultText = literalExample "pkgs.pidgin";
         description = "The Pidgin package to use.";
       };
 

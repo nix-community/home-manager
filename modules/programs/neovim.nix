@@ -24,6 +24,14 @@ let
     merge = mergeOneOption;
   };
 
+  moduleConfigure =
+    optionalAttrs (cfg.extraConfig != "") {
+      customRC = cfg.extraConfig;
+    }
+    // optionalAttrs (cfg.plugins != []) {
+      packages.home-manager.start = cfg.plugins;
+    };
+
 in
 
 {
@@ -107,8 +115,15 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.neovim-unwrapped;
-        defaultText = "pkgs.neovim-unwrapped";
+        defaultText = literalExample "pkgs.neovim-unwrapped";
         description = "The package to use for the neovim binary.";
+      };
+
+      finalPackage = mkOption {
+        type = types.package;
+        visible = false;
+        readOnly = true;
+        description = "Resulting customized neovim package.";
       };
 
       configure = mkOption {
@@ -130,19 +145,68 @@ in
         description = ''
           Generate your init file from your list of plugins and custom commands,
           and loads it from the store via <command>nvim -u /nix/store/hash-vimrc</command>
+
+          </para><para>
+
+          This option is deprecated. Please use the options <varname>extraConfig</varname>
+          and <varname>plugins</varname> which are mutually exclusive with this option.
+        '';
+      };
+
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
+        example = ''
+          set nocompatible
+          set nobackup
+        '';
+        description = ''
+          Custom vimrc lines.
+
+          </para><para>
+
+          This option is mutually exclusive with <varname>configure</varname>.
+        '';
+      };
+
+      plugins = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        example = literalExample "[ pkgs.vimPlugins.yankring ]";
+        description = ''
+          List of vim plugins to install.
+
+          </para><para>
+
+          This option is mutually exclusive with <varname>configure</varname>.
         '';
       };
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [
-      (pkgs.wrapNeovim cfg.package {
-        inherit (cfg)
-          extraPython3Packages withPython3
-          extraPythonPackages withPython
-          withNodeJs withRuby viAlias vimAlias configure;
-      })
+    assertions = [
+      {
+        assertion = cfg.configure == { } || moduleConfigure == { };
+        message = "The programs.neovim option configure is mutually exclusive"
+          + " with extraConfig and plugins.";
+      }
     ];
+
+    warnings = optional (cfg.configure != {}) ''
+      The programs.neovim.configure option is deprecated. Please use
+      extraConfig and package option.
+    '';
+
+    home.packages = [ cfg.finalPackage ];
+
+    programs.neovim.finalPackage = pkgs.wrapNeovim cfg.package {
+      inherit (cfg)
+        extraPython3Packages withPython3
+        extraPythonPackages withPython
+        withNodeJs withRuby viAlias vimAlias;
+
+      configure = cfg.configure // moduleConfigure;
+    };
   };
 }

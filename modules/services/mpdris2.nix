@@ -42,7 +42,7 @@ in
     package = mkOption {
       type = types.package;
       default = pkgs.mpdris2;
-      defaultText = "pkgs.mpdris2";
+      defaultText = literalExample "pkgs.mpdris2";
       description = "The mpDris2 package to use.";
     };
 
@@ -56,7 +56,7 @@ in
       };
 
       port = mkOption {
-        type = types.ints.positive;
+        type = types.port;
         default = config.services.mpd.network.port;
         defaultText = "config.services.mpd.network.port";
         description = ''

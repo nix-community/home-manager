@@ -17,7 +17,7 @@ in
 
       package = mkOption {
         default = pkgs.taffybar;
-        defaultText = "pkgs.taffybar";
+        defaultText = literalExample "pkgs.taffybar";
         type = types.package;
         example = literalExample "pkgs.taffybar";
         description = "The package to use for the Taffybar binary.";
@@ -35,11 +35,14 @@ in
 
       Service = {
         ExecStart = "${cfg.package}/bin/taffybar";
+        Restart = "on-failure";
       };
 
       Install = {
         WantedBy = [ "graphical-session.target" ];
       };
     };
+
+    xsession.importedVariables = [ "GDK_PIXBUF_MODULE_FILE" ];
   };
 }

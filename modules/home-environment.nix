@@ -55,16 +55,24 @@ let
   keyboardSubModule = types.submodule {
     options = {
       layout = mkOption {
-        type = types.str;
-        default = "us";
+        type = with types; nullOr str;
+        default =
+          if versionAtLeast config.home.stateVersion "19.09"
+          then null
+          else "us";
+        defaultText = literalExample "null";
         description = ''
-          Keyboard layout.
+          Keyboard layout. If <literal>null</literal>, then the system
+          configuration will be used.
+          </para><para>
+          This defaults to <literal>null</literal> for state
+          version ≥ 19.09 and <literal>"us"</literal> otherwise.
         '';
       };
 
       model = mkOption {
-        type = types.str;
-        default = "pc104";
+        type = with types; nullOr str;
+        default = null;
         example = "presario";
         description = ''
           Keyboard model.
@@ -81,11 +89,19 @@ let
       };
 
       variant = mkOption {
-        type = types.str;
-        default = "";
+        type = with types; nullOr str;
+        default =
+          if versionAtLeast config.home.stateVersion "19.09"
+          then null
+          else "";
+        defaultText = literalExample "null";
         example = "colemak";
         description = ''
-          X keyboard variant.
+          X keyboard variant. If <literal>null</literal>, then the
+          system configuration will be used.
+          </para><para>
+          This defaults to <literal>null</literal> for state
+          version ≥ 19.09 and <literal>""</literal> otherwise.
         '';
       };
     };
@@ -139,9 +155,12 @@ in
     };
 
     home.keyboard = mkOption {
-      type = keyboardSubModule;
+      type = types.nullOr keyboardSubModule;
       default = {};
-      description = "Keyboard configuration.";
+      description = ''
+        Keyboard configuration. Set to <literal>null</literal> to
+        disable Home Manager keyboard management.
+      '';
     };
 
     home.sessionVariables = mkOption {
@@ -164,19 +183,19 @@ in
         variable may have a runtime dependency on another session
         variable. In particular code like
         <programlisting language="nix">
-          home.sessionVariables = {
-            FOO = "Hello";
-            BAR = "$FOO World!";
-          };
+        home.sessionVariables = {
+          FOO = "Hello";
+          BAR = "$FOO World!";
+        };
         </programlisting>
         may not work as expected. If you need to reference another
         session variable, then do so inside Nix instead. The above
         example then becomes
         <programlisting language="nix">
-          home.sessionVariables = {
-            FOO = "Hello";
-            BAR = "''${config.home.sessionVariables.FOO} World!";
-          };
+        home.sessionVariables = {
+          FOO = "Hello";
+          BAR = "''${config.home.sessionVariables.FOO} World!";
+        };
         </programlisting>
       '';
     };
@@ -367,7 +386,7 @@ in
         + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
         activationScript = pkgs.writeScript "activation-script" ''
-          #!${pkgs.stdenv.shell}
+          #!${pkgs.runtimeShell}
 
           set -eu
           set -o pipefail

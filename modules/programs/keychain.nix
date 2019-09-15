@@ -25,7 +25,7 @@ in
     package = mkOption {
       type = types.package;
       default = pkgs.keychain;
-      defaultText = "pkgs.keychain";
+      defaultText = literalExample "pkgs.keychain";
       description = ''
         Keychain package to install.
       '';

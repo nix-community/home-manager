@@ -17,7 +17,7 @@ in
     package = mkOption {
       type = types.package;
       default = pkgs.opam;
-      defaultText = "pkgs.opam";
+      defaultText = literalExample "pkgs.opam";
       description = "Opam package to install.";
     };
 

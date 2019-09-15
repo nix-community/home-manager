@@ -11,6 +11,22 @@ let
     . ${pkgs.gnome3.vte}/etc/profile.d/vte.sh
   '';
 
+  backForeSubModule = types.submodule (
+    { ... }: {
+      options = {
+        foreground = mkOption {
+          type = types.str;
+          description = "The foreground color.";
+        };
+
+        background = mkOption {
+          type = types.str;
+          description = "The background color.";
+        };
+      };
+    }
+  );
+
   profileColorsSubModule = types.submodule (
     { ... }: {
       options = {
@@ -33,6 +49,18 @@ let
         palette = mkOption {
           type = types.listOf types.str;
           description = "The terminal palette.";
+        };
+
+        cursor = mkOption {
+          default = null;
+          type = types.nullOr backForeSubModule;
+          description = "The color for the terminal cursor.";
+        };
+
+        highlight = mkOption {
+          default = null;
+          type = types.nullOr backForeSubModule;
+          description = "The colors for the terminal’s highlighted area.";
         };
       };
     }
@@ -68,6 +96,15 @@ let
           default = null;
           type = types.nullOr types.str;
           description = "The font name, null to use system default.";
+        };
+
+        allowBold = mkOption {
+          default = null;
+          type = types.nullOr types.bool;
+          description = ''
+            If <literal>true</literal>, allow applications in the
+            terminal to make text boldface.
+          '';
         };
 
         scrollOnOutput = mkOption {
@@ -115,6 +152,9 @@ let
           background-color = pcfg.colors.backgroundColor;
           palette = pcfg.colors.palette;
         }
+        // optionalAttrs (pcfg.allowBold != null) {
+          allow-bold = pcfg.allowBold;
+        }
         // (
           if (pcfg.colors.boldColor == null)
           then { bold-color-same-as-fg = true; }
@@ -122,6 +162,24 @@ let
             bold-color-same-as-fg = false;
             bold-color = pcfg.colors.boldColor;
           }
+        )
+        // (
+          if (pcfg.colors.cursor != null)
+          then {
+            cursor-colors-set = true;
+            cursor-foreground-color = pcfg.colors.cursor.foreground;
+            cursor-background-color = pcfg.colors.cursor.background;
+          }
+          else { cursor-colors-set = false; }
+        )
+        // (
+          if (pcfg.colors.highlight != null)
+          then {
+            highlight-colors-set = true;
+            highlight-foreground-color = pcfg.colors.highlight.foreground;
+            highlight-background-color = pcfg.colors.highlight.background;
+          }
+          else { highlight-colors-set = false; }
         )
       )
     );

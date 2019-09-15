@@ -6,11 +6,53 @@ let
 
   cfg = config.programs.git;
 
+  # create [section "subsection"] keys from "section.subsection" attrset names
+  mkSectionName = name:
+    let
+      containsQuote = strings.hasInfix ''"'' name;
+      sections = splitString "." name;
+      section = head sections;
+      subsections = tail sections;
+      subsection = concatStringsSep "." subsections;
+    in
+      if containsQuote || subsections == []
+      then name
+      else "${section} \"${subsection}\"";
+
+  # generation for multiple ini values
+  mkKeyValue = k: v:
+    let
+      mkKeyValue = generators.mkKeyValueDefault {} "=" k;
+    in
+      concatStringsSep "\n" (map mkKeyValue (toList v));
+
+  # converts { a.b.c = 5; } to { "a.b".c = 5; } for toINI
+  gitFlattenAttrs =
+    let
+      recurse = path: value:
+        if isAttrs value then
+          mapAttrsToList (name: value: recurse ([name] ++ path) value) value
+        else if length path > 1 then
+          { ${concatStringsSep "." (reverseList (tail path))}.${head path} = value; }
+        else
+          { ${head path} = value; };
+    in
+      attrs: foldl recursiveUpdate {} (flatten (recurse [] attrs));
+
+  gitToIni = attrs:
+    let
+      toIni = generators.toINI { inherit mkKeyValue mkSectionName; };
+    in
+      toIni (gitFlattenAttrs attrs);
+
   gitIniType = with types;
     let
-      primitiveType = either bool (either int str);
+      primitiveType = either str (either bool int);
+      multipleType = either primitiveType (listOf primitiveType);
+      sectionType = attrsOf multipleType;
+      supersectionType = attrsOf (either multipleType sectionType);
     in
-      attrsOf (attrsOf primitiveType);
+      attrsOf supersectionType;
 
   signModule = types.submodule {
     options = {
@@ -64,7 +106,7 @@ let
     };
 
     config.path = mkIf (config.contents != {}) (
-      mkDefault (pkgs.writeText "contents" (generators.toINI {} config.contents))
+      mkDefault (pkgs.writeText "contents" (gitToIni config.contents))
     );
   });
 
@@ -80,7 +122,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.git;
-        defaultText = "pkgs.git";
+        defaultText = literalExample "pkgs.git";
         description = ''
           Git package to install. Use <varname>pkgs.gitAndTools.gitFull</varname>
           to gain access to <command>git send-email</command> for instance.
@@ -117,8 +159,12 @@ in
         default = {};
         example = {
           core = { whitespace = "trailing-space,space-before-tab"; };
+          url."ssh://git@host".insteadOf = "otherhost";
         };
-        description = "Additional configuration to add.";
+        description = ''
+          Additional configuration to add. The use of string values is
+          deprecated and will be removed in the future.
+        '';
       };
 
       iniContent = mkOption {
@@ -175,7 +221,7 @@ in
         };
 
         xdg.configFile = {
-          "git/config".text = generators.toINI {} cfg.iniContent;
+          "git/config".text = gitToIni cfg.iniContent;
 
           "git/ignore" = mkIf (cfg.ignores != []) {
             text = concatStringsSep "\n" cfg.ignores + "\n";
@@ -189,7 +235,7 @@ in
             hasSmtp = name: account: account.smtp != null;
 
             genIdentity = name: account: with account;
-              nameValuePair "sendemail \"${name}\"" ({
+              nameValuePair "sendemail.${name}" ({
                 smtpEncryption = if smtp.tls.enable then "tls" else "";
                 smtpServer = smtp.host;
                 smtpUser = userName;
@@ -220,23 +266,35 @@ in
       })
 
       (mkIf (lib.isString cfg.extraConfig) {
+        warnings = [
+          ''
+            Using programs.git.extraConfig as a string option is
+            deprecated and will be removed in the future. Please
+            change to using it as an attribute set instead.
+          ''
+        ];
+
         xdg.configFile."git/config".text = cfg.extraConfig;
       })
 
       (mkIf (cfg.includes != []) {
-        xdg.configFile."git/config".text = mkAfter
-          (concatMapStringsSep "\n"
-            (i: with i; ''
-              [${if (condition == null) then "include" else "includeIf \"${condition}\""}]
-              path = ${path}
-            '')
-            cfg.includes);
+        xdg.configFile."git/config".text =
+          let
+            include = i: with i;
+              if condition != null
+              then { includeIf.${condition}.path = "${path}"; }
+              else { include.path = "${path}"; };
+          in
+            mkAfter
+            (concatStringsSep "\n"
+            (map gitToIni
+            (map include cfg.includes)));
       })
 
       (mkIf cfg.lfs.enable {
         home.packages = [ pkgs.git-lfs ];
 
-        programs.git.iniContent."filter \"lfs\"" =
+        programs.git.iniContent.filter.lfs =
           let
             skipArg = optional cfg.lfs.skipSmudge "--skip";
           in

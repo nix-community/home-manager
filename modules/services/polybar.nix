@@ -37,7 +37,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.polybar;
-        defaultText = "pkgs.polybar";
+        defaultText = literalExample "pkgs.polybar";
         description = "Polybar package to install.";
         example =  literalExample ''
           pkgs.polybar.override {
@@ -118,7 +118,9 @@ in
         Description = "Polybar status bar";
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
-        X-Restart-Triggers = [ config.xdg.configFile."polybar/config".source ];
+        X-Restart-Triggers = [
+          "${config.xdg.configFile."polybar/config".source}"
+        ];
       };
 
       Service = {
@@ -129,6 +131,7 @@ in
             scriptPkg = pkgs.writeShellScriptBin "polybar-start" cfg.script;
           in
             "${scriptPkg}/bin/polybar-start";
+        Restart = "on-failure";
       };
 
       Install = {

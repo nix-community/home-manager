@@ -13,13 +13,19 @@ let
     let
       tweakVal = v:
         if isString v then "'${v}'"
-        else if isList v then "[" + concatMapStringsSep "," tweakVal v + "]"
+        else if isList v then tweakList v
         else if isBool v then (if v then "true" else "false")
         else toString v;
+
+      # Assume empty list is a list of strings, see #769
+      tweakList = v:
+        if v == [] then "@as []"
+        else "[" + concatMapStringsSep "," tweakVal v + "]";
+
     in
       "${key}=${tweakVal value}";
 
-  primitive = with types; either bool (either int str);
+  primitive = with types; either bool (either int (either float str));
 
 in
 

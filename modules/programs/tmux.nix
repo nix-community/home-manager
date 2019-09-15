@@ -65,6 +65,11 @@ let
       bind C-${cfg.shortcut} last-window
     ''}
 
+    ${optionalString cfg.disableConfirmationPrompt ''
+      bind-key & kill-window
+      bind-key x kill-pane
+    ''}
+
     setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
     setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
     set  -s escape-time       ${toString cfg.escapeTime}
@@ -106,6 +111,14 @@ in
         description = ''
           Override the hjkl and HJKL bindings for pane navigation and
           resizing in VI mode.
+        '';
+      };
+
+      disableConfirmationPrompt = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''
+          Disable confirmation prompt before killing a pane or window
         '';
       };
 
@@ -156,7 +169,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.tmux;
-        defaultText = "pkgs.tmux";
+        defaultText = literalExample "pkgs.tmux";
         example = literalExample "pkgs.tmux";
         description = "The tmux package to install";
       };
@@ -251,7 +264,7 @@ in
           ++ optional cfg.tmuxinator.enable pkgs.tmuxinator
           ++ optional cfg.tmuxp.enable      pkgs.tmuxp;
 
-          home.file.".tmux.conf".text = tmuxConf;
+        home.file.".tmux.conf".text = tmuxConf;
       }
 
       (mkIf cfg.sensibleOnTop {
@@ -262,6 +275,12 @@ in
           run-shell ${pkgs.tmuxPlugins.sensible.rtp}
           # ============================================= #
         '';
+      })
+
+      (mkIf cfg.secureSocket {
+        home.sessionVariables = {
+          TMUX_TMPDIR = ''''${XDG_RUNTIME_DIR:-"/run/user/\$(id -u)"}'';
+        };
       })
 
       (mkIf (cfg.plugins != []) {

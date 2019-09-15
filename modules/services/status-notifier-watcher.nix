@@ -17,7 +17,7 @@ in
 
       package = mkOption {
         default = pkgs.haskellPackages.status-notifier-item;
-        defaultText = "pkgs.haskellPackages.status-notifier-item";
+        defaultText = literalExample "pkgs.haskellPackages.status-notifier-item";
         type = types.package;
         example = literalExample "pkgs.haskellPackages.status-notifier-item";
         description = "The package to use for the status notifier watcher binary.";

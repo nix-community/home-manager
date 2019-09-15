@@ -21,6 +21,11 @@ let
           realname = realName;
           sendmail_command =
             optionalString (alot.sendMailCommand != null) alot.sendMailCommand;
+          sent_box = "maildir" + "://" + maildir.absPath + "/" + folders.sent;
+          draft_box = "maildir" + "://"+ maildir.absPath + "/" + folders.drafts;
+        }
+        // optionalAttrs (aliases != []) {
+          aliases = concatStringsSep "," aliases;
         }
         // optionalAttrs (gpg != null) {
           gpg_key = gpg.key;
@@ -33,11 +38,10 @@ let
             boolStr (signature.showSignature == "attach");
         }
       )
+      ++ [ alot.extraConfig ]
       ++ [ "[[[abook]]]" ]
       ++ mapAttrsToList (n: v: n + "=" + v) alot.contactCompletion
-    )
-    + "\n"
-    + alot.extraConfig;
+    );
 
   configFile =
     let

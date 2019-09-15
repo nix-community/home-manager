@@ -12,7 +12,8 @@ let
       || cfg.sockets != {}
       || cfg.targets != {}
       || cfg.timers != {}
-      || cfg.paths != {};
+      || cfg.paths != {}
+      || cfg.sessionVariables != {};
 
   toSystemdIni = generators.toINI {
     mkKeyValue = key: value:
@@ -57,9 +58,14 @@ let
 
   servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
 
-  attrsRecursivelyMerged = types.attrs // {
-    merge = loc: foldl' (res: def: recursiveUpdate res def.value) {};
-  };
+  unitType = unitKind: with types;
+    let
+      primitive = either bool (either int str);
+    in
+      attrsOf (attrsOf (attrsOf (either primitive (listOf primitive))))
+      // {
+        description = "systemd ${unitKind} unit configuration";
+      };
 
   unitDescription = type: ''
     Definition of systemd per-user ${type} units. Attributes are
@@ -75,15 +81,25 @@ let
 
   unitExample = type: literalExample ''
     {
-      Unit = {
-        Description = "Example description";
-      };
+      ${toLower type}-name = {
+        Unit = {
+          Description = "Example description";
+          Documentation = [ "man:example(1)" "man:example(5)" ];
+        };
 
-      ${type} = {
-        …
-      };
-    }
+        ${type} = {
+          …
+        };
+      }
+    };
   '';
+
+  sessionVariables = mkIf (cfg.sessionVariables != {}) {
+    "environment.d/10-home-manager.conf".text =
+      concatStringsSep "\n" (
+        mapAttrsToList (n: v: "${n}=${toString v}") cfg.sessionVariables
+      ) + "\n";
+    };
 
 in
 
@@ -105,35 +121,35 @@ in
 
       services = mkOption {
         default = {};
-        type = attrsRecursivelyMerged;
+        type = unitType "service";
         description = unitDescription "service";
         example = unitExample "Service";
       };
 
       sockets = mkOption {
         default = {};
-        type = attrsRecursivelyMerged;
+        type = unitType "socket";
         description = unitDescription "socket";
         example = unitExample "Socket";
       };
 
       targets = mkOption {
         default = {};
-        type = attrsRecursivelyMerged;
+        type = unitType "target";
         description = unitDescription "target";
         example = unitExample "Target";
       };
 
       timers = mkOption {
         default = {};
-        type = attrsRecursivelyMerged;
+        type = unitType "timer";
         description = unitDescription "timer";
         example = unitExample "Timer";
       };
 
       paths = mkOption {
         default = {};
-        type = attrsRecursivelyMerged;
+        type = unitType "path";
         description = unitDescription "path";
         example = unitExample "Path";
       };
@@ -156,6 +172,20 @@ in
           start is considered successful.
         '';
       };
+
+      sessionVariables = mkOption {
+        default = {};
+        type = with types; attrsOf (either int str);
+        example = { EDITOR = "vim"; };
+        description = ''
+          Environment variables that will be set for the user session.
+          The variable values must be as described in
+          <citerefentry>
+            <refentrytitle>environment.d</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry>.
+        '';
+      };
     };
   };
 
@@ -168,7 +198,7 @@ in
             let
               names = concatStringsSep ", " (
                   attrNames (
-                      cfg.services // cfg.sockets // cfg.targets // cfg.timers // cfg.paths
+                      cfg.services // cfg.sockets // cfg.targets // cfg.timers // cfg.paths // cfg.sessionVariables
                   )
               );
             in
@@ -180,8 +210,8 @@ in
     # If we run under a Linux system we assume that systemd is
     # available, in particular we assume that systemctl is in PATH.
     (mkIf pkgs.stdenv.isLinux {
-      xdg.configFile =
-        listToAttrs (
+      xdg.configFile = mkMerge [
+        (listToAttrs (
           (buildServices "service" cfg.services)
           ++
           (buildServices "socket" cfg.sockets)
@@ -191,7 +221,10 @@ in
           (buildServices "timer" cfg.timers)
           ++
           (buildServices "path" cfg.paths)
-        );
+          ))
+
+          sessionVariables
+        ];
 
       # Run systemd service reload if user is logged in. If we're
       # running this from the NixOS module then XDG_RUNTIME_DIR is not

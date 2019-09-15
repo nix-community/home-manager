@@ -81,12 +81,12 @@ in
 
       shellAliases = mkOption {
         default = {};
+        type = types.attrsOf types.str;
         example = { ll = "ls -l"; ".." = "cd .."; };
         description = ''
           An attribute set that maps aliases (the top level attribute names in
           this option) to command strings or directly to build outputs.
         '';
-        type = types.attrs;
       };
 
       enableAutojump = mkOption {
@@ -120,6 +120,15 @@ in
         type = types.lines;
         description = ''
           Extra commands that should be run when initializing an
+          interactive shell.
+        '';
+      };
+
+      logoutExtra = mkOption {
+        default = "";
+        type = types.lines;
+        description = ''
+          Extra commands that should be run when logging out of an
           interactive shell.
         '';
       };
@@ -194,6 +203,14 @@ in
 
         ${cfg.bashrcExtra}
       '';
+
+      home.file.".bash_logout" = mkIf (cfg.logoutExtra != "") {
+        text = ''
+          # -*- mode: sh -*-
+
+          ${cfg.logoutExtra}
+        '';
+      };
 
       home.packages =
         optional (cfg.enableAutojump) pkgs.autojump;

@@ -1,0 +1,19 @@
+[[sec-release-19.09]]
+== Release 19.09 (unreleased)
+
+This is the current unstable branch and the information in this
+section is therefore not final.
+
+[[sec-release-19.09-state-version-changes]]
+=== State Version Changes
+
+The state version in this release includes the changes below. These
+changes are only active if the `home.stateVersion` option is set to
+"19.09" or later.
+
+* The <<opt-programs.firefox.package>> option now expects a wrapped
+  Firefox package and defaults to `pkgs.firefox`.
+
+* The options <<opt-home.keyboard.layout>> and
+  <<opt-home.keyboard.variant>> now default to `null`, which indicates
+  that the system value should be used.

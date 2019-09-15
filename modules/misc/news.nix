@@ -994,6 +994,7 @@ in
 
       {
         time = "2019-02-24T00:32:23+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new service is available: 'services.mpdris2'.
         '';
@@ -1010,6 +1011,178 @@ in
         time = "2019-03-19T23:07:34+00:00";
         message = ''
           A new module is available: 'programs.lsd'.
+        '';
+      }
+
+      {
+        time = "2019-04-09T20:10:22+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.xcape'.
+        '';
+      }
+
+      {
+        time = "2019-04-11T22:50:10+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          The type used for the systemd unit options under
+
+              systemd.user.services, systemd.user.sockets, etc.
+
+          has been changed to offer more robust merging of configurations.
+
+          If you don't override values within systemd units then you are not
+          affected by this change. Unfortunately, if you do override unit values
+          you may encounter errors due to this change.
+
+          In particular, if you get an error saying that a "unique option" is
+          "defined multiple times" then you need to use 'lib.mkForce'. For
+          example,
+
+              systemd.user.services.foo.Service.ExecStart = "/foo/bar";
+
+          becomes
+
+              systemd.user.services.foo.Service.ExecStart = lib.mkForce "/foo/bar";
+
+          We had to make this change because the old merging was causing too
+          many confusing situations for people. Apologies for potentially
+          breaking your configuration!
+        '';
+      }
+
+      {
+        time = "2019-04-14T15:35:16+00:00";
+        message = ''
+          A new module is available: 'programs.skim'.
+        '';
+      }
+
+      {
+        time = "2019-04-22T12:43:20+00:00";
+        message = ''
+          A new module is available: 'programs.alacritty'.
+        '';
+      }
+
+      {
+        time = "2019-04-26T22:53:48+00:00";
+        condition = config.programs.vscode.enable;
+        message = ''
+          A new module is available: 'programs.vscode.haskell'.
+
+          Enable to add Haskell IDE Engine and syntax highlighting
+          support to your VSCode.
+        '';
+      }
+
+      {
+        time = "2019-05-04T23:56:39+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.rsibreak'.
+        '';
+      }
+
+      {
+        time = "2019-05-07T20:49:29+00:00";
+        message = ''
+          A new module is available: 'programs.mpv'.
+        '';
+      }
+
+      {
+        time = "2019-05-30T17:49:29+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.xsuspender'.
+        '';
+      }
+
+      {
+        time = "2019-06-03T21:47:10+00:00";
+        message = ''
+          A new module is available: 'programs.gpg'.
+        '';
+      }
+
+      {
+        time = "2019-06-09T12:19:18+00:00";
+        message = ''
+          Collisions between unmanaged and managed files can now be
+          automatically resolved by moving the target file to a new
+          path instead of failing the switch operation. To enable
+          this, use the new '-b' command line argument. For example,
+
+              home-manager -b bck switch
+
+          where 'bck' is the suffix to give the moved file. In this
+          case a colliding file 'foo.conf' will be moved to
+          'foo.conf.bck'.
+        '';
+      }
+
+      {
+        time = "2019-06-19T17:49:29+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: `services.getmail`.
+        '';
+      }
+
+      {
+        time = "2019-07-02T09:27:56+00:00";
+        message = ''
+          A new module is available: 'programs.broot'.
+        '';
+      }
+
+      {
+        time = "2019-07-17T19:30:29+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.taskwarrior-sync'.
+        '';
+      }
+
+      {
+        time = "2019-07-17T20:05:29+00:00";
+        message = ''
+          A new module is available: 'programs.kakoune'.
+        '';
+      }
+
+      {
+        time = "2019-08-08T11:49:35+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.hound'.
+        '';
+      }
+
+      {
+        time = "2019-08-17T12:24:58+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.muchsync'.
+        '';
+      }
+
+      {
+        time = "2019-08-18T14:22:41+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.dwm-status'.
+        '';
+      }
+
+      {
+        time = "2019-08-28T10:18:07+00:00";
+        condition = config.programs.vim.enable;
+        message = ''
+          The 'programs.vim.plugins' option now accepts packages.
+          Specifying them as strings is deprecated.
         '';
       }
     ];
