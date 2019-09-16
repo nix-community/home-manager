@@ -46,6 +46,7 @@ in {
         type = types.path;
         default = "${config.home.homeDirectory}/music";
         defaultText = "$HOME/music";
+        apply = toString;       # Prevent copies to Nix store.
         description = ''
           The directory where mpd reads music from.
         '';
@@ -55,6 +56,7 @@ in {
         type = types.path;
         default = "${cfg.dataDir}/playlists";
         defaultText = ''''${dataDir}/playlists'';
+        apply = toString;       # Prevent copies to Nix store.
         description = ''
           The directory where mpd stores playlists.
         '';
@@ -79,6 +81,7 @@ in {
         type = types.path;
         default = "${config.xdg.dataHome}/${name}";
         defaultText = "$XDG_DATA_HOME/mpd";
+        apply = toString;       # Prevent copies to Nix store.
         description = ''
           The directory where MPD stores its state, tag cache,
           playlists etc.
