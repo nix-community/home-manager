@@ -4,7 +4,7 @@
     services.sxhkd = {
       enable = true;
 
-      hotkeybindings = {
+      keybindings = {
         "super + a" = "run command a";
         "super + b" = null;
         "super + Shift + b" = "run command b";
