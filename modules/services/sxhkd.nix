@@ -20,7 +20,7 @@ in
 
 {
   options.services.sxhkd = {
-    enable = mkEnableOption "Simple X hotkey daemon";
+    enable = mkEnableOption "simple X hotkey daemon";
 
     keybindings = mkOption {
       type = types.attrsOf (types.nullOr types.str);
