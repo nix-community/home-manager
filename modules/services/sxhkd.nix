@@ -43,15 +43,6 @@ in
           i3-msg {workspace,move container to workspace} {1-10}
       '';
     };
-
-    extraPath = mkOption {
-      default = "";
-      type = types.envVar;
-      description = ''
-        Additional <envar>PATH</envar> entries to search for commands.
-      '';
-      example = "/home/some-user/bin:/extra/path/bin";
-    };
   };
 
   config = mkIf cfg.enable {
@@ -70,11 +61,6 @@ in
       };
 
       Service = {
-        Environment =
-          "PATH="
-          + "${config.home.profileDirectory}/bin"
-          + optionalString (cfg.extraPath != "") ":"
-          + cfg.extraPath;
         ExecStart = "${pkgs.sxhkd}/bin/sxhkd";
       };
 
