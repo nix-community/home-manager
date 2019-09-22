@@ -61,12 +61,18 @@ in
 
     home.file."${configFilePath}".text = builtins.toJSON cfg.userSettings;
     #adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-    home.activation.vscExtensions = dag.entryAfter ["installPackages"] ''
-        EXT_DIR=${config.home.homeDirectory}/.vscode/extensions
-        $DRY_RUN_CMD mkdir -p $EXT_DIR
-        for x in ${lib.concatMapStringsSep " " toString cfg.extensions}; do
-            $DRY_RUN_CMD ln -s $x/share/vscode/extensions/* $EXT_DIR/
-        done
-    '';
-  };
+    home.file =
+      let
+        toPaths = p: 
+          mapAttrsToList (k: v: {''${k}''.source = p;}) (builtins.readDir p);
+        toSymlink = concatMap (toPaths) cfg.extensions;
+      in foldr (a: b: a//b) toSymlink;
+  #   home.activation.vscExtensions = dag.entryAfter ["installPackages"] ''
+  #       EXT_DIR=${config.home.homeDirectory}/.vscode/extensions
+  #       $DRY_RUN_CMD mkdir -p $EXT_DIR
+  #       for x in ${lib.concatMapStringsSep " " toString cfg.extensions}; do
+  #           $DRY_RUN_CMD ln -s $x/share/vscode/extensions/* $EXT_DIR/
+  #       done
+  #   '';
+  # };
 }
