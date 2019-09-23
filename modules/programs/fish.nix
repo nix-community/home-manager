@@ -51,62 +51,62 @@ in
       enable = mkEnableOption "fish friendly interactive shell";
 
       package = mkOption {
+        type = types.package;
         default = pkgs.fish;
         defaultText = literalExample "pkgs.fish";
         description = ''
           The fish package to install. May be used to change the version.
         '';
-        type = types.package;
       };
 
       shellAliases = mkOption {
+        type = types.attrs;
         default = {};
         description = ''
           Set of aliases for fish shell. See
           <option>environment.shellAliases</option> for an option
           format description.
         '';
-        type = types.attrs;
       };
 
       shellAbbrs = mkOption {
+        type = types.attrs;
         default = {};
         description = ''
           Set of abbreviations for fish shell.
         '';
-        type = types.attrs;
       };
 
       shellInit = mkOption {
+        type = types.lines;
         default = "";
         description = ''
           Shell script code called during fish shell initialisation.
         '';
-        type = types.lines;
       };
 
       loginShellInit = mkOption {
+        type = types.lines;
         default = "";
         description = ''
           Shell script code called during fish login shell initialisation.
         '';
-        type = types.lines;
       };
 
       interactiveShellInit = mkOption {
+        type = types.lines;
         default = "";
         description = ''
           Shell script code called during interactive fish shell initialisation.
         '';
-        type = types.lines;
       };
 
       promptInit = mkOption {
+        type = types.lines;
         default = "";
         description = ''
           Shell script code used to initialise fish prompt.
         '';
-        type = types.lines;
       };
     };
 
