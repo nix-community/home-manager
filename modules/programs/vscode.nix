@@ -6,13 +6,20 @@ let
 
   cfg = config.programs.vscode;
   dag = config.lib.dag;
+  vscodePname = cfg.package.pname;
 
+  configDir = {
+    "vscode" = "Code";
+    "vscode-insiders" = "Code - Insiders";
+    "vscodium" = "Codium";
+  }.${vscodePname};
   configFilePath =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/Code/User/settings.json"
+      "Library/Application Support/${configDir}/User/settings.json"
     else
-      "${config.xdg.configHome}/Code/User/settings.json";
+      "${config.xdg.configHome}/${configDir}/User/settings.json";
 
+  extensionPath = ".${vscodePname}/extensions";#TODO:on Darwin where are the extensions?
 in
 
 {
@@ -59,20 +66,21 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file."${configFilePath}".text = builtins.toJSON cfg.userSettings;
     #adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
     home.file =
       let
         toPaths = p: 
-          mapAttrsToList (k: v: {''${k}''.source = p;}) (builtins.readDir p);
+          #links every dir in p to the 
+          mapAttrsToList (k: v: 
+            {
+              "${extensionPath}/${k}".source = "${p}/${k}";
+            }) (builtins.readDir p);
         toSymlink = concatMap (toPaths) cfg.extensions;
-      in foldr (a: b: a//b) toSymlink;
-  #   home.activation.vscExtensions = dag.entryAfter ["installPackages"] ''
-  #       EXT_DIR=${config.home.homeDirectory}/.vscode/extensions
-  #       $DRY_RUN_CMD mkdir -p $EXT_DIR
-  #       for x in ${lib.concatMapStringsSep " " toString cfg.extensions}; do
-  #           $DRY_RUN_CMD ln -s $x/share/vscode/extensions/* $EXT_DIR/
-  #       done
-  #   '';
-  # };
+      in 
+        (foldr (a: b: a//b) 
+          {
+            "${configFilePath}".text = builtins.toJSON cfg.userSettings;
+          } 
+        toSymlink);
+  };
 }
