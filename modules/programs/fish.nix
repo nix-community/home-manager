@@ -62,6 +62,7 @@ in
       shellAliases = mkOption {
         type = types.attrs;
         default = {};
+        example = { ".." = "cd .."; ll = "ls -l"; };
         description = ''
           Set of aliases for fish shell. See
           <option>environment.shellAliases</option> for an option
@@ -72,6 +73,7 @@ in
       shellAbbrs = mkOption {
         type = types.attrs;
         default = {};
+        example = { l = "less"; gco = "git checkout"; };
         description = ''
           Set of abbreviations for fish shell.
         '';
