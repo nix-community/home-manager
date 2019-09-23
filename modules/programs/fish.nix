@@ -64,9 +64,8 @@ in
         default = {};
         example = { ".." = "cd .."; ll = "ls -l"; };
         description = ''
-          Set of aliases for fish shell. See
-          <option>environment.shellAliases</option> for an option
-          format description.
+          An attribute set that maps aliases (the top level attribute names
+          in this option) to command strings or directly to build outputs.
         '';
       };
 
@@ -75,7 +74,9 @@ in
         default = {};
         example = { l = "less"; gco = "git checkout"; };
         description = ''
-          Set of abbreviations for fish shell.
+          An attribute set that maps aliases (the top level attribute names
+          in this option) to abbreviations. Abbreviations are expanded with
+          the longer phrase after they are entered.
         '';
       };
 
@@ -83,7 +84,8 @@ in
         type = types.lines;
         default = "";
         description = ''
-          Shell script code called during fish shell initialisation.
+          Shell script code called during fish shell
+          initialisation.
         '';
       };
 
@@ -91,7 +93,8 @@ in
         type = types.lines;
         default = "";
         description = ''
-          Shell script code called during fish login shell initialisation.
+          Shell script code called during fish login shell
+          initialisation.
         '';
       };
 
@@ -99,7 +102,8 @@ in
         type = types.lines;
         default = "";
         description = ''
-          Shell script code called during interactive fish shell initialisation.
+          Shell script code called during interactive fish shell
+          initialisation.
         '';
       };
 
