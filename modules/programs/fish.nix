@@ -155,6 +155,7 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [{
+
     home.packages = [ cfg.package ];
 
     xdg.dataFile."fish/home-manager_generated_completions".source =
@@ -274,12 +275,14 @@ in
 
       end
     '';
+
   } {
-      xdg.configFile = mapAttrs' (f_name: f_body: {
-        name = "fish/functions/${f_name}.fish";
+
+      xdg.configFile = mapAttrs' (fName: fBody: {
+        name = "fish/functions/${fName}.fish";
         value = {"text" = ''
-          function ${f_name}
-            ${f_body}
+          function ${fName}
+            ${fBody}
           end
         '';};
       }) cfg.functions;
