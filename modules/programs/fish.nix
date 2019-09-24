@@ -48,7 +48,7 @@ in
 {
   options = {
     programs.fish = {
-      enable = mkEnableOption "fish friendly interactive shell";
+      enable = mkEnableOption "fish, the friendly interactive shell";
 
       package = mkOption {
         type = types.package;
