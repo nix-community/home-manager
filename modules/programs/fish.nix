@@ -31,7 +31,7 @@ in
       };
 
       shellAliases = mkOption {
-        type = types.attrs;
+        type = with types; attrsOf str;
         default = {};
         example = { ".." = "cd .."; ll = "ls -l"; };
         description = ''
@@ -41,7 +41,7 @@ in
       };
 
       shellAbbrs = mkOption {
-        type = types.attrs;
+        type = with types; attrsOf str;
         default = {};
         example = { l = "less"; gco = "git checkout"; };
         description = ''
