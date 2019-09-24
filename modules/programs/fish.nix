@@ -14,35 +14,6 @@ let
     mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
   );
 
-  fileType = textGen: types.submodule (
-    { name, config, ... }: {
-      options = {
-        body = mkOption {
-          default = null;
-          type = types.nullOr types.lines;
-          description = "Body of the file.";
-        };
-
-        source = mkOption {
-          type = types.path;
-          description = ''
-            Path of the source file. The file name must not start
-            with a period.
-          '';
-        };
-      };
-
-      config = {
-        source = mkIf (config.body != null) (
-          mkDefault (pkgs.writeTextFile {
-            inherit name;
-            text = textGen name config.body;
-            executable = true;
-          })
-        );
-      };
-    }
-  );
 in
 
 {
