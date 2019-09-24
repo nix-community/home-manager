@@ -179,6 +179,13 @@ in
         description = "List of paths that should be globally ignored.";
       };
 
+      attributes = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = [ "*.pdf diff=pdf" ];
+        description = "List of defining attributes set globally.";
+      };
+
       includes = mkOption {
         type = types.listOf includeModule;
         default = [];
@@ -225,6 +232,10 @@ in
 
           "git/ignore" = mkIf (cfg.ignores != []) {
             text = concatStringsSep "\n" cfg.ignores + "\n";
+          };
+
+          "git/attributes" = mkIf (cfg.attributes != []) {
+            text = concatStringsSep "\n" cfg.attributes + "\n";
           };
         };
       }
