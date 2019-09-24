@@ -288,32 +288,37 @@ in
           end
         '';};
       }) cfg.functions;
-    } (
-    let
-      wrappedPkgVersion = lib.getVersion pkgs.fish;
-      wrappedPkgName = lib.removeSuffix "-${wrappedPkgVersion}" pkgs.fish.name;
-      dependencies = concatMap (p: p.dependencies) cfg.plugins;
-      combinedPluginDrv = pkgs.buildEnv {
-        name = "${wrappedPkgName}-plugins-${wrappedPkgVersion}";
-        paths = cfg.plugins;
-        postBuild = ''
-          touch $out/setup.fish
 
-          if [ -d $out/functions ]; then
-            echo "set fish_function_path \$fish_function_path[1] $out/functions \$fish_function_path[2..-1]" >> $out/setup.fish
-          fi
+  }
 
-          if [ -d $out/completions ]; then
-            echo "set fish_complete_path \$fish_complete_path[1] $out/completions \$fish_complete_path[2..-1]" >> $out/setup.fish
-          fi
+    # Plugins are all sources together in a conf.d file as this allows
+    # the original source to be undisturbed.
+    (mkIf (length cfg.plugins > 0) {
+      xdg.configFile."fish/conf.d/99plugins.fish".text = concatStrings
+        (map (plugin: ''
+          # Plugin ${plugin.name}
+          if test -d ${plugin.src}/functions
+            set fish_function_path $fish_function_path[1] ${plugin.src}/functions $fish_function_path[2..-1]
+          end
 
-          if [ -d $out/conf.d ]; then
-            echo "source $out/conf.d/*.fish" >> $out/setup.fish
-          fi
-        '';
-      };
-    in mkIf (length cfg.plugins > 0) {
-      xdg.configFile."fish/conf.d/99plugins.fish".source = "${combinedPluginDrv}/setup.fish";
-      home.packages = dependencies;
-  })]);
+          if test -d ${plugin.src}/completions
+            set fish_complete_path $fish_function_path[1] ${plugin.src}/completions $fish_complete_path[2..-1]
+          end
+
+          if test -d ${plugin.src}/conf.d
+            source ${plugin.src}/conf.d/*.fish
+          end
+
+          if test -f ${plugin.src}/key_bindings.fish
+            source ${plugin.src}/key_bindings.fish
+          end
+
+          if test -f ${plugin.src}/init.fish
+            source ${plugin.src}/init.fish
+          end
+
+        ''
+        ) cfg.plugins);
+    })
+  ]);
 }
