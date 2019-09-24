@@ -6,6 +6,28 @@ let
 
   cfg = config.programs.fish;
 
+  pluginModule = types.submodule ({ config, ... }: {
+    options = {
+      src = mkOption {
+        type = types.path;
+        description = ''
+          Path to the plugin folder.
+
+          Relevant pieces will be added to the fish function path and the
+          completion path. init.fish and key_binding.fish files are sourced
+          if they exist.
+        '';
+      };
+
+      name = mkOption {
+        type = types.str;
+        description = ''
+          The name of the plugin.
+        '';
+      };
+    };
+  });
+
   abbrsStr = concatStringsSep "\n" (
     mapAttrsToList (k: v: "abbr --add --global ${k} '${v}'") cfg.shellAbbrs
   );
