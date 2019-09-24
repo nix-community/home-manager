@@ -136,13 +136,6 @@ in
       '';
     };
 
-    programs.fish.completions = mkOption {
-      type = types.attrsOf (fileType (name: body: body));
-      default = {};
-      description = ''
-        Completions to add to fish.
-      '';
-    };
   };
 
   config = mkIf cfg.enable (mkMerge [{
