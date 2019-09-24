@@ -127,14 +127,12 @@ in
     };
 
     programs.fish.functions = mkOption {
-      type = types.attrsOf (fileType (name: body: ''
-            function ${name}
-              ${body}
-            end
-            ''));
+      type = types.attrsOf types.lines;
       default = {};
+      example = { gitignore = "curl -sL https://www.gitignore.io/api/$argv"; };
       description = ''
-        Functions to add to fish.
+        Basic functions to add to fish. For more information see
+        https://fishshell.com/docs/current/commands.html#function
       '';
     };
 
@@ -253,7 +251,14 @@ in
       end
     '';
   } {
-      xdg.configFile = map (n: { target = "fish/functions/${n}.fish"; source = cfg.functions.${n}.source; }) (attrNames cfg.functions);
+      xdg.configFile = mapAttrs' (f_name: f_body: {
+        name = "fish/functions/${f_name}.fish";
+        value = {"text" = ''
+          function ${f_name}
+            ${f_body}
+          end
+        '';};
+      }) cfg.functions;
     } (
     let
       wrappedPkgVersion = lib.getVersion pkgs.fish;
