@@ -291,34 +291,37 @@ in
 
   }
 
-    # Plugins are all sources together in a conf.d file as this allows
-    # the original source to be undisturbed.
+    # Each plugin gets a corresponding conf.d/plugin-NAME.fish file to load
+    # in the paths and any initialization scripts.
     (mkIf (length cfg.plugins > 0) {
-      xdg.configFile."fish/conf.d/99plugins.fish".text = concatStrings
-        (map (plugin: ''
+      xdg.configFile = mkMerge (
+        (map (plugin: { "fish/conf.d/plugin-${plugin.name}.fish".text = ''
           # Plugin ${plugin.name}
-          if test -d ${plugin.src}/functions
-            set fish_function_path $fish_function_path[1] ${plugin.src}/functions $fish_function_path[2..-1]
+          set -l plugin_dir ${plugin.src}
+
+          # Set paths to import plugin components
+          if test -d $plugin_dir"/functions"
+            set fish_function_path $fish_function_path[1] $plugin_dir"/functions" $fish_function_path[2..-1]
           end
 
-          if test -d ${plugin.src}/completions
-            set fish_complete_path $fish_function_path[1] ${plugin.src}/completions $fish_complete_path[2..-1]
+          if test -d $plugin_dir"/completions"
+            set fish_complete_path $fish_function_path[1] $plugin_dir"/completions" $fish_complete_path[2..-1]
           end
 
-          if test -d ${plugin.src}/conf.d
-            source ${plugin.src}/conf.d/*.fish
+          # Source initialization code if it exists.
+          if test -d $plugin_dir"/conf.d"
+            source $plugin_dir"/conf.d/*.fish"
           end
 
-          if test -f ${plugin.src}/key_bindings.fish
-            source ${plugin.src}/key_bindings.fish
+          if test -f $plugin_dir"/key_bindings.fish"
+            source $plugin_dir"/key_bindings.fish"
           end
 
-          if test -f ${plugin.src}/init.fish
-            source ${plugin.src}/init.fish
+          if test -f $plugin_dir"/init.fish"
+            source $plugin_dir"/init.fish"
           end
-
-        ''
-        ) cfg.plugins);
+        '';
+        }) cfg.plugins));
     })
   ]);
 }
