@@ -1200,6 +1200,13 @@ in
           A new module is available: 'programs.starship'.
         '';
       }
+
+      {
+        time = "2019-09-26T21:47:13+00:00";
+        message = ''
+          A new module is available: 'programs.rtorrent'.
+        '';
+      }
     ];
   };
 }
