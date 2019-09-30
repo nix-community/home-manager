@@ -318,7 +318,6 @@ in
           if test -f $plugin_dir"/init.fish"
             source $plugin_dir"/init.fish"
           end
-
         '';
         }) cfg.plugins));
     })
