@@ -46,5 +46,6 @@ import nmt {
   // import ./modules/programs/gpg
   // import ./modules/programs/ssh
   // import ./modules/programs/tmux
-  // import ./modules/programs/zsh;
+  // import ./modules/programs/zsh
+  // import ./modules/programs/fish;
 }
