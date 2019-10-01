@@ -83,9 +83,9 @@ in
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      if [ -z "$INSIDE_EMACS" ]; then
+      if test -z "$INSIDE_EMACS"
         eval (${pkgs.starship}/bin/starship init fish)
-      fi
+      end
     '';
   };
 }
