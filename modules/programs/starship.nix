@@ -71,7 +71,7 @@ in
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      if [ -z "$INSIDE_EMACS" ]; then
+      if [[ -z $INSIDE_EMACS ]]; then
         eval "$(${pkgs.starship}/bin/starship init bash)"
       fi
     '';
