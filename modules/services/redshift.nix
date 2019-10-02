@@ -123,6 +123,18 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion =
+          cfg.provider == "manual"
+          -> cfg.latitude != null && cfg.longitude != null;
+        message =
+          "Must provide services.redshift.latitude and"
+          + " services.redshift.latitude when"
+          + " services.redshift.provider is set to \"manual\".";
+      }
+    ];
+
     systemd.user.services.redshift = {
       Unit = {
         Description = "Redshift colour temperature adjuster";
