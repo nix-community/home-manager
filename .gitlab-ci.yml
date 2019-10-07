@@ -9,7 +9,7 @@ Run tests:
   script:
     - nix-shell tests -A run.files-text
   only:
-    - master
+    - release-19.09
 
 pages:
   stage: deploy
@@ -34,4 +34,4 @@ Deploy NUR:
     project: rycee/nur-expressions
     branch: master
   only:
-    - master
+    - release-19.09
