@@ -1,0 +1,3 @@
+http://example.org/feed.xml "tag1" "tag2" "~Cool feed"
+http://example.org/feed2.xml
+"query:foo:rssurl =~ \"example.com\""
