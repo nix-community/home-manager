@@ -24,6 +24,7 @@ in
     programs.git = mkMerge [
       {
         enable = true;
+        package = pkgs.gitMinimal;
         aliases = {
           a1 = "foo";
           a2 = "bar";

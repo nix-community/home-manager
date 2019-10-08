@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -6,6 +6,7 @@ with lib;
   config = {
     programs.git = {
       enable = true;
+      package = pkgs.gitMinimal;
       extraConfig = ''
         This can be anything.
       '';

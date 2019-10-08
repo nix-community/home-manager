@@ -2,15 +2,7 @@
 
 with lib;
 
-let
-
-  substituteExpected = path: pkgs.substituteAll {
-    src = path;
-
-    sensible_rtp = pkgs.tmuxPlugins.sensible.rtp;
-  };
-
-in {
+{
   config = {
     programs.tmux = {
       aggressiveResize = true;
@@ -21,10 +13,19 @@ in {
       reverseSplit = true;
     };
 
+    nixpkgs.overlays = [
+      (self: super: {
+        tmuxPlugins = super.tmuxPlugins // {
+          sensible = super.tmuxPlugins.sensible // {
+            rtp = "@sensible_rtp@";
+          };
+        };
+      })
+    ];
+
     nmt.script = ''
       assertFileExists home-files/.tmux.conf
-      assertFileContent home-files/.tmux.conf \
-        ${substituteExpected ./vi-all-true.conf}
+      assertFileContent home-files/.tmux.conf ${./vi-all-true.conf}
     '';
   };
 }

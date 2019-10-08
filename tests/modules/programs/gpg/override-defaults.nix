@@ -14,6 +14,12 @@ with lib;
       };
     };
 
+    nixpkgs.overlays = [
+      (self: super: {
+        gnupg = pkgs.writeScriptBin "dummy-gnupg" "";
+      })
+    ];
+
     nmt.script = ''
       assertFileExists home-files/.gnupg/gpg.conf
       assertFileContent home-files/.gnupg/gpg.conf ${./override-defaults-expected.conf}

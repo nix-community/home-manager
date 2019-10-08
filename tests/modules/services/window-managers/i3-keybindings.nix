@@ -18,17 +18,26 @@ with lib;
           };
     };
 
+    nixpkgs.overlays = [
+      (self: super: {
+        dmenu = super.dmenu // {
+          outPath = "@dmenu@";
+        };
+
+        i3 = super.i3 // {
+          outPath = "@i3@";
+        };
+
+        i3status = super.i3status // {
+          outPath = "@i3status@";
+        };
+      })
+    ];
+
     nmt.script = ''
       assertFileExists home-files/.config/i3/config
-
-      assertFileRegex home-files/.config/i3/config \
-        'bindsym Mod1+Left overridden-command'
-
-      assertFileNotRegex home-files/.config/i3/config \
-        'Mod1+Right'
-
-      assertFileRegex home-files/.config/i3/config \
-        'bindsym Mod1+Invented invented-key-command'
+      assertFileContent home-files/.config/i3/config \
+        ${./i3-keybindings-expected.conf}
     '';
   };
 }

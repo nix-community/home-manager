@@ -2,19 +2,6 @@
 
 with lib;
 
-let
-
-  substituteExpected = path: pkgs.substituteAll {
-    src = path;
-
-    tmuxplugin_fzf_tmux_url = pkgs.tmuxPlugins.fzf-tmux-url;
-    tmuxplugin_logging = pkgs.tmuxPlugins.logging;
-    tmuxplugin_prefix_highlight = pkgs.tmuxPlugins.prefix-highlight;
-    tmuxplugin_sensible_rtp = pkgs.tmuxPlugins.sensible.rtp;
-  };
-
-in
-
 {
   config = {
     programs.tmux = {
@@ -32,10 +19,31 @@ in
       ];
     };
 
+    nixpkgs.overlays = [
+      (self: super: {
+        tmuxPlugins = super.tmuxPlugins // {
+          fzf-tmux-url = super.tmuxPlugins.fzf-tmux-url // {
+            rtp = "@tmuxplugin_fzf_tmux_url_rtp@";
+          };
+
+          logging = super.tmuxPlugins.logging // {
+            rtp = "@tmuxplugin_logging_rtp@";
+          };
+
+          prefix-highlight = super.tmuxPlugins.prefix-highlight // {
+            rtp = "@tmuxplugin_prefix_highlight_rtp@";
+          };
+
+          sensible = super.tmuxPlugins.sensible // {
+            rtp = "@tmuxplugin_sensible_rtp@";
+          };
+        };
+      })
+    ];
+
     nmt.script = ''
       assertFileExists home-files/.tmux.conf
-      assertFileContent home-files/.tmux.conf \
-        ${substituteExpected ./emacs-with-plugins.conf}
+      assertFileContent home-files/.tmux.conf ${./emacs-with-plugins.conf}
     '';
   };
 }
