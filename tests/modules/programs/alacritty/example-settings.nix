@@ -23,6 +23,12 @@ with lib;
       };
     };
 
+    nixpkgs.overlays = [
+      (self: super: {
+        alacritty = pkgs.writeScriptBin "dummy-alacritty" "";
+      })
+    ];
+
     nmt.script = ''
       assertFileContent \
         home-files/.config/alacritty/alacritty.yml \

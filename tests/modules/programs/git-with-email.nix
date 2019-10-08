@@ -8,6 +8,7 @@ with lib;
   config = {
     programs.git = {
       enable = true;
+      package = pkgs.gitMinimal;
       userEmail = "hm@example.com";
       userName = "H. M. Test";
     };

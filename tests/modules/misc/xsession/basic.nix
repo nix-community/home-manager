@@ -14,6 +14,16 @@ with lib;
       profileExtra = "profile extra commands";
     };
 
+    nixpkgs.overlays = [
+      (self: super: {
+        xorg = super.xorg // {
+          setxkbmap = super.xorg.setxkbmap // {
+            outPath = "@setxkbmap@";
+          };
+        };
+     })
+    ];
+
     nmt.script = ''
       assertFileExists home-files/.xprofile
       assertFileContent \
@@ -28,10 +38,7 @@ with lib;
       assertFileExists home-files/.config/systemd/user/setxkbmap.service
       assertFileContent \
         home-files/.config/systemd/user/setxkbmap.service \
-        ${pkgs.substituteAll {
-          src = ./basic-setxkbmap-expected.service;
-          inherit (pkgs.xorg) setxkbmap;
-        }}
+        ${./basic-setxkbmap-expected.service}
     '';
   };
 }

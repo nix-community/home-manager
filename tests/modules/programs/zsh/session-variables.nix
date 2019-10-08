@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -12,6 +12,12 @@ with lib;
         V2 = "v2-${config.programs.zsh.sessionVariables.V1}";
       };
     };
+
+    nixpkgs.overlays = [
+      (self: super: {
+        zsh = pkgs.writeScriptBin "dummy-zsh" "";
+      })
+    ];
 
     nmt.script = ''
       assertFileExists home-files/.zshrc
