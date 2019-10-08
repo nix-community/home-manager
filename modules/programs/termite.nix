@@ -9,7 +9,7 @@ let
   vteInitStr = ''
     # See https://github.com/thestinger/termite#id1
     if [[ $TERM == xterm-termite ]]; then
-      . ${pkgs.gnome3.vte-ng}/etc/profile.d/vte.sh
+      . ${pkgs.termite.vte-ng}/etc/profile.d/vte.sh
     fi
   '';
 
