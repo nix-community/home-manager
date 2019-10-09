@@ -8,6 +8,7 @@
   This section lists the release notes for stable versions of Home Manager and
   the current unstable version.
  </para>
+ <xi:include href="rl-2003.xml" />
  <xi:include href="rl-1909.xml" />
  <xi:include href="rl-1903.xml" />
  <xi:include href="rl-1809.xml" />
