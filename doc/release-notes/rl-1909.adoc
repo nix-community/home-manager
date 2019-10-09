@@ -1,8 +1,20 @@
 [[sec-release-19.09]]
-== Release 19.09 (unreleased)
+== Release 19.09
 
-This is the current unstable branch and the information in this
-section is therefore not final.
+The 19.09 release branch became the stable branch in October, 2019.
+
+[[sec-release-19.09-highlights]]
+=== Highlights
+
+This release has the following notable changes:
+
+* The <<opt-programs.firefox.enableGoogleTalk>> and
+  <<opt-programs.firefox.enableIcedTea>> options are now deprecated
+  and will only work if Firefox ESR 52.x is used.
+
+* The `home-manager` tool now provides an `uninstall` sub-command that
+  can be used to uninstall Home Manager, if used in the standalone
+  mode. That is, not as a NixOS module.
 
 [[sec-release-19.09-state-version-changes]]
 === State Version Changes
