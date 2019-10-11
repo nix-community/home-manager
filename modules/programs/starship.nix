@@ -26,6 +26,13 @@ in
   options.programs.starship = {
     enable = mkEnableOption "starship";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.starship;
+      defaultText = literalExample "pkgs.starship";
+      description = "The package to use for the starship binary.";
+    };
+
     settings = mkOption {
       type = types.attrs;
       default = {};
@@ -64,7 +71,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.starship ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."starship.toml" = mkIf (cfg.settings != {}) {
       source = configFile cfg.settings;
@@ -72,19 +79,19 @@ in
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ -z $INSIDE_EMACS ]]; then
-        eval "$(${pkgs.starship}/bin/starship init bash)"
+        eval "$(${cfg.package}/bin/starship init bash)"
       fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       if [ -z "$INSIDE_EMACS" ]; then
-        eval "$(${pkgs.starship}/bin/starship init zsh)"
+        eval "$(${cfg.package}/bin/starship init zsh)"
       fi
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
       if test -z "$INSIDE_EMACS"
-        eval (${pkgs.starship}/bin/starship init fish)
+        eval (${cfg.package}/bin/starship init fish)
       end
     '';
   };
