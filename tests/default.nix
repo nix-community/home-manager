@@ -56,6 +56,7 @@ import nmt {
     ./modules/programs/ncmpcpp
     ./modules/programs/ne
     ./modules/programs/neomutt
+    ./modules/programs/neovim
     ./modules/programs/newsboat
     ./modules/programs/nushell
     ./modules/programs/qutebrowser
