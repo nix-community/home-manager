@@ -27,6 +27,7 @@ let
   defaultResize   = 5;
   defaultShortcut = "b";
   defaultTerminal = "screen";
+  defaultShell    = null;
 
   boolToStr = value: if value then "on" else "off";
 
@@ -41,7 +42,10 @@ let
     set  -g default-terminal "${cfg.terminal}"
     set  -g base-index      ${toString cfg.baseIndex}
     setw -g pane-base-index ${toString cfg.baseIndex}
-
+    ${optionalString (cfg.shell != null) ''
+      # We need to set default-shell before calling new-session
+      set  -g default-shell "${cfg.shell}"
+    ''}
     ${optionalString cfg.newSession "new-session"}
 
     ${optionalString cfg.reverseSplit ''
@@ -248,6 +252,13 @@ in
         example = "screen-256color";
         type = types.str;
         description = "Set the $TERM variable.";
+      };
+
+      shell = mkOption {
+        default = defaultShell;
+        example = "\${pkgs.zsh}/bin/zsh";
+        type = with types; nullOr str;
+        description = "Set the default-shell tmux variable.";
       };
 
       secureSocket = mkOption {
