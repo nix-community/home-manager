@@ -32,7 +32,7 @@ in
         default = pkgs.vscode;
         example = literalExample "pkgs.vscodium";
         description = ''
-          Version of Visual Studio Code to install
+          Version of Visual Studio Code to install.
         '';
       };
 
