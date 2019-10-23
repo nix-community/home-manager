@@ -31,6 +31,7 @@ let
       [retriever]
       type = ${retrieverType}
       server = ${imap.host}
+      ${optionalString (imap.port != null) "port = ${imap.port}"}
       username = ${userName}
       password_command = (${passCmd})
       mailboxes = ( ${renderedMailboxes} )
