@@ -540,6 +540,7 @@ let
     in
       pkgs.writeText "kakrc" (
         optionalString (cfg.config != null) cfgStr
+        + "\n"
         + cfg.extraConfig
       );
 
