@@ -10,11 +10,14 @@ with lib;
     home.homeDirectory = "/home/hm-user";
 
     accounts.email.accounts = {
-      "hm@example.com".getmail = {
-        enable = true;
-        mailboxes = ["INBOX" "Sent" "Work"];
-        destinationCommand = "/bin/maildrop";
-        delete = false;
+      "hm@example.com" = {
+        getmail = {
+          enable = true;
+          mailboxes = ["INBOX" "Sent" "Work"];
+          destinationCommand = "/bin/maildrop";
+          delete = false;
+        };
+        imap.port = 993;
       };
     };
 
