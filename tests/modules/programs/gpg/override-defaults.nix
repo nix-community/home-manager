@@ -16,11 +16,13 @@ with lib;
           "0xYYYYYYYYYYYYY"
         ];
       };
+
+      homedir = "${config.home.homeDirectory}/bar/foopg";
     };
 
     nmt.script = ''
-      assertFileExists home-files/.gnupg/gpg.conf
-      assertFileContent home-files/.gnupg/gpg.conf ${./override-defaults-expected.conf}
+      assertFileExists home-files/bar/foopg/gpg.conf
+      assertFileContent home-files/bar/foopg/gpg.conf ${./override-defaults-expected.conf}
     '';
   };
 }
