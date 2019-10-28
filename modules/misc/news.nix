@@ -1207,6 +1207,21 @@ in
           A new module is available: 'programs.rtorrent'.
         '';
       }
+
+      {
+        time = "2019-10-28T14:41:48+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          The 'programs.zsh.history.path' option behavior and default
+          value has changed for state version 20.03 and above.
+
+          Specifically, '$HOME' will no longer be prepended to the
+          option value, which allows specifying absolute paths (e.g.
+          using the xdg module). Also, the default value is fixed to
+          '$HOME/.zsh_history' and 'dotDir' path is not prepended to
+          it anymore.
+        '';
+      }
     ];
   };
 }
