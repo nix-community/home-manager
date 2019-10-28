@@ -26,6 +26,8 @@ let
     vicmd = "bindkey -a";
   };
 
+  stateVersion = config.home.stateVersion;
+
   historyModule = types.submodule ({ config, ... }: {
     options = {
       size = mkOption {
@@ -43,8 +45,10 @@ let
 
       path = mkOption {
         type = types.str;
-        default = relToDotDir ".zsh_history";
-        defaultText = ".zsh_history";
+        default = if versionAtLeast stateVersion "20.03"
+          then "$HOME/.zsh_history"
+          else relToDotDir ".zsh_history";
+        example = literalExample ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
         description = "History file location";
       };
 
@@ -402,8 +406,11 @@ in
         # History options should be set in .zshrc and after oh-my-zsh sourcing.
         # See https://github.com/rycee/home-manager/issues/177.
         HISTSIZE="${toString cfg.history.size}"
-        HISTFILE="$HOME/${cfg.history.path}"
         SAVEHIST="${toString cfg.history.save}"
+        ${if versionAtLeast config.home.stateVersion "20.03"
+          then ''HISTFILE="${cfg.history.path}"''
+          else ''HISTFILE="$HOME/${cfg.history.path}"''}
+        mkdir -p "$(dirname "$HISTFILE")"
 
         setopt HIST_FCNTL_LOCK
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS

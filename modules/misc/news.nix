@@ -1214,6 +1214,21 @@ in
           A new module is available: 'programs.pazi'.
         '';
       }
+
+      {
+        time = "2019-11-05T21:54:04+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          The 'programs.zsh.history.path' option behavior and the
+          default value has changed for state version 20.03 and above.
+
+          Specifically, '$HOME' will no longer be prepended to the
+          option value, which allows specifying absolute paths (e.g.
+          using the xdg module). Also, the default value is fixed to
+          '$HOME/.zsh_history' and 'dotDir' path is not prepended to
+          it anymore.
+        '';
+      }
     ];
   };
 }

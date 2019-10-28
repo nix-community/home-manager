@@ -18,4 +18,8 @@ The state version in this release includes the changes below. These
 changes are only active if the `home.stateVersion` option is set to
 "20.03" or later.
 
-* Nothing has happened.
+* The <<opt-programs.zsh.history.path>> option is no longer prepended
+  by `$HOME`, which allows specifying absolute paths, for example,
+  using the xdg module. Also, the default value is fixed to
+  `$HOME/.zsh_history` and `dotDir` path is not prepended to it
+  anymore.
