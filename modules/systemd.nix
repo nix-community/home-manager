@@ -1,10 +1,13 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
 
   cfg = config.systemd.user;
+
+  inherit (lib) getAttr hm isBool literalExample mkIf mkMerge mkOption types;
+
+  # From <nixpkgs/nixos/modules/system/boot/systemd-lib.nix>
+  mkPathSafeName = lib.replaceChars ["@" ":" "\\" "[" "]"] ["-" "-" "-" "" ""];
 
   enabled = cfg.services != {}
       || cfg.slices != {}
@@ -15,7 +18,7 @@ let
       || cfg.mounts != {}
       || cfg.sessionVariables != {};
 
-  toSystemdIni = generators.toINI {
+  toSystemdIni = lib.generators.toINI {
     listsAsDuplicateKeys = true;
     mkKeyValue = key: value:
       let
@@ -29,16 +32,14 @@ let
   buildService = style: name: serviceCfg:
     let
       filename = "${name}.${style}";
-      pathSafeName = lib.replaceChars ["@" ":" "\\" "[" "]"]
-                                      ["-" "-" "-"  ""  "" ]
-                                      filename;
+      pathSafeName = mkPathSafeName filename;
 
       # Needed because systemd derives unit names from the ultimate
       # link target.
       source = pkgs.writeTextFile {
         name = pathSafeName;
         text = toSystemdIni serviceCfg;
-        destination = "/${filename}";
+        destination = lib.escapeShellArg "/${filename}";
       } + "/${filename}";
 
       wantedBy = target:
@@ -47,7 +48,7 @@ let
           value = { inherit source; };
         };
     in
-      singleton {
+      lib.singleton {
         name = "systemd/user/${filename}";
         value = { inherit source; };
       }
@@ -55,7 +56,7 @@ let
       map wantedBy (serviceCfg.Install.WantedBy or []);
 
   buildServices = style: serviceCfgs:
-    concatLists (mapAttrsToList (buildService style) serviceCfgs);
+    lib.concatLists (lib.mapAttrsToList (buildService style) serviceCfgs);
 
   servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
 
@@ -82,7 +83,7 @@ let
 
   unitExample = type: literalExample ''
     {
-      ${toLower type}-name = {
+      ${lib.toLower type}-name = {
         Unit = {
           Description = "Example description";
           Documentation = [ "man:example(1)" "man:example(5)" ];
@@ -97,15 +98,15 @@ let
 
   sessionVariables = mkIf (cfg.sessionVariables != {}) {
     "environment.d/10-home-manager.conf".text =
-      concatStringsSep "\n" (
-        mapAttrsToList (n: v: "${n}=${toString v}") cfg.sessionVariables
+      lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (n: v: "${n}=${toString v}") cfg.sessionVariables
       ) + "\n";
     };
 
 in
 
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     systemd.user = {
@@ -244,8 +245,8 @@ in
           assertion = enabled -> pkgs.stdenv.isLinux;
           message =
             let
-              names = concatStringsSep ", " (
-                  attrNames (
+              names = lib.concatStringsSep ", " (
+                  lib.attrNames (
                       cfg.services // cfg.slices // cfg.sockets // cfg.targets
                       // cfg.timers // cfg.paths // cfg.mounts // cfg.sessionVariables
                   )
@@ -260,7 +261,7 @@ in
     # available, in particular we assume that systemctl is in PATH.
     (mkIf pkgs.stdenv.isLinux {
       xdg.configFile = mkMerge [
-        (listToAttrs (
+        (lib.listToAttrs (
           (buildServices "service" cfg.services)
           ++
           (buildServices "slices" cfg.slices)
