@@ -79,11 +79,11 @@
      if you are following Nixpkgs master or an unstable channel and
     </para>
 <screen>
-<prompt>$</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.03.tar.gz home-manager</userinput>
+<prompt>$</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager</userinput>
 <prompt>$</prompt> <userinput>nix-channel --update</userinput>
 </screen>
     <para>
-     if you follow a Nixpkgs version 19.03 channel.
+     if you follow a Nixpkgs version 19.09 channel.
     </para>
     <para>
      On NixOS you may need to log out and back in for the channel to become
@@ -169,12 +169,12 @@ $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
   </para>
 
 <screen>
-<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.03.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
 
   <para>
-   if you follow a Nixpkgs version 19.03 channel.
+   if you follow a Nixpkgs version 19.09 channel.
   </para>
 
   <para>
@@ -251,12 +251,12 @@ home-manager.useUserPackages = true;
   </para>
 
 <screen>
-<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.03.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
 
   <para>
-   if you follow a Nixpkgs version 19.03 channel.
+   if you follow a Nixpkgs version 19.09 channel.
   </para>
 
   <para>
