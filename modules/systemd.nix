@@ -16,6 +16,7 @@ let
       || cfg.timers != {}
       || cfg.paths != {}
       || cfg.mounts != {}
+      || cfg.automounts != {}
       || cfg.sessionVariables != {};
 
   toSystemdIni = lib.generators.toINI {
@@ -170,6 +171,13 @@ in
         example = unitExample "Mount";
       };
 
+      automounts = mkOption {
+        default = {};
+        type = unitType "automount";
+        description = unitDescription "automount";
+        example = unitExample "Automount";
+      };
+
       startServices = mkOption {
         default = "suggest";
         type = with types; either bool (enum ["suggest" "legacy" "sd-switch"]);
@@ -275,6 +283,8 @@ in
           (buildServices "path" cfg.paths)
           ++
           (buildServices "mount" cfg.mounts)
+          ++
+          (buildServices "automount" cfg.automounts)
           ))
 
           sessionVariables
