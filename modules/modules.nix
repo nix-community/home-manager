@@ -82,6 +82,7 @@ let
     (loadModule ./programs/obs-studio.nix { })
     (loadModule ./programs/offlineimap.nix { })
     (loadModule ./programs/opam.nix { })
+    (loadModule ./programs/pazi.nix { })
     (loadModule ./programs/pidgin.nix { })
     (loadModule ./programs/rofi.nix { })
     (loadModule ./programs/rtorrent.nix { })
