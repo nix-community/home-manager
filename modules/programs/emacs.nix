@@ -12,7 +12,7 @@ let
   # overrides.
   emacsPackages =
     let
-      epkgs = pkgs.emacsPackagesNgGen cfg.package;
+      epkgs = pkgs.emacsPackagesGen cfg.package;
     in
       epkgs.overrideScope' cfg.overrides;
   emacsWithPackages = emacsPackages.emacsWithPackages;
@@ -42,7 +42,7 @@ in
         description = ''
           Extra packages available to Emacs. To get a list of
           available packages run:
-          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A emacsPackagesNg</command>.
+          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A emacsPackages</command>.
         '';
       };
 
