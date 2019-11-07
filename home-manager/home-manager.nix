@@ -1,6 +1,6 @@
-{ pkgs ? import <nixpkgs> {}
-, confPath
-, confAttr
+{ pkgs
+, configuration
+, nixpkgsSrc
 , check ? true
 , newsReadIdsFile ? null
 }:
@@ -10,12 +10,7 @@ with pkgs.lib;
 let
 
   env = import ../modules {
-    configuration =
-      if confAttr == ""
-      then confPath
-      else (import confPath).${confAttr};
-    pkgs = pkgs;
-    check = check;
+    inherit configuration pkgs check nixpkgsSrc;
   };
 
   newsReadIds =

@@ -1,5 +1,6 @@
 { pkgs
 , lib
+, nixpkgsSrc # XXX little hack since modules are not exposed yet in the flake
 
   # Whether to enable module type checking.
 , check ? true
@@ -149,8 +150,8 @@ let
     (loadModule ./xcursor.nix { })
     (loadModule ./xresources.nix { })
     (loadModule ./xsession.nix { })
-    (loadModule <nixpkgs/nixos/modules/misc/assertions.nix> { })
-    (loadModule <nixpkgs/nixos/modules/misc/meta.nix> { })
+    (loadModule "${nixpkgsSrc}/nixos/modules/misc/assertions.nix" { })
+    (loadModule "${nixpkgsSrc}/nixos/modules/misc/meta.nix" { })
   ];
 
   modules = map (getAttr "file") (filter (getAttr "condition") allModules);

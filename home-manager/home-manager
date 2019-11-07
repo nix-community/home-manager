@@ -32,78 +32,42 @@ function setWorkDir() {
     fi
 }
 
-# Attempts to set the HOME_MANAGER_CONFIG global variable.
-#
-# If no configuration file can be found then this function will print
-# an error message and exit with an error code.
-function setConfigFile() {
-    if [[ -v HOME_MANAGER_CONFIG ]] ; then
-        if [[ ! -e "$HOME_MANAGER_CONFIG" ]] ; then
-            errorEcho "No configuration file found at $HOME_MANAGER_CONFIG"
-            exit 1
-        fi
-
-        HOME_MANAGER_CONFIG="$(realpath "$HOME_MANAGER_CONFIG")"
+function setFlake() {
+    if [[ -v HOME_MANAGER_FLAKE ]] ; then
         return
     fi
 
-    local defaultConfFile="${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home.nix"
-    local confFile
-    for confFile in "$defaultConfFile" \
-                    "$HOME/.nixpkgs/home.nix" ; do
-        if [[ -e "$confFile" ]] ; then
-            HOME_MANAGER_CONFIG="$(realpath "$confFile")"
-            return
-        fi
-    done
+    # local defaultConfFile="${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home.nix"
+    # local confFile
+    # for confFile in "$defaultConfFile" \
+    #                 "$HOME/.nixpkgs/home.nix" ; do
+    #     if [[ -e "$confFile" ]] ; then
+    #         HOME_MANAGER_CONFIG="$(realpath "$confFile")"
+    #         return
+    #     fi
+    # done
 
-    errorEcho "No configuration file found." \
-         "Please create one at $defaultConfFile"
+    # errorEcho "No configuration file found." \
+    #      "Please create one at $defaultConfFile"
+    errorEcho "No flake found, please pass one."
     exit 1
 }
 
-function setHomeManagerNixPath() {
-    local path
-    for path in "@HOME_MANAGER_PATH@" \
-                "${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home-manager" \
-                "$HOME/.nixpkgs/home-manager" ; do
-        if [[ -e "$path" || "$path" =~ ^https?:// ]] ; then
-            export NIX_PATH="home-manager=$path${NIX_PATH:+:}$NIX_PATH"
-            return
-        fi
-    done
-}
-
 function doBuildAttr() {
-    setConfigFile
-    setHomeManagerNixPath
+    setFlake
 
-    local extraArgs="$*"
-
-    for p in "${EXTRA_NIX_PATH[@]}"; do
-        extraArgs="$extraArgs -I $p"
-    done
+    local attribute="$*"
+    #local extraArgs="$*"
+    local extraArgs=""
 
     if [[ -v VERBOSE ]]; then
         extraArgs="$extraArgs --show-trace"
     fi
 
-    # shellcheck disable=2086
-    if [[ -v USE_NIX2_COMMAND ]]; then
-        nix build \
-            -f "<home-manager/home-manager/home-manager.nix>" \
-            $extraArgs \
-            ${PASSTHROUGH_OPTS[*]} \
-            --argstr confPath "$HOME_MANAGER_CONFIG" \
-            --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
-    else
-        nix-build \
-            "<home-manager/home-manager/home-manager.nix>" \
-            $extraArgs \
-            ${PASSTHROUGH_OPTS[*]} \
-            --argstr confPath "$HOME_MANAGER_CONFIG" \
-            --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
-    fi
+    nix build \
+        $HOME_MANAGER_FLAKE#homeConfiguration.$attribute
+        $extraArgs \
+        ${PASSTHROUGH_OPTS[*]}
 }
 
 # Presents news to the user. Takes as argument the path to a "news
@@ -169,13 +133,8 @@ function doBuild() {
 
     local exitCode
 
-    if [[ -v USE_NIX2_COMMAND ]]; then
-        doBuildAttr activationPackage \
-            && exitCode=0 || exitCode=1
-    else
-        doBuildAttr --attr activationPackage \
-            && exitCode=0 || exitCode=1
-    fi
+    doBuildAttr activationPackage \
+        && exitCode=0 || exitCode=1
 
     presentNews "$newsInfo"
 
@@ -307,23 +266,11 @@ function buildNews() {
     local output
     output="$WORK_DIR/news-info.sh"
 
-    if [[ -v USE_NIX2_COMMAND ]]; then
-        doBuildAttr \
+        doBuildAttr newsInfo \
                     --out-link "$output" \
                     --quiet \
                     --arg check false \
-                    --argstr newsReadIdsFile "$(newsReadIdsFile)" \
-                    newsInfo
-    else
-        doBuildAttr \
-                    --out-link "$output" \
-                    --no-build-output \
-                    --quiet \
-                    --arg check false \
-                    --argstr newsReadIdsFile "$(newsReadIdsFile)" \
-                    --attr newsInfo \
-                    > /dev/null
-    fi
+                    --argstr newsReadIdsFile "$(newsReadIdsFile)"
 
     echo "$output"
 }
@@ -460,7 +407,6 @@ function doHelp() {
     echo "  uninstall    Remove Home Manager"
 }
 
-EXTRA_NIX_PATH=()
 HOME_MANAGER_CONFIG_ATTRIBUTE=""
 PASSTHROUGH_OPTS=()
 COMMAND=""
@@ -473,23 +419,16 @@ while [[ $# -gt 0 ]]; do
         build|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
             COMMAND="$opt"
             ;;
-        -2)
-            USE_NIX2_COMMAND=1
-            ;;
         -A)
             HOME_MANAGER_CONFIG_ATTRIBUTE="$1"
-            shift
-            ;;
-        -I)
-            EXTRA_NIX_PATH+=("$1")
             shift
             ;;
         -b)
             export HOME_MANAGER_BACKUP_EXT="$1"
             shift
             ;;
-        -f|--file)
-            HOME_MANAGER_CONFIG="$1"
+        -f|--flake)
+            HOME_MANAGER_FLAKE="$1"
             shift
             ;;
         -h|--help)

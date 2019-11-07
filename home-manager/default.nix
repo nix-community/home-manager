@@ -1,16 +1,4 @@
-{ runCommand, lib, bash, coreutils, findutils, gnused, less
-
-  # Extra path to Home Manager. If set then this path will be tried
-  # before `$HOME/.config/nixpkgs/home-manager` and
-  # `$HOME/.nixpkgs/home-manager`.
-, path ? null
-}:
-
-let
-
-  pathStr = if path == null then "" else path;
-
-in
+{ runCommand, lib, bash, coreutils, findutils, gnused, less}:
 
 runCommand
   "home-manager"
@@ -33,7 +21,6 @@ runCommand
       --subst-var-by findutils "${findutils}" \
       --subst-var-by gnused "${gnused}" \
       --subst-var-by less "${less}" \
-      --subst-var-by HOME_MANAGER_PATH '${pathStr}'
 
     install -D -m755 ${./completion.bash} \
       $out/share/bash-completion/completions/home-manager

@@ -1,5 +1,6 @@
 { configuration
 , pkgs
+, nixpkgsSrc
 , lib ? pkgs.stdenv.lib
 
   # Whether to check that each option has a matching declaration.
@@ -22,7 +23,7 @@ let
   rawModule = lib.evalModules {
     modules =
       [ configuration ]
-      ++ (import ./modules.nix { inherit check lib pkgs; });
+      ++ (import ./modules.nix { inherit check lib pkgs nixpkgsSrc; });
     specialArgs = {
       modulesPath = builtins.toString ./.;
     };

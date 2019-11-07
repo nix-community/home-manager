@@ -24,7 +24,7 @@ in
 
     manual.manpages.enable = mkOption {
       type = types.bool;
-      default = true;
+      default = false;
       example = false;
       description = ''
         Whether to install the configuration manual page. The manual can
