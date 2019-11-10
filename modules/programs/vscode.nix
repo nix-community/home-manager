@@ -71,7 +71,7 @@ in
     # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
     home.file =
       let
-        toPaths = p:
+        toPaths = path: let p ="${path}/share/vscode/extensions";in
           # Links every dir in p to the extension path.
           mapAttrsToList (k: v:
             {
