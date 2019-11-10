@@ -1268,6 +1268,18 @@ in
           A new module is available: 'services.unison'.
         '';
       }
+
+      {
+        time = "2019-12-01T22:10:23+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xdg.mime'.
+
+          If enabled, which it is by default, this module will create
+          the XDG mime database and desktop file database caches from
+          programs installed via Home Manager.
+        '';
+      }
     ];
   };
 }
