@@ -11,7 +11,7 @@ let
   configDir = {
     "vscode" = "Code";
     "vscode-insiders" = "Code - Insiders";
-    "vscodium" = "Codium";
+    "vscodium" = "VSCodium";
   }.${vscodePname};
 
   configFilePath =
