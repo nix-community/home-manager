@@ -106,14 +106,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = config.programs.notmuch.maildir.synchronizeFlags;
-        message = "The astroid module requires"
-          + " 'programs.notmuch.maildir.synchronizeFlags = true'.";
-      }
-    ];
-
     home.packages =  [ pkgs.astroid ];
 
     xdg.configFile."astroid/config".source =
