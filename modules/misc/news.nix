@@ -1229,6 +1229,13 @@ in
           it anymore.
         '';
       }
+
+      {
+        time = "2019-11-17T18:47:40+00:00";
+        message = ''
+          A new module is available: 'services.lorri'.
+        '';
+      }
     ];
   };
 }
