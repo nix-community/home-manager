@@ -1207,6 +1207,13 @@ in
           A new module is available: 'programs.rtorrent'.
         '';
       }
+
+      {
+        time = "2019-12-10T19:58:00+00:00";
+        message = ''
+          A new module is available: 'services.lorri'.
+        '';
+      }
     ];
   };
 }
