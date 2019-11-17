@@ -242,15 +242,27 @@ in
           '';
 
           ensureRuntimeDir = "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$(id -u)}";
+
+          systemctl = "${ensureRuntimeDir} ${cfg.systemctlPath}";
         in
           ''
-            if ${ensureRuntimeDir} ${cfg.systemctlPath} --quiet --user is-system-running 2> /dev/null; then
+            systemdStatus=$(${systemctl} --user is-system-running 2>&1 || true)
+
+            if [[ $systemdStatus == 'running' || $systemdStatus == 'degraded' ]]; then
+              if [[ $systemdStatus == 'degraded' ]]; then
+                warnEcho "The user systemd session is degraded:"
+                systemctl --user --state=failed
+                warnEcho "Attempting to reload services anyway..."
+              fi
+
               ${ensureRuntimeDir} \
               PATH=${dirOf cfg.systemctlPath}:$PATH \
                 ${if cfg.startServices then autoReloadCmd else legacyReloadCmd}
             else
               echo "User systemd daemon not running. Skipping reload."
             fi
+
+            unset systemdStatus
           ''
       );
     })
