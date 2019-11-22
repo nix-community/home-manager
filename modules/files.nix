@@ -236,6 +236,9 @@ in
       (''
         mkdir -p $out
 
+        # Needed in case /nix is a symbolic link.
+        realOut="$(realpath -m "$out")"
+
         function insertFile() {
           local source="$1"
           local relTarget="$2"
@@ -244,10 +247,10 @@ in
 
           # Figure out the real absolute path to the target.
           local target
-          target="$(realpath -m "$out/$relTarget")"
+          target="$(realpath -m "$realOut/$relTarget")"
 
           # Target path must be within $HOME.
-          if [[ ! $target == $out* ]] ; then
+          if [[ ! $target == $realOut* ]] ; then
             echo "Error installing file '$relTarget' outside \$HOME" >&2
             exit 1
           fi
