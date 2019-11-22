@@ -244,7 +244,11 @@ in
 
           # Figure out the real absolute path to the target.
           local target
-          target="$(realpath -m "$out/$relTarget")"
+          maybe_path="$(realpath -m "$out/$relTarget")"
+          
+          # Strip the leading /usr/local off if it exists. 
+          target=''${maybe_path#/usr/local}
+          
 
           # Target path must be within $HOME.
           if [[ ! $target == $out* ]] ; then
