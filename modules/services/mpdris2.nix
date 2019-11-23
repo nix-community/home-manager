@@ -86,15 +86,21 @@ in
     xdg.configFile."mpDris2/mpDris2.conf".text = toIni mpdris2Conf;
 
     systemd.user.services.mpdris2 = {
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+
       Unit = {
         Description = "MPRIS 2 support for MPD";
-        After = [ "graphical-session-pre.target" "mpd.service" ];
-        PartOf = [ "graphical-session.target" ];
+        After = [ "mpd.service" ];
       };
 
       Service = {
         Type = "simple";
+        Restart = "on-failure";
+        RestartSec = "5s";
         ExecStart = "${cfg.package}/bin/mpDris2";
+        BusName = "org.mpris.MediaPlayer2.mpd";
       };
     };
   };
