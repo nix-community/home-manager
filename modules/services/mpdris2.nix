@@ -86,6 +86,10 @@ in
     xdg.configFile."mpDris2/mpDris2.conf".text = toIni mpdris2Conf;
 
     systemd.user.services.mpdris2 = {
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+
       Unit = {
         Description = "MPRIS 2 support for MPD";
         After = [ "graphical-session-pre.target" "mpd.service" ];
