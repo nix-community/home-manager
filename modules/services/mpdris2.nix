@@ -92,12 +92,13 @@ in
 
       Unit = {
         Description = "MPRIS 2 support for MPD";
-        After = [ "graphical-session-pre.target" "mpd.service" ];
-        PartOf = [ "graphical-session.target" ];
+        After = [ "mpd.service" ];
       };
 
       Service = {
         Type = "simple";
+        Restart = "on-failure";
+        RestartSec = "5s";
         ExecStart = "${cfg.package}/bin/mpDris2";
       };
     };
