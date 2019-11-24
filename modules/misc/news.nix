@@ -1232,6 +1232,7 @@ in
 
       {
         time = "2019-11-17T18:47:40+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.lorri'.
         '';
