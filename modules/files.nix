@@ -23,10 +23,6 @@ let
       then file.source
       else builtins.path { path = file.source; name = sourceName; };
 
-  # A symbolic link whose target path matches this pattern will be
-  # considered part of a Home Manager generation.
-  homeFilePattern = "${builtins.storeDir}/*-home-manager-files/*";
-
 in
 
 {
@@ -52,13 +48,17 @@ in
         check = pkgs.writeText "check" ''
           . ${./lib-bash/color-echo.sh}
 
+          # A symbolic link whose target path matches this pattern will be
+          # considered part of a Home Manager generation.
+          homeFilePattern="$(readlink -e "${builtins.storeDir}")/*-home-manager-files/*"
+
           newGenFiles="$1"
           shift
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
-                && ! "$(readlink "$targetPath")" == ${homeFilePattern} ]] ; then
+                && ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               if [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
                 if [[ -e "$backup" ]]; then
@@ -133,13 +133,17 @@ in
         cleanup = pkgs.writeText "cleanup" ''
           . ${./lib-bash/color-echo.sh}
 
+          # A symbolic link whose target path matches this pattern will be
+          # considered part of a Home Manager generation.
+          homeFilePattern="$(readlink -e "${builtins.storeDir}")/*-home-manager-files/*"
+
           newGenFiles="$1"
           shift 1
           for relativePath in "$@" ; do
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" == ${homeFilePattern} ]] ; then
+            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               warnEcho "Path '$targetPath' not link into Home Manager generation. Skipping delete."
             else
               $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
