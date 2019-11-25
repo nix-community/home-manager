@@ -1245,6 +1245,16 @@ in
           A new module is available: 'services.spotifyd'.
         '';
       }
+
+      {
+        time = "2019-11-25T13:25:33+00:00";
+        message = ''
+          A new option in the 'emacs' module is available : 'programs.emacs.client'.
+
+          It can be used to enable a desktop file for the Emacs client.
+        '';
+      }
+
     ];
   };
 }
