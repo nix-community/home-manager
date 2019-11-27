@@ -100,6 +100,7 @@ in
         Restart = "on-failure";
         RestartSec = "5s";
         ExecStart = "${cfg.package}/bin/mpDris2";
+        BusName = "org.mpris.MediaPlayer2.mpd";
       };
     };
   };
