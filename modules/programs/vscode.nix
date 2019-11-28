@@ -85,7 +85,10 @@ in
         foldr
           (a: b: a // b)
           {
-            "${configFilePath}".text = builtins.toJSON cfg.userSettings;
+            "${configFilePath}" =
+              mkIf (cfg.userSettings != {}) {
+                text = builtins.toJSON cfg.userSettings;
+              };
           }
           toSymlink;
   };
