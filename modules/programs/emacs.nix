@@ -112,7 +112,7 @@ in
   config = mkIf cfg.enable {
     home.packages =
       [ cfg.finalPackage ]
-      ++ (lib.optional cfg.client.enable clientDesktopFile);
+      ++ lib.optional cfg.client.enable clientDesktopFile;
     programs.emacs.finalPackage = emacsWithPackages cfg.extraPackages;
   };
 }
