@@ -57,7 +57,9 @@ in
         args = mkOption {
           type = with types; listOf str;
           default = [ "-c" ];
-          description = "Command-line arguments to pass to emacsclient.";
+          description = ''
+            Command-line arguments to pass to <command>emacsclient</command>.
+          '';
         };
       };
 
