@@ -127,6 +127,10 @@
    </arg>
     
    <arg>
+    --(no-)substitute
+   </arg>
+    
+   <arg>
     <group choice="req"> 
     <arg choice="plain">
      -v
@@ -437,6 +441,18 @@
    <varlistentry>
     <term>
      <option>--show-trace</option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--(no-)substitute</option>
     </term>
     <listitem>
      <para>

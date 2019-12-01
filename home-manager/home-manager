@@ -431,6 +431,7 @@ function doHelp() {
     echo "  --max-jobs NUM"
     echo "  --option NAME VALUE"
     echo "  --show-trace"
+    echo "  --(no-)substitute"
     echo
     echo "Commands"
     echo
@@ -507,7 +508,8 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;
-        --keep-failed|--keep-going|--show-trace)
+        --keep-failed|--keep-going|--show-trace\
+            |--substitute|--no-substitute)
             PASSTHROUGH_OPTS+=("$opt")
             ;;
         -v|--verbose)
