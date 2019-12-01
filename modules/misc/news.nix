@@ -1280,6 +1280,13 @@ in
           programs installed via Home Manager.
         '';
       }
+
+      {
+        time = "2019-12-08T19:48:26+00:00";
+        message = ''
+          A new module is available: 'programs.readline'.
+        '';
+      }
     ];
   };
 }
