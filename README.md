@@ -187,8 +187,8 @@ which will create a `result` link to a directory containing an
 activation script and the generated home directory files.
 
 Documentation of available configuration options, including
-descriptions and usage examples, is available in the [Home Manager
-manual][configuration options] or offline by running
+descriptions and usage examples, is available in the Home Manager
+manual by running
 
 ```console
 $ man home-configuration.nix
@@ -307,7 +307,6 @@ in your Home Manager configuration.
 [nixAllowedUsers]: https://nixos.org/nix/manual/#conf-allowed-users
 [nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
 [Z shell]: http://zsh.sourceforge.net/
-[configuration options]: https://rycee.gitlab.io/home-manager/options.html
 [#home-manager]: https://webchat.freenode.net/?url=irc%3A%2F%2Firc.freenode.net%2Fhome-manager
 [freenode]: https://freenode.net/
 [channel logs]: https://logs.nix.samueldr.com/home-manager/
