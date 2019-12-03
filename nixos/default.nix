@@ -1,3 +1,4 @@
+nixpkgs:
 { config, lib, pkgs, utils, ... }:
 
 with lib;
@@ -8,35 +9,35 @@ let
 
   extendedLib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
-  hmModule = types.submoduleWith {
+  hmModule = types.submodule ({name, ...}: {
     specialArgs = { lib = extendedLib; };
-    modules = [
-      ({ name, ... }: {
-        imports = import ../modules/modules.nix {
-          inherit pkgs;
-          lib = extendedLib;
-          useNixpkgsModule = !cfg.useGlobalPkgs;
-        };
+    imports = import ../modules/modules.nix nixpkgs {
+      inherit pkgs;
+      lib = extendedLib;
+      useNixpkgsModule = !cfg.useGlobalPkgs;
+    };
 
-        config = {
-          submoduleSupport.enable = true;
-          submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+    config = {
+      submoduleSupport.enable = true;
+      submoduleSupport.externalPackageInstall = cfg.useUserPackages;
 
-          # The per-user directory inside /etc/profiles is not known by
-          # fontconfig by default.
-          fonts.fontconfig.enable = cfg.useUserPackages
-            && config.fonts.fontconfig.enable;
+      # The per-user directory inside /etc/profiles is not known by
+      # fontconfig by default.
+      fonts.fontconfig.enable =
+        cfg.useUserPackages && config.fonts.fontconfig.enable;
 
-          home.username = config.users.users.${name}.name;
-          home.homeDirectory = config.users.users.${name}.home;
-        };
-      })
-    ];
-  };
+      home.username = config.users.users.${name}.name;
+      home.homeDirectory = config.users.users.${name}.home;
+    };
+  });
 
-  serviceEnvironment = optionalAttrs (cfg.backupFileExtension != null) {
-    HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
-  } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
+  serviceEnvironment =
+    optionalAttrs (cfg.backupFileExtension != null) {
+      HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
+    }
+    // optionalAttrs cfg.verbose {
+      VERBOSE = "1";
+    };
 
 in {
   options = {
