@@ -13,6 +13,12 @@ let
     "vscode-insiders" = "Code - Insiders";
     "vscodium" = "VSCodium";
   }.${vscodePname};
+  
+  extensionDir = {
+    "vscode" = "vscode";
+    "vscode-insiders" = "vscode-insiders";
+    "vscodium" = "vscode-oss";
+  }.${vscodePname};
 
   configFilePath =
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -21,7 +27,7 @@ let
       "${config.xdg.configHome}/${configDir}/User/settings.json";
 
   # TODO: On Darwin where are the extensions?
-  extensionPath = ".${vscodePname}/extensions";
+  extensionPath = ".${extensionDir}/extensions";
 in
 
 {
