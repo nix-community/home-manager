@@ -36,7 +36,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.readline ];
     home.file.".inputrc".text =
       let
         includeSystemStr = if cfg.includeSystem then "$include /etc/inputrc" else "";
