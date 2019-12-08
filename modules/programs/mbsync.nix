@@ -178,11 +178,13 @@ in
           ++ groupsConfig
         ) + "\n";
 
-    home.activation.createMaildir =
-      dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-        $DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG ${
-          concatMapStringsSep " " (a: a.maildir.absPath) mbsyncAccounts
-        }
-      '';
+    home.activation = mkIf (mbsyncAccounts != []) {
+      createMaildir =
+        dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+          $DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG ${
+            concatMapStringsSep " " (a: a.maildir.absPath) mbsyncAccounts
+          }
+        '';
+    };
   };
 }
