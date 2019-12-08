@@ -46,6 +46,7 @@ import nmt {
   // import ./modules/programs/alacritty
   // import ./modules/programs/bash
   // import ./modules/programs/gpg
+  // import ./modules/programs/readline
   // import ./modules/programs/ssh
   // import ./modules/programs/tmux
   // import ./modules/programs/zsh;

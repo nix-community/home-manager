@@ -6,6 +6,19 @@ let
 
   cfg = config.programs.readline;
 
+  mkSetVariableStr = n: v:
+    let
+      mkValueStr = v:
+        if v == true then "on"
+        else if v == false then "off"
+        else if isInt v then toString v
+        else if isString v then v
+        else abort ("values ${toPretty v} is of unsupported type");
+    in
+      "set ${n} ${mkValueStr v}";
+
+  mkBindingStr = k: v: "\"${k}\": ${v}";
+
 in
 
 {
@@ -17,6 +30,15 @@ in
       type = types.attrsOf types.str;
       example = { "\C-h" = "backward-kill-word"; };
       description = "Readline bindings.";
+    };
+
+    variables = mkOption {
+      type = with types; attrsOf (either str (either int bool));
+      default = {};
+      example = { expand-tilde = true; };
+      description = ''
+        Readline customization variable assignments.
+      '';
     };
 
     includeSystemConfig = mkOption {
@@ -40,7 +62,8 @@ in
       let
         configStr = concatStringsSep "\n" (
           optional cfg.includeSystemConfig "$include /etc/inputrc"
-          ++ mapAttrsToList (k: v: "\"${k}\": ${v}") cfg.bindings
+          ++ mapAttrsToList mkSetVariableStr cfg.variables
+          ++ mapAttrsToList mkBindingStr cfg.bindings
         );
       in
         ''
