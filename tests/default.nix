@@ -17,13 +17,6 @@ import nmt {
   testedAttrPath = [ "home" "activationPackage" ];
   tests = {
     browserpass = ./modules/programs/browserpass.nix;
-    files-executable = ./modules/files/executable.nix;
-    files-hidden-source = ./modules/files/hidden-source.nix;
-    files-source-with-spaces = ./modules/files/source-with-spaces.nix;
-    files-text = ./modules/files/text.nix;
-    git-with-email = ./modules/programs/git-with-email.nix;
-    git-with-most-options = ./modules/programs/git.nix;
-    git-with-str-extra-config = ./modules/programs/git-with-str-extra-config.nix;
     mbsync = ./modules/programs/mbsync.nix;
     texlive-minimal = ./modules/programs/texlive-minimal.nix;
     xresources = ./modules/xresources.nix;
@@ -41,10 +34,12 @@ import nmt {
     // import ./modules/services/sxhkd
     // import ./modules/systemd
   )
+  // import ./modules/files
   // import ./modules/home-environment
   // import ./modules/misc/fontconfig
   // import ./modules/programs/alacritty
   // import ./modules/programs/bash
+  // import ./modules/programs/git
   // import ./modules/programs/gpg
   // import ./modules/programs/newsboat
   // import ./modules/programs/readline
