@@ -9,6 +9,8 @@
 /modules/misc/fontconfig.nix                          @rycee
 /tests/modules/misc/fontconfig                        @rycee
 
+/modules/misc/gnome.nix                               @liff
+
 /modules/misc/gtk.nix                                 @rycee
 
 /modules/misc/news.nix                                @rycee

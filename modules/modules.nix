@@ -28,6 +28,7 @@ let
     (loadModule ./misc/dconf.nix { })
     (loadModule ./misc/debug.nix { })
     (loadModule ./misc/fontconfig.nix { })
+    (loadModule ./misc/gnome.nix { condition = hostPlatform.isLinux; })
     (loadModule ./misc/gtk.nix { })
     (loadModule ./misc/lib.nix { })
     (loadModule ./misc/news.nix { })
