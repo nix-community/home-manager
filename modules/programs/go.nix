@@ -38,7 +38,27 @@ in
         type = with types; nullOr str;
         default = null;
         example = "go";
-        description = "GOPATH relative to HOME";
+        description = ''
+          Primary <envar>GOPATH</envar> relative to
+          <envar>HOME</envar>. It will be exported first and therefore
+          used by default by the Go tooling.
+        '';
+      };
+
+      extraGoPaths = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = [ "extraGoPath1" "extraGoPath2" ];
+        description =
+          let
+            goPathOpt = "programs.go.goPath";
+          in
+          ''
+            Extra <envar>GOPATH</envar>s relative to <envar>HOME</envar> appended
+            after
+            <varname><link linkend="opt-${goPathOpt}">${goPathOpt}</link></varname>,
+            if that option is set.
+          '';
       };
 
       goBin = mkOption {
@@ -66,7 +86,11 @@ in
         mapAttrsToList mkSrc cfg.packages;
     }
     (mkIf (cfg.goPath != null) {
-      home.sessionVariables.GOPATH = builtins.toPath "${config.home.homeDirectory}/${cfg.goPath}";
+      home.sessionVariables.GOPATH =
+        concatStringsSep ":"
+        (map builtins.toPath
+        (map (path: "${config.home.homeDirectory}/${path}")
+        ([cfg.goPath] ++ cfg.extraGoPaths)));
     })
     (mkIf (cfg.goBin != null) {
       home.sessionVariables.GOBIN = builtins.toPath "${config.home.homeDirectory}/${cfg.goBin}";
