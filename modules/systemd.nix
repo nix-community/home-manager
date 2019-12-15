@@ -251,7 +251,7 @@ in
             if [[ $systemdStatus == 'running' || $systemdStatus == 'degraded' ]]; then
               if [[ $systemdStatus == 'degraded' ]]; then
                 warnEcho "The user systemd session is degraded:"
-                systemctl --user --state=failed
+                ${systemctl} --user --state=failed
                 warnEcho "Attempting to reload services anyway..."
               fi
 
