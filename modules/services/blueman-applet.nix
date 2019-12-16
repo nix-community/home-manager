@@ -8,9 +8,9 @@ with lib;
       enable = mkEnableOption ''
         Blueman applet.
 
-        Note, for the applet to work, 'blueman' package should also be installed system-wide
-        since it requires running 'blueman-mechanism' service activated via dbus.
-        You can add it to the dbus packages in system configuration:
+        Note, for the applet to work, 'blueman' service should be enabled system-wide
+        since it requires running 'blueman-mechanism' service activated.
+        You can enable it in system configuration:
 
           services.blueman.enable = true;
       '';
