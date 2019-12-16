@@ -12,7 +12,7 @@ with lib;
         since it requires running 'blueman-mechanism' service activated via dbus.
         You can add it to the dbus packages in system configuration:
 
-          services.dbus.packages = [ pkgs.blueman ];
+          services.blueman.enable = true;
       '';
     };
   };
