@@ -28,6 +28,17 @@ in
         '';
       };
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.beets;
+        defaultText = literalExample "pkgs.beets";
+        example = literalExample "(pkgs.beets.override { enableCheck = true; })";
+        description = ''
+          The <literal>beets</literal> package to use.
+          Can be used to specify extensions.
+        '';
+      };
+
       settings = mkOption {
         type = types.attrs;
         default = {};
@@ -40,7 +51,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.beets ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."beets/config.yaml".text =
         builtins.toJSON config.programs.beets.settings;
