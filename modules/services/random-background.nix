@@ -22,7 +22,13 @@ in
 
   options = {
     services.random-background = {
-      enable = mkEnableOption "random desktop background";
+      enable = mkEnableOption "random desktop background" // {
+        description = ''
+          Whether to enable random desktop background. If using a custom
+          xsession, this may require setting bgSupport to true or the
+          background image may be overwritten.
+        '';
+      };
 
       imageDirectory = mkOption {
         type = types.str;
