@@ -5,15 +5,18 @@ with lib;
 {
   options = {
     services.blueman-applet = {
-      enable = mkEnableOption ''
-        Blueman applet.
-
-        Note, for the applet to work, 'blueman' service should be enabled system-wide
-        since it requires running 'blueman-mechanism' service activated.
-        You can enable it in system configuration:
-
-          services.blueman.enable = true;
-      '';
+      enable = mkEnableOption "" // {
+        description = ''
+          Whether to enable the Blueman applet.
+          </para><para>
+          Note, for the applet to work, the 'blueman' service should
+          be enabled system-wide. You can enable it in the system
+          configuration using
+          <programlisting language="nix">
+            services.blueman.enable = true;
+          </programlisting>
+        '';
+      };
     };
   };
 
