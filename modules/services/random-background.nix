@@ -22,7 +22,17 @@ in
 
   options = {
     services.random-background = {
-      enable = mkEnableOption "random desktop background";
+      enable = mkEnableOption "" // {
+        description = ''
+          Whether to enable random desktop background.
+          </para><para>
+          Note, if you are using NixOS and have set up a custom
+          desktop manager session for Home Manager, then the session
+          configuration must have the <option>bgSupport</option>
+          option set to <literal>true</literal> or the background
+          image set by this module may be overwritten.
+        '';
+      };
 
       imageDirectory = mkOption {
         type = types.str;
