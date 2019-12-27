@@ -1295,6 +1295,14 @@ in
           A new module is available: 'services.cbatticon'.
         '';
       }
+
+      {
+        time = "2020-01-16T10:02:00+00:00";
+        message = ''
+          A new module is available: 'services.grobi'.
+        '';
+      }
+
     ];
   };
 }
