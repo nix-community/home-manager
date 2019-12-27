@@ -10,9 +10,7 @@ let
     ++ optional (cfg.agents != []) "--agents ${concatStringsSep "," cfg.agents}"
     ++ optional (cfg.inheritType != null) "--inherit ${cfg.inheritType}";
 
-  shellCommand = ''
-    eval "$(${cfg.package}/bin/keychain --eval ${concatStringsSep " " flags} ${concatStringsSep " " cfg.keys})"
-  '';
+  shellCommand = "${cfg.package}/bin/keychain --eval ${concatStringsSep " " flags} ${concatStringsSep " " cfg.keys}";
 
 in
 
@@ -71,6 +69,14 @@ in
       '';
     };
 
+    enableFishIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Fish integration.
+      '';
+    };
+
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
@@ -82,7 +88,14 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration shellCommand;
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration shellCommand;
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+      eval "$(${shellCommand})"
+    '';
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+      eval (${shellCommand})
+    '';
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      eval "$(${shellCommand})"
+    '';
   };
 }
