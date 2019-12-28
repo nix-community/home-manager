@@ -89,7 +89,7 @@ in
       default = true;
       type = types.bool;
       description = ''
-        Whether to run keychain from your ~/.profile.
+        Whether to run keychain from your <filename>~/.xsession</filename>.
       '';
     };
   };
