@@ -84,6 +84,15 @@ in
         Whether to enable Zsh integration.
       '';
     };
+
+    enableXsessionIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      visible = pkgs.stdenv.hostPlatform.isLinux;
+      description = ''
+        Whether to run keychain from your <filename>~/.xsession</filename>.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -95,6 +104,9 @@ in
       eval (${shellCommand})
     '';
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      eval "$(${shellCommand})"
+    '';
+    xsession.initExtra = mkIf cfg.enableXsessionIntegration ''
       eval "$(${shellCommand})"
     '';
   };
