@@ -3,8 +3,24 @@
 with lib;
 
 let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
   cfg = config.programs.firefox;
+
+  mozillaConfigPath =
+    if isDarwin
+    then "Library/Application Support/Mozilla"
+    else ".mozilla";
+
+  firefoxConfigPath =
+    if isDarwin
+    then "Library/Application Support/Firefox"
+    else "${mozillaConfigPath}/firefox";
+
+  profilesPath =
+    if isDarwin
+    then "${firefoxConfigPath}/Profiles"
+    else firefoxConfigPath;
 
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
 
@@ -12,7 +28,10 @@ let
     flip mapAttrs' cfg.profiles (_: profile:
       nameValuePair "Profile${toString profile.id}" {
         Name = profile.name;
-        Path = profile.path;
+        Path =
+          if isDarwin
+          then "Profiles/${profile.path}"
+          else profile.path;
         IsRelative = 1;
         Default = if profile.isDefault then 1 else 0;
       }
@@ -242,15 +261,18 @@ in
         bcfg = setAttrByPath [browserName] fcfg;
 
         package =
-          if versionAtLeast config.home.stateVersion "19.09"
-          then cfg.package.override { cfg = fcfg; }
-          else (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
+          if isDarwin then
+            cfg.package
+          else if versionAtLeast config.home.stateVersion "19.09" then
+            cfg.package.override { cfg = fcfg; }
+          else
+            (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
       in
         [ package ];
 
     home.file = mkMerge (
       [{
-        ".mozilla/${extensionPath}" = mkIf (cfg.extensions != []) (
+        "${mozillaConfigPath}/${extensionPath}" = mkIf (cfg.extensions != []) (
           let
             extensionsEnv = pkgs.buildEnv {
               name = "hm-firefox-extensions";
@@ -262,17 +284,17 @@ in
           }
         );
 
-        ".mozilla/firefox/profiles.ini" = mkIf (cfg.profiles != {}) {
+        "${firefoxConfigPath}/profiles.ini" = mkIf (cfg.profiles != {}) {
           text = profilesIni;
         };
       }]
       ++ flip mapAttrsToList cfg.profiles (_: profile: {
-        ".mozilla/firefox/${profile.path}/chrome/userChrome.css" =
+        "${profilesPath}/${profile.path}/chrome/userChrome.css" =
           mkIf (profile.userChrome != "") {
             text = profile.userChrome;
           };
 
-        ".mozilla/firefox/${profile.path}/user.js" =
+        "${profilesPath}/${profile.path}/user.js" =
           mkIf (profile.settings != {} || profile.extraConfig != "") {
             text = mkUserJs profile.settings profile.extraConfig;
           };
