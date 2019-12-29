@@ -1287,6 +1287,14 @@ in
           A new module is available: 'programs.readline'.
         '';
       }
+
+      {
+        time = "2020-01-11T11:49:51+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.cbatticon'.
+        '';
+      }
     ];
   };
 }
