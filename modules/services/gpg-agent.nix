@@ -129,6 +129,26 @@ in
           configuration file.
         '';
       };
+
+      pinentryFlavor = mkOption {
+        type = types.nullOr (types.enum pkgs.pinentry.flavors);
+        example = "gnome3";
+        default = "gtk2";
+        description = ''
+          Which pinentry interface to use. If not
+          <literal>null</literal>, it sets
+          <option>pinentry-program</option> in
+          <filename>gpg-agent.conf</filename>. Beware that
+          <literal>pinentry-gnome3</literal> may not work on non-Gnome
+          systems. You can fix it by adding the following to your
+          system configuration:
+          <programlisting language="nix">
+          services.dbus.packages = [ pkgs.gcr ];
+          </programlisting>
+          For this reason, the default is <literal>gtk2</literal> for
+          now.
+        '';
+      };
     };
   };
 
@@ -152,6 +172,9 @@ in
         ++
         optional (cfg.maxCacheTtlSsh != null)
           "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
+        ++
+        optional (cfg.pinentryFlavor != null)
+          "pinentry-program ${pkgs.pinentry.${cfg.pinentryFlavor}}/bin/pinentry"
         ++
         [ cfg.extraConfig ]
       );
