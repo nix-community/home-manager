@@ -1,5 +1,9 @@
 image: nixos/nix:latest
 
+variables:
+  # Pinned 2020-01-01.
+  NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/b0bbacb52134a7e731e549f4c0a7a2a39ca6b481.tar.gz"
+
 stages:
   - test
   - deploy
