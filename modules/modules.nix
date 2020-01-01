@@ -43,6 +43,7 @@ let
     (loadModule ./programs/astroid.nix { })
     (loadModule ./programs/autorandr.nix { })
     (loadModule ./programs/bash.nix { })
+    (loadModule ./programs/bash-my-aws.nix { })
     (loadModule ./programs/bat.nix { })
     (loadModule ./programs/beets.nix { })
     (loadModule ./programs/broot.nix { })
