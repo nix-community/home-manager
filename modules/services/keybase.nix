@@ -20,17 +20,37 @@ in
 
     systemd.user.services.keybase = {
       Unit = {
-        Description = "Keybase service";
+        Description = "Keybase core service";
+        Requires = [ "keybase.socket" ];
       };
 
       Service = {
-        ExecStart = "${pkgs.keybase}/bin/keybase service --auto-forked";
+        Type = "notify";
+        Environment = [
+          "KEYBASE_SERVICE_TYPE=systemd"
+          "KEYBASE_SYSTEMD=1"
+        ];
+        EnvironmentFile = [
+          "-%E/keybase/keybase.autogen.env"
+          "-%E/keybase/keybase.env"
+        ];
+        PIDFile = "%t/keybase/keybased.pid";
+        ExecStart = "${pkgs.keybase}/bin/keybase service";
         Restart = "on-failure";
-        PrivateTmp = true;
+      };
+    };
+
+    systemd.user.sockets.keybase = {
+      Unit = {
+        Description = "Socket for the Keybase core service";
+      };
+
+      Socket = {
+        ListenStream = "%t/keybase/keybased.sock";
       };
 
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = [ "sockets.target" ];
       };
     };
   };

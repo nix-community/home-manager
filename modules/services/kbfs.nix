@@ -33,6 +33,21 @@ in
           Additional flags to pass to the Keybase filesystem on launch.
         '';
       };
+
+      fusermountPath = mkOption {
+        type = types.str;
+        default = "/run/wrappers/bin";
+        example = "/usr/bin";
+        description = ''
+          Path to the directory containing the <citerefentry>
+            <refentrytitle>fusermount</refentrytitle>
+            <manvolnum>1</manvolnum>
+          </citerefentry> binary for the system. The binary should be
+          suid root or otherwise executable by the home user.
+          </para><para>
+          This option should be customized on non-NixOS systems.
+        '';
+      };
     };
   };
 
@@ -40,24 +55,49 @@ in
     systemd.user.services.kbfs = {
       Unit = {
         Description = "Keybase File System";
-        Requires = [ "keybase.service" ];
-        After = [ "keybase.service" ];
+        Requires = [ "kbfs.socket" ];
+        Wants = [ "keybase.service" ];
       };
 
       Service =
         let
           mountPoint = "\"%h/${cfg.mountPoint}\"";
         in {
-          Environment = "PATH=/run/wrappers/bin KEYBASE_SYSTEMD=1";
-          ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mountPoint}";
-          ExecStart ="${pkgs.kbfs}/bin/kbfsfuse ${toString cfg.extraFlags} ${mountPoint}";
-          ExecStopPost = "/run/wrappers/bin/fusermount -u ${mountPoint}";
+          Type = "notify";
+          Environment = [
+            "KEYBASE_SYSTEMD=1"
+            "PATH=${cfg.fusermountPath}:${pkgs.coreutils}/bin"
+          ];
+          EnvironmentFile = [
+            "-%E/keybase/keybase.autogen.env"
+            "-%E/keybase/keybase.env"
+          ];
+          PIDFile = "%t/keybase/kbfsd.pid";
+          ExecStartPre = [
+            "${pkgs.coreutils}/bin/mkdir -p ${mountPoint}"
+            "-${cfg.fusermountPath}/fusermount -uz ${mountPoint}"
+          ];
+          ExecStart = "${pkgs.kbfs}/bin/kbfsfuse ${toString cfg.extraFlags} ${mountPoint}";
+          ExecStopPost = "-${cfg.fusermountPath}/fusermount -uz ${mountPoint}";
           Restart = "on-failure";
-          PrivateTmp = true;
         };
 
       Install = {
         WantedBy = [ "default.target" ];
+      };
+    };
+
+    systemd.user.sockets.kbfs = {
+      Unit = {
+        Description = "Socket for Keybase File System";
+      };
+
+      Socket = {
+        ListenStream = "%t/keybase/kbfsd.sock";
+      };
+
+      Install = {
+        WantedBy = [ "sockets.target" ];
       };
     };
 

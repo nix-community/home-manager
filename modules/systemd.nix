@@ -15,14 +15,14 @@ let
       || cfg.paths != {}
       || cfg.sessionVariables != {};
 
+  mkValueString = value:
+    if isBool value then (if value then "true" else "false")
+    else toString value;
+
   toSystemdIni = generators.toINI {
     mkKeyValue = key: value:
-      let
-        value' =
-          if isBool value then (if value then "true" else "false")
-          else toString value;
-      in
-        "${key}=${value'}";
+      if isList value then concatMapStringsSep "\n" (v: "${key}=${mkValueString v}") value
+      else "${key}=${mkValueString value}";
   };
 
   buildService = style: name: serviceCfg:

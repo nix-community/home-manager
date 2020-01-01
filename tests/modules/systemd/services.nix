@@ -10,6 +10,10 @@ with lib;
       };
 
       Service = {
+        ExecStartPre = [
+          "/some/exec/start/pre/command first-command"
+          "/some/exec/start/pre/command second-command"
+        ];
         ExecStart = ''/some/exec/start/command --with-arguments "%i"'';
       };
     };
