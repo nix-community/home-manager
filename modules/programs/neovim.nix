@@ -148,8 +148,8 @@ in
 
           </para><para>
 
-          This option is deprecated. Please use the options <varname>extraConfig</varname>
-          and <varname>plugins</varname> which are mutually exclusive with this option.
+          This option is mutually exclusive with <varname>extraConfig</varname>
+          and <varname>plugins</varname>.
         '';
       };
 
@@ -192,11 +192,6 @@ in
           + " with extraConfig and plugins.";
       }
     ];
-
-    warnings = optional (cfg.configure != {}) ''
-      The programs.neovim.configure option is deprecated. Please use
-      extraConfig and package option.
-    '';
 
     home.packages = [ cfg.finalPackage ];
 
