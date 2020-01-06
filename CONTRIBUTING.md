@@ -139,15 +139,18 @@ If you do have a change worthy of a news entry then please add one in
   > use 'services.myservice.bar' instead.
 
 - A new module, say `foo.nix`, should always include a news entry
-  (without any condition) that has a message along the lines of
+  that has a message along the lines of
 
-  > A new service is available: 'services.foo'.
+  > A new module is available: 'services.foo'.
 
-  or
+  If the module is platform specific, e.g., a service module using
+  systemd, then a condition like
 
-  > A new program configuration is available: 'program.foo'.
+  ```
+  condition = hostPlatform.isLinux;
+  ```
 
-  depending on the type of module.
+  should be added.
 
 [open issues]: https://github.com/rycee/home-manager/issues
 [new issue]: https://github.com/rycee/home-manager/issues/new
