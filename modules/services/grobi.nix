@@ -25,9 +25,7 @@ in
           value declared here will be translated to JSON and written to the
           <option>execute_after</option> key in <filename>~/.config/grobi.conf</filename>.
         '';
-        example = literalExample ''
-          [ "setxkbmap dvorak" ]
-        '';
+        example = [ "setxkbmap dvorak" ];
       };
 
       rules = mkOption {
