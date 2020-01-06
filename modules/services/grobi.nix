@@ -23,7 +23,7 @@ in
         description = ''
           Commands to be run after an output configuration was changed. The Nix
           value declared here will be translated to JSON and written to the
-          `execute_after` key in ~/.config/grobi.conf.
+          <option>execute_after</option> key in <filename>~/.config/grobi.conf</filename>.
         '';
         example = literalExample ''
           [ "setxkbmap dvorak" ]
@@ -37,9 +37,9 @@ in
           These are the rules grobi tries to match to the current output
           configuration. The rules are evaluated top to bottom, the first
           matching rule is applied and processing stops. See
-          https://github.com/fd0/grobi/blob/master/doc/grobi.conf for more
+          <link xlink:href="https://github.com/fd0/grobi/blob/master/doc/grobi.conf"/> for more
           information. The Nix value declared here will be translated to JSON
-          and written to the `rules` key in ~/.config/grobi.conf.
+          and written to the <option>rules</option> key in <filename>~/.config/grobi.conf</filename>.
         '';
         example = literalExample ''
           [
