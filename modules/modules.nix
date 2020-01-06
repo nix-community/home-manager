@@ -113,7 +113,7 @@ let
     (loadModule ./services/getmail.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/gnome-keyring.nix { })
     (loadModule ./services/gpg-agent.nix { })
-    (loadModule ./services/grobi.nix { })
+    (loadModule ./services/grobi.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/hound.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/imapnotify.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/kbfs.nix { })
