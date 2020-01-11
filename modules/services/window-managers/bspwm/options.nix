@@ -3,41 +3,8 @@
 with lib;
 
 let
-
-  monitor = types.submodule {
-    options = {
-      name = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "The name or id of the monitor (MONITOR_SEL).";
-        example = "HDMI-0";
-      };
-
-      desktops = mkOption {
-        type = types.listOf types.str;
-        default = [];
-        description = "The desktops that the monitor is going to hold";
-        example = [ "web" "terminal" "III" "IV" ];
-      };
-    };
-  };
-
   rule = types.submodule {
     options = {
-      className = mkOption {
-        type = types.str;
-        default = "";
-        description = "The class name of the program you want to apply the rule";
-        example = "Firefox";
-      };
-
-      instanceName = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "The particular instance name of a program";
-        example = "Navigator";
-      };
-
       monitor = mkOption {
         type = types.nullOr types.str;
         default = null;
@@ -52,11 +19,11 @@ let
         example = "^8";
       };
 
-      # AAHFUIOEHFUIWEHFWUIEHFUIWEH
       node = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = "The node where the rule should be applied";
+        example = "1";
       };
 
       state = mkOption {
@@ -80,12 +47,12 @@ let
         example = "south";
       };
 
-      # splitRatio = mkOption {
-      #   type = types.nullOr types.float;
-      #   default = null;
-      #   description = "The ratio between the new window and the previous existing window in the desktop";
-      #   example = 0.65;
-      # };
+      splitRatio = mkOption {
+        type = types.nullOr types.float;
+        default = null;
+        description = "The ratio between the new window and the previous existing window in the desktop";
+        example = 0.65;
+      };
 
       hidden = mkOption {
         type = types.nullOr types.bool;
@@ -122,11 +89,10 @@ let
         example = true;
       };
 
-      # AIOFGHIEUWHGWUIEHGUIWEGHUIWE
       center = mkOption {
         type = types.nullOr types.bool;
         default = null;
-        description = "";
+        description = "If it's set to true, the node will be put in the center of the screen in floating mode.";
         example = true;
       };
 
@@ -137,11 +103,10 @@ let
         example = true;
       };
 
-      # GVWIOERHGIOWERHGOWIERGHWIOEHGWIOEHGIOWERHGWO
       manage = mkOption {
         type = types.nullOr types.bool;
         default = null;
-        description = "";
+        description = "If set to false, the window will not be managed by bspwm at all";
         example = true;
       };
 
@@ -165,7 +130,7 @@ in
 
 {
   xsession.windowManager.bspwm = {
-    enable = mkEnableOption "bspwm window manager."; 
+    enable = mkEnableOption "bspwm window manager.";
 
     package = mkOption {
         type = types.package;
@@ -191,57 +156,52 @@ in
       default = "";
       description = "Additional configuration to add";
       example = ''
-        bspc rule -a Gimp desktop='^8' state=floating follow=on
-        bspc rule -a Chromium desktop='^2'
-        bspc rule -a mplayer2 state=floating
-        bspc rule -a Kupfer.py focus=on
-        bspc rule -a Screenkey manage=off
+        bspc subscribe all > ~/bspc-report.log &
       '';
     };
 
+    applyJavaGuiFixes = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Add _JAVA_AWT_WM_NONREPARENTING to environment, to fix some Java GUI applications.";
+      example = true;
+    };
+
     monitors = mkOption {
-      type = types.listOf monitor;
-      default = [];
+      type = types.attrsOf (types.listOf types.str);
+      default = {};
       description = "bspc monitor configurations";
       example = ''
-        [
-          {
-            name = "HDMI-0";
-            desktops = [ "web" "terminal" "III" "IV" ];
-          }
-        ];
+        {
+          "HDMI-0" = [ "web" "terminal" "III" "IV" ];
+        }
       '';
     };
 
     rules = mkOption {
-      type = types.listOf rule;
-      default = [];
+      type = types.attrsOf rule;
+      default = {};
       description = "bspc rules";
       example = ''
-        [
-          {
-            className = "Gimp";
+        {
+          "Gimp" = {
             desktop = "^8";
             state = "floating";
             follow = true;
-          }
-          {
-            className = "Chromium";
+          };
+          "Chromium" = {
             desktop = "^2";
           }
-          {
-            className = "mplayer2";
+          "mplayer2" = {
             state = "floating";
           }
-          {
-            className = "Kupfer.py";
+          "Kupfer.py" = {
             focus = true;
           }
-          {
-            className = "Screenkey";
+          "Screenkey" = {
             manage = false;
           }
-        ];
+        };
       '';
     };
 

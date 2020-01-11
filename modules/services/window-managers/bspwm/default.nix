@@ -7,6 +7,9 @@ let
   cfg = config.xsession.windowManager.bspwm;
   bspwm = cfg.package;
 
+  camelToSnake = s:
+    builtins.replaceStrings lib.upperChars (map (c: "_${c}") lib.lowerChars) s;
+
   formatConfig = n: v:
     let
       formatList = x:
@@ -17,36 +20,26 @@ let
       formatValue = v:
         if isBool v then (if v then "true" else "false")
         else if isList v then concatMapStringsSep ", " formatList v
+        else if isString v then "'${lib.strings.escapeShellArg v}'"
         else toString v;
     in
       "bspc config ${n} ${formatValue v}";
 
-  formatMonitors = n:
-    map(s: 
-      "bspc monitor " + (if (builtins.hasAttr "name" s) then (s.name + " ") else "") + "-d ${concatStringsSep " " s.desktops}" 
-    ) n;
+  formatMonitors = n: v: "bspc monitor ${n} -d ${concatStringsSep " " v}";
 
-  formatRules = n:
+  formatRules = target: directiveOptions:
     let
-      camelToSnake = s:
-        builtins.replaceStrings lib.upperChars (map (c: "_${c}") lib.lowerChars) s;
-
       formatDirective = n: v:
         if isBool v then (if v then "${camelToSnake n}=on" else "${camelToSnake n}=off")
-        else if n == "desktop" then "${camelToSnake n}='${v}'"
-        else "${camelToSnake n}=${toString v}";
+        else if (n == "desktop" || n == "node") then "${camelToSnake n}='${v}'"
+        else "${camelToSnake n}=${lib.strings.escapeShellArg v}";
 
+      directives = filterAttrs (n: v: v != null && !(lib.strings.hasPrefix "_" n)) directiveOptions;
+      directivesStr = builtins.concatStringsSep " " (mapAttrsToList formatDirective directives);
     in
-    map(s:
-      "bspc rule -a " +
-        (if (s.instanceName != null) then ("'${s.className}:${s.instanceName}'") else (s.className)) +
-        builtins.concatStringsSep " " (map (n:
-          (if n != "className" && n != "instanceName" && n != null then (formatDirective n s.${n}) else (""))
-        ) (builtins.attrNames s))
-  ) n;
+      "bspc rule -a ${target} ${directivesStr}";
 
-  formatStartupPrograms = n:
-    map(s: s + " &") n;
+  formatStartupPrograms = map (s: "${s} &");
 
 in
 
@@ -62,14 +55,19 @@ in
     (mkIf (cfg.config != null) {
       xdg.configFile."bspwm/bspwmrc" = {
         executable = true;
-        text = "#!/bin/sh\n\n" + 
+        text = "#!/bin/sh\n\n" +
         concatStringsSep "\n" ([]
-          ++ (optionals (cfg.monitors != []) (formatMonitors cfg.monitors))
+          ++ (optionals (cfg.monitors != {}) (mapAttrsToList formatMonitors cfg.monitors))
           ++ [ "" ]
           ++ (optionals (cfg.config != null) (mapAttrsToList formatConfig cfg.config))
           ++ [ "" ]
-          # ++ (optionals (cfg.rules != []) (formatRules cfg.rules))
+          ++ (optionals (cfg.rules != {}) (mapAttrsToList formatRules cfg.rules))
           ++ [ "" ]
+          ++ (optional (cfg.applyJavaGuiFixes) ''
+            # java gui fixes
+            export _JAVA_AWT_WM_NONREPARENTING=1
+            bspc rule -a sun-awt-X11-XDialogPeer state=floating
+            '')
           ++ (optional (cfg.extraConfig != "") cfg.extraConfig)
           ++ (optionals (cfg.startupPrograms != null) (formatStartupPrograms cfg.startupPrograms))
         ) + "\n";
