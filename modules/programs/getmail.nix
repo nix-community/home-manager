@@ -47,14 +47,14 @@ let
   getmailEnabled = length (filter (a: a.getmail.enable) accounts) > 0;
   # Watch out! This is used by the getmail.service too!
   renderConfigFilepath = a: ".getmail/getmail${if a.primary then "rc" else a.name}";
+
 in
 
-  {
-    config = mkIf getmailEnabled {
-      home.file = map (a:
-        { target = renderConfigFilepath a;
-          text = renderAccountConfig a;
-        }) accounts;
-
-    };
-  }
+{
+  config = mkIf getmailEnabled {
+    home.file =
+      foldl' (a: b: a // b) {}
+      (map (a: { "${renderConfigFilepath a}".text = renderAccountConfig a; })
+      accounts);
+  };
+}
