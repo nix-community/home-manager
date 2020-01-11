@@ -186,18 +186,14 @@ in
       let
         hook = name: cmds:
           {
-            "${notmuchIni.database.path}/.notmuch/hooks/${name}" = {
-              source = pkgs.writeScript name ''
-                #!${pkgs.runtimeShell}
-
+            "${notmuchIni.database.path}/.notmuch/hooks/${name}".source =
+              pkgs.writeShellScript name ''
                 export PATH="${pkgs.notmuch}/bin''${PATH:+:}$PATH"
                 export NOTMUCH_CONFIG="${config.xdg.configHome}/notmuch/notmuchrc"
                 export NMBGIT="${config.xdg.dataHome}/notmuch/nmbug"
 
                 ${cmds}
               '';
-              executable = true;
-            };
           };
       in
         optionalAttrs (cfg.hooks.preNew != "")
