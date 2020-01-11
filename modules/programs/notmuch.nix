@@ -186,26 +186,27 @@ in
       let
         hook = name: cmds:
           {
-            target = "${notmuchIni.database.path}/.notmuch/hooks/${name}";
-            source = pkgs.writeScript name ''
-              #!${pkgs.runtimeShell}
+            "${notmuchIni.database.path}/.notmuch/hooks/${name}" = {
+              source = pkgs.writeScript name ''
+                #!${pkgs.runtimeShell}
 
-              export PATH="${pkgs.notmuch}/bin''${PATH:+:}$PATH"
-              export NOTMUCH_CONFIG="${config.xdg.configHome}/notmuch/notmuchrc"
-              export NMBGIT="${config.xdg.dataHome}/notmuch/nmbug"
+                export PATH="${pkgs.notmuch}/bin''${PATH:+:}$PATH"
+                export NOTMUCH_CONFIG="${config.xdg.configHome}/notmuch/notmuchrc"
+                export NMBGIT="${config.xdg.dataHome}/notmuch/nmbug"
 
-              ${cmds}
-            '';
-            executable = true;
+                ${cmds}
+              '';
+              executable = true;
+            };
           };
       in
-        optional (cfg.hooks.preNew != "")
+        optionalAttrs (cfg.hooks.preNew != "")
           (hook "pre-new" cfg.hooks.preNew)
-        ++
-        optional (cfg.hooks.postNew != "")
+        //
+        optionalAttrs (cfg.hooks.postNew != "")
           (hook "post-new" cfg.hooks.postNew)
-        ++
-        optional (cfg.hooks.postInsert != "")
+        //
+        optionalAttrs (cfg.hooks.postInsert != "")
           (hook "post-insert" cfg.hooks.postInsert);
   };
 }
