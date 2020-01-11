@@ -437,10 +437,10 @@ in
       # but allow the user to opt out.
       programs.zsh.enableCompletion = mkDefault true;
 
-      home.file = map (plugin: {
-        target = "${pluginsDir}/${plugin.name}";
-        source = plugin.src;
-      }) cfg.plugins;
+      home.file =
+        foldl' (a: b: a // b) {}
+        (map (plugin: { "${pluginsDir}/${plugin.name}".source = plugin.src; })
+        cfg.plugins);
     })
   ]);
 }
