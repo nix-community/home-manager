@@ -62,8 +62,8 @@ let
         else "${config.xdg.configHome}/${browser}";
 
       extensionJson = ext: {
-        target = "${configDir}/External Extensions/${ext}.json";
-        text = builtins.toJSON {
+        name = "${configDir}/External Extensions/${ext}.json";
+        value.text = builtins.toJSON {
           external_update_url = "https://clients2.google.com/service/update2/crx";
         };
       };
@@ -71,7 +71,7 @@ let
     in
       mkIf cfg.enable {
         home.packages = [ cfg.package ];
-        home.file = map extensionJson cfg.extensions;
+        home.file = listToAttrs (map extensionJson cfg.extensions);
       };
 
 in
