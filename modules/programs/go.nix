@@ -77,14 +77,11 @@ in
       home.file =
         let
           goPath = if cfg.goPath != null then cfg.goPath else "go";
-
-          mkSrc = n: v: {
-            target = "${goPath}/src/${n}";
-            source = v;
-          };
+          mkSrc = n: v: { "${goPath}/src/${n}".source = v; };
         in
-        mapAttrsToList mkSrc cfg.packages;
+          foldl' (a: b: a // b) {} (mapAttrsToList mkSrc cfg.packages);
     }
+
     (mkIf (cfg.goPath != null) {
       home.sessionVariables.GOPATH =
         concatStringsSep ":"
@@ -92,6 +89,7 @@ in
         (map (path: "${config.home.homeDirectory}/${path}")
         ([cfg.goPath] ++ cfg.extraGoPaths)));
     })
+
     (mkIf (cfg.goBin != null) {
       home.sessionVariables.GOBIN = builtins.toPath "${config.home.homeDirectory}/${cfg.goBin}";
     })
