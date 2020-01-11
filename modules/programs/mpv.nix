@@ -55,7 +55,7 @@ in {
       enable = mkEnableOption "mpv";
 
       scripts = mkOption {
-        type = types.listOf types.package;
+        type = with types; listOf (either package str);
         default = [];
         example = literalExample "[ pkgs.mpvScripts.mpris ]";
         description = ''
