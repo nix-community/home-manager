@@ -20,7 +20,7 @@ let
       formatValue = v:
         if isBool v then (if v then "true" else "false")
         else if isList v then concatMapStringsSep ", " formatList v
-        else if isString v then "'${lib.strings.escapeShellArg v}'"
+        else if isString v then "${lib.strings.escapeShellArg v}"
         else toString v;
     in
       "bspc config ${n} ${formatValue v}";
@@ -52,26 +52,22 @@ in
       xsession.windowManager.command = "${cfg.package}/bin/bspwm";
     }
 
-    (mkIf (cfg.config != null) {
-      xdg.configFile."bspwm/bspwmrc" = {
-        executable = true;
-        text = "#!/bin/sh\n\n" +
-        concatStringsSep "\n" ([]
-          ++ (optionals (cfg.monitors != {}) (mapAttrsToList formatMonitors cfg.monitors))
-          ++ [ "" ]
-          ++ (optionals (cfg.config != null) (mapAttrsToList formatConfig cfg.config))
-          ++ [ "" ]
-          ++ (optionals (cfg.rules != {}) (mapAttrsToList formatRules cfg.rules))
-          ++ [ "" ]
-          ++ (optional (cfg.applyJavaGuiFixes) ''
+    (mkIf (cfg.settings != null) {
+      xdg.configFile."bspwm/bspwmrc".source = pkgs.writeShellScript "bspwmrc"
+      (concatStringsSep "\n" (
+        (mapAttrsToList formatMonitors cfg.monitors)
+        ++ (mapAttrsToList formatConfig cfg.settings)
+        ++ (mapAttrsToList formatRules cfg.rules)
+        ++ [ ''
             # java gui fixes
             export _JAVA_AWT_WM_NONREPARENTING=1
             bspc rule -a sun-awt-X11-XDialogPeer state=floating
-            '')
-          ++ (optional (cfg.extraConfig != "") cfg.extraConfig)
-          ++ (optionals (cfg.startupPrograms != null) (formatStartupPrograms cfg.startupPrograms))
-        ) + "\n";
-      };
-    })
-  ]);
-}
+        '' ]
+        ++ [ cfg.extraConfig ]
+        ++ (formatStartupPrograms cfg.startupPrograms)
+        )
+        );
+      }
+      )
+    ]);
+  }
