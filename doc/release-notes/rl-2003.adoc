@@ -9,7 +9,32 @@ section is therefore not final.
 
 This release has the following notable changes:
 
-* Nothing has happened.
+* Assigning a list to the <<opt-home.file>>, <<opt-xdg.configFile>>,
+and <<opt-xdg.dataFile>> options is now deprecated and will produce a
+warning message if used. Specifically, if your configuration currently
+contains something like
++
+[source,nix]
+----
+home.file = [
+  {
+    target = ".config/foo.txt";
+    text = "bar";
+  }
+]
+----
++
+then it should be updated to instead use the equivalent attribute set form
++
+[source,nix]
+----
+home.file = {
+  ".config/foo.txt".text = "bar";
+}
+----
++
+Support for the list form will be removed in Home Manager version
+20.09.
 
 [[sec-release-20.03-state-version-changes]]
 === State Version Changes
