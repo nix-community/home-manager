@@ -11,6 +11,12 @@ in
 {
   meta.maintainers = with maintainers; [ pacien ];
 
+  imports = [
+    (mkRenamedOptionModule
+      [ "xdg" "userDirs" "publishShare" ]
+      [ "xdg" "userDirs" "publicShare" ])
+  ];
+
   options.xdg.userDirs = {
     enable = mkOption {
       type = types.bool;
@@ -56,7 +62,7 @@ in
       description = "The Pictures directory.";
     };
 
-    publishShare = mkOption {
+    publicShare = mkOption {
       type = types.str;
       default = "$HOME/Public";
       description = "The Public share directory.";
@@ -90,7 +96,7 @@ in
         XDG_DOWNLOAD_DIR = cfg.download;
         XDG_MUSIC_DIR = cfg.music;
         XDG_PICTURES_DIR = cfg.pictures;
-        XDG_PUBLICSHARE_DIR = cfg.publishShare;
+        XDG_PUBLICSHARE_DIR = cfg.publicShare;
         XDG_TEMPLATES_DIR = cfg.templates;
         XDG_VIDEOS_DIR = cfg.videos;
       }
