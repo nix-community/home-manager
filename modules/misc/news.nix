@@ -1318,6 +1318,13 @@ in
           A new module is available: 'programs.neomutt'.
         '';
       }
+
+      {
+        time = "2020-02-23T10:19:48+00:00";
+        message = ''
+          A new module is available: 'programs.kitty'.
+        '';
+      }
     ];
   };
 }
