@@ -1,8 +1,17 @@
-{ lib }:
+{ lib, dag ? import ./dag.nix { inherit lib; } }:
 
 with lib;
 
+let
+
+  hmLib = import ./default.nix { inherit lib; };
+  typesDag = import ./types-dag.nix { inherit dag lib; };
+
+in
+
 {
+
+  inherit (typesDag) dagOf listOrDagOf;
 
   selectorFunction = mkOptionType {
     name = "selectorFunction";
