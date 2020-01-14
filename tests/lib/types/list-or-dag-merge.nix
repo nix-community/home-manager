@@ -25,7 +25,7 @@ in
     tested = mkMerge [
       { dag = [ "k" "l" ]; }
       { dag = [ "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" ]; }
-      { dag.after = dag.entryAnywhere "after"; }
+      { dag.after = "after"; }
       { dag.before = dag.entryBefore ["after"] "before"; }
       { dag.between = dag.entryBetween ["after"] ["before"] "between"; }
     ];

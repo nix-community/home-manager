@@ -23,7 +23,7 @@ in
 
   config = {
     tested = mkMerge [
-      { dag.after = dag.entryAnywhere "after"; }
+      { dag.after = "after"; }
       { dag.before = dag.entryBefore ["after"] "before"; }
       { dag.between = dag.entryBetween ["after"] ["before"] "between"; }
     ];

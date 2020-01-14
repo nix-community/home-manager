@@ -7,6 +7,7 @@ let
   cfg = config.home;
 
   dag = config.lib.dag;
+  dagOf = (import ./lib/types.nix { inherit dag lib; }).dagOf;
 
   languageSubModule = types.submodule {
     options = {
@@ -235,8 +236,8 @@ in
 
     home.activation = mkOption {
       internal = true;
+      type = dagOf types.str;
       default = {};
-      type = types.attrs;
       description = ''
         Activation scripts for the home environment.
         </para><para>
