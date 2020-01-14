@@ -1297,6 +1297,13 @@ in
       }
 
       {
+        time = "2020-01-21T12:42:54+00:00";
+        message = ''
+          A new module is available: 'programs.kitty'.
+        '';
+      }
+
+      {
         time = "2020-01-26T12:42:33+00:00";
         condition = hostPlatform.isLinux;
         message = ''
