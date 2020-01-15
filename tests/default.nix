@@ -34,6 +34,7 @@ import nmt {
     // import ./modules/services/sxhkd
     // import ./modules/systemd
   )
+  // import ./lib/types
   // import ./modules/files
   // import ./modules/home-environment
   // import ./modules/misc/fontconfig
