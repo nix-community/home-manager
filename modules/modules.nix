@@ -157,8 +157,8 @@ let
     (loadModule ./xcursor.nix { })
     (loadModule ./xresources.nix { })
     (loadModule ./xsession.nix { })
-    (loadModule <nixpkgs/nixos/modules/misc/assertions.nix> { })
-    (loadModule <nixpkgs/nixos/modules/misc/meta.nix> { })
+    (loadModule (pkgs.path + "/nixos/modules/misc/assertions.nix") { })
+    (loadModule (pkgs.path + "/nixos/modules/misc/meta.nix") { })
   ];
 
   modules = map (getAttr "file") (filter (getAttr "condition") allModules);
