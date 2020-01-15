@@ -142,7 +142,7 @@ in
 
   config = {
     _module.args = {
-      pkgs = _pkgs;
+      pkgs = mkOverride modules.defaultPriority _pkgs;
       pkgs_i686 =
         if _pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86
         then _pkgs.pkgsi686Linux
