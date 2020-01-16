@@ -36,6 +36,39 @@ home.file = {
 Support for the list form will be removed in Home Manager version
 20.09.
 
+* The `lib` function attribute given to modules is now enriched with
+an attribute `hm` containing extra library functions specific for Home
+Manager. More specifically, `lib.hm` is now the same as `config.lib`
+and should be the preferred choice since it is more robust.
++
+Therefore, if your configuration makes use of, for example,
+`config.lib.dag` to create activation script blocks, it is recommended
+to change to `lib.hm.dag`.
++
+Note, in the unlikely case that you are
++
+** using Home Manager's NixOS or nix-darwin module,
+** have made your own Home Manager module containing an top-level
+   option named `config` or `options`, and
+** assign to this option in your system configuration inside a plain
+   attribute set, i.e., without a function argument,
+
++
+then you must update your configuration to perform the option
+assignment inside a `config` attribute. For example, instead of
++
+[source,nix]
+----
+home-manager.users.jane = { config = "foo"; };
+----
++
+use
++
+[source,nix]
+----
+home-manager.users.jane = { config.config = "foo"; };
+----
+
 [[sec-release-20.03-state-version-changes]]
 === State Version Changes
 

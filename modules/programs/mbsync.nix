@@ -4,8 +4,6 @@ with lib;
 
 let
 
-  dag = config.lib.dag;
-
   cfg = config.programs.mbsync;
 
   # Accounts for which mbsync is enabled.
@@ -180,7 +178,7 @@ in
 
     home.activation = mkIf (mbsyncAccounts != []) {
       createMaildir =
-        dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+        hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
           $DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG ${
             concatMapStringsSep " " (a: a.maildir.absPath) mbsyncAccounts
           }

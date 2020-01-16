@@ -2,18 +2,21 @@
 
 let
 
+  lib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
+
   nmt = pkgs.fetchFromGitLab {
     owner = "rycee";
     repo = "nmt";
-    rev = "89fb12a2aaa8ec671e22a033162c7738be714305";
-    sha256 = "07yc1jkgw8vhskzk937k9hfba401q8rn4sgj9baw3fkjl9zrbcyf";
+    rev = "6f866d1acb89fa15cd3b62baa052deae1f685c0c";
+    sha256 = "1qr1shhapjn4nnd4k6hml69ri8vgz4l8lakjll5hc516shs9a9nn";
   };
+
+  modules = import ../modules/modules.nix { inherit lib pkgs; check = false; };
 
 in
 
 import nmt {
-  inherit pkgs;
-  modules = import ../modules/modules.nix { inherit pkgs; lib = pkgs.lib; };
+  inherit lib pkgs modules;
   testedAttrPath = [ "home" "activationPackage" ];
   tests = {
     browserpass = ./modules/programs/browserpass.nix;

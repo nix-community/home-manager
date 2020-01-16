@@ -4,7 +4,6 @@ with lib;
 
 let
 
-  hmLib = import ./default.nix { inherit lib; };
   typesDag = import ./types-dag.nix { inherit dag lib; };
 
 in

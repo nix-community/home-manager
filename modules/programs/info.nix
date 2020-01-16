@@ -26,8 +26,6 @@ let
 
   cfg = config.programs.info;
 
-  dag = config.lib.dag;
-
   # Indexes info files found in this location
   homeInfoPath = "${config.home.profileDirectory}/share/info";
 
@@ -57,7 +55,7 @@ in
     home.sessionVariables.INFOPATH =
       "${cfg.homeInfoDirLocation}\${INFOPATH:+:}\${INFOPATH}";
 
-    home.activation.createHomeInfoDir = dag.entryAfter ["installPackages"] ''
+    home.activation.createHomeInfoDir = hm.dag.entryAfter ["installPackages"] ''
       oPATH=$PATH
       export PATH="${lib.makeBinPath [ pkgs.gzip ]}''${PATH:+:}$PATH"
       $DRY_RUN_CMD mkdir -p "${cfg.homeInfoDirLocation}"

@@ -1,4 +1,6 @@
 { pkgs
+
+  # Note, this should be "the standard library" + HM extensions.
 , lib
 
   # Whether to enable module type checking.
@@ -167,7 +169,7 @@ let
     config._module.args.baseModules = modules;
     config._module.args.pkgs = lib.mkDefault pkgs;
     config._module.check = check;
-    config.lib = import ./lib { inherit lib; };
+    config.lib = lib.hm;
     config.nixpkgs.system = mkDefault pkgs.system;
   };
 

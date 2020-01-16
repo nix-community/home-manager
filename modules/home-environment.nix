@@ -6,9 +6,6 @@ let
 
   cfg = config.home;
 
-  dag = config.lib.dag;
-  dagOf = (import ./lib/types.nix { inherit dag lib; }).dagOf;
-
   languageSubModule = types.submodule {
     options = {
       base = mkOption {
@@ -235,11 +232,11 @@ in
     };
 
     home.activation = mkOption {
-      type = dagOf types.str;
+      type = hm.types.dagOf types.str;
       default = {};
       example = literalExample ''
         {
-          myActivationAction = config.lib.dag.entryAfter ["writeBoundary"] '''
+          myActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] '''
             $DRY_RUN_CMD ln -s $VERBOSE_ARG \
                 ''${builtins.toPath ./link-me-directly} $HOME
           ''';
@@ -362,7 +359,7 @@ in
 
     # A dummy entry acting as a boundary between the activation
     # script's "check" and the "write" phases.
-    home.activation.writeBoundary = dag.entryAnywhere "";
+    home.activation.writeBoundary = hm.dag.entryAnywhere "";
 
     # Install packages to the user environment.
     #
@@ -379,7 +376,7 @@ in
     # In case the user has moved from a user-install of Home Manager
     # to a submodule managed one we attempt to uninstall the
     # `home-manager-path` package if it is installed.
-    home.activation.installPackages = dag.entryAfter ["writeBoundary"] (
+    home.activation.installPackages = hm.dag.entryAfter ["writeBoundary"] (
       if config.submoduleSupport.externalPackageInstall
       then
         ''
@@ -399,7 +396,7 @@ in
             noteEcho Activating ${res.name}
             ${res.data}
           '';
-        sortedCommands = dag.topoSort cfg.activation;
+        sortedCommands = hm.dag.topoSort cfg.activation;
         activationCmds =
           if sortedCommands ? result then
             concatStringsSep "\n" (map mkCmd sortedCommands.result)

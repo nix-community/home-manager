@@ -5,7 +5,6 @@ with lib;
 let
 
   cfg = config.dconf;
-  dag = config.lib.dag;
 
   toDconfIni = generators.toINI { mkKeyValue = mkIniKeyValue; };
 
@@ -65,7 +64,7 @@ in
   };
 
   config = mkIf (cfg.enable && cfg.settings != {}) {
-    home.activation.dconfSettings = dag.entryAfter ["installPackages"] (
+    home.activation.dconfSettings = hm.dag.entryAfter ["installPackages"] (
       let
         iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
       in

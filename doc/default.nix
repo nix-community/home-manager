@@ -1,18 +1,20 @@
-{ pkgs }:
+{
+  # Note, this should be "the standard library" + HM extensions.
+  lib
+, pkgs
+}:
 
 let
-
-  lib = pkgs.lib;
 
   nmdSrc = pkgs.fetchFromGitLab {
     name = "nmd";
     owner = "rycee";
     repo = "nmd";
-    rev = "9751ca5ef6eb2ef27470010208d4c0a20e89443d";
-    sha256 = "0rbx10n8kk0bvp1nl5c8q79lz1w0p1b8103asbvwps3gmqd070hi";
+    rev = "b437898c2b137c39d9c5f9a1cf62ec630f14d9fc";
+    sha256 = "18j1nh53cfpjpdiwn99x9kqpvr0s7hwngyc0a93xf4sg88ww93lq";
   };
 
-  nmd = import nmdSrc { inherit pkgs; };
+  nmd = import nmdSrc { inherit lib pkgs; };
 
   # Make sure the used package is scrubbed to avoid actually
   # instantiating derivations.
@@ -29,7 +31,10 @@ let
 
   hmModulesDocs = nmd.buildModulesDocs {
     modules =
-      import ../modules/modules.nix { inherit lib pkgs; }
+      import ../modules/modules.nix {
+        inherit lib pkgs;
+        check = false;
+      }
       ++ [ scrubbedPkgsModule ];
     moduleRootPaths = [ ./.. ];
     mkModuleUrl = path:

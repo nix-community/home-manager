@@ -5,7 +5,6 @@ with lib;
 let
 
   cfg = config.qt;
-  dag = config.lib.dag;
 
 in
 
@@ -69,7 +68,7 @@ in
 
     # Enable GTK+ style for Qt4 in either case.
     # It doesn’t support the platform theme packages.
-    home.activation.useGtkThemeInQt4 = dag.entryAfter ["writeBoundary"] ''
+    home.activation.useGtkThemeInQt4 = hm.dag.entryAfter ["writeBoundary"] ''
       $DRY_RUN_CMD ${pkgs.crudini}/bin/crudini $VERBOSE_ARG \
         --set "${config.xdg.configHome}/Trolltech.conf" Qt style GTK+
     '';

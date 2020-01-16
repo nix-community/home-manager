@@ -6,22 +6,32 @@ let
 
   cfg = config.home-manager;
 
-  hmModule = types.submodule ({name, ...}: {
-    imports = import ../modules/modules.nix { inherit lib pkgs; };
+  extendedLib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
-    config = {
-      submoduleSupport.enable = true;
-      submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+  hmModule = types.submoduleWith {
+    specialArgs = { lib = extendedLib; };
+    modules = [(
+      {name, ...}: {
+        imports = import ../modules/modules.nix {
+          inherit pkgs;
+          lib = extendedLib;
+        };
 
-      # The per-user directory inside /etc/profiles is not known by
-      # fontconfig by default.
-      fonts.fontconfig.enable =
-        cfg.useUserPackages && config.fonts.fontconfig.enable;
+        config = {
+          submoduleSupport.enable = true;
+          submoduleSupport.externalPackageInstall = cfg.useUserPackages;
 
-      home.username = config.users.users.${name}.name;
-      home.homeDirectory = config.users.users.${name}.home;
-    };
-  });
+          # The per-user directory inside /etc/profiles is not known by
+          # fontconfig by default.
+          fonts.fontconfig.enable =
+            cfg.useUserPackages && config.fonts.fontconfig.enable;
+
+          home.username = config.users.users.${name}.name;
+          home.homeDirectory = config.users.users.${name}.home;
+        };
+      }
+    )];
+  };
 
   serviceEnvironment =
     optionalAttrs (cfg.backupFileExtension != null) {
