@@ -46,28 +46,28 @@ in
 {
   options = import ./options.nix { inherit pkgs; inherit lib; };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (
     {
       home.packages = [ bspwm ];
-      xsession.windowManager.command = "${cfg.package}/bin/bspwm";
+      xsession.windowManager.command =
+        let
+          configFile = pkgs.writeShellScript "bspwmrc" (
+            concatStringsSep "\n" (
+              (mapAttrsToList formatMonitors cfg.monitors)
+              ++ (mapAttrsToList formatConfig cfg.settings)
+              ++ (mapAttrsToList formatRules cfg.rules)
+              ++ [ ''
+                # java gui fixes
+                export _JAVA_AWT_WM_NONREPARENTING=1
+                bspc rule -a sun-awt-X11-XDialogPeer state=floating
+              '' ]
+              ++ [ cfg.extraConfig ]
+              ++ (formatStartupPrograms cfg.startupPrograms)
+            )
+          );
+          configCmdOpt = optionalString (cfg.settings != null) "-c ${configFile}";
+        in
+          "${cfg.package}/bin/bspwm ${configCmdOpt}";
     }
-
-    (mkIf (cfg.settings != null) {
-      xdg.configFile."bspwm/bspwmrc".source = pkgs.writeShellScript "bspwmrc"
-      (concatStringsSep "\n" (
-        (mapAttrsToList formatMonitors cfg.monitors)
-        ++ (mapAttrsToList formatConfig cfg.settings)
-        ++ (mapAttrsToList formatRules cfg.rules)
-        ++ [ ''
-            # java gui fixes
-            export _JAVA_AWT_WM_NONREPARENTING=1
-            bspc rule -a sun-awt-X11-XDialogPeer state=floating
-        '' ]
-        ++ [ cfg.extraConfig ]
-        ++ (formatStartupPrograms cfg.startupPrograms)
-        )
-        );
-      }
-      )
-    ]);
+    );
   }
