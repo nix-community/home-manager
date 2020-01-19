@@ -6,6 +6,9 @@ using the [Nix][] package manager together with the Nix libraries
 found in [Nixpkgs][]. Before attempting to use Home Manager please
 read the warning below.
 
+For a more systematic overview of all the options Home Manager
+provides please see the [Home Manager manual][configuration options].
+
 Words of warning
 ----------------
 
