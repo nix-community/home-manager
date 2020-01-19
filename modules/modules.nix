@@ -133,6 +133,7 @@ let
     (loadModule ./services/polybar.nix { })
     (loadModule ./services/random-background.nix { })
     (loadModule ./services/redshift.nix { })
+    (loadModule ./services/resilio.nix { })
     (loadModule ./services/rsibreak.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/screen-locker.nix { })
     (loadModule ./services/stalonetray.nix { })
