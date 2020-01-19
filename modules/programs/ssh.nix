@@ -183,10 +183,14 @@ let
       };
 
       certificateFile = mkOption {
-        type = types.nullOr types.path;
-        default = null;
+        type = with types; either (listOf str) (nullOr str);
+        default = [];
+        apply = p:
+          if p == null then []
+          else if isString p then [p]
+          else p;
         description = ''
-          Specifies a file from which the user certificate is read.
+          Specifies files from which the user certificate is read.
         '';
       };
 
@@ -273,7 +277,6 @@ let
     ++ optional cf.forwardX11Trusted         "  ForwardX11Trusted yes"
     ++ optional cf.identitiesOnly            "  IdentitiesOnly yes"
     ++ optional (cf.user != null)            "  User ${cf.user}"
-    ++ optional (cf.certificateFile != null) "  CertificateFile ${cf.certificateFile}"
     ++ optional (cf.hostname != null)        "  HostName ${cf.hostname}"
     ++ optional (cf.addressFamily != null)   "  AddressFamily ${cf.addressFamily}"
     ++ optional (cf.sendEnv != [])           "  SendEnv ${unwords cf.sendEnv}"
@@ -284,6 +287,7 @@ let
     ++ optional (cf.proxyCommand != null)    "  ProxyCommand ${cf.proxyCommand}"
     ++ optional (cf.proxyJump != null)       "  ProxyJump ${cf.proxyJump}"
     ++ map (file: "  IdentityFile ${file}") cf.identityFile
+    ++ map (file: "  CertificateFile ${file}") cf.certificateFile
     ++ map (f: "  LocalForward" + addressPort f.bind + addressPort f.host) cf.localForwards
     ++ map (f: "  RemoteForward" + addressPort f.bind + addressPort f.host) cf.remoteForwards
     ++ map (f: "  DynamicForward" + addressPort f) cf.dynamicForwards
