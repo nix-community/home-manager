@@ -29,11 +29,13 @@ in
     xresources.properties = mkOption {
       type = types.nullOr types.attrs;
       default = null;
-      example = {
-        "Emacs*toolBar" = 0;
-        "XTerm*faceName" = "dejavu sans mono";
-        "XTerm*charClass" = [ "37:48" "45-47:48" "58:48" "64:48" "126:48" ];
-      };
+      example = literalExample ''
+        {
+          "Emacs*toolBar" = 0;
+          "XTerm*faceName" = "dejavu sans mono";
+          "XTerm*charClass" = [ "37:48" "45-47:48" "58:48" "64:48" "126:48" ];
+        }
+      '';
       description = ''
         X server resources that should be set.
         Booleans are formatted as "true" or "false" respectively.
