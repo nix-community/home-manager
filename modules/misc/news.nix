@@ -1311,6 +1311,13 @@ in
           A new module is available: 'services.grobi'.
         '';
       }
+
+      {
+        time = "2020-01-26T19:37:57+00:00";
+        message = ''
+          A new module is available: 'programs.neomutt'.
+        '';
+      }
     ];
   };
 }

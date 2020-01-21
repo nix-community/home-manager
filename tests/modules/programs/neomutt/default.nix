@@ -1,0 +1,3 @@
+{
+  neomutt-simple = ./neomutt.nix;
+}

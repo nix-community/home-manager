@@ -33,6 +33,7 @@ import nmt {
     // import ./modules/misc/xdg
     // import ./modules/misc/xsession
     // import ./modules/programs/firefox
+    // import ./modules/programs/neomutt
     // import ./modules/programs/rofi
     // import ./modules/services/sxhkd
     // import ./modules/systemd

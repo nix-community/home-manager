@@ -78,6 +78,7 @@ let
     (loadModule ./programs/mercurial.nix { })
     (loadModule ./programs/mpv.nix { })
     (loadModule ./programs/msmtp.nix { })
+    (loadModule ./programs/neomutt.nix { })
     (loadModule ./programs/neovim.nix { })
     (loadModule ./programs/newsboat.nix { })
     (loadModule ./programs/noti.nix { })
