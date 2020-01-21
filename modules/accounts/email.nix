@@ -391,6 +391,7 @@ in
         (import ../programs/getmail-accounts.nix)
         (import ../programs/mbsync-accounts.nix)
         (import ../programs/msmtp-accounts.nix)
+        (import ../programs/neomutt-accounts.nix)
         (import ../programs/notmuch-accounts.nix)
         (import ../programs/offlineimap-accounts.nix)
       ]);
