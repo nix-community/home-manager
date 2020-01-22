@@ -15,12 +15,13 @@ let
 
   toKittyConfig = generators.toKeyValue {
     mkKeyValue = key: value:
-    let
-      value' =
-        if isBool value then (if value then "yes" else "no")
-        else toString value;
-    in
-      "${key} ${value'}";
+      let
+        value' =
+          if isBool value
+          then (if value then "yes" else "no")
+          else toString value;
+      in
+        "${key} ${value'}";
   };
 
   toKittyKeybindings = generators.toKeyValue {
