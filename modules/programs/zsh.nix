@@ -61,6 +61,15 @@ let
         '';
       };
 
+      ignoreSpace = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Do not enter command lines into the history list
+          if the first character is a space.
+        '';
+      };
+
       expireDuplicatesFirst = mkOption {
         type = types.bool;
         default = false;
@@ -414,6 +423,7 @@ in
 
         setopt HIST_FCNTL_LOCK
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
+        ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
         ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
         ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
         ${if cfg.history.extended then "setopt" else "unsetopt"} EXTENDED_HISTORY
