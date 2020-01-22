@@ -32,7 +32,7 @@ in
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
 
-    config = mkOption {
+    settings = mkOption {
       type = types.attrsOf eitherStrBoolInt;
       default = {};
       example = literalExample ''
@@ -87,7 +87,7 @@ in
           (cfg.font.name != null)
           "font_family ${cfg.font.name}"}
 
-      ${toKittyConfig cfg.config}
+      ${toKittyConfig cfg.settings}
 
       ${toKittyKeybindings cfg.keybindings}
 
