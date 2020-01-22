@@ -70,9 +70,8 @@ in
 
     extraConfig = mkOption {
       default = "";
-      type = types.str;
+      type = types.lines;
       description = "Additional configuration to add.";
-      example = "";
     };
   };
 
