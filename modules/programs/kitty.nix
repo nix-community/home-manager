@@ -4,14 +4,14 @@ with lib;
 
 let
 
+  hmTypes = import ../lib/types.nix { inherit lib; };
+
   cfg = config.programs.kitty;
 
   eitherStrBoolInt = with types; either str (either bool int);
 
   optionalPackage = opt:
     optional (opt != null && opt.package != null) opt.package;
-
-  fontType = (import ../lib/font-type.nix { inherit lib; }).fontType;
 
   toKittyConfig = generators.toKeyValue {
     mkKeyValue = key: value:
@@ -51,7 +51,7 @@ in
     };
 
     font = mkOption {
-      type = fontType;
+      type = hmTypes.fontType;
       default = null;
       description = "The font to use.";
     };
