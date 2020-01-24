@@ -17,7 +17,7 @@ with lib;
       default = null;
       example = "msmtpq --read-envelope-from --read-recipients";
       description = ''
-        Command to send a mail. If not set, mutt will be in charge of sending mails.
+        Command to send a mail. If not set, neomutt will be in charge of sending mails.
       '';
     };
 

@@ -82,28 +82,28 @@ let
     config.xdg.configHome + "/neomutt/" + account.name;
 
   genCommonFolderHooks = account: with account;
+    {
+      from = "'${address}'";
+      realname = "'${realName}'";
+      spoolfile = "'+${folders.inbox}'";
+      record = if folders.sent == null then null else "'+${folders.sent}'";
+      postponed = "'+${folders.drafts}'";
+      trash = "'+${folders.trash}'";
+    };
+
+  mtaSection = account: with account;
     let
       passCmd = concatStringsSep " " passwordCommand;
     in
-      {
-        from = "'${address}'";
-        realname = "'${realName}'";
-        spoolfile = "'+${folders.inbox}'";
-        record = if folders.sent == null then null else "'+${folders.sent}'";
-        postponed = "'+${folders.drafts}'";
-        trash = "'+${folders.trash}'";
+      if neomutt.sendMailCommand != null then {
+        sendmail = "'${neomutt.sendMailCommand}'";
+      } else let
+        smtpProto = if smtp.tls.enable then "smtps" else "smtp";
+        smtpBaseUrl = "${smtpProto}://${escape userName}@${smtp.host}";
+      in {
+          smtp_url = "'${smtpBaseUrl}'";
+          smtp_pass = "'`${passCmd}`'";
       };
-
-  mtaSection = account: with account;
-    if neomutt.sendMailCommand != null then {
-      sendmail = "'${neomutt.sendMailCommand}'";
-    } else let
-      smtpProto = if smtp.tls.enable then "smtps" else "smtp";
-      smtpBaseUrl = "${smtpProto}://${escape userName}@${smtp.host}";
-    in {
-        smtp_url = "'${smtpBaseUrl}'";
-        smtp_pass = "'`${passCmd}`'";
-    };
 
   genMaildirAccountConfig = account: with account;
     let
