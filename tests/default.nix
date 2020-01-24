@@ -35,6 +35,7 @@ import nmt {
     ./modules/home-environment
     ./modules/misc/fontconfig
     ./modules/programs/alacritty
+    ./modules/programs/alot
     ./modules/programs/bash
     ./modules/programs/browserpass
     ./modules/programs/fish

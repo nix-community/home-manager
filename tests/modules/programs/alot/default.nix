@@ -1,0 +1,3 @@
+{
+  alot = ./alot.nix;
+}
