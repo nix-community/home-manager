@@ -3,7 +3,7 @@
 with lib;
 
 {
-  imports = [ ../accounts/email-test-accounts.nix ];
+  imports = [ ../../accounts/email-test-accounts.nix ];
 
   config = {
     home.username = "hm-user";

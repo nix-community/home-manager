@@ -1,0 +1,3 @@
+{
+  getmail = ./getmail.nix;
+}

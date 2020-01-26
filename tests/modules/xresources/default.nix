@@ -1,0 +1,3 @@
+{
+  xresources = ./xresources.nix;
+}
