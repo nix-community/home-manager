@@ -4,8 +4,6 @@ with lib;
 
 let
 
-  hmTypes = import ../lib/types.nix { inherit lib; };
-
   cfg = config.programs.emacs;
 
   # Copied from all-packages.nix, with modifications to support
@@ -36,7 +34,7 @@ in
 
       extraPackages = mkOption {
         default = self: [];
-        type = hmTypes.selectorFunction;
+        type = hm.types.selectorFunction;
         defaultText = "epkgs: []";
         example = literalExample "epkgs: [ epkgs.emms epkgs.magit ]";
         description = ''
@@ -48,7 +46,7 @@ in
 
       overrides = mkOption {
         default = self: super: {};
-        type = hmTypes.overlayFunction;
+        type = hm.types.overlayFunction;
         defaultText = "self: super: {}";
         example = literalExample ''
           self: super: rec {
