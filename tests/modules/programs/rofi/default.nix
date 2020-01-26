@@ -1,3 +1,3 @@
 {
-  rofi-assert-on-both-theme-and-colors = import ./assert-on-both-theme-and-colors.nix;
+  rofi-assert-on-both-theme-and-colors = ./assert-on-both-theme-and-colors.nix;
 }
