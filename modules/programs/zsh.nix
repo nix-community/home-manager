@@ -345,9 +345,14 @@ in
         ++ optional cfg.enableCompletion nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
 
-      home.file."${relToDotDir ".zshrc"}".text = ''
+      home.file."${relToDotDir ".zshenv"}".text = ''
         typeset -U path cdpath fpath manpath
 
+        # Set PATH for both interactive and non-interactive shell
+        path+=($HOME/.nix-profile/bin /etc/profiles/per-user/$USER/bin /nix/var/nix/profiles/default/bin /run/current-system/sw/bin)
+      '';
+
+      home.file."${relToDotDir ".zshrc"}".text = ''
         for profile in ''${(z)NIX_PROFILES}; do
           fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
         done
