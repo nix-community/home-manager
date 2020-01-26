@@ -178,7 +178,7 @@ in
       scrollbar = mkOption {
         default = null;
         type = types.nullOr (types.enum [ "off" "left" "right" ]);
-        description = "Scroll to the bottom when the shell generates output.";
+        description = "Scrollbar position.";
       };
 
       backgroundColor = mkOption {
