@@ -5,7 +5,6 @@ with lib;
 let
 
   dag = config.lib.dag;
-  hmTypes = import ../../../modules/lib/types.nix { inherit dag lib; };
 
   result =
     let
@@ -18,7 +17,7 @@ in
 
 {
   options.tested.dag = mkOption {
-    type = with types; hmTypes.dagOf str;
+    type = hm.types.dagOf types.str;
   };
 
   config = {
