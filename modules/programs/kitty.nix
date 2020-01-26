@@ -4,8 +4,6 @@ with lib;
 
 let
 
-  hmTypes = import ../lib/types.nix { inherit lib; };
-
   cfg = config.programs.kitty;
 
   eitherStrBoolInt = with types; either str (either bool int);
@@ -52,7 +50,7 @@ in
     };
 
     font = mkOption {
-      type = hmTypes.fontType;
+      type = hm.types.fontType;
       default = null;
       description = "The font to use.";
     };

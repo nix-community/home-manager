@@ -4,8 +4,6 @@ with lib;
 
 let
 
-  hmTypes = import ../lib/types.nix { inherit lib; };
-
   cfg = config.gtk;
   cfg2 = config.gtk.gtk2;
   cfg3 = config.gtk.gtk3;
@@ -66,7 +64,7 @@ in
       enable = mkEnableOption "GTK 2/3 configuration";
 
       font = mkOption {
-        type = types.nullOr hmTypes.fontType;
+        type = types.nullOr hm.types.fontType;
         default = null;
         description = ''
           The font to use in GTK+ 2/3 applications.
