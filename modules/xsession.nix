@@ -107,8 +107,10 @@ in
               with config.home.keyboard;
               let
                 args =
-                  optional (layout != null) "-layout '${layout}'"
-                  ++ optional (variant != null) "-variant '${variant}'"
+                  optional (layouts != []) (let
+                  layouts' = zipAttrsWith (name: values: concatStringsSep "," values) layouts;
+                  in
+                  "-layout '${layouts'.name}' -variant '${layouts'.variant}'")
                   ++ optional (model != null) "-model '${model}'"
                   ++ map (v: "-option '${v}'") options;
               in

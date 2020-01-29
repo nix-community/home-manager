@@ -50,8 +50,36 @@ let
     };
   };
 
+  layoutSubmodule = types.submodule {
+    options = {
+      name = mkOption {
+        type = types.str;
+        visible = false;
+      };
+      variant = mkOption {
+        type = types.str;
+        default = "";
+        visible = false;
+      };
+    };
+  };
+
   keyboardSubModule = types.submodule {
     options = {
+      layouts = mkOption {
+        type = with types; nullOr (listOf layoutSubmodule);
+        default =
+          if versionAtLeast config.home.stateVersion "19.09"
+          then []
+          else [ {name = "us";} ];
+        example = [ { name = "us"; } { name = "ru"; variant = "phonetic"; } ];
+        description = ''
+          List of keyboard layout and variant pairs.
+          If empty, then the system configuration will be used.
+          This defaults to <literal>[]</literal> for state
+          version ≥ 19.09 and <literal>[ {name = "us";} ]</literal> otherwise.
+        '';
+      };
       layout = mkOption {
         type = with types; nullOr str;
         default =
@@ -316,6 +344,12 @@ in
         message = "Home directory could not be determined";
       }
     ];
+
+    warnings = optional (cfg.keyboard.layout != null) "home.keyboard.`layout` and home.keyboard.`variant` are deprecated, please use home.keyboard.`layouts`.";
+
+    # For backward compatibility
+    home.keyboard.layouts = mkIf (cfg.keyboard.layout != null || cfg.keyboard.variant != null ) (mkDefault [ {name = cfg.keyboard.layout; variant = mkIf (cfg.keyboard.variant != null) cfg.keyboard.variant;} ]);
+
 
     home.username = mkDefault (builtins.getEnv "USER");
     home.homeDirectory = mkDefault (builtins.getEnv "HOME");
