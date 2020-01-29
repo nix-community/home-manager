@@ -763,10 +763,10 @@ let
   configFile = pkgs.writeText "i3.conf" ((if cfg.config != null then with cfg.config; ''
     font pango:${concatStringsSep ", " fonts}
     floating_modifier ${floating.modifier}
-    new_window ${if window.titlebar then "normal" else "pixel"} ${toString window.border}
-    new_float ${if floating.titlebar then "normal" else "pixel"} ${toString floating.border}
+    default_border ${if window.titlebar then "normal" else "pixel"} ${toString window.border}
+    default_floating_border ${if floating.titlebar then "normal" else "pixel"} ${toString floating.border}
     hide_edge_borders ${window.hideEdgeBorders}
-    force_focus_wrapping ${if focus.forceWrapping then "yes" else "no"}
+    focus_wrapping ${if focus.forceWrapping then "yes" else "no"}
     focus_follows_mouse ${if focus.followMouse then "yes" else "no"}
     focus_on_window_activation ${focus.newWindow}
     mouse_warping ${if focus.mouseWarping then "output" else "none"}
