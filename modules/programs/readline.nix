@@ -30,7 +30,9 @@ in {
     bindings = mkOption {
       default = { };
       type = types.attrsOf types.str;
-      example = { "\\C-h" = "backward-kill-word"; };
+      example = literalExample ''
+        { "\\C-h" = "backward-kill-word"; }
+      '';
       description = "Readline bindings.";
     };
 
