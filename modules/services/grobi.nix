@@ -6,12 +6,10 @@ let
 
   cfg = config.services.grobi;
 
-  eitherStrBoolIntList =
-    with types; either str (either bool (either int (listOf str)));
+  eitherStrBoolIntList = with types;
+    either str (either bool (either int (listOf str)));
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.mbrgm ];
 
   options = {
@@ -20,7 +18,7 @@ in
 
       executeAfter = mkOption {
         type = with types; listOf str;
-        default = [];
+        default = [ ];
         example = [ "setxkbmap dvorak" ];
         description = ''
           Commands to be run after an output configuration was
@@ -32,7 +30,7 @@ in
 
       rules = mkOption {
         type = with types; listOf (attrsOf eitherStrBoolIntList);
-        default = [];
+        default = [ ];
         example = literalExample ''
           [
             {
@@ -88,9 +86,7 @@ in
         Environment = "PATH=${pkgs.xorg.xrandr}/bin:${pkgs.bash}/bin";
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
     };
 
     xdg.configFile."grobi.conf".text = builtins.toJSON {

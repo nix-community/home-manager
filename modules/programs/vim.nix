@@ -31,43 +31,36 @@ let
   };
 
   vimSettingsType = types.submodule {
-    options =
-      let
-        opt = name: type: mkOption {
+    options = let
+      opt = name: type:
+        mkOption {
           type = types.nullOr type;
           default = null;
           visible = false;
         };
-      in
-        mapAttrs opt knownSettings;
+    in mapAttrs opt knownSettings;
   };
 
   setExpr = name: value:
     let
-      v =
-        if isBool value then (if value then "" else "no") + name
-        else
-          "${name}=${
-            if isList value
-            then concatStringsSep "," value
-            else toString value
-          }";
-    in
-      optionalString (value != null) ("set " + v);
+      v = if isBool value then
+        (if value then "" else "no") + name
+      else
+        "${name}=${
+          if isList value then concatStringsSep "," value else toString value
+        }";
+    in optionalString (value != null) ("set " + v);
 
-  plugins =
-    let
-      vpkgs = pkgs.vimPlugins;
-      getPkg = p:
-        if isDerivation p
-        then [ p ]
-        else optional (isString p && hasAttr p vpkgs) vpkgs.${p};
-    in
-      concatMap getPkg cfg.plugins;
+  plugins = let
+    vpkgs = pkgs.vimPlugins;
+    getPkg = p:
+      if isDerivation p then
+        [ p ]
+      else
+        optional (isString p && hasAttr p vpkgs) vpkgs.${p};
+  in concatMap getPkg cfg.plugins;
 
-in
-
-{
+in {
   options = {
     programs.vim = {
       enable = mkEnableOption "Vim";
@@ -75,7 +68,7 @@ in
       plugins = mkOption {
         type = with types; listOf (either str package);
         default = defaultPlugins;
-        example = literalExample ''[ pkgs.vimPlugins.YankRing ]'';
+        example = literalExample "[ pkgs.vimPlugins.YankRing ]";
         description = ''
           List of vim plugins to install. To get a list of supported plugins run:
           <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A vimPlugins</command>.
@@ -88,7 +81,7 @@ in
 
       settings = mkOption {
         type = vimSettingsType;
-        default = {};
+        default = { };
         example = literalExample ''
           {
             expandtab = true;
@@ -102,14 +95,12 @@ in
           options.
 
           <informaltable frame="none"><tgroup cols="1"><tbody>
-          ${concatStringsSep "\n" (
-            mapAttrsToList (n: v: ''
-              <row>
-                <entry><varname>${n}</varname></entry>
-                <entry>${v.description}</entry>
-              </row>
-            '') knownSettings
-          )}
+          ${concatStringsSep "\n" (mapAttrsToList (n: v: ''
+            <row>
+              <entry><varname>${n}</varname></entry>
+              <entry>${v.description}</entry>
+            </row>
+          '') knownSettings)}
           </tbody></tgroup></informaltable>
 
           See the Vim documentation for detailed descriptions of these
@@ -136,56 +127,45 @@ in
     };
   };
 
-  config = (
-    let
-      customRC = ''
-        ${concatStringsSep "\n" (
-          filter (v: v != "") (
-          mapAttrsToList setExpr (
-          builtins.intersectAttrs knownSettings cfg.settings)))}
+  config = (let
+    customRC = ''
+      ${concatStringsSep "\n" (filter (v: v != "") (mapAttrsToList setExpr
+        (builtins.intersectAttrs knownSettings cfg.settings)))}
 
-        ${cfg.extraConfig}
-      '';
+      ${cfg.extraConfig}
+    '';
 
-      vim = pkgs.vim_configurable.customize {
-        name = "vim";
-        vimrcConfig = {
-          inherit customRC;
+    vim = pkgs.vim_configurable.customize {
+      name = "vim";
+      vimrcConfig = {
+        inherit customRC;
 
-          packages.home-manager.start = plugins;
-        };
+        packages.home-manager.start = plugins;
       };
-    in
-      mkIf cfg.enable {
-        assertions =
-          let
-            packagesNotFound = filter (p: isString p && (!hasAttr p pkgs.vimPlugins)) cfg.plugins;
-          in
-            [
-              {
-                assertion = packagesNotFound == [];
-                message = "Following VIM plugin not found in pkgs.vimPlugins: ${
-                  concatMapStringsSep ", " (p: ''"${p}"'') packagesNotFound
-                }";
-              }
-            ];
+    };
+  in mkIf cfg.enable {
+    assertions = let
+      packagesNotFound =
+        filter (p: isString p && (!hasAttr p pkgs.vimPlugins)) cfg.plugins;
+    in [{
+      assertion = packagesNotFound == [ ];
+      message = "Following VIM plugin not found in pkgs.vimPlugins: ${
+          concatMapStringsSep ", " (p: ''"${p}"'') packagesNotFound
+        }";
+    }];
 
-        warnings =
-          let
-            stringPlugins = filter isString cfg.plugins;
-          in
-            optional (stringPlugins != []) ''
-              Specifying VIM plugins using strings is deprecated, found ${
-                concatMapStringsSep ", " (p: ''"${p}"'') stringPlugins
-              } as strings.
-            '';
+    warnings = let stringPlugins = filter isString cfg.plugins;
+    in optional (stringPlugins != [ ]) ''
+      Specifying VIM plugins using strings is deprecated, found ${
+        concatMapStringsSep ", " (p: ''"${p}"'') stringPlugins
+      } as strings.
+    '';
 
-        home.packages = [ cfg.package ];
+    home.packages = [ cfg.package ];
 
-        programs.vim = {
-          package = vim;
-          plugins = defaultPlugins;
-        };
-      }
-  );
+    programs.vim = {
+      package = vim;
+      plugins = defaultPlugins;
+    };
+  });
 }

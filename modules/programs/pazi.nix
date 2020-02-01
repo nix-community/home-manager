@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.pazi;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.marsam ];
 
   options.programs.pazi = {

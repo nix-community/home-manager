@@ -6,16 +6,14 @@ let
 
   cfg = config.programs.alacritty;
 
-in
-
-{
+in {
   options = {
     programs.alacritty = {
       enable = mkEnableOption "Alacritty";
 
       settings = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         example = literalExample ''
           {
             window.dimensions = {
@@ -45,8 +43,9 @@ in
     (mkIf cfg.enable {
       home.packages = [ pkgs.alacritty ];
 
-      xdg.configFile."alacritty/alacritty.yml" = mkIf (cfg.settings != {}) {
-        text = replaceStrings ["\\\\"] ["\\"] (builtins.toJSON cfg.settings);
+      xdg.configFile."alacritty/alacritty.yml" = mkIf (cfg.settings != { }) {
+        text =
+          replaceStrings [ "\\\\" ] [ "\\" ] (builtins.toJSON cfg.settings);
       };
     })
   ];

@@ -6,9 +6,7 @@ let
 
   cfg = config.xsession;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -89,30 +87,25 @@ in
 
     systemd.user = {
       services = mkIf (config.home.keyboard != null) {
-        setxkbmap =  {
+        setxkbmap = {
           Unit = {
             Description = "Set up keyboard in X";
             After = [ "graphical-session-pre.target" ];
             PartOf = [ "graphical-session.target" ];
           };
 
-          Install = {
-            WantedBy = [ "graphical-session.target" ];
-          };
+          Install = { WantedBy = [ "graphical-session.target" ]; };
 
           Service = {
             Type = "oneshot";
             RemainAfterExit = true;
-            ExecStart =
-              with config.home.keyboard;
+            ExecStart = with config.home.keyboard;
               let
-                args =
-                  optional (layout != null) "-layout '${layout}'"
+                args = optional (layout != null) "-layout '${layout}'"
                   ++ optional (variant != null) "-variant '${variant}'"
                   ++ optional (model != null) "-model '${model}'"
                   ++ map (v: "-option '${v}'") options;
-              in
-                "${pkgs.xorg.setxkbmap}/bin/setxkbmap ${toString args}";
+              in "${pkgs.xorg.setxkbmap}/bin/setxkbmap ${toString args}";
           };
         };
       };
@@ -128,25 +121,24 @@ in
     };
 
     home.file.".xprofile".text = ''
-        . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+      . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
-        if [ -e "$HOME/.profile" ]; then
-          . "$HOME/.profile"
-        fi
+      if [ -e "$HOME/.profile" ]; then
+        . "$HOME/.profile"
+      fi
 
-        # If there are any running services from a previous session.
-        # Need to run this in xprofile because the NixOS xsession
-        # script starts up graphical-session.target.
-        systemctl --user stop graphical-session.target graphical-session-pre.target
+      # If there are any running services from a previous session.
+      # Need to run this in xprofile because the NixOS xsession
+      # script starts up graphical-session.target.
+      systemctl --user stop graphical-session.target graphical-session-pre.target
 
-        ${optionalString (cfg.importedVariables != []) (
-          "systemctl --user import-environment "
-            + toString (unique cfg.importedVariables)
-        )}
+      ${optionalString (cfg.importedVariables != [ ])
+      ("systemctl --user import-environment "
+        + toString (unique cfg.importedVariables))}
 
-        ${cfg.profileExtra}
+      ${cfg.profileExtra}
 
-        export HM_XPROFILE_SOURCED=1
+      export HM_XPROFILE_SOURCED=1
     '';
 
     home.file.${cfg.scriptPath} = {

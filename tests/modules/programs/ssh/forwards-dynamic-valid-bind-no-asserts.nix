@@ -8,31 +8,24 @@ with lib;
       enable = true;
       matchBlocks = {
         dynamicBindPathNoPort = {
-          dynamicForwards = [
-            {
-              # OK:
-              address = "/run/user/1000/gnupg/S.gpg-agent.extra";
-            }
-          ];
+          dynamicForwards = [{
+            # OK:
+            address = "/run/user/1000/gnupg/S.gpg-agent.extra";
+          }];
         };
 
         dynamicBindAddressWithPort = {
-          dynamicForwards = [
-            {
-              # OK:
-              address = "127.0.0.1";
-              port = 3000;
-            }
-          ];
+          dynamicForwards = [{
+            # OK:
+            address = "127.0.0.1";
+            port = 3000;
+          }];
         };
       };
     };
 
-    home.file.result.text =
-      builtins.toJSON
-      (map (a: a.message)
-      (filter (a: !a.assertion)
-        config.assertions));
+    home.file.result.text = builtins.toJSON
+      (map (a: a.message) (filter (a: !a.assertion) config.assertions));
 
     nmt.script = ''
       assertFileExists home-files/.ssh/config

@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.opam;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.marsam ];
 
   options.programs.opam = {

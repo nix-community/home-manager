@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.bat;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.marsam ];
 
   options.programs.bat = {
@@ -16,7 +14,7 @@ in
 
     config = mkOption {
       type = types.attrsOf types.str;
-      default = {};
+      default = { };
       example = {
         theme = "TwoDark";
         pager = "less -FR";
@@ -31,10 +29,9 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.bat ];
 
-    xdg.configFile."bat/config" = mkIf (cfg.config != {}) {
-      text = concatStringsSep "\n" (
-        mapAttrsToList (n: v: ''--${n}="${v}"'') cfg.config
-      );
+    xdg.configFile."bat/config" = mkIf (cfg.config != { }) {
+      text = concatStringsSep "\n"
+        (mapAttrsToList (n: v: ''--${n}="${v}"'') cfg.config);
     };
   };
 }

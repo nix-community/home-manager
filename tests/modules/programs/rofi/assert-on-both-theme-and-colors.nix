@@ -13,16 +13,12 @@ with lib;
           border = "border";
           separator = "separator";
         };
-        rows = {
-        };
+        rows = { };
       };
     };
 
-    home.file.result.text =
-      builtins.toJSON
-      (map (a: a.message)
-      (filter (a: !a.assertion)
-        config.assertions));
+    home.file.result.text = builtins.toJSON
+      (map (a: a.message) (filter (a: !a.assertion) config.assertions));
 
     nmt.script = ''
       assertFileContent \

@@ -7,10 +7,8 @@ let
   cfg = config.services.unison;
 
   pairOf = t:
-    let
-      list = types.addCheck (types.listOf t) (l: length l == 2);
-    in
-      list // { description = list.description + " of length 2"; };
+    let list = types.addCheck (types.listOf t) (l: length l == 2);
+    in list // { description = list.description + " of length 2"; };
 
   pairOptions = {
     options = {
@@ -64,17 +62,14 @@ let
 
   serialiseArg = key: val: "-${key}=${escapeShellArg val}";
 
-  serialiseArgs = args:
-    concatStringsSep " " (mapAttrsToList serialiseArg args);
+  serialiseArgs = args: concatStringsSep " " (mapAttrsToList serialiseArg args);
 
   makeDefs = gen:
     mapAttrs'
-      (name: pairCfg: nameValuePair "unison-pair-${name}" (gen name pairCfg))
-      cfg.pairs;
+    (name: pairCfg: nameValuePair "unison-pair-${name}" (gen name pairCfg))
+    cfg.pairs;
 
-in
-
-{
+in {
   meta.maintainers = with maintainers; [ pacien ];
 
   options.services.unison = {
@@ -120,9 +115,7 @@ in
         '';
       };
 
-      Install = {
-        WantedBy = [ "default.target" ];
-      };
+      Install = { WantedBy = [ "default.target" ]; };
     });
   };
 }

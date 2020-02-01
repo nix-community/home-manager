@@ -7,18 +7,16 @@ let
   cfg = config.services.spotifyd;
 
   configFile = pkgs.writeText "spotifyd.conf" ''
-    ${generators.toINI {} cfg.settings}
+    ${generators.toINI { } cfg.settings}
   '';
 
-in
-
-{
+in {
   options.services.spotifyd = {
     enable = mkEnableOption "SpotifyD connect";
 
     settings = mkOption {
       type = types.attrsOf (types.attrsOf types.str);
-      default = {};
+      default = { };
       description = "Configuration for spotifyd";
       example = literalExample ''
         {
@@ -44,7 +42,8 @@ in
       Install.WantedBy = [ "default.target" ];
 
       Service = {
-        ExecStart = "${pkgs.spotifyd}/bin/spotifyd --no-daemon --config-path ${configFile}";
+        ExecStart =
+          "${pkgs.spotifyd}/bin/spotifyd --no-daemon --config-path ${configFile}";
         Restart = "always";
         RestartSec = 12;
       };

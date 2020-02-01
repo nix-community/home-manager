@@ -1,3 +1,1 @@
-{
-  mbsync = ./mbsync.nix;
-}
+{ mbsync = ./mbsync.nix; }

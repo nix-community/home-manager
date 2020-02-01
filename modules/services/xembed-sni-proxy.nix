@@ -6,9 +6,7 @@ let
 
   cfg = config.services.xembed-sni-proxy;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -35,9 +33,7 @@ in
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";

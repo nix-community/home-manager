@@ -1,3 +1,1 @@
-{
-  browserpass = ./browserpass.nix;
-}
+{ browserpass = ./browserpass.nix; }

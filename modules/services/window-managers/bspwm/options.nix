@@ -28,7 +28,8 @@ let
       };
 
       state = mkOption {
-        type = types.nullOr (types.enum [ "tiled" "pseudo_tiled" "floating" "fullscreen" ]);
+        type = types.nullOr
+          (types.enum [ "tiled" "pseudo_tiled" "floating" "fullscreen" ]);
         default = null;
         description = "The state in which a new window should spawn.";
         example = "floating";
@@ -61,7 +62,7 @@ let
       hidden = mkOption {
         type = types.nullOr types.bool;
         default = null;
-        description = ''Whether the node should occupy any space.'';
+        description = "Whether the node should occupy any space.";
         example = true;
       };
 
@@ -141,9 +142,7 @@ let
     };
   };
 
-in
-
-{
+in {
   xsession.windowManager.bspwm = {
     enable = mkEnableOption "bspwm window manager.";
 
@@ -156,11 +155,10 @@ in
     };
 
     settings = mkOption {
-      type = with types; let
-          primitive = either bool (either int (either float str));
-        in
-          attrsOf (either primitive (listOf primitive));
-      default = {};
+      type = with types;
+        let primitive = either bool (either int (either float str));
+        in attrsOf (either primitive (listOf primitive));
+      default = { };
       description = "bspwm configuration";
       example = {
         "border_width" = 2;
@@ -180,16 +178,14 @@ in
 
     monitors = mkOption {
       type = types.attrsOf (types.listOf types.str);
-      default = {};
+      default = { };
       description = "bspc monitor configurations";
-      example = {
-        "HDMI-0" = [ "web" "terminal" "III" "IV" ];
-      };
+      example = { "HDMI-0" = [ "web" "terminal" "III" "IV" ]; };
     };
 
     rules = mkOption {
       type = types.attrsOf rule;
-      default = {};
+      default = { };
       description = "bspc rules";
       example = literalExample ''
         {
@@ -210,12 +206,9 @@ in
 
     startupPrograms = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = "Programs to be executed during startup.";
-      example = [
-        "numlockx on"
-        "tilda"
-      ];
+      example = [ "numlockx on" "tilda" ];
     };
   };
 }

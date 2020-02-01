@@ -6,9 +6,7 @@ let
 
   cfg = config.xdg.mime;
 
-in
-
-{
+in {
   options = {
     xdg.mime.enable = mkOption {
       type = types.bool;

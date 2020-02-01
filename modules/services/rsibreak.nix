@@ -6,9 +6,7 @@ let
 
   cfg = config.services.rsibreak;
 
-in
-
-{
+in {
   options.services.rsibreak = {
 
     enable = mkEnableOption "rsibreak";
@@ -23,9 +21,7 @@ in
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";

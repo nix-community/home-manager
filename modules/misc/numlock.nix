@@ -6,12 +6,8 @@ let
 
   cfg = config.xsession.numlock;
 
-in
-
-{
-  options = {
-    xsession.numlock.enable = mkEnableOption "Num Lock";
-  };
+in {
+  options = { xsession.numlock.enable = mkEnableOption "Num Lock"; };
 
   config = mkIf cfg.enable {
     systemd.user.services.numlockx = {
@@ -27,9 +23,7 @@ in
         ExecStart = "${pkgs.numlockx}/bin/numlockx";
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
     };
   };
 }

@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.skim;
 
-in
-
-{
+in {
   options.programs.skim = {
     enable = mkEnableOption "skim - a command-line fuzzy finder";
 
@@ -24,7 +22,7 @@ in
 
     defaultOptions = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       example = [ "--height 40%" "--prompt ⟫" ];
       description = ''
         Extra command line options given to skim by default.
@@ -43,7 +41,7 @@ in
 
     fileWidgetOptions = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       example = [ "--preview 'head {}'" ];
       description = ''
         Command line options for the CTRL-T keybinding.
@@ -53,7 +51,7 @@ in
     changeDirWidgetCommand = mkOption {
       type = types.nullOr types.str;
       default = null;
-      example = "fd --type d" ;
+      example = "fd --type d";
       description = ''
         The command that gets executed as the source for skim for the
         ALT-C keybinding.
@@ -62,7 +60,7 @@ in
 
     changeDirWidgetOptions = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       example = [ "--preview 'tree -C {} | head -200'" ];
       description = ''
         Command line options for the ALT-C keybinding.
@@ -71,7 +69,7 @@ in
 
     historyWidgetOptions = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       example = [ "--tac" "--exact" ];
       description = ''
         Command line options for the CTRL-R keybinding.
@@ -98,18 +96,16 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.skim ];
 
-    home.sessionVariables =
-      mapAttrs (n: v: toString v) (
-        filterAttrs (n: v: v != [] && v != null) {
-          SKIM_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
-          SKIM_ALT_C_OPTS = cfg.changeDirWidgetOptions;
-          SKIM_CTRL_R_OPTS = cfg.historyWidgetOptions;
-          SKIM_CTRL_T_COMMAND = cfg.fileWidgetCommand;
-          SKIM_CTRL_T_OPTS = cfg.fileWidgetOptions;
-          SKIM_DEFAULT_COMMAND = cfg.defaultCommand;
-          SKIM_DEFAULT_OPTIONS = cfg.defaultOptions;
-        }
-      );
+    home.sessionVariables = mapAttrs (n: v: toString v)
+      (filterAttrs (n: v: v != [ ] && v != null) {
+        SKIM_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
+        SKIM_ALT_C_OPTS = cfg.changeDirWidgetOptions;
+        SKIM_CTRL_R_OPTS = cfg.historyWidgetOptions;
+        SKIM_CTRL_T_COMMAND = cfg.fileWidgetCommand;
+        SKIM_CTRL_T_OPTS = cfg.fileWidgetOptions;
+        SKIM_DEFAULT_COMMAND = cfg.defaultCommand;
+        SKIM_DEFAULT_OPTIONS = cfg.defaultOptions;
+      });
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then

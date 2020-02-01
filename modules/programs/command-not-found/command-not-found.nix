@@ -13,8 +13,11 @@ let
     isExecutable = true;
     inherit (pkgs) perl;
     inherit (cfg) dbPath;
-    perlFlags = concatStrings (map (path: "-I ${path}/lib/perl5/site_perl ")
-      [ pkgs.perlPackages.DBI pkgs.perlPackages.DBDSQLite pkgs.perlPackages.StringShellQuote ]);
+    perlFlags = concatStrings (map (path: "-I ${path}/lib/perl5/site_perl ") [
+      pkgs.perlPackages.DBI
+      pkgs.perlPackages.DBDSQLite
+      pkgs.perlPackages.StringShellQuote
+    ]);
   };
 
   shInit = commandNotFoundHandlerName: ''
@@ -31,14 +34,13 @@ let
     }
   '';
 
-in
-
-{
+in {
   options.programs.command-not-found = {
     enable = mkEnableOption "command-not-found hook for interactive shell";
 
     dbPath = mkOption {
-      default = "/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite" ;
+      default =
+        "/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite";
       description = ''
         Absolute path to <filename>programs.sqlite</filename>. By
         default this file will be provided by your channel

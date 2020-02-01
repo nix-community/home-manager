@@ -8,9 +8,7 @@ let
 
   dag = config.lib.dag;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -33,10 +31,7 @@ in
   };
 
   config = mkIf (cfg.enable && !config.submoduleSupport.enable) {
-    home.packages = [
-      (pkgs.callPackage ../../home-manager {
-        inherit (cfg) path;
-      })
-    ];
+    home.packages =
+      [ (pkgs.callPackage ../../home-manager { inherit (cfg) path; }) ];
   };
 }

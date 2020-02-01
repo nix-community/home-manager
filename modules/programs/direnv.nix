@@ -6,21 +6,17 @@ let
 
   cfg = config.programs.direnv;
   configFile = config:
-    pkgs.runCommand "config.toml"
-      {
-         buildInputs = [ pkgs.remarshal ];
-         preferLocalBuild = true;
-         allowSubstitutes = false;
-      }
-      ''
-        remarshal -if json -of toml \
-          < ${pkgs.writeText "config.json" (builtins.toJSON config)} \
-          > $out
-      '';
+    pkgs.runCommand "config.toml" {
+      buildInputs = [ pkgs.remarshal ];
+      preferLocalBuild = true;
+      allowSubstitutes = false;
+    } ''
+      remarshal -if json -of toml \
+        < ${pkgs.writeText "config.json" (builtins.toJSON config)} \
+        > $out
+    '';
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options.programs.direnv = {
@@ -28,7 +24,7 @@ in
 
     config = mkOption {
       type = types.attrs;
-      default = {};
+      default = { };
       description = ''
         Configuration written to
         <filename>~/.config/direnv/config.toml</filename>.
@@ -79,22 +75,18 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.direnv ];
 
-    xdg.configFile."direnv/config.toml" = mkIf (cfg.config != {}) {
-      source = configFile cfg.config;
-    };
+    xdg.configFile."direnv/config.toml" =
+      mkIf (cfg.config != { }) { source = configFile cfg.config; };
 
-    xdg.configFile."direnv/direnvrc" = mkIf (cfg.stdlib != "") {
-      text = cfg.stdlib;
-    };
+    xdg.configFile."direnv/direnvrc" =
+      mkIf (cfg.stdlib != "") { text = cfg.stdlib; };
 
-    programs.bash.initExtra =
-      mkIf cfg.enableBashIntegration (
-        # Using mkAfter to make it more likely to appear after other
-        # manipulations of the prompt.
-        mkAfter ''
-          eval "$(${pkgs.direnv}/bin/direnv hook bash)"
-        ''
-      );
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (
+    # Using mkAfter to make it more likely to appear after other
+    # manipulations of the prompt.
+      mkAfter ''
+        eval "$(${pkgs.direnv}/bin/direnv hook bash)"
+      '');
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"

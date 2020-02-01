@@ -11,23 +11,18 @@ let
     let
       pluginDirs = map (pkg: "${pkg}/share/obs/obs-plugins") packages;
       plugins = concatMapStringsSep " " (p: "${p}/*") pluginDirs;
-    in
-      pkgs.runCommand "obs-studio-plugins"
-        {
-          preferLocalBuild = true;
-          allowSubstitutes = false;
-        }
-        ''
-          mkdir $out
-          [[ '${plugins}' ]] || exit 0
-          for plugin in ${plugins}; do
-            ln -s "$plugin" $out/
-          done
-        '';
+    in pkgs.runCommand "obs-studio-plugins" {
+      preferLocalBuild = true;
+      allowSubstitutes = false;
+    } ''
+      mkdir $out
+      [[ '${plugins}' ]] || exit 0
+      for plugin in ${plugins}; do
+        ln -s "$plugin" $out/
+      done
+    '';
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.adisbladis ];
 
   options = {
@@ -35,7 +30,7 @@ in
       enable = mkEnableOption "obs-studio";
 
       plugins = mkOption {
-        default = [];
+        default = [ ];
         example = literalExample "[ pkgs.obs-linuxbrowser ]";
         description = "Optional OBS plugins.";
         type = types.listOf types.package;
@@ -46,8 +41,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ package ];
 
-    xdg.configFile."obs-studio/plugins" = mkIf (cfg.plugins != []) {
-      source = mkPluginEnv cfg.plugins;
-    };
+    xdg.configFile."obs-studio/plugins" =
+      mkIf (cfg.plugins != [ ]) { source = mkPluginEnv cfg.plugins; };
   };
 }

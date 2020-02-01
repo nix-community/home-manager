@@ -9,38 +9,39 @@ let
   themePath = theme: "${pkgs.taskwarrior}/share/doc/task/rc/${theme}.theme";
 
   includeTheme = location:
-    if location == null then ""
-    else if isString location then "include ${themePath location}"
-    else "include ${location}";
+    if location == null then
+      ""
+    else if isString location then
+      "include ${themePath location}"
+    else
+      "include ${location}";
 
   formatValue = value:
-    if isBool value then if value then "true" else "false"
-    else if isList value then concatMapStringsSep "," formatValue value
-    else toString value;
+    if isBool value then
+      if value then "true" else "false"
+    else if isList value then
+      concatMapStringsSep "," formatValue value
+    else
+      toString value;
 
-  formatLine = key: value:
-    "${key}=${formatValue value}";
+  formatLine = key: value: "${key}=${formatValue value}";
 
   formatSet = key: values:
     (concatStringsSep "\n"
-      (mapAttrsToList
-        (subKey: subValue: formatPair "${key}.${subKey}" subValue)
+      (mapAttrsToList (subKey: subValue: formatPair "${key}.${subKey}" subValue)
         values));
 
   formatPair = key: value:
-    if isAttrs value then formatSet key value
-    else formatLine key value;
+    if isAttrs value then formatSet key value else formatLine key value;
 
-in
-
-{
+in {
   options = {
     programs.taskwarrior = {
       enable = mkEnableOption "Task Warrior";
 
       config = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         example = literalExample ''
           {
             confirmation = false;
@@ -103,8 +104,7 @@ in
       data.location=${cfg.dataLocation}
       ${includeTheme cfg.colorTheme}
 
-      ${concatStringsSep "\n" (
-        mapAttrsToList formatPair cfg.config)}
+      ${concatStringsSep "\n" (mapAttrsToList formatPair cfg.config)}
 
       ${cfg.extraConfig}
     '';

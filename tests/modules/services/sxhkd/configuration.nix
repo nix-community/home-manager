@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+{ config, ... }: {
   config = {
     services.sxhkd = {
       enable = true;
@@ -13,7 +12,7 @@
       extraConfig = ''
         super + c
           call command c
- 
+
         # comment
         super + d
           call command d

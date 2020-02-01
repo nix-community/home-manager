@@ -13,19 +13,15 @@ with lib;
 
   config = mkIf config.services.keepassx.enable {
     systemd.user.services.keepassx = {
-        Unit = {
-          Description = "KeePassX password manager";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
+      Unit = {
+        Description = "KeePassX password manager";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
 
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
 
-        Service = {
-          ExecStart = "${pkgs.keepassx}/bin/keepassx -min -lock";
-        };
+      Service = { ExecStart = "${pkgs.keepassx}/bin/keepassx -min -lock"; };
     };
   };
 }

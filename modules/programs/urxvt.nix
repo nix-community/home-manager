@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.urxvt;
 
-in
-
-{
+in {
   options.programs.urxvt = {
     enable = mkEnableOption "rxvt-unicode terminal emulator";
 
@@ -21,14 +19,14 @@ in
 
     fonts = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = "List of fonts to be used.";
       example = [ "xft:Droid Sans Mono Nerd Font:size=9" ];
     };
 
     keybindings = mkOption {
       type = types.attrsOf types.str;
-      default = {};
+      default = { };
       description = "Mapping of keybindings to actions";
       example = literalExample ''
         {
@@ -41,7 +39,8 @@ in
     iso14755 = mkOption {
       type = types.bool;
       default = true;
-      description = "ISO14755 support for viewing and entering unicode characters.";
+      description =
+        "ISO14755 support for viewing and entering unicode characters.";
     };
 
     scroll = {
@@ -75,11 +74,12 @@ in
             floating = mkOption {
               type = types.bool;
               default = true;
-              description = "Whether to display an rxvt scrollbar without a trough.";
+              description =
+                "Whether to display an rxvt scrollbar without a trough.";
             };
           };
         };
-        default = {};
+        default = { };
         description = "Scrollbar settings.";
       };
 
@@ -92,7 +92,8 @@ in
       keepPosition = mkOption {
         type = types.bool;
         default = true;
-        description = "Whether to keep a scroll position when TTY receives new lines.";
+        description =
+          "Whether to keep a scroll position when TTY receives new lines.";
       };
 
       scrollOnKeystroke = mkOption {
@@ -117,11 +118,12 @@ in
     shading = mkOption {
       type = types.ints.between 0 200;
       default = 100;
-      description = "Darken (0 .. 99) or lighten (101 .. 200) the transparent background.";
+      description =
+        "Darken (0 .. 99) or lighten (101 .. 200) the transparent background.";
     };
 
     extraConfig = mkOption {
-      default = {};
+      default = { };
       type = types.attrs;
       description = "Additional configuration to add.";
       example = { "shading" = 15; };
@@ -145,12 +147,10 @@ in
       "URxvt.transparent" = cfg.transparent;
       "URxvt.shading" = cfg.shading;
       "URxvt.iso14755" = cfg.iso14755;
-    } // flip mapAttrs' cfg.keybindings (kb: action:
-     nameValuePair "URxvt.keysym.${kb}" action
-    ) // optionalAttrs (cfg.fonts != []) {
-      "URxvt.font" = concatStringsSep "," cfg.fonts;
-    } // flip mapAttrs' cfg.extraConfig (k: v:
-      nameValuePair "URxvt.${k}" v
-    );
+    } // flip mapAttrs' cfg.keybindings
+      (kb: action: nameValuePair "URxvt.keysym.${kb}" action)
+      // optionalAttrs (cfg.fonts != [ ]) {
+        "URxvt.font" = concatStringsSep "," cfg.fonts;
+      } // flip mapAttrs' cfg.extraConfig (k: v: nameValuePair "URxvt.${k}" v);
   };
 }

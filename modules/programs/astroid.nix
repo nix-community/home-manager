@@ -8,35 +8,32 @@ let
   cfg = config.programs.astroid;
 
   astroidAccounts =
-    filterAttrs
-      (n: v: v.astroid.enable)
-      config.accounts.email.accounts;
+    filterAttrs (n: v: v.astroid.enable) config.accounts.email.accounts;
 
   boolOpt = b: if b then "true" else "false";
 
-  accountAttr = account: with account; {
-    email = address;
-    name = realName;
-    sendmail = astroid.sendMailCommand;
-    additional_sent_tags = "";
-    default = boolOpt primary;
-    save_drafts_to = "${maildir.absPath}/${folders.drafts}";
-    save_sent = "true";
-    save_sent_to = "${maildir.absPath}/${folders.sent}";
-    select_query = "";
-  }
-  // optionalAttrs (signature.showSignature != "none") {
-    signature_attach = boolOpt (signature.showSignature == "attach");
-    signature_default_on = boolOpt (signature.showSignature != "none");
-    signature_file = pkgs.writeText "signature.txt" signature.text;
-    signature_file_markdown = "false";
-    signature_separate = "true";  # prepends '--\n' to the signature
-  }
-  // optionalAttrs (gpg != null) {
-    always_gpg_sign = boolOpt gpg.signByDefault;
-    gpgkey = gpg.key;
-  }
-  // astroid.extraConfig;
+  accountAttr = account:
+    with account;
+    {
+      email = address;
+      name = realName;
+      sendmail = astroid.sendMailCommand;
+      additional_sent_tags = "";
+      default = boolOpt primary;
+      save_drafts_to = "${maildir.absPath}/${folders.drafts}";
+      save_sent = "true";
+      save_sent_to = "${maildir.absPath}/${folders.sent}";
+      select_query = "";
+    } // optionalAttrs (signature.showSignature != "none") {
+      signature_attach = boolOpt (signature.showSignature == "attach");
+      signature_default_on = boolOpt (signature.showSignature != "none");
+      signature_file = pkgs.writeText "signature.txt" signature.text;
+      signature_file_markdown = "false";
+      signature_separate = "true"; # prepends '--\n' to the signature
+    } // optionalAttrs (gpg != null) {
+      always_gpg_sign = boolOpt gpg.signByDefault;
+      gpgkey = gpg.key;
+    } // astroid.extraConfig;
 
   # See https://github.com/astroidmail/astroid/wiki/Configuration-Reference
   configFile = mailAccounts:
@@ -51,12 +48,9 @@ let
         cfg.extraConfig
         cfg.externalEditor
       ];
-    in
-      builtins.toJSON astroidConfig;
+    in builtins.toJSON astroidConfig;
 
-in
-
-{
+in {
   options = {
     programs.astroid = {
       enable = mkEnableOption "Astroid";
@@ -81,7 +75,8 @@ in
               "cmd" = cmd;
             };
           };
-        example = "nvim-qt -- -c 'set ft=mail' '+set fileencoding=utf-8' '+set ff=unix' '+set enc=utf-8' '+set fo+=w' %1";
+        example =
+          "nvim-qt -- -c 'set ft=mail' '+set fileencoding=utf-8' '+set ff=unix' '+set enc=utf-8' '+set fo+=w' %1";
         description = ''
           You can use <code>%1</code>, <code>%2</code>, and
           <code>%3</code> to refer respectively to:
@@ -96,7 +91,7 @@ in
 
       extraConfig = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         example = { poll.interval = 0; };
         description = ''
           JSON config that will override the default Astroid configuration.
@@ -106,18 +101,15 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages =  [ pkgs.astroid ];
+    home.packages = [ pkgs.astroid ];
 
-    xdg.configFile."astroid/config".source =
-      pkgs.runCommand "out.json"
-        {
-          json = configFile astroidAccounts;
-          preferLocalBuild = true;
-          allowSubstitutes = false;
-        }
-        ''
-          echo -n "$json" | ${pkgs.jq}/bin/jq . > $out
-        '';
+    xdg.configFile."astroid/config".source = pkgs.runCommand "out.json" {
+      json = configFile astroidAccounts;
+      preferLocalBuild = true;
+      allowSubstitutes = false;
+    } ''
+      echo -n "$json" | ${pkgs.jq}/bin/jq . > $out
+    '';
 
     xdg.configFile."astroid/poll.sh" = {
       executable = true;

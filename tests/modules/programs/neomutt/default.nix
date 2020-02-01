@@ -1,3 +1,1 @@
-{
-  neomutt-simple = ./neomutt.nix;
-}
+{ neomutt-simple = ./neomutt.nix; }

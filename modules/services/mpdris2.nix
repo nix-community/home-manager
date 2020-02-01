@@ -9,11 +9,11 @@ let
   toIni = generators.toINI {
     mkKeyValue = key: value:
       let
-        value' =
-          if isBool value then (if value then "True" else "False")
-          else toString value;
-      in
-        "${key} = ${value'}";
+        value' = if isBool value then
+          (if value then "True" else "False")
+        else
+          toString value;
+      in "${key} = ${value'}";
   };
 
   mpdris2Conf = {
@@ -29,9 +29,7 @@ let
     };
   };
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.pjones ];
 
   options.services.mpdris2 = {
@@ -76,19 +74,15 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = config.services.mpd.enable;
-        message = "The mpdris2 module requires 'services.mpd.enable = true'.";
-      }
-    ];
+    assertions = [{
+      assertion = config.services.mpd.enable;
+      message = "The mpdris2 module requires 'services.mpd.enable = true'.";
+    }];
 
     xdg.configFile."mpDris2/mpDris2.conf".text = toIni mpdris2Conf;
 
     systemd.user.services.mpdris2 = {
-      Install = {
-        WantedBy = [ "default.target" ];
-      };
+      Install = { WantedBy = [ "default.target" ]; };
 
       Unit = {
         Description = "MPRIS 2 support for MPD";

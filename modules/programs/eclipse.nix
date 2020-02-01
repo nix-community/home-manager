@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.eclipse;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -27,13 +25,13 @@ in
 
       jvmArgs = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         description = "JVM arguments to use for the Eclipse process.";
       };
 
       plugins = mkOption {
         type = types.listOf types.package;
-        default = [];
+        default = [ ];
         description = "Plugins that should be added to Eclipse.";
       };
     };
@@ -43,10 +41,8 @@ in
     home.packages = [
       (pkgs.eclipses.eclipseWithPlugins {
         eclipse = pkgs.eclipses.eclipse-platform;
-        jvmArgs =
-          cfg.jvmArgs
-          ++ optional cfg.enableLombok
-              "-javaagent:${pkgs.lombok}/share/java/lombok.jar";
+        jvmArgs = cfg.jvmArgs ++ optional cfg.enableLombok
+          "-javaagent:${pkgs.lombok}/share/java/lombok.jar";
         plugins = cfg.plugins;
       })
     ];

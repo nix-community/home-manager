@@ -7,15 +7,11 @@ let
   cfg = config.services.parcellite;
   package = pkgs.parcellite;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.gleber ];
 
   options = {
-    services.parcellite = {
-      enable = mkEnableOption "Parcellite";
-    };
+    services.parcellite = { enable = mkEnableOption "Parcellite"; };
   };
 
   config = mkIf cfg.enable {
@@ -28,9 +24,7 @@ in
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
 
       Service = {
         ExecStart = "${package}/bin/parcellite";

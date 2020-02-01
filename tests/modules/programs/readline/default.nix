@@ -1,3 +1,1 @@
-{
-  readline-using-all-options = ./using-all-options.nix;
-}
+{ readline-using-all-options = ./using-all-options.nix; }

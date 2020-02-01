@@ -6,9 +6,7 @@ let
 
   cfg = config.services.taskwarrior-sync;
 
-in
-
-{
+in {
   meta.maintainers = with maintainers; [ minijackson pacien ];
 
   options.services.taskwarrior-sync = {
@@ -32,9 +30,7 @@ in
 
   config = mkIf cfg.enable {
     systemd.user.services.taskwarrior-sync = {
-      Unit = {
-        Description = "Taskwarrior sync";
-      };
+      Unit = { Description = "Taskwarrior sync"; };
       Service = {
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
@@ -43,16 +39,12 @@ in
     };
 
     systemd.user.timers.taskwarrior-sync = {
-      Unit = {
-        Description = "Taskwarrior periodic sync";
-      };
+      Unit = { Description = "Taskwarrior periodic sync"; };
       Timer = {
         Unit = "taskwarrior-sync.service";
         OnCalendar = cfg.frequency;
       };
-      Install = {
-        WantedBy = [ "timers.target" ];
-      };
+      Install = { WantedBy = [ "timers.target" ]; };
     };
   };
 }

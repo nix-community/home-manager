@@ -6,18 +6,11 @@ let
 
   cfg = config.services.random-background;
 
-  flags = lib.concatStringsSep " " (
-    [
-      "--bg-${cfg.display}"
-      "--no-fehbg"
-      "--randomize"
-    ]
-    ++ lib.optional (!cfg.enableXinerama) "--no-xinerama"
-  );
+  flags = lib.concatStringsSep " "
+    ([ "--bg-${cfg.display}" "--no-fehbg" "--randomize" ]
+      ++ lib.optional (!cfg.enableXinerama) "--no-xinerama");
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -73,41 +66,32 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    mkMerge ([
-      {
-        systemd.user.services.random-background = {
-          Unit = {
-            Description = "Set random desktop background using feh";
-            After = [ "graphical-session-pre.target" ];
-            PartOf = [ "graphical-session.target" ];
-          };
-
-          Service = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.feh}/bin/feh ${flags} ${cfg.imageDirectory}";
-            IOSchedulingClass = "idle";
-          };
-
-          Install = {
-            WantedBy = [ "graphical-session.target" ];
-          };
+  config = mkIf cfg.enable (mkMerge ([
+    {
+      systemd.user.services.random-background = {
+        Unit = {
+          Description = "Set random desktop background using feh";
+          After = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session.target" ];
         };
-      }
-      (mkIf (cfg.interval != null) {
-        systemd.user.timers.random-background = {
-          Unit = {
-            Description = "Set random desktop background using feh";
-          };
 
-          Timer = {
-            OnUnitActiveSec = cfg.interval;
-          };
-
-          Install = {
-            WantedBy = [ "timers.target" ];
-          };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.feh}/bin/feh ${flags} ${cfg.imageDirectory}";
+          IOSchedulingClass = "idle";
         };
-      })
-    ]));
+
+        Install = { WantedBy = [ "graphical-session.target" ]; };
+      };
+    }
+    (mkIf (cfg.interval != null) {
+      systemd.user.timers.random-background = {
+        Unit = { Description = "Set random desktop background using feh"; };
+
+        Timer = { OnUnitActiveSec = cfg.interval; };
+
+        Install = { WantedBy = [ "timers.target" ]; };
+      };
+    })
+  ]));
 }

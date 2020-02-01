@@ -6,19 +6,17 @@ let
 
   cfg = config.programs.beets;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
     programs.beets = {
       enable = mkOption {
         type = types.bool;
-        default =
-          if versionAtLeast config.home.stateVersion "19.03"
-          then false
-          else cfg.settings != {};
+        default = if versionAtLeast config.home.stateVersion "19.03" then
+          false
+        else
+          cfg.settings != { };
         defaultText = "false";
         description = ''
           Whether to enable the beets music library manager. This
@@ -32,7 +30,8 @@ in
         type = types.package;
         default = pkgs.beets;
         defaultText = literalExample "pkgs.beets";
-        example = literalExample "(pkgs.beets.override { enableCheck = true; })";
+        example =
+          literalExample "(pkgs.beets.override { enableCheck = true; })";
         description = ''
           The <literal>beets</literal> package to use.
           Can be used to specify extensions.
@@ -41,7 +40,7 @@ in
 
       settings = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         description = ''
           Configuration written to
           <filename>~/.config/beets/config.yaml</filename>
@@ -54,6 +53,6 @@ in
     home.packages = [ cfg.package ];
 
     xdg.configFile."beets/config.yaml".text =
-        builtins.toJSON config.programs.beets.settings;
+      builtins.toJSON config.programs.beets.settings;
   };
 }

@@ -1,3 +1,1 @@
-{
-  texlive-minimal = ./texlive-minimal.nix;
-}
+{ texlive-minimal = ./texlive-minimal.nix; }

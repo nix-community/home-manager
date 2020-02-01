@@ -9,20 +9,21 @@ let
   formatLine = n: v:
     let
       formatList = x:
-        if isList x
-        then throw "can not convert 2-dimensional lists to Xresources format"
-        else formatValue x;
+        if isList x then
+          throw "can not convert 2-dimensional lists to Xresources format"
+        else
+          formatValue x;
 
       formatValue = v:
-        if isBool v then (if v then "true" else "false")
-        else if isList v then concatMapStringsSep ", " formatList v
-        else toString v;
-    in
-      "${n}: ${formatValue v}";
+        if isBool v then
+          (if v then "true" else "false")
+        else if isList v then
+          concatMapStringsSep ", " formatList v
+        else
+          toString v;
+    in "${n}: ${formatValue v}";
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -72,11 +73,10 @@ in
 
   config = mkIf (cfg.properties != null || cfg.extraConfig != "") {
     home.file.".Xresources" = {
-      text =
-        concatStringsSep "\n" ([]
-          ++ optional (cfg.extraConfig != "") cfg.extraConfig
-          ++ optionals (cfg.properties != null) (mapAttrsToList formatLine cfg.properties)
-        ) + "\n";
+      text = concatStringsSep "\n" ([ ]
+        ++ optional (cfg.extraConfig != "") cfg.extraConfig
+        ++ optionals (cfg.properties != null)
+        (mapAttrsToList formatLine cfg.properties)) + "\n";
       onChange = ''
         if [[ -v DISPLAY ]] ; then
           $DRY_RUN_CMD ${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources

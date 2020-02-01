@@ -6,20 +6,21 @@ let
 
   cfg = config.programs.autorandr;
 
-  matrixOf = n: m: elemType: mkOptionType rec {
-    name = "matrixOf";
-    description = "${toString n}×${toString m} matrix of ${elemType.description}s";
-    check = xss:
-      let
-        listOfSize = l: xs: isList xs && length xs == l;
-      in
-        listOfSize n xss && all (xs: listOfSize m xs && all elemType.check xs) xss;
-    merge = mergeOneOption;
-    getSubOptions = prefix: elemType.getSubOptions (prefix ++ ["*" "*"]);
-    getSubModules = elemType.getSubModules;
-    substSubModules = mod: matrixOf n m (elemType.substSubModules mod);
-    functor = (defaultFunctor name) // { wrapped = elemType; };
-  };
+  matrixOf = n: m: elemType:
+    mkOptionType rec {
+      name = "matrixOf";
+      description =
+        "${toString n}×${toString m} matrix of ${elemType.description}s";
+      check = xss:
+        let listOfSize = l: xs: isList xs && length xs == l;
+        in listOfSize n xss
+        && all (xs: listOfSize m xs && all elemType.check xs) xss;
+      merge = mergeOneOption;
+      getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "*" "*" ]);
+      getSubModules = elemType.getSubModules;
+      substSubModules = mod: matrixOf n m (elemType.substSubModules mod);
+      functor = (defaultFunctor name) // { wrapped = elemType; };
+    };
 
   profileModule = types.submodule {
     options = {
@@ -29,19 +30,19 @@ let
           Output name to EDID mapping.
           Use <code>autorandr --fingerprint</code> to get current setup values.
         '';
-        default = {};
+        default = { };
       };
 
       config = mkOption {
         type = types.attrsOf configModule;
         description = "Per output profile configuration.";
-        default = {};
+        default = { };
       };
 
       hooks = mkOption {
         type = profileHooksModule;
         description = "Profile hook scripts.";
-        default = {};
+        default = { };
       };
     };
   };
@@ -89,7 +90,7 @@ let
       };
 
       rotate = mkOption {
-        type = types.nullOr (types.enum ["normal" "left" "right" "inverted"]);
+        type = types.nullOr (types.enum [ "normal" "left" "right" "inverted" ]);
         description = "Output rotate configuration.";
         default = null;
         example = "left";
@@ -126,7 +127,7 @@ let
         type = types.nullOr (types.submodule {
           options = {
             method = mkOption {
-              type = types.enum ["factor" "pixel" ];
+              type = types.enum [ "factor" "pixel" ];
               description = "Output scaling method.";
               default = "factor";
               example = "pixel";
@@ -178,19 +179,21 @@ let
       postswitch = mkOption {
         type = types.attrsOf hookType;
         description = "Postswitch hook executed after mode switch.";
-        default = {};
+        default = { };
       };
 
       preswitch = mkOption {
         type = types.attrsOf hookType;
         description = "Preswitch hook executed before mode switch.";
-        default = {};
+        default = { };
       };
 
       predetect = mkOption {
         type = types.attrsOf hookType;
-        description = "Predetect hook executed before autorandr attempts to run xrandr.";
-        default = {};
+        description = ''
+          Predetect hook executed before autorandr attempts to run xrandr.
+        '';
+        default = { };
       };
     };
   };
@@ -211,50 +214,56 @@ let
 
       predetect = mkOption {
         type = hookType;
-        description = "Predetect hook executed before autorandr attempts to run xrandr.";
+        description = ''
+          Predetect hook executed before autorandr attempts to run xrandr.
+        '';
         default = "";
       };
     };
   };
 
   hookToFile = folder: name: hook:
-    nameValuePair
-      "autorandr/${folder}/${name}"
-      { source = "${pkgs.writeShellScriptBin "hook" hook}/bin/hook"; };
-  profileToFiles = name: profile: with profile; mkMerge ([
-    {
-      "autorandr/${name}/setup".text = concatStringsSep "\n" (mapAttrsToList fingerprintToString fingerprint);
-      "autorandr/${name}/config".text = concatStringsSep "\n" (mapAttrsToList configToString profile.config);
-    }
-    (mkIf (hooks.postswitch != "") (listToAttrs [ (hookToFile name "postswitch" hooks.postswitch) ]))
-    (mkIf (hooks.preswitch != "") (listToAttrs [ (hookToFile name "preswitch" hooks.preswitch) ]))
-    (mkIf (hooks.predetect != "") (listToAttrs [ (hookToFile name "predetect" hooks.predetect) ]))
-  ]);
+    nameValuePair "autorandr/${folder}/${name}" {
+      source = "${pkgs.writeShellScriptBin "hook" hook}/bin/hook";
+    };
+  profileToFiles = name: profile:
+    with profile;
+    mkMerge ([
+      {
+        "autorandr/${name}/setup".text = concatStringsSep "\n"
+          (mapAttrsToList fingerprintToString fingerprint);
+        "autorandr/${name}/config".text =
+          concatStringsSep "\n" (mapAttrsToList configToString profile.config);
+      }
+      (mkIf (hooks.postswitch != "")
+        (listToAttrs [ (hookToFile name "postswitch" hooks.postswitch) ]))
+      (mkIf (hooks.preswitch != "")
+        (listToAttrs [ (hookToFile name "preswitch" hooks.preswitch) ]))
+      (mkIf (hooks.predetect != "")
+        (listToAttrs [ (hookToFile name "predetect" hooks.predetect) ]))
+    ]);
   fingerprintToString = name: edid: "${name} ${edid}";
-  configToString = name: config: if config.enable then ''
-    output ${name}
-    ${optionalString (config.position != "") "pos ${config.position}"}
-    ${optionalString config.primary "primary"}
-    ${optionalString (config.dpi != null) "dpi ${toString config.dpi}"}
-    ${optionalString (config.gamma != "") "gamma ${config.gamma}"}
-    ${optionalString (config.mode != "") "mode ${config.mode}"}
-    ${optionalString (config.rate != "") "rate ${config.rate}"}
-    ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
-    ${optionalString (config.scale != null) (
-      (if config.scale.method == "factor" then "scale" else "scale-from")
-      + " ${toString config.scale.x}x${toString config.scale.y}"
-    )}
-    ${optionalString (config.transform != null) (
-      "transform " + concatMapStringsSep "," toString (flatten config.transform)
-    )}
-  '' else ''
-    output ${name}
-    off
-  '';
+  configToString = name: config:
+    if config.enable then ''
+      output ${name}
+      ${optionalString (config.position != "") "pos ${config.position}"}
+      ${optionalString config.primary "primary"}
+      ${optionalString (config.dpi != null) "dpi ${toString config.dpi}"}
+      ${optionalString (config.gamma != "") "gamma ${config.gamma}"}
+      ${optionalString (config.mode != "") "mode ${config.mode}"}
+      ${optionalString (config.rate != "") "rate ${config.rate}"}
+      ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
+      ${optionalString (config.scale != null)
+      ((if config.scale.method == "factor" then "scale" else "scale-from")
+        + " ${toString config.scale.x}x${toString config.scale.y}")}
+      ${optionalString (config.transform != null) ("transform "
+        + concatMapStringsSep "," toString (flatten config.transform))}
+    '' else ''
+      output ${name}
+      off
+    '';
 
-in
-
-{
+in {
   options = {
     programs.autorandr = {
       enable = mkEnableOption "Autorandr";
@@ -262,39 +271,39 @@ in
       hooks = mkOption {
         type = globalHooksModule;
         description = "Global hook scripts";
-        default = {};
+        default = { };
         example = literalExample ''
-        {
-          postswitch = {
-            "notify-i3" = "''${pkgs.i3}/bin/i3-msg restart";
-            "change-background" = readFile ./change-background.sh;
-            "change-dpi" = '''
-              case "$AUTORANDR_CURRENT_PROFILE" in
-                default)
-                  DPI=120
-                  ;;
-                home)
-                  DPI=192
-                  ;;
-                work)
-                  DPI=144
-                  ;;
-                *)
-                  echo "Unknown profle: $AUTORANDR_CURRENT_PROFILE"
-                  exit 1
-              esac
+          {
+            postswitch = {
+              "notify-i3" = "''${pkgs.i3}/bin/i3-msg restart";
+              "change-background" = readFile ./change-background.sh;
+              "change-dpi" = '''
+                case "$AUTORANDR_CURRENT_PROFILE" in
+                  default)
+                    DPI=120
+                    ;;
+                  home)
+                    DPI=192
+                    ;;
+                  work)
+                    DPI=144
+                    ;;
+                  *)
+                    echo "Unknown profle: $AUTORANDR_CURRENT_PROFILE"
+                    exit 1
+                esac
 
-              echo "Xft.dpi: $DPI" | ''${pkgs.xorg.xrdb}/bin/xrdb -merge
-            '''
-          };
-        }
+                echo "Xft.dpi: $DPI" | ''${pkgs.xorg.xrdb}/bin/xrdb -merge
+              '''
+            };
+          }
         '';
       };
 
       profiles = mkOption {
         type = types.attrsOf profileModule;
         description = "Autorandr profiles specification.";
-        default = {};
+        default = { };
         example = literalExample ''
           {
             "work" = {
@@ -323,24 +332,21 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = flatten (mapAttrsToList (
-      profile: { config, ... }: mapAttrsToList (
-        output: opts: {
-          assertion = opts.scale == null || opts.transform == null;
-          message = ''
-            Cannot use the profile output options 'scale' and 'transform' simultaneously.
-            Check configuration for: programs.autorandr.profiles.${profile}.config.${output}
-          '';
-        })
-        config
-    )
-    cfg.profiles);
+    assertions = flatten (mapAttrsToList (profile:
+      { config, ... }:
+      mapAttrsToList (output: opts: {
+        assertion = opts.scale == null || opts.transform == null;
+        message = ''
+          Cannot use the profile output options 'scale' and 'transform' simultaneously.
+          Check configuration for: programs.autorandr.profiles.${profile}.config.${output}
+        '';
+      }) config) cfg.profiles);
 
     home.packages = [ pkgs.autorandr ];
     xdg.configFile = mkMerge ([
       (mapAttrs' (hookToFile "postswitch.d") cfg.hooks.postswitch)
-      (mapAttrs' (hookToFile "preswitch.d")  cfg.hooks.preswitch)
-      (mapAttrs' (hookToFile "predetect.d")  cfg.hooks.predetect)
+      (mapAttrs' (hookToFile "preswitch.d") cfg.hooks.preswitch)
+      (mapAttrs' (hookToFile "predetect.d") cfg.hooks.predetect)
       (mkMerge (mapAttrsToList profileToFiles cfg.profiles))
     ]);
   };

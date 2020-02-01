@@ -18,13 +18,9 @@ with lib;
     };
 
     accounts.email.accounts = {
-      "hm@example.com".mbsync = {
-        enable = true;
-      };
+      "hm@example.com".mbsync = { enable = true; };
 
-      hm-account.mbsync = {
-        enable = true;
-      };
+      hm-account.mbsync = { enable = true; };
     };
 
     nmt.script = ''

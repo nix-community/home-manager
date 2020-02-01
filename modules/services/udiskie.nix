@@ -6,19 +6,17 @@ let
 
   cfg = config.services.udiskie;
 
-  commandArgs =
-    concatStringsSep " " (
-      map (opt: "-" + opt) [
-        (if cfg.automount then "a" else "A")
-        (if cfg.notify then "n" else "N")
-        ({ always = "t"; auto = "s"; never = "T"; }.${cfg.tray})
-      ]
-      ++ optional config.xsession.preferStatusNotifierItems "--appindicator"
-    );
+  commandArgs = concatStringsSep " " (map (opt: "-" + opt) [
+    (if cfg.automount then "a" else "A")
+    (if cfg.notify then "n" else "N")
+    ({
+      always = "t";
+      auto = "s";
+      never = "T";
+    }.${cfg.tray})
+  ] ++ optional config.xsession.preferStatusNotifierItems "--appindicator");
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   imports = [
@@ -77,19 +75,17 @@ in
 
   config = mkIf config.services.udiskie.enable {
     systemd.user.services.udiskie = {
-        Unit = {
-          Description = "udiskie mount daemon";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
+      Unit = {
+        Description = "udiskie mount daemon";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
 
-        Service = {
-          ExecStart = "${pkgs.udiskie}/bin/udiskie -2 ${commandArgs}";
-        };
+      Service = {
+        ExecStart = "${pkgs.udiskie}/bin/udiskie -2 ${commandArgs}";
+      };
 
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
     };
   };
 }

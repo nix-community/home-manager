@@ -3,6 +3,7 @@
 with lib;
 
 let
+
   cfg = config.programs.htop;
 
   list = xs: concatMapStrings (x: "${toString x} ") xs;
@@ -81,16 +82,15 @@ let
     RightCPUs2 = 1;
     Blank = 2;
     CPU = 1;
-    "CPU(1)"= 1;
+    "CPU(1)" = 1;
     "CPU(2)" = 1;
     "CPU(3)" = 1;
     "CPU(4)" = 1;
   };
 
-  singleMeterType = types.coercedTo
-    (types.enum (attrNames meters))
-    (m: { kind = m; mode = meters.${m}; })
-    (types.submodule {
+  singleMeterType = let
+    meterEnum = types.enum (attrNames meters);
+    meterSubmodule = types.submodule {
       options = {
         kind = mkOption {
           type = types.enum (attrNames meters);
@@ -101,10 +101,15 @@ let
         mode = mkOption {
           type = types.enum [ 1 2 3 4 ];
           example = 2;
-          description = "Which mode the meter should use, one of 1(Bar) 2(Text) 3(Graph) 4(LED).";
+          description =
+            "Which mode the meter should use, one of 1(Bar) 2(Text) 3(Graph) 4(LED).";
         };
       };
-    });
+    };
+  in types.coercedTo meterEnum (m: {
+    kind = m;
+    mode = meters.${m};
+  }) meterSubmodule;
 
   meterType = types.submodule {
     options = {
@@ -115,7 +120,10 @@ let
           "Memory"
           "LeftCPUs2"
           "RightCPUs2"
-          { kind = "CPU"; mode = 3; }
+          {
+            kind = "CPU";
+            mode = 3;
+          }
         ];
         type = types.listOf singleMeterType;
       };
@@ -123,7 +131,10 @@ let
         description = "Meters shown in the right header.";
         default = [ "Tasks" "LoadAverage" "Uptime" ];
         example = [
-          { kind = "Clock"; mode = 4; }
+          {
+            kind = "Clock";
+            mode = 4;
+          }
           "Uptime"
           "Tasks"
         ];
@@ -131,15 +142,37 @@ let
       };
     };
   };
-in
-{
+
+in {
   options.programs.htop = {
     enable = mkEnableOption "htop";
 
     fields = mkOption {
       type = types.listOf (types.enum (attrNames fields));
-      default = [ "PID" "USER" "PRIORITY" "NICE" "M_SIZE" "M_RESIDENT" "M_SHARE" "STATE" "PERCENT_CPU" "PERCENT_MEM" "TIME" "COMM" ];
-      example = [ "PID" "USER" "PRIORITY" "PERCENT_CPU" "M_RESIDENT" "PERCENT_MEM" "TIME" "COMM" ];
+      default = [
+        "PID"
+        "USER"
+        "PRIORITY"
+        "NICE"
+        "M_SIZE"
+        "M_RESIDENT"
+        "M_SHARE"
+        "STATE"
+        "PERCENT_CPU"
+        "PERCENT_MEM"
+        "TIME"
+        "COMM"
+      ];
+      example = [
+        "PID"
+        "USER"
+        "PRIORITY"
+        "PERCENT_CPU"
+        "M_RESIDENT"
+        "PERCENT_MEM"
+        "TIME"
+        "COMM"
+      ];
       description = "Active fields shown in the table.";
     };
 
@@ -209,7 +242,7 @@ in
       default = true;
       description = "Display threads in a different color.";
     };
-    
+
     treeView = mkOption {
       type = types.bool;
       default = false;
@@ -225,7 +258,8 @@ in
     detailedCpuTime = mkOption {
       type = types.bool;
       default = false;
-      description = "Detailed CPU time (System/IO-Wait/Hard-IRQ/Soft-IRQ/Steal/Guest).";
+      description =
+        "Detailed CPU time (System/IO-Wait/Hard-IRQ/Soft-IRQ/Steal/Guest).";
     };
 
     cpuCountFromZero = mkOption {
@@ -272,14 +306,23 @@ in
           "CPU"
           "LeftCPUs2"
           "RightCPUs2"
-          { kind = "CPU"; mode = 3; }
+          {
+            kind = "CPU";
+            mode = 3;
+          }
         ];
         right = [
-          { kind = "Clock"; mode = 4; }
+          {
+            kind = "Clock";
+            mode = 4;
+          }
           "Uptime"
           "Tasks"
           "LoadAverage"
-          { kind = "Battery"; mode = 1; }
+          {
+            kind = "Battery";
+            mode = 1;
+          }
         ];
       };
       type = meterType;

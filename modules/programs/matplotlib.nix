@@ -9,16 +9,13 @@ let
   formatLine = o: n: v:
     let
       formatValue = v:
-        if isBool v then (if v then "True" else "False")
-        else toString v;
-    in
-      if isAttrs v
-      then concatStringsSep "\n" (mapAttrsToList (formatLine "${o}${n}.") v)
-      else (if v == "" then "" else "${o}${n}: ${formatValue v}");
+        if isBool v then (if v then "True" else "False") else toString v;
+    in if isAttrs v then
+      concatStringsSep "\n" (mapAttrsToList (formatLine "${o}${n}.") v)
+    else
+      (if v == "" then "" else "${o}${n}: ${formatValue v}");
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rprospero ];
 
   options.programs.matplotlib = {
@@ -31,7 +28,7 @@ in
         Add terms to the <filename>matplotlibrc</filename> file to
         control the default matplotlib behavior.
       '';
-      example = literalExample  ''
+      example = literalExample ''
         {
           backend = "Qt5Agg";
           axes = {
@@ -55,10 +52,8 @@ in
   };
 
   config = mkIf cfg.enable {
-    xdg.configFile."matplotlib/matplotlibrc".text =
-      concatStringsSep "\n" ([]
-        ++ mapAttrsToList (formatLine "") cfg.config
-        ++ optional (cfg.extraConfig != "") cfg.extraConfig
-      ) + "\n";
+    xdg.configFile."matplotlib/matplotlibrc".text = concatStringsSep "\n" ([ ]
+      ++ mapAttrsToList (formatLine "") cfg.config
+      ++ optional (cfg.extraConfig != "") cfg.extraConfig) + "\n";
   };
 }

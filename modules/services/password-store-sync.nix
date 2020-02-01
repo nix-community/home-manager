@@ -7,9 +7,7 @@ let
   serviceCfg = config.services.password-store-sync;
   programCfg = config.programs.password-store;
 
-in
-
-{
+in {
   meta.maintainers = with maintainers; [ pacien ];
 
   options.services.password-store-sync = {
@@ -35,28 +33,22 @@ in
   };
 
   config = mkIf serviceCfg.enable {
-    assertions = [
-      {
-        assertion = programCfg.enable;
-        message = "The 'services.password-store-sync' module requires"
-          + " 'programs.password-store.enable = true'.";
-      }
-    ];
+    assertions = [{
+      assertion = programCfg.enable;
+      message = "The 'services.password-store-sync' module requires"
+        + " 'programs.password-store.enable = true'.";
+    }];
 
     systemd.user.services.password-store-sync = {
-      Unit = {
-        Description = "Password store sync";
-      };
+      Unit = { Description = "Password store sync"; };
 
       Service = {
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
-        Environment =
-          let
-            makeEnvironmentPairs =
-              mapAttrsToList (key: value: "${key}=${builtins.toJSON value}");
-          in
-            makeEnvironmentPairs programCfg.settings;
+        Environment = let
+          makeEnvironmentPairs =
+            mapAttrsToList (key: value: "${key}=${builtins.toJSON value}");
+        in makeEnvironmentPairs programCfg.settings;
         ExecStart = toString (pkgs.writeShellScript "password-store-sync" ''
           ${pkgs.pass}/bin/pass git pull --rebase && \
           ${pkgs.pass}/bin/pass git push
@@ -65,9 +57,7 @@ in
     };
 
     systemd.user.timers.password-store-sync = {
-      Unit = {
-        Description = "Password store periodic sync";
-      };
+      Unit = { Description = "Password store periodic sync"; };
 
       Timer = {
         Unit = "password-store-sync.service";
@@ -75,9 +65,7 @@ in
         Persistent = true;
       };
 
-      Install = {
-        WantedBy = [ "timers.target" ];
-      };
+      Install = { WantedBy = [ "timers.target" ]; };
     };
   };
 }

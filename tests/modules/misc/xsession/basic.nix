@@ -17,11 +17,9 @@ with lib;
     nixpkgs.overlays = [
       (self: super: {
         xorg = super.xorg // {
-          setxkbmap = super.xorg.setxkbmap // {
-            outPath = "@setxkbmap@";
-          };
+          setxkbmap = super.xorg.setxkbmap // { outPath = "@setxkbmap@"; };
         };
-     })
+      })
     ];
 
     nmt.script = ''

@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.mercurial;
 
-in
-
-{
+in {
 
   options = {
     programs.mercurial = {
@@ -33,13 +31,13 @@ in
 
       aliases = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         description = "Mercurial aliases to define.";
       };
 
       extraConfig = mkOption {
         type = types.either types.attrs types.lines;
-        default = {};
+        default = { };
         description = "Additional configuration to add.";
       };
 
@@ -50,53 +48,53 @@ in
 
       ignores = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         example = [ "*~" "*.swp" ];
         description = "List of globs for files to be globally ignored.";
       };
 
       ignoresRegexp = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         example = [ "^.*~$" "^.*\\.swp$" ];
         description =
-            "List of regular expressions for files to be globally ignored.";
+          "List of regular expressions for files to be globally ignored.";
       };
     };
   };
 
-  config = mkIf cfg.enable (
-    mkMerge [
-      {
-        home.packages = [ cfg.package ];
+  config = mkIf cfg.enable (mkMerge [
+    {
+      home.packages = [ cfg.package ];
 
-        programs.mercurial.iniContent.ui = {
-          username = cfg.userName + " <" + cfg.userEmail + ">";
-        };
+      programs.mercurial.iniContent.ui = {
+        username = cfg.userName + " <" + cfg.userEmail + ">";
+      };
 
-        xdg.configFile."hg/hgrc".text = generators.toINI {} cfg.iniContent;
-      }
+      xdg.configFile."hg/hgrc".text = generators.toINI { } cfg.iniContent;
+    }
 
-      (mkIf (cfg.ignores != [] || cfg.ignoresRegexp != []) {
-        programs.mercurial.iniContent.ui.ignore =
-            "${config.xdg.configHome}/hg/hgignore_global";
+    (mkIf (cfg.ignores != [ ] || cfg.ignoresRegexp != [ ]) {
+      programs.mercurial.iniContent.ui.ignore =
+        "${config.xdg.configHome}/hg/hgignore_global";
 
-        xdg.configFile."hg/hgignore_global".text =
-            "syntax: glob\n"   + concatStringsSep "\n" cfg.ignores + "\n" +
-            "syntax: regexp\n" + concatStringsSep "\n" cfg.ignoresRegexp + "\n";
-      })
+      xdg.configFile."hg/hgignore_global".text = ''
+        syntax: glob
+      '' + concatStringsSep "\n" cfg.ignores + "\n" + ''
+        syntax: regexp
+      '' + concatStringsSep "\n" cfg.ignoresRegexp + "\n";
+    })
 
-      (mkIf (cfg.aliases != {}) {
-        programs.mercurial.iniContent.alias = cfg.aliases;
-      })
+    (mkIf (cfg.aliases != { }) {
+      programs.mercurial.iniContent.alias = cfg.aliases;
+    })
 
-      (mkIf (lib.isAttrs cfg.extraConfig) {
-        programs.mercurial.iniContent = cfg.extraConfig;
-      })
+    (mkIf (lib.isAttrs cfg.extraConfig) {
+      programs.mercurial.iniContent = cfg.extraConfig;
+    })
 
-      (mkIf (lib.isString cfg.extraConfig) {
-        xdg.configFile."hg/hgrc".text = cfg.extraConfig;
-      })
-    ]
-  );
+    (mkIf (lib.isString cfg.extraConfig) {
+      xdg.configFile."hg/hgrc".text = cfg.extraConfig;
+    })
+  ]);
 }

@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.go;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rvolosatovs ];
 
   options = {
@@ -24,7 +22,7 @@ in
 
       packages = mkOption {
         type = with types; attrsOf path;
-        default = {};
+        default = { };
         example = literalExample ''
           {
             "golang.org/x/text" = builtins.fetchGit "https://go.googlesource.com/text";
@@ -47,18 +45,15 @@ in
 
       extraGoPaths = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         example = [ "extraGoPath1" "extraGoPath2" ];
-        description =
-          let
-            goPathOpt = "programs.go.goPath";
-          in
-          ''
-            Extra <envar>GOPATH</envar>s relative to <envar>HOME</envar> appended
-            after
-            <varname><link linkend="opt-${goPathOpt}">${goPathOpt}</link></varname>,
-            if that option is set.
-          '';
+        description = let goPathOpt = "programs.go.goPath";
+        in ''
+          Extra <envar>GOPATH</envar>s relative to <envar>HOME</envar> appended
+          after
+          <varname><link linkend="opt-${goPathOpt}">${goPathOpt}</link></varname>,
+          if that option is set.
+        '';
       };
 
       goBin = mkOption {
@@ -74,24 +69,21 @@ in
     {
       home.packages = [ cfg.package ];
 
-      home.file =
-        let
-          goPath = if cfg.goPath != null then cfg.goPath else "go";
-          mkSrc = n: v: { "${goPath}/src/${n}".source = v; };
-        in
-          foldl' (a: b: a // b) {} (mapAttrsToList mkSrc cfg.packages);
+      home.file = let
+        goPath = if cfg.goPath != null then cfg.goPath else "go";
+        mkSrc = n: v: { "${goPath}/src/${n}".source = v; };
+      in foldl' (a: b: a // b) { } (mapAttrsToList mkSrc cfg.packages);
     }
 
     (mkIf (cfg.goPath != null) {
-      home.sessionVariables.GOPATH =
-        concatStringsSep ":"
-        (map builtins.toPath
+      home.sessionVariables.GOPATH = concatStringsSep ":" (map builtins.toPath
         (map (path: "${config.home.homeDirectory}/${path}")
-        ([cfg.goPath] ++ cfg.extraGoPaths)));
+          ([ cfg.goPath ] ++ cfg.extraGoPaths)));
     })
 
     (mkIf (cfg.goBin != null) {
-      home.sessionVariables.GOBIN = builtins.toPath "${config.home.homeDirectory}/${cfg.goBin}";
+      home.sessionVariables.GOBIN =
+        builtins.toPath "${config.home.homeDirectory}/${cfg.goBin}";
     })
   ]);
 }

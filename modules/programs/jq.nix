@@ -15,19 +15,17 @@ let
 
   colorsType = types.submodule {
     options = {
-      null    = colorType;
-      false   = colorType;
-      true    = colorType;
+      null = colorType;
+      false = colorType;
+      true = colorType;
       numbers = colorType;
       strings = colorType;
-      arrays  = colorType;
+      arrays = colorType;
       objects = colorType;
     };
   };
 
-in
-
-{
+in {
   options = {
     programs.jq = {
       enable = mkEnableOption "the jq command-line JSON processor";
@@ -52,12 +50,12 @@ in
         '';
 
         default = {
-          null    = "1;30";
-          false   = "0;39";
-          true    = "0;39";
+          null = "1;30";
+          false = "0;39";
+          true = "0;39";
           numbers = "0;39";
           strings = "0;32";
-          arrays  = "1;39";
+          arrays = "1;39";
           objects = "1;39";
         };
 
@@ -69,8 +67,10 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.jq ];
 
-    home.sessionVariables = let c = cfg.colors; in {
-      JQ_COLORS = "${c.null}:${c.false}:${c.true}:${c.numbers}:${c.strings}:${c.arrays}:${c.objects}";
+    home.sessionVariables = let c = cfg.colors;
+    in {
+      JQ_COLORS =
+        "${c.null}:${c.false}:${c.true}:${c.numbers}:${c.strings}:${c.arrays}:${c.objects}";
     };
   };
 }

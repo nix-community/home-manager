@@ -18,12 +18,10 @@ with lib;
       type = types.attrsOf types.str;
       default = {
         type = "shellcommand";
-        command = "'${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients  date:6M..'";
-        regexp =
-          "'\\[?{"
-          + ''"name": "(?P<name>.*)", ''
-          + ''"address": "(?P<email>.+)", ''
-          + ''"name-addr": ".*"''
+        command =
+          "'${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients  date:6M..'";
+        regexp = "'\\[?{" + ''
+          "name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"''
           + "}[,\\]]?'";
         shellcommand_external_filtering = "False";
       };
@@ -36,9 +34,9 @@ with lib;
         }
       '';
       description = ''
-       Contact completion configuration as expected per alot.
-       See <link xlink:href="http://alot.readthedocs.io/en/latest/configuration/contacts_completion.html">alot's wiki</link> for
-       explanation about possible values.
+        Contact completion configuration as expected per alot.
+        See <link xlink:href="http://alot.readthedocs.io/en/latest/configuration/contacts_completion.html">alot's wiki</link> for
+        explanation about possible values.
       '';
     };
 
@@ -52,10 +50,9 @@ with lib;
   };
 
   config = mkIf config.notmuch.enable {
-    alot.sendMailCommand = mkOptionDefault (
-      if config.msmtp.enable
-      then "msmtpq --read-envelope-from --read-recipients"
-      else null
-    );
+    alot.sendMailCommand = mkOptionDefault (if config.msmtp.enable then
+      "msmtpq --read-envelope-from --read-recipients"
+    else
+      null);
   };
 }

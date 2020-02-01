@@ -7,9 +7,7 @@ with lib;
     programs.readline = {
       enable = true;
 
-      bindings = {
-        "\C-h" = "backward-kill-word";
-      };
+      bindings = { "C-h" = "backward-kill-word"; };
 
       variables = {
         bell-style = "audible";
