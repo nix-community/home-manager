@@ -197,8 +197,7 @@ in
 
           if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
             echo "Creating profile generation $newGenNum"
-            $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenProfilePath"
-            $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG $(basename "$newGenProfilePath") "$genProfilePath"
+            $DRY_RUN_CMD nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"
           else
             echo "No change so reusing latest profile generation $oldGenNum"
