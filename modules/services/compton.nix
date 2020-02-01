@@ -34,6 +34,7 @@ let
     # opacity
     active-opacity   = ${cfg.activeOpacity};
     inactive-opacity = ${cfg.inactiveOpacity};
+    inactive-dim     = ${cfg.inactiveDim};
     menu-opacity     = ${cfg.menuOpacity};
     opacity-rule     = ${toJSON cfg.opacityRule};
 
@@ -175,6 +176,15 @@ in {
       example = "0.8";
       description = ''
         Opacity of active windows.
+      '';
+    };
+
+    inactiveDim = mkOption {
+      type = types.str;
+      default = "0.0";
+      example = "0.2";
+      description = ''
+        Dim inactive windows.
       '';
     };
 
