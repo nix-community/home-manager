@@ -67,10 +67,26 @@ in {
       };
     };
 
-    # xss-lock will run specified screen locker when the session is locked via loginctl
-    # can't be started as a systemd service,
-    # see https://bitbucket.org/raymonad/xss-lock/issues/13/allow-operation-as-systemd-user-unit
-    xsession.initExtra = "${pkgs.xss-lock}/bin/xss-lock ${concatStringsSep " " cfg.xssLockExtraOptions} -- ${cfg.lockCmd} &";
+    systemd.user.services.xss-lock = {
+      Unit = {
+        Description = "xss-lock, session locker service";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        ExecStart = concatStringsSep " " ([
+          "${pkgs.xss-lock}/bin/xss-lock"
+          "-s \${XDG_SESSION_ID}"
+        ] ++ cfg.xssLockExtraOptions ++ [
+          "-- ${cfg.lockCmd}"
+        ]);
+      };
+    };
   };
 
 }
