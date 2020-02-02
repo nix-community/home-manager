@@ -8,9 +8,7 @@ let
 
   texlivePkgs = cfg.extraPackages pkgs.texlive;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -35,13 +33,11 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = texlivePkgs != {};
-        message = "Must provide at least one extra package in"
-          + " 'programs.texlive.extraPackages'.";
-      }
-    ];
+    assertions = [{
+      assertion = texlivePkgs != { };
+      message = "Must provide at least one extra package in"
+        + " 'programs.texlive.extraPackages'.";
+    }];
 
     home.packages = [ cfg.package ];
 

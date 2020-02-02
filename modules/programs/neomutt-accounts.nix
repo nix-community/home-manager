@@ -26,10 +26,9 @@ with lib;
   };
 
   config = mkIf config.neomutt.enable {
-    neomutt.sendMailCommand = mkOptionDefault (
-      if config.msmtp.enable
-      then "msmtpq --read-envelope-from --read-recipients"
-      else null
-    );
+    neomutt.sendMailCommand = mkOptionDefault (if config.msmtp.enable then
+      "msmtpq --read-envelope-from --read-recipients"
+    else
+      null);
   };
 }

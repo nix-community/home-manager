@@ -7,9 +7,7 @@ let
   cfg = config.services.kdeconnect;
   package = pkgs.kdeconnect;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.adisbladis ];
 
   options = {
@@ -31,14 +29,13 @@ in
 
       systemd.user.services.kdeconnect = {
         Unit = {
-          Description = "Adds communication between your desktop and your smartphone";
+          Description =
+            "Adds communication between your desktop and your smartphone";
           After = [ "graphical-session-pre.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
+        Install = { WantedBy = [ "graphical-session.target" ]; };
 
         Service = {
           Environment = "PATH=${config.home.profileDirectory}/bin";
@@ -52,16 +49,16 @@ in
       systemd.user.services.kdeconnect-indicator = {
         Unit = {
           Description = "kdeconnect-indicator";
-          After = [ "graphical-session-pre.target"
-                    "polybar.service"
-                    "taffybar.service"
-                    "stalonetray.service" ];
+          After = [
+            "graphical-session-pre.target"
+            "polybar.service"
+            "taffybar.service"
+            "stalonetray.service"
+          ];
           PartOf = [ "graphical-session.target" ];
         };
 
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
+        Install = { WantedBy = [ "graphical-session.target" ]; };
 
         Service = {
           Environment = "PATH=${config.home.profileDirectory}/bin";

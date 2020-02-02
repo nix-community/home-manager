@@ -23,31 +23,21 @@ let
     }.${typeOf option};
 
   renderOptions = options:
-    concatStringsSep "\n"
-      (mapAttrsToList
-        (name: value:
-          let
-            rendered = renderOption value;
-            length = toString (stringLength rendered);
-          in
-          "${name}=%${length}%${rendered}")
-          options);
+    concatStringsSep "\n" (mapAttrsToList (name: value:
+      let
+        rendered = renderOption value;
+        length = toString (stringLength rendered);
+      in "${name}=%${length}%${rendered}") options);
 
   renderProfiles = profiles:
-    concatStringsSep "\n"
-      (mapAttrsToList
-        (name: value: ''
-          [${name}]
-          ${renderOptions value}
-        '')
-        profiles);
+    concatStringsSep "\n" (mapAttrsToList (name: value: ''
+      [${name}]
+      ${renderOptions value}
+    '') profiles);
 
   renderBindings = bindings:
     concatStringsSep "\n"
-      (mapAttrsToList
-        (name: value:
-          "${name} ${value}")
-        bindings);
+    (mapAttrsToList (name: value: "${name} ${value}") bindings);
 
 in {
   options = {
@@ -56,7 +46,7 @@ in {
 
       scripts = mkOption {
         type = with types; listOf (either package str);
-        default = [];
+        default = [ ];
         example = literalExample "[ pkgs.mpvScripts.mpris ]";
         description = ''
           List of scripts to use with mpv.
@@ -74,7 +64,7 @@ in {
           for the full list of options.
         '';
         type = mpvOptions;
-        default = {};
+        default = { };
         example = literalExample ''
           {
             profile = "gpu-hq";
@@ -92,7 +82,7 @@ in {
           <option>programs.mpv.config</option> for more information.
         '';
         type = mpvProfiles;
-        default = {};
+        default = { };
         example = literalExample ''
           {
             fast = {
@@ -117,7 +107,7 @@ in {
           for the full list of options.
         '';
         type = mpvBindings;
-        default = {};
+        default = { };
         example = literalExample ''
           {
             WHEEL_UP = "seek 10";
@@ -131,19 +121,20 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [(
-        if cfg.scripts == []
-        then pkgs.mpv
-        else pkgs.mpv-with-scripts.override { scripts = cfg.scripts; }
-      )];
+      home.packages = [
+        (if cfg.scripts == [ ] then
+          pkgs.mpv
+        else
+          pkgs.mpv-with-scripts.override { scripts = cfg.scripts; })
+      ];
     }
-    (mkIf (cfg.config != {} || cfg.profiles != {}) {
+    (mkIf (cfg.config != { } || cfg.profiles != { }) {
       xdg.configFile."mpv/mpv.conf".text = ''
-        ${optionalString (cfg.config != {}) (renderOptions cfg.config)}
-        ${optionalString (cfg.profiles != {}) (renderProfiles cfg.profiles)}
+        ${optionalString (cfg.config != { }) (renderOptions cfg.config)}
+        ${optionalString (cfg.profiles != { }) (renderProfiles cfg.profiles)}
       '';
     })
-    (mkIf (cfg.bindings != {}) {
+    (mkIf (cfg.bindings != { }) {
       xdg.configFile."mpv/input.conf".text = renderBindings cfg.bindings;
     })
   ]);

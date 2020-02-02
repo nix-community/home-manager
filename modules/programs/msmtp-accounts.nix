@@ -23,7 +23,8 @@ with lib;
     };
 
     tls.fingerprint = mkOption {
-      type = types.nullOr (types.strMatching "([[:alnum:]]{2}\:)+[[:alnum:]]{2}");
+      type =
+        types.nullOr (types.strMatching "([[:alnum:]]{2}:)+[[:alnum:]]{2}");
       default = null;
       example = "my:SH:a2:56:ha:sh";
       description = ''

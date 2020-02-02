@@ -25,7 +25,9 @@ with lib;
       }
 
       assertFileExists home-files/.config/git/config
-      assertFileContent home-files/.config/git/config ${./git-with-email-expected.conf}
+      assertFileContent home-files/.config/git/config ${
+        ./git-with-email-expected.conf
+      }
 
       assertGitConfig "sendemail.hm@example.com.from" "hm@example.com"
       assertGitConfig "sendemail.hm-account.from" "hm@example.org"

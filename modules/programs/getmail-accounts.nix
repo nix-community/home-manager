@@ -17,8 +17,8 @@ with lib;
 
     mailboxes = mkOption {
       type = types.nonEmptyListOf types.str;
-      default = [];
-      example = ["INBOX" "INBOX.spam"];
+      default = [ ];
+      example = [ "INBOX" "INBOX.spam" ];
       description = ''
         A non-empty list of mailboxes. To download all mail you can
         use the <literal>ALL</literal> mailbox.

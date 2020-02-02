@@ -7,9 +7,7 @@ with lib;
     programs.alacritty.enable = true;
 
     nixpkgs.overlays = [
-      (self: super: {
-        alacritty = pkgs.writeScriptBin "dummy-alacritty" "";
-      })
+      (self: super: { alacritty = pkgs.writeScriptBin "dummy-alacritty" ""; })
     ];
 
     nmt.script = ''

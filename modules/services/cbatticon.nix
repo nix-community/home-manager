@@ -9,37 +9,24 @@ let
   package = pkgs.cbatticon;
 
   makeCommand = commandName: commandArg:
-    optional (commandArg != null) (
-      let
-        cmd = pkgs.writeShellScript commandName commandArg;
-      in
-        "--${commandName} ${cmd}"
-    );
+    optional (commandArg != null)
+    (let cmd = pkgs.writeShellScript commandName commandArg;
+    in "--${commandName} ${cmd}");
 
-  commandLine = concatStringsSep " " (
-    [ "${package}/bin/cbatticon" ]
+  commandLine = concatStringsSep " " ([ "${package}/bin/cbatticon" ]
     ++ makeCommand "command-critical-level" cfg.commandCriticalLevel
     ++ makeCommand "command-left-click" cfg.commandLeftClick
-    ++ optional
-      (cfg.iconType != null)
-      "--icon-type ${cfg.iconType}"
-    ++ optional
-      (cfg.lowLevelPercent != null)
-      "--low-level ${toString cfg.lowLevelPercent}"
-    ++ optional
-      (cfg.criticalLevelPercent != null)
-      "--critical-level ${toString cfg.criticalLevelPercent}"
-    ++ optional
-      (cfg.updateIntervalSeconds != null)
-      "--update-interval ${toString cfg.updateIntervalSeconds}"
-    ++ optional
-      (cfg.hideNotification != null && cfg.hideNotification)
-      "--hide-notification"
-  );
+    ++ optional (cfg.iconType != null) "--icon-type ${cfg.iconType}"
+    ++ optional (cfg.lowLevelPercent != null)
+    "--low-level ${toString cfg.lowLevelPercent}"
+    ++ optional (cfg.criticalLevelPercent != null)
+    "--critical-level ${toString cfg.criticalLevelPercent}"
+    ++ optional (cfg.updateIntervalSeconds != null)
+    "--update-interval ${toString cfg.updateIntervalSeconds}"
+    ++ optional (cfg.hideNotification != null && cfg.hideNotification)
+    "--hide-notification");
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.pmiddend ];
 
   options = {
@@ -66,7 +53,8 @@ in
       };
 
       iconType = mkOption {
-        type = types.nullOr (types.enum [ "standard" "notification" "symbolic" ]);
+        type =
+          types.nullOr (types.enum [ "standard" "notification" "symbolic" ]);
         default = null;
         example = "symbolic";
         description = "Icon type to display in the system tray.";
@@ -119,9 +107,7 @@ in
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
 
       Service = {
         ExecStart = commandLine;

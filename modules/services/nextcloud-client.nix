@@ -4,9 +4,7 @@ with lib;
 
 {
   options = {
-    services.nextcloud-client = {
-      enable = mkEnableOption "Nextcloud Client";
-    };
+    services.nextcloud-client = { enable = mkEnableOption "Nextcloud Client"; };
   };
 
   config = mkIf config.services.nextcloud-client.enable {
@@ -22,9 +20,7 @@ with lib;
         ExecStart = "${pkgs.nextcloud-client}/bin/nextcloud";
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
     };
   };
 }

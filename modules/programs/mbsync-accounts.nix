@@ -6,9 +6,7 @@ let
 
   extraConfigType = with lib.types; attrsOf (either (either str int) bool);
 
-in
-
-{
+in {
   options.mbsync = {
     enable = mkEnableOption "synchronization using mbsync";
 
@@ -62,7 +60,7 @@ in
 
     extraConfig.channel = mkOption {
       type = extraConfigType;
-      default = {};
+      default = { };
       example = literalExample ''
         {
           MaxMessages = 10000;
@@ -76,7 +74,7 @@ in
 
     extraConfig.local = mkOption {
       type = extraConfigType;
-      default = {};
+      default = { };
       description = ''
         Local store extra configuration.
       '';
@@ -84,7 +82,7 @@ in
 
     extraConfig.remote = mkOption {
       type = extraConfigType;
-      default = {};
+      default = { };
       description = ''
         Remote store extra configuration.
       '';
@@ -92,7 +90,7 @@ in
 
     extraConfig.account = mkOption {
       type = extraConfigType;
-      default = {};
+      default = { };
       example = literalExample ''
         {
           PipelineDepth = 10;

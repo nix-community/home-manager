@@ -14,36 +14,31 @@ let
       section = head sections;
       subsections = tail sections;
       subsection = concatStringsSep "." subsections;
-    in
-      if containsQuote || subsections == []
-      then name
-      else "${section} \"${subsection}\"";
+    in if containsQuote || subsections == [ ] then
+      name
+    else
+      ''${section} "${subsection}"'';
 
   # generation for multiple ini values
   mkKeyValue = k: v:
-    let
-      mkKeyValue = generators.mkKeyValueDefault {} "=" k;
-    in
-      concatStringsSep "\n" (map mkKeyValue (toList v));
+    let mkKeyValue = generators.mkKeyValueDefault { } "=" k;
+    in concatStringsSep "\n" (map mkKeyValue (toList v));
 
   # converts { a.b.c = 5; } to { "a.b".c = 5; } for toINI
-  gitFlattenAttrs =
-    let
-      recurse = path: value:
-        if isAttrs value then
-          mapAttrsToList (name: value: recurse ([name] ++ path) value) value
-        else if length path > 1 then
-          { ${concatStringsSep "." (reverseList (tail path))}.${head path} = value; }
-        else
-          { ${head path} = value; };
-    in
-      attrs: foldl recursiveUpdate {} (flatten (recurse [] attrs));
+  gitFlattenAttrs = let
+    recurse = path: value:
+      if isAttrs value then
+        mapAttrsToList (name: value: recurse ([ name ] ++ path) value) value
+      else if length path > 1 then {
+        ${concatStringsSep "." (reverseList (tail path))}.${head path} = value;
+      } else {
+        ${head path} = value;
+      };
+  in attrs: foldl recursiveUpdate { } (flatten (recurse [ ] attrs));
 
   gitToIni = attrs:
-    let
-      toIni = generators.toINI { inherit mkKeyValue mkSectionName; };
-    in
-      toIni (gitFlattenAttrs attrs);
+    let toIni = generators.toINI { inherit mkKeyValue mkSectionName; };
+    in toIni (gitFlattenAttrs attrs);
 
   gitIniType = with types;
     let
@@ -51,8 +46,7 @@ let
       multipleType = either primitiveType (listOf primitiveType);
       sectionType = attrsOf multipleType;
       supersectionType = attrsOf (either multipleType sectionType);
-    in
-      attrsOf supersectionType;
+    in attrsOf supersectionType;
 
   signModule = types.submodule {
     options = {
@@ -98,21 +92,18 @@ let
 
       contents = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         description = ''
           Configuration to include. If empty then a path must be given.
         '';
       };
     };
 
-    config.path = mkIf (config.contents != {}) (
-      mkDefault (pkgs.writeText "contents" (gitToIni config.contents))
-    );
+    config.path = mkIf (config.contents != { })
+      (mkDefault (pkgs.writeText "contents" (gitToIni config.contents)));
   });
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -143,7 +134,7 @@ in
 
       aliases = mkOption {
         type = types.attrsOf types.str;
-        default = {};
+        default = { };
         example = { co = "checkout"; };
         description = "Git aliases to define.";
       };
@@ -156,7 +147,7 @@ in
 
       extraConfig = mkOption {
         type = types.either types.lines gitIniType;
-        default = {};
+        default = { };
         example = {
           core = { whitespace = "trailing-space,space-before-tab"; };
           url."ssh://git@host".insteadOf = "otherhost";
@@ -174,21 +165,21 @@ in
 
       ignores = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         example = [ "*~" "*.swp" ];
         description = "List of paths that should be globally ignored.";
       };
 
       attributes = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         example = [ "*.pdf diff=pdf" ];
         description = "List of defining attributes set globally.";
       };
 
       includes = mkOption {
         type = types.listOf includeModule;
-        default = [];
+        default = [ ];
         example = literalExample ''
           [
             { path = "~/path/to/config.inc"; }
@@ -217,109 +208,96 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    mkMerge [
-      {
-        home.packages = [ cfg.package ];
+  config = mkIf cfg.enable (mkMerge [
+    {
+      home.packages = [ cfg.package ];
 
-        programs.git.iniContent.user = {
-          name = mkIf (cfg.userName != null) cfg.userName;
-          email = mkIf (cfg.userEmail != null) cfg.userEmail;
+      programs.git.iniContent.user = {
+        name = mkIf (cfg.userName != null) cfg.userName;
+        email = mkIf (cfg.userEmail != null) cfg.userEmail;
+      };
+
+      xdg.configFile = {
+        "git/config".text = gitToIni cfg.iniContent;
+
+        "git/ignore" = mkIf (cfg.ignores != [ ]) {
+          text = concatStringsSep "\n" cfg.ignores + "\n";
         };
 
-        xdg.configFile = {
-          "git/config".text = gitToIni cfg.iniContent;
+        "git/attributes" = mkIf (cfg.attributes != [ ]) {
+          text = concatStringsSep "\n" cfg.attributes + "\n";
+        };
+      };
+    }
 
-          "git/ignore" = mkIf (cfg.ignores != []) {
-            text = concatStringsSep "\n" cfg.ignores + "\n";
+    {
+      programs.git.iniContent = let
+        hasSmtp = name: account: account.smtp != null;
+
+        genIdentity = name: account:
+          with account;
+          nameValuePair "sendemail.${name}" ({
+            smtpEncryption = if smtp.tls.enable then "tls" else "";
+            smtpServer = smtp.host;
+            smtpUser = userName;
+            from = address;
+          } // optionalAttrs (smtp.port != null) {
+            smtpServerPort = smtp.port;
+          });
+      in mapAttrs' genIdentity
+      (filterAttrs hasSmtp config.accounts.email.accounts);
+    }
+
+    (mkIf (cfg.signing != null) {
+      programs.git.iniContent = {
+        user.signingKey = cfg.signing.key;
+        commit.gpgSign = cfg.signing.signByDefault;
+        gpg.program = cfg.signing.gpgPath;
+      };
+    })
+
+    (mkIf (cfg.aliases != { }) { programs.git.iniContent.alias = cfg.aliases; })
+
+    (mkIf (lib.isAttrs cfg.extraConfig) {
+      programs.git.iniContent = cfg.extraConfig;
+    })
+
+    (mkIf (lib.isString cfg.extraConfig) {
+      warnings = [''
+        Using programs.git.extraConfig as a string option is
+        deprecated and will be removed in the future. Please
+        change to using it as an attribute set instead.
+      ''];
+
+      xdg.configFile."git/config".text = cfg.extraConfig;
+    })
+
+    (mkIf (cfg.includes != [ ]) {
+      xdg.configFile."git/config".text = let
+        include = i:
+          with i;
+          if condition != null then {
+            includeIf.${condition}.path = "${path}";
+          } else {
+            include.path = "${path}";
           };
+      in mkAfter
+      (concatStringsSep "\n" (map gitToIni (map include cfg.includes)));
+    })
 
-          "git/attributes" = mkIf (cfg.attributes != []) {
-            text = concatStringsSep "\n" cfg.attributes + "\n";
-          };
+    (mkIf cfg.lfs.enable {
+      home.packages = [ pkgs.git-lfs ];
+
+      programs.git.iniContent.filter.lfs =
+        let skipArg = optional cfg.lfs.skipSmudge "--skip";
+        in {
+          clean = "git-lfs clean -- %f";
+          process =
+            concatStringsSep " " ([ "git-lfs" "filter-process" ] ++ skipArg);
+          required = true;
+          smudge = concatStringsSep " "
+            ([ "git-lfs" "smudge" ] ++ skipArg ++ [ "--" "%f" ]);
         };
-      }
-
-      {
-        programs.git.iniContent =
-          let
-            hasSmtp = name: account: account.smtp != null;
-
-            genIdentity = name: account: with account;
-              nameValuePair "sendemail.${name}" ({
-                smtpEncryption = if smtp.tls.enable then "tls" else "";
-                smtpServer = smtp.host;
-                smtpUser = userName;
-                from = address;
-              }
-              // optionalAttrs (smtp.port != null) {
-                smtpServerPort = smtp.port;
-              });
-          in
-            mapAttrs' genIdentity
-              (filterAttrs hasSmtp config.accounts.email.accounts);
-      }
-
-      (mkIf (cfg.signing != null) {
-        programs.git.iniContent = {
-          user.signingKey = cfg.signing.key;
-          commit.gpgSign = cfg.signing.signByDefault;
-          gpg.program = cfg.signing.gpgPath;
-        };
-      })
-
-      (mkIf (cfg.aliases != {}) {
-        programs.git.iniContent.alias = cfg.aliases;
-      })
-
-      (mkIf (lib.isAttrs cfg.extraConfig) {
-        programs.git.iniContent = cfg.extraConfig;
-      })
-
-      (mkIf (lib.isString cfg.extraConfig) {
-        warnings = [
-          ''
-            Using programs.git.extraConfig as a string option is
-            deprecated and will be removed in the future. Please
-            change to using it as an attribute set instead.
-          ''
-        ];
-
-        xdg.configFile."git/config".text = cfg.extraConfig;
-      })
-
-      (mkIf (cfg.includes != []) {
-        xdg.configFile."git/config".text =
-          let
-            include = i: with i;
-              if condition != null
-              then { includeIf.${condition}.path = "${path}"; }
-              else { include.path = "${path}"; };
-          in
-            mkAfter
-            (concatStringsSep "\n"
-            (map gitToIni
-            (map include cfg.includes)));
-      })
-
-      (mkIf cfg.lfs.enable {
-        home.packages = [ pkgs.git-lfs ];
-
-        programs.git.iniContent.filter.lfs =
-          let
-            skipArg = optional cfg.lfs.skipSmudge "--skip";
-          in
-            {
-              clean = "git-lfs clean -- %f";
-              process = concatStringsSep " " (
-                [ "git-lfs" "filter-process" ] ++ skipArg
-              );
-              required = true;
-              smudge = concatStringsSep " " (
-                [ "git-lfs" "smudge" ] ++ skipArg ++ [ "--" "%f" ]
-              );
-            };
-      })
-    ]
-  );
+    })
+  ]);
 }

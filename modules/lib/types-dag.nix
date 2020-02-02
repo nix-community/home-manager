@@ -6,41 +6,34 @@ let
 
   isDagEntry = e: isAttrs e && (e ? data) && (e ? after) && (e ? before);
 
-  dagContentType = elemType: types.submodule {
-    options = {
-      data = mkOption { type = elemType; };
-      after = mkOption { type = with types; uniq (listOf str); };
-      before = mkOption { type = with types; uniq (listOf str); };
+  dagContentType = elemType:
+    types.submodule {
+      options = {
+        data = mkOption { type = elemType; };
+        after = mkOption { type = with types; uniq (listOf str); };
+        before = mkOption { type = with types; uniq (listOf str); };
+      };
     };
-  };
 
-in
-
-{
+in {
   # A directed acyclic graph of some inner type.
   dagOf = elemType:
     let
-      convertAllToDags =
-        let
-          maybeConvert = n: v:
-            if isDagEntry v
-            then v
-            else dag.entryAnywhere v;
-        in
-          map (def: def // { value = mapAttrs maybeConvert def.value; });
+      convertAllToDags = let
+        maybeConvert = n: v: if isDagEntry v then v else dag.entryAnywhere v;
+      in map (def: def // { value = mapAttrs maybeConvert def.value; });
 
       attrEquivalent = types.attrsOf (dagContentType elemType);
-    in
-      mkOptionType rec {
-        name = "dagOf";
-        description = "DAG of ${elemType.description}s";
-        check = isAttrs;
-        merge = loc: defs: attrEquivalent.merge loc (convertAllToDags defs);
-        getSubOptions = prefix: elemType.getSubOptions (prefix ++ ["<name>"]);
-        getSubModules = elemType.getSubModules;
-        substSubModules = m: dagOf (elemType.substSubModules m);
-        functor = (defaultFunctor name) // { wrapped = elemType; };
-      };
+    in mkOptionType rec {
+      name = "dagOf";
+      description = "DAG of ${elemType.description}s";
+      check = isAttrs;
+      merge = loc: defs: attrEquivalent.merge loc (convertAllToDags defs);
+      getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "<name>" ]);
+      getSubModules = elemType.getSubModules;
+      substSubModules = m: dagOf (elemType.substSubModules m);
+      functor = (defaultFunctor name) // { wrapped = elemType; };
+    };
 
   # A directed acyclic graph of some inner type OR a list of that
   # inner type. This is a temporary hack for use by the
@@ -55,42 +48,37 @@ in
   listOrDagOf = elemType:
     let
       paddedIndexStr = list: i:
-        let
-          padWidth = stringLength (toString (length list));
-        in
-          fixedWidthNumber padWidth i;
+        let padWidth = stringLength (toString (length list));
+        in fixedWidthNumber padWidth i;
 
       convertAllToDags = defs:
         let
           convertAttrValue = n: v:
-            if isDagEntry v then v
-            else dag.entryAnywhere v;
+            if isDagEntry v then v else dag.entryAnywhere v;
 
           convertListValue = namePrefix: vs:
             let
               pad = paddedIndexStr vs;
               makeEntry = i: v:
                 nameValuePair "${namePrefix}.${pad i}" (dag.entryAnywhere v);
-            in
-              listToAttrs (imap1 makeEntry vs);
+            in listToAttrs (imap1 makeEntry vs);
 
           convertValue = i: value:
-            if isList value
-            then convertListValue "unnamed-${paddedIndexStr defs i}" value
-            else mapAttrs convertAttrValue value;
-        in
-          imap1 (i: def: def // { value = convertValue i def.value; }) defs;
+            if isList value then
+              convertListValue "unnamed-${paddedIndexStr defs i}" value
+            else
+              mapAttrs convertAttrValue value;
+        in imap1 (i: def: def // { value = convertValue i def.value; }) defs;
 
       attrEquivalent = types.attrsOf (dagContentType elemType);
-    in
-      mkOptionType rec {
-        name = "dagOf";
-        description = "DAG of ${elemType.description}s";
-        check = x: isAttrs x || isList x;
-        merge = loc: defs: attrEquivalent.merge loc (convertAllToDags defs);
-        getSubOptions = prefix: elemType.getSubOptions (prefix ++ ["<name>"]);
-        getSubModules = elemType.getSubModules;
-        substSubModules = m: dagOf (elemType.substSubModules m);
-        functor = (defaultFunctor name) // { wrapped = elemType; };
-      };
+    in mkOptionType rec {
+      name = "dagOf";
+      description = "DAG of ${elemType.description}s";
+      check = x: isAttrs x || isList x;
+      merge = loc: defs: attrEquivalent.merge loc (convertAllToDags defs);
+      getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "<name>" ]);
+      getSubModules = elemType.getSubModules;
+      substSubModules = m: dagOf (elemType.substSubModules m);
+      functor = (defaultFunctor name) // { wrapped = elemType; };
+    };
 }

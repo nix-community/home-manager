@@ -1,8 +1,6 @@
 {
-  # Note, this should be "the standard library" + HM extensions.
-  lib
-, pkgs
-}:
+# Note, this should be "the standard library" + HM extensions.
+lib, pkgs }:
 
 let
 
@@ -19,23 +17,19 @@ let
   # Make sure the used package is scrubbed to avoid actually
   # instantiating derivations.
   scrubbedPkgsModule = {
-    imports = [
-      {
-        _module.args = {
-          pkgs = lib.mkForce (nmd.scrubDerivations "pkgs" pkgs);
-          pkgs_i686 = lib.mkForce { };
-        };
-      }
-    ];
+    imports = [{
+      _module.args = {
+        pkgs = lib.mkForce (nmd.scrubDerivations "pkgs" pkgs);
+        pkgs_i686 = lib.mkForce { };
+      };
+    }];
   };
 
   hmModulesDocs = nmd.buildModulesDocs {
-    modules =
-      import ../modules/modules.nix {
-        inherit lib pkgs;
-        check = false;
-      }
-      ++ [ scrubbedPkgsModule ];
+    modules = import ../modules/modules.nix {
+      inherit lib pkgs;
+      check = false;
+    } ++ [ scrubbedPkgsModule ];
     moduleRootPaths = [ ./.. ];
     mkModuleUrl = path:
       "https://github.com/rycee/home-manager/blob/master/${path}#blob-path";
@@ -58,9 +52,7 @@ let
     '';
   };
 
-in
-
-{
+in {
   inherit nmdSrc;
 
   options = {
@@ -71,7 +63,5 @@ in
 
   manPages = docs.manPages;
 
-  manual = {
-    inherit (docs) html htmlOpenTool;
-  };
+  manual = { inherit (docs) html htmlOpenTool; };
 }

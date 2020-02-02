@@ -4,9 +4,7 @@ with lib;
 
 {
   options = {
-    services.owncloud-client = {
-      enable = mkEnableOption "Owncloud Client";
-    };
+    services.owncloud-client = { enable = mkEnableOption "Owncloud Client"; };
   };
 
   config = mkIf config.services.owncloud-client.enable {
@@ -22,9 +20,7 @@ with lib;
         ExecStart = "${pkgs.owncloud-client}/bin/owncloud";
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
     };
   };
 }

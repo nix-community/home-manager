@@ -1,3 +1,1 @@
-{
-  gpg-override-defaults = ./override-defaults.nix;
-}
+{ gpg-override-defaults = ./override-defaults.nix; }

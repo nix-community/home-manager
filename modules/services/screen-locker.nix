@@ -29,7 +29,7 @@ in {
 
     xautolockExtraOptions = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = ''
         Extra command-line arguments to pass to <command>xautolock</command>.
       '';
@@ -37,7 +37,7 @@ in {
 
     xssLockExtraOptions = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = ''
         Extra command-line arguments to pass to <command>xss-lock</command>.
       '';
@@ -53,9 +53,7 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
 
       Service = {
         ExecStart = concatStringsSep " " ([
@@ -70,7 +68,9 @@ in {
     # xss-lock will run specified screen locker when the session is locked via loginctl
     # can't be started as a systemd service,
     # see https://bitbucket.org/raymonad/xss-lock/issues/13/allow-operation-as-systemd-user-unit
-    xsession.initExtra = "${pkgs.xss-lock}/bin/xss-lock ${concatStringsSep " " cfg.xssLockExtraOptions} -- ${cfg.lockCmd} &";
+    xsession.initExtra = "${pkgs.xss-lock}/bin/xss-lock ${
+        concatStringsSep " " cfg.xssLockExtraOptions
+      } -- ${cfg.lockCmd} &";
   };
 
 }

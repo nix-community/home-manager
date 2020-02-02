@@ -6,14 +6,10 @@ let
 
   cfg = config.services.lorri;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.gerschtli ];
 
-  options = {
-    services.lorri.enable = mkEnableOption "lorri build daemon";
-  };
+  options = { services.lorri.enable = mkEnableOption "lorri build daemon"; };
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.lorri ];
@@ -33,25 +29,22 @@ in
           ProtectSystem = "strict";
           ProtectHome = "read-only";
           Restart = "on-failure";
-          Environment =
-            let path = with pkgs; makeSearchPath "bin" [ nix gitMinimal gnutar gzip ];
-            in "PATH=${path}";
+          Environment = let
+            path = with pkgs;
+              makeSearchPath "bin" [ nix gitMinimal gnutar gzip ];
+          in "PATH=${path}";
         };
       };
 
       sockets.lorri = {
-        Unit = {
-          Description = "Socket for lorri build daemon";
-        };
+        Unit = { Description = "Socket for lorri build daemon"; };
 
         Socket = {
           ListenStream = "%t/lorri/daemon.socket";
           RuntimeDirectory = "lorri";
         };
 
-        Install = {
-          WantedBy = [ "sockets.target" ];
-        };
+        Install = { WantedBy = [ "sockets.target" ]; };
       };
     };
   };

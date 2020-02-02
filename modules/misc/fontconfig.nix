@@ -8,15 +8,15 @@ let
 
   profileDirectory = config.home.profileDirectory;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   imports = [
-    (mkRenamedOptionModule
-      [ "fonts" "fontconfig" "enableProfileFonts" ]
-      [ "fonts" "fontconfig" "enable" ])
+    (mkRenamedOptionModule [ "fonts" "fontconfig" "enableProfileFonts" ] [
+      "fonts"
+      "fontconfig"
+      "enable"
+    ])
   ];
 
   options = {

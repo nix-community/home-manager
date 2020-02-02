@@ -150,23 +150,21 @@ in {
   };
 
   config = let
-    mapRemotes = gen: with attrsets; mapAttrs'
+    mapRemotes = gen:
+      with attrsets;
+      mapAttrs'
       (name: remoteCfg: nameValuePair "muchsync-${name}" (gen name remoteCfg))
       cfg.remotes;
   in mkIf (cfg.remotes != { }) {
-    assertions = [
-      {
-        assertion = config.programs.notmuch.enable;
-        message = ''
-          The muchsync module requires 'programs.notmuch.enable = true'.
-        '';
-      }
-    ];
+    assertions = [{
+      assertion = config.programs.notmuch.enable;
+      message = ''
+        The muchsync module requires 'programs.notmuch.enable = true'.
+      '';
+    }];
 
     systemd.user.services = mapRemotes (name: remoteCfg: {
-      Unit = {
-        Description = "muchsync sync service (${name})";
-      };
+      Unit = { Description = "muchsync sync service (${name})"; };
       Service = {
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
@@ -175,8 +173,7 @@ in {
           ''"NOTMUCH_CONFIG=${config.home.sessionVariables.NOTMUCH_CONFIG}"''
           ''"NMBGIT=${config.home.sessionVariables.NMBGIT}"''
         ];
-        ExecStart = concatStringsSep " " (
-          [ "${pkgs.muchsync}/bin/muchsync" ]
+        ExecStart = concatStringsSep " " ([ "${pkgs.muchsync}/bin/muchsync" ]
           ++ [ "-s ${escapeShellArg remoteCfg.sshCommand}" ]
           ++ optional (!remoteCfg.upload) "--noup"
 
@@ -187,25 +184,20 @@ in {
           # remote configuration
           ++ [ (escapeShellArg remoteCfg.remote.host) ]
           ++ optional (remoteCfg.remote.muchsyncPath != "")
-            "-r ${escapeShellArg remoteCfg.remote.muchsyncPath}"
+          "-r ${escapeShellArg remoteCfg.remote.muchsyncPath}"
           ++ optional remoteCfg.remote.checkForModifiedFiles "-F"
-          ++ optional (!remoteCfg.remote.importNew) "--nonew"
-        );
+          ++ optional (!remoteCfg.remote.importNew) "--nonew");
       };
     });
 
     systemd.user.timers = mapRemotes (name: remoteCfg: {
-      Unit = {
-        Description = "muchsync periodic sync (${name})";
-      };
+      Unit = { Description = "muchsync periodic sync (${name})"; };
       Timer = {
         Unit = "muchsync-${name}.service";
         OnCalendar = remoteCfg.frequency;
         Persistent = true;
       };
-      Install = {
-        WantedBy = [ "timers.target" ];
-      };
+      Install = { WantedBy = [ "timers.target" ]; };
     });
   };
 }

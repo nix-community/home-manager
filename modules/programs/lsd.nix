@@ -11,12 +11,10 @@ let
     ll = "ls -l";
     la = "ls -a";
     lt = "ls --tree";
-    lla ="ls -la";
+    lla = "ls -la";
   };
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.marsam ];
 
   options.programs.lsd = {

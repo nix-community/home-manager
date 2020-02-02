@@ -22,21 +22,21 @@ with lib;
       systemd.user.services = {
         syncthing = {
           Unit = {
-            Description = "Syncthing - Open Source Continuous File Synchronization";
+            Description =
+              "Syncthing - Open Source Continuous File Synchronization";
             Documentation = "man:syncthing(1)";
             After = [ "network.target" ];
           };
 
           Service = {
-            ExecStart = "${pkgs.syncthing}/bin/syncthing -no-browser -no-restart -logflags=0";
+            ExecStart =
+              "${pkgs.syncthing}/bin/syncthing -no-browser -no-restart -logflags=0";
             Restart = "on-failure";
             SuccessExitStatus = [ 3 4 ];
             RestartForceExitStatus = [ 3 4 ];
           };
 
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
+          Install = { WantedBy = [ "default.target" ]; };
         };
       };
     })
@@ -46,10 +46,12 @@ with lib;
         qsyncthingtray = {
           Unit = {
             Description = "QSyncthingTray";
-            After = [ "graphical-session-pre.target"
-                      "polybar.service"
-                      "taffybar.service"
-                      "stalonetray.service" ];
+            After = [
+              "graphical-session-pre.target"
+              "polybar.service"
+              "taffybar.service"
+              "stalonetray.service"
+            ];
             PartOf = [ "graphical-session.target" ];
           };
 
@@ -58,9 +60,7 @@ with lib;
             ExecStart = "${pkgs.qsyncthingtray}/bin/QSyncthingTray";
           };
 
-          Install = {
-            WantedBy = [ "graphical-session.target" ];
-          };
+          Install = { WantedBy = [ "graphical-session.target" ]; };
         };
       };
     })

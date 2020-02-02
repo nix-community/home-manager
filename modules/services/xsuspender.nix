@@ -61,7 +61,7 @@ let
         '';
         type = types.nullOr types.str;
         default = null;
-        example = ''echo resuming ...'';
+        example = "echo resuming ...";
       };
 
       sendSignals = mkOption {
@@ -74,7 +74,8 @@ let
       };
 
       suspendSubtreePattern = mkOption {
-        description = "Also suspend descendant processes that match this regex.";
+        description =
+          "Also suspend descendant processes that match this regex.";
         type = types.nullOr types.str;
         default = null;
       };
@@ -105,9 +106,7 @@ let
     };
   };
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.offline ];
 
   options = {
@@ -117,13 +116,13 @@ in
       defaults = mkOption {
         description = "XSuspender defaults.";
         type = xsuspenderOptions;
-        default = {};
+        default = { };
       };
 
       rules = mkOption {
         description = "Attribute set of XSuspender rules.";
         type = types.attrsOf xsuspenderOptions;
-        default = {};
+        default = { };
         example = {
           Chromium = {
             suspendDelay = 10;
@@ -147,9 +146,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.xsuspender.iniContent =
-      let
-        mkSection = values: filterAttrs (_: v: v != null) {
+    services.xsuspender.iniContent = let
+      mkSection = values:
+        filterAttrs (_: v: v != null) {
           match_wm_class_contains = values.matchWmClassContains;
           match_wm_class_group_contains = values.matchWmClassGroupContains;
           match_wm_name_contains = values.matchWmNameContains;
@@ -164,25 +163,22 @@ in
           auto_suspend_on_battery = values.autoSuspendOnBattery;
           downclock_on_battery = values.downclockOnBattery;
         };
-      in
-        {
-          Default = mkSection cfg.defaults;
-        }
-        // mapAttrs (_: mkSection) cfg.rules;
+    in {
+      Default = mkSection cfg.defaults;
+    } // mapAttrs (_: mkSection) cfg.rules;
 
     # To make the xsuspender tool available.
     home.packages = [ pkgs.xsuspender ];
 
-    xdg.configFile."xsuspender.conf".text = generators.toINI {} cfg.iniContent;
+    xdg.configFile."xsuspender.conf".text = generators.toINI { } cfg.iniContent;
 
     systemd.user.services.xsuspender = {
       Unit = {
         Description = "XSuspender";
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
-        X-Restart-Triggers = [
-          "${config.xdg.configFile."xsuspender.conf".source}"
-        ];
+        X-Restart-Triggers =
+          [ "${config.xdg.configFile."xsuspender.conf".source}" ];
       };
 
       Service = {
@@ -190,9 +186,7 @@ in
         Environment = mkIf cfg.debug [ "G_MESSAGE_DEBUG=all" ];
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
     };
   };
 }

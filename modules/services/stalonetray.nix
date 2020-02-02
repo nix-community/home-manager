@@ -6,9 +6,7 @@ let
 
   cfg = config.services.stalonetray;
 
-in
-
-{
+in {
   options = {
     services.stalonetray = {
       enable = mkEnableOption "Stalonetray system tray";
@@ -22,19 +20,18 @@ in
       };
 
       config = mkOption {
-          type = with types;
-            attrsOf (nullOr (either str (either bool int)));
-          description = ''
-            Stalonetray configuration as a set of attributes.
-          '';
-          default = {};
-          example = {
-            geometry = "3x1-600+0";
-            decorations = null;
-            icon_size = 30;
-            sticky = true;
-            background = "#cccccc";
-          };
+        type = with types; attrsOf (nullOr (either str (either bool int)));
+        description = ''
+          Stalonetray configuration as a set of attributes.
+        '';
+        default = { };
+        example = {
+          geometry = "3x1-600+0";
+          decorations = null;
+          icon_size = 30;
+          sticky = true;
+          background = "#cccccc";
+        };
       };
 
       extraConfig = mkOption {
@@ -42,11 +39,11 @@ in
         description = "Additional configuration lines for stalonetrayrc.";
         default = "";
         example = ''
-            geometry 3x1-600+0
-            decorations none
-            icon_size 30
-            sticky true
-            background "#cccccc"
+          geometry 3x1-600+0
+          decorations none
+          icon_size 30
+          sticky true
+          background "#cccccc"
         '';
       };
     };
@@ -63,9 +60,7 @@ in
           PartOf = [ "graphical-session.target" ];
         };
 
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
+        Install = { WantedBy = [ "graphical-session.target" ]; };
 
         Service = {
           ExecStart = "${cfg.package}/bin/stalonetray";
@@ -74,17 +69,18 @@ in
       };
     }
 
-    (mkIf (cfg.config != {}) {
-      home.file.".stalonetrayrc".text =
-        let
-          valueToString = v:
-            if isBool v then (if v then "true" else "false")
-            else if (v==null) then "none"
-            else ''"${toString v}"'';
-        in
-          concatStrings (
-            mapAttrsToList (k: v: "${k} ${valueToString v}\n") cfg.config
-          );
+    (mkIf (cfg.config != { }) {
+      home.file.".stalonetrayrc".text = let
+        valueToString = v:
+          if isBool v then
+            (if v then "true" else "false")
+          else if (v == null) then
+            "none"
+          else
+            ''"${toString v}"'';
+      in concatStrings (mapAttrsToList (k: v: ''
+        ${k} ${valueToString v}
+      '') cfg.config);
     })
 
     (mkIf (cfg.extraConfig != "") {

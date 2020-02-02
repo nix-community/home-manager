@@ -7,20 +7,17 @@ let
   cfg = config.programs.starship;
 
   configFile = config:
-    pkgs.runCommand "config.toml"
-      {
-        buildInputs = [ pkgs.remarshal ];
-        preferLocalBuild = true;
-        allowSubstitutes = false;
-      }
-      ''
-        remarshal -if json -of toml \
-          < ${pkgs.writeText "config.json" (builtins.toJSON config)} \
-          > $out
-      '';
-in
+    pkgs.runCommand "config.toml" {
+      buildInputs = [ pkgs.remarshal ];
+      preferLocalBuild = true;
+      allowSubstitutes = false;
+    } ''
+      remarshal -if json -of toml \
+        < ${pkgs.writeText "config.json" (builtins.toJSON config)} \
+        > $out
+    '';
 
-{
+in {
   meta.maintainers = [ maintainers.marsam ];
 
   options.programs.starship = {
@@ -35,7 +32,7 @@ in
 
     settings = mkOption {
       type = types.attrs;
-      default = {};
+      default = { };
       description = ''
         Configuration written to
         <filename>~/.config/starship.toml</filename>.
@@ -73,9 +70,8 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."starship.toml" = mkIf (cfg.settings != {}) {
-      source = configFile cfg.settings;
-    };
+    xdg.configFile."starship.toml" =
+      mkIf (cfg.settings != { }) { source = configFile cfg.settings; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ -z $INSIDE_EMACS ]]; then

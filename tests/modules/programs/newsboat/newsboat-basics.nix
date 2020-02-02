@@ -14,20 +14,14 @@ with lib;
           title = "Cool feed";
         }
 
-        {
-          url = "http://example.org/feed2.xml";
-        }
+        { url = "http://example.org/feed2.xml"; }
       ];
 
-      queries = {
-        "foo" = "rssurl =~ \"example.com\"";
-      };
+      queries = { "foo" = ''rssurl =~ "example.com"''; };
     };
 
     nixpkgs.overlays = [
-      (self: super: {
-        newsboat = pkgs.writeScriptBin "dummy-newsboat" "";
-      })
+      (self: super: { newsboat = pkgs.writeScriptBin "dummy-newsboat" ""; })
     ];
 
     nmt.script = ''

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ...}:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -9,14 +9,10 @@ let
   formatLine = n: v:
     let
       formatValue = v:
-        if isBool v then (if v then "true" else "false")
-        else toString v;
-    in
-      "set ${n}\t\"${formatValue v}\"";
+        if isBool v then (if v then "true" else "false") else toString v;
+    in ''set ${n}	"${formatValue v}"'';
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rprospero ];
 
   options.programs.zathura = {
@@ -25,7 +21,7 @@ in
       focused on keyboard interaction'';
 
     options = mkOption {
-      default = {};
+      default = { };
       type = with types; attrsOf (either str (either bool int));
       description = ''
         Add <option>:set</option> command options to zathura and make
@@ -36,7 +32,10 @@ in
         </citerefentry>
         for the full list of options.
       '';
-      example = { default-bg = "#000000"; default-fg = "#FFFFFF"; };
+      example = {
+        default-bg = "#000000";
+        default-fg = "#FFFFFF";
+      };
     };
 
     extraConfig = mkOption {
@@ -52,10 +51,8 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.zathura ];
 
-    xdg.configFile."zathura/zathurarc".text =
-      concatStringsSep "\n" ([]
-        ++ optional (cfg.extraConfig != "") cfg.extraConfig
-        ++ mapAttrsToList formatLine cfg.options
-      ) + "\n";
+    xdg.configFile."zathura/zathurarc".text = concatStringsSep "\n" ([ ]
+      ++ optional (cfg.extraConfig != "") cfg.extraConfig
+      ++ mapAttrsToList formatLine cfg.options) + "\n";
   };
 }

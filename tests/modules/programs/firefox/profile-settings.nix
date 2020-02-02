@@ -6,26 +6,20 @@ with lib;
   config = {
     programs.firefox = {
       enable = true;
-      profiles.test.settings = {
-        "general.smoothScroll" = false;
-      };
+      profiles.test.settings = { "general.smoothScroll" = false; };
     };
 
     nixpkgs.overlays = [
       (self: super: {
-        firefox-unwrapped =
-          pkgs.runCommand
-            "firefox-0"
-            {
-              meta.description = "I pretend to be Firefox";
-              preferLocalBuild = true;
-              allowSubstitutes = false;
-            }
-            ''
-              mkdir -p "$out/bin"
-              touch "$out/bin/firefox"
-              chmod 755 "$out/bin/firefox"
-            '';
+        firefox-unwrapped = pkgs.runCommand "firefox-0" {
+          meta.description = "I pretend to be Firefox";
+          preferLocalBuild = true;
+          allowSubstitutes = false;
+        } ''
+          mkdir -p "$out/bin"
+          touch "$out/bin/firefox"
+          chmod 755 "$out/bin/firefox"
+        '';
       })
     ];
 

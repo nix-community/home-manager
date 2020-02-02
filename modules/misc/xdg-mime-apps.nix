@@ -9,9 +9,7 @@ let
   strListOrSingleton = with types;
     coercedTo (either (listOf str) str) toList (listOf str);
 
-in
-
-{
+in {
   meta.maintainers = with maintainers; [ pacien ];
 
   options.xdg.mimeApps = {
@@ -80,13 +78,11 @@ in
       config.xdg.configFile."mimeapps.list".source;
 
     xdg.configFile."mimeapps.list".text =
-      let
-        joinValues = mapAttrs (n: concatStringsSep ";");
-      in
-        generators.toINI {} {
-          "Added Associations" = joinValues cfg.associations.added;
-          "Removed Associations" = joinValues cfg.associations.removed;
-          "Default Applications" = joinValues cfg.defaultApplications;
-        };
+      let joinValues = mapAttrs (n: concatStringsSep ";");
+      in generators.toINI { } {
+        "Added Associations" = joinValues cfg.associations.added;
+        "Removed Associations" = joinValues cfg.associations.removed;
+        "Default Applications" = joinValues cfg.defaultApplications;
+      };
   };
 }

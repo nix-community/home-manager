@@ -8,9 +8,7 @@ with lib;
 
     home.homeDirectory = "/test-home";
 
-    home.keyboard = {
-      options = [ "ctrl:nocaps" "altwin:no_win" ];
-    };
+    home.keyboard = { options = [ "ctrl:nocaps" "altwin:no_win" ]; };
 
     xsession = {
       enable = true;
@@ -23,11 +21,9 @@ with lib;
     nixpkgs.overlays = [
       (self: super: {
         xorg = super.xorg // {
-          setxkbmap = super.xorg.setxkbmap // {
-            outPath = "@setxkbmap@";
-          };
+          setxkbmap = super.xorg.setxkbmap // { outPath = "@setxkbmap@"; };
         };
-     })
+      })
     ];
 
     nmt.script = ''

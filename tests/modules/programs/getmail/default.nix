@@ -1,3 +1,1 @@
-{
-  getmail = ./getmail.nix;
-}
+{ getmail = ./getmail.nix; }

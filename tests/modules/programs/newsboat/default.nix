@@ -1,3 +1,1 @@
-{
-  newsboat-basics = ./newsboat-basics.nix;
-}
+{ newsboat-basics = ./newsboat-basics.nix; }

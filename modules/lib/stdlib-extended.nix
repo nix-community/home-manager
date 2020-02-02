@@ -3,9 +3,5 @@
 
 nixpkgsLib:
 
-let
-  mkHmLib = import ./.;
-in
-  nixpkgsLib.extend (self: super: {
-    hm = mkHmLib { lib = super; };
-  })
+let mkHmLib = import ./.;
+in nixpkgsLib.extend (self: super: { hm = mkHmLib { lib = super; }; })

@@ -34,9 +34,7 @@ let
   # from this package in the activation script.
   infoPkg = pkgs.texinfoInteractive;
 
-in
-
-{
+in {
   options = {
     programs.info = {
       enable = mkEnableOption "GNU Info";
@@ -55,19 +53,20 @@ in
     home.sessionVariables.INFOPATH =
       "${cfg.homeInfoDirLocation}\${INFOPATH:+:}\${INFOPATH}";
 
-    home.activation.createHomeInfoDir = hm.dag.entryAfter ["installPackages"] ''
-      oPATH=$PATH
-      export PATH="${lib.makeBinPath [ pkgs.gzip ]}''${PATH:+:}$PATH"
-      $DRY_RUN_CMD mkdir -p "${cfg.homeInfoDirLocation}"
-      $DRY_RUN_CMD rm -f "${cfg.homeInfoDirLocation}/dir"
-      if [[ -d "${homeInfoPath}" ]]; then
-        find -L "${homeInfoPath}" \( -name '*.info' -o -name '*.info.gz' \) \
-          -exec $DRY_RUN_CMD ${infoPkg}/bin/install-info '{}' \
-          "${cfg.homeInfoDirLocation}/dir" \;
-      fi
-      export PATH="$oPATH"
-      unset oPATH
-    '';
+    home.activation.createHomeInfoDir =
+      hm.dag.entryAfter [ "installPackages" ] ''
+        oPATH=$PATH
+        export PATH="${lib.makeBinPath [ pkgs.gzip ]}''${PATH:+:}$PATH"
+        $DRY_RUN_CMD mkdir -p "${cfg.homeInfoDirLocation}"
+        $DRY_RUN_CMD rm -f "${cfg.homeInfoDirLocation}/dir"
+        if [[ -d "${homeInfoPath}" ]]; then
+          find -L "${homeInfoPath}" \( -name '*.info' -o -name '*.info.gz' \) \
+            -exec $DRY_RUN_CMD ${infoPkg}/bin/install-info '{}' \
+            "${cfg.homeInfoDirLocation}/dir" \;
+        fi
+        export PATH="$oPATH"
+        unset oPATH
+      '';
 
     home.packages = [ infoPkg ];
 

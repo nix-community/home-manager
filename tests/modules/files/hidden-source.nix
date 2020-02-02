@@ -9,7 +9,10 @@ with lib;
     nmt.script = ''
       assertFileExists home-files/.hidden;
       assertFileContent home-files/.hidden ${
-        builtins.path { path = ./.hidden; name = "expected"; }
+        builtins.path {
+          path = ./.hidden;
+          name = "expected";
+        }
       }
     '';
   };

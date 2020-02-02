@@ -6,9 +6,7 @@ let
 
   cfg = config.services.taffybar;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -38,9 +36,7 @@ in
         Restart = "on-failure";
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
     };
 
     xsession.importedVariables = [ "GDK_PIXBUF_MODULE_FILE" ];

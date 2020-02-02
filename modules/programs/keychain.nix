@@ -6,15 +6,16 @@ let
 
   cfg = config.programs.keychain;
 
-  flags = cfg.extraFlags
-    ++ optional (cfg.agents != []) "--agents ${concatStringsSep "," cfg.agents}"
+  flags = cfg.extraFlags ++ optional (cfg.agents != [ ])
+    "--agents ${concatStringsSep "," cfg.agents}"
     ++ optional (cfg.inheritType != null) "--inherit ${cfg.inheritType}";
 
-  shellCommand = "${cfg.package}/bin/keychain --eval ${concatStringsSep " " flags} ${concatStringsSep " " cfg.keys}";
+  shellCommand =
+    "${cfg.package}/bin/keychain --eval ${concatStringsSep " " flags} ${
+      concatStringsSep " " cfg.keys
+    }";
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.marsam ];
 
   options.programs.keychain = {
@@ -39,14 +40,15 @@ in
 
     agents = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = ''
         Agents to add.
       '';
     };
 
     inheritType = mkOption {
-      type = types.nullOr (types.enum ["local" "any" "local-once" "any-once"]);
+      type =
+        types.nullOr (types.enum [ "local" "any" "local-once" "any-once" ]);
       default = null;
       description = ''
         Inherit type to attempt from agent variables from the environment.

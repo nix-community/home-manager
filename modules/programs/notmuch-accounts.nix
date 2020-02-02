@@ -1,7 +1,5 @@
 { lib, ... }:
 
 {
-  options.notmuch = {
-    enable = lib.mkEnableOption "notmuch indexing";
-  };
+  options.notmuch = { enable = lib.mkEnableOption "notmuch indexing"; };
 }

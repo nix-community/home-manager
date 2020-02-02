@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.password-store;
 
-in
-
-{
+in {
   meta.maintainers = with maintainers; [ pacien ];
 
   options.programs.password-store = {

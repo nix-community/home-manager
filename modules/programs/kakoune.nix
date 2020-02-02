@@ -10,16 +10,44 @@ let
     options = {
       name = mkOption {
         type = types.enum [
-          "NormalBegin" "NormalIdle" "NormalEnd" "NormalKey"
-          "InsertBegin" "InsertIdle" "InsertEnd" "InsertKey"
-          "InsertChar" "InsertDelete" "InsertMove" "WinCreate"
-          "WinClose" "WinResize" "WinDisplay" "WinSetOption"
-          "BufSetOption" "BufNewFile" "BufOpenFile" "BufCreate"
-          "BufWritePre" "BufWritePost" "BufReload" "BufClose"
-          "BufOpenFifo" "BufReadFifo" "BufCloseFifo" "RuntimeError"
-          "ModeChange" "PromptIdle" "GlobalSetOption" "KakBegin"
-          "KakEnd" "FocusIn" "FocusOut" "RawKey"
-          "InsertCompletionShow" "InsertCompletionHide"
+          "NormalBegin"
+          "NormalIdle"
+          "NormalEnd"
+          "NormalKey"
+          "InsertBegin"
+          "InsertIdle"
+          "InsertEnd"
+          "InsertKey"
+          "InsertChar"
+          "InsertDelete"
+          "InsertMove"
+          "WinCreate"
+          "WinClose"
+          "WinResize"
+          "WinDisplay"
+          "WinSetOption"
+          "BufSetOption"
+          "BufNewFile"
+          "BufOpenFile"
+          "BufCreate"
+          "BufWritePre"
+          "BufWritePost"
+          "BufReload"
+          "BufClose"
+          "BufOpenFifo"
+          "BufReadFifo"
+          "BufCloseFifo"
+          "RuntimeError"
+          "ModeChange"
+          "PromptIdle"
+          "GlobalSetOption"
+          "KakBegin"
+          "KakEnd"
+          "FocusIn"
+          "FocusOut"
+          "RawKey"
+          "InsertCompletionShow"
+          "InsertCompletionHide"
           "InsertCompletionSelect"
         ];
         example = "SetOption";
@@ -159,7 +187,8 @@ let
       };
 
       autoInfo = mkOption {
-        type = types.nullOr (types.listOf (types.enum [ "command" "onkey" "normal" ]));
+        type = types.nullOr
+          (types.listOf (types.enum [ "command" "onkey" "normal" ]));
         default = null;
         example = [ "command" "normal" ];
         description = ''
@@ -169,7 +198,7 @@ let
       };
 
       autoComplete = mkOption {
-        type = types.nullOr(types.listOf (types.enum [ "insert" "prompt" ]));
+        type = types.nullOr (types.listOf (types.enum [ "insert" "prompt" ]));
         default = null;
         description = ''
           Modes in which to display possible completions.
@@ -450,7 +479,7 @@ let
 
       keyMappings = mkOption {
         type = types.listOf keyMapping;
-        default = [];
+        default = [ ];
         description = ''
           User-defined key mappings. For documentation, see
           <link xlink:href="https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc"/>.
@@ -459,7 +488,7 @@ let
 
       hooks = mkOption {
         type = types.listOf hook;
-        default = [];
+        default = [ ];
         description = ''
           Global hooks. For documentation, see
           <link xlink:href="https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc"/>.
@@ -468,92 +497,103 @@ let
     };
   };
 
-  configFile =
-    let
-      wrapOptions = with cfg.config.wrapLines; concatStrings [
+  configFile = let
+    wrapOptions = with cfg.config.wrapLines;
+      concatStrings [
         "${optionalString word " -word"}"
         "${optionalString indent " -indent"}"
         "${optionalString (marker != null) " -marker ${marker}"}"
         "${optionalString (maxWidth != null) " -width ${toString maxWidth}"}"
       ];
 
-      numberLinesOptions = with cfg.config.numberLines; concatStrings [
+    numberLinesOptions = with cfg.config.numberLines;
+      concatStrings [
         "${optionalString relative " -relative "}"
         "${optionalString highlightCursor " -hlcursor"}"
         "${optionalString (separator != null) " -separator ${separator}"}"
       ];
 
-      uiOptions = with cfg.config.ui; concatStringsSep " " [
+    uiOptions = with cfg.config.ui;
+      concatStringsSep " " [
         "ncurses_set_title=${if setTitle then "true" else "false"}"
-        "ncurses_status_on_top=${if (statusLine == "top") then "true" else "false"}"
+        "ncurses_status_on_top=${
+          if (statusLine == "top") then "true" else "false"
+        }"
         "ncurses_assistant=${assistant}"
         "ncurses_enable_mouse=${if enableMouse then "true" else "false"}"
         "ncurses_change_colors=${if changeColors then "true" else "false"}"
         "${optionalString (wheelDownButton != null)
-          "ncurses_wheel_down_button=${wheelDownButton}"}"
+        "ncurses_wheel_down_button=${wheelDownButton}"}"
         "${optionalString (wheelUpButton != null)
-          "ncurses_wheel_up_button=${wheelUpButton}"}"
+        "ncurses_wheel_up_button=${wheelUpButton}"}"
         "${optionalString (shiftFunctionKeys != null)
-          "ncurses_shift_function_key=${toString shiftFunctionKeys}"}"
-        "ncurses_builtin_key_parser=${if useBuiltinKeyParser then "true" else "false"}"
+        "ncurses_shift_function_key=${toString shiftFunctionKeys}"}"
+        "ncurses_builtin_key_parser=${
+          if useBuiltinKeyParser then "true" else "false"
+        }"
       ];
 
-      keyMappingString = km: concatStringsSep " " [
+    keyMappingString = km:
+      concatStringsSep " " [
         "map global"
         "${km.mode} ${km.key} '${km.effect}'"
-        "${optionalString (km.docstring != null) "-docstring '${km.docstring}'"}"
+        "${optionalString (km.docstring != null)
+        "-docstring '${km.docstring}'"}"
       ];
 
-      hookString = h: concatStringsSep " " [
-        "hook" "${optionalString (h.group != null) "-group ${group}"}"
-        "${optionalString (h.once) "-once"}" "global"
-        "${h.name}" "${optionalString (h.option != null) h.option}"
+    hookString = h:
+      concatStringsSep " " [
+        "hook"
+        "${optionalString (h.group != null) "-group ${group}"}"
+        "${optionalString (h.once) "-once"}"
+        "global"
+        "${h.name}"
+        "${optionalString (h.option != null) h.option}"
         "%{ ${h.commands} }"
       ];
 
-      cfgStr = with cfg.config; concatStringsSep "\n" (
-        [ "# Generated by home-manager" ]
+    cfgStr = with cfg.config;
+      concatStringsSep "\n" ([ "# Generated by home-manager" ]
         ++ optional (colorScheme != null) "colorscheme ${colorScheme}"
-        ++ optional (tabStop != null) "set-option global tabstop ${toString tabStop}"
-        ++ optional (indentWidth != null) "set-option global indentwidth ${toString indentWidth}"
+        ++ optional (tabStop != null)
+        "set-option global tabstop ${toString tabStop}"
+        ++ optional (indentWidth != null)
+        "set-option global indentwidth ${toString indentWidth}"
         ++ optional (!incrementalSearch) "set-option global incsearch false"
         ++ optional (alignWithTabs) "set-option global aligntab true"
-        ++ optional (autoInfo != null) "set-option global autoinfo ${concatStringsSep "|" autoInfo}"
-        ++ optional (autoComplete != null) "set-option global autocomplete ${concatStringsSep "|" autoComplete}"
-        ++ optional (autoReload != null) "set-option global/ autoreload ${autoReload}"
-        ++ optional (wrapLines != null && wrapLines.enable) "add-highlighter global/ wrap${wrapOptions}"
+        ++ optional (autoInfo != null)
+        "set-option global autoinfo ${concatStringsSep "|" autoInfo}"
+        ++ optional (autoComplete != null)
+        "set-option global autocomplete ${concatStringsSep "|" autoComplete}"
+        ++ optional (autoReload != null)
+        "set-option global/ autoreload ${autoReload}"
+        ++ optional (wrapLines != null && wrapLines.enable)
+        "add-highlighter global/ wrap${wrapOptions}"
         ++ optional (numberLines != null && numberLines.enable)
-          "add-highlighter global/ number-lines${numberLinesOptions}"
+        "add-highlighter global/ number-lines${numberLinesOptions}"
         ++ optional showMatching "add-highlighter global/ show-matching"
         ++ optional (scrollOff != null)
-          "set-option global scrolloff ${toString scrollOff.lines},${toString scrollOff.columns}"
+        "set-option global scrolloff ${toString scrollOff.lines},${
+          toString scrollOff.columns
+        }"
 
         ++ [ "# UI options" ]
         ++ optional (ui != null) "set-option global ui_options ${uiOptions}"
 
-        ++ [ "# Key mappings" ]
-        ++ map keyMappingString keyMappings
+        ++ [ "# Key mappings" ] ++ map keyMappingString keyMappings
 
-        ++ [ "# Hooks" ]
-        ++ map hookString hooks
-      );
-    in
-      pkgs.writeText "kakrc" (
-        optionalString (cfg.config != null) cfgStr
-        + "\n"
-        + cfg.extraConfig
-      );
+        ++ [ "# Hooks" ] ++ map hookString hooks);
+  in pkgs.writeText "kakrc"
+  (optionalString (cfg.config != null) cfgStr + "\n" + cfg.extraConfig);
 
-in
-
-{
+in {
   options = {
     programs.kakoune = {
       enable = mkEnableOption "the kakoune text editor";
 
       config = mkOption {
         type = types.nullOr configModule;
-        default = {};
+        default = { };
         description = "kakoune configuration options.";
       };
 

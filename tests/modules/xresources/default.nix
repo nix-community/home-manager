@@ -1,3 +1,1 @@
-{
-  xresources = ./xresources.nix;
-}
+{ xresources = ./xresources.nix; }

@@ -8,29 +8,21 @@ with lib;
       enable = true;
 
       config.keybindings =
-        let
-          modifier = config.xsession.windowManager.i3.config.modifier;
-        in
-          lib.mkOptionDefault {
-            "${modifier}+Left" = "overridden-command";
-            "${modifier}+Right" = null;
-            "${modifier}+Invented" = "invented-key-command";
-          };
+        let modifier = config.xsession.windowManager.i3.config.modifier;
+        in lib.mkOptionDefault {
+          "${modifier}+Left" = "overridden-command";
+          "${modifier}+Right" = null;
+          "${modifier}+Invented" = "invented-key-command";
+        };
     };
 
     nixpkgs.overlays = [
       (self: super: {
-        dmenu = super.dmenu // {
-          outPath = "@dmenu@";
-        };
+        dmenu = super.dmenu // { outPath = "@dmenu@"; };
 
-        i3 = super.i3 // {
-          outPath = "@i3@";
-        };
+        i3 = super.i3 // { outPath = "@i3@"; };
 
-        i3status = super.i3status // {
-          outPath = "@i3status@";
-        };
+        i3status = super.i3status // { outPath = "@i3status@"; };
       })
     ];
 

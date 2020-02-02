@@ -8,9 +8,7 @@ let
 
   cfg = config.services.redshift;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options.services.redshift = {
@@ -113,7 +111,7 @@ in
 
     extraOptions = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       example = [ "-v" "-m randr" ];
       description = ''
         Additional command-line arguments to pass to
@@ -123,17 +121,13 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion =
-          cfg.provider == "manual"
-          -> cfg.latitude != null && cfg.longitude != null;
-        message =
-          "Must provide services.redshift.latitude and"
-          + " services.redshift.latitude when"
-          + " services.redshift.provider is set to \"manual\".";
-      }
-    ];
+    assertions = [{
+      assertion = cfg.provider == "manual" -> cfg.latitude != null
+        && cfg.longitude != null;
+      message = "Must provide services.redshift.latitude and"
+        + " services.redshift.latitude when"
+        + " services.redshift.provider is set to \"manual\".";
+    }];
 
     systemd.user.services.redshift = {
       Unit = {
@@ -142,27 +136,25 @@ in
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
 
       Service = {
-        ExecStart =
-          let
-           providerString =
-             if cfg.provider == "manual"
-             then "${cfg.latitude}:${cfg.longitude}"
-             else cfg.provider;
+        ExecStart = let
+          providerString = if cfg.provider == "manual" then
+            "${cfg.latitude}:${cfg.longitude}"
+          else
+            cfg.provider;
 
-            args = [
-              "-l ${providerString}"
-              "-t ${toString cfg.temperature.day}:${toString cfg.temperature.night}"
-              "-b ${toString cfg.brightness.day}:${toString cfg.brightness.night}"
-            ] ++ cfg.extraOptions;
+          args = [
+            "-l ${providerString}"
+            "-t ${toString cfg.temperature.day}:${
+              toString cfg.temperature.night
+            }"
+            "-b ${toString cfg.brightness.day}:${toString cfg.brightness.night}"
+          ] ++ cfg.extraOptions;
 
-            command = if cfg.tray then "redshift-gtk" else "redshift";
-          in
-            "${cfg.package}/bin/${command} ${concatStringsSep " " args}";
+          command = if cfg.tray then "redshift-gtk" else "redshift";
+        in "${cfg.package}/bin/${command} ${concatStringsSep " " args}";
         RestartSec = 3;
         Restart = "always";
       };

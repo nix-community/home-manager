@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.rtorrent;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.marsam ];
 
   options.programs.rtorrent = {
@@ -30,8 +28,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.rtorrent ];
 
-    xdg.configFile."rtorrent/rtorrent.rc" = mkIf (cfg.settings != "") {
-      text = cfg.settings;
-    };
+    xdg.configFile."rtorrent/rtorrent.rc" =
+      mkIf (cfg.settings != "") { text = cfg.settings; };
   };
 }

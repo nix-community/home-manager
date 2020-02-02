@@ -15,13 +15,11 @@ with lib;
         xyz = {
           identityFile = "file";
           serverAliveInterval = 60;
-          localForwards = [
-            {
-              bind.port = 8080;
-              host.address = "10.0.0.1";
-              host.port = 80;
-            }
-          ];
+          localForwards = [{
+            bind.port = 8080;
+            host.address = "10.0.0.1";
+            host.port = 80;
+          }];
           remoteForwards = [
             {
               bind.port = 8081;
@@ -33,25 +31,18 @@ with lib;
               host.address = "/run/user/1000/gnupg/S.gpg-agent";
             }
           ];
-          dynamicForwards = [
-            {
-              port = 2839;
-            }
-          ];
+          dynamicForwards = [{ port = 2839; }];
         };
 
         "* !github.com" = {
-          identityFile = ["file1" "file2"];
+          identityFile = [ "file1" "file2" ];
           port = 516;
         };
       };
     };
 
-    home.file.assertions.text =
-      builtins.toJSON
-      (map (a: a.message)
-      (filter (a: !a.assertion)
-        config.assertions));
+    home.file.assertions.text = builtins.toJSON
+      (map (a: a.message) (filter (a: !a.assertion) config.assertions));
 
     nmt.script = ''
       assertFileExists home-files/.ssh/config
