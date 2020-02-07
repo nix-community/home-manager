@@ -82,8 +82,8 @@ in {
       mkIf (cfg.stdlib != "") { text = cfg.stdlib; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
-    # Using mkAfter to make it more likely to appear after other
-    # manipulations of the prompt.
+      # Using mkAfter to make it more likely to appear after other
+      # manipulations of the prompt.
       mkAfter ''
         eval "$(${pkgs.direnv}/bin/direnv hook bash)"
       '');
