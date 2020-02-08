@@ -308,7 +308,7 @@ in
 
           # Source initialization code if it exists.
           if test -d $plugin_dir"/conf.d"
-            source $plugin_dir"/conf.d/*.fish"
+            source $plugin_dir/conf.d/*.fish
           end
 
           if test -f $plugin_dir"/key_bindings.fish"
