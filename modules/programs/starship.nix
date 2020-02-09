@@ -30,6 +30,34 @@ in {
       description = "The package to use for the starship binary.";
     };
 
+    disabled = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "A list of prompt segments to disable";
+      example = [ "battery" ];
+    };
+
+    symbols = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = "A set of symbols to be displayed with prompt segments";
+      example = {
+        aws = " ";
+        conda = " ";
+        git_branch = " ";
+        golang = " ";
+        package = " ";
+        python = " ";
+      };
+    };
+
+    styles = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = "A set of styles to be applies to prompt segments";
+      example = { directory = "blue"; };
+    };
+
     settings = mkOption {
       type = types.attrs;
       default = { };
@@ -69,9 +97,14 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-
-    xdg.configFile."starship.toml" =
-      mkIf (cfg.settings != { }) { source = configFile cfg.settings; };
+    xdg.configFile."starship.toml" = let
+      fromKey = key:
+        mapAttrs' (name: value: nameValuePair name { "${key}" = value; });
+      settings = cfg.settings // (fromKey "symbol" cfg.symbols)
+        // (fromKey "style" cfg.styles) // (listToAttrs
+          (builtins.map (name: nameValuePair name { disabled = true; })
+            cfg.disabled));
+    in mkIf (settings != { }) { source = configFile settings; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ -z $INSIDE_EMACS ]]; then
