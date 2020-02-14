@@ -28,13 +28,12 @@ let
     };
   });
 
-  abbrsStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: "abbr --add --global ${k} '${v}'") cfg.shellAbbrs
-  );
+  abbrsStr = concatStringsSep "\n"
+    (mapAttrsToList (k: v: "abbr --add --global -- ${k} ${escapeShellArg v}")
+      cfg.shellAbbrs);
 
-  aliasesStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
-  );
+  aliasesStr = concatStringsSep "\n"
+    (mapAttrsToList (k: v: "alias ${k} ${escapeShellArg v}") cfg.shellAliases);
 
 in
 
