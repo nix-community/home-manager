@@ -227,7 +227,7 @@ in
       # if we haven't sourced the general config, do it
       if not set -q __fish_general_config_sourced
 
-        set fish_function_path ${pkgs.fish-foreign-env}/share/fish-foreign-env/functions $fish_function_path
+        set -p fish_function_path ${pkgs.fish-foreign-env}/share/fish-foreign-env/functions
         fenv source ${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh > /dev/null
         set -e fish_function_path[1]
 
