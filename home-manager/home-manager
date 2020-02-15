@@ -375,7 +375,7 @@ function doUninstall() {
         y|Y)
             echo "Switching to empty Home Manager configuration..."
             HOME_MANAGER_CONFIG="$(mktemp --tmpdir home-manager.XXXXXXXXXX)"
-            echo "{}" > "$HOME_MANAGER_CONFIG"
+            echo "{ lib, ... }: { home.file = lib.mkForce {}; }" > "$HOME_MANAGER_CONFIG"
             doSwitch
             rm "$HOME_MANAGER_CONFIG"
             $DRY_RUN_CMD rm $VERBOSE_ARG -r \
