@@ -54,7 +54,7 @@ in
 
       shellAliases = mkOption {
         type = with types; attrsOf str;
-        default = {};
+        default = { };
         example = { ".." = "cd .."; ll = "ls -l"; };
         description = ''
           An attribute set that maps aliases (the top level attribute names
@@ -64,8 +64,11 @@ in
 
       shellAbbrs = mkOption {
         type = with types; attrsOf str;
-        default = {};
-        example = { l = "less"; gco = "git checkout"; };
+        default = { };
+        example = {
+          l = "less";
+          gco = "git checkout";
+        };
         description = ''
           An attribute set that maps aliases (the top level attribute names
           in this option) to abbreviations. Abbreviations are expanded with
@@ -111,7 +114,7 @@ in
 
     programs.fish.plugins = mkOption {
       type = types.listOf pluginModule;
-      default = [];
+      default = [ ];
       example = literalExample ''
         [
           {
@@ -145,7 +148,7 @@ in
 
     programs.fish.functions = mkOption {
       type = types.attrsOf types.lines;
-      default = {};
+      default = { };
       example = { gitignore = "curl -sL https://www.gitignore.io/api/$argv"; };
       description = ''
         Basic functions to add to fish. For more information see
@@ -299,25 +302,25 @@ in
           set -l plugin_dir ${plugin.src}
 
           # Set paths to import plugin components
-          if test -d $plugin_dir"/functions"
-            set fish_function_path $fish_function_path[1] $plugin_dir"/functions" $fish_function_path[2..-1]
+          if test -d $plugin_dir/functions
+            set fish_function_path $fish_function_path[1] $plugin_dir/functions $fish_function_path[2..-1]
           end
 
-          if test -d $plugin_dir"/completions"
-            set fish_complete_path $fish_function_path[1] $plugin_dir"/completions" $fish_complete_path[2..-1]
+          if test -d $plugin_dir/completions
+            set fish_complete_path $fish_function_path[1] $plugin_dir/completions $fish_complete_path[2..-1]
           end
 
           # Source initialization code if it exists.
-          if test -d $plugin_dir"/conf.d"
+          if test -d $plugin_dir/conf.d
             source $plugin_dir/conf.d/*.fish
           end
 
-          if test -f $plugin_dir"/key_bindings.fish"
-            source $plugin_dir"/key_bindings.fish"
+          if test -f $plugin_dir/key_bindings.fish
+            source $plugin_dir/key_bindings.fish
           end
 
-          if test -f $plugin_dir"/init.fish"
-            source $plugin_dir"/init.fish"
+          if test -f $plugin_dir/init.fish
+            source $plugin_dir/init.fish
           end
         '';
         }) cfg.plugins));
