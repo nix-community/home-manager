@@ -8,7 +8,16 @@ with lib;
 
     sendMailCommand = mkOption {
       type = types.nullOr types.str;
-      default = null;
+      default = if config.msmtp.enable then
+        "msmtpq --read-envelope-from --read-recipients"
+      else
+        null;
+      defaultText = literalExample ''
+        if config.msmtp.enable then
+          "msmtpq --read-envelope-from --read-recipients"
+        else
+          null
+      '';
       example = "msmtpq --read-envelope-from --read-recipients";
       description = ''
         Command to send a mail. If not set, neomutt will be in charge of sending mails.
@@ -23,12 +32,5 @@ with lib;
         Extra lines to add to the folder hook for this account.
       '';
     };
-  };
-
-  config = mkIf config.neomutt.enable {
-    neomutt.sendMailCommand = mkOptionDefault (if config.msmtp.enable then
-      "msmtpq --read-envelope-from --read-recipients"
-    else
-      null);
   };
 }
