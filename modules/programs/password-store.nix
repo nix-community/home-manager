@@ -29,10 +29,10 @@ in {
       type = with types; attrsOf str;
       apply = mergeAttrs default;
       default = {
-        PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
+        PASSWORD_STORE_DIR = "${config.home.homeDirectory}/.password-store";
       };
       defaultText = literalExample ''
-        { PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store"; }
+        { PASSWORD_STORE_DIR = "$HOME/.password-store"; }
       '';
       example = literalExample ''
         {
