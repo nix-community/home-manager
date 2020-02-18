@@ -6,10 +6,16 @@ let
 
   cfg = config.xdg.userDirs;
 
-in
-
-{
+in {
   meta.maintainers = with maintainers; [ pacien ];
+
+  imports = [
+    (mkRenamedOptionModule [ "xdg" "userDirs" "publishShare" ] [
+      "xdg"
+      "userDirs"
+      "publicShare"
+    ])
+  ];
 
   options.xdg.userDirs = {
     enable = mkOption {
@@ -56,7 +62,7 @@ in
       description = "The Pictures directory.";
     };
 
-    publishShare = mkOption {
+    publicShare = mkOption {
       type = types.str;
       default = "$HOME/Public";
       description = "The Public share directory.";
@@ -83,18 +89,15 @@ in
   };
 
   config = mkIf cfg.enable {
-    xdg.configFile."user-dirs.dirs".text = generators.toKeyValue {} (
-      {
-        XDG_DESKTOP_DIR = cfg.desktop;
-        XDG_DOCUMENTS_DIR = cfg.documents;
-        XDG_DOWNLOAD_DIR = cfg.download;
-        XDG_MUSIC_DIR = cfg.music;
-        XDG_PICTURES_DIR = cfg.pictures;
-        XDG_PUBLICSHARE_DIR = cfg.publishShare;
-        XDG_TEMPLATES_DIR = cfg.templates;
-        XDG_VIDEOS_DIR = cfg.videos;
-      }
-      // cfg.extraConfig
-    );
+    xdg.configFile."user-dirs.dirs".text = generators.toKeyValue { } ({
+      XDG_DESKTOP_DIR = cfg.desktop;
+      XDG_DOCUMENTS_DIR = cfg.documents;
+      XDG_DOWNLOAD_DIR = cfg.download;
+      XDG_MUSIC_DIR = cfg.music;
+      XDG_PICTURES_DIR = cfg.pictures;
+      XDG_PUBLICSHARE_DIR = cfg.publicShare;
+      XDG_TEMPLATES_DIR = cfg.templates;
+      XDG_VIDEOS_DIR = cfg.videos;
+    } // cfg.extraConfig);
   };
 }

@@ -6,8 +6,6 @@ let
 
   cfg = config.home.file;
 
-  dag = config.lib.dag;
-
   homeDirectory = config.home.homeDirectory;
 
   fileType = (import lib/file-type.nix {
@@ -22,10 +20,6 @@ let
       if builtins.hasContext sourcePath
       then file.source
       else builtins.path { path = file.source; name = sourceName; };
-
-  # A symbolic link whose target path matches this pattern will be
-  # considered part of a Home Manager generation.
-  homeFilePattern = "${builtins.storeDir}/*-home-manager-files/*";
 
 in
 
@@ -47,10 +41,14 @@ in
   config = {
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
-    home.activation.checkLinkTargets = dag.entryBefore ["writeBoundary"] (
+    home.activation.checkLinkTargets = hm.dag.entryBefore ["writeBoundary"] (
       let
         check = pkgs.writeText "check" ''
           . ${./lib-bash/color-echo.sh}
+
+          # A symbolic link whose target path matches this pattern will be
+          # considered part of a Home Manager generation.
+          homeFilePattern="$(readlink -e "${builtins.storeDir}")/*-home-manager-files/*"
 
           newGenFiles="$1"
           shift
@@ -58,7 +56,7 @@ in
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" \
-                && ! "$(readlink "$targetPath")" == ${homeFilePattern} ]] ; then
+                && ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               if [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
                 if [[ -e "$backup" ]]; then
@@ -113,7 +111,7 @@ in
     # and a failure during the intermediate state FA ∩ FB will not
     # result in lost links because this set of links are in both the
     # source and target generation.
-    home.activation.linkGeneration = dag.entryAfter ["writeBoundary"] (
+    home.activation.linkGeneration = hm.dag.entryAfter ["writeBoundary"] (
       let
         link = pkgs.writeText "link" ''
           newGenFiles="$1"
@@ -133,13 +131,17 @@ in
         cleanup = pkgs.writeText "cleanup" ''
           . ${./lib-bash/color-echo.sh}
 
+          # A symbolic link whose target path matches this pattern will be
+          # considered part of a Home Manager generation.
+          homeFilePattern="$(readlink -e "${builtins.storeDir}")/*-home-manager-files/*"
+
           newGenFiles="$1"
           shift 1
           for relativePath in "$@" ; do
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" == ${homeFilePattern} ]] ; then
+            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               warnEcho "Path '$targetPath' not link into Home Manager generation. Skipping delete."
             else
               $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
@@ -195,8 +197,7 @@ in
 
           if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
             echo "Creating profile generation $newGenNum"
-            $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenProfilePath"
-            $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG $(basename "$newGenProfilePath") "$genProfilePath"
+            $DRY_RUN_CMD nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"
           else
             echo "No change so reusing latest profile generation $oldGenNum"
@@ -206,7 +207,7 @@ in
         ''
     );
 
-    home.activation.checkFilesChanged = dag.entryBefore ["linkGeneration"] (
+    home.activation.checkFilesChanged = hm.dag.entryBefore ["linkGeneration"] (
       ''
         declare -A changedFiles
       '' + concatMapStrings (v: ''
@@ -216,7 +217,7 @@ in
       '') (filter (v: v.onChange != "") (attrValues cfg))
     );
 
-    home.activation.onFilesChange = dag.entryAfter ["linkGeneration"] (
+    home.activation.onFilesChange = hm.dag.entryAfter ["linkGeneration"] (
       concatMapStrings (v: ''
         if [[ ${"$\{changedFiles"}["${v.target}"]} -eq 1 ]]; then
           ${v.onChange}
@@ -236,6 +237,9 @@ in
       (''
         mkdir -p $out
 
+        # Needed in case /nix is a symbolic link.
+        realOut="$(realpath -m "$out")"
+
         function insertFile() {
           local source="$1"
           local relTarget="$2"
@@ -244,10 +248,10 @@ in
 
           # Figure out the real absolute path to the target.
           local target
-          target="$(realpath -m "$out/$relTarget")"
+          target="$(realpath -m "$realOut/$relTarget")"
 
           # Target path must be within $HOME.
-          if [[ ! $target == $out* ]] ; then
+          if [[ ! $target == $realOut* ]] ; then
             echo "Error installing file '$relTarget' outside \$HOME" >&2
             exit 1
           fi

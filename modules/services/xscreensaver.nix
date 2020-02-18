@@ -6,9 +6,7 @@ let
 
   cfg = config.services.xscreensaver;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -17,7 +15,7 @@ in
 
       settings = mkOption {
         type = with types; attrsOf (either bool (either int str));
-        default = {};
+        default = { };
         example = {
           mode = "blank";
           lock = false;
@@ -38,19 +36,17 @@ in
       mapAttrs' (n: nameValuePair "xscreensaver.${n}") cfg.settings;
 
     systemd.user.services.xscreensaver = {
-        Unit = {
-          Description = "XScreenSaver";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
+      Unit = {
+        Description = "XScreenSaver";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
 
-        Service = {
-          ExecStart = "${pkgs.xscreensaver}/bin/xscreensaver -no-splash";
-        };
+      Service = {
+        ExecStart = "${pkgs.xscreensaver}/bin/xscreensaver -no-splash";
+      };
 
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
     };
   };
 }

@@ -8,9 +8,7 @@ with lib;
 
     home.homeDirectory = "/test-home";
 
-    home.keyboard = {
-      options = [ "ctrl:nocaps" "altwin:no_win" ];
-    };
+    home.keyboard = { options = [ "ctrl:nocaps" "altwin:no_win" ]; };
 
     xsession = {
       enable = true;
@@ -20,14 +18,19 @@ with lib;
       profileExtra = "profile extra commands";
     };
 
+    nixpkgs.overlays = [
+      (self: super: {
+        xorg = super.xorg // {
+          setxkbmap = super.xorg.setxkbmap // { outPath = "@setxkbmap@"; };
+        };
+      })
+    ];
+
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/setxkbmap.service
       assertFileContent \
         home-files/.config/systemd/user/setxkbmap.service \
-        ${pkgs.substituteAll {
-          src = ./keyboard-without-layout-expected.service;
-          inherit (pkgs.xorg) setxkbmap;
-        }}
+        ${./keyboard-without-layout-expected.service}
     '';
   };
 }

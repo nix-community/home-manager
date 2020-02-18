@@ -6,17 +6,19 @@ let
 
   cfg = config.services.getmail;
 
-  accounts = filter (a: a.getmail.enable)
-    (attrValues config.accounts.email.accounts);
+  accounts =
+    filter (a: a.getmail.enable) (attrValues config.accounts.email.accounts);
 
   # Note: The getmail service does not expect a path, but just the filename!
-  renderConfigFilepath = a: if a.primary then "getmailrc" else "getmail${a.name}";
-  configFiles = concatMapStringsSep " " (a: " --rcfile ${renderConfigFilepath a}") accounts;
-in
-{
+  renderConfigFilepath = a:
+    if a.primary then "getmailrc" else "getmail${a.name}";
+  configFiles =
+    concatMapStringsSep " " (a: " --rcfile ${renderConfigFilepath a}") accounts;
+in {
   options = {
     services.getmail = {
-      enable = mkEnableOption "the getmail systemd service to automatically retrieve mail";
+      enable = mkEnableOption
+        "the getmail systemd service to automatically retrieve mail";
 
       frequency = mkOption {
         type = types.str;
@@ -36,25 +38,17 @@ in
 
   config = mkIf cfg.enable {
     systemd.user.services.getmail = {
-      Unit = {
-        Description = "getmail email fetcher";
-      };
-      Service = {
-        ExecStart = "${pkgs.getmail}/bin/getmail ${configFiles}";
-      };
+      Unit = { Description = "getmail email fetcher"; };
+      Service = { ExecStart = "${pkgs.getmail}/bin/getmail ${configFiles}"; };
     };
 
     systemd.user.timers.getmail = {
-      Unit = {
-        Description = "getmail email fetcher";
-      };
+      Unit = { Description = "getmail email fetcher"; };
       Timer = {
         OnCalendar = "${cfg.frequency}";
         Unit = "getmail.service";
       };
-      Install = {
-        WantedBy = [ "timers.target" ];
-      };
+      Install = { WantedBy = [ "timers.target" ]; };
     };
 
   };

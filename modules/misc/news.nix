@@ -1185,6 +1185,139 @@ in
           Specifying them as strings is deprecated.
         '';
       }
+
+      {
+        time = "2019-09-17T19:33:49+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.sxhkd'.
+        '';
+      }
+
+      {
+        time = "2019-09-26T21:05:24+00:00";
+        message = ''
+          A new module is available: 'programs.starship'.
+        '';
+      }
+
+      {
+        time = "2019-09-26T21:47:13+00:00";
+        message = ''
+          A new module is available: 'programs.rtorrent'.
+        '';
+      }
+
+      {
+        time = "2019-11-04T20:56:29+00:00";
+        message = ''
+          A new module is available: 'programs.pazi'.
+        '';
+      }
+
+      {
+        time = "2019-11-05T21:54:04+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          The 'programs.zsh.history.path' option behavior and the
+          default value has changed for state version 20.03 and above.
+
+          Specifically, '$HOME' will no longer be prepended to the
+          option value, which allows specifying absolute paths (e.g.
+          using the xdg module). Also, the default value is fixed to
+          '$HOME/.zsh_history' and 'dotDir' path is not prepended to
+          it anymore.
+        '';
+      }
+
+      {
+        time = "2019-11-17T18:47:40+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.lorri'.
+        '';
+      }
+
+      {
+        time = "2019-11-24T17:46:57+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.spotifyd'.
+        '';
+      }
+
+      {
+        time = "2019-11-29T21:18:48+00:00";
+        message = ''
+          A new module is available: 'programs.password-store'.
+        '';
+      }
+
+      {
+        time = "2019-11-29T21:18:48+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.password-store-sync'.
+        '';
+      }
+
+      {
+        time = "2019-11-29T22:46:49+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.unison'.
+        '';
+      }
+
+      {
+        time = "2019-12-01T22:10:23+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xdg.mime'.
+
+          If enabled, which it is by default, this module will create
+          the XDG mime database and desktop file database caches from
+          programs installed via Home Manager.
+        '';
+      }
+
+      {
+        time = "2019-12-08T19:48:26+00:00";
+        message = ''
+          A new module is available: 'programs.readline'.
+        '';
+      }
+
+      {
+        time = "2020-01-11T11:49:51+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.cbatticon'.
+        '';
+      }
+
+      {
+        time = "2020-01-26T12:42:33+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xsession.windowManager.bspwm'.
+        '';
+      }
+
+      {
+        time = "2020-01-26T12:49:40+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.grobi'.
+        '';
+      }
+
+      {
+        time = "2020-01-26T19:37:57+00:00";
+        message = ''
+          A new module is available: 'programs.neomutt'.
+        '';
+      }
     ];
   };
 }

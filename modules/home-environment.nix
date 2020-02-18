@@ -6,8 +6,6 @@ let
 
   cfg = config.home;
 
-  dag = config.lib.dag;
-
   languageSubModule = types.submodule {
     options = {
       base = mkOption {
@@ -234,17 +232,51 @@ in
     };
 
     home.activation = mkOption {
-      internal = true;
+      type = hm.types.dagOf types.str;
       default = {};
-      type = types.attrs;
+      example = literalExample ''
+        {
+          myActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] '''
+            $DRY_RUN_CMD ln -s $VERBOSE_ARG \
+                ''${builtins.toPath ./link-me-directly} $HOME
+          ''';
+        }
+      '';
       description = ''
-        Activation scripts for the home environment.
+        The activation scripts blocks to run when activating a Home
+        Manager generation. Any entry here should be idempotent,
+        meaning running twice or more times produces the same result
+        as running it once.
+
         </para><para>
-        Any script should respect the <varname>DRY_RUN</varname>
-        variable, if it is set then no actual action should be taken.
+
+        If the script block produces any observable side effect, such
+        as writing or deleting files, then it
+        <emphasis>must</emphasis> be placed after the special
+        <literal>writeBoundary</literal> script block. Prior to the
+        write boundary one can place script blocks that verifies, but
+        does not modify, the state of the system and exits if an
+        unexpected state is found. For example, the
+        <literal>checkLinkTargets</literal> script block checks for
+        collisions between non-managed files and files defined in
+        <varname><link linkend="opt-home.file">home.file</link></varname>.
+
+        </para><para>
+
+        A script block should respect the <varname>DRY_RUN</varname>
+        variable, if it is set then the actions taken by the script
+        should be logged to standard out and not actually performed.
         The variable <varname>DRY_RUN_CMD</varname> is set to
-        <code>echo</code> if dry run is enabled. Thus, many cases you
-        can use the idiom <code>$DRY_RUN_CMD rm -rf /</code>.
+        <command>echo</command> if dry run is enabled.
+
+        </para><para>
+
+        A script block should also respect the
+        <varname>VERBOSE</varname> variable, and if set print
+        information on standard out that may be useful for debugging
+        any issue that may arise. The variable
+        <varname>VERBOSE_ARG</varname> is set to
+        <option>--verbose</option> if verbose output is enabled.
       '';
     };
 
@@ -327,7 +359,7 @@ in
 
     # A dummy entry acting as a boundary between the activation
     # script's "check" and the "write" phases.
-    home.activation.writeBoundary = dag.entryAnywhere "";
+    home.activation.writeBoundary = hm.dag.entryAnywhere "";
 
     # Install packages to the user environment.
     #
@@ -344,7 +376,7 @@ in
     # In case the user has moved from a user-install of Home Manager
     # to a submodule managed one we attempt to uninstall the
     # `home-manager-path` package if it is installed.
-    home.activation.installPackages = dag.entryAfter ["writeBoundary"] (
+    home.activation.installPackages = hm.dag.entryAfter ["writeBoundary"] (
       if config.submoduleSupport.externalPackageInstall
       then
         ''
@@ -364,7 +396,7 @@ in
             noteEcho Activating ${res.name}
             ${res.data}
           '';
-        sortedCommands = dag.topoSort cfg.activation;
+        sortedCommands = hm.dag.topoSort cfg.activation;
         activationCmds =
           if sortedCommands ? result then
             concatStringsSep "\n" (map mkCmd sortedCommands.result)

@@ -11,19 +11,20 @@ let
     };
   };
 
-  substituteExpected = path: pkgs.substituteAll {
-    src = path;
+  substituteExpected = path:
+    pkgs.substituteAll {
+      src = path;
 
-    git_include_path = pkgs.writeText "contents" (generators.toINI {} gitInclude);
-  };
+      git_include_path =
+        pkgs.writeText "contents" (generators.toINI { } gitInclude);
+    };
 
-in
-
-{
+in {
   config = {
     programs.git = mkMerge [
       {
         enable = true;
+        package = pkgs.gitMinimal;
         aliases = {
           a1 = "foo";
           a2 = "bar";
@@ -31,7 +32,7 @@ in
         extraConfig = {
           extra = {
             name = "value";
-            multiple = [1];
+            multiple = [ 1 ];
           };
         };
         ignores = [ "*~" "*.swp" ];
@@ -61,14 +62,16 @@ in
         extraConfig."extra \"backcompat.with.dots\"".previously = "worked";
         extraConfig.extra.boolean = true;
         extraConfig.extra.integer = 38;
-        extraConfig.extra.multiple = [2];
+        extraConfig.extra.multiple = [ 2 ];
         extraConfig.extra.subsection.value = "test";
       }
     ];
 
     nmt.script = ''
       assertFileExists home-files/.config/git/config
-      assertFileContent home-files/.config/git/config ${substituteExpected ./git-expected.conf}
+      assertFileContent home-files/.config/git/config ${
+        substituteExpected ./git-expected.conf
+      }
     '';
   };
 }

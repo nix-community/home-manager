@@ -6,17 +6,19 @@ let
 
   cfg = config.services.dunst;
 
-  eitherStrBoolIntList = with types; either str (either bool (either int (listOf str)));
+  eitherStrBoolIntList = with types;
+    either str (either bool (either int (listOf str)));
 
   toDunstIni = generators.toINI {
     mkKeyValue = key: value:
-    let
-      value' =
-        if isBool value then (if value then "yes" else "no")
-        else if isString value then "\"${value}\""
-        else toString value;
-    in
-      "${key}=${value'}";
+      let
+        value' = if isBool value then
+          (if value then "yes" else "no")
+        else if isString value then
+          ''"${value}"''
+        else
+          toString value;
+      in "${key}=${value'}";
   };
 
   themeType = types.submodule {
@@ -48,9 +50,7 @@ let
     size = "32x32";
   };
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -65,7 +65,7 @@ in
 
       settings = mkOption {
         type = with types; attrsOf (attrsOf eitherStrBoolIntList);
-        default = {};
+        default = { };
         description = "Configuration written to ~/.config/dunstrc";
         example = literalExample ''
           {
@@ -87,86 +87,73 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    mkMerge [
-      {
-        xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
-          "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
+  config = mkIf cfg.enable (mkMerge [
+    {
+      xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
+        "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
 
-        services.dunst.settings.global.icon_path =
-          let
-            useCustomTheme =
-              cfg.iconTheme.package != hicolorTheme.package
-              || cfg.iconTheme.name != hicolorTheme.name
-              || cfg.iconTheme.size != hicolorTheme.size;
+      services.dunst.settings.global.icon_path = let
+        useCustomTheme = cfg.iconTheme.package != hicolorTheme.package
+          || cfg.iconTheme.name != hicolorTheme.name || cfg.iconTheme.size
+          != hicolorTheme.size;
 
-            basePaths = [
-              "/run/current-system/sw"
-              config.home.profileDirectory
-              cfg.iconTheme.package
-            ] ++ optional useCustomTheme hicolorTheme.package;
+        basePaths = [
+          "/run/current-system/sw"
+          config.home.profileDirectory
+          cfg.iconTheme.package
+        ] ++ optional useCustomTheme hicolorTheme.package;
 
-            themes =
-              [
-                cfg.iconTheme
-              ] ++ optional useCustomTheme (
-                hicolorTheme // { size = cfg.iconTheme.size; }
-              );
+        themes = [ cfg.iconTheme ] ++ optional useCustomTheme
+          (hicolorTheme // { size = cfg.iconTheme.size; });
 
-            categories = [
-              "actions"
-              "animations"
-              "apps"
-              "categories"
-              "devices"
-              "emblems"
-              "emotes"
-              "filesystem"
-              "intl"
-              "mimetypes"
-              "places"
-              "status"
-              "stock"
-            ];
-          in
-            concatStringsSep ":" (
-              concatMap (theme:
-                concatMap (basePath:
-                  map (category:
-                    "${basePath}/share/icons/${theme.name}/${theme.size}/${category}"
-                  ) categories
-                ) basePaths
-              ) themes
-            );
+        categories = [
+          "actions"
+          "animations"
+          "apps"
+          "categories"
+          "devices"
+          "emblems"
+          "emotes"
+          "filesystem"
+          "intl"
+          "mimetypes"
+          "places"
+          "status"
+          "stock"
+        ];
+      in concatStringsSep ":" (concatMap (theme:
+        concatMap (basePath:
+          map (category:
+            "${basePath}/share/icons/${theme.name}/${theme.size}/${category}")
+          categories) basePaths) themes);
 
-        systemd.user.services.dunst = {
-          Unit = {
-            Description = "Dunst notification daemon";
-            After = [ "graphical-session-pre.target" ];
-            PartOf = [ "graphical-session.target" ];
-          };
-
-          Service = {
-            Type = "dbus";
-            BusName = "org.freedesktop.Notifications";
-            ExecStart = "${pkgs.dunst}/bin/dunst";
-          };
+      systemd.user.services.dunst = {
+        Unit = {
+          Description = "Dunst notification daemon";
+          After = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session.target" ];
         };
-      }
 
-      (mkIf (cfg.settings != {}) {
-        xdg.configFile."dunst/dunstrc" = {
-          text = toDunstIni cfg.settings;
-          onChange = ''
-            pkillVerbose=""
-            if [[ -v VERBOSE ]]; then
-              pkillVerbose="-e"
-            fi
-            $DRY_RUN_CMD ${pkgs.procps}/bin/pkill -u $USER $pkillVerbose dunst || true
-            unset pkillVerbose
-          '';
+        Service = {
+          Type = "dbus";
+          BusName = "org.freedesktop.Notifications";
+          ExecStart = "${pkgs.dunst}/bin/dunst";
         };
-      })
-    ]
-  );
+      };
+    }
+
+    (mkIf (cfg.settings != { }) {
+      xdg.configFile."dunst/dunstrc" = {
+        text = toDunstIni cfg.settings;
+        onChange = ''
+          pkillVerbose=""
+          if [[ -v VERBOSE ]]; then
+            pkillVerbose="-e"
+          fi
+          $DRY_RUN_CMD ${pkgs.procps}/bin/pkill -u $USER $pkillVerbose dunst || true
+          unset pkillVerbose
+        '';
+      };
+    })
+  ]);
 }

@@ -1,6 +1,6 @@
 # -*- mode: sh -*-
 
-. "@homeDirectory@/.nix-profile/etc/profile.d/hm-session-vars.sh"
+. "/home/testuser/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
 export V1="v1"
 export V2="v2-v1"

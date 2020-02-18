@@ -6,23 +6,16 @@ let
 
   cfg = config.services.hound;
 
-  configFile = pkgs.writeText "hound-config.json" (
-    builtins.toJSON {
-      max-concurrent-indexers = cfg.maxConcurrentIndexers;
-      dbpath = cfg.databasePath;
-      repos = cfg.repositories;
-      health-check-url = "/healthz";
-    }
-  );
+  configFile = pkgs.writeText "hound-config.json" (builtins.toJSON {
+    max-concurrent-indexers = cfg.maxConcurrentIndexers;
+    dbpath = cfg.databasePath;
+    repos = cfg.repositories;
+    health-check-url = "/healthz";
+  });
 
-  houndOptions = [
-    "--addr ${cfg.listenAddress}"
-    "--conf ${configFile}"
-  ];
+  houndOptions = [ "--addr ${cfg.listenAddress}" "--conf ${configFile}" ];
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.adisbladis ];
 
   options.services.hound = {
@@ -37,7 +30,7 @@ in
     databasePath = mkOption {
       type = types.path;
       default = "${config.xdg.dataHome}/hound";
-      defaultText = "\$XDG_DATA_HOME/hound";
+      defaultText = "$XDG_DATA_HOME/hound";
       description = "The Hound database path.";
     };
 
@@ -49,7 +42,7 @@ in
 
     repositories = mkOption {
       type = types.attrsOf (types.uniq types.attrs);
-      default = {};
+      default = { };
       example = literalExample ''
         {
           SomeGitRepo = {
@@ -67,17 +60,14 @@ in
     home.packages = [ pkgs.hound ];
 
     systemd.user.services.hound = {
-      Unit = {
-        Description = "Hound source code search engine";
-      };
+      Unit = { Description = "Hound source code search engine"; };
 
-      Install = {
-        WantedBy = [ "default.target" ];
-      };
+      Install = { WantedBy = [ "default.target" ]; };
 
       Service = {
         Environment = "PATH=${makeBinPath [ pkgs.mercurial pkgs.git ]}";
-        ExecStart = "${pkgs.hound}/bin/houndd ${concatStringsSep " " houndOptions}";
+        ExecStart =
+          "${pkgs.hound}/bin/houndd ${concatStringsSep " " houndOptions}";
       };
     };
   };

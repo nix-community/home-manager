@@ -6,34 +6,38 @@ let
 
   cfg = config.home-manager;
 
-  hmModule = types.submodule ({name, ...}: {
-    imports = import ../modules/modules.nix { inherit lib pkgs; };
+  extendedLib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
-    config = {
-      submoduleSupport.enable = true;
-      submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+  hmModule = types.submoduleWith {
+    specialArgs = { lib = extendedLib; };
+    modules = [
+      ({ name, ... }: {
+        imports = import ../modules/modules.nix {
+          inherit pkgs;
+          lib = extendedLib;
+        };
 
-      # The per-user directory inside /etc/profiles is not known by
-      # fontconfig by default.
-      fonts.fontconfig.enable =
-        cfg.useUserPackages && config.fonts.fontconfig.enable;
+        config = {
+          submoduleSupport.enable = true;
+          submoduleSupport.externalPackageInstall = cfg.useUserPackages;
 
-      home.username = config.users.users.${name}.name;
-      home.homeDirectory = config.users.users.${name}.home;
-    };
-  });
+          # The per-user directory inside /etc/profiles is not known by
+          # fontconfig by default.
+          fonts.fontconfig.enable = cfg.useUserPackages
+            && config.fonts.fontconfig.enable;
 
-  serviceEnvironment =
-    optionalAttrs (cfg.backupFileExtension != null) {
-      HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
-    }
-    // optionalAttrs cfg.verbose {
-      VERBOSE = "1";
-    };
+          home.username = config.users.users.${name}.name;
+          home.homeDirectory = config.users.users.${name}.home;
+        };
+      })
+    ];
+  };
 
-in
+  serviceEnvironment = optionalAttrs (cfg.backupFileExtension != null) {
+    HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
+  } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
 
-{
+in {
   options = {
     home-manager = {
       useUserPackages = mkEnableOption ''
@@ -55,7 +59,7 @@ in
 
       users = mkOption {
         type = types.attrsOf hmModule;
-        default = {};
+        default = { };
         description = ''
           Per-user Home Manager configuration.
         '';
@@ -63,57 +67,44 @@ in
     };
   };
 
-  config = mkIf (cfg.users != {}) {
-    warnings =
-      flatten (flip mapAttrsToList cfg.users (user: config:
-        flip map config.warnings (warning:
-          "${user} profile: ${warning}"
-        )
-      ));
+  config = mkIf (cfg.users != { }) {
+    warnings = flatten (flip mapAttrsToList cfg.users (user: config:
+      flip map config.warnings (warning: "${user} profile: ${warning}")));
 
-    assertions =
-      flatten (flip mapAttrsToList cfg.users (user: config:
-        flip map config.assertions (assertion:
-          {
-            inherit (assertion) assertion;
-            message = "${user} profile: ${assertion.message}";
-          }
-        )
-      ));
+    assertions = flatten (flip mapAttrsToList cfg.users (user: config:
+      flip map config.assertions (assertion: {
+        inherit (assertion) assertion;
+        message = "${user} profile: ${assertion.message}";
+      })));
 
-    users.users = mkIf cfg.useUserPackages (
-      mapAttrs (username: usercfg: {
-        packages = usercfg.home.packages;
-      }) cfg.users
-    );
+    users.users = mkIf cfg.useUserPackages
+      (mapAttrs (username: usercfg: { packages = usercfg.home.packages; })
+        cfg.users);
 
     systemd.services = mapAttrs' (_: usercfg:
-      let
-        username = usercfg.home.username;
-      in
-        nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
-          description = "Home Manager environment for ${username}";
-          wantedBy = [ "multi-user.target" ];
-          wants = [ "nix-daemon.socket" ];
-          after = [ "nix-daemon.socket" ];
+      let username = usercfg.home.username;
+      in nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
+        description = "Home Manager environment for ${username}";
+        wantedBy = [ "multi-user.target" ];
+        wants = [ "nix-daemon.socket" ];
+        after = [ "nix-daemon.socket" ];
 
-          environment = serviceEnvironment;
+        environment = serviceEnvironment;
 
-          serviceConfig = {
-            User = usercfg.home.username;
-            Type = "oneshot";
-            RemainAfterExit = "yes";
-            SyslogIdentifier = "hm-activate-${username}";
+        serviceConfig = {
+          User = usercfg.home.username;
+          Type = "oneshot";
+          RemainAfterExit = "yes";
+          SyslogIdentifier = "hm-activate-${username}";
 
-            # The activation script is run by a login shell to make sure
-            # that the user is given a sane Nix environment.
-            ExecStart = pkgs.writeScript "activate-${username}" ''
-              #! ${pkgs.runtimeShell} -el
-              echo Activating home-manager configuration for ${username}
-              exec ${usercfg.home.activationPackage}/activate
-            '';
-          };
-        }
-    ) cfg.users;
+          # The activation script is run by a login shell to make sure
+          # that the user is given a sane Nix environment.
+          ExecStart = pkgs.writeScript "activate-${username}" ''
+            #! ${pkgs.runtimeShell} -el
+            echo Activating home-manager configuration for ${username}
+            exec ${usercfg.home.activationPackage}/activate
+          '';
+        };
+      }) cfg.users;
   };
 }

@@ -9,15 +9,13 @@ let
   xmonad = pkgs.xmonad-with-packages.override {
     ghcWithPackages = cfg.haskellPackages.ghcWithPackages;
     packages = self:
-      cfg.extraPackages self
-      ++ optionals cfg.enableContribAndExtras [
-        self.xmonad-contrib self.xmonad-extras
+      cfg.extraPackages self ++ optionals cfg.enableContribAndExtras [
+        self.xmonad-contrib
+        self.xmonad-extras
       ];
   };
 
-in
-
-{
+in {
   options = {
     xsession.windowManager.xmonad = {
       enable = mkEnableOption "xmonad window manager";
@@ -35,7 +33,7 @@ in
       };
 
       extraPackages = mkOption {
-        default = self: [];
+        default = self: [ ];
         defaultText = "self: []";
         example = literalExample ''
           haskellPackages: [

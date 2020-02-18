@@ -10,9 +10,8 @@ let
   configText = builtins.toJSON ({ inherit (cfg) order; } // cfg.extraConfig);
 
   configFile = pkgs.writeText "dwm-status.json" configText;
-in
 
-{
+in {
   options = {
     services.dwm-status = {
       enable = mkEnableOption "dwm-status user service";
@@ -32,7 +31,7 @@ in
 
       extraConfig = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         example = literalExample ''
           {
             separator = "#";
@@ -58,13 +57,9 @@ in
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
 
-      Service = {
-        ExecStart = "${cfg.package}/bin/dwm-status ${configFile}";
-      };
+      Service = { ExecStart = "${cfg.package}/bin/dwm-status ${configFile}"; };
     };
   };
 }

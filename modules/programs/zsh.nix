@@ -26,6 +26,8 @@ let
     vicmd = "bindkey -a";
   };
 
+  stateVersion = config.home.stateVersion;
+
   historyModule = types.submodule ({ config, ... }: {
     options = {
       size = mkOption {
@@ -43,8 +45,10 @@ let
 
       path = mkOption {
         type = types.str;
-        default = relToDotDir ".zsh_history";
-        defaultText = ".zsh_history";
+        default = if versionAtLeast stateVersion "20.03"
+          then "$HOME/.zsh_history"
+          else relToDotDir ".zsh_history";
+        example = literalExample ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
         description = "History file location";
       };
 
@@ -54,6 +58,15 @@ let
         description = ''
           Do not enter command lines into the history list
           if they are duplicates of the previous event.
+        '';
+      };
+
+      ignoreSpace = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Do not enter command lines into the history list
+          if the first character is a space.
         '';
       };
 
@@ -402,11 +415,15 @@ in
         # History options should be set in .zshrc and after oh-my-zsh sourcing.
         # See https://github.com/rycee/home-manager/issues/177.
         HISTSIZE="${toString cfg.history.size}"
-        HISTFILE="$HOME/${cfg.history.path}"
         SAVEHIST="${toString cfg.history.save}"
+        ${if versionAtLeast config.home.stateVersion "20.03"
+          then ''HISTFILE="${cfg.history.path}"''
+          else ''HISTFILE="$HOME/${cfg.history.path}"''}
+        mkdir -p "$(dirname "$HISTFILE")"
 
         setopt HIST_FCNTL_LOCK
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
+        ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
         ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
         ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
         ${if cfg.history.extended then "setopt" else "unsetopt"} EXTENDED_HISTORY
@@ -430,10 +447,10 @@ in
       # but allow the user to opt out.
       programs.zsh.enableCompletion = mkDefault true;
 
-      home.file = map (plugin: {
-        target = "${pluginsDir}/${plugin.name}";
-        source = plugin.src;
-      }) cfg.plugins;
+      home.file =
+        foldl' (a: b: a // b) {}
+        (map (plugin: { "${pluginsDir}/${plugin.name}".source = plugin.src; })
+        cfg.plugins);
     })
   ]);
 }

@@ -2,13 +2,15 @@
 
 rec {
   # Produces a Zsh shell like value
-  toZshValue = v: if builtins.isBool v then
-                    if v then "true" else "false"
-                  else if builtins.isString v then
-                    "\"${v}\""
-                  else if builtins.isList v then
-                    "(${lib.concatStringsSep " " (map toZshValue v)})"
-                  else "\"${toString v}\"";
+  toZshValue = v:
+    if builtins.isBool v then
+      if v then "true" else "false"
+    else if builtins.isString v then
+      ''"${v}"''
+    else if builtins.isList v then
+      "(${lib.concatStringsSep " " (map toZshValue v)})"
+    else
+      ''"${toString v}"'';
 
   # Produces a Zsh shell like definition statement
   define = n: v: "${n}=${toZshValue v}";

@@ -11,12 +11,10 @@ let
     ll = "ls -l";
     la = "ls -a";
     lt = "ls --tree";
-    lla ="ls -la";
+    lla = "ls -la";
   };
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.marsam ];
 
   options.programs.lsd = {
@@ -37,5 +35,7 @@ in
     programs.bash.shellAliases = mkIf cfg.enableAliases aliases;
 
     programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
+
+    programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
   };
 }

@@ -1,4 +1,6 @@
 { pkgs
+
+  # Note, this should be "the standard library" + HM extensions.
 , lib
 
   # Whether to enable module type checking.
@@ -33,8 +35,10 @@ let
     (loadModule ./misc/qt.nix { })
     (loadModule ./misc/submodule-support.nix { })
     (loadModule ./misc/version.nix { })
-    (loadModule ./misc/xdg.nix { })
+    (loadModule ./misc/xdg-mime.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./misc/xdg-mime-apps.nix { condition = hostPlatform.isLinux; })
     (loadModule ./misc/xdg-user-dirs.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./misc/xdg.nix { })
     (loadModule ./programs/afew.nix { })
     (loadModule ./programs/alacritty.nix { })
     (loadModule ./programs/alot.nix { })
@@ -74,6 +78,7 @@ let
     (loadModule ./programs/mercurial.nix { })
     (loadModule ./programs/mpv.nix { })
     (loadModule ./programs/msmtp.nix { })
+    (loadModule ./programs/neomutt.nix { })
     (loadModule ./programs/neovim.nix { })
     (loadModule ./programs/newsboat.nix { })
     (loadModule ./programs/noti.nix { })
@@ -81,9 +86,14 @@ let
     (loadModule ./programs/obs-studio.nix { })
     (loadModule ./programs/offlineimap.nix { })
     (loadModule ./programs/opam.nix { })
+    (loadModule ./programs/password-store.nix { })
+    (loadModule ./programs/pazi.nix { })
     (loadModule ./programs/pidgin.nix { })
+    (loadModule ./programs/readline.nix { })
     (loadModule ./programs/rofi.nix { })
+    (loadModule ./programs/rtorrent.nix { })
     (loadModule ./programs/skim.nix { })
+    (loadModule ./programs/starship.nix { })
     (loadModule ./programs/ssh.nix { })
     (loadModule ./programs/taskwarrior.nix { })
     (loadModule ./programs/termite.nix { })
@@ -97,6 +107,7 @@ let
     (loadModule ./programs/zathura.nix { })
     (loadModule ./programs/zsh.nix { })
     (loadModule ./services/blueman-applet.nix { })
+    (loadModule ./services/cbatticon.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/compton.nix { })
     (loadModule ./services/dunst.nix { })
     (loadModule ./services/dwm-status.nix { condition = hostPlatform.isLinux; })
@@ -105,12 +116,14 @@ let
     (loadModule ./services/getmail.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/gnome-keyring.nix { })
     (loadModule ./services/gpg-agent.nix { })
+    (loadModule ./services/grobi.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/hound.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/imapnotify.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/kbfs.nix { })
     (loadModule ./services/kdeconnect.nix { })
     (loadModule ./services/keepassx.nix { })
     (loadModule ./services/keybase.nix { })
+    (loadModule ./services/lorri.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/mbsync.nix { })
     (loadModule ./services/mpd.nix { })
     (loadModule ./services/mpdris2.nix { condition = hostPlatform.isLinux; })
@@ -119,6 +132,7 @@ let
     (loadModule ./services/nextcloud-client.nix { })
     (loadModule ./services/owncloud-client.nix { })
     (loadModule ./services/parcellite.nix { })
+    (loadModule ./services/password-store-sync.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/pasystray.nix { })
     (loadModule ./services/polybar.nix { })
     (loadModule ./services/random-background.nix { })
@@ -127,13 +141,17 @@ let
     (loadModule ./services/screen-locker.nix { })
     (loadModule ./services/stalonetray.nix { })
     (loadModule ./services/status-notifier-watcher.nix { })
+    (loadModule ./services/spotifyd.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./services/sxhkd.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/syncthing.nix { })
     (loadModule ./services/taffybar.nix { })
     (loadModule ./services/tahoe-lafs.nix { })
     (loadModule ./services/taskwarrior-sync.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/udiskie.nix { })
     (loadModule ./services/unclutter.nix { })
+    (loadModule ./services/unison.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/window-managers/awesome.nix { })
+    (loadModule ./services/window-managers/bspwm/default.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/window-managers/i3.nix { })
     (loadModule ./services/window-managers/xmonad.nix { })
     (loadModule ./services/xcape.nix { condition = hostPlatform.isLinux; })
@@ -144,8 +162,8 @@ let
     (loadModule ./xcursor.nix { })
     (loadModule ./xresources.nix { })
     (loadModule ./xsession.nix { })
-    (loadModule <nixpkgs/nixos/modules/misc/assertions.nix> { })
-    (loadModule <nixpkgs/nixos/modules/misc/meta.nix> { })
+    (loadModule (pkgs.path + "/nixos/modules/misc/assertions.nix") { })
+    (loadModule (pkgs.path + "/nixos/modules/misc/meta.nix") { })
   ];
 
   modules = map (getAttr "file") (filter (getAttr "condition") allModules);
@@ -154,7 +172,7 @@ let
     config._module.args.baseModules = modules;
     config._module.args.pkgs = lib.mkDefault pkgs;
     config._module.check = check;
-    config.lib = import ./lib { inherit lib; };
+    config.lib = lib.hm;
     config.nixpkgs.system = mkDefault pkgs.system;
   };
 

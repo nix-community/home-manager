@@ -13,13 +13,11 @@ with lib;
 
 rec {
 
-  emptyDag = {};
+  emptyDag = { };
 
   isDag = dag:
-    let
-      isEntry = e: (e ? data) && (e ? after) && (e ? before);
-    in
-      builtins.isAttrs dag && all (x: x) (mapAttrsToList (n: isEntry) dag);
+    let isEntry = e: (e ? data) && (e ? after) && (e ? before);
+    in builtins.isAttrs dag && all (x: x) (mapAttrsToList (n: isEntry) dag);
 
   # Takes an attribute set containing entries built by
   # dagEntryAnywhere, dagEntryAfter, and dagEntryBefore to a
@@ -80,22 +78,19 @@ rec {
   dagTopoSort = dag:
     let
       dagBefore = dag: name:
-        mapAttrsToList (n: v: n) (
-          filterAttrs (n: v: any (a: a == name) v.before) dag
-        );
-      normalizedDag =
-        mapAttrs (n: v: {
-          name = n;
-          data = v.data;
-          after = v.after ++ dagBefore dag n;
-        }) dag;
+        mapAttrsToList (n: v: n)
+        (filterAttrs (n: v: any (a: a == name) v.before) dag);
+      normalizedDag = mapAttrs (n: v: {
+        name = n;
+        data = v.data;
+        after = v.after ++ dagBefore dag n;
+      }) dag;
       before = a: b: any (c: a.name == c) b.after;
       sorted = toposort before (mapAttrsToList (n: v: v) normalizedDag);
-    in
-      if sorted ? result then
-        { result = map (v: { inherit (v) name data; }) sorted.result; }
-      else
-        sorted;
+    in if sorted ? result then {
+      result = map (v: { inherit (v) name data; }) sorted.result;
+    } else
+      sorted;
 
   # Applies a function to each element of the given DAG.
   dagMap = f: dag: mapAttrs (n: v: v // { data = f n v.data; }) dag;
@@ -103,22 +98,20 @@ rec {
   # Create a DAG entry with no particular dependency information.
   dagEntryAnywhere = data: {
     inherit data;
-    before = [];
-    after = [];
+    before = [ ];
+    after = [ ];
   };
 
-  dagEntryBetween = before: after: data: {
-    inherit data before after;
-  };
+  dagEntryBetween = before: after: data: { inherit data before after; };
 
   dagEntryAfter = after: data: {
     inherit data after;
-    before = [];
+    before = [ ];
   };
 
   dagEntryBefore = before: data: {
     inherit data before;
-    after = [];
+    after = [ ];
   };
 
 }

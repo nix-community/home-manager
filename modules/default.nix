@@ -19,10 +19,16 @@ let
     in
       fold f res res.config.warnings;
 
-  rawModule = lib.evalModules {
-    modules =
-      [ configuration ]
-      ++ (import ./modules.nix { inherit check lib pkgs; });
+  extendedLib = import ./lib/stdlib-extended.nix pkgs.lib;
+
+  hmModules =
+    import ./modules.nix {
+      inherit check pkgs;
+      lib = extendedLib;
+    };
+
+  rawModule = extendedLib.evalModules {
+    modules = [ configuration ] ++ hmModules;
     specialArgs = {
       modulesPath = builtins.toString ./.;
     };

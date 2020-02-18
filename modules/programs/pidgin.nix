@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.pidgin;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -23,7 +21,7 @@ in
       };
 
       plugins = mkOption {
-        default = [];
+        default = [ ];
         example = literalExample "[ pkgs.pidgin-otr pkgs.pidgin-osd ]";
         description = "Plugins that should be available to Pidgin.";
       };

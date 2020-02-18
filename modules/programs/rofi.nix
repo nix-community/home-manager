@@ -7,10 +7,11 @@ let
 
   cfg = config.programs.rofi;
 
-  colorOption = description: mkOption {
-    type = types.str;
-    description = description;
-  };
+  colorOption = description:
+    mkOption {
+      type = types.str;
+      description = description;
+    };
 
   rowColorSubmodule = types.submodule {
     options = {
@@ -71,72 +72,64 @@ let
   };
 
   valueToString = value:
-    if isBool value
-      then (if value then "true" else "else")
-      else toString value;
+    if isBool value then (if value then "true" else "else") else toString value;
 
-  windowColorsToString = window: concatStringsSep ", " (with window; [
-    background
-    border
-    separator
-  ]);
+  windowColorsToString = window:
+    concatStringsSep ", " (with window; [ background border separator ]);
 
   rowsColorsToString = rows: ''
-    ${optionalString
-        (rows.normal != null)
-        (setOption "color-normal" (rowColorsToString rows.normal))}
-    ${optionalString
-        (rows.active != null)
-        (setOption "color-active" (rowColorsToString rows.active))}
-    ${optionalString
-        (rows.urgent != null)
-        (setOption "color-urgent" (rowColorsToString rows.urgent))}
+    ${optionalString (rows.normal != null)
+    (setOption "color-normal" (rowColorsToString rows.normal))}
+    ${optionalString (rows.active != null)
+    (setOption "color-active" (rowColorsToString rows.active))}
+    ${optionalString (rows.urgent != null)
+    (setOption "color-urgent" (rowColorsToString rows.urgent))}
   '';
 
-  rowColorsToString = row: concatStringsSep ", " (with row; [
-    background
-    foreground
-    backgroundAlt
-    highlight.background
-    highlight.foreground
-  ]);
+  rowColorsToString = row:
+    concatStringsSep ", " (with row; [
+      background
+      foreground
+      backgroundAlt
+      highlight.background
+      highlight.foreground
+    ]);
 
   setOption = name: value:
     optionalString (value != null) "rofi.${name}: ${valueToString value}";
 
-  setColorScheme = colors: optionalString (colors != null) ''
-    ${optionalString
-        (colors.window != null)
-        setOption "color-window" (windowColorsToString colors.window)}
-    ${optionalString
-        (colors.rows != null)
-        (rowsColorsToString colors.rows)}
-  '';
+  setColorScheme = colors:
+    optionalString (colors != null) ''
+      ${optionalString (colors.window != null) setOption "color-window"
+      (windowColorsToString colors.window)}
+      ${optionalString (colors.rows != null) (rowsColorsToString colors.rows)}
+    '';
 
   locationsMap = {
-    center       = 0;
-    top-left     = 1;
-    top          = 2;
-    top-right    = 3;
-    right        = 4;
+    center = 0;
+    top-left = 1;
+    top = 2;
+    top-right = 3;
+    right = 4;
     bottom-right = 5;
-    bottom       = 6;
-    bottom-left  = 7;
-    left         = 8;
+    bottom = 6;
+    bottom-left = 7;
+    left = 8;
   };
 
-  themeName =
-    if (cfg.theme == null) then null
-    else if (lib.isString cfg.theme) then cfg.theme
-    else lib.removeSuffix ".rasi" (baseNameOf cfg.theme);
+  themeName = if (cfg.theme == null) then
+    null
+  else if (lib.isString cfg.theme) then
+    cfg.theme
+  else
+    lib.removeSuffix ".rasi" (baseNameOf cfg.theme);
 
   themePath = if (lib.isString cfg.theme) then null else cfg.theme;
 
-in
-
-{
+in {
   options.programs.rofi = {
-    enable = mkEnableOption "Rofi: A window switcher, application launcher and dmenu replacement";
+    enable = mkEnableOption
+      "Rofi: A window switcher, application launcher and dmenu replacement";
 
     width = mkOption {
       default = null;
@@ -295,14 +288,12 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = cfg.theme == null || cfg.colors == null;
-        message = ''
-          Cannot use the rofi options 'theme' and 'colors' simultaneously.
-        '';
-      }
-    ];
+    assertions = [{
+      assertion = cfg.theme == null || cfg.colors == null;
+      message = ''
+        Cannot use the rofi options 'theme' and 'colors' simultaneously.
+      '';
+    }];
 
     home.packages = [ pkgs.rofi ];
 
@@ -314,11 +305,8 @@ in
       ${setOption "eh" cfg.rowHeight}
       ${setOption "padding" cfg.padding}
       ${setOption "separator-style" cfg.separator}
-      ${setOption "hide-scrollbar" (
-        if (cfg.scrollbar != null)
-        then (! cfg.scrollbar)
-        else cfg.scrollbar
-      )}
+      ${setOption "hide-scrollbar"
+      (if (cfg.scrollbar != null) then (!cfg.scrollbar) else cfg.scrollbar)}
       ${setOption "terminal" cfg.terminal}
       ${setOption "cycle" cfg.cycle}
       ${setOption "fullscreen" cfg.fullscreen}
@@ -333,7 +321,7 @@ in
     '';
 
     xdg.dataFile = mkIf (themePath != null) {
-      "rofi/themes/${themeName}.rasi".source =  themePath;
+      "rofi/themes/${themeName}.rasi".source = themePath;
     };
   };
 }

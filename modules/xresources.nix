@@ -9,31 +9,34 @@ let
   formatLine = n: v:
     let
       formatList = x:
-        if isList x
-        then throw "can not convert 2-dimensional lists to Xresources format"
-        else formatValue x;
+        if isList x then
+          throw "can not convert 2-dimensional lists to Xresources format"
+        else
+          formatValue x;
 
       formatValue = v:
-        if isBool v then (if v then "true" else "false")
-        else if isList v then concatMapStringsSep ", " formatList v
-        else toString v;
-    in
-      "${n}: ${formatValue v}";
+        if isBool v then
+          (if v then "true" else "false")
+        else if isList v then
+          concatMapStringsSep ", " formatList v
+        else
+          toString v;
+    in "${n}: ${formatValue v}";
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
     xresources.properties = mkOption {
       type = types.nullOr types.attrs;
       default = null;
-      example = {
-        "Emacs*toolBar" = 0;
-        "XTerm*faceName" = "dejavu sans mono";
-        "XTerm*charClass" = [ "37:48" "45-47:48" "58:48" "64:48" "126:48" ];
-      };
+      example = literalExample ''
+        {
+          "Emacs*toolBar" = 0;
+          "XTerm*faceName" = "dejavu sans mono";
+          "XTerm*charClass" = [ "37:48" "45-47:48" "58:48" "64:48" "126:48" ];
+        }
+      '';
       description = ''
         X server resources that should be set.
         Booleans are formatted as "true" or "false" respectively.
@@ -70,11 +73,10 @@ in
 
   config = mkIf (cfg.properties != null || cfg.extraConfig != "") {
     home.file.".Xresources" = {
-      text =
-        concatStringsSep "\n" ([]
-          ++ optional (cfg.extraConfig != "") cfg.extraConfig
-          ++ optionals (cfg.properties != null) (mapAttrsToList formatLine cfg.properties)
-        ) + "\n";
+      text = concatStringsSep "\n" ([ ]
+        ++ optional (cfg.extraConfig != "") cfg.extraConfig
+        ++ optionals (cfg.properties != null)
+        (mapAttrsToList formatLine cfg.properties)) + "\n";
       onChange = ''
         if [[ -v DISPLAY ]] ; then
           $DRY_RUN_CMD ${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources

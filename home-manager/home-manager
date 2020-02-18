@@ -93,14 +93,14 @@ function doBuildAttr() {
         nix build \
             -f "<home-manager/home-manager/home-manager.nix>" \
             $extraArgs \
-            ${PASSTHROUGH_OPTS[*]} \
+            "${PASSTHROUGH_OPTS[@]}" \
             --argstr confPath "$HOME_MANAGER_CONFIG" \
             --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
     else
         nix-build \
             "<home-manager/home-manager/home-manager.nix>" \
             $extraArgs \
-            ${PASSTHROUGH_OPTS[*]} \
+            "${PASSTHROUGH_OPTS[@]}" \
             --argstr confPath "$HOME_MANAGER_CONFIG" \
             --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
     fi
@@ -375,7 +375,7 @@ function doUninstall() {
         y|Y)
             echo "Switching to empty Home Manager configuration..."
             HOME_MANAGER_CONFIG="$(mktemp --tmpdir home-manager.XXXXXXXXXX)"
-            echo "{}" > "$HOME_MANAGER_CONFIG"
+            echo "{ lib, ... }: { home.file = lib.mkForce {}; }" > "$HOME_MANAGER_CONFIG"
             doSwitch
             rm "$HOME_MANAGER_CONFIG"
             $DRY_RUN_CMD rm $VERBOSE_ARG -r \
@@ -431,6 +431,7 @@ function doHelp() {
     echo "  --max-jobs NUM"
     echo "  --option NAME VALUE"
     echo "  --show-trace"
+    echo "  --(no-)substitute"
     echo
     echo "Commands"
     echo
@@ -507,7 +508,8 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;
-        --keep-failed|--keep-going|--show-trace)
+        --keep-failed|--keep-going|--show-trace\
+            |--substitute|--no-substitute)
             PASSTHROUGH_OPTS+=("$opt")
             ;;
         -v|--verbose)

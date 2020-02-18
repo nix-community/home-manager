@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ...}:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.noti;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.marsam ];
 
   options.programs.noti = {
@@ -16,7 +14,7 @@ in
 
     settings = mkOption {
       type = types.attrsOf (types.attrsOf types.str);
-      default = {};
+      default = { };
       description = ''
         Configuration written to
         <filename>~/.config/noti/noti.yaml</filename>.
@@ -45,9 +43,8 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.noti ];
 
-    xdg.configFile."noti/noti.yaml" = mkIf (cfg.settings != {}) {
-      text = generators.toYAML {} cfg.settings;
-    };
+    xdg.configFile."noti/noti.yaml" =
+      mkIf (cfg.settings != { }) { text = generators.toYAML { } cfg.settings; };
   };
 
 }

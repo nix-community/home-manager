@@ -7,16 +7,14 @@ let
   cfg = config.programs.z-lua;
 
   aliases = {
-    zz = "z -c";         # restrict matches to subdirs of $PWD
-    zi = "z -i";         # cd with interactive selection
-    zf = "z -I";         # use fzf to select in multiple matches
-    zb = "z -b";         # quickly cd to the parent directory
-    zh = "z -I -t .";    # fzf
+    zz = "z -c"; # restrict matches to subdirs of $PWD
+    zi = "z -i"; # cd with interactive selection
+    zf = "z -I"; # use fzf to select in multiple matches
+    zb = "z -b"; # quickly cd to the parent directory
+    zh = "z -I -t ."; # fzf
   };
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.marsam ];
 
   options.programs.z-lua = {
@@ -24,7 +22,7 @@ in
 
     options = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       example = [ "enhanced" "once" "fzf" ];
       description = ''
         List of options to pass to z.lua.
@@ -68,15 +66,21 @@ in
     home.packages = [ pkgs.z-lua ];
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(${pkgs.z-lua}/bin/z --init bash ${concatStringsSep " " cfg.options})"
+      eval "$(${pkgs.z-lua}/bin/z --init bash ${
+        concatStringsSep " " cfg.options
+      })"
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      eval "$(${pkgs.z-lua}/bin/z --init zsh ${concatStringsSep " " cfg.options})"
+      eval "$(${pkgs.z-lua}/bin/z --init zsh ${
+        concatStringsSep " " cfg.options
+      })"
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      source (${pkgs.z-lua}/bin/z --init fish ${concatStringsSep " " cfg.options} | psub)
+      source (${pkgs.z-lua}/bin/z --init fish ${
+        concatStringsSep " " cfg.options
+      } | psub)
     '';
 
     programs.bash.shellAliases = mkIf cfg.enableAliases aliases;

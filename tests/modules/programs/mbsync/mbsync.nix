@@ -3,7 +3,7 @@
 with lib;
 
 {
-  imports = [ ../accounts/email-test-accounts.nix ];
+  imports = [ ../../accounts/email-test-accounts.nix ];
 
   config = {
     home.username = "hm-user";
@@ -18,13 +18,9 @@ with lib;
     };
 
     accounts.email.accounts = {
-      "hm@example.com".mbsync = {
-        enable = true;
-      };
+      "hm@example.com".mbsync = { enable = true; };
 
-      hm-account.mbsync = {
-        enable = true;
-      };
+      hm-account.mbsync = { enable = true; };
     };
 
     nmt.script = ''

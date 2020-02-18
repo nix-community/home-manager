@@ -36,9 +36,7 @@ let
     };
   };
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.league ];
 
   options = {
@@ -58,15 +56,17 @@ in
 
   config = mkIf (cfg != null) {
 
-    home.packages = [cfg.package];
+    home.packages = [ cfg.package ];
 
     xsession.initExtra = ''
-      ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cfg.package}/share/icons/${cfg.name}/cursors/${cfg.defaultCursor} ${toString cfg.size}
+      ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cfg.package}/share/icons/${cfg.name}/cursors/${cfg.defaultCursor} ${
+        toString cfg.size
+      }
     '';
 
     xresources.properties = {
       "Xcursor.theme" = cfg.name;
-      "Xcursor.size"  = cfg.size;
+      "Xcursor.size" = cfg.size;
     };
 
     gtk.gtk2.extraConfig = ''

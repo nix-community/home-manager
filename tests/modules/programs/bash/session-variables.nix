@@ -13,16 +13,13 @@ with lib;
       };
     };
 
+    home.homeDirectory = "/home/testuser";
+
     nmt.script = ''
       assertFileExists home-files/.profile
       assertFileContent \
         home-files/.profile \
-        ${
-          pkgs.substituteAll {
-            src = ./session-variables-expected.txt;
-            inherit (config.home) homeDirectory;
-          }
-        }
+        ${./session-variables-expected.txt}
     '';
   };
 }

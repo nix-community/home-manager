@@ -91,12 +91,15 @@ In addition to the above commit message guidelines, try to follow the
 
 ### Style guidelines ###
 
-The code in Home Manager should follow the [Nixpkgs syntax
-guidelines][]. Note, we prefer `lowerCamelCase` for variable and
-attribute names with the accepted exception of variables directly
-referencing packages in Nixpkgs which use a hyphenated style. For
-example, the Home Manager option `services.gpg-agent.enableSshSupport`
-references the `gpg-agent` package in Nixpkgs.
+The code in Home Manager is formatted by the [nixfmt][] tool and the
+formatting is checked in the pull request tests. Run the `format` tool
+inside the project repository before submitting your pull request.
+
+Note, we prefer `lowerCamelCase` for variable and attribute names with
+the accepted exception of variables directly referencing packages in
+Nixpkgs which use a hyphenated style. For example, the Home Manager
+option `services.gpg-agent.enableSshSupport` references the
+`gpg-agent` package in Nixpkgs.
 
 ### News ###
 
@@ -139,15 +142,18 @@ If you do have a change worthy of a news entry then please add one in
   > use 'services.myservice.bar' instead.
 
 - A new module, say `foo.nix`, should always include a news entry
-  (without any condition) that has a message along the lines of
+  that has a message along the lines of
 
-  > A new service is available: 'services.foo'.
+  > A new module is available: 'services.foo'.
 
-  or
+  If the module is platform specific, e.g., a service module using
+  systemd, then a condition like
 
-  > A new program configuration is available: 'program.foo'.
+  ```
+  condition = hostPlatform.isLinux;
+  ```
 
-  depending on the type of module.
+  should be added.
 
 [open issues]: https://github.com/rycee/home-manager/issues
 [new issue]: https://github.com/rycee/home-manager/issues/new
@@ -155,4 +161,4 @@ If you do have a change worthy of a news entry then please add one in
 [create a pull request]: https://help.github.com/articles/creating-a-pull-request/
 [seven rules]: https://chris.beams.io/posts/git-commit/#seven-rules
 [`news.nix`]: https://github.com/rycee/home-manager/blob/master/modules/misc/news.nix
-[Nixpkgs syntax guidelines]: https://nixos.org/nixpkgs/manual/#sec-syntax
+[nixfmt]: https://github.com/serokell/nixfmt/

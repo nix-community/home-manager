@@ -6,6 +6,9 @@ using the [Nix][] package manager together with the Nix libraries
 found in [Nixpkgs][]. Before attempting to use Home Manager please
 read the warning below.
 
+For a more systematic overview of all the options Home Manager
+provides please see the [Home Manager manual][configuration options].
+
 Words of warning
 ----------------
 
@@ -19,7 +22,7 @@ will write to your dconf store and cannot tell whether a configuration
 that it is about to be overwrite was from a previous Home Manager
 generation or from manual configuration.
 
-Home Manager targets [NixOS][] unstable and NixOS version 19.03 (the
+Home Manager targets [NixOS][] unstable and NixOS version 19.09 (the
 current stable version), it may or may not work on other Linux
 distributions and NixOS versions.
 
@@ -72,11 +75,11 @@ Currently the easiest way to install Home Manager is as follows:
     if you are following Nixpkgs master or an unstable channel and
 
     ```console
-    $ nix-channel --add https://github.com/rycee/home-manager/archive/release-19.03.tar.gz home-manager
+    $ nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager
     $ nix-channel --update
     ```
 
-    if you follow a Nixpkgs version 19.03 channel.
+    if you follow a Nixpkgs version 19.09 channel.
 
     On NixOS you may need to log out and back in for the channel to
     become available. On non-NixOS you may have to add

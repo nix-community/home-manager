@@ -119,3 +119,33 @@ The solution on NixOS is to add
     services.dbus.packages = with pkgs; [ gnome3.dconf ];
 
 to your system configuration.
+
+How do I install packages from Nixpkgs unstable?
+------------------------------------------------
+
+If you are using a stable version of Nixpkgs but would like to install
+some particular packages from Nixpkgs unstable then you can import the
+unstable Nixpkgs and refer to its packages within your configuration.
+Something like
+
+```nix
+{ pkgs, config, ... }:
+
+let
+
+  pkgsUnstable = import <nixpkgs-unstable> {};
+
+in
+
+{
+  home.packages = [
+    pkgsUnstable.foo
+  ];
+
+  # …
+}
+```
+
+should work provided you have a Nix channel called `nixpkgs-unstable`.
+Note, the package will not be affected by any package overrides,
+overlays, etc.

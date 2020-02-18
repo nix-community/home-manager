@@ -6,18 +6,14 @@ let
 
   extraConfigType = with types; attrsOf (either (either str int) bool);
 
-in
-
-{
+in {
   options.offlineimap = {
     enable = mkEnableOption "OfflineIMAP";
 
     extraConfig.account = mkOption {
       type = extraConfigType;
-      default = {};
-      example = {
-        autorefresh = 20;
-      };
+      default = { };
+      example = { autorefresh = 20; };
       description = ''
         Extra configuration options to add to the account section.
       '';
@@ -25,10 +21,8 @@ in
 
     extraConfig.local = mkOption {
       type = extraConfigType;
-      default = {};
-      example = {
-        sync_deletes = true;
-      };
+      default = { };
+      example = { sync_deletes = true; };
       description = ''
         Extra configuration options to add to the local account
         section.
@@ -37,7 +31,7 @@ in
 
     extraConfig.remote = mkOption {
       type = extraConfigType;
-      default = {};
+      default = { };
       example = {
         maxconnections = 2;
         expunge = false;

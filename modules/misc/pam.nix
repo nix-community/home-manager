@@ -6,14 +6,12 @@ let
 
   vars = config.pam.sessionVariables;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
     pam.sessionVariables = mkOption {
-      default = {};
+      default = { };
       type = types.attrs;
       example = { EDITOR = "vim"; };
       description = ''
@@ -27,10 +25,8 @@ in
     };
   };
 
-  config = mkIf (vars != {}) {
-    home.file.".pam_environment".text =
-      concatStringsSep "\n" (
-        mapAttrsToList (n: v: "${n} OVERRIDE=\"${toString v}\"") vars
-      ) + "\n";
+  config = mkIf (vars != { }) {
+    home.file.".pam_environment".text = concatStringsSep "\n"
+      (mapAttrsToList (n: v: ''${n} OVERRIDE="${toString v}"'') vars) + "\n";
   };
 }

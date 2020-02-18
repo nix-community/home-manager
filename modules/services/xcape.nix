@@ -6,9 +6,7 @@ let
 
   cfg = config.services.xcape;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.nickhu ];
 
   options = {
@@ -27,8 +25,11 @@ in
 
       mapExpression = mkOption {
         type = types.attrsOf types.str;
-        default = {};
-        example = { Shift_L = "Escape"; Control_L = "Control_L|O"; };
+        default = { };
+        example = {
+          Shift_L = "Escape";
+          Control_L = "Control_L|O";
+        };
         description = ''
           The value has the grammar <literal>Key[|OtherKey]</literal>.
           </para>
@@ -63,14 +64,13 @@ in
         Type = "forking";
         ExecStart = "${pkgs.xcape}/bin/xcape"
           + optionalString (cfg.timeout != null) " -t ${toString cfg.timeout}"
-          + optionalString (cfg.mapExpression != {})
-            " -e '${builtins.concatStringsSep ";"
-              (attrsets.mapAttrsToList (n: v: "${n}=${v}") cfg.mapExpression)}'";
+          + optionalString (cfg.mapExpression != { }) " -e '${
+             builtins.concatStringsSep ";"
+             (attrsets.mapAttrsToList (n: v: "${n}=${v}") cfg.mapExpression)
+           }'";
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
+      Install = { WantedBy = [ "graphical-session.target" ]; };
     };
   };
 }

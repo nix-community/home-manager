@@ -13,15 +13,17 @@ with lib;
           columns = 200;
         };
 
-        key_bindings = [
-          {
-            key = "K";
-            mods = "Control";
-            chars = "\\x0c";
-          }
-        ];
+        key_bindings = [{
+          key = "K";
+          mods = "Control";
+          chars = "\\x0c";
+        }];
       };
     };
+
+    nixpkgs.overlays = [
+      (self: super: { alacritty = pkgs.writeScriptBin "dummy-alacritty" ""; })
+    ];
 
     nmt.script = ''
       assertFileContent \

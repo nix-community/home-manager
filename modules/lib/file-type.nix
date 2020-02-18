@@ -2,12 +2,6 @@
 
 with lib;
 
-let
-
-  stringsExtra = import ./strings.nix { inherit lib; };
-
-in
-
 {
   # Constructs a type suitable for a `home.file` like option. The
   # target path may be either absolute or relative, in which case it
@@ -93,7 +87,7 @@ in
         source = mkIf (config.text != null) (
           mkDefault (pkgs.writeTextFile {
             inherit (config) executable text;
-            name = stringsExtra.storeFileName name;
+            name = hm.strings.storeFileName name;
           })
         );
       };
