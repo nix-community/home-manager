@@ -39,7 +39,6 @@ find . -name '*.nix' \
   ! -path ./modules/programs/bash.nix \
   ! -path ./modules/programs/emacs.nix \
   ! -path ./modules/programs/firefox.nix \
-  ! -path ./modules/programs/fish.nix \
   ! -path ./modules/programs/gpg.nix \
   ! -path ./modules/programs/lesspipe.nix \
   ! -path ./modules/programs/neovim.nix \
