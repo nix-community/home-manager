@@ -6,83 +6,160 @@ let
 
   cfg = config.programs.fish;
 
-  abbrsStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: "abbr --add --global ${k} '${v}'") cfg.shellAbbrs
-  );
+  pluginModule = types.submodule ({ config, ... }: {
+    options = {
+      src = mkOption {
+        type = types.path;
+        description = ''
+          Path to the plugin folder.
+          </para><para>
+          Relevant pieces will be added to the fish function path and
+          the completion path. The <filename>init.fish</filename> and
+          <filename>key_binding.fish</filename> files are sourced if
+          they exist.
+        '';
+      };
 
-  aliasesStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: "alias ${k}='${v}'") cfg.shellAliases
-  );
+      name = mkOption {
+        type = types.str;
+        description = ''
+          The name of the plugin.
+        '';
+      };
+    };
+  });
+
+  abbrsStr = concatStringsSep "\n"
+    (mapAttrsToList (k: v: "abbr --add --global -- ${k} ${escapeShellArg v}")
+      cfg.shellAbbrs);
+
+  aliasesStr = concatStringsSep "\n"
+    (mapAttrsToList (k: v: "alias ${k} ${escapeShellArg v}") cfg.shellAliases);
 
 in
 
 {
   options = {
     programs.fish = {
-      enable = mkEnableOption "fish friendly interactive shell";
+      enable = mkEnableOption "fish, the friendly interactive shell";
 
       package = mkOption {
+        type = types.package;
         default = pkgs.fish;
         defaultText = literalExample "pkgs.fish";
         description = ''
           The fish package to install. May be used to change the version.
         '';
-        type = types.package;
       };
 
       shellAliases = mkOption {
-        default = {};
+        type = with types; attrsOf str;
+        default = { };
+        example = { ".." = "cd .."; ll = "ls -l"; };
         description = ''
-          Set of aliases for fish shell. See
-          <option>environment.shellAliases</option> for an option
-          format description.
+          An attribute set that maps aliases (the top level attribute names
+          in this option) to command strings or directly to build outputs.
         '';
-        type = types.attrs;
       };
 
       shellAbbrs = mkOption {
-        default = {};
+        type = with types; attrsOf str;
+        default = { };
+        example = {
+          l = "less";
+          gco = "git checkout";
+        };
         description = ''
-          Set of abbreviations for fish shell.
+          An attribute set that maps aliases (the top level attribute names
+          in this option) to abbreviations. Abbreviations are expanded with
+          the longer phrase after they are entered.
         '';
-        type = types.attrs;
       };
 
       shellInit = mkOption {
+        type = types.lines;
         default = "";
         description = ''
-          Shell script code called during fish shell initialisation.
+          Shell script code called during fish shell
+          initialisation.
         '';
-        type = types.lines;
       };
 
       loginShellInit = mkOption {
+        type = types.lines;
         default = "";
         description = ''
-          Shell script code called during fish login shell initialisation.
+          Shell script code called during fish login shell
+          initialisation.
         '';
-        type = types.lines;
       };
 
       interactiveShellInit = mkOption {
+        type = types.lines;
         default = "";
         description = ''
-          Shell script code called during interactive fish shell initialisation.
+          Shell script code called during interactive fish shell
+          initialisation.
         '';
-        type = types.lines;
       };
 
       promptInit = mkOption {
+        type = types.lines;
         default = "";
         description = ''
           Shell script code used to initialise fish prompt.
         '';
-        type = types.lines;
       };
     };
+
+    programs.fish.plugins = mkOption {
+      type = types.listOf pluginModule;
+      default = [ ];
+      example = literalExample ''
+        [
+          {
+            name = "z";
+            src = pkgs.fetchFromGitHub {
+              owner = "jethrokuan";
+              repo = "z";
+              rev = "ddeb28a7b6a1f0ec6dae40c636e5ca4908ad160a";
+              sha256 = "0c5i7sdrsp0q3vbziqzdyqn4fmp235ax4mn4zslrswvn8g3fvdyh";
+            };
+          }
+
+          # oh-my-fish plugins are stored in their own repositories, which
+          # makes them simple to import into home-manager.
+          {
+            name = "fasd";
+            src = pkgs.fetchFromGitHub {
+              owner = "oh-my-fish";
+              repo = "plugin-fasd";
+              rev = "38a5b6b6011106092009549e52249c6d6f501fba";
+              sha256 = "06v37hqy5yrv5a6ssd1p3cjd9y3hnp19d3ab7dag56fs1qmgyhbs";
+            };
+          }
+        ]
+      '';
+      description = ''
+        The plugins to source in
+        <filename>conf.d/99plugins.fish</filename>.
+      '';
+    };
+
+    programs.fish.functions = mkOption {
+      type = types.attrsOf types.lines;
+      default = { };
+      example = { gitignore = "curl -sL https://www.gitignore.io/api/$argv"; };
+      description = ''
+        Basic functions to add to fish. For more information see
+        <link xlink:href="https://fishshell.com/docs/current/commands.html#function"/>.
+      '';
+    };
+
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.enable (mkMerge [{
+
     home.packages = [ cfg.package ];
 
     xdg.dataFile."fish/home-manager_generated_completions".source =
@@ -149,10 +226,13 @@ in
     '';
 
     xdg.configFile."fish/config.fish".text = ''
-      # ~/.config/fish/config.fish: DO NOT EDIT -- this file has been generated automatically.
+      # ~/.config/fish/config.fish: DO NOT EDIT -- this file has been generated
+      # automatically by home-manager.
+
       # if we haven't sourced the general config, do it
       if not set -q __fish_general_config_sourced
-        set fish_function_path ${pkgs.fish-foreign-env}/share/fish-foreign-env/functions $fish_function_path
+
+        set -p fish_function_path ${pkgs.fish-foreign-env}/share/fish-foreign-env/functions
         fenv source ${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh > /dev/null
         set -e fish_function_path[1]
 
@@ -160,32 +240,90 @@ in
         # and leave a note so we don't source this config section again from
         # this very shell (children will source the general config anew)
         set -g __fish_general_config_sourced 1
+
       end
+
       # if we haven't sourced the login config, do it
       status --is-login; and not set -q __fish_login_config_sourced
       and begin
 
+        # Login shell initialisation
         ${cfg.loginShellInit}
+
         # and leave a note so we don't source this config section again from
         # this very shell (children will source the general config anew)
         set -g __fish_login_config_sourced 1
+
       end
+
       # if we haven't sourced the interactive config, do it
       status --is-interactive; and not set -q __fish_interactive_config_sourced
       and begin
-        # Abbrs
+
+        # Abbreviations
         ${abbrsStr}
 
         # Aliases
         ${aliasesStr}
 
+        # Prompt initialisation
         ${cfg.promptInit}
+
+        # Interactive shell intialisation
         ${cfg.interactiveShellInit}
+
         # and leave a note so we don't source this config section again from
         # this very shell (children will source the general config anew,
         # allowing configuration changes in, e.g, aliases, to propagate)
         set -g __fish_interactive_config_sourced 1
+
       end
     '';
-  };
+
+  } {
+
+      xdg.configFile = mapAttrs' (fName: fBody: {
+        name = "fish/functions/${fName}.fish";
+        value = {"text" = ''
+          function ${fName}
+            ${fBody}
+          end
+        '';};
+      }) cfg.functions;
+
+  }
+
+    # Each plugin gets a corresponding conf.d/plugin-NAME.fish file to load
+    # in the paths and any initialization scripts.
+    (mkIf (length cfg.plugins > 0) {
+      xdg.configFile = mkMerge (
+        (map (plugin: { "fish/conf.d/plugin-${plugin.name}.fish".text = ''
+          # Plugin ${plugin.name}
+          set -l plugin_dir ${plugin.src}
+
+          # Set paths to import plugin components
+          if test -d $plugin_dir/functions
+            set fish_function_path $fish_function_path[1] $plugin_dir/functions $fish_function_path[2..-1]
+          end
+
+          if test -d $plugin_dir/completions
+            set fish_complete_path $fish_function_path[1] $plugin_dir/completions $fish_complete_path[2..-1]
+          end
+
+          # Source initialization code if it exists.
+          if test -d $plugin_dir/conf.d
+            source $plugin_dir/conf.d/*.fish
+          end
+
+          if test -f $plugin_dir/key_bindings.fish
+            source $plugin_dir/key_bindings.fish
+          end
+
+          if test -f $plugin_dir/init.fish
+            source $plugin_dir/init.fish
+          end
+        '';
+        }) cfg.plugins));
+    })
+  ]);
 }
