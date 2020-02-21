@@ -48,6 +48,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/firefox
     ./modules/programs/getmail
+    ./modules/services/lieer
     ./modules/programs/rofi
     ./modules/services/sxhkd
     ./modules/services/window-managers/i3
