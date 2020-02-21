@@ -13,8 +13,6 @@ let
 
   hostPlatform = pkgs.stdenv.hostPlatform;
 
-  checkPlatform = any (meta.platformMatch pkgs.stdenv.hostPlatform);
-
   loadModule = file: { condition ? true }: {
     inherit file condition;
   };
