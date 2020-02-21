@@ -102,7 +102,7 @@ in {
 
       mkQueryEntry = n: v: ''"query:${n}:${escape [ ''"'' ] v}"'';
       queries = mapAttrsToList mkQueryEntry cfg.queries;
-    in concatStringsSep "\n" (urls ++ queries) + "\n";
+    in concatStringsSep "\n" (queries ++ urls) + "\n";
 
     home.file.".newsboat/config".text = ''
       max-items ${toString cfg.maxItems}
