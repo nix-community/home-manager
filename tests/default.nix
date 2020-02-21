@@ -51,6 +51,7 @@ import nmt {
     ./modules/programs/abook
     ./modules/programs/firefox
     ./modules/programs/getmail
+    ./modules/services/lieer
     ./modules/programs/rofi
     ./modules/services/polybar
     ./modules/services/sxhkd
