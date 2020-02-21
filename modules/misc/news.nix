@@ -1366,6 +1366,13 @@ in
             https://rycee.gitlab.io/home-manager/#sec-install-nixos-module
         '';
       }
+
+      {
+        time = "2020-03-07T14:12:50+00:00";
+        message = ''
+          A new module is available: 'programs.lieer'.
+        '';
+      }
     ];
   };
 }
