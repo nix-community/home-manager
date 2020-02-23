@@ -303,6 +303,16 @@ in your system configuration and
 
 in your Home Manager configuration.
 
+Releases
+--------
+
+Home Manager is developed against `nixpkgs-unstable` branch, which often causes
+it to contain tweaks for changes/packages not yet released in stable NixOS.
+To avoid breaking users configurations, Home Manager is released in branches
+corresponding to NixOS releases (e.g. `release-19.09`). These branches
+get fixes, but usually not new modules. If you need a module to be backported,
+open an issue.
+
 [Bash]: https://www.gnu.org/software/bash/
 [Nix]: https://nixos.org/nix/
 [NixOS]: https://nixos.org/
