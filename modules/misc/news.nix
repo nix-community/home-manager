@@ -1673,6 +1673,13 @@ in
           support the apropos command.
         '';
       }
+
+      {
+        time = "2020-09-22T21:03:28+00:00";
+        message = ''
+          A new module is available: 'programs.pet'.
+        '';
+      }
     ];
   };
 }
