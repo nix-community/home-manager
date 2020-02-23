@@ -78,28 +78,28 @@ function doBuildAttr() {
     setConfigFile
     setHomeManagerNixPath
 
-    local extraArgs="$*"
+    local extraArgs=("$@")
 
     for p in "${EXTRA_NIX_PATH[@]}"; do
-        extraArgs="$extraArgs -I $p"
+        extraArgs=("${extraArgs[@]}" "-I" "$p")
     done
 
     if [[ -v VERBOSE ]]; then
-        extraArgs="$extraArgs --show-trace"
+        extraArgs=("${extraArgs[@]}" "--show-trace")
     fi
 
     # shellcheck disable=2086
     if [[ -v USE_NIX2_COMMAND ]]; then
         nix build \
             -f "<home-manager/home-manager/home-manager.nix>" \
-            $extraArgs \
+            "${extraArgs[@]}" \
             "${PASSTHROUGH_OPTS[@]}" \
             --argstr confPath "$HOME_MANAGER_CONFIG" \
             --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
     else
         nix-build \
             "<home-manager/home-manager/home-manager.nix>" \
-            $extraArgs \
+            "${extraArgs[@]}" \
             "${PASSTHROUGH_OPTS[@]}" \
             --argstr confPath "$HOME_MANAGER_CONFIG" \
             --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
