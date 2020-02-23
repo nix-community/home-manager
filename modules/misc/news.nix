@@ -1325,6 +1325,13 @@ in
           A new module is available: 'programs.kitty'.
         '';
       }
+
+      {
+        time = "2020-02-23T20:37:40+00:00";
+        message = ''
+          A new module is available: 'programs.pet'.
+        '';
+      }
     ];
   };
 }
