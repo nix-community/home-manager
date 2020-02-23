@@ -25,6 +25,7 @@ import nmt {
     ./lib/types
     ./modules/files
     ./modules/home-environment
+    ./modules/misc/debug.nix
     ./modules/misc/fontconfig
     ./modules/programs/alacritty
     ./modules/programs/bash
