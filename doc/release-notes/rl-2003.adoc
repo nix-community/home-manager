@@ -74,6 +74,26 @@ new module `services.picom` should be used. This is because Nixpkgs no
 longer packages compton, and instead packages the (mostly) compatible
 fork called picom.
 
+* Entries in <<opt-home.file>> are now linked into place via an
+intermediate location, `$XDG_DATA_HOME/home-manager/files`, much like
+`/etc/static` in NixOS. This change was made to makes the switch
+process more atomic.
++
+In general this should not be noticeable but if you manually activate
+an older generation it may (harmlessly) exit with an error along the
+lines of
++
+....
+Existing file '/home/jane/foo' is in the way
+Please move the above files and try again or use -b <ext> to move automatically.
+....
++
+where `/home/jane/foo` is a file managed through the <<opt-home.file>>
+option. This is due to the older activation script not recognizing the
+new XDG data home path as belonging to Home Manager. You can resolve
+this by manually removing the `/home/jane/foo` symbolic link and
+running the activate script again.
+
 [[sec-release-20.03-state-version-changes]]
 === State Version Changes
 

@@ -431,6 +431,11 @@ in
 
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
+          # Some activation blocks may need to maintain some state, which
+          # should be kept in this directory. We consider creation of this
+          # directory exempt from the write boundary.
+          $DRY_RUN_CMD mkdir $VERBOSE_ARG -p "${config.xdg.dataHome}/home-manager"
+
           ${activationCmds}
         '';
       in
