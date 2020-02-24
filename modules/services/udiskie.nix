@@ -81,9 +81,7 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Service = {
-        ExecStart = "${pkgs.udiskie}/bin/udiskie ${commandArgs}";
-      };
+      Service = { ExecStart = "${pkgs.udiskie}/bin/udiskie ${commandArgs}"; };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
     };
