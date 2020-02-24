@@ -82,7 +82,7 @@ in {
       };
 
       Service = {
-        ExecStart = "${pkgs.udiskie}/bin/udiskie -2 ${commandArgs}";
+        ExecStart = "${pkgs.udiskie}/bin/udiskie ${commandArgs}";
       };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
