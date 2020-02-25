@@ -81,3 +81,6 @@ changes are only active if the `home.stateVersion` option is set to
   using the xdg module. Also, the default value is fixed to
   `$HOME/.zsh_history` and `dotDir` path is not prepended to it
   anymore.
+* The newsboat module will now default in displaying `queries` before `urls` in
+  its main window. This makes sense in the case when one has a lot of urls and a
+  few queries.
