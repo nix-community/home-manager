@@ -7,9 +7,12 @@
       [ -L $TESTED/home-path/lib/debug/nix ] \
         || fail "Debug-symbols for pkgs.nix should exist in \`/home-path/lib/debug'!"
 
-      source $TESTED/home-path/etc/profile.d/hm-session-vars.sh
-      [[ "$NIX_DEBUG_INFO_DIRS" =~ /lib/debug$ ]] \
-        || fail "Invalid NIX_DEBUG_INFO_DIRS!"
+      #source $TESTED/home-path/etc/profile.d/hm-session-vars.sh
+      #[[ "$NIX_DEBUG_INFO_DIRS" =~ /lib/debug$ ]] \
+        #|| fail "Invalid NIX_DEBUG_INFO_DIRS!"
+      assertFileExists home-path/etc/profile.d/hm-session-vars.sh
+      assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
+          'NIX_DEBUG_INFO_DIRS=.*/lib/debug'
 
       # We need to override NIX_DEBUG_INFO_DIRS here as $HOME evalutes to the home
       # of the user who executes this testcase :/
