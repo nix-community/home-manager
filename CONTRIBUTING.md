@@ -156,6 +156,35 @@ If you do have a change worthy of a news entry then please add one in
   should be added. If you contribute a module then you don't need to
   add this entry, the merger will create an entry for you.
 
+### Tests ###
+
+Home Manager includes a basic test suite and it is highly recommended
+to include at least one test when adding a module. Tests are typically
+in the form of "golden tests" where, for example, a generated
+configuration file is compared to a known correct file.
+
+It is relatively easy to create tests by modeling the existing tests,
+found in the `tests` project directory.
+
+The full Home Manager test suite can be run by executing
+
+```console
+$ nix-shell --pure tests -A run.all
+```
+
+in the project root. List all test cases through
+
+```console
+$ nix-shell --pure tests -A list
+```
+
+and run an individual test, for example `alacritty-empty-settings`,
+through
+
+```console
+$ nix-shell --pure tests -A run.alacritty-empty-settings
+```
+
 [open issues]: https://github.com/rycee/home-manager/issues
 [new issue]: https://github.com/rycee/home-manager/issues/new
 [Fork A Repo]: https://help.github.com/articles/fork-a-repo/
