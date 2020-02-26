@@ -153,7 +153,8 @@ If you do have a change worthy of a news entry then please add one in
   condition = hostPlatform.isLinux;
   ```
 
-  should be added.
+  should be added. If you contribute a module then you don't need to
+  add this entry, the merger will create an entry for you.
 
 [open issues]: https://github.com/rycee/home-manager/issues
 [new issue]: https://github.com/rycee/home-manager/issues/new
