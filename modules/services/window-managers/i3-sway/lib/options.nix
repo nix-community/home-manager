@@ -353,7 +353,7 @@ in {
           type =
             types.enum [ "Shift" "Control" "Mod1" "Mod2" "Mod3" "Mod4" "Mod5" ];
           default = cfg.config.modifier;
-          defaultText = "i3.config.modifier";
+          defaultText = "${moduleName}.config.modifier";
           description =
             "Modifier key that can be used to drag floating windows.";
           example = "Mod4";
