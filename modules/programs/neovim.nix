@@ -55,6 +55,14 @@ in
         '';
       };
 
+      vimdiffAlias = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Alias `vimdiff` to `nvim -d`.
+        '';
+      };
+
       withNodeJs = mkOption {
         type = types.bool;
         default = false;
@@ -203,5 +211,9 @@ in
 
       configure = cfg.configure // moduleConfigure;
     };
+
+    programs.bash.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+    programs.fish.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+    programs.zsh.shellAliases  = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
   };
 }
