@@ -28,7 +28,11 @@ in {
 
   options = {
     xresources.properties = mkOption {
-      type = types.nullOr types.attrs;
+      type = with types;
+        let
+          prim = either bool (either int str);
+          entry = either prim (listOf prim);
+        in nullOr (attrsOf entry);
       default = null;
       example = literalExample ''
         {
