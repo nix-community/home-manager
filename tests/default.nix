@@ -43,6 +43,7 @@ import nmt {
     ./modules/programs/zsh
     ./modules/xresources
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+    ./modules/programs/abook
     ./modules/misc/pam
     ./modules/misc/xdg
     ./modules/misc/xsession
