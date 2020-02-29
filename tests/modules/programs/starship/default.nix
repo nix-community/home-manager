@@ -1,0 +1,1 @@
+{ starship-settings = ./settings.nix; }

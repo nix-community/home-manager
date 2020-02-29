@@ -31,8 +31,23 @@ in {
     };
 
     settings = mkOption {
-      type = types.attrs;
+      type = with types;
+        let
+          prim = either bool (either int str);
+          primOrPrimAttrs = either prim (attrsOf prim);
+          entry = either prim (listOf primOrPrimAttrs);
+          entryOrAttrsOf = t: either entry (attrsOf t);
+          entries = entryOrAttrsOf (entryOrAttrsOf entry);
+        in attrsOf entries // { description = "Starship configuration"; };
       default = { };
+      example = literalExample ''
+        {
+          add_newline = false;
+          prompt_order = [ "line_break" "package" "line_break" "character" ];
+          scan_timeout = 10;
+          character.symbol = "➜";
+        }
+      '';
       description = ''
         Configuration written to
         <filename>~/.config/starship.toml</filename>.
