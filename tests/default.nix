@@ -26,6 +26,7 @@ import nmt {
     ./modules/files
     ./modules/home-environment
     ./modules/misc/fontconfig
+    ./modules/programs/abook
     ./modules/programs/alacritty
     ./modules/programs/bash
     ./modules/programs/browserpass
