@@ -1333,6 +1333,12 @@ in
           A new module is available: 'wayland.windowManager.sway'
         '';
       }
+      {
+        time = "2020-02-29T16:35:58+00:00";
+        message = ''
+          A new module is available: 'programs.abook'
+        '';
+      }
     ];
   };
 }
