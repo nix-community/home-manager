@@ -1333,11 +1333,22 @@ in
           A new module is available: 'wayland.windowManager.sway'
         '';
       }
+
       {
         time = "2020-03-04T18:55:03+00:00";
         condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'programs.abook'
+        '';
+      }
+
+      {
+        time = "2020-03-07T11:43:26+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          The option 'programs.fish.functions' has been reworked in
+          order to support all available flags, such as
+          '--description', '--on-event', and more.
         '';
       }
     ];
