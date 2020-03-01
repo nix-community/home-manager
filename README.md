@@ -6,8 +6,8 @@ using the [Nix][] package manager together with the Nix libraries
 found in [Nixpkgs][]. Before attempting to use Home Manager please
 read the warning below.
 
-For a more systematic overview of all the options Home Manager
-provides please see the [Home Manager manual][configuration options].
+For a more systematic overview of Home Manager and its available
+options, please see the [Home Manager manual][manual].
 
 Words of warning
 ----------------
@@ -321,6 +321,7 @@ an issue.
 [nixAllowedUsers]: https://nixos.org/nix/manual/#conf-allowed-users
 [nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
 [Z shell]: http://zsh.sourceforge.net/
+[manual]: https://rycee.gitlab.io/home-manager/
 [configuration options]: https://rycee.gitlab.io/home-manager/options.html
 [#home-manager]: https://webchat.freenode.net/?url=irc%3A%2F%2Firc.freenode.net%2Fhome-manager
 [freenode]: https://freenode.net/
