@@ -58,7 +58,7 @@ let
 
   unitType = unitKind: with types;
     let
-      primitive = either bool (either int str);
+      primitive = oneOf [ bool int str package ];
     in
       attrsOf (attrsOf (attrsOf (either primitive (listOf primitive))))
       // {
