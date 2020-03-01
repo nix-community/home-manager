@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.abook;
 
-in
-
-{
+in {
   options.programs.abook = {
     enable = mkEnableOption "Abook";
 
@@ -43,9 +41,7 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
-    {
-      home.packages = [ pkgs.abook ];
-    }
+    { home.packages = [ pkgs.abook ]; }
 
     (mkIf (cfg.extraConfig != "") {
       xdg.configFile."abook/abookrc".text = ''
