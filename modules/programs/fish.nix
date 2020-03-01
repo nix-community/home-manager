@@ -29,6 +29,115 @@ let
     };
   });
 
+  functionModule = types.submodule {
+    options = {
+      body = mkOption {
+        type = types.lines;
+        description = ''
+          The function body.
+        '';
+      };
+
+      argumentNames = mkOption {
+        type = with types; nullOr (either str (listOf str));
+        default = null;
+        description = ''
+          Assigns the value of successive command line arguments to the names
+          given.
+        '';
+      };
+
+      description = mkOption {
+        type = with types; nullOr str;
+        default = null;
+        description = ''
+          A description of what the function does, suitable as a completion
+          description.
+        '';
+      };
+
+      wraps = mkOption {
+        type = with types; nullOr str;
+        default = null;
+        description = ''
+          Causes the function to inherit completions from the given wrapped
+          command.
+        '';
+      };
+
+      onEvent = mkOption {
+        type = with types; nullOr str;
+        default = null;
+        description = ''
+          Tells fish to run this function when the specified named event is
+          emitted. Fish internally generates named events e.g. when showing the
+          prompt.
+        '';
+      };
+
+      onVariable = mkOption {
+        type = with types; nullOr str;
+        default = null;
+        description = ''
+          Tells fish to run this function when the specified variable changes
+          value.
+        '';
+      };
+
+      onJobExit = mkOption {
+        type = with types; nullOr (either str int);
+        default = null;
+        description = ''
+          Tells fish to run this function when the job with the specified group
+          ID exits. Instead of a PID, the stringer <literal>caller</literal> can
+          be specified. This is only legal when in a command substitution, and
+          will result in the handler being triggered by the exit of the job
+          which created this command substitution.
+        '';
+      };
+
+      onProcessExit = mkOption {
+        type = with types; nullOr (either str int);
+        default = null;
+        example = "$fish_pid";
+        description = ''
+          Tells fish to run this function when the fish child process with the
+          specified process ID exits. Instead of a PID, for backwards
+          compatibility, <literal>%self</literal> can be specified as an alias
+          for <literal>$fish_pid</literal>, and the function will be run when
+          the current fish instance exits.
+        '';
+      };
+
+      onSignal = mkOption {
+        type = with types; nullOr (either str int);
+        default = null;
+        example = [ "SIGHUP" "HUP" 1 ];
+        description = ''
+          Tells fish to run this function when the specified signal is
+          delievered. The signal can be a signal number or signal name.
+        '';
+      };
+
+      noScopeShadowing = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Allows the function to access the variables of calling functions.
+        '';
+      };
+
+      inheritVariable = mkOption {
+        type = with types; nullOr str;
+        default = null;
+        description = ''
+          Snapshots the value of the specified variable and defines a local
+          variable with that same name and value when the function is defined.
+        '';
+      };
+    };
+  };
+
   abbrsStr = concatStringsSep "\n"
     (mapAttrsToList (k: v: "abbr --add --global -- ${k} ${escapeShellArg v}")
       cfg.shellAbbrs);
@@ -150,12 +259,21 @@ in {
     };
 
     programs.fish.functions = mkOption {
-      type = types.attrsOf types.lines;
+      type = with types; attrsOf (either lines functionModule);
       default = { };
-      example = { gitignore = "curl -sL https://www.gitignore.io/api/$argv"; };
+      example = literalExample ''
+        {
+          __fish_command_not_found_handler = {
+            body = "__fish_default_command_not_found_handler $argv[1]";
+            onEvent = "fish_command_not_found";
+          };
+
+          gitignore = "curl -sL https://www.gitignore.io/api/$argv";
+        }
+      '';
       description = ''
         Basic functions to add to fish. For more information see
-        <link xlink:href="https://fishshell.com/docs/current/commands.html#function"/>.
+        <link xlink:href="https://fishshell.com/docs/current/cmds/function.html"/>.
       '';
     };
 
@@ -274,12 +392,30 @@ in {
       '';
     }
     {
-      xdg.configFile = mapAttrs' (fName: fBody: {
-        name = "fish/functions/${fName}.fish";
+      xdg.configFile = mapAttrs' (name: def: {
+        name = "fish/functions/${name}.fish";
         value = {
-          "text" = ''
-            function ${fName}
-              ${fBody}
+          text = let
+            modifierStr = n: v: optional (v != null) ''--${n}="${toString v}"'';
+            modifierStrs = n: v: optional (v != null) "--${n}=${toString v}";
+            modifierBool = n: v: optional (v != null && v) "--${n}";
+
+            mods = with def;
+              modifierStr "description" description ++ modifierStr "wraps" wraps
+              ++ modifierStr "on-event" onEvent
+              ++ modifierStr "on-variable" onVariable
+              ++ modifierStr "on-job-exit" onJobExit
+              ++ modifierStr "on-process-exit" onProcessExit
+              ++ modifierStr "on-signal" onSignal
+              ++ modifierBool "no-scope-shadowing" noScopeShadowing
+              ++ modifierStr "inherit-variable" inheritVariable
+              ++ modifierStrs "argument-names" argumentNames;
+
+            modifiers = if isAttrs def then " ${toString mods}" else "";
+            body = if isAttrs def then def.body else def;
+          in ''
+            function ${name}${modifiers}
+              ${body}
             end
           '';
         };

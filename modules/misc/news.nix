@@ -1333,6 +1333,15 @@ in
           A new module is available: 'wayland.windowManager.sway'
         '';
       }
+
+      {
+        time = "2020-03-01T21:20:44+00:00";
+        message = ''
+          The option 'programs.fish.functions' has been reworked in
+          order to support all available flags, such as
+          '--description', '--on-event', and more.
+        '';
+      }
     ];
   };
 }
