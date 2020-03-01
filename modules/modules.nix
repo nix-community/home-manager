@@ -5,6 +5,9 @@
 
   # Whether to enable module type checking.
 , check ? true
+
+# If disabled, the pkgs attribute passed to this function is used instead.
+, useNixpkgsModule ? true
 }:
 
 with lib;
@@ -27,7 +30,7 @@ let
     (loadModule ./misc/gtk.nix { })
     (loadModule ./misc/lib.nix { })
     (loadModule ./misc/news.nix { })
-    (loadModule ./misc/nixpkgs.nix { })
+    (loadModule ./misc/nixpkgs.nix { condition = useNixpkgsModule; })
     (loadModule ./misc/numlock.nix { condition = hostPlatform.isLinux; })
     (loadModule ./misc/pam.nix { })
     (loadModule ./misc/qt.nix { })
@@ -170,11 +173,14 @@ let
   modules = map (getAttr "file") (filter (getAttr "condition") allModules);
 
   pkgsModule = {
-    config._module.args.baseModules = modules;
-    config._module.args.pkgs = lib.mkDefault pkgs;
-    config._module.check = check;
-    config.lib = lib.hm;
-    config.nixpkgs.system = mkDefault pkgs.system;
+    config = {
+      _module.args.baseModules = modules;
+      _module.args.pkgs = lib.mkDefault pkgs;
+      _module.check = check;
+      lib = lib.hm;
+    } // optionalAttrs useNixpkgsModule {
+      nixpkgs.system = mkDefault pkgs.system;
+    };
   };
 
 in

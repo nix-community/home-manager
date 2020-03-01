@@ -1351,6 +1351,21 @@ in
           '--description', '--on-event', and more.
         '';
       }
+
+      {
+        time = "2020-03-07T13:11:43+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          The NixOS module has a new option: 'home-manager.useGlobalPkgs'.
+
+          This enables using the system configuration's 'pkgs'
+          argument in Home Manager.
+
+          To learn more, see the installation section of the manual
+
+            https://rycee.gitlab.io/home-manager/#sec-install-nixos-module
+        '';
+      }
     ];
   };
 }

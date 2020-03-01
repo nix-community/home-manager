@@ -15,6 +15,7 @@ let
         imports = import ../modules/modules.nix {
           inherit pkgs;
           lib = extendedLib;
+          useNixpkgsModule = !cfg.useGlobalPkgs;
         };
 
         config = {
@@ -43,6 +44,12 @@ in {
       useUserPackages = mkEnableOption ''
         installation of user packages through the
         <option>users.users.‹name?›.packages</option> option.
+      '';
+
+      useGlobalPkgs = mkEnableOption ''
+        using the system configuration's <literal>pkgs</literal>
+        argument in Home Manager. This disables the Home Manager
+        options <option>nixpkgs.*</option>
       '';
 
       backupFileExtension = mkOption {
