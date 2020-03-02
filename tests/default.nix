@@ -26,7 +26,6 @@ import nmt {
     ./modules/files
     ./modules/home-environment
     ./modules/misc/fontconfig
-    ./modules/programs/abook
     ./modules/programs/alacritty
     ./modules/programs/bash
     ./modules/programs/browserpass
@@ -44,6 +43,7 @@ import nmt {
     ./modules/programs/zsh
     ./modules/xresources
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+    ./modules/programs/abook
     ./modules/misc/pam
     ./modules/misc/xdg
     ./modules/misc/xsession

@@ -1335,6 +1335,7 @@ in
       }
       {
         time = "2020-02-29T16:35:58+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'programs.abook'
         '';

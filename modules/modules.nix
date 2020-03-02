@@ -37,7 +37,7 @@ let
     (loadModule ./misc/xdg-mime-apps.nix { condition = hostPlatform.isLinux; })
     (loadModule ./misc/xdg-user-dirs.nix { condition = hostPlatform.isLinux; })
     (loadModule ./misc/xdg.nix { })
-    (loadModule ./programs/abook.nix { })
+    (loadModule ./programs/abook.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/afew.nix { })
     (loadModule ./programs/alacritty.nix { })
     (loadModule ./programs/alot.nix { })
