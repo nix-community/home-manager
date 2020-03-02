@@ -30,7 +30,7 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-files/.config/abook/abookrc
-      assertFileContent home-files/.config/abook/abookrc ${./expected.cfg} 
+      assertFileContent home-files/.config/abook/abookrc ${./with-settings.cfg}
     '';
   };
 }
