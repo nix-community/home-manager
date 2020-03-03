@@ -155,6 +155,7 @@ let
     (loadModule ./services/window-managers/i3-sway/sway.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/window-managers/xmonad.nix { })
     (loadModule ./services/xcape.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./services/xcompose.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xembed-sni-proxy.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xscreensaver.nix { })
     (loadModule ./services/xsuspender.nix { condition = hostPlatform.isLinux; })
