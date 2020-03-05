@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -19,6 +19,9 @@ with lib;
 
     home.file.result.text = builtins.toJSON
       (map (a: a.message) (filter (a: !a.assertion) config.assertions));
+
+    nixpkgs.overlays =
+      [ (self: super: { rofi = pkgs.writeScriptBin "dummy-rofi" ""; }) ];
 
     nmt.script = ''
       assertFileContent \

@@ -28,6 +28,9 @@ with lib;
       '';
     };
 
+    nixpkgs.overlays =
+      [ (self: super: { abook = pkgs.writeScriptBin "dummy-abook" ""; }) ];
+
     nmt.script = ''
       assertFileExists home-files/.config/abook/abookrc
       assertFileContent home-files/.config/abook/abookrc ${./with-settings.cfg}
