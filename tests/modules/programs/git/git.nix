@@ -16,7 +16,7 @@ let
       src = path;
 
       git_include_path =
-        pkgs.writeText "contents" (generators.toINI { } gitInclude);
+        pkgs.writeText "contents" (builtins.readFile ./git-expected-include.conf);
     };
 
 in {
