@@ -190,9 +190,9 @@ in
         session variable, then do so inside Nix instead. The above
         example then becomes
         <programlisting language="nix">
-        home.sessionVariables = {
+        home.sessionVariables = rec {
           FOO = "Hello";
-          BAR = "''${config.home.sessionVariables.FOO} World!";
+          BAR = "${FOO} World!";
         };
         </programlisting>
       '';
