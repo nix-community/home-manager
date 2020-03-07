@@ -1333,11 +1333,23 @@ in
           A new module is available: 'wayland.windowManager.sway'
         '';
       }
+
       {
         time = "2020-03-04T18:55:03+00:00";
         condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'programs.abook'
+        '';
+      }
+
+      {
+        time = "2020-03-05T00:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          The NixOS integration module has a new option: 'home-manager.useGlobalPkgs'.
+          This enables using the system configuration's <literal>pkgs</literal> argument
+          in Home Manager.
+          To learn more, see the installation section of the manual.
         '';
       }
     ];

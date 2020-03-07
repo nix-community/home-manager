@@ -225,6 +225,25 @@ home-manager.useUserPackages = true;
     become the default value in the future.
    </para>
   </note>
+
+  <note>
+   <para>
+    By default, Home Manager modules use a private <literal>pkgs</literal> instance
+    that is configured via the <option>home-manager.users.&lt;name?&gt;.nixpkgs</option> options.
+    To instead use the global <literal>pkgs</literal> that is configured via
+    the <option>nixpkgs</option> options, set
+   </para>
+<programlisting language="nix">
+home-manager.useGlobalPkgs = true;
+</programlisting>
+  <para>
+   This saves an extra Nixpkgs evaluation, adds consistency, and removes the
+   dependency on <envar>NIX_PATH</envar>, which is otherwise used for
+   importing the pkgs.
+   This option may become the default value in the future.
+   </para>
+  </note>
+
  </section>
  <section xml:id="sec-install-nix-darwin-module">
   <title>nix-darwin module</title>
