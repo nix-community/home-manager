@@ -18,7 +18,9 @@ with lib;
 
     nixpkgs.overlays = [
       (self: super: {
-        gmailieer = super.gmailieer // { outPath = "@lieer@"; };
+        gmailieer = pkgs.writeScriptBin "dummy-gmailieer" "" // {
+          outPath = "@lieer@";
+        };
       })
     ];
 

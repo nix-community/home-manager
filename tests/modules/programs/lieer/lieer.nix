@@ -13,6 +13,10 @@ with lib;
 
     accounts.email.accounts = { "hm@example.com".lieer.enable = true; };
 
+    nixpkgs.overlays = [
+      (self: super: { gmailieer = pkgs.writeScriptBin "dummy-gmailieer" ""; })
+    ];
+
     nmt.script = ''
       assertFileExists home-files/Mail/hm@example.com/.gmailieer.json
       assertFileContent home-files/Mail/hm@example.com/.gmailieer.json \
