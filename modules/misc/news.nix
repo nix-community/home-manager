@@ -1344,7 +1344,7 @@ in
 
       {
         time = "2020-03-07T11:43:26+00:00";
-        condition = config.programs.zsh.enable;
+        condition = config.programs.fish.enable;
         message = ''
           The option 'programs.fish.functions' has been reworked in
           order to support all available flags, such as
