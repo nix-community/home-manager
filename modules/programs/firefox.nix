@@ -137,7 +137,7 @@ in
             userChrome = mkOption {
               type = types.lines;
               default = "";
-              description = "Custom Firefox CSS.";
+              description = "Custom Firefox userChrome CSS";
               example = ''
                 /* Hide tab bar in FF Quantum */
                 @-moz-document url("chrome://browser/content/browser.xul") {
@@ -150,6 +150,16 @@ in
                     visibility: collapse !important;
                   }
                 }
+              '';
+            };
+
+            userContent = mkOption {
+              type = types.lines;
+              default = "";
+              description = "Custom Firefox userContent CSS";
+              example = ''
+                /* Hide scrollbar in FF Quantum */
+                *{scrollbar-width:none !important}
               '';
             };
 
@@ -293,6 +303,11 @@ in
         "${profilesPath}/${profile.path}/chrome/userChrome.css" =
           mkIf (profile.userChrome != "") {
             text = profile.userChrome;
+          };
+          
+        "${profilesPath}/${profile.path}/chrome/userContent.css" =
+          mkIf (profile.userContent != "") {
+            text = profile.userContent;
           };
 
         "${profilesPath}/${profile.path}/user.js" =
