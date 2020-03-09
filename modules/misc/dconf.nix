@@ -9,22 +9,7 @@ let
   toDconfIni = generators.toINI { mkKeyValue = mkIniKeyValue; };
 
   mkIniKeyValue = key: value:
-    let
-      tweakVal = v:
-        if isString v then "'${v}'"
-        else if isList v then tweakList v
-        else if isBool v then (if v then "true" else "false")
-        else toString v;
-
-      # Assume empty list is a list of strings, see #769
-      tweakList = v:
-        if v == [] then "@as []"
-        else "[" + concatMapStringsSep "," tweakVal v + "]";
-
-    in
-      "${key}=${tweakVal value}";
-
-  primitive = with types; either bool (either int (either float str));
+    "${key}=${toString (hm.gvariant.mkValue value)}";
 
 in
 
@@ -43,8 +28,7 @@ in
       };
 
       settings = mkOption {
-        type = with types;
-          attrsOf (attrsOf (either primitive (listOf primitive)));
+        type = with types; attrsOf (attrsOf hm.types.gvariant);
         default = {};
         example = literalExample ''
           {
@@ -53,6 +37,7 @@ in
               show-thousands = true;
               base = 10;
               word-size = 64;
+              window-position = lib.hm.gvariant.mkTuple [100 100];
             };
           }
         '';
