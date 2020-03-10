@@ -1407,6 +1407,14 @@ in
           [1] https://blog.mozilla.org/addons/2019/10/31/firefox-to-discontinue-sideloaded-extensions/
         '';
       }
+
+      {
+        time = "2020-03-17T21:56:26+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.keynav'.
+        '';
+      }
     ];
   };
 }

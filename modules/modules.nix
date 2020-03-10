@@ -128,6 +128,7 @@ let
     (loadModule ./services/kdeconnect.nix { })
     (loadModule ./services/keepassx.nix { })
     (loadModule ./services/keybase.nix { })
+    (loadModule ./services/keynav.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/lieer.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/lorri.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/mbsync.nix { })
