@@ -379,7 +379,7 @@ in {
     xdg.configFile."sway/config" = {
       source = configFile;
       onChange = ''
-        swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.*.sock
+        swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep -x sway).sock
         if [ -S $swaySocket ]; then
           echo "Reloading sway"
           $DRY_RUN_CMD ${cfg.package}/bin/swaymsg -s $swaySocket reload
