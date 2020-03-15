@@ -23,7 +23,7 @@ let
     then "${firefoxConfigPath}/Profiles"
     else firefoxConfigPath;
 
-  # The extensions path shared by all profiles, will not be supported
+  # The extensions path shared by all profiles; will not be supported
   # by future Firefox versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
 

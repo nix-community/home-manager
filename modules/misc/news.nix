@@ -1386,8 +1386,8 @@ in
         time = "2020-03-15T16:55:28+00:00";
         condition = config.programs.firefox.enable;
         message = ''
-          In preparation of Firefox's dropping support for extension
-          sideloading[1] we now install extensions directly in Firefox
+          In anticipation of Firefox dropping support for extension
+          sideloading[1], we now install extensions directly to Firefox
           profiles managed through Home Manager's
 
             'programs.firefox.profiles'
@@ -1397,7 +1397,7 @@ in
           Unfortunately this will most likely trigger an "Existing
           file is in the way" error when activating your configuration
           since Firefox keeps a copy of the add-on in the location
-          Home Manager wants to overwrite. If this is the case then
+          Home Manager wants to overwrite. If this is the case,
           remove the listed '.xpi' files and try again.
 
           This change also means that extensions installed through
