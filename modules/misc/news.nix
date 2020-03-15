@@ -1381,6 +1381,32 @@ in
           A new module is available: 'services.lieer'.
         '';
       }
+
+      {
+        time = "2020-03-15T16:55:28+00:00";
+        condition = config.programs.firefox.enable;
+        message = ''
+          In preparation of Firefox's dropping support for extension
+          sideloading[1] we now install extensions directly in Firefox
+          profiles managed through Home Manager's
+
+            'programs.firefox.profiles'
+
+          option.
+
+          Unfortunately this will most likely trigger an "Existing
+          file is in the way" error when activating your configuration
+          since Firefox keeps a copy of the add-on in the location
+          Home Manager wants to overwrite. If this is the case then
+          remove the listed '.xpi' files and try again.
+
+          This change also means that extensions installed through
+          Home Manager may disappear from unmanaged profiles in future
+          Firefox releases.
+
+          [1] https://blog.mozilla.org/addons/2019/10/31/firefox-to-discontinue-sideloaded-extensions/
+        '';
+      }
     ];
   };
 }

@@ -23,7 +23,14 @@ let
     then "${firefoxConfigPath}/Profiles"
     else firefoxConfigPath;
 
+  # The extensions path shared by all profiles, will not be supported
+  # by future Firefox versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
+
+  extensionsEnvPkg = pkgs.buildEnv {
+    name = "hm-firefox-extensions";
+    paths = cfg.extensions;
+  };
 
   profiles =
     flip mapAttrs' cfg.profiles (_: profile:
@@ -283,17 +290,10 @@ in
 
     home.file = mkMerge (
       [{
-        "${mozillaConfigPath}/${extensionPath}" = mkIf (cfg.extensions != []) (
-          let
-            extensionsEnv = pkgs.buildEnv {
-              name = "hm-firefox-extensions";
-              paths = cfg.extensions;
-            };
-          in {
-            source = "${extensionsEnv}/share/mozilla/${extensionPath}";
-            recursive = true;
-          }
-        );
+        "${mozillaConfigPath}/${extensionPath}" = mkIf (cfg.extensions != []) {
+          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+          recursive = true;
+        };
 
         "${firefoxConfigPath}/profiles.ini" = mkIf (cfg.profiles != {}) {
           text = profilesIni;
@@ -314,6 +314,11 @@ in
           mkIf (profile.settings != {} || profile.extraConfig != "") {
             text = mkUserJs profile.settings profile.extraConfig;
           };
+
+        "${profilesPath}/${profile.path}/extensions" = mkIf (cfg.extensions != []) {
+          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+          recursive = true;
+        };
       })
     );
   };
