@@ -156,7 +156,7 @@ in {
           command = if cfg.tray then "redshift-gtk" else "redshift";
         in "${cfg.package}/bin/${command} ${concatStringsSep " " args}";
         RestartSec = 3;
-        Restart = "always";
+        Restart = "on-failure";
       };
     };
   };
