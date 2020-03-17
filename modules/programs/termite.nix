@@ -362,7 +362,7 @@ in {
       ${optionalString "cursor" cfg.cursorColor}
       ${optionalString "cursor_foreground" cfg.cursorForegroundColor}
       ${optionalString "foreground" cfg.foregroundColor}
-      ${optionalString "foregroundBold" cfg.foregroundBoldColor}
+      ${optionalString "foreground_bold" cfg.foregroundBoldColor}
       ${optionalString "highlight" cfg.highlightColor}
 
       ${cfg.colorsExtra}
