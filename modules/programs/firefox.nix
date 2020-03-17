@@ -318,6 +318,7 @@ in
         "${profilesPath}/${profile.path}/extensions" = mkIf (cfg.extensions != []) {
           source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
           recursive = true;
+          force = true;
         };
       })
     );
