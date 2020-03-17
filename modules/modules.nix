@@ -155,7 +155,7 @@ let
     (loadModule ./services/taskwarrior-sync.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/udiskie.nix { })
     (loadModule ./services/unclutter.nix { })
-    (loadModule ./services/keynav.nix { })
+    (loadModule ./services/keynav.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/unison.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/window-managers/awesome.nix { })
     (loadModule ./services/window-managers/bspwm/default.nix { condition = hostPlatform.isLinux; })
