@@ -278,7 +278,7 @@ _home-manager_completions ()
     #--------------------------#
 
     local Subcommands
-    Subcommands=( "help" "edit" "build" "switch" "generations" "remove-generations" "expire-generations" "packages" "news" "uninstall" )
+    Subcommands=( "help" "edit" "build" "instantiate" "switch" "generations" "remove-generations" "expire-generations" "packages" "news" "uninstall" )
 
     # ^ « home-manager »'s subcommands.
 

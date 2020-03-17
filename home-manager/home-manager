@@ -74,6 +74,28 @@ function setHomeManagerNixPath() {
     done
 }
 
+function doInstantiate() {
+    setConfigFile
+    setHomeManagerNixPath
+
+    local extraArgs=("$@")
+
+    for p in "${EXTRA_NIX_PATH[@]}"; do
+        extraArgs=("${extraArgs[@]}" "-I" "$p")
+    done
+
+    if [[ -v VERBOSE ]]; then
+        extraArgs=("${extraArgs[@]}" "--show-trace")
+    fi
+
+    nix-instantiate \
+        "<home-manager/home-manager/home-manager.nix>" \
+        "${extraArgs[@]}" \
+        "${PASSTHROUGH_OPTS[@]}" \
+        --argstr confPath "$HOME_MANAGER_CONFIG" \
+        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+}
+
 function doBuildAttr() {
     setConfigFile
     setHomeManagerNixPath
@@ -441,6 +463,8 @@ function doHelp() {
     echo
     echo "  build        Build configuration into result directory"
     echo
+    echo "  instantiate  Instantiate the configuration and print the resulting derivation"
+    echo
     echo "  switch       Build and activate configuration"
     echo
     echo "  generations  List all home environment generations"
@@ -471,7 +495,7 @@ while [[ $# -gt 0 ]]; do
     opt="$1"
     shift
     case $opt in
-        build|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
+        build|instantiate|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
             COMMAND="$opt"
             ;;
         -2)
@@ -541,6 +565,9 @@ case $COMMAND in
         ;;
     build)
         doBuild
+        ;;
+    instantiate)
+        doInstantiate
         ;;
     switch)
         doSwitch

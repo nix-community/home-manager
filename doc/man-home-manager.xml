@@ -18,6 +18,10 @@
    </arg>
     
    <arg choice="plain">
+    instantiate
+   </arg>
+    
+   <arg choice="plain">
     edit
    </arg>
     
@@ -160,6 +164,16 @@
      <listitem>
       <para>
        Build configuration into a <filename>result</filename> directory.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>instantiate</option>
+     </term>
+     <listitem>
+      <para>
+       Instantiate the configuration and print the resulting derivation.
       </para>
      </listitem>
     </varlistentry>
