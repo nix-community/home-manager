@@ -80,6 +80,18 @@ with lib;
             into place.
           '';
         };
+
+        force = mkOption {
+          type = types.bool;
+          default = false;
+          visible = false;
+          description = ''
+            Whether the target path should be unconditionally replaced
+            by the managed file source. Warning, this will silently
+            delete the target regardless of whether it is a file or
+            link.
+          '';
+        };
       };
 
       config = {
