@@ -6,15 +6,7 @@ let cfg = config.services.keynav;
 
 in {
   options.services.keynav = {
-
     enable = mkEnableOption "keynav";
-
-    package = mkOption {
-      description = "keynav derivation to use.";
-      type = types.package;
-      default = pkgs.keynav;
-      defaultText = literalExample "pkgs.keynav";
-    };
   };
 
   config = mkIf cfg.enable {
