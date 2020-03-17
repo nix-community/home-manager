@@ -45,6 +45,13 @@ in
     # overwrite an existing file.
     home.activation.checkLinkTargets = dag.entryBefore ["writeBoundary"] (
       let
+        # Paths that should be forcibly overwritten by Home Manager.
+        # Caveat emptor!
+        forcedPaths =
+          concatMapStringsSep " " (p: ''"$HOME/${p}"'')
+            (mapAttrsToList (n: v: v.target)
+            (filterAttrs (n: v: v.force) cfg));
+
         check = pkgs.writeText "check" ''
           . ${./lib-bash/color-echo.sh}
 
@@ -52,12 +59,25 @@ in
           # considered part of a Home Manager generation.
           homeFilePattern="$(readlink -e "${builtins.storeDir}")/*-home-manager-files/*"
 
+          forcedPaths=(${forcedPaths})
+
           newGenFiles="$1"
           shift
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
-            if [[ -e "$targetPath" \
+
+            forced=""
+            for forcedPath in "''${forcedPaths[@]}"; do
+              if [[ $targetPath == $forcedPath* ]]; then
+                forced="yeah"
+                break
+              fi
+            done
+
+            if [[ -n $forced ]]; then
+              $VERBOSE_ECHO "Skipping collision check for $targetPath"
+            elif [[ -e "$targetPath" \
                 && ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               if [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
