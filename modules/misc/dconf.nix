@@ -60,13 +60,27 @@ in
           Settings to write to the dconf configuration system.
         '';
       };
+
+      extraSettings = mkOption {
+        type = types.str;
+        default = "";
+        example = literalExample ''
+          [org/gnome/desktop/input-sources]
+          current=uint32 0
+          sources=[('xkb', 'us+alt-intl')]
+        '';
+        description = ''
+          Settings to write at the end of the dconf imported file.
+          Useful for not serializable arguments.
+        '';
+      };
     };
   };
 
   config = mkIf (cfg.enable && cfg.settings != {}) {
     home.activation.dconfSettings = hm.dag.entryAfter ["installPackages"] (
       let
-        iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
+        iniFile = pkgs.writeText "hm-dconf.ini" ((toDconfIni cfg.settings) + cfg.extraSettings);
       in
         ''
           if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
