@@ -79,7 +79,7 @@ in
       let
         toPaths = path:
           let
-            p = "${path}/share/vscode/extensions";
+            p = "${path}";
           in
             # Links every dir in p to the extension path.
             mapAttrsToList (k: v:
