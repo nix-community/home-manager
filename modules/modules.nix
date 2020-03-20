@@ -110,6 +110,7 @@ let
     (loadModule ./programs/vscode/haskell.nix { })
     (loadModule ./programs/z-lua.nix { })
     (loadModule ./programs/zathura.nix { })
+    (loadModule ./programs/zplug.nix { })
     (loadModule ./programs/zsh.nix { })
     (loadModule ./services/blueman-applet.nix { })
     (loadModule ./services/cbatticon.nix { condition = hostPlatform.isLinux; })
