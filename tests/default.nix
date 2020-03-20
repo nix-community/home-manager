@@ -62,6 +62,7 @@ import nmt {
     ./modules/programs/starship
     ./modules/programs/texlive
     ./modules/programs/tmux
+    ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/xresources
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
