@@ -4,15 +4,7 @@ with lib;
 
 let
 
-  cfg = config.programs.zplug;
-
-  pkg = pkgs.srcOnly {
-    name = "zplug";
-    src = builtins.fetchGit {
-      url = https://github.com/zplug/zplug.git;
-      ref = "master";
-    };
-  };
+  cfg = config.programs.zsh.zplug;
 
   pluginModule = types.submodule ({ config, ... }: {
     options = {
@@ -25,38 +17,39 @@ let
 
       tags = mkOption {
         type = types.listOf types.str;
-        default = [];
-        description = "The plugin tags";
+        default = [ ];
+        description = "The plugin tags.";
       };
     };
 
   });
 
 in {
-  options.programs.zplug = {
+  options.programs.zsh.zplug = {
     enable = mkEnableOption "zplug - a zsh plugin manager";
 
-
     plugins = mkOption {
-        default = [];
-        type = types.listOf pluginModule;
-        description = ''
-          List of zplug plugins
-        '';
-      };
+      default = [ ];
+      type = types.listOf pluginModule;
+      description = ''
+        List of zplug plugins
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkg ];
+    home.packages = [ pkgs.zplug ];
 
     programs.zsh.initExtraBeforeCompInit = ''
-      source ${pkg}/init.zsh
+      source ${pkgs.zplug}/init.zsh
 
-      ${optionalString (cfg.plugins != []) ''
+      ${optionalString (cfg.plugins != [ ]) ''
         ${concatStrings (map (plugin: ''
-          zplug "${plugin.name}"${optionalString (plugin.tags != []) ''
-            ${concatStrings (map (tag: ", ${tag}") plugin.tags)}
-          ''} 
+          zplug "${plugin.name}"${
+            optionalString (plugin.tags != [ ]) ''
+              ${concatStrings (map (tag: ", ${tag}") plugin.tags)}
+            ''
+          } 
         '') cfg.plugins)}
       ''}
 
