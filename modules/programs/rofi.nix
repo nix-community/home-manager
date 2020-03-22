@@ -272,6 +272,13 @@ in {
       '';
     };
 
+    plugins = mkOption {
+      default = [ ];
+      type = with types; listOf package;
+      description = "Plugins to compile rofi with.";
+      example = literalExample "[ pkgs.rofi-calc ]";
+    };
+
     configPath = mkOption {
       default = "${config.xdg.configHome}/rofi/config";
       defaultText = "$XDG_CONFIG_HOME/rofi/config";
@@ -295,7 +302,7 @@ in {
       '';
     }];
 
-    home.packages = [ pkgs.rofi ];
+    home.packages = [ (pkgs.rofi.override { inherit (cfg) plugins; }) ];
 
     home.file."${cfg.configPath}".text = ''
       ${setOption "width" cfg.width}
