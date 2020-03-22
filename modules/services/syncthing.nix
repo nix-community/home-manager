@@ -19,6 +19,8 @@ with lib;
 
   config = mkMerge [
     (mkIf config.services.syncthing.enable {
+      home.packages = [ (getOutput "man" pkgs.syncthing) ];
+
       systemd.user.services = {
         syncthing = {
           Unit = {
