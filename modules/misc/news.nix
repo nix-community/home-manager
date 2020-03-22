@@ -1415,6 +1415,34 @@ in
           A new module is available: 'services.keynav'.
         '';
       }
+
+      {
+        time = "2020-03-24T22:17:20+00:00";
+        condition = config.services.compton.enable;
+        message = ''
+          The 'services.compton' module has been deprecated and
+          instead the new module 'services.picom' should be used. This
+          is because Nixpkgs no longer packages compton, and instead
+          packages the (mostly) compatible fork called picom.
+
+          The 'services.compton' and 'services.picom' modules have a
+          few differences:
+
+            - 'services.picom' has a new 'experimentalBackends'
+              option.
+
+            - 'vSync' is now a boolean value on 'services.picom', as
+              opposed to the string in 'services.compton'.
+
+          Migrating to the new picom service is simple - just change
+          all references to 'services.compton' to 'services.picom',
+          and adhere to the above changes.
+
+          The deprecated 'services.compton' will eventually be removed
+          in the future. Please update your configurations to use
+          'services.picom' as soon as possible.
+        '';
+      }
     ];
   };
 }

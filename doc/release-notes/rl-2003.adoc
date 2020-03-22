@@ -69,6 +69,11 @@ use
 home-manager.users.jane = { config.config = "foo"; };
 ----
 
+* The `services.compton` module has been deprecated and instead the
+new module `services.picom` should be used. This is because Nixpkgs no
+longer packages compton, and instead packages the (mostly) compatible
+fork called picom.
+
 [[sec-release-20.03-state-version-changes]]
 === State Version Changes
 

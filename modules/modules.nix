@@ -141,6 +141,7 @@ let
     (loadModule ./services/parcellite.nix { })
     (loadModule ./services/password-store-sync.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/pasystray.nix { })
+    (loadModule ./services/picom.nix { })
     (loadModule ./services/polybar.nix { })
     (loadModule ./services/random-background.nix { })
     (loadModule ./services/redshift.nix { })
