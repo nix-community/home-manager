@@ -113,7 +113,7 @@ def systemctl_action(cmd, services)
 
   cmd = ['systemctl', '--user', cmd, *services]
   if @dry_run
-    puts cmd
+    puts cmd.join(' ')
     return
   end
 
