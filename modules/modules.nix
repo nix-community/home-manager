@@ -77,6 +77,7 @@ let
     (loadModule ./programs/kitty.nix { })
     (loadModule ./programs/lesspipe.nix { })
     (loadModule ./programs/lsd.nix { })
+    (loadModule ./programs/mako.nix { })
     (loadModule ./programs/man.nix { })
     (loadModule ./programs/matplotlib.nix { })
     (loadModule ./programs/mbsync.nix { })
