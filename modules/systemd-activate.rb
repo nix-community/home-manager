@@ -41,7 +41,7 @@ def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
 
   # Exclude services that aren't allowed to be manually started or stopped
   no_manual_start, no_manual_stop, no_restart = get_restricted_units(to_stop + to_restart + to_start)
-  to_stop -= no_manual_stop + no_restart
+  to_stop -= no_manual_stop
   to_restart -= no_manual_stop + no_manual_start + no_restart
   to_start -= no_manual_start
 
