@@ -28,7 +28,7 @@ def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
   exit if old_services.empty? && new_services.empty?
 
   # These services should be running when this script is finished
-  services_to_run = get_services_to_run(new_units_path)
+  services_to_run = get_active_targets_units(new_units_path)
   maybe_changed_services = services_to_run & old_services
 
   # Only stop active services, otherwise we might get a 'service not loaded' error
@@ -87,15 +87,15 @@ end
 
 TargetDirRegexp = /^(.*\.target)\.wants$/
 
-# @return all services wanted by active targets
-def get_services_to_run(units_dir)
+# @return all units wanted by active targets
+def get_active_targets_units(units_dir)
   return Set.new unless Dir.exists?(units_dir)
   targets = Dir.entries(units_dir).map { |entry| entry[TargetDirRegexp, 1] }.compact
   active_targets = get_active_units(targets)
-  services_to_run = active_targets.map do |target|
+  active_units = active_targets.map do |target|
     get_service_files(File.join(units_dir, "#{target}.wants"))
   end.flatten
-  Set.new(services_to_run)
+  Set.new(active_units)
 end
 
 # @return true on success
