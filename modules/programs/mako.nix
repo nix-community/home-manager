@@ -143,7 +143,7 @@ in {
       };
 
       icons = mkOption {
-        default = 1;
+        default = true;
         type = types.nullOr types.bool;
         description = ''
 	   Show icons in notifications.
@@ -169,7 +169,7 @@ in {
       };
 
       markup = mkOption {
-        default = 1;
+        default = true;
         type = types.nullOr types.bool;
         description = ''
 	   If 1, enable Pango markup. If 0, disable Pango markup. If enabled, Pango markup will be interpreted in your format specifier and in the body of notifications.
@@ -177,7 +177,7 @@ in {
       };
 
       actions = mkOption {
-        default = 1;
+        default = true;
         type = types.nullOr types.bool;
         description = ''
 	   Applications may request an action to be associated with activating a notification. Disabling this will cause mako to ignore these requests.
@@ -193,7 +193,7 @@ in {
       };
 
       defaultTimeout = mkOption {
-        default = 0;
+        default = false;
         type = types.nullOr types.bool;
         description = ''
 	   Set the default timeout to timeout in milliseconds. To disable the timeout, set it to zero.
@@ -201,7 +201,7 @@ in {
       };
 
       ignoreTimeout = mkOption {
-        default = 0;
+        default = false;
         type = types.nullOr types.bool;
         description = ''
 	   If set, mako will ignore the expire timeout sent by notifications and use the one provided by default-timeout instead.
