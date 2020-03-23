@@ -27,14 +27,17 @@ def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
 
   exit if old_services.empty? && new_services.empty?
 
+  all_services = get_active_targets_units(new_units_path)
+  maybe_changed = all_services & old_services
+  changed_services = get_changed_services(old_units_path, new_units_path, maybe_changed)
+
   # These services should be running when this script is finished
-  services_to_run = get_active_targets_units(new_units_path)
-  maybe_changed_services = services_to_run & old_services
+  services_to_run = all_services
 
   # Only stop active services, otherwise we might get a 'service not loaded' error
   # for inactive services that were removed in the current generation.
   to_stop = get_active_units(old_services - new_services)
-  to_restart = get_changed_services(old_units_path, new_units_path, maybe_changed_services)
+  to_restart = changed_services
   to_start = get_inactive_units(services_to_run - to_restart)
 
   raise "daemon-reload failed" unless run_cmd('systemctl', '--user', 'daemon-reload')
