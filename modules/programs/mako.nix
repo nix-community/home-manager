@@ -77,7 +77,7 @@ in {
       };
 
       width = mkOption {
-        default = "300";
+        default = 300;
         type = types.nullOr types.int;
         description = ''
 	   Set width of notification popups.
@@ -85,7 +85,7 @@ in {
       };
 
       height = mkOption {
-        default = "100";
+        default = 100;
         type = types.nullOr types.int;
         description = ''
            Set maximum height of notification popups. Notifications whose text takes up less space are shrunk to fit.
@@ -93,7 +93,7 @@ in {
       };
 
       margin = mkOption {
-        default = "10";
+        default = 10;
         type = types.nullOr types.int;
         description = ''
            Set margin of each edge to the size specified by directional.
@@ -102,7 +102,7 @@ in {
       };
 
       padding = mkOption {
-        default = "5";
+        default = 5;
         type = types.nullOr types.int;
         description = ''
 	   Set padding on each side to the size specified by directional.
@@ -111,7 +111,7 @@ in {
       };
 
       borderSize = mkOption {
-        default = "1";
+        default = 1;
         type = types.nullOr types.int;
         description = ''
            Set popup border size to px pixels.
@@ -127,7 +127,7 @@ in {
       };
 
       borderRadius = mkOption {
-        default = "0";
+        default = 0;
         type = types.nullOr types.int;
         description = ''
 	   Set popup corner radius to px pixels.
@@ -143,7 +143,7 @@ in {
       };
 
       icons = mkOption {
-        default = "1";
+        default = 1;
         type = types.nullOr types.bool;
         description = ''
 	   Show icons in notifications.
@@ -151,7 +151,7 @@ in {
       };
 
       maxIconSize = mkOption {
-        default = "64";
+        default = 64;
         type = types.nullOr types.int;
         description = ''
 	   Set maximum icon size to px pixels.
@@ -169,7 +169,7 @@ in {
       };
 
       markup = mkOption {
-        default = "1";
+        default = 1;
         type = types.nullOr types.bool;
         description = ''
 	   If 1, enable Pango markup. If 0, disable Pango markup. If enabled, Pango markup will be interpreted in your format specifier and in the body of notifications.
@@ -177,7 +177,7 @@ in {
       };
 
       actions = mkOption {
-        default = "1";
+        default = 1;
         type = types.nullOr types.bool;
         description = ''
 	   Applications may request an action to be associated with activating a notification. Disabling this will cause mako to ignore these requests.
@@ -193,7 +193,7 @@ in {
       };
 
       defaultTimeout = mkOption {
-        default = "0";
+        default = 0;
         type = types.nullOr types.bool;
         description = ''
 	   Set the default timeout to timeout in milliseconds. To disable the timeout, set it to zero.
@@ -201,7 +201,7 @@ in {
       };
 
       ignoreTimeout = mkOption {
-        default = "0";
+        default = 0;
         type = types.nullOr types.bool;
         description = ''
 	   If set, mako will ignore the expire timeout sent by notifications and use the one provided by default-timeout instead.
