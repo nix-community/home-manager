@@ -39,13 +39,12 @@ def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
 
   raise "daemon-reload failed" unless run_cmd('systemctl', '--user', 'daemon-reload')
 
-  # Exclude services that aren't allowed to be manually started or stopped
+  # Exclude units that shouldn't be (re)started or stopped
   no_manual_start, no_manual_stop, no_restart = get_restricted_units(to_stop + to_restart + to_start)
+  notify_skipped_units(to_restart & no_restart)
   to_stop -= no_manual_stop
   to_restart -= no_manual_stop + no_manual_start + no_restart
   to_start -= no_manual_start
-
-  puts "Not restarting: #{no_restart.join(' ')}" unless no_restart.empty?
 
   if to_stop.empty? && to_start.empty? && to_restart.empty?
     print_service_msg("All services are already running", services_to_run)
@@ -195,6 +194,10 @@ def print_service_msg(msg, services)
   else
     puts msg
   end
+end
+
+def notify_skipped_units(no_restart)
+  puts "Not restarting: #{no_restart.join(' ')}" unless no_restart.empty?
 end
 
 setup_services(*ARGV)
