@@ -139,20 +139,17 @@ def print_cmd(cmd)
 end
 
 def get_active_units(units)
-  get_units_by_activity(units, true)
+  filter_units(units) { |state| state == 'active' }
 end
 
 def get_inactive_units(units)
-  get_units_by_activity(units, false)
+  filter_units(units) { |state| state != 'active' }
 end
 
-def get_units_by_activity(units, active)
+def filter_units(units)
   return [] if units.empty?
-  units = units.to_a
-  is_active = systemctl('is-active', *units).split
-  units.select.with_index do |_, i|
-    (is_active[i] == 'active') == active
-  end
+  states = systemctl('is-active', *units).split
+  units.select.with_index { |_, i| yield states[i] }
 end
 
 def get_restricted_units(units)
