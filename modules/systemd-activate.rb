@@ -38,7 +38,7 @@ def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
   to_restart = get_changed_services(old_units_path, new_units_path, maybe_changed_services)
   to_start = get_inactive_units(services_to_run - to_restart)
 
-  raise "daemon-reload failed" unless run_cmd('systemctl --user daemon-reload')
+  raise "daemon-reload failed" unless run_cmd('systemctl', '--user', 'daemon-reload')
 
   # Exclude services that aren't allowed to be manually started or stopped
   no_manual_start, no_manual_stop, no_restart = get_restricted_units(to_stop + to_restart + to_start)
@@ -101,9 +101,9 @@ def get_services_to_run(units_dir)
 end
 
 # @return true on success
-def run_cmd(cmd)
+def run_cmd(*cmd)
   print_cmd cmd
-  @dry_run || system(cmd)
+  @dry_run || system(*cmd)
 end
 
 def systemctl(cmd, services)
@@ -132,7 +132,7 @@ def systemctl(cmd, services)
 end
 
 def print_cmd(cmd)
-  puts cmd if @verbose || @dry_run
+  puts [*cmd].join(' ') if @verbose || @dry_run
 end
 
 def get_active_units(units)
@@ -186,7 +186,7 @@ end
 def show_failed_services_status(services)
   puts
   services.each do |service|
-    run_cmd("systemctl --user status #{service.shellescape}")
+    run_cmd('systemctl', '--user', 'status', service)
     puts
   end
 end
