@@ -193,8 +193,8 @@ in {
       };
 
       defaultTimeout = mkOption {
-        default = false;
-        type = types.nullOr types.bool;
+        default = 0;
+        type = types.nullOr types.int;
         description = ''
 	   Set the default timeout to timeout in milliseconds. To disable the timeout, set it to zero.
         '';
