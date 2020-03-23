@@ -167,11 +167,10 @@ def get_restricted_units(units)
     no_manual_start << unit if no_start.end_with?('yes')
     no_manual_stop << unit if no_stop.end_with?('yes')
   end
-  # Regular expression that indicates that a service should not be
-  # restarted even if a change has been detected.
-  restartRe = /^[ \t]*X-RestartIfChanged[ \t]*=[ \t]*false[ \t]*(?:#.*)?$/
+  # Get units that should not be restarted even if a change has been detected.
+  no_restart_regexp = /^\s*X-RestartIfChanged\s*=\s*false\b/
   units.each do |unit|
-    if systemctl('cat', unit) =~ restartRe
+    if systemctl('cat', unit) =~ no_restart_regexp
       no_restart << unit
     end
   end
