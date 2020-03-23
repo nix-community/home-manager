@@ -52,9 +52,9 @@ def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
     print_service_msg("All services are already running", services_to_run)
   else
     puts "Setting up services" if @verbose
-    systemctl('stop', to_stop)
-    systemctl('start', to_start)
-    systemctl('restart', to_restart)
+    systemctl_action('stop', to_stop)
+    systemctl_action('start', to_start)
+    systemctl_action('restart', to_restart)
     started_services = to_start + to_restart
     if start_timeout_ms > 0 && !started_services.empty? && !@dry_run
       failed = wait_and_get_failed_services(started_services, start_timeout_ms)
@@ -106,7 +106,7 @@ def run_cmd(*cmd)
   @dry_run || system(*cmd)
 end
 
-def systemctl(cmd, services)
+def systemctl_action(cmd, services)
   return if services.empty?
 
   verb = (cmd == 'stop') ? 'Stopping' : "#{cmd.capitalize}ing"
