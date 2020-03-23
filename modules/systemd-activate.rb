@@ -30,9 +30,10 @@ def setup_services(old_gen_path, new_gen_path, start_timeout_ms_string)
   all_services = get_active_targets_units(new_units_path)
   maybe_changed = all_services & old_services
   changed_services = get_changed_services(old_units_path, new_units_path, maybe_changed)
+  unchanged_oneshots = get_oneshot_services(maybe_changed - changed_services)
 
   # These services should be running when this script is finished
-  services_to_run = all_services
+  services_to_run = all_services - unchanged_oneshots
 
   # Only stop active services, otherwise we might get a 'service not loaded' error
   # for inactive services that were removed in the current generation.
@@ -157,6 +158,14 @@ def filter_units(units)
   return [] if units.empty?
   states = systemctl('is-active', *units).split
   units.select.with_index { |_, i| yield states[i] }
+end
+
+def get_oneshot_services(units)
+  return [] if units.empty?
+  types = systemctl('show', '-p', 'Type', *units).split
+  units.select.with_index do |_, i|
+    types[i] == 'Type=oneshot'
+  end
 end
 
 def get_restricted_units(units)
