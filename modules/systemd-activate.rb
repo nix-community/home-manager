@@ -1,6 +1,5 @@
 require 'set'
 require 'open3'
-require 'shellwords'
 
 @dry_run = ENV['DRY_RUN']
 @verbose = ENV['VERBOSE']
@@ -131,6 +130,11 @@ def systemctl_action(cmd, services)
   end
 end
 
+def systemctl(*cmd)
+  output, _ = Open3.capture2('systemctl', '--user', *cmd)
+  output
+end
+
 def print_cmd(cmd)
   puts [*cmd].join(' ') if @verbose || @dry_run
 end
@@ -146,15 +150,14 @@ end
 def get_units_by_activity(units, active)
   return [] if units.empty?
   units = units.to_a
-  is_active = `systemctl --user is-active #{units.shelljoin}`.split
+  is_active = systemctl('is-active', *units).split
   units.select.with_index do |_, i|
     (is_active[i] == 'active') == active
   end
 end
 
 def get_restricted_units(units)
-  units = units.to_a
-  infos = `systemctl --user show -p RefuseManualStart -p RefuseManualStop #{units.shelljoin}`
+  infos = systemctl('show', '-p', 'RefuseManualStart', '-p', 'RefuseManualStop', *units)
           .split("\n\n")
   no_restart = []
   no_manual_start = []
@@ -168,7 +171,7 @@ def get_restricted_units(units)
   # restarted even if a change has been detected.
   restartRe = /^[ \t]*X-RestartIfChanged[ \t]*=[ \t]*false[ \t]*(?:#.*)?$/
   units.each do |unit|
-    if `systemctl --user cat #{unit.shellescape}` =~ restartRe
+    if systemctl('cat', unit) =~ restartRe
       no_restart << unit
     end
   end
