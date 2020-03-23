@@ -185,7 +185,7 @@ in {
       };
 
       format = mkOption {
-        default = "<b>%s</b>\n%b";
+        default = "<b>%s</b>\\n%b";
         type = types.nullOr types.str;
         description = ''
 	   Set notification format string to format. See FORMAT SPECIFIERS for more information. To change this for grouped notifications, set it within a grouped criteria.
@@ -222,22 +222,22 @@ in {
   config = (let
     boolToString = v: if v then "true" else "false";
     optionalBoolean = name: val:
-      lib.optionalString (val != null) "${name} = ${boolToString val}";
+      lib.optionalString (val != null) "${name}=${boolToString val}";
     optionalInteger = name: val:
-      lib.optionalString (val != null) "${name} = ${toString val}";
+      lib.optionalString (val != null) "${name}=${toString val}";
     optionalString = name: val:
-      lib.optionalString (val != null) "${name} = ${val}";
+      lib.optionalString (val != null) "${name}=${val}";
   in mkIf cfg.enable {
     home.packages = [ pkgs.mako ];
     xdg.configFile."mako/config".text = ''
-      [global]
+      #[global]
       ${optionalInteger "max-visible" cfg.maxVisible}
       ${optionalString "sort" cfg.sort}
       ${optionalString "output" cfg.output}
       ${optionalString "layer" cfg.layer}
       ${optionalString "anchor" cfg.anchor}
 
-      [style]
+      #[style]
       ${optionalString "font" cfg.font}
       ${optionalString "background-color" cfg.backgroundColor}
       ${optionalString "text-color" cfg.textColor}
