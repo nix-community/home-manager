@@ -159,7 +159,6 @@ end
 def get_restricted_units(units)
   infos = systemctl('show', '-p', 'RefuseManualStart', '-p', 'RefuseManualStop', *units)
           .split("\n\n")
-  no_restart = []
   no_manual_start = []
   no_manual_stop = []
   infos.zip(units).each do |info, unit|
@@ -169,11 +168,7 @@ def get_restricted_units(units)
   end
   # Get units that should not be restarted even if a change has been detected.
   no_restart_regexp = /^\s*X-RestartIfChanged\s*=\s*false\b/
-  units.each do |unit|
-    if systemctl('cat', unit) =~ no_restart_regexp
-      no_restart << unit
-    end
-  end
+  no_restart = units.select { |unit| systemctl('cat', unit) =~ no_restart_regexp }
   [no_manual_start, no_manual_stop, no_restart]
 end
 
