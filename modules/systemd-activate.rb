@@ -146,6 +146,10 @@ def get_inactive_units(units)
   filter_units(units) { |state| state != 'active' }
 end
 
+def get_failed_units(units)
+  filter_units(units) { |state| state == 'failed' }
+end
+
 def filter_units(units)
   return [] if units.empty?
   states = systemctl('is-active', *units).split
@@ -173,7 +177,7 @@ def wait_and_get_failed_services(services, start_timeout_ms)
   # Force the previous message to always be visible before sleeping
   STDOUT.flush
   sleep(start_timeout_ms / 1000.0)
-  get_inactive_units(services)
+  get_failed_units(services)
 end
 
 def show_failed_services_status(services)
