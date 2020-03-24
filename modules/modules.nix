@@ -25,7 +25,7 @@ let
     (loadModule ./accounts/email.nix { })
     (loadModule ./files.nix { })
     (loadModule ./home-environment.nix { })
-    (loadModule ./manual.nix { })
+    (loadModule (import ./manual.nix nixpkgs) { })
     (loadModule ./misc/dconf.nix { })
     (loadModule ./misc/debug.nix { })
     (loadModule ./misc/fontconfig.nix { })
@@ -183,8 +183,8 @@ let
     (loadModule ./xsession.nix { })
     (loadModule (pkgs.path + "/nixos/modules/misc/assertions.nix") { })
     (loadModule (pkgs.path + "/nixos/modules/misc/meta.nix") { })
-    (loadModule "${nixpkgs}/nixos/modules/misc/assertions.nix" { })
-    (loadModule "${nixpkgs}/nixos/modules/misc/meta.nix" { })
+   #(loadModule "${nixpkgs}/nixos/modules/misc/assertions.nix" { })
+   #(loadModule "${nixpkgs}/nixos/modules/misc/meta.nix" { })
   ];
 
   modules = map (getAttr "file") (filter (getAttr "condition") allModules);

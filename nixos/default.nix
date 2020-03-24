@@ -9,27 +9,31 @@ let
 
   extendedLib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
-  hmModule = types.submodule ({name, ...}: {
+  hmModule = types.submoduleWith {
     specialArgs = { lib = extendedLib; };
-    imports = import ../modules/modules.nix nixpkgs {
-      inherit pkgs;
-      lib = extendedLib;
-      useNixpkgsModule = !cfg.useGlobalPkgs;
-    };
-
-    config = {
-      submoduleSupport.enable = true;
-      submoduleSupport.externalPackageInstall = cfg.useUserPackages;
-
-      # The per-user directory inside /etc/profiles is not known by
-      # fontconfig by default.
-      fonts.fontconfig.enable =
-        cfg.useUserPackages && config.fonts.fontconfig.enable;
-
-      home.username = config.users.users.${name}.name;
-      home.homeDirectory = config.users.users.${name}.home;
-    };
-  });
+    modules = [
+      ({ name, ... }: {
+        imports = import ../modules/modules.nix nixpkgs {
+          inherit pkgs;
+          lib = extendedLib;
+          useNixpkgsModule = !cfg.useGlobalPkgs;
+        };
+ 
+        config = {
+          submoduleSupport.enable = true;
+          submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+ 
+          # The per-user directory inside /etc/profiles is not known by
+          # fontconfig by default.
+          fonts.fontconfig.enable =
+            cfg.useUserPackages && config.fonts.fontconfig.enable;
+ 
+          home.username = config.users.users.${name}.name;
+          home.homeDirectory = config.users.users.${name}.home;
+        };
+      })
+    ];
+  };
 
   serviceEnvironment =
     optionalAttrs (cfg.backupFileExtension != null) {

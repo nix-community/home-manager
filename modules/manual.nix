@@ -1,3 +1,4 @@
+nixpkgs:
 { config, lib, pkgs, ... }:
 
 with lib;
@@ -6,7 +7,7 @@ let
 
   cfg = config.manual;
 
-  docs = import ../doc { inherit lib pkgs; };
+  docs = import ../doc nixpkgs { inherit lib pkgs; };
 
 in
 
