@@ -160,7 +160,7 @@ let
         '';
         type = types.lines;
         description = ''
-          Extra settings for plugins
+          Extra settings for plugins.
         '';
       };
     };
