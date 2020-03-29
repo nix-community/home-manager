@@ -566,7 +566,7 @@ let
         ++ optional (autoComplete != null)
         "set-option global autocomplete ${concatStringsSep "|" autoComplete}"
         ++ optional (autoReload != null)
-        "set-option global/ autoreload ${autoReload}"
+        "set-option global autoreload ${autoReload}"
         ++ optional (wrapLines != null && wrapLines.enable)
         "add-highlighter global/ wrap${wrapOptions}"
         ++ optional (numberLines != null && numberLines.enable)
