@@ -5,7 +5,7 @@ with lib;
 let
 
   cfg = config.programs.vim;
-  defaultPlugins = [ pkgs.vimPlugins.sensible ];
+  defaultPlugins = [ pkgs.vimPlugins.vim-sensible ];
 
   knownSettings = {
     background = types.enum [ "dark" "light" ];
