@@ -23,10 +23,12 @@ in {
 
       sort = mkOption {
         default = "-time";
-        type = types.nullOr types.str;
+        type = types.nullOr (types.enum [
+          "+time" "-time" "+priority" "-priority"
+        ]);
         description = ''
 	        Sorts incoming notifications by time and/or priority in ascending(+)
-          or descending(-( order. E.g.: +/-time, +/-priority
+          or descending(-) order.
 	      '';
       };
 
@@ -79,7 +81,8 @@ in {
         default = "#285577FF";
         type = types.nullOr types.str;
         description = ''
-	        Set background color to color. See COLORS for more information.
+	        Set popup background color to a specific color, represented in hex
+          color code.
         '';
       };
 
@@ -87,7 +90,8 @@ in {
         default = "#FFFFFFFF";
         type = types.nullOr types.str;
         description = ''
-	        Set text color to color. See COLORS for more information.
+	        Set popup text color to a specific color, represented in hex color
+          code.
         '';
       };
 
@@ -95,7 +99,7 @@ in {
         default = 300;
         type = types.nullOr types.int;
         description = ''
-	        Set width of notification popups.
+	        Set width of notification popups in specified number of pixels.
         '';
       };
 
@@ -110,19 +114,27 @@ in {
 
       margin = mkOption {
         default = 10;
-        type = types.nullOr types.int;
+        type = types.nullOr types.str;
         description = ''
-          Set margin of each edge to the size specified by directional.
-	        See DIRECTIONAL VALUES for more information.
+          Set margin of each edge specified in pixels. Specify single value to
+          apply margin on all sides. Two comma-seperated values will set
+          vertical and horizontal edges seperately. Four comma-seperated will
+          give each edge a seperate value.
+	        For example: 10,20,5 will set top margin to 10, left and right to 20
+          and bottom to five.
         '';
       };
 
       padding = mkOption {
         default = 5;
-        type = types.nullOr types.int;
+        type = types.nullOr types.str;
         description = ''
-	        Set padding on each side to the size specified by directional.
-          See DIRECTIONAL VALUES for more information.
+	        Set padding of each edge specified in pixels. Specify single value to
+          apply margin on all sides. Two comma-seperated values will set
+          vertical and horizontal edges seperately. Four comma-seperated will
+          give each edge a seperate value.
+	        For example: 10,20,5 will set top margin to 10, left and right to 20
+          and bottom to five.
         '';
       };
 
@@ -138,7 +150,8 @@ in {
         default = "#4C7899FF";
         type = types.nullOr types.str;
         description = ''
-          Set popup border color to color. See COLORS for more information.
+          Set popup border color to a specific color, represented in hex color
+          code.
         '';
       };
 
@@ -154,11 +167,11 @@ in {
         default = "over #5588AAFF";
         type = types.nullOr types.str;
         description = ''
-          Set popup progress indicator color to color. See COLOR for more
-          information. To draw the progress indicator on top of the background
-          color, use the over attribute. To replace the background color, use
-          the source attribute (this can be useful when the notification is
-          semi-transparent).
+          Set popup progress indicator color to a specific color, represented in
+          hex color code. To draw the progress indicator on top of the
+          background color, use the over attribute. To replace the background
+          color, use the source attribute (this can be useful when the
+          notification is semi-transparent).
         '';
       };
 
