@@ -113,7 +113,7 @@ in {
       };
 
       margin = mkOption {
-        default = 10;
+        default = "10";
         type = types.nullOr types.str;
         description = ''
           Set margin of each edge specified in pixels. Specify single value to
@@ -126,7 +126,7 @@ in {
       };
 
       padding = mkOption {
-        default = 5;
+        default = "5";
         type = types.nullOr types.str;
         description = ''
 	        Set padding of each edge specified in pixels. Specify single value to
@@ -288,8 +288,8 @@ in {
       ${optionalString "text-color" cfg.textColor}
       ${optionalInteger "width" cfg.width}
       ${optionalInteger "height" cfg.height}
-      ${optionalInteger "margin" cfg.margin}
-      ${optionalInteger "padding" cfg.padding}
+      ${optionalString "margin" cfg.margin}
+      ${optionalString "padding" cfg.padding}
       ${optionalInteger "border-size" cfg.borderSize}
       ${optionalString "border-color" cfg.borderColor}
       ${optionalInteger "border-radius" cfg.borderRadius}
