@@ -57,13 +57,13 @@ in {
       anchor = mkOption {
         default = "top-right";
         type = types.nullOr (types.enum [
-          "top-right" "tio.center" "top-left" "bottom-right" "bottom-center"
+          "top-right" "top-center" "top-left" "bottom-right" "bottom-center"
           "bottom-left" "center"
         ]);
         description = ''
-           Show notifications at the specified position on the output.
-           Supported values are top-right, top-center, top-left, bottom-right,
-           bottom-center, bottom-left, and center.
+          Show notifications at the specified position on the output.
+          Supported values are top-right, top-center, top-left, bottom-right,
+          bottom-center, bottom-left, and center.
          '';
       };
 
@@ -71,7 +71,7 @@ in {
         default = "monospace 10";
         type = types.nullOr types.str;
         description = ''
-	   Set font to font, in Pango format.
+	        Font to use, in Pango format.
         '';
       };
 
@@ -79,7 +79,7 @@ in {
         default = "#285577FF";
         type = types.nullOr types.str;
         description = ''
-	   Set background color to color. See COLORS for more information.
+	        Set background color to color. See COLORS for more information.
         '';
       };
 
@@ -87,7 +87,7 @@ in {
         default = "#FFFFFFFF";
         type = types.nullOr types.str;
         description = ''
-	   Set text color to color. See COLORS for more information.
+	        Set text color to color. See COLORS for more information.
         '';
       };
 
@@ -95,7 +95,7 @@ in {
         default = 300;
         type = types.nullOr types.int;
         description = ''
-	   Set width of notification popups.
+	        Set width of notification popups.
         '';
       };
 
@@ -103,8 +103,8 @@ in {
         default = 100;
         type = types.nullOr types.int;
         description = ''
-           Set maximum height of notification popups. Notifications whose text
-           takes up less space are shrunk to fit.
+          Set maximum height of notification popups. Notifications whose text
+          takes up less space are shrunk to fit.
         '';
       };
 
@@ -112,8 +112,8 @@ in {
         default = 10;
         type = types.nullOr types.int;
         description = ''
-           Set margin of each edge to the size specified by directional.
-	         See DIRECTIONAL VALUES for more information.
+          Set margin of each edge to the size specified by directional.
+	        See DIRECTIONAL VALUES for more information.
         '';
       };
 
@@ -121,8 +121,8 @@ in {
         default = 5;
         type = types.nullOr types.int;
         description = ''
-	         Set padding on each side to the size specified by directional.
-           See DIRECTIONAL VALUES for more information.
+	        Set padding on each side to the size specified by directional.
+          See DIRECTIONAL VALUES for more information.
         '';
       };
 
@@ -130,7 +130,7 @@ in {
         default = 1;
         type = types.nullOr types.int;
         description = ''
-           Set popup border size to px pixels.
+          Set popup border size to the specified number of pixels.
         '';
       };
 
@@ -138,7 +138,7 @@ in {
         default = "#4C7899FF";
         type = types.nullOr types.str;
         description = ''
-           Set popup border color to color. See COLORS for more information.
+          Set popup border color to color. See COLORS for more information.
         '';
       };
 
@@ -146,7 +146,7 @@ in {
         default = 0;
         type = types.nullOr types.int;
         description = ''
-	   Set popup corner radius to px pixels.
+	        Set popup corner radius to the specified number of pixels.
         '';
       };
 
@@ -154,11 +154,11 @@ in {
         default = "over #5588AAFF";
         type = types.nullOr types.str;
         description = ''
-           Set popup progress indicator color to color. See COLOR for more
-           information. To draw the progress indicator on top of the background
-           color, use the over attribute. To replace the background color, use
-           the source attribute (this can be useful when the notification is
-           semi-transparent).
+          Set popup progress indicator color to color. See COLOR for more
+          information. To draw the progress indicator on top of the background
+          color, use the over attribute. To replace the background color, use
+          the source attribute (this can be useful when the notification is
+          semi-transparent).
         '';
       };
 
@@ -166,7 +166,7 @@ in {
         default = true;
         type = types.nullOr types.bool;
         description = ''
-	   Show icons in notifications.
+	        Whether or not to show icons in notifications.
         '';
       };
 
@@ -174,7 +174,7 @@ in {
         default = 64;
         type = types.nullOr types.int;
         description = ''
-	   Set maximum icon size to px pixels.
+	        Set maximum icon size to the specified number of pixels.
         '';
       };
 
@@ -188,7 +188,7 @@ in {
           support any of the theme metadata. Therefore, if you want to search
           parent themes, you'll need to add them to the path manually.
 
-           /usr/share/icons/hicolor and /usr/share/pixmaps are always searched.
+          /usr/share/icons/hicolor and /usr/share/pixmaps are always searched.
         '';
       };
 
