@@ -264,14 +264,12 @@ in {
   in mkIf cfg.enable {
     home.packages = [ pkgs.mako ];
     xdg.configFile."mako/config".text = ''
-      #[global]
       ${optionalInteger "max-visible" cfg.maxVisible}
       ${optionalString "sort" cfg.sort}
       ${optionalString "output" cfg.output}
       ${optionalString "layer" cfg.layer}
       ${optionalString "anchor" cfg.anchor}
 
-      #[style]
       ${optionalString "font" cfg.font}
       ${optionalString "background-color" cfg.backgroundColor}
       ${optionalString "text-color" cfg.textColor}
