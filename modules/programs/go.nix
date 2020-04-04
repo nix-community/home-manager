@@ -62,6 +62,18 @@ in {
         example = ".local/bin.go";
         description = "GOBIN relative to HOME";
       };
+
+      goPrivate = mkOption {
+        type = with types; listOf str;
+        default = [ ];
+        example = [ "*.corp.example.com" "rsc.io/private" ];
+        description = ''
+          The <envar>GOPRIVATE</envar> environment variable controls
+          which modules the go command considers to be private (not
+          available publicly) and should therefore not use the proxy
+          or checksum database.
+        '';
+      };
     };
   };
 
@@ -84,6 +96,10 @@ in {
     (mkIf (cfg.goBin != null) {
       home.sessionVariables.GOBIN =
         builtins.toPath "${config.home.homeDirectory}/${cfg.goBin}";
+    })
+
+    (mkIf (cfg.goPrivate != [ ]) {
+      home.sessionVariables.GOPRIVATE = concatStringsSep "," cfg.goPrivate;
     })
   ]);
 }
