@@ -96,6 +96,13 @@ in
       };
 
       gtk3 = {
+        bookmarks = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = [ "file:///home/jane/Documents" ];
+          description = "Bookmarks in the sidebar of the GTK file browser";
+        };
+
         extraConfig = mkOption {
           type = with types; attrsOf (either bool (either int str));
           default = {};
@@ -158,6 +165,10 @@ in
           toGtk3Ini { Settings = ini // cfg3.extraConfig; };
 
         xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
+
+        xdg.configFile."gtk-3.0/bookmarks" = mkIf (cfg3.bookmarks != []) {
+          text = concatStringsSep "\n" cfg3.bookmarks;
+        };
 
         dconf.settings."org/gnome/desktop/interface" = dconfIni;
       }
