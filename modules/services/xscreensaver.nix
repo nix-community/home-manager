@@ -25,6 +25,13 @@ in {
           The settings to use for XScreenSaver.
         '';
       };
+
+      command = mkOption {
+        type = types.str;
+        default = "${pkgs.xscreensaver}/bin/xscreensaver -no-splash";
+        example = "${config.home.homeDirectory}/bin/wrapped-xscreensaver";
+        description = "Command to start the xscreensaver";
+      };
     };
   };
 
@@ -42,9 +49,7 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Service = {
-        ExecStart = "${pkgs.xscreensaver}/bin/xscreensaver -no-splash";
-      };
+      Service = { ExecStart = services.xscreensaver.command; };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
     };
