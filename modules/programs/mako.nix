@@ -26,19 +26,19 @@ in {
         type =
           types.nullOr (types.enum [ "+time" "-time" "+priority" "-priority" ]);
         description = ''
-          	        Sorts incoming notifications by time and/or priority in ascending(+)
-                    or descending(-) order.
-          	      '';
+          Sorts incoming notifications by time and/or priority in ascending(+)
+          or descending(-) order.
+        '';
       };
 
       output = mkOption {
         default = null;
         type = types.nullOr types.str;
         description = ''
-          	        Show notifications on the specified output. If empty, notifications
-                    will appear on the focused output. Requires the compositor to support
-                    the Wayland protocol xdg-output-unstable-v1 version 2.
-                  '';
+          Show notifications on the specified output. If empty, notifications
+          will appear on the focused output. Requires the compositor to support
+          the Wayland protocol xdg-output-unstable-v1 version 2.
+        '';
       };
 
       layer = mkOption {
@@ -46,12 +46,12 @@ in {
         type =
           types.nullOr (types.enum [ "background" "bottom" "top" "overlay" ]);
         description = ''
-          	        Arrange mako at the specified layer, relative to normal windows.
-                    Supported values are background, bottom, top, and overlay. Using
-                    overlay will cause notifications to be displayed above fullscreen
-                    windows, though this may also occur at top depending on your
-                    compositor.
-                  '';
+          Arrange mako at the specified layer, relative to normal windows.
+          Supported values are background, bottom, top, and overlay. Using
+          overlay will cause notifications to be displayed above fullscreen
+          windows, though this may also occur at top depending on your
+          compositor.
+        '';
       };
 
       anchor = mkOption {
@@ -84,18 +84,18 @@ in {
         default = "#285577FF";
         type = types.nullOr types.str;
         description = ''
-          	        Set popup background color to a specific color, represented in hex
-                    color code.
-                  '';
+          Set popup background color to a specific color, represented in hex
+          color code.
+        '';
       };
 
       textColor = mkOption {
         default = "#FFFFFFFF";
         type = types.nullOr types.str;
         description = ''
-          	        Set popup text color to a specific color, represented in hex color
-                    code.
-                  '';
+          Set popup text color to a specific color, represented in hex color
+          code.
+        '';
       };
 
       width = mkOption {
@@ -119,26 +119,26 @@ in {
         default = "10";
         type = types.nullOr types.str;
         description = ''
-                    Set margin of each edge specified in pixels. Specify single value to
-                    apply margin on all sides. Two comma-seperated values will set
-                    vertical and horizontal edges seperately. Four comma-seperated will
-                    give each edge a seperate value.
-          	        For example: 10,20,5 will set top margin to 10, left and right to 20
-                    and bottom to five.
-                  '';
+          Set margin of each edge specified in pixels. Specify single value to
+          apply margin on all sides. Two comma-seperated values will set
+          vertical and horizontal edges seperately. Four comma-seperated will
+          give each edge a seperate value.
+          For example: 10,20,5 will set top margin to 10, left and right to 20
+          and bottom to five.
+        '';
       };
 
       padding = mkOption {
         default = "5";
         type = types.nullOr types.str;
         description = ''
-          	        Set padding of each edge specified in pixels. Specify single value to
-                    apply margin on all sides. Two comma-seperated values will set
-                    vertical and horizontal edges seperately. Four comma-seperated will
-                    give each edge a seperate value.
-          	        For example: 10,20,5 will set top margin to 10, left and right to 20
-                    and bottom to five.
-                  '';
+          Set padding of each edge specified in pixels. Specify single value to
+          apply margin on all sides. Two comma-seperated values will set
+          vertical and horizontal edges seperately. Four comma-seperated will
+          give each edge a seperate value.
+          For example: 10,20,5 will set top margin to 10, left and right to 20
+          and bottom to five.
+        '';
       };
 
       borderSize = mkOption {
@@ -198,72 +198,72 @@ in {
         default = null;
         type = types.nullOr types.str;
         description = ''
-          	        Paths to search for icons when a notification specifies a name
-                    instead of a full path. Colon-delimited. This approximates the search
-                    algorithm used by the XDG Icon Theme Specification, but does not
-                    support any of the theme metadata. Therefore, if you want to search
-                    parent themes, you'll need to add them to the path manually.
+          Paths to search for icons when a notification specifies a name
+          instead of a full path. Colon-delimited. This approximates the search
+          algorithm used by the XDG Icon Theme Specification, but does not
+          support any of the theme metadata. Therefore, if you want to search
+          parent themes, you'll need to add them to the path manually.
 
-                    /usr/share/icons/hicolor and /usr/share/pixmaps are always searched.
-                  '';
+          /usr/share/icons/hicolor and /usr/share/pixmaps are always searched.
+        '';
       };
 
       markup = mkOption {
         default = true;
         type = types.nullOr types.bool;
         description = ''
-          	        If 1, enable Pango markup. If 0, disable Pango markup. If enabled,
-                    Pango markup will be interpreted in your format specifier and in the
-                    body of notifications.
-                  '';
+          If 1, enable Pango markup. If 0, disable Pango markup. If enabled,
+          Pango markup will be interpreted in your format specifier and in the
+          body of notifications.
+        '';
       };
 
       actions = mkOption {
         default = true;
         type = types.nullOr types.bool;
         description = ''
-          	        Applications may request an action to be associated with activating a
-                    notification. Disabling this will cause mako to ignore these requests.
-                  '';
+          Applications may request an action to be associated with activating a
+          notification. Disabling this will cause mako to ignore these requests.
+        '';
       };
 
       format = mkOption {
         default = "<b>%s</b>\\n%b";
         type = types.nullOr types.str;
         description = ''
-          	        Set notification format string to format. See FORMAT SPECIFIERS for
-                    more information. To change this for grouped notifications, set it
-                    within a grouped criteria.
-                  '';
+          Set notification format string to format. See FORMAT SPECIFIERS for
+          more information. To change this for grouped notifications, set it
+          within a grouped criteria.
+        '';
       };
 
       defaultTimeout = mkOption {
         default = 0;
         type = types.nullOr types.int;
         description = ''
-          	        Set the default timeout to timeout in milliseconds. To disable the
-                    timeout, set it to zero.
-                  '';
+          Set the default timeout to timeout in milliseconds. To disable the
+          timeout, set it to zero.
+        '';
       };
 
       ignoreTimeout = mkOption {
         default = false;
         type = types.nullOr types.bool;
         description = ''
-          	        If set, mako will ignore the expire timeout sent by notifications
-                    and use the one provided by default-timeout instead.
-                  '';
+          If set, mako will ignore the expire timeout sent by notifications
+          and use the one provided by default-timeout instead.
+        '';
       };
 
       groupBy = mkOption {
         default = null;
         type = types.nullOr types.str;
         description = ''
-          	        A comma-separated list of criteria fields that will be compared to
-                    other visible notifications to determine if this one should form a
-                    group with them. All listed criteria must be exactly equal for two
-                    notifications to group.
-                  '';
+          A comma-separated list of criteria fields that will be compared to
+          other visible notifications to determine if this one should form a
+          group with them. All listed criteria must be exactly equal for two
+          notifications to group.
+        '';
       };
 
     };
