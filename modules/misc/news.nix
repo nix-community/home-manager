@@ -1443,6 +1443,16 @@ in
           'services.picom' as soon as possible.
         '';
       }
+
+      {
+        time = "2020-04-05T21:16:44+01:00";
+        message = ''
+          A new option is available: 'targets.genericLinux.enable'.
+
+          Enable this option to make Home Manager work better on
+          GNU/Linux distributions other than NixOS.
+        '';
+      }
     ];
   };
 }
