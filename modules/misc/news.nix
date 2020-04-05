@@ -1443,6 +1443,22 @@ in
           'services.picom' as soon as possible.
         '';
       }
+
+      {
+        time = "2020-04-08T09:33:05+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'targets.genericLinux'.
+
+          When enabled, this module will configure various settings
+          and environment variables to make Home Manager and programs
+          installed through Nix work better on GNU/Linux distributions
+          other than NixOS.
+
+          It should not be enabled if your Home Manager configuration
+          is deployed on a NixOS host.
+        '';
+      }
     ];
   };
 }

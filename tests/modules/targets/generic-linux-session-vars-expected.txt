@@ -1,0 +1,6 @@
+# Only source this once.
+if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+export __HM_SESS_VARS_SOURCED=1
+
+export XDG_DATA_DIRS="/nix/var/nix/profiles/default/share:/homeless-shelter/.nix-profile/share${XDG_DATA_DIRS:+:}$XDG_DATA_DIRS"
+. "@nix@/etc/profile.d/nix.sh"

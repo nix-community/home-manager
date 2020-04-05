@@ -57,5 +57,6 @@ import nmt {
     ./modules/services/sxhkd
     ./modules/services/window-managers/i3
     ./modules/systemd
+    ./modules/targets
   ]);
 }
