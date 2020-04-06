@@ -1,4 +1,4 @@
-{ config, ... }: {
+{ config, pkgs, ... }: {
   config = {
     services.sxhkd = {
       enable = true;
@@ -18,6 +18,9 @@
           call command d
       '';
     };
+
+    nixpkgs.overlays =
+      [ (self: super: { sxhkd = pkgs.writeScriptBin "dummy-sxhkd" ""; }) ];
 
     nmt.script = ''
       local sxhkdrc=home-files/.config/sxhkd/sxhkdrc
