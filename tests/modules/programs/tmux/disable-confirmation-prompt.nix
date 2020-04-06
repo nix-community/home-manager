@@ -12,9 +12,7 @@ with lib;
     nixpkgs.overlays = [
       (self: super: {
         tmuxPlugins = super.tmuxPlugins // {
-          sensible = super.tmuxPlugins.sensible // {
-            rtp = "@sensible_rtp@";
-          };
+          sensible = super.tmuxPlugins.sensible // { rtp = "@sensible_rtp@"; };
         };
       })
     ];

@@ -1,7 +1,5 @@
-{ lib
-, dag ? import ./dag.nix { inherit lib; }
-, gvariant ? import ./gvariant.nix { inherit lib; }
-}:
+{ lib, dag ? import ./dag.nix { inherit lib; }
+, gvariant ? import ./gvariant.nix { inherit lib; } }:
 
 with lib;
 
@@ -13,31 +11,25 @@ let
   # must refer back to the type.
   gvar = gvariant;
 
-in
-
-rec {
+in rec {
 
   inherit (typesDag) dagOf listOrDagOf;
 
   selectorFunction = mkOptionType {
     name = "selectorFunction";
-    description =
-      "Function that takes an attribute set and returns a list"
+    description = "Function that takes an attribute set and returns a list"
       + " containing a selection of the values of the input set";
     check = isFunction;
-    merge = _loc: defs:
-      as: concatMap (select: select as) (getValues defs);
+    merge = _loc: defs: as: concatMap (select: select as) (getValues defs);
   };
 
   overlayFunction = mkOptionType {
     name = "overlayFunction";
-    description =
-      "An overlay function, takes self and super and returns"
+    description = "An overlay function, takes self and super and returns"
       + " an attribute set overriding the desired attributes.";
     check = isFunction;
-    merge = _loc: defs:
-      self: super:
-        foldl' (res: def: mergeAttrs res (def.value self super)) {} defs;
+    merge = _loc: defs: self: super:
+      foldl' (res: def: mergeAttrs res (def.value self super)) { } defs;
   };
 
   fontType = types.submodule {
@@ -76,22 +68,21 @@ rec {
         # A bit naive to just check the first entry…
         sharedDefType = foldl' sameOrNull (head defTypes) defTypes;
         allChecked = all (x: check x) vals;
-      in
-        if sharedDefType == null then
-          throw ("Cannot merge definitions of `${showOption loc}' with"
-                 + " mismatched GVariant types given in"
-                 + " ${showFiles (getFiles defs)}.")
-        else if gvar.isArray sharedDefType && allChecked then
-          (types.listOf gvariant).merge
-            loc (map (d: d // { value = d.value.value; } ) vdefs)
-        else if gvar.isTuple sharedDefType && allChecked then
-          mergeOneOption loc defs
-        else if gvar.type.string == sharedDefType && allChecked then
-          types.str.merge loc defs
-        else if gvar.type.double == sharedDefType && allChecked then
-          types.float.merge loc defs
-        else
-          mergeDefaultOption loc defs;
+      in if sharedDefType == null then
+        throw ("Cannot merge definitions of `${showOption loc}' with"
+          + " mismatched GVariant types given in"
+          + " ${showFiles (getFiles defs)}.")
+      else if gvar.isArray sharedDefType && allChecked then
+        (types.listOf gvariant).merge loc
+        (map (d: d // { value = d.value.value; }) vdefs)
+      else if gvar.isTuple sharedDefType && allChecked then
+        mergeOneOption loc defs
+      else if gvar.type.string == sharedDefType && allChecked then
+        types.str.merge loc defs
+      else if gvar.type.double == sharedDefType && allChecked then
+        types.float.merge loc defs
+      else
+        mergeDefaultOption loc defs;
   };
 
 }

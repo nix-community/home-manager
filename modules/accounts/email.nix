@@ -106,7 +106,7 @@ let
 
       tls = mkOption {
         type = tlsModule;
-        default = {};
+        default = { };
         description = ''
           Configuration for secure connections.
         '';
@@ -136,7 +136,7 @@ let
 
       tls = mkOption {
         type = tlsModule;
-        default = {};
+        default = { };
         description = ''
           Configuration for secure connections.
         '';
@@ -209,7 +209,7 @@ let
 
       aliases = mkOption {
         type = types.listOf (types.strMatching ".*@.*");
-        default = [];
+        default = [ ];
         example = [ "webmaster@example.org" "admin@example.org" ];
         description = "Alternative email addresses of this account.";
       };
@@ -276,7 +276,7 @@ let
             };
           };
         };
-        default = {};
+        default = { };
         description = ''
           Standard email folders.
         '';
@@ -292,7 +292,7 @@ let
 
       signature = mkOption {
         type = signatureModule;
-        default = {};
+        default = { };
         description = ''
           Signature configuration.
         '';
@@ -332,9 +332,7 @@ let
       (mkIf (config.flavor == "gmail.com") {
         userName = mkDefault config.address;
 
-        imap = {
-          host = "imap.gmail.com";
-        };
+        imap = { host = "imap.gmail.com"; };
 
         smtp = {
           host = "smtp.gmail.com";
@@ -343,20 +341,14 @@ let
       })
 
       (mkIf (config.flavor == "runbox.com") {
-        imap = {
-          host = "mail.runbox.com";
-        };
+        imap = { host = "mail.runbox.com"; };
 
-        smtp = {
-          host = "mail.runbox.com";
-        };
+        smtp = { host = "mail.runbox.com"; };
       })
     ];
   };
 
-in
-
-{
+in {
   options.accounts.email = {
     certificatesFile = mkOption {
       type = types.path;
@@ -373,9 +365,7 @@ in
       default = "${config.home.homeDirectory}/Maildir";
       defaultText = "$HOME/Maildir";
       apply = p:
-        if hasPrefix "/" p
-        then p
-        else "${config.home.homeDirectory}/${p}";
+        if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''
         The base directory for account maildir directories. May be a
         relative path, in which case it is relative the home
@@ -395,32 +385,24 @@ in
         (import ../programs/neomutt-accounts.nix)
         (import ../programs/notmuch-accounts.nix)
         (import ../programs/offlineimap-accounts.nix)
-      ] ++ optionals pkgs.stdenv.hostPlatform.isLinux [
-        (import ../services/lieer-accounts.nix)
-      ]));
-      default = {};
+      ] ++ optionals pkgs.stdenv.hostPlatform.isLinux
+        [ (import ../services/lieer-accounts.nix) ]));
+      default = { };
       description = "List of email accounts.";
     };
   };
 
-  config = mkIf (cfg.accounts != {}) {
+  config = mkIf (cfg.accounts != { }) {
     assertions = [
-      (
-        let
-          primaries =
-            catAttrs "name"
-            (filter (a: a.primary)
-            (attrValues cfg.accounts));
-        in
-          {
-            assertion = length primaries == 1;
-            message =
-              "Must have exactly one primary mail account but found "
-              + toString (length primaries)
-              + optionalString (length primaries > 1)
-                  (", namely " + concatStringsSep ", " primaries);
-          }
-      )
+      (let
+        primaries =
+          catAttrs "name" (filter (a: a.primary) (attrValues cfg.accounts));
+      in {
+        assertion = length primaries == 1;
+        message = "Must have exactly one primary mail account but found "
+          + toString (length primaries) + optionalString (length primaries > 1)
+          (", namely " + concatStringsSep ", " primaries);
+      })
     ];
   };
 }

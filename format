@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/b0bbacb52134a7e731e549f4c0a7a2a39ca6b481.tar.gz -i bash -p findutils nixfmt
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/05f0934825c2a0750d4888c4735f9420c906b388.tar.gz -i bash -p findutils nixfmt
 
 CHECK_ARG=
 
@@ -20,13 +20,11 @@ find . -name '*.nix' \
   \
   ! -path ./home-manager/default.nix \
   ! -path ./home-manager/home-manager.nix \
-  ! -path ./modules/accounts/email.nix \
   ! -path ./modules/default.nix \
   ! -path ./modules/files.nix \
   ! -path ./modules/home-environment.nix \
   ! -path ./modules/lib/default.nix \
   ! -path ./modules/lib/file-type.nix \
-  ! -path ./modules/lib/types.nix \
   ! -path ./modules/manual.nix \
   ! -path ./modules/misc/dconf.nix \
   ! -path ./modules/misc/gtk.nix \
@@ -59,8 +57,6 @@ find . -name '*.nix' \
   ! -path ./tests/modules/home-environment/session-variables.nix \
   ! -path ./tests/modules/programs/gpg/override-defaults.nix \
   ! -path ./tests/modules/programs/tmux/default.nix \
-  ! -path ./tests/modules/programs/tmux/disable-confirmation-prompt.nix \
-  ! -path ./tests/modules/programs/tmux/secure-socket-enabled.nix \
   ! -path ./tests/modules/programs/zsh/session-variables.nix \
   ! -path ./tests/modules/services/sxhkd/service.nix \
   ! -path ./tests/modules/systemd/default.nix \
