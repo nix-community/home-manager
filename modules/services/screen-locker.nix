@@ -17,6 +17,14 @@ in {
       example = "\${pkgs.i3lock}/bin/i3lock -n -c 000000";
     };
 
+    enableDetectSleep = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Whether to reset timers when awaking from sleep.
+      '';
+    };
+
     inactiveInterval = mkOption {
       type = types.int;
       default = 10;
@@ -42,7 +50,6 @@ in {
         Extra command-line arguments to pass to <command>xss-lock</command>.
       '';
     };
-
   };
 
   config = mkIf cfg.enable {
@@ -58,10 +65,10 @@ in {
       Service = {
         ExecStart = concatStringsSep " " ([
           "${pkgs.xautolock}/bin/xautolock"
-          "-detectsleep"
           "-time ${toString cfg.inactiveInterval}"
           "-locker '${pkgs.systemd}/bin/loginctl lock-session $XDG_SESSION_ID'"
-        ] ++ cfg.xautolockExtraOptions);
+        ] ++ optional cfg.enableDetectSleep "-detectsleep"
+          ++ cfg.xautolockExtraOptions);
       };
     };
 
