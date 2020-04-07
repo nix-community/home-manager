@@ -351,6 +351,10 @@ in
             if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
             export __HM_SESS_VARS_SOURCED=1
 
+            ${optionalString config.targets.genericLinux.enable ''
+              . "${pkgs.nix}/etc/profile.d/nix.sh"
+            ''}
+
             ${config.lib.shell.exportAll cfg.sessionVariables}
           '';
         }

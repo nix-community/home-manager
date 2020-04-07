@@ -2,6 +2,7 @@
 if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
 export __HM_SESS_VARS_SOURCED=1
 
+. "@nix@/etc/profile.d/nix.sh"
 
 
 export V1="v1"
