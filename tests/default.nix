@@ -36,6 +36,7 @@ import nmt {
     ./modules/programs/mbsync
     ./modules/programs/neomutt
     ./modules/programs/newsboat
+    ./modules/programs/qutebrowser
     ./modules/programs/readline
     ./modules/programs/ssh
     ./modules/programs/starship

@@ -1459,6 +1459,13 @@ in
           is deployed on a NixOS host.
         '';
       }
+
+      {
+        time = "2020-04-08T11:51:15+00:00";
+        message = ''
+          A new module is available: 'programs.qutebrowser'
+        '';
+      }
     ];
   };
 }
