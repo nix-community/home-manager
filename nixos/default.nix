@@ -18,16 +18,16 @@ let
           lib = extendedLib;
           useNixpkgsModule = !cfg.useGlobalPkgs;
         };
- 
+
         config = {
           submoduleSupport.enable = true;
           submoduleSupport.externalPackageInstall = cfg.useUserPackages;
- 
+
           # The per-user directory inside /etc/profiles is not known by
           # fontconfig by default.
-          fonts.fontconfig.enable =
-            cfg.useUserPackages && config.fonts.fontconfig.enable;
- 
+          fonts.fontconfig.enable = cfg.useUserPackages
+            && config.fonts.fontconfig.enable;
+
           home.username = config.users.users.${name}.name;
           home.homeDirectory = config.users.users.${name}.home;
         };
@@ -35,13 +35,9 @@ let
     ];
   };
 
-  serviceEnvironment =
-    optionalAttrs (cfg.backupFileExtension != null) {
-      HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
-    }
-    // optionalAttrs cfg.verbose {
-      VERBOSE = "1";
-    };
+  serviceEnvironment = optionalAttrs (cfg.backupFileExtension != null) {
+    HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
+  } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
 
 in {
   options = {
