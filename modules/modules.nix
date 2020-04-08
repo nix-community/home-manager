@@ -131,7 +131,7 @@ let
     (loadModule ./services/keynav.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/lieer.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/lorri.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./programs/mako.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./services/mako.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/mbsync.nix { })
     (loadModule ./services/mpd.nix { })
     (loadModule ./services/mpdris2.nix { condition = hostPlatform.isLinux; })
