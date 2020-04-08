@@ -18,7 +18,7 @@ in {
 
       settings = mkOption {
         type = format.type;
-        default = {};
+        default = { };
         description = ''
           Configuration for Waybar, see
           <link xlink:href="https://github.com/Alexays/Waybar/wiki/Configuration"/>
