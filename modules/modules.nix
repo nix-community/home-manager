@@ -157,7 +157,7 @@ let
     (loadModule ./services/udiskie.nix { })
     (loadModule ./services/unclutter.nix { })
     (loadModule ./services/unison.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/waybar.nix { })
+    (loadModule ./services/waybar.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/window-managers/awesome.nix { })
     (loadModule ./services/window-managers/bspwm/default.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/window-managers/i3-sway/i3.nix { })
