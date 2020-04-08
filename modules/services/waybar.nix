@@ -10,6 +10,8 @@ let
   configFile = pkgs.writeText "config" configText;
 
 in {
+  meta.maintainers = [ maintainers.onny ];
+
   options = {
     services.waybar = {
       enable = mkEnableOption ''
