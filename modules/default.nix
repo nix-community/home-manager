@@ -1,3 +1,4 @@
+nixpkgs:
 { configuration
 , pkgs
 , lib ? pkgs.stdenv.lib
@@ -19,10 +20,10 @@ let
     in
       fold f res res.config.warnings;
 
-  extendedLib = import ./lib/stdlib-extended.nix pkgs.lib;
+  extendedLib = import ./lib/stdlib-extended.nix nixpkgs.lib;
 
   hmModules =
-    import ./modules.nix {
+    import ./modules.nix nixpkgs {
       inherit check pkgs;
       lib = extendedLib;
     };
