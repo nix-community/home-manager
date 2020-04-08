@@ -14,9 +14,7 @@ in {
 
   options = {
     services.waybar = {
-      enable = mkEnableOption ''
-        Highly customizable Wayland bar for Sway and Wlroots based compositors
-      '';
+      enable = mkEnableOption "Waybar";
 
       layer = mkOption {
         default = "bottom";
