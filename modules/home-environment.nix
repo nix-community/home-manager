@@ -198,6 +198,16 @@ in
       '';
     };
 
+    home.sessionVariablesExtra = mkOption {
+      type = types.lines;
+      default = "";
+      internal = true;
+      description = ''
+        Extra configuration to add to the
+        <filename>hm-session-vars.sh</filename> file.
+      '';
+    };
+
     home.packages = mkOption {
       type = types.listOf types.package;
       default = [];
@@ -352,7 +362,7 @@ in
             export __HM_SESS_VARS_SOURCED=1
 
             ${config.lib.shell.exportAll cfg.sessionVariables}
-          '';
+          '' + cfg.sessionVariablesExtra;
         }
       )
     ];
