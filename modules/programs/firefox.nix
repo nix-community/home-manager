@@ -6,7 +6,20 @@ let
 
   cfg = config.programs.firefox;
 
+  mozillaConfigPath = ".mozilla";
+
+  firefoxConfigPath = "${mozillaConfigPath}/firefox";
+
+  profilesPath = firefoxConfigPath;
+
+  # The extensions path shared by all profiles; will not be supported
+  # by future Firefox versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
+
+  extensionsEnvPkg = pkgs.buildEnv {
+    name = "hm-firefox-extensions";
+    paths = cfg.extensions;
+  };
 
   profiles =
     flip mapAttrs' cfg.profiles (_: profile:
@@ -250,32 +263,30 @@ in
 
     home.file = mkMerge (
       [{
-        ".mozilla/${extensionPath}" = mkIf (cfg.extensions != []) (
-          let
-            extensionsEnv = pkgs.buildEnv {
-              name = "hm-firefox-extensions";
-              paths = cfg.extensions;
-            };
-          in {
-            source = "${extensionsEnv}/share/mozilla/${extensionPath}";
-            recursive = true;
-          }
-        );
+        "${mozillaConfigPath}/${extensionPath}" = mkIf (cfg.extensions != []) {
+          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+          recursive = true;
+        };
 
-        ".mozilla/firefox/profiles.ini" = mkIf (cfg.profiles != {}) {
+        "${firefoxConfigPath}/profiles.ini" = mkIf (cfg.profiles != {}) {
           text = profilesIni;
         };
       }]
       ++ flip mapAttrsToList cfg.profiles (_: profile: {
-        ".mozilla/firefox/${profile.path}/chrome/userChrome.css" =
+        "${profilesPath}/${profile.path}/chrome/userChrome.css" =
           mkIf (profile.userChrome != "") {
             text = profile.userChrome;
           };
 
-        ".mozilla/firefox/${profile.path}/user.js" =
+        "${profilesPath}/${profile.path}/user.js" =
           mkIf (profile.settings != {} || profile.extraConfig != "") {
             text = mkUserJs profile.settings profile.extraConfig;
           };
+
+        "${profilesPath}/${profile.path}/extensions" = mkIf (cfg.extensions != []) {
+          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+          recursive = true;
+        };
       })
     );
   };
