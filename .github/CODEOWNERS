@@ -1,0 +1,159 @@
+*                                                     @rycee
+
+/modules/home-environment.nix                         @rycee
+
+/modules/misc/dconf.nix                               @gnidorah @rycee
+
+/modules/misc/fontconfig.nix                          @rycee
+/tests/modules/misc/fontconfig                        @rycee
+
+/modules/misc/gtk.nix                                 @rycee
+
+/modules/misc/news.nix                                @rycee
+
+/modules/misc/pam.nix                                 @rycee
+/tests/modules/misc/pam                               @rycee
+
+/modules/misc/qt.nix                                  @rycee
+
+/modules/misc/submodule-support.nix                   @rycee
+
+/modules/misc/xdg-mime-apps.nix                       @pacien
+
+/modules/misc/xdg-user-dirs.nix                       @pacien
+
+/modules/programs/autorandr.nix                       @uvNikita
+
+/modules/programs/bash.nix                            @rycee
+
+/modules/programs/bat.nix                             @marsam
+
+/modules/programs/beets.nix                           @rycee
+
+/modules/programs/broot.nix                           @aheaume
+
+/modules/programs/direnv.nix                          @rycee
+
+/modules/programs/eclipse.nix                         @rycee
+
+/modules/programs/emacs.nix                           @rycee
+
+/modules/programs/firefox.nix                         @rycee
+
+/modules/programs/git.nix                             @rycee
+
+/modules/programs/gnome-terminal.nix                  @rycee
+
+/modules/programs/go.nix                              @rvolosatovs
+
+/modules/programs/home-manager.nix                    @rycee
+
+/modules/programs/keychain.nix                        @marsam
+
+/modules/programs/lesspipe.nix                        @rycee
+
+/modules/programs/lieer.nix                           @tadfisher
+
+/modules/programs/lsd.nix                             @marsam
+
+/modules/programs/matplotlib.nix                      @rprospero
+
+/modules/programs/mpv.nix                             @tadeokondrak
+
+/modules/programs/noti.nix                            @marsam
+
+/modules/programs/obs-studio.nix                      @adisbladis
+
+/modules/programs/opam.nix                            @marsam
+
+/modules/programs/openssh.nix                         @rycee
+
+/modules/programs/password-store.nix                  @pacien
+
+/modules/programs/pazi.nix                            @marsam
+
+/modules/programs/pidgin.nix                          @rycee
+
+/modules/programs/rtorrent.nix                        @marsam
+
+/modules/programs/ssh.nix                             @rycee
+
+/modules/programs/starship.nix                        @marsam
+
+/modules/programs/texlive.nix                         @rycee
+
+/modules/programs/z-lua.nix                           @marsam
+
+/modules/programs/zathura.nix                         @rprospero
+
+/modules/services/cbatticon.nix                       @pmiddend
+
+/modules/services/dunst.nix                           @rycee
+
+/modules/services/flameshot.nix                       @moredhel
+
+/modules/services/gnome-keyring.nix                   @rycee
+
+/modules/services/gpg-agent.nix                       @rycee
+
+/modules/services/grobi.nix                           @mbrgm
+
+/modules/services/hound.nix                           @adisbladis
+
+/modules/services/imapnotify.nix                      @nickhu
+
+/modules/services/kdeconnect.nix                      @adisbladis
+
+/modules/services/keepassx.nix                        @rycee
+
+/modules/services/lieer.nix                           @tadfisher
+
+/modules/services/lorri.nix                           @Gerschtli
+
+/modules/services/mbsync.nix                          @pjones
+
+/modules/services/mpdris2.nix                         @pjones
+
+/modules/services/muchsync.nix                        @pacien
+
+/modules/services/network-manager-applet.nix          @rycee
+
+/modules/services/parcellite.nix                      @gleber
+
+/modules/services/password-store-sync.nix             @pacien
+
+/modules/services/pasystray.nix                       @pltanton
+
+/modules/services/random-background.nix               @rycee
+
+/modules/services/redshift.nix                        @rycee
+
+/modules/services/status-notifier-watcher.nix         @pltanton
+
+/modules/services/syncthing.nix                       @rycee
+
+/modules/services/taffybar.nix                        @rycee
+
+/modules/services/tahoe-lafs.nix                      @rycee
+
+/modules/services/taskwarrior-sync.nix                @minijackson @pacien
+
+/modules/services/udiskie.nix                         @rycee
+
+/modules/services/unison.nix                          @pacien
+
+/modules/services/xcape.nix                           @nickhu
+
+/modules/services/xembed-sni-proxy.nix                @rycee
+
+/modules/services/xscreensaver.nix                    @rycee
+
+/modules/services/xsuspender.nix                      @offlinehacker
+
+/modules/systemd.nix                                  @rycee
+
+/modules/xcursor.nix                                  @league
+
+/modules/xresources.nix                               @rycee
+
+/modules/xsession.nix                                 @rycee
