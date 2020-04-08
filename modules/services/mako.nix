@@ -7,6 +7,8 @@ let
   cfg = config.programs.mako;
 
 in {
+  meta.maintainers = [ maintainers.onny ];
+
   options = {
     programs.mako = {
       enable = mkEnableOption ''
