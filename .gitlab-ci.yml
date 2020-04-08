@@ -12,8 +12,9 @@ Run tests:
   stage: test
   script:
     - nix-shell tests -A run.files-text
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: always
 
 pages:
   stage: deploy
@@ -26,8 +27,9 @@ pages:
   artifacts:
     paths:
       - public
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: always
 
 Deploy NUR:
   stage: deploy
@@ -37,5 +39,6 @@ Deploy NUR:
   trigger:
     project: rycee/nur-expressions
     branch: master
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH =~ /^release-/
+      when: always
