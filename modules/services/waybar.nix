@@ -17,7 +17,7 @@ in {
       enable = mkEnableOption "Waybar";
 
       settings = mkOption {
-        type = format.type;
+        type = types.attrsOf (types.attrsOf types.str);
         default = { };
         description = ''
           Configuration for Waybar, see
