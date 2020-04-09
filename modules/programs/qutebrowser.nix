@@ -15,6 +15,8 @@ let
           (if v then "True" else "False")
         else if builtins.isString v then
           ''"${v}"''
+        else if builtins.isList v then
+          "[${concatStringsSep ", " (map formatValue v)}]"
         else
           builtins.toString v;
     in if builtins.isAttrs v then

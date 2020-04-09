@@ -15,6 +15,7 @@ with lib;
           };
           tabs.bar.bg = "#000000";
         };
+        spellcheck.languages = [ "en-US" "sv-SE" ];
         tabs.tabs_are_windows = true;
       };
 
@@ -37,6 +38,7 @@ with lib;
             c.colors.hints.bg = "#000000"
             c.colors.hints.fg = "#ffffff"
             c.colors.tabs.bar.bg = "#000000"
+            c.spellcheck.languages = ["en-US", "sv-SE"]
             c.tabs.tabs_are_windows = True
             # Extra qutebrowser configuration.
           ''
