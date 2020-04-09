@@ -110,6 +110,8 @@
 
 /modules/services/lorri.nix                           @Gerschtli
 
+/modules/services/mako.nix                            @onny
+
 /modules/services/mbsync.nix                          @pjones
 
 /modules/services/mpdris2.nix                         @pjones
