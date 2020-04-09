@@ -43,7 +43,7 @@ in
         type = types.bool;
         default = false;
         description = ''
-          Symlink `vi` to `nvim` binary.
+          Symlink <command>vi</command> to <command>nvim</command> binary.
         '';
       };
 
@@ -51,7 +51,7 @@ in
         type = types.bool;
         default = false;
         description = ''
-          Symlink `vim` to `nvim` binary.
+          Symlink <command>vim</command> to <command>nvim</command> binary.
         '';
       };
 
@@ -59,7 +59,7 @@ in
         type = types.bool;
         default = false;
         description = ''
-          Alias `vimdiff` to `nvim -d`.
+          Alias <command>vimdiff</command> to <command>nvim -d</command>.
         '';
       };
 
