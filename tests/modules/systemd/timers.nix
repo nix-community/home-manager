@@ -13,8 +13,8 @@ with lib;
     };
 
     nmt.script = ''
-      local unitDir=home-files/.config/systemd/user
-      local timerFile=$unitDir/test-timer.timer
+      unitDir=home-files/.config/systemd/user
+      timerFile=$unitDir/test-timer.timer
 
       assertFileExists $timerFile
       assertFileContent $timerFile ${./timers-expected.conf}

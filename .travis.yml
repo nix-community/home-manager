@@ -10,4 +10,4 @@ before_script:
 script:
   - ./format -c
   - nix-shell . -A install
-  - nix-shell --pure tests -A run.all
+  - nix-shell --pure --max-jobs 10 tests -A run.all

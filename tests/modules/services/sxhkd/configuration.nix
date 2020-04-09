@@ -23,7 +23,7 @@
       [ (self: super: { sxhkd = pkgs.writeScriptBin "dummy-sxhkd" ""; }) ];
 
     nmt.script = ''
-      local sxhkdrc=home-files/.config/sxhkd/sxhkdrc
+      sxhkdrc=home-files/.config/sxhkd/sxhkdrc
 
       assertFileExists $sxhkdrc
 

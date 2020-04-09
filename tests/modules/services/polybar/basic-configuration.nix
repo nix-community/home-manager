@@ -34,7 +34,7 @@
     };
 
     nmt.script = ''
-      local serviceFile=home-files/.config/systemd/user/polybar.service
+      serviceFile=home-files/.config/systemd/user/polybar.service
 
       assertFileExists $serviceFile
       assertFileRegex $serviceFile 'X-Restart-Triggers=.*polybar\.conf'

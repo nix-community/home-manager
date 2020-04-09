@@ -10,7 +10,7 @@ with lib;
     };
 
     nmt.script = ''
-      local envFile=home-files/.config/environment.d/10-home-manager.conf
+      envFile=home-files/.config/environment.d/10-home-manager.conf
       assertFileExists $envFile
       assertFileContent $envFile ${./session-variables-expected.conf}
     '';
