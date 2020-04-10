@@ -81,6 +81,12 @@ let
         description = "The terminal colors, null to use system default.";
       };
 
+      cursorBlinkMode = mkOption {
+        default = "system";
+        type = types.enum [ "system" "on" "off" ];
+        description = "The cursor blink mode.";
+      };
+
       cursorShape = mkOption {
         default = "block";
         type = types.enum [ "block" "ibeam" "underline" ];
@@ -130,6 +136,7 @@ let
       scrollbar-policy = if pcfg.showScrollbar then "always" else "never";
       scrollback-lines = pcfg.scrollbackLines;
       cursor-shape = pcfg.cursorShape;
+      cursor-blink-mode = pcfg.cursorBlinkMode;
     } // (if (pcfg.font == null) then {
       use-system-font = true;
     } else {
