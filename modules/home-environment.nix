@@ -236,8 +236,8 @@ in
       type = types.bool;
       description = ''
         Whether the activation script should start with an empty
-        <envvar>PATH</envvar> variable. When <literal>false</literal>
-        then the user's <envvar>PATH</envvar> will be used.
+        <envar>PATH</envar> variable. When <literal>false</literal>
+        then the user's <envar>PATH</envar> will be used.
       '';
     };
 
