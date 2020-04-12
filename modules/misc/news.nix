@@ -1627,6 +1627,14 @@ in
           A new module is available: 'programs.waybar'
         '';
       }
+
+      {
+        time = "2020-08-14T22:44:20+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.kanshi'
+        '';
+      }
     ];
   };
 }

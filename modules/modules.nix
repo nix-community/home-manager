@@ -140,6 +140,7 @@ let
     (loadModule ./services/grobi.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/hound.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/imapnotify.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./services/kanshi.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/kbfs.nix { })
     (loadModule ./services/kdeconnect.nix { })
     (loadModule ./services/keepassx.nix { })

@@ -137,6 +137,9 @@
 
 /modules/services/imapnotify.nix                      @nickhu
 
+/modules/services/kanshi.nix                          @nurelin
+/tests/modules/services/kanshi                        @nurelin
+
 /modules/services/kdeconnect.nix                      @adisbladis
 
 /modules/services/keepassx.nix                        @rycee
