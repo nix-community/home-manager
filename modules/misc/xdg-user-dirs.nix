@@ -99,5 +99,7 @@ in {
       XDG_TEMPLATES_DIR = cfg.templates;
       XDG_VIDEOS_DIR = cfg.videos;
     } // cfg.extraConfig);
+
+    xdg.configFile."user-dirs.conf".text = "enabled=False";
   };
 }
