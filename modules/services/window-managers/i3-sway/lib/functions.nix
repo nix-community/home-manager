@@ -10,8 +10,9 @@ rec {
 
   keybindingsStr = keybindings:
     concatStringsSep "\n" (mapAttrsToList (keycomb: action:
-      optionalString (action != null) "bindsym ${keycomb} ${action}")
-      keybindings);
+      optionalString (action != null) "bindsym ${
+        lib.optionalString (moduleName == "sway") "--to-code "
+      }${keycomb} ${action}") keybindings);
 
   keycodebindingsStr = keycodebindings:
     concatStringsSep "\n" (mapAttrsToList (keycomb: action:
