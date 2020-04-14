@@ -74,6 +74,42 @@ new module `services.picom` should be used. This is because Nixpkgs no
 longer packages compton, and instead packages the (mostly) compatible
 fork called picom.
 
+* The list form of the <<opt-programs.ssh.matchBlocks>> option has
+been deprecated and configurations requiring match blocks in a defined
+order should switch to using DAG entries instead. For example, a
+configuration
++
+[source,nix]
+----
+programs.ssh.matchBlocks = [
+  {
+    host = "alpha.foo.com";
+    user = "jd";
+  }
+  {
+    host = "*.foo.com";
+    user = "john.doe";
+  }
+];
+----
++
+can be expressed along the lines of
++
+[source,nix]
+----
+programs.ssh.matchBlocks = {
+  "*.example.com" = {
+    user = "john.doe";
+  }
+  "alpha.example.com" = lib.hm.dag.entryBefore ["*.example.com"] {
+    user = "jd";
+  }
+};
+----
++
+Support for the list form will be removed in Home Manager version
+20.09.
+
 [[sec-release-20.03-state-version-changes]]
 === State Version Changes
 
