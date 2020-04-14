@@ -46,11 +46,13 @@ in {
         <option>users.users.‹name?›.packages</option> option.
       '';
 
-      useGlobalPkgs = mkEnableOption ''
+      useGlobalPkgs = (mkEnableOption ''
         using the system configuration's <literal>pkgs</literal>
         argument in Home Manager. This disables the Home Manager
         options <option>nixpkgs.*</option>
-      '';
+      '') // {
+        default = true;
+      };
 
       backupFileExtension = mkOption {
         type = types.nullOr types.str;

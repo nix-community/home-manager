@@ -1,5 +1,7 @@
 *                                                     @rycee
 
+/flake.nix                                            @ehmry
+
 /modules/home-environment.nix                         @rycee
 
 /modules/misc/dconf.nix                               @gnidorah @rycee
