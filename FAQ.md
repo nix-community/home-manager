@@ -147,6 +147,14 @@ in
 ```
 
 should work provided you have a Nix channel called `nixpkgs-unstable`.
+
+You can add the `nixpkgs-unstable` channel by running
+
+```
+# nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
+# nix-channel --update
+```
+
 Note, the package will not be affected by any package overrides,
 overlays, etc.
 
