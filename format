@@ -17,6 +17,7 @@ esac
 # requests and we want to avoid merge conflicts.
 find . -name '*.nix' \
   ! -path ./modules/programs/irssi.nix \
+  ! -path ./tests/modules/programs/kakoune/whitespace-highlighter.nix \
   \
   ! -path ./home-manager/default.nix \
   ! -path ./home-manager/home-manager.nix \
