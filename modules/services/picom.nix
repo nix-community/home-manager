@@ -35,16 +35,23 @@ let
     inactive-dim     = ${cfg.inactiveDim};
     opacity-rule     = ${toJSON cfg.opacityRule};
   '' + (let
-    moduleToString = rules: with rules; ''
-      {
-        ${optionalString (fade != null) "fade = ${toJSON fade};"}
-        ${optionalString (shadow != null) "shadow = ${toJSON shadow};"}
-        ${optionalString (opacity != null) "opacity = ${opacity};"}
-        ${optionalString (focus != null) "focus = ${toJSON focus};"}
-        ${optionalString (fullShadow != null) "full-shadow = ${toJSON fullShadow};"}
-        ${optionalString (redirIgnore != null) "redir-ignore = ${toJSON redirIgnore};"}
-      }
-    '';
+    moduleToString = rules:
+      with rules; ''
+        {
+          ${optionalString (fade != null) "fade = ${toJSON fade};"}
+          ${optionalString (shadow != null) "shadow = ${toJSON shadow};"}
+          ${optionalString (opacity != null) "opacity = ${opacity};"}
+          ${optionalString (focus != null) "focus = ${toJSON focus};"}
+          ${
+            optionalString (fullShadow != null)
+            "full-shadow = ${toJSON fullShadow};"
+          }
+          ${
+            optionalString (redirIgnore != null)
+            "redir-ignore = ${toJSON redirIgnore};"
+          }
+        }
+      '';
   in ''
 
     wintypes:
@@ -285,78 +292,79 @@ in {
 
     windowType = let
       rulesOption = mkOption {
-        type = with types; submodule {
-          options = {
-            fade = mkOption {
-              type = nullOr bool;
-              default = null;
-              description = "Whether to enable fading for this window type.";
-            };
+        type = with types;
+          submodule {
+            options = {
+              fade = mkOption {
+                type = nullOr bool;
+                default = null;
+                description = "Whether to enable fading for this window type.";
+              };
 
-            shadow = mkOption {
-              type = nullOr bool;
-              default = null;
-              description = "Whether to enable shadows for this window type";
-            };
+              shadow = mkOption {
+                type = nullOr bool;
+                default = null;
+                description = "Whether to enable shadows for this window type";
+              };
 
-            opacity = mkOption {
-              type = nullOr str;
-              default = null;
-              description = "Default opacity of the window type.";
-            };
+              opacity = mkOption {
+                type = nullOr str;
+                default = null;
+                description = "Default opacity of the window type.";
+              };
 
-            focus = mkOption {
-              type = nullOr bool;
-              default = null;
-              description = ''
-                Controls whether the window of this type is to be always
-                considered focused. (By default, all window types except
-                "normal" and "dialog" have this on.)
-              '';
-            };
+              focus = mkOption {
+                type = nullOr bool;
+                default = null;
+                description = ''
+                  Controls whether the window of this type is to be always
+                  considered focused. (By default, all window types except
+                  "normal" and "dialog" have this on.)
+                '';
+              };
 
-            fullShadow = mkOption {
-              type = nullOr bool;
-              default = null;
-              description = ''
-                Controls whether shadow is drawn under the parts of the window
-                that you normally won’t be able to see. Useful when the window
-                has parts of it transparent, and you want shadows in those areas.
-              '';
-            };
+              fullShadow = mkOption {
+                type = nullOr bool;
+                default = null;
+                description = ''
+                  Controls whether shadow is drawn under the parts of the window
+                  that you normally won’t be able to see. Useful when the window
+                  has parts of it transparent, and you want shadows in those areas.
+                '';
+              };
 
-            redirIgnore = mkOption {
-              type = nullOr bool;
-              default = null;
-              description = ''
-                Controls whether this type of windows should cause screen to
-                become redirected again after been unredirected. If you have
-                <literal>--unredir-if-possible</literal> set, and do not want
-                certain window to cause unnecessary screen redirection,
-                you can set this to true.
-              '';
+              redirIgnore = mkOption {
+                type = nullOr bool;
+                default = null;
+                description = ''
+                  Controls whether this type of windows should cause screen to
+                  become redirected again after been unredirected. If you have
+                  <literal>--unredir-if-possible</literal> set, and do not want
+                  certain window to cause unnecessary screen redirection,
+                  you can set this to true.
+                '';
+              };
             };
           };
-        };
-        default = {};
+        default = { };
         description = "Specific settings for this window type.";
       };
     in {
-      unknown       = rulesOption;
-      desktop       = rulesOption;
-      dock          = rulesOption;
-      toolbar       = rulesOption;
-      menu          = rulesOption;
-      utility       = rulesOption;
-      splash        = rulesOption;
-      dialog        = rulesOption;
-      normal        = rulesOption;
-      dropdownMenu  = rulesOption;
-      popupMenu     = rulesOption;
-      tooltip       = rulesOption;
-      notify        = rulesOption;
-      combo         = rulesOption;
-      dnd           = rulesOption;
+      unknown = rulesOption;
+      desktop = rulesOption;
+      dock = rulesOption;
+      toolbar = rulesOption;
+      menu = rulesOption;
+      utility = rulesOption;
+      splash = rulesOption;
+      dialog = rulesOption;
+      normal = rulesOption;
+      dropdownMenu = rulesOption;
+      popupMenu = rulesOption;
+      tooltip = rulesOption;
+      notify = rulesOption;
+      combo = rulesOption;
+      dnd = rulesOption;
     };
 
     package = mkOption {
