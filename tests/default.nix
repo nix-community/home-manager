@@ -32,6 +32,7 @@ import nmt {
     ./modules/programs/fish
     ./modules/programs/git
     ./modules/programs/gpg
+    ./modules/programs/kakoune
     ./modules/programs/lieer
     ./modules/programs/mbsync
     ./modules/programs/neomutt
