@@ -34,14 +34,38 @@ let
     inactive-opacity = ${cfg.inactiveOpacity};
     inactive-dim     = ${cfg.inactiveDim};
     opacity-rule     = ${toJSON cfg.opacityRule};
+  '' + (let
+    moduleToString = rules: with rules; ''
+      {
+        ${optionalString (fade != null) "fade = ${toJSON fade};"}
+        ${optionalString (shadow != null) "shadow = ${toJSON shadow};"}
+        ${optionalString (opacity != null) "opacity = ${opacity};"}
+        ${optionalString (focus != null) "focus = ${toJSON focus};"}
+        ${optionalString (fullShadow != null) "full-shadow = ${toJSON fullShadow};"}
+        ${optionalString (redirIgnore != null) "redir-ignore = ${toJSON redirIgnore};"}
+      }
+    '';
+  in ''
 
     wintypes:
     {
-      dock          = { shadow = ${toJSON (!cfg.noDockShadow)}; };
-      dnd           = { shadow = ${toJSON (!cfg.noDNDShadow)}; };
-      popup_menu    = { opacity = ${cfg.menuOpacity}; };
-      dropdown_menu = { opacity = ${cfg.menuOpacity}; };
+      unknown       = ${moduleToString cfg.windowType.unknown};
+      desktop       = ${moduleToString cfg.windowType.desktop};
+      dock          = ${moduleToString cfg.windowType.dock};
+      toolbar       = ${moduleToString cfg.windowType.toolbar};
+      menu          = ${moduleToString cfg.windowType.menu};
+      utility       = ${moduleToString cfg.windowType.utility};
+      splash        = ${moduleToString cfg.windowType.splash};
+      dialog        = ${moduleToString cfg.windowType.dialog};
+      normal        = ${moduleToString cfg.windowType.normal};
+      dropdown_menu = ${moduleToString cfg.windowType.dropdownMenu};
+      popup_menu    = ${moduleToString cfg.windowType.popupMenu};
+      tooltip       = ${moduleToString cfg.windowType.tooltip};
+      notify        = ${moduleToString cfg.windowType.notify};
+      combo         = ${moduleToString cfg.windowType.combo};
+      dnd           = ${moduleToString cfg.windowType.dnd};
     };
+  '') + ''
 
     # other options
     backend = ${toJSON cfg.backend};
@@ -259,6 +283,82 @@ in {
       '';
     };
 
+    windowType = let
+      rulesOption = mkOption {
+        type = with types; submodule {
+          options = {
+            fade = mkOption {
+              type = nullOr bool;
+              default = null;
+              description = "Whether to enable fading for this window type.";
+            };
+
+            shadow = mkOption {
+              type = nullOr bool;
+              default = null;
+              description = "Whether to enable shadows for this window type";
+            };
+
+            opacity = mkOption {
+              type = nullOr str;
+              default = null;
+              description = "Default opacity of the window type.";
+            };
+
+            focus = mkOption {
+              type = nullOr bool;
+              default = null;
+              description = ''
+                Controls whether the window of this type is to be always
+                considered focused. (By default, all window types except
+                "normal" and "dialog" have this on.)
+              '';
+            };
+
+            fullShadow = mkOption {
+              type = nullOr bool;
+              default = null;
+              description = ''
+                Controls whether shadow is drawn under the parts of the window
+                that you normally won’t be able to see. Useful when the window
+                has parts of it transparent, and you want shadows in those areas.
+              '';
+            };
+
+            redirIgnore = mkOption {
+              type = nullOr bool;
+              default = null;
+              description = ''
+                Controls whether this type of windows should cause screen to
+                become redirected again after been unredirected. If you have
+                <literal>--unredir-if-possible</literal> set, and do not want
+                certain window to cause unnecessary screen redirection,
+                you can set this to true.
+              '';
+            };
+          };
+        };
+        default = {};
+        description = "Specific settings for this window type.";
+      };
+    in {
+      unknown       = rulesOption;
+      desktop       = rulesOption;
+      dock          = rulesOption;
+      toolbar       = rulesOption;
+      menu          = rulesOption;
+      utility       = rulesOption;
+      splash        = rulesOption;
+      dialog        = rulesOption;
+      normal        = rulesOption;
+      dropdownMenu  = rulesOption;
+      popupMenu     = rulesOption;
+      tooltip       = rulesOption;
+      notify        = rulesOption;
+      combo         = rulesOption;
+      dnd           = rulesOption;
+    };
+
     package = mkOption {
       type = types.package;
       default = pkgs.picom;
@@ -284,6 +384,11 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
+
+    services.picom.windowType.popupMenu.opacity = mkDefault cfg.menuOpacity;
+    services.picom.windowType.dropdownMenu.opacity = mkDefault cfg.menuOpacity;
+    services.picom.windowType.dnd = mkIf cfg.noDNDShadow { shadow = false; };
+    services.picom.windowType.dock = mkIf cfg.noDockShadow { shadow = false; };
 
     systemd.user.services.picom = {
       Unit = {
