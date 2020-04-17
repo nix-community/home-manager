@@ -21,7 +21,7 @@ in {
       example = literalExample ''
         {
           global = {
-            user = "Alex";
+            username = "Alex";
             password = "foo";
             device_name = "nix";
           };
