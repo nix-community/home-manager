@@ -33,6 +33,7 @@ import nmt {
     ./modules/programs/git
     ./modules/programs/gpg
     ./modules/programs/kakoune
+    ./modules/programs/lf
     ./modules/programs/lieer
     ./modules/programs/mbsync
     ./modules/programs/neomutt
