@@ -66,6 +66,13 @@ in
 {
   meta.maintainers = [ maintainers.rycee ];
 
+  imports = [
+    (mkRemovedOptionModule ["programs" "firefox" "enableGoogleTalk"]
+      "Support for this option has been removed.")
+    (mkRemovedOptionModule ["programs" "firefox" "enableIcedTea"]
+      "Support for this option has been removed.")
+  ];
+
   options = {
     programs.firefox = {
       enable = mkEnableOption "Firefox";
@@ -193,38 +200,6 @@ in
         default = false;
         description = "Whether to enable the unfree Adobe Flash plugin.";
       };
-
-      enableGoogleTalk = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable the unfree Google Talk plugin. This option
-          is <emphasis>deprecated</emphasis> and will only work if
-
-          <programlisting language="nix">
-          programs.firefox.package = pkgs.firefox-esr-52-unwrapped;
-          </programlisting>
-
-          and the <option>plugin.load_flash_only</option> Firefox
-          option has been disabled.
-        '';
-      };
-
-      enableIcedTea = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable the Java applet plugin. This option is
-          <emphasis>deprecated</emphasis> and will only work if
-
-          <programlisting language="nix">
-          programs.firefox.package = pkgs.firefox-esr-52-unwrapped;
-          </programlisting>
-
-          and the <option>plugin.load_flash_only</option> Firefox
-          option has been disabled.
-        '';
-      };
     };
   };
 
@@ -267,8 +242,6 @@ in
         # The configuration expected by the Firefox wrapper.
         fcfg = {
           enableAdobeFlash = cfg.enableAdobeFlash;
-          enableGoogleTalkPlugin = cfg.enableGoogleTalk;
-          icedtea = cfg.enableIcedTea;
         };
 
         # A bit of hackery to force a config into the wrapper.
