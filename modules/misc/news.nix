@@ -1474,6 +1474,13 @@ in
           A new module is available: 'services.mako'
         '';
       }
+
+      {
+        time = "2020-04-23T19:45:26+00:00";
+        message = ''
+          A new module is available: 'programs.lf'
+        '';
+      }
     ];
   };
 }

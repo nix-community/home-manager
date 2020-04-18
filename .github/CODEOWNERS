@@ -52,6 +52,9 @@
 
 /modules/programs/lesspipe.nix                        @rycee
 
+/modules/programs/lf.nix                              @owm111
+/tests/modules/programs/lf                            @owm111
+
 /modules/programs/lieer.nix                           @tadfisher
 
 /modules/programs/lsd.nix                             @marsam
