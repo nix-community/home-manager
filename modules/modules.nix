@@ -76,6 +76,7 @@ let
     (loadModule ./programs/keychain.nix { })
     (loadModule ./programs/kitty.nix { })
     (loadModule ./programs/lesspipe.nix { })
+    (loadModule ./programs/lf.nix { })
     (loadModule ./programs/lsd.nix { })
     (loadModule ./programs/man.nix { })
     (loadModule ./programs/matplotlib.nix { })
