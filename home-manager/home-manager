@@ -78,7 +78,7 @@ function doInstantiate() {
     setConfigFile
     setHomeManagerNixPath
 
-    local extraArgs=("$@")
+    local extraArgs=()
 
     for p in "${EXTRA_NIX_PATH[@]}"; do
         extraArgs=("${extraArgs[@]}" "-I" "$p")
