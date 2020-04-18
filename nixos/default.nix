@@ -88,6 +88,17 @@ in {
       (mapAttrs (username: usercfg: { packages = usercfg.home.packages; })
         cfg.users);
 
+    # make sure the home-manager gcroot and the profile is created
+    system.activationScripts = mapAttrs' (_: usercfg:
+      let username = usercfg.home.username;
+      in nameValuePair "hm-base-dirs-${username}" {
+        text = ''
+          mkdir -p /nix/var/nix/profiles/per-user/${username}/
+          mkdir -p /nix/var/nix/gcroots/per-user/${username}/
+        '';
+        deps = [ ];
+      }) cfg.users;
+
     systemd.services = mapAttrs' (_: usercfg:
       let username = usercfg.home.username;
       in nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
