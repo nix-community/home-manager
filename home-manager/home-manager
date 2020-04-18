@@ -110,22 +110,12 @@ function doBuildAttr() {
         extraArgs=("${extraArgs[@]}" "--show-trace")
     fi
 
-    # shellcheck disable=2086
-    if [[ -v USE_NIX2_COMMAND ]]; then
-        nix build \
-            -f "<home-manager/home-manager/home-manager.nix>" \
-            "${extraArgs[@]}" \
-            "${PASSTHROUGH_OPTS[@]}" \
-            --argstr confPath "$HOME_MANAGER_CONFIG" \
-            --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
-    else
-        nix-build \
-            "<home-manager/home-manager/home-manager.nix>" \
-            "${extraArgs[@]}" \
-            "${PASSTHROUGH_OPTS[@]}" \
-            --argstr confPath "$HOME_MANAGER_CONFIG" \
-            --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
-    fi
+    nix-build \
+        "<home-manager/home-manager/home-manager.nix>" \
+        "${extraArgs[@]}" \
+        "${PASSTHROUGH_OPTS[@]}" \
+        --argstr confPath "$HOME_MANAGER_CONFIG" \
+        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
 }
 
 # Presents news to the user. Takes as argument the path to a "news
@@ -191,13 +181,8 @@ function doBuild() {
 
     local exitCode
 
-    if [[ -v USE_NIX2_COMMAND ]]; then
-        doBuildAttr activationPackage \
-            && exitCode=0 || exitCode=1
-    else
-        doBuildAttr --attr activationPackage \
-            && exitCode=0 || exitCode=1
-    fi
+    doBuildAttr --attr activationPackage \
+        && exitCode=0 || exitCode=1
 
     presentNews "$newsInfo"
 
@@ -219,17 +204,10 @@ function doSwitch() {
     # before activation completes.
     generation="$WORK_DIR/generation"
 
-    if [[ -v USE_NIX2_COMMAND ]]; then
-        doBuildAttr \
-                    --out-link "$generation" \
-                    activationPackage \
-            && "$generation/activate" || exitCode=1
-    else
-        doBuildAttr \
-                    --out-link "$generation" \
-                    --attr activationPackage \
-            && "$generation/activate" || exitCode=1
-    fi
+    doBuildAttr \
+                --out-link "$generation" \
+                --attr activationPackage \
+        && "$generation/activate" || exitCode=1
 
     presentNews "$newsInfo"
 
@@ -329,23 +307,14 @@ function buildNews() {
     local output
     output="$WORK_DIR/news-info.sh"
 
-    if [[ -v USE_NIX2_COMMAND ]]; then
-        doBuildAttr \
-                    --out-link "$output" \
-                    --quiet \
-                    --arg check false \
-                    --argstr newsReadIdsFile "$(newsReadIdsFile)" \
-                    newsInfo
-    else
-        doBuildAttr \
-                    --out-link "$output" \
-                    --no-build-output \
-                    --quiet \
-                    --arg check false \
-                    --argstr newsReadIdsFile "$(newsReadIdsFile)" \
-                    --attr newsInfo \
-                    > /dev/null
-    fi
+    doBuildAttr \
+                --out-link "$output" \
+                --no-build-output \
+                --quiet \
+                --arg check false \
+                --argstr newsReadIdsFile "$(newsReadIdsFile)" \
+                --attr newsInfo \
+                > /dev/null
 
     echo "$output"
 }
@@ -497,9 +466,6 @@ while [[ $# -gt 0 ]]; do
     case $opt in
         build|instantiate|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
             COMMAND="$opt"
-            ;;
-        -2)
-            USE_NIX2_COMMAND=1
             ;;
         -A)
             HOME_MANAGER_CONFIG_ATTRIBUTE="$1"
