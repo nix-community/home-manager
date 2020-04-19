@@ -14,8 +14,8 @@ let
           Path to the plugin folder.
           </para><para>
           Relevant pieces will be added to the fish function path and
-          the completion path. The <filename>init.fish</filename> and
-          <filename>key_binding.fish</filename> files are sourced if
+          the completion path. The <filename>$initFile</filename> and
+          <filename>$keyBindingFile</filename> files are sourced if
           they exist.
         '';
       };
@@ -24,6 +24,22 @@ let
         type = types.str;
         description = ''
           The name of the plugin.
+        '';
+      };
+
+      initFile = mkOption {
+        type = types.str;
+        default = "init.fish";
+        description = ''
+          Relative path to the plugin's init file.
+        '';
+      };
+
+      keyBindingFile = mkOption {
+        type = types.str;
+        default = "key_bindings.fish";
+        description = ''
+          Relative path to the plugin's keybindings file.
         '';
       };
     };
@@ -444,12 +460,12 @@ in {
             source $plugin_dir/conf.d/*.fish
           end
 
-          if test -f $plugin_dir/key_bindings.fish
-            source $plugin_dir/key_bindings.fish
+          if test -f $plugin_dir/${plugin.keyBindingFile}
+            source $plugin_dir/${plugin.keyBindingFile}
           end
 
-          if test -f $plugin_dir/init.fish
-            source $plugin_dir/init.fish
+          if test -f $plugin_dir/${plugin.initFile}
+            source $plugin_dir/${plugin.initFile}
           end
         '';
       }) cfg.plugins));
