@@ -1,0 +1,17 @@
+[[ch-release-notes]]
+[appendix]
+== Release Notes
+
+This section lists the release notes for stable versions of Home Manager and the current unstable version.
+
+:leveloffset: 1
+
+include::rl-2003.adoc[]
+
+include::rl-1909.adoc[]
+
+include::rl-1903.adoc[]
+
+include::rl-1809.adoc[]
+
+:leveloffset: 0

@@ -8,8 +8,8 @@ let
     name = "nmd";
     owner = "rycee";
     repo = "nmd";
-    rev = "b437898c2b137c39d9c5f9a1cf62ec630f14d9fc";
-    sha256 = "18j1nh53cfpjpdiwn99x9kqpvr0s7hwngyc0a93xf4sg88ww93lq";
+    rev = "49567e3ff2824ac8ba457f439f384eafc1eb4547";
+    sha256 = "0x2lwcryvmnr128r497bzrawi4x1yyxb4riicppdaib95iwn8jck";
   };
 
   nmd = import nmdSrc { inherit lib pkgs; };
@@ -41,6 +41,7 @@ let
     pathName = "home-manager";
     modulesDocs = [ hmModulesDocs ];
     documentsDirectory = ./.;
+    documentType = "book";
     chunkToc = ''
       <toc>
         <d:tocentry xmlns:d="http://docbook.org/ns/docbook" linkend="book-home-manager-manual"><?dbhtml filename="index.html"?>
