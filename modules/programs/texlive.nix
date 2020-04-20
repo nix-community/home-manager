@@ -6,7 +6,8 @@ let
 
   cfg = config.programs.texlive;
 
-  texlivePkgs = cfg.extraPackages pkgs.texlive;
+  texlive = cfg.packageSet;
+  texlivePkgs = cfg.extraPackages texlive;
 
 in {
   meta.maintainers = [ maintainers.rycee ];
@@ -14,6 +15,12 @@ in {
   options = {
     programs.texlive = {
       enable = mkEnableOption "TeX Live";
+
+      packageSet = mkOption {
+        default = pkgs.texlive;
+        defaultText = literalExample "pkgs.texlive";
+        description = "TeX Live package set to use.";
+      };
 
       extraPackages = mkOption {
         default = tpkgs: { inherit (tpkgs) collection-basic; };
@@ -41,6 +48,6 @@ in {
 
     home.packages = [ cfg.package ];
 
-    programs.texlive.package = pkgs.texlive.combine texlivePkgs;
+    programs.texlive.package = texlive.combine texlivePkgs;
   };
 }
