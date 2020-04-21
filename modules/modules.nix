@@ -145,6 +145,7 @@ let
     (loadModule ./services/pasystray.nix { })
     (loadModule ./services/picom.nix { })
     (loadModule ./services/polybar.nix { })
+    (loadModule ./services/pulseeffects.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/random-background.nix { })
     (loadModule ./services/redshift.nix { })
     (loadModule ./services/rsibreak.nix { condition = hostPlatform.isLinux; })
