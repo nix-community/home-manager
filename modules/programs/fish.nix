@@ -436,7 +436,7 @@ in {
           end
 
           if test -d $plugin_dir/completions
-            set fish_complete_path $fish_function_path[1] $plugin_dir/completions $fish_complete_path[2..-1]
+            set fish_complete_path $fish_complete_path[1] $plugin_dir/completions $fish_complete_path[2..-1]
           end
 
           # Source initialization code if it exists.
