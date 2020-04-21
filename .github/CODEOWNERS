@@ -129,6 +129,8 @@
 
 /modules/services/pasystray.nix                       @pltanton
 
+/modules/services/pulseeffects.nix                    @jonringer
+
 /modules/services/random-background.nix               @rycee
 
 /modules/services/redshift.nix                        @rycee
