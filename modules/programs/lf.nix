@@ -177,8 +177,9 @@ in {
               "${k} ${if isInt v then toString v else ''"${v}"''}"
           }";
 
-        settingsStr = concatStringsSep "\n"
-          (filter (x: x != "") (mapAttrsToList fmtSetting cfg.settings));
+        settingsStr = concatStringsSep "\n" (filter (x: x != "")
+          (mapAttrsToList fmtSetting
+            (builtins.intersectAttrs knownSettings cfg.settings)));
 
         fmtCmdMap = before: k: v:
           "${before} ${k}${optionalString (v != null && v != "") " ${v}"}";
