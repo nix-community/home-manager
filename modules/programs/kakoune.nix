@@ -49,6 +49,7 @@ let
           "InsertCompletionShow"
           "InsertCompletionHide"
           "InsertCompletionSelect"
+          "ModuleLoaded"
         ];
         example = "SetOption";
         description = ''
