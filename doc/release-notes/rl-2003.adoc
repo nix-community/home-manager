@@ -1,8 +1,7 @@
 [[sec-release-20.03]]
-== Release 20.03 (unreleased)
+== Release 20.03
 
-This is the current unstable branch and the information in this
-section is therefore not final.
+The 20.03 release branch became the stable branch in April, 2020.
 
 [[sec-release-20.03-highlights]]
 === Highlights
