@@ -9,7 +9,7 @@ function setupVars() {
         find "$profilesPath" -name 'home-manager-*-link' \
             | sed 's/^.*-\([0-9]*\)-link$/\1/' \
             | sort -rn \
-            | head -1)
+            | head -1 || true)
 
     if [[ -n $greatestGenNum ]] ; then
         oldGenNum=$greatestGenNum
