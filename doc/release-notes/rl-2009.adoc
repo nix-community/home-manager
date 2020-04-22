@@ -1,0 +1,21 @@
+[[sec-release-20.09]]
+== Release 20.09 (unreleased)
+
+This is the current unstable branch and the information in this
+section is therefore not final.
+
+[[sec-release-20.09-highlights]]
+=== Highlights
+
+This release has the following notable changes:
+
+* Nothing has happened.
+
+[[sec-release-20.09-state-version-changes]]
+=== State Version Changes
+
+The state version in this release includes the changes below. These
+changes are only active if the `home.stateVersion` option is set to
+"20.09" or later.
+
+* Nothing has happened.
