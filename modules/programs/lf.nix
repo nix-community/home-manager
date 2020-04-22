@@ -59,7 +59,11 @@ in {
       settings = mkOption {
         type = lfSettingsType;
         default = { };
-        example = { tabstop = 4; number = true; ratios = "1:1:2"; };
+        example = {
+          tabstop = 4;
+          number = true;
+          ratios = "1:1:2";
+        };
         description = ''
           An attribute set of lf settings. The attribute names and cooresponding
           values must be among the following supported options.
