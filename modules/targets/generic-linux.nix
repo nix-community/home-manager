@@ -16,7 +16,7 @@ in {
 
   config = mkIf config.targets.genericLinux.enable {
     home.sessionVariables = let
-      profiles = [ "/nix/var/nix/profiles/default" profileDirectory ];
+      profiles = [ "/nix/var/nix/profiles/default" "$HOME/.nix-profile" ];
       dataDirs =
         concatStringsSep ":" (map (profile: "${profile}/share") profiles);
     in { XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:}$XDG_DATA_DIRS"; };
