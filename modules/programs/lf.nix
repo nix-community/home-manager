@@ -65,7 +65,7 @@ in {
           ratios = "1:1:2";
         };
         description = ''
-          An attribute set of lf settings. The attribute names and cooresponding
+          An attribute set of lf settings. The attribute names and corresponding
           values must be among the following supported options.
 
           <informaltable frame="none"><tgroup cols="1"><tbody>
