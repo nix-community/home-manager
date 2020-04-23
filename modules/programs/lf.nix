@@ -166,9 +166,7 @@ in {
     };
   };
 
-  config = let
-
-  in mkIf cfg.enable {
+  config = mkIf cfg.enable {
     home.packages = [ pkgs.lf ];
 
     xdg.configFile = {
