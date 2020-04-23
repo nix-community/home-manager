@@ -52,6 +52,8 @@ let
     in mapAttrs opt knownSettings;
   };
 in {
+  meta.maintainers = [ maintainers.owm111 ];
+
   options = {
     programs.lf = {
       enable = mkEnableOption "lf";
