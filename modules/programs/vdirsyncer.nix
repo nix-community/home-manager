@@ -107,14 +107,14 @@ let
     let
            contents = map (c: if (isString c)
                           then ''"${c}"''
-                          else mkList (map wrapString c)) v;
+                          else listString (map wrap c)) v;
     in ''collections = ${if ((isNull v) || v == []) then "null" else listString contents}''
   else if (n == "conflictResolution") then
     if v == "remote wins"
       then ''conflict_resolution = "a wins"''
       else if v == "local wins"
       then ''conflict_resolution = "b wins"''
-      else ''conflict_resolution = ${mkList (map wrapString (["command"] ++ v))}''
+      else ''conflict_resolution = ${listString (map wrap (["command"] ++ v))}''
   else throw "Unrecognized option: ${n}";
 
   attrsString = a: concatStringsSep "\n" (mapAttrsToList optionString a);
