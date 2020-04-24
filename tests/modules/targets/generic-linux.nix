@@ -4,20 +4,16 @@ with lib;
 
 {
   config = {
-    home.homeDirectory = "/homeless-shelter";
-
     targets.genericLinux.enable = true;
 
     nmt.script = ''
       assertFileExists home-path/etc/profile.d/hm-session-vars.sh
-      assertFileContent \
+      assertFileContains \
         home-path/etc/profile.d/hm-session-vars.sh \
-        ${
-          pkgs.substituteAll {
-            src = ./generic-linux-session-vars-expected.txt;
-            nix = pkgs.nix;
-          }
-        }
+        'export XDG_DATA_DIRS="/nix/var/nix/profiles/default/share:/home/hm-user/.nix-profile/share''${XDG_DATA_DIRS:+:}$XDG_DATA_DIRS"'
+      assertFileContains \
+        home-path/etc/profile.d/hm-session-vars.sh \
+        '. "${pkgs.nix}/etc/profile.d/nix.sh"'
     '';
   };
 }

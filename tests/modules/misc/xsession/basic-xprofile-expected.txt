@@ -1,4 +1,4 @@
-. "/test-home/.nix-profile/etc/profile.d/hm-session-vars.sh"
+. "/home/hm-user/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
 if [ -e "$HOME/.profile" ]; then
   . "$HOME/.profile"

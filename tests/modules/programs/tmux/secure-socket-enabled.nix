@@ -11,9 +11,8 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-path/etc/profile.d/hm-session-vars.sh
-      assertFileContent home-path/etc/profile.d/hm-session-vars.sh ${
-        ./hm-session-vars.sh
-      }
+      assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
+        'export TMUX_TMPDIR="''${XDG_RUNTIME_DIR:-"/run/user/\$(id -u)"}"'
     '';
   };
 }

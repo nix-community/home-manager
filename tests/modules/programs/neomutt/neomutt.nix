@@ -6,11 +6,6 @@ with lib;
   imports = [ ../../accounts/email-test-accounts.nix ];
 
   config = {
-    home.username = "hm-user";
-    home.homeDirectory = "/home/hm-user";
-    xdg.configHome = mkForce "/home/hm-user/.config";
-    xdg.cacheHome = mkForce "/home/hm-user/.cache";
-
     accounts.email.accounts = {
       "hm@example.com" = {
         primary = true;

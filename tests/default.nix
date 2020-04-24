@@ -14,7 +14,15 @@ let
   modules = import ../modules/modules.nix {
     inherit lib pkgs;
     check = false;
-  };
+  } ++ [
+    # Fix impurities. Without these some of the user's environment
+    # will leak into the tests through `builtins.getEnv`.
+    {
+      xdg.enable = true;
+      home.username = "hm-user";
+      home.homeDirectory = "/home/hm-user";
+    }
+  ];
 
 in
 

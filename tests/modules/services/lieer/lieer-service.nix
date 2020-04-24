@@ -6,9 +6,6 @@ with lib;
   imports = [ ../../accounts/email-test-accounts.nix ];
 
   config = {
-    home.username = "hm-user";
-    home.homeDirectory = "/home/hm-user";
-
     services.lieer.enable = true;
 
     accounts.email.accounts = {
