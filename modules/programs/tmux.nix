@@ -74,8 +74,6 @@ let
     setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
     set  -s escape-time       ${toString cfg.escapeTime}
     set  -g history-limit     ${toString cfg.historyLimit}
-
-    ${cfg.extraConfig}
   '';
 
 in
@@ -315,6 +313,8 @@ in
           # ============================================= #
         '';
       })
+
+      { home.file.".tmux.conf".text = mkOrder 1600 cfg.extraConfig; }
     ]
   );
 }
