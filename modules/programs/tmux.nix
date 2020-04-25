@@ -6,7 +6,7 @@ let
 
   cfg = config.programs.tmux;
 
-  pluginName = p: if types.package.check p then p.name else p.plugin.name;
+  pluginName = p: if types.package.check p then p.pname else p.plugin.pname;
 
   pluginModule = types.submodule {
     options = {
