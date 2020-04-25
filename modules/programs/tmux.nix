@@ -302,7 +302,9 @@ in
           # Load plugins with Home Manager                #
           # --------------------------------------------- #
 
-          ${(concatMapStringsSep "\n" (p: ''
+          ${(concatMapStringsSep "\n\n" (p: ''
+              # ${pluginName p}
+              # ---------------------
               ${p.extraConfig or ""}
               run-shell ${
                 if types.package.check p
