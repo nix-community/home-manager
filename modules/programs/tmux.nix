@@ -31,6 +31,13 @@ let
   boolToStr = value: if value then "on" else "off";
 
   tmuxConf = ''
+    ${optionalString cfg.sensibleOnTop ''
+      # ============================================= #
+      # Start with defaults from the Sensible plugin  #
+      # --------------------------------------------- #
+      run-shell ${pkgs.tmuxPlugins.sensible.rtp}
+      # ============================================= #
+    ''}
     set  -g default-terminal "${cfg.terminal}"
     set  -g base-index      ${toString cfg.baseIndex}
     setw -g pane-base-index ${toString cfg.baseIndex}
@@ -76,6 +83,38 @@ let
     set  -g history-limit     ${toString cfg.historyLimit}
   '';
 
+  configPlugins = {
+    assertions = [(
+      let
+        hasBadPluginName = p: !(hasPrefix "tmuxplugin" (pluginName p));
+        badPlugins = filter hasBadPluginName cfg.plugins;
+      in
+        {
+          assertion = badPlugins == [];
+          message =
+            "Invalid tmux plugin (not prefixed with \"tmuxplugins\"): "
+            + concatMapStringsSep ", " pluginName badPlugins;
+        }
+    )];
+
+    home.file.".tmux.conf".text = ''
+      # ============================================= #
+      # Load plugins with Home Manager                #
+      # --------------------------------------------- #
+
+      ${(concatMapStringsSep "\n\n" (p: ''
+          # ${pluginName p}
+          # ---------------------
+          ${p.extraConfig or ""}
+          run-shell ${
+            if types.package.check p
+            then p.rtp
+            else p.plugin.rtp
+          }
+      '') cfg.plugins)}
+      # ============================================= #
+    '';
+  };
 in
 
 {
@@ -256,65 +295,22 @@ in
   };
 
   config = mkIf cfg.enable (
-    mkMerge [
+    mkMerge ([
       {
         home.packages = [ cfg.package ]
           ++ optional cfg.tmuxinator.enable pkgs.tmuxinator
           ++ optional cfg.tmuxp.enable      pkgs.tmuxp;
-
-        home.file.".tmux.conf".text = tmuxConf;
       }
-
-      (mkIf cfg.sensibleOnTop {
-        home.file.".tmux.conf".text = mkBefore ''
-          # ============================================= #
-          # Start with defaults from the Sensible plugin  #
-          # --------------------------------------------- #
-          run-shell ${pkgs.tmuxPlugins.sensible.rtp}
-          # ============================================= #
-        '';
-      })
-
       (mkIf cfg.secureSocket {
         home.sessionVariables = {
           TMUX_TMPDIR = ''''${XDG_RUNTIME_DIR:-"/run/user/\$(id -u)"}'';
         };
       })
 
-      (mkIf (cfg.plugins != []) {
-        assertions = [(
-          let
-            hasBadPluginName = p: !(hasPrefix "tmuxplugin" (pluginName p));
-            badPlugins = filter hasBadPluginName cfg.plugins;
-          in
-            {
-              assertion = badPlugins == [];
-              message =
-                "Invalid tmux plugin (not prefixed with \"tmuxplugins\"): "
-                + concatMapStringsSep ", " pluginName badPlugins;
-            }
-        )];
-
-        home.file.".tmux.conf".text = mkAfter ''
-          # ============================================= #
-          # Load plugins with Home Manager                #
-          # --------------------------------------------- #
-
-          ${(concatMapStringsSep "\n\n" (p: ''
-              # ${pluginName p}
-              # ---------------------
-              ${p.extraConfig or ""}
-              run-shell ${
-                if types.package.check p
-                then p.rtp
-                else p.plugin.rtp
-              }
-          '') cfg.plugins)}
-          # ============================================= #
-        '';
-      })
-
-      { home.file.".tmux.conf".text = mkOrder 1600 cfg.extraConfig; }
-    ]
+      # config file ~/.tmux.conf
+      { home.file.".tmux.conf".text = mkBefore tmuxConf; }
+      (mkIf (cfg.plugins != []) configPlugins)
+      { home.file.".tmux.conf".text = mkAfter cfg.extraConfig; }
+    ])
   );
 }
