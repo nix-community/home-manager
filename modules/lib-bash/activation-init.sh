@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 function setupVars() {
-    local profilesPath="/nix/var/nix/profiles/per-user/$USER"
-    local gcPath="/nix/var/nix/gcroots/per-user/$USER"
+    local profilesPath="${NIX_STATE_DIR:-/nix/var/nix}/profiles/per-user/$USER"
+    local gcPath="${NIX_STATE_DIR:-/nix/var/nix}/gcroots/per-user/$USER"
     local greatestGenNum
 
     greatestGenNum=$( \
