@@ -1503,6 +1503,16 @@ in
           A new module is available: 'programs.aria2'
         '';
       }
+
+      {
+        time = "2020-05-04T21:19:43+00:00";
+        condition = config.programs.git.enable;
+        message = ''
+          The Git module now supports the 'delta' syntax highlighter.
+
+          It can be enabled through the option 'programs.git.delta.enable'.
+        '';
+      }
     ];
   };
 }

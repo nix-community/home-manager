@@ -215,6 +215,24 @@ in {
           '';
         };
       };
+
+      delta = {
+        enable = mkEnableOption "" // {
+          description = ''
+            Whether to enable the <command>delta</command> syntax highlighter.
+            See <link xlink:href="https://github.com/dandavison/delta" />.
+          '';
+        };
+
+        options = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = [ "--dark" ];
+          description = ''
+            Extra command line options given to delta.
+          '';
+        };
+      };
     };
   };
 
@@ -308,6 +326,17 @@ in {
           smudge = concatStringsSep " "
             ([ "git-lfs" "smudge" ] ++ skipArg ++ [ "--" "%f" ]);
         };
+    })
+
+    (mkIf cfg.delta.enable {
+      programs.git.iniContent = let
+        deltaArgs = [ "${pkgs.gitAndTools.delta}/bin/delta" ]
+          ++ cfg.delta.options;
+      in {
+        core.pager = concatStringsSep " " deltaArgs;
+        interactive.diffFilter =
+          concatStringsSep " " (deltaArgs ++ [ "--color-only" ]);
+      };
     })
   ]);
 }
