@@ -6,36 +6,37 @@ let
 
   cfg = config.accounts.calendar;
 
-  localModule = name: types.submodule {
-    options = {
-      path = mkOption {
-        type = types.str;
-        default = "${cfg.basePath}/${name}";
-        defaultText = "‹accounts.contact.basePath›/‹name›";
-        description = "The path of the storage.";
-      };
+  localModule = name:
+    types.submodule {
+      options = {
+        path = mkOption {
+          type = types.str;
+          default = "${cfg.basePath}/${name}";
+          defaultText = "‹accounts.contact.basePath›/‹name›";
+          description = "The path of the storage.";
+        };
 
-      type = mkOption {
-        type = types.enum [ "filesystem" "singlefile" ];
-        description = "The type of the storage.";
-      };
+        type = mkOption {
+          type = types.enum [ "filesystem" "singlefile" ];
+          description = "The type of the storage.";
+        };
 
-      fileExt = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "The file extension to use.";
-      };
+        fileExt = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "The file extension to use.";
+        };
 
-      encoding = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = ''
-          File encoding for items, both content and file name.
-          Defaults to UTF-8.
-        '';
+        encoding = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            File encoding for items, both content and file name.
+            Defaults to UTF-8.
+          '';
+        };
       };
     };
-  };
 
   remoteModule = types.submodule {
     options = {
@@ -121,21 +122,15 @@ let
       };
     };
 
-    config = {
-      name = name;
-    };
+    config = { name = name; };
   };
 
-in
-
-{
+in {
   options.accounts.calendar = {
     basePath = mkOption {
       type = types.str;
       apply = p:
-        if hasPrefix "/" p
-        then p
-        else "${config.home.homeDirectory}/${p}";
+        if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''
         The base directory in which to save calendars. May be a
         relative path, in which case it is relative the home
@@ -150,25 +145,19 @@ in
         (import ../programs/khal-accounts.nix)
         (import ../programs/khal-calendar-accounts.nix)
       ]);
-      default = {};
+      default = { };
       description = "List of calendars.";
     };
   };
-  config = mkIf (cfg.accounts != {}) {
-    assertions =
-      let
-        primaries =
-          catAttrs "name"
-          (filter (a: a.primary)
-          (attrValues cfg.accounts));
-      in
-        [{
-          assertion = length primaries <= 1;
-          message =
-            "Must have at most one primary calendar account but found "
-            + toString (length primaries)
-            + ", namely "
-            + concatStringsSep ", " primaries;
-        }];
+  config = mkIf (cfg.accounts != { }) {
+    assertions = let
+      primaries =
+        catAttrs "name" (filter (a: a.primary) (attrValues cfg.accounts));
+    in [{
+      assertion = length primaries <= 1;
+      message = "Must have at most one primary calendar account but found "
+        + toString (length primaries) + ", namely "
+        + concatStringsSep ", " primaries;
+    }];
   };
 }

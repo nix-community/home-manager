@@ -6,36 +6,37 @@ let
 
   cfg = config.accounts.contact;
 
-  localModule = name: types.submodule {
-    options = {
-      path = mkOption {
-        type = types.str;
-        default = "${cfg.basePath}/${name}";
-        defaultText = "‹accounts.contact.basePath›/‹name›";
-        description = "The path of the storage.";
-      };
+  localModule = name:
+    types.submodule {
+      options = {
+        path = mkOption {
+          type = types.str;
+          default = "${cfg.basePath}/${name}";
+          defaultText = "‹accounts.contact.basePath›/‹name›";
+          description = "The path of the storage.";
+        };
 
-      type = mkOption {
-        type = types.enum [ "filesystem" "singlefile" ];
-        description = "The type of the storage.";
-      };
+        type = mkOption {
+          type = types.enum [ "filesystem" "singlefile" ];
+          description = "The type of the storage.";
+        };
 
-      fileExt = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "The file extension to use.";
-      };
+        fileExt = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "The file extension to use.";
+        };
 
-      encoding = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = ''
-          File encoding for items, both content and file name.
-          Defaults to UTF-8.
-        '';
+        encoding = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            File encoding for items, both content and file name.
+            Defaults to UTF-8.
+          '';
+        };
       };
     };
-  };
 
   remoteModule = types.submodule {
     options = {
@@ -104,21 +105,15 @@ let
       };
     };
 
-    config = {
-      name = name;
-    };
+    config = { name = name; };
   };
 
-in
-
-{
+in {
   options.accounts.contact = {
     basePath = mkOption {
       type = types.str;
       apply = p:
-        if hasPrefix "/" p
-        then p
-        else "${config.home.homeDirectory}/${p}";
+        if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''
         The base directory in which to save contacts. May be a
         relative path, in which case it is relative the home
@@ -132,7 +127,7 @@ in
         (import ../programs/vdirsyncer-accounts.nix)
         (import ../programs/khal-accounts.nix)
       ]);
-      default = {};
+      default = { };
       description = "List of contacts.";
     };
   };
