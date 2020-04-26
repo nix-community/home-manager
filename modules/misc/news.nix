@@ -1489,6 +1489,16 @@ in
           A new module is available: 'services.pulseeffects'
         '';
       }
+
+      {
+        time = "2020-04-26T09:20:00+00:00";
+        condition = config.programs.git.enable;
+        message = ''
+          A new option in git module is available: 'config.programs.git.delta.enable'.
+
+          This option enables 'delta' syntax-highlighter for git.
+        '';
+      }
     ];
   };
 }
