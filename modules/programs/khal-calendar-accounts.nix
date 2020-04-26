@@ -5,7 +5,7 @@ with lib;
 {
   options.khal = {
     type = mkOption {
-      type = types.nullOr (types.enum [ "calendar" "discover"]);
+      type = types.nullOr (types.enum [ "calendar" "discover" ]);
       default = null;
       description = ''
         There is no description of this option.
@@ -23,9 +23,22 @@ with lib;
 
     color = mkOption {
       type = types.nullOr (types.enum [
-        "black" "white" "brown" "yellow" "dark gray" "dark green" "dark blue"
-        "light gray" "light green" "light blue" "dark magenta" "dark cyan"
-        "dark red" "light magenta" "light cyan" "light red"
+        "black"
+        "white"
+        "brown"
+        "yellow"
+        "dark gray"
+        "dark green"
+        "dark blue"
+        "light gray"
+        "light green"
+        "light blue"
+        "dark magenta"
+        "dark cyan"
+        "dark red"
+        "light magenta"
+        "light cyan"
+        "light red"
       ]);
       default = null;
       description = ''

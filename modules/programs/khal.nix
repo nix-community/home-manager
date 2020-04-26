@@ -10,83 +10,82 @@ let
   khalCalendarAccounts =
     filterAttrs (_: a: a.khal.enable) config.accounts.calendar.accounts;
 
-  khalContactAccounts =
-    mapAttrs (_: v: v // { type = "birthdays"; })
+  khalContactAccounts = mapAttrs (_: v: v // { type = "birthdays"; })
     (filterAttrs (_: a: a.khal.enable) config.accounts.contact.accounts);
 
   khalAccounts = khalCalendarAccounts // khalContactAccounts;
 
-  primaryAccount =
-    findSingle (a: a.primary) null null
-    (mapAttrsToList (n: v: v // {name= n;}) khalAccounts);
+  primaryAccount = findSingle (a: a.primary) null null
+    (mapAttrsToList (n: v: v // { name = n; }) khalAccounts);
 
   definedAttrs = filterAttrs (_: v: !isNull v);
 
-  toKeyValueIfDefined = attrs:
-    generators.toKeyValue {} (definedAttrs attrs);
+  toKeyValueIfDefined = attrs: generators.toKeyValue { } (definedAttrs attrs);
 
   genCalendarStr = name: value:
-    concatStringsSep "\n" (
-      [
-        "[[${name}]]"
-        "path = ${value.local.path + "/" + (optionalString (value.khal.type == "discover") value.khal.glob)}"
-      ]
-      ++ optional (value.khal.readOnly) "readonly = True"
-      ++ [ (toKeyValueIfDefined (getAttrs [ "type" "color" "priority" ] value.khal)) ]
-      ++ ["\n"]
-    );
+    concatStringsSep "\n" ([
+      "[[${name}]]"
+      "path = ${
+        value.local.path + "/"
+        + (optionalString (value.khal.type == "discover") value.khal.glob)
+      }"
+    ] ++ optional (value.khal.readOnly) "readonly = True" ++ [
+      (toKeyValueIfDefined (getAttrs [ "type" "color" "priority" ] value.khal))
+    ] ++ [ "\n" ]);
 
-  localeFormatOptions = let T = lib.types; in mapAttrs (n: v: v // {
-    description = v.description + ''
+  localeFormatOptions = let T = lib.types;
+  in mapAttrs (n: v:
+    v // {
+      description = v.description + ''
 
-      Format strings are for python 'strftime', similarly to man 3 strftime.
-    '';
-  }) {
-    dateformat = {
-      type = T.str;
-      default = "%x";
-      description = ''
-        khal will display and understand all dates in this format.
+        Format strings are for python 'strftime', similarly to man 3 strftime.
       '';
+    }) {
+      dateformat = {
+        type = T.str;
+        default = "%x";
+        description = ''
+          khal will display and understand all dates in this format.
+        '';
+      };
+
+      timeformat = {
+        type = T.str;
+        default = "%X";
+        description = ''
+          khal will display and understand all times in this format.
+        '';
+      };
+
+      datetimeformat = {
+        type = T.str;
+        default = "%c";
+        description = ''
+          khal will display and understand all datetimes in this format.
+        '';
+      };
+
+      longdateformat = {
+        type = T.str;
+        default = "%x";
+        description = ''
+          khal will display and understand all dates in this format.
+          It should contain a year (e.g. %Y).
+        '';
+      };
+
+      longdatetimeformat = {
+        type = T.str;
+        default = "%c";
+        description = ''
+          khal will display and understand all datetimes in this format.
+          It should contain a year (e.g. %Y).
+        '';
+      };
     };
 
-    timeformat = {
-      type = T.str;
-      default = "%X";
-      description = ''
-        khal will display and understand all times in this format.
-      '';
-    };
-
-    datetimeformat = {
-      type = T.str;
-      default = "%c";
-      description = ''
-        khal will display and understand all datetimes in this format.
-      '';
-    };
-
-    longdateformat = {
-      type = T.str;
-      default = "%x";
-      description = ''
-        khal will display and understand all dates in this format.
-        It should contain a year (e.g. %Y).
-      '';
-    };
-
-    longdatetimeformat = {
-      type = T.str;
-      default = "%c";
-      description = ''
-        khal will display and understand all datetimes in this format.
-        It should contain a year (e.g. %Y).
-      '';
-    };
-  };
-
-
-  localeOptions = let T = lib.types; in localeFormatOptions // {
+  localeOptions = let T = lib.types;
+  in localeFormatOptions // {
     unicode_symbols = {
       type = T.bool;
       default = true;
@@ -136,9 +135,7 @@ let
     };
   };
 
-in
-
-{
+in {
   options.programs.khal = {
     enable = mkEnableOption "khal, a CLI calendar application";
     locale = mkOption {
@@ -152,23 +149,20 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages =  [ pkgs.khal ];
+    home.packages = [ pkgs.khal ];
 
-    xdg.configFile."khal/config".text = concatStringsSep "\n" (
-      [
-        "[calendars]"
-      ]
-      ++ mapAttrsToList genCalendarStr khalAccounts
-      ++
-      [
-        (generators.toINI {} {
+    xdg.configFile."khal/config".text = concatStringsSep "\n" ([ "[calendars]" ]
+      ++ mapAttrsToList genCalendarStr khalAccounts ++ [
+        (generators.toINI { } {
           locale = definedAttrs (cfg.locale // { _module = null; });
 
           default = optionalAttrs (!isNull primaryAccount) {
-            default_calendar = if isNull primaryAccount.primaryCollection then primaryAccount.name else primaryAccount.primaryCollection;
+            default_calendar = if isNull primaryAccount.primaryCollection then
+              primaryAccount.name
+            else
+              primaryAccount.primaryCollection;
           };
         })
-      ]
-    );
+      ]);
   };
 }

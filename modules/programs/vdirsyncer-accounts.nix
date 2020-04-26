@@ -6,9 +6,7 @@ let
 
   collection = types.either types.str (types.listOf types.str);
 
-in
-
-{
+in {
   options.vdirsyncer = {
     enable = mkEnableOption "synchronization using vdirsyncer";
 
@@ -21,10 +19,8 @@ in
     };
 
     conflictResolution = mkOption {
-      type =
-        types.nullOr
-        (types.either
-          (types.enum ["remote wins" "local wins"])
+      type = types.nullOr
+        (types.either (types.enum [ "remote wins" "local wins" ])
           (types.listOf types.str));
       default = null;
       description = ''
@@ -52,7 +48,7 @@ in
 
     metadata = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       example = [ "color" "displayname" ];
       description = ''
         Metadata keys that should be synchronized when vdirsyncer
@@ -115,7 +111,7 @@ in
     };
 
     auth = mkOption {
-      type = types.nullOr (types.enum ["basic" "digest" "guess"]);
+      type = types.nullOr (types.enum [ "basic" "digest" "guess" ]);
       default = null;
       description = ''
         Authentication settings. The default is <literal>basic</literal>.
@@ -128,7 +124,7 @@ in
       description = ''
         Either a path to a certificate with a client certificate and
         the key or a list of paths to the files with them.
-     '';
+      '';
     };
 
     userAgent = mkOption {
