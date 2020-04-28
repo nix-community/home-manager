@@ -52,6 +52,8 @@
 
 /modules/programs/lesspipe.nix                        @rycee
 
+/modules/programs/ledger.nix                          @piperswe
+
 /modules/programs/lf.nix                              @owm111
 /tests/modules/programs/lf                            @owm111
 
