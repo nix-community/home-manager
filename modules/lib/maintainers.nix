@@ -7,6 +7,12 @@
 # [1] https://github.com/NixOS/nixpkgs/blob/fca0d6e093c82b31103dc0dacc48da2a9b06e24b/maintainers/maintainer-list.nix#LC1
 
 {
+  justinlovinger = {
+    name = "Justin Lovinger";
+    email = "git@justinlovinger.com";
+    github = "JustinLovinger";
+    githubId = 7183441;
+  };
   owm111 = {
     email = "7798336+owm111@users.noreply.github.com";
     name = "Owen McGrath";

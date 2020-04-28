@@ -36,6 +36,7 @@ import nmt {
     ./modules/misc/fontconfig
     ./modules/programs/alacritty
     ./modules/programs/alot
+    ./modules/programs/aria2
     ./modules/programs/bash
     ./modules/programs/browserpass
     ./modules/programs/fish

@@ -22,6 +22,8 @@
 
 /modules/misc/xdg-user-dirs.nix                       @pacien
 
+/modules/programs/aria2.nix                           @JustinLovinger
+
 /modules/programs/autorandr.nix                       @uvNikita
 
 /modules/programs/bash.nix                            @rycee
