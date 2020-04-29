@@ -4,6 +4,8 @@ with lib;
 let
   cfg = config.programs.ledger;
   package = pkgs.ledger;
+  boolOption = value: name: if value == true then "--${name}" else "";
+  valueOption = value: name: if value != null then "--${name} ${value}" else "";
 in {
   meta.maintainers = [ maintainers.piperswe ];
 
@@ -170,32 +172,23 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ package ];
     home.file.".ledgerrc".text = ''
-      ${if cfg.checkPayees == true then "--check-payees" else ""}
-      ${if cfg.dayBreak == true then "--day-break" else ""}
-      ${if cfg.decimalComma == true then "--decimal-comma" else ""}
-      ${if cfg.download == true then "--download" else ""}
-      ${if cfg.explicit == true then "--explicit" else ""}
-      ${if cfg.file != null then "--file ${cfg.file}" else ""}
-      ${if cfg.inputDateFormat != null then
-        "--input-date-format ${cfg.inputDateFormat}"
-      else
-        ""}
-      ${if cfg.masterAccount != null then
-        "--master-account ${cfg.masterAccount}"
-      else
-        ""}
-      ${if cfg.noAliases == true then "--no-aliases" else ""}
-      ${if cfg.pedantic == true then "--pedantic" else ""}
-      ${if cfg.permissive == true then "--permissive" else ""}
-      ${if cfg.priceDB != null then "--price-db ${cfg.priceDB}" else ""}
-      ${if cfg.priceExpectedFreshness != null then
-        "--price-exp ${cfg.pricesExpectedFreshness}"
-      else
-        ""}
-      ${if cfg.strict == true then "--strict" else ""}
-      ${if cfg.recursiveAliases == true then "--recursive-aliases" else ""}
-      ${if cfg.timeColon == true then "--time-colon" else ""}
-      ${if cfg.valueExpr != null then "--value-expr ${cfg.valueExpr}" else ""}
+      ${boolOption cfg.checkPayees "check-payees"}
+      ${boolOption cfg.dayBreak "day-break"}
+      ${boolOption cfg.decimalComma "decimal-comma"}
+      ${boolOption cfg.download "download"}
+      ${boolOption cfg.explicit "explicit"}
+      ${valueOption cfg.file "file"}
+      ${valueOption cfg.inputDateFormat "input-date-format"}
+      ${valueOption cfg.masterAccount "master-account"}
+      ${boolOption cfg.noAliases "no-aliases"}
+      ${boolOption cfg.pedantic "pedantic"}
+      ${boolOption cfg.permissive "permissive"}
+      ${valueOption cfg.priceDB "price-db"}
+      ${valueOption cfg.priceExpectedFreshness "price-exp"}
+      ${boolOption cfg.strict "strict"}
+      ${boolOption cfg.recursiveAliases "recursive-aliases"}
+      ${boolOption cfg.timeColon "time-colon"}
+      ${valueOption cfg.valueExpr "value-expr"}
 
       ${cfg.extraConfig}
     '';
