@@ -78,11 +78,14 @@ in
     home.file =
       let
         toPaths = path:
-          # Links every dir in path to the extension path.
-          mapAttrsToList (k: v:
-            {
-              "${extensionPath}/${k}".source = "${path}/${k}";
-            }) (builtins.readDir path);
+          let
+            p = "${path}/share/vscode/extensions";
+          in
+            # Links every dir in p to the extension path.
+            mapAttrsToList (k: v:
+              {
+                "${extensionPath}/${k}".source = "${p}/${k}";
+              }) (builtins.readDir p);
         toSymlink = concatMap toPaths cfg.extensions;
       in
         foldr
