@@ -19,9 +19,19 @@ let
     else
       ''${section} "${subsection}"'';
 
+  mkValueString = v:
+    let
+      escapedV = ''
+        "${
+          replaceStrings [ "\n" "	" ''"'' "\\" ] [ "\\n" "\\t" ''\"'' "\\\\" ] v
+        }"'';
+    in generators.mkValueStringDefault { } (if isString v then escapedV else v);
+
   # generation for multiple ini values
   mkKeyValue = k: v:
-    let mkKeyValue = generators.mkKeyValueDefault { } " = " k;
+    let
+      mkKeyValue =
+        generators.mkKeyValueDefault { inherit mkValueString; } " = " k;
     in concatStringsSep "\n" (map (kv: "	" + mkKeyValue kv) (toList v));
 
   # converts { a.b.c = 5; } to { "a.b".c = 5; } for toINI
