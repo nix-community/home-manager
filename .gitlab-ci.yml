@@ -11,10 +11,7 @@ stages:
 Run tests:
   stage: test
   script:
-    - nix-shell tests -A run.files-text
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master"
-      when: always
+    - nix-shell --pure tests -A run.files-text
 
 pages:
   stage: deploy
