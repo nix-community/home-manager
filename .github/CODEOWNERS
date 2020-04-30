@@ -18,6 +18,8 @@
 
 /modules/misc/submodule-support.nix                   @rycee
 
+/modules/misc/tmpfiles.nix                            @dawidsowa
+
 /modules/misc/xdg-mime-apps.nix                       @pacien
 
 /modules/misc/xdg-user-dirs.nix                       @pacien
