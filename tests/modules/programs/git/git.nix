@@ -28,6 +28,7 @@ in {
         aliases = {
           a1 = "foo";
           a2 = "bar";
+          escapes = ''"\n	'';
         };
         extraConfig = {
           extra = {
