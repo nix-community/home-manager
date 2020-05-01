@@ -1,3 +1,1 @@
-{
-  alot = ./alot.nix;
-}
+{ alot = ./alot.nix; }

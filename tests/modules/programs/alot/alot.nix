@@ -16,7 +16,7 @@ with lib;
         primary = true;
         notmuch.enable = true;
         alot = {
-          contactCompletion = {};
+          contactCompletion = { };
           extraConfig = ''
             auto_remove_unread = True
             ask_subject = False
@@ -27,9 +27,10 @@ with lib;
       };
     };
 
-    programs.alot = {
-      enable = true;
-    };
+    programs.alot = { enable = true; };
+
+    nixpkgs.overlays =
+      [ (self: super: { alot = pkgs.writeScriptBin "dummy-alot" ""; }) ];
 
     nmt.script = ''
       assertFileExists home-files/.config/alot/config
@@ -37,5 +38,4 @@ with lib;
     '';
   };
 }
-
 
