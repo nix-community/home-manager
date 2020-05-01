@@ -39,6 +39,13 @@ in
   };
 
   config = {
+    lib.file.mkOutOfStoreSymlink = path:
+      let
+        pathStr = toString path;
+        name = hm.strings.storeFileName (baseNameOf pathStr);
+      in
+        pkgs.runCommandLocal name {} ''ln -s ${escapeShellArg pathStr} $out'';
+
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
     home.activation.checkLinkTargets = hm.dag.entryBefore ["writeBoundary"] (
