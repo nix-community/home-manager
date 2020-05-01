@@ -68,6 +68,7 @@ let
     (loadModule ./programs/gpg.nix { })
     (loadModule ./programs/home-manager.nix { })
     (loadModule ./programs/htop.nix { })
+    (loadModule ./programs/i3status.nix { })
     (loadModule ./programs/info.nix { })
     (loadModule ./programs/irssi.nix { })
     (loadModule ./programs/lieer.nix { })

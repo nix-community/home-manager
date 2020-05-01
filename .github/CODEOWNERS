@@ -48,6 +48,8 @@
 
 /modules/programs/home-manager.nix                    @rycee
 
+/modules/programs/i3status.nix                        @JustinLovinger
+
 /modules/programs/keychain.nix                        @marsam
 
 /modules/programs/lesspipe.nix                        @rycee

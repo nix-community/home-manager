@@ -41,6 +41,7 @@ import nmt {
     ./modules/programs/fish
     ./modules/programs/git
     ./modules/programs/gpg
+    ./modules/programs/i3status
     ./modules/programs/kakoune
     ./modules/programs/lf
     ./modules/programs/lieer
