@@ -52,7 +52,7 @@ let
     in mapAttrs opt knownSettings;
   };
 in {
-  meta.maintainers = [{ github = "owm111"; }];
+  meta.maintainers = [ hm.maintainers.owm111 ];
 
   options = {
     programs.lf = {

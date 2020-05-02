@@ -17,7 +17,7 @@ rec {
       };
 
   gvariant = import ./gvariant.nix { inherit lib; };
-
+  maintainers = import ./maintainers.nix;
   strings = import ./strings.nix { inherit lib; };
   types = import ./types.nix { inherit dag gvariant lib; };
 
