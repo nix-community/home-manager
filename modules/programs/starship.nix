@@ -89,7 +89,7 @@ in {
       mkIf (cfg.settings != { }) { source = configFile cfg.settings; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      if [[ -z $INSIDE_EMACS ]] && [[ $TERM != "dumb" ]]; then
+      if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
         eval "$(${cfg.package}/bin/starship init bash)"
       fi
     '';
