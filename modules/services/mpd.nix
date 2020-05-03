@@ -8,22 +8,26 @@ let
 
   cfg = config.services.mpd;
 
-  mpdConf = pkgs.writeText "mpd.conf" ''
-    music_directory     "${cfg.musicDirectory}"
-    playlist_directory  "${cfg.playlistDirectory}"
-    ${lib.optionalString (cfg.dbFile != null) ''
-      db_file             "${cfg.dbFile}"
+  mpdConf = cfg': pkgs.writeText "mpd.conf" ''
+    music_directory     "${cfg'.musicDirectory}"
+    playlist_directory  "${cfg'.playlistDirectory}"
+    ${lib.optionalString (cfg'.dbFile != null) ''
+      db_file             "${cfg'.dbFile}"
     ''}
-    state_file          "${cfg.dataDir}/state"
-    sticker_file        "${cfg.dataDir}/sticker.sql"
+    state_file          "${cfg'.dataDir}/state"
+    sticker_file        "${cfg'.dataDir}/sticker.sql"
 
-    ${optionalString (cfg.network.listenAddress != "any")
-      ''bind_to_address "${cfg.network.listenAddress}"''}
-    ${optionalString (cfg.network.port != 6600)
-      ''port "${toString cfg.network.port}"''}
+    ${optionalString (cfg'.network.listenAddress != "any")
+      ''bind_to_address "${cfg'.network.listenAddress}"''}
+    ${optionalString (cfg'.network.port != 6600)
+      ''port "${toString cfg'.network.port}"''}
 
-    ${cfg.extraConfig}
+    ${cfg'.extraConfig}
   '';
+
+  mpdOptions = cfg: {
+
+  };
 
 in {
 
@@ -129,7 +133,8 @@ in {
           configuration.
         '';
       };
-    };
+
+    } // mpdOptions cfg;
 
   };
 
@@ -150,7 +155,7 @@ in {
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";
-        ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf}";
+        ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf cfg}";
         Type = "notify";
         ExecStartPre = ''${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
       };
