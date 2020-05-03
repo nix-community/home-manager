@@ -33,13 +33,7 @@ in {
 
     services.mpd = {
 
-      enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable MPD, the music player daemon.
-        '';
-      };
+      enable = mkEnableOption "MPD, the music player daemon";
 
       package = mkOption {
         type = types.package;
