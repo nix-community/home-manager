@@ -1489,6 +1489,13 @@ in
           A new module is available: 'services.pulseeffects'
         '';
       }
+
+      {
+        time = "2020-05-03T11:13:07+00:00";
+        message = ''
+          A new module is available: 'programs.i3status'
+        '';
+      }
     ];
   };
 }
