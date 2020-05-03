@@ -125,21 +125,21 @@ let
   };
 
   mpdService = cfg: {
-      Unit = {
-        After = [ "network.target" "sound.target" ];
-        Description = "Music Player Daemon";
-      };
+    Unit = {
+      After = [ "network.target" "sound.target" ];
+      Description = "Music Player Daemon";
+    };
 
-      Install = mkIf (!cfg.network.startWhenNeeded) {
-        WantedBy = [ "default.target" ];
-      };
+    Install = mkIf (!cfg.network.startWhenNeeded) {
+      WantedBy = [ "default.target" ];
+    };
 
-      Service = {
-        Environment = "PATH=${config.home.profileDirectory}/bin";
-        ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf cfg}";
-        Type = "notify";
-        ExecStartPre = ''${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
-      };
+    Service = {
+      Environment = "PATH=${config.home.profileDirectory}/bin";
+      ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf cfg}";
+      Type = "notify";
+      ExecStartPre = ''${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
+    };
   };
 
   mpdSocket = cfg: mkIf cfg.network.startWhenNeeded {
