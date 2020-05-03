@@ -27,18 +27,6 @@ let
 
   mpdOptions = cfg: {
 
-  };
-
-in {
-
-  ###### interface
-
-  options = {
-
-    services.mpd = {
-
-      enable = mkEnableOption "MPD, the music player daemon";
-
       package = mkOption {
         type = types.package;
         default = pkgs.mpd;
@@ -133,6 +121,18 @@ in {
           configuration.
         '';
       };
+
+  };
+
+in {
+
+  ###### interface
+
+  options = {
+
+    services.mpd = {
+
+      enable = mkEnableOption "MPD, the music player daemon";
 
     } // mpdOptions cfg;
 
