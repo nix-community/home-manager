@@ -36,15 +36,15 @@ let
       '';
     };
 
-      musicDirectory = mkOption {
-        type = with types; either path (strMatching "(http|https|nfs|smb)://.+");
-        default = "${config.home.homeDirectory}/music";
-        defaultText = "$HOME/music";
-        apply = toString;       # Prevent copies to Nix store.
-        description = ''
-          The directory where mpd reads music from.
-        '';
-      };
+    musicDirectory = mkOption {
+      type = with types; either path (strMatching "(http|https|nfs|smb)://.+");
+      default = "${config.home.homeDirectory}/music";
+      defaultText = "$HOME/music";
+      apply = toString;       # Prevent copies to Nix store.
+      description = ''
+        The directory where mpd reads music from.
+      '';
+    };
 
     playlistDirectory = mkOption {
       type = with types; either path str;
@@ -56,20 +56,20 @@ let
       '';
     };
 
-      extraConfig = mkOption {
-        type = types.lines;
-        default = "";
-        description = ''
-          Extra directives added to to the end of MPD's configuration
-          file, <filename>mpd.conf</filename>. Basic configuration
-          like file location and uid/gid is added automatically to the
-          beginning of the file. For available options see
-          <citerefentry>
-            <refentrytitle>mpd.conf</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>.
-        '';
-      };
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Extra directives added to to the end of MPD's configuration
+        file, <filename>mpd.conf</filename>. Basic configuration
+        like file location and uid/gid is added automatically to the
+        beginning of the file. For available options see
+        <citerefentry>
+          <refentrytitle>mpd.conf</refentrytitle>
+          <manvolnum>5</manvolnum>
+        </citerefentry>.
+      '';
+    };
 
     dataDir = mkOption {
       type = with types; either path str;
@@ -82,14 +82,14 @@ let
       '';
     };
 
-      network = {
-        startWhenNeeded = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-           Enable systemd socket activation.
-          '';
-        };
+    network = {
+      startWhenNeeded = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Enable systemd socket activation.
+        '';
+      };
 
       listenAddress = mkOption {
         type = types.str;
@@ -101,13 +101,13 @@ let
         '';
       };
 
-        port = mkOption {
-          type = types.port;
-          default = 6600;
-          description = ''
-            The TCP port on which the the daemon will listen.
-          '';
-        };
+      port = mkOption {
+        type = types.port;
+        default = 6600;
+        description = ''
+          The TCP port on which the the daemon will listen.
+        '';
+      };
 
     };
 
