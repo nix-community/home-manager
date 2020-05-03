@@ -27,14 +27,14 @@ let
 
   mpdOptions = cfg: {
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.mpd;
-        defaultText = "pkgs.mpd";
-        description = ''
-          The MPD package to run.
-        '';
-      };
+    package = mkOption {
+      type = types.package;
+      default = pkgs.mpd;
+      defaultText = "pkgs.mpd";
+      description = ''
+        The MPD package to run.
+      '';
+    };
 
       musicDirectory = mkOption {
         type = with types; either path (strMatching "(http|https|nfs|smb)://.+");
@@ -46,15 +46,15 @@ let
         '';
       };
 
-      playlistDirectory = mkOption {
-        type = with types; either path str;
-        default = "${cfg.dataDir}/playlists";
-        defaultText = ''''${dataDir}/playlists'';
-        apply = toString;       # Prevent copies to Nix store.
-        description = ''
-          The directory where mpd stores playlists.
-        '';
-      };
+    playlistDirectory = mkOption {
+      type = with types; either path str;
+      default = "${cfg.dataDir}/playlists";
+      defaultText = ''''${dataDir}/playlists'';
+      apply = toString;       # Prevent copies to Nix store.
+      description = ''
+        The directory where mpd stores playlists.
+      '';
+    };
 
       extraConfig = mkOption {
         type = types.lines;
@@ -71,16 +71,16 @@ let
         '';
       };
 
-      dataDir = mkOption {
-        type = with types; either path str;
-        default = "${config.xdg.dataHome}/${name}";
-        defaultText = "$XDG_DATA_HOME/mpd";
-        apply = toString;       # Prevent copies to Nix store.
-        description = ''
-          The directory where MPD stores its state, tag cache,
-          playlists etc.
-        '';
-      };
+    dataDir = mkOption {
+      type = with types; either path str;
+      default = "${config.xdg.dataHome}/${name}";
+      defaultText = "$XDG_DATA_HOME/mpd";
+      apply = toString;       # Prevent copies to Nix store.
+      description = ''
+        The directory where MPD stores its state, tag cache,
+        playlists etc.
+      '';
+    };
 
       network = {
         startWhenNeeded = mkOption {
@@ -91,15 +91,15 @@ let
           '';
         };
 
-        listenAddress = mkOption {
-          type = types.str;
-          default = "127.0.0.1";
-          example = "any";
-          description = ''
-            The address for the daemon to listen on.
-            Use <literal>any</literal> to listen on all addresses.
-          '';
-        };
+      listenAddress = mkOption {
+        type = types.str;
+        default = "127.0.0.1";
+        example = "any";
+        description = ''
+          The address for the daemon to listen on.
+          Use <literal>any</literal> to listen on all addresses.
+        '';
+      };
 
         port = mkOption {
           type = types.port;
@@ -109,18 +109,18 @@ let
           '';
         };
 
-      };
+    };
 
-      dbFile = mkOption {
-        type = types.nullOr types.str;
-        default = "${cfg.dataDir}/tag_cache";
-        defaultText = ''''${dataDir}/tag_cache'';
-        description = ''
-          The path to MPD's database. If set to
-          <literal>null</literal> the parameter is omitted from the
-          configuration.
-        '';
-      };
+    dbFile = mkOption {
+      type = types.nullOr types.str;
+      default = "${cfg.dataDir}/tag_cache";
+      defaultText = ''''${dataDir}/tag_cache'';
+      description = ''
+        The path to MPD's database. If set to
+        <literal>null</literal> the parameter is omitted from the
+        configuration.
+      '';
+    };
 
   };
 
