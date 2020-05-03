@@ -105,11 +105,11 @@ in {
       '';
     };
 
-    disableDefaultBindings = mkOption {
+    enableDefaultBindings = mkOption {
       type = types.bool;
-      default = false;
+      default = true;
       description = ''
-        Enable to load no default keybindings at all.
+        Disable to prevent loading default keybindings.
       '';
     };
 
@@ -254,7 +254,7 @@ in {
       ++ mapAttrsToList (formatDictLine "c.url.searchengines") cfg.searchEngines
       ++ mapAttrsToList (formatDictLine "c.bindings.key_mappings")
       cfg.keyMappings
-      ++ optional cfg.disableDefaultBindings [ "c.bindings.default = {}" ]
+      ++ optional (!cfg.enableDefaultBindings) [ "c.bindings.default = {}" ]
       ++ mapAttrsToList formatKeyBindings cfg.keybindings
       ++ optional (cfg.extraConfig != "") cfg.extraConfig);
   };
