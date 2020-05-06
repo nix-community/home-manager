@@ -29,6 +29,7 @@ import nmt {
     ./modules/programs/alacritty
     ./modules/programs/bash
     ./modules/programs/browserpass
+    ./modules/programs/dircolors
     ./modules/programs/fish
     ./modules/programs/git
     ./modules/programs/gpg

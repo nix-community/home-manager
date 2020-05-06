@@ -1474,6 +1474,13 @@ in
           A new module is available: 'services.mako'
         '';
       }
+
+      {
+        time = "2020-05-12T20:09:54+00:00";
+        message = ''
+          A new module is available: 'programs.dircolors'
+        '';
+      }
     ];
   };
 }

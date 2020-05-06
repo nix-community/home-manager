@@ -54,6 +54,7 @@ let
     (loadModule ./programs/browserpass.nix { })
     (loadModule ./programs/chromium.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/command-not-found/command-not-found.nix { })
+    (loadModule ./programs/dircolors.nix { })
     (loadModule ./programs/direnv.nix { })
     (loadModule ./programs/eclipse.nix { })
     (loadModule ./programs/emacs.nix { })

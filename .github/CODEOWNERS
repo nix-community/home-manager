@@ -32,6 +32,8 @@
 
 /modules/programs/broot.nix                           @aheaume
 
+/modules/programs/dircolors.nix                       @JustinLovinger
+
 /modules/programs/direnv.nix                          @rycee
 
 /modules/programs/eclipse.nix                         @rycee
