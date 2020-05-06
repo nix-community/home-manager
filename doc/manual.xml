@@ -27,6 +27,7 @@
  </preface>
  <xi:include href="installation.xml" />
  <xi:include href="writing-modules.xml" />
+ <xi:include href="faq.xml" />
  <appendix xml:id="ch-options">
   <title>Configuration Options</title>
   <xi:include href="./nmd-result/home-manager-options.xml" />

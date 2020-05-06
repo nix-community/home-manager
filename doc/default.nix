@@ -8,8 +8,8 @@ let
     name = "nmd";
     owner = "rycee";
     repo = "nmd";
-    rev = "49567e3ff2824ac8ba457f439f384eafc1eb4547";
-    sha256 = "0x2lwcryvmnr128r497bzrawi4x1yyxb4riicppdaib95iwn8jck";
+    rev = "701d981f0ab979b79143e4f3b52e3b58836d4f6e";
+    sha256 = "0wwa5ivrvqy4izj2zwn9vzr44n54lz3kbbj4d6f0gjriab07dwd6";
   };
 
   nmd = import nmdSrc { inherit lib pkgs; };
