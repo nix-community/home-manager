@@ -39,6 +39,7 @@ import nmt {
     ./modules/programs/aria2
     ./modules/programs/bash
     ./modules/programs/browserpass
+    ./modules/programs/dircolors
     ./modules/programs/fish
     ./modules/programs/git
     ./modules/programs/gpg
