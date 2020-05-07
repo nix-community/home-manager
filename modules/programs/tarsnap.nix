@@ -1,0 +1,300 @@
+{ config, lib, pkgs, ... }:
+
+with lib;
+
+let
+
+  cfg = config.programs.tarsnap;
+
+in {
+  options = {
+    programs.tarsnap = {
+      enable = mkEnableOption "Tarsnap";
+
+      package = mkOption {
+        type = types.package;
+        default = pkgs.tarsnap;
+        defaultText = literalExample "pkgs.tarsnap";
+        description = ''
+          Tarsnap package to install
+        '';
+      };
+
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
+        description = ''
+          Extra config to add to the end of .tarsnaprc
+        '';
+      };
+
+      aggressiveNetworking = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Use multiple TCP connections to send data to the
+          <command>tarsnap</command> server. If the upload rate is
+          congestion-limited rather than being limited by individual
+          bottleneck(s), this may allow tarsnap to use a significantly larger
+          fraction of the available bandwidth, at the expense of slowing down
+          any other network traffic.
+        '';
+      };
+
+      cachedir = mkOption {
+        type = types.str;
+        default = "$HOME/.cache/tarsnap";
+        description = ''
+          Cache information about the archives stored by
+          <command>tarsnap</command> in the directory cache-dir. The contents of
+          this directory will not be backed up by tarsnap, so it should not be
+          used for any other purpose. If the directory cache-dir is lost, it can
+          be reconstructed by running <command>tarsnap --fsck</command>.
+        '';
+      };
+
+      checkpointBytes = mkOption {
+        type = types.str;
+        default = "1G";
+        description = ''
+          Create a checkpoint after every bytespercheckpoint bytes of uploaded
+          data. The value bytespercheckpoint must be at least 1000000, and a
+          higher value is recommended since creating a checkpoint in an archive
+          can take a few seconds and several hundred kB of bandwidth.
+        '';
+      };
+
+      diskPause = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Pause for X ms between storing archive entries and after every 64 kB
+          of file data. This will slow down tarsnap and thereby reduce its
+          impact on other applications. For archiving files which are stored on
+          an ATA disk and are not in the operating system disk cache, a value of
+          diskPause = 10 will approximately double the time taken.
+        '';
+      };
+
+      exclude = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Do not process files or directories that match the specified pattern.
+          Note that exclusions take precedence over patterns or filenames
+          specified on the command line.
+        '';
+      };
+
+      forceResources = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Force the decryption of a passphrase-encrypted key file to proceed
+          even if it is anticipated to require an excessive amount of memory or
+          CPU time
+        '';
+      };
+
+      humanizeNumbers = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Use SI prefixes to make numbers printed by --print-stats and SIGINFO
+          more readable.
+        '';
+      };
+
+      include = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          Process only files or directories that match the specified pattern.
+          Note that exclusions specified with exclude take precedence over
+          inclusions. If no inclusions are explicitly specified, all entries are
+          processed by default. The --include option is especially useful when
+          filtering archives. For example, the command <command>tarsnap -c -f
+          foo-backup --include='*foo*' @@all-backup</command> creates a new
+          archive foo-backup containing only the entries from all-backup
+          containing the string Sq foo.
+        '';
+      };
+
+      insaneFilesystems = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Allow descent into synthetic filesystems such as procfs. Normally
+          archiving of such filesystems is a silly thing to do, hence the name
+          of the option.
+        '';
+      };
+
+      isoDates = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Print file and directory dates as yyyy-mm-dd hh:mm:ss.
+        '';
+      };
+
+      keyfile = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Obtain encryption, authentication, and access keys from key-file. This
+          file should have been generated by
+          <command>tarsnap-keygen(1)</command>.
+        '';
+      };
+
+      memoryUsage = mkOption {
+        type = types.enum [ "normal" "low" "verylow" ];
+        default = "normal";
+        description = ''
+          Set the memory-usage mode of tarsnap.
+
+          For low, reduce memory usage by not caching small files. This may be
+          useful when backing up files of average size less than 1 MB if the
+          available RAM in kilobytes is less than the number of files being
+          backed up.
+
+          For verylow reduce memory usage, by approximately a factor of 2 beyond
+          the memory usage when --lowmem is specified, by not caching anything.
+        '';
+      };
+
+      maxbw = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Interrupt archival if more than numbytes bytes of upstream bandwidth
+          is used
+        '';
+      };
+
+      maxbwRate = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Limit download and upload bandwidth used to maxbwRate bytes per
+          second.
+        '';
+      };
+
+      maxbwRateDown = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Limit download bandwidth used to maxbwRate bytes per second.
+        '';
+      };
+
+      maxbwRateUp = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = ''
+          Limit upload bandwidth used to maxbwRate bytes per second.
+        '';
+      };
+
+      nodump = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Limit upload bandwidth used to maxbwRate bytes per second.
+        '';
+      };
+
+      printStats = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Print statistics for the archive being created (c mode) or delete (d
+          mode).
+        '';
+      };
+
+      quiet = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Avoid printing some warnings. Currently the warnings which are
+          silenced by this option are "Removing leading '/' ...", "Not adding
+          cache directory to archive", "... file may have grown while being
+          archived", and "Skipping entry on filesystem of type ...", but it is
+          likely that other warnings will be silenced by this option in future
+          versions of <command>tarsnap</command>.
+        '';
+      };
+
+      retryForever = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          This option causes tarsnap to continue trying to reconnect to the
+          tarsnap server forever, instead of giving up after 5-10 minutes. This
+          may be useful for people with excessively flaky networks, or on mobile
+          devices which regularly lose their internet connections for extended
+          periods of time. This is not enabled by default since continued
+          failures generally indicate a problem which should be investigated
+          by the user.
+        '';
+      };
+
+      storeAtime = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Enable the storing of file access times. The default behaviour of
+          tarsnap is to not store file access times, since this can cause a
+          significant amount of bandwidth and storage to be wasted when the same
+          set of files are archived several times (e.g., if daily backup
+          archives are created) due to tarsnap itself accessing files and
+          thereby causing their access times to be changed.
+        '';
+      };
+
+      totals = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Print the size of the archive after creating it. This option is
+          provided mainly for compatibility with GNU tar; in most situations the
+          printStats option will be far more useful.
+        '';
+      };
+    };
+  };
+
+  config = mkIf cfg.enable {
+    home.packages = [ cfg.package ];
+
+    home.file.".tarsnaprc".text = with cfg;
+      concatStringsSep "\n" ([
+        "cachedir ${
+          replaceStrings [ "$HOME" ] [ config.home.homeDirectory ] cachedir
+        }"
+        "keyfile ${
+          replaceStrings [ "$HOME" ] [ config.home.homeDirectory ] keyfile
+        }"
+        "checkpoint-bytes ${checkpointBytes}"
+        "${memoryUsage}mem"
+      ] ++ optional aggressiveNetworking "aggressive-networking"
+        ++ optional (!isNull diskPause) "disk-pause ${diskPause}"
+        ++ optional (!isNull exclude) "exclude ${exclude}"
+        ++ optional forceResources "force-resources"
+        ++ optional humanizeNumbers "humanize-numbers"
+        ++ optional (!isNull include) "include ${include}"
+        ++ optional insaneFilesystems "insane-filesystems"
+        ++ optional isoDates "iso-dates"
+        ++ optional (!isNull maxbw) "maxbw ${maxbw}"
+        ++ optional (!isNull maxbwRate) "maxbw-rate ${maxbwRate}"
+        ++ optional (!isNull maxbwRateDown) "maxbw-rate-down ${maxbwRateDown}"
+        ++ optional (!isNull maxbwRateUp) "maxbw-rate-up ${maxbwRateUp}"
+        ++ optional printStats "print-stats" ++ optional quiet "quiet"
+        ++ optional retryForever "retry-forever"
+        ++ optional storeAtime "store-atime" ++ optional totals "totals"
+        ++ [ extraConfig ]);
+  };
+}

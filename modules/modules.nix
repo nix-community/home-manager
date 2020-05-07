@@ -104,6 +104,7 @@ let
     (loadModule ./programs/skim.nix { })
     (loadModule ./programs/starship.nix { })
     (loadModule ./programs/ssh.nix { })
+    (loadModule ./programs/tarsnap.nix { })
     (loadModule ./programs/taskwarrior.nix { })
     (loadModule ./programs/termite.nix { })
     (loadModule ./programs/texlive.nix { })
