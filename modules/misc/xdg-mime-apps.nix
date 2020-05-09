@@ -74,7 +74,7 @@ in {
 
   config = mkIf cfg.enable {
     # Deprecated but still used by some applications.
-    home.file.".local/share/applications/mimeapps.list".source =
+    xdg.dataFile."applications/mimeapps.list".source =
       config.xdg.configFile."mimeapps.list".source;
 
     xdg.configFile."mimeapps.list".text =
