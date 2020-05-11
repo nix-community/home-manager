@@ -253,7 +253,7 @@ let
       } ${toString floating.border}
       hide_edge_borders ${window.hideEdgeBorders}
       focus_wrapping ${if focus.forceWrapping then "yes" else "no"}
-      focus_follows_mouse ${if focus.followMouse then "yes" else "no"}
+      focus_follows_mouse ${focus.followMouse}
       focus_on_window_activation ${focus.newWindow}
       mouse_warping ${if focus.mouseWarping then "output" else "none"}
       workspace_layout ${workspaceLayout}

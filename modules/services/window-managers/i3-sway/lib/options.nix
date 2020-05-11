@@ -390,9 +390,17 @@ in {
         };
 
         followMouse = mkOption {
-          type = types.bool;
-          default = true;
+          type = if moduleName == "sway" then
+            types.either (types.enum [ "yes" "no" "always" ]) types.bool
+          else
+            types.bool;
+          default = if moduleName == "sway" then "yes" else true;
           description = "Whether focus should follow the mouse.";
+          apply = val:
+            if (moduleName == "sway" && isBool val) then
+              (if val then "yes" else "no")
+            else
+              val;
         };
 
         forceWrapping = mkOption {
