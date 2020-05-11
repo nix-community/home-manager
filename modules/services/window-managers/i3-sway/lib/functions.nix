@@ -48,7 +48,10 @@ rec {
         mode ${mode}
         hidden_state ${hiddenState}
         position ${position}
-        status_command ${statusCommand}
+        ${
+          optionalString (statusCommand != null)
+          "status_command ${statusCommand}"
+        }
         ${moduleName}bar_command ${command}
         workspace_buttons ${if workspaceButtons then "yes" else "no"}
         strip_workspace_numbers ${if !workspaceNumbers then "yes" else "no"}
