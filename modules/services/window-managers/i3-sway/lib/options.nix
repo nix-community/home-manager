@@ -111,7 +111,7 @@ let
       };
 
       statusCommand = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
         default = "${pkgs.i3status}/bin/i3status";
         description = "Command that will be used to get status lines.";
       };
