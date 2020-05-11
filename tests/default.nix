@@ -83,6 +83,7 @@ import nmt {
     ./modules/services/sxhkd
     ./modules/services/fluidsynth
     ./modules/services/window-managers/i3
+    ./modules/services/window-managers/sway
     ./modules/systemd
     ./modules/targets
   ]);
