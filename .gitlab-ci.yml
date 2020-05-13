@@ -11,7 +11,8 @@ stages:
 Run tests:
   stage: test
   script:
-    - nix-shell tests -A run.files-text
+    - ./format -c && echo Format is OK
+    - nix-shell --pure tests -A run.files-text
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
       when: always
