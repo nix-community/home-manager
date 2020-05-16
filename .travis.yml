@@ -4,9 +4,6 @@ os:
   - linux
   - osx
 
-before_script:
-  - mkdir -m 0755 -p /nix/var/nix/{profiles,gcroots}/per-user/$USER
-
 script:
   - ./format -c
   - nix-shell . -A install

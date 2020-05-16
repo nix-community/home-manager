@@ -46,21 +46,12 @@ Installation
 
 Currently the easiest way to install Home Manager is as follows:
 
-1.  Make sure you have a working Nix installation. If you are not
-    using NixOS then you may here have to run
-
-    ```console
-    $ mkdir -m 0755 -p /nix/var/nix/{profiles,gcroots}/per-user/$USER
-    ```
-
-    since Home Manager uses these directories to manage your profile
-    generations. On NixOS these should already be available.
-
-    Also make sure that your user is able to build and install Nix
-    packages. For example, you should be able to successfully run a
-    command like `nix-instantiate '<nixpkgs>' -A hello` without having
-    to switch to the root user. For a multi-user install of Nix this
-    means that your user must be covered by the
+1.  Make sure you have a working Nix installation. Specifically, make
+    sure that your user is able to build and install Nix packages. For
+    example, you should be able to successfully run a command like
+    `nix-instantiate '<nixpkgs>' -A hello` without having to switch to
+    the root user. For a multi-user install of Nix this means that
+    your user must be covered by the
     [`allowed-users`][nixAllowedUsers] Nix option. On NixOS you can
     control this option using the
     [`nix.allowedUsers`][nixosAllowedUsers] system option.
