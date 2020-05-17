@@ -169,7 +169,7 @@ in
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath: exists"
             elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
-              warnEcho "Path '$targetPath' not link into Home Manager generation. Skipping delete."
+              warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
             else
               $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
               $DRY_RUN_CMD rm $VERBOSE_ARG "$targetPath"
