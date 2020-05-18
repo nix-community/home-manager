@@ -101,7 +101,7 @@ in {
     '';
 
     programs.fish.promptInit = mkIf cfg.enableFishIntegration ''
-      if test -z "$INSIDE_EMACS"
+      if test [[  "$TERM" != "dumb"  -a \( -n "$INSIDE_EMACS"  -o "$INSIDE_EMACS" == "vterm" \)  ]]
         eval (${cfg.package}/bin/starship init fish)
       end
     '';
