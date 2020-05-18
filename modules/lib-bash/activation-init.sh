@@ -10,7 +10,7 @@ function setupVars() {
 
     local greatestGenNum
     greatestGenNum=$( \
-        nix-env --list-generations --profile "$genProfilePath" \
+        (nix-env --list-generations --profile "$genProfilePath" || echo "") \
             | tail -1 \
             | sed -E 's/ *([[:digit:]]+) .*/\1/')
 
