@@ -94,8 +94,7 @@ in {
     })
 
     (mkIf (cfg.goBin != null) {
-      home.sessionVariables.GOBIN =
-        "${config.home.homeDirectory}/${cfg.goBin}";
+      home.sessionVariables.GOBIN = "${config.home.homeDirectory}/${cfg.goBin}";
     })
 
     (mkIf (cfg.goPrivate != [ ]) {
