@@ -317,7 +317,7 @@ in
       '' + concatStrings (
         mapAttrsToList (n: v: ''
           insertFile "${sourceStorePath v}" \
-                     "${v.target}" \
+                     "$(HOME= sh -c 'echo ${v.target}')" \
                      "${if v.executable == null
                         then "inherit"
                         else builtins.toString v.executable}" \
