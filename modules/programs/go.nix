@@ -88,14 +88,14 @@ in {
     }
 
     (mkIf (cfg.goPath != null) {
-      home.sessionVariables.GOPATH = concatStringsSep ":" (map builtins.toPath
+      home.sessionVariables.GOPATH = concatStringsSep ":"
         (map (path: "${config.home.homeDirectory}/${path}")
-          ([ cfg.goPath ] ++ cfg.extraGoPaths)));
+          ([ cfg.goPath ] ++ cfg.extraGoPaths));
     })
 
     (mkIf (cfg.goBin != null) {
       home.sessionVariables.GOBIN =
-        builtins.toPath "${config.home.homeDirectory}/${cfg.goBin}";
+        "${config.home.homeDirectory}/${cfg.goBin}";
     })
 
     (mkIf (cfg.goPrivate != [ ]) {

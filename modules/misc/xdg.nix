@@ -30,7 +30,7 @@ in
     enable = mkEnableOption "management of XDG base directories";
 
     cacheHome = mkOption {
-      type = types.path;
+      type = types.either types.path types.str;
       defaultText = "~/.cache";
       description = ''
         Absolute path to directory holding application caches.
@@ -47,7 +47,7 @@ in
     };
 
     configHome = mkOption {
-      type = types.path;
+      type = types.either types.path types.str;
       defaultText = "~/.config";
       description = ''
         Absolute path to directory holding application configurations.
@@ -64,7 +64,7 @@ in
     };
 
     dataHome = mkOption {
-      type = types.path;
+      type = types.either types.path types.str;
       defaultText = "~/.local/share";
       description = ''
         Absolute path to directory holding application data.

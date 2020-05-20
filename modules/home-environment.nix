@@ -105,6 +105,10 @@ let
     };
   };
 
+  getEnvOrVar = var: let val = builtins.getEnv var;
+                     in if val == "" then "$" + var
+                     else val;
+
 in
 
 {
@@ -130,13 +134,13 @@ in
     };
 
     home.homeDirectory = mkOption {
-      type = types.path;
+      type = types.either types.path types.str;
       defaultText = "$HOME";
       description = "The user's home directory.";
     };
 
     home.profileDirectory = mkOption {
-      type = types.path;
+      type = types.either types.path types.str;
       defaultText = "~/.nix-profile";
       internal = true;
       readOnly = true;
@@ -328,7 +332,7 @@ in
     ];
 
     home.username = mkDefault (builtins.getEnv "USER");
-    home.homeDirectory = mkDefault (builtins.getEnv "HOME");
+    home.homeDirectory = mkDefault (getEnvOrVar "HOME");
 
     home.profileDirectory =
       if config.submoduleSupport.enable
