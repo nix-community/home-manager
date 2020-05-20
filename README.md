@@ -149,7 +149,13 @@ To satisfy the above setup we should elaborate the
 
   programs.firefox = {
     enable = true;
-    enableIcedTea = true;
+    profiles = {
+      myprofile = {
+        settings = {
+          "general.smoothScroll" = false;
+        };
+      };
+    };
   };
 
   services.gpg-agent = {
