@@ -19,7 +19,7 @@ let
   };
 
   newsReadIds =
-    if newsReadIdsFile == null
+    if newsReadIdsFile == null || !(builtins.pathExists newsReadIdsFile)
     then {}
     else
       let
