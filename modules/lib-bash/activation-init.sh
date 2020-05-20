@@ -50,6 +50,11 @@ fi
 
 echo "Starting home manager activation"
 
+# Verify that we can connect to the Nix store and/or daemon. This will
+# also create the necessary directories in profiles and gcroots.
+$VERBOSE_ECHO "Sanity checking Nix"
+nix-build --expr '{}' --no-out-link
+
 setupVars
 
 if [[ -v DRY_RUN ]] ; then
