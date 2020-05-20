@@ -147,10 +147,7 @@ To satisfy the above setup we should elaborate the
     ];
   };
 
-  programs.firefox = {
-    enable = true;
-    enableIcedTea = true;
-  };
+  programs.firefox.enable = true;
 
   services.gpg-agent = {
     enable = true;
