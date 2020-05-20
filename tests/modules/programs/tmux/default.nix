@@ -5,4 +5,6 @@
   tmux-secure-socket-enabled = ./secure-socket-enabled.nix;
   tmux-disable-confirmation-prompt = ./disable-confirmation-prompt.nix;
   tmux-default-shell = ./default-shell.nix;
+  tmux-shortcut-without-prefix = ./shortcut-without-prefix.nix;
+  tmux-prefix = ./prefix.nix;
 }

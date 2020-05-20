@@ -68,13 +68,21 @@ let
       bind -r L resize-pane -R ${toString cfg.resizeAmount}
     ''}
 
-    ${optionalString (cfg.shortcut != defaultShortcut) ''
-      # rebind main key: C-${cfg.shortcut}
-      unbind C-${defaultShortcut}
-      set -g prefix C-${cfg.shortcut}
-      bind ${cfg.shortcut} send-prefix
-      bind C-${cfg.shortcut} last-window
-    ''}
+    ${if cfg.prefix != null
+        then ''
+          # rebind main key: ${cfg.prefix}
+          unbind C-${defaultShortcut}
+          set -g prefix ${cfg.prefix}
+          bind ${cfg.prefix} send-prefix
+        ''
+        else optionalString (cfg.shortcut != defaultShortcut) ''
+          # rebind main key: C-${cfg.shortcut}
+          unbind C-${defaultShortcut}
+          set -g prefix C-${cfg.shortcut}
+          bind ${cfg.shortcut} send-prefix
+          bind C-${cfg.shortcut} last-window
+        ''
+     }
 
     ${optionalString cfg.disableConfirmationPrompt ''
       bind-key & kill-window
@@ -235,6 +243,15 @@ in
           Run the sensible plugin at the top of the configuration. It
           is possible to override the sensible settings using the
           <option>programs.tmux.extraConfig</option> option.
+        '';
+      };
+
+      prefix = mkOption {
+        default = null;
+        example = "C-a";
+        type = types.nullOr types.str;
+        description = ''
+          Set the prefix key. Overrules the "shortcut" option when set.
         '';
       };
 
