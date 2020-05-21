@@ -1,4 +1,5 @@
 { configuration
+, extraModules ? [ ]
 , pkgs
 , lib ? pkgs.stdenv.lib
 
@@ -28,7 +29,7 @@ let
     };
 
   rawModule = extendedLib.evalModules {
-    modules = [ configuration ] ++ hmModules;
+    modules = [ configuration ] ++ hmModules ++ extraModules;
     specialArgs = {
       modulesPath = builtins.toString ./.;
     };
