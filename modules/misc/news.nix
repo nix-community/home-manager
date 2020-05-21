@@ -2000,6 +2000,27 @@ in
           login shells.
         '';
       }
+
+      {
+        time = "2021-05-18T12:22:42+00:00";
+        condition = config.services.syncthing != {};
+        message = ''
+          Setting 'services.syncthing.tray' as a boolean will be deprecated in
+          the future.
+
+          This is to make the syncthing tray package configurable, with
+          `services.syncthing.tray.package`, following QSyncthingTray becoming
+          no longer actively maintained. The default syncthing tray package has
+          also changed to https://github.com/Martchus/syncthingtray. To
+          continue as before, set `services.syncthing.tray.enable`.
+
+          See
+
+            https://github.com/nix-community/home-manager/pulls/1257
+
+          for discussion.
+        '';
+      }
     ];
   };
 }

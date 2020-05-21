@@ -114,6 +114,7 @@ import nmt {
     ./modules/services/polybar
     ./modules/services/redshift-gammastep
     ./modules/services/sxhkd
+    ./modules/services/syncthing
     ./modules/services/window-managers/i3
     ./modules/services/window-managers/sway
     ./modules/services/wlsunset
