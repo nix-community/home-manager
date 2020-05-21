@@ -9,10 +9,19 @@ let
 in {
   meta.maintainers = [ maintainers.gerschtli ];
 
-  options = { services.lorri.enable = mkEnableOption "lorri build daemon"; };
+  options.services.lorri = {
+    enable = mkEnableOption "lorri build daemon";
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.lorri;
+      defaultText = literalExample "pkgs.lorri";
+      description = "Which lorri package to install.";
+    };
+  };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.lorri ];
+    home.packages = [ cfg.package ];
 
     systemd.user = {
       services.lorri = {
@@ -24,7 +33,7 @@ in {
         };
 
         Service = {
-          ExecStart = "${pkgs.lorri}/bin/lorri daemon";
+          ExecStart = "${cfg.package}/bin/lorri daemon";
           PrivateTmp = true;
           ProtectSystem = "strict";
           ProtectHome = "read-only";

@@ -1474,6 +1474,52 @@ in
           A new module is available: 'services.mako'
         '';
       }
+
+      {
+        time = "2020-04-23T19:45:26+00:00";
+        message = ''
+          A new module is available: 'programs.lf'
+        '';
+      }
+
+      {
+        time = "2020-04-26T13:46:28+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.pulseeffects'
+        '';
+      }
+
+      {
+        time = "2020-05-03T11:13:07+00:00";
+        message = ''
+          A new module is available: 'programs.i3status'
+        '';
+      }
+
+      {
+        time = "2020-05-03T11:21:42+00:00";
+        message = ''
+          A new module is available: 'programs.aria2'
+        '';
+      }
+
+      {
+        time = "2020-05-04T21:19:43+00:00";
+        condition = config.programs.git.enable;
+        message = ''
+          The Git module now supports the 'delta' syntax highlighter.
+
+          It can be enabled through the option 'programs.git.delta.enable'.
+        '';
+      }
+
+      {
+        time = "2020-05-12T20:09:54+00:00";
+        message = ''
+          A new module is available: 'programs.dircolors'
+        '';
+      }
     ];
   };
 }

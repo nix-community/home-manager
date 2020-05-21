@@ -33,7 +33,6 @@ find . -name '*.nix' \
   ! -path ./modules/misc/xdg.nix \
   ! -path ./modules/modules.nix \
   ! -path ./modules/programs/afew.nix \
-  ! -path ./modules/programs/alot.nix \
   ! -path ./modules/programs/bash.nix \
   ! -path ./modules/programs/emacs.nix \
   ! -path ./modules/programs/firefox.nix \

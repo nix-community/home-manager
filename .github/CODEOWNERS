@@ -20,9 +20,13 @@
 
 /modules/misc/submodule-support.nix                   @rycee
 
+/modules/misc/tmpfiles.nix                            @dawidsowa
+
 /modules/misc/xdg-mime-apps.nix                       @pacien
 
 /modules/misc/xdg-user-dirs.nix                       @pacien
+
+/modules/programs/aria2.nix                           @JustinLovinger
 
 /modules/programs/autorandr.nix                       @uvNikita
 
@@ -33,6 +37,8 @@
 /modules/programs/beets.nix                           @rycee
 
 /modules/programs/broot.nix                           @aheaume
+
+/modules/programs/dircolors.nix                       @JustinLovinger
 
 /modules/programs/direnv.nix                          @rycee
 
@@ -50,9 +56,14 @@
 
 /modules/programs/home-manager.nix                    @rycee
 
+/modules/programs/i3status.nix                        @JustinLovinger
+
 /modules/programs/keychain.nix                        @marsam
 
 /modules/programs/lesspipe.nix                        @rycee
+
+/modules/programs/lf.nix                              @owm111
+/tests/modules/programs/lf                            @owm111
 
 /modules/programs/lieer.nix                           @tadfisher
 
@@ -127,6 +138,8 @@
 /modules/services/password-store-sync.nix             @pacien
 
 /modules/services/pasystray.nix                       @pltanton
+
+/modules/services/pulseeffects.nix                    @jonringer
 
 /modules/services/random-background.nix               @rycee
 

@@ -131,6 +131,17 @@ in {
     enable = mkEnableOption
       "Rofi: A window switcher, application launcher and dmenu replacement";
 
+    package = mkOption {
+      default = pkgs.rofi;
+      type = types.package;
+      description = ''
+        Package providing the <command>rofi</command> binary.
+      '';
+      example = literalExample ''
+        pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
+      '';
+    };
+
     width = mkOption {
       default = null;
       type = types.nullOr types.int;
@@ -295,7 +306,7 @@ in {
       '';
     }];
 
-    home.packages = [ pkgs.rofi ];
+    home.packages = [ cfg.package ];
 
     home.file."${cfg.configPath}".text = ''
       ${setOption "width" cfg.width}

@@ -4,8 +4,6 @@ with lib;
 
 {
   config = {
-    home.homeDirectory = "/test-home";
-
     xsession = {
       enable = true;
       windowManager.command = "window manager command";

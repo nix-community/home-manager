@@ -186,7 +186,7 @@ in {
 
       themeVariant = mkOption {
         default = "default";
-        type = types.enum [ "default" "light" "dark" ];
+        type = types.enum [ "default" "light" "dark" "system" ];
         description = "The theme variation to request";
       };
 

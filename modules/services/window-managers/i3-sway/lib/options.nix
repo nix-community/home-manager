@@ -8,7 +8,7 @@ let
     default = [ "monospace 8" ];
     description = ''
       Font list used for window titles. Only FreeType fonts are supported.
-      The order here is improtant (e.g. icons font should go before the one used for text).
+      The order here is important (e.g. icons font should go before the one used for text).
     '';
     example = [ "FontAwesome 10" "Terminus 10" ];
   };
@@ -111,7 +111,7 @@ let
       };
 
       statusCommand = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
         default = "${pkgs.i3status}/bin/i3status";
         description = "Command that will be used to get status lines.";
       };

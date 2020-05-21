@@ -6,9 +6,6 @@ with lib;
   imports = [ ../../accounts/email-test-accounts.nix ];
 
   config = {
-    home.username = "hm-user";
-    home.homeDirectory = "/home/hm-user";
-
     accounts.email.accounts = {
       "hm@example.com" = {
         getmail = {

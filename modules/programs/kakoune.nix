@@ -49,6 +49,7 @@ let
           "InsertCompletionShow"
           "InsertCompletionHide"
           "InsertCompletionSelect"
+          "ModuleLoaded"
         ];
         example = "SetOption";
         description = ''
@@ -513,6 +514,15 @@ let
         "${optionalString (separator != null) " -separator ${separator}"}"
       ];
 
+    showWhitespaceOptions = with cfg.config.showWhitespace;
+      concatStrings [
+        (optionalString (tab != null) " -tab ${tab}")
+        (optionalString (tabStop != null) " -tabpad ${tabStop}")
+        (optionalString (space != null) " -spc ${space}")
+        (optionalString (nonBreakingSpace != null) " -nbsp ${nonBreakingSpace}")
+        (optionalString (lineFeed != null) " -lf ${lineFeed}")
+      ];
+
     uiOptions = with cfg.config.ui;
       concatStringsSep " " [
         "ncurses_set_title=${if setTitle then "true" else "false"}"
@@ -572,6 +582,8 @@ let
         ++ optional (numberLines != null && numberLines.enable)
         "add-highlighter global/ number-lines${numberLinesOptions}"
         ++ optional showMatching "add-highlighter global/ show-matching"
+        ++ optional (showWhitespace != null && showWhitespace.enable)
+        "add-highlighter global/ show-whitespaces${showWhitespaceOptions}"
         ++ optional (scrollOff != null)
         "set-option global scrolloff ${toString scrollOff.lines},${
           toString scrollOff.columns

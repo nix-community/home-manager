@@ -13,8 +13,6 @@ with lib;
       };
     };
 
-    home.homeDirectory = "/home/testuser";
-
     nmt.script = ''
       assertFileExists home-files/.profile
       assertFileContent \

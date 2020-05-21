@@ -89,7 +89,7 @@ in {
       mkIf (cfg.settings != { }) { source = configFile cfg.settings; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      if [[ -z $INSIDE_EMACS ]]; then
+      if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
         eval "$(${cfg.package}/bin/starship init bash)"
       fi
     '';
@@ -101,7 +101,7 @@ in {
     '';
 
     programs.fish.promptInit = mkIf cfg.enableFishIntegration ''
-      if test -z "$INSIDE_EMACS"
+      if test [[  "$TERM" != "dumb"  -a \( -n "$INSIDE_EMACS"  -o "$INSIDE_EMACS" == "vterm" \)  ]]
         eval (${cfg.package}/bin/starship init fish)
       end
     '';

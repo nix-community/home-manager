@@ -16,12 +16,14 @@ let
     end
 
     if test -d $plugin_dir/completions
-      set fish_complete_path $fish_function_path[1] $plugin_dir/completions $fish_complete_path[2..-1]
+      set fish_complete_path $fish_complete_path[1] $plugin_dir/completions $fish_complete_path[2..-1]
     end
 
     # Source initialization code if it exists.
     if test -d $plugin_dir/conf.d
-      source $plugin_dir/conf.d/*.fish
+      for f in $plugin_dir/conf.d/*.fish
+        source $f
+      end
     end
 
     if test -f $plugin_dir/key_bindings.fish

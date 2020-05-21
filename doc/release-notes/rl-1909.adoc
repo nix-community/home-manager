@@ -8,8 +8,8 @@ The 19.09 release branch became the stable branch in October, 2019.
 
 This release has the following notable changes:
 
-* The <<opt-programs.firefox.enableGoogleTalk>> and
-  <<opt-programs.firefox.enableIcedTea>> options are now deprecated
+* The `programs.firefox.enableGoogleTalk` and
+  `programs.firefox.enableIcedTea` options are now deprecated
   and will only work if Firefox ESR 52.x is used.
 
 * The `home-manager` tool now provides an `uninstall` sub-command that

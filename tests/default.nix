@@ -7,14 +7,22 @@ let
   nmt = pkgs.fetchFromGitLab {
     owner = "rycee";
     repo = "nmt";
-    rev = "ae9ce0033dbd28b4774142a67369f41c11753555";
-    sha256 = "1m5jqhflykya5h6s69ps6r70ffbsr6qkxdq1miqa68msshl21f9y";
+    rev = "8e130d655ec396ce165763c95bbf4ac429810ca8";
+    sha256 = "1jbljr06kg1ycdn24hj8xap16axq11rhb6hm4949fz48n57pwwps";
   };
 
   modules = import ../modules/modules.nix {
     inherit lib pkgs;
     check = false;
-  };
+  } ++ [
+    # Fix impurities. Without these some of the user's environment
+    # will leak into the tests through `builtins.getEnv`.
+    {
+      xdg.enable = true;
+      home.username = "hm-user";
+      home.homeDirectory = "/home/hm-user";
+    }
+  ];
 
 in
 
@@ -27,11 +35,17 @@ import nmt {
     ./modules/home-environment
     ./modules/misc/fontconfig
     ./modules/programs/alacritty
+    ./modules/programs/alot
+    ./modules/programs/aria2
     ./modules/programs/bash
     ./modules/programs/browserpass
+    ./modules/programs/dircolors
     ./modules/programs/fish
     ./modules/programs/git
     ./modules/programs/gpg
+    ./modules/programs/i3status
+    ./modules/programs/kakoune
+    ./modules/programs/lf
     ./modules/programs/lieer
     ./modules/programs/mbsync
     ./modules/programs/neomutt

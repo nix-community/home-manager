@@ -6,8 +6,6 @@ with lib;
   config = {
     home.stateVersion = "19.09";
 
-    home.homeDirectory = "/test-home";
-
     home.keyboard = { options = [ "ctrl:nocaps" "altwin:no_win" ]; };
 
     xsession = {

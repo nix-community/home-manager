@@ -44,22 +44,12 @@
   <orderedlist>
    <listitem>
     <para>
-     Make sure you have a working Nix installation. If you are not using NixOS
-     then it may be necessary to run
-    </para>
-<screen>
-<prompt>$</prompt> <userinput>mkdir -m 0755 -p /nix/var/nix/{profiles,gcroots}/per-user/$USER</userinput>
-</screen>
-    <para>
-     since Home Manager uses these directories to manage your profile
-     generations. On NixOS these should already be available.
-    </para>
-    <para>
-     Also make sure that your user is able to build and install Nix packages.
-     For example, you should be able to successfully run a command like
-     <literal>nix-instantiate '&lt;nixpkgs&gt;' -A hello</literal> without
-     having to switch to the root user. For a multi-user install of Nix this
-     means that your user must be covered by the
+     Make sure you have a working Nix installation. Specifically, make
+     sure that your user is able to build and install Nix packages.
+     For example, you should be able to successfully run a command
+     like <literal>nix-instantiate '&lt;nixpkgs&gt;' -A hello</literal>
+     without having to switch to the root user. For a multi-user
+     install of Nix this means that your user must be covered by the
      <link xlink:href="https://nixos.org/nix/manual/#conf-allowed-users"><literal>allowed-users</literal></link>
      Nix option. On NixOS you can control this option using the
      <link xlink:href="https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers"><literal>nix.allowedUsers</literal></link>
@@ -79,11 +69,11 @@
      if you are following Nixpkgs master or an unstable channel and
     </para>
 <screen>
-<prompt>$</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager</userinput>
+<prompt>$</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager</userinput>
 <prompt>$</prompt> <userinput>nix-channel --update</userinput>
 </screen>
     <para>
-     if you follow a Nixpkgs version 19.09 channel.
+     if you follow a Nixpkgs version 20.03 channel.
     </para>
     <para>
      On NixOS you may need to log out and back in for the channel to become
@@ -159,7 +149,7 @@ $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
    a Home Manager channel, for example
   </para>
 
-<screen>
+<screen language="console">
 <prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
@@ -168,13 +158,13 @@ $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
    if you are following Nixpkgs master or an unstable channel and
   </para>
 
-<screen>
-<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager</userinput>
+<screen language="console">
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
 
   <para>
-   if you follow a Nixpkgs version 19.09 channel.
+   if you follow a Nixpkgs version 20.03 channel.
   </para>
 
   <para>
@@ -258,7 +248,7 @@ home-manager.useGlobalPkgs = true;
    a Home Manager channel, for example
   </para>
 
-<screen>
+<screen language="console">
 <prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
@@ -267,13 +257,13 @@ home-manager.useGlobalPkgs = true;
    if you are following Nixpkgs master or an unstable channel and
   </para>
 
-<screen>
-<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager</userinput>
+<screen language="console">
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
 
   <para>
-   if you follow a Nixpkgs version 19.09 channel.
+   if you follow a Nixpkgs version 20.03 channel.
   </para>
 
   <para>

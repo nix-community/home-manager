@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> {}
 , confPath
-, confAttr
+, confAttr ? null
 , check ? true
 , newsReadIdsFile ? null
 }:
@@ -11,7 +11,7 @@ let
 
   env = import ../modules {
     configuration =
-      if confAttr == ""
+      if confAttr == "" || confAttr == null
       then confPath
       else (import confPath).${confAttr};
     pkgs = pkgs;

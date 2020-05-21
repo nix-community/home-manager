@@ -3,13 +3,16 @@
 function setupVars() {
     local profilesPath="/nix/var/nix/profiles/per-user/$USER"
     local gcPath="/nix/var/nix/gcroots/per-user/$USER"
-    local greatestGenNum
 
+    genProfilePath="$profilesPath/home-manager"
+    newGenPath="@GENERATION_DIR@";
+    newGenGcPath="$gcPath/current-home"
+
+    local greatestGenNum
     greatestGenNum=$( \
-        find "$profilesPath" -name 'home-manager-*-link' \
-            | sed 's/^.*-\([0-9]*\)-link$/\1/' \
-            | sort -rn \
-            | head -1)
+        nix-env --list-generations --profile "$genProfilePath" \
+            | tail -1 \
+            | sed -E 's/ *([[:digit:]]+) .*/\1/')
 
     if [[ -n $greatestGenNum ]] ; then
         oldGenNum=$greatestGenNum
@@ -18,15 +21,15 @@ function setupVars() {
         newGenNum=1
     fi
 
-    if [[ -e $gcPath/current-home ]] ; then
-        oldGenPath="$(readlink -e "$gcPath/current-home")"
+    if [[ -e $profilesPath/home-manager ]] ; then
+        oldGenPath="$(readlink -e "$profilesPath/home-manager")"
     fi
 
     $VERBOSE_ECHO "Sanity checking oldGenNum and oldGenPath"
     if [[ -v oldGenNum && ! -v oldGenPath
             || ! -v oldGenNum && -v oldGenPath ]]; then
-        errorEcho "Invalid profile number and GC root values! These must be"
-        errorEcho "either both empty or both set but are now set to"
+        errorEcho "Invalid profile number and current profile values! These"
+        errorEcho "must be either both empty or both set but are now set to"
         errorEcho "    '${oldGenNum:-}' and '${oldGenPath:-}'"
         errorEcho "If you don't mind losing previous profile generations then"
         errorEcho "the easiest solution is probably to run"
@@ -35,12 +38,6 @@ function setupVars() {
         errorEcho "and trying home-manager switch again. Good luck!"
         exit 1
     fi
-
-
-    genProfilePath="$profilesPath/home-manager"
-    newGenPath="@GENERATION_DIR@";
-    newGenProfilePath="$profilesPath/home-manager-$newGenNum-link"
-    newGenGcPath="$gcPath/current-home"
 }
 
 if [[ -v VERBOSE ]]; then
@@ -52,6 +49,11 @@ else
 fi
 
 echo "Starting home manager activation"
+
+# Verify that we can connect to the Nix store and/or daemon. This will
+# also create the necessary directories in profiles and gcroots.
+$VERBOSE_ECHO "Sanity checking Nix"
+nix-build --expr '{}' --no-out-link
 
 setupVars
 
@@ -78,6 +80,5 @@ else
 fi
 $VERBOSE_ECHO "  newGenPath=$newGenPath"
 $VERBOSE_ECHO "  newGenNum=$newGenNum"
-$VERBOSE_ECHO "  newGenProfilePath=$newGenProfilePath"
 $VERBOSE_ECHO "  newGenGcPath=$newGenGcPath"
 $VERBOSE_ECHO "  genProfilePath=$genProfilePath"

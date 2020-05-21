@@ -18,7 +18,7 @@ in {
       };
 
       Service = {
-        ExecStart = "${cfg.package}/bin/keynav";
+        ExecStart = "${pkgs.keynav}/bin/keynav";
         RestartSec = 3;
         Restart = "always";
       };
