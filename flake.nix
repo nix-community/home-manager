@@ -1,7 +1,7 @@
 {
   description = "Manage a user environment using Nix";
   edition = 201909;
-  inputs.nixpkgs.url = "github:edolstra/nixpkgs/release-19.09";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/release-20.03";
   outputs = { self, nixpkgs }:
     let
       systems = [ "x86_64-linux" "i686-linux" "aarch64-linux" ];

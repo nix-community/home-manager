@@ -2,18 +2,18 @@
   "nodes": {
     "nixpkgs": {
       "info": {
-        "lastModified": 1586701331,
-        "narHash": "sha256-7vLoChJGMCrLJFuORIK4tYILy/k1rwzkOJtC4V2SXdw="
+        "lastModified": 1590005505,
+        "narHash": "sha256-vRBTIKMoUf5Zi1WPLZB94JKOPTST/Ugh102KcwmXMU0="
       },
       "locked": {
-        "owner": "edolstra",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "23f6739791ea779310ea6bae07f10775631582fd",
+        "rev": "a18eaa7b93a05657b64a386c7f535e3ea25ec77a",
         "type": "github"
       },
       "original": {
-        "owner": "edolstra",
-        "ref": "release-19.09",
+        "owner": "nixos",
+        "ref": "release-20.03",
         "repo": "nixpkgs",
         "type": "github"
       }
