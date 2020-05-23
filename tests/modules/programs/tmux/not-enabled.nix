@@ -7,7 +7,7 @@ with lib;
     programs.tmux = { enable = false; };
 
     nmt.script = ''
-      assertPathNotExists home-files/.tmux.conf
+      assertPathNotExists $home_files/.tmux.conf
     '';
   };
 }

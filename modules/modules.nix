@@ -9,6 +9,7 @@ nixpkgs:
 
 # If disabled, the pkgs attribute passed to this function is used instead.
 , useNixpkgsModule ? true
+, ...
 }:
 
 with lib;
@@ -54,7 +55,7 @@ let
     (loadModule ./programs/bat.nix { })
     (loadModule ./programs/beets.nix { })
     (loadModule ./programs/broot.nix { })
-    (loadModule ./programs/browserpass.nix { })
+    (loadModule ./programs/browserpass.nix { condition = (hostPlatform.system != "armv7a-linux"); })
     (loadModule ./programs/chromium.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/command-not-found/command-not-found.nix { })
     (loadModule ./programs/dircolors.nix { })

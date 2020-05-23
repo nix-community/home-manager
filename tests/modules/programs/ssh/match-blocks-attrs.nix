@@ -47,11 +47,11 @@ with lib;
       (map (a: a.message) (filter (a: !a.assertion) config.assertions));
 
     nmt.script = ''
-      assertFileExists home-files/.ssh/config
+      assertFileExists $home_files/.ssh/config
       assertFileContent \
-        home-files/.ssh/config \
+        $home_files/.ssh/config \
         ${./match-blocks-attrs-expected.conf}
-      assertFileContent home-files/assertions ${./no-assertions.json}
+      assertFileContent $home_files/assertions ${./no-assertions.json}
     '';
   };
 }

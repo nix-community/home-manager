@@ -14,9 +14,9 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-files/.profile
+      assertFileExists $home_files/.profile
       assertFileContent \
-        home-files/.profile \
+        $home_files/.profile \
         ${./session-variables-expected.txt}
     '';
   };

@@ -29,12 +29,12 @@ with lib;
       [ (self: super: { neomutt = pkgs.writeScriptBin "dummy-neomutt" ""; }) ];
 
     nmt.script = ''
-      assertFileExists home-files/.config/neomutt/neomuttrc
-      assertFileExists home-files/.config/neomutt/hm@example.com
-      assertFileContent home-files/.config/neomutt/neomuttrc ${
+      assertFileExists $home_files/.config/neomutt/neomuttrc
+      assertFileExists $home_files/.config/neomutt/hm@example.com
+      assertFileContent $home_files/.config/neomutt/neomuttrc ${
         ./neomutt-expected.conf
       }
-      assertFileContent home-files/.config/neomutt/hm@example.com ${
+      assertFileContent $home_files/.config/neomutt/hm@example.com ${
         ./hm-example.com-expected
       }
     '';

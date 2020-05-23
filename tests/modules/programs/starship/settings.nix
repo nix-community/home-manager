@@ -42,7 +42,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.config/starship.toml \
+        $home_files/.config/starship.toml \
         ${./settings-expected.toml}
     '';
   };

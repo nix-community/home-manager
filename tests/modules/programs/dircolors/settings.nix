@@ -20,7 +20,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.dir_colors \
+        $home_files/.dir_colors \
         ${./settings-expected.conf}
     '';
   };

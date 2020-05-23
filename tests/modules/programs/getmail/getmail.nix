@@ -19,8 +19,8 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-files/.getmail/getmailhm@example.com
-      assertFileContent home-files/.getmail/getmailhm@example.com ${
+      assertFileExists $home_files/.getmail/getmailhm@example.com
+      assertFileContent $home_files/.getmail/getmailhm@example.com ${
         ./getmail-expected.conf
       }
     '';

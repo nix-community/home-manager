@@ -15,8 +15,8 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-files/.config/git/config
-      assertFileContent home-files/.config/git/config \
+      assertFileExists $home_files/.config/git/config
+      assertFileContent $home_files/.config/git/config \
         ${./git-with-str-extra-config-expected.conf}
     '';
   };

@@ -14,7 +14,7 @@ with lib;
       [ (self: super: { zsh = pkgs.writeScriptBin "dummy-zsh" ""; }) ];
 
     nmt.script = ''
-      assertFileRegex home-files/.zshrc '^HISTFILE="$HOME/some/directory/zsh_history"$'
+      assertFileRegex $home_files/.zshrc '^HISTFILE="$HOME/some/directory/zsh_history"$'
     '';
   };
 }

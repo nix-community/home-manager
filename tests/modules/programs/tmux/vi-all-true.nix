@@ -22,8 +22,8 @@ with lib;
     ];
 
     nmt.script = ''
-      assertFileExists home-files/.tmux.conf
-      assertFileContent home-files/.tmux.conf ${./vi-all-true.conf}
+      assertFileExists $home_files/.tmux.conf
+      assertFileContent $home_files/.tmux.conf ${./vi-all-true.conf}
     '';
   };
 }

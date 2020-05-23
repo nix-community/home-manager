@@ -22,12 +22,12 @@ with lib;
     ];
 
     nmt.script = ''
-      assertFileExists home-files/.config/systemd/user/lieer-hm-example-com.service
-      assertFileExists home-files/.config/systemd/user/lieer-hm-example-com.timer
+      assertFileExists $home_files/.config/systemd/user/lieer-hm-example-com.service
+      assertFileExists $home_files/.config/systemd/user/lieer-hm-example-com.timer
 
-      assertFileContent home-files/.config/systemd/user/lieer-hm-example-com.service \
+      assertFileContent $home_files/.config/systemd/user/lieer-hm-example-com.service \
                         ${./lieer-service-expected.service}
-      assertFileContent home-files/.config/systemd/user/lieer-hm-example-com.timer \
+      assertFileContent $home_files/.config/systemd/user/lieer-hm-example-com.timer \
                         ${./lieer-service-expected.timer}
     '';
   };

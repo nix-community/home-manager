@@ -7,7 +7,7 @@ with lib;
     programs.texlive.enable = true;
 
     nmt.script = ''
-      assertFileExists home-path/bin/tex
+      assertFileExists $home_path/bin/tex
     '';
   };
 }

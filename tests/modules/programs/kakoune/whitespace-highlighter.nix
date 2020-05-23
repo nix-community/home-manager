@@ -21,12 +21,12 @@ with lib;
         "^add-highlighter\\s\\+global\\/\\?\\s\\+show-whitespaces\\s\\+"
         + "\\(-\\w\\+\\s\\+.\\s\\+\\)*";
     in ''
-      assertFileExists home-files/.config/kak/kakrc
-      assertFileRegex home-files/.config/kak/kakrc '${lineStart}-lf\s\+1\b'
-      assertFileRegex home-files/.config/kak/kakrc '${lineStart}-spc\s\+2\b'
-      assertFileRegex home-files/.config/kak/kakrc '${lineStart}-nbsp\s\+3\b'
-      assertFileRegex home-files/.config/kak/kakrc '${lineStart}-tab\s\+4\b'
-      assertFileRegex home-files/.config/kak/kakrc '${lineStart}-tabpad\s\+5\b'
+      assertFileExists $home_files/.config/kak/kakrc
+      assertFileRegex $home_files/.config/kak/kakrc '${lineStart}-lf\s\+1\b'
+      assertFileRegex $home_files/.config/kak/kakrc '${lineStart}-spc\s\+2\b'
+      assertFileRegex $home_files/.config/kak/kakrc '${lineStart}-nbsp\s\+3\b'
+      assertFileRegex $home_files/.config/kak/kakrc '${lineStart}-tab\s\+4\b'
+      assertFileRegex $home_files/.config/kak/kakrc '${lineStart}-tabpad\s\+5\b'
     '';
   };
 }

@@ -24,7 +24,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.config/qutebrowser/config.py \
+        $home_files/.config/qutebrowser/config.py \
         ${
           pkgs.writeText "qutebrowser-expected-config.py" ''
             config.bind(",l", "config-cycle spellcheck.languages [\"en-GB\"] [\"en-US\"]", mode="normal")

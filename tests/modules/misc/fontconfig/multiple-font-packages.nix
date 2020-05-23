@@ -9,7 +9,7 @@ with lib;
     fonts.fontconfig.enable = true;
 
     nmt.script = ''
-      assertDirectoryNotEmpty home-path/lib/fontconfig/cache
+      assertDirectoryNotEmpty $home_path/lib/fontconfig/cache
     '';
   };
 }

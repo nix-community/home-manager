@@ -20,9 +20,9 @@ with lib;
     ];
 
     nmt.script = ''
-      assertFileExists home-files/.zshrc
-      assertFileRegex home-files/.zshrc 'export V1="v1"'
-      assertFileRegex home-files/.zshrc 'export V2="v2-v1"'
+      assertFileExists $home_files/.zshrc
+      assertFileRegex $home_files/.zshrc 'export V1="v1"'
+      assertFileRegex $home_files/.zshrc 'export V2="v2-v1"'
     '';
   };
 }

@@ -34,13 +34,13 @@ in {
       description =
         "if fish.function is set, check file exists and contents match";
       script = ''
-        assertFileExists home-files/.config/fish/functions/func.fish
+        assertFileExists $home_files/.config/fish/functions/func.fish
         echo ${func}
-        assertFileContent home-files/.config/fish/functions/func.fish ${func}
+        assertFileContent $home_files/.config/fish/functions/func.fish ${func}
 
-        assertFileExists home-files/.config/fish/functions/func-event.fish
+        assertFileExists $home_files/.config/fish/functions/func-event.fish
         echo ${funcEvent}
-        assertFileContent home-files/.config/fish/functions/func-event.fish ${funcEvent}
+        assertFileContent $home_files/.config/fish/functions/func-event.fish ${funcEvent}
       '';
 
     };

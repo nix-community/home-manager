@@ -28,8 +28,8 @@ with lib;
       [ (self: super: { alot = pkgs.writeScriptBin "dummy-alot" ""; }) ];
 
     nmt.script = ''
-      assertFileExists home-files/.config/alot/config
-      assertFileContent home-files/.config/alot/config ${./alot-expected.conf}
+      assertFileExists $home_files/.config/alot/config
+      assertFileContent $home_files/.config/alot/config ${./alot-expected.conf}
     '';
   };
 }

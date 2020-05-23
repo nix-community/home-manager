@@ -15,8 +15,8 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-files/.gnupg/gpg.conf
-      assertFileContent home-files/.gnupg/gpg.conf ${./override-defaults-expected.conf}
+      assertFileExists $home_files/.gnupg/gpg.conf
+      assertFileContent $home_files/.gnupg/gpg.conf ${./override-defaults-expected.conf}
     '';
   };
 }

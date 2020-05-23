@@ -32,8 +32,8 @@ with lib;
       [ (self: super: { abook = pkgs.writeScriptBin "dummy-abook" ""; }) ];
 
     nmt.script = ''
-      assertFileExists home-files/.config/abook/abookrc
-      assertFileContent home-files/.config/abook/abookrc ${./with-settings.cfg}
+      assertFileExists $home_files/.config/abook/abookrc
+      assertFileContent $home_files/.config/abook/abookrc ${./with-settings.cfg}
     '';
   };
 }

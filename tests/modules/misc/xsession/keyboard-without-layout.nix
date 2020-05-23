@@ -25,9 +25,9 @@ with lib;
     ];
 
     nmt.script = ''
-      assertFileExists home-files/.config/systemd/user/setxkbmap.service
+      assertFileExists $home_files/.config/systemd/user/setxkbmap.service
       assertFileContent \
-        home-files/.config/systemd/user/setxkbmap.service \
+        $home_files/.config/systemd/user/setxkbmap.service \
         ${./keyboard-without-layout-expected.service}
     '';
   };

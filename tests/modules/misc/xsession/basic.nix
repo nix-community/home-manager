@@ -21,19 +21,19 @@ with lib;
     ];
 
     nmt.script = ''
-      assertFileExists home-files/.xprofile
+      assertFileExists $home_files/.xprofile
       assertFileContent \
-        home-files/.xprofile \
+        $home_files/.xprofile \
         ${./basic-xprofile-expected.txt}
 
-      assertFileExists home-files/.xsession
+      assertFileExists $home_files/.xsession
       assertFileContent \
-        home-files/.xsession \
+        $home_files/.xsession \
         ${./basic-xsession-expected.txt}
 
-      assertFileExists home-files/.config/systemd/user/setxkbmap.service
+      assertFileExists $home_files/.config/systemd/user/setxkbmap.service
       assertFileContent \
-        home-files/.config/systemd/user/setxkbmap.service \
+        $home_files/.config/systemd/user/setxkbmap.service \
         ${./basic-setxkbmap-expected.service}
     '';
   };

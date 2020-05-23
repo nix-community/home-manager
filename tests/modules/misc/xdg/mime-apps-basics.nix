@@ -19,9 +19,9 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-files/.config/mimeapps.list
+      assertFileExists $home_files/.config/mimeapps.list
       assertFileContent \
-        home-files/.config/mimeapps.list \
+        $home_files/.config/mimeapps.list \
         ${./mime-apps-basics-expected.ini}
     '';
   };

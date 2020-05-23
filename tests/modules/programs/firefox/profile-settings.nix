@@ -25,11 +25,11 @@ with lib;
 
     nmt.script = ''
       assertFileRegex \
-        home-path/bin/firefox \
+        $home_path/bin/firefox \
         MOZ_APP_LAUNCHER
 
       assertFileContent \
-        home-files/.mozilla/firefox/test/user.js \
+        $home_files/.mozilla/firefox/test/user.js \
         ${./profile-settings-expected-user.js}
     '';
   };

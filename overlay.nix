@@ -1,3 +1,3 @@
-self: super: {
-  home-manager = super.callPackage ./home-manager { path = toString ./.; };
+final: prev: {
+  home-manager = final.callPackage ./home-manager { path = toString ./.; };
 }

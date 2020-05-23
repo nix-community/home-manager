@@ -25,7 +25,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.config/aria2/aria2.conf \
+        $home_files/.config/aria2/aria2.conf \
         ${
           pkgs.writeText "aria2-expected-config.conf" ''
             dht-listen-port=60000

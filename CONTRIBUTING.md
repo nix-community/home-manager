@@ -169,20 +169,14 @@ found in the `tests` project directory.
 The full Home Manager test suite can be run by executing
 
 ```console
-$ nix-shell --pure tests -A run.all
+$ nix-build tests -A all
 ```
 
-in the project root. List all test cases through
-
-```console
-$ nix-shell --pure tests -A list
-```
-
-and run an individual test, for example `alacritty-empty-settings`,
+in the project root. Run an individual test, for example `alacritty-empty-settings`,
 through
 
 ```console
-$ nix-shell --pure tests -A run.alacritty-empty-settings
+$ nix-build tests -A run.alacritty-empty-settings.config.test.toplevel
 ```
 
 [open issues]: https://github.com/rycee/home-manager/issues

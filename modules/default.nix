@@ -20,7 +20,7 @@ let
     in
       fold f res res.config.warnings;
 
-  extendedLib = import ./lib/stdlib-extended.nix nixpkgs.lib;
+  extendedLib = import ./lib/stdlib-extended.nix (if nixpkgs ? lib then nixpkgs.lib else (import nixpkgs {}).lib);
 
   hmModules =
     import ./modules.nix nixpkgs {

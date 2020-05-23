@@ -10,9 +10,9 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-path/etc/profile.d/hm-session-vars.sh
+      assertFileExists $home_path/etc/profile.d/hm-session-vars.sh
       assertFileContent \
-        home-path/etc/profile.d/hm-session-vars.sh \
+        $home_path/etc/profile.d/hm-session-vars.sh \
         ${./session-variables-expected.txt}
     '';
   };

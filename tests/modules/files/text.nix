@@ -10,9 +10,9 @@ with lib;
     '';
 
     nmt.script = ''
-      assertFileExists home-files/using-text
-      assertFileIsNotExecutable home-files/using-text
-      assertFileContent home-files/using-text ${./text-expected.txt}
+      assertFileExists $home_files/using-text
+      assertFileIsNotExecutable $home_files/using-text
+      assertFileContent $home_files/using-text ${./text-expected.txt}
     '';
   };
 }

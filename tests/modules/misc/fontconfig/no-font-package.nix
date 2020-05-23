@@ -11,7 +11,7 @@ with lib;
     fonts.fontconfig.enable = true;
 
     nmt.script = ''
-      assertPathNotExists home-path/lib/fontconfig/cache
+      assertPathNotExists $home_path/lib/fontconfig/cache
     '';
   };
 }

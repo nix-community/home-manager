@@ -10,9 +10,9 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-files/.pam_environment
+      assertFileExists $home_files/.pam_environment
       assertFileContent \
-        home-files/.pam_environment \
+        $home_files/.pam_environment \
         ${./session-variables-expected.txt}
     '';
   };

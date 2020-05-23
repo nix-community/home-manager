@@ -14,7 +14,7 @@ with lib;
       description =
         "if fish.functions is blank, the functions folder should not exist.";
       script = ''
-        assertPathNotExists home-files/.config/fish/functions
+        assertPathNotExists $home_files/.config/fish/functions
       '';
 
     };

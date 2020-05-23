@@ -32,7 +32,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.config/qutebrowser/config.py \
+        $home_files/.config/qutebrowser/config.py \
         ${
           pkgs.writeText "qutebrowser-expected-config.py" ''
             c.colors.hints.bg = "#000000"

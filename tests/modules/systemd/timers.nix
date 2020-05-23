@@ -13,7 +13,7 @@ with lib;
     };
 
     nmt.script = ''
-      unitDir=home-files/.config/systemd/user
+      unitDir=$home_files/.config/systemd/user
       timerFile=$unitDir/test-timer.timer
 
       assertFileExists $timerFile

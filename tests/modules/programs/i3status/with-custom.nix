@@ -38,7 +38,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.config/i3status/config \
+        $home_files/.config/i3status/config \
         ${
           pkgs.writeText "i3status-expected-config" ''
             general {

@@ -11,9 +11,9 @@ in {
     home.file."oos".source = config.lib.file.mkOutOfStoreSymlink filePath;
 
     nmt.script = ''
-      assertLinkExists "home-files/oos"
+      assertLinkExists "$home_files/oos"
 
-      storePath="$(readlink $TESTED/home-files/oos)"
+      storePath="$(readlink $home_files/oos)"
 
       if [[ ! -L $storePath ]]; then
         fail "Expected $storePath to be a symbolic link, but it was not."

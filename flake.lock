@@ -1,11 +1,45 @@
 {
-    "inputs": {
-        "nixpkgs": {
-            "inputs": {},
-            "narHash": "sha256-OiQYSXtgVbxbQwfOFe2L61M6d2X6Ah/E5q0FcJiJ5FM=",
-            "originalUrl": "github:NixOS/nixpkgs",
-            "url": "github:NixOS/nixpkgs/25eaaf8e8ad1d2091003c1573dc004ff0fd2a2c6"
-        }
+  "nodes": {
+    "nixpkgs": {
+      "info": {
+        "lastModified": 1590224735,
+        "narHash": "sha256-AK/LxNa2E1851OAK0mGnBNmvknHxfW4qvCMlIw9yBZs="
+      },
+      "locked": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "80ab05ee4d49a4fe0e2207fb65f401a077d2540a",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
     },
-    "version": 3
+    "nmt": {
+      "info": {
+        "lastModified": 1590269023,
+        "narHash": "sha256-VNDyjOFqF17vOpNxc0QJ9W8rY2v610j+ov+sv6oPUl8="
+      },
+      "locked": {
+        "owner": "kloenk",
+        "repo": "nmt",
+        "rev": "6fce291806fb130ce3c2318a06179caa9a381406",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kloenk",
+        "repo": "nmt",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "nmt": "nmt"
+      }
+    }
+  },
+  "root": "root",
+  "version": 5
 }

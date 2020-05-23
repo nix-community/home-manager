@@ -10,7 +10,7 @@ with lib;
       [ (self: super: { abook = pkgs.writeScriptBin "dummy-abook" ""; }) ];
 
     nmt.script = ''
-      assertPathNotExists home-files/.config/abook/abookrc
+      assertPathNotExists $home_files/.config/abook/abookrc
     '';
   };
 }

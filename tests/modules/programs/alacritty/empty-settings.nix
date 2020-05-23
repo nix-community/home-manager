@@ -11,7 +11,7 @@ with lib;
     ];
 
     nmt.script = ''
-      assertPathNotExists home-files/.config/alacritty
+      assertPathNotExists $home_files/.config/alacritty
     '';
   };
 }

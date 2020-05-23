@@ -7,7 +7,7 @@
     };
 
     nmt.script = ''
-      serviceFile=home-files/.config/systemd/user/sxhkd.service
+      serviceFile=$home_files/.config/systemd/user/sxhkd.service
 
       assertFileExists $serviceFile
 

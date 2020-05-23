@@ -28,11 +28,11 @@ with lib;
       (map (a: a.message) (filter (a: !a.assertion) config.assertions));
 
     nmt.script = ''
-      assertFileExists home-files/.ssh/config
+      assertFileExists $home_files/.ssh/config
       assertFileContent \
-        home-files/.ssh/config \
+        $home_files/.ssh/config \
         ${./forwards-dynamic-valid-bind-no-asserts-expected.conf}
-      assertFileContent home-files/result ${./no-assertions.json}
+      assertFileContent $home_files/result ${./no-assertions.json}
     '';
   };
 }

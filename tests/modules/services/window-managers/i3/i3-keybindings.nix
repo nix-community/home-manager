@@ -27,8 +27,8 @@ with lib;
     ];
 
     nmt.script = ''
-      assertFileExists home-files/.config/i3/config
-      assertFileContent home-files/.config/i3/config \
+      assertFileExists $home_files/.config/i3/config
+      assertFileContent $home_files/.config/i3/config \
         ${./i3-keybindings-expected.conf}
     '';
   };

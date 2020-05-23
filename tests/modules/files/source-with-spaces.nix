@@ -7,8 +7,8 @@ with lib;
     home.file."source with spaces!".source = ./. + "/source with spaces!";
 
     nmt.script = ''
-      assertFileExists 'home-files/source with spaces!';
-      assertFileContent 'home-files/source with spaces!' \
+      assertFileExists $home_files/'source with spaces!';
+      assertFileContent $home_files/'source with spaces!' \
         ${
           builtins.path {
             path = ./. + "/source with spaces!";

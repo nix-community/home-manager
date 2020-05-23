@@ -27,7 +27,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.config/alacritty/alacritty.yml \
+        $home_files/.config/alacritty/alacritty.yml \
         ${./example-settings-expected.yml}
     '';
   };

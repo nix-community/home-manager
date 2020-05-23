@@ -25,7 +25,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/result \
+        $home_files/result \
         ${./assert-on-both-theme-and-colors-expected.json}
     '';
   };

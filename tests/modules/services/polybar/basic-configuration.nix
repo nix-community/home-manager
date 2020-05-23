@@ -34,14 +34,14 @@
     };
 
     nmt.script = ''
-      serviceFile=home-files/.config/systemd/user/polybar.service
+      serviceFile=$home_files/.config/systemd/user/polybar.service
 
       assertFileExists $serviceFile
       assertFileRegex $serviceFile 'X-Restart-Triggers=.*polybar\.conf'
       assertFileRegex $serviceFile 'ExecStart=.*/bin/polybar-start'
 
-      assertFileExists home-files/.config/polybar/config
-      assertFileContent home-files/.config/polybar/config \
+      assertFileExists $home_files/.config/polybar/config
+      assertFileContent $home_files/.config/polybar/config \
           ${./basic-configuration.conf}
     '';
   };

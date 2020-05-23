@@ -21,7 +21,7 @@ with lib;
       (map (a: a.message) (filter (a: !a.assertion) config.assertions));
 
     nmt.script = ''
-      assertFileContent home-files/result ${
+      assertFileContent $home_files/result ${
         ./forwards-paths-with-ports-error.json
       }
     '';

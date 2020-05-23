@@ -9,7 +9,7 @@ with pkgs.lib;
 
 let
 
-  env = import ../modules {
+  env = import ../modules <nixpkgs> {
     configuration =
       if confAttr == ""
       then confPath

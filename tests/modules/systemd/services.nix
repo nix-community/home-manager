@@ -15,7 +15,7 @@ with lib;
     };
 
     nmt.script = ''
-      serviceFile=home-files/.config/systemd/user/test-service@.service
+      serviceFile=$home_files/.config/systemd/user/test-service@.service
       assertFileExists $serviceFile
       assertFileContent $serviceFile ${./services-expected.conf}
     '';

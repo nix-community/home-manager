@@ -7,4 +7,4 @@ os:
 script:
   - ./format -c
   - nix-shell . -A install
-  - nix-shell --pure --max-jobs 10 tests -A run.all
+  - nix-build --max-jobs 10 tests -A all 

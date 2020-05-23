@@ -24,7 +24,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.inputrc \
+        $home_files/.inputrc \
         ${./using-all-options.txt}
     '';
   };

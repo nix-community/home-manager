@@ -17,15 +17,15 @@ with lib;
       function assertGitConfig() {
         local value
         value=$(${pkgs.git}/bin/git config \
-          --file $TESTED/home-files/.config/git/config \
+          --file $home_files/.config/git/config \
           --get $1)
         if [[ $value != $2 ]]; then
           fail "Expected option '$1' to have value '$2' but it was '$value'"
         fi
       }
 
-      assertFileExists home-files/.config/git/config
-      assertFileContent home-files/.config/git/config ${
+      assertFileExists $home_files/.config/git/config
+      assertFileContent $home_files/.config/git/config ${
         ./git-with-email-expected.conf
       }
 

@@ -15,8 +15,8 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-files/.Xresources
-      assertFileContent home-files/.Xresources ${./xresources-expected.conf}
+      assertFileExists $home_files/.Xresources
+      assertFileContent $home_files/.Xresources ${./xresources-expected.conf}
     '';
   };
 }

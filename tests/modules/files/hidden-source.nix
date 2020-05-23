@@ -7,8 +7,8 @@ with lib;
     home.file.".hidden".source = ./.hidden;
 
     nmt.script = ''
-      assertFileExists home-files/.hidden;
-      assertFileContent home-files/.hidden ${
+      assertFileExists $home_files/.hidden;
+      assertFileContent $home_files/.hidden ${
         builtins.path {
           path = ./.hidden;
           name = "expected";

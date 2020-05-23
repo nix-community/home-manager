@@ -10,8 +10,8 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-files/executable
-      assertFileIsExecutable home-files/executable;
+      assertFileExists $home_files/executable
+      assertFileIsExecutable $home_files/executable;
     '';
   };
 }

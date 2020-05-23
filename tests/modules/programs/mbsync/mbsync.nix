@@ -21,8 +21,8 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-files/.mbsyncrc
-      assertFileContent home-files/.mbsyncrc ${./mbsync-expected.conf}
+      assertFileExists $home_files/.mbsyncrc
+      assertFileContent $home_files/.mbsyncrc ${./mbsync-expected.conf}
     '';
   };
 }

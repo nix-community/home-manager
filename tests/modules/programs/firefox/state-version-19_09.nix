@@ -24,7 +24,7 @@ with lib;
 
     nmt.script = ''
       assertFileRegex \
-        home-path/bin/firefox \
+        $home_path/bin/firefox \
         MOZ_APP_LAUNCHER
     '';
   };

@@ -13,9 +13,9 @@ with lib;
     };
 
     nmt.script = ''
-      assertFileExists home-files/.bash_logout
+      assertFileExists $home_files/.bash_logout
       assertFileContent \
-        home-files/.bash_logout \
+        $home_files/.bash_logout \
         ${./logout-expected.txt}
     '';
   };

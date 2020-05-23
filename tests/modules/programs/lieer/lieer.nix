@@ -15,8 +15,8 @@ with lib;
     ];
 
     nmt.script = ''
-      assertFileExists home-files/Mail/hm@example.com/.gmailieer.json
-      assertFileContent home-files/Mail/hm@example.com/.gmailieer.json \
+      assertFileExists $home_files/Mail/hm@example.com/.gmailieer.json
+      assertFileContent $home_files/Mail/hm@example.com/.gmailieer.json \
                         ${./lieer-expected.json}
     '';
   };

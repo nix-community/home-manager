@@ -10,9 +10,11 @@ with lib;
       (map (a: a.message) (filter (a: !a.assertion) config.assertions));
 
     nmt.script = ''
-      assertFileExists home-files/.ssh/config
-      assertFileContent home-files/.ssh/config ${./default-config-expected.conf}
-      assertFileContent home-files/assertions ${./no-assertions.json}
+      assertFileExists $home_files/.ssh/config
+      assertFileContent $home_files/.ssh/config ${
+        ./default-config-expected.conf
+      }
+      assertFileContent $home_files/assertions ${./no-assertions.json}
     '';
   };
 }

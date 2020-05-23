@@ -50,9 +50,9 @@ in {
       description =
         "if fish.plugins set, check conf.d file exists and contents match";
       script = ''
-        assertDirectoryExists home-files/.config/fish/conf.d
-        assertFileExists home-files/.config/fish/conf.d/plugin-foo.fish
-        assertFileContent home-files/.config/fish/conf.d/plugin-foo.fish ${generatedConfdFile}
+        assertDirectoryExists $home_files/.config/fish/conf.d
+        assertFileExists $home_files/.config/fish/conf.d/plugin-foo.fish
+        assertFileContent $home_files/.config/fish/conf.d/plugin-foo.fish ${generatedConfdFile}
       '';
 
     };
