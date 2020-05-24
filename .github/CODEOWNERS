@@ -44,6 +44,8 @@
 
 /modules/programs/emacs.nix                           @rycee
 
+/modules/programs/fff.nix                             @Gigahawk
+
 /modules/programs/firefox.nix                         @rycee
 
 /modules/programs/git.nix                             @rycee

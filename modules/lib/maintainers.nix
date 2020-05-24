@@ -19,4 +19,10 @@
     github = "owm111";
     githubId = 7798336;
   };
+  gigahawk = {
+    email = "jasperchan515@gmailcom";
+    name = "Jasper Chan";
+    github = "Gigahawk";
+    githubId = 10356230;
+  };
 }

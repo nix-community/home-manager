@@ -61,6 +61,7 @@ let
     (loadModule ./programs/eclipse.nix { })
     (loadModule ./programs/emacs.nix { })
     (loadModule ./programs/feh.nix { })
+    (loadModule ./programs/fff.nix { })
     (loadModule ./programs/firefox.nix { })
     (loadModule ./programs/fish.nix { })
     (loadModule ./programs/fzf.nix { })

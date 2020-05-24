@@ -1520,6 +1520,13 @@ in
           A new module is available: 'programs.dircolors'
         '';
       }
+
+      {
+        time = "2020-05-24T07:32:45+00:00";
+        message = ''
+          A new module is available: 'programs.fff'
+        '';
+      }
     ];
   };
 }
