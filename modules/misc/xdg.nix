@@ -85,10 +85,18 @@ in
       };
     })
 
-    (mkIf (!cfg.enable) {
+    # Legacy non-deterministic setup.
+    (mkIf (!cfg.enable && versionOlder config.home.stateVersion "20.09") {
       xdg.cacheHome = getXdgDir "XDG_CACHE_HOME" defaultCacheHome;
       xdg.configHome = getXdgDir "XDG_CONFIG_HOME" defaultConfigHome;
       xdg.dataHome = getXdgDir "XDG_DATA_HOME" defaultDataHome;
+    })
+
+    # "Modern" deterministic setup.
+    (mkIf (!cfg.enable && versionAtLeast config.home.stateVersion "20.09") {
+      xdg.cacheHome = mkDefault defaultCacheHome;
+      xdg.configHome = mkDefault defaultConfigHome;
+      xdg.dataHome = mkDefault defaultDataHome;
     })
 
     {

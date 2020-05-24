@@ -125,14 +125,22 @@ in
   options = {
     home.username = mkOption {
       type = types.str;
-      defaultText = "$USER";
+      defaultText = literalExample ''
+        "$USER"   for state version < 20.09,
+        undefined for state version ≥ 20.09
+      '';
+      example = "jane.doe";
       description = "The user's username.";
     };
 
     home.homeDirectory = mkOption {
       type = types.path;
-      defaultText = "$HOME";
-      description = "The user's home directory.";
+      defaultText = literalExample ''
+        "$HOME"   for state version < 20.09,
+        undefined for state version ≥ 20.09
+      '';
+      example = "/home/jane.doe";
+      description = "The user's home directory. Must be an absolute path.";
     };
 
     home.profileDirectory = mkOption {
@@ -327,8 +335,12 @@ in
       }
     ];
 
-    home.username = mkDefault (builtins.getEnv "USER");
-    home.homeDirectory = mkDefault (builtins.getEnv "HOME");
+    home.username =
+      mkIf (versionOlder config.home.stateVersion "20.09")
+        (mkDefault (builtins.getEnv "USER"));
+    home.homeDirectory =
+      mkIf (versionOlder config.home.stateVersion "20.09")
+        (mkDefault (builtins.getEnv "HOME"));
 
     home.profileDirectory =
       if config.submoduleSupport.enable

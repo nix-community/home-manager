@@ -12,6 +12,18 @@ runCommand "home-manager-install" {
       echo
       echo "Creating initial Home Manager configuration..."
 
+      nl=$'\n'
+      xdgVars=""
+      if [[ -v XDG_CACHE_HOME && $XDG_CACHE_HOME != "$HOME/.cache" ]]; then
+        xdgVars="$xdgVars  xdg.cacheHome = \"$XDG_CACHE_HOME\";$nl"
+      fi
+      if [[ -v XDG_CONFIG_HOME && $XDG_CONFIG_HOME != "$HOME/.config" ]]; then
+        xdgVars="$xdgVars  xdg.configHome = \"$XDG_CONFIG_HOME\";$nl"
+      fi
+      if [[ -v XDG_DATA_HOME && $XDG_DATA_HOME != "$HOME/.local/share" ]]; then
+        xdgVars="$xdgVars  xdg.dataHome = \"$XDG_DATA_HOME\";$nl"
+      fi
+
       mkdir -p "$(dirname "$confFile")"
       cat > $confFile <<EOF
     { config, pkgs, ... }:
@@ -20,6 +32,11 @@ runCommand "home-manager-install" {
       # Let Home Manager install and manage itself.
       programs.home-manager.enable = true;
 
+      # Home Manager needs a bit of information about you and the
+      # paths it should manage.
+      home.username = "$USER";
+      home.homeDirectory = "$HOME";
+    $xdgVars
       # This value determines the Home Manager release that your
       # configuration is compatible with. This helps avoid breakage
       # when a new Home Manager release introduces backwards
@@ -28,7 +45,7 @@ runCommand "home-manager-install" {
       # You can update Home Manager without changing this value. See
       # the Home Manager release notes for a list of state version
       # changes in each release.
-      home.stateVersion = "20.03";
+      home.stateVersion = "20.09";
     }
     EOF
     fi
