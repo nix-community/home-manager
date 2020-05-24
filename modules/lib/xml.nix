@@ -1,4 +1,4 @@
-{ saxon-he, runCommand }:
+{ libxslt, runCommand }:
 
 rec {
   genXMLFile = input:
@@ -7,7 +7,7 @@ rec {
 
       stylesheet = builtins.toFile "stylesheet.xsl" ''
         <?xml version='1.0' encoding='UTF-8'?>
-        <xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='3.0'>
+        <xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='1.0'>
           <xsl:output method="xml" indent="yes" />
           <xsl:template match='attrs[attr[@name="name"]]'>
             <xsl:element name='{attr[@name="name"]/string/@value}'>
@@ -23,7 +23,7 @@ rec {
         </xsl:stylesheet>
       '';
     } ''
-      echo "$input" | ${saxon-he}/bin/saxon-he - $stylesheet > $out
+      echo "$input" | ${libxslt}/bin/xsltproc $stylesheet - > $out
     '';
   genXML = input: builtins.readFile (genXMLFile input);
 }
