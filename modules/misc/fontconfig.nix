@@ -60,6 +60,34 @@ in {
         default = [ ];
         description = "Directories to load fonts from.";
       };
+      aliases = mkOption {
+        type = types.listOf (types.submodule {
+          options = {
+            families = mkOption {
+              type = types.listOf types.str;
+              description = "Families to be matched.";
+            };
+            prefer = mkOption {
+              type = types.nullOr (types.listOf types.str);
+              default = null;
+              description =
+                "Families to be prepended before the matched family.";
+            };
+            accept = mkOption {
+              type = types.nullOr (types.listOf types.str);
+              default = null;
+              description = "Families to be placed after the matched family.";
+            };
+            default = mkOption {
+              type = types.nullOr (types.listOf types.str);
+              default = null;
+              description = "Families to be appended to the family list.";
+            };
+          };
+        });
+        default = [ ];
+        description = "Substitutions of one font family for another.";
+      };
     };
   };
 
@@ -133,6 +161,7 @@ in {
         let
           submoduleToAttrs = m:
             lib.filterAttrs (name: v: name != "_module" && v != null) m;
+          takeSubmodule = f: x: f (submoduleToAttrs x);
           mkInclude = { ignoreMissing, path }: {
             name = "include";
             attrs = if ignoreMissing then { ignore_missing = "yes"; } else { };
@@ -142,18 +171,38 @@ in {
             name = "dir";
             content = path;
           };
-          includeElements =
-            builtins.map (x: mkInclude (submoduleToAttrs x)) includes;
+          mkFamilies = families:
+            builtins.map (x: {
+              name = "family";
+              content = x;
+            }) families;
+          mkFamilyType = type: families:
+            if families == null then
+              [ ]
+            else [{
+              name = type;
+              children = mkFamilies families;
+            }];
+          mkAlias =
+            { families, prefer ? null, accept ? null, default ? null }: {
+              name = "alias";
+              children = mkFamilies families ++ mkFamilyType "prefer" prefer
+                ++ mkFamilyType "accept" accept
+                ++ mkFamilyType "default" default;
+            };
+          includeElements = builtins.map (takeSubmodule mkInclude) includes;
           dirElements = builtins.map mkDir dirs;
           cacheDirElement = {
             name = "cachedir";
             content = cacheDir;
           };
+          aliasElements = builtins.map (takeSubmodule mkAlias) aliases;
         in lib.hm.xml.genXMLFile {
           doctype = "SYSTEM 'fonts.dtd'";
           root = {
             name = "fontconfig";
-            children = includeElements ++ dirElements ++ [ cacheDirElement ];
+            children = includeElements ++ dirElements ++ [ cacheDirElement ]
+              ++ aliasElements;
           };
         };
     };
