@@ -27,7 +27,6 @@ find . -name '*.nix' \
   ! -path ./modules/lib/file-type.nix \
   ! -path ./modules/manual.nix \
   ! -path ./modules/misc/dconf.nix \
-  ! -path ./modules/misc/gtk.nix \
   ! -path ./modules/misc/news.nix \
   ! -path ./modules/misc/nixpkgs.nix \
   ! -path ./modules/misc/xdg.nix \
