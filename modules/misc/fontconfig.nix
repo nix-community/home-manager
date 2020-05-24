@@ -88,6 +88,101 @@ in {
         default = [ ];
         description = "Substitutions of one font family for another.";
       };
+      matches = mkOption {
+        type = types.listOf (types.submodule {
+          options = {
+            tests = mkOption {
+              type = types.listOf (types.submodule {
+                options = {
+                  name = mkOption {
+                    type = types.str;
+                    description = "Attribute to match on.";
+                  };
+                  qual = mkOption {
+                    type = types.nullOr
+                      (types.enum [ "any" "all" "first" "not_first" ]);
+                    default = null;
+                    description =
+                      "Determines which occurrence of the attribute should be tested if it appears multiple times.";
+                  };
+                  target = mkOption {
+                    type = types.nullOr (types.enum [ "pattern" "font" ]);
+                    default = null;
+                    description = "Determines what is tested.";
+                  };
+                  ignoreBlanks = mkOption {
+                    type = types.bool;
+                    default = false;
+                    description = "Whether whitespace should be ignored.";
+                  };
+                  compare = mkOption {
+                    type = types.nullOr (types.enum [
+                      "eq"
+                      "not_eq"
+                      "less"
+                      "less_eq"
+                      "more"
+                      "more_eq"
+                      "contains"
+                      "not_contains"
+                    ]);
+                    default = null;
+                    description = "The type of comparison to make.";
+                  };
+                  exprs = mkOption {
+                    type = types.listOf types.str;
+                    default = [ ];
+                    description = "The expressions to match.";
+                  };
+                };
+              });
+              description = "Tests to make to find matched elements.";
+            };
+            edits = mkOption {
+              type = types.listOf (types.submodule {
+                options = {
+                  name = mkOption {
+                    type = types.str;
+                    description = "The attribute to edit.";
+                  };
+                  mode = mkOption {
+                    type = types.nullOr (types.enum [
+                      "assign"
+                      "assign_replace"
+                      "prepend"
+                      "append"
+                      "prepend_first"
+                      "append_last"
+                      "delete"
+                      "delete_all"
+                    ]);
+                    default = null;
+                    description = "The type of edit to be made.";
+                  };
+                  binding = mkOption {
+                    type = types.nullOr (types.enum [ "weak" "strong" "same" ]);
+                    default = null;
+                    description = "The binding to be used for the edit.";
+                  };
+                  exprs = mkOption {
+                    type = types.listOf types.str;
+                    default = [ ];
+                    description = "The expressions to edit.";
+                  };
+                };
+              });
+              description = "Edits to be made to matches.";
+            };
+            target = mkOption {
+              type = types.nullOr (types.enum [ "pattern" "font" "scan" ]);
+              default = null;
+              description = "The target to be matched.";
+            };
+          };
+        });
+        default = [ ];
+        description = "Modifications to make.";
+      };
     };
   };
 
@@ -159,8 +254,7 @@ in {
     xdg.configFile = {
       "fontconfig/conf.d/10-hm-fonts.conf".source = with cfg;
         let
-          submoduleToAttrs = m:
-            lib.filterAttrs (name: v: name != "_module" && v != null) m;
+          submoduleToAttrs = m: lib.filterAttrs (name: v: name != "_module") m;
           takeSubmodule = f: x: f (submoduleToAttrs x);
           mkInclude = { ignoreMissing, path }: {
             name = "include";
@@ -183,13 +277,37 @@ in {
               name = type;
               children = mkFamilies families;
             }];
-          mkAlias =
-            { families, prefer ? null, accept ? null, default ? null }: {
-              name = "alias";
-              children = mkFamilies families ++ mkFamilyType "prefer" prefer
-                ++ mkFamilyType "accept" accept
-                ++ mkFamilyType "default" default;
+          mkAlias = { families, prefer, accept, default }: {
+            name = "alias";
+            children = mkFamilies families ++ mkFamilyType "prefer" prefer
+              ++ mkFamilyType "accept" accept ++ mkFamilyType "default" default;
+          };
+          mkExpr = expr:
+            let type = builtins.typeOf expr;
+            in if type == "string" then {
+              name = "string";
+              content = expr;
+            } else
+              throw "Bad expression type ${type}";
+          mkTest = { name, qual, target, ignoreBlanks, compare, exprs }: {
+            name = "test";
+            attrs = {
+              inherit name qual compare target;
+              ignore-blanks = if ignoreBlanks then "true" else null;
             };
+            children = builtins.map mkExpr exprs;
+          };
+          mkEdit = { name, mode, binding, exprs }: {
+            name = "edit";
+            attrs = { inherit name mode binding; };
+            children = builtins.map mkExpr exprs;
+          };
+          mkMatch = { tests, edits, target }: {
+            name = "match";
+            attrs.target = target;
+            children = builtins.map (takeSubmodule mkTest) tests
+              ++ builtins.map (takeSubmodule mkEdit) edits;
+          };
           includeElements = builtins.map (takeSubmodule mkInclude) includes;
           dirElements = builtins.map mkDir dirs;
           cacheDirElement = {
@@ -197,12 +315,13 @@ in {
             content = cacheDir;
           };
           aliasElements = builtins.map (takeSubmodule mkAlias) aliases;
+          matchElements = builtins.map (takeSubmodule mkMatch) matches;
         in lib.hm.xml.genXMLFile {
           doctype = "SYSTEM 'fonts.dtd'";
           root = {
             name = "fontconfig";
             children = includeElements ++ dirElements ++ [ cacheDirElement ]
-              ++ aliasElements;
+              ++ aliasElements ++ matchElements;
           };
         };
     };
