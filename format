@@ -56,7 +56,6 @@ find . -name '*.nix' \
   ! -path ./tests/modules/programs/tmux/default.nix \
   ! -path ./tests/modules/programs/zsh/session-variables.nix \
   ! -path ./tests/modules/services/sxhkd/service.nix \
-  ! -path ./tests/modules/systemd/default.nix \
   ! -path ./tests/modules/systemd/services.nix \
   ! -path ./tests/modules/systemd/session-variables.nix \
   -exec nixfmt $CHECK_ARG {} +
