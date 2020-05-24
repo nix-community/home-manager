@@ -18,7 +18,7 @@ rec {
           <xsl:output method="xml" encoding="utf-8" omit-xml-declaration="yes" />
           <xsl:template match='attrs[attr[@name="name"]]'>
             <xsl:element name='{attr[@name="name"]/string/@value}'>
-              <xsl:for-each select='attr[@name="attrs"]/attrs/*'>
+              <xsl:for-each select='attr[@name="attrs"]/attrs/*[string]'>
                 <xsl:attribute name='{@name}'>
                   <xsl:value-of select='string/@value' />
                 </xsl:attribute>
