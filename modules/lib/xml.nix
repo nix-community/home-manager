@@ -8,7 +8,7 @@ rec {
       stylesheet = builtins.toFile "stylesheet.xsl" ''
         <?xml version='1.0' encoding='UTF-8'?>
         <xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='1.0'>
-          <xsl:output method="xml" />
+          <xsl:output method="xml" encoding="utf-8" />
           <xsl:template match='attrs[attr[@name="name"]]'>
             <xsl:element name='{attr[@name="name"]/string/@value}'>
               <xsl:for-each select='attr[@name="attrs"]/attrs/*'>
