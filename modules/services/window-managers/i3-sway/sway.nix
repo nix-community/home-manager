@@ -130,10 +130,8 @@ let
         '';
         example = literalExample ''
           let
-            modifier = cfg.config.modifier;
-          in
-
-          lib.mkOptionDefault {
+            modifier = config.wayland.windowManager.sway.config.modifier;
+          in lib.mkOptionDefault {
             "''${modifier}+Return" = "exec ${cfg.config.terminal}";
             "''${modifier}+Shift+q" = "kill";
             "''${modifier}+d" = "exec ${cfg.config.menu}";
