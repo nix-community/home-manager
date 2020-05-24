@@ -1,4 +1,4 @@
-{ lib }:
+{ lib, callPackage }:
 
 rec {
   dag =
@@ -23,4 +23,6 @@ rec {
 
   shell = import ./shell.nix { inherit lib; };
   zsh = import ./zsh.nix { inherit lib; };
+
+  xml = callPackage ./xml.nix {};
 }
