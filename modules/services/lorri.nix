@@ -32,7 +32,7 @@ in {
           Environment = let
             path = with pkgs;
               makeSearchPath "bin" [ nix gitMinimal gnutar gzip ];
-          in "PATH=${path}";
+          in [ "PATH=${path}" ];
         };
       };
 
