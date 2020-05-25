@@ -97,6 +97,8 @@
 
 /modules/programs/zathura.nix                         @rprospero
 
+/modules/programs/zoxide.nix                          @marsam
+
 /modules/services/cbatticon.nix                       @pmiddend
 
 /modules/services/dunst.nix                           @rycee
