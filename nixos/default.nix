@@ -98,6 +98,8 @@ in {
 
         environment = serviceEnvironment;
 
+        unitConfig = { RequiresMountsFor = usercfg.home.homeDirectory; };
+
         serviceConfig = {
           User = usercfg.home.username;
           Type = "oneshot";
