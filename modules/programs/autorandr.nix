@@ -244,21 +244,21 @@ let
     ]);
   fingerprintToString = name: edid: "${name} ${edid}";
   configToString = name: config:
-    if config.enable then ''
-      output ${name}
-      ${optionalString (config.position != "") "pos ${config.position}"}
-      ${optionalString config.primary "primary"}
-      ${optionalString (config.dpi != null) "dpi ${toString config.dpi}"}
-      ${optionalString (config.gamma != "") "gamma ${config.gamma}"}
-      ${optionalString (config.mode != "") "mode ${config.mode}"}
-      ${optionalString (config.rate != "") "rate ${config.rate}"}
-      ${optionalString (config.rotate != null) "rotate ${config.rotate}"}
-      ${optionalString (config.scale != null)
-      ((if config.scale.method == "factor" then "scale" else "scale-from")
-        + " ${toString config.scale.x}x${toString config.scale.y}")}
-      ${optionalString (config.transform != null) ("transform "
-        + concatMapStringsSep "," toString (flatten config.transform))}
-    '' else ''
+    if config.enable then
+      concatStringsSep "\n" ([ "output ${name}" ]
+        ++ optional (config.position != "") "pos ${config.position}"
+        ++ optional config.primary "primary"
+        ++ optional (config.dpi != null) "dpi ${toString config.dpi}"
+        ++ optional (config.gamma != "") "gamma ${config.gamma}"
+        ++ optional (config.mode != "") "mode ${config.mode}"
+        ++ optional (config.rate != "") "rate ${config.rate}"
+        ++ optional (config.rotate != null) "rotate ${config.rotate}"
+        ++ optional (config.transform != null) ("transform "
+          + concatMapStringsSep "," toString (flatten config.transform))
+        ++ optional (config.scale != null)
+        ((if config.scale.method == "factor" then "scale" else "scale-from")
+          + " ${toString config.scale.x}x${toString config.scale.y}"))
+    else ''
       output ${name}
       off
     '';
