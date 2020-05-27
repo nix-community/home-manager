@@ -25,7 +25,7 @@
     {long description}
     ```
 
-    See [CONTRIBUTING](https://github.com/rycee/home-manager/blob/master/CONTRIBUTING.md#commits) for more information and [recent commit messages](https://github.com/rycee/home-manager/commits/master) for examples.
+    See [CONTRIBUTING](https://github.com/rycee/home-manager/blob/master/doc/contributing.adoc#commits) for more information and [recent commit messages](https://github.com/rycee/home-manager/commits/master) for examples.
 
 - If this PR adds a new module
 
