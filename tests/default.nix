@@ -59,6 +59,7 @@ import nmt {
     ./modules/programs/zsh
     ./modules/xresources
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+    ./meta # Suffices to run on one platform.
     ./modules/misc/debug
     ./modules/misc/pam
     ./modules/misc/xdg
