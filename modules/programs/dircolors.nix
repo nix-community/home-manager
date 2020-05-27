@@ -215,7 +215,8 @@ in {
       eval (${pkgs.coreutils}/bin/dircolors -c ~/.dir_colors)
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    # Set `LS_COLORS` before Oh My Zsh and `initExtra`.
+    programs.zsh.initExtraBeforeCompInit = mkIf cfg.enableZshIntegration ''
       eval $(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)
     '';
   };
