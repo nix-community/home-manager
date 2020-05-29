@@ -55,6 +55,13 @@ let
         default = true;
       };
 
+      crtc = mkOption {
+        type = types.nullOr types.ints.unsigned;
+        description = "Output video display controller.";
+        default = null;
+        example = 0;
+      };
+
       primary = mkOption {
         type = types.bool;
         description = "Whether output should be marked as primary";
@@ -247,6 +254,7 @@ let
     if config.enable then
       concatStringsSep "\n" ([ "output ${name}" ]
         ++ optional (config.position != "") "pos ${config.position}"
+        ++ optional (config.crtc != null) "crtc ${toString config.crtc}"
         ++ optional config.primary "primary"
         ++ optional (config.dpi != null) "dpi ${toString config.dpi}"
         ++ optional (config.gamma != "") "gamma ${config.gamma}"
@@ -315,6 +323,7 @@ in {
                 eDP1.enable = false;
                 DP1 = {
                   enable = true;
+                  crtc = 0;
                   primary = true;
                   position = "0x0";
                   mode = "3840x2160";

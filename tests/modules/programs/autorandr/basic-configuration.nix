@@ -13,6 +13,7 @@
           config = {
             DP1.enable = false;
             DP2 = {
+              crtc = 0;
               primary = true;
               position = "0x0";
               mode = "1920x1080";
