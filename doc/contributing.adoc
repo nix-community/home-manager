@@ -157,7 +157,9 @@ Finally, when adding a new module, say `programs/foo.nix`, we use the fixed comm
 
 The code in Home Manager is formatted by the {nixfmt}[nixfmt] tool and the formatting is checked in the pull request tests. Run the `format` tool inside the project repository before submitting your pull request.
 
-Note, we prefer `lowerCamelCase` for variable and attribute names with the accepted exception of variables directly referencing packages in Nixpkgs which use a hyphenated style. For example, the Home Manager option `services.gpg-agent.enableSshSupport` references the `gpg-agent` package in Nixpkgs.
+Keep lines at a reasonable width, ideally 80 characters or less. This also applies to string literals.
+
+We prefer `lowerCamelCase` for variable and attribute names with the accepted exception of variables directly referencing packages in Nixpkgs which use a hyphenated style. For example, the Home Manager option `services.gpg-agent.enableSshSupport` references the `gpg-agent` package in Nixpkgs.
 
 [[sec-news]]
 === News
