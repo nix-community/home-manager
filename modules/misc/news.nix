@@ -1527,6 +1527,14 @@ in
           A new module is available: 'programs.zoxide'
         '';
       }
+
+      {
+        time = "2020-05-29T16:33:07+00:00";
+        condition = config.programs.bash.enable;
+        message = ''
+          A new module is available: 'programs.powerline-go'
+        '';
+      }
     ];
   };
 }

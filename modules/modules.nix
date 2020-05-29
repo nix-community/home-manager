@@ -99,6 +99,7 @@ let
     (loadModule ./programs/password-store.nix { })
     (loadModule ./programs/pazi.nix { })
     (loadModule ./programs/pidgin.nix { })
+    (loadModule ./programs/powerline-go.nix { })
     (loadModule ./programs/qutebrowser.nix { })
     (loadModule ./programs/readline.nix { })
     (loadModule ./programs/rofi.nix { })
