@@ -57,6 +57,7 @@ import nmt {
     ./modules/programs/newsboat
     ./modules/programs/qutebrowser
     ./modules/programs/readline
+    ./modules/programs/powerline-go
     ./modules/programs/ssh
     ./modules/programs/starship
     ./modules/programs/texlive

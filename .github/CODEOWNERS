@@ -85,6 +85,8 @@
 
 /modules/programs/pidgin.nix                          @rycee
 
+/modules/programs/powerline-go.nix                    @DamienCassou
+
 /modules/programs/rtorrent.nix                        @marsam
 
 /modules/programs/ssh.nix                             @rycee

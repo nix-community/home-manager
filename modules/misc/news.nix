@@ -1560,6 +1560,14 @@ in
           A new module is available: 'services.clipmenu'
         '';
       }
+
+      {
+        time = "2020-06-12T07:08:09+00:00";
+        condition = config.programs.bash.enable;
+        message = ''
+          A new module is available: 'programs.powerline-go'
+        '';
+      }
     ];
   };
 }
