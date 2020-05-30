@@ -535,22 +535,19 @@ let
       ];
 
     userModeString = mode:
-      optionalString
-        (!builtins.elem mode [
-          "insert"
-          "normal"
-          "prompt"
-          "menu"
-          "user"
-          "goto"
-          "view"
-          "object"
-        ])
-        "try %{declare-user-mode ${mode}}";
+      optionalString (!builtins.elem mode [
+        "insert"
+        "normal"
+        "prompt"
+        "menu"
+        "user"
+        "goto"
+        "view"
+        "object"
+      ]) "try %{declare-user-mode ${mode}}";
 
-    userModeStrings =
-      map userModeString
-        (lists.unique (map (km: km.mode) cfg.config.keyMappings));
+    userModeStrings = map userModeString
+      (lists.unique (map (km: km.mode) cfg.config.keyMappings));
 
     keyMappingString = km:
       concatStringsSep " " [
@@ -601,8 +598,8 @@ let
         ++ [ "# UI options" ]
         ++ optional (ui != null) "set-option global ui_options ${uiOptions}"
 
-        ++ [ "# User modes" ] ++ userModeStrings
-        ++ [ "# Key mappings" ] ++ map keyMappingString keyMappings
+        ++ [ "# User modes" ] ++ userModeStrings ++ [ "# Key mappings" ]
+        ++ map keyMappingString keyMappings
 
         ++ [ "# Hooks" ] ++ map hookString hooks);
   in pkgs.writeText "kakrc"
