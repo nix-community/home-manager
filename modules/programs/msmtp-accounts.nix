@@ -45,4 +45,11 @@ with lib;
       '';
     };
   };
+
+  config = {
+    sendMailCommand = mkOptionDefault (if config.msmtp.enable then
+      "msmtpq --read-envelope-from --read-recipients"
+    else
+      null);
+  };
 }

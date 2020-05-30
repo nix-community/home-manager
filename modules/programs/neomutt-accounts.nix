@@ -8,19 +8,12 @@ with lib;
 
     sendMailCommand = mkOption {
       type = types.nullOr types.str;
-      default = if config.msmtp.enable then
-        "msmtpq --read-envelope-from --read-recipients"
-      else
-        null;
-      defaultText = literalExample ''
-        if config.msmtp.enable then
-          "msmtpq --read-envelope-from --read-recipients"
-        else
-          null
-      '';
+      default = config.sendMailCommand;
       example = "msmtpq --read-envelope-from --read-recipients";
       description = ''
-        Command to send a mail. If not set, neomutt will be in charge of sending mails.
+        Override command to send a mail. Defaults to this account's
+        sendMailCommand.
+        If not set or null, neomutt will be in charge of sending mails.
       '';
     };
 

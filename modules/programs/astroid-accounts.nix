@@ -8,10 +8,10 @@ with lib;
 
     sendMailCommand = mkOption {
       type = types.str;
+      default = config.sendMailCommand;
       description = ''
-        Command to send a mail. If msmtp is enabled for the account,
-        then this is set to
-        <command>msmtpq --read-envelope-from --read-recipients</command>.
+        Override command to send a mail. Defaults to this account's
+        sendMailCommand.
       '';
     };
 
@@ -23,10 +23,5 @@ with lib;
         Extra settings to add to this astroid account configuration.
       '';
     };
-  };
-
-  config = mkIf config.notmuch.enable {
-    astroid.sendMailCommand = mkIf config.msmtp.enable
-      (mkOptionDefault "msmtpq --read-envelope-from --read-recipients");
   };
 }
