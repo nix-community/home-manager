@@ -139,6 +139,15 @@ let
         '';
       };
 
+      bindkeysToCode = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Whether to make use of <option>--to-code</option> in keybindings.
+        '';
+      };
+
       input = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
@@ -259,7 +268,11 @@ let
       client.placeholder ${colorSetStr colors.placeholder}
       client.background ${colors.background}
 
-      ${keybindingsStr keybindings}
+      ${keybindingsStr {
+        inherit keybindings;
+        bindsymArgs =
+          lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+      }}
       ${keycodebindingsStr keycodebindings}
       ${concatStringsSep "\n" (mapAttrsToList inputStr input)}
       ${concatStringsSep "\n" (mapAttrsToList outputStr output)}

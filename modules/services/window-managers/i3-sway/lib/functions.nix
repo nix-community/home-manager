@@ -8,10 +8,10 @@ rec {
       concatStringsSep " " (mapAttrsToList (k: v: ''${k}="${v}"'') criteria)
     }]";
 
-  keybindingsStr = keybindings:
+  keybindingsStr = { keybindings, bindsymArgs ? "" }:
     concatStringsSep "\n" (mapAttrsToList (keycomb: action:
       optionalString (action != null) "bindsym ${
-        lib.optionalString (moduleName == "sway") "--to-code "
+        lib.optionalString (bindsymArgs != "") "${bindsymArgs} "
       }${keycomb} ${action}") keybindings);
 
   keycodebindingsStr = keycodebindings:
@@ -31,7 +31,7 @@ rec {
 
   modeStr = name: keybindings: ''
     mode "${name}" {
-    ${keybindingsStr keybindings}
+    ${keybindingsStr { inherit keybindings; }}
     }
   '';
 

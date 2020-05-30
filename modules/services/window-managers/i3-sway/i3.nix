@@ -180,7 +180,7 @@ let
       client.placeholder ${colorSetStr colors.placeholder}
       client.background ${colors.background}
 
-      ${keybindingsStr keybindings}
+      ${keybindingsStr { inherit keybindings; }}
       ${keycodebindingsStr keycodebindings}
       ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
       ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
