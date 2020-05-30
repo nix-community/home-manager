@@ -264,6 +264,17 @@ in
       '';
     };
 
+    home.sessionPath = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      example = [
+        ".git/safe/../../bin"
+        "\${xdg.configHome}/emacs/bin"
+        "~/.local/bin"
+      ];
+      description = "Extra directories to add to <envar>PATH</envar>.";
+    };
+
     home.sessionVariablesExtra = mkOption {
       type = types.lines;
       default = "";
@@ -446,6 +457,8 @@ in
             export __HM_SESS_VARS_SOURCED=1
 
             ${config.lib.shell.exportAll cfg.sessionVariables}
+          '' + lib.optionalString (cfg.sessionPath != [ ]) ''
+            export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
           '' + cfg.sessionVariablesExtra;
         }
       )
