@@ -349,6 +349,17 @@ function doShowNews() {
     fi
 }
 
+function maybeUpdateChannels() {
+    # If the --upgrade flag is given, we update channels
+    if [[ ${DO_UPDATE_CHANNELS-} != 1 ]]; then
+        return
+    fi
+
+    setVerboseAndDryRun
+
+    $DRY_RUN_CMD nix-channel --update
+}
+
 function doUninstall() {
     setVerboseAndDryRun
 
@@ -413,6 +424,8 @@ function doHelp() {
     echo "  -v           Verbose output"
     echo "  -n           Do a dry run, only prints what actions would be taken"
     echo "  -h           Print this help"
+    echo "  --upgrade    Fetch the latest versions for all user nix-channels"
+    echo
     echo
     echo "Options passed on to nix-build(1)"
     echo
@@ -505,6 +518,9 @@ while [[ $# -gt 0 ]]; do
         -v|--verbose)
             export VERBOSE=1
             ;;
+        --upgrade)
+            export DO_UPDATE_CHANNELS=1
+            ;;
         *)
             case $COMMAND in
                 expire-generations|remove-generations)
@@ -530,12 +546,15 @@ case $COMMAND in
         doEdit
         ;;
     build)
+        maybeUpdateChannels
         doBuild
         ;;
     instantiate)
+        maybeUpdateChannels
         doInstantiate
         ;;
     switch)
+        maybeUpdateChannels
         doSwitch
         ;;
     generations)

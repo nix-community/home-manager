@@ -136,14 +136,18 @@
     
    <arg>
     <group choice="req"> 
-    <arg choice="plain">
-     -v
-    </arg>
-     
-    <arg choice="plain">
-     --verbose
-    </arg>
-     </group>
+     <arg choice="plain">
+      -v
+     </arg>
+      
+     <arg choice="plain">
+      --verbose
+     </arg>
+    </group>
+   </arg>
+    
+   <arg>
+    --upgrade
    </arg>
   </cmdsynopsis>
  </refsynopsisdiv>
@@ -486,6 +490,16 @@
     <listitem>
      <para>
       Activates verbose output.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--upgrade</option>
+    </term>
+    <listitem>
+     <para>
+      Fetch the latest versions for all user nix-channels
      </para>
     </listitem>
    </varlistentry>

@@ -56,6 +56,7 @@
 # --dry-run
 # -v
 # --verbose
+# --upgrade
 # build
 # edit
 # expire-generations
@@ -108,6 +109,7 @@
 #   --dry-run
 #   -h
 #   --help
+#   --upgrade
 
 # $ home-manager
 #
@@ -124,6 +126,7 @@
 #   -v           Verbose output
 #   -n           Do a dry run, only prints what actions would be taken
 #   -h           Print this help
+#   --upgrade    Fetch the latest versions for all user nix-channels
 #
 # Commands
 #
@@ -285,7 +288,7 @@ _home-manager_completions ()
     #--------------------------#
 
     local Options
-    Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" "--verbose" "--show-trace" )
+    Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" "--verbose" "--show-trace" "--upgrade" )
 
     # ^ « home-manager »'s options.
 
