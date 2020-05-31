@@ -125,7 +125,7 @@ in {
         (if cfg.scripts == [ ] then
           pkgs.mpv
         else
-          pkgs.mpv-with-scripts.override { scripts = cfg.scripts; })
+          pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; })
       ];
     }
     (mkIf (cfg.config != { } || cfg.profiles != { }) {
