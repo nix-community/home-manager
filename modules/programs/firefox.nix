@@ -101,10 +101,19 @@ in
           ]
         '';
         description = ''
-          List of Firefox add-on packages to install. Note, it is
-          necessary to manually enable these extensions inside Firefox
-          after the first installation.
-        '';
+          List of Firefox add-on packages to install. Some addons are
+          accessible from the NUR meta repository (<link
+          xlink:href="https://gitlab.com/rycee/nur-expressions">https://gitlab.com/rycee/nur-expressions</link>). Once
+          NUR is enabled, the following expression will list available
+          Firefox addons :
+
+          <programlisting language="bash">
+          nix-env -f '&lt;nixpkgs&gt;' -qaP -A nur.repos.rycee.firefox-addons
+          </programlisting>
+
+          Note that it is necessary to manually enable these extensions inside
+          Firefox after the first installation.
+          '';
       };
 
       profiles = mkOption {
