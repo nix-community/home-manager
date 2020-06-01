@@ -1542,6 +1542,16 @@ in
               programs.ssh.matchBlocks.<name>.serverAliveCountMax
         '';
       }
+
+      {
+        time = "2020-06-01T08:22:16+00:00";
+        condition = config.programs.direnv.enable;
+        message = ''
+          The direnv module now supports 'nix-direnv', a fast, persistent use_nix implementation for direnv.
+
+          It can be enabled through the option 'programs.direnv.enableNixDirenvIntegration'.
+        '';
+      }
     ];
   };
 }

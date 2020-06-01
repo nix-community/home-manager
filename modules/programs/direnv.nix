@@ -70,6 +70,11 @@ in {
         Whether to enable Fish integration.
       '';
     };
+
+    enableNixDirenvIntegration = mkEnableOption ''
+      <link
+          xlink:href="https://github.com/nix-community/nix-direnv">nix-direnv</link>,
+          a fast, persistent use_nix implementation for direnv'';
   };
 
   config = mkIf cfg.enable {
@@ -78,8 +83,14 @@ in {
     xdg.configFile."direnv/config.toml" =
       mkIf (cfg.config != { }) { source = configFile cfg.config; };
 
-    xdg.configFile."direnv/direnvrc" =
-      mkIf (cfg.stdlib != "") { text = cfg.stdlib; };
+    xdg.configFile."direnv/direnvrc" = let
+      stdlib = cfg.stdlib;
+      nixDirenv = cfg.enableNixDirenvIntegration;
+    in mkIf (cfg.stdlib != "" || nixDirenv) {
+      text = (optionalString (stdlib != "") (stdlib + "\n"))
+        + (optionalString nixDirenv
+          "source ${pkgs.nix-direnv}/share/nix-direnv/direnvrc");
+    };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
       # Using mkAfter to make it more likely to appear after other
