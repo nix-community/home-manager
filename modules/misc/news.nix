@@ -1527,6 +1527,17 @@ in
           A new module is available: 'programs.zoxide'
         '';
       }
+
+      {
+        time = "2020-06-01T14:46:40+00:00";
+        condition = config.programs.ssh.enable;
+        message = ''
+          The ssh module now supports the 'ServerAliveCountMax' option
+          both globally (through 'programs.ssh.serverAliveCountMax')
+          and per match blocks (through
+          'programs.ssh.matchBlocks.<name>.serverAliveCountMax').
+        '';
+      }
     ];
   };
 }
