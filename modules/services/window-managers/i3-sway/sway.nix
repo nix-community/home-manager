@@ -298,6 +298,8 @@ let
   };
 
 in {
+  meta.maintainers = [ maintainers.alexarice ];
+
   options.wayland.windowManager.sway = {
     enable = mkEnableOption "sway wayland compositor";
 
