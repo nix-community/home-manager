@@ -302,11 +302,15 @@ in {
     enable = mkEnableOption "sway wayland compositor";
 
     package = mkOption {
-      type = types.package;
+      type = with types; nullOr package;
       default = defaultSwayPackage;
       defaultText = literalExample "${pkgs.sway}";
       description = ''
-        Sway package to use. Will override the options 'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
+        Sway package to use. Will override the options
+        'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
+        Set to <code>null</code> to not add any Sway package to your
+        path. This should be done if you want to use the NixOS Sway
+        module to install Sway.
       '';
     };
 
@@ -385,14 +389,15 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ] ++ optional cfg.xwayland pkgs.xwayland;
+    home.packages = optional (cfg.package != null) cfg.package
+      ++ optional cfg.xwayland pkgs.xwayland;
     xdg.configFile."sway/config" = {
       source = configFile;
       onChange = ''
         swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep -x sway).sock
         if [ -S $swaySocket ]; then
           echo "Reloading sway"
-          $DRY_RUN_CMD ${cfg.package}/bin/swaymsg -s $swaySocket reload
+          $DRY_RUN_CMD ${pkgs.sway}/bin/swaymsg -s $swaySocket reload
         fi
       '';
     };
