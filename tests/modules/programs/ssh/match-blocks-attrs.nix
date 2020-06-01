@@ -17,6 +17,7 @@ with lib;
         xyz = {
           identityFile = "file";
           serverAliveInterval = 60;
+          serverAliveCountMax = 10;
           localForwards = [{
             bind.port = 8080;
             host.address = "10.0.0.1";
