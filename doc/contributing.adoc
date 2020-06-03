@@ -120,6 +120,13 @@ If you add a module that is platform specific then make sure to include a condit
 
 Similarly, if you are adding a news entry then it should be shown only to users that may find it relevant, see <<sec-news>> for a description of conditional news.
 
+[[sec-guidelines-licensing]]
+==== Mind the license
+
+The Home Manager project is covered by the MIT license and we can only accept contributions that fall under this license, or are licensed in a compatible way. When you contribute self written code and documentation it is assumed that you are doing so under the MIT license.
+
+A potential gotcha with respect to licensing are option descriptions. Often it is convenient to copy from the upstream software documentation. When this is done it is important to verify that the license of the upstream documentation allows redistribution under the terms of the MIT license.
+
 [[sec-commit-style]]
 === Commits
 
