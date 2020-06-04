@@ -30,7 +30,7 @@ in {
     ];
 
     home.extraProfileCommands = ''
-      if [[ -w $out/share/mime && -d $out/share/mime/packages ]]; then
+      if [[ -w $out/share/mime && -w $out/share/mime/packages && -d $out/share/mime/packages ]]; then
         XDG_DATA_DIRS=$out/share \
         PKGSYSTEM_ENABLE_FSYNC=0 \
         ${pkgs.buildPackages.shared-mime-info}/bin/update-mime-database \
