@@ -257,7 +257,7 @@ in
     home-files = pkgs.runCommand
       "home-manager-files"
       {
-        nativeBuildInputs = [ pkgs.xlibs.lndir ];
+        nativeBuildInputs = [ pkgs.xorg.lndir ];
         preferLocalBuild = true;
         allowSubstitutes = false;
       }
