@@ -84,6 +84,25 @@ If at all possible, make sure to add new tests and expand existing tests so that
 All contributed code _must_ pass the test suite.
 
 [[sec-guidelines-module-maintainer]]
+
+==== Add relevant documentation
+:docbook: https://tdg.docbook.org/
+:asciidoc: https://asciidoc.org/
+
+Many code changes require changing the documentation as well. Module options should be documented with DocBook (see {docbook}[DocBook 5: The Definitive Guide] for general information). Home Manager is itself documented with {asciidoc}[AsciiDoc]. All text is hosted in Home Manager's git repository.
+
+The HTML version of the manual containing both the module option descriptions and the documentation of Home Manager can be generated and opened by typing the following in a shell within a clone of the Home Manager git repository:
+
+[source,console]
+$ nix-build -A html-manual
+$ xdg-open ./result/share/doc/home-manager/index.html
+
+When you have made changes to a module, it is a good idea to check that the man page version of the module options looks good:
+
+[source,console]
+$ nix-build -A manPages
+$ man result/share/man/man5/home-configuration.nix.5
+
 ==== Add yourself as a module maintainer
 
 Every new module _must_ include a named maintainer using the `meta.maintainers` attribute. If you are a user of a module that currently lacks a maintainer then please consider adopting it.
