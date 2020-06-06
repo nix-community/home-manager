@@ -680,7 +680,7 @@ in {
     default = if moduleName == "i3" then
       "i3-sensible-terminal"
     else
-      "${pkgs.rxvt_unicode}/bin/urxvt";
+      "${pkgs.rxvt-unicode-unwrapped}/bin/urxvt";
     description = "Default terminal to run.";
     example = "alacritty";
   };
