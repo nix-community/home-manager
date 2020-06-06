@@ -61,9 +61,9 @@ in
           fi
 
           if [[ -v DRY_RUN ]]; then
-            echo $DCONF_DBUS_RUN_SESSION ${pkgs.gnome3.dconf}/bin/dconf load / "<" ${iniFile}
+            echo $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / "<" ${iniFile}
           else
-            $DCONF_DBUS_RUN_SESSION ${pkgs.gnome3.dconf}/bin/dconf load / < ${iniFile}
+            $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
           fi
 
           unset DCONF_DBUS_RUN_SESSION
