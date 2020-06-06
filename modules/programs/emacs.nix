@@ -8,7 +8,7 @@ let
 
   # Copied from all-packages.nix, with modifications to support
   # overrides.
-  emacsPackages = let epkgs = pkgs.emacsPackagesGen cfg.package;
+  emacsPackages = let epkgs = pkgs.emacsPackagesFor cfg.package;
   in epkgs.overrideScope' cfg.overrides;
 
   emacsWithPackages = emacsPackages.emacsWithPackages;
