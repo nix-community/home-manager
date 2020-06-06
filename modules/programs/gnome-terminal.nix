@@ -8,7 +8,7 @@ let
 
   vteInitStr = ''
     # gnome-terminal: Show current directory in the terminal window title.
-    . ${pkgs.gnome3.vte}/etc/profile.d/vte.sh
+    . ${pkgs.vte}/etc/profile.d/vte.sh
   '';
 
   backForeSubModule = types.submodule ({ ... }: {
@@ -199,7 +199,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.gnome3.gnome_terminal ];
+    home.packages = [ pkgs.gnome3.gnome-terminal ];
 
     dconf.settings = let dconfPath = "org/gnome/terminal/legacy";
     in {
