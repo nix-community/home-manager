@@ -101,6 +101,8 @@
 
 /modules/services/cbatticon.nix                       @pmiddend
 
+/modules/services/clipmenu.nix                        @DamienCassou
+
 /modules/services/dunst.nix                           @rycee
 
 /modules/services/emacs.nix                           @tadfisher

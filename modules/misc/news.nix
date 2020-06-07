@@ -1552,6 +1552,14 @@ in
           It can be enabled through the option 'services.emacs.socketActivation.enable'.
         '';
       }
+
+      {
+        time = "2020-06-12T17:48:01+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.clipmenu'
+        '';
+      }
     ];
   };
 }
