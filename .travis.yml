@@ -4,6 +4,10 @@ os:
   - linux
   - osx
 
+before_script:
+  # Nixpkgs says it needs Nix 2.2 but we need to use 2.0.
+  - export NIX_PATH=$(nix-build --out-link nixpkgs -E '(import <nixpkgs/pkgs/top-level/impure.nix> {}).runCommandLocal "tweaked-nixpkgs" {} "cp -a ${<nixpkgs>} $out && chmod -v a+w $out/default.nix && echo import ./pkgs/top-level/impure.nix > $out/default.nix"'):$NIX_PATH
+
 script:
   - nix-shell . -A install
   - nix-shell --pure --max-jobs 10 tests -A run.all
