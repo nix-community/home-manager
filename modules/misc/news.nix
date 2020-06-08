@@ -1481,6 +1481,16 @@ in
           A new module is available: 'programs.dircolors'
         '';
       }
+
+      {
+        time = "2020-06-11T18:06:37+00:00";
+        condition = config.services.emacs.enable;
+        message = ''
+          The Emacs service now supports systemd socket activation.
+
+          It can be enabled through the option 'services.emacs.socketActivation.enable'.
+        '';
+      }
     ];
   };
 }
