@@ -13,6 +13,15 @@ in {
     programs.eclipse = {
       enable = mkEnableOption "Eclipse";
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.eclipses.eclipse-platform;
+        example = pkgs.eclipses.eclipse-java;
+        description = ''
+          The Eclipse package to install.
+        '';
+      };
+
       enableLombok = mkOption {
         type = types.bool;
         default = false;
@@ -40,7 +49,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [
       (pkgs.eclipses.eclipseWithPlugins {
-        eclipse = pkgs.eclipses.eclipse-platform;
+        eclipse = cfg.package;
         jvmArgs = cfg.jvmArgs ++ optional cfg.enableLombok
           "-javaagent:${pkgs.lombok}/share/java/lombok.jar";
         plugins = cfg.plugins;
