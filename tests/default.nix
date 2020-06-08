@@ -67,6 +67,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/services/emacs
     ./modules/programs/firefox
     ./modules/programs/getmail
     ./modules/services/lieer
