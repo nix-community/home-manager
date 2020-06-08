@@ -22,6 +22,7 @@ in {
           "graphical-session-pre.target"
           "polybar.service"
           "stalonetray.service"
+          "status-notifier-watcher.service"
           "taffybar.service"
         ];
         PartOf = [ "graphical-session.target" ];
@@ -31,6 +32,9 @@ in {
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";
+        # There seems to be a race condition with taffybars status-notifier-watcher:
+        # no tray icon although service is started after taffybar and status-notifier-watcher
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
         ExecStart = "${package}/bin/flameshot";
         Restart = "on-abort";
       };
