@@ -1,9 +1,0 @@
-language: nix
-
-os:
-  - linux
-  - osx
-
-script:
-  - nix-shell . -A install
-  - nix-shell --pure --max-jobs 10 tests -A run.all
