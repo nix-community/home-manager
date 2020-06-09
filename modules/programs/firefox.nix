@@ -111,9 +111,19 @@ in
           </screen>
 
           to list the available Firefox add-ons.
+
           </para><para>
+
           Note that it is necessary to manually enable these
           extensions inside Firefox after the first installation.
+
+          </para><para>
+
+          Extensions listed here will only be available in Firefox
+          profiles managed through the
+          <link linkend="opt-programs.firefox.profiles">programs.firefox.profiles</link>
+          option. This is due to recent changes in the way Firefox
+          handles extension side-loading.
         '';
       };
 
