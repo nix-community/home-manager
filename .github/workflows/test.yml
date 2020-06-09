@@ -1,7 +1,6 @@
-name: "Test"
+name: Test
 on:
   pull_request:
-  push:
 jobs:
   tests:
     strategy:
