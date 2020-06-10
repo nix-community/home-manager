@@ -34,7 +34,14 @@ in {
         Before = [ "taffybar.service" ];
       };
 
-      Service = { ExecStart = "${cfg.package}/bin/status-notifier-watcher"; };
+      Service = {
+        ExecStart = "${cfg.package}/bin/status-notifier-watcher";
+        # Delay the unit start a bit to allow the program to get fully
+        # set up before letting dependent services start. This is
+        # brittle and a better solution using, e.g., `BusName=` might
+        # be possible.
+        ExecStartPost = "${pkgs.coreutils}/bin/sleep 1";
+      };
 
       Install = {
         WantedBy = [ "graphical-session.target" "taffybar.service" ];
