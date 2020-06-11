@@ -46,6 +46,8 @@ let
     "%T/emacs%U/server";
 
 in {
+  meta.maintainers = [ maintainers.tadfisher ];
+
   options.services.emacs = {
     enable = mkEnableOption "the Emacs daemon";
 

@@ -103,6 +103,8 @@
 
 /modules/services/dunst.nix                           @rycee
 
+/modules/services/emacs.nix                           @tadfisher
+
 /modules/services/flameshot.nix                       @moredhel
 
 /modules/services/gnome-keyring.nix                   @rycee
