@@ -15,12 +15,16 @@ let
     inherit lib pkgs;
     check = false;
   } ++ [
-    # Fix impurities. Without these some of the user's environment
-    # will leak into the tests through `builtins.getEnv`.
     {
+      # Fix impurities. Without these some of the user's environment
+      # will leak into the tests through `builtins.getEnv`.
       xdg.enable = true;
       home.username = "hm-user";
       home.homeDirectory = "/home/hm-user";
+
+      # Avoid including documentation since this will cause
+      # unnecessary rebuilds of the tests.
+      manual.manpages.enable = false;
     }
   ];
 
