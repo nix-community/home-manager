@@ -1545,7 +1545,7 @@ in
 
       {
         time = "2020-06-11T18:06:37+00:00";
-        condition = config.services.emacs.enable;
+        condition = hostPlatform.isLinux && config.services.emacs.enable;
         message = ''
           The Emacs service now supports systemd socket activation.
 
