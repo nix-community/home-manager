@@ -1568,6 +1568,14 @@ in
           A new module is available: 'programs.powerline-go'
         '';
       }
+
+      {
+        time = "2020-06-13T12:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'service.fluidsynth'
+        '';
+      }
     ];
   };
 }

@@ -79,6 +79,7 @@ import nmt {
     ./modules/programs/rofi
     ./modules/services/polybar
     ./modules/services/sxhkd
+    ./modules/services/fluidsynth
     ./modules/services/window-managers/i3
     ./modules/systemd
     ./modules/targets
