@@ -77,12 +77,13 @@ in
     # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
     home.file =
       let
+        subDir = "share/vscode/extensions";
         toPaths = path:
           # Links every dir in path to the extension path.
-          mapAttrsToList (k: v:
+          mapAttrsToList (k: _:
             {
-              "${extensionPath}/${k}".source = "${path}/${k}";
-            }) (builtins.readDir path);
+              "${extensionPath}/${k}".source = "${path}/${subDir}/${k}";
+            }) (builtins.readDir (path + "/${subDir}"));
         toSymlink = concatMap toPaths cfg.extensions;
       in
         foldr
