@@ -56,6 +56,7 @@ import nmt {
     ./modules/programs/ne
     ./modules/programs/neomutt
     ./modules/programs/newsboat
+    ./modules/programs/nushell
     ./modules/programs/qutebrowser
     ./modules/programs/readline
     ./modules/programs/powerline-go

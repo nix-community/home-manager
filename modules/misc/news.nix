@@ -1604,6 +1604,13 @@ in
           A new module is available: 'programs.ne'
         '';
       }
+
+      {
+        time = "2020-07-24T15:03:11+00:00";
+        message = ''
+          A new module is available: 'programs.nushell'.
+        '';
+      }
     ];
   };
 }
