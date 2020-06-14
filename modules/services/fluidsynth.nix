@@ -11,7 +11,7 @@ in {
 
   options = {
     services.fluidsynth = {
-      enable = mkEnableOption "fluidsynth, the music player daemon";
+      enable = mkEnableOption "fluidsynth midi synthesizer";
 
       soundFont = mkOption {
         type = types.path;
