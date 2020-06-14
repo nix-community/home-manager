@@ -28,7 +28,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.newsboat/urls \
+        home-files/.config/newsboat/urls \
         ${./newsboat-basics-urls-2003.txt}
     '';
   };

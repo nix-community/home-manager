@@ -94,7 +94,7 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.newsboat ];
-    home.file.".newsboat/urls".text = let
+    xdg.configFile."newsboat/urls".text = let
       mkUrlEntry = u:
         concatStringsSep " " ([ u.url ] ++ map wrapQuote u.tags
           ++ optional (u.title != null) (wrapQuote "~${u.title}"));
@@ -108,7 +108,7 @@ in {
     else
       urls ++ queries) + "\n";
 
-    home.file.".newsboat/config".text = ''
+    xdg.configFile."newsboat/config".text = ''
       max-items ${toString cfg.maxItems}
       browser ${cfg.browser}
       reload-threads ${toString cfg.reloadThreads}
