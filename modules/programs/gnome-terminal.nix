@@ -6,11 +6,6 @@ let
 
   cfg = config.programs.gnome-terminal;
 
-  vteInitStr = ''
-    # gnome-terminal: Show current directory in the terminal window title.
-    . ${pkgs.vte}/etc/profile.d/vte.sh
-  '';
-
   backForeSubModule = types.submodule ({ ... }: {
     options = {
       foreground = mkOption {
@@ -217,7 +212,7 @@ in {
     (n: v: nameValuePair ("${dconfPath}/profiles:/:${n}") (buildProfileSet v))
     cfg.profile;
 
-    programs.bash.initExtra = mkBefore vteInitStr;
-    programs.zsh.initExtra = vteInitStr;
+    programs.bash.enableVteIntegration = true;
+    programs.zsh.enableVteIntegration = true;
   };
 }

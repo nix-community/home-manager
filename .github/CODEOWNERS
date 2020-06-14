@@ -20,6 +20,8 @@
 
 /modules/misc/tmpfiles.nix                            @dawidsowa
 
+/modules/misc/vte.nix                                 @rycee
+
 /modules/misc/xdg-mime-apps.nix                       @pacien
 
 /modules/misc/xdg-user-dirs.nix                       @pacien
