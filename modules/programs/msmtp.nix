@@ -56,6 +56,10 @@ in {
         '';
       };
     };
+
+    accounts.email.accounts = mkOption {
+      type = with types; attrsOf (submodule (import ./msmtp-accounts.nix));
+    };
   };
 
   config = mkIf cfg.enable {

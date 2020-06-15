@@ -262,6 +262,10 @@ in {
         description = "Extra configuration appended to the end.";
       };
     };
+
+    accounts.email.accounts = mkOption {
+      type = with types; attrsOf (submodule (import ./neomutt-accounts.nix));
+    };
   };
 
   config = mkIf cfg.enable {

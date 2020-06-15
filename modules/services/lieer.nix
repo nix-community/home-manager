@@ -52,6 +52,10 @@ in {
   options = {
     services.lieer.enable =
       mkEnableOption "lieer Gmail synchronization service";
+
+    accounts.email.accounts = mkOption {
+      type = with types; attrsOf (submodule (import ./lieer-accounts.nix));
+    };
   };
 
   config = mkIf cfg.enable {

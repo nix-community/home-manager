@@ -98,6 +98,10 @@ in {
         '';
       };
     };
+
+    accounts.email.accounts = mkOption {
+      type = with types; attrsOf (submodule (import ./astroid-accounts.nix));
+    };
   };
 
   config = mkIf cfg.enable {
