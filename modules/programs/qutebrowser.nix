@@ -36,6 +36,16 @@ in {
   options.programs.qutebrowser = {
     enable = mkEnableOption "qutebrowser";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.qutebrowser;
+      description = "Qutebrowser package to install.";
+      example = literalExample ''
+        pkgs.qutebrowser;
+      '';
+
+    };
+
     aliases = mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -246,7 +256,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.qutebrowser ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."qutebrowser/config.py".text = concatStringsSep "\n" ([ ]
       ++ mapAttrsToList (formatLine "c.") cfg.settings
