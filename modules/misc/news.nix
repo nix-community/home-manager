@@ -1597,6 +1597,13 @@ in
           Apologies for the belated notification!
         '';
       }
+
+      {
+        time = "2020-06-23T20:06:39+00:00";
+        message = ''
+          A new module is available: 'programs.ne'
+        '';
+      }
     ];
   };
 }
