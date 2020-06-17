@@ -88,6 +88,8 @@ in {
       (mapAttrs (username: usercfg: { packages = [ usercfg.home.path ]; })
         cfg.users);
 
+    environment.pathsToLink = mkIf cfg.useUserPackages [ "/etc/profile.d" ];
+
     systemd.services = mapAttrs' (_: usercfg:
       let username = usercfg.home.username;
       in nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {

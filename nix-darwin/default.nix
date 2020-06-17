@@ -72,6 +72,8 @@ in
       }) cfg.users
     );
 
+    environment.pathsToLink = mkIf cfg.useUserPackages [ "/etc/profile.d" ];
+
     system.activationScripts.postActivation.text =
       concatStringsSep "\n" (mapAttrsToList (username: usercfg: ''
         echo Activating home-manager configuration for ${username}
