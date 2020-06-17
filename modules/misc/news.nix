@@ -1576,6 +1576,27 @@ in
           A new module is available: 'service.fluidsynth'
         '';
       }
+
+      {
+        time = "2020-06-17T22:17:52+00:00";
+        condition = config.programs.git.enable;
+        message = ''
+          Since May 1, 2020 string values in Git configurations are
+          automatically escaped. If you have any manually escaped characters,
+          then you may need to restore them to their unescaped form to avoid
+          double escaping.
+
+          In other words, if you now have something along the lines of
+
+              programs.git.aliases.hello = '''"!echo $'Hello\\nWorld'"''';
+
+          you must replace it by the unescaped form
+
+              programs.git.aliases.hello = "!echo $'Hello\nWorld'";
+
+          Apologies for the belated notification!
+        '';
+      }
     ];
   };
 }
