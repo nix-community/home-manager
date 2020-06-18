@@ -85,7 +85,7 @@ in {
       })));
 
     users.users = mkIf cfg.useUserPackages
-      (mapAttrs (username: usercfg: { packages = usercfg.home.packages; })
+      (mapAttrs (username: usercfg: { packages = [ usercfg.home.path ]; })
         cfg.users);
 
     systemd.services = mapAttrs' (_: usercfg:
