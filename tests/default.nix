@@ -63,6 +63,7 @@ import nmt {
     ./modules/programs/starship
     ./modules/programs/texlive
     ./modules/programs/tmux
+    ./modules/programs/vim
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/xresources

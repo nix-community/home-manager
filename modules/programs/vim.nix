@@ -6,6 +6,7 @@ let
 
   cfg = config.programs.vim;
   defaultPlugins = [ pkgs.vimPlugins.vim-sensible ];
+  defaultOptionalPlugins = [ ];
 
   knownSettings = {
     background = types.enum [ "dark" "light" ];
@@ -60,6 +61,15 @@ let
         optional (isString p && hasAttr p vpkgs) vpkgs.${p};
   in concatMap getPkg cfg.plugins;
 
+  optionalPlugins = let
+    vpkgs = pkgs.vimPlugins;
+    getPkg = p:
+      if isDerivation p then
+        [ p ]
+      else
+        optional (isString p && hasAttr p vpkgs) vpkgs.${p};
+  in concatMap getPkg cfg.optionalPlugins;
+
 in {
   options = {
     programs.vim = {
@@ -76,6 +86,26 @@ in {
           </para><para>
 
           Note: String values are deprecated, please use actual packages.
+        '';
+      };
+
+      optionalPlugins = mkOption {
+        type = with types; listOf (package);
+        default = defaultOptionalPlugins;
+        example = literalExample "[ pkgs.vimPlugins.vim-go ]";
+        description = ''
+          List of optional vim plugins to install. To get a list of supported 
+          plugins run:
+          </para><para>
+
+          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A vimPlugins</command>.
+          </para><para>
+
+          To have these plugins loaded, you'll need something like the following
+          in <varname>extraConfig</varname>:
+          </para><para>
+
+          <literal>autocmd FileType go :packadd vim-go</literal>
         '';
       };
 
@@ -141,12 +171,13 @@ in {
         inherit customRC;
 
         packages.home-manager.start = plugins;
+        packages.home-manager.opt = optionalPlugins;
       };
     };
   in mkIf cfg.enable {
     assertions = let
-      packagesNotFound =
-        filter (p: isString p && (!hasAttr p pkgs.vimPlugins)) cfg.plugins;
+      packagesNotFound = filter (p: isString p && (!hasAttr p pkgs.vimPlugins))
+        (cfg.plugins ++ cfg.optionalPlugins);
     in [{
       assertion = packagesNotFound == [ ];
       message = "Following VIM plugin not found in pkgs.vimPlugins: ${
@@ -154,18 +185,20 @@ in {
         }";
     }];
 
-    warnings = let stringPlugins = filter isString cfg.plugins;
-    in optional (stringPlugins != [ ]) ''
-      Specifying VIM plugins using strings is deprecated, found ${
-        concatMapStringsSep ", " (p: ''"${p}"'') stringPlugins
-      } as strings.
-    '';
+    warnings =
+      let stringPlugins = filter isString (cfg.plugins ++ cfg.optionalPlugins);
+      in optional (stringPlugins != [ ]) ''
+        Specifying VIM plugins using strings is deprecated, found ${
+          concatMapStringsSep ", " (p: ''"${p}"'') stringPlugins
+        } as strings.
+      '';
 
     home.packages = [ cfg.package ];
 
     programs.vim = {
       package = vim;
       plugins = defaultPlugins;
+      optionalPlugins = defaultOptionalPlugins;
     };
   });
 }
