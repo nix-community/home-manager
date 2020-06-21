@@ -32,5 +32,24 @@ with lib;
         Extra lines to add to the folder hook for this account.
       '';
     };
+
+    onlyVirtualMailbox = mkOption {
+      type = types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Don't use the mailboxes option of neomutt. Only use virtual-mailboxes.
+        Has no effect if notmuch is not enabled.
+      '';
+    };
+
+    virtualMailboxName = mkOption {
+      type = types.str;
+      default = "My INBOX";
+      description = ''
+        The name of virtual mailbox when using neomut and notmuch.
+        Has no effect if notmuch is not enabled.
+      '';
+    };
   };
 }

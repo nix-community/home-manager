@@ -128,9 +128,15 @@ let
     '';
 
   registerAccount = account:
-    with account; ''
+    with account;
+    let
+      mailboxes = if neomutt.onlyVirtualMailbox && account.notmuch.enable then
+        ""
+      else
+        ''mailboxes "${account.maildir.absPath}/${folders.inbox}"'';
+    in ''
       # register account ${name}
-      mailboxes "${account.maildir.absPath}/${folders.inbox}"
+      ${mailboxes}
       folder-hook ${account.maildir.absPath}/ " \
           source ${accountFilename account} "
     '';
@@ -167,7 +173,7 @@ let
     with account; ''
       # notmuch section
       set nm_default_uri = "notmuch://${config.accounts.email.maildirBasePath}"
-      virtual-mailboxes "My INBOX" "notmuch://?query=tag:inbox"
+      virtual-mailboxes "${neomutt.virtualMailboxName}" "notmuch://?query=tag:inbox"
     '';
 
   accountStr = account:
