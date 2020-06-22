@@ -20,11 +20,14 @@ let
     "vscodium" = "vscode-oss";
   }.${vscodePname};
 
-  configFilePath =
+  userDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${configDir}/User/settings.json"
+      "Library/Application Support/${configDir}/User"
     else
-      "${config.xdg.configHome}/${configDir}/User/settings.json";
+      "${config.xdg.configHome}/${configDir}/User";
+
+  configFilePath = "${userDir}/settings.json";
+  keybindingsFilePath = "${userDir}/keybindings.json";
 
   # TODO: On Darwin where are the extensions?
   extensionPath = ".${extensionDir}/extensions";
@@ -56,6 +59,24 @@ in
         description = ''
           Configuration written to Visual Studio Code's
           <filename>settings.json</filename>.
+        '';
+      };
+
+      keybindings = mkOption {
+        type = types.listOf (types.attrsOf types.str);
+        default = [];
+        example = literalExample ''
+          [
+            {
+              key = "ctrl+c";
+              command = "editor.action.clipboardCopyAction";
+              when = "textInputFocus";
+            }
+          ]
+        '';
+        description = ''
+          Keybindings written to Visual Studio Code's
+          <filename>keybindings.json</filename>.
         '';
       };
 
@@ -92,6 +113,10 @@ in
             "${configFilePath}" =
               mkIf (cfg.userSettings != {}) {
                 text = builtins.toJSON cfg.userSettings;
+              };
+            "${keybindingsFilePath}" =
+              mkIf (cfg.keybindings != []) {
+                text = builtins.toJSON cfg.keybindings;
               };
           }
           toSymlink;
