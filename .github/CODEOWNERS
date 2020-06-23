@@ -83,6 +83,8 @@
 
 /modules/programs/mpv.nix                             @tadeokondrak
 
+/modules/programs/mu.nix                              @KarlJoad
+
 /modules/programs/ncmpcpp.nix                         @olmokramer
 /tests/modules/programs/ncmpcpp                       @olmokramer
 /tests/modules/programs/ncmpcpp-linux                 @olmokramer

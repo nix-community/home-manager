@@ -1680,6 +1680,13 @@ in
           A new module is available: 'programs.pet'.
         '';
       }
+
+      {
+        time = "2020-09-29T21:21:44+00:00";
+        message = ''
+          A new module is available: 'programs.mu'.
+        '';
+      }
     ];
   };
 }
