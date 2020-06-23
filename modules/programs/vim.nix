@@ -65,6 +65,15 @@ in {
     programs.vim = {
       enable = mkEnableOption "Vim";
 
+      customizable_package = mkOption {
+        type = with types; package;
+        default = pkgs.vim_configurable;
+        example = literalExample "pkgs.vim_configurable.override { python = pkgs.python3; }";
+        description = ''
+          TODO
+        '';
+      };
+
       plugins = mkOption {
         type = with types; listOf (either str package);
         default = defaultPlugins;
@@ -135,7 +144,7 @@ in {
       ${cfg.extraConfig}
     '';
 
-    vim = pkgs.vim_configurable.customize {
+    vim = cfg.customizable_package.customize {
       name = "vim";
       vimrcConfig = {
         inherit customRC;
