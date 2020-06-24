@@ -8,18 +8,18 @@ with lib;
       enable = true;
       config.showWhitespace = {
         enable = true;
-        lineFeed = "1";
-        space = "2";
-        nonBreakingSpace = "3";
-        tab = "4";
-        tabStop = "5";
+        lineFeed = ''"'';
+        space = " ";
+        nonBreakingSpace = "' '"; # backwards compat
+        tab = "'";
+        # tabStop = <default>
       };
     };
 
     nmt.script = ''
       assertFileExists home-files/.config/kak/kakrc
       assertFileContains home-files/.config/kak/kakrc \
-        "add-highlighter global/ show-whitespaces -tab '4' -tabpad '5' -spc '2' -nbsp '3' -lf '1'"
+        "add-highlighter global/ show-whitespaces -tab \"'\" -spc ' ' -nbsp ' ' -lf '\"'"
     '';
   };
 }
