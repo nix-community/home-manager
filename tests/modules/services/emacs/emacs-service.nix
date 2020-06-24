@@ -24,7 +24,12 @@ with lib;
       assertFileExists home-path/share/applications/emacsclient.desktop
 
       assertFileContent home-files/.config/systemd/user/emacs.service \
-                        ${./emacs-service-emacs.service}
+                        ${
+                          pkgs.substituteAll {
+                            inherit (pkgs) runtimeShell;
+                            src = ./emacs-service-emacs.service;
+                          }
+                        }
       assertFileContent home-path/share/applications/emacsclient.desktop \
                         ${./emacs-emacsclient.desktop}
     '';

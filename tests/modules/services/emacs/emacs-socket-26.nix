@@ -27,7 +27,12 @@ with lib;
       assertFileContent home-files/.config/systemd/user/emacs.socket \
                         ${./emacs-socket-26-emacs.socket}
       assertFileContent home-files/.config/systemd/user/emacs.service \
-                        ${./emacs-socket-26-emacs.service}
+                        ${
+                          pkgs.substituteAll {
+                            inherit (pkgs) runtimeShell;
+                            src = ./emacs-socket-26-emacs.service;
+                          }
+                        }
       assertFileContent home-path/share/applications/emacsclient.desktop \
                         ${./emacs-emacsclient.desktop}
     '';
