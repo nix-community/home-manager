@@ -97,13 +97,19 @@ in {
         };
 
         Service = {
-          ExecStart = "${emacsBinPath}/emacs --fg-daemon${
+          # We wrap ExecStart in a login shell so Emacs starts with the user's
+          # environment, most importantly $PATH and $NIX_PROFILES. It may be
+          # worth investigating a more targeted approach for user services to
+          # import the user environment.
+          ExecStart = ''
+            ${pkgs.runtimeShell} -l -c "${emacsBinPath}/emacs --fg-daemon${
             # In case the user sets 'server-directory' or 'server-name' in
             # their Emacs config, we want to specify the socket path explicitly
             # so launching 'emacs.service' manually doesn't break emacsclient
             # when using socket activation.
-              optionalString cfg.socketActivation.enable ''="${socketPath}"''
-            }";
+              optionalString cfg.socketActivation.enable
+              "=${escapeShellArg socketPath}"
+            }"'';
           # We use '(kill-emacs 0)' to avoid exiting with a failure code, which
           # would restart the service immediately.
           ExecStop = "${emacsBinPath}/emacsclient --eval '(kill-emacs 0)'";

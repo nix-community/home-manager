@@ -1,5 +1,5 @@
 [Service]
-ExecStart=@emacs@/bin/emacs --fg-daemon="%t/emacs/server"
+ExecStart=@runtimeShell@ -l -c "@emacs@/bin/emacs --fg-daemon='%t/emacs/server'"
 ExecStop=@emacs@/bin/emacsclient --eval '(kill-emacs 0)'
 Restart=on-failure
 
