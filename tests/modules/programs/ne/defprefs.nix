@@ -1,13 +1,16 @@
 { config, lib, pkgs, ... }:
 
 with lib;
+
 let
   defpref = ''
     defined through defaultPreferences
   '';
+
   autopref = ''
     defined through automaticPreferences
   '';
+
 in {
   config = {
     programs.ne = {
@@ -15,6 +18,10 @@ in {
       defaultPreferences = defpref;
       automaticPreferences.".default" = autopref;
     };
+
+    nixpkgs.overlays =
+      [ (self: super: { ne = pkgs.writeScriptBin "dummy-ne" ""; }) ];
+
     nmt = {
       description =
         "Check that it gracefully handles the case of both defaultPreferences and automaticPreferences.'.default' being set, defaulting to the former.";
@@ -24,7 +31,6 @@ in {
           builtins.toFile "defpref" defpref
         }
       '';
-
     };
   };
 }
