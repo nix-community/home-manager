@@ -515,12 +515,22 @@ let
       ];
 
     showWhitespaceOptions = with cfg.config.showWhitespace;
-      concatStrings [
-        (optionalString (tab != null) " -tab ${tab}")
-        (optionalString (tabStop != null) " -tabpad ${tabStop}")
-        (optionalString (space != null) " -spc ${space}")
-        (optionalString (nonBreakingSpace != null) " -nbsp ${nonBreakingSpace}")
-        (optionalString (lineFeed != null) " -lf ${lineFeed}")
+      let
+        quoteSep = sep:
+          if sep == "'" then
+            ''"'"''
+          else if lib.strings.stringLength sep == 1 then
+            "'${sep}'"
+          else
+            sep; # backwards compat, in case sep == "' '", etc.
+
+      in concatStrings [
+        (optionalString (tab != null) " -tab ${quoteSep tab}")
+        (optionalString (tabStop != null) " -tabpad ${quoteSep tabStop}")
+        (optionalString (space != null) " -spc ${quoteSep space}")
+        (optionalString (nonBreakingSpace != null)
+          " -nbsp ${quoteSep nonBreakingSpace}")
+        (optionalString (lineFeed != null) " -lf ${quoteSep lineFeed}")
       ];
 
     uiOptions = with cfg.config.ui;
