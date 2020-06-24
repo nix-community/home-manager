@@ -489,6 +489,10 @@ let
     };
   };
 
+  kakouneWithPlugins = pkgs.wrapKakoune pkgs.kakoune-unwrapped {
+    configure = { plugins = cfg.plugins; };
+  };
+
   configFile = let
     wrapOptions = with cfg.config.wrapLines;
       concatStrings [
@@ -634,11 +638,22 @@ in {
           <filename>~/.config/kak/kakrc</filename>.
         '';
       };
+
+      plugins = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        example = literalExample "[ pkgs.kakounePlugins.kak-fzf ]";
+        description = ''
+          List of kakoune plugins to install. To get a list of
+          supported plugins run:
+          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A kakounePlugins</command>.
+        '';
+      };
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.kakoune ];
+    home.packages = [ kakouneWithPlugins ];
     xdg.configFile."kak/kakrc".source = configFile;
   };
 }
