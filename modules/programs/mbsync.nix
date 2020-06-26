@@ -79,6 +79,31 @@ let
         SyncState = "*";
       } // mbsync.extraConfig.channel) + "\n";
   # Given the attr set of groups, return a string of channels to put into each group.
+  # Given the attr set of groups, return a string of channels that will direct
+  # mail to the proper directories, according to the pattern used in channel's
+  # master pattern definition.
+  genGroupChannelConfig = storeName: groups:
+    let
+      # Given the name of the group this channel is part of and the channel
+      # itself, generate the string for the desired configuration.
+      genChannelString = groupName: channel:
+        genSection "Channel ${groupName}-${channel.name}" ({
+          Master = ":${storeName}-remote:${channel.masterPattern}";
+          Slave = ":${storeName}-local:${channel.slavePattern}";
+        }) + "\n";
+      # Given the group name, and a attr set of channels within that group,
+      # Generate a list of strings for each channels' configuration.
+      genChannelStrings = groupName: channels:
+        mapAttrsToList (channelName: info: genChannelString groupName info) channels;
+      # Given a group, return a string that configures all the channels within
+      # the group.
+      genGroupsChannels = group: concatStrings
+        (genChannelStrings group.name group.channels);
+    in
+      # Generate all channel configurations for all groups for this account.
+      concatStringsSep "\n"
+        (mapAttrsToList (name: group: genGroupsChannels group) groups);
+
   # Given the attr set of groups, return a string which maps channels to groups
   genAccountGroups = groups:
     let
