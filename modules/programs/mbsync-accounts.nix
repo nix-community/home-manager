@@ -53,6 +53,7 @@ let
       masterPattern = mkOption {
         type = types.str;
         default = "";
+        example = "[Gmail]/Sent Mail";
         description = ''
           Regular expression pattern for which mailboxes on the remote mail server
           to sync.
@@ -65,6 +66,7 @@ let
       slavePattern = mkOption {
         type = types.str;
         default = "";
+        example = "Sent";
         description = ''
           Name for where mail coming from the master mail server will end up
           locally. The mailbox specified by the master's pattern will be placed
