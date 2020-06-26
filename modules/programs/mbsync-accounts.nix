@@ -8,9 +8,11 @@ let
 
   perAccountGroups = { name, config, ... }: {
     options = {
-      groupName = mkOption {
+      name = mkOption {
         type = types.str;
+        # Make value of name the same as the name used with the dot prefix
         default = name;
+        readOnly = true;
         description = ''
           The name of this group for this account. These names are different than
           some others, because they will hide channel names that are the same.
@@ -18,7 +20,7 @@ let
       };
 
       channels = mkOption {
-        type = types.listOf (types.submodule groupChannel);
+        type = types.attrsOf (types.submodule channel);
         default = { };
         description = ''
           List of channels that should be grouped together into this group. When
@@ -33,11 +35,12 @@ let
   };
 
   # Options for configuring channel(s) that will be composed together into a group.
-  groupChannel = { config, ... }: {
+  channel = { name, config, ... }: {
     options = {
       name = mkOption {
         type = types.str;
-        default = "DEFAULT";
+        default = name;
+        readOnly = true;
         description = ''
           The unique name for THIS channel in THIS group. The group will refer to
           this channel by this name.
