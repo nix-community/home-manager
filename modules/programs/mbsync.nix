@@ -78,6 +78,27 @@ let
         Expunge = masterSlaveMapping.${mbsync.expunge};
         SyncState = "*";
       } // mbsync.extraConfig.channel) + "\n";
+  # Given the attr set of groups, return a string of channels to put into each group.
+  # Given the attr set of groups, return a string which maps channels to groups
+  genAccountGroups = groups:
+    let
+      # Given the name of the group and the attribute set of channels, make
+      # make "Channel <grpName>-<chnName>" for each channel to list os strings
+      genChannelStrings = groupName: channels: mapAttrsToList
+        (name: info: "Channel ${groupName}-${name}") channels;
+      # Take in 1 group, construct the "Group <grpName>" header, and construct
+      # each of the channels.
+      genGroupChannelString = group:
+        [("Group " + group.name)] ++
+        (genChannelStrings group.name group.channels);
+      # Given set of groups, generates list of strings, where each string is one
+      # of the groups and its consituent channels.
+      genGroupsStrings = mapAttrsToList (name: info: concatStringsSep "\n"
+        (genGroupChannelString groups.${name})) groups;
+    in (concatStringsSep "\n\n" genGroupsStrings) # Put all strings together.
+       # 2 \n needed in concatStringsSep because last element genGroupsStrings
+       # has no \n.
+       + "\n\n"; # Additional spacing after this account's group setup.
 
   genGroupConfig = name: channels:
     let
