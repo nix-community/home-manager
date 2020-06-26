@@ -6,6 +6,48 @@ let
 
   extraConfigType = with lib.types; attrsOf (either (either str int) bool);
 
+  # Options for configuring channel(s) that will be composed together into a group.
+  groupChannel = { config, ... }: {
+    options = {
+      name = mkOption {
+        type = types.str;
+        default = "DEFAULT";
+        description = ''
+          The unique name for THIS channel in THIS group. The group will refer to
+          this channel by this name.
+          </para><para>
+          In addition, you can manually sync just this channel by specifying this
+          name to mbsync on the command line.
+        '';
+      };
+
+      masterPattern = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          Regular expression pattern for which mailboxes on the remote mail server
+          to sync.
+          </para><para>
+          If this is left as the default, then mbsync will default to the pattern
+          <literal>INBOX</literal>.
+        '';
+      };
+
+      slavePattern = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          Name for where mail coming from the master mail server will end up
+          locally. The mailbox specified by the master's pattern will be placed
+          in this directory.
+          </para><para>
+          If this is left as the default, then mbsync will default to the pattern
+          <literal>INBOX</literal>.
+        '';
+      };
+    };
+  };
+
 in {
   options.mbsync = {
     enable = mkEnableOption "synchronization using mbsync";
