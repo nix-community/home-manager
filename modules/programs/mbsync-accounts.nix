@@ -126,6 +126,20 @@ in {
       '';
     };
 
+    groups = mkOption {
+      type = types.attrsOf (types.submodule perAccountGroups);
+      default = { };
+      description = ''
+        Some email providers (Gmail) have a different directory hierarchy for
+        synchronized email messages. Namely, when using mbsync without specifying
+        a set of channels into a group, all synchronized directories end up beneath
+        the <literal>[Gmail]/</literal> directory.
+        </para><para>
+        This option allows you to specify a group, and subsequently channels that
+        will allow you to sync your mail into an arbitrary hierarchy.
+      '';
+    };
+
     extraConfig.channel = mkOption {
       type = extraConfigType;
       default = { };
