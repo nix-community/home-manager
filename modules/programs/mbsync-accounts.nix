@@ -1,10 +1,36 @@
-{ lib, ... }:
+{ config, lib, ... }:
 
 with lib;
 
 let
 
   extraConfigType = with lib.types; attrsOf (either (either str int) bool);
+
+  perAccountGroups = { name, config, ... }: {
+    options = {
+      groupName = mkOption {
+        type = types.str;
+        default = name;
+        description = ''
+          The name of this group for this account. These names are different than
+          some others, because they will hide channel names that are the same.
+        '';
+      };
+
+      channels = mkOption {
+        type = types.listOf (types.submodule groupChannel);
+        default = { };
+        description = ''
+          List of channels that should be grouped together into this group. When
+          performing a synchronization, the groups are synchronized, rather than
+          the individual channels.
+          </para><para>
+          Using these channels and then grouping them together allows for you to
+          define the maildir hierarchy as you see fit.
+        '';
+      };
+    };
+  };
 
   # Options for configuring channel(s) that will be composed together into a group.
   groupChannel = { config, ... }: {
