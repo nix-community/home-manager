@@ -70,8 +70,8 @@ let
       SubFolders = "Verbatim";
     } // optionalAttrs (mbsync.flatten != null) { Flatten = mbsync.flatten; }
     // mbsync.extraConfig.local) + "\n"
-    + genGroupChannelConfig name mbsync.groups
-    + genAccountGroups mbsync.groups;
+    + genChannels account;
+
   genChannels = account:
     with account;
     if mbsync.groups == {} then
