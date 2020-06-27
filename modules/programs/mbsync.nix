@@ -130,7 +130,8 @@ let
     in
       # Generate all channel configurations for all groups for this account.
       concatStringsSep "\n"
-        (mapAttrsToList (name: group: genGroupsChannels group) groups);
+        (filter (s: s != "")
+          (mapAttrsToList (name: group: genGroupsChannels group) groups));
 
   # Given the attr set of groups, return a string which maps channels to groups
   genAccountGroups = groups:
