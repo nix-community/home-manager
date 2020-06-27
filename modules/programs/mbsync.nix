@@ -69,16 +69,10 @@ let
       Inbox = "${maildir.absPath}/${folders.inbox}";
       SubFolders = "Verbatim";
     } // optionalAttrs (mbsync.flatten != null) { Flatten = mbsync.flatten; }
-      // mbsync.extraConfig.local) + "\n" + genSection "Channel ${name}" ({
-        Master = ":${name}-remote:";
-        Slave = ":${name}-local:";
-        Patterns = mbsync.patterns;
-        Create = masterSlaveMapping.${mbsync.create};
-        Remove = masterSlaveMapping.${mbsync.remove};
-        Expunge = masterSlaveMapping.${mbsync.expunge};
-        SyncState = "*";
-      } // mbsync.extraConfig.channel) + "\n";
-  # Given the attr set of groups, return a string of channels to put into each group.
+    // mbsync.extraConfig.local) + "\n"
+    + genGroupChannelConfig name mbsync.groups
+    + genAccountGroups mbsync.groups;
+
   # Given the attr set of groups, return a string of channels that will direct
   # mail to the proper directories, according to the pattern used in channel's
   # master pattern definition.
