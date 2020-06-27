@@ -76,6 +76,19 @@ let
           <literal>INBOX</literal>.
         '';
       };
+
+      patterns = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = [ "INBOX" ];
+        description = ''
+          Instead of synchronizing <emphasis>just</emphasis> the mailboxes that
+          match the <literal>masterPattern</literal>, use it as a prefix which is
+          not matched against the patterns, and is not affected by mailbox list
+          overrides.
+        '';
+      };
+
     };
   };
 
