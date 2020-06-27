@@ -179,6 +179,20 @@ in {
       '';
     };
 
+    extraConfig.channel = mkOption {
+      type = extraConfigType;
+      default = { };
+      example = literalExample ''
+        {
+          MaxMessages = 10000;
+          MaxSize = "1m";
+        };
+      '';
+      description = ''
+        Per channel extra configuration.
+      '';
+    };
+
     extraConfig.local = mkOption {
       type = extraConfigType;
       default = { };
