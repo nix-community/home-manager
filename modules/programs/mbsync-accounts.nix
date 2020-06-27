@@ -55,8 +55,10 @@ let
         default = "";
         example = "[Gmail]/Sent Mail";
         description = ''
-          Regular expression pattern for which mailboxes on the remote mail server
-          to sync.
+          IMAP4 patterns for which mailboxes on the remote mail server to sync.
+          If <literal>Patterns</literal> are specified, <literal>masterPattern</literal>
+          is interpreted as a prefix which is not matched against the patterns,
+          and is not affected by mailbox list overrides.
           </para><para>
           If this is left as the default, then mbsync will default to the pattern
           <literal>INBOX</literal>.
