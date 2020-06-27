@@ -125,7 +125,7 @@ let
         (mapAttrsToList (channelName: info: genChannelString groupName info) channels);
       # Given a group, return a string that configures all the channels within
       # the group.
-      genGroupsChannels = group: concatStrings
+      genGroupsChannels = group: concatStringsSep "\n"
         (genChannelStrings group.name group.channels);
     in
       # Generate all channel configurations for all groups for this account.
