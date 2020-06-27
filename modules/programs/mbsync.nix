@@ -99,8 +99,8 @@ let
         + "\n";
       # Given the group name, and a attr set of channels within that group,
       # Generate a list of strings for each channels' configuration.
-      genChannelStrings = groupName: channels:
-        mapAttrsToList (channelName: info: genChannelString groupName info) channels;
+      genChannelStrings = groupName: channels: optionals (channels != { })
+        (mapAttrsToList (channelName: info: genChannelString groupName info) channels);
       # Given a group, return a string that configures all the channels within
       # the group.
       genGroupsChannels = group: concatStrings
@@ -117,11 +117,11 @@ let
       # make "Channel <grpName>-<chnName>" for each channel to list os strings
       genChannelStrings = groupName: channels: mapAttrsToList
         (name: info: "Channel ${groupName}-${name}") channels;
-      # Take in 1 group, construct the "Group <grpName>" header, and construct
-      # each of the channels.
-      genGroupChannelString = group:
-        [("Group " + group.name)] ++
-        (genChannelStrings group.name group.channels);
+      # Take in 1 group, construct the "Group <grpName>" header, and if the group
+      # is NOT empty, construct each of the channels.
+      genGroupChannelString = group: optionals (groups != { })
+        ([("Group " + group.name)] ++
+         (genChannelStrings group.name group.channels));
       # Given set of groups, generates list of strings, where each string is one
       # of the groups and its consituent channels.
       genGroupsStrings = mapAttrsToList (name: info: concatStringsSep "\n"
