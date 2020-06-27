@@ -8,6 +8,10 @@ with lib;
   config = {
     programs.mbsync = {
       enable = true;
+      # programs.mbsync.groups and
+      # accounts.email.accounts.<name>.mbsync.groups should NOT be used at the
+      # same time.
+      # If they are, then the new version will take precendence.
       groups.inboxes = {
         "hm@example.com" = [ "Inbox1" "Inbox2" ];
         hm-account = [ "Inbox" ];
