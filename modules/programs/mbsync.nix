@@ -148,11 +148,10 @@ let
       # Given set of groups, generates list of strings, where each string is one
       # of the groups and its consituent channels.
       genGroupsStrings = mapAttrsToList (name: info: concatStringsSep "\n"
-        (genGroupChannelString groups.${name})) groups;
-    in (concatStringsSep "\n\n" genGroupsStrings) # Put all strings together.
-       # 2 \n needed in concatStringsSep because last element genGroupsStrings
-       # has no \n.
-       + "\n\n"; # Additional spacing after this account's group setup.
+          (genGroupChannelString groups.${name})) groups;
+    in concatStringsSep "\n\n"
+      (filter (s: s != "") genGroupsStrings) # filter for the cases of empty groups
+    + "\n"; # Put all strings together.
 
   genGroupConfig = name: channels:
     let
