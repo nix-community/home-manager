@@ -156,7 +156,7 @@ let
   genGroupConfig = name: channels:
     let
       genGroupChannel = n: boxes: "Channel ${n}:${concatStringsSep "," boxes}";
-    in concatStringsSep "\n"
+    in "\n" + concatStringsSep "\n"
     ([ "Group ${name}" ] ++ mapAttrsToList genGroupChannel channels);
 
 in {
