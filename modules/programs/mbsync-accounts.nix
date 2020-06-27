@@ -89,6 +89,22 @@ let
         '';
       };
 
+      extraConfig = mkOption {
+        type = extraConfigType;
+        default = { };
+        example = ''
+          {
+            Create = "both";
+            CopyArrivalDate = "yes";
+            MaxMessages = 10000;
+            MaxSize = "1m";
+          }
+        '';
+        description = ''
+          Extra configuration lines to add to <emphasis>THIS</emphasis> channel's
+          configuration.
+        '';
+      };
     };
   };
 
