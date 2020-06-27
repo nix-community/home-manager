@@ -15,9 +15,52 @@ with lib;
     };
 
     accounts.email.accounts = {
-      "hm@example.com".mbsync = { enable = true; };
+      "hm@example.com".mbsync = {
+        enable = true;
+        groups.inboxes = {
+          channels = {
+            inbox1 = {
+              masterPattern = "Inbox1";
+              slavePattern = "Inboxes";
+            };
+            inbox2 = {
+              masterPattern = "Inbox2";
+              slavePattern = "Inboxes";
+            };
+          };
+        };
+      };
 
-      hm-account.mbsync = { enable = true; };
+      hm-account.mbsync = {
+        enable = true;
+        groups.hm-account = {
+          channels.earlierPatternMatch = {
+            masterPattern = "Label";
+            slavePattern = "SomethingUnderLabel";
+            patterns = [ "ThingUnderLabel" "!NotThisMaildirThough" "\"[Weird] Label?\"" ];
+          };
+          channels.inbox = {
+            masterPattern = "Inbox";
+            slavePattern = "Inbox";
+          };
+          channels.strangeHostBoxName = {
+            masterPattern = "[Weird]/Label Mess";
+            slavePattern = "[AnotherWeird]/Label";
+          };
+          channels.patternMatch = {
+            masterPattern = "Label";
+            slavePattern = "SomethingUnderLabel";
+            patterns = [ "ThingUnderLabel" "!NotThisMaildirThough" "\"[Weird] Label?\"" ];
+          };
+        };
+        # No group should be printed.
+        groups.emptyGroup = { };
+        # Group should be printed, but left with default channels.
+        groups.emptyChannels = {
+          channels.empty1 = { };
+          channels.empty2 = { };
+        };
+      };
     };
 
     nmt.script = ''
