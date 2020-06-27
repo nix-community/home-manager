@@ -71,6 +71,9 @@
 
 /modules/programs/matplotlib.nix                      @rprospero
 
+/modules/programs/mbsync.nix                          @KarlJoad
+/tests/modules/programs/mbsync                        @KarlJoad
+
 /modules/programs/mpv.nix                             @tadeokondrak
 
 /modules/programs/ne.nix                              @cwyc

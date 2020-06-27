@@ -159,6 +159,8 @@ let
     ([ "Group ${name}" ] ++ mapAttrsToList genGroupChannel channels);
 
 in {
+  meta.maintainers = [ maintainers.KarlJoad ];
+
   options = {
     programs.mbsync = {
       enable = mkEnableOption "mbsync IMAP4 and Maildir mailbox synchronizer";
