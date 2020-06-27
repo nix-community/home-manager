@@ -73,6 +73,21 @@ let
     + genGroupChannelConfig name mbsync.groups
     + genAccountGroups mbsync.groups;
 
+  # Used when no channels are specified for this account. This will create a
+  # single channel for the entire account that is then further refined within
+  # the Group for synchronization.
+  genAccountWideChannel = account:
+    with account;
+    genSection "Channel ${name}" ({
+      Master = ":${name}-remote:";
+      Slave = ":${name}-local:";
+      Patterns = mbsync.patterns;
+      Create = masterSlaveMapping.${mbsync.create};
+      Remove = masterSlaveMapping.${mbsync.remove};
+      Expunge = masterSlaveMapping.${mbsync.expunge};
+      SyncState = "*";
+    } // mbsync.extraConfig.channel) + "\n";
+
   # Given the attr set of groups, return a string of channels that will direct
   # mail to the proper directories, according to the pattern used in channel's
   # master pattern definition.
