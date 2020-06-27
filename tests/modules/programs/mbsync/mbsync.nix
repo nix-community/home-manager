@@ -41,7 +41,11 @@ with lib;
           channels.earlierPatternMatch = {
             masterPattern = "Label";
             slavePattern = "SomethingUnderLabel";
-            patterns = [ "ThingUnderLabel" "!NotThisMaildirThough" "\"[Weird] Label?\"" ];
+            patterns = [
+              "ThingUnderLabel"
+              "!NotThisMaildirThough"
+              ''"[Weird] Label?"''
+            ];
           };
           channels.inbox = {
             masterPattern = "Inbox";
@@ -54,7 +58,11 @@ with lib;
           channels.patternMatch = {
             masterPattern = "Label";
             slavePattern = "SomethingUnderLabel";
-            patterns = [ "ThingUnderLabel" "!NotThisMaildirThough" "\"[Weird] Label?\"" ];
+            patterns = [
+              "ThingUnderLabel"
+              "!NotThisMaildirThough"
+              ''"[Weird] Label?"''
+            ];
           };
         };
         # No group should be printed.

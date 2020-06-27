@@ -69,12 +69,11 @@ let
       Inbox = "${maildir.absPath}/${folders.inbox}";
       SubFolders = "Verbatim";
     } // optionalAttrs (mbsync.flatten != null) { Flatten = mbsync.flatten; }
-    // mbsync.extraConfig.local) + "\n"
-    + genChannels account;
+      // mbsync.extraConfig.local) + "\n" + genChannels account;
 
   genChannels = account:
     with account;
-    if mbsync.groups == {} then
+    if mbsync.groups == { } then
       genAccountWideChannel account
     else
       genGroupChannelConfig name mbsync.groups + "\n"
@@ -108,49 +107,49 @@ let
           hasSpace = v: builtins.match ".* .*" v != null;
           # Given a list of patterns, will return the string requested.
           # Only prints if the pattern is NOT the empty list, the default.
-          genChannelPatterns = patterns: if (length patterns) != 0 then
-            "Pattern " + concatStringsSep " "
-              (map (pat: if hasSpace pat then escapeValue pat else pat) patterns)
-            + "\n"
-          else "";
-        in
-        genSection "Channel ${groupName}-${channel.name}" ({
+          genChannelPatterns = patterns:
+            if (length patterns) != 0 then
+              "Pattern " + concatStringsSep " "
+              (map (pat: if hasSpace pat then escapeValue pat else pat)
+                patterns) + "\n"
+            else
+              "";
+        in genSection "Channel ${groupName}-${channel.name}" ({
           Master = ":${storeName}-remote:${channel.masterPattern}";
           Slave = ":${storeName}-local:${channel.slavePattern}";
-        } // channel.extraConfig)
-        + genChannelPatterns channel.patterns;
+        } // channel.extraConfig) + genChannelPatterns channel.patterns;
       # Given the group name, and a attr set of channels within that group,
       # Generate a list of strings for each channels' configuration.
-      genChannelStrings = groupName: channels: optionals (channels != { })
-        (mapAttrsToList (channelName: info: genChannelString groupName info) channels);
+      genChannelStrings = groupName: channels:
+        optionals (channels != { })
+        (mapAttrsToList (channelName: info: genChannelString groupName info)
+          channels);
       # Given a group, return a string that configures all the channels within
       # the group.
-      genGroupsChannels = group: concatStringsSep "\n"
-        (genChannelStrings group.name group.channels);
-    in
+      genGroupsChannels = group:
+        concatStringsSep "\n" (genChannelStrings group.name group.channels);
       # Generate all channel configurations for all groups for this account.
-      concatStringsSep "\n"
-        (filter (s: s != "")
-          (mapAttrsToList (name: group: genGroupsChannels group) groups));
+    in concatStringsSep "\n" (filter (s: s != "")
+      (mapAttrsToList (name: group: genGroupsChannels group) groups));
 
   # Given the attr set of groups, return a string which maps channels to groups
   genAccountGroups = groups:
     let
       # Given the name of the group and the attribute set of channels, make
       # make "Channel <grpName>-<chnName>" for each channel to list os strings
-      genChannelStrings = groupName: channels: mapAttrsToList
-        (name: info: "Channel ${groupName}-${name}") channels;
+      genChannelStrings = groupName: channels:
+        mapAttrsToList (name: info: "Channel ${groupName}-${name}") channels;
       # Take in 1 group, if the group has channels specified, construct the
       # "Group <grpName>" header and each of the channels.
-      genGroupChannelString = group: flatten (optionals (group.channels != { })
-        (["Group ${group.name}"] ++
-         (genChannelStrings group.name group.channels)));
+      genGroupChannelString = group:
+        flatten (optionals (group.channels != { }) ([ "Group ${group.name}" ]
+          ++ (genChannelStrings group.name group.channels)));
       # Given set of groups, generates list of strings, where each string is one
       # of the groups and its consituent channels.
-      genGroupsStrings = mapAttrsToList (name: info: concatStringsSep "\n"
-          (genGroupChannelString groups.${name})) groups;
-    in concatStringsSep "\n\n"
-      (filter (s: s != "") genGroupsStrings) # filter for the cases of empty groups
+      genGroupsStrings = mapAttrsToList (name: info:
+        concatStringsSep "\n" (genGroupChannelString groups.${name})) groups;
+    in concatStringsSep "\n\n" (filter (s: s != "")
+      genGroupsStrings) # filter for the cases of empty groups
     + "\n"; # Put all strings together.
 
   genGroupConfig = name: channels:
@@ -226,10 +225,11 @@ in {
       accountsConfig = map genAccountConfig mbsyncAccounts;
       # Only generate this kind of Group configuration if there are ANY accounts
       # that do NOT have a per-account groups/channels option(s) specified.
-      groupsConfig = if any (account: account.mbsync.groups == { }) mbsyncAccounts then
-        mapAttrsToList genGroupConfig cfg.groups
-                     else
-                       [];
+      groupsConfig =
+        if any (account: account.mbsync.groups == { }) mbsyncAccounts then
+          mapAttrsToList genGroupConfig cfg.groups
+        else
+          [ ];
     in ''
       # Generated by Home Manager.
 
