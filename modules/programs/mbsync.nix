@@ -109,16 +109,16 @@ let
           # Given a list of patterns, will return the string requested.
           # Only prints if the pattern is NOT the empty list, the default.
           genChannelPatterns = patterns: if (length patterns) != 0 then
-            "Pattern " + concatStringsSep " " (map
-              (pat: if hasSpace pat then escapeValue pat else pat) patterns) + "\n"
+            "Pattern " + concatStringsSep " "
+              (map (pat: if hasSpace pat then escapeValue pat else pat) patterns)
+            + "\n"
           else "";
         in
         genSection "Channel ${groupName}-${channel.name}" ({
           Master = ":${storeName}-remote:${channel.masterPattern}";
           Slave = ":${storeName}-local:${channel.slavePattern}";
         } // channel.extraConfig)
-        + genChannelPatterns channel.patterns
-        + "\n";
+        + genChannelPatterns channel.patterns;
       # Given the group name, and a attr set of channels within that group,
       # Generate a list of strings for each channels' configuration.
       genChannelStrings = groupName: channels: optionals (channels != { })
