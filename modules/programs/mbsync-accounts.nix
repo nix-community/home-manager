@@ -165,6 +165,9 @@ in {
     groups = mkOption {
       type = types.attrsOf (types.submodule perAccountGroups);
       default = { };
+      # The default cannot actually be empty, but contains an attribute set where
+      # the channels set is empty. If a group is specified, then a name is given,
+      # creating the attribute set.
       description = ''
         Some email providers (Gmail) have a different directory hierarchy for
         synchronized email messages. Namely, when using mbsync without specifying
