@@ -87,10 +87,22 @@ let
       # Given the name of the group this channel is part of and the channel
       # itself, generate the string for the desired configuration.
       genChannelString = groupName: channel:
+        let
+          escapeValue = escape [ ''\"'' ];
+          hasSpace = v: builtins.match ".* .*" v != null;
+          # Given a list of patterns, will return the string requested.
+          # Only prints if the pattern is NOT the empty list, the default.
+          genChannelPatterns = patterns: if (length patterns) != 0 then
+            "Pattern " + concatStringsSep " " (map
+              (pat: if hasSpace pat then escapeValue pat else pat) patterns) + "\n"
+          else "";
+        in
         genSection "Channel ${groupName}-${channel.name}" ({
           Master = ":${storeName}-remote:${channel.masterPattern}";
           Slave = ":${storeName}-local:${channel.slavePattern}";
-        }) + "\n";
+        } // channel.extraConfig)
+        + genChannelPatterns channel.patterns
+        + "\n";
       # Given the group name, and a attr set of channels within that group,
       # Generate a list of strings for each channels' configuration.
       genChannelStrings = groupName: channels:
