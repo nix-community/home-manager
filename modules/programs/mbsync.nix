@@ -139,11 +139,11 @@ let
       # make "Channel <grpName>-<chnName>" for each channel to list os strings
       genChannelStrings = groupName: channels: mapAttrsToList
         (name: info: "Channel ${groupName}-${name}") channels;
-      # Take in 1 group, construct the "Group <grpName>" header, and if the group
-      # is NOT empty, construct each of the channels.
-      genGroupChannelString = group: optionals (groups != { })
-        ([("Group " + group.name)] ++
-         (genChannelStrings group.name group.channels));
+      # Take in 1 group, if the group has channels specified, construct the
+      # "Group <grpName>" header and each of the channels.
+      genGroupChannelString = group: flatten (optionals (group.channels != { })
+        (["Group ${group.name}"] ++
+         (genChannelStrings group.name group.channels)));
       # Given set of groups, generates list of strings, where each string is one
       # of the groups and its consituent channels.
       genGroupsStrings = mapAttrsToList (name: info: concatStringsSep "\n"
