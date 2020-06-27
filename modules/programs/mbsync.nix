@@ -72,6 +72,13 @@ let
     // mbsync.extraConfig.local) + "\n"
     + genGroupChannelConfig name mbsync.groups
     + genAccountGroups mbsync.groups;
+  genChannels = account:
+    with account;
+    if mbsync.groups == {} then
+      genAccountWideChannel account
+    else
+      genGroupChannelConfig name mbsync.groups + "\n"
+      + genAccountGroups mbsync.groups;
 
   # Used when no channels are specified for this account. This will create a
   # single channel for the entire account that is then further refined within
