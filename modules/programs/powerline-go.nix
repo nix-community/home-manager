@@ -110,7 +110,7 @@ in {
     programs.bash.initExtra = ''
       function _update_ps1() {
         local old_exit_status=$?
-        PS1="$(${pkgs.powerline-go}/bin/powerline-go -error $? ${commandLineArguments})"
+        PS1="$(${pkgs.powerline-go}/bin/powerline-go -error $old_exit_status ${commandLineArguments})"
         ${cfg.extraUpdatePS1}
         return $old_exit_status
       }

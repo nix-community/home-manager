@@ -1604,6 +1604,14 @@ in
           A new module is available: 'programs.ne'
         '';
       }
+
+      {
+        time = "2020-06-29T05:23:24+00:00";
+        condition = config.programs.powerline-go.enable;
+        message = ''
+          Fixed a bug where powerline-go would never show the exit status of the previous command.
+        '';
+      }
     ];
   };
 }
