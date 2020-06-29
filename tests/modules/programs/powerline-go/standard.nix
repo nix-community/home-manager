@@ -22,7 +22,7 @@ with lib;
       assertFileExists home-files/.bashrc
       assertFileContains \
         home-files/.bashrc \
-        '/bin/powerline-go -error $? -modules nix-shell -newline -path-aliases \~/project/foo=prj-foo -ignore-repos /home/me/project1,/home/me/project2'
+        '/bin/powerline-go -error $old_exit_status -modules nix-shell -newline -path-aliases \~/project/foo=prj-foo -ignore-repos /home/me/project1,/home/me/project2'
     '';
   };
 }
