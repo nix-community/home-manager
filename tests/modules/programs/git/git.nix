@@ -60,7 +60,15 @@ in {
         lfs.enable = true;
         delta = {
           enable = true;
-          options = [ "--dark" ];
+          options = {
+            features = "decorations";
+            whitespace-error-style = "22 reverse";
+            decorations = {
+              commit-decoration-style = "bold yellow box ul";
+              file-style = "bold yellow ul";
+              file-decoration-style = "none";
+            };
+          };
         };
       }
 
