@@ -6,6 +6,7 @@ with lib;
   config = {
     programs.alacritty = {
       enable = true;
+      package = pkgs.writeScriptBin "dummy-alacritty" "";
 
       settings = {
         window.dimensions = {
@@ -20,10 +21,6 @@ with lib;
         }];
       };
     };
-
-    nixpkgs.overlays = [
-      (self: super: { alacritty = pkgs.writeScriptBin "dummy-alacritty" ""; })
-    ];
 
     nmt.script = ''
       assertFileContent \
