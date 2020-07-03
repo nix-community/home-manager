@@ -25,4 +25,14 @@
     github = "cwyc";
     githubId = 16950437;
   };
+  svmhdvn = {
+    email = "me@svmhdvn.name";
+    name = "Siva Mahadevan";
+    github = "svmhdvn";
+    githubId = 2187906;
+    keys = [{
+      longkeyid = "ed25519/0xF1299E0B6ED2B95B";
+      fingerprint = "5F09 212B 063A E019 946D  D00F F129 9E0B 6ED2 B95B";
+    }];
+  };
 }
