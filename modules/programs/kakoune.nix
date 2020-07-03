@@ -97,16 +97,7 @@ let
   keyMapping = types.submodule {
     options = {
       mode = mkOption {
-        type = types.enum [
-          "insert"
-          "normal"
-          "prompt"
-          "menu"
-          "user"
-          "goto"
-          "view"
-          "object"
-        ];
+        type = types.str;
         example = "user";
         description = ''
           The mode in which the mapping takes effect.
@@ -543,6 +534,21 @@ let
         }"
       ];
 
+    userModeString = mode:
+      optionalString (!builtins.elem mode [
+        "insert"
+        "normal"
+        "prompt"
+        "menu"
+        "user"
+        "goto"
+        "view"
+        "object"
+      ]) "try %{declare-user-mode ${mode}}";
+
+    userModeStrings = map userModeString
+      (lists.unique (map (km: km.mode) cfg.config.keyMappings));
+
     keyMappingString = km:
       concatStringsSep " " [
         "map global"
@@ -592,7 +598,8 @@ let
         ++ [ "# UI options" ]
         ++ optional (ui != null) "set-option global ui_options ${uiOptions}"
 
-        ++ [ "# Key mappings" ] ++ map keyMappingString keyMappings
+        ++ [ "# User modes" ] ++ userModeStrings ++ [ "# Key mappings" ]
+        ++ map keyMappingString keyMappings
 
         ++ [ "# Hooks" ] ++ map hookString hooks);
   in pkgs.writeText "kakrc"
