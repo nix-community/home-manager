@@ -1,15 +1,25 @@
+### Description
+
 <!--
 
-  Please fill the description and checklist to the best of your
-  ability.
+Please provide a brief description of your change.
 
 -->
 
-### Description
-
-
-
 ### Checklist
+
+<!--
+
+Please go through the following checklist before opening a non-WIP
+pull-request.
+
+Also make sure to read the guidelines found at
+
+  https://github.com/rycee/home-manager/blob/master/doc/contributing.adoc#sec-guidelines
+
+-->
+
+- [ ] Change is backwards compatible.
 
 - [ ] Code formatted with `./format`.
 
@@ -25,7 +35,7 @@
     {long description}
     ```
 
-    See [CONTRIBUTING](https://github.com/rycee/home-manager/blob/master/CONTRIBUTING.md#commits) for more information and [recent commit messages](https://github.com/rycee/home-manager/commits/master) for examples.
+    See [CONTRIBUTING](https://github.com/rycee/home-manager/blob/master/doc/contributing.adoc#sec-commit-style) for more information and [recent commit messages](https://github.com/rycee/home-manager/commits/master) for examples.
 
 - If this PR adds a new module
 

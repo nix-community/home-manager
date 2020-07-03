@@ -43,6 +43,10 @@ in {
   options = {
     programs.lieer.enable =
       mkEnableOption "lieer Gmail synchronization for notmuch";
+
+    accounts.email.accounts = mkOption {
+      type = with types; attrsOf (submodule (import ./lieer-accounts.nix));
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [

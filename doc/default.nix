@@ -1,6 +1,7 @@
-{
+{ pkgs
+
 # Note, this should be "the standard library" + HM extensions.
-lib, pkgs }:
+, lib ? import ../modules/lib/stdlib-extended.nix pkgs.lib }:
 
 let
 
@@ -8,8 +9,8 @@ let
     name = "nmd";
     owner = "rycee";
     repo = "nmd";
-    rev = "701d981f0ab979b79143e4f3b52e3b58836d4f6e";
-    sha256 = "0wwa5ivrvqy4izj2zwn9vzr44n54lz3kbbj4d6f0gjriab07dwd6";
+    rev = "2398aa79ab12aa7aba14bc3b08a6efd38ebabdc5";
+    sha256 = "0yxb48afvccn8vvpkykzcr4q1rgv8jsijqncia7a5ffzshcrwrnh";
   };
 
   nmd = import nmdSrc { inherit lib pkgs; };

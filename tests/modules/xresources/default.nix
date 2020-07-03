@@ -1,1 +1,4 @@
-{ xresources = ./xresources.nix; }
+{
+  xresources = ./xresources.nix;
+  xresources-empty-properties = ./empty.nix;
+}

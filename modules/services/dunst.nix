@@ -45,7 +45,7 @@ let
   };
 
   hicolorTheme = {
-    package = pkgs.hicolor_icon_theme;
+    package = pkgs.hicolor-icon-theme;
     name = "hicolor";
     size = "32x32";
   };

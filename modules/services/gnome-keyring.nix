@@ -36,7 +36,7 @@ in {
           args = concatStringsSep " " ([ "--start" "--foreground" ]
             ++ optional (cfg.components != [ ])
             ("--components=" + concatStringsSep "," cfg.components));
-        in "${pkgs.gnome3.gnome_keyring}/bin/gnome-keyring-daemon ${args}";
+        in "${pkgs.gnome3.gnome-keyring}/bin/gnome-keyring-daemon ${args}";
         Restart = "on-abort";
       };
 

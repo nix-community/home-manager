@@ -16,6 +16,11 @@ This project is under development. I personally use it to manage
 several user configurations but it may fail catastrophically for you.
 So beware!
 
+Before using Home Manager you should be comfortable using the Nix
+language and the various tools in the Nix ecosystem. Reading through
+the [Nix Pills][] document is a good way to familiarize yourself with
+them.
+
 In some cases Home Manager cannot detect whether it will overwrite a
 previous manual configuration. For example, the Gnome Terminal module
 will write to your dconf store and cannot tell whether a configuration
@@ -149,7 +154,13 @@ To satisfy the above setup we should elaborate the
 
   programs.firefox = {
     enable = true;
-    enableIcedTea = true;
+    profiles = {
+      myprofile = {
+        settings = {
+          "general.smoothScroll" = false;
+        };
+      };
+    };
   };
 
   services.gpg-agent = {
@@ -318,3 +329,4 @@ an issue.
 [freenode]: https://freenode.net/
 [channel logs]: https://logs.nix.samueldr.com/home-manager/
 [samueldr]: https://github.com/samueldr/
+[Nix Pills]: https://nixos.org/nixos/nix-pills/

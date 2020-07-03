@@ -1,0 +1,12 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=@runtimeShell@ -l -c "@emacs@/bin/emacs --fg-daemon"
+ExecStop=@emacs@/bin/emacsclient --eval '(kill-emacs 0)'
+Restart=on-failure
+
+[Unit]
+Description=Emacs: the extensible, self-documenting text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+X-RestartIfChanged=false

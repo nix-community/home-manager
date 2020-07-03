@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 function setupVars() {
-    local profilesPath="/nix/var/nix/profiles/per-user/$USER"
-    local gcPath="/nix/var/nix/gcroots/per-user/$USER"
+    local nixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
+    local profilesPath="$nixStateDir/profiles/per-user/$USER"
+    local gcPath="$nixStateDir/gcroots/per-user/$USER"
 
     genProfilePath="$profilesPath/home-manager"
     newGenPath="@GENERATION_DIR@";

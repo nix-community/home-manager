@@ -101,9 +101,29 @@ in
           ]
         '';
         description = ''
-          List of Firefox add-on packages to install. Note, it is
-          necessary to manually enable these extensions inside Firefox
-          after the first installation.
+          List of Firefox add-on packages to install. Some
+          pre-packaged add-ons are accessible from NUR,
+          <link xlink:href="https://github.com/nix-community/NUR"/>.
+          Once you have NUR installed run
+
+          <screen language="console">
+            <prompt>$</prompt> <userinput>nix-env -f '&lt;nixpkgs&gt;' -qaP -A nur.repos.rycee.firefox-addons</userinput>
+          </screen>
+
+          to list the available Firefox add-ons.
+
+          </para><para>
+
+          Note that it is necessary to manually enable these
+          extensions inside Firefox after the first installation.
+
+          </para><para>
+
+          Extensions listed here will only be available in Firefox
+          profiles managed through the
+          <link linkend="opt-programs.firefox.profiles">programs.firefox.profiles</link>
+          option. This is due to recent changes in the way Firefox
+          handles extension side-loading.
         '';
       };
 

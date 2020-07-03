@@ -172,7 +172,7 @@ in {
     xdg.configFile."broot/conf.toml".source = configFile brootConf;
 
     # Dummy file to prevent broot from trying to reinstall itself
-    xdg.configFile."broot/launcher/installed".text = "";
+    xdg.configFile."broot/launcher/installed-v1".text = "";
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
       # Using mkAfter to make it more likely to appear after other

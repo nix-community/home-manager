@@ -22,6 +22,8 @@
 
 /modules/misc/tmpfiles.nix                            @dawidsowa
 
+/modules/misc/vte.nix                                 @rycee
+
 /modules/misc/xdg-mime-apps.nix                       @pacien
 
 /modules/misc/xdg-user-dirs.nix                       @pacien
@@ -73,6 +75,9 @@
 
 /modules/programs/mpv.nix                             @tadeokondrak
 
+/modules/programs/ne.nix                              @cwyc
+/tests/modules/programs/ne                            @cwyc
+
 /modules/programs/noti.nix                            @marsam
 
 /modules/programs/obs-studio.nix                      @adisbladis
@@ -87,6 +92,8 @@
 
 /modules/programs/pidgin.nix                          @rycee
 
+/modules/programs/powerline-go.nix                    @DamienCassou
+
 /modules/programs/rtorrent.nix                        @marsam
 
 /modules/programs/ssh.nix                             @rycee
@@ -99,11 +106,19 @@
 
 /modules/programs/zathura.nix                         @rprospero
 
+/modules/programs/zoxide.nix                          @marsam
+
 /modules/services/cbatticon.nix                       @pmiddend
+
+/modules/services/clipmenu.nix                        @DamienCassou
 
 /modules/services/dunst.nix                           @rycee
 
+/modules/services/emacs.nix                           @tadfisher
+
 /modules/services/flameshot.nix                       @moredhel
+
+/modules/services/fluidsynth.nix                      @Valodim
 
 /modules/services/gnome-keyring.nix                   @rycee
 
@@ -158,6 +173,8 @@
 /modules/services/udiskie.nix                         @rycee
 
 /modules/services/unison.nix                          @pacien
+
+/modlues/services/window-managers/i3-sway/sway.nix    @alexarice
 
 /modules/services/xcape.nix                           @nickhu
 

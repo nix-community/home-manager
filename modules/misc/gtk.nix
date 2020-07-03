@@ -11,21 +11,22 @@ let
   toGtk3Ini = generators.toINI {
     mkKeyValue = key: value:
       let
-        value' =
-          if isBool value then (if value then "true" else "false")
-          else toString value;
-      in
-        "${key}=${value'}";
+        value' = if isBool value then
+          (if value then "true" else "false")
+        else
+          toString value;
+      in "${key}=${value'}";
   };
 
   formatGtk2Option = n: v:
     let
-      v' =
-        if isBool v then (if v then "true" else "false")
-        else if isString v then "\"${v}\""
-        else toString v;
-    in
-      "${n} = ${v'}";
+      v' = if isBool v then
+        (if v then "true" else "false")
+      else if isString v then
+        ''"${v}"''
+      else
+        toString v;
+    in "${n} = ${v'}";
 
   themeType = types.submodule {
     options = {
@@ -48,13 +49,11 @@ let
     };
   };
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   imports = [
-    (mkRemovedOptionModule ["gtk" "gtk3" "waylandSupport"] ''
+    (mkRemovedOptionModule [ "gtk" "gtk3" "waylandSupport" ] ''
       This options is not longer needed and can be removed.
     '')
   ];
@@ -105,8 +104,11 @@ in
 
         extraConfig = mkOption {
           type = with types; attrsOf (either bool (either int str));
-          default = {};
-          example = { gtk-cursor-blink = false; gtk-recent-files-limit = 20; };
+          default = { };
+          example = {
+            gtk-cursor-blink = false;
+            gtk-recent-files-limit = 20;
+          };
           description = ''
             Extra configuration options to add to
             <filename>~/.config/gtk-3.0/settings.ini</filename>.
@@ -125,52 +127,38 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    let
-      ini =
-        optionalAttrs (cfg.font != null)
-          { gtk-font-name = cfg.font.name; }
-        //
-        optionalAttrs (cfg.theme != null)
-          { gtk-theme-name = cfg.theme.name; }
-        //
-        optionalAttrs (cfg.iconTheme != null)
-          { gtk-icon-theme-name = cfg.iconTheme.name; };
+  config = mkIf cfg.enable (let
+    ini = optionalAttrs (cfg.font != null) { gtk-font-name = cfg.font.name; }
+      // optionalAttrs (cfg.theme != null) { gtk-theme-name = cfg.theme.name; }
+      // optionalAttrs (cfg.iconTheme != null) {
+        gtk-icon-theme-name = cfg.iconTheme.name;
+      };
 
-      dconfIni =
-        optionalAttrs (cfg.font != null)
-          { font-name = cfg.font.name; }
-        //
-        optionalAttrs (cfg.theme != null)
-          { gtk-theme = cfg.theme.name; }
-        //
-        optionalAttrs (cfg.iconTheme != null)
-          { icon-theme = cfg.iconTheme.name; };
+    dconfIni = optionalAttrs (cfg.font != null) { font-name = cfg.font.name; }
+      // optionalAttrs (cfg.theme != null) { gtk-theme = cfg.theme.name; }
+      // optionalAttrs (cfg.iconTheme != null) {
+        icon-theme = cfg.iconTheme.name;
+      };
 
-      optionalPackage = opt:
-        optional (opt != null && opt.package != null) opt.package;
-    in
-      {
-        home.packages =
-          optionalPackage cfg.font
-          ++ optionalPackage cfg.theme
-          ++ optionalPackage cfg.iconTheme;
+    optionalPackage = opt:
+      optional (opt != null && opt.package != null) opt.package;
+  in {
+    home.packages = optionalPackage cfg.font ++ optionalPackage cfg.theme
+      ++ optionalPackage cfg.iconTheme;
 
-        home.file.".gtkrc-2.0".text =
-          concatStringsSep "\n" (
-            mapAttrsToList formatGtk2Option ini
-          ) + "\n" + cfg2.extraConfig;
+    home.file.".gtkrc-2.0".text =
+      concatStringsSep "\n" (mapAttrsToList formatGtk2Option ini) + "\n"
+      + cfg2.extraConfig;
 
-        xdg.configFile."gtk-3.0/settings.ini".text =
-          toGtk3Ini { Settings = ini // cfg3.extraConfig; };
+    xdg.configFile."gtk-3.0/settings.ini".text =
+      toGtk3Ini { Settings = ini // cfg3.extraConfig; };
 
-        xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
+    xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
 
-        xdg.configFile."gtk-3.0/bookmarks" = mkIf (cfg3.bookmarks != []) {
-          text = concatStringsSep "\n" cfg3.bookmarks;
-        };
+    xdg.configFile."gtk-3.0/bookmarks" = mkIf (cfg3.bookmarks != [ ]) {
+      text = concatStringsSep "\n" cfg3.bookmarks;
+    };
 
-        dconf.settings."org/gnome/desktop/interface" = dconfIni;
-      }
-    );
+    dconf.settings."org/gnome/desktop/interface" = dconfIni;
+  });
 }

@@ -1,0 +1,1 @@
+{ fluidsynth = import ./service.nix; }

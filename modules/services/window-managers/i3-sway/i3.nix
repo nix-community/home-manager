@@ -101,10 +101,8 @@ let
         '';
         example = literalExample ''
           let
-            modifier = xsession.windowManager.i3.config.modifier;
-          in
-
-          lib.mkOptionDefault {
+            modifier = config.xsession.windowManager.i3.config.modifier;
+          in lib.mkOptionDefault {
             "''${modifier}+Return" = "exec i3-sensible-terminal";
             "''${modifier}+Shift+q" = "kill";
             "''${modifier}+d" = "exec \${pkgs.dmenu}/bin/dmenu_run";
@@ -182,7 +180,7 @@ let
       client.placeholder ${colorSetStr colors.placeholder}
       client.background ${colors.background}
 
-      ${keybindingsStr keybindings}
+      ${keybindingsStr { inherit keybindings; }}
       ${keycodebindingsStr keycodebindings}
       ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
       ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}

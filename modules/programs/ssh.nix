@@ -143,6 +143,15 @@ let
           "Set timeout in seconds after which response will be requested.";
       };
 
+      serverAliveCountMax = mkOption {
+        type = types.ints.positive;
+        default = 3;
+        description = ''
+          Sets the number of server alive messages which may be sent
+          without SSH receiving any messages back from the server.
+        '';
+      };
+
       sendEnv = mkOption {
         type = types.listOf types.str;
         default = [];
@@ -281,7 +290,9 @@ let
     ++ optional (cf.addressFamily != null)   "  AddressFamily ${cf.addressFamily}"
     ++ optional (cf.sendEnv != [])           "  SendEnv ${unwords cf.sendEnv}"
     ++ optional (cf.serverAliveInterval != 0)
-         "  ServerAliveInterval ${toString cf.serverAliveInterval}"
+      "  ServerAliveInterval ${toString cf.serverAliveInterval}"
+    ++ optional (cf.serverAliveCountMax != 3)
+      "  ServerAliveCountMax ${toString cf.serverAliveCountMax}"
     ++ optional (cf.compression != null)     "  Compression ${yn cf.compression}"
     ++ optional (!cf.checkHostIP)            "  CheckHostIP no"
     ++ optional (cf.proxyCommand != null)    "  ProxyCommand ${cf.proxyCommand}"
@@ -322,6 +333,15 @@ in
       default = 0;
       description = ''
         Set default timeout in seconds after which response will be requested.
+      '';
+    };
+
+    serverAliveCountMax = mkOption {
+      type = types.ints.positive;
+      default = 3;
+      description = ''
+        Sets the default number of server alive messages which may be
+        sent without SSH receiving any messages back from the server.
       '';
     };
 
@@ -459,6 +479,7 @@ in
         ForwardAgent ${yn cfg.forwardAgent}
         Compression ${yn cfg.compression}
         ServerAliveInterval ${toString cfg.serverAliveInterval}
+        ServerAliveCountMax ${toString cfg.serverAliveCountMax}
         HashKnownHosts ${yn cfg.hashKnownHosts}
         UserKnownHostsFile ${cfg.userKnownHostsFile}
         ControlMaster ${cfg.controlMaster}

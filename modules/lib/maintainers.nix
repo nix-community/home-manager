@@ -19,4 +19,10 @@
     github = "owm111";
     githubId = 7798336;
   };
+  cwyc = {
+    email = "cwyc@users.noreply.github.com";
+    name = "cwyc";
+    github = "cwyc";
+    githubId = 16950437;
+  };
 }

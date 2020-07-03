@@ -143,6 +143,10 @@ in {
         };
       };
     };
+
+    accounts.email.accounts = mkOption {
+      type = with types; attrsOf (submodule (import ./notmuch-accounts.nix));
+    };
   };
 
   config = mkIf cfg.enable {

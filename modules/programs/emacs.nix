@@ -8,16 +8,12 @@ let
 
   # Copied from all-packages.nix, with modifications to support
   # overrides.
-  emacsPackages =
-    let
-      epkgs = pkgs.emacsPackagesGen cfg.package;
-    in
-      epkgs.overrideScope' cfg.overrides;
+  emacsPackages = let epkgs = pkgs.emacsPackagesFor cfg.package;
+  in epkgs.overrideScope' cfg.overrides;
+
   emacsWithPackages = emacsPackages.emacsWithPackages;
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -33,7 +29,7 @@ in
       };
 
       extraPackages = mkOption {
-        default = self: [];
+        default = self: [ ];
         type = hm.types.selectorFunction;
         defaultText = "epkgs: []";
         example = literalExample "epkgs: [ epkgs.emms epkgs.magit ]";
@@ -45,7 +41,7 @@ in
       };
 
       overrides = mkOption {
-        default = self: super: {};
+        default = self: super: { };
         type = hm.types.overlayFunction;
         defaultText = "self: super: {}";
         example = literalExample ''

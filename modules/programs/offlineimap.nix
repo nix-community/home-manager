@@ -147,6 +147,11 @@ in {
         '';
       };
     };
+
+    accounts.email.accounts = mkOption {
+      type = with types;
+        attrsOf (submodule (import ./offlineimap-accounts.nix));
+    };
   };
 
   config = mkIf cfg.enable {

@@ -49,6 +49,12 @@ let
     ".getmail/getmail${if a.primary then "rc" else a.name}";
 
 in {
+  options = {
+    accounts.email.accounts = mkOption {
+      type = with types; attrsOf (submodule (import ./getmail-accounts.nix));
+    };
+  };
+
   config = mkIf getmailEnabled {
     home.file = foldl' (a: b: a // b) { }
       (map (a: { "${renderConfigFilepath a}".text = renderAccountConfig a; })

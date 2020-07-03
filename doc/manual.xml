@@ -13,9 +13,14 @@
    Manager.
   </para>
   <para>
-   If you encounter problems or bugs then please report them on the
-   <link xlink:href="https://github.com/rycee/home-manager/issues">Home Manager
-   issue tracker</link>.
+   If you encounter problems then please reach out on the IRC channel
+   <link xlink:href="https://webchat.freenode.net/?url=irc%3A%2F%2Firc.freenode.net%2Fhome-manager">#home-manager</link>
+   hosted by <link xlink:href="https://freenode.net/">freenode</link>.
+   The <link xlink:href="https://logs.nix.samueldr.com/home-manager/">channel logs</link>
+   are hosted courtesy of <link xlink:href="https://github.com/samueldr/">samueldr</link>.
+   If your problem is caused by a bug in Home Manager then it should
+   be reported on the
+   <link xlink:href="https://github.com/rycee/home-manager/issues">Home Manager issue tracker</link>.
   </para>
   <note>
    <para>

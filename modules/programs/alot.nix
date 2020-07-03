@@ -114,106 +114,112 @@ let
   '';
 
 in {
-  options.programs.alot = {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
-      description = ''
-        Whether to enable the Alot mail user agent. Alot uses the
-        Notmuch email system and will therefore be automatically
-        enabled for each email account that is managed by Notmuch.
-      '';
-    };
+  options = {
+    programs.alot = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Whether to enable the Alot mail user agent. Alot uses the
+          Notmuch email system and will therefore be automatically
+          enabled for each email account that is managed by Notmuch.
+        '';
+      };
 
-    hooks = mkOption {
-      type = types.lines;
-      default = "";
-      description = ''
-        Content of the hooks file.
-      '';
-    };
+      hooks = mkOption {
+        type = types.lines;
+        default = "";
+        description = ''
+          Content of the hooks file.
+        '';
+      };
 
-    bindings = mkOption {
-      type = types.submodule {
-        options = {
-          global = mkOption {
-            type = types.attrsOf types.str;
-            default = { };
-            description = "Global keybindings.";
-          };
+      bindings = mkOption {
+        type = types.submodule {
+          options = {
+            global = mkOption {
+              type = types.attrsOf types.str;
+              default = { };
+              description = "Global keybindings.";
+            };
 
-          bufferlist = mkOption {
-            type = types.attrsOf types.str;
-            default = { };
-            description = "Bufferlist mode keybindings.";
-          };
+            bufferlist = mkOption {
+              type = types.attrsOf types.str;
+              default = { };
+              description = "Bufferlist mode keybindings.";
+            };
 
-          search = mkOption {
-            type = types.attrsOf types.str;
-            default = { };
-            description = "Search mode keybindings.";
-          };
+            search = mkOption {
+              type = types.attrsOf types.str;
+              default = { };
+              description = "Search mode keybindings.";
+            };
 
-          envelope = mkOption {
-            type = types.attrsOf types.str;
-            default = { };
-            description = "Envelope mode keybindings.";
-          };
+            envelope = mkOption {
+              type = types.attrsOf types.str;
+              default = { };
+              description = "Envelope mode keybindings.";
+            };
 
-          taglist = mkOption {
-            type = types.attrsOf types.str;
-            default = { };
-            description = "Taglist mode keybindings.";
-          };
+            taglist = mkOption {
+              type = types.attrsOf types.str;
+              default = { };
+              description = "Taglist mode keybindings.";
+            };
 
-          thread = mkOption {
-            type = types.attrsOf types.str;
-            default = { };
-            description = "Thread mode keybindings.";
+            thread = mkOption {
+              type = types.attrsOf types.str;
+              default = { };
+              description = "Thread mode keybindings.";
+            };
           };
         };
+        default = { };
+        description = ''
+          Keybindings.
+        '';
       };
-      default = { };
-      description = ''
-        Keybindings.
-      '';
-    };
 
-    tags = mkOption {
-      type = types.attrsOf tagSubmodule;
-      default = { };
-      description = "How to display the tags.";
-    };
-
-    settings = mkOption {
-      type = with types;
-        let primitive = either (either (either str int) bool) float;
-        in attrsOf primitive;
-      default = {
-        initial_command = "search tag:inbox AND NOT tag:killed";
-        auto_remove_unread = true;
-        handle_mouse = true;
-        prefer_plaintext = true;
+      tags = mkOption {
+        type = types.attrsOf tagSubmodule;
+        default = { };
+        description = "How to display the tags.";
       };
-      example = literalExample ''
-        {
+
+      settings = mkOption {
+        type = with types;
+          let primitive = either (either (either str int) bool) float;
+          in attrsOf primitive;
+        default = {
+          initial_command = "search tag:inbox AND NOT tag:killed";
           auto_remove_unread = true;
-          ask_subject = false;
-          thread_indent_replies = 2;
-        }
-      '';
-      description = ''
-        Configuration options added to alot configuration file.
-      '';
+          handle_mouse = true;
+          prefer_plaintext = true;
+        };
+        example = literalExample ''
+          {
+            auto_remove_unread = true;
+            ask_subject = false;
+            thread_indent_replies = 2;
+          }
+        '';
+        description = ''
+          Configuration options added to alot configuration file.
+        '';
+      };
+
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
+        description = ''
+          Extra lines added to alot configuration file.
+        '';
+      };
     };
 
-    extraConfig = mkOption {
-      type = types.lines;
-      default = "";
-      description = ''
-        Extra lines added to alot configuration file.
-      '';
+    accounts.email.accounts = mkOption {
+      type = with types; attrsOf (submodule (import ./alot-accounts.nix pkgs));
     };
   };
 

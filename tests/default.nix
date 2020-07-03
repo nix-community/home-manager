@@ -15,12 +15,16 @@ let
     inherit lib pkgs;
     check = false;
   } ++ [
-    # Fix impurities. Without these some of the user's environment
-    # will leak into the tests through `builtins.getEnv`.
     {
+      # Fix impurities. Without these some of the user's environment
+      # will leak into the tests through `builtins.getEnv`.
       xdg.enable = true;
       home.username = "hm-user";
       home.homeDirectory = "/home/hm-user";
+
+      # Avoid including documentation since this will cause
+      # unnecessary rebuilds of the tests.
+      manual.manpages.enable = false;
     }
   ];
 
@@ -40,6 +44,7 @@ import nmt {
     ./modules/programs/bash
     ./modules/programs/browserpass
     ./modules/programs/dircolors
+    ./modules/programs/direnv
     ./modules/programs/fish
     ./modules/programs/git
     ./modules/programs/gpg
@@ -48,28 +53,35 @@ import nmt {
     ./modules/programs/lf
     ./modules/programs/lieer
     ./modules/programs/mbsync
+    ./modules/programs/ne
     ./modules/programs/neomutt
     ./modules/programs/newsboat
     ./modules/programs/qutebrowser
     ./modules/programs/readline
+    ./modules/programs/powerline-go
     ./modules/programs/ssh
     ./modules/programs/starship
     ./modules/programs/texlive
     ./modules/programs/tmux
+    ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/xresources
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+    ./meta # Suffices to run on one platform.
     ./modules/misc/debug
     ./modules/misc/pam
     ./modules/misc/xdg
     ./modules/misc/xsession
     ./modules/programs/abook
+    ./modules/programs/autorandr
+    ./modules/services/emacs
     ./modules/programs/firefox
     ./modules/programs/getmail
     ./modules/services/lieer
     ./modules/programs/rofi
     ./modules/services/polybar
     ./modules/services/sxhkd
+    ./modules/services/fluidsynth
     ./modules/services/window-managers/i3
     ./modules/systemd
     ./modules/targets

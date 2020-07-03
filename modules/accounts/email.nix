@@ -374,19 +374,7 @@ in {
     };
 
     accounts = mkOption {
-      type = types.attrsOf (types.submodule ([
-        mailAccountOpts
-        (import ../programs/alot-accounts.nix pkgs)
-        (import ../programs/astroid-accounts.nix)
-        (import ../programs/getmail-accounts.nix)
-        (import ../programs/lieer-accounts.nix)
-        (import ../programs/mbsync-accounts.nix)
-        (import ../programs/msmtp-accounts.nix)
-        (import ../programs/neomutt-accounts.nix)
-        (import ../programs/notmuch-accounts.nix)
-        (import ../programs/offlineimap-accounts.nix)
-      ] ++ optionals pkgs.stdenv.hostPlatform.isLinux
-        [ (import ../services/lieer-accounts.nix) ]));
+      type = types.attrsOf (types.submodule mailAccountOpts);
       default = { };
       description = "List of email accounts.";
     };
