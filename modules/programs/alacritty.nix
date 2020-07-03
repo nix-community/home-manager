@@ -36,12 +36,21 @@ in {
           for the default configuration.
         '';
       };
+
+      package = mkOption {
+        type = types.package;
+        default = pkgs.alacritty;
+        defaultText = literalExample "pkgs.alacritty";
+        description = ''
+          The alacritty package to install. May be used to change the version.
+        '';
+      };
     };
   };
 
   config = mkMerge [
     (mkIf cfg.enable {
-      home.packages = [ pkgs.alacritty ];
+      home.packages = [ cfg.package ];
 
       xdg.configFile."alacritty/alacritty.yml" = mkIf (cfg.settings != { }) {
         text =
