@@ -228,7 +228,7 @@ in
       # running this from the NixOS module then XDG_RUNTIME_DIR is not
       # set and systemd commands will fail. We'll therefore have to
       # set it ourselves in that case.
-      home.activation.reloadSystemD = hm.dag.entryAfter ["linkGeneration"] (
+      home.activation.reloadSystemd = hm.dag.entryAfter ["linkGeneration"] (
         let
           autoReloadCmd = ''
             ${pkgs.ruby}/bin/ruby ${./systemd-activate.rb} \
