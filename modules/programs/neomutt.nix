@@ -111,7 +111,7 @@ let
     } else
       let
         smtpProto = if smtp.tls.enable then "smtps" else "smtp";
-        smtpPort = if smtp.port != null then ":${smtp.port}" else "";
+        smtpPort = if smtp.port != null then ":${toString smtp.port}" else "";
         smtpBaseUrl =
           "${smtpProto}://${escape userName}@${smtp.host}${smtpPort}";
       in {
