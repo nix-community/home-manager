@@ -32,6 +32,15 @@ programs.broot.verbs = [
 ];
 ----
 
+* The systemd activation is now handled by
+https://gitlab.com/rycee/sd-switch[sd-switch], a program that stops,
+starts, reloads, etc. systemd units as necessary to match the new Home
+Manager configuration.
++
+Since sd-switch is relatively lightweight it is always used and the
+option `systemd.user.startServices` is therefore considered obsolete
+and can be removed from your configuration.
+
 [[sec-release-21.03-state-version-changes]]
 === State Version Changes
 
