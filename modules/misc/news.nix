@@ -1619,6 +1619,21 @@ in
           A new module is available: 'services.dropbox'.
         '';
       }
+
+      {
+        time = "2020-08-03T22:34:42+00:00";
+        condition = hostPlatform.isLinux && (with config.systemd.user;
+          services != {} || sockets != {} || targets != {} || timers != {});
+        message = ''
+          The systemd activation is now handled by 'sd-switch', a program that
+          stops, starts, reloads, etc. systemd units as necessary to match the
+          new Home Manager configuration.
+
+          Since sd-switch is relatively lightweight it is always used and the
+          option 'systemd.user.startServices' is therefore considered obsolete
+          and can be removed from your configuration.
+        '';
+      }
     ];
   };
 }
