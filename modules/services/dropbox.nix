@@ -5,8 +5,7 @@ with lib;
 let
   cfg = config.services.dropbox;
   baseDir = ".dropbox-hm";
-  dropboxCmd = ''
-    ${pkgs.coreutils}/bin/env -i HOME="$HOME" ${pkgs.dropbox-cli}/bin/dropbox'';
+  dropboxCmd = "${pkgs.dropbox-cli}/bin/dropbox";
   homeBaseDir = "${config.home.homeDirectory}/${baseDir}";
 in {
   meta.maintainers = [ maintainers.eyjhb ];
@@ -28,7 +27,7 @@ in {
     home.packages = [ pkgs.dropbox-cli ];
 
     systemd.user.services.dropbox = {
-      Unit = { Description = "Starting dropbox"; };
+      Unit = { Description = "dropbox"; };
 
       Install = { WantedBy = [ "default.target" ]; };
 
@@ -43,7 +42,7 @@ in {
         ProtectSystem = "full";
         Nice = 10;
 
-        ExecReload = "${pkgs.coreutils.out}/bin/kill -HUP $MAINPID";
+        ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
         ExecStop = "${dropboxCmd} stop";
         ExecStart = let
           script = pkgs.writeShellScript "dropboxInit" ''
@@ -59,7 +58,7 @@ in {
 
     home.activation.dropbox = hm.dag.entryAfter [ "writeBoundary" ] ''
       # ensure we have the dirs we need
-      $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir $VERBOSE_ARG -p ${homeBaseDir}{config.home.homeDirectory}/${baseDir}/{.dropbox,.dropbox-dist,Dropbox}
+      $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir $VERBOSE_ARG -p ${homeBaseDir}/{.dropbox,.dropbox-dist,Dropbox}
 
       # symlink them as needed
       if [[ ! -d ${config.home.homeDirectory}/.dropbox ]]; then

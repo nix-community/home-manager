@@ -74,6 +74,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/services/dropbox
     ./modules/services/emacs
     ./modules/services/dropbox
     ./modules/programs/firefox
