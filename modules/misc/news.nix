@@ -1611,6 +1611,14 @@ in
           A new module is available: 'programs.nushell'.
         '';
       }
+
+      {
+        time = "2020-07-25T21:04:59+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.dropbox'.
+        '';
+      }
     ];
   };
 }

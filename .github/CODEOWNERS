@@ -113,6 +113,9 @@
 
 /modules/services/clipmenu.nix                        @DamienCassou
 
+/modules/services/dropbox.nix                         @eyJhb
+/tests/modules/services/dropbox                       @eyJhb
+
 /modules/services/dunst.nix                           @rycee
 
 /modules/services/emacs.nix                           @tadfisher
