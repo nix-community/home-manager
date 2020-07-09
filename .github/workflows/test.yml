@@ -16,3 +16,16 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-shell . -A install
     - run: nix-shell --pure --max-jobs 4 tests -A run.all
+  macos_perf_test:
+    runs-on: macos-latest
+    steps:
+    - name: Disable syspolicy assessments
+      run: |
+        spctl --status
+        sudo spctl --master-disable
+    - uses: actions/checkout@v2
+    - uses: cachix/install-nix-action@v10
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - run: nix-shell . -A install
+    - run: nix-shell --pure --max-jobs 4 tests -A run.all
