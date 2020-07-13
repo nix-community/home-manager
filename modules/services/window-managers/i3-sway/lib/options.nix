@@ -1,4 +1,5 @@
-{ lib, moduleName, cfg, pkgs, capitalModuleName ? moduleName, isGaps ? true }:
+{ config, lib, moduleName, cfg, pkgs, capitalModuleName ? moduleName
+, isGaps ? true }:
 
 with lib;
 
@@ -49,8 +50,23 @@ let
   };
 
   barModule = types.submodule {
-    options = {
-      inherit fonts;
+    options = let
+      versionAtLeast2009 = versionAtLeast config.home.stateVersion "20.09";
+      mkNullableOption = { type, default, ... }@args:
+        mkOption (args // optionalAttrs versionAtLeast2009 {
+          type = types.nullOr type;
+          default = null;
+          example = default;
+        } // {
+          defaultText = literalExample ''
+            ${
+              if isString default then default else "See code"
+            } for state version < 20.09,
+            null for state version ≥ 20.09
+          '';
+        });
+    in {
+      fonts = fonts // optionalAttrs versionAtLeast2009 { default = [ ]; };
 
       extraConfig = mkOption {
         type = types.lines;
@@ -68,31 +84,31 @@ let
         '';
       };
 
-      mode = mkOption {
+      mode = mkNullableOption {
         type = types.enum [ "dock" "hide" "invisible" ];
         default = "dock";
         description = "Bar visibility mode.";
       };
 
-      hiddenState = mkOption {
+      hiddenState = mkNullableOption {
         type = types.enum [ "hide" "show" ];
         default = "hide";
         description = "The default bar mode when 'bar.mode' == 'hide'.";
       };
 
-      position = mkOption {
+      position = mkNullableOption {
         type = types.enum [ "top" "bottom" ];
         default = "bottom";
         description = "The edge of the screen ${moduleName}bar should show up.";
       };
 
-      workspaceButtons = mkOption {
+      workspaceButtons = mkNullableOption {
         type = types.bool;
         default = true;
         description = "Whether workspace buttons should be shown or not.";
       };
 
-      workspaceNumbers = mkOption {
+      workspaceNumbers = mkNullableOption {
         type = types.bool;
         default = true;
         description =
@@ -112,32 +128,34 @@ let
 
       statusCommand = mkOption {
         type = types.nullOr types.str;
-        default = "${pkgs.i3status}/bin/i3status";
+        default =
+          if versionAtLeast2009 then null else "${pkgs.i3status}/bin/i3status";
+        example = "i3status";
         description = "Command that will be used to get status lines.";
       };
 
       colors = mkOption {
         type = types.submodule {
           options = {
-            background = mkOption {
+            background = mkNullableOption {
               type = types.str;
               default = "#000000";
               description = "Background color of the bar.";
             };
 
-            statusline = mkOption {
+            statusline = mkNullableOption {
               type = types.str;
               default = "#ffffff";
               description = "Text color to be used for the statusline.";
             };
 
-            separator = mkOption {
+            separator = mkNullableOption {
               type = types.str;
               default = "#666666";
               description = "Text color to be used for the separator.";
             };
 
-            focusedWorkspace = mkOption {
+            focusedWorkspace = mkNullableOption {
               type = barColorSetModule;
               default = {
                 border = "#4c7899";
@@ -149,7 +167,7 @@ let
               '';
             };
 
-            activeWorkspace = mkOption {
+            activeWorkspace = mkNullableOption {
               type = barColorSetModule;
               default = {
                 border = "#333333";
@@ -161,7 +179,7 @@ let
               '';
             };
 
-            inactiveWorkspace = mkOption {
+            inactiveWorkspace = mkNullableOption {
               type = barColorSetModule;
               default = {
                 border = "#333333";
@@ -174,7 +192,7 @@ let
               '';
             };
 
-            urgentWorkspace = mkOption {
+            urgentWorkspace = mkNullableOption {
               type = barColorSetModule;
               default = {
                 border = "#2f343a";
@@ -187,7 +205,7 @@ let
               '';
             };
 
-            bindingMode = mkOption {
+            bindingMode = mkNullableOption {
               type = barColorSetModule;
               default = {
                 border = "#2f343a";
@@ -210,7 +228,7 @@ let
         '';
       };
 
-      trayOutput = mkOption {
+      trayOutput = mkNullableOption {
         type = types.str;
         default = "primary";
         description = "Where to output tray.";
@@ -573,7 +591,47 @@ in {
 
   bars = mkOption {
     type = types.listOf barModule;
-    default = [ { } ];
+    default = if versionAtLeast config.home.stateVersion "20.09" then [{
+      mode = "dock";
+      hiddenState = "hide";
+      position = "bottom";
+      workspaceButtons = true;
+      workspaceNumbers = true;
+      statusCommand = "${pkgs.i3status}/bin/i3status";
+      fonts = [ "monospace 8" ];
+      trayOutput = "primary";
+      colors = {
+        background = "#000000";
+        statusline = "#ffffff";
+        separator = "#666666";
+        focusedWorkspace = {
+          border = "#4c7899";
+          background = "#285577";
+          text = "#ffffff";
+        };
+        activeWorkspace = {
+          border = "#333333";
+          background = "#5f676a";
+          text = "#ffffff";
+        };
+        inactiveWorkspace = {
+          border = "#333333";
+          background = "#222222";
+          text = "#888888";
+        };
+        urgentWorkspace = {
+          border = "#2f343a";
+          background = "#900000";
+          text = "#ffffff";
+        };
+        bindingMode = {
+          border = "#2f343a";
+          background = "#900000";
+          text = "#ffffff";
+        };
+      };
+    }] else
+      [ { } ];
     description = ''
       ${capitalModuleName} bars settings blocks. Set to empty list to remove bars completely.
     '';

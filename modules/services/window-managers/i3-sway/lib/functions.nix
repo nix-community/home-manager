@@ -41,31 +41,66 @@ rec {
 
   barStr = { id, fonts, mode, hiddenState, position, workspaceButtons
     , workspaceNumbers, command, statusCommand, colors, trayOutput, extraConfig
-    , ... }: ''
+    , ... }:
+    let colorsNotNull = lib.filterAttrs (n: v: v != null) colors != { };
+    in ''
       bar {
         ${optionalString (id != null) "id ${id}"}
-        font pango:${concatStringsSep ", " fonts}
-        mode ${mode}
-        hidden_state ${hiddenState}
-        position ${position}
+        ${
+          optionalString (fonts != [ ])
+          "font pango:${concatStringsSep ", " fonts}"
+        }
+        ${optionalString (mode != null) "mode ${mode}"}
+        ${optionalString (hiddenState != null) "hidden_state ${hiddenState}"}
+        ${optionalString (position != null) "position ${position}"}
         ${
           optionalString (statusCommand != null)
           "status_command ${statusCommand}"
         }
         ${moduleName}bar_command ${command}
-        workspace_buttons ${if workspaceButtons then "yes" else "no"}
-        strip_workspace_numbers ${if !workspaceNumbers then "yes" else "no"}
-        tray_output ${trayOutput}
-        colors {
-          background ${colors.background}
-          statusline ${colors.statusline}
-          separator ${colors.separator}
-          focused_workspace ${barColorSetStr colors.focusedWorkspace}
-          active_workspace ${barColorSetStr colors.activeWorkspace}
-          inactive_workspace ${barColorSetStr colors.inactiveWorkspace}
-          urgent_workspace ${barColorSetStr colors.urgentWorkspace}
-          binding_mode ${barColorSetStr colors.bindingMode}
+        ${
+          optionalString (workspaceButtons != null)
+          "workspace_buttons ${if workspaceButtons then "yes" else "no"}"
         }
+        ${
+          optionalString (workspaceNumbers != null)
+          "strip_workspace_numbers ${if !workspaceNumbers then "yes" else "no"}"
+        }
+        ${optionalString (trayOutput != null) "tray_output ${trayOutput}"}
+        ${optionalString colorsNotNull "colors {"}
+          ${
+            optionalString (colors.background != null)
+            "background ${colors.background}"
+          }
+          ${
+            optionalString (colors.statusline != null)
+            "statusline ${colors.statusline}"
+          }
+          ${
+            optionalString (colors.separator != null)
+            "separator ${colors.separator}"
+          }
+          ${
+            optionalString (colors.focusedWorkspace != null)
+            "focused_workspace ${barColorSetStr colors.focusedWorkspace}"
+          }
+          ${
+            optionalString (colors.activeWorkspace != null)
+            "active_workspace ${barColorSetStr colors.activeWorkspace}"
+          }
+          ${
+            optionalString (colors.inactiveWorkspace != null)
+            "inactive_workspace ${barColorSetStr colors.inactiveWorkspace}"
+          }
+          ${
+            optionalString (colors.urgentWorkspace != null)
+            "urgent_workspace ${barColorSetStr colors.urgentWorkspace}"
+          }
+          ${
+            optionalString (colors.bindingMode != null)
+            "binding_mode ${barColorSetStr colors.bindingMode}"
+          }
+        ${optionalString colorsNotNull "}"}
         ${extraConfig}
       }
     '';

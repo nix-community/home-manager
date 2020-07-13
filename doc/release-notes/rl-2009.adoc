@@ -52,3 +52,46 @@ will automatically include these options, when necessary.
 _module.args.pkgsPath = <nixpkgs>;
 +
 to your Home Manager configuration.
+
+* The options `wayland.windowManager.sway.config.bars` and `opt-xsession.windowManager.i3.config.bars` have been changed so that most of the suboptions are now nullable and default to null. The default for these two options has been changed to manually set the old defaults for each suboption. The overall effect is that if the `bars` options is not set, then the default remains the same, however something like:
++
+--
+[source,nix]
+----
+bars = [ {
+  command = "waybar";
+} ];
+----
+will now create the config:
+....
+bar {
+  swaybar_command waybar
+}
+....
+instead of
+....
+bar {
+
+  font pango:monospace 8
+  mode dock
+  hidden_state hide
+  position bottom
+  status_command /nix/store/h7s6i9q1z5fxrlyyw5ls8vqxhf5bcs5a-i3status-2.13/bin/i3status
+  swaybar_command waybar
+  workspace_buttons yes
+  strip_workspace_numbers no
+  tray_output primary
+  colors {
+    background #000000
+    statusline #ffffff
+    separator #666666
+    focused_workspace #4c7899 #285577 #ffffff
+    active_workspace #333333 #5f676a #ffffff
+    inactive_workspace #333333 #222222 #888888
+    urgent_workspace #2f343a #900000 #ffffff
+    binding_mode #2f343a #900000 #ffffff
+  }
+
+}
+....
+--
