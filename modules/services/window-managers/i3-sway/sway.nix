@@ -7,7 +7,7 @@ let
   cfg = config.wayland.windowManager.sway;
 
   commonOptions = import ./lib/options.nix {
-    inherit lib cfg pkgs;
+    inherit config lib cfg pkgs;
     moduleName = "sway";
     capitalModuleName = "Sway";
   };
