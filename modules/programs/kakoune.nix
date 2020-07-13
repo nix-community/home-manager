@@ -615,6 +615,14 @@ in {
         default = { };
         description = "kakoune configuration options.";
       };
+      
+      package = mkOption {
+        type = types.package;
+        default = pkgs.kakoune;
+        description = ''
+          The package to use when installing kakoune
+         '';
+      };
 
       extraConfig = mkOption {
         type = types.lines;
@@ -628,7 +636,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.kakoune ];
+    home.packages = [ cfg.package ];
     xdg.configFile."kak/kakrc".source = configFile;
   };
 }
