@@ -160,7 +160,7 @@ let
       output = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
-        example = { "HDMI-A-2" = { bg = "~/path/to/background.png"; }; };
+        example = { "HDMI-A-2" = { bg = "~/path/to/background.png fill"; }; };
         description = ''
           An attribute set that defines output modules. See man sway_output for options.
         '';
