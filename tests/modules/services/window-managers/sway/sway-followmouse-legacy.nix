@@ -20,7 +20,6 @@ with lib;
         rxvt-unicode-unwrapped = super.rxvt-unicode-unwrapped // {
           outPath = "@rxvt-unicode-unwrapped@";
         };
-        sway = super.sway // { outPath = "@sway@"; };
       })
     ];
 
