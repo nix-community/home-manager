@@ -404,6 +404,14 @@ let
                 <literal>"|"</literal>.
               '';
             };
+            
+            minDigits = mkOption {
+              type = types.ints.unsigned;
+              default = null;
+              description = ''
+                Always reserve room for at least num digits, so text doesn’t jump around as lines are added or removed
+              '';
+            };
           };
         });
         default = null;
@@ -503,6 +511,7 @@ let
         "${optionalString relative " -relative "}"
         "${optionalString highlightCursor " -hlcursor"}"
         "${optionalString (separator != null) " -separator ${separator}"}"
+        "${optionalString (minDigits != null) " -min-digits ${minDigits}"}"
       ];
 
     showWhitespaceOptions = with cfg.config.showWhitespace;
