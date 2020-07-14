@@ -511,7 +511,7 @@ let
         "${optionalString relative " -relative "}"
         "${optionalString highlightCursor " -hlcursor"}"
         "${optionalString (separator != null) " -separator ${separator}"}"
-        "${optionalString (minDigits != null) " -min-digits ${minDigits}"}"
+        "${optionalString (minDigits != null) " -min-digits ${toString minDigits}"}"
       ];
 
     showWhitespaceOptions = with cfg.config.showWhitespace;
