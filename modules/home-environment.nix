@@ -402,7 +402,7 @@ in
     home.profileDirectory =
       if config.submoduleSupport.enable
         && config.submoduleSupport.externalPackageInstall
-      then config.home.path
+      then "/etc/profiles/per-user/${cfg.username}"
       else cfg.homeDirectory + "/.nix-profile";
 
     home.sessionVariables =

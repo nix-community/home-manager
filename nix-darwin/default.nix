@@ -68,9 +68,11 @@ in
 
     users.users = mkIf cfg.useUserPackages (
       mapAttrs (username: usercfg: {
-        packages = usercfg.home.packages;
+        packages = [ usercfg.home.path ];
       }) cfg.users
     );
+
+    environment.pathsToLink = mkIf cfg.useUserPackages [ "/etc/profile.d" ];
 
     system.activationScripts.postActivation.text =
       concatStringsSep "\n" (mapAttrsToList (username: usercfg: ''
