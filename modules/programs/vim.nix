@@ -63,11 +63,7 @@ let
 
   optionalPlugins = let
     vpkgs = pkgs.vimPlugins;
-    getPkg = p:
-      if isDerivation p then
-        [ p ]
-      else
-        optional (isString p && hasAttr p vpkgs) vpkgs.${p};
+    getPkg = p: [ p ];
   in concatMap getPkg cfg.optionalPlugins;
 
 in {
@@ -176,8 +172,8 @@ in {
     };
   in mkIf cfg.enable {
     assertions = let
-      packagesNotFound = filter (p: isString p && (!hasAttr p pkgs.vimPlugins))
-        (cfg.plugins ++ cfg.optionalPlugins);
+      packagesNotFound =
+        filter (p: isString p && (!hasAttr p pkgs.vimPlugins)) cfg.plugins;
     in [{
       assertion = packagesNotFound == [ ];
       message = "Following VIM plugin not found in pkgs.vimPlugins: ${
@@ -185,13 +181,12 @@ in {
         }";
     }];
 
-    warnings =
-      let stringPlugins = filter isString (cfg.plugins ++ cfg.optionalPlugins);
-      in optional (stringPlugins != [ ]) ''
-        Specifying VIM plugins using strings is deprecated, found ${
-          concatMapStringsSep ", " (p: ''"${p}"'') stringPlugins
-        } as strings.
-      '';
+    warnings = let stringPlugins = filter isString cfg.plugins;
+    in optional (stringPlugins != [ ]) ''
+      Specifying VIM plugins using strings is deprecated, found ${
+        concatMapStringsSep ", " (p: ''"${p}"'') stringPlugins
+      } as strings.
+    '';
 
     home.packages = [ cfg.package ];
 

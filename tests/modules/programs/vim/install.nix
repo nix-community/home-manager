@@ -11,6 +11,7 @@ with lib;
     };
 
     nmt.script = ''
+      # files aren't created in the $TESTED dir
       function assertAbsoluteFileExists() {
         if [[ ! -f "$1" ]]; then
           fail "Expected $1 to exist but it was not found."
@@ -23,11 +24,11 @@ with lib;
         fi
       }
 
-
       assertFileExists home-path/bin/vim
       assertFileIsExecutable home-path/bin/vim
 
-      rc_file=$(find /nix/store/ -type f -iname '*-vimrc' -not -iname '*nixos*' | tail -n1)
+      # load the rc file from the nix shim
+      rc_file=$(tail -n1 "$TESTED/home-path/bin/vim" | cut -d " " -f 4)
       assertAbsoluteFileExists "$rc_file"
       assertAbsoluteFileContains "$rc_file" "set background=dark"
     '';
