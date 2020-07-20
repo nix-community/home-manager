@@ -221,7 +221,7 @@ in
         '';
         description = ''
           Similar to <varname><link linkend="opt-programs.zsh.shellAliases">opt-programs.zsh.shellAliases</link></varname>,
-          but are substituted anywhere on a line. 
+          but are substituted anywhere on a line.
         '';
         type = types.attrsOf types.str;
       };
