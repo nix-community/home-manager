@@ -277,7 +277,14 @@ in {
         genIdentity = name: account:
           with account;
           nameValuePair "sendemail.${name}" ({
-            smtpEncryption = if smtp.tls.enable then "tls" else "";
+            smtpEncryption = if smtp.tls.enable then
+              (if smtp.tls.useStartTls
+              || versionOlder config.home.stateVersion "20.09" then
+                "tls"
+              else
+                "ssl")
+            else
+              "";
             smtpServer = smtp.host;
             smtpUser = userName;
             from = address;
