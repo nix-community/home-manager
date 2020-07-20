@@ -21,6 +21,7 @@
         passwordCommand = "password-command 2";
         imap.host = "imap.example.org";
         smtp.host = "smtp.example.org";
+        smtp.tls.useStartTls = true;
       };
     };
   };

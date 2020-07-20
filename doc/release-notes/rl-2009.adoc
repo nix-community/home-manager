@@ -43,3 +43,9 @@ $ nix-shell '<home-manager>' -A install
 
 will automatically include these options, when necessary.
 --
+
+* Git's `smtpEncryption` option now only is set to `tls` if
+<<opt-accounts.email.accounts.\_name_.smtp.tls.enable>> AND
+<<opt-accounts.email.accounts.\_name_.smtp.tls.useStartTls>> are `true`. If
+only <<opt-accounts.email.accounts.\_name_.smtp.tls.enable>> is `true`, `ssl`
+is used instead.
