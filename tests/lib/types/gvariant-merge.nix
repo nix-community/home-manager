@@ -28,6 +28,8 @@ in {
         { string = "foo"; }
 
         { tuple = mkTuple [ 1 [ "foo" ] ]; }
+
+        { raw = mkRawString "@mb true"; }
       ];
 
     home.file."result.txt".text = let
@@ -46,6 +48,7 @@ in {
             float = 3.140000
             int = 42
             list = @as ['one','two']
+            raw = @mb true
             string = 'foo'
             tuple = @(ias) (1,@as ['foo'])
           ''
