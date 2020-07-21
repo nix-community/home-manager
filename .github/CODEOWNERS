@@ -184,6 +184,8 @@
 
 /modules/services/emacs.nix                           @tadfisher
 
+/modules/services/etesync-dav.nix                     @Valodim
+
 /modules/services/flameshot.nix                       @moredhel
 
 /modules/services/fluidsynth.nix                      @Valodim

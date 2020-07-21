@@ -1946,7 +1946,7 @@ in
           A new module is available: 'programs.lazygit'.
         '';
       }
-      
+
       {
         time = "2021-04-27T00:00:00+00:00";
         message = ''
@@ -1954,6 +1954,13 @@ in
         '';
       }
 
+      {
+        time = "2021-05-06T20:47:37+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.etesync-dav'
+        '';
+      }
     ];
   };
 }
