@@ -75,6 +75,7 @@ import nmt {
     ./modules/programs/abook
     ./modules/programs/autorandr
     ./modules/services/emacs
+    ./modules/services/dropbox
     ./modules/programs/firefox
     ./modules/programs/getmail
     ./modules/services/lieer

@@ -7,6 +7,7 @@ let
   baseDir = ".dropbox-hm";
   dropboxCmd = ''
     ${pkgs.coreutils}/bin/env -i HOME="$HOME" ${pkgs.dropbox-cli}/bin/dropbox'';
+  homeBaseDir = "${config.home.homeDirectory}/${baseDir}";
 in {
   meta.maintainers = [ maintainers.eyjhb ];
 
@@ -23,7 +24,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [{
+  config = mkIf cfg.enable {
     home.packages = [ pkgs.dropbox-cli ];
 
     systemd.user.services.dropbox = {
@@ -32,11 +33,10 @@ in {
       Install = { WantedBy = [ "default.target" ]; };
 
       Service = {
-        Environment = [ "HOME=${config.home.homeDirectory}/${baseDir}" ];
+        Environment = [ "HOME=${homeBaseDir}" ];
 
         Type = "forking";
-        PIDFile =
-          "${config.home.homeDirectory}/${baseDir}/.dropbox/dropbox.pid";
+        PIDFile = "${homeBaseDir}/.dropbox/dropbox.pid";
 
         Restart = "on-failure";
         PrivateTmp = true;
@@ -46,10 +46,9 @@ in {
         ExecReload = "${pkgs.coreutils.out}/bin/kill -HUP $MAINPID";
         ExecStop = "${dropboxCmd} stop";
         ExecStart = let
-          script = pkgs.writeScript "dropboxInit" ''
-            #!/bin/sh
-            if [ ! -f $HOME/.dropbox-dist/VERSION ]; then
-              ${pkgs.coreutils}/bin/yes | ${pkgs.coreutils}/bin/env -i HOME="$HOME" ${pkgs.dropbox-cli}/bin/dropbox update
+          script = pkgs.writeShellScript "dropboxInit" ''
+            if [[ ! -f $HOME/.dropbox-dist/VERSION ]]; then
+              ${pkgs.coreutils}/bin/yes | ${dropboxCmd} update
             fi
 
             ${dropboxCmd} start
@@ -58,17 +57,19 @@ in {
       };
     };
 
-    home.activation.dropbox = let dag = lib.hm.dag;
-    in dag.entryAfter [ "writeBoundary" ] ''
+    home.activation.dropbox = hm.dag.entryAfter [ "writeBoundary" ] ''
       # ensure we have the dirs we need
-      $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p ${config.home.homeDirectory}/${baseDir}/.dropbox
-      $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p ${config.home.homeDirectory}/${baseDir}/.dropbox-dist
-      $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p ${config.home.homeDirectory}/${baseDir}/Dropbox
+      $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir $VERBOSE_ARG -p ${homeBaseDir}{config.home.homeDirectory}/${baseDir}/{.dropbox,.dropbox-dist,Dropbox}
 
       # symlink them as needed
-      if [ ! -d ${config.home.homeDirectory}/.dropbox ]; then $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln -s ${config.home.homeDirectory}/${baseDir}/.dropbox ${config.home.homeDirectory}/.dropbox; fi
-      # if [ ! -d ${config.home.homeDirectory}/.dropbox-dist ]; then $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln -s ${config.home.homeDirectory}/${baseDir}/.dropbox-dist ${config.home.homeDirectory}/.dropbox-dist; fi
-      if [ ! -d ${cfg.path} ]; then $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln -s ${config.home.homeDirectory}/${baseDir}/Dropbox ${cfg.path}; fi
+      if [[ ! -d ${config.home.homeDirectory}/.dropbox ]]; then
+        $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s ${homeBaseDir}/.dropbox ${config.home.homeDirectory}/.dropbox
+      fi
+      if [[ ! -d ${escapeShellArg cfg.path} ]]; then
+        $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s ${homeBaseDir}/Dropbox ${
+          escapeShellArg cfg.path
+        }
+      fi
     '';
-  }]);
+  };
 }
