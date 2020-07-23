@@ -36,6 +36,8 @@
 
 /modules/programs/beets.nix                           @rycee
 
+/modules/programs/brave.nix                           @workflow
+
 /modules/programs/broot.nix                           @aheaume
 
 /modules/programs/dircolors.nix                       @JustinLovinger

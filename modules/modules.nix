@@ -52,6 +52,7 @@ let
     (loadModule ./programs/autorandr.nix { })
     (loadModule ./programs/bash.nix { })
     (loadModule ./programs/bat.nix { })
+    (loadModule ./programs/brave.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/beets.nix { })
     (loadModule ./programs/broot.nix { })
     (loadModule ./programs/browserpass.nix { })
