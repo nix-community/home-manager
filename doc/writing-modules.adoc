@@ -168,13 +168,20 @@ Builds a GVariant array containing the given list of elements, where each elemen
 - `hm.gvariant.type.uint64`
 - `hm.gvariant.type.double`
 - `hm.gvariant.type.arrayOf type`
+- `hm.gvariant.type.maybeOf type`
 - `hm.gvariant.type.tupleOf types`
 --
 +
-where `type` and `types` are themselve a type and list of types, respectively.
+where `type` and `types` are themselves a type and list of types, respectively.
 +
 `hm.gvariant.mkEmptyArray type`:::
 An alias of `hm.gvariant.mkArray type []`.
++
+`hm.gvariant.mkNothing type`:::
+Builds a GVariant maybe value whose (non-existent) element is of the given type. The `type` value is constructed as described for the `mkArray` function above.
++
+`hm.gvariant.mkJust element`:::
+Builds a GVariant maybe value containing the given GVariant element.
 +
 `hm.gvariant.mkTuple elements`:::
 Builds a GVariant tuple containing the given list of elements, where each element is a GVariant value.

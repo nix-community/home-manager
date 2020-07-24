@@ -28,6 +28,9 @@ in {
         { string = "foo"; }
 
         { tuple = mkTuple [ 1 [ "foo" ] ]; }
+
+        { maybe1 = mkNothing type.string; }
+        { maybe2 = mkJust (mkUint32 4); }
       ];
 
     home.file."result.txt".text = let
@@ -46,6 +49,8 @@ in {
             float = 3.140000
             int = 42
             list = @as ['one','two']
+            maybe1 = @ms nothing
+            maybe2 = just @u 4
             string = 'foo'
             tuple = @(ias) (1,@as ['foo'])
           ''
