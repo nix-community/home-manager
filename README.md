@@ -12,10 +12,6 @@ options, please see the [Home Manager manual][manual].
 Words of warning
 ----------------
 
-This project is under development. I personally use it to manage
-several user configurations but it may fail catastrophically for you.
-So beware!
-
 Before using Home Manager you should be comfortable using the Nix
 language and the various tools in the Nix ecosystem. Reading through
 the [Nix Pills][] document is a good way to familiarize yourself with
