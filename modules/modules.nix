@@ -161,6 +161,7 @@ let
     (loadModule ./services/polybar.nix { })
     (loadModule ./services/pulseeffects.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/random-background.nix { })
+    (loadModule ./services/ranger.nix { })
     (loadModule ./services/redshift.nix { })
     (loadModule ./services/rsibreak.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/screen-locker.nix { })
