@@ -174,6 +174,7 @@ let
     (loadModule ./services/pulseeffects.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/random-background.nix { })
     (loadModule ./services/redshift.nix { })
+    (loadModule ./services/remind.nix { })
     (loadModule ./services/rsibreak.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/screen-locker.nix { })
     (loadModule ./services/stalonetray.nix { })

@@ -198,6 +198,8 @@
 
 /modules/services/random-background.nix               @rycee
 
+/modules/services/remind.nix                          @markus1189
+
 /modules/services/redshift.nix                        @rycee
 
 /modules/services/status-notifier-watcher.nix         @pltanton

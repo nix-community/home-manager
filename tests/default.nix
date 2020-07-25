@@ -97,6 +97,7 @@ import nmt {
     ./modules/services/kanshi
     ./modules/services/lieer
     ./modules/services/polybar
+    ./modules/services/remind
     ./modules/services/sxhkd
     ./modules/services/window-managers/i3
     ./modules/services/window-managers/sway
