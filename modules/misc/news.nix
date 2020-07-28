@@ -1804,7 +1804,15 @@ in
             https://github.com/nix-community/home-manager/issues/1691
 
           for discussion.
-      '';
+        '';
+      }
+
+      {
+        time = "2021-01-02T07:49:15+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.plan9port'.
+        '';
       }
     ];
   };
