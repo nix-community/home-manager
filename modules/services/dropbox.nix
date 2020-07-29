@@ -36,7 +36,7 @@ in {
       Install = { WantedBy = [ "default.target" ]; };
 
       Service = {
-        Environment = [ "HOME=${homeBaseDir}" ];
+        Environment = [ "HOME=${homeBaseDir}" "DISPLAY=" ];
 
         Type = "forking";
         PIDFile = "${homeBaseDir}/.dropbox/dropbox.pid";
@@ -49,6 +49,21 @@ in {
         ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
         ExecStop = "${dropboxCmd} stop";
         ExecStart = toString (pkgs.writeShellScript "dropbox-start" ''
+          # ensure we have the dirs we need
+          $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir $VERBOSE_ARG -p \
+            ${homeBaseDir}/{.dropbox,.dropbox-dist,Dropbox}
+
+          # symlink them as needed
+          if [[ ! -d ${config.home.homeDirectory}/.dropbox ]]; then
+            $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
+              ${homeBaseDir}/.dropbox ${config.home.homeDirectory}/.dropbox
+          fi
+          if [[ ! -d ${escapeShellArg cfg.path} ]]; then
+            $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
+              ${homeBaseDir}/Dropbox ${escapeShellArg cfg.path}
+          fi
+
+          # get the dropbox bins if needed
           if [[ ! -f $HOME/.dropbox-dist/VERSION ]]; then
             ${pkgs.coreutils}/bin/yes | ${dropboxCmd} update
           fi
@@ -57,21 +72,5 @@ in {
         '');
       };
     };
-
-    home.activation.dropbox = hm.dag.entryAfter [ "writeBoundary" ] ''
-      # ensure we have the dirs we need
-      $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir $VERBOSE_ARG -p \
-        ${homeBaseDir}/{.dropbox,.dropbox-dist,Dropbox}
-
-      # symlink them as needed
-      if [[ ! -d ${config.home.homeDirectory}/.dropbox ]]; then
-        $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
-          ${homeBaseDir}/.dropbox ${config.home.homeDirectory}/.dropbox
-      fi
-      if [[ ! -d ${escapeShellArg cfg.path} ]]; then
-        $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
-          ${homeBaseDir}/Dropbox ${escapeShellArg cfg.path}
-      fi
-    '';
   };
 }
