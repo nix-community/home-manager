@@ -1604,6 +1604,14 @@ in
           A new module is available: 'programs.ne'
         '';
       }
+
+      {
+        time = "2020-07-18T18:13:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.waybar'
+        '';
+      }
     ];
   };
 }
