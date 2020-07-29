@@ -118,6 +118,7 @@ let
     (loadModule ./programs/vim.nix { })
     (loadModule ./programs/vscode.nix { })
     (loadModule ./programs/vscode/haskell.nix { })
+    (loadModule ./programs/waybar.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/z-lua.nix { })
     (loadModule ./programs/zathura.nix { })
     (loadModule ./programs/zoxide.nix { })

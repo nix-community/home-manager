@@ -82,6 +82,7 @@ import nmt {
     ./modules/programs/getmail
     ./modules/services/lieer
     ./modules/programs/rofi
+    ./modules/programs/waybar
     ./modules/services/polybar
     ./modules/services/sxhkd
     ./modules/services/fluidsynth

@@ -103,6 +103,9 @@
 
 /modules/programs/texlive.nix                         @rycee
 
+/modules/programs/waybar.nix                          @berbiche
+/tests/modules/programs/waybar                        @berbiche
+
 /modules/programs/z-lua.nix                           @marsam
 
 /modules/programs/zathura.nix                         @rprospero

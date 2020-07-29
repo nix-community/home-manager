@@ -1619,6 +1619,14 @@ in
           A new module is available: 'services.dropbox'.
         '';
       }
+
+      {
+        time = "2020-08-13T22:15:27+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.waybar'
+        '';
+      }
     ];
   };
 }
