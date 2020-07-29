@@ -116,6 +116,21 @@ in {
           }
         '';
       };
+
+      extraConfig = mkOption {
+        description = ''
+          Extra settings to add to <filename>mpv.conf</filename>.
+        '';
+        type = types.lines;
+        default = "";
+        example = literalExample ''
+          profile = gpu-hq
+          profile = slow
+
+          [slow]
+          framedrop = no
+        '';
+      };
     };
   };
 
@@ -128,9 +143,10 @@ in {
           pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; })
       ];
     }
-    (mkIf (cfg.config != { } || cfg.profiles != { }) {
+    (mkIf (cfg.config != { } || cfg.profiles != { } || cfg.extraConfig != "") {
       xdg.configFile."mpv/mpv.conf".text = ''
         ${optionalString (cfg.config != { }) (renderOptions cfg.config)}
+        ${cfg.extraConfig}
         ${optionalString (cfg.profiles != { }) (renderProfiles cfg.profiles)}
       '';
     })
