@@ -185,6 +185,14 @@ in
         type = types.nullOr types.bool;
       };
 
+      cdpath = mkOption {
+        default = [];
+        description = ''
+          List of paths to autocomplete calls to `cd`.
+        '';
+        type = types.listOf types.str;
+      };
+
       dotDir = mkOption {
         default = null;
         example = ".config/zsh";
@@ -391,6 +399,10 @@ in
 
       home.file."${relToDotDir ".zshrc"}".text = ''
         typeset -U path cdpath fpath manpath
+
+        ${optionalString (cfg.cdpath != []) ''
+          cdpath+=(${concatStringsSep " " cfg.cdpath})
+        ''}
 
         for profile in ''${(z)NIX_PROFILES}; do
           fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
