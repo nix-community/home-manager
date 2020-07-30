@@ -21,6 +21,7 @@ with lib;
               absPath = if hasPrefix "/" p then p else "${basePath}/${p}";
             in
               removePrefix (homeDirectory + "/") absPath;
+          defaultText = literalExample "<name>";
           description = ''
             Path to target file relative to ${basePathDesc}.
           '';
@@ -29,17 +30,20 @@ with lib;
         text = mkOption {
           default = null;
           type = types.nullOr types.lines;
-          description = "Text of the file.";
+          description = ''
+            Text of the file. If this option is null then
+            <link linkend="opt-home.file._name__.source">home.file.&lt;name?&gt;.source</link>
+            must be set.
+          '';
         };
 
         source = mkOption {
           type = types.path;
           description = ''
-            Path of the source file. The file name must not start
-            with a period since Nix will not allow such names in
-            the Nix store.
-            </para><para>
-            This may refer to a directory.
+            Path of the source file or directory. If
+            <link linkend="opt-home.file._name__.text">home.file.&lt;name?&gt;.text</link>
+            is non-null then this option will automatically point to a file
+            containing that text.
           '';
         };
 
