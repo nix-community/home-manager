@@ -197,9 +197,14 @@ let
 
   modules = map (getAttr "file") (filter (getAttr "condition") allModules);
 
-  pkgsModule = {
+  pkgsModule = { config, ... }: {
     config = {
       _module.args.baseModules = modules;
+      _module.args.pkgsPath = lib.mkDefault (
+        if versionAtLeast config.home.stateVersion "20.09" then
+          pkgs.path
+        else
+          <nixpkgs>);
       _module.args.pkgs = lib.mkDefault pkgs;
       _module.check = check;
       lib = lib.hm;

@@ -45,3 +45,10 @@ will automatically include these options, when necessary.
 --
 
 * Git's `smtpEncryption` option is now set to `tls` only if both <<opt-accounts.email.accounts.\_name_.smtp.tls.enable>> and <<opt-accounts.email.accounts.\_name_.smtp.tls.useStartTls>> are `true`. If only <<opt-accounts.email.accounts.\_name_.smtp.tls.enable>> is `true`, `ssl` is used instead.
+
+* The `nixpkgs` module no longer references `<nixpkgs>`. Before it would do so when building the `pkgs` module argument. Starting with state version 20.09, the `pkgs` argument is instead built from the same Nixpkgs that was used to initialize the Home Manager modules. This is useful, for example, when using Home Manager within a Nix Flake. If you want to keep using `<nixpkgs>` with state version ≥ 20.09 then add
++
+[source,nix]
+_module.args.pkgsPath = <nixpkgs>;
++
+to your Home Manager configuration.
