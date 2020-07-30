@@ -18,6 +18,7 @@ let
 
   type = {
     arrayOf = t: "a${t}";
+    maybeOf = t: "m${t}";
     tupleOf = ts: "(${concatStrings ts})";
     string = "s";
     boolean = "b";
@@ -57,11 +58,21 @@ let
     else
       "";
 
+  mkMaybe = elemType: elem:
+    mkPrimitive (type.maybeOf elemType) elem // {
+      __toString = self:
+        if self.value == null then
+          "@${self.type} nothing"
+        else
+          "just ${toString self.value}";
+    };
+
 in rec {
 
   inherit type typeOf;
 
   isArray = hasPrefix "a";
+  isMaybe = hasPrefix "m";
   isTuple = hasPrefix "(";
 
   # Returns the GVariant value that most closely matches the given Nix
@@ -91,6 +102,10 @@ in rec {
     };
 
   mkEmptyArray = elemType: mkArray elemType [ ];
+
+  mkNothing = elemType: mkMaybe elemType null;
+
+  mkJust = elem: let gvarElem = mkValue elem; in mkMaybe gvarElem.type gvarElem;
 
   mkTuple = elems:
     let

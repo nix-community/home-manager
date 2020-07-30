@@ -77,6 +77,8 @@ in rec {
         (map (d: d // { value = d.value.value; }) vdefs)
       else if gvar.isTuple sharedDefType && allChecked then
         mergeOneOption loc defs
+      else if gvar.isMaybe sharedDefType && allChecked then
+        mergeOneOption loc defs
       else if gvar.type.string == sharedDefType && allChecked then
         types.str.merge loc defs
       else if gvar.type.double == sharedDefType && allChecked then

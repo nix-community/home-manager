@@ -18,6 +18,10 @@ let
     mapAttrsToList (k: v: "alias ${k}=${lib.escapeShellArg v}") cfg.shellAliases
   );
 
+  globalAliasesStr = concatStringsSep "\n" (
+    mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases
+  );
+
   zdotdir = "$HOME/" + cfg.dotDir;
 
   bindkeyCommands = {
@@ -203,6 +207,21 @@ in
         description = ''
           An attribute set that maps aliases (the top level attribute names in
           this option) to command strings or directly to build outputs.
+        '';
+        type = types.attrsOf types.str;
+      };
+
+      shellGlobalAliases = mkOption {
+        default = {};
+        example = literalExample ''
+          {
+            UUID = "$(uuidgen | tr -d \\n)";
+            G = "| grep";
+          }
+        '';
+        description = ''
+          Similar to <varname><link linkend="opt-programs.zsh.shellAliases">opt-programs.zsh.shellAliases</link></varname>,
+          but are substituted anywhere on a line.
         '';
         type = types.attrsOf types.str;
       };
@@ -451,6 +470,9 @@ in
 
         # Aliases
         ${aliasesStr}
+
+        # Global Aliases
+        ${globalAliasesStr}
       '';
     }
 

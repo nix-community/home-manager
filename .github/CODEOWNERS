@@ -80,6 +80,9 @@
 
 /modules/programs/noti.nix                            @marsam
 
+/modules/programs/nushell.nix                         @Philipp-M
+/tests/modules/programs/nushell                       @Philipp-M
+
 /modules/programs/obs-studio.nix                      @adisbladis
 
 /modules/programs/opam.nix                            @marsam
@@ -111,6 +114,9 @@
 /modules/services/cbatticon.nix                       @pmiddend
 
 /modules/services/clipmenu.nix                        @DamienCassou
+
+/modules/services/dropbox.nix                         @eyJhb
+/tests/modules/services/dropbox                       @eyJhb
 
 /modules/services/dunst.nix                           @rycee
 

@@ -7,6 +7,8 @@ with lib;
     programs.qutebrowser = {
       enable = true;
 
+      enableDefaultBindings = false;
+
       keyBindings = {
         normal = {
           "<Ctrl-v>" = "spawn mpv {url}";
@@ -27,6 +29,7 @@ with lib;
         home-files/.config/qutebrowser/config.py \
         ${
           pkgs.writeText "qutebrowser-expected-config.py" ''
+            c.bindings.default = {}
             config.bind(",l", "config-cycle spellcheck.languages [\"en-GB\"] [\"en-US\"]", mode="normal")
             config.bind("<Ctrl-v>", "spawn mpv {url}", mode="normal")
             config.bind("<Ctrl-y>", "prompt-yes", mode="prompt")''
