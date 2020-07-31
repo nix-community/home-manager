@@ -237,3 +237,6 @@
 /modules/xresources.nix                               @rycee
 
 /modules/xsession.nix                                 @rycee
+
+/modules/programs/rofi-power.nix                      @seylerius
+/tests/modules/programs/rofi-power/*                  @seylerius

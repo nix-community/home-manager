@@ -206,6 +206,7 @@ let
     (loadModule ./xsession.nix { })
     (loadModule (pkgs.path + "/nixos/modules/misc/assertions.nix") { })
     (loadModule (pkgs.path + "/nixos/modules/misc/meta.nix") { })
+    (loadModule ./programs/rofi-power.nix { })
   ];
 
   modules = map (getAttr "file") (filter (getAttr "condition") allModules);
