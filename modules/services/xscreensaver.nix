@@ -40,6 +40,10 @@ in {
         Description = "XScreenSaver";
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
+
+        # Make sure the service is restarted if the settings change.
+        X-Restart-Triggers =
+          [ (builtins.hashString "md5" (builtins.toJSON cfg.settings)) ];
       };
 
       Service = {
