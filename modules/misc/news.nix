@@ -1728,6 +1728,13 @@ in
           A new module is available: 'services.caffeine'.
         '';
       }
+
+      {
+        time = "2020-12-18T22:22:25+00:00";
+        message = ''
+          A new module is available: 'programs.rofi.pass'.
+        '';
+      }
     ];
   };
 }

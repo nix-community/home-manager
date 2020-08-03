@@ -31,4 +31,14 @@
     github = "olmokramer";
     githubId = 3612514;
   };
+  seylerius = {
+    email = "sable@seyleri.us";
+    name = "Sable Seyler";
+    github = "seylerius";
+    githubId = 1145981;
+    keys = [{
+      logkeyid = "rsa4096/0x68BF2EAE6D91CAFF";
+      fingerprint = "F0E0 0311 126A CD72 4392  25E6 68BF 2EAE 6D91 CAFF";
+    }];
+  };
 }
