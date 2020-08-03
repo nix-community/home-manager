@@ -119,6 +119,9 @@
 
 /modules/programs/powerline-go.nix                    @DamienCassou
 
+/modules/programs/rofi-pass.nix                       @seylerius
+/tests/modules/programs/rofi-pass                     @seylerius
+
 /modules/programs/rtorrent.nix                        @marsam
 
 /modules/programs/ssh.nix                             @rycee

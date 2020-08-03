@@ -89,6 +89,7 @@ import nmt {
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.
     ./modules/programs/rofi
+    ./modules/programs/rofi-pass
     ./modules/programs/waybar
     ./modules/services/dropbox
     ./modules/services/emacs

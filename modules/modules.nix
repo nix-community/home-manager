@@ -113,6 +113,7 @@ let
     (loadModule ./programs/qutebrowser.nix { })
     (loadModule ./programs/readline.nix { })
     (loadModule ./programs/rofi.nix { })
+    (loadModule ./programs/rofi-pass.nix {  })
     (loadModule ./programs/rtorrent.nix { })
     (loadModule ./programs/skim.nix { })
     (loadModule ./programs/starship.nix { })
