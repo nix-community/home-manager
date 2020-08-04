@@ -54,6 +54,8 @@ let
   buildServices = style: serviceCfgs:
     concatLists (mapAttrsToList (buildService style) serviceCfgs);
 
+  servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
+
   unitType = unitKind: with types;
     let
       primitive = either bool (either int str);
@@ -150,11 +152,9 @@ in
         example = unitExample "Path";
       };
 
-      # Keep for a while for backwards compatibility.
       startServices = mkOption {
         default = false;
         type = types.bool;
-        visible = false;
         description = ''
           Start all services that are wanted by active targets.
           Additionally, stop obsolete services from the previous
@@ -164,10 +164,10 @@ in
 
       servicesStartTimeoutMs = mkOption {
         default = 0;
-        type = types.ints.unsigned;
+        type = types.int;
         description = ''
-          How long to wait for started services to fail until their start is
-          considered successful. The value 0 indicates no timeout.
+          How long to wait for started services to fail until their
+          start is considered successful.
         '';
       };
 
@@ -203,10 +203,6 @@ in
               "Must use Linux for modules that require systemd: " + names;
         }
       ];
-
-      warnings = mkIf cfg.startServices [
-        "The option 'systemd.user.startServices' is obsolete and can be removed."
-      ];
     }
 
     # If we run under a Linux system we assume that systemd is
@@ -234,17 +230,13 @@ in
       # set it ourselves in that case.
       home.activation.reloadSystemD = hm.dag.entryAfter ["linkGeneration"] (
         let
-          timeoutArg =
-            if cfg.servicesStartTimeoutMs != 0 then
-              "--timeout " + toString cfg.servicesStartTimeoutMs
-            else
-              "";
+          autoReloadCmd = ''
+            ${pkgs.ruby}/bin/ruby ${./systemd-activate.rb} \
+              "''${oldGenPath=}" "$newGenPath" "${servicesStartTimeoutMs}"
+          '';
 
-          sdSwitchCmd = ''
-            ${pkgs.sd-switch}/bin/sd-switch \
-              ''${DRY_RUN:+--dry-run} $VERBOSE_ARG ${timeoutArg} \
-              ''${oldGenPath:+--old-units $oldGenPath/home-files/.config/systemd/user} \
-              --new-units $newGenPath/home-files/.config/systemd/user
+          legacyReloadCmd = ''
+            bash ${./systemd-activate.sh} "''${oldGenPath=}" "$newGenPath"
           '';
 
           ensureRuntimeDir = "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$(id -u)}";
@@ -262,7 +254,8 @@ in
               fi
 
               ${ensureRuntimeDir} \
-                ${sdSwitchCmd}
+              PATH=${dirOf cfg.systemctlPath}:$PATH \
+                ${if cfg.startServices then autoReloadCmd else legacyReloadCmd}
             else
               echo "User systemd daemon not running. Skipping reload."
             fi
