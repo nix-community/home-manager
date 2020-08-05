@@ -11,6 +11,11 @@ let
       when = "textInputFocus && false";
     }
     {
+      key = "ctrl+c";
+      command = "deleteFile";
+      when = "";
+    }
+    {
       key = "d";
       command = "deleteFile";
       when = "explorerViewletVisible";

@@ -63,7 +63,26 @@ in
       };
 
       keybindings = mkOption {
-        type = types.listOf (types.attrsOf types.str);
+        type = types.listOf (types.submodule {
+          options = {
+            key = mkOption {
+              type = types.str;
+              example = "ctrl+c";
+              description = "The key or key-combination to bind.";
+            };
+            command = mkOption {
+              type = types.str;
+              example = "editor.action.clipboardCopyAction";
+              description = "The VS Code command to execute.";
+            };
+            when = mkOption {
+              type = types.str;
+              default = "";
+              example = "textInputFocus";
+              description = "Optional context filter.";
+            };
+          };
+        });
         default = [];
         example = literalExample ''
           [
