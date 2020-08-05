@@ -26,6 +26,10 @@
 
 /modules/misc/xdg-user-dirs.nix                       @pacien
 
+/modules/programs/aerc.nix                            @svmhdvn
+/modules/programs/aerc-accounts.nix                   @svmhdvn
+/tests/modules/programs/aerc                          @svmhdvn
+
 /modules/programs/aria2.nix                           @JustinLovinger
 
 /modules/programs/autorandr.nix                       @uvNikita
