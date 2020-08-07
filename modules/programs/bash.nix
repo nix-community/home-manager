@@ -176,10 +176,10 @@ in
 
           ${aliasesStr}
 
-          ${cfg.initExtra}
-
           ${optionalString cfg.enableAutojump
             ". ${pkgs.autojump}/share/autojump/autojump.bash"}
+
+          ${cfg.initExtra}
         fi
       '';
 
