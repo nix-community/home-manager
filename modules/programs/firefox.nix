@@ -23,15 +23,6 @@ let
     then "${firefoxConfigPath}/Profiles"
     else firefoxConfigPath;
 
-  # The extensions path shared by all profiles; will not be supported
-  # by future Firefox versions.
-  extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
-
-  extensionsEnvPkg = pkgs.buildEnv {
-    name = "hm-firefox-extensions";
-    paths = cfg.extensions;
-  };
-
   profiles =
     flip mapAttrs' cfg.profiles (_: profile:
       nameValuePair "Profile${toString profile.id}" {
@@ -60,6 +51,28 @@ let
 
     ${extraPrefs}
   '';
+
+  globalSettings = {
+    "toolkit.policies.perUserDir" = true;
+  };
+
+  extensionXpiDirs = builtins.map (x: "${x}/share/mozilla/extensions") cfg.extensions;
+
+  policiesJson = pkgs.stdenv.mkDerivation {
+    name = "hm-ff-policies.json";
+
+    __structuredAttrs = true;
+
+    inherit extensionXpiDirs;
+
+    PATH = pkgs.lib.makeBinPath (with pkgs; [ coreutils jq findutils ]);
+
+    builder = builtins.toFile "builder" ''
+    . .attrs.sh
+    out=''${outputs[out]}
+    find ''${extensionXpiDirs[@]} -type f -name \*.xpi | jq -R '{policies: {DisableAppUpdate: true, Extensions: {Install: [.,inputs]}}}' > $out
+    '';
+  };
 
 in
 
@@ -278,16 +291,21 @@ in
             cfg.package.override { cfg = fcfg; }
           else
             (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
+
+        addPolicies = pkgs.writeScript "hm-add-ff-policies" ''
+        #!${pkgs.stdenv.shell}
+        mkdir -p ''${XDG_RUNTIME_DIR:-"/run/user/\$(id -u)"}/firefox/
+        ln -sf ${policiesJson} ''${XDG_RUNTIME_DIR:-"/run/user/\$(id -u)"}/firefox/policies.json
+        '';
+
+        withPolicies = package.overrideAttrs (oldAttrs: {
+          buildCommand = builtins.replaceStrings ["--suffix-each MOZ_PLUGIN_PATH"] ["--run ${addPolicies} --suffix-each MOZ_PLUGIN_PATH"] oldAttrs.buildCommand;
+        });
       in
-        [ package ];
+        [ withPolicies ];
 
     home.file = mkMerge (
       [{
-        "${mozillaConfigPath}/${extensionPath}" = mkIf (cfg.extensions != []) {
-          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
-          recursive = true;
-        };
-
         "${firefoxConfigPath}/profiles.ini" = mkIf (cfg.profiles != {}) {
           text = profilesIni;
         };
@@ -305,14 +323,8 @@ in
 
         "${profilesPath}/${profile.path}/user.js" =
           mkIf (profile.settings != {} || profile.extraConfig != "") {
-            text = mkUserJs profile.settings profile.extraConfig;
+            text = mkUserJs (globalSettings // profile.settings) profile.extraConfig;
           };
-
-        "${profilesPath}/${profile.path}/extensions" = mkIf (cfg.extensions != []) {
-          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
-          recursive = true;
-          force = true;
-        };
       })
     );
   };
