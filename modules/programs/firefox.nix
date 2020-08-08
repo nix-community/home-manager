@@ -64,13 +64,15 @@ let
     __structuredAttrs = true;
 
     inherit extensionXpiDirs;
+    userPolicies = builtins.toJSON { inherit (cfg) policies; };
 
     PATH = pkgs.lib.makeBinPath (with pkgs; [ coreutils jq findutils ]);
 
     builder = builtins.toFile "builder" ''
     . .attrs.sh
     out=''${outputs[out]}
-    find ''${extensionXpiDirs[@]} -type f -name \*.xpi | jq -R '{policies: {DisableAppUpdate: true, Extensions: {Install: [.,inputs]}}}' > $out
+    find "''${extensionXpiDirs[@]}" -type f -name \*.xpi | \
+      jq -R --argjson user "$userPolicies" '{policies: {DisableAppUpdate: true, Extensions: {Install: [.,inputs]}}} * $user' > $out
     '';
   };
 
@@ -137,6 +139,21 @@ in
           <link linkend="opt-programs.firefox.profiles">programs.firefox.profiles</link>
           option. This is due to recent changes in the way Firefox
           handles extension side-loading.
+        '';
+      };
+
+      policies = mkOption {
+        type = types.attrs;
+        default = {};
+        example = literalExample ''
+          {
+            UserMessaging.ExtensionRecommendations = false;
+          }
+        '';
+        description = ''
+          List of Firefox enterprise policiees to use. See
+          <link xlink:href="https://github.com/mozilla/policy-templates/blob/master/README.md"/>
+          for a list.
         '';
       };
 
