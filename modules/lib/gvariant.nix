@@ -123,7 +123,7 @@ in rec {
 
   mkString = v:
     mkPrimitive type.string v // {
-      __toString = self: "'${escape [ "'" ] self.value}'";
+      __toString = self: "'${escape [ "'" "\\" ] self.value}'";
     };
 
   mkObjectpath = v:
