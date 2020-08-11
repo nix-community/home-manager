@@ -61,6 +61,41 @@ let
     ${extraPrefs}
   '';
 
+  # stolen from the nixos znc config module
+  # TODO(eyjhb) CHANGE THIS!
+  semanticTypes = with types; rec {
+    zncAtom = oneOf [ int bool str ];
+    zncAll = oneOf [ zncAtom (listOf zncAtom) (attrsOf zncAll) ];
+    zncConf = attrsOf ( (zncAll)  // {
+      # Since this is a recursive type and the description by default contains
+      # the description of its subtypes, infinite recursion would occur without
+      # explicitly breaking this cycle
+      description = "TODO(eyjhb) replace";
+    });
+  };
+
+  profileExtensions = exts: { "ExtensionSettings" = (profileExtensionsInner exts); };
+  profileExtensionsInner = exts:
+    mapAttrs' (name: value: nameValuePair ( value.id ) (
+      {
+        "installation_mode" = value.mode;
+        "install_url" = if (strings.hasPrefix "/" value.path)
+        then "file://" + value.path
+        else value.path;
+      }
+    )) exts;
+
+    mkExtensions = exts: {
+      "ExtensionSettings" = builtins.listToAttrs (forEach exts (x: {
+        "name" = builtins.readFile "${x}/name";
+        "value" = {
+          "installation_mode" = "force_installed";
+          "install_url" = "file://${x}/extension.xpi";
+        };
+      }));
+    };
+
+  mkPolicies = profile: builtins.toJSON ({ "policies" = (profile.extraPolicies // ( mkExtensions profile.extensions ) ); });
 in
 
 {
@@ -209,6 +244,25 @@ in
               defaultText = "true if profile ID is 0";
               description = "Whether this is a default profile.";
             };
+
+            extensions = mkOption {
+              type = types.listOf types.package;
+              default = [];
+              example = literalExample ''
+              '';
+              description = "";
+            };
+
+            extraPolicies = mkOption {
+              type = semanticTypes.zncConf;
+              default = {};
+              example = literalExample ''
+                "NoDefaultBookmarks" = true;
+                "OfferToSaveLogins" = false;
+              '';
+              description = "Attribute set of Firefox policies.";
+            };
+
           };
         }));
         default = {};
@@ -304,8 +358,12 @@ in
           };
 
         "${profilesPath}/${profile.path}/user.js" =
-          mkIf (profile.settings != {} || profile.extraConfig != "") {
-            text = mkUserJs profile.settings profile.extraConfig;
+          mkIf (profile.settings != {} || profile.extraConfig != "" || profile.extensions != [] || profile.extraPolicies != {}) {
+            text = let
+              settings = if (profile.extensions != [] || profile.extraPolicies != {})
+              then profile.settings // { "toolkit.policies.loadFrom" = 2; }
+              else profile.settings;
+            in mkUserJs settings profile.extraConfig;
           };
 
         "${profilesPath}/${profile.path}/extensions" = mkIf (cfg.extensions != []) {
@@ -313,6 +371,11 @@ in
           recursive = true;
           force = true;
         };
+
+        "${profilesPath}/${profile.path}/policies.json" = mkIf (profile.extraPolicies != {} || profile.extensions != []) {
+          text = (mkPolicies profile);
+        };
+
       })
     );
   };
