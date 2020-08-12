@@ -23,15 +23,6 @@ let
     then "${firefoxConfigPath}/Profiles"
     else firefoxConfigPath;
 
-  # The extensions path shared by all profiles; will not be supported
-  # by future Firefox versions.
-  extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
-
-  extensionsEnvPkg = pkgs.buildEnv {
-    name = "hm-firefox-extensions";
-    paths = cfg.extensions;
-  };
-
   profiles =
     flip mapAttrs' cfg.profiles (_: profile:
       nameValuePair "Profile${toString profile.id}" {
@@ -62,10 +53,20 @@ let
   '';
 
   # stolen from the nixos znc config module
+  # this is fun/needed to do stuff like bookmarks
+  # "Bookmarks": [
+  #     {
+  #       "Title": "Example",
+  #       "URL": "https://example.com",
+  #       "Favicon": "https://example.com/favicon.ico",
+  #       "Placement": "toolbar" | "menu",
+  #       "Folder": "FolderName"
+  #     }
+  #   ]
   # TODO(eyjhb) CHANGE THIS!
   semanticTypes = with types; rec {
     zncAtom = oneOf [ int bool str ];
-    zncAll = oneOf [ zncAtom (listOf zncAtom) (attrsOf zncAll) ];
+    zncAll = oneOf [ zncAtom (listOf zncAll) (attrsOf zncAll) ];
     zncConf = attrsOf ( (zncAll)  // {
       # Since this is a recursive type and the description by default contains
       # the description of its subtypes, infinite recursion would occur without
@@ -74,28 +75,17 @@ let
     });
   };
 
-  profileExtensions = exts: { "ExtensionSettings" = (profileExtensionsInner exts); };
-  profileExtensionsInner = exts:
-    mapAttrs' (name: value: nameValuePair ( value.id ) (
-      {
-        "installation_mode" = value.mode;
-        "install_url" = if (strings.hasPrefix "/" value.path)
-        then "file://" + value.path
-        else value.path;
-      }
-    )) exts;
+  mkExtensions = exts: {
+    "ExtensionSettings" = builtins.listToAttrs (forEach exts (x: {
+      "name" = builtins.readFile "${x}/name";
+      "value" = {
+        "installation_mode" = "force_installed";
+        "install_url" = "file://${x}/extension.xpi";
+      };
+    }));
+  };
 
-    mkExtensions = exts: {
-      "ExtensionSettings" = builtins.listToAttrs (forEach exts (x: {
-        "name" = builtins.readFile "${x}/name";
-        "value" = {
-          "installation_mode" = "force_installed";
-          "install_url" = "file://${x}/extension.xpi";
-        };
-      }));
-    };
-
-  mkPolicies = profile: builtins.toJSON ({ "policies" = (profile.extraPolicies // ( mkExtensions profile.extensions ) ); });
+  mkPolicies = cfg: builtins.toJSON ({ "policies" = (cfg.extraPolicies // ( mkExtensions cfg.extensions ) ); });
 in
 
 {
@@ -126,6 +116,18 @@ in
         '';
       };
 
+      individualPolicies = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether or not to use a pr. policies.json approach, which will merge
+          the global extensions and extraPolicies into each profile, and allow 
+          to customize each profile, using policies with individual extensions, etc.
+          This however requires a patched Firefox, which can be fond here:
+          https://github.com/NixOS/nixpkgs/pull/94898
+        '';
+      };
+
       extensions = mkOption {
         type = types.listOf types.package;
         default = [];
@@ -136,6 +138,7 @@ in
           ]
         '';
         description = ''
+          TODO(eyjhb) not correct anymore, since the new extensions does not function this way
           List of Firefox add-on packages to install. Some
           pre-packaged add-ons are accessible from NUR,
           <link xlink:href="https://github.com/nix-community/NUR"/>.
@@ -274,6 +277,16 @@ in
         default = false;
         description = "Whether to enable the unfree Adobe Flash plugin.";
       };
+
+      extraPolicies = mkOption {
+        type = semanticTypes.zncConf;
+        default = {};
+        example = literalExample ''
+          "NoDefaultBookmarks" = true;
+          "OfferToSaveLogins" = false;
+        '';
+        description = "Attribute set of Firefox policies.";
+      };
     };
   };
 
@@ -337,16 +350,13 @@ in
 
     home.file = mkMerge (
       [{
-        "${mozillaConfigPath}/${extensionPath}" = mkIf (cfg.extensions != []) {
-          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
-          recursive = true;
-        };
-
         "${firefoxConfigPath}/profiles.ini" = mkIf (cfg.profiles != {}) {
           text = profilesIni;
         };
       }]
-      ++ flip mapAttrsToList cfg.profiles (_: profile: {
+      # merge the global config with the profiles -> policies will only be used in some cases
+      ++ flip mapAttrsToList (mapAttrs (n: v: { extensions = cfg.extensions ++ v.extensions; extraPolicies = cfg.extraPolicies // v.extraPolicies; individualPolicies = cfg.individualPolicies; } // (filterAttrs (na: va: na != "extensions" && na != "extraPolicies") v)) cfg.profiles)
+        (_: profile: {
         "${profilesPath}/${profile.path}/chrome/userChrome.css" =
           mkIf (profile.userChrome != "") {
             text = profile.userChrome;
@@ -361,22 +371,40 @@ in
           mkIf (profile.settings != {} || profile.extraConfig != "" || profile.extensions != [] || profile.extraPolicies != {}) {
             text = let
               settings = if (profile.extensions != [] || profile.extraPolicies != {})
-              then profile.settings // { "toolkit.policies.loadFrom" = 2; }
+              then profile.settings // (if (profile.individualPolicies == true) then { "toolkit.policies.loadFrom" = 2; } else { "toolkit.policies.perUserDir" = true; } )
               else profile.settings;
             in mkUserJs settings profile.extraConfig;
           };
 
-        "${profilesPath}/${profile.path}/extensions" = mkIf (cfg.extensions != []) {
-          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
-          recursive = true;
-          force = true;
-        };
-
-        "${profilesPath}/${profile.path}/policies.json" = mkIf (profile.extraPolicies != {} || profile.extensions != []) {
+        "${profilesPath}/${profile.path}/policies.json" = mkIf (profile.individualPolicies == true && (profile.extraPolicies != {} || profile.extensions != [])) {
           text = (mkPolicies profile);
         };
-
       })
     );
+
+    home.activation.runtime = hm.dag.entryAfter [ "writeBoundary" ] (let
+      policiesFile = pkgs.writeText "policies.json" (mkPolicies cfg);
+      shouldRun = (cfg.extensions != [] || cfg.extraPolicies != {});
+    in ''
+      # check if this should run, if not just exit 0
+      if [[ ! ${pkgs.lib.boolToString shouldRun} ]]; then
+        exit 0
+      fi
+
+      # set our runtime dir + policies location here 
+      XDG_RUNTIME_DIR="/run/user/$(id -u)"
+      POLICIES_LOCATION="$XDG_RUNTIME_DIR/firefox/policies.json"
+
+      # create the dir, so it exists else other operations will fail
+      mkdir -p "$XDG_RUNTIME_DIR/firefox"
+
+      # first remove the dir, if it exists
+      if [[ -f $POLICIES_LOCATION ]]; then
+        rm $POLICIES_LOCATION
+      fi
+
+      # actually link it
+      ln -s ${policiesFile} $POLICIES_LOCATION
+    '');
   };
 }
