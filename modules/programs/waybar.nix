@@ -1,5 +1,6 @@
 { config, lib, pkgs, ... }:
 
+with lib;
 let
   cfg = config.programs.waybar;
 
@@ -28,25 +29,24 @@ let
   ];
 
   isValidCustomModuleName = x:
-    lib.elem x defaultModuleNames
-    || (lib.hasPrefix "custom/" x && lib.stringLength x > 7);
+    elem x defaultModuleNames || (hasPrefix "custom/" x && stringLength x > 7);
 
   margins = let
     mkMargin = name: {
-      "margin-${name}" = lib.mkOption {
-        type = lib.types.nullOr lib.types.int;
+      "margin-${name}" = mkOption {
+        type = types.nullOr types.int;
         default = null;
         example = 10;
         description = "Margins value without unit.";
       };
     };
     margins = map mkMargin [ "top" "left" "bottom" "right" ];
-  in lib.foldl' lib.mergeAttrs { } margins;
+  in foldl' mergeAttrs { } margins;
 
   waybarBarConfig = with lib.types;
     submodule {
       options = {
-        layer = lib.mkOption {
+        layer = mkOption {
           type = nullOr (enum [ "top" "bottom" ]);
           default = null;
           description = ''
@@ -56,7 +56,7 @@ let
           example = "top";
         };
 
-        output = lib.mkOption {
+        output = mkOption {
           type = nullOr (either str (listOf str));
           default = null;
           example = literalExample ''
@@ -68,14 +68,14 @@ let
           '';
         };
 
-        position = lib.mkOption {
+        position = mkOption {
           type = nullOr (enum [ "top" "bottom" "left" "right" ]);
           default = null;
           example = "right";
           description = "Bar position relative to the output.";
         };
 
-        height = lib.mkOption {
+        height = mkOption {
           type = nullOr ints.unsigned;
           default = null;
           example = 5;
@@ -83,7 +83,7 @@ let
             "Height to be used by the bar if possible. Leave blank for a dynamic value.";
         };
 
-        width = lib.mkOption {
+        width = mkOption {
           type = nullOr ints.unsigned;
           default = null;
           example = 5;
@@ -91,7 +91,7 @@ let
             "Width to be used by the bar if possible. Leave blank for a dynamic value.";
         };
 
-        modules-left = lib.mkOption {
+        modules-left = mkOption {
           type = nullOr (listOf str);
           default = null;
           description = "Modules that will be displayed on the left.";
@@ -100,7 +100,7 @@ let
           '';
         };
 
-        modules-center = lib.mkOption {
+        modules-center = mkOption {
           type = nullOr (listOf str);
           default = null;
           description = "Modules that will be displayed in the center.";
@@ -109,7 +109,7 @@ let
           '';
         };
 
-        modules-right = lib.mkOption {
+        modules-right = mkOption {
           type = nullOr (listOf str);
           default = null;
           description = "Modules that will be displayed on the right.";
@@ -118,7 +118,7 @@ let
           '';
         };
 
-        modules = lib.mkOption {
+        modules = mkOption {
           type = attrsOf unspecified;
           default = { };
           description = "Modules configuration.";
@@ -145,7 +145,7 @@ let
           '';
         };
 
-        margin = lib.mkOption {
+        margin = mkOption {
           type = nullOr str;
           default = null;
           description = "Margins value using the CSS format without units.";
@@ -154,7 +154,7 @@ let
 
         inherit (margins) margin-top margin-left margin-bottom margin-right;
 
-        name = lib.mkOption {
+        name = mkOption {
           type = nullOr str;
           default = null;
           description =
@@ -162,7 +162,7 @@ let
           example = "waybar-1";
         };
 
-        gtk-layer-shell = lib.mkOption {
+        gtk-layer-shell = mkOption {
           type = nullOr bool;
           default = null;
           example = false;
@@ -172,13 +172,13 @@ let
       };
     };
 in {
-  meta.maintainers = [ lib.hm.maintainers.berbiche ];
+  meta.maintainers = [ hm.maintainers.berbiche ];
 
   options.programs.waybar = with lib.types; {
-    enable = lib.mkEnableOption "Waybar";
+    enable = mkEnableOption "Waybar";
 
-    package = lib.mkOption {
-      type = nullOr package;
+    package = mkOption {
+      type = package;
       default = pkgs.waybar;
       defaultText = literalExample "${pkgs.waybar}";
       description = ''
@@ -186,7 +186,7 @@ in {
       '';
     };
 
-    settings = lib.mkOption {
+    settings = mkOption {
       type = listOf waybarBarConfig;
       default = [ ];
       description = ''
@@ -229,9 +229,9 @@ in {
       '';
     };
 
-    systemd.enable = lib.mkEnableOption "Waybar Systemd integration";
+    systemd.enable = mkEnableOption "Waybar Systemd integration";
 
-    style = lib.mkOption {
+    style = mkOption {
       type = nullOr str;
       default = null;
       description = ''
@@ -260,12 +260,12 @@ in {
     # Inspired by https://github.com/NixOS/nixpkgs/pull/89781
     writePrettyJSON = name: x:
       pkgs.runCommandNoCCLocal name { } ''
-        ${pkgs.jq}/bin/jq . > $out <<<${lib.escapeShellArg (builtins.toJSON x)}
+        ${pkgs.jq}/bin/jq . > $out <<<${escapeShellArg (builtins.toJSON x)}
       '';
 
     configSource = let
       # Removes nulls because Waybar ignores them for most values
-      removeNulls = lib.filterAttrs (_: v: v != null);
+      removeNulls = filterAttrs (_: v: v != null);
 
       # Makes the actual valid configuration Waybar accepts
       # (strips our custom settings before converting to JSON)
@@ -274,9 +274,9 @@ in {
           # The "modules" option is not valid in the JSON
           # as its descendants have to live at the top-level
           settingsWithoutModules =
-            lib.filterAttrs (n: _: n != "modules") configuration;
-          settingsModules = lib.optionalAttrs (configuration.modules != { })
-            configuration.modules;
+            filterAttrs (n: _: n != "modules") configuration;
+          settingsModules =
+            optionalAttrs (configuration.modules != { }) configuration.modules;
         in removeNulls (settingsWithoutModules // settingsModules);
       # The clean list of configurations
       finalConfiguration = map makeConfiguration cfg.settings;
@@ -289,12 +289,12 @@ in {
       mkUndefinedModuleWarning = settings: name:
         let
           # Locations where the module is undefined (a combination modules-{left,center,right})
-          locations = lib.flip lib.filter [ "left" "center" "right" ]
-            (x: lib.elem name settings."modules-${x}");
+          locations = flip filter [ "left" "center" "right" ]
+            (x: elem name settings."modules-${x}");
           mkPath = loc: "'${modulesPath}-${loc}'";
           # The modules-{left,center,right} configuration that includes
           # an undefined module
-          path = lib.concatMapStringsSep " and " mkPath locations;
+          path = concatMapStringsSep " and " mkPath locations;
         in "The module '${name}' defined in ${path} is neither "
         + "a default module or a custom module declared in '${modulesPath}'";
       mkInvalidModuleNameWarning = name:
@@ -305,25 +305,24 @@ in {
       # Find all modules in `modules-{left,center,right}` and `modules` not declared/referenced.
       # `cfg.settings` is a list of Waybar configurations
       # and we need to preserve the index for appropriate warnings
-      allFaultyModules = lib.flip map cfg.settings (settings:
+      allFaultyModules = flip map cfg.settings (settings:
         let
-          allModules = lib.unique
-            (lib.concatMap (x: lib.attrByPath [ "modules-${x}" ] [ ] settings) [
+          allModules = unique
+            (concatMap (x: attrByPath [ "modules-${x}" ] [ ] settings) [
               "left"
               "center"
               "right"
             ]);
-          declaredModules = lib.attrNames settings.modules;
+          declaredModules = attrNames settings.modules;
           # Modules declared in `modules` but not referenced in `modules-{left,center,right}`
-          unreferencedModules = lib.subtractLists allModules declaredModules;
+          unreferencedModules = subtractLists allModules declaredModules;
           # Modules listed in modules-{left,center,right} that are not default modules
-          nonDefaultModules = lib.subtractLists defaultModuleNames allModules;
+          nonDefaultModules = subtractLists defaultModuleNames allModules;
           # Modules referenced in `modules-{left,center,right}` but not declared in `modules`
-          undefinedModules =
-            lib.subtractLists declaredModules nonDefaultModules;
+          undefinedModules = subtractLists declaredModules nonDefaultModules;
           # Check for invalid module names
-          invalidModuleNames = lib.filter (m: !isValidCustomModuleName m)
-            (lib.attrNames settings.modules);
+          invalidModuleNames =
+            filter (m: !isValidCustomModuleName m) (attrNames settings.modules);
         in {
           # The Waybar bar configuration (since config.settings is a list)
           settings = settings;
@@ -332,7 +331,7 @@ in {
           invalidName = invalidModuleNames;
         });
 
-      allWarnings = lib.flip lib.concatMap allFaultyModules
+      allWarnings = flip concatMap allFaultyModules
         ({ settings, undef, unref, invalidName }:
           let
             unreferenced = map mkUnreferencedModuleWarning unref;
@@ -341,18 +340,18 @@ in {
           in undefined ++ unreferenced ++ invalid);
     in allWarnings;
 
-  in lib.mkIf cfg.enable (lib.mkMerge [
+  in mkIf cfg.enable (mkMerge [
     { home.packages = [ cfg.package ]; }
-    (lib.mkIf (cfg.settings != [ ]) {
+    (mkIf (cfg.settings != [ ]) {
       # Generate warnings about defined but unreferenced modules
       inherit warnings;
 
       xdg.configFile."waybar/config".source = configSource;
     })
-    (lib.mkIf (cfg.style != null) {
+    (mkIf (cfg.style != null) {
       xdg.configFile."waybar/style.css".text = cfg.style;
     })
-    (lib.mkIf cfg.systemd.enable {
+    (mkIf cfg.systemd.enable {
       systemd.user.services.waybar = {
         Unit = {
           Description =
