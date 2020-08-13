@@ -200,10 +200,9 @@ in {
             layer = "top";
             position = "top";
             height = 30;
-            # Specify outputs to restrict to certain outputs, otherwise show on all outputs
             output = [
               "eDP-1"
-              "DP-1"
+              "HDMI-A-1"
             ];
             modules-left = [ "sway/workspaces" "sway/mode" "wlr/taskbar" ];
             modules-center = [ "sway/window" "custom/hello-from-waybar" ];
@@ -217,11 +216,9 @@ in {
                 format = "hello {}";
                 max-length = 40;
                 interval = "once";
-                # You may be interested in using symlinkJoin to merge all scripts in one derivation
-                # to have them all under one directory structure in the nix store
-                exec = "''${pkgs.writers.writeBashBin "hello-from-waybar" '''
+                exec = pkgs.writeShellScript "hello-from-waybar" '''
                   echo "from within waybar"
-                '''}/bin/hello-from-waybar";
+                ''';
               };
             };
           }
