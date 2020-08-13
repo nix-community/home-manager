@@ -10,23 +10,21 @@ let
   emacsVersion = getVersion emacsCfg.finalPackage;
 
   # Adapted from upstream emacs.desktop
-  clientDesktopItem = pkgs.makeDesktopItem rec {
-    name = "emacsclient";
-    desktopName = "Emacs Client";
-    genericName = "Text Editor";
-    comment = "Edit text";
-    mimeType =
-      "text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;";
-    exec = "${emacsBinPath}/emacsclient ${
-        concatStringsSep " " cfg.client.arguments
-      } %F";
-    icon = "emacs";
-    type = "Application";
-    terminal = "false";
-    categories = "Utility;TextEditor;";
-    extraEntries = ''
-      StartupWMClass=Emacs
-    '';
+  clientDesktopItem = generators.toINI { } {
+    "Desktop Entry" = {
+      Type = "Application";
+      Exec = "${emacsBinPath}/emacsclient ${
+          concatStringsSep " " cfg.client.arguments
+        } %u";
+      Terminal = false;
+      Name = "Emacs Client";
+      Icon = "emacs";
+      Comment = "Edit text";
+      GenericName = "Text Editor";
+      MimeType = concatMapStrings (s: s + ";") cfg.client.mimeTypes;
+      Categories = "Utility;TextEditor;";
+      StartupWMClass = "Emacs";
+    };
   };
 
   # Match the default socket path for the Emacs version so emacsclient continues
@@ -58,6 +56,30 @@ in {
         default = [ "-c" ];
         description = ''
           Command-line arguments to pass to <command>emacsclient</command>.
+        '';
+      };
+      mimeTypes = mkOption {
+        type = with types; listOf str;
+        default = [
+          "application/x-shellscript"
+          "text/english"
+          "text/plain"
+          "text/x-c"
+          "text/x-c++"
+          "text/x-c++hdr"
+          "text/x-c++src"
+          "text/x-chdr"
+          "text/x-csrc"
+          "text/x-java"
+          "text/x-makefile"
+          "text/x-moc"
+          "text/x-pascal"
+          "text/x-tcl"
+          "text/x-tex"
+          "x-scheme-handler/org-protocol"
+        ];
+        description = ''
+          MIME types to associate with the Emacs client.
         '';
       };
     };
@@ -118,9 +140,13 @@ in {
       } // optionalAttrs (!cfg.socketActivation.enable) {
         Install = { WantedBy = [ "default.target" ]; };
       };
-
-      home.packages = optional cfg.client.enable clientDesktopItem;
     }
+
+    (mkIf cfg.client.enable {
+      # Emacs 28 ships its own desktop file, so link the client desktop file to
+      # $XDG_DATA_HOME/applications to avoid a collision.
+      xdg.dataFile."applications/emacsclient.desktop".text = clientDesktopItem;
+    })
 
     (mkIf cfg.socketActivation.enable {
       systemd.user.sockets.emacs = {

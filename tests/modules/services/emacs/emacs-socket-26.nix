@@ -22,7 +22,7 @@ with lib;
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/emacs.socket
       assertFileExists home-files/.config/systemd/user/emacs.service
-      assertFileExists home-path/share/applications/emacsclient.desktop
+      assertFileExists home-files/.local/share/applications/emacsclient.desktop
 
       assertFileContent home-files/.config/systemd/user/emacs.socket \
                         ${./emacs-socket-26-emacs.socket}
@@ -33,7 +33,7 @@ with lib;
                             src = ./emacs-socket-26-emacs.service;
                           }
                         }
-      assertFileContent home-path/share/applications/emacsclient.desktop \
+      assertFileContent home-files/.local/share/applications/emacsclient.desktop \
                         ${./emacs-emacsclient.desktop}
     '';
   };
