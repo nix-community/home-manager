@@ -86,6 +86,8 @@ let
   };
 
   mkPolicies = cfg: builtins.toJSON ({ "policies" = (cfg.extraPolicies // ( mkExtensions cfg.extensions ) ); });
+
+  systemdTimerInterval = 5;
 in
 
 {
@@ -383,23 +385,10 @@ in
     );
 
     systemd.user = {
-      paths = {
+      timers = {
         firefox-policies-writer = {
           Unit = { Description = "Firefox Policies Writer"; };
-          Path = {
-# 13:27:29  eyJhb | Can't seem to find this, but I have a path unit, where I would like to monitor $XDG_RUNTIME_DIR, can I use           │ ablackack
-#                 | "$XDG_RUNTIME_DIR/something/file" as a path variable?                                                                │ Adbray
-# 13:28:56 damjan | wild guess, not. but maybe try %t                                                                                    │ adema
-# 113:29:59  eyJhb | Is there a list of varibales some place damjan ? - Also it IS a user path unit, just in case                         │ Aelius
-# 113:30:21 damjan | eyJhb: afaik man systemd.unit                                                                                        │ af1cs
-# 113:30:54 damjan | https://www.freedesktop.org/software/systemd/man/systemd.unit.html#Specifiers                                        │ Ahti333_
-# 113:31:04  eyJhb | Uhh, nice. Lets see                                                                                                  │ aib
-# 113:31:35  eyJhb | Or maybe the userid will work, if any work in that variable...                                                       │ aidalgol
-            # PathExists = "/run/user/$XDG_RUNTIME_DIR/firefox/policies.json";
-            PathExists = "/run/user/1000/firefox/policies.json";
-            MakeDirectory = true;
-            DirectoryMode = 0700;
-          };
+          Timer = { OnUnitInactiveSec = systemdTimerInterval; };
         };
       };
       services = {
@@ -409,47 +398,54 @@ in
           Install = { WantedBy = [ "default.target" ]; };
 
           Service = {
-            Environment = [ "XDG_RUNTIME_DIR=/run/user/1000" ];
             Type = "simple";
 
             ExecStart = let
               policiesFile = pkgs.writeText "policies.json" (mkPolicies cfg);
             in (toString (pkgs.writeShellScript "dropbox-start" ''
-              # if file exists, then we do nothing
-              if [[ -f $XDG_RUNTIME_DIR/firefox/policies.json ]]; then
-                rm $XDG_RUNTIME_DIR/firefox/policies.json
+              # set our runtime dir + policies location here 
+              XDG_RUNTIME_DIR="/run/user/$(id -u)"
+              POLICIES_LOCATION="$XDG_RUNTIME_DIR/firefox/policies.json"
+
+              # create the dir, so it exists else other operations will fail
+              mkdir -p "$XDG_RUNTIME_DIR/firefox"
+
+              # if the file exists, check if correct version, if not remove and link
+              if [[ -f $POLICIES_LOCATION ]]; then
+                echo Policies exists
+                if [[ "$(readlink -f $POLICIES_LOCATION)" -ne "${policiesFile}" ]]; then
+                  echo Policies are the same nothing to do
+                  exit 0
+                fi
+
+                echo policies are not the same deleting
+                rm $POLICIES_LOCATION
               fi
 
-              ln -s ${policiesFile} $XDG_RUNTIME_DIR/firefox/policies.json
+              # actually link it
+              echo linking file
+              ln -s ${policiesFile} $POLICIES_LOCATION
             ''));
         };
       };
     };
   };
 
-    # home.activation.runtime = hm.dag.entryAfter [ "writeBoundary" ] (let
-    #   policiesFile = pkgs.writeText "policies.json" (mkPolicies cfg);
-    #   shouldRun = (cfg.extensions != [] || cfg.extraPolicies != {});
-    # in ''
-    #   # check if this should run, if not just exit 0
-    #   if [[ ! ${pkgs.lib.boolToString shouldRun} ]]; then
-    #     exit 0
-    #   fi
+    home.activation.runtime = hm.dag.entryAfter [ "writeBoundary" ] (let
+      policiesFile = pkgs.writeText "policies.json" (mkPolicies cfg);
+      shouldRun = (cfg.extensions != [] || cfg.extraPolicies != {});
+    in ''
+      # check if this should run, if not just exit 0
+      if [[ ! ${pkgs.lib.boolToString shouldRun} ]]; then
+        exit 0
+      fi
 
-    #   # set our runtime dir + policies location here 
-    #   XDG_RUNTIME_DIR="/run/user/$(id -u)"
-    #   POLICIES_LOCATION="$XDG_RUNTIME_DIR/firefox/policies.json"
+      # set our runtime dir + policies location here 
+      XDG_RUNTIME_DIR="/run/user/$(id -u)"
+      POLICIES_LOCATION="$XDG_RUNTIME_DIR/firefox/policies.json"
 
-    #   # create the dir, so it exists else other operations will fail
-    #   mkdir -p "$XDG_RUNTIME_DIR/firefox"
-
-    #   # first remove the dir, if it exists
-    #   if [[ -f $POLICIES_LOCATION ]]; then
-    #     rm $POLICIES_LOCATION
-    #   fi
-
-    #   # actually link it
-    #   ln -s ${policiesFile} $POLICIES_LOCATION
-    # '');
+      echo Deleting file, because we should use it now
+      rm $POLICIES_LOCATION
+    '');
   };
 }
