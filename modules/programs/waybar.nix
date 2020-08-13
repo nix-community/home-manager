@@ -259,7 +259,7 @@ in {
   config = let
     # Inspired by https://github.com/NixOS/nixpkgs/pull/89781
     writePrettyJSON = name: x:
-      pkgs.runCommandNoCCLocal name { } ''
+      pkgs.runCommandLocal name { } ''
         ${pkgs.jq}/bin/jq . > $out <<<${escapeShellArg (builtins.toJSON x)}
       '';
 
