@@ -1,0 +1,16 @@
+[Install]
+WantedBy=cage-session.target
+
+[Service]
+BusName=fr.arouillard.waybar
+ExecStart=@waybar@/bin/waybar
+Restart=always
+RestartSec=1sec
+Type=dbus
+
+[Unit]
+After=cage-session.target
+Description=Highly customizable Wayland bar for Sway and Wlroots based compositors.
+Documentation=https://github.com/Alexays/Waybar/wiki
+PartOf=cage-session.target
+Requisite=dbus.service

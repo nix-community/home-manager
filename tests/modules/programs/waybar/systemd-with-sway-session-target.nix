@@ -18,7 +18,7 @@ in {
 
       assertFileContent \
         home-files/.config/systemd/user/waybar.service \
-        ${./systemd-with-graphical-session-target.service}
+        ${./systemd-with-sway-session-target.service}
     '';
   };
 }

@@ -215,7 +215,17 @@ in {
       '';
     };
 
-    systemd.enable = mkEnableOption "Waybar systemd integration";
+    systemd = {
+      enable = mkEnableOption "Waybar systemd integration";
+
+      target = mkOption {
+        type = str;
+        default = "sway-session.target";
+        description = ''
+          Systemd target to bind to.
+        '';
+      };
+    };
 
     style = mkOption {
       type = nullOr str;
@@ -343,9 +353,9 @@ in {
           Description =
             "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
           Documentation = "https://github.com/Alexays/Waybar/wiki";
-          PartOf = [ "graphical-session.target" ];
+          PartOf = [ cfg.systemd.target ];
           Requisite = [ "dbus.service" ];
-          After = [ "dbus.service" ];
+          After = [ cfg.systemd.target ];
         };
 
         Service = {
@@ -356,7 +366,7 @@ in {
           RestartSec = "1sec";
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = { WantedBy = [ cfg.systemd.target ]; };
       };
     })
   ]);

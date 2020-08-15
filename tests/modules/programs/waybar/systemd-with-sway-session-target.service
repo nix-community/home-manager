@@ -1,5 +1,5 @@
 [Install]
-WantedBy=graphical-session.target
+WantedBy=sway-session.target
 
 [Service]
 BusName=fr.arouillard.waybar
@@ -9,8 +9,8 @@ RestartSec=1sec
 Type=dbus
 
 [Unit]
-After=dbus.service
+After=sway-session.target
 Description=Highly customizable Wayland bar for Sway and Wlroots based compositors.
 Documentation=https://github.com/Alexays/Waybar/wiki
-PartOf=graphical-session.target
+PartOf=sway-session.target
 Requisite=dbus.service
