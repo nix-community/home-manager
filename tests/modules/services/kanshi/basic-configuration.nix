@@ -11,6 +11,7 @@
           }];
         };
         desktop = {
+          exec = ''echo "1 two 3"'';
           outputs = [
             {
               criteria = "eDP-1";
