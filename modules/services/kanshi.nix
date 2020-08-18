@@ -120,7 +120,7 @@ let
     ''
       profile ${name} {
         ${concatStringsSep "\n  " (map outputStr outputs)}
-    '' + optionalString (exec != null) "  ${exec}" + ''
+    '' + optionalString (exec != null) "  exec ${exec}\n" + ''
       }
     '';
 in {
