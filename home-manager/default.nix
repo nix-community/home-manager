@@ -1,4 +1,6 @@
-{ runCommand, lib, bash, coreutils, findutils, gnused, less
+{ runCommand, lib, bash, callPackage, coreutils, findutils, gnused, less
+# used for pkgs.path for nixos-option
+, pkgs
 
 # Extra path to Home Manager. If set then this path will be tried
 # before `$HOME/.config/nixpkgs/home-manager` and
@@ -8,6 +10,9 @@
 let
 
   pathStr = if path == null then "" else path;
+
+  nixos-option =
+    callPackage "${pkgs.path}/nixos/modules/installer/tools/nixos-option" { };
 
 in runCommand "home-manager" {
   preferLocalBuild = true;
@@ -27,6 +32,7 @@ in runCommand "home-manager" {
     --subst-var-by findutils "${findutils}" \
     --subst-var-by gnused "${gnused}" \
     --subst-var-by less "${less}" \
+    --subst-var-by nixos-option "${nixos-option}" \
     --subst-var-by HOME_MANAGER_PATH '${pathStr}'
 
   install -D -m755 ${./completion.bash} \

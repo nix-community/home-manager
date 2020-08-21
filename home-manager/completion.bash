@@ -62,6 +62,7 @@
 # generations
 # help
 # news
+# option
 # packages
 # remove-generations
 # switch
@@ -86,6 +87,7 @@
 #
 #   help
 #   edit
+#   option
 #   build
 #   switch
 #   generations
@@ -130,6 +132,9 @@
 #   help         Print this help
 #
 #   edit         Open the home configuration in $EDITOR
+#
+#   option OPTION.NAME
+#                Inspect configuration option named OPTION.NAME.
 #
 #   build        Build configuration into result directory
 #
@@ -278,7 +283,7 @@ _home-manager_completions ()
     #--------------------------#
 
     local Subcommands
-    Subcommands=( "help" "edit" "build" "instantiate" "switch" "generations" "remove-generations" "expire-generations" "packages" "news" "uninstall" )
+    Subcommands=( "help" "edit" "option" "build" "instantiate" "switch" "generations" "remove-generations" "expire-generations" "packages" "news" "uninstall" )
 
     # ^ « home-manager »'s subcommands.
 
@@ -354,4 +359,4 @@ _home-manager_completions ()
 
 complete -F _home-manager_completions -o default home-manager
 
-#complete -W "help edit build switch generations remove-generations expire-generations packages news" home-manager
+#complete -W "help edit option build switch generations remove-generations expire-generations packages news" home-manager

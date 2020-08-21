@@ -25,6 +25,7 @@ case "$state" in
     _values 'command' \
       'help[help]' \
       'edit[edit]' \
+      'option[inspect option]' \
       'build[build]' \
       'switch[switch]' \
       'generations[list generations]' \

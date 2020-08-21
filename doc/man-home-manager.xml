@@ -42,6 +42,10 @@
    </arg>
 
    <arg choice="plain">
+    option <replaceable>option.name</replaceable>
+   </arg>
+
+   <arg choice="plain">
     packages
    </arg>
 
@@ -247,6 +251,18 @@
      <listitem>
       <para>
        Show news entries in a pager.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>option <replaceable>option.name</replaceable></option>
+     </term>
+     <listitem>
+      <para>
+       Inspect the given option name in the home configuration, like <citerefentry>
+       <refentrytitle>nixos-option</refentrytitle>
+       <manvolnum>8</manvolnum> </citerefentry>.
       </para>
      </listitem>
     </varlistentry>
