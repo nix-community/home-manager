@@ -86,6 +86,7 @@ let
     (loadModule ./programs/man.nix { })
     (loadModule ./programs/matplotlib.nix { })
     (loadModule ./programs/mbsync.nix { })
+    (loadModule ./programs/mcfly.nix { })
     (loadModule ./programs/mercurial.nix { })
     (loadModule ./programs/mpv.nix { })
     (loadModule ./programs/msmtp.nix { })
