@@ -71,6 +71,8 @@
 
 /modules/programs/matplotlib.nix                      @rprospero
 
+/modules/programs/mcfly.nix                           @marsam
+
 /modules/programs/mpv.nix                             @tadeokondrak
 
 /modules/programs/ne.nix                              @cwyc
