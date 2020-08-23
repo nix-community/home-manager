@@ -284,7 +284,19 @@ like
 {
   # …
 
-  services.xserver.enable = true;
+  services.xserver = {
+    enable = true;
+
+    desktopManager.session = [
+      {
+        name = "home-manager";
+        start = ''
+          ${pkgs.runtimeShell} $HOME/.hm-xsession &
+          waitPID=$!
+        '';
+      }
+    ];
+  };
 
   # …
 }
@@ -296,8 +308,13 @@ in your system configuration and
 {
   # …
 
-  xsession.enable = true;
-  xsession.windowManager.command = "…";
+  xsession = {
+    enable = true;
+    scriptPath = ".hm-xsession";
+    windowManager = {
+      # …
+    };
+  };
 
   # …
 }
