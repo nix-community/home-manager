@@ -77,6 +77,9 @@
 
 /modules/programs/mpv.nix                             @tadeokondrak
 
+/modules/programs/ncmpcpp.nix                         @olmokramer
+/tests/modules/programs/ncmpcpp                       @olmokramer
+
 /modules/programs/ne.nix                              @cwyc
 /tests/modules/programs/ne                            @cwyc
 

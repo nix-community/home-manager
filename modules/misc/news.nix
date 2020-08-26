@@ -1642,6 +1642,13 @@ in
           A new module is available: 'programs.mcfly'
         '';
       }
+
+      {
+        time = "2020-08-26T18:47:12+00:00";
+        message = ''
+          A new module is available: 'programs.ncmpcpp'
+        '';
+      }
     ];
   };
 }

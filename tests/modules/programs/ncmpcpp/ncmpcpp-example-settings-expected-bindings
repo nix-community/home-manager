@@ -1,0 +1,16 @@
+def_key "j"
+  scroll_down
+def_key "k"
+  scroll_up
+def_key "J"
+  select_item
+  scroll_down
+def_key "K"
+  select_item
+  scroll_up
+def_key "x"
+  delete_playlist_items
+def_key "x"
+  delete_browser_items
+def_key "x"
+  delete_stored_playlist

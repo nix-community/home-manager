@@ -53,6 +53,7 @@ import nmt {
     ./modules/programs/lf
     ./modules/programs/lieer
     ./modules/programs/mbsync
+    ./modules/programs/ncmpcpp
     ./modules/programs/ne
     ./modules/programs/neomutt
     ./modules/programs/newsboat
