@@ -53,6 +53,7 @@ import nmt {
     ./modules/programs/lf
     ./modules/programs/lieer
     ./modules/programs/mbsync
+    ./modules/programs/ncmpcpp
     ./modules/programs/ne
     ./modules/programs/neomutt
     ./modules/programs/newsboat
@@ -81,6 +82,7 @@ import nmt {
     ./modules/programs/firefox
     ./modules/programs/getmail
     ./modules/services/lieer
+    ./modules/programs/ncmpcpp-linux
     ./modules/programs/rofi
     ./modules/programs/waybar
     ./modules/services/kanshi
