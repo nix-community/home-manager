@@ -313,5 +313,22 @@ home-manager.useUserPackages = true;
     value in the future.
    </para>
   </note>
+
+  <note>
+   <para>
+    By default, Home Manager uses a private <literal>pkgs</literal> instance
+    that is configured via the <option>home-manager.users.&lt;name&gt;.nixpkgs</option> options.
+    To instead use the global <literal>pkgs</literal> that is configured via
+    the system level <option>nixpkgs</option> options, set
+   </para>
+<programlisting language="nix">
+home-manager.useGlobalPkgs = true;
+</programlisting>
+  <para>
+   This saves an extra Nixpkgs evaluation, adds consistency, and removes the
+   dependency on <envar>NIX_PATH</envar>, which is otherwise used for
+   importing Nixpkgs.
+   </para>
+  </note>
  </section>
 </chapter>
