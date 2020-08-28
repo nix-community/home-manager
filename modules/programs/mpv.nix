@@ -39,10 +39,23 @@ let
     concatStringsSep "\n"
     (mapAttrsToList (name: value: "${name} ${value}") bindings);
 
+  mpvPackage = if cfg.scripts == [ ] then
+    pkgs.mpv
+  else
+    pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; };
+
 in {
   options = {
     programs.mpv = {
       enable = mkEnableOption "mpv";
+
+      package = mkOption {
+        type = types.package;
+        readOnly = true;
+        description = ''
+          Resulting mpv package.
+        '';
+      };
 
       scripts = mkOption {
         type = with types; listOf (either package str);
@@ -121,12 +134,8 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [
-        (if cfg.scripts == [ ] then
-          pkgs.mpv
-        else
-          pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; })
-      ];
+      home.packages = [ mpvPackage ];
+      programs.mpv.package = mpvPackage;
     }
     (mkIf (cfg.config != { } || cfg.profiles != { }) {
       xdg.configFile."mpv/mpv.conf".text = ''
