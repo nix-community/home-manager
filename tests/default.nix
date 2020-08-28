@@ -69,6 +69,8 @@ import nmt {
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/xresources
+  ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
+    ./modules/targets-darwin
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     ./meta # Suffices to run on one platform.
     ./modules/misc/debug
@@ -93,6 +95,6 @@ import nmt {
     ./modules/services/window-managers/i3
     ./modules/services/window-managers/sway
     ./modules/systemd
-    ./modules/targets
+    ./modules/targets-linux
   ]);
 }
