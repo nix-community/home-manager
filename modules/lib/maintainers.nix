@@ -35,4 +35,10 @@
       fingerprint = "D446 E58D 87A0 31C7 EC15  88D7 B461 2924 45C6 E696";
     }];
   };
+  mlvzk = {
+    name = "mlvzk";
+    email = "mlvzk@users.noreply.github.com";
+    github = "mlvzk";
+    githubId = 44906333;
+  };
 }

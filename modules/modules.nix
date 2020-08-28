@@ -69,6 +69,7 @@ let
     (loadModule ./programs/git.nix { })
     (loadModule ./programs/gnome-terminal.nix { })
     (loadModule ./programs/go.nix { })
+    (loadModule ./programs/go-2fa.nix { })
     (loadModule ./programs/gpg.nix { })
     (loadModule ./programs/home-manager.nix { })
     (loadModule ./programs/htop.nix { })
