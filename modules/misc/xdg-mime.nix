@@ -29,7 +29,10 @@ in {
       pkgs.shared-mime-info
 
       # Make sure the target directories will be real directories.
-      (pkgs.runCommandLocal "dummy-xdg-mime-dirs" { } ''
+      (pkgs.runCommandLocal "dummy-xdg-mime-dirs1" { } ''
+        mkdir -p $out/share/{applications,mime/packages}
+      '')
+      (pkgs.runCommandLocal "dummy-xdg-mime-dirs2" { } ''
         mkdir -p $out/share/{applications,mime/packages}
       '')
     ];
