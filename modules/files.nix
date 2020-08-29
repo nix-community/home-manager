@@ -316,12 +316,15 @@ in
         }
       '' + concatStrings (
         mapAttrsToList (n: v: ''
-          insertFile "${sourceStorePath v}" \
-                     "${v.target}" \
-                     "${if v.executable == null
-                        then "inherit"
-                        else builtins.toString v.executable}" \
-                     "${builtins.toString v.recursive}"
+          insertFile ${
+            escapeShellArgs [
+              (sourceStorePath v)
+              v.target
+              (if v.executable == null
+               then "inherit"
+               else toString v.executable)
+              (toString v.recursive)
+            ]}
         '') cfg
       ));
   };
