@@ -7,18 +7,13 @@ let
 
   mpdCfg = config.services.mpd;
 
-  mpdMusicDir = if cfg.mpdMusicDir == null then
-    mpdCfg.musicDirectory
-  else
-    toString cfg.mpdMusicDir;
-
   renderSettings = settings:
     lib.concatStringsSep "\n" (lib.mapAttrsToList renderSetting settings);
 
   renderSetting = name: value: "${name}=${renderValue value}";
 
   renderValue = option:
-    rec {
+    {
       int = toString option;
       bool = if option then "yes" else "no";
       string = option;
@@ -33,7 +28,7 @@ let
 
   maybeWrapList = xs: if lib.isList xs then xs else [ xs ];
 
-  valueType = types.oneOf [ types.bool types.int types.str ];
+  valueType = with types; oneOf [ bool int str ];
 
   bindingType = types.submodule ({ name, config, ... }: {
     options = {
@@ -44,7 +39,7 @@ let
       };
 
       command = mkOption {
-        type = types.either types.str (types.listOf types.str);
+        type = with types; either str (listOf str);
         description = "Command or sequence of commands to be executed.";
         example = "scroll_down";
       };
@@ -68,10 +63,17 @@ in {
 
     mpdMusicDir = mkOption {
       type = types.nullOr types.path;
-      default = null;
+      default = if mpdCfg.enable then mpdCfg.musicDirectory else null;
+      defaultText = lib.literalExample ''
+        if config.services.mpd.enable then
+          config.services.mpd.musicDirectory
+        else
+          null
+      '';
       description = ''
-        Value of the <code>mpd_music_dir</code> option. The value of
-        services.mpd.musicDirectory is used if set to <literal>null</literal>.
+        Value of the <code>mpd_music_dir</code> setting. The value of
+        services.mpd.musicDirectory is used as the default if
+        services.mpd.enable is <literal>true</literal>.
       '';
       example = "~/music";
     };
@@ -110,32 +112,24 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = cfg.mpdMusicDir != null || mpdCfg.enable;
-        message = "Either set programs.ncmpcpp.mpdMusicDir or enable"
-          + " Home manager's MPD service with services.mpd.enable to"
-          + " use services.mpd.musicDirectory.";
-      }
-      {
-        assertion = !(cfg.settings ? mpd_music_dir);
-        message = "ncmpcpp's mpd_music_dir setting should be configured"
-          + " through the programs.ncmpcpp.mpdMusicDir option.";
-      }
+    warnings = mkIf (cfg.settings ? mpd_music_dir && cfg.mpdMusicDir != null) [
+      ("programs.ncmpcpp.settings.mpd_music_dir will be overridden by"
+        + " programs.ncmpcpp.mpdMusicDir.")
     ];
 
     home.packages = [ cfg.package ];
 
     xdg.configFile = {
-      "ncmpcpp/config".text = ''
-        mpd_music_dir=${mpdMusicDir}
-        ${renderSettings cfg.settings}
-      '';
+      "ncmpcpp/config" = let
+        settings = cfg.settings // lib.optionalAttrs (cfg.mpdMusicDir != null) {
+          mpd_music_dir = toString cfg.mpdMusicDir;
+        };
+      in mkIf (lib.length (lib.attrValues settings) > 0) {
+        text = renderSettings settings + "\n";
+      };
 
-      "ncmpcpp/bindings" = lib.mkIf (lib.length cfg.bindings > 0) {
-        text = ''
-          ${renderBindings cfg.bindings}
-        '';
+      "ncmpcpp/bindings" = mkIf (lib.length cfg.bindings > 0) {
+        text = renderBindings cfg.bindings + "\n";
       };
     };
   };
