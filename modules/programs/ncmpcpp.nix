@@ -64,16 +64,19 @@ in {
 
     mpdMusicDir = mkOption {
       type = types.nullOr types.path;
-      default = if mpdCfg.enable then mpdCfg.musicDirectory else null;
+      default = if pkgs.stdenv.hostPlatform.isLinux && mpdCfg.enable then
+        mpdCfg.musicDirectory
+      else
+        null;
       defaultText = literalExample ''
-        if config.services.mpd.enable then
+        if pkgs.stdenv.hostPlatform.isLinux && config.services.mpd.enable then
           config.services.mpd.musicDirectory
         else
           null
       '';
       description = ''
-        Value of the <code>mpd_music_dir</code> setting. The value of
-        services.mpd.musicDirectory is used as the default if
+        Value of the <code>mpd_music_dir</code> setting. On Linux platforms
+        the value of services.mpd.musicDirectory is used as the default if
         services.mpd.enable is <literal>true</literal>.
       '';
       example = "~/music";
