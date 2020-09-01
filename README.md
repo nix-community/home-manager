@@ -305,6 +305,59 @@ in your system configuration and
 
 in your Home Manager configuration.
 
+Flakes
+------
+
+Home Manager includes a flake.nix for compatibility with [NixOS flakes](https://nixos.wiki/wiki/Flakes) for those
+that wish to use it as a module. A bare-minimum flake.nix would be as follows:
+
+```nix
+{
+  description = "NixOS configuration";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    home-manager.url = "github:rycee/home-manager";
+  };
+
+  outputs = inputs: {
+    nixosConfigurations = {
+      hostname = let
+        system = "x86_64-linux";
+        pkgs = inputs.nixpkgs.legacyPackages.${system};
+        inherit (inputs.nixpkgs) lib;
+
+        # Things in this set are passed to modules and accessible
+        #  in the top-level arguments (e.g. `{ pkgs, lib, inputs, ... }:`)
+        specialArgs = {
+          inherit inputs;
+        };
+
+        hm-nixos-as-super = { config, ... }: {
+          # Submodules have merge semantics, making it possible to amend
+          #  the `home-manager.users` submodule for additional functionality
+          options.home-manager.users = lib.mkOption {
+            type = lib.types.attrsOf (lib.types.submoduleWith {
+              modules = [ ];
+              # Makes specialArgs available to home-manager modules as well
+              specialArgs = specialArgs // {
+                super = config; # access the parent NixOS configuration from h-m
+              };
+            });
+          };
+        };
+
+        modules = [
+          ./configuration.nix
+          inputs.home.nixosModules.home-manager
+          hm-nixos-as-super
+        ];
+      in lib.nixosSystem { inherit system modules specialArgs; };
+    };
+  };
+}
+```
+
 Releases
 --------
 
