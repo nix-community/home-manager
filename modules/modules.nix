@@ -75,6 +75,7 @@ let
     (loadModule ./programs/home-manager.nix { })
     (loadModule ./programs/htop.nix { })
     (loadModule ./programs/i3status.nix { })
+    (loadModule ./programs/i3status-rust.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/info.nix { })
     (loadModule ./programs/irssi.nix { })
     (loadModule ./programs/lieer.nix { })

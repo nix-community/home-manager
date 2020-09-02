@@ -69,6 +69,8 @@
 
 /modules/programs/i3status.nix                        @JustinLovinger
 
+/modules/programs/i3status-rust.nix                   @workflow
+
 /modules/programs/keychain.nix                        @marsam
 
 /modules/programs/lesspipe.nix                        @rycee

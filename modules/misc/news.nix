@@ -1728,6 +1728,14 @@ in
           A new module is available: 'services.caffeine'.
         '';
       }
+
+      {
+        time = "2020-11-05T22:59:21+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.i3status-rust'.
+        '';
+      }
     ];
   };
 }
