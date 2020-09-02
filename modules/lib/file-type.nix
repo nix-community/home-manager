@@ -11,7 +11,7 @@ with lib;
   # Arguments:
   #   - basePathDesc   docbook compatible description of the base path
   #   - basePath       the file base path
-  fileType = basePathDesc: basePath: types.loaOf (types.submodule (
+  fileType = basePathDesc: basePath: types.attrsOf (types.submodule (
     { name, config, ... }: {
       options = {
         target = mkOption {
@@ -32,7 +32,7 @@ with lib;
           type = types.nullOr types.lines;
           description = ''
             Text of the file. If this option is null then
-            <link linkend="opt-home.file._name__.source">home.file.&lt;name?&gt;.source</link>
+            <link linkend="opt-home.file._name_.source">home.file.&lt;name?&gt;.source</link>
             must be set.
           '';
         };
@@ -41,7 +41,7 @@ with lib;
           type = types.path;
           description = ''
             Path of the source file or directory. If
-            <link linkend="opt-home.file._name__.text">home.file.&lt;name?&gt;.text</link>
+            <link linkend="opt-home.file._name_.text">home.file.&lt;name?&gt;.text</link>
             is non-null then this option will automatically point to a file
             containing that text.
           '';
