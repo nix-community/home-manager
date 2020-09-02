@@ -196,6 +196,7 @@ in
         "$HOME"   for state version < 20.09,
         undefined for state version ≥ 20.09
       '';
+      apply = toString;
       example = "/home/jane.doe";
       description = "The user's home directory. Must be an absolute path.";
     };
