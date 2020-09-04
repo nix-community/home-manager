@@ -1,0 +1,1 @@
+{ targets-darwin = ./darwin.nix; }
