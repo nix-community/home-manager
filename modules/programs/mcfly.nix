@@ -66,7 +66,9 @@ in {
 
       programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
         source "${pkgs.mcfly}/share/mcfly/mcfly.fish"
-        mcfly_key_bindings
+        if status is-interactive
+          mcfly_key_bindings
+        end
       '';
 
       home.sessionVariables.MCFLY_KEY_SCHEME = cfg.keyScheme;
