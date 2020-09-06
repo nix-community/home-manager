@@ -8,7 +8,8 @@ let
   cfg = config.programs.mpv;
 
   mpvOption = with types; either str (either int (either bool float));
-  mpvOptions = with types; attrsOf mpvOption;
+  mpvOptionDup = with types; either mpvOption (listOf mpvOption);
+  mpvOptions = with types; attrsOf mpvOptionDup;
   mpvProfiles = with types; attrsOf mpvOptions;
   mpvBindings = with types; attrsOf str;
 
@@ -22,18 +23,23 @@ let
       string = option;
     }.${typeOf option};
 
-  renderOptions = options:
-    concatStringsSep "\n" (mapAttrsToList (name: value:
-      let
-        rendered = renderOption value;
-        length = toString (stringLength rendered);
-      in "${name}=%${length}%${rendered}") options);
+  renderOptionValue = value:
+    let
+      rendered = renderOption value;
+      length = toString (stringLength rendered);
+    in "%${length}%${rendered}";
 
-  renderProfiles = profiles:
-    concatStringsSep "\n" (mapAttrsToList (name: value: ''
-      [${name}]
-      ${renderOptions value}
-    '') profiles);
+  renderOptions = generators.toKeyValue {
+    mkKeyValue =
+      generators.mkKeyValueDefault { mkValueString = renderOptionValue; } "=";
+    listsAsDuplicateKeys = true;
+  };
+
+  renderProfiles = generators.toINI {
+    mkKeyValue =
+      generators.mkKeyValueDefault { mkValueString = renderOptionValue; } "=";
+    listsAsDuplicateKeys = true;
+  };
 
   renderBindings = bindings:
     concatStringsSep "\n"
