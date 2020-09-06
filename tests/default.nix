@@ -81,6 +81,7 @@ import nmt {
     ./modules/programs/autorandr
     ./modules/services/dropbox
     ./modules/services/emacs
+    ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/programs/firefox
     ./modules/programs/getmail

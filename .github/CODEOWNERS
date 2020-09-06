@@ -124,6 +124,8 @@
 
 /modules/services/clipmenu.nix                        @DamienCassou
 
+/modules/services/devilspie2.nix                      @dawidsowa
+
 /modules/services/dropbox.nix                         @eyJhb
 /tests/modules/services/dropbox                       @eyJhb
 
