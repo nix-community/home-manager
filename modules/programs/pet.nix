@@ -13,30 +13,27 @@ let
       description = mkOption {
         type = types.str;
         default = "";
-        example = "Show expiration date of SSL certificate";
+        example = "Count the number of commits in the current branch";
         description = ''
-          description of the snippet
+          Description of the snippet.
         '';
       };
 
       command = mkOption {
         type = types.str;
         default = "";
-        example = "echo | openssl s_client -connect example.com:443 2>/dev/null |openssl x509 -dates -noout";
+        example = "git rev-list --count HEAD";
         description = ''
-          the command
+          The command.
         '';
       };
 
       output = mkOption {
         type = types.str;
         default = "";
-        example = ''
-          notBefore=Nov  3 00:00:00 2015 GMT
-          notAfter=Nov 28 12:00:00 2018 GMT
-        '';
+        example = "473";
         description = ''
-          example output of the command
+          Example output of the command.
         '';
       };
     };
