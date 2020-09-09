@@ -1664,6 +1664,15 @@ in
           available in menus.
         '';
       }
+
+      {
+        time = "2020-09-09T06:54:59+00:00";
+        condition = config.programs.man.enable;
+        message = ''
+          A new option 'programs.man.generateCaches' was added to
+          support the apropos command.
+        '';
+      }
     ];
   };
 }

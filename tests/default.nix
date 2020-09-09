@@ -52,6 +52,7 @@ import nmt {
     ./modules/programs/kakoune
     ./modules/programs/lf
     ./modules/programs/lieer
+    ./modules/programs/man
     ./modules/programs/mbsync
     ./modules/programs/ncmpcpp
     ./modules/programs/ne
