@@ -7,11 +7,13 @@ let
   profileDirectory = config.home.profileDirectory;
 
 in {
-  options.targets.genericLinux.enable = mkEnableOption "" // {
-    description = ''
-      Whether to enable settings that make Home Manager work better on
-      GNU/Linux distributions other than NixOS.
-    '';
+  options.targets.genericLinux = {
+    enable = mkEnableOption "" // {
+      description = ''
+        Whether to enable settings that make Home Manager work better on
+        GNU/Linux distributions other than NixOS.
+      '';
+    };
   };
 
   config = mkIf config.targets.genericLinux.enable {
