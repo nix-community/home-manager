@@ -1649,6 +1649,21 @@ in
           A new module is available: 'programs.ncmpcpp'
         '';
       }
+
+      {
+        time = "2020-09-11T10:06:47+00:00";
+        condition = hostPlatform.isLinux && config.targets.genericLinux.enable;
+        message = ''
+          A new option 'targets.genericLinux.extraXdgDataDirs' is available
+          to setup the user environment with the OS's data files.
+
+          This is useful for example to get Bash completion for
+          'systemctl' which shouldn't be installed through Home Manager.
+
+          This is also useful to have non Home Manager applications
+          available in menus.
+        '';
+      }
     ];
   };
 }

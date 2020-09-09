@@ -14,14 +14,24 @@ in {
         GNU/Linux distributions other than NixOS.
       '';
     };
+
+    extraXdgDataDirs = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "/usr/share" "/usr/local/share" ];
+      description = ''
+        List of directory names to add to <envar>XDG_DATA_DIRS</envar>.
+      '';
+    };
   };
 
   config = mkIf config.targets.genericLinux.enable {
     home.sessionVariables = let
       profiles =
         [ "\${NIX_STATE_DIR:-/nix/var/nix}/profiles/default" profileDirectory ];
-      dataDirs =
-        concatStringsSep ":" (map (profile: "${profile}/share") profiles);
+      dataDirs = concatStringsSep ":"
+        (map (profile: "${profile}/share") profiles
+          ++ config.targets.genericLinux.extraXdgDataDirs);
     in { XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:}$XDG_DATA_DIRS"; };
 
     home.sessionVariablesExtra = ''
