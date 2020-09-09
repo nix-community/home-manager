@@ -452,7 +452,7 @@ in
 
       {
         time = "2017-12-11T17:23:12+00:00";
-        condition = config.home.activation ? reloadSystemD;
+        condition = config.home.activation ? reloadSystemd;
         message = ''
           The Boolean option 'systemd.user.startServices' is now
           available. When enabled the current naive systemd unit
@@ -1640,6 +1640,13 @@ in
         time = "2020-08-25T22:14:01+00:00";
         message = ''
           A new module is available: 'programs.mcfly'
+        '';
+      }
+
+      {
+        time = "2020-09-01T18:38:18+00:00";
+        message = ''
+          A new module is available: 'programs.ncmpcpp'
         '';
       }
     ];

@@ -61,6 +61,9 @@ let
     CGROUP = 112;
     OOM = 113;
     IO_PRIORITY = 114;
+    M_PSS = 118;
+    M_SWAP = 119;
+    M_PSSWP = 120;
   };
 
   # Mapping from names to defaults
@@ -76,16 +79,32 @@ let
     Hostname = 2;
     AllCPUs = 1;
     AllCPUs2 = 1;
+    AllCPUs4 = 1;
     LeftCPUs = 1;
     RightCPUs = 1;
+    Right = 1;
+    CPUs = 1;
     LeftCPUs2 = 1;
     RightCPUs2 = 1;
+    LeftCPUs4 = 1;
+    RightCPUs4 = 1;
     Blank = 2;
+    PressureStallCPUSome = 2;
+    PressureStallIOSome = 2;
+    PressureStallIOFull = 2;
+    PressureStallMemorySome = 2;
+    PressureStallMemoryFull = 2;
+    ZFSARC = 2;
+    ZFSCARC = 2;
     CPU = 1;
     "CPU(1)" = 1;
     "CPU(2)" = 1;
     "CPU(3)" = 1;
     "CPU(4)" = 1;
+    "CPU(5)" = 1;
+    "CPU(6)" = 1;
+    "CPU(7)" = 1;
+    "CPU(8)" = 1;
   };
 
   singleMeterType = let
@@ -268,6 +287,18 @@ in {
       description = "Count CPUs from 0 instead of 1.";
     };
 
+    showCpuUsage = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Show CPU usage frequency.";
+    };
+
+    showCpuFrequency = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Show CPU frequency.";
+    };
+
     updateProcessNames = mkOption {
       type = types.bool;
       default = false;
@@ -285,6 +316,12 @@ in {
       default = 0;
       example = 6;
       description = "Which color scheme to use.";
+    };
+
+    enableMouse = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable mouse support.";
     };
 
     delay = mkOption {
@@ -328,6 +365,11 @@ in {
       type = meterType;
     };
 
+    vimMode = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Vim key bindings.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -357,14 +399,18 @@ in {
       header_margin=${bool cfg.headerMargin}
       detailed_cpu_time=${bool cfg.detailedCpuTime}
       cpu_count_from_zero=${bool cfg.cpuCountFromZero}
+      show_cpu_usage=${bool cfg.showCpuUsage}
+      show_cpu_frequency=${bool cfg.showCpuFrequency}
       update_process_names=${bool cfg.updateProcessNames}
       account_guest_in_cpu_meter=${bool cfg.accountGuestInCpuMeter}
       color_scheme=${toString cfg.colorScheme}
+      enable_mouse=${bool cfg.enableMouse}
       delay=${toString cfg.delay}
       left_meters=${list leftMeters}
       left_meter_modes=${list leftModes}
       right_meters=${list rightMeters}
       right_meter_modes=${list rightModes}
+      vim_mode=${bool cfg.vimMode}
     '';
   };
 }

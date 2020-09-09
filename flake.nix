@@ -4,6 +4,8 @@
   outputs = { self, nixpkgs }: rec {
     nixosModules.home-manager = import ./nixos;
 
+    darwinModules.home-manager = import ./nix-darwin;
+
     lib = {
       homeManagerConfiguration = { configuration, system, homeDirectory
         , username

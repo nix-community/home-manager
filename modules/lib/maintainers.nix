@@ -41,4 +41,10 @@
     github = "mlvzk";
     githubId = 44906333;
   };
+  olmokramer = {
+    name = "Olmo Kramer";
+    email = "olmokramer@users.noreply.github.com";
+    github = "olmokramer";
+    githubId = 3612514;
+  };
 }
