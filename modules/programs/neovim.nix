@@ -24,23 +24,26 @@ let
     merge = mergeOneOption;
   };
 
-  pluginWithConfigType = mkOptionType {
-    name = "plugin-with-config";
-    description = ''{ plugin = vim-plugin; config = "vimrc config"; }'';
-    check = with types; x:
-      (let a = {plugin=0;config=0;}; in x // a == a) &&
-      hasAttr "plugin" x &&
-      package.check x.plugin &&
-      (hasAttr "config" x -> lines.check x.config);
+  pluginWithConfigType = types.submodule {
+    options = {
+      plugin = mkOption {
+        type = types.package;
+        description = "vim plugin";
+      };
+      config = mkOption {
+        type = types.lines;
+        description = "vimscript for this plugin to be placed in init.vim";
+        default = "";
+      };
+    };
   };
 
   # A function to get the configuration string (if any) from an element of 'plugins'
   pluginConfig = p:
     if builtins.hasAttr "plugin" p && builtins.hasAttr "config" p then ''
-      """"""""""""""""""""""""""""""""
-      " ${p.plugin.pname}
-      """"""""""""""""""""""""""""""""
+      " ${p.plugin.pname} {{{
       ${p.config}
+      " }}}
     '' else "";
 
   moduleConfigure =
