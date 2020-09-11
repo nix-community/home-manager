@@ -56,7 +56,7 @@ let
     (loadModule ./programs/beets.nix { })
     (loadModule ./programs/broot.nix { })
     (loadModule ./programs/browserpass.nix { })
-    (loadModule ./programs/chromium.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./programs/chromium.nix { })
     (loadModule ./programs/command-not-found/command-not-found.nix { })
     (loadModule ./programs/dircolors.nix { })
     (loadModule ./programs/direnv.nix { })
