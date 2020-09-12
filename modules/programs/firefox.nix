@@ -65,13 +65,13 @@ let
   #   ]
   # TODO(eyjhb) CHANGE THIS!
   semanticTypes = with types; rec {
-    zncAtom = oneOf [ int bool str ];
-    zncAll = oneOf [ zncAtom (listOf zncAll) (attrsOf zncAll) ];
-    zncConf = attrsOf ( (zncAll)  // {
+    policiesAtom = oneOf [ int bool str ];
+    policiesAll = oneOf [ policiesAtom (listOf policiesAll) (attrsOf policiesAll) ];
+    policiesConf = attrsOf ( (policiesAll)  // {
       # Since this is a recursive type and the description by default contains
       # the description of its subtypes, infinite recursion would occur without
       # explicitly breaking this cycle
-      description = "TODO(eyjhb) replace";
+      description = "attrset of int, bool, str, listof (previous values), attrset of (previous values)";
     });
   };
 
@@ -125,7 +125,7 @@ in
           Whether or not to use a pr. policies.json approach, which will merge
           the global extensions and extraPolicies into each profile, and allow 
           to customize each profile, using policies with individual extensions, etc.
-          This however requires a patched Firefox, which can be fond here:
+          This however requires a patched Firefox, which can be found here:
           https://github.com/NixOS/nixpkgs/pull/94898
         '';
       };
@@ -259,7 +259,7 @@ in
             };
 
             extraPolicies = mkOption {
-              type = semanticTypes.zncConf;
+              type = semanticTypes.policiesConf;
               default = {};
               example = literalExample ''
                 "NoDefaultBookmarks" = true;
@@ -281,7 +281,7 @@ in
       };
 
       extraPolicies = mkOption {
-        type = semanticTypes.zncConf;
+        type = semanticTypes.policiesConf;
         default = {};
         example = literalExample ''
           "NoDefaultBookmarks" = true;
@@ -385,12 +385,6 @@ in
     );
 
     systemd.user = {
-      timers = {
-        firefox-policies-writer = {
-          Unit = { Description = "Firefox Policies Writer"; };
-          Timer = { OnUnitInactiveSec = systemdTimerInterval; };
-        };
-      };
       services = {
         firefox-policies-writer = {
           Unit = { Description = "Firefox Policies Writer"; };
@@ -398,54 +392,45 @@ in
           Install = { WantedBy = [ "default.target" ]; };
 
           Service = {
-            Type = "simple";
+            Type = "oneshot";
+
+            # We will never need this, as `/run/user/:UID/` is created at each boot
+            # and will therefore wipe the file
+            # ExecStop = (toString (pkgs.writeShellScript "remove-firefox-policies-file" ''
+            #   # set our runtime dir + policies location here 
+            #   # XDG_RUNTIME_DIR="/run/user/$(id -u)"
+            #   XDG_RUNTIME_DIR="/run/user/$($DRY_RUN_CMD  ${pkgs.coreutils}/bin/id -u)"
+            #   POLICIES_LOCATION="$XDG_RUNTIME_DIR/firefox/policies.json"
+
+            #   # if the file exists, delete it
+            #   if [[ -f $POLICIES_LOCATION ]]; then
+            #     ${pkgs.coreutils}/bin/rm $POLICIES_LOCATION
+            #   fi
+            # ''));
 
             ExecStart = let
               policiesFile = pkgs.writeText "policies.json" (mkPolicies cfg);
-            in (toString (pkgs.writeShellScript "dropbox-start" ''
+            in (toString (pkgs.writeShellScript "write-firefox-policies-file" ''
+              set -xe
+
               # set our runtime dir + policies location here 
-              XDG_RUNTIME_DIR="/run/user/$(id -u)"
+              XDG_RUNTIME_DIR="/run/user/$($DRY_RUN_CMD  ${pkgs.coreutils}/bin/id -u)"
               POLICIES_LOCATION="$XDG_RUNTIME_DIR/firefox/policies.json"
 
               # create the dir, so it exists else other operations will fail
-              mkdir -p "$XDG_RUNTIME_DIR/firefox"
+              $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p "$XDG_RUNTIME_DIR/firefox"
 
-              # if the file exists, check if correct version, if not remove and link
+              # if the file exists, delete it
               if [[ -f $POLICIES_LOCATION ]]; then
-                echo Policies exists
-                if [[ "$(readlink -f $POLICIES_LOCATION)" -ne "${policiesFile}" ]]; then
-                  echo Policies are the same nothing to do
-                  exit 0
-                fi
-
-                echo policies are not the same deleting
-                rm $POLICIES_LOCATION
+                ${pkgs.coreutils}/bin/rm $POLICIES_LOCATION
               fi
 
               # actually link it
-              echo linking file
-              ln -s ${policiesFile} $POLICIES_LOCATION
+              $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln -s ${policiesFile} $POLICIES_LOCATION
             ''));
+          };
         };
       };
     };
-  };
-
-    home.activation.runtime = hm.dag.entryAfter [ "writeBoundary" ] (let
-      policiesFile = pkgs.writeText "policies.json" (mkPolicies cfg);
-      shouldRun = (cfg.extensions != [] || cfg.extraPolicies != {});
-    in ''
-      # check if this should run, if not just exit 0
-      if [[ ! ${pkgs.lib.boolToString shouldRun} ]]; then
-        exit 0
-      fi
-
-      # set our runtime dir + policies location here 
-      XDG_RUNTIME_DIR="/run/user/$(id -u)"
-      POLICIES_LOCATION="$XDG_RUNTIME_DIR/firefox/policies.json"
-
-      echo Deleting file, because we should use it now
-      rm $POLICIES_LOCATION
-    '');
   };
 }
