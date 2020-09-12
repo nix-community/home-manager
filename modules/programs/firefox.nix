@@ -394,20 +394,6 @@ in
           Service = {
             Type = "oneshot";
 
-            # We will never need this, as `/run/user/:UID/` is created at each boot
-            # and will therefore wipe the file
-            # ExecStop = (toString (pkgs.writeShellScript "remove-firefox-policies-file" ''
-            #   # set our runtime dir + policies location here 
-            #   # XDG_RUNTIME_DIR="/run/user/$(id -u)"
-            #   XDG_RUNTIME_DIR="/run/user/$($DRY_RUN_CMD  ${pkgs.coreutils}/bin/id -u)"
-            #   POLICIES_LOCATION="$XDG_RUNTIME_DIR/firefox/policies.json"
-
-            #   # if the file exists, delete it
-            #   if [[ -f $POLICIES_LOCATION ]]; then
-            #     ${pkgs.coreutils}/bin/rm $POLICIES_LOCATION
-            #   fi
-            # ''));
-
             ExecStart = let
               policiesFile = pkgs.writeText "policies.json" (mkPolicies cfg);
             in (toString (pkgs.writeShellScript "write-firefox-policies-file" ''
