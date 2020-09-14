@@ -196,6 +196,7 @@ in
         "$HOME"   for state version < 20.09,
         undefined for state version ≥ 20.09
       '';
+      apply = toString;
       example = "/home/jane.doe";
       description = "The user's home directory. Must be an absolute path.";
     };
@@ -402,7 +403,7 @@ in
     home.profileDirectory =
       if config.submoduleSupport.enable
         && config.submoduleSupport.externalPackageInstall
-      then config.home.path
+      then "/etc/profiles/per-user/${cfg.username}"
       else cfg.homeDirectory + "/.nix-profile";
 
     home.sessionVariables =

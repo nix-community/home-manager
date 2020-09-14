@@ -1,0 +1,4 @@
+display_volume_level=no
+mpd_music_dir=/home/user/music
+playlist_disable_highlight_delay=0
+user_interface=alternative

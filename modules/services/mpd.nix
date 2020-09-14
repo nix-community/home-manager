@@ -42,7 +42,7 @@ in {
       };
 
      musicDirectory = mkOption {
-        type = types.path;
+        type = with types; either path str;
         default = "${config.home.homeDirectory}/music";
         defaultText = "$HOME/music";
         apply = toString;       # Prevent copies to Nix store.

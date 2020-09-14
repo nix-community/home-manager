@@ -7,7 +7,7 @@ let
   cfg = config.xsession.windowManager.i3;
 
   commonOptions = import ./lib/options.nix {
-    inherit lib cfg pkgs;
+    inherit config lib cfg pkgs;
     moduleName = "i3";
     isGaps = cfg.package == pkgs.i3-gaps;
   };

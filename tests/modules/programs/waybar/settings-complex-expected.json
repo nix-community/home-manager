@@ -1,0 +1,46 @@
+[
+  {
+    "custom/my-module": {
+      "exec": "@dummy@/bin/dummy",
+      "format": "hello from {}"
+    },
+    "height": 30,
+    "idle_inhibitor": {
+      "format": "{icon}"
+    },
+    "layer": "top",
+    "modules-center": [
+      "sway/window"
+    ],
+    "modules-left": [
+      "sway/workspaces",
+      "sway/mode",
+      "custom/my-module"
+    ],
+    "modules-right": [
+      "idle_inhibitor",
+      "pulseaudio",
+      "network",
+      "cpu",
+      "memory",
+      "backlight",
+      "tray",
+      "battery",
+      "clock"
+    ],
+    "output": [
+      "DP-1"
+    ],
+    "position": "top",
+    "sway/mode": {
+      "tooltip": false
+    },
+    "sway/window": {
+      "max-length": 120
+    },
+    "sway/workspaces": {
+      "all-outputs": true,
+      "disable-scroll": true
+    }
+  }
+]

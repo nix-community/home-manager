@@ -225,11 +225,23 @@ in {
         };
 
         options = mkOption {
-          type = types.listOf types.str;
-          default = [ ];
-          example = [ "--dark" ];
+          type = with types;
+            let
+              primitiveType = either str (either bool int);
+              sectionType = attrsOf primitiveType;
+            in attrsOf (either primitiveType sectionType);
+          default = { };
+          example = {
+            features = "decorations";
+            whitespace-error-style = "22 reverse";
+            decorations = {
+              commit-decoration-style = "bold yellow box ul";
+              file-style = "bold yellow ul";
+              file-decoration-style = "none";
+            };
+          };
           description = ''
-            Extra command line options given to delta.
+            Options to configure delta.
           '';
         };
       };
@@ -265,7 +277,14 @@ in {
         genIdentity = name: account:
           with account;
           nameValuePair "sendemail.${name}" ({
-            smtpEncryption = if smtp.tls.enable then "tls" else "";
+            smtpEncryption = if smtp.tls.enable then
+              (if smtp.tls.useStartTls
+              || versionOlder config.home.stateVersion "20.09" then
+                "tls"
+              else
+                "ssl")
+            else
+              "";
             smtpServer = smtp.host;
             smtpUser = userName;
             from = address;
@@ -329,14 +348,13 @@ in {
     })
 
     (mkIf cfg.delta.enable {
-      programs.git.iniContent = let
-        deltaArgs = [ "${pkgs.gitAndTools.delta}/bin/delta" ]
-          ++ cfg.delta.options;
-      in {
-        core.pager = concatStringsSep " " deltaArgs;
-        interactive.diffFilter =
-          concatStringsSep " " (deltaArgs ++ [ "--color-only" ]);
-      };
+      programs.git.iniContent =
+        let deltaCommand = "${pkgs.gitAndTools.delta}/bin/delta";
+        in {
+          core.pager = deltaCommand;
+          interactive.diffFilter = "${deltaCommand} --color-only";
+          delta = cfg.delta.options;
+        };
     })
   ]);
 }

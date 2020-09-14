@@ -45,11 +45,14 @@ in {
             optionalString (plugin.tags != [ ]) ''
               ${concatStrings (map (tag: ", ${tag}") plugin.tags)}
             ''
-          } 
+          }
         '') cfg.plugins)}
       ''}
 
-      zplug install
+      if ! zplug check; then
+        zplug install
+      fi
+
       zplug load
     '';
 

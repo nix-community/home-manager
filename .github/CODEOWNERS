@@ -1,5 +1,7 @@
 *                                                     @rycee
 
+/flake.nix                                            @bqv @kisik21
+
 /modules/home-environment.nix                         @rycee
 
 /modules/misc/dconf.nix                               @gnidorah @rycee
@@ -74,12 +76,21 @@
 /modules/programs/mbsync.nix                          @KarlJoad
 /tests/modules/programs/mbsync                        @KarlJoad
 
+/modules/programs/mcfly.nix                           @marsam
+
 /modules/programs/mpv.nix                             @tadeokondrak
+
+/modules/programs/ncmpcpp.nix                         @olmokramer
+/tests/modules/programs/ncmpcpp                       @olmokramer
+/tests/modules/programs/ncmpcpp-linux                 @olmokramer
 
 /modules/programs/ne.nix                              @cwyc
 /tests/modules/programs/ne                            @cwyc
 
 /modules/programs/noti.nix                            @marsam
+
+/modules/programs/nushell.nix                         @Philipp-M
+/tests/modules/programs/nushell                       @Philipp-M
 
 /modules/programs/obs-studio.nix                      @adisbladis
 
@@ -103,6 +114,9 @@
 
 /modules/programs/texlive.nix                         @rycee
 
+/modules/programs/waybar.nix                          @berbiche
+/tests/modules/programs/waybar                        @berbiche
+
 /modules/programs/z-lua.nix                           @marsam
 
 /modules/programs/zathura.nix                         @rprospero
@@ -112,6 +126,9 @@
 /modules/services/cbatticon.nix                       @pmiddend
 
 /modules/services/clipmenu.nix                        @DamienCassou
+
+/modules/services/dropbox.nix                         @eyJhb
+/tests/modules/services/dropbox                       @eyJhb
 
 /modules/services/dunst.nix                           @rycee
 
@@ -130,6 +147,9 @@
 /modules/services/hound.nix                           @adisbladis
 
 /modules/services/imapnotify.nix                      @nickhu
+
+/modules/services/kanshi.nix                          @nurelin
+/tests/modules/services/kanshi                        @nurelin
 
 /modules/services/kdeconnect.nix                      @adisbladis
 
@@ -175,7 +195,7 @@
 
 /modules/services/unison.nix                          @pacien
 
-/modlues/services/window-managers/i3-sway/sway.nix    @alexarice
+/modules/services/window-managers/i3-sway/sway.nix    @alexarice
 
 /modules/services/xcape.nix                           @nickhu
 

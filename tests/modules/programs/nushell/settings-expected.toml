@@ -1,0 +1,5 @@
+completion_mode = "circular"
+edit_mode = "vi"
+key_timeout = 10
+no_auto_pivot = true
+startup = ["alias la [] { ls -a }", "alias e [msg] { echo $msg }"]

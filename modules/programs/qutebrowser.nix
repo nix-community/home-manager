@@ -261,7 +261,7 @@ in {
       ++ mapAttrsToList (formatDictLine "c.url.searchengines") cfg.searchEngines
       ++ mapAttrsToList (formatDictLine "c.bindings.key_mappings")
       cfg.keyMappings
-      ++ optional (!cfg.enableDefaultBindings) [ "c.bindings.default = {}" ]
+      ++ optional (!cfg.enableDefaultBindings) "c.bindings.default = {}"
       ++ mapAttrsToList formatKeyBindings cfg.keyBindings
       ++ optional (cfg.extraConfig != "") cfg.extraConfig);
   };

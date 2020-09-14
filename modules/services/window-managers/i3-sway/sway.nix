@@ -7,7 +7,7 @@ let
   cfg = config.wayland.windowManager.sway;
 
   commonOptions = import ./lib/options.nix {
-    inherit lib cfg pkgs;
+    inherit config lib cfg pkgs;
     moduleName = "sway";
     capitalModuleName = "Sway";
   };
@@ -160,7 +160,7 @@ let
       output = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
-        example = { "HDMI-A-2" = { bg = "~/path/to/background.png"; }; };
+        example = { "HDMI-A-2" = { bg = "~/path/to/background.png fill"; }; };
         description = ''
           An attribute set that defines output modules. See man sway_output for options.
         '';
@@ -253,7 +253,7 @@ let
       } ${toString floating.border}
       hide_edge_borders ${window.hideEdgeBorders}
       focus_wrapping ${if focus.forceWrapping then "yes" else "no"}
-      focus_follows_mouse ${if focus.followMouse then "yes" else "no"}
+      focus_follows_mouse ${focus.followMouse}
       focus_on_window_activation ${focus.newWindow}
       mouse_warping ${if focus.mouseWarping then "output" else "none"}
       workspace_layout ${workspaceLayout}

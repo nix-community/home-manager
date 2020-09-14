@@ -10,11 +10,12 @@ let
 
   hmModule = types.submoduleWith {
     specialArgs = { lib = extendedLib; };
-    modules = [(
-      {name, ...}: {
+    modules = [
+      ({ name, ... }: {
         imports = import ../modules/modules.nix {
           inherit pkgs;
           lib = extendedLib;
+          useNixpkgsModule = !cfg.useGlobalPkgs;
         };
 
         config = {
@@ -24,8 +25,8 @@ let
           home.username = config.users.users.${name}.name;
           home.homeDirectory = config.users.users.${name}.home;
         };
-      }
-    )];
+      })
+    ];
   };
 
 in
@@ -37,6 +38,24 @@ in
         installation of user packages through the
         <option>users.users.‹name?›.packages</option> option.
       '';
+
+      useGlobalPkgs = mkEnableOption ''
+        using the system configuration's <literal>pkgs</literal>
+        argument in Home Manager. This disables the Home Manager
+        options <option>nixpkgs.*</option>
+      '';
+
+      backupFileExtension = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "backup";
+        description = ''
+          On activation move existing files by appending the given
+          file extension rather than exiting with an error.
+        '';
+      };
+
+      verbose = mkEnableOption "verbose output on activation";
 
       users = mkOption {
         type = types.attrsOf hmModule;
@@ -68,14 +87,21 @@ in
 
     users.users = mkIf cfg.useUserPackages (
       mapAttrs (username: usercfg: {
-        packages = usercfg.home.packages;
+        packages = [ usercfg.home.path ];
       }) cfg.users
     );
+
+    environment.pathsToLink = mkIf cfg.useUserPackages [ "/etc/profile.d" ];
 
     system.activationScripts.postActivation.text =
       concatStringsSep "\n" (mapAttrsToList (username: usercfg: ''
         echo Activating home-manager configuration for ${username}
-        sudo -u ${username} -i ${usercfg.home.activationPackage}/activate
+        sudo -u ${username} -i ${pkgs.writeShellScript "activation-${username}" ''
+          ${lib.optionalString (cfg.backupFileExtension != null)
+            "export HOME_MANAGER_BACKUP_EXT=${lib.escapeShellArg cfg.backupFileExtension}"}
+          ${lib.optionalString cfg.verbose "export VERBOSE=1"}
+          exec ${usercfg.home.activationPackage}/activate
+        ''}
       '') cfg.users);
   };
 }

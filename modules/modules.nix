@@ -86,15 +86,18 @@ let
     (loadModule ./programs/man.nix { })
     (loadModule ./programs/matplotlib.nix { })
     (loadModule ./programs/mbsync.nix { })
+    (loadModule ./programs/mcfly.nix { })
     (loadModule ./programs/mercurial.nix { })
     (loadModule ./programs/mpv.nix { })
     (loadModule ./programs/msmtp.nix { })
+    (loadModule ./programs/ncmpcpp.nix { })
     (loadModule ./programs/ne.nix { })
     (loadModule ./programs/neomutt.nix { })
     (loadModule ./programs/neovim.nix { })
     (loadModule ./programs/newsboat.nix { })
     (loadModule ./programs/noti.nix { })
     (loadModule ./programs/notmuch.nix { })
+    (loadModule ./programs/nushell.nix { })
     (loadModule ./programs/obs-studio.nix { })
     (loadModule ./programs/offlineimap.nix { })
     (loadModule ./programs/opam.nix { })
@@ -117,6 +120,7 @@ let
     (loadModule ./programs/vim.nix { })
     (loadModule ./programs/vscode.nix { })
     (loadModule ./programs/vscode/haskell.nix { })
+    (loadModule ./programs/waybar.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/z-lua.nix { })
     (loadModule ./programs/zathura.nix { })
     (loadModule ./programs/zoxide.nix { })
@@ -126,6 +130,7 @@ let
     (loadModule ./services/cbatticon.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/clipmenu.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/compton.nix { })
+    (loadModule ./services/dropbox.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/dunst.nix { })
     (loadModule ./services/dwm-status.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/emacs.nix { condition = hostPlatform.isLinux; })
@@ -137,6 +142,7 @@ let
     (loadModule ./services/grobi.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/hound.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/imapnotify.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./services/kanshi.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/kbfs.nix { })
     (loadModule ./services/kdeconnect.nix { })
     (loadModule ./services/keepassx.nix { })
@@ -183,6 +189,7 @@ let
     (loadModule ./services/xscreensaver.nix { })
     (loadModule ./services/xsuspender.nix { condition = hostPlatform.isLinux; })
     (loadModule ./systemd.nix { })
+    (loadModule ./targets/darwin.nix { condition = hostPlatform.isDarwin; })
     (loadModule ./targets/generic-linux.nix { condition = hostPlatform.isLinux; })
     (loadModule ./xcursor.nix { })
     (loadModule ./xresources.nix { })
@@ -193,9 +200,14 @@ let
 
   modules = map (getAttr "file") (filter (getAttr "condition") allModules);
 
-  pkgsModule = {
+  pkgsModule = { config, ... }: {
     config = {
       _module.args.baseModules = modules;
+      _module.args.pkgsPath = lib.mkDefault (
+        if versionAtLeast config.home.stateVersion "20.09" then
+          pkgs.path
+        else
+          <nixpkgs>);
       _module.args.pkgs = lib.mkDefault pkgs;
       _module.check = check;
       lib = lib.hm;

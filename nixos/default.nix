@@ -85,8 +85,10 @@ in {
       })));
 
     users.users = mkIf cfg.useUserPackages
-      (mapAttrs (username: usercfg: { packages = usercfg.home.packages; })
+      (mapAttrs (username: usercfg: { packages = [ usercfg.home.path ]; })
         cfg.users);
+
+    environment.pathsToLink = mkIf cfg.useUserPackages [ "/etc/profile.d" ];
 
     systemd.services = mapAttrs' (_: usercfg:
       let username = usercfg.home.username;

@@ -52,10 +52,13 @@ import nmt {
     ./modules/programs/kakoune
     ./modules/programs/lf
     ./modules/programs/lieer
+    ./modules/programs/man
     ./modules/programs/mbsync
+    ./modules/programs/ncmpcpp
     ./modules/programs/ne
     ./modules/programs/neomutt
     ./modules/programs/newsboat
+    ./modules/programs/nushell
     ./modules/programs/qutebrowser
     ./modules/programs/readline
     ./modules/programs/powerline-go
@@ -63,9 +66,12 @@ import nmt {
     ./modules/programs/starship
     ./modules/programs/texlive
     ./modules/programs/tmux
+    ./modules/programs/vscode
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/xresources
+  ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
+    ./modules/targets-darwin
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     ./meta # Suffices to run on one platform.
     ./modules/misc/debug
@@ -74,16 +80,22 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/services/dropbox
     ./modules/services/emacs
+    ./modules/services/dropbox
     ./modules/programs/firefox
     ./modules/programs/getmail
     ./modules/services/lieer
+    ./modules/programs/ncmpcpp-linux
     ./modules/programs/rofi
+    ./modules/programs/waybar
+    ./modules/services/kanshi
     ./modules/services/polybar
     ./modules/services/sxhkd
     ./modules/services/fluidsynth
     ./modules/services/window-managers/i3
+    ./modules/services/window-managers/sway
     ./modules/systemd
-    ./modules/targets
+    ./modules/targets-linux
   ]);
 }

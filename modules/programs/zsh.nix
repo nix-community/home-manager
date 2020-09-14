@@ -18,6 +18,10 @@ let
     mapAttrsToList (k: v: "alias ${k}=${lib.escapeShellArg v}") cfg.shellAliases
   );
 
+  globalAliasesStr = concatStringsSep "\n" (
+    mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases
+  );
+
   zdotdir = "$HOME/" + cfg.dotDir;
 
   bindkeyCommands = {
@@ -181,6 +185,14 @@ in
         type = types.nullOr types.bool;
       };
 
+      cdpath = mkOption {
+        default = [];
+        description = ''
+          List of paths to autocomplete calls to `cd`.
+        '';
+        type = types.listOf types.str;
+      };
+
       dotDir = mkOption {
         default = null;
         example = ".config/zsh";
@@ -203,6 +215,21 @@ in
         description = ''
           An attribute set that maps aliases (the top level attribute names in
           this option) to command strings or directly to build outputs.
+        '';
+        type = types.attrsOf types.str;
+      };
+
+      shellGlobalAliases = mkOption {
+        default = {};
+        example = literalExample ''
+          {
+            UUID = "$(uuidgen | tr -d \\n)";
+            G = "| grep";
+          }
+        '';
+        description = ''
+          Similar to <varname><link linkend="opt-programs.zsh.shellAliases">opt-programs.zsh.shellAliases</link></varname>,
+          but are substituted anywhere on a line.
         '';
         type = types.attrsOf types.str;
       };
@@ -373,6 +400,10 @@ in
       home.file."${relToDotDir ".zshrc"}".text = ''
         typeset -U path cdpath fpath manpath
 
+        ${optionalString (cfg.cdpath != []) ''
+          cdpath+=(${concatStringsSep " " cfg.cdpath})
+        ''}
+
         for profile in ''${(z)NIX_PROFILES}; do
           fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
         done
@@ -451,6 +482,9 @@ in
 
         # Aliases
         ${aliasesStr}
+
+        # Global Aliases
+        ${globalAliasesStr}
       '';
     }
 
