@@ -5,7 +5,7 @@ The 19.03 release branch became the stable branch in April, 2019.
 
 [[sec-release-19.03-highlights]]
 === Highlights
-:opt-home-file-source: opt-home.file._name__.source
+:opt-home-file-source: opt-home.file._name_.source
 
 This release has the following notable changes:
 
