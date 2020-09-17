@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="text/smos">
+  <acronym>Smos</acronym>
+  <expanded-acronym>Smos</expanded-acronym>
+  <sub-class-of type="text/plain"/>
+  <glob pattern="*.smos"/>
+</mime-type>
+
+

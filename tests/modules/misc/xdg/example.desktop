@@ -1,0 +1,6 @@
+Type=Application
+Exec=hello %u
+Name=Hello
+Terminal=true
+MimeType=application/example
+
