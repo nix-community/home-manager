@@ -1,5 +1,5 @@
 Type=Application
-Exec=hello %u
+Exec=hello -g %u
 Name=Hello
 Terminal=true
 MimeType=application/example

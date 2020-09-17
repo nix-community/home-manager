@@ -36,6 +36,12 @@ in {
       assertFileContent \
         home-path/share/mime/packages/example.xml \
         ${./example.xml}
+
+      ${pkgs.xdg_utils}/bin/xdg-mime query default application/example > $out/query-output.txt
+      assertFileContent $out/output.txt ${./query-output.txt}
+
+      ${pkgs.xdg_utils}/bin/xdg-open ${./example.xyz} > $out/output.txt
+      assertFileContent $out/output.txt ${./example.xyz}
     '';
   };
 }
