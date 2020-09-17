@@ -60,7 +60,7 @@ let
     };
   };
 
-  serialiseArg = key: val: "-${key}=${escapeShellArg val}";
+  serialiseArg = key: val: escapeShellArg "-${key}=${escape [ "=" ] val}";
 
   serialiseArgs = args: concatStringsSep " " (mapAttrsToList serialiseArg args);
 
