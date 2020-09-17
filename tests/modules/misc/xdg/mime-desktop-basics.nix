@@ -13,8 +13,8 @@ let
   mimeTypeExample = pkgs.stdenv.mkDerivation {
     name = "mime-type-example";
     buildCommand = ''
-      mkdir -p $out/share/mime/text
-      cp ${./example.xml} $out/share/mime/text/example.xml
+      mkdir -p $out/share/mime/packages
+      cp ${./example.xml} $out/share/mime/packages/example.xml
     '';
   };
 
@@ -33,9 +33,9 @@ in {
         home-path/share/applications/example.desktop \
         ${./example.desktop}
 
-      assertFileExists home-path/share/mime/text/example.xml
+      assertFileExists home-path/share/mime/packages/example.xml
       assertFileContent \
-        home-path/share/mime/text/example.xml \
+        home-path/share/mime/packages/example.xml \
         ${./example.xml}
     '';
   };
