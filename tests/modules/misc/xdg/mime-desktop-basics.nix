@@ -18,7 +18,6 @@ let
     '';
   };
 
-
 in {
   config = {
     xdg = {
