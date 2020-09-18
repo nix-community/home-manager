@@ -49,6 +49,7 @@ let
     (loadModule ./programs/alot.nix { })
     (loadModule ./programs/aria2.nix { })
     (loadModule ./programs/astroid.nix { })
+    (loadModule ./programs/autojump.nix { })
     (loadModule ./programs/autorandr.nix { })
     (loadModule ./programs/bash.nix { })
     (loadModule ./programs/bat.nix { })

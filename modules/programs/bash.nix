@@ -11,6 +11,14 @@ in
 {
   meta.maintainers = [ maintainers.rycee ];
 
+  imports = [
+    (mkRenamedOptionModule [ "programs" "bash" "enableAutojump" ] [
+      "programs"
+      "autojump"
+      "enable"
+    ])
+  ];
+
   options = {
     programs.bash = {
       enable = mkEnableOption "GNU Bourne-Again SHell";
@@ -94,12 +102,6 @@ in
         '';
       };
 
-      enableAutojump = mkOption {
-        default = false;
-        type = types.bool;
-        description = "Enable the autojump navigation tool.";
-      };
-
       profileExtra = mkOption {
         default = "";
         type = types.lines;
@@ -176,9 +178,6 @@ in
 
           ${aliasesStr}
 
-          ${optionalString cfg.enableAutojump
-            ". ${pkgs.autojump}/share/autojump/autojump.bash"}
-
           ${cfg.initExtra}
         fi
       '';
@@ -216,9 +215,6 @@ in
           ${cfg.logoutExtra}
         '';
       };
-
-      home.packages =
-        optional (cfg.enableAutojump) pkgs.autojump;
     }
   );
 }

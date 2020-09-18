@@ -33,6 +33,9 @@
 
 /modules/programs/aria2.nix                           @JustinLovinger
 
+/modules/programs/autojump.nix                        @evanjs
+/tests/modules/programs/autojump                      @evanjs
+
 /modules/programs/autorandr.nix                       @uvNikita
 
 /modules/programs/bash.nix                            @rycee

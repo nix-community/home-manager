@@ -1687,6 +1687,16 @@ in
           A new module is available: 'programs.mu'.
         '';
       }
+
+      {
+        time = "2020-10-08T21:28:16+00:00";
+        message = ''
+          A new module is available: 'programs.autojump'
+
+          The option `programs.bash.enableAutojump` is deprecated and this new
+          module should be used instead.
+        '';
+      }
     ];
   };
 }

@@ -41,6 +41,7 @@ import nmt {
     ./modules/programs/alacritty
     ./modules/programs/alot
     ./modules/programs/aria2
+    ./modules/programs/autojump
     ./modules/programs/bash
     ./modules/programs/browserpass
     ./modules/programs/dircolors
