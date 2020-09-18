@@ -452,7 +452,7 @@ in
 
       {
         time = "2017-12-11T17:23:12+00:00";
-        condition = config.home.activation ? reloadSystemD;
+        condition = config.home.activation ? reloadSystemd;
         message = ''
           The Boolean option 'systemd.user.startServices' is now
           available. When enabled the current naive systemd unit
@@ -1617,6 +1617,60 @@ in
         condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.dropbox'.
+        '';
+      }
+
+      {
+        time = "2020-08-13T22:15:27+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.waybar'
+        '';
+      }
+
+      {
+        time = "2020-08-14T22:44:20+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.kanshi'
+        '';
+      }
+
+      {
+        time = "2020-08-25T22:14:01+00:00";
+        message = ''
+          A new module is available: 'programs.mcfly'
+        '';
+      }
+
+      {
+        time = "2020-09-01T18:38:18+00:00";
+        message = ''
+          A new module is available: 'programs.ncmpcpp'
+        '';
+      }
+
+      {
+        time = "2020-09-11T10:06:47+00:00";
+        condition = hostPlatform.isLinux && config.targets.genericLinux.enable;
+        message = ''
+          A new option 'targets.genericLinux.extraXdgDataDirs' is available
+          to setup the user environment with the OS's data files.
+
+          This is useful for example to get Bash completion for
+          'systemctl' which shouldn't be installed through Home Manager.
+
+          This is also useful to have non Home Manager applications
+          available in menus.
+        '';
+      }
+
+      {
+        time = "2020-09-09T06:54:59+00:00";
+        condition = config.programs.man.enable;
+        message = ''
+          A new option 'programs.man.generateCaches' was added to
+          support the apropos command.
         '';
       }
     ];

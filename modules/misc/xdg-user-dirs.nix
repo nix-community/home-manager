@@ -89,16 +89,21 @@ in {
   };
 
   config = mkIf cfg.enable {
-    xdg.configFile."user-dirs.dirs".text = generators.toKeyValue { } ({
-      XDG_DESKTOP_DIR = cfg.desktop;
-      XDG_DOCUMENTS_DIR = cfg.documents;
-      XDG_DOWNLOAD_DIR = cfg.download;
-      XDG_MUSIC_DIR = cfg.music;
-      XDG_PICTURES_DIR = cfg.pictures;
-      XDG_PUBLICSHARE_DIR = cfg.publicShare;
-      XDG_TEMPLATES_DIR = cfg.templates;
-      XDG_VIDEOS_DIR = cfg.videos;
-    } // cfg.extraConfig);
+    xdg.configFile."user-dirs.dirs".text = let
+      options = {
+        XDG_DESKTOP_DIR = cfg.desktop;
+        XDG_DOCUMENTS_DIR = cfg.documents;
+        XDG_DOWNLOAD_DIR = cfg.download;
+        XDG_MUSIC_DIR = cfg.music;
+        XDG_PICTURES_DIR = cfg.pictures;
+        XDG_PUBLICSHARE_DIR = cfg.publicShare;
+        XDG_TEMPLATES_DIR = cfg.templates;
+        XDG_VIDEOS_DIR = cfg.videos;
+      } // cfg.extraConfig;
+
+      # For some reason, these need to be wrapped with quotes to be valid.
+      wrapped = mapAttrs (_: value: ''"${value}"'') options;
+    in generators.toKeyValue { } wrapped;
 
     xdg.configFile."user-dirs.conf".text = "enabled=False";
   };

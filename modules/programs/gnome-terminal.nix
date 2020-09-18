@@ -122,6 +122,20 @@ let
           The number of scrollback lines to keep, null for infinite.
         '';
       };
+
+      customCommand = mkOption {
+        default = null;
+        type = types.nullOr types.str;
+        description = ''
+          The command to use to start the shell, or null for default shell.
+        '';
+      };
+
+      loginShell = mkOption {
+        default = false;
+        type = types.bool;
+        description = "Run command as a login shell.";
+      };
     };
   });
 
@@ -132,7 +146,13 @@ let
       scrollback-lines = pcfg.scrollbackLines;
       cursor-shape = pcfg.cursorShape;
       cursor-blink-mode = pcfg.cursorBlinkMode;
-    } // (if (pcfg.font == null) then {
+      login-shell = pcfg.loginShell;
+    } // (if (pcfg.customCommand != null) then {
+      use-custom-command = true;
+      custom-command = pcfg.customCommand;
+    } else {
+      use-custom-command = false;
+    }) // (if (pcfg.font == null) then {
       use-system-font = true;
     } else {
       use-system-font = false;

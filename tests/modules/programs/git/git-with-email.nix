@@ -13,6 +13,8 @@ with lib;
       userName = "H. M. Test";
     };
 
+    home.stateVersion = "20.09";
+
     nmt.script = ''
       function assertGitConfig() {
         local value

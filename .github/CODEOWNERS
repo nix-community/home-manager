@@ -1,6 +1,6 @@
 *                                                     @rycee
 
-/flake.nix                                            @ehmry
+/flake.nix                                            @bqv @kisik21
 
 /modules/home-environment.nix                         @rycee
 
@@ -73,7 +73,13 @@
 
 /modules/programs/matplotlib.nix                      @rprospero
 
+/modules/programs/mcfly.nix                           @marsam
+
 /modules/programs/mpv.nix                             @tadeokondrak
+
+/modules/programs/ncmpcpp.nix                         @olmokramer
+/tests/modules/programs/ncmpcpp                       @olmokramer
+/tests/modules/programs/ncmpcpp-linux                 @olmokramer
 
 /modules/programs/ne.nix                              @cwyc
 /tests/modules/programs/ne                            @cwyc
@@ -105,6 +111,9 @@
 
 /modules/programs/texlive.nix                         @rycee
 
+/modules/programs/waybar.nix                          @berbiche
+/tests/modules/programs/waybar                        @berbiche
+
 /modules/programs/z-lua.nix                           @marsam
 
 /modules/programs/zathura.nix                         @rprospero
@@ -135,6 +144,9 @@
 /modules/services/hound.nix                           @adisbladis
 
 /modules/services/imapnotify.nix                      @nickhu
+
+/modules/services/kanshi.nix                          @nurelin
+/tests/modules/services/kanshi                        @nurelin
 
 /modules/services/kdeconnect.nix                      @adisbladis
 

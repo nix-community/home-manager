@@ -489,6 +489,10 @@ let
     };
   };
 
+  kakouneWithPlugins = pkgs.wrapKakoune pkgs.kakoune-unwrapped {
+    configure = { plugins = cfg.plugins; };
+  };
+
   configFile = let
     wrapOptions = with cfg.config.wrapLines;
       concatStrings [
@@ -506,12 +510,22 @@ let
       ];
 
     showWhitespaceOptions = with cfg.config.showWhitespace;
-      concatStrings [
-        (optionalString (tab != null) " -tab ${tab}")
-        (optionalString (tabStop != null) " -tabpad ${tabStop}")
-        (optionalString (space != null) " -spc ${space}")
-        (optionalString (nonBreakingSpace != null) " -nbsp ${nonBreakingSpace}")
-        (optionalString (lineFeed != null) " -lf ${lineFeed}")
+      let
+        quoteSep = sep:
+          if sep == "'" then
+            ''"'"''
+          else if lib.strings.stringLength sep == 1 then
+            "'${sep}'"
+          else
+            sep; # backwards compat, in case sep == "' '", etc.
+
+      in concatStrings [
+        (optionalString (tab != null) " -tab ${quoteSep tab}")
+        (optionalString (tabStop != null) " -tabpad ${quoteSep tabStop}")
+        (optionalString (space != null) " -spc ${quoteSep space}")
+        (optionalString (nonBreakingSpace != null)
+          " -nbsp ${quoteSep nonBreakingSpace}")
+        (optionalString (lineFeed != null) " -lf ${quoteSep lineFeed}")
       ];
 
     uiOptions = with cfg.config.ui;
@@ -624,11 +638,22 @@ in {
           <filename>~/.config/kak/kakrc</filename>.
         '';
       };
+
+      plugins = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        example = literalExample "[ pkgs.kakounePlugins.kak-fzf ]";
+        description = ''
+          List of kakoune plugins to install. To get a list of
+          supported plugins run:
+          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A kakounePlugins</command>.
+        '';
+      };
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.kakoune ];
+    home.packages = [ kakouneWithPlugins ];
     xdg.configFile."kak/kakrc".source = configFile;
   };
 }

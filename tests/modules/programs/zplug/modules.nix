@@ -38,8 +38,10 @@ with lib;
       assertFileContains home-files/.zshrc \
         'zplug "lib/clipboard", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"'
 
-      assertFileRegex home-files/.zshrc \
-        '^zplug install$'
+      assertFileContains home-files/.zshrc \
+        'if ! zplug check; then
+           zplug install
+         fi'
 
       assertFileRegex home-files/.zshrc \
         '^zplug load$'

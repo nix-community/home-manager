@@ -16,17 +16,10 @@ with lib;
       };
     };
 
-    nmt.script = let
-      lineStart =
-        "^add-highlighter\\s\\+global\\/\\?\\s\\+show-whitespaces\\s\\+"
-        + "\\(-\\w\\+\\s\\+.\\s\\+\\)*";
-    in ''
+    nmt.script = ''
       assertFileExists home-files/.config/kak/kakrc
-      assertFileRegex home-files/.config/kak/kakrc '${lineStart}-lf\s\+1\b'
-      assertFileRegex home-files/.config/kak/kakrc '${lineStart}-spc\s\+2\b'
-      assertFileRegex home-files/.config/kak/kakrc '${lineStart}-nbsp\s\+3\b'
-      assertFileRegex home-files/.config/kak/kakrc '${lineStart}-tab\s\+4\b'
-      assertFileRegex home-files/.config/kak/kakrc '${lineStart}-tabpad\s\+5\b'
+      assertFileContains home-files/.config/kak/kakrc \
+        "add-highlighter global/ show-whitespaces -tab '4' -tabpad '5' -spc '2' -nbsp '3' -lf '1'"
     '';
   };
 }

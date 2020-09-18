@@ -1,0 +1,1 @@
+{ vscode-keybindings = ./keybindings.nix; }

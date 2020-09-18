@@ -36,9 +36,12 @@ in {
     systemd.user.services.pulseeffects = {
       Unit = {
         Description = "Pulseeffects daemon";
-        Requires = [ "pulseaudio.service" "dbus.service" ];
-        After = [ "graphical-session.target" ];
+        Requires = [ "dbus.service" ];
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" "pulseaudio.service" ];
       };
+
+      Install = { WantedBy = [ "graphical-session.target" ]; };
 
       Service = {
         ExecStart =
