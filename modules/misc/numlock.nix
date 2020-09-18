@@ -7,6 +7,8 @@ let
   cfg = config.xsession.numlock;
 
 in {
+  meta.maintainers = [ maintainers.evanjs ];
+
   options = { xsession.numlock.enable = mkEnableOption "Num Lock"; };
 
   config = mkIf cfg.enable {

@@ -13,6 +13,9 @@
 
 /modules/misc/news.nix                                @rycee
 
+/modules/misc/numlock.nix                             @evanjs
+/tests/modules/misc/numlock                           @evanjs
+
 /modules/misc/pam.nix                                 @rycee
 /tests/modules/misc/pam                               @rycee
 

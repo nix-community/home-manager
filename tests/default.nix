@@ -75,6 +75,7 @@ import nmt {
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     ./meta # Suffices to run on one platform.
     ./modules/misc/debug
+    ./modules/misc/numlock
     ./modules/misc/pam
     ./modules/misc/xdg
     ./modules/misc/xsession
