@@ -75,6 +75,8 @@
 
 /modules/programs/mcfly.nix                           @marsam
 
+/modules/programs/micro                               @sivizius
+
 /modules/programs/mpv.nix                             @tadeokondrak
 
 /modules/programs/ncmpcpp.nix                         @olmokramer
