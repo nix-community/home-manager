@@ -165,7 +165,11 @@ function doEdit() {
 
     setConfigFile
 
-    exec "$EDITOR" "$HOME_MANAGER_CONFIG"
+    # Don't quote $EDITOR in order to support values including options, e.g.,
+    # "code --wait".
+    #
+    # shellcheck disable=2086
+    exec $EDITOR "$HOME_MANAGER_CONFIG"
 }
 
 function doBuild() {
