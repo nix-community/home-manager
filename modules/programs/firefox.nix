@@ -63,7 +63,6 @@ let
   #       "Folder": "FolderName"
   #     }
   #   ]
-  # TODO(eyjhb) CHANGE THIS!
   semanticTypes = with types; rec {
     policiesAtom = oneOf [ int bool str ];
     policiesAll = oneOf [ policiesAtom (listOf policiesAll) (attrsOf policiesAll) ];
@@ -401,11 +400,11 @@ in
               set -xe
 
               # set our runtime dir + policies location here 
-              XDG_RUNTIME_DIR="/run/user/$($DRY_RUN_CMD  ${pkgs.coreutils}/bin/id -u)"
+              XDG_RUNTIME_DIR="/run/user/$(${pkgs.coreutils}/bin/id -u)"
               POLICIES_LOCATION="$XDG_RUNTIME_DIR/firefox/policies.json"
 
               # create the dir, so it exists else other operations will fail
-              $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p "$XDG_RUNTIME_DIR/firefox"
+              ${pkgs.coreutils}/bin/mkdir -p "$XDG_RUNTIME_DIR/firefox"
 
               # if the file exists, delete it
               if [[ -f $POLICIES_LOCATION ]]; then
@@ -413,7 +412,7 @@ in
               fi
 
               # actually link it
-              $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln -s ${policiesFile} $POLICIES_LOCATION
+              ${pkgs.coreutils}/bin/ln -s ${policiesFile} $POLICIES_LOCATION
             ''));
           };
         };
