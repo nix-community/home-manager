@@ -3,7 +3,7 @@ let
   cfg = config.programs.micro;
   dir = ".config/micro";
 in {
-  #  meta.maintainers = [ maintainers.sivizius ];
+  meta.maintainers = [ maintainers.sivizius ];
 
   ###### interface
   options = {
@@ -12,6 +12,7 @@ in {
         "micro – a modern easy-to-use intuitive terminal-based text editor.";
       bindings = import ./bindings.nix lib;
       colorschemes = import ./colorschemes.nix lib;
+      extraSettings = import ./extraSettings.nix lib;
       plugins = import ./plugins.nix lib;
       settings = import ./settings.nix lib;
     };
@@ -28,7 +29,7 @@ in {
             '') configuration);
         })) cfg.colorschemes;
       plugins = lib.genAttrs cfg.plugins (name: true);
-      settings = cfg.settings // plugins;
+      settings = cfg.settings // cfg.extraSettings // plugins;
     in {
       packages = [ pkgs.micro ];
       file = {

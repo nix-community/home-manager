@@ -41,4 +41,14 @@
     github = "olmokramer";
     githubId = 3612514;
   };
+  sivizius = {
+    name = "Sebastian Walz";
+    email = "nix@sivizius.eu";
+    github = "sivizius";
+    githubId = 1690450;
+    keys = [{
+      longkeyid = "rsa4096/0x7BB421C684E821D8";
+      fingerprint = "6A6A 9F7C 47BA 4CBE DCD5  CB74 7BB4 21C6 84E8 21D8";
+    }];
+  };
 }

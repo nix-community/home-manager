@@ -1,5 +1,8 @@
-let
-  plugins = [
+lib:
+lib.mkOption {
+  type = lib.types.listOf lib.types.str;
+  default = [ ];
+  example = [
     "autoclose"
     "comment"
     "diff"
@@ -9,11 +12,6 @@ let
     "literate"
     "status"
   ];
-in lib:
-lib.mkOption {
-  type = lib.types.listOf (lib.types.enum plugins);
-  default = [ ];
-  example = plugins;
   description = ''
     List of plugins to enable.
   '';

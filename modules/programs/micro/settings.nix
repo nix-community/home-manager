@@ -275,11 +275,6 @@ in {
       A list of links to plugin repositories.
     '';
   };
-  readonly = mkActivatableOption ''
-    When enabled,
-      disallows edits to the buffer.
-    It is recommended to only ever set this option locally using setlocal.
-  '';
   rmtrailingws = mkActivatableOption ''
     micro will automatically trim trailing whitespaces at ends of lines.
   '';
