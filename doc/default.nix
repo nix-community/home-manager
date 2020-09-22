@@ -1,3 +1,4 @@
+nixpkgs:
 {
 # Note, this should be "the standard library" + HM extensions.
 lib, pkgs }:
@@ -26,7 +27,7 @@ let
   };
 
   hmModulesDocs = nmd.buildModulesDocs {
-    modules = import ../modules/modules.nix {
+    modules = import ../modules/modules.nix nixpkgs {
       inherit lib pkgs;
       check = false;
     } ++ [ scrubbedPkgsModule ];

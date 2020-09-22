@@ -1,3 +1,4 @@
+nixpkgs:
 { pkgs
 
   # Note, this should be "the standard library" + HM extensions.
@@ -24,14 +25,14 @@ let
     (loadModule ./accounts/email.nix { })
     (loadModule ./files.nix { })
     (loadModule ./home-environment.nix { })
-    (loadModule ./manual.nix { })
+    (loadModule (import ./manual.nix nixpkgs) { })
     (loadModule ./misc/dconf.nix { })
     (loadModule ./misc/debug.nix { })
     (loadModule ./misc/fontconfig.nix { })
     (loadModule ./misc/gtk.nix { })
     (loadModule ./misc/lib.nix { })
     (loadModule ./misc/news.nix { })
-    (loadModule ./misc/nixpkgs.nix { condition = useNixpkgsModule; })
+    (loadModule (import ./misc/nixpkgs.nix nixpkgs) { condition = useNixpkgsModule; })
     (loadModule ./misc/numlock.nix { condition = hostPlatform.isLinux; })
     (loadModule ./misc/pam.nix { })
     (loadModule ./misc/qt.nix { })

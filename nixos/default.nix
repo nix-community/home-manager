@@ -1,3 +1,4 @@
+nixpkgs:
 { config, lib, pkgs, utils, ... }:
 
 with lib;
@@ -12,7 +13,7 @@ let
     specialArgs = { lib = extendedLib; };
     modules = [
       ({ name, ... }: {
-        imports = import ../modules/modules.nix {
+        imports = import ../modules/modules.nix nixpkgs {
           inherit pkgs;
           lib = extendedLib;
           useNixpkgsModule = !cfg.useGlobalPkgs;
