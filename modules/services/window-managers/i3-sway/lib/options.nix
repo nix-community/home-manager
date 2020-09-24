@@ -645,13 +645,22 @@ in {
 
       See <link xlink:href="https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup"/>.
     '';
-    example = literalExample ''
-      [
-      { command = "systemctl --user restart polybar"; always = true; notification = false; }
-      { command = "dropbox start"; notification = false; }
-      { command = "firefox"; workspace = "1: web"; }
-      ];
-    '';
+    example = if moduleName == "i3" then
+      literalExample ''
+        [
+        { command = "systemctl --user restart polybar"; always = true; notification = false; }
+        { command = "dropbox start"; notification = false; }
+        { command = "firefox"; workspace = "1: web"; }
+        ];
+      ''
+    else
+      literalExample ''
+        [
+        { command = "systemctl --user restart waybar"; always = true; }
+        { command = "dropbox start"; }
+        { command = "firefox"; }
+        ]
+      '';
   };
 
   gaps = mkOption {
