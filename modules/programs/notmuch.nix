@@ -145,7 +145,10 @@ in {
     };
 
     accounts.email.accounts = mkOption {
-      type = with types; attrsOf (submodule (import ./notmuch-accounts.nix));
+      type = with types;
+        attrsOf (submodule {
+          options.notmuch.enable = mkEnableOption "notmuch indexing";
+        });
     };
   };
 
