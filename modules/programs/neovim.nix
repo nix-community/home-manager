@@ -24,12 +24,35 @@ let
     merge = mergeOneOption;
   };
 
+  pluginWithConfigType = types.submodule {
+    options = {
+      plugin = mkOption {
+        type = types.package;
+        description = "vim plugin";
+      };
+      config = mkOption {
+        type = types.lines;
+        description = "vimscript for this plugin to be placed in init.vim";
+        default = "";
+      };
+    };
+  };
+
+  # A function to get the configuration string (if any) from an element of 'plugins'
+  pluginConfig = p:
+    if builtins.hasAttr "plugin" p && builtins.hasAttr "config" p then ''
+      " ${p.plugin.pname} {{{
+      ${p.config}
+      " }}}
+    '' else "";
+
   moduleConfigure =
-    optionalAttrs (cfg.extraConfig != "") {
-      customRC = cfg.extraConfig;
+    optionalAttrs (cfg.extraConfig != "" || (lib.filter (hasAttr "config") cfg.plugins) != []) {
+      customRC = cfg.extraConfig +
+        pkgs.lib.concatMapStrings pluginConfig cfg.plugins;
     }
-    // optionalAttrs (cfg.plugins != []) {
-      packages.home-manager.start = cfg.plugins;
+    // optionalAttrs (cfg.plugins != [] ) {
+      packages.home-manager.start = map (x: x.plugin or x) cfg.plugins;
     };
 
 in
@@ -178,11 +201,20 @@ in
       };
 
       plugins = mkOption {
-        type = with types; listOf package;
+        type = with types; listOf (either package pluginWithConfigType);
         default = [ ];
-        example = literalExample "[ pkgs.vimPlugins.yankring ]";
+        example = literalExample ''
+          with pkgs.vimPlugins; [
+            yankring
+            vim-nix
+            { plugin = vim-startify;
+              config = "let g:startify_change_to_vcs_root = 0";
+            }
+          ]
+        '';
         description = ''
-          List of vim plugins to install.
+          List of vim plugins to install optionally associated with
+          configuration to be placed in init.vim.
 
           </para><para>
 
