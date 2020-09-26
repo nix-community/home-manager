@@ -305,11 +305,12 @@ in your system configuration and
 
 in your Home Manager configuration.
 
-Flakes
-------
+Nix Flakes
+----------
 
-Home Manager includes a flake.nix for compatibility with [NixOS flakes](https://nixos.wiki/wiki/Flakes) for those
-that wish to use it as a module. A bare-minimum flake.nix would be as follows:
+Home Manager includes a `flake.nix` file for compatibility with [Nix Flakes][]
+for those that wish to use it as a module. A bare-minimum `flake.nix` would be
+as follows:
 
 ```nix
 {
@@ -320,40 +321,20 @@ that wish to use it as a module. A bare-minimum flake.nix would be as follows:
     home-manager.url = "github:nix-community/home-manager";
   };
 
-  outputs = inputs: {
+  outputs = { home-manager, nixpkgs, ... }: {
     nixosConfigurations = {
-      hostname = let
+      hostname = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        pkgs = inputs.nixpkgs.legacyPackages.${system};
-        inherit (inputs.nixpkgs) lib;
-
-        # Things in this set are passed to modules and accessible
-        # in the top-level arguments (e.g. `{ pkgs, lib, inputs, ... }:`).
-        specialArgs = {
-          inherit inputs;
-        };
-
-        hm-nixos-as-super = { config, ... }: {
-          # Submodules have merge semantics, making it possible to amend
-          # the `home-manager.users` submodule for additional functionality.
-          options.home-manager.users = lib.mkOption {
-            type = lib.types.attrsOf (lib.types.submoduleWith {
-              modules = [ ];
-              # Makes specialArgs available to Home Manager modules as well.
-              specialArgs = specialArgs // {
-                # Allow accessing the parent NixOS configuration.
-                super = config;
-              };
-            });
-          };
-        };
-
         modules = [
           ./configuration.nix
-          inputs.home.nixosModules.home-manager
-          hm-nixos-as-super
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.user = import ./home.nix;
+          }
         ];
-      in lib.nixosSystem { inherit system modules specialArgs; };
+      };
     };
   };
 }
@@ -384,3 +365,4 @@ an issue.
 [channel logs]: https://logs.nix.samueldr.com/home-manager/
 [samueldr]: https://github.com/samueldr/
 [Nix Pills]: https://nixos.org/nixos/nix-pills/
+[Nix Flakes]: https://nixos.wiki/wiki/Flakes
