@@ -45,6 +45,7 @@ import nmt {
     ./modules/programs/browserpass
     ./modules/programs/dircolors
     ./modules/programs/direnv
+    ./modules/programs/feh
     ./modules/programs/fish
     ./modules/programs/git
     ./modules/programs/gpg
