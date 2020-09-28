@@ -204,7 +204,7 @@ in
       };
 
       extraPackages = mkOption {
-        type = with types; listOf attrs;
+        type = with types; listOf package;
         default = [ ];
         example = "extraPackages: [ pkgs.shfmt ]";
         description = "Extra packages available to nvim.";
