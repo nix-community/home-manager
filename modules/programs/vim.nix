@@ -165,7 +165,7 @@ in {
 
     programs.vim = {
       package = vim;
-      plugins = defaultPlugins;
+      plugins = cfg.plugins;
     };
   });
 }
