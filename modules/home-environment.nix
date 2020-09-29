@@ -487,13 +487,13 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-          if nix-env -q | grep '^home-manager-path$'; then
+          if nix profile info | grep '^home-manager-path$'; then
             $DRY_RUN_CMD nix-env -e home-manager-path
           fi
         ''
       else
         ''
-          $DRY_RUN_CMD nix-env -i ${cfg.path}
+          $DRY_RUN_CMD nix profile install ${cfg.path}
         ''
     );
 
