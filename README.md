@@ -64,14 +64,14 @@ Currently the easiest way to install Home Manager is as follows:
 2.  Add the appropriate Home Manager channel. Typically this is
 
     ```console
-    $ nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
+    $ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
     $ nix-channel --update
     ```
 
     if you are following Nixpkgs master or an unstable channel and
 
     ```console
-    $ nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
+    $ nix-channel --add https://github.com/nix-community/home-manager/archive/release-20.03.tar.gz home-manager
     $ nix-channel --update
     ```
 
@@ -317,7 +317,7 @@ that wish to use it as a module. A bare-minimum flake.nix would be as follows:
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-manager.url = "github:rycee/home-manager";
+    home-manager.url = "github:nix-community/home-manager";
   };
 
   outputs = inputs: {
