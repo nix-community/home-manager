@@ -165,7 +165,7 @@ function doEdit() {
 
     setConfigFile
 
-    exec "$EDITOR" "$HOME_MANAGER_CONFIG"
+    ${EDITOR} "$HOME_MANAGER_CONFIG"
 }
 
 function doBuild() {
