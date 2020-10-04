@@ -54,10 +54,8 @@ let
     // optionalAttrs (cfg.plugins != [] ) {
       packages.home-manager.start = map (x: x.plugin or x) cfg.plugins;
     };
-  extraMakeWrapperArgs =
-    if builtins.hasAttr "extraPackages" cfg
-    then " --prefix PATH : '${lib.makeBinPath cfg.extraPackages}'"
-    else "";
+    extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [])
+      '' --prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
 in
 
 {
