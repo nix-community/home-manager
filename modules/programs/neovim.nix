@@ -54,7 +54,8 @@ let
     // optionalAttrs (cfg.plugins != [] ) {
       packages.home-manager.start = map (x: x.plugin or x) cfg.plugins;
     };
-
+    extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [])
+      '' --prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
 in
 
 {
@@ -200,6 +201,13 @@ in
         '';
       };
 
+      extraPackages = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        example = "[ pkgs.shfmt ]";
+        description = "Extra packages available to nvim.";
+      };
+
       plugins = mkOption {
         type = with types; listOf (either package pluginWithConfigType);
         default = [ ];
@@ -241,6 +249,7 @@ in
         extraPythonPackages withPython
         withNodeJs withRuby viAlias vimAlias;
 
+      extraMakeWrapperArgs = extraMakeWrapperArgs;
       configure = cfg.configure // moduleConfigure;
     };
 
