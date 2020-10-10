@@ -91,6 +91,14 @@ in {
         Whether to enable Zsh integration.
       '';
     };
+
+    enableFishIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Fish integration.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -119,6 +127,10 @@ in {
         . ${pkgs.skim}/share/skim/completion.zsh
         . ${pkgs.skim}/share/skim/key-bindings.zsh
       fi
+    '';
+
+    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
+      source ${pkgs.skim}/share/skim/key-bindings.fish && skim_key_bindings
     '';
   };
 }
