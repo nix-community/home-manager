@@ -101,11 +101,13 @@ in
 
     {
       home.file = mkMerge [
-        cfg.configFile
-        cfg.dataFile
-        {
-          "${config.xdg.cacheHome}/.keep".text = "";
-        }
+        (mapAttrs'
+          (name: file: nameValuePair "${config.xdg.configHome}/${name}" file)
+          cfg.configFile)
+        (mapAttrs'
+          (name: file: nameValuePair "${config.xdg.dataHome}/${name}" file)
+          cfg.dataFile)
+        { "${config.xdg.cacheHome}/.keep".text = ""; }
       ];
     }
   ];
