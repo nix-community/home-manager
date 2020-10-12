@@ -1697,6 +1697,14 @@ in
           module should be used instead.
         '';
       }
+
+      {
+        time = "2020-10-12T00:12:23+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          A new zsh submodule is available: 'programs.zsh.prezto'.
+        '';
+      }
     ];
   };
 }

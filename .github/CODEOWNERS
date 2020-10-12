@@ -131,6 +131,8 @@
 
 /modules/programs/zoxide.nix                          @marsam
 
+/modules/programs/zsh/prezto.nix                      @NickHu
+
 /modules/services/cbatticon.nix                       @pmiddend
 
 /modules/services/clipmenu.nix                        @DamienCassou
