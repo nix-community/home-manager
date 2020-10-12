@@ -9,18 +9,16 @@ let
   extraPythonPackageType = mkOptionType {
     name = "extra-python-packages";
     description = "python packages in python.withPackages format";
-    check = with types; (x: if isFunction x
-      then isList (x pkgs.pythonPackages)
-      else false);
+    check = with types;
+      (x: if isFunction x then isList (x pkgs.pythonPackages) else false);
     merge = mergeOneOption;
   };
 
   extraPython3PackageType = mkOptionType {
     name = "extra-python3-packages";
     description = "python3 packages in python.withPackages format";
-    check = with types; (x: if isFunction x
-      then isList (x pkgs.python3Packages)
-      else false);
+    check = with types;
+      (x: if isFunction x then isList (x pkgs.python3Packages) else false);
     merge = mergeOneOption;
   };
 
@@ -44,21 +42,20 @@ let
       " ${p.plugin.pname} {{{
       ${p.config}
       " }}}
-    '' else "";
+    '' else
+      "";
 
-  moduleConfigure =
-    optionalAttrs (cfg.extraConfig != "" || (lib.filter (hasAttr "config") cfg.plugins) != []) {
-      customRC = cfg.extraConfig +
-        pkgs.lib.concatMapStrings pluginConfig cfg.plugins;
-    }
-    // optionalAttrs (cfg.plugins != [] ) {
+  moduleConfigure = optionalAttrs (cfg.extraConfig != ""
+    || (lib.filter (hasAttr "config") cfg.plugins) != [ ]) {
+      customRC = cfg.extraConfig
+        + pkgs.lib.concatMapStrings pluginConfig cfg.plugins;
+    } // optionalAttrs (cfg.plugins != [ ]) {
       packages.home-manager.start = map (x: x.plugin or x) cfg.plugins;
     };
-    extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [])
-      '' --prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
-in
+  extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
+    ''--prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
 
-{
+in {
   options = {
     programs.neovim = {
       enable = mkEnableOption "Neovim";
@@ -107,7 +104,7 @@ in
 
       extraPythonPackages = mkOption {
         type = with types; either extraPythonPackageType (listOf package);
-        default = (_: []);
+        default = (_: [ ]);
         defaultText = "ps: []";
         example = literalExample "(ps: with ps; [ pandas jedi ])";
         description = ''
@@ -135,7 +132,7 @@ in
 
       extraPython3Packages = mkOption {
         type = with types; either extraPython3PackageType (listOf package);
-        default = (_: []);
+        default = (_: [ ]);
         defaultText = "ps: []";
         example = literalExample "(ps: with ps; [ python-language-server ])";
         description = ''
@@ -160,7 +157,7 @@ in
 
       configure = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         example = literalExample ''
           configure = {
               customRC = $''''
@@ -233,20 +230,17 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = cfg.configure == { } || moduleConfigure == { };
-        message = "The programs.neovim option configure is mutually exclusive"
-          + " with extraConfig and plugins.";
-      }
-    ];
+    assertions = [{
+      assertion = cfg.configure == { } || moduleConfigure == { };
+      message = "The programs.neovim option configure is mutually exclusive"
+        + " with extraConfig and plugins.";
+    }];
 
     home.packages = [ cfg.finalPackage ];
 
     programs.neovim.finalPackage = pkgs.wrapNeovim cfg.package {
       inherit (cfg)
-        extraPython3Packages withPython3
-        extraPythonPackages withPython
+        extraPython3Packages withPython3 extraPythonPackages withPython
         withNodeJs withRuby viAlias vimAlias;
 
       extraMakeWrapperArgs = extraMakeWrapperArgs;
@@ -255,6 +249,6 @@ in
 
     programs.bash.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
     programs.fish.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
-    programs.zsh.shellAliases  = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+    programs.zsh.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
   };
 }
