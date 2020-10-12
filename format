@@ -38,7 +38,6 @@ find . -name '*.nix' \
   ! -path ./modules/programs/lesspipe.nix \
   ! -path ./modules/programs/ssh.nix \
   ! -path ./modules/programs/tmux.nix \
-  ! -path ./modules/programs/vscode.nix \
   ! -path ./modules/programs/zsh.nix \
   ! -path ./modules/services/gpg-agent.nix \
   ! -path ./modules/services/kbfs.nix \
