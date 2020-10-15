@@ -1,9 +1,6 @@
-{ config, ... }:
-{
+{ config, ... }: {
   config = {
-    services.devilspie2 = {
-      enable = true;
-    };
+    services.devilspie2 = { enable = true; };
 
     nmt.script = ''
       serviceFile=home-files/.config/systemd/user/devilspie2.service

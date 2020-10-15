@@ -18,8 +18,9 @@
       '';
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { devilspie2 = pkgs.writeScriptBin "dummy-devilspie2" ""; }) ];
+    nixpkgs.overlays = [
+      (self: super: { devilspie2 = pkgs.writeScriptBin "dummy-devilspie2" ""; })
+    ];
 
     nmt.script = ''
       configlua=home-files/.config/devilspie2/config.lua
