@@ -148,6 +148,8 @@
 
 /modules/services/fluidsynth.nix                      @Valodim
 
+/modules/services/gammastep.nix                       @petabyteboy
+
 /modules/services/gnome-keyring.nix                   @rycee
 
 /modules/services/gpg-agent.nix                       @rycee

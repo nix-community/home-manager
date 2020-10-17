@@ -140,6 +140,7 @@ let
     (loadModule ./services/emacs.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/flameshot.nix { })
     (loadModule ./services/fluidsynth.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./services/gammastep.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/getmail.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/gnome-keyring.nix { })
     (loadModule ./services/gpg-agent.nix { })
