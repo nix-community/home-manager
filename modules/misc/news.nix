@@ -508,7 +508,7 @@ in
           configuration you can add
 
               imports = [
-                "''${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
+                "''${builtins.fetchTarball https://github.com/nix-community/home-manager/archive/master.tar.gz}/nixos"
               ];
 
           to your 'configuration.nix' file. This will introduce a new

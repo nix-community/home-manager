@@ -1,14 +1,14 @@
 [[ch-contributing]]
 == Contributing
 
-:open-issues: https://github.com/rycee/home-manager/issues
-:new-issue: https://github.com/rycee/home-manager/issues/new
+:open-issues: https://github.com/nix-community/home-manager/issues
+:new-issue: https://github.com/nix-community/home-manager/issues/new
 :fork-a-repo: https://help.github.com/articles/fork-a-repo/
 :create-a-pull-request: https://help.github.com/articles/creating-a-pull-request/
 :seven-rules: https://chris.beams.io/posts/git-commit/#seven-rules
-:news-nix: https://github.com/rycee/home-manager/blob/master/modules/misc/news.nix
+:news-nix: https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix
 :nixfmt: https://github.com/serokell/nixfmt/
-:example-commit-message: https://github.com/rycee/home-manager/commit/69f8e47e9e74c8d3d060ca22e18246b7f7d988ef
+:example-commit-message: https://github.com/nix-community/home-manager/commit/69f8e47e9e74c8d3d060ca22e18246b7f7d988ef
 
 Contributions to Home Manager are very welcome. To make the process as smooth as possible for both you and the Home Manager maintainers we provide some guidelines that we ask you to follow. See <<sec-contrib-getting-started>> for information on how to set up a suitable development environment and <<sec-guidelines>> for the actual guidelines.
 

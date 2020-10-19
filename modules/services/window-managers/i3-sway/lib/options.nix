@@ -42,7 +42,7 @@ let
         description = ''
           Launch application on a particular workspace. DEPRECATED:
           Use <varname><link linkend="opt-xsession.windowManager.i3.config.assigns">xsession.windowManager.i3.config.assigns</link></varname>
-          instead. See <link xlink:href="https://github.com/rycee/home-manager/issues/265"/>.
+          instead. See <link xlink:href="https://github.com/nix-community/home-manager/issues/265"/>.
         '';
       };
     };
