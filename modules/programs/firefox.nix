@@ -225,9 +225,10 @@ in
         type = types.bool;
         default = false;
         description = ''
-          Whether to enable the GNOME Shell native host connector.
-          You need set NixOS's `services.gnome3.chrome-gnome-shell.enable`
-          to <literal>true</literal>.
+          Whether to enable the GNOME Shell native host connector. Note, you
+          also need to set the NixOS option
+          <literal>services.gnome3.chrome-gnome-shell.enable</literal> to
+          <literal>true</literal>.
         '';
       };
     };
