@@ -1363,7 +1363,7 @@ in
 
           To learn more, see the installation section of the manual
 
-            https://rycee.gitlab.io/home-manager/#sec-install-nixos-module
+            https://nix-community.github.io/home-manager/#sec-install-nixos-module
         '';
       }
 
