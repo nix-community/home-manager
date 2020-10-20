@@ -84,6 +84,8 @@
 
 /modules/programs/mcfly.nix                           @marsam
 
+/modules/programs/meli.nix                            @colemickens
+
 /modules/programs/mpv.nix                             @tadeokondrak
 
 /modules/programs/mu.nix                              @KarlJoad
