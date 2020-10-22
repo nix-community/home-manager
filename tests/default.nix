@@ -59,12 +59,11 @@ import nmt {
     ./modules/programs/ncmpcpp
     ./modules/programs/ne
     ./modules/programs/neomutt
-    ./modules/programs/neovim
     ./modules/programs/newsboat
     ./modules/programs/nushell
+    ./modules/programs/powerline-go
     ./modules/programs/qutebrowser
     ./modules/programs/readline
-    ./modules/programs/powerline-go
     ./modules/programs/ssh
     ./modules/programs/starship
     ./modules/programs/texlive
@@ -84,19 +83,19 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
-    ./modules/services/dropbox
-    ./modules/services/emacs
-    ./modules/services/dropbox
     ./modules/programs/firefox
     ./modules/programs/getmail
-    ./modules/services/lieer
     ./modules/programs/ncmpcpp-linux
+    ./modules/programs/neovim   # Broken package dependency on Darwin.
     ./modules/programs/rofi
     ./modules/programs/waybar
+    ./modules/services/dropbox
+    ./modules/services/emacs
+    ./modules/services/fluidsynth
     ./modules/services/kanshi
+    ./modules/services/lieer
     ./modules/services/polybar
     ./modules/services/sxhkd
-    ./modules/services/fluidsynth
     ./modules/services/window-managers/i3
     ./modules/services/window-managers/sway
     ./modules/systemd
