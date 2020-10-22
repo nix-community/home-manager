@@ -8257,6 +8257,88 @@ percent symbol).
         "\${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/fluidsynth.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/fluidsynth.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.enable"></a><a class="term" href="options.html#opt-services.gammastep.enable"><code class="option">services.gammastep.enable</code></a></span></dt><dd><p>Enable Gammastep to change your screen's colour temperature depending on
+the time of day.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.package"></a><a class="term" href="options.html#opt-services.gammastep.package"><code class="option">services.gammastep.package</code></a></span></dt><dd><p>gammastep derivation to use.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.gammastep
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.brightness.day"></a><a class="term" href="options.html#opt-services.gammastep.brightness.day"><code class="option">services.gammastep.brightness.day</code></a></span></dt><dd><p>Screen brightness to apply during the day,
+between <code class="literal">0.1</code> and <code class="literal">1.0</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "1"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.brightness.night"></a><a class="term" href="options.html#opt-services.gammastep.brightness.night"><code class="option">services.gammastep.brightness.night</code></a></span></dt><dd><p>Screen brightness to apply during the night,
+between <code class="literal">0.1</code> and <code class="literal">1.0</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "1"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.extraOptions"></a><a class="term" href="options.html#opt-services.gammastep.extraOptions"><code class="option">services.gammastep.extraOptions</code></a></span></dt><dd><p>Additional command-line arguments to pass to
+<span class="command"><strong>gammastep</strong></span>.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        [
+        "-v" "-m randr" 
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.latitude"></a><a class="term" href="options.html#opt-services.gammastep.latitude"><code class="option">services.gammastep.latitude</code></a></span></dt><dd><p>Your current latitude, between <code class="literal">-90.0</code> and
+<code class="literal">90.0</code>. Must be provided along with
+longitude.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.longitude"></a><a class="term" href="options.html#opt-services.gammastep.longitude"><code class="option">services.gammastep.longitude</code></a></span></dt><dd><p>Your current longitude, between <code class="literal">-180.0</code> and
+<code class="literal">180.0</code>. Must be provided along with
+latitude.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.provider"></a><a class="term" href="options.html#opt-services.gammastep.provider"><code class="option">services.gammastep.provider</code></a></span></dt><dd><p>The location provider to use for determining your location. If set to
+<code class="literal">manual</code> you must also provide latitude/longitude.
+If set to <code class="literal">geoclue2</code>, you must also enable the global
+geoclue2 service.
+</p><p><span class="emphasis"><em>Type:</em></span> one of "manual", "geoclue2"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "manual"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.temperature.day"></a><a class="term" href="options.html#opt-services.gammastep.temperature.day"><code class="option">services.gammastep.temperature.day</code></a></span></dt><dd><p>Colour temperature to use during the day, between
+<code class="literal">1000</code> and <code class="literal">25000</code> K.
+</p><p><span class="emphasis"><em>Type:</em></span> signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        5500
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.temperature.night"></a><a class="term" href="options.html#opt-services.gammastep.temperature.night"><code class="option">services.gammastep.temperature.night</code></a></span></dt><dd><p>Colour temperature to use at night, between
+<code class="literal">1000</code> and <code class="literal">25000</code> K.
+</p><p><span class="emphasis"><em>Type:</em></span> signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        3700
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.tray"></a><a class="term" href="options.html#opt-services.gammastep.tray"><code class="option">services.gammastep.tray</code></a></span></dt><dd><p>Start the gammastep-indicator tray applet.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gammastep.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.getmail.enable"></a><a class="term" href="options.html#opt-services.getmail.enable"><code class="option">services.getmail.enable</code></a></span></dt><dd><p>Whether to enable the getmail systemd service to automatically retrieve mail.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
