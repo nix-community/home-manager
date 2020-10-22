@@ -508,7 +508,7 @@ in
           configuration you can add
 
               imports = [
-                "''${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
+                "''${builtins.fetchTarball https://github.com/nix-community/home-manager/archive/master.tar.gz}/nixos"
               ];
 
           to your 'configuration.nix' file. This will introduce a new
@@ -1363,7 +1363,7 @@ in
 
           To learn more, see the installation section of the manual
 
-            https://rycee.gitlab.io/home-manager/#sec-install-nixos-module
+            https://nix-community.github.io/home-manager/#sec-install-nixos-module
         '';
       }
 

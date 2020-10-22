@@ -1,13 +1,13 @@
-name: Test
+name: GitHub Pages
 on:
-  pull_request:
-  schedule:
-    - cron: "30 2 * * *"
+  push:
+    branches:
+      - master
 jobs:
-  tests:
+  publish:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
@@ -18,5 +18,11 @@ jobs:
       with:
         name: nix-community
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
-    - run: nix-shell . -A install
-    - run: nix-shell --pure --max-jobs 4 tests -A run.all
+    - run: |
+        nix-build -A docs.html
+        cp -r result/share/doc/home-manager public
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./public

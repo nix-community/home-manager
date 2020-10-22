@@ -250,7 +250,7 @@ in {
         warnings = [
           ("'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
             + "use 'xsession.windowManager.i3.config.assigns' instead."
-            + "See https://github.com/rycee/home-manager/issues/265.")
+            + "See https://github.com/nix-community/home-manager/issues/265.")
         ];
       })
   ]);

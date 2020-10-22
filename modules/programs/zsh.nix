@@ -465,7 +465,7 @@ in
         '') cfg.plugins)}
 
         # History options should be set in .zshrc and after oh-my-zsh sourcing.
-        # See https://github.com/rycee/home-manager/issues/177.
+        # See https://github.com/nix-community/home-manager/issues/177.
         HISTSIZE="${toString cfg.history.size}"
         SAVEHIST="${toString cfg.history.save}"
         ${if versionAtLeast config.home.stateVersion "20.03"
@@ -493,7 +493,7 @@ in
 
     (mkIf cfg.oh-my-zsh.enable {
       # Make sure we create a cache directory since some plugins expect it to exist
-      # See: https://github.com/rycee/home-manager/issues/761
+      # See: https://github.com/nix-community/home-manager/issues/761
       home.file."${config.xdg.cacheHome}/oh-my-zsh/.keep".text = "";
     })
 

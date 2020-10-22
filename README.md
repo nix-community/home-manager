@@ -358,8 +358,8 @@ an issue.
 [nixAllowedUsers]: https://nixos.org/nix/manual/#conf-allowed-users
 [nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
 [Z shell]: http://zsh.sourceforge.net/
-[manual]: https://rycee.gitlab.io/home-manager/
-[configuration options]: https://rycee.gitlab.io/home-manager/options.html
+[manual]: https://nix-community.github.io/home-manager/
+[configuration options]: https://nix-community.github.io/home-manager/options.html
 [#home-manager]: https://webchat.freenode.net/?url=irc%3A%2F%2Firc.freenode.net%2Fhome-manager
 [freenode]: https://freenode.net/
 [channel logs]: https://logs.nix.samueldr.com/home-manager/

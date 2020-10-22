@@ -71,7 +71,7 @@ runCommand "home-manager-install" {
 
     Uh oh, the installation failed! Please create an issue at
 
-        https://github.com/rycee/home-manager/issues
+        https://github.com/nix-community/home-manager/issues
 
     if the error seems to be the fault of Home Manager.
     EOF
