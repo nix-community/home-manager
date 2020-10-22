@@ -10,24 +10,24 @@ let
   emacsVersion = getVersion emacsCfg.finalPackage;
 
   # Adapted from upstream emacs.desktop
-  clientDesktopItem = pkgs.makeDesktopItem rec {
-    name = "emacsclient";
-    desktopName = "Emacs Client";
-    genericName = "Text Editor";
-    comment = "Edit text";
-    mimeType =
-      "text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;";
-    exec = "${emacsBinPath}/emacsclient ${
-        concatStringsSep " " cfg.client.arguments
-      } %F";
-    icon = "emacs";
-    type = "Application";
-    terminal = "false";
-    categories = "Utility;TextEditor;";
-    extraEntries = ''
-      StartupWMClass=Emacs
-    '';
-  };
+  clientDesktopItem = pkgs.writeTextDir "share/applications/emacsclient.desktop"
+    (generators.toINI { } {
+      "Desktop Entry" = {
+        Type = "Application";
+        Exec = "${emacsBinPath}/emacsclient ${
+            concatStringsSep " " cfg.client.arguments
+          } %F";
+        Terminal = false;
+        Name = "Emacs Client";
+        Icon = "emacs";
+        Comment = "Edit text";
+        GenericName = "Text Editor";
+        MimeType =
+          "text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;";
+        Categories = "Utility;TextEditor;";
+        StartupWMClass = "Emacs";
+      };
+    });
 
   # Match the default socket path for the Emacs version so emacsclient continues
   # to work without wrapping it. It might be worthwhile to allow customizing the
