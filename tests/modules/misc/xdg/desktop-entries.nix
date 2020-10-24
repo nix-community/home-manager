@@ -14,12 +14,17 @@ with lib;
         name = "Test";
         genericName = "Web Browser";
         mimeType = [ "text/html" "text/xml" ];
-        categories = [ "Application" "Network" "WebBrowser" ];
+        categories = [ "Network" "WebBrowser" ];
         startupNotify = false;
         extraConfig = ''
-          NoDisplay=false
-          DBusActivatable=false
+          [X-ExtraSection]
+          Exec=foo -o
         '';
+        settings = {
+          Keywords = "calc;math";
+          DBusActivatable = "false";
+        };
+        fileValidation = true;
       };
       min = { # minimal definition
         exec = "test --option";
