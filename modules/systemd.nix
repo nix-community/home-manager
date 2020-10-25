@@ -14,6 +14,7 @@ let
       || cfg.sessionVariables != {};
 
   toSystemdIni = generators.toINI {
+    listsAsDuplicateKeys = true;
     mkKeyValue = key: value:
       let
         value' =
