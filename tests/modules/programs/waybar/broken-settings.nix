@@ -68,7 +68,7 @@ in {
 
     nmt.description = ''
       Test for the broken configuration
-      https://github.com/rycee/home-manager/pull/1329#issuecomment-653253069
+      https://github.com/nix-community/home-manager/pull/1329#issuecomment-653253069
     '';
     nmt.script = ''
       assertPathNotExists home-files/.config/waybar/style.css

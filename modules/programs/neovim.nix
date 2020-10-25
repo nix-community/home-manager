@@ -9,32 +9,53 @@ let
   extraPythonPackageType = mkOptionType {
     name = "extra-python-packages";
     description = "python packages in python.withPackages format";
-    check = with types; (x: if isFunction x
-      then isList (x pkgs.pythonPackages)
-      else false);
+    check = with types;
+      (x: if isFunction x then isList (x pkgs.pythonPackages) else false);
     merge = mergeOneOption;
   };
 
   extraPython3PackageType = mkOptionType {
     name = "extra-python3-packages";
     description = "python3 packages in python.withPackages format";
-    check = with types; (x: if isFunction x
-      then isList (x pkgs.python3Packages)
-      else false);
+    check = with types;
+      (x: if isFunction x then isList (x pkgs.python3Packages) else false);
     merge = mergeOneOption;
   };
 
-  moduleConfigure =
-    optionalAttrs (cfg.extraConfig != "") {
-      customRC = cfg.extraConfig;
-    }
-    // optionalAttrs (cfg.plugins != []) {
-      packages.home-manager.start = cfg.plugins;
+  pluginWithConfigType = types.submodule {
+    options = {
+      plugin = mkOption {
+        type = types.package;
+        description = "vim plugin";
+      };
+      config = mkOption {
+        type = types.lines;
+        description = "vimscript for this plugin to be placed in init.vim";
+        default = "";
+      };
     };
+  };
 
-in
+  # A function to get the configuration string (if any) from an element of 'plugins'
+  pluginConfig = p:
+    if builtins.hasAttr "plugin" p && builtins.hasAttr "config" p then ''
+      " ${p.plugin.pname} {{{
+      ${p.config}
+      " }}}
+    '' else
+      "";
 
-{
+  moduleConfigure = optionalAttrs (cfg.extraConfig != ""
+    || (lib.filter (hasAttr "config") cfg.plugins) != [ ]) {
+      customRC = cfg.extraConfig
+        + pkgs.lib.concatMapStrings pluginConfig cfg.plugins;
+    } // optionalAttrs (cfg.plugins != [ ]) {
+      packages.home-manager.start = map (x: x.plugin or x) cfg.plugins;
+    };
+  extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
+    ''--prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
+
+in {
   options = {
     programs.neovim = {
       enable = mkEnableOption "Neovim";
@@ -83,7 +104,7 @@ in
 
       extraPythonPackages = mkOption {
         type = with types; either extraPythonPackageType (listOf package);
-        default = (_: []);
+        default = (_: [ ]);
         defaultText = "ps: []";
         example = literalExample "(ps: with ps; [ pandas jedi ])";
         description = ''
@@ -111,7 +132,7 @@ in
 
       extraPython3Packages = mkOption {
         type = with types; either extraPython3PackageType (listOf package);
-        default = (_: []);
+        default = (_: [ ]);
         defaultText = "ps: []";
         example = literalExample "(ps: with ps; [ python-language-server ])";
         description = ''
@@ -136,7 +157,7 @@ in
 
       configure = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         example = literalExample ''
           configure = {
               customRC = $''''
@@ -177,12 +198,28 @@ in
         '';
       };
 
-      plugins = mkOption {
+      extraPackages = mkOption {
         type = with types; listOf package;
         default = [ ];
-        example = literalExample "[ pkgs.vimPlugins.yankring ]";
+        example = "[ pkgs.shfmt ]";
+        description = "Extra packages available to nvim.";
+      };
+
+      plugins = mkOption {
+        type = with types; listOf (either package pluginWithConfigType);
+        default = [ ];
+        example = literalExample ''
+          with pkgs.vimPlugins; [
+            yankring
+            vim-nix
+            { plugin = vim-startify;
+              config = "let g:startify_change_to_vcs_root = 0";
+            }
+          ]
+        '';
         description = ''
-          List of vim plugins to install.
+          List of vim plugins to install optionally associated with
+          configuration to be placed in init.vim.
 
           </para><para>
 
@@ -193,27 +230,25 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = cfg.configure == { } || moduleConfigure == { };
-        message = "The programs.neovim option configure is mutually exclusive"
-          + " with extraConfig and plugins.";
-      }
-    ];
+    assertions = [{
+      assertion = cfg.configure == { } || moduleConfigure == { };
+      message = "The programs.neovim option configure is mutually exclusive"
+        + " with extraConfig and plugins.";
+    }];
 
     home.packages = [ cfg.finalPackage ];
 
     programs.neovim.finalPackage = pkgs.wrapNeovim cfg.package {
       inherit (cfg)
-        extraPython3Packages withPython3
-        extraPythonPackages withPython
+        extraPython3Packages withPython3 extraPythonPackages withPython
         withNodeJs withRuby viAlias vimAlias;
 
+      extraMakeWrapperArgs = extraMakeWrapperArgs;
       configure = cfg.configure // moduleConfigure;
     };
 
     programs.bash.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
     programs.fish.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
-    programs.zsh.shellAliases  = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+    programs.zsh.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
   };
 }

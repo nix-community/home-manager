@@ -62,14 +62,14 @@
      running
     </para>
 <screen>
-<prompt>$</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager</userinput>
+<prompt>$</prompt> <userinput>nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager</userinput>
 <prompt>$</prompt> <userinput>nix-channel --update</userinput>
 </screen>
     <para>
      if you are following Nixpkgs master or an unstable channel and
     </para>
 <screen>
-<prompt>$</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager</userinput>
+<prompt>$</prompt> <userinput>nix-channel --add https://github.com/nix-community/home-manager/archive/release-20.03.tar.gz home-manager</userinput>
 <prompt>$</prompt> <userinput>nix-channel --update</userinput>
 </screen>
     <para>
@@ -150,7 +150,7 @@ $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
   </para>
 
 <screen language="console">
-<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
 
@@ -159,7 +159,7 @@ $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
   </para>
 
 <screen language="console">
-<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/nix-community/home-manager/archive/release-20.03.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
 
@@ -249,7 +249,7 @@ home-manager.useGlobalPkgs = true;
   </para>
 
 <screen language="console">
-<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
 
@@ -258,7 +258,7 @@ home-manager.useGlobalPkgs = true;
   </para>
 
 <screen language="console">
-<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/nix-community/home-manager/archive/release-20.03.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
 

@@ -124,7 +124,7 @@ let
     let
       folderHook = mapAttrsToList setOption (genCommonFolderHooks account // {
         folder = "'${account.maildir.absPath}'";
-      }) ++ optional (neomutt.extraConfig != "") neomutt.extraConfig;
+      });
     in ''
       ${concatStringsSep "\n" folderHook}
     '';

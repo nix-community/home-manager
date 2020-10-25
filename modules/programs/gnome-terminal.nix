@@ -6,6 +6,14 @@ let
 
   cfg = config.programs.gnome-terminal;
 
+  eraseBinding = types.enum [
+    "auto"
+    "ascii-backspace"
+    "ascii-delete"
+    "delete-sequence"
+    "tty"
+  ];
+
   backForeSubModule = types.submodule ({ ... }: {
     options = {
       foreground = mkOption {
@@ -136,6 +144,90 @@ let
         type = types.bool;
         description = "Run command as a login shell.";
       };
+
+      backspaceBinding = mkOption {
+        default = "ascii-delete";
+        type = eraseBinding;
+        description = ''
+          Which string the terminal should send to an application when the user
+          presses the <emphasis>Backspace</emphasis> key.
+
+          <variablelist>
+            <varlistentry>
+              <term><literal>auto</literal></term>
+              <listitem><para>
+                Attempt to determine the right value from the terminal's IO settings.
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>ascii-backspace</literal></term>
+              <listitem><para>
+                Send an ASCII backspace character (0x08).
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>ascii-delete</literal></term>
+              <listitem><para>
+                Send an ASCII delete character (0x7F).
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>delete-sequence</literal></term>
+              <listitem><para>
+                Send the <quote>@7</quote> control sequence.
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>tty</literal></term>
+              <listitem><para>
+                Send terminal’s <quote>erase</quote> setting.
+              </para></listitem>
+            </varlistentry>
+          </variablelist>
+        '';
+      };
+
+      deleteBinding = mkOption {
+        default = "delete-sequence";
+        type = eraseBinding;
+        description = ''
+          Which string the terminal should send to an application when the user
+          presses the <emphasis>Delete</emphasis> key.
+
+          <variablelist>
+            <varlistentry>
+              <term><literal>auto</literal></term>
+              <listitem><para>
+                Send the <quote>@7</quote> control sequence.
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>ascii-backspace</literal></term>
+              <listitem><para>
+                Send an ASCII backspace character (0x08).
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>ascii-delete</literal></term>
+              <listitem><para>
+                Send an ASCII delete character (0x7F).
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>delete-sequence</literal></term>
+              <listitem><para>
+                Send the <quote>@7</quote> control sequence.
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>tty</literal></term>
+              <listitem><para>
+                Send terminal’s <quote>erase</quote> setting.
+              </para></listitem>
+            </varlistentry>
+          </variablelist>
+        '';
+      };
     };
   });
 
@@ -147,6 +239,8 @@ let
       cursor-shape = pcfg.cursorShape;
       cursor-blink-mode = pcfg.cursorBlinkMode;
       login-shell = pcfg.loginShell;
+      backspace-binding = pcfg.backspaceBinding;
+      delete-binding = pcfg.deleteBinding;
     } // (if (pcfg.customCommand != null) then {
       use-custom-command = true;
       custom-command = pcfg.customCommand;

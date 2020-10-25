@@ -13,6 +13,9 @@
 
 /modules/misc/news.nix                                @rycee
 
+/modules/misc/numlock.nix                             @evanjs
+/tests/modules/misc/numlock                           @evanjs
+
 /modules/misc/pam.nix                                 @rycee
 /tests/modules/misc/pam                               @rycee
 
@@ -29,6 +32,9 @@
 /modules/misc/xdg-user-dirs.nix                       @pacien
 
 /modules/programs/aria2.nix                           @JustinLovinger
+
+/modules/programs/autojump.nix                        @evanjs
+/tests/modules/programs/autojump                      @evanjs
 
 /modules/programs/autorandr.nix                       @uvNikita
 
@@ -49,6 +55,9 @@
 /modules/programs/emacs.nix                           @rycee
 
 /modules/programs/firefox.nix                         @rycee
+
+/modules/programs/gh.nix                              @Gerschtli
+/tests/modules/programs/gh                            @Gerschtli
 
 /modules/programs/git.nix                             @rycee
 
@@ -73,9 +82,14 @@
 
 /modules/programs/matplotlib.nix                      @rprospero
 
+/modules/programs/mbsync.nix                          @KarlJoad
+/tests/modules/programs/mbsync                        @KarlJoad
+
 /modules/programs/mcfly.nix                           @marsam
 
 /modules/programs/mpv.nix                             @tadeokondrak
+
+/modules/programs/mu.nix                              @KarlJoad
 
 /modules/programs/ncmpcpp.nix                         @olmokramer
 /tests/modules/programs/ncmpcpp                       @olmokramer
@@ -120,6 +134,8 @@
 
 /modules/programs/zoxide.nix                          @marsam
 
+/modules/programs/zsh/prezto.nix                      @NickHu
+
 /modules/services/cbatticon.nix                       @pmiddend
 
 /modules/services/clipmenu.nix                        @DamienCassou
@@ -134,6 +150,8 @@
 /modules/services/flameshot.nix                       @moredhel
 
 /modules/services/fluidsynth.nix                      @Valodim
+
+/modules/services/gammastep.nix                       @petabyteboy
 
 /modules/services/gnome-keyring.nix                   @rycee
 

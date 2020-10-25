@@ -508,7 +508,7 @@ in
           configuration you can add
 
               imports = [
-                "''${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
+                "''${builtins.fetchTarball https://github.com/nix-community/home-manager/archive/master.tar.gz}/nixos"
               ];
 
           to your 'configuration.nix' file. This will introduce a new
@@ -1363,7 +1363,7 @@ in
 
           To learn more, see the installation section of the manual
 
-            https://rycee.gitlab.io/home-manager/#sec-install-nixos-module
+            https://nix-community.github.io/home-manager/#sec-install-nixos-module
         '';
       }
 
@@ -1671,6 +1671,53 @@ in
         message = ''
           A new option 'programs.man.generateCaches' was added to
           support the apropos command.
+        '';
+      }
+
+      {
+        time = "2020-09-22T21:03:28+00:00";
+        message = ''
+          A new module is available: 'programs.pet'.
+        '';
+      }
+
+      {
+        time = "2020-09-29T21:21:44+00:00";
+        message = ''
+          A new module is available: 'programs.mu'.
+        '';
+      }
+
+      {
+        time = "2020-10-08T21:28:16+00:00";
+        message = ''
+          A new module is available: 'programs.autojump'
+
+          The option `programs.bash.enableAutojump` is deprecated and this new
+          module should be used instead.
+        '';
+      }
+
+      {
+        time = "2020-10-12T00:12:23+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          A new zsh submodule is available: 'programs.zsh.prezto'.
+        '';
+      }
+
+      {
+        time = "2020-10-22T21:10:38+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.gammastep'.
+        '';
+      }
+
+      {
+        time = "2020-10-22T21:30:42+00:00";
+        message = ''
+          A new module is available: 'programs.gh'.
         '';
       }
     ];

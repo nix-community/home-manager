@@ -161,7 +161,7 @@ let
       };
     };
 in {
-  meta.maintainers = [ hm.maintainers.berbiche ];
+  meta.maintainers = with lib.maintainers; [ berbiche ];
 
   options.programs.waybar = with lib.types; {
     enable = mkEnableOption "Waybar";

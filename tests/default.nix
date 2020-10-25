@@ -41,11 +41,14 @@ import nmt {
     ./modules/programs/alacritty
     ./modules/programs/alot
     ./modules/programs/aria2
+    ./modules/programs/autojump
     ./modules/programs/bash
     ./modules/programs/browserpass
     ./modules/programs/dircolors
     ./modules/programs/direnv
+    ./modules/programs/feh
     ./modules/programs/fish
+    ./modules/programs/gh
     ./modules/programs/git
     ./modules/programs/gpg
     ./modules/programs/i3status
@@ -59,9 +62,9 @@ import nmt {
     ./modules/programs/neomutt
     ./modules/programs/newsboat
     ./modules/programs/nushell
+    ./modules/programs/powerline-go
     ./modules/programs/qutebrowser
     ./modules/programs/readline
-    ./modules/programs/powerline-go
     ./modules/programs/ssh
     ./modules/programs/starship
     ./modules/programs/texlive
@@ -75,24 +78,25 @@ import nmt {
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     ./meta # Suffices to run on one platform.
     ./modules/misc/debug
+    ./modules/misc/numlock
     ./modules/misc/pam
     ./modules/misc/xdg
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
-    ./modules/services/dropbox
-    ./modules/services/emacs
-    ./modules/services/dropbox
     ./modules/programs/firefox
     ./modules/programs/getmail
-    ./modules/services/lieer
     ./modules/programs/ncmpcpp-linux
+    ./modules/programs/neovim   # Broken package dependency on Darwin.
     ./modules/programs/rofi
     ./modules/programs/waybar
+    ./modules/services/dropbox
+    ./modules/services/emacs
+    ./modules/services/fluidsynth
     ./modules/services/kanshi
+    ./modules/services/lieer
     ./modules/services/polybar
     ./modules/services/sxhkd
-    ./modules/services/fluidsynth
     ./modules/services/window-managers/i3
     ./modules/services/window-managers/sway
     ./modules/systemd

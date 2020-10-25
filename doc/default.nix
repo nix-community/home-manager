@@ -33,7 +33,7 @@ let
     } ++ [ scrubbedPkgsModule ];
     moduleRootPaths = [ ./.. ];
     mkModuleUrl = path:
-      "https://github.com/rycee/home-manager/blob/master/${path}#blob-path";
+      "https://github.com/nix-community/home-manager/blob/master/${path}#blob-path";
     channelName = "home-manager";
     docBook.id = "home-manager-options";
   };

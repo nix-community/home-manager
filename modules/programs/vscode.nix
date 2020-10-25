@@ -20,20 +20,18 @@ let
     "vscodium" = "vscode-oss";
   }.${vscodePname};
 
-  userDir =
-    if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${configDir}/User"
-    else
-      "${config.xdg.configHome}/${configDir}/User";
+  userDir = if pkgs.stdenv.hostPlatform.isDarwin then
+    "Library/Application Support/${configDir}/User"
+  else
+    "${config.xdg.configHome}/${configDir}/User";
 
   configFilePath = "${userDir}/settings.json";
   keybindingsFilePath = "${userDir}/keybindings.json";
 
   # TODO: On Darwin where are the extensions?
   extensionPath = ".${extensionDir}/extensions";
-in
 
-{
+in {
   options = {
     programs.vscode = {
       enable = mkEnableOption "Visual Studio Code";
@@ -49,7 +47,7 @@ in
 
       userSettings = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         example = literalExample ''
           {
             "update.channel" = "none";
@@ -85,7 +83,7 @@ in
             };
           };
         });
-        default = [];
+        default = [ ];
         example = literalExample ''
           [
             {
@@ -103,7 +101,7 @@ in
 
       extensions = mkOption {
         type = types.listOf types.package;
-        default = [];
+        default = [ ];
         example = literalExample "[ pkgs.vscode-extensions.bbenoist.Nix ]";
         description = ''
           The extensions Visual Studio Code should be started with.
@@ -117,29 +115,21 @@ in
     home.packages = [ cfg.package ];
 
     # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-    home.file =
-      let
-        subDir = "share/vscode/extensions";
-        toPaths = path:
-          # Links every dir in path to the extension path.
-          mapAttrsToList (k: _:
-            {
-              "${extensionPath}/${k}".source = "${path}/${subDir}/${k}";
-            }) (builtins.readDir (path + "/${subDir}"));
-        toSymlink = concatMap toPaths cfg.extensions;
-      in
-        foldr
-          (a: b: a // b)
-          {
-            "${configFilePath}" =
-              mkIf (cfg.userSettings != {}) {
-                text = builtins.toJSON cfg.userSettings;
-              };
-            "${keybindingsFilePath}" =
-              mkIf (cfg.keybindings != []) {
-                text = builtins.toJSON cfg.keybindings;
-              };
-          }
-          toSymlink;
+    home.file = let
+      subDir = "share/vscode/extensions";
+      toPaths = path:
+        # Links every dir in path to the extension path.
+        mapAttrsToList
+        (k: _: { "${extensionPath}/${k}".source = "${path}/${subDir}/${k}"; })
+        (builtins.readDir (path + "/${subDir}"));
+      toSymlink = concatMap toPaths cfg.extensions;
+    in foldr (a: b: a // b) {
+      "${configFilePath}" = mkIf (cfg.userSettings != { }) {
+        text = builtins.toJSON cfg.userSettings;
+      };
+      "${keybindingsFilePath}" = mkIf (cfg.keybindings != [ ]) {
+        text = builtins.toJSON cfg.keybindings;
+      };
+    } toSymlink;
   };
 }

@@ -14,9 +14,6 @@ let
   substituteExpected = path:
     pkgs.substituteAll {
       src = path;
-
-      deltaCommand = "${pkgs.gitAndTools.delta}/bin/delta";
-
       git_include_path = pkgs.writeText "contents"
         (builtins.readFile ./git-expected-include.conf);
     };
@@ -80,6 +77,17 @@ in {
         extraConfig.extra.multiple = [ 2 ];
         extraConfig.extra.subsection.value = "test";
       }
+    ];
+
+    nixpkgs.overlays = [
+      (self: super: {
+        git-lfs = pkgs.writeScriptBin "dummy-git-lfs" "";
+        gitAndTools = super.gitAndTools // {
+          delta = pkgs.writeScriptBin "dummy-delta" "" // {
+            outPath = "@delta@";
+          };
+        };
+      })
     ];
 
     nmt.script = ''

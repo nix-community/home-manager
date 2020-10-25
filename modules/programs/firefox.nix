@@ -220,6 +220,17 @@ in
         default = false;
         description = "Whether to enable the unfree Adobe Flash plugin.";
       };
+
+      enableGnomeExtensions = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to enable the GNOME Shell native host connector. Note, you
+          also need to set the NixOS option
+          <literal>services.gnome3.chrome-gnome-shell.enable</literal> to
+          <literal>true</literal>.
+        '';
+      };
     };
   };
 
@@ -262,6 +273,7 @@ in
         # The configuration expected by the Firefox wrapper.
         fcfg = {
           enableAdobeFlash = cfg.enableAdobeFlash;
+          enableGnomeExtensions = cfg.enableGnomeExtensions;
         };
 
         # A bit of hackery to force a config into the wrapper.
