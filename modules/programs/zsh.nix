@@ -22,6 +22,10 @@ let
     mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases
   );
 
+  dirHashesStr = concatStringsSep "\n" (
+    mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
+  );
+
   zdotdir = "$HOME/" + cfg.dotDir;
 
   bindkeyCommands = {
@@ -230,6 +234,21 @@ in
         description = ''
           Similar to <varname><link linkend="opt-programs.zsh.shellAliases">opt-programs.zsh.shellAliases</link></varname>,
           but are substituted anywhere on a line.
+        '';
+        type = types.attrsOf types.str;
+      };
+
+      dirHashes = mkOption {
+        default = {};
+        example = literalExample ''
+          {
+            docs  = "$HOME/Documents";
+            vids  = "$HOME/Videos";
+            dl    = "$HOME/Downloads";
+          }
+        '';
+        description = ''
+          An attribute set that adds to named directory hash table.
         '';
         type = types.attrsOf types.str;
       };
@@ -488,6 +507,9 @@ in
 
         # Global Aliases
         ${globalAliasesStr}
+
+        # Named Directory Hashes
+        ${dirHashesStr}
       '';
     }
 
