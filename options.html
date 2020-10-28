@@ -8818,6 +8818,11 @@ useful for creating the directories mbsync is going to use.
         false
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/mpd.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.mpd.package"></a><a class="term" href="options.html#opt-services.mpd.package"><code class="option">services.mpd.package</code></a></span></dt><dd><p>The MPD package to run.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "pkgs.mpd"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/mpd.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.mpd.dataDir"></a><a class="term" href="options.html#opt-services.mpd.dataDir"><code class="option">services.mpd.dataDir</code></a></span></dt><dd><p>The directory where MPD stores its state, tag cache,
 playlists etc.
 </p><p><span class="emphasis"><em>Type:</em></span> path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -8856,6 +8861,11 @@ Use <code class="literal">any</code> to listen on all addresses.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.mpd.network.port"></a><a class="term" href="options.html#opt-services.mpd.network.port"><code class="option">services.mpd.network.port</code></a></span></dt><dd><p>The TCP port on which the the daemon will listen.
 </p><p><span class="emphasis"><em>Type:</em></span> 16 bit unsigned integer; between 0 and 65535 (both inclusive)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         6600
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/mpd.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.mpd.network.startWhenNeeded"></a><a class="term" href="options.html#opt-services.mpd.network.startWhenNeeded"><code class="option">services.mpd.network.startWhenNeeded</code></a></span></dt><dd><p>Enable systemd socket activation.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/mpd.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.mpd.playlistDirectory"></a><a class="term" href="options.html#opt-services.mpd.playlistDirectory"><code class="option">services.mpd.playlistDirectory</code></a></span></dt><dd><p>The directory where mpd stores playlists.
