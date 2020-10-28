@@ -119,7 +119,7 @@ in {
         Install = { WantedBy = [ "default.target" ]; };
       };
 
-      home.packages = optional cfg.client.enable clientDesktopItem;
+      home.packages = optional cfg.client.enable (hiPrio clientDesktopItem);
     }
 
     (mkIf cfg.socketActivation.enable {
