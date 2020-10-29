@@ -275,6 +275,16 @@ in
       description = "Extra directories to add to <envar>PATH</envar>.";
     };
 
+    home.sessionNixPath = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      example = [
+        "$HOME/.nix-defexpr/channels"
+        "darwin-config=$HOME/.dotfiles/nix/darwin.nix"
+      ];
+      description = "Extra directories to add to <envar>NIX_PATH</envar>.";
+    };
+
     home.sessionVariablesExtra = mkOption {
       type = types.lines;
       default = "";
@@ -447,21 +457,23 @@ in
 
     home.packages = [
       # Provide a file holding all session variables.
-      (
-        pkgs.writeTextFile {
-          name = "hm-session-vars.sh";
-          destination = "/etc/profile.d/hm-session-vars.sh";
-          text = ''
-            # Only source this once.
-            if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
-            export __HM_SESS_VARS_SOURCED=1
+      (pkgs.writeTextFile {
+        name = "hm-session-vars.sh";
+        destination = "/etc/profile.d/hm-session-vars.sh";
+        text = ''
+          # Only source this once.
+          if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+          export __HM_SESS_VARS_SOURCED=1
 
-            ${config.lib.shell.exportAll cfg.sessionVariables}
-          '' + lib.optionalString (cfg.sessionPath != [ ]) ''
-            export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
-          '' + cfg.sessionVariablesExtra;
-        }
-      )
+          ${config.lib.shell.exportAll cfg.sessionVariables}
+        '' + lib.optionalString (cfg.sessionPath != [ ]) ''
+          export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
+        '' + lib.optionalString (cfg.sessionNixPath != [ ]) ''
+          export NIX_PATH="$NIX_PATH''${NIX_PATH:+:}${
+            concatStringsSep ":" cfg.sessionNixPath
+          }"
+        '' + cfg.sessionVariablesExtra;
+      })
     ];
 
     # A dummy entry acting as a boundary between the activation
