@@ -1720,6 +1720,14 @@ in
           A new module is available: 'programs.gh'.
         '';
       }
+
+      {
+        time = "2020-11-01T11:17:02+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.caffeine'.
+        '';
+      }
     ];
   };
 }
