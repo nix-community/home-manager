@@ -1,7 +1,7 @@
 [[sec-release-20.09]]
 == Release 20.09
 
-The 20.03 release branch became the stable branch in late September, 2020.
+The 20.09 release branch became the stable branch in late September, 2020.
 
 [[sec-release-20.09-highlights]]
 === Highlights
