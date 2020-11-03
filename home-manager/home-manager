@@ -512,6 +512,10 @@ while [[ $# -gt 0 ]]; do
         -v|--verbose)
             export VERBOSE=1
             ;;
+        --version)
+            echo 20.09
+            exit 0
+            ;;
         *)
             case $COMMAND in
                 expire-generations|remove-generations)
