@@ -1,3 +1,13 @@
+<!--
+
+Please PLEASE search for existing issues before creating a new one!!
+
+This also applies for the error message
+
+  element xref: validity error : IDREF attribute linkend references an unknown ID "opt-home.file._name__.source"
+
+-->
+
 ### Issue description
 
 <!--
