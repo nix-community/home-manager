@@ -9,10 +9,8 @@ with lib;
       plugins = [ pkgs.kakounePlugins.kak-powerline ];
     };
 
-    nmt.script = let plugins_kak = "home-path/share/kak/plugins.kak";
-    in ''
-      assertFileRegex ${plugins_kak} \
-        '^source "/nix/store/.*-kak-powerline/share/kak/autoload/plugins/powerline/.*.kak"$'
+    nmt.script = ''
+      assertDirectoryNotEmpty home-path/share/kak/autoload/plugins
     '';
   };
 }

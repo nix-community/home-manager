@@ -7,7 +7,7 @@ with lib;
     programs.kakoune = { enable = true; };
 
     nmt.script = ''
-      assertFileNotRegex home-path/share/kak/plugins.kak . # file is empty
+      assertPathNotExists home-path/share/kak/autoload/plugins
     '';
   };
 }
