@@ -1736,6 +1736,29 @@ in
           A new module is available: 'programs.i3status-rust'.
         '';
       }
+
+      {
+        time = "2020-11-14T13:02:40+00:00";
+        condition = config.programs.broot.enable;
+        message = ''
+          The 'programs.broot.verbs' option is now a list rather than an
+          attribute set. To migrate, move the keys of the attrset into the
+          list items' 'invocation' keys. For example,
+
+            programs.broot.verbs = {
+              "p" = { execution = ":parent"; };
+            };
+
+          becomes
+
+            programs.broot.verbs = [
+              {
+                invocation = "p";
+                execution = ":parent";
+              }
+            ];
+        '';
+      }
     ];
   };
 }

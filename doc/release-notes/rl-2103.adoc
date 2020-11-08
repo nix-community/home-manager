@@ -9,7 +9,28 @@ section is therefore not final.
 
 This release has the following notable changes:
 
-* Nothing has happened.
+* The <<opt-programs.broot.verbs>> option is now a list rather than an
+attribute set. To migrate, move the keys of the attrset into the list
+items' `invocation` keys. For example,
++
+[source,nix]
+----
+programs.broot.verbs = {
+  "p" = { execution = ":parent"; };
+};
+----
++
+becomes
++
+[source,nix]
+----
+programs.broot.verbs = [
+  {
+    invocation = "p";
+    execution = ":parent";
+  }
+];
+----
 
 [[sec-release-21.03-state-version-changes]]
 === State Version Changes

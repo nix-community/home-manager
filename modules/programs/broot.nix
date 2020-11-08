@@ -18,8 +18,7 @@ let
     '';
 
   brootConf = {
-    verbs =
-      mapAttrsToList (name: value: value // { invocation = name; }) cfg.verbs;
+    verbs = cfg.verbs;
     skin = cfg.skin;
   };
 
@@ -54,31 +53,42 @@ in {
     };
 
     verbs = mkOption {
-      type = with types; attrsOf (attrsOf (either bool str));
-      default = {
-        "p" = { execution = ":parent"; };
-        "edit" = {
+      type = with types; listOf (attrsOf (either bool str));
+      default = [
+        {
+          invocation = "p";
+          execution = ":parent";
+        }
+        {
+          invocation = "edit";
           shortcut = "e";
           execution = "$EDITOR {file}";
-        };
-        "create {subpath}" = { execution = "$EDITOR {directory}/{subpath}"; };
-        "view" = { execution = "less {file}"; };
-      };
-      example = literalExample ''
+        }
         {
-          "p" = { execution = ":parent"; };
-          "edit" = { shortcut = "e"; execution = "$EDITOR {file}" ; };
-          "create {subpath}" = { execution = "$EDITOR {directory}/{subpath}"; };
-          "view" = { execution = "less {file}"; };
-          "blop {name}\\.{type}" = {
+          invocation = "create {subpath}";
+          execution = "$EDITOR {directory}/{subpath}";
+        }
+        {
+          invocation = "view";
+          execution = "less {file}";
+        }
+      ];
+      example = literalExample ''
+        [
+          { invocation = "p"; execution = ":parent"; }
+          { invocation = "edit"; shortcut = "e"; execution = "$EDITOR {file}" ; }
+          { invocation = "create {subpath}"; execution = "$EDITOR {directory}/{subpath}"; }
+          { invocation = "view"; execution = "less {file}"; }
+          {
+            invocation = "blop {name}\\.{type}";
             execution = "/bin/mkdir {parent}/{type} && /usr/bin/nvim {parent}/{type}/{name}.{type}";
             from_shell = true;
-          };
-        }
+          }
+        ]
       '';
       description = ''
-        Define new verbs. The attribute name indicates how the verb is
-        called by the user, with placeholders for arguments.
+        Define new verbs. For more information, see
+        <link xlink:href="https://dystroy.org/broot/documentation/configuration/#verb-definition-attributes"/>.
         </para><para>
         The possible attributes are:
         </para>
@@ -86,8 +96,16 @@ in {
         <para>
         <variablelist>
           <varlistentry>
+            <term><literal>invocation</literal> (optional)</term>
+            <listitem><para>how the verb is called by the user, with placeholders for arguments</para></listitem>
+          </varlistentry>
+          <varlistentry>
             <term><literal>execution</literal> (mandatory)</term>
             <listitem><para>how the verb is executed</para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><literal>key</literal> (optional)</term>
+            <listitem><para>a keyboard key triggering execution</para></listitem>
           </varlistentry>
           <varlistentry>
             <term><literal>shortcut</literal> (optional)</term>
