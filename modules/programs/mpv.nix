@@ -55,14 +55,6 @@ in {
     programs.mpv = {
       enable = mkEnableOption "mpv";
 
-      package = mkOption {
-        type = types.package;
-        readOnly = true;
-        description = ''
-          Resulting mpv package.
-        '';
-      };
-
       scripts = mkOption {
         type = with types; listOf (either package str);
         default = [ ];
