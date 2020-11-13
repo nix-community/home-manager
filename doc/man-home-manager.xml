@@ -115,7 +115,16 @@
    </arg>
     
    <arg>
-    --max-jobs <replaceable>number</replaceable>
+     <group choice="req">
+       <arg choice="plain">
+         -j
+       </arg>
+
+       <arg choice="plain">
+         --max-jobs
+       </arg>
+     </group>
+     <replaceable>number</replaceable>
    </arg>
     
    <arg>
@@ -417,6 +426,9 @@
     </listitem>
    </varlistentry>
    <varlistentry>
+    <term>
+     <option>-j <replaceable>number</replaceable></option>
+    </term>
     <term>
      <option>--max-jobs <replaceable>number</replaceable></option>
     </term>

@@ -285,7 +285,8 @@ _home-manager_completions ()
     #--------------------------#
 
     local Options
-    Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" "--verbose" "--show-trace" )
+    Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" "--verbose" "--show-trace" \
+              "-j" "--max-jobs" )
 
     # ^ « home-manager »'s options.
 
