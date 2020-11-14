@@ -23,6 +23,7 @@ with lib;
           outPath = "@rxvt-unicode-unwrapped@";
         };
         i3status = self.dummy-package // { outPath = "@i3status@"; };
+        xwayland = self.dummy-package // { outPath = "@xwayland@"; };
       })
     ];
 
