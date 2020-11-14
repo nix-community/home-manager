@@ -6,7 +6,7 @@ with lib;
   config = {
     programs.kakoune = {
       enable = true;
-      plugins = [ pkgs.kakounePlugins.kak-powerline ];
+      plugins = [ pkgs.kakounePlugins.kak-prelude ];
     };
 
     nmt.script = ''
