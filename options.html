@@ -2150,48 +2150,49 @@ Add <code class="literal">_fg</code> for a foreground color and
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/broot.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/broot.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.broot.verbs"></a><a class="term" href="options.html#opt-programs.broot.verbs"><code class="option">programs.broot.verbs</code></a></span></dt><dd><p>Define new verbs. The attribute name indicates how the verb is
-called by the user, with placeholders for arguments.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.broot.verbs"></a><a class="term" href="options.html#opt-programs.broot.verbs"><code class="option">programs.broot.verbs</code></a></span></dt><dd><p>Define new verbs. For more information, see
+<a class="link" href="https://dystroy.org/broot/documentation/configuration/#verb-definition-attributes" target="_top">https://dystroy.org/broot/documentation/configuration/#verb-definition-attributes</a>.
 </p><p>
 The possible attributes are:
 </p><p>
-</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">execution</code> (mandatory)</span></dt><dd><p>how the verb is executed</p></dd><dt><span class="term"><code class="literal">shortcut</code> (optional)</span></dt><dd><p>an alternate way to call the verb (without
+</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">invocation</code> (optional)</span></dt><dd><p>how the verb is called by the user, with placeholders for arguments</p></dd><dt><span class="term"><code class="literal">execution</code> (mandatory)</span></dt><dd><p>how the verb is executed</p></dd><dt><span class="term"><code class="literal">key</code> (optional)</span></dt><dd><p>a keyboard key triggering execution</p></dd><dt><span class="term"><code class="literal">shortcut</code> (optional)</span></dt><dd><p>an alternate way to call the verb (without
     the arguments part)</p></dd><dt><span class="term"><code class="literal">leave_broot</code> (optional)</span></dt><dd><p>whether to quit broot on execution
     (default: <code class="literal">true</code>)</p></dd><dt><span class="term"><code class="literal">from_shell</code> (optional)</span></dt><dd><p>whether the verb must be executed from the
     parent shell (default:
     <code class="literal">false</code>)</p></dd></dl></div><p>
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of boolean or stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> list of attribute set of boolean or stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
         
         {
-        create {subpath} = 
+        execution = ":parent"; invocation = "p"; 
+        }
+     
         {
-        execution = "\$EDITOR {directory}/{subpath}"; 
+        execution = "\$EDITOR {file}"; invocation = "edit"; shortcut = "e"; 
         }
-    ; edit = 
+     
         {
-        execution = "\$EDITOR {file}"; shortcut = "e"; 
+        execution = "\$EDITOR {directory}/{subpath}"; invocation = "create {subpath}"; 
         }
-    ; p = 
+     
         {
-        execution = ":parent"; 
+        execution = "less {file}"; invocation = "view"; 
         }
-    ; view = 
-        {
-        execution = "less {file}"; 
-        }
-    ; 
-        }
+     
+        ]
     
-      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  "p" = { execution = ":parent"; };
-  "edit" = { shortcut = "e"; execution = "$EDITOR {file}" ; };
-  "create {subpath}" = { execution = "$EDITOR {directory}/{subpath}"; };
-  "view" = { execution = "less {file}"; };
-  "blop {name}\\.{type}" = {
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[
+  { invocation = "p"; execution = ":parent"; }
+  { invocation = "edit"; shortcut = "e"; execution = "$EDITOR {file}" ; }
+  { invocation = "create {subpath}"; execution = "$EDITOR {directory}/{subpath}"; }
+  { invocation = "view"; execution = "less {file}"; }
+  {
+    invocation = "blop {name}\\.{type}";
     execution = "/bin/mkdir {parent}/{type} &amp;&amp; /usr/bin/nvim {parent}/{type}/{name}.{type}";
     from_shell = true;
-  };
-}
+  }
+]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/broot.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/broot.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.browserpass.enable"></a><a class="term" href="options.html#opt-programs.browserpass.enable"><code class="option">programs.browserpass.enable</code></a></span></dt><dd><p>Whether to enable the browserpass extension host application.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
