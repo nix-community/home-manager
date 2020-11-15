@@ -1,18 +1,28 @@
 { config, lib, pkgs, ... }:
 
-with lib;
 let
+  inherit (lib)
+    attrByPath attrNames concatMap concatMapStringsSep elem filter filterAttrs
+    flip foldl' hasPrefix mergeAttrs optionalAttrs stringLength subtractLists
+    types unique;
+  inherit (lib.options) literalExample mkEnableOption mkOption;
+  inherit (lib.modules) mkIf mkMerge;
+
   cfg = config.programs.waybar;
 
   # Used when generating warnings
   modulesPath = "programs.waybar.settings.[].modules";
+
+  jsonFormat = pkgs.formats.json { };
 
   # Taken from <https://github.com/Alexays/Waybar/blob/adaf84304865e143e4e83984aaea6f6a7c9d4d96/src/factory.cpp>
   defaultModuleNames = [
     "sway/mode"
     "sway/workspaces"
     "sway/window"
+    "sway/language"
     "wlr/taskbar"
+    "river/tags"
     "idle_inhibitor"
     "memory"
     "cpu"
@@ -23,6 +33,7 @@ let
     "backlight"
     "pulseaudio"
     "mpd"
+    "sndio"
     "temperature"
     "bluetooth"
     "battery"
@@ -92,8 +103,8 @@ let
         };
 
         modules-left = mkOption {
-          type = nullOr (listOf str);
-          default = null;
+          type = listOf str;
+          default = [ ];
           description = "Modules that will be displayed on the left.";
           example = literalExample ''
             [ "sway/workspaces" "sway/mode" "wlr/taskbar" ]
@@ -101,8 +112,8 @@ let
         };
 
         modules-center = mkOption {
-          type = nullOr (listOf str);
-          default = null;
+          type = listOf str;
+          default = [ ];
           description = "Modules that will be displayed in the center.";
           example = literalExample ''
             [ "sway/window" ]
@@ -110,8 +121,8 @@ let
         };
 
         modules-right = mkOption {
-          type = nullOr (listOf str);
-          default = null;
+          type = listOf str;
+          default = [ ];
           description = "Modules that will be displayed on the right.";
           example = literalExample ''
             [ "mpd" "custom/mymodule#with-css-id" "temperature" ]
@@ -119,7 +130,7 @@ let
         };
 
         modules = mkOption {
-          type = attrsOf unspecified;
+          type = jsonFormat.type;
           default = { };
           description = "Modules configuration.";
           example = literalExample ''
@@ -169,7 +180,7 @@ in {
     package = mkOption {
       type = package;
       default = pkgs.waybar;
-      defaultText = literalExample "${pkgs.waybar}";
+      defaultText = "pkgs.waybar";
       description = ''
         Waybar package to use. Set to <code>null</code> to use the default module.
       '';
@@ -243,11 +254,7 @@ in {
   };
 
   config = let
-    # Inspired by https://github.com/NixOS/nixpkgs/pull/89781
-    writePrettyJSON = name: x:
-      pkgs.runCommandLocal name { } ''
-        ${pkgs.jq}/bin/jq . > $out <<<${escapeShellArg (builtins.toJSON x)}
-      '';
+    writePrettyJSON = jsonFormat.generate;
 
     configSource = let
       # Removes nulls because Waybar ignores them for most values
@@ -259,8 +266,7 @@ in {
         let
           # The "modules" option is not valid in the JSON
           # as its descendants have to live at the top-level
-          settingsWithoutModules =
-            filterAttrs (n: _: n != "modules") configuration;
+          settingsWithoutModules = removeAttrs configuration [ "modules" ];
           settingsModules =
             optionalAttrs (configuration.modules != { }) configuration.modules;
         in removeNulls (settingsWithoutModules // settingsModules);
@@ -268,6 +274,15 @@ in {
       finalConfiguration = map makeConfiguration cfg.settings;
     in writePrettyJSON "waybar-config.json" finalConfiguration;
 
+    #
+    # Warnings are generated based on the following things:
+    # 1. A `module` is referenced in any of `modules-{left,center,right}` that is neither
+    #    a default module name nor defined in `modules`.
+    # 2. A `module` is defined in `modules` but is not referenced in either of
+    #    `modules-{left,center,right}`.
+    # 3. A custom `module` configuration is defined in `modules` but has an invalid name
+    #    for a custom module (i.e. not "custom/my-module-name").
+    #
     warnings = let
       mkUnreferencedModuleWarning = name:
         "The module '${name}' defined in '${modulesPath}' is not referenced "
@@ -288,9 +303,6 @@ in {
         + "module name. A custom module's name must start with 'custom/' "
         + "like 'custom/mymodule' for instance";
 
-      # Find all modules in `modules-{left,center,right}` and `modules` not declared/referenced.
-      # `cfg.settings` is a list of Waybar configurations
-      # and we need to preserve the index for appropriate warnings
       allFaultyModules = flip map cfg.settings (settings:
         let
           allModules = unique
@@ -308,10 +320,10 @@ in {
           undefinedModules = subtractLists declaredModules nonDefaultModules;
           # Check for invalid module names
           invalidModuleNames =
-            filter (m: !isValidCustomModuleName m) (attrNames settings.modules);
+            filter (m: !isValidCustomModuleName m) declaredModules;
         in {
           # The Waybar bar configuration (since config.settings is a list)
-          settings = settings;
+          inherit settings;
           undef = undefinedModules;
           unref = unreferencedModules;
           invalidName = invalidModuleNames;
