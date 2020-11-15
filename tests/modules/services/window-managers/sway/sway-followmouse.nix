@@ -6,7 +6,7 @@ with lib;
   config = {
     wayland.windowManager.sway = {
       enable = true;
-
+      package = pkgs.writeScriptBin "sway" "" // { outPath = "@sway@"; };
       config = {
         focus.followMouse = "always";
         menu = "${pkgs.dmenu}/bin/dmenu_run";
@@ -20,9 +20,6 @@ with lib;
         rxvt-unicode-unwrapped = super.rxvt-unicode-unwrapped // {
           outPath = "@rxvt-unicode-unwrapped@";
         };
-        sway-unwrapped =
-          pkgs.runCommandLocal "dummy-sway-unwrapped" { version = "1"; }
-          "mkdir $out";
         swaybg = pkgs.writeScriptBin "dummy-swaybg" "";
         xwayland = pkgs.writeScriptBin "xwayland" "";
       })
