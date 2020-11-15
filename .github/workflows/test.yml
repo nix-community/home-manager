@@ -19,4 +19,4 @@ jobs:
         name: nix-community
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
     - run: nix-shell . -A install
-    - run: nix-shell --pure --max-jobs 4 tests -A run.all
+    - run: nix-shell --pure tests -A run.all
