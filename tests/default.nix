@@ -76,7 +76,6 @@ import nmt {
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
     ./modules/targets-darwin
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
-    ./meta # Suffices to run on one platform.
     ./modules/misc/debug
     ./modules/misc/numlock
     ./modules/misc/pam
