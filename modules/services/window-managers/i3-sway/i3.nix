@@ -193,6 +193,21 @@ let
   else
     "") + "\n" + cfg.extraConfig);
 
+  # Validates the i3 configuration
+  checkI3Config =
+    pkgs.runCommandLocal "i3-config" { buildInputs = [ cfg.package ]; } ''
+      # We have to make sure the wrapper does not start a dbus session
+      export DBUS_SESSION_BUS_ADDRESS=1
+
+      # A zero exit code means i3 succesfully validated the configuration
+      i3 -c ${configFile} -C -d all || {
+        echo "i3 configuration validation failed"
+        echo "For a verbose log of the failure, run 'i3 -c ${configFile} -C -d all'"
+        exit 1
+      };
+      cp ${configFile} $out
+    '';
+
 in {
   options = {
     xsession.windowManager.i3 = {
@@ -229,7 +244,7 @@ in {
       home.packages = [ cfg.package ];
       xsession.windowManager.command = "${cfg.package}/bin/i3";
       xdg.configFile."i3/config" = {
-        source = configFile;
+        source = checkI3Config;
         onChange = ''
           i3Socket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*
           if [ -S $i3Socket ]; then
