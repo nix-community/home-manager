@@ -290,6 +290,21 @@ let
     '' else
       "") + cfg.extraConfig);
 
+  # Validates the Sway configuration
+  checkSwayConfig =
+    pkgs.runCommandLocal "sway-config" { buildInputs = [ cfg.package ]; } ''
+      # We have to make sure the wrapper does not start a dbus session
+      export DBUS_SESSION_BUS_ADDRESS=1
+
+      # A zero exit code means Sway succesfully validated the configuration
+      sway --config ${configFile} --validate --debug || {
+        echo "Sway configuration validation failed"
+        echo "For a verbose log of the failure, run 'sway --config ${configFile} --validate --debug'"
+        exit 1
+      };
+      cp ${configFile} $out
+    '';
+
   defaultSwayPackage = pkgs.sway.override {
     extraSessionCommands = cfg.extraSessionCommands;
     extraOptions = cfg.extraOptions;
@@ -394,7 +409,7 @@ in {
     home.packages = optional (cfg.package != null) cfg.package
       ++ optional cfg.xwayland pkgs.xwayland;
     xdg.configFile."sway/config" = {
-      source = configFile;
+      source = checkSwayConfig;
       onChange = ''
         swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep -x sway || ${pkgs.coreutils}/bin/true).sock
         if [ -S $swaySocket ]; then

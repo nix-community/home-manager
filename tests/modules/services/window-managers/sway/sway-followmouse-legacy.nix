@@ -10,7 +10,7 @@ in {
   config = {
     wayland.windowManager.sway = {
       enable = true;
-      package = dummy-package // { outPath = "@sway"; };
+      package = pkgs.writeScriptBin "sway" "";
 
       config = {
         focus.followMouse = false;
@@ -26,10 +26,6 @@ in {
           outPath = "@rxvt-unicode-unwrapped@";
         };
         sway = dummy-package // { outPath = "@sway@"; };
-        sway-unwrapped = dummy-package // {
-          outPath = "@sway-unwrapped@";
-          version = "1";
-        };
         swaybg = dummy-package // { outPath = "@swaybg@"; };
         xwayland = dummy-package // { outPath = "@xwayland@"; };
       })

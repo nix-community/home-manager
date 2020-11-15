@@ -12,7 +12,8 @@ in {
 
     wayland.windowManager.sway = {
       enable = true;
-      package = dummy-package // { outPath = "@sway"; };
+      package = pkgs.writeScriptBin "sway" "" // { outPath = "@sway@"; };
+
       # overriding findutils causes issues
       config.menu = "${pkgs.dmenu}/bin/dmenu_run";
     };
