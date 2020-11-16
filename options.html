@@ -7342,7 +7342,7 @@ overlay or set this option. Example overlay configuration:
                     &lt;home-manager/modules/programs/waybar.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.package"></a><a class="term" href="options.html#opt-programs.waybar.package"><code class="option">programs.waybar.package</code></a></span></dt><dd><p>Waybar package to use. Set to <code class="code">null</code> to use the default module.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        ${pkgs.waybar}
+        "pkgs.waybar"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/waybar.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.settings"></a><a class="term" href="options.html#opt-programs.waybar.settings"><code class="option">programs.waybar.settings</code></a></span></dt><dd><p>Configuration for Waybar, see <a class="link" href="https://github.com/Alexays/Waybar/wiki/Configuration" target="_top">https://github.com/Alexays/Waybar/wiki/Configuration</a>
@@ -7433,7 +7433,7 @@ of the windows or behind (<code class="code">"bottom"</code>).
         10
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/waybar.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.settings._.modules"></a><a class="term" href="options.html#opt-programs.waybar.settings._.modules"><code class="option">programs.waybar.settings.*.modules</code></a></span></dt><dd><p>Modules configuration.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of unspecifieds</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.settings._.modules"></a><a class="term" href="options.html#opt-programs.waybar.settings._.modules"><code class="option">programs.waybar.settings.*.modules</code></a></span></dt><dd><p>Modules configuration.</p><p><span class="emphasis"><em>Type:</em></span> JSON value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
         
@@ -7449,18 +7449,30 @@ of the windows or behind (<code class="code">"bottom"</code>).
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/waybar.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.settings._.modules-center"></a><a class="term" href="options.html#opt-programs.waybar.settings._.modules-center"><code class="option">programs.waybar.settings.*.modules-center</code></a></span></dt><dd><p>Modules that will be displayed in the center.</p><p><span class="emphasis"><em>Type:</em></span> null or list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        null
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.settings._.modules-center"></a><a class="term" href="options.html#opt-programs.waybar.settings._.modules-center"><code class="option">programs.waybar.settings.*.modules-center</code></a></span></dt><dd><p>Modules that will be displayed in the center.</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ "sway/window" ]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/waybar.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.settings._.modules-left"></a><a class="term" href="options.html#opt-programs.waybar.settings._.modules-left"><code class="option">programs.waybar.settings.*.modules-left</code></a></span></dt><dd><p>Modules that will be displayed on the left.</p><p><span class="emphasis"><em>Type:</em></span> null or list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        null
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.settings._.modules-left"></a><a class="term" href="options.html#opt-programs.waybar.settings._.modules-left"><code class="option">programs.waybar.settings.*.modules-left</code></a></span></dt><dd><p>Modules that will be displayed on the left.</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ "sway/workspaces" "sway/mode" "wlr/taskbar" ]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/waybar.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.settings._.modules-right"></a><a class="term" href="options.html#opt-programs.waybar.settings._.modules-right"><code class="option">programs.waybar.settings.*.modules-right</code></a></span></dt><dd><p>Modules that will be displayed on the right.</p><p><span class="emphasis"><em>Type:</em></span> null or list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        null
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.settings._.modules-right"></a><a class="term" href="options.html#opt-programs.waybar.settings._.modules-right"><code class="option">programs.waybar.settings.*.modules-right</code></a></span></dt><dd><p>Modules that will be displayed on the right.</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ "mpd" "custom/mymodule#with-css-id" "temperature" ]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/waybar.nix&gt;
