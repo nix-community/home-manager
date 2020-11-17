@@ -198,6 +198,7 @@ let
     pkgs.runCommandLocal "i3-config" { buildInputs = [ cfg.package ]; } ''
       # We have to make sure the wrapper does not start a dbus session
       export DBUS_SESSION_BUS_ADDRESS=1
+      export XDG_RUNTIME_DIR=$PWD
 
       # A zero exit code means i3 succesfully validated the configuration
       i3 -c ${configFile} -C -d all || {

@@ -295,6 +295,7 @@ let
     pkgs.runCommandLocal "sway-config" { buildInputs = [ cfg.package ]; } ''
       # We have to make sure the wrapper does not start a dbus session
       export DBUS_SESSION_BUS_ADDRESS=1
+      export XDG_RUNTIME_DIR=$PWD
 
       # A zero exit code means Sway succesfully validated the configuration
       sway --config ${configFile} --validate --debug || {
