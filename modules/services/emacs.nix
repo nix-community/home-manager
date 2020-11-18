@@ -6,8 +6,8 @@ let
 
   cfg = config.services.emacs;
   emacsCfg = config.programs.emacs;
-  emacsBinPath = "${emacsCfg.finalPackage}/bin";
-  emacsVersion = getVersion emacsCfg.finalPackage;
+  emacsBinPath = "${cfg.package}/bin";
+  emacsVersion = getVersion cfg.package;
 
   # Adapted from upstream emacs.desktop
   clientDesktopItem = pkgs.writeTextDir "share/applications/emacsclient.desktop"
@@ -51,6 +51,16 @@ in {
   options.services.emacs = {
     enable = mkEnableOption "the Emacs daemon";
 
+    package = mkOption {
+      type = types.package;
+      default = if emacsCfg.enable then emacsCfg.finalPackage else pkgs.emacs;
+      defaultText = literalExample ''
+        if config.programs.emacs.enable then config.programs.emacs.finalPackage
+        else pkgs.emacs
+      '';
+      description = "The Emacs package to use.";
+    };
+
     client = {
       enable = mkEnableOption "generation of Emacs client desktop file";
       arguments = mkOption {
@@ -72,18 +82,11 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      assertions = [
-        {
-          assertion = emacsCfg.enable;
-          message = "The Emacs service module requires"
-            + " 'programs.emacs.enable = true'.";
-        }
-        {
-          assertion = cfg.socketActivation.enable
-            -> versionAtLeast emacsVersion "26";
-          message = "Socket activation requires Emacs 26 or newer.";
-        }
-      ];
+      assertions = [{
+        assertion = cfg.socketActivation.enable
+          -> versionAtLeast emacsVersion "26";
+        message = "Socket activation requires Emacs 26 or newer.";
+      }];
 
       systemd.user.services.emacs = {
         Unit = {
