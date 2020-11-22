@@ -51,7 +51,7 @@ in {
       };
 
       musicDirectory = mkOption {
-        type = with types; either path str;
+        type = with types; either path (strMatching "(http|https|nfs|smb)://.+");
         default = "${config.home.homeDirectory}/music";
         defaultText = "$HOME/music";
         apply = toString;       # Prevent copies to Nix store.
@@ -61,7 +61,7 @@ in {
       };
 
       playlistDirectory = mkOption {
-        type = types.path;
+        type = with types; either path str;
         default = "${cfg.dataDir}/playlists";
         defaultText = ''''${dataDir}/playlists'';
         apply = toString;       # Prevent copies to Nix store.
@@ -86,7 +86,7 @@ in {
       };
 
       dataDir = mkOption {
-        type = types.path;
+        type = with types; either path str;
         default = "${config.xdg.dataHome}/${name}";
         defaultText = "$XDG_DATA_HOME/mpd";
         apply = toString;       # Prevent copies to Nix store.
