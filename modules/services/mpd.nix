@@ -124,6 +124,42 @@ let
 
   };
 
+  mpdService = cfg: {
+      Unit = {
+        After = [ "network.target" "sound.target" ];
+        Description = "Music Player Daemon";
+      };
+
+      Install = mkIf (!cfg.network.startWhenNeeded) {
+        WantedBy = [ "default.target" ];
+      };
+
+      Service = {
+        Environment = "PATH=${config.home.profileDirectory}/bin";
+        ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf cfg}";
+        Type = "notify";
+        ExecStartPre = ''${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
+      };
+  };
+
+  mpdSocket = cfg: mkIf cfg.network.startWhenNeeded {
+      Socket = {
+        ListenStream = let
+          listen =
+            if cfg.network.listenAddress == "any"
+            then toString cfg.network.port
+            else "${cfg.network.listenAddress}:${toString cfg.network.port}";
+        in [ listen "%t/mpd/socket" ];
+
+        Backlog = 5;
+        KeepAlive = true;
+      };
+
+      Install = {
+        WantedBy = [ "sockets.target" ];
+      };
+  };
+
 in {
 
   ###### interface
@@ -143,40 +179,10 @@ in {
 
   config = mkIf cfg.enable {
 
-    systemd.user.services.mpd = {
-      Unit = {
-        After = [ "network.target" "sound.target" ];
-        Description = "Music Player Daemon";
-      };
+    systemd.user.services.mpd = mpdService cfg;
 
-      Install = mkIf (!cfg.network.startWhenNeeded) {
-        WantedBy = [ "default.target" ];
-      };
+    systemd.user.sockets.mpd = mpdSocket cfg;
 
-      Service = {
-        Environment = "PATH=${config.home.profileDirectory}/bin";
-        ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf cfg}";
-        Type = "notify";
-        ExecStartPre = ''${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
-      };
-    };
-    systemd.user.sockets.mpd = mkIf cfg.network.startWhenNeeded {
-      Socket = {
-        ListenStream = let
-          listen =
-            if cfg.network.listenAddress == "any"
-            then toString cfg.network.port
-            else "${cfg.network.listenAddress}:${toString cfg.network.port}";
-        in [ listen "%t/mpd/socket" ];
-
-        Backlog = 5;
-        KeepAlive = true;
-      };
-
-      Install = {
-        WantedBy = [ "sockets.target" ];
-      };
-    };
   };
 
 }
