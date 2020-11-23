@@ -488,7 +488,7 @@ in
       then
         ''
           if nix profile info | grep '^home-manager-path$'; then
-            $DRY_RUN_CMD nix-env -e home-manager-path
+            $DRY_RUN_CMD nix profile remove home-manager-path
           fi
         ''
       else
