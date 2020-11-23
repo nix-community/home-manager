@@ -1782,6 +1782,13 @@ in
           A new module is available: 'programs.rofi.pass'.
         '';
       }
+
+      {
+        time = "2020-12-31T14:16:47+00:00";
+        message = ''
+          A new module is available: 'programs.octant'.
+        '';
+      }
     ];
   };
 }

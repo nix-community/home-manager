@@ -103,6 +103,7 @@ let
     (loadModule ./programs/notmuch.nix { })
     (loadModule ./programs/nushell.nix { })
     (loadModule ./programs/obs-studio.nix { })
+    (loadModule ./programs/octant.nix { })
     (loadModule ./programs/offlineimap.nix { })
     (loadModule ./programs/opam.nix { })
     (loadModule ./programs/password-store.nix { })
