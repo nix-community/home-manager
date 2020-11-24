@@ -4,16 +4,28 @@ with lib;
 
 let
 
-  cfg = config.programs.mako;
+  cfg = config.services.mako;
 
 in {
   meta.maintainers = [ maintainers.onny ];
 
+  imports =
+    [ (mkRenamedOptionModule [ "programs" "mako" ] [ "services" "mako" ]) ];
+
   options = {
-    programs.mako = {
+    services.mako = {
       enable = mkEnableOption ''
         Mako, lightweight notification daemon for Wayland
       '';
+
+      package = mkOption {
+        type = types.package;
+        default = pkgs.mako;
+        defaultText = "pkgs.mako";
+        description = ''
+          mako derivation to use.
+        '';
+      };
 
       maxVisible = mkOption {
         default = 5;
@@ -271,6 +283,13 @@ in {
         '';
       };
 
+      systemdTarget = mkOption {
+        type = types.str;
+        default = "graphical-session.target";
+        description = ''
+          Systemd target to bind to.
+        '';
+      };
     };
   };
 
@@ -283,7 +302,8 @@ in {
     optionalString = name: val:
       lib.optionalString (val != null) "${name}=${val}";
   in mkIf cfg.enable {
-    home.packages = [ pkgs.mako ];
+    home.packages = [ cfg.package ];
+
     xdg.configFile."mako/config".text = ''
       ${optionalInteger "max-visible" cfg.maxVisible}
       ${optionalString "sort" cfg.sort}
@@ -312,5 +332,23 @@ in {
       ${optionalBoolean "ignore-timeout" cfg.ignoreTimeout}
       ${optionalString "group-by" cfg.groupBy}
     '';
+
+    systemd.user.services.mako = {
+      Unit = {
+        Description = "Lightweight Wayland notification daemon";
+        Documentation = "man:mako(1)";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "dbus";
+        BusName = "org.freedesktop.Notifications";
+        ExecStart = "${cfg.package}/bin/mako";
+        ExecReload = "${cfg.package}/bin/makoctl reload";
+      };
+
+      Install = { WantedBy = [ cfg.systemdTarget ]; };
+    };
   };
 }

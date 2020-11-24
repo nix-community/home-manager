@@ -32,6 +32,8 @@ programs.broot.verbs = [
 ];
 ----
 
+* The option <<opt-programs.mako>> has been renamed to <<opt-services.mako>> and now provides a systemd user service.
+
 [[sec-release-21.03-state-version-changes]]
 === State Version Changes
 
