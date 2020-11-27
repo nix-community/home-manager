@@ -12,6 +12,7 @@ let
       || cfg.targets != {}
       || cfg.timers != {}
       || cfg.paths != {}
+      || cfg.mounts != {}
       || cfg.sessionVariables != {};
 
   toSystemdIni = generators.toINI {
@@ -161,6 +162,13 @@ in
         example = unitExample "Path";
       };
 
+      mounts = mkOption {
+        default = {};
+        type = unitType "mount";
+        description = unitDescription "mount";
+        example = unitExample "Mount";
+      };
+
       startServices = mkOption {
         default = false;
         type = types.bool;
@@ -206,7 +214,7 @@ in
               names = concatStringsSep ", " (
                   attrNames (
                       cfg.services // cfg.slices // cfg.sockets // cfg.targets
-                      // cfg.timers // cfg.paths // cfg.sessionVariables
+                      // cfg.timers // cfg.paths // cfg.mounts // cfg.sessionVariables
                   )
               );
             in
@@ -231,6 +239,8 @@ in
           (buildServices "timer" cfg.timers)
           ++
           (buildServices "path" cfg.paths)
+          ++
+          (buildServices "mount" cfg.mounts)
           ))
 
           sessionVariables
