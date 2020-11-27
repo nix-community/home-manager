@@ -53,6 +53,7 @@ let
         google-chrome = "Google/Chrome";
         google-chrome-beta = "Google/Chrome Beta";
         google-chrome-dev = "Google/Chrome Dev";
+        brave = "BraveSoftware/Brave-Browser";
       };
 
       configDir = if pkgs.stdenv.isDarwin then
@@ -81,6 +82,7 @@ in {
       browserModule pkgs.google-chrome-beta "Google Chrome Beta" false;
     google-chrome-dev =
       browserModule pkgs.google-chrome-dev "Google Chrome Dev" false;
+    brave = browserModule pkgs.brave "Brave Browser" false;
   };
 
   config = mkMerge [
@@ -88,5 +90,6 @@ in {
     (browserConfig config.programs.google-chrome)
     (browserConfig config.programs.google-chrome-beta)
     (browserConfig config.programs.google-chrome-dev)
+    (browserConfig config.programs.brave)
   ];
 }
