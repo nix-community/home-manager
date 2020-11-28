@@ -99,6 +99,7 @@ import nmt {
     ./modules/services/sxhkd
     ./modules/services/window-managers/i3
     ./modules/services/window-managers/sway
+    ./modules/services/wlsunset
     ./modules/systemd
     ./modules/targets-linux
   ]);

@@ -216,6 +216,9 @@
 
 /modules/services/window-managers/i3-sway/sway.nix    @alexarice
 
+/modules/services/wlsunset.nix                        @matrss
+/tests/modules/services/wlsunset                      @matrss
+
 /modules/services/xcape.nix                           @nickhu
 
 /modules/services/xembed-sni-proxy.nix                @rycee

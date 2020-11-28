@@ -1759,6 +1759,14 @@ in
             ];
         '';
       }
+
+      {
+        time = "2020-12-01T20:46:14+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.wlsunset'.
+        '';
+      }
     ];
   };
 }

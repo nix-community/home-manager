@@ -31,4 +31,10 @@
     github = "olmokramer";
     githubId = 3612514;
   };
+  matrss = {
+    name = "Matthias Riße";
+    email = "matrss@users.noreply.github.com";
+    github = "matrss";
+    githubId = 9308656;
+  };
 }

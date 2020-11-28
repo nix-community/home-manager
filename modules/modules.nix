@@ -192,6 +192,7 @@ let
     (loadModule ./services/window-managers/i3-sway/i3.nix { })
     (loadModule ./services/window-managers/i3-sway/sway.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/window-managers/xmonad.nix { })
+    (loadModule ./services/wlsunset.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xcape.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xembed-sni-proxy.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xscreensaver.nix { })
