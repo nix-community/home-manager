@@ -20,4 +20,4 @@ jobs:
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
     - run: ./format -c
     - run: nix-shell . -A install
-    - run: nix-shell --pure tests -A run.all
+    - run: for t in $(nix-shell tests -A list | grep -v all) ; do nix-shell --pure tests -A run.$t ; done
