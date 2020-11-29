@@ -38,22 +38,31 @@ let
         type = types.package;
         description = "vim plugin";
       };
+
+      before = mkOption {
+        type = types.lines;
+        description =
+          "vimscript for this plugin to be placed in init.vim before plugin is loaded";
+        default = "";
+      };
     };
   };
 
   # A function to get the configuration string (if any) from an element of 'plugins'
-  pluginConfig = p:
-    if builtins.hasAttr "plugin" p && builtins.hasAttr "config" p then ''
+  pluginConfig = attr: p:
+    if builtins.hasAttr "plugin" p && builtins.hasAttr attr p then ''
       " ${p.plugin.pname} {{{
-      ${p.config}
+      ${p.${attr}}
       " }}}
     '' else
       "";
 
   moduleConfigure = optionalAttrs (cfg.extraConfig != ""
     || (lib.filter (hasAttr "config") cfg.plugins) != [ ]) {
+      beforePlugins =
+        pkgs.lib.concatMapStrings (pluginConfig "before") cfg.plugins;
       customRC = cfg.extraConfig
-        + pkgs.lib.concatMapStrings pluginConfig cfg.plugins;
+        + pkgs.lib.concatMapStrings (pluginConfig "config") cfg.plugins;
 
       packages.home-manager = {
         start = filter (f: f != null) (map (x:
@@ -63,6 +72,8 @@ let
           (map (x: if x ? plugin && x.optional == true then x.plugin else null)
             cfg.plugins);
       };
+    } // optionalAttrs (cfg.plugins != [ ]) {
+      packages.home-manager.start = map (x: x.plugin or x) cfg.plugins;
     };
   extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
     ''--prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';

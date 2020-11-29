@@ -18,6 +18,9 @@ with lib;
             autocmd FileType c setlocal commentstring=//\ %s
             autocmd FileType c setlocal comments=://
           '';
+          before = ''
+            " This comment should come before all plugins are loaded
+          '';
         }
       ];
     };
