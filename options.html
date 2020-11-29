@@ -5989,7 +5989,7 @@ for options.
                     &lt;home-manager/modules/programs/rofi.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.package"></a><a class="term" href="options.html#opt-programs.rofi.package"><code class="option">programs.rofi.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>rofi</strong></span> binary.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        <em class="replaceable"><code>(build of rofi-1.6.0)</code></em>
+        <em class="replaceable"><code>(build of rofi-1.6.1)</code></em>
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/rofi.nix&gt;
@@ -7764,6 +7764,10 @@ if the first character is a space.
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/zsh.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zsh.initExtraBeforeCompInit"></a><a class="term" href="options.html#opt-programs.zsh.initExtraBeforeCompInit"><code class="option">programs.zsh.initExtraBeforeCompInit</code></a></span></dt><dd><p>Extra commands that should be added to <code class="filename">.zshrc</code> before compinit.</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        ""
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/zsh.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zsh.initExtraFirst"></a><a class="term" href="options.html#opt-programs.zsh.initExtraFirst"><code class="option">programs.zsh.initExtraFirst</code></a></span></dt><dd><p>Commands that should be added to top of <code class="filename">.zshrc</code>.</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         ""
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/zsh.nix&gt;
