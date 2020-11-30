@@ -101,7 +101,7 @@ let
       };
 
       contents = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.anything;
         default = { };
         description = ''
           Configuration to include. If empty then a path must be given.

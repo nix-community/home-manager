@@ -27,7 +27,25 @@ let
   else
     ".config/Code/User/keybindings.json";
 
-  expectedJson = pkgs.writeText "expected.json" (builtins.toJSON bindings);
+  expectedJson = pkgs.writeText "expected.json" ''
+    [
+      {
+        "command": "editor.action.clipboardCopyAction",
+        "key": "ctrl+c",
+        "when": "textInputFocus && false"
+      },
+      {
+        "command": "deleteFile",
+        "key": "ctrl+c",
+        "when": ""
+      },
+      {
+        "command": "deleteFile",
+        "key": "d",
+        "when": "explorerViewletVisible"
+      }
+    ]
+  '';
 in {
   config = {
     programs.vscode = {

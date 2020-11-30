@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.mercurial;
 
+  iniFormat = pkgs.formats.ini { };
+
 in {
 
   options = {
@@ -30,19 +32,19 @@ in {
       };
 
       aliases = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.anything;
         default = { };
         description = "Mercurial aliases to define.";
       };
 
       extraConfig = mkOption {
-        type = types.either types.attrs types.lines;
+        type = types.either (types.attrsOf types.anything) types.lines;
         default = { };
         description = "Additional configuration to add.";
       };
 
       iniContent = mkOption {
-        type = types.attrsOf types.attrs;
+        type = iniFormat.type;
         internal = true;
       };
 
@@ -71,7 +73,8 @@ in {
         username = cfg.userName + " <" + cfg.userEmail + ">";
       };
 
-      xdg.configFile."hg/hgrc".text = generators.toINI { } cfg.iniContent;
+      xdg.configFile."hg/hgrc".source =
+        iniFormat.generate "hgrc" cfg.iniContent;
     }
 
     (mkIf (cfg.ignores != [ ] || cfg.ignoresRegexp != [ ]) {

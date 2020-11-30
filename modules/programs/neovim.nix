@@ -156,7 +156,7 @@ in {
       };
 
       configure = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.anything;
         default = { };
         example = literalExample ''
           configure = {

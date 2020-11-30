@@ -78,7 +78,7 @@ in {
     };
 
     settings = mkOption {
-      type = types.attrs;
+      type = types.attrsOf types.anything;
       default = { };
       description = ''
         Options to add to qutebrowser <filename>config.py</filename> file.

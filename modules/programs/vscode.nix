@@ -8,6 +8,8 @@ let
 
   vscodePname = cfg.package.pname;
 
+  jsonFormat = pkgs.formats.json { };
+
   configDir = {
     "vscode" = "Code";
     "vscode-insiders" = "Code - Insiders";
@@ -46,7 +48,7 @@ in {
       };
 
       userSettings = mkOption {
-        type = types.attrs;
+        type = jsonFormat.type;
         default = { };
         example = literalExample ''
           {
@@ -125,10 +127,10 @@ in {
       toSymlink = concatMap toPaths cfg.extensions;
     in foldr (a: b: a // b) {
       "${configFilePath}" = mkIf (cfg.userSettings != { }) {
-        text = builtins.toJSON cfg.userSettings;
+        source = jsonFormat.generate "vscode-user-settings" cfg.userSettings;
       };
       "${keybindingsFilePath}" = mkIf (cfg.keybindings != [ ]) {
-        text = builtins.toJSON cfg.keybindings;
+        source = jsonFormat.generate "vscode-keybindings" cfg.keybindings;
       };
     } toSymlink;
   };
