@@ -342,6 +342,9 @@ as follows:
 }
 ```
 
+Note, the Home Manager library is exported by the flake under
+`lib.hm`.
+
 Releases
 --------
 

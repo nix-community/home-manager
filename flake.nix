@@ -7,6 +7,7 @@
     darwinModules.home-manager = import ./nix-darwin;
 
     lib = {
+      hm = import ./modules/lib { lib = nixpkgs.lib; };
       homeManagerConfiguration = { configuration, system, homeDirectory
         , username
         , pkgs ? builtins.getAttr system nixpkgs.outputs.legacyPackages
