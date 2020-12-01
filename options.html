@@ -10002,6 +10002,47 @@ for a list of available options.
         "\$XDG_DATA_HOME/unison"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/unison.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/unison.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.wlsunset.enable"></a><a class="term" href="options.html#opt-services.wlsunset.enable"><code class="option">services.wlsunset.enable</code></a></span></dt><dd><p>Whether to enable Whether to enable wlsunset..</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/wlsunset.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.wlsunset.package"></a><a class="term" href="options.html#opt-services.wlsunset.package"><code class="option">services.wlsunset.package</code></a></span></dt><dd><p>wlsunset derivation to use.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "pkgs.wlsunset"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/wlsunset.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.wlsunset.gamma"></a><a class="term" href="options.html#opt-services.wlsunset.gamma"><code class="option">services.wlsunset.gamma</code></a></span></dt><dd><p>Gamma value to use.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "1.0"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/wlsunset.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.wlsunset.latitude"></a><a class="term" href="options.html#opt-services.wlsunset.latitude"><code class="option">services.wlsunset.latitude</code></a></span></dt><dd><p>Your current latitude, between <code class="literal">-90.0</code> and
+<code class="literal">90.0</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/wlsunset.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.wlsunset.longitude"></a><a class="term" href="options.html#opt-services.wlsunset.longitude"><code class="option">services.wlsunset.longitude</code></a></span></dt><dd><p>Your current longitude, between <code class="literal">-180.0</code> and
+<code class="literal">180.0</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/wlsunset.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.wlsunset.systemdTarget"></a><a class="term" href="options.html#opt-services.wlsunset.systemdTarget"><code class="option">services.wlsunset.systemdTarget</code></a></span></dt><dd><p>Systemd target to bind to.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "graphical-session.target"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/wlsunset.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.wlsunset.temperature.day"></a><a class="term" href="options.html#opt-services.wlsunset.temperature.day"><code class="option">services.wlsunset.temperature.day</code></a></span></dt><dd><p>Colour temperature to use during the day, in Kelvin (K).
+This value must be greater than <code class="literal">temperature.night</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        6500
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/wlsunset.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.wlsunset.temperature.night"></a><a class="term" href="options.html#opt-services.wlsunset.temperature.night"><code class="option">services.wlsunset.temperature.night</code></a></span></dt><dd><p>Colour temperature to use during the night, in Kelvin (K).
+This value must be smaller than <code class="literal">temperature.day</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        4000
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/wlsunset.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.xcape.enable"></a><a class="term" href="options.html#opt-services.xcape.enable"><code class="option">services.xcape.enable</code></a></span></dt><dd><p>Whether to enable xcape.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
