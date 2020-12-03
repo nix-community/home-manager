@@ -194,6 +194,9 @@
 
 /modules/services/pasystray.nix                       @pltanton
 
+/modules/services/pbgopy.nix                          @ivarwithoutbones
+/tests/modules/services/pbgopy                        @ivarwithoutbones
+
 /modules/services/pulseeffects.nix                    @jonringer
 
 /modules/services/random-background.nix               @rycee

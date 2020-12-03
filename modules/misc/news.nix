@@ -1767,6 +1767,14 @@ in
           A new module is available: 'services.wlsunset'.
         '';
       }
+
+      {
+        time = "2020-12-09T22:34:33+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.pbgopy'.
+        '';
+      }
     ];
   };
 }

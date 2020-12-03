@@ -169,6 +169,7 @@ let
     (loadModule ./services/parcellite.nix { })
     (loadModule ./services/password-store-sync.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/pasystray.nix { })
+    (loadModule ./services/pbgopy.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/picom.nix { })
     (loadModule ./services/polybar.nix { })
     (loadModule ./services/pulseeffects.nix { condition = hostPlatform.isLinux; })
