@@ -7,6 +7,7 @@ let
   cfg = config.systemd.user;
 
   enabled = cfg.services != {}
+      || cfg.slices != {}
       || cfg.sockets != {}
       || cfg.targets != {}
       || cfg.timers != {}
@@ -125,6 +126,13 @@ in
         example = unitExample "Service";
       };
 
+      slices = mkOption {
+        default = {};
+        type = unitType "slices";
+        description = unitDescription "slices";
+        example = unitExample "Slices";
+      };
+
       sockets = mkOption {
         default = {};
         type = unitType "socket";
@@ -197,7 +205,8 @@ in
             let
               names = concatStringsSep ", " (
                   attrNames (
-                      cfg.services // cfg.sockets // cfg.targets // cfg.timers // cfg.paths // cfg.sessionVariables
+                      cfg.services // cfg.slices // cfg.sockets // cfg.targets
+                      // cfg.timers // cfg.paths // cfg.sessionVariables
                   )
               );
             in
@@ -212,6 +221,8 @@ in
       xdg.configFile = mkMerge [
         (listToAttrs (
           (buildServices "service" cfg.services)
+          ++
+          (buildServices "slices" cfg.slices)
           ++
           (buildServices "socket" cfg.sockets)
           ++
