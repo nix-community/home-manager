@@ -20,6 +20,13 @@ in {
       Zathura, a highly customizable and functional document viewer
       focused on keyboard interaction'';
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.zathura;
+      defaultText = "pkgs.zathura";
+      description = "The Zathura package to use";
+    };
+
     options = mkOption {
       default = { };
       type = with types; attrsOf (either str (either bool int));
@@ -49,7 +56,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.zathura ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."zathura/zathurarc".text = concatStringsSep "\n" ([ ]
       ++ optional (cfg.extraConfig != "") cfg.extraConfig
