@@ -10365,6 +10365,32 @@ The variable values must be as described in
     
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/systemd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/systemd.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.slices"></a><a class="term" href="options.html#opt-systemd.user.slices"><code class="option">systemd.user.slices</code></a></span></dt><dd><p>Definition of systemd per-user slices units. Attributes are
+merged recursively.
+</p><p>
+Note that the attributes follow the capitalization and naming used
+by systemd. More details can be found in
+<span class="citerefentry"><span class="refentrytitle">systemd.slices</span>(5)</span>.
+</p><p><span class="emphasis"><em>Type:</em></span> systemd slices unit configuration</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  slices-name = {
+    Unit = {
+      Description = "Example description";
+      Documentation = [ "man:example(1)" "man:example(5)" ];
+    };
+
+    Slices = {
+      …
+    };
+  };
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/systemd.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/systemd.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.sockets"></a><a class="term" href="options.html#opt-systemd.user.sockets"><code class="option">systemd.user.sockets</code></a></span></dt><dd><p>Definition of systemd per-user socket units. Attributes are
 merged recursively.
 </p><p>
