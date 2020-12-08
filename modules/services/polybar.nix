@@ -27,6 +27,8 @@ let
   configFile = pkgs.writeText "polybar.conf"
     (toPolybarIni cfg.config + "\n" + cfg.extraConfig);
 
+  path = "PATH=${cfg.package}/bin:/run/wrappers/bin";
+
 in {
   options = {
     services.polybar = {
@@ -103,6 +105,27 @@ in {
         '';
         example = "polybar bar &";
       };
+
+      extraEnv = mkOption {
+        type = types.attrsOf types.str;
+        description = ''
+          Any extra environment variables to be set for the service.
+        '';
+        default = { };
+        example = {
+          DISPLAY = ":0";
+          EDITOR = "nvim";
+        };
+      };
+
+      extraPathDirs = mkOption {
+        type = types.listOf types.str;
+        description = ''
+          Any extra directories to make available in the <envar>PATH</envar>.
+        '';
+        default = [ ];
+        example = [ "/run/current-system/sw/bin" ];
+      };
     };
   };
 
@@ -121,7 +144,10 @@ in {
 
       Service = {
         Type = "forking";
-        Environment = "PATH=${cfg.package}/bin:/run/wrappers/bin";
+        Environment = let
+          newPath = path + foldl' (x: y: x + ":" + y) "" cfg.extraPathDirs;
+          envVars = attrValues (mapAttrs (k: v: "${k}=${v}") cfg.extraEnv);
+        in [ "${newPath}" ] ++ envVars;
         ExecStart =
           let scriptPkg = pkgs.writeShellScriptBin "polybar-start" cfg.script;
           in "${scriptPkg}/bin/polybar-start";

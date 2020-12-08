@@ -22,6 +22,8 @@
           label = "%time%  %date%";
         };
       };
+      extraEnv = { DISPLAY = ":0"; };
+      extraPathDirs = [ "/run/current-system/sw/bin" ];
       extraConfig = ''
         [module/date]
         type = internal/date
