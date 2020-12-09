@@ -32,7 +32,10 @@ in {
       dataDirs = concatStringsSep ":"
         (map (profile: "${profile}/share") profiles
           ++ config.targets.genericLinux.extraXdgDataDirs);
-    in { XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:}$XDG_DATA_DIRS"; };
+    in {
+      XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:}$XDG_DATA_DIRS";
+      LOCALE_ARCHIVE_2_27 = "${pkgs.glibcLocales}/lib/locale/locale-archive";
+    };
 
     home.sessionVariablesExtra = ''
       . "${pkgs.nix}/etc/profile.d/nix.sh"

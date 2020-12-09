@@ -17,6 +17,9 @@ with lib;
       assertFileContains \
         home-path/etc/profile.d/hm-session-vars.sh \
         '. "${pkgs.nix}/etc/profile.d/nix.sh"'
+      assertFileContains \
+        home-path/etc/profile.d/hm-session-vars.sh \
+        'export LOCALE_ARCHIVE_2_27="${pkgs.glibcLocales}/lib/locale/locale-archive"'
     '';
   };
 }
