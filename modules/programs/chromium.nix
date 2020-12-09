@@ -25,8 +25,41 @@ let
 
       extensions = mkOption {
         inherit visible;
-        type = types.listOf (types.either types.str
-          types.attrs); # strings are accepted to maintain backward compatibility
+        type = with types;
+          let
+            extensionType = submodule {
+              options = {
+                id = mkOption {
+                  type = strMatching "[a-zA-Z]{32}";
+                  description =
+                    "The extension's ID from the Chome Web Store url or the unpacked crx.";
+                  default = "";
+                };
+                updateUrl = mkOption {
+                  type = str;
+                  description =
+                    "URL of the extension's update manifest XML file. (Linux only)";
+                  default = "https://clients2.google.com/service/update2/crx";
+                  visible = pkgs.stdenv.isLinux;
+                  readOnly = pkgs.stdenv.isDarwin;
+                };
+                crxPath = mkOption {
+                  type = either path bool;
+                  description =
+                    "Path to the extension's crx file. (Linux only)";
+                  default = false;
+                  visible = pkgs.stdenv.isLinux;
+                };
+                version = mkOption {
+                  type = either str bool;
+                  description =
+                    "The extension's version, required for local installation. (Linux only)";
+                  default = false;
+                  visible = pkgs.stdenv.isLinux;
+                };
+              };
+            };
+          in listOf (coercedTo str (v: { id = v; }) extensionType);
         default = [ ];
         example = literalExample ''
           [
@@ -71,21 +104,15 @@ let
         "${config.xdg.configHome}/${browser}";
 
       extensionJson = ext:
-        if builtins.isString ext then {
-          name = "${configDir}/External Extensions/${ext}.json";
-          value.text = builtins.toJSON {
-            external_update_url =
-              "https://clients2.google.com/service/update2/crx";
-          };
-        } else {
+        with builtins; {
           name = "${configDir}/External Extensions/${ext.id}.json";
-          value.text = if ext ? updateUrl then
-            builtins.toJSON { external_update_url = ext.updateUrl; }
-          else
-            builtins.toJSON {
+          value.text = toJSON
+            (if (isPath ext.crxPath && isString ext.version) then {
               external_crx = ext.crxPath;
               external_version = ext.version;
-            };
+            } else {
+              external_update_url = ext.updateUrl;
+            });
         };
 
     in mkIf cfg.enable {
