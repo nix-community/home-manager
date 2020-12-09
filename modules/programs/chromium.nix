@@ -44,17 +44,17 @@ let
                   readOnly = pkgs.stdenv.isDarwin;
                 };
                 crxPath = mkOption {
-                  type = either path bool;
+                  type = nullOr path;
                   description =
                     "Path to the extension's crx file. (Linux only)";
-                  default = false;
+                  default = null;
                   visible = pkgs.stdenv.isLinux;
                 };
                 version = mkOption {
-                  type = either str bool;
+                  type = nullOr str;
                   description =
                     "The extension's version, required for local installation. (Linux only)";
-                  default = false;
+                  default = null;
                   visible = pkgs.stdenv.isLinux;
                 };
               };
