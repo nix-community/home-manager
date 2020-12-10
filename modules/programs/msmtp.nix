@@ -26,8 +26,7 @@ let
         tls_fingerprint = msmtp.tls.fingerprint;
       } // optionalAttrs (smtp.port != null) { port = toString smtp.port; }
         // optionalAttrs (passwordCommand != null) {
-          passwordeval =
-            ''${pkgs.bash}/bin/bash -c "${toString passwordCommand}"'';
+          passwordeval = toString passwordCommand;
         } // msmtp.extraConfig) ++ optional primary ''
 
           account default : ${name}'');
