@@ -170,21 +170,54 @@ in
       };
 
       startServices = mkOption {
-        default = false;
-        type = types.bool;
+        default = "suggest";
+        type = with types; either bool (enum ["suggest" "legacy" "sd-switch"]);
+        apply = p:
+          if isBool p then if p then "legacy" else "suggest"
+          else p;
         description = ''
-          Start all services that are wanted by active targets.
-          Additionally, stop obsolete services from the previous
-          generation.
+          Whether new or changed services that are wanted by active targets
+          should be started. Additionally, stop obsolete services from the
+          previous generation.
+          </para><para>
+          The alternatives are
+          <variablelist>
+          <varlistentry>
+            <term><literal>suggest</literal> (or <literal>false</literal>)</term>
+            <listitem><para>
+              Use a very simple shell script to print suggested
+              <command>systemctl</command> commands to run. You will have to
+              manually run those commands after the switch.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><literal>legacy</literal> (or <literal>true</literal>)</term>
+            <listitem><para>
+              Use a Ruby script to, in a more robust fashion, determine the
+              necessary changes and automatically run the
+              <command>systemctl</command> commands.
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><literal>sd-switch</literal></term>
+            <listitem><para>
+              Use sd-switch, a third party application, to perform the service
+              updates. This tool offers more features while having a small
+              closure size. Note, it requires a fully functional user D-Bus
+              session. Once tested and deemed sufficiently robust, this will
+              become the default.
+            </para></listitem>
+          </varlistentry>
+          </variablelist>
         '';
       };
 
       servicesStartTimeoutMs = mkOption {
         default = 0;
-        type = types.int;
+        type = types.ints.unsigned;
         description = ''
-          How long to wait for started services to fail until their
-          start is considered successful.
+          How long to wait for started services to fail until their start is
+          considered successful. The value 0 indicates no timeout.
         '';
       };
 
@@ -252,14 +285,30 @@ in
       # set it ourselves in that case.
       home.activation.reloadSystemd = hm.dag.entryAfter ["linkGeneration"] (
         let
-          autoReloadCmd = ''
-            ${pkgs.ruby}/bin/ruby ${./systemd-activate.rb} \
-              "''${oldGenPath=}" "$newGenPath" "${servicesStartTimeoutMs}"
-          '';
-
-          legacyReloadCmd = ''
-            bash ${./systemd-activate.sh} "''${oldGenPath=}" "$newGenPath"
-          '';
+          cmd = {
+            suggest = ''
+              PATH=${dirOf cfg.systemctlPath}:$PATH \
+              bash ${./systemd-activate.sh} "''${oldGenPath=}" "$newGenPath"
+            '';
+            legacy = ''
+              PATH=${dirOf cfg.systemctlPath}:$PATH \
+              ${pkgs.ruby}/bin/ruby ${./systemd-activate.rb} \
+                "''${oldGenPath=}" "$newGenPath" "${servicesStartTimeoutMs}"
+            '';
+            sd-switch =
+              let
+                timeoutArg =
+                  if cfg.servicesStartTimeoutMs != 0 then
+                    "--timeout " + servicesStartTimeoutMs
+                  else
+                    "";
+              in ''
+                ${pkgs.sd-switch}/bin/sd-switch \
+                  ''${DRY_RUN:+--dry-run} $VERBOSE_ARG ${timeoutArg} \
+                  ''${oldGenPath:+--old-units $oldGenPath/home-files/.config/systemd/user} \
+                  --new-units $newGenPath/home-files/.config/systemd/user
+              '';
+          };
 
           ensureRuntimeDir = "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$(id -u)}";
 
@@ -276,8 +325,7 @@ in
               fi
 
               ${ensureRuntimeDir} \
-              PATH=${dirOf cfg.systemctlPath}:$PATH \
-                ${if cfg.startServices then autoReloadCmd else legacyReloadCmd}
+                ${getAttr cfg.startServices cmd}
             else
               echo "User systemd daemon not running. Skipping reload."
             fi
