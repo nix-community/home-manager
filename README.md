@@ -113,6 +113,13 @@ Currently the easiest way to install Home Manager is as follows:
     . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
     ```
 
+    or this when managing home configuration together with system
+    configuration
+
+    ```bash
+    . "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
+    ```
+
     to your `~/.profile` file.
 
 If instead of using channels you want to run Home Manager from a Git
@@ -343,6 +350,10 @@ as follows:
 
 Note, the Home Manager library is exported by the flake under
 `lib.hm`.
+
+When using flakes, switch to new configurations as you do for the
+whole system (e. g. `nixos-rebuild switch --flake <path>`) instead of
+using the `home-manager` command line tool.
 
 Releases
 --------
