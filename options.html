@@ -10381,9 +10381,9 @@ by systemd. More details can be found in
 };
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/systemd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/systemd.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.servicesStartTimeoutMs"></a><a class="term" href="options.html#opt-systemd.user.servicesStartTimeoutMs"><code class="option">systemd.user.servicesStartTimeoutMs</code></a></span></dt><dd><p>How long to wait for started services to fail until their
-start is considered successful.
-</p><p><span class="emphasis"><em>Type:</em></span> signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.servicesStartTimeoutMs"></a><a class="term" href="options.html#opt-systemd.user.servicesStartTimeoutMs"><code class="option">systemd.user.servicesStartTimeoutMs</code></a></span></dt><dd><p>How long to wait for started services to fail until their start is
+considered successful. The value 0 indicates no timeout.
+</p><p><span class="emphasis"><em>Type:</em></span> unsigned integer, meaning &gt;=0</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         0
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/systemd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/systemd.nix&gt;
@@ -10456,11 +10456,28 @@ by systemd. More details can be found in
 };
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/systemd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/systemd.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.startServices"></a><a class="term" href="options.html#opt-systemd.user.startServices"><code class="option">systemd.user.startServices</code></a></span></dt><dd><p>Start all services that are wanted by active targets.
-Additionally, stop obsolete services from the previous
-generation.
-</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        false
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.startServices"></a><a class="term" href="options.html#opt-systemd.user.startServices"><code class="option">systemd.user.startServices</code></a></span></dt><dd><p>Whether new or changed services that are wanted by active targets
+should be started. Additionally, stop obsolete services from the
+previous generation.
+</p><p>
+The alternatives are
+</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">suggest</code> (or <code class="literal">false</code>)</span></dt><dd><p>
+    Use a very simple shell script to print suggested
+    <span class="command"><strong>systemctl</strong></span> commands to run. You will have to
+    manually run those commands after the switch.
+  </p></dd><dt><span class="term"><code class="literal">legacy</code> (or <code class="literal">true</code>)</span></dt><dd><p>
+    Use a Ruby script to, in a more robust fashion, determine the
+    necessary changes and automatically run the
+    <span class="command"><strong>systemctl</strong></span> commands.
+  </p></dd><dt><span class="term"><code class="literal">sd-switch</code></span></dt><dd><p>
+    Use sd-switch, a third party application, to perform the service
+    updates. This tool offers more features while having a small
+    closure size. Note, it requires a fully functional user D-Bus
+    session. Once tested and deemed sufficiently robust, this will
+    become the default.
+  </p></dd></dl></div><p>
+</p><p><span class="emphasis"><em>Type:</em></span> boolean or one of "suggest", "legacy", "sd-switch"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "suggest"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/systemd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/systemd.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.systemctlPath"></a><a class="term" href="options.html#opt-systemd.user.systemctlPath"><code class="option">systemd.user.systemctlPath</code></a></span></dt><dd><p>Absolute path to the <span class="command"><strong>systemctl</strong></span> tool. This
