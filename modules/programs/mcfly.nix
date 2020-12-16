@@ -27,6 +27,14 @@ in {
       '';
     };
 
+    enableFuzzySearch = mkOption {
+      default = false;
+      type = types.bool;
+      description = ''
+        Whether to enable fuzzy searching.
+      '';
+    };
+
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
@@ -75,5 +83,7 @@ in {
     }
 
     (mkIf cfg.enableLightTheme { home.sessionVariables.MCFLY_LIGHT = "TRUE"; })
+
+    (mkIf cfg.enableFuzzySearch { home.sessionVariables.MCFLY_FUZZY = "TRUE"; })
   ]);
 }
