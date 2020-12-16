@@ -12,6 +12,7 @@
 /modules/misc/gtk.nix                                 @rycee
 
 /modules/config/i18n.nix                              @midchildan
+/tests/modules/config/i18n                            @midchildan
 
 /modules/misc/news.nix                                @rycee
 

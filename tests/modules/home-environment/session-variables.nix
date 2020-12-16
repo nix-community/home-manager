@@ -1,17 +1,36 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
-  inherit (pkgs.stdenv.hostPlatform) isLinux;
 
-  expectedConf = pkgs.substituteAll {
-    src = ./session-variables-expected.txt;
-    # the blank space below is intentional
-    exportLocaleVar = optionalString isLinux ''
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-      export LOCALE_ARCHIVE_2_27="${pkgs.glibcLocales}/lib/locale/locale-archive"'';
-  };
+  linuxExpected = ''
+    # Only source this once.
+    if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+    export __HM_SESS_VARS_SOURCED=1
+
+    export LOCALE_ARCHIVE_2_27="${pkgs.glibcLocales}/lib/locale/locale-archive"
+    export V1="v1"
+    export V2="v2-v1"
+    export XDG_CACHE_HOME="/home/hm-user/.cache"
+    export XDG_CONFIG_HOME="/home/hm-user/.config"
+    export XDG_DATA_HOME="/home/hm-user/.local/share"
+  '';
+
+  darwinExpected = ''
+    # Only source this once.
+    if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+    export __HM_SESS_VARS_SOURCED=1
+
+    export V1="v1"
+    export V2="v2-v1"
+    export XDG_CACHE_HOME="/home/hm-user/.cache"
+    export XDG_CONFIG_HOME="/home/hm-user/.config"
+    export XDG_DATA_HOME="/home/hm-user/.local/share"
+  '';
+
+  expected = pkgs.writeText "expected" (if isDarwin then darwinExpected else linuxExpected);
+
 in {
   config = {
     home.sessionVariables = {
@@ -22,7 +41,7 @@ in {
     nmt.script = ''
       assertFileExists home-path/etc/profile.d/hm-session-vars.sh
       assertFileContent home-path/etc/profile.d/hm-session-vars.sh \
-        ${expectedConf}
+        ${expected}
     '';
   };
 }
