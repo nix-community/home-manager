@@ -22,6 +22,7 @@ let
 
   allModules = [
     (loadModule ./accounts/email.nix { })
+    (loadModule ./config/i18n.nix { condition = hostPlatform.isLinux; })
     (loadModule ./files.nix { })
     (loadModule ./home-environment.nix { })
     (loadModule ./manual.nix { })
