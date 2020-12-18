@@ -6119,6 +6119,32 @@ should be used whenever possible.
         400
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/rofi.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.pass.enable"></a><a class="term" href="options.html#opt-programs.rofi.pass.enable"><code class="option">programs.rofi.pass.enable</code></a></span></dt><dd><p>Whether to enable rofi integration with password-store.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi-pass.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rofi-pass.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.pass.extraConfig"></a><a class="term" href="options.html#opt-programs.rofi.pass.extraConfig"><code class="option">programs.rofi.pass.extraConfig</code></a></span></dt><dd><p>Extra configuration to be added at to the rofi-pass config file.
+Additional examples can be found at
+<a class="link" href="https://github.com/carnager/rofi-pass/blob/master/config.example" target="_top">https://github.com/carnager/rofi-pass/blob/master/config.example</a>.
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        ""
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
+URL_field='url'
+USERNAME_field='user'
+AUTOTYPE_field='autotype'
+''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi-pass.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rofi-pass.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.pass.stores"></a><a class="term" href="options.html#opt-programs.rofi.pass.stores"><code class="option">programs.rofi.pass.stores</code></a></span></dt><dd><p>Directory roots of your password-stores.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi-pass.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rofi-pass.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.rowHeight"></a><a class="term" href="options.html#opt-programs.rofi.rowHeight"><code class="option">programs.rofi.rowHeight</code></a></span></dt><dd><p>Row height (in chars)</p><p><span class="emphasis"><em>Type:</em></span> null or signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
