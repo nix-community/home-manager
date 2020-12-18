@@ -118,6 +118,7 @@ in {
           "emotes"
           "filesystem"
           "intl"
+          "legacy"
           "mimetypes"
           "places"
           "status"
