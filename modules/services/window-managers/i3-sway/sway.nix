@@ -166,6 +166,15 @@ let
         '';
       };
 
+      seat = mkOption {
+        type = types.attrsOf (types.attrsOf types.str);
+        default = { };
+        example = { "*" = { hide_cursor = "0000"; }; };
+        description = ''
+          An attribute set that defines seats. See man sway_input for options.
+        '';
+      };
+
       modes = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = {
@@ -234,6 +243,13 @@ let
     }
   '';
 
+  seatStr = name: attrs: ''
+    seat "${name}" {
+    ${concatStringsSep "\n"
+    (mapAttrsToList (name: value: "${name} ${value}") attrs)}
+    }
+  '';
+
   outputStr = name: attrs: ''
     output "${name}" {
     ${concatStringsSep "\n"
@@ -276,6 +292,7 @@ let
       ${keycodebindingsStr keycodebindings}
       ${concatStringsSep "\n" (mapAttrsToList inputStr input)}
       ${concatStringsSep "\n" (mapAttrsToList outputStr output)}
+      ${concatStringsSep "\n" (mapAttrsToList seatStr seat)}
       ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
       ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
       ${concatStringsSep "\n" (map barStr bars)}
