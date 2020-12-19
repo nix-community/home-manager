@@ -63,21 +63,20 @@ Currently the easiest way to install Home Manager is as follows:
 
     Note that Nix 2.4 (`nixUnstable`) is not yet supported.
 
-2.  Add the appropriate Home Manager channel. Typically this is
+2.  Add the appropriate Home Manager channel. If you are following
+    Nixpkgs master or an unstable channel you can run
 
     ```console
     $ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
     $ nix-channel --update
     ```
 
-    if you are following Nixpkgs master or an unstable channel and
+    and if you follow a Nixpkgs version 20.09 channel you can run
 
     ```console
     $ nix-channel --add https://github.com/nix-community/home-manager/archive/release-20.09.tar.gz home-manager
     $ nix-channel --update
     ```
-
-    if you follow a Nixpkgs version 20.09 channel.
 
     On NixOS you may need to log out and back in for the channel to
     become available. On non-NixOS you may have to add

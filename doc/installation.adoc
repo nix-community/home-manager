@@ -37,8 +37,9 @@ must be covered by the {nix-allowed-users}[`allowed-users`] Nix
 option. On NixOS you can control this option using the
 {nixos-allowed-users}[`nix.allowedUsers`] system option.
 
-2. Add the Home Manager channel that you wish to follow. This is done
-by running
+2. Add the Home Manager channel that you wish to follow. If you are
+following Nixpkgs master or an unstable channel then this is done by
+running
 +
 [source,console]
 ----
@@ -46,15 +47,13 @@ $ nix-channel --add https://github.com/nix-community/home-manager/archive/master
 $ nix-channel --update
 ----
 +
-if you are following Nixpkgs master or an unstable channel and
+and if you follow a Nixpkgs version 20.09 channel, you can run
 +
 [source,console]
 ----
 $ nix-channel --add https://github.com/nix-community/home-manager/archive/release-20.09.tar.gz home-manager
 $ nix-channel --update
 ----
-+
-if you follow a Nixpkgs version 20.09 channel.
 +
 On NixOS you may need to log out and back in for the channel to become
 available. On non-NixOS you may have to add
@@ -111,7 +110,8 @@ deployed through NixOps.
 
 To make the NixOS module available for use you must `import` it into
 your system configuration. This is most conveniently done by adding a
-Home Manager channel, for example
+Home Manager channel. For example, if you are following Nixpkgs master
+or an unstable channel, you can run
 
 [source,console]
 ----
@@ -119,15 +119,13 @@ Home Manager channel, for example
 # nix-channel --update
 ----
 
-if you are following Nixpkgs master or an unstable channel and
+and if you follow a Nixpkgs version 20.09 channel, you can run
 
 [source,console]
 ----
 # nix-channel --add https://github.com/nix-community/home-manager/archive/release-20.09.tar.gz home-manager
 # nix-channel --update
 ----
-
-if you follow a Nixpkgs version 20.09 channel.
 
 It is then possible to add
 
@@ -190,7 +188,8 @@ tool.
 
 To make the NixOS module available for use you must `import` it into
 your system configuration. This is most conveniently done by adding a
-Home Manager channel, for example
+Home Manager channel. For example, if you are following Nixpkgs master
+or an unstable channel, you can run
 
 [source,console]
 ----
@@ -198,15 +197,13 @@ Home Manager channel, for example
 # nix-channel --update
 ----
 
-if you are following Nixpkgs master or an unstable channel and
+and if you follow a Nixpkgs version 20.09 channel, you can run
 
 [source,console]
 ----
 # nix-channel --add https://github.com/nix-community/home-manager/archive/release-20.09.tar.gz home-manager
 # nix-channel --update
 ----
-
-if you follow a Nixpkgs version 20.09 channel.
 
 It is then possible to add
 
