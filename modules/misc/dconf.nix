@@ -8,12 +8,9 @@ let
 
   toDconfIni = generators.toINI { mkKeyValue = mkIniKeyValue; };
 
-  mkIniKeyValue = key: value:
-    "${key}=${toString (hm.gvariant.mkValue value)}";
+  mkIniKeyValue = key: value: "${key}=${toString (hm.gvariant.mkValue value)}";
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.gnidorah maintainers.rycee ];
 
   options = {
@@ -29,7 +26,7 @@ in
 
       settings = mkOption {
         type = with types; attrsOf (attrsOf hm.types.gvariant);
-        default = {};
+        default = { };
         example = literalExample ''
           {
             "org/gnome/calculator" = {
@@ -48,26 +45,23 @@ in
     };
   };
 
-  config = mkIf (cfg.enable && cfg.settings != {}) {
-    home.activation.dconfSettings = hm.dag.entryAfter ["installPackages"] (
-      let
-        iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
-      in
-        ''
-          if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
-            DCONF_DBUS_RUN_SESSION=""
-          else
-            DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session"
-          fi
+  config = mkIf (cfg.enable && cfg.settings != { }) {
+    home.activation.dconfSettings = hm.dag.entryAfter [ "installPackages" ]
+      (let iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
+      in ''
+        if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
+          DCONF_DBUS_RUN_SESSION=""
+        else
+          DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session"
+        fi
 
-          if [[ -v DRY_RUN ]]; then
-            echo $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / "<" ${iniFile}
-          else
-            $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
-          fi
+        if [[ -v DRY_RUN ]]; then
+          echo $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / "<" ${iniFile}
+        else
+          $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
+        fi
 
-          unset DCONF_DBUS_RUN_SESSION
-        ''
-    );
+        unset DCONF_DBUS_RUN_SESSION
+      '');
   };
 }
