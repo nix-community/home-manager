@@ -43,7 +43,12 @@ in {
       example = literalExample ''
         {
           add_newline = false;
-          prompt_order = [ "line_break" "package" "line_break" "character" ];
+          format = lib.concatStrings [
+            "$line_break"
+            "$package"
+            "$line_break"
+            "$character"
+          ];
           scan_timeout = 10;
           character.symbol = "➜";
         }
