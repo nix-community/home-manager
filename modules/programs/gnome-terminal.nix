@@ -228,11 +228,18 @@ let
           </variablelist>
         '';
       };
+
+      audibleBell = mkOption {
+        default = true;
+        type = types.bool;
+        description = "Turn on/off the terminal's bell.";
+      };
     };
   });
 
   buildProfileSet = pcfg:
     {
+      audible-bell = pcfg.audibleBell;
       visible-name = pcfg.visibleName;
       scrollbar-policy = if pcfg.showScrollbar then "always" else "never";
       scrollback-lines = pcfg.scrollbackLines;
