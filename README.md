@@ -332,7 +332,7 @@ as follows:
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.user = import ./home.nix;
+            home-manager.users.jdoe = import ./home.nix;
           }
         ];
       };
