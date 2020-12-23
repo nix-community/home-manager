@@ -19,8 +19,12 @@ let
         Unit = { Description = "imapnotify for ${name}"; };
 
         Service = {
-          ExecStart =
-            "${pkgs.imapnotify}/bin/imapnotify -c ${genAccountConfig account}";
+          ExecStart = "${pkgs.goimapnotify}/bin/goimapnotify -conf ${
+              genAccountConfig account
+            }";
+          Restart = "always";
+          RestartSec = 30;
+          Type = "simple";
         } // optionalAttrs account.notmuch.enable {
           Environment =
             "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/notmuchrc";
@@ -31,7 +35,7 @@ let
     };
 
   genAccountConfig = account:
-    pkgs.writeText "imapnotify-${safeName account.name}-config.js" (let
+    pkgs.writeText "imapnotify-${safeName account.name}-config.json" (let
       port = if account.imap.port != null then
         account.imap.port
       else if account.imap.tls.enable then
@@ -40,23 +44,17 @@ let
         143;
 
       toJSON = builtins.toJSON;
-    in ''
-      var child_process = require('child_process');
-
-      function getStdout(cmd) {
-          var stdout = child_process.execSync(cmd);
-          return stdout.toString().trim();
-      }
-
-      exports.host = ${toJSON account.imap.host}
-      exports.port = ${toJSON port};
-      exports.tls = ${toJSON account.imap.tls.enable};
-      exports.username = ${toJSON account.userName};
-      exports.password = getStdout("${toString account.passwordCommand}");
-      exports.onNotify = ${toJSON account.imapnotify.onNotify};
-      exports.onNotifyPost = ${toJSON account.imapnotify.onNotifyPost};
-      exports.boxes = ${toJSON account.imapnotify.boxes};
-    '');
+    in toJSON {
+      inherit (account.imap) host;
+      inherit port;
+      tls = account.imap.tls.enable;
+      username = account.userName;
+      passwordCmd =
+        lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
+      onNewMail = account.imapnotify.onNotify;
+      onNewMailPost = account.imapnotify.onNotifyPost;
+      inherit (account.imapnotify) boxes;
+    });
 
 in {
   meta.maintainers = [ maintainers.nickhu ];
