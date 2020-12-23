@@ -26,6 +26,8 @@ let
         Type = "oneshot";
         ExecStart = "${pkgs.gmailieer}/bin/gmi sync";
         WorkingDirectory = account.maildir.absPath;
+        Environment =
+          "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/notmuchrc";
       };
     };
   };
