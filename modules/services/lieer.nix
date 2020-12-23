@@ -26,6 +26,8 @@ let
         Type = "oneshot";
         ExecStart = "${pkgs.gmailieer}/bin/gmi sync";
         WorkingDirectory = account.maildir.absPath;
+        Environment = mkIf (config.home.sessionVariables ? NOTMUCH_CONFIG)
+          "NOTMUCH_CONFIG=${config.home.sessionVariables.NOTMUCH_CONFIG}";
       };
     };
   };
