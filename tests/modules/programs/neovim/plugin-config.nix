@@ -23,9 +23,8 @@ with lib;
     };
 
     nmt.script = ''
-      vimrc=$(grep -Po "(?<=-u )[^ ]*" < "${
-        builtins.toJSON config.programs.neovim.finalPackage
-      }/bin/nvim")
+      vimrc="$TESTED/home-files/.config/nvim/init.vim"
+      assertFileExists home-files/.config/nvim/init.vim
       # We need to remove the unkown store paths in the config
       TESTED="" assertFileContent \
         <( ${pkgs.perl}/bin/perl -pe "s|\Q$NIX_STORE\E/[a-z0-9]{32}-|$NIX_STORE/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-|g" < "$vimrc"

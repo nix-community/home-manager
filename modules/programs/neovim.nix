@@ -241,7 +241,18 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = let
+    extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
+      ''--prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
+    neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
+      inherit (cfg)
+        extraPython3Packages withPython3 extraPythonPackages withPython
+        withNodeJs withRuby viAlias vimAlias;
+      configure = cfg.configure // moduleConfigure;
+      plugins = cfg.plugins;
+    };
+
+  in mkIf cfg.enable {
     assertions = [{
       assertion = cfg.configure == { } || moduleConfigure == { };
       message = "The programs.neovim option configure is mutually exclusive"
@@ -250,14 +261,12 @@ in {
 
     home.packages = [ cfg.finalPackage ];
 
-    programs.neovim.finalPackage = pkgs.wrapNeovim cfg.package {
-      inherit (cfg)
-        extraPython3Packages withPython3 extraPythonPackages withPython
-        withNodeJs withRuby viAlias vimAlias;
-
-      extraMakeWrapperArgs = extraMakeWrapperArgs;
-      configure = cfg.configure // moduleConfigure;
-    };
+    xdg.configFile."nvim/init.vim".text = neovimConfig.neovimRcContent;
+    programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
+      (neovimConfig // {
+        wrapperArgs = (lib.escapeShellArgs neovimConfig.wrapperArgs) + " "
+          + extraMakeWrapperArgs;
+      });
 
     programs.bash.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
     programs.fish.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
