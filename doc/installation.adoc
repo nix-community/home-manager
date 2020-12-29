@@ -80,7 +80,14 @@ configuration then you must source the
 [source,bash]
 $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
 +
-file in your shell configuration. Unfortunately, we currently only
+file in your shell configuration. Alternatively source
++
+[source,bash]
+/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh
++
+when managing home configuration together with system configuration.
++
+Unfortunately, we currently only
 support POSIX.2-like shells such as
 https://www.gnu.org/software/bash/[Bash] or
 http://zsh.sourceforge.net/[Z shell].
