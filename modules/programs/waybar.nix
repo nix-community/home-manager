@@ -2,9 +2,9 @@
 
 let
   inherit (lib)
-    attrByPath attrNames concatMap concatMapStringsSep elem filter filterAttrs
-    flip foldl' hasPrefix mergeAttrs optionalAttrs stringLength subtractLists
-    types unique;
+    any attrByPath attrNames concatMap concatMapStringsSep elem filter
+    filterAttrs flip foldl' hasPrefix mergeAttrs optionalAttrs removePrefix
+    stringLength subtractLists types unique;
   inherit (lib.options) literalExample mkEnableOption mkOption;
   inherit (lib.modules) mkIf mkMerge;
 
@@ -15,8 +15,10 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  # Taken from <https://github.com/Alexays/Waybar/blob/adaf84304865e143e4e83984aaea6f6a7c9d4d96/src/factory.cpp>
+  # Taken from <https://github.com/Alexays/Waybar/blob/cc3acf8102c71d470b00fd55126aef4fb335f728/src/factory.cpp> (2020/10/10)
+  # Order is preserved from the file for easier matching
   defaultModuleNames = [
+    "battery"
     "sway/mode"
     "sway/workspaces"
     "sway/window"
@@ -36,11 +38,15 @@ let
     "sndio"
     "temperature"
     "bluetooth"
-    "battery"
   ];
 
+  # Allow specifying a CSS class after the default module name
+  isValidDefaultModuleName = x:
+    any (name: hasPrefix name x && hasPrefix "#" (removePrefix name x))
+    defaultModuleNames;
+
   isValidCustomModuleName = x:
-    elem x defaultModuleNames || (hasPrefix "custom/" x && stringLength x > 7);
+    hasPrefix "custom/" x && stringLength x > 7 || isValidDefaultModuleName x;
 
   margins = let
     mkMargin = name: {
