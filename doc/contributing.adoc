@@ -47,6 +47,7 @@ The first option is good if you only temporarily want to use your clone.
 :irc-home-manager: https://webchat.freenode.net/?url=irc%3A%2F%2Firc.freenode.net%2Fhome-manager
 :valuable-options: https://github.com/Infinisil/rfcs/blob/config-option/rfcs/0042-config-option.md#valuable-options
 :rfc-42: https://github.com/Infinisil/rfcs/blob/config-option/rfcs/0042-config-option.md
+:assertions: https://nixos.org/manual/nixos/stable/index.html#sec-assertions
 
 If your contribution satisfy the following rules then there is a good chance it will be merged without too much trouble. The rules are enforced by the Home Manager maintainers and to a lesser extent the Home Manager CI system.
 
@@ -55,7 +56,9 @@ If you are uncertain how these rules affect the change you would like to make th
 [[sec-guidelines-back-compat]]
 ==== Maintain backward compatibility
 
-Your contribution should never cause another user's existing configuration to break. Home Manager is used in many different environments and you should consider how you change may effect others. For example,
+Your contribution should not cause another user's existing configuration to break unless there is a very good reason and the change should be announced to the user through an {assertions}[assertion] or similar.
+
+Remember that Home Manager is used in many different environments and you should consider how your change may effect others. For example,
 
 - Does your change work for people that do not use NixOS? Consider other GNU/Linux distributions and macOS.
 - Does your change work for people whose configuration is built on one system and deployed on another system?
