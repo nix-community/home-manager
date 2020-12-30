@@ -94,7 +94,7 @@ in {
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      eval (${pkgs.direnv}/bin/direnv hook fish)
+      ${pkgs.direnv}/bin/direnv hook fish | source
     '';
   };
 }
