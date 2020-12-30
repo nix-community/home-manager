@@ -2,8 +2,8 @@
 
 let
   inherit (lib)
-    any attrByPath attrNames concatMap concatMapStringsSep elem filter
-    filterAttrs flip foldl' hasPrefix mergeAttrs optionalAttrs removePrefix
+    any attrByPath attrNames concatMap concatMapStringsSep elem elemAt filter
+    filterAttrs flip foldl' hasPrefix head length mergeAttrs optionalAttrs
     stringLength subtractLists types unique;
   inherit (lib.options) literalExample mkEnableOption mkOption;
   inherit (lib.modules) mkIf mkMerge;
@@ -40,13 +40,19 @@ let
     "bluetooth"
   ];
 
-  # Allow specifying a CSS class after the default module name
+  # Allow specifying a CSS id after the default module name
   isValidDefaultModuleName = x:
-    any (name: hasPrefix name x && hasPrefix "#" (removePrefix name x))
+    any (name:
+      let
+        res = builtins.split name x;
+        # if exact match of default module name
+      in if res == [ "" [ ] ] || res == [ "" [ ] "" ] then
+        true
+      else
+        head res == "" && length res >= 3 && hasPrefix "#" (elemAt res 2))
     defaultModuleNames;
 
-  isValidCustomModuleName = x:
-    hasPrefix "custom/" x && stringLength x > 7 || isValidDefaultModuleName x;
+  isValidCustomModuleName = x: hasPrefix "custom/" x && stringLength x > 7;
 
   margins = let
     mkMargin = name: {
@@ -321,12 +327,14 @@ in {
           # Modules declared in `modules` but not referenced in `modules-{left,center,right}`
           unreferencedModules = subtractLists allModules declaredModules;
           # Modules listed in modules-{left,center,right} that are not default modules
-          nonDefaultModules = subtractLists defaultModuleNames allModules;
+          nonDefaultModules =
+            filter (x: !isValidDefaultModuleName x) allModules;
           # Modules referenced in `modules-{left,center,right}` but not declared in `modules`
           undefinedModules = subtractLists declaredModules nonDefaultModules;
           # Check for invalid module names
-          invalidModuleNames =
-            filter (m: !isValidCustomModuleName m) declaredModules;
+          invalidModuleNames = filter
+            (m: !isValidCustomModuleName m && !isValidDefaultModuleName m)
+            declaredModules;
         in {
           # The Waybar bar configuration (since config.settings is a list)
           inherit settings;
