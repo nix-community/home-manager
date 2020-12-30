@@ -25,6 +25,8 @@ let
       # Avoid including documentation since this will cause
       # unnecessary rebuilds of the tests.
       manual.manpages.enable = false;
+
+      imports = [ ./asserts.nix ];
     }
   ];
 

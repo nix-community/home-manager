@@ -11,6 +11,7 @@ with lib;
     accounts.email.accounts = {
       "hm@example.com".lieer.enable = true;
       "hm@example.com".lieer.sync.enable = true;
+      "hm@example.com".notmuch.enable = true;
     };
 
     nixpkgs.overlays = [

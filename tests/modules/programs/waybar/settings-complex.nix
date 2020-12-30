@@ -50,6 +50,10 @@ in {
       }];
     };
 
+    # Remove when https://github.com/nix-community/home-manager/issues/1686 is
+    # fixed.
+    test.asserts.warnings.enable = false;
+
     nmt.script = ''
       assertPathNotExists home-files/.config/waybar/style.css
       assertFileContent \

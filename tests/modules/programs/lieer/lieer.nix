@@ -8,7 +8,10 @@ with lib;
   config = {
     programs.lieer.enable = true;
 
-    accounts.email.accounts = { "hm@example.com".lieer.enable = true; };
+    accounts.email.accounts."hm@example.com" = {
+      lieer.enable = true;
+      notmuch.enable = true;
+    };
 
     nixpkgs.overlays = [
       (self: super: { gmailieer = pkgs.writeScriptBin "dummy-gmailieer" ""; })

@@ -66,6 +66,10 @@ in {
       }];
     };
 
+    # Remove when https://github.com/nix-community/home-manager/issues/1686 is
+    # fixed.
+    test.asserts.warnings.enable = false;
+
     nmt.description = ''
       Test for the broken configuration
       https://github.com/nix-community/home-manager/pull/1329#issuecomment-653253069
