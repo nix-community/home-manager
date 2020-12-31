@@ -21,6 +21,9 @@ in {
           <refentrytitle>pam_env.conf</refentrytitle>
           <manvolnum>5</manvolnum>
         </citerefentry>.
+        </para><para>
+        Note, this option will become deprecated in the future and its use is
+        therefore discouraged.
       '';
     };
   };

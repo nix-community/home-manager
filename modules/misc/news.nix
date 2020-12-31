@@ -1789,6 +1789,23 @@ in
           A new module is available: 'programs.octant'.
         '';
       }
+
+      {
+        time = "2021-01-01T08:51:11+00:00";
+        condition = config.pam.sessionVariables != {};
+        message = ''
+          The option 'pam.sessionVariables' will be deprecated in the future.
+          This is due to PAM 1.5.0 deprecating reading of the user environment.
+          The deprecation will not take place immediately but you may wish to
+          consider alternatives to PAM environment variables.
+
+          See
+
+            https://github.com/nix-community/home-manager/issues/1691
+
+          for discussion.
+      '';
+      }
     ];
   };
 }
