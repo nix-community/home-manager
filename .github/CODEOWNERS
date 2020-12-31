@@ -107,6 +107,8 @@
 
 /modules/programs/obs-studio.nix                      @adisbladis
 
+/modules/programs/octant.nix                          @06kellyjac
+
 /modules/programs/opam.nix                            @marsam
 
 /modules/programs/openssh.nix                         @rycee
