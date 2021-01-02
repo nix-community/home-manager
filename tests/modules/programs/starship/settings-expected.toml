@@ -18,7 +18,8 @@ style = "bold yellow"
 threshold = 30
 
 [character]
-symbol = "➜"
+error_symbol = "➜"
+success_symbol = "➜"
 
 [memory_usage]
 threshold = -1

@@ -50,7 +50,10 @@ in {
             "$character"
           ];
           scan_timeout = 10;
-          character.symbol = "➜";
+          character = {
+            success_symbol = "➜";
+            error_symbol = "➜";
+          };
         }
       '';
       description = ''
