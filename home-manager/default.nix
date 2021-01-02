@@ -37,4 +37,6 @@ runCommand
 
     install -D -m755 ${./completion.bash} \
       $out/share/bash-completion/completions/home-manager
+    install -D -m755 ${./completion.zsh} \
+      $out/share/zsh/site-functions/_home-manager
   ''
