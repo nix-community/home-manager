@@ -17,7 +17,10 @@ with lib;
             "$character"
           ];
           scan_timeout = 10;
-          character.symbol = "➜";
+          character = {
+            success_symbol = "➜";
+            error_symbol = "➜";
+          };
           package.disabled = true;
           memory_usage.threshold = -1;
           aws.style = "bold blue";
