@@ -1,0 +1,2 @@
+[[ch-flakes]]
+== Using home-manager with Flakes
