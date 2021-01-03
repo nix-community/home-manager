@@ -6731,7 +6731,10 @@ of options.
     "$character"
   ];
   scan_timeout = 10;
-  character.symbol = "➜";
+  character = {
+    success_symbol = "➜";
+    error_symbol = "➜";
+  };
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/starship.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/starship.nix&gt;
