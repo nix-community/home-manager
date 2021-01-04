@@ -57,6 +57,7 @@ in {
           type = lib.types.bool;
           description = "Toggle for Logout target";
         };
+
         shutdown = mkOption {
           default = true;
           type = lib.types.bool;
