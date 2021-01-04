@@ -1,2 +1,2 @@
 [[ch-flakes]]
-== Using home-manager with Flakes
+== Using Home Manager with Flakes
