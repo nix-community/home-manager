@@ -44,8 +44,9 @@ in {
       logoutCommand = mkOption {
         default = "";
         type = types.str;
-        description =
-          "The command used to logout. Required if the Logout state is enabled.";
+        description = ''
+          The command used to logout. Required if the Logout state is enabled.
+        '';
       };
 
       # validation = mkSinkUndeclaredOptions { description = "Sink for validation assert"; };
