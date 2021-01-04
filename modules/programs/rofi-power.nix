@@ -10,8 +10,7 @@ with lib;
 let
   cfg = config.programs.rofi.power;
   rofi-power = { states, logoutCmd }:
-    pkgs.writeScriptBin "rofi-power" ''
-      #!${pkgs.stdenv.shell}
+    pkgs.writeShellScriptBin "rofi-power" ''
       chosen=$(cat <<EOF | rofi -dmenu -i
       ${states}
       EOF
