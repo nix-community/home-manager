@@ -43,7 +43,7 @@ in {
 
       logoutCommand = mkOption {
         default = "";
-        type = lib.types.str;
+        type = types.str;
         description =
           "The command used to logout. Required if the Logout state is enabled.";
       };
