@@ -97,7 +97,7 @@ in {
       # programs.rofi.power.validation = assert (cfg.states.logout -> (cfg.logoutCommand != null)); cfg.logoutCommand;
       home.packages = [
         (rofi-power {
-          states = (pkgs.lib.concatStringsSep "\n" ([ "[Cancel]" ]
+          states = concatStringsSep "\n" ([ "[Cancel]" ]
             ++ optionals cfg.states.logout [ "Logout" ]
             ++ optionals cfg.states.shutdown [ "Shutdown" ]
             ++ optionals cfg.states.reboot [ "Reboot" ]
