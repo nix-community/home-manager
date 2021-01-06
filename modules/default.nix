@@ -4,6 +4,8 @@
 
   # Whether to check that each option has a matching declaration.
 , check ? true
+  # Extra arguments passed to specialArgs.
+, extraSpecialArgs ? { }
 }:
 
 with lib;
@@ -31,7 +33,7 @@ let
     modules = [ configuration ] ++ hmModules;
     specialArgs = {
       modulesPath = builtins.toString ./.;
-    };
+    } // extraSpecialArgs;
   };
 
   module = showWarnings (
