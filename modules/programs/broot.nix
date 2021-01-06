@@ -127,6 +127,13 @@ in {
       '';
     };
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.broot;
+      defaultText = literalExample "pkgs.broot";
+      description = "Package providing broot";
+    };
+
     skin = mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -185,7 +192,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.broot ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."broot/conf.toml".source = configFile brootConf;
 
