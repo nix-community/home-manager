@@ -3,7 +3,7 @@ Home Manager using Nix
 
 This project provides a basic system for managing a user environment
 using the [Nix][] package manager together with the Nix libraries
-found in [Nixpkgs][]`. It allows declarative configuration of user
+found in [Nixpkgs][]. It allows declarative configuration of user
 specific (non global) packages and dotfiles.
 
 Before attempting to use Home Manager please read the warning below.
