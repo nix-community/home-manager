@@ -4905,6 +4905,22 @@ for the full list of options.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mpv.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mpv.defaultProfiles"></a><a class="term" href="options.html#opt-programs.mpv.defaultProfiles"><code class="option">programs.mpv.defaultProfiles</code></a></span></dt><dd><p>Profiles to be applied by default. Options set by them are overridden
+by options set in <a class="xref" href="options.html#opt-programs.mpv.config"><code class="option">programs.mpv.config</code></a>.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        [
+        "gpu-hq" 
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mpv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mpv.profiles"></a><a class="term" href="options.html#opt-programs.mpv.profiles"><code class="option">programs.mpv.profiles</code></a></span></dt><dd><p>Sub-configuration options for specific profiles written to
 <code class="filename">~/.config/mpv/mpv.conf</code>. See
 <code class="option">programs.mpv.config</code> for more information.
