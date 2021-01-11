@@ -4,6 +4,9 @@
 with lib;
 
 let
+  isI3 = moduleName == "i3";
+  isSway = !isI3;
+
   fonts = mkOption {
     type = types.listOf types.str;
     default = [ "monospace 8" ];
@@ -26,7 +29,7 @@ let
         default = false;
         description = "Whether to run command on each ${moduleName} restart.";
       };
-    } // optionalAttrs (moduleName == "i3") {
+    } // optionalAttrs isI3 {
       notification = mkOption {
         type = types.bool;
         default = true;
@@ -120,7 +123,7 @@ let
         default = "${cfg.package}/bin/${moduleName}bar";
         defaultText = "i3bar";
         description = "Command that will be used to start a bar.";
-        example = if moduleName == "i3" then
+        example = if isI3 then
           "\${pkgs.i3-gaps}/bin/i3bar -t"
         else
           "\${pkgs.waybar}/bin/waybar";
@@ -311,7 +314,7 @@ in {
         titlebar = mkOption {
           type = types.bool;
           default = !isGaps;
-          defaultText = if moduleName == "i3" then
+          defaultText = if isI3 then
             "xsession.windowManager.i3.package != nixpkgs.i3-gaps (titlebar should be disabled for i3-gaps)"
           else
             "false";
@@ -354,7 +357,7 @@ in {
         titlebar = mkOption {
           type = types.bool;
           default = !isGaps;
-          defaultText = if moduleName == "i3" then
+          defaultText = if isI3 then
             "xsession.windowManager.i3.package != nixpkgs.i3-gaps (titlebar should be disabled for i3-gaps)"
           else
             "false";
@@ -408,14 +411,14 @@ in {
         };
 
         followMouse = mkOption {
-          type = if moduleName == "sway" then
+          type = if isSway then
             types.either (types.enum [ "yes" "no" "always" ]) types.bool
           else
             types.bool;
-          default = if moduleName == "sway" then "yes" else true;
+          default = if isSway then "yes" else true;
           description = "Whether focus should follow the mouse.";
           apply = val:
-            if (moduleName == "sway" && isBool val) then
+            if (isSway && isBool val) then
               (if val then "yes" else "no")
             else
               val;
@@ -645,7 +648,7 @@ in {
 
       See <link xlink:href="https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup"/>.
     '';
-    example = if moduleName == "i3" then
+    example = if isI3 then
       literalExample ''
         [
         { command = "systemctl --user restart polybar"; always = true; notification = false; }
@@ -743,7 +746,7 @@ in {
       };
     });
     default = null;
-    description = if moduleName == "sway" then ''
+    description = if isSway then ''
       Gaps related settings.
     '' else ''
       i3Gaps related settings. The i3-gaps package must be used for these features to work.
@@ -752,7 +755,7 @@ in {
 
   terminal = mkOption {
     type = types.str;
-    default = if moduleName == "i3" then
+    default = if isI3 then
       "i3-sensible-terminal"
     else
       "${pkgs.rxvt-unicode-unwrapped}/bin/urxvt";
@@ -762,7 +765,7 @@ in {
 
   menu = mkOption {
     type = types.str;
-    default = if moduleName == "sway" then
+    default = if isSway then
       "${pkgs.dmenu}/bin/dmenu_path | ${pkgs.dmenu}/bin/dmenu | ${pkgs.findutils}/bin/xargs swaymsg exec --"
     else
       "${pkgs.dmenu}/bin/dmenu_run";
