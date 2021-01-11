@@ -12,6 +12,7 @@ let
   mpvOptions = with types; attrsOf mpvOptionDup;
   mpvProfiles = with types; attrsOf mpvOptions;
   mpvBindings = with types; attrsOf str;
+  mpvDefaultProfiles = with types; listOf str;
 
   renderOption = option:
     rec {
@@ -44,6 +45,9 @@ let
   renderBindings = bindings:
     concatStringsSep "\n"
     (mapAttrsToList (name: value: "${name} ${value}") bindings);
+
+  renderDefaultProfiles = profiles:
+    renderOptions { profile = concatStringsSep "," profiles; };
 
   mpvPackage = if cfg.scripts == [ ] then
     pkgs.mpv
@@ -115,6 +119,16 @@ in {
         '';
       };
 
+      defaultProfiles = mkOption {
+        description = ''
+          Profiles to be applied by default. Options set by them are overridden
+          by options set in <xref linkend="opt-programs.mpv.config"/>.
+        '';
+        type = mpvDefaultProfiles;
+        default = [ ];
+        example = [ "gpu-hq" ];
+      };
+
       bindings = mkOption {
         description = ''
           Input configuration written to
@@ -145,6 +159,8 @@ in {
     }
     (mkIf (cfg.config != { } || cfg.profiles != { }) {
       xdg.configFile."mpv/mpv.conf".text = ''
+        ${optionalString (cfg.defaultProfiles != [ ])
+        (renderDefaultProfiles cfg.defaultProfiles)}
         ${optionalString (cfg.config != { }) (renderOptions cfg.config)}
         ${optionalString (cfg.profiles != { }) (renderProfiles cfg.profiles)}
       '';
