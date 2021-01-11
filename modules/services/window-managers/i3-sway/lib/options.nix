@@ -120,7 +120,11 @@ let
 
       command = mkOption {
         type = types.str;
-        default = "${cfg.package}/bin/${moduleName}bar";
+        default = let
+          # If the user uses the "system" Sway (i.e. cfg.package == null) then the bar has
+          # to come from a different package
+          pkg = if isSway && isNull cfg.package then pkgs.sway else cfg.package;
+        in "${pkg}/bin/${moduleName}bar";
         defaultText = "i3bar";
         description = "Command that will be used to start a bar.";
         example = if isI3 then
