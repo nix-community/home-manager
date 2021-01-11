@@ -116,7 +116,7 @@ let
           "${smtpProto}://${escape userName}@${smtp.host}${smtpPort}";
       in {
         smtp_url = "'${smtpBaseUrl}'";
-        smtp_pass = "'`${passCmd}`'";
+        smtp_pass = ''"`${passCmd}`"'';
       };
 
   genMaildirAccountConfig = account:

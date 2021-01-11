@@ -10,7 +10,7 @@ set mbox_type = Maildir
 set sort = "threads"
 
 # MTA section
-set smtp_pass='`password-command`'
+set smtp_pass="`password-command`"
 set smtp_url='smtps://home.manager@smtp.example.com'
 
 
