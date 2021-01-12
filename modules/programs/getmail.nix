@@ -11,8 +11,7 @@ let
     with account;
     let
       passCmd = concatMapStringsSep ", " (x: "'${x}'") passwordCommand;
-      renderedMailboxes =
-        concatMapStringsSep ", " (x: "'${x}'") getmail.mailboxes;
+      renderedMailboxes = concatMapStrings (x: "'${x}', ") getmail.mailboxes;
       retrieverType = if imap.tls.enable then
         "SimpleIMAPSSLRetriever"
       else
