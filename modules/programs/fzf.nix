@@ -10,6 +10,13 @@ in {
   options.programs.fzf = {
     enable = mkEnableOption "fzf - a command-line fuzzy finder";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.fzf;
+      defaultText = literalExample "pkgs.fzf";
+      description = "Package providing the <command>fzf</command> tool.";
+    };
+
     defaultCommand = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -111,7 +118,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.fzf ];
+    home.packages = [ cfg.package ];
 
     home.sessionVariables = mapAttrs (n: v: toString v)
       (filterAttrs (n: v: v != [ ] && v != null) {
