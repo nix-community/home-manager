@@ -22,6 +22,20 @@ in
   options.services.sxhkd = {
     enable = mkEnableOption "simple X hotkey daemon";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.sxhkd;
+      defaultText = "pkgs.sxhkd";
+      description = "Package containing the <command>sxhkd</command> executable.";
+    };
+
+    extraOptions = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "Command line arguments to invoke <command>sxhkd</command> with.";
+      example = literalExample ''[ "-m 1" ]'';
+    };
+
     keybindings = mkOption {
       type = types.attrsOf (types.nullOr types.str);
       default = {};
@@ -75,7 +89,7 @@ in
           + "${config.home.profileDirectory}/bin"
           + optionalString (cfg.extraPath != "") ":"
           + cfg.extraPath;
-        ExecStart = "${pkgs.sxhkd}/bin/sxhkd";
+        ExecStart = "${cfg.package}/bin/sxhkd ${toString cfg.extraOptions}";
       };
 
       Install = {

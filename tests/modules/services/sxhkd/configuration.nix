@@ -3,6 +3,10 @@
     services.sxhkd = {
       enable = true;
 
+      package = pkgs.runCommandLocal "dummy-package" { } "mkdir $out" // {
+        outPath = "@sxhkd@";
+      };
+
       keybindings = {
         "super + a" = "run command a";
         "super + b" = null;
@@ -18,9 +22,6 @@
           call command d
       '';
     };
-
-    nixpkgs.overlays =
-      [ (self: super: { sxhkd = pkgs.writeScriptBin "dummy-sxhkd" ""; }) ];
 
     nmt.script = ''
       sxhkdrc=home-files/.config/sxhkd/sxhkdrc

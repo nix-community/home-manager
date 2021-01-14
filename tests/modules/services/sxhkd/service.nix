@@ -1,8 +1,10 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   config = {
     services.sxhkd = {
       enable = true;
+      package = pkgs.runCommandLocal "dummy-package" { } "mkdir $out" // { outPath = "@sxhkd@"; };
+      extraOptions = [ "-m 1" ];
       extraPath = "/home/the-user/bin:/extra/path/bin";
     };
 
@@ -11,7 +13,7 @@
 
       assertFileExists $serviceFile
 
-      assertFileRegex $serviceFile 'ExecStart=.*/bin/sxhkd'
+      assertFileRegex $serviceFile 'ExecStart=@sxhkd@/bin/sxhkd -m 1'
 
       assertFileRegex $serviceFile \
         'Environment=PATH=.*\.nix-profile/bin:/home/the-user/bin:/extra/path/bin'
