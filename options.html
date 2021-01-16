@@ -9991,11 +9991,23 @@ background "#cccccc"
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/sxhkd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/sxhkd.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.sxhkd.package"></a><a class="term" href="options.html#opt-services.sxhkd.package"><code class="option">services.sxhkd.package</code></a></span></dt><dd><p>Package containing the <span class="command"><strong>sxhkd</strong></span> executable.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "pkgs.sxhkd"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/sxhkd.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/sxhkd.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.sxhkd.extraConfig"></a><a class="term" href="options.html#opt-services.sxhkd.extraConfig"><code class="option">services.sxhkd.extraConfig</code></a></span></dt><dd><p>Additional configuration to add.</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         ""
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">super + {_,shift +} {1-9,0}
   i3-msg {workspace,move container to workspace} {1-10}
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/sxhkd.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/sxhkd.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.sxhkd.extraOptions"></a><a class="term" href="options.html#opt-services.sxhkd.extraOptions"><code class="option">services.sxhkd.extraOptions</code></a></span></dt><dd><p>Command line arguments to invoke <span class="command"><strong>sxhkd</strong></span> with.</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ "-m 1" ]</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/sxhkd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/sxhkd.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.sxhkd.extraPath"></a><a class="term" href="options.html#opt-services.sxhkd.extraPath"><code class="option">services.sxhkd.extraPath</code></a></span></dt><dd><p>Additional <code class="envar">PATH</code> entries to search for commands.
 </p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with ":"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
