@@ -1814,6 +1814,12 @@ in
           A new module is available: 'services.plan9port'.
         '';
       }
+      {
+        time = "2021-01-18T18:56:00+00:00";
+        message = ''
+          A new configuration option is available: 'programs.mercurial.extensions'.
+        '';
+      }
     ];
   };
 }

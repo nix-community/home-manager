@@ -21,6 +21,19 @@ in {
         description = "Mercurial package to install.";
       };
 
+      extensions = mkOption {
+        type = types.attrsOf types.string;
+        default = { };
+        description = "Mercurial extensions to enable.";
+        example = ''
+          extensions = {
+            histedit = "";
+            "hgext.convert" = "";
+            purge = "";
+          }
+        '';
+      };
+
       userName = mkOption {
         type = types.str;
         description = "Default user name to use.";
@@ -90,6 +103,10 @@ in {
 
     (mkIf (cfg.aliases != { }) {
       programs.mercurial.iniContent.alias = cfg.aliases;
+    })
+
+    (mkIf (cfg.extensions != [ ]) {
+      programs.mercurial.iniContent.extensions = cfg.extensions;
     })
 
     (mkIf (lib.isAttrs cfg.extraConfig) {
