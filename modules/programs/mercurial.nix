@@ -26,6 +26,14 @@ in {
         description = "Default user name to use.";
       };
 
+      tweakDefaults = mkOption {
+        type = types.bool;
+        description =
+          "Enable functionality that the average user probably wants on by default";
+        example = "tweakdefaults = true;";
+        default = false;
+      };
+
       userEmail = mkOption {
         type = types.str;
         description = "Default user email to use.";
@@ -71,11 +79,16 @@ in {
 
       programs.mercurial.iniContent.ui = {
         username = cfg.userName + " <" + cfg.userEmail + ">";
+
       };
 
       xdg.configFile."hg/hgrc".source =
         iniFormat.generate "hgrc" cfg.iniContent;
     }
+
+    (mkIf (cfg.tweakDefaults) {
+      programs.mercurial.iniContent.ui.tweakdefaults = "yes";
+    })
 
     (mkIf (cfg.ignores != [ ] || cfg.ignoresRegexp != [ ]) {
       programs.mercurial.iniContent.ui.ignore =
