@@ -32,6 +32,24 @@ programs.broot.verbs = [
 ];
 ----
 
+* The <<opt-programs.mpv.package>> option has been changed to allow custom
+derivations. The following configuration is now possible:
++
+[source,nix]
+----
+programs.mpv.package = (pkgs.wrapMpv (pkgs.mpv-unwrapped.override {
+  vapoursynthSupport = true;
+}) {
+  extraMakeWrapperArgs = [
+    "--prefix" "LD_LIBRARY_PATH" ":" "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+  ];
+});
+----
++
+As a result of this change, <<opt-programs.mpv.package>> is no longer the
+resulting derivation. Use the newly introduced `programs.mpv.finalPackage`
+instead.
+
 [[sec-release-21.03-state-version-changes]]
 === State Version Changes
 
