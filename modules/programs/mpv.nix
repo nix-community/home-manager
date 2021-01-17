@@ -165,12 +165,11 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      assertions = [
-        {
-          assertion = (cfg.scripts == [ ]) || (cfg.package == pkgs.mpv);
-          message = ''The programs.mpv "package" option is mutually exclusive with "scripts" option.'';
-        }
-      ];
+      assertions = [{
+        assertion = (cfg.scripts == [ ]) || (cfg.package == pkgs.mpv);
+        message = ''
+          The programs.mpv "package" option is mutually exclusive with "scripts" option.'';
+      }];
     }
     {
       home.packages = [ mpvPackage ];
