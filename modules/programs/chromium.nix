@@ -116,15 +116,15 @@ let
         "${config.xdg.configHome}/${browser}";
 
       extensionJson = ext:
+        assert ext.crxPath != null -> ext.version != null;
         with builtins; {
           name = "${configDir}/External Extensions/${ext.id}.json";
-          value.text = toJSON
-            (if (isPath ext.crxPath && isString ext.version) then {
-              external_crx = ext.crxPath;
-              external_version = ext.version;
-            } else {
-              external_update_url = ext.updateUrl;
-            });
+          value.text = toJSON (if ext.crxPath != null then {
+            external_crx = ext.crxPath;
+            external_version = ext.version;
+          } else {
+            external_update_url = ext.updateUrl;
+          });
         };
 
     in mkIf cfg.enable {
