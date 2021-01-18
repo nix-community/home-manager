@@ -46,7 +46,7 @@ in {
     home-manager = {
       useUserPackages = mkEnableOption ''
         installation of user packages through the
-        <option>users.users.‹name?›.packages</option> option.
+        <option>users.users.&lt;name&gt;.packages</option> option.
       '';
 
       useGlobalPkgs = mkEnableOption ''
@@ -70,6 +70,9 @@ in {
       users = mkOption {
         type = types.attrsOf hmModule;
         default = { };
+        # Set as not visible to prevent the entire submodule being included in
+        # the documentation.
+        visible = false;
         description = ''
           Per-user Home Manager configuration.
         '';

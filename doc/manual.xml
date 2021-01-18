@@ -38,6 +38,14 @@
   <title>Configuration Options</title>
   <xi:include href="./nmd-result/home-manager-options.xml" />
  </appendix>
+ <appendix xml:id="ch-nixos-options">
+  <title>NixOS Module Options</title>
+  <xi:include href="./nmd-result/nixos-options.xml" />
+ </appendix>
+ <appendix xml:id="ch-nix-darwin-options">
+  <title>nix-darwin Module Options</title>
+  <xi:include href="./nmd-result/nix-darwin-options.xml" />
+ </appendix>
  <appendix xml:id="ch-tools">
   <title>Tools</title>
   <xi:include href="./man-home-manager.xml" />
