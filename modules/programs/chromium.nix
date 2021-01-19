@@ -99,7 +99,8 @@ let
   browserConfig = cfg:
     let
 
-      browser = (builtins.parseDrvName cfg.package.name).name;
+      drvName = (builtins.parseDrvName cfg.package.name).name;
+      browser = if drvName == "ungoogled-chromium" then "chromium" else drvName;
 
       darwinDirs = {
         chromium = "Chromium";
