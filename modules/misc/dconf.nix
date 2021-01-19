@@ -46,6 +46,9 @@ in {
   };
 
   config = mkIf (cfg.enable && cfg.settings != { }) {
+    # Make sure the dconf directory exists.
+    xdg.configFile."dconf/.keep".source = builtins.toFile "keep" "";
+
     home.activation.dconfSettings = hm.dag.entryAfter [ "installPackages" ]
       (let iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
       in ''
