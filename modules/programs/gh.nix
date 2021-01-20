@@ -45,7 +45,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.gitAndTools.gh ];
+    home.packages = [ pkgs.gh ];
 
     xdg.configFile."gh/config.yml".text =
       builtins.toJSON { inherit (cfg) aliases editor gitProtocol; };

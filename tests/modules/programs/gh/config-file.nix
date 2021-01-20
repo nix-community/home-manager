@@ -8,13 +8,8 @@
       editor = "vim";
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        gitAndTools = super.gitAndTools // {
-          gh = pkgs.writeScriptBin "dummy-gh" "";
-        };
-      })
-    ];
+    nixpkgs.overlays =
+      [ (self: super: { gh = pkgs.writeScriptBin "dummy-gh" ""; }) ];
 
     nmt.script = ''
       assertFileExists home-files/.config/gh/config.yml
