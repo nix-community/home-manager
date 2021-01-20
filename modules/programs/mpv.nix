@@ -188,5 +188,5 @@ in {
     })
   ]);
 
-  meta.maintainers = with maintainers; [ tadeokondrak ];
+  meta.maintainers = with maintainers; [ tadeokondrak thiagokokada ];
 }
