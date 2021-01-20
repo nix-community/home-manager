@@ -1,0 +1,20 @@
+configuration {
+bw: 1;
+color-normal: "argb:58455a64, #fafbfc, argb:58455a64, #00bcd4, #fafbfc";
+color-window: "argb:583a4c54, argb:582a373e, #c3c6c8";
+cycle: false;
+eh: 1;
+font: "Droid Sans Mono 14";
+hide-scrollbar: false;
+kb-primary-paste: "Control+V,Shift+Insert";
+kb-secondary-paste: "Control+v,Insert";
+lines: 10;
+location: 0;
+modi: "drun,emoji,ssh";
+padding: 400;
+separator-style: "solid";
+terminal: "/some/path";
+width: 100;
+xoffset: 0;
+yoffset: 0;
+}

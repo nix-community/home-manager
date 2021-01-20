@@ -71,20 +71,8 @@ let
     };
   };
 
-  valueToString = value:
-    if isBool value then (if value then "true" else "else") else toString value;
-
   windowColorsToString = window:
     concatStringsSep ", " (with window; [ background border separator ]);
-
-  rowsColorsToString = rows: ''
-    ${optionalString (rows.normal != null)
-    (setOption "color-normal" (rowColorsToString rows.normal))}
-    ${optionalString (rows.active != null)
-    (setOption "color-active" (rowColorsToString rows.active))}
-    ${optionalString (rows.urgent != null)
-    (setOption "color-urgent" (rowColorsToString rows.urgent))}
-  '';
 
   rowColorsToString = row:
     concatStringsSep ", " (with row; [
@@ -95,15 +83,36 @@ let
       highlight.foreground
     ]);
 
-  setOption = name: value:
-    optionalString (value != null) "rofi.${name}: ${valueToString value}";
+  mkColorScheme = colors:
+    if colors != null then
+      with colors; {
+        color-window =
+          if window != null then (windowColorsToString window) else null;
+        color-normal = if (rows != null && rows.normal != null) then
+          (rowColorsToString rows.normal)
+        else
+          null;
+        color-active = if (rows != null && rows.active != null) then
+          (rowColorsToString rows.active)
+        else
+          null;
+        color-urgent = if (rows != null && rows.active != null) then
+          (rowColorsToString rows.urgent)
+        else
+          null;
+      }
+    else
+      { };
 
-  setColorScheme = colors:
-    optionalString (colors != null) ''
-      ${optionalString (colors.window != null) setOption "color-window"
-      (windowColorsToString colors.window)}
-      ${optionalString (colors.rows != null) (rowsColorsToString colors.rows)}
-    '';
+  mkValueString = value:
+    if isBool value then
+      if value then "true" else "false"
+    else if isInt value then
+      toString value
+    else
+      ''"${toString value}"'';
+
+  mkKeyValue = name: value: "${name}: ${mkValueString value};";
 
   locationsMap = {
     center = 0;
@@ -284,15 +293,22 @@ in {
     };
 
     configPath = mkOption {
-      default = "${config.xdg.configHome}/rofi/config";
-      defaultText = "$XDG_CONFIG_HOME/rofi/config";
+      default = "${config.xdg.configHome}/rofi/config.rasi";
+      defaultText = "$XDG_CONFIG_HOME/rofi/config.rasi";
       type = types.str;
       description = "Path where to put generated configuration file.";
     };
 
     extraConfig = mkOption {
-      default = "";
-      type = types.lines;
+      default = { };
+      example = literalExample ''
+        {
+          modi = "drun,emoji,ssh";
+          kb-primary-paste = "Control+V,Shift+Insert";
+          kb-secondary-paste = "Control+v,Insert";
+        }
+      '';
+      type = with types; attrsOf (oneOf [ int str bool ]);
       description = "Additional configuration to add.";
     };
 
@@ -308,27 +324,29 @@ in {
 
     home.packages = [ cfg.package ];
 
-    home.file."${cfg.configPath}".text = ''
-      ${setOption "width" cfg.width}
-      ${setOption "lines" cfg.lines}
-      ${setOption "font" cfg.font}
-      ${setOption "bw" cfg.borderWidth}
-      ${setOption "eh" cfg.rowHeight}
-      ${setOption "padding" cfg.padding}
-      ${setOption "separator-style" cfg.separator}
-      ${setOption "hide-scrollbar"
-      (if (cfg.scrollbar != null) then (!cfg.scrollbar) else cfg.scrollbar)}
-      ${setOption "terminal" cfg.terminal}
-      ${setOption "cycle" cfg.cycle}
-      ${setOption "fullscreen" cfg.fullscreen}
-      ${setOption "location" (builtins.getAttr cfg.location locationsMap)}
-      ${setOption "xoffset" cfg.xoffset}
-      ${setOption "yoffset" cfg.yoffset}
-
-      ${setColorScheme cfg.colors}
-      ${setOption "theme" themeName}
-
-      ${cfg.extraConfig}
+    home.file."${cfg.configPath}".text = let
+      # Remove null values so the resulting config does not have empty lines
+      config = lib.attrsets.filterAttrs (n: v: v != null) ({
+        width = cfg.width;
+        lines = cfg.lines;
+        font = cfg.font;
+        bw = cfg.borderWidth;
+        eh = cfg.rowHeight;
+        padding = cfg.padding;
+        separator-style = cfg.separator;
+        hide-scrollbar =
+          if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
+        terminal = cfg.terminal;
+        cycle = cfg.cycle;
+        fullscreen = cfg.fullscreen;
+        location = (builtins.getAttr cfg.location locationsMap);
+        xoffset = cfg.xoffset;
+        yoffset = cfg.yoffset;
+        theme = themeName;
+      } // (mkColorScheme cfg.colors) // cfg.extraConfig);
+    in ''
+      configuration {
+      ${lib.generators.toKeyValue { inherit mkKeyValue; } config}}
     '';
 
     xdg.dataFile = mkIf (themePath != null) {
