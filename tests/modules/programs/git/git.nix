@@ -82,10 +82,8 @@ in {
     nixpkgs.overlays = [
       (self: super: {
         git-lfs = pkgs.writeScriptBin "dummy-git-lfs" "";
-        gitAndTools = super.gitAndTools // {
-          delta = pkgs.writeScriptBin "dummy-delta" "" // {
-            outPath = "@delta@";
-          };
+        delta = pkgs.writeScriptBin "dummy-delta" "" // {
+          outPath = "@delta@";
         };
       })
     ];

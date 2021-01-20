@@ -348,13 +348,12 @@ in {
     })
 
     (mkIf cfg.delta.enable {
-      programs.git.iniContent =
-        let deltaCommand = "${pkgs.gitAndTools.delta}/bin/delta";
-        in {
-          core.pager = deltaCommand;
-          interactive.diffFilter = "${deltaCommand} --color-only";
-          delta = cfg.delta.options;
-        };
+      programs.git.iniContent = let deltaCommand = "${pkgs.delta}/bin/delta";
+      in {
+        core.pager = deltaCommand;
+        interactive.diffFilter = "${deltaCommand} --color-only";
+        delta = cfg.delta.options;
+      };
     })
   ]);
 }
