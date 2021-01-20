@@ -50,6 +50,28 @@ As a result of this change, <<opt-programs.mpv.package>> is no longer the
 resulting derivation. Use the newly introduced `programs.mpv.finalPackage`
 instead.
 
+* The <<opt-programs.rofi.extraConfig>> option is now an attrset rather
+than a string. To migrate, move the each line into the attrset,
+removing the `rofi.` prefix from the keys. For example,
++
+[source,nix]
+----
+programs.rofi.extraConfig = ''
+  rofi.show-icons: true
+  rofi.modi: drun,emoji,ssh
+'';
+----
++
+becomes
++
+[source,nix]
+----
+programs.rofi.extraConfig = {
+  show-icons = true;
+  modi = "drun,emoji,ssh";
+};
+----
+
 [[sec-release-21.03-state-version-changes]]
 === State Version Changes
 
