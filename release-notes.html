@@ -11,7 +11,18 @@ items' <code class="literal">invocation</code> keys. For example,
     invocation = "p";
     execution = ":parent";
   }
-];</pre></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-21.03-state-version-changes"></a>E.1.2. State Version Changes</h3></div></div></div><p>The state version in this release includes the changes below. These
+];</pre></li><li class="listitem"><p class="simpara">
+The <a class="xref" href="options.html#opt-programs.mpv.package"><code class="option">programs.mpv.package</code></a> option has been changed to allow custom
+derivations. The following configuration is now possible:
+</p><pre class="programlisting nix">programs.mpv.package = (pkgs.wrapMpv (pkgs.mpv-unwrapped.override {
+  vapoursynthSupport = true;
+}) {
+  extraMakeWrapperArgs = [
+    "--prefix" "LD_LIBRARY_PATH" ":" "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+  ];
+});</pre><p class="simpara">As a result of this change, <a class="xref" href="options.html#opt-programs.mpv.package"><code class="option">programs.mpv.package</code></a> is no longer the
+resulting derivation. Use the newly introduced <code class="literal">programs.mpv.finalPackage</code>
+instead.</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-21.03-state-version-changes"></a>E.1.2. State Version Changes</h3></div></div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
 "21.03" or later.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 Nothing has happened.

@@ -4867,8 +4867,10 @@ control the default matplotlib behavior.
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mpv.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mpv.package"></a><a class="term" href="options.html#opt-programs.mpv.package"><code class="option">programs.mpv.package</code></a></span></dt><dd><p>Resulting mpv package.
-</p><p><span class="emphasis"><em>Type:</em></span> package <span class="emphasis"><em>(read only)</em></span></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mpv.package"></a><a class="term" href="options.html#opt-programs.mpv.package"><code class="option">programs.mpv.package</code></a></span></dt><dd><p>Package providing mpv.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        <em class="replaceable"><code>(build of mpv-with-scripts-0.33.0)</code></em>
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.wrapMpv (pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }) { youtubeSupport = true; }</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mpv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mpv.bindings"></a><a class="term" href="options.html#opt-programs.mpv.bindings"><code class="option">programs.mpv.bindings</code></a></span></dt><dd><p>Input configuration written to
 <code class="filename">~/.config/mpv/input.conf</code>. See
@@ -4899,7 +4901,7 @@ for the full list of options.
     
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
   profile = "gpu-hq";
-  force-window = "yes";
+  force-window = true;
   ytdl-format = "bestvideo+bestaudio";
   cache-default = 4000000;
 }
