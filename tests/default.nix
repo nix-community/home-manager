@@ -59,6 +59,7 @@ import nmt {
     ./modules/programs/lieer
     ./modules/programs/man
     ./modules/programs/mbsync
+    ./modules/programs/mpv
     ./modules/programs/ncmpcpp
     ./modules/programs/ne
     ./modules/programs/neomutt

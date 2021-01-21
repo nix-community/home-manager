@@ -1,0 +1,13 @@
+profile=%6%gpu-hq
+
+cache-default=%7%4000000
+force-window=%3%yes
+ytdl-format=%19%bestvideo+bestaudio
+
+[fast]
+vo=%5%vdpau
+
+[protocol.dvd]
+alang=%2%en
+profile-desc=%26%profile for dvd:// streams
+
