@@ -353,4 +353,6 @@ in {
       "rofi/themes/${themeName}.rasi".source = themePath;
     };
   };
+
+  meta.maintainers = with maintainers; [ thiagokokada ];
 }
