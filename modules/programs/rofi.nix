@@ -87,7 +87,7 @@ let
     if colors != null then
       with colors; {
         color-window =
-          if window != null then (windowColorsToString window) else null;
+          if (window != null) then (windowColorsToString window) else null;
         color-normal = if (rows != null && rows.normal != null) then
           (rowColorsToString rows.normal)
         else
@@ -114,6 +114,16 @@ let
 
   mkKeyValue = name: value: "${name}: ${mkValueString value};";
 
+  toRasi = section: config:
+    let
+      # Remove null values so the resulting config does not have empty lines
+      configStr = generators.toKeyValue { inherit mkKeyValue; }
+        (attrsets.filterAttrs (m: v: v != null) config);
+    in ''
+      ${section} {
+      ${configStr}}
+    '';
+
   locationsMap = {
     center = 0;
     top-left = 1;
@@ -128,12 +138,12 @@ let
 
   themeName = if (cfg.theme == null) then
     null
-  else if (lib.isString cfg.theme) then
+  else if (isString cfg.theme) then
     cfg.theme
   else
-    lib.removeSuffix ".rasi" (baseNameOf cfg.theme);
+    removeSuffix ".rasi" (baseNameOf cfg.theme);
 
-  themePath = if (lib.isString cfg.theme) then null else cfg.theme;
+  themePath = if (isString cfg.theme) then null else cfg.theme;
 
 in {
   options.programs.rofi = {
@@ -229,7 +239,7 @@ in {
 
     location = mkOption {
       default = "center";
-      type = types.enum (builtins.attrNames locationsMap);
+      type = types.enum (attrNames locationsMap);
       description = "The location rofi appears on the screen.";
     };
 
@@ -324,30 +334,24 @@ in {
 
     home.packages = [ cfg.package ];
 
-    home.file."${cfg.configPath}".text = let
-      # Remove null values so the resulting config does not have empty lines
-      config = lib.attrsets.filterAttrs (n: v: v != null) ({
-        width = cfg.width;
-        lines = cfg.lines;
-        font = cfg.font;
-        bw = cfg.borderWidth;
-        eh = cfg.rowHeight;
-        padding = cfg.padding;
-        separator-style = cfg.separator;
-        hide-scrollbar =
-          if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
-        terminal = cfg.terminal;
-        cycle = cfg.cycle;
-        fullscreen = cfg.fullscreen;
-        location = (builtins.getAttr cfg.location locationsMap);
-        xoffset = cfg.xoffset;
-        yoffset = cfg.yoffset;
-        theme = themeName;
-      } // (mkColorScheme cfg.colors) // cfg.extraConfig);
-    in ''
-      configuration {
-      ${lib.generators.toKeyValue { inherit mkKeyValue; } config}}
-    '';
+    home.file."${cfg.configPath}".text = toRasi "configuration" ({
+      width = cfg.width;
+      lines = cfg.lines;
+      font = cfg.font;
+      bw = cfg.borderWidth;
+      eh = cfg.rowHeight;
+      padding = cfg.padding;
+      separator-style = cfg.separator;
+      hide-scrollbar =
+        if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
+      terminal = cfg.terminal;
+      cycle = cfg.cycle;
+      fullscreen = cfg.fullscreen;
+      location = (getAttr cfg.location locationsMap);
+      xoffset = cfg.xoffset;
+      yoffset = cfg.yoffset;
+      theme = themeName;
+    } // (mkColorScheme cfg.colors) // cfg.extraConfig);
 
     xdg.dataFile = mkIf (themePath != null) {
       "rofi/themes/${themeName}.rasi".source = themePath;
