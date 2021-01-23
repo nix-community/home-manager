@@ -11,6 +11,8 @@
 
 /modules/misc/gtk.nix                                 @rycee
 
+/modules/config/i18n.nix                              @midchildan
+
 /modules/misc/news.nix                                @rycee
 
 /modules/misc/numlock.nix                             @evanjs
