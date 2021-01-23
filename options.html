@@ -6176,16 +6176,25 @@ should be used whenever possible.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.colors.window.separator"></a><a class="term" href="options.html#opt-programs.rofi.colors.window.separator"><code class="option">programs.rofi.colors.window.separator</code></a></span></dt><dd><p>Separator color</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/rofi.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.configPath"></a><a class="term" href="options.html#opt-programs.rofi.configPath"><code class="option">programs.rofi.configPath</code></a></span></dt><dd><p>Path where to put generated configuration file.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        "\$XDG_CONFIG_HOME/rofi/config"
+        "\$XDG_CONFIG_HOME/rofi/config.rasi"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/rofi.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.cycle"></a><a class="term" href="options.html#opt-programs.rofi.cycle"><code class="option">programs.rofi.cycle</code></a></span></dt><dd><p>Whether to cycle through the results list.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/rofi.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.extraConfig"></a><a class="term" href="options.html#opt-programs.rofi.extraConfig"><code class="option">programs.rofi.extraConfig</code></a></span></dt><dd><p>Additional configuration to add.</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        ""
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.extraConfig"></a><a class="term" href="options.html#opt-programs.rofi.extraConfig"><code class="option">programs.rofi.extraConfig</code></a></span></dt><dd><p>Additional configuration to add.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of signed integer or string or booleans</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  modi = "drun,emoji,ssh";
+  kb-primary-paste = "Control+V,Shift+Insert";
+  kb-secondary-paste = "Control+v,Insert";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/rofi.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.font"></a><a class="term" href="options.html#opt-programs.rofi.font"><code class="option">programs.rofi.font</code></a></span></dt><dd><p>Font to use.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
