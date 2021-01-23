@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-with builtins;
 
 let
 
@@ -109,20 +108,30 @@ let
       if value then "true" else "false"
     else if isInt value then
       toString value
+    else if value._type or "" == "literal" then
+      value.value
+    else if isString value then
+      ''"${value}"''
     else
-      ''"${toString value}"'';
+      abort "Unhandled value type ${builtins.typeOf value}";
 
   mkKeyValue = name: value: "${name}: ${mkValueString value};";
 
-  toRasi = section: config:
+  mkRasiSection = section: config:
     let
+      toRasiKeyValue = generators.toKeyValue { inherit mkKeyValue; };
       # Remove null values so the resulting config does not have empty lines
-      configStr = generators.toKeyValue { inherit mkKeyValue; }
-        (attrsets.filterAttrs (m: v: v != null) config);
+      configStr = toRasiKeyValue (filterAttrs (_: v: v != null) config);
     in ''
       ${section} {
       ${configStr}}
     '';
+
+  toRasi = attrsOfAttrs:
+    let
+      mkSection = mkRasiSection;
+      sections = mapAttrsToList mkSection attrsOfAttrs;
+    in concatStringsSep "\n" sections;
 
   locationsMap = {
     center = 0;
@@ -136,14 +145,41 @@ let
     left = 8;
   };
 
+  configType = with types; attrsOf (oneOf [ str int bool rasiLiteral ]);
+
+  rasiLiteral = types.submodule {
+    options = {
+      _type = mkOption {
+        type = types.enum [ "literal" ];
+        internal = true;
+      };
+
+      value = mkOption {
+        type = types.str;
+        internal = true;
+      };
+    };
+  } // {
+    description = "Rasi literal string";
+  };
+
+  themeType = with types; attrsOf configType;
+
   themeName = if (cfg.theme == null) then
     null
   else if (isString cfg.theme) then
     cfg.theme
+  else if (isAttrs cfg.theme) then
+    "custom"
   else
     removeSuffix ".rasi" (baseNameOf cfg.theme);
 
-  themePath = if (isString cfg.theme) then null else cfg.theme;
+  themePath = if (isString cfg.theme) then
+    null
+  else if (isAttrs cfg.theme) then
+    "custom"
+  else
+    cfg.theme;
 
 in {
   options.programs.rofi = {
@@ -293,11 +329,28 @@ in {
 
     theme = mkOption {
       default = null;
-      type = with types; nullOr (either str path);
-      example = "Arc";
+      type = with types; nullOr (oneOf [ str path themeType ]);
+      example = literalExample ''
+        with config.lib.formats.rasi; {
+          "*" = {
+            # config.lib.formats.rasi.mkLiteral unquotes the value
+            background-color = mkLiteral "#000000";
+            foreground-color = mkLiteral "rgba ( 250, 251, 252, 100 % )";
+            border-color = mkLiteral "#FFFFFF";
+            width = 512;
+          };
+
+          "#textbox-prompt-colon" = {
+            expand = false;
+            str = ":";
+            margin = mkLiteral "0px 0.3em 0em 0em";
+            text-color = mkLiteral "@foreground-color";
+          };
+        }
+      '';
       description = ''
-        Name of theme or path to theme file in rasi format. Available
-        named themes can be viewed using the
+        Name of theme or path to theme file in rasi format or attribute set with
+        theme configuration. Available named themes can be viewed using the
         <command>rofi-theme-selector</command> tool.
       '';
     };
@@ -318,7 +371,7 @@ in {
           kb-secondary-paste = "Control+v,Insert";
         }
       '';
-      type = with types; attrsOf (oneOf [ int str bool ]);
+      type = configType;
       description = "Additional configuration to add.";
     };
 
@@ -332,30 +385,39 @@ in {
       '';
     }];
 
+    lib.formats.rasi.mkLiteral = value: {
+      _type = "literal";
+      inherit value;
+    };
+
     home.packages = [ cfg.package ];
 
-    home.file."${cfg.configPath}".text = toRasi "configuration" ({
-      width = cfg.width;
-      lines = cfg.lines;
-      font = cfg.font;
-      bw = cfg.borderWidth;
-      eh = cfg.rowHeight;
-      padding = cfg.padding;
-      separator-style = cfg.separator;
-      hide-scrollbar =
-        if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
-      terminal = cfg.terminal;
-      cycle = cfg.cycle;
-      fullscreen = cfg.fullscreen;
-      location = (getAttr cfg.location locationsMap);
-      xoffset = cfg.xoffset;
-      yoffset = cfg.yoffset;
-      theme = themeName;
-    } // (mkColorScheme cfg.colors) // cfg.extraConfig);
-
-    xdg.dataFile = mkIf (themePath != null) {
-      "rofi/themes/${themeName}.rasi".source = themePath;
+    home.file."${cfg.configPath}".text = toRasi {
+      configuration = ({
+        width = cfg.width;
+        lines = cfg.lines;
+        font = cfg.font;
+        bw = cfg.borderWidth;
+        eh = cfg.rowHeight;
+        padding = cfg.padding;
+        separator-style = cfg.separator;
+        hide-scrollbar =
+          if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
+        terminal = cfg.terminal;
+        cycle = cfg.cycle;
+        fullscreen = cfg.fullscreen;
+        location = (getAttr cfg.location locationsMap);
+        xoffset = cfg.xoffset;
+        yoffset = cfg.yoffset;
+        theme = themeName;
+      } // (mkColorScheme cfg.colors) // cfg.extraConfig);
     };
+
+    xdg.dataFile = mkIf (themePath != null) (if themePath == "custom" then {
+      "rofi/themes/${themeName}.rasi".text = toRasi cfg.theme;
+    } else {
+      "rofi/themes/${themeName}.rasi".source = themePath;
+    });
   };
 
   meta.maintainers = with maintainers; [ thiagokokada ];

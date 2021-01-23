@@ -1,0 +1,6 @@
+configuration {
+location: 0;
+theme: "custom";
+xoffset: 0;
+yoffset: 0;
+}

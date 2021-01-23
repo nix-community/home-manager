@@ -48,6 +48,9 @@ with lib;
       };
     };
 
+    nixpkgs.overlays =
+      [ (self: super: { rofi = pkgs.writeScriptBin "dummy-rofi" ""; }) ];
+
     nmt.script = ''
       assertFileContent \
         home-files/.config/rofi/config.rasi \
