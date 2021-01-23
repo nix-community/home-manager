@@ -1,0 +1,13 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@redshift@/bin/redshift -l 0.0:0.0 -t 5500:3700 -b 1:1
+Restart=on-failure
+RestartSec=3
+
+[Unit]
+After=graphical-session-pre.target
+Description=Redshift colour temperature adjuster
+Documentation=http://jonls.dk/redshift/
+PartOf=graphical-session.target
