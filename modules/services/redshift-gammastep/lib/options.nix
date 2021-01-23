@@ -1,24 +1,27 @@
 # Adapted from Nixpkgs.
 
-{ config, lib, pkgs, ... }:
+{ config, lib, moduleName, programName, defaultPackage, examplePackage
+, mainExecutable, appletExecutable, serviceDocumentation }:
 
 with lib;
 
 let
 
-  cfg = config.services.gammastep;
+  cfg = config.services.${moduleName};
 
 in {
-  meta.maintainers = [ maintainers.petabyteboy ];
+  meta = {
+    maintainers = with maintainers; [ rycee petabyteboy thiagokokada ];
+  };
 
-  options.services.gammastep = {
+  options = {
     enable = mkOption {
       type = types.bool;
       default = false;
       example = true;
       description = ''
-        Enable Gammastep to change your screen's colour temperature depending on
-        the time of day.
+        Enable ${programName} to change your screen's colour temperature
+        depending on the time of day.
       '';
     };
 
@@ -62,7 +65,6 @@ in {
           <literal>1000</literal> and <literal>25000</literal> K.
         '';
       };
-
       night = mkOption {
         type = types.int;
         default = 3700;
@@ -95,10 +97,10 @@ in {
 
     package = mkOption {
       type = types.package;
-      default = pkgs.gammastep;
-      defaultText = literalExample "pkgs.gammastep";
+      default = defaultPackage;
+      defaultText = literalExample examplePackage;
       description = ''
-        gammastep derivation to use.
+        ${programName} derivation to use.
       '';
     };
 
@@ -107,7 +109,7 @@ in {
       default = false;
       example = true;
       description = ''
-        Start the gammastep-indicator tray applet.
+        Start the ${appletExecutable} tray applet.
       '';
     };
 
@@ -117,23 +119,24 @@ in {
       example = [ "-v" "-m randr" ];
       description = ''
         Additional command-line arguments to pass to
-        <command>gammastep</command>.
+        <command>redshift</command>.
       '';
     };
   };
 
-  config = mkIf cfg.enable {
+  config = {
     assertions = [{
       assertion = cfg.provider == "manual" -> cfg.latitude != null
         && cfg.longitude != null;
-      message = "Must provide services.gammastep.latitude and"
-        + " services.gammastep.latitude when"
-        + " services.gammastep.provider is set to \"manual\".";
+      message = "Must provide services.${moduleName}.latitude and"
+        + " services.${moduleName}.latitude when"
+        + " services.${moduleName}.provider is set to \"manual\".";
     }];
 
-    systemd.user.services.gammastep = {
+    systemd.user.services.${moduleName} = {
       Unit = {
-        Description = "Gammastep colour temperature adjuster";
+        Description = "${programName} colour temperature adjuster";
+        Documentation = serviceDocumentation;
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
       };
@@ -155,12 +158,11 @@ in {
             "-b ${toString cfg.brightness.day}:${toString cfg.brightness.night}"
           ] ++ cfg.extraOptions;
 
-          command = if cfg.tray then "gammastep-indicator" else "gammastep";
+          command = if cfg.tray then appletExecutable else mainExecutable;
         in "${cfg.package}/bin/${command} ${concatStringsSep " " args}";
         RestartSec = 3;
-        Restart = "always";
+        Restart = "on-failure";
       };
     };
   };
-
 }
