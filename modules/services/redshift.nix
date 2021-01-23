@@ -132,6 +132,7 @@ in {
     systemd.user.services.redshift = {
       Unit = {
         Description = "Redshift colour temperature adjuster";
+        Documentation = "http://jonls.dk/redshift/";
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
       };
