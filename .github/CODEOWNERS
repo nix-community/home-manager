@@ -91,7 +91,8 @@
 
 /modules/programs/mcfly.nix                           @marsam
 
-/modules/programs/mpv.nix                             @tadeokondrak
+/modules/programs/mpv.nix                             @tadeokondrak @thiagokokada
+/tests/modules/programs/mpv                           @thiagokokada
 
 /modules/programs/mu.nix                              @KarlJoad
 
@@ -122,6 +123,9 @@
 /modules/programs/pidgin.nix                          @rycee
 
 /modules/programs/powerline-go.nix                    @DamienCassou
+
+/modules/programs/rofi.nix                            @thiagokokada
+/tests/modules/programs/rofi                          @thiagokokada
 
 /modules/programs/rofi-pass.nix                       @seylerius
 /tests/modules/programs/rofi-pass                     @seylerius
