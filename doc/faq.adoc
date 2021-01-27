@@ -51,7 +51,7 @@ Home Manager is only able to set session variables automatically if it manages y
 
 to your `.profile` and `.zshrc` files, respectively. The `hm-session-vars.sh` file should work in most Bourne-like shells.
 
-=== How do set up a configuration for multiple users/machines?
+=== How to set up a configuration for multiple users/machines?
 :post-your-homenix: https://www.reddit.com/r/NixOS/comments/9bb9h9/post_your_homemanager_homenix_file/
 
 A typical way to prepare a repository of configurations for multiple logins and machines is to prepare one "top-level" file for each unique combination.
