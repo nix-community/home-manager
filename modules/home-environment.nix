@@ -274,6 +274,14 @@ in
       ];
       description = "Extra directories to add to <envar>PATH</envar>.";
     };
+    home.sessionPrependPath = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      example = [
+        "~/bin"
+      ];
+      description = "Extra directories to add to beginning of <envar>PATH</envar>.";
+    };
 
     home.sessionVariablesExtra = mkOption {
       type = types.lines;
@@ -459,6 +467,8 @@ in
             ${config.lib.shell.exportAll cfg.sessionVariables}
           '' + lib.optionalString (cfg.sessionPath != [ ]) ''
             export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
+          '' + lib.optionalString (cfg.sessionPrependPath != [ ]) ''
+            export PATH="${concatStringsSep ":" cfg.sessionPrependPath}''${PATH:+:$PATH}"
           '' + cfg.sessionVariablesExtra;
         }
       )
