@@ -204,7 +204,7 @@ let
     (loadModule ./services/xscreensaver.nix { })
     (loadModule ./services/xsuspender.nix { condition = hostPlatform.isLinux; })
     (loadModule ./systemd.nix { })
-    (loadModule ./targets/darwin.nix { condition = hostPlatform.isDarwin; })
+    (loadModule ./targets/darwin { condition = hostPlatform.isDarwin; })
     (loadModule ./targets/generic-linux.nix { condition = hostPlatform.isLinux; })
     (loadModule ./xcursor.nix { })
     (loadModule ./xresources.nix { })

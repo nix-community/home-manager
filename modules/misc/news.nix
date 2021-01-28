@@ -1822,6 +1822,29 @@ in
           A new module is available: 'services.playerctld'.
         '';
       }
+
+      {
+        time = "2021-01-28T15:07:34+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          New options are available for 'targets.darwin':
+
+          - targets.darwin.defaults
+
+            This adds options for configuring macOS through the defaults(1)
+            system.
+
+          - targets.darwin.keybindings
+
+            This adds options for configuring the default keybindings for macOS
+            text fields.
+
+          - targets.darwin.search
+
+            This adds options for configuring the default search engine for
+            macOS.
+        '';
+      }
     ];
   };
 }
