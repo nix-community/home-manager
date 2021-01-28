@@ -72,6 +72,35 @@ programs.rofi.extraConfig = {
 };
 ----
 
+* The `services.redshift.extraOptions` and `services.gammastep.extraOptions`
+options were removed in favor of <<opt-services.redshift.settings>> and
+`services.gammastep.settings`, that are now an attribute set rather
+than a string. They also support new features not available before, for
+example:
++
+[source,nix]
+----
+services.redshift = {
+  dawnTime = "6:00-7:45";
+  duskTime = "18:35-20:15";
+  settings = {
+    redshift = {
+      gamma = 0.8;
+      adjustment-method = "randr";
+    };
+
+    randr = {
+      screen = 0;
+    };
+  };
+};
+----
++
+It is recommended to check either
+https://github.com/jonls/redshift/blob/master/redshift.conf.sample[redshift.conf.sample] or
+https://gitlab.com/chinstrap/gammastep/-/blob/master/gammastep.conf.sample[gammastep.conf.sample]
+for the available additional options in each program.
+
 [[sec-release-21.05-state-version-changes]]
 === State Version Changes
 
