@@ -4,6 +4,12 @@ with lib;
 
 let
 
+  keybindingsStrTmp = { keybindings, bindsymArgs ? "" }:
+    concatStringsSep "\n" (map ({ name, data }:
+      optionalString (data != null) "bindsym ${
+        lib.optionalString (bindsymArgs != "") "${bindsymArgs} "
+      }${name} ${data}") (hm.dag.topoSort keybindings).result);
+
   cfg = config.xsession.windowManager.i3;
 
   commonOptions = import ./lib/options.nix {
@@ -20,8 +26,9 @@ let
         terminal;
 
       keybindings = mkOption {
-        type = types.attrsOf (types.nullOr types.str);
-        default = mapAttrs (n: mkOptionDefault) {
+        type = hm.types.dagOf (types.nullOr types.str);
+        # default = mapAttrs (n: mkOptionDefault) {
+        default = {
           "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
           "${cfg.config.modifier}+Shift+q" = "kill";
           "${cfg.config.modifier}+d" = "exec ${cfg.config.menu}";
@@ -61,7 +68,7 @@ let
           "${cfg.config.modifier}+7" = "workspace number 7";
           "${cfg.config.modifier}+8" = "workspace number 8";
           "${cfg.config.modifier}+9" = "workspace number 9";
-          "${cfg.config.modifier}+0" = "workspace number 10";
+          "${cfg.config.modifier}+0" = hm.dag.entryAfter [ "${cfg.config.modifier}+1" ] "workspace number 10";
 
           "${cfg.config.modifier}+Shift+1" =
             "move container to workspace number 1";
@@ -180,7 +187,7 @@ let
       client.placeholder ${colorSetStr colors.placeholder}
       client.background ${colors.background}
 
-      ${keybindingsStr { inherit keybindings; }}
+      ${keybindingsStrTmp { inherit keybindings; }}
       ${keycodebindingsStr keycodebindings}
       ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
       ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
