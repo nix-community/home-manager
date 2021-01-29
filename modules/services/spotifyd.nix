@@ -6,9 +6,9 @@ let
 
   cfg = config.services.spotifyd;
 
-  configFile = pkgs.writeText "spotifyd.conf" ''
-    ${generators.toINI { } cfg.settings}
-  '';
+  tomlFormat = pkgs.formats.toml { };
+
+  configFile = tomlFormat.generate "spotifyd.conf" cfg.settings;
 
 in {
   options.services.spotifyd = {
@@ -27,7 +27,7 @@ in {
     };
 
     settings = mkOption {
-      type = types.attrsOf (types.attrsOf types.str);
+      type = tomlFormat.type;
       default = { };
       description = "Configuration for spotifyd";
       example = literalExample ''
