@@ -65,10 +65,13 @@ let
     + genSection "IMAPStore ${name}-remote"
     ({ Account = name; } // mbsync.extraConfig.remote) + "\n"
     + genSection "MaildirStore ${name}-local" ({
-      Path = "${maildir.absPath}/";
       Inbox = "${maildir.absPath}/${folders.inbox}";
-      SubFolders = "Verbatim";
-    } // optionalAttrs (mbsync.flatten != null) { Flatten = mbsync.flatten; }
+    } // optionalAttrs
+      (mbsync.subFolders != "Maildir++" || mbsync.flatten != null) {
+        Path = "${maildir.absPath}/";
+      } // optionalAttrs (mbsync.flatten == null) {
+        SubFolders = mbsync.subFolders;
+      } // optionalAttrs (mbsync.flatten != null) { Flatten = mbsync.flatten; }
       // mbsync.extraConfig.local) + "\n" + genChannels account;
 
   genChannels = account:
