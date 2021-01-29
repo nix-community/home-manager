@@ -43,12 +43,10 @@ let
 
   # A function to get the configuration string (if any) from an element of 'plugins'
   pluginConfig = p:
-    if builtins.hasAttr "plugin" p && builtins.hasAttr "config" p then ''
+    if p ? plugin && (p.config or "") != "" then ''
       " ${p.plugin.pname} {{{
       ${p.config}
       " }}}
-    '' else
-      "";
 
   moduleConfigure = optionalAttrs (cfg.extraConfig != ""
     || (lib.filter (hasAttr "config") cfg.plugins) != [ ]) {
