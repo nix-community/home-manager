@@ -65,7 +65,7 @@ let
       };
     };
   extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
-    ''--prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
+    ''--suffix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
 
 in {
   options = {
@@ -242,8 +242,6 @@ in {
   };
 
   config = let
-    extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
-      ''--prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
     neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
       inherit (cfg)
         extraPython3Packages withPython3 extraPythonPackages withPython
