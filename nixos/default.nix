@@ -34,6 +34,7 @@ let
           home.homeDirectory = config.users.users.${name}.home;
         };
       })
+      ({ ... }: { imports = cfg.sharedModules; })
     ];
   };
 
@@ -62,6 +63,16 @@ in {
         description = ''
           On activation move existing files by appending the given
           file extension rather than exiting with an error.
+        '';
+      };
+
+      sharedModules = mkOption {
+        type = types.listOf
+          (types.anything // { description = "Home Manager module"; });
+        default = [ ];
+        example = [ /path/to/module.nix ];
+        description = ''
+          Home Manager modules that are shared among all users.
         '';
       };
 
