@@ -102,6 +102,7 @@ import nmt {
     ./modules/services/lieer
     ./modules/services/redshift-gammastep
     ./modules/services/pbgopy
+    ./modules/services/playerctld
     ./modules/services/polybar
     ./modules/services/sxhkd
     ./modules/services/window-managers/i3

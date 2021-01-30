@@ -175,6 +175,7 @@ let
     (loadModule ./services/pbgopy.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/picom.nix { })
     (loadModule ./services/plan9port.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./services/playerctld.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/polybar.nix { })
     (loadModule ./services/pulseeffects.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/random-background.nix { })

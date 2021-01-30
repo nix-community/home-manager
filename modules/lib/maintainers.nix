@@ -53,4 +53,10 @@
     github = "thiagokokada";
     githubId = 844343;
   };
+  fendse = {
+    email = "46252070+Fendse@users.noreply.github.com";
+    github = "Fendse";
+    githubId = 46252070;
+    name = "Sara Johnsson";
+  };
 }

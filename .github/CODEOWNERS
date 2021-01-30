@@ -209,6 +209,9 @@
 
 /modules/services/plan9port.nix                       @ehmry
 
+/modules/services/playerctld.nix                      @fendse
+/tests/modules/playerctld                             @fendse
+
 /modules/services/pulseeffects.nix                    @jonringer
 
 /modules/services/random-background.nix               @rycee

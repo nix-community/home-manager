@@ -1814,6 +1814,14 @@ in
           A new module is available: 'services.plan9port'.
         '';
       }
+
+      {
+        time = "2021-01-31T11:23:30+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.playerctld'.
+        '';
+      }
     ];
   };
 }
