@@ -133,6 +133,9 @@
 
 /modules/programs/rtorrent.nix                        @marsam
 
+/modules/programs/sbt.nix                             @kubukoz
+/tests/modules/programs/sbt                           @kubukoz
+
 /modules/programs/ssh.nix                             @rycee
 
 /modules/programs/starship.nix                        @marsam

@@ -1845,6 +1845,13 @@ in
             macOS.
         '';
       }
+
+      {
+        time = "2021-02-04T22:28:26+00:00";
+        message = ''
+          A new module is available: 'programs.sbt'.
+        '';
+      }
     ];
   };
 }

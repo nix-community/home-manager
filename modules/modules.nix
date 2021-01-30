@@ -119,6 +119,7 @@ let
     (loadModule ./programs/rtorrent.nix { })
     (loadModule ./programs/skim.nix { })
     (loadModule ./programs/starship.nix { })
+    (loadModule ./programs/sbt.nix { })
     (loadModule ./programs/ssh.nix { })
     (loadModule ./programs/taskwarrior.nix { })
     (loadModule ./programs/termite.nix { })
