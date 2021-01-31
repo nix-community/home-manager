@@ -20,7 +20,7 @@ in {
     description = "Default search engine.";
   };
 
-  config = mkIf (isDarwin && cfg.search != null) {
+  config = mkIf (cfg.search != null) {
     targets.darwin.defaults = {
       NSGlobalDomain.NSPreferredWebServices = {
         NSWebServicesProviderWebSearch = {

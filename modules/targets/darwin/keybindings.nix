@@ -10,7 +10,7 @@ let
     (lib.generators.toPlist { } cfg.keybindings);
 in {
   options.targets.darwin.keybindings = mkOption {
-    type = types.attrs;
+    type = with types; attrsOf anything;
     default = { };
     example = {
       "^u" = "deleteToBeginningOfLine:";
@@ -31,7 +31,7 @@ in {
     '';
   };
 
-  config = mkIf (isDarwin && cfg.keybindings != { }) {
+  config = mkIf (cfg.keybindings != { }) {
     # NOTE: just copy the files because symlinks won't be recognized by macOS
     home.activation.setCocoaKeybindings =
       hm.dag.entryAfter [ "writeBoundary" ] ''

@@ -42,7 +42,7 @@ in {
     '';
   };
 
-  config = mkIf (isDarwin && cfg.defaults != { }) {
+  config = mkIf (cfg.defaults != { }) {
     home.activation.setDarwinDefaults = hm.dag.entryAfter [ "writeBoundary" ] ''
       $VERBOSE_ECHO "Configuring macOS user defaults"
       ${concatStringsSep "\n" activationCmds}

@@ -19,7 +19,7 @@ let
 
   safari = config."com.apple.Safari";
 in {
-  freeformType = with types; attrsOf attrs;
+  freeformType = with types; attrsOf (attrsOf anything);
 
   options = {
     NSGlobalDomain = {
