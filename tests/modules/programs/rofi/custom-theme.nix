@@ -15,6 +15,8 @@ with lib;
           width = 512;
         };
 
+        "#inputbar" = { children = map mkLiteral [ "prompt" "entry" ]; };
+
         "#textbox-prompt-colon" = {
           expand = false;
           str = ":";
