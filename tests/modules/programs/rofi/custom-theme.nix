@@ -7,7 +7,8 @@ with lib;
     programs.rofi = {
       enable = true;
 
-      theme = with config.lib.formats.rasi; {
+      theme = let inherit (config.lib.formats.rasi) mkLiteral;
+      in {
         "*" = {
           background-color = mkLiteral "#000000";
           foreground-color = mkLiteral "rgba ( 250, 251, 252, 100 % )";

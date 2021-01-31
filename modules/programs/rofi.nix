@@ -335,9 +335,10 @@ in {
       default = null;
       type = with types; nullOr (oneOf [ str path themeType ]);
       example = literalExample ''
-        with config.lib.formats.rasi; {
+        let
+          inherit (config.lib.formats.rasi) mkLiteral;
+        in {
           "*" = {
-            # config.lib.formats.rasi.mkLiteral unquotes the value
             background-color = mkLiteral "#000000";
             foreground-color = mkLiteral "rgba ( 250, 251, 252, 100 % )";
             border-color = mkLiteral "#FFFFFF";
