@@ -1,6 +1,6 @@
 { configuration
 , pkgs
-, lib ? pkgs.stdenv.lib
+, lib ? pkgs.lib
 
   # Whether to check that each option has a matching declaration.
 , check ? true
