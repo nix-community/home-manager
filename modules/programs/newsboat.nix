@@ -71,7 +71,7 @@ in {
 
       browser = mkOption {
         type = types.str;
-        default = "${pkgs.xdg_utils}/bin/xdg-open";
+        default = "${pkgs.xdg-utils}/bin/xdg-open";
         description = "External browser to use.";
       };
 
