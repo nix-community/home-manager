@@ -6183,7 +6183,7 @@ should be used whenever possible.
         null
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/rofi.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.extraConfig"></a><a class="term" href="options.html#opt-programs.rofi.extraConfig"><code class="option">programs.rofi.extraConfig</code></a></span></dt><dd><p>Additional configuration to add.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean or Rasi literal strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.extraConfig"></a><a class="term" href="options.html#opt-programs.rofi.extraConfig"><code class="option">programs.rofi.extraConfig</code></a></span></dt><dd><p>Additional configuration to add.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean or Rasi literal string or list of string or signed integer or boolean or Rasi literal stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
         
@@ -6274,15 +6274,20 @@ AUTOTYPE_field='autotype'
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rofi.theme"></a><a class="term" href="options.html#opt-programs.rofi.theme"><code class="option">programs.rofi.theme</code></a></span></dt><dd><p>Name of theme or path to theme file in rasi format or attribute set with
 theme configuration. Available named themes can be viewed using the
 <span class="command"><strong>rofi-theme-selector</strong></span> tool.
-</p><p><span class="emphasis"><em>Type:</em></span> null or string or path or attribute set of attribute set of string or signed integer or boolean or Rasi literal stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> null or string or path or attribute set of attribute set of string or signed integer or boolean or Rasi literal string or list of string or signed integer or boolean or Rasi literal stringsss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
-      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">with config.lib.formats.rasi; {
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">let
+  inherit (config.lib.formats.rasi) mkLiteral;
+in {
   "*" = {
-    # config.lib.formats.rasi.mkLiteral unquotes the value
     background-color = mkLiteral "#000000";
     foreground-color = mkLiteral "rgba ( 250, 251, 252, 100 % )";
     border-color = mkLiteral "#FFFFFF";
     width = 512;
+  };
+
+  "#inputbar" = {
+    children = map mkLiteral [ "prompt" "entry" ];
   };
 
   "#textbox-prompt-colon" = {
