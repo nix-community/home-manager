@@ -47,12 +47,13 @@ let
       " ${p.plugin.pname} {{{
       ${p.config}
       " }}}
-    '' else "";
+    '' else
+      "";
 
   moduleConfigure = {
     packages.home-manager = {
-      start = filter (f: f != null) (map (x:
-        if x ? plugin && x.optional == true then null else (x.plugin or x))
+      start = filter (f: f != null) (map
+        (x: if x ? plugin && x.optional == true then null else (x.plugin or x))
         cfg.plugins);
       opt = filter (f: f != null)
         (map (x: if x ? plugin && x.optional == true then x.plugin else null)
