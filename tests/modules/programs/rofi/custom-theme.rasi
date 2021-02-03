@@ -1,3 +1,7 @@
+#inputbar {
+children: [ prompt,entry ];
+}
+
 #textbox-prompt-colon {
 expand: false;
 margin: 0px 0.3em 0em 0em;

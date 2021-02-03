@@ -112,6 +112,8 @@ let
       value.value
     else if isString value then
       ''"${value}"''
+    else if isList value then
+      "[ ${strings.concatStringsSep "," (map mkValueString value)} ]"
     else
       abort "Unhandled value type ${builtins.typeOf value}";
 
@@ -145,7 +147,9 @@ let
     left = 8;
   };
 
-  configType = with types; attrsOf (oneOf [ str int bool rasiLiteral ]);
+  primitive = with types; (oneOf [ str int bool rasiLiteral ]);
+
+  configType = with types; attrsOf (either primitive (listOf primitive));
 
   rasiLiteral = types.submodule {
     options = {
@@ -331,13 +335,18 @@ in {
       default = null;
       type = with types; nullOr (oneOf [ str path themeType ]);
       example = literalExample ''
-        with config.lib.formats.rasi; {
+        let
+          inherit (config.lib.formats.rasi) mkLiteral;
+        in {
           "*" = {
-            # config.lib.formats.rasi.mkLiteral unquotes the value
             background-color = mkLiteral "#000000";
             foreground-color = mkLiteral "rgba ( 250, 251, 252, 100 % )";
             border-color = mkLiteral "#FFFFFF";
             width = 512;
+          };
+
+          "#inputbar" = {
+            children = map mkLiteral [ "prompt" "entry" ];
           };
 
           "#textbox-prompt-colon" = {
