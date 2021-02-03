@@ -479,7 +479,7 @@ in
             if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
             export __HM_SESS_VARS_SOURCED=1
 
-            ${config.lib.shell.exportAll cfg.sessionVariables}
+            ${config.lib.shell.exportAll' { colonVars = ["NIX_PATH" "PATH"]; } cfg.sessionVariables}
           '' + lib.optionalString (cfg.sessionPath != [ ]) ''
             export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
           '' + cfg.sessionVariablesExtra;
