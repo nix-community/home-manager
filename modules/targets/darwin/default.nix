@@ -3,21 +3,21 @@
 with lib;
 
 let
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
-  inherit (lib.strings) escapeShellArg;
-
   cfg = config.targets.darwin;
 
   toDefaultsFile = domain: attrs:
-    pkgs.writeText "${domain}.plist"
-    (lib.generators.toPlist { } (filterAttrs (n: v: v != null) attrs));
+    pkgs.writeText "${domain}.plist" (lib.generators.toPlist { } attrs);
 
   toActivationCmd = domain: attrs:
     "$DRY_RUN_CMD defaults import ${escapeShellArg domain} ${
       toDefaultsFile domain attrs
     }";
 
-  activationCmds = mapAttrsToList toActivationCmd cfg.defaults;
+  nonNullDefaults =
+    mapAttrs (domain: attrs: (filterAttrs (n: v: v != null) attrs))
+    cfg.defaults;
+  writableDefaults = filterAttrs (domain: attrs: attrs != { }) nonNullDefaults;
+  activationCmds = mapAttrsToList toActivationCmd writableDefaults;
 in {
   imports = [ ./keybindings.nix ./linkapps.nix ./search.nix ];
 
@@ -42,7 +42,7 @@ in {
     '';
   };
 
-  config = mkIf (cfg.defaults != { }) {
+  config = mkIf (activationCmds != [ ]) {
     home.activation.setDarwinDefaults = hm.dag.entryAfter [ "writeBoundary" ] ''
       $VERBOSE_ECHO "Configuring macOS user defaults"
       ${concatStringsSep "\n" activationCmds}

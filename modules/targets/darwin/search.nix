@@ -3,7 +3,6 @@
 with lib;
 
 let
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
   cfg = config.targets.darwin;
   searchEngines = {
     Bing = "com.bing.www";

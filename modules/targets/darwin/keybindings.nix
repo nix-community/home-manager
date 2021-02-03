@@ -3,7 +3,6 @@
 with lib;
 
 let
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
   cfg = config.targets.darwin;
   homeDir = config.home.homeDirectory;
   confFile = pkgs.writeText "DefaultKeybinding.dict"

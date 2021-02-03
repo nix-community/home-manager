@@ -3,13 +3,13 @@
 with lib;
 
 let
-  mkOption = args:
+  mkNullableOption = args:
     lib.mkOption (args // {
       type = types.nullOr args.type;
       default = null;
     });
 
-  mkEnableOption = name:
+  mkNullableEnableOption = name:
     lib.mkOption {
       type = with types; nullOr bool;
       default = null;
@@ -23,48 +23,50 @@ in {
 
   options = {
     NSGlobalDomain = {
-      AppleLanguages = mkOption {
+      AppleLanguages = mkNullableOption {
         type = with types; listOf str;
         example = [ "en" ];
         description = "Sets the language to use in the preferred order.";
       };
 
-      AppleLocale = mkOption {
+      AppleLocale = mkNullableOption {
         type = types.str;
         example = "en_US";
         description = "Configures the user locale.";
       };
 
-      AppleMeasurementUnits = mkOption {
+      AppleMeasurementUnits = mkNullableOption {
         type = types.enum [ "Centimeters" "Inches" ];
         example = "Centimeters";
         description = "Sets the measurement unit.";
       };
 
-      AppleTemperatureUnit = mkOption {
+      AppleTemperatureUnit = mkNullableOption {
         type = types.enum [ "Celsius" "Fahrenheit" ];
         example = "Celsius";
         description = "Sets the temperature unit.";
       };
 
-      AppleMetricUnits = mkEnableOption "the metric system";
+      AppleMetricUnits = mkNullableEnableOption "the metric system";
 
       NSAutomaticCapitalizationEnabled =
-        mkEnableOption "automatic captilization";
+        mkNullableEnableOption "automatic captilization";
 
-      NSAutomaticDashSubstitutionEnabled = mkEnableOption "smart dashes";
+      NSAutomaticDashSubstitutionEnabled =
+        mkNullableEnableOption "smart dashes";
 
       NSAutomaticPeriodSubstitutionEnabled =
-        mkEnableOption "period with double space";
+        mkNullableEnableOption "period with double space";
 
-      NSAutomaticQuoteSubstitutionEnabled = mkEnableOption "smart quotes";
+      NSAutomaticQuoteSubstitutionEnabled =
+        mkNullableEnableOption "smart quotes";
 
       NSAutomaticSpellingCorrectionEnabled =
-        mkEnableOption "spelling correction";
+        mkNullableEnableOption "spelling correction";
     };
 
     "com.apple.desktopservices" = {
-      DSDontWriteNetworkStores = mkOption {
+      DSDontWriteNetworkStores = mkNullableOption {
         type = types.bool;
         example = false;
         description = ''
@@ -73,7 +75,7 @@ in {
           official article</link> for more info.
         '';
       };
-      DSDontWriteUSBStores = mkOption {
+      DSDontWriteUSBStores = mkNullableOption {
         type = types.bool;
         example = false;
         description = ''
@@ -83,30 +85,34 @@ in {
     };
 
     "com.apple.dock" = {
-      tilesize = mkOption {
+      tilesize = mkNullableOption {
         type = types.int;
         example = 64;
         description = "Sets the size of the dock.";
       };
-      size-immutable = mkEnableOption "locking of the dock size";
-      expose-group-apps =
-        mkEnableOption "grouping of windows by application in Mission Control";
+      size-immutable = mkNullableEnableOption "locking of the dock size";
+      expose-group-apps = mkNullableEnableOption
+        "grouping of windows by application in Mission Control";
     };
 
-    "com.apple.menuextra.battery".ShowPercent = mkOption {
+    "com.apple.menuextra.battery".ShowPercent = mkNullableOption {
       type = types.enum [ "YES" "NO" ];
       example = "NO";
       description = "Whether to show battery percentage in the menu bar.";
     };
 
     "com.apple.Safari" = {
-      AutoOpenSafeDownloads = mkEnableOption "opening of downloaded files";
-      AutoFillPasswords = mkEnableOption "autofill of usernames and passwords";
-      AutoFillCreditCardData = mkEnableOption "autofill of credit card numbers";
-      IncludeDevelopMenu = mkEnableOption ''"Develop" menu in the menu bar'';
-      ShowOverlayStatusBar = mkEnableOption "status bar";
+      AutoOpenSafeDownloads =
+        mkNullableEnableOption "opening of downloaded files";
+      AutoFillPasswords =
+        mkNullableEnableOption "autofill of usernames and passwords";
+      AutoFillCreditCardData =
+        mkNullableEnableOption "autofill of credit card numbers";
+      IncludeDevelopMenu =
+        mkNullableEnableOption ''"Develop" menu in the menu bar'';
+      ShowOverlayStatusBar = mkNullableEnableOption "status bar";
 
-      WebKitDeveloperExtrasEnabledPreferenceKey = mkOption {
+      WebKitDeveloperExtrasEnabledPreferenceKey = mkNullableOption {
         type = types.bool;
         description = ''
           Configures the web inspector.
@@ -120,7 +126,7 @@ in {
         '';
       };
       "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" =
-        mkOption {
+        mkNullableOption {
           type = types.bool;
           description = ''
             Configures the web inspector.
@@ -136,15 +142,16 @@ in {
     };
 
     "com.googlecode.iterm2" = {
-      AddNewTabAtEndOfTabs =
-        mkEnableOption "placement of new tabs at the end of the tab bar";
+      AddNewTabAtEndOfTabs = mkNullableEnableOption
+        "placement of new tabs at the end of the tab bar";
 
-      AlternateMouseScroll =
-        mkEnableOption "arrow keys when scrolling in alternate screen mode";
+      AlternateMouseScroll = mkNullableEnableOption
+        "arrow keys when scrolling in alternate screen mode";
 
-      CopySelection = mkEnableOption "copy to clipboard upon selecting text";
+      CopySelection =
+        mkNullableEnableOption "copy to clipboard upon selecting text";
 
-      OpenTmuxWindowsIn = mkOption {
+      OpenTmuxWindowsIn = mkNullableOption {
         type = types.int;
         example = 2;
         description = ''
@@ -167,16 +174,16 @@ in {
         '';
       };
 
-      ExperimentalKeyHandling =
-        mkEnableOption "experimental key handling for AquaSKK compatibility";
+      ExperimentalKeyHandling = mkNullableEnableOption
+        "experimental key handling for AquaSKK compatibility";
     };
   };
 
   config = {
-    "com.apple.Safari" = mkIf (safari.IncludeDevelopMenu == true) {
-      WebKitDeveloperExtrasEnabledPreferenceKey = true;
+    "com.apple.Safari" = mkIf (safari.IncludeDevelopMenu != null) {
+      WebKitDeveloperExtrasEnabledPreferenceKey = safari.IncludeDevelopMenu;
       "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" =
-        true;
+        safari.IncludeDevelopMenu;
     };
   };
 }
