@@ -6329,6 +6329,72 @@ for explanation about possible values.
         ""
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtorrent.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/rtorrent.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.enable"></a><a class="term" href="options.html#opt-programs.sbt.enable"><code class="option">programs.sbt.enable</code></a></span></dt><dd><p>Whether to enable sbt.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.package"></a><a class="term" href="options.html#opt-programs.sbt.package"><code class="option">programs.sbt.package</code></a></span></dt><dd><p>The package with sbt to be installed.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.sbt
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.baseConfigPath"></a><a class="term" href="options.html#opt-programs.sbt.baseConfigPath"><code class="option">programs.sbt.baseConfigPath</code></a></span></dt><dd><p>Where the plugins and credentials should be located.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        ".sbt/1.0"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.credentials"></a><a class="term" href="options.html#opt-programs.sbt.credentials"><code class="option">programs.sbt.credentials</code></a></span></dt><dd><p>A list of credentials to define in the sbt configuration directory.
+</p><p><span class="emphasis"><em>Type:</em></span> list of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[{
+  realm = "Sonatype Nexus Repository Manager";
+  host = "example.com";
+  user = "user";
+  passwordCommand = "pass show sbt/user@example.com";
+}]
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.credentials._.host"></a><a class="term" href="options.html#opt-programs.sbt.credentials._.host"><code class="option">programs.sbt.credentials.*.host</code></a></span></dt><dd><p>The hostname of the repository you're authenticating to.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.credentials._.passwordCommand"></a><a class="term" href="options.html#opt-programs.sbt.credentials._.passwordCommand"><code class="option">programs.sbt.credentials.*.passwordCommand</code></a></span></dt><dd><p>The command that provides the password or authentication token for
+the repository.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.credentials._.realm"></a><a class="term" href="options.html#opt-programs.sbt.credentials._.realm"><code class="option">programs.sbt.credentials.*.realm</code></a></span></dt><dd><p>The realm of the repository you're authenticating to.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.credentials._.user"></a><a class="term" href="options.html#opt-programs.sbt.credentials._.user"><code class="option">programs.sbt.credentials.*.user</code></a></span></dt><dd><p>The user you're using to authenticate.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.plugins"></a><a class="term" href="options.html#opt-programs.sbt.plugins"><code class="option">programs.sbt.plugins</code></a></span></dt><dd><p>A list of plugins to place in the sbt configuration directory.
+</p><p><span class="emphasis"><em>Type:</em></span> list of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[
+  {
+    org = "net.virtual-void";
+    artifact = "sbt-dependency-graph";
+    version = "0.10.0-RC1";
+  }
+  {
+    org = "com.dwijnand";
+    artifact = "sbt-project-graph";
+    version = "0.4.0";
+  }
+]
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.plugins._.artifact"></a><a class="term" href="options.html#opt-programs.sbt.plugins._.artifact"><code class="option">programs.sbt.plugins.*.artifact</code></a></span></dt><dd><p>The name of the artifact.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.plugins._.org"></a><a class="term" href="options.html#opt-programs.sbt.plugins._.org"><code class="option">programs.sbt.plugins.*.org</code></a></span></dt><dd><p>The organization the artifact is published under.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.plugins._.version"></a><a class="term" href="options.html#opt-programs.sbt.plugins._.version"><code class="option">programs.sbt.plugins.*.version</code></a></span></dt><dd><p>The version of the plugin.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.skim.enable"></a><a class="term" href="options.html#opt-programs.skim.enable"><code class="option">programs.skim.enable</code></a></span></dt><dd><p>Whether to enable skim - a command-line fuzzy finder.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
