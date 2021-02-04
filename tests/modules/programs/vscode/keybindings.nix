@@ -1,4 +1,4 @@
-# Test that keybdinings.json is created correctly.
+# Test that keybindings.json is created correctly.
 { config, lib, pkgs, ... }:
 
 with lib;
