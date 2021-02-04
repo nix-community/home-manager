@@ -24,12 +24,12 @@ with lib;
         groups.inboxes = {
           channels = {
             inbox1 = {
-              masterPattern = "Inbox1";
-              slavePattern = "Inboxes";
+              farPattern = "Inbox1";
+              nearPattern = "Inboxes";
             };
             inbox2 = {
-              masterPattern = "Inbox2";
-              slavePattern = "Inboxes";
+              farPattern = "Inbox2";
+              nearPattern = "Inboxes";
             };
           };
         };
@@ -39,8 +39,8 @@ with lib;
         enable = true;
         groups.hm-account = {
           channels.earlierPatternMatch = {
-            masterPattern = "Label";
-            slavePattern = "SomethingUnderLabel";
+            farPattern = "Label";
+            nearPattern = "SomethingUnderLabel";
             patterns = [
               "ThingUnderLabel"
               "!NotThisMaildirThough"
@@ -48,16 +48,16 @@ with lib;
             ];
           };
           channels.inbox = {
-            masterPattern = "Inbox";
-            slavePattern = "Inbox";
+            farPattern = "Inbox";
+            nearPattern = "Inbox";
           };
           channels.strangeHostBoxName = {
-            masterPattern = "[Weird]/Label Mess";
-            slavePattern = "[AnotherWeird]/Label";
+            farPattern = "[Weird]/Label Mess";
+            nearPattern = "[AnotherWeird]/Label";
           };
           channels.patternMatch = {
-            masterPattern = "Label";
-            slavePattern = "SomethingUnderLabel";
+            farPattern = "Label";
+            nearPattern = "SomethingUnderLabel";
             patterns = [
               "ThingUnderLabel"
               "!NotThisMaildirThough"

@@ -22,10 +22,10 @@ let
       CertificateFile = toString tls.certificatesFile;
     };
 
-  masterSlaveMapping = {
+  nearFarMapping = {
     none = "None";
-    imap = "Master";
-    maildir = "Slave";
+    imap = "Far";
+    maildir = "Near";
     both = "Both";
   };
 
@@ -88,18 +88,18 @@ let
   genAccountWideChannel = account:
     with account;
     genSection "Channel ${name}" ({
-      Master = ":${name}-remote:";
-      Slave = ":${name}-local:";
+      Far = ":${name}-remote:";
+      Near = ":${name}-local:";
       Patterns = mbsync.patterns;
-      Create = masterSlaveMapping.${mbsync.create};
-      Remove = masterSlaveMapping.${mbsync.remove};
-      Expunge = masterSlaveMapping.${mbsync.expunge};
+      Create = nearFarMapping.${mbsync.create};
+      Remove = nearFarMapping.${mbsync.remove};
+      Expunge = nearFarMapping.${mbsync.expunge};
       SyncState = "*";
     } // mbsync.extraConfig.channel) + "\n";
 
   # Given the attr set of groups, return a string of channels that will direct
   # mail to the proper directories, according to the pattern used in channel's
-  # master pattern definition.
+  # "far" pattern definition.
   genGroupChannelConfig = storeName: groups:
     let
       # Given the name of the group this channel is part of and the channel
@@ -118,8 +118,8 @@ let
             else
               "";
         in genSection "Channel ${groupName}-${channel.name}" ({
-          Master = ":${storeName}-remote:${channel.masterPattern}";
-          Slave = ":${storeName}-local:${channel.slavePattern}";
+          Far = ":${storeName}-remote:${channel.farPattern}";
+          Near = ":${storeName}-local:${channel.nearPattern}";
         } // channel.extraConfig) + genChannelPatterns channel.patterns;
       # Given the group name, and a attr set of channels within that group,
       # Generate a list of strings for each channels' configuration.
