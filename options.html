@@ -7528,6 +7528,16 @@ overlay or set this option. Example overlay configuration:
 ]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.keybindings._.args"></a><a class="term" href="options.html#opt-programs.vscode.keybindings._.args"><code class="option">programs.vscode.keybindings.*.args</code></a></span></dt><dd><p>Optional arguments for a command.</p><p><span class="emphasis"><em>Type:</em></span> null or attribute set</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        direction = "up"; 
+        }
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.keybindings._.command"></a><a class="term" href="options.html#opt-programs.vscode.keybindings._.command"><code class="option">programs.vscode.keybindings.*.command</code></a></span></dt><dd><p>The VS Code command to execute.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         "editor.action.clipboardCopyAction"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
@@ -7536,8 +7546,8 @@ overlay or set this option. Example overlay configuration:
         "ctrl+c"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.keybindings._.when"></a><a class="term" href="options.html#opt-programs.vscode.keybindings._.when"><code class="option">programs.vscode.keybindings.*.when</code></a></span></dt><dd><p>Optional context filter.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        ""
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.keybindings._.when"></a><a class="term" href="options.html#opt-programs.vscode.keybindings._.when"><code class="option">programs.vscode.keybindings.*.when</code></a></span></dt><dd><p>Optional context filter.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         "textInputFocus"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
