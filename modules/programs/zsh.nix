@@ -483,7 +483,7 @@ in
         ''}
 
         ${optionalString cfg.prezto.enable
-            (builtins.readFile "${pkgs.zsh-prezto}/runcoms/zshrc")}
+            (builtins.readFile "${pkgs.zsh-prezto}/share/zsh-prezto/runcoms/zshrc")}
 
         ${concatStrings (map (plugin: ''
           if [ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]; then
