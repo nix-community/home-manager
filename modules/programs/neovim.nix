@@ -43,29 +43,28 @@ let
 
   # A function to get the configuration string (if any) from an element of 'plugins'
   pluginConfig = p:
-    if builtins.hasAttr "plugin" p && builtins.hasAttr "config" p then ''
+    if p ? plugin && (p.config or "") != "" then ''
       " ${p.plugin.pname} {{{
       ${p.config}
       " }}}
     '' else
       "";
 
-  moduleConfigure = optionalAttrs (cfg.extraConfig != ""
-    || (lib.filter (hasAttr "config") cfg.plugins) != [ ]) {
-      customRC = cfg.extraConfig
-        + pkgs.lib.concatMapStrings pluginConfig cfg.plugins;
-
-      packages.home-manager = {
-        start = filter (f: f != null) (map (x:
-          if x ? plugin && x.optional == true then null else (x.plugin or x))
+  moduleConfigure = {
+    packages.home-manager = {
+      start = filter (f: f != null) (map
+        (x: if x ? plugin && x.optional == true then null else (x.plugin or x))
+        cfg.plugins);
+      opt = filter (f: f != null)
+        (map (x: if x ? plugin && x.optional == true then x.plugin else null)
           cfg.plugins);
-        opt = filter (f: f != null)
-          (map (x: if x ? plugin && x.optional == true then x.plugin else null)
-            cfg.plugins);
-      };
     };
+    customRC = cfg.extraConfig
+      + pkgs.lib.concatMapStrings pluginConfig cfg.plugins;
+  };
+
   extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
-    ''--prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
+    ''--suffix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
 
 in {
   options = {
@@ -242,8 +241,6 @@ in {
   };
 
   config = let
-    extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
-      ''--prefix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
     neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
       inherit (cfg)
         extraPython3Packages withPython3 extraPythonPackages withPython
