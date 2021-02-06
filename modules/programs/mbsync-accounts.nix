@@ -125,6 +125,16 @@ in {
       '';
     };
 
+    subFolders = mkOption {
+      type = types.enum [ "Verbatim" "Maildir++" "Legacy" ];
+      default = "Verbatim";
+      example = "Maildir++";
+      description = ''
+        The on-disk folder naming style. This option has no
+        effect when <option>flatten</option> is used.
+      '';
+    };
+
     create = mkOption {
       type = types.enum [ "none" "maildir" "imap" "both" ];
       default = "none";
