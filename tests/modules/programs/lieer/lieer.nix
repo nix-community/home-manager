@@ -9,6 +9,7 @@ with lib;
     programs.lieer.enable = true;
 
     accounts.email.accounts."hm@example.com" = {
+      flavor = "gmail.com";
       lieer.enable = true;
       notmuch.enable = true;
     };

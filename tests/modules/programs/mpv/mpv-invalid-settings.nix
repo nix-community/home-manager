@@ -17,13 +17,9 @@
       })
     ];
 
-    home.file.result.text = builtins.toJSON
-      (map (a: a.message) (lib.filter (a: !a.assertion) config.assertions));
-
-    nmt.script = ''
-      assertFileContent \
-         home-files/result \
-         ${./mpv-invalid-settings-expected.json}
-    '';
+    test.asserts.assertions.expected = [
+      ''
+        The programs.mpv "package" option is mutually exclusive with "scripts" option.''
+    ];
   };
 }

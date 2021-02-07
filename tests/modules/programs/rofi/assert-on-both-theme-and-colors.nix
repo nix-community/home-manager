@@ -17,16 +17,11 @@ with lib;
       };
     };
 
-    home.file.result.text = builtins.toJSON
-      (map (a: a.message) (filter (a: !a.assertion) config.assertions));
-
     nixpkgs.overlays =
       [ (self: super: { rofi = pkgs.writeScriptBin "dummy-rofi" ""; }) ];
 
-    nmt.script = ''
-      assertFileContent \
-        home-files/result \
-        ${./assert-on-both-theme-and-colors-expected.json}
-    '';
+    test.asserts.assertions.expected = [''
+      Cannot use the rofi options 'theme' and 'colors' simultaneously.
+    ''];
   };
 }

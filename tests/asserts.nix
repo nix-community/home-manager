@@ -19,6 +19,22 @@ with lib;
         '';
       };
     };
+
+    assertions = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether assertion asserts are enabled.";
+      };
+
+      expected = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = ''
+          List of expected assertions.
+        '';
+      };
+    };
   };
 
   config = mkIf config.test.asserts.warnings.enable {
@@ -27,6 +43,11 @@ with lib;
 
         --
       '' config.warnings;
+
+      "asserts/assertions.actual".text = concatStringsSep ''
+
+        --
+      '' (map (x: x.message) (filter (x: !x.assertion) config.assertions));
     };
 
     nmt.script = ''
@@ -37,6 +58,15 @@ with lib;
 
             --
           '' config.test.asserts.warnings.expected)
+        }
+
+      assertFileContent \
+        home-files/asserts/assertions.actual \
+        ${
+          pkgs.writeText "assertions.expected" (concatStringsSep ''
+
+            --
+          '' config.test.asserts.assertions.expected)
         }
     '';
   };

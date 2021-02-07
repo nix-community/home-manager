@@ -8,7 +8,6 @@ with lib;
   config = {
     accounts.email.accounts = {
       "hm@example.com" = {
-        primary = true;
         notmuch.enable = true;
         alot = {
           contactCompletion = { };
