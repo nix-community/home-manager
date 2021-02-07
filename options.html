@@ -8781,7 +8781,9 @@ else pkgs.emacs
         "\${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/fluidsynth.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/fluidsynth.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.enable"></a><a class="term" href="options.html#opt-services.gammastep.enable"><code class="option">services.gammastep.enable</code></a></span></dt><dd><p>Whether to enable Gammastep.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.enable"></a><a class="term" href="options.html#opt-services.gammastep.enable"><code class="option">services.gammastep.enable</code></a></span></dt><dd><p>Enable Gammastep to change your screen's colour temperature
+depending on the time of day.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         true
@@ -8792,33 +8794,45 @@ else pkgs.emacs
         pkgs.gammastep
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/gammastep.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/gammastep.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.dawnTime"></a><a class="term" href="options.html#opt-services.gammastep.dawnTime"><code class="option">services.gammastep.dawnTime</code></a></span></dt><dd><p>Set the time interval of dawn manually.
-The times must be specified as HH:MM in 24-hour format.
-</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        null
-      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        "6:00-7:45"
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.brightness.day"></a><a class="term" href="options.html#opt-services.gammastep.brightness.day"><code class="option">services.gammastep.brightness.day</code></a></span></dt><dd><p>Screen brightness to apply during the day,
+between <code class="literal">0.1</code> and <code class="literal">1.0</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "1"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/gammastep.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/gammastep.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.duskTime"></a><a class="term" href="options.html#opt-services.gammastep.duskTime"><code class="option">services.gammastep.duskTime</code></a></span></dt><dd><p>Set the time interval of dusk manually.
-The times must be specified as HH:MM in 24-hour format.
-</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        null
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.brightness.night"></a><a class="term" href="options.html#opt-services.gammastep.brightness.night"><code class="option">services.gammastep.brightness.night</code></a></span></dt><dd><p>Screen brightness to apply during the night,
+between <code class="literal">0.1</code> and <code class="literal">1.0</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "1"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/gammastep.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/redshift-gammastep/gammastep.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.extraOptions"></a><a class="term" href="options.html#opt-services.gammastep.extraOptions"><code class="option">services.gammastep.extraOptions</code></a></span></dt><dd><p>Additional command-line arguments to pass to
+<span class="command"><strong>redshift</strong></span>.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        "18:35-20:15"
+        
+        [
+        "-v" "-m randr" 
+        ]
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/gammastep.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/gammastep.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.latitude"></a><a class="term" href="options.html#opt-services.gammastep.latitude"><code class="option">services.gammastep.latitude</code></a></span></dt><dd><p>Your current latitude, between <code class="literal">-90.0</code> and
 <code class="literal">90.0</code>. Must be provided along with
 longitude.
-</p><p><span class="emphasis"><em>Type:</em></span> null or string or floating point number</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/gammastep.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/gammastep.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.longitude"></a><a class="term" href="options.html#opt-services.gammastep.longitude"><code class="option">services.gammastep.longitude</code></a></span></dt><dd><p>Your current longitude, between <code class="literal">-180.0</code> and
 <code class="literal">180.0</code>. Must be provided along with
 latitude.
-</p><p><span class="emphasis"><em>Type:</em></span> null or string or floating point number</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/gammastep.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/gammastep.nix&gt;
@@ -8829,25 +8843,6 @@ geoclue2 service.
 </p><p><span class="emphasis"><em>Type:</em></span> one of "manual", "geoclue2"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         "manual"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/gammastep.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/redshift-gammastep/gammastep.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.settings"></a><a class="term" href="options.html#opt-services.gammastep.settings"><code class="option">services.gammastep.settings</code></a></span></dt><dd><p>The configuration to pass to Gammastep.
-Available options for Gammastep described in
-<span class="citerefentry"><span class="refentrytitle">gammastep</span>(1)</span>.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of INI atom (null, bool, int, float or string)ss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        
-        {
-        
-        }
-    
-      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  general = {
-    adjustment-method = "randr";
-  };
-  randr = {
-    screen = 0;
-  };
-};
-</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/gammastep.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/gammastep.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.temperature.day"></a><a class="term" href="options.html#opt-services.gammastep.temperature.day"><code class="option">services.gammastep.temperature.day</code></a></span></dt><dd><p>Colour temperature to use during the day, between
 <code class="literal">1000</code> and <code class="literal">25000</code> K.
@@ -9922,7 +9917,9 @@ as a duration understood by systemd.
         "1h"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/random-background.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/random-background.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.enable"></a><a class="term" href="options.html#opt-services.redshift.enable"><code class="option">services.redshift.enable</code></a></span></dt><dd><p>Whether to enable Redshift.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.enable"></a><a class="term" href="options.html#opt-services.redshift.enable"><code class="option">services.redshift.enable</code></a></span></dt><dd><p>Enable Redshift to change your screen's colour temperature
+depending on the time of day.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         true
@@ -9933,33 +9930,45 @@ as a duration understood by systemd.
         pkgs.redshift
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/redshift.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/redshift.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.dawnTime"></a><a class="term" href="options.html#opt-services.redshift.dawnTime"><code class="option">services.redshift.dawnTime</code></a></span></dt><dd><p>Set the time interval of dawn manually.
-The times must be specified as HH:MM in 24-hour format.
-</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        null
-      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        "6:00-7:45"
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.brightness.day"></a><a class="term" href="options.html#opt-services.redshift.brightness.day"><code class="option">services.redshift.brightness.day</code></a></span></dt><dd><p>Screen brightness to apply during the day,
+between <code class="literal">0.1</code> and <code class="literal">1.0</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "1"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/redshift.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/redshift.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.duskTime"></a><a class="term" href="options.html#opt-services.redshift.duskTime"><code class="option">services.redshift.duskTime</code></a></span></dt><dd><p>Set the time interval of dusk manually.
-The times must be specified as HH:MM in 24-hour format.
-</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        null
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.brightness.night"></a><a class="term" href="options.html#opt-services.redshift.brightness.night"><code class="option">services.redshift.brightness.night</code></a></span></dt><dd><p>Screen brightness to apply during the night,
+between <code class="literal">0.1</code> and <code class="literal">1.0</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "1"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/redshift.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/redshift-gammastep/redshift.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.extraOptions"></a><a class="term" href="options.html#opt-services.redshift.extraOptions"><code class="option">services.redshift.extraOptions</code></a></span></dt><dd><p>Additional command-line arguments to pass to
+<span class="command"><strong>redshift</strong></span>.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        "18:35-20:15"
+        
+        [
+        "-v" "-m randr" 
+        ]
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/redshift.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/redshift.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.latitude"></a><a class="term" href="options.html#opt-services.redshift.latitude"><code class="option">services.redshift.latitude</code></a></span></dt><dd><p>Your current latitude, between <code class="literal">-90.0</code> and
 <code class="literal">90.0</code>. Must be provided along with
 longitude.
-</p><p><span class="emphasis"><em>Type:</em></span> null or string or floating point number</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/redshift.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/redshift.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.longitude"></a><a class="term" href="options.html#opt-services.redshift.longitude"><code class="option">services.redshift.longitude</code></a></span></dt><dd><p>Your current longitude, between <code class="literal">-180.0</code> and
 <code class="literal">180.0</code>. Must be provided along with
 latitude.
-</p><p><span class="emphasis"><em>Type:</em></span> null or string or floating point number</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/redshift.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/redshift.nix&gt;
@@ -9970,25 +9979,6 @@ geoclue2 service.
 </p><p><span class="emphasis"><em>Type:</em></span> one of "manual", "geoclue2"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         "manual"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/redshift.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/redshift-gammastep/redshift.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.settings"></a><a class="term" href="options.html#opt-services.redshift.settings"><code class="option">services.redshift.settings</code></a></span></dt><dd><p>The configuration to pass to Redshift.
-Available options for Redshift described in
-<span class="citerefentry"><span class="refentrytitle">redshift</span>(1)</span>.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of INI atom (null, bool, int, float or string)ss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        
-        {
-        
-        }
-    
-      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  redshift = {
-    adjustment-method = "randr";
-  };
-  randr = {
-    screen = 0;
-  };
-};
-</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/redshift.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/redshift.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.redshift.temperature.day"></a><a class="term" href="options.html#opt-services.redshift.temperature.day"><code class="option">services.redshift.temperature.day</code></a></span></dt><dd><p>Colour temperature to use during the day, between
 <code class="literal">1000</code> and <code class="literal">25000</code> K.
