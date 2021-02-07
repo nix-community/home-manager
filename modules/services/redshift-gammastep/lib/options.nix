@@ -1,61 +1,32 @@
-{ config, lib, pkgs, moduleName, mainSection, programName, defaultPackage
-, examplePackage, mainExecutable, appletExecutable, xdgConfigFilePath
-, serviceDocumentation }:
+# Adapted from Nixpkgs.
+
+{ config, lib, moduleName, programName, defaultPackage, examplePackage
+, mainExecutable, appletExecutable, serviceDocumentation }:
 
 with lib;
 
 let
 
   cfg = config.services.${moduleName};
-  settingsFormat = pkgs.formats.ini { };
 
 in {
   meta = {
     maintainers = with maintainers; [ rycee petabyteboy thiagokokada ];
   };
 
-  imports = let
-    mkRenamed = old: new:
-      mkRenamedOptionModule ([ "services" moduleName ] ++ old) [
-        "services"
-        moduleName
-        "settings"
-        mainSection
-        new
-      ];
-  in [
-    (mkRemovedOptionModule [ "services" moduleName "extraOptions" ]
-      "All ${programName} configuration is now available through services.${moduleName}.settings instead.")
-    (mkRenamed [ "brightness" "day" ] "brightness-day")
-    (mkRenamed [ "brightness" "night" ] "brightness-night")
-  ];
-
   options = {
-    enable = mkEnableOption programName;
-
-    dawnTime = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      example = "6:00-7:45";
+    enable = mkOption {
+      type = types.bool;
+      default = false;
+      example = true;
       description = ''
-        Set the time interval of dawn manually.
-        The times must be specified as HH:MM in 24-hour format.
-      '';
-    };
-
-    duskTime = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      example = "18:35-20:15";
-      description = ''
-        Set the time interval of dusk manually.
-        The times must be specified as HH:MM in 24-hour format.
+        Enable ${programName} to change your screen's colour temperature
+        depending on the time of day.
       '';
     };
 
     latitude = mkOption {
-      type = with types; nullOr (either str float);
-      apply = toString;
+      type = types.nullOr types.str;
       default = null;
       description = ''
         Your current latitude, between <literal>-90.0</literal> and
@@ -65,8 +36,7 @@ in {
     };
 
     longitude = mkOption {
-      type = with types; nullOr (either str float);
-      apply = toString;
+      type = types.nullOr types.str;
       default = null;
       description = ''
         Your current longitude, between <literal>-180.0</literal> and
@@ -105,6 +75,26 @@ in {
       };
     };
 
+    brightness = {
+      day = mkOption {
+        type = types.str;
+        default = "1";
+        description = ''
+          Screen brightness to apply during the day,
+          between <literal>0.1</literal> and <literal>1.0</literal>.
+        '';
+      };
+
+      night = mkOption {
+        type = types.str;
+        default = "1";
+        description = ''
+          Screen brightness to apply during the night,
+          between <literal>0.1</literal> and <literal>1.0</literal>.
+        '';
+      };
+    };
+
     package = mkOption {
       type = types.package;
       default = defaultPackage;
@@ -123,61 +113,25 @@ in {
       '';
     };
 
-    settings = mkOption {
-      type = types.submodule { freeformType = settingsFormat.type; };
-      default = { };
-      example = literalExample ''
-        {
-          ${mainSection} = {
-            adjustment-method = "randr";
-          };
-          randr = {
-            screen = 0;
-          };
-        };
-      '';
+    extraOptions = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "-v" "-m randr" ];
       description = ''
-        The configuration to pass to ${programName}.
-        Available options for ${programName} described in
-        <citerefentry>
-          <refentrytitle>${moduleName}</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>.
+        Additional command-line arguments to pass to
+        <command>redshift</command>.
       '';
     };
   };
 
   config = {
     assertions = [{
-      assertion = (cfg.settings ? ${moduleName}.dawn-time || cfg.settings
-        ? ${moduleName}.dusk-time)
-        || (cfg.settings.${moduleName}.location-provider) == "geoclue2"
-        || ((cfg.settings.${moduleName}.location-provider) == "manual"
-          && (cfg.settings ? ${moduleName}.latitude || cfg.settings
-            ? ${moduleName}.longitude));
-      message = ''
-        In order for ${programName} to know the time of action, you need to set one of
-          - services.${moduleName}.provider = "geoclue2" for automatically inferring your location
-            (you also need to enable Geoclue2 service separately)
-          - services.${moduleName}.longitude and .latitude for specifying your location manually
-          - services.${moduleName}.dawnTime and .duskTime for specifying the times manually
-      '';
+      assertion = cfg.provider == "manual" -> cfg.latitude != null
+        && cfg.longitude != null;
+      message = "Must provide services.${moduleName}.latitude and"
+        + " services.${moduleName}.latitude when"
+        + " services.${moduleName}.provider is set to \"manual\".";
     }];
-
-    services.${moduleName}.settings = {
-      ${mainSection} = {
-        temp-day = cfg.temperature.day;
-        temp-night = cfg.temperature.night;
-        location-provider = cfg.provider;
-        dawn-time = mkIf (cfg.dawnTime != null) cfg.dawnTime;
-        dusk-time = mkIf (cfg.duskTime != null) cfg.dawnTime;
-        latitude = mkIf (cfg.latitude != null) cfg.latitude;
-        longitude = mkIf (cfg.longitude != null) cfg.longitude;
-      };
-    };
-
-    xdg.configFile.${xdgConfigFilePath}.source =
-      settingsFormat.generate xdgConfigFilePath cfg.settings;
 
     systemd.user.services.${moduleName} = {
       Unit = {
@@ -191,9 +145,21 @@ in {
 
       Service = {
         ExecStart = let
+          providerString = if cfg.provider == "manual" then
+            "${cfg.latitude}:${cfg.longitude}"
+          else
+            cfg.provider;
+
+          args = [
+            "-l ${providerString}"
+            "-t ${toString cfg.temperature.day}:${
+              toString cfg.temperature.night
+            }"
+            "-b ${toString cfg.brightness.day}:${toString cfg.brightness.night}"
+          ] ++ cfg.extraOptions;
+
           command = if cfg.tray then appletExecutable else mainExecutable;
-          configFullPath = config.xdg.configHome + "/${xdgConfigFilePath}";
-        in "${cfg.package}/bin/${command} -c ${configFullPath}";
+        in "${cfg.package}/bin/${command} ${concatStringsSep " " args}";
         RestartSec = 3;
         Restart = "on-failure";
       };
