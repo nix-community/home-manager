@@ -5,7 +5,6 @@ with lib;
 let
 
   cfg = config.programs.obs-studio;
-  package = pkgs.obs-studio;
 
   mkPluginEnv = packages:
     let
@@ -29,6 +28,15 @@ in {
     programs.obs-studio = {
       enable = mkEnableOption "obs-studio";
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.obs-studio;
+        example = literalExample "pkgs.obs-studio";
+        description = ''
+          OBS Studio package to install.
+        '';
+      };
+
       plugins = mkOption {
         default = [ ];
         example = literalExample "[ pkgs.obs-linuxbrowser ]";
@@ -39,7 +47,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ package ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."obs-studio/plugins" =
       mkIf (cfg.plugins != [ ]) { source = mkPluginEnv cfg.plugins; };
