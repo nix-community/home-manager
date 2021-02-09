@@ -68,6 +68,8 @@
 
 /modules/programs/go.nix                              @rvolosatovs
 
+/modules/programs/hexchat.nix                         @superherointj
+
 /modules/programs/home-manager.nix                    @rycee
 
 /modules/programs/i3status.nix                        @JustinLovinger
