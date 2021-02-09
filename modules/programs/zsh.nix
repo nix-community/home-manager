@@ -452,7 +452,7 @@ in
         '') cfg.plugins)}
 
         # Oh-My-Zsh/Prezto calls compinit during initialization,
-        # calling it twice causes sight start up slowdown
+        # calling it twice causes slight start up slowdown
         # as all $fpath entries will be traversed again.
         ${optionalString (cfg.enableCompletion && !cfg.oh-my-zsh.enable && !cfg.prezto.enable)
           "autoload -U compinit && compinit"
@@ -483,7 +483,7 @@ in
         ''}
 
         ${optionalString cfg.prezto.enable
-            (builtins.readFile "${pkgs.zsh-prezto}/runcoms/zshrc")}
+            (builtins.readFile "${pkgs.zsh-prezto}/share/zsh-prezto/runcoms/zshrc")}
 
         ${concatStrings (map (plugin: ''
           if [ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]; then

@@ -9,11 +9,11 @@ with lib;
     nixpkgs.overlays = [
       (self: super: {
         zsh-prezto = super.runCommandLocal "dummy-zsh-prezto" { } ''
-          mkdir -p $out/runcoms
-          echo '# zprofile' > $out/runcoms/zprofile
-          echo '# zlogin' > $out/runcoms/zlogin
-          echo '# zlogout' > $out/runcoms/zlogout
-          echo '# zshenv' > $out/runcoms/zshenv
+          mkdir -p $out/share/zsh-prezto/runcoms
+          echo '# zprofile' > $out/share/zsh-prezto/runcoms/zprofile
+          echo '# zlogin' > $out/share/zsh-prezto/runcoms/zlogin
+          echo '# zlogout' > $out/share/zsh-prezto/runcoms/zlogout
+          echo '# zshenv' > $out/share/zsh-prezto/runcoms/zshenv
         '';
       })
     ];
