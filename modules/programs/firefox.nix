@@ -67,6 +67,8 @@ in
   meta.maintainers = [ maintainers.rycee ];
 
   imports = [
+    (mkRemovedOptionModule ["programs" "firefox" "enableAdobeFlash"]
+      "Support for this option has been removed.")
     (mkRemovedOptionModule ["programs" "firefox" "enableGoogleTalk"]
       "Support for this option has been removed.")
     (mkRemovedOptionModule ["programs" "firefox" "enableIcedTea"]
@@ -215,12 +217,6 @@ in
         description = "Attribute set of Firefox profiles.";
       };
 
-      enableAdobeFlash = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether to enable the unfree Adobe Flash plugin.";
-      };
-
       enableGnomeExtensions = mkOption {
         type = types.bool;
         default = false;
@@ -272,7 +268,6 @@ in
       let
         # The configuration expected by the Firefox wrapper.
         fcfg = {
-          enableAdobeFlash = cfg.enableAdobeFlash;
           enableGnomeExtensions = cfg.enableGnomeExtensions;
         };
 
