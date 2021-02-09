@@ -15,3 +15,5 @@ border-color: #FFFFFF;
 foreground-color: rgba ( 250, 251, 252, 100 % );
 width: 512;
 }
+
+@import "~/.cache/wal/colors-rofi-dark"

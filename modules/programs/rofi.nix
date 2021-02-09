@@ -117,23 +117,27 @@ let
     else
       abort "Unhandled value type ${builtins.typeOf value}";
 
-  mkKeyValue = name: value: "${name}: ${mkValueString value};";
+  mkKeyValue = { sep ? ": ", end ? ";" }:
+    name: value:
+    "${name}${sep}${mkValueString value}${end}";
 
-  mkRasiSection = section: config:
-    let
-      toRasiKeyValue = generators.toKeyValue { inherit mkKeyValue; };
-      # Remove null values so the resulting config does not have empty lines
-      configStr = toRasiKeyValue (filterAttrs (_: v: v != null) config);
-    in ''
-      ${section} {
-      ${configStr}}
-    '';
+  mkRasiSection = name: value:
+    if isAttrs value then
+      let
+        toRasiKeyValue = generators.toKeyValue { mkKeyValue = mkKeyValue { }; };
+        # Remove null values so the resulting config does not have empty lines
+        configStr = toRasiKeyValue (filterAttrs (_: v: v != null) value);
+      in ''
+        ${name} {
+        ${configStr}}
+      ''
+    else
+      mkKeyValue {
+        sep = " ";
+        end = "";
+      } name value;
 
-  toRasi = attrsOfAttrs:
-    let
-      mkSection = mkRasiSection;
-      sections = mapAttrsToList mkSection attrsOfAttrs;
-    in concatStringsSep "\n" sections;
+  toRasi = attrs: concatStringsSep "\n" (mapAttrsToList mkRasiSection attrs);
 
   locationsMap = {
     center = 0;
@@ -149,7 +153,9 @@ let
 
   primitive = with types; (oneOf [ str int bool rasiLiteral ]);
 
-  configType = with types; attrsOf (either primitive (listOf primitive));
+  # Either a `section { foo: "bar"; }` or a `@import/@theme "some-text"`
+  configType = with types;
+    (either (attrsOf (either primitive (listOf primitive))) str);
 
   rasiLiteral = types.submodule {
     options = {

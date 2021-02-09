@@ -9,6 +9,8 @@ with lib;
 
       theme = let inherit (config.lib.formats.rasi) mkLiteral;
       in {
+        "@import" = "~/.cache/wal/colors-rofi-dark";
+
         "*" = {
           background-color = mkLiteral "#000000";
           foreground-color = mkLiteral "rgba ( 250, 251, 252, 100 % )";
