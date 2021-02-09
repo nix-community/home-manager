@@ -92,6 +92,9 @@
 
 /modules/programs/go.nix                              @rvolosatovs
 
+/modules/programs/hexchat.nix                         @superherointj @thiagokokada
+/tests/modules/programs/hexchat                       @thiagokokada
+
 /modules/programs/himalaya.nix                        @ambroisie
 /tests/modules/programs/himalaya                      @ambroisie
 

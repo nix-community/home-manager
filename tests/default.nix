@@ -110,6 +110,7 @@ import nmt {
     ./modules/programs/foot
     ./modules/programs/getmail
     ./modules/programs/gnome-terminal
+    ./modules/programs/hexchat
     ./modules/programs/i3status-rust
     ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux

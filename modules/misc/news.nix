@@ -2225,6 +2225,14 @@ in
           you may need to do some changes.
         '';
       }
+
+      {
+        time = "2021-10-23T17:12:22+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.hexchat'.
+        '';
+      }
     ];
   };
 }
