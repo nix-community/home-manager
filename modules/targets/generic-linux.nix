@@ -4,7 +4,13 @@ with lib;
 
 let
 
+  cfg = config.targets.genericLinux;
   profileDirectory = config.home.profileDirectory;
+
+  profiles =
+    [ "\${NIX_STATE_DIR:-/nix/var/nix}/profiles/default" profileDirectory ];
+  dataDirs = concatStringsSep ":"
+    (map (profile: "${profile}/share") profiles ++ cfg.extraXdgDataDirs);
 
 in {
   options.targets.genericLinux = {
@@ -25,14 +31,8 @@ in {
     };
   };
 
-  config = mkIf config.targets.genericLinux.enable {
+  config = mkIf cfg.enable {
     home.sessionVariables = let
-      profiles =
-        [ "\${NIX_STATE_DIR:-/nix/var/nix}/profiles/default" profileDirectory ];
-      dataDirs = concatStringsSep ":"
-        (map (profile: "${profile}/share") profiles
-          ++ config.targets.genericLinux.extraXdgDataDirs);
-
       # https://github.com/archlinux/svntogit-packages/blob/packages/ncurses/trunk/PKGBUILD
       # https://salsa.debian.org/debian/ncurses/-/blob/master/debian/rules
       # https://src.fedoraproject.org/rpms/ncurses/blob/main/f/ncurses.spec
@@ -54,6 +54,10 @@ in {
       # reset TERM with new TERMINFO available (if any)
       export TERM="$TERM"
     '';
+
+    systemd.user.sessionVariables = {
+      XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:}$XDG_DATA_DIRS";
+    };
 
     # We need to source both nix.sh and hm-session-vars.sh as noted in
     # https://github.com/nix-community/home-manager/pull/797#issuecomment-544783247
