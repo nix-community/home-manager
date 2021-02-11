@@ -12,13 +12,15 @@ let
   toDunstIni = generators.toINI {
     mkKeyValue = key: value:
       let
-        value' = if isBool value then
-          (if value then "yes" else "no")
-        else if isString value then
-          ''"${value}"''
-        else
-          toString value;
-      in "${key}=${value'}";
+        value' =
+          if isBool value then
+            (if value then "yes" else "no")
+          else if isString value then
+            ''"${value}"''
+          else
+            toString value;
+      in
+      "${key}=${value'}";
   };
 
   themeType = types.submodule {
@@ -50,12 +52,19 @@ let
     size = "32x32";
   };
 
-in {
+in
+{
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
     services.dunst = {
       enable = mkEnableOption "the dunst notification daemon";
+
+      package = mkOption {
+        type = types.package;
+        default = pkgs.dunst;
+        description = "Package providing dunst.";
+      };
 
       iconTheme = mkOption {
         type = themeType;
@@ -94,41 +103,48 @@ in {
       xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
         "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
 
-      services.dunst.settings.global.icon_path = let
-        useCustomTheme = cfg.iconTheme.package != hicolorTheme.package
-          || cfg.iconTheme.name != hicolorTheme.name || cfg.iconTheme.size
-          != hicolorTheme.size;
+      services.dunst.settings.global.icon_path =
+        let
+          useCustomTheme = cfg.iconTheme.package != hicolorTheme.package
+            || cfg.iconTheme.name != hicolorTheme.name || cfg.iconTheme.size
+            != hicolorTheme.size;
 
-        basePaths = [
-          "/run/current-system/sw"
-          config.home.profileDirectory
-          cfg.iconTheme.package
-        ] ++ optional useCustomTheme hicolorTheme.package;
+          basePaths = [
+            "/run/current-system/sw"
+            config.home.profileDirectory
+            cfg.iconTheme.package
+          ] ++ optional useCustomTheme hicolorTheme.package;
 
-        themes = [ cfg.iconTheme ] ++ optional useCustomTheme
-          (hicolorTheme // { size = cfg.iconTheme.size; });
+          themes = [ cfg.iconTheme ] ++ optional useCustomTheme
+            (hicolorTheme // { size = cfg.iconTheme.size; });
 
-        categories = [
-          "actions"
-          "animations"
-          "apps"
-          "categories"
-          "devices"
-          "emblems"
-          "emotes"
-          "filesystem"
-          "intl"
-          "legacy"
-          "mimetypes"
-          "places"
-          "status"
-          "stock"
-        ];
-      in concatStringsSep ":" (concatMap (theme:
-        concatMap (basePath:
-          map (category:
-            "${basePath}/share/icons/${theme.name}/${theme.size}/${category}")
-          categories) basePaths) themes);
+          categories = [
+            "actions"
+            "animations"
+            "apps"
+            "categories"
+            "devices"
+            "emblems"
+            "emotes"
+            "filesystem"
+            "intl"
+            "legacy"
+            "mimetypes"
+            "places"
+            "status"
+            "stock"
+          ];
+        in
+        concatStringsSep ":" (concatMap
+          (theme:
+            concatMap
+              (basePath:
+                map
+                  (category:
+                    "${basePath}/share/icons/${theme.name}/${theme.size}/${category}")
+                  categories)
+              basePaths)
+          themes);
 
       systemd.user.services.dunst = {
         Unit = {
@@ -140,7 +156,7 @@ in {
         Service = {
           Type = "dbus";
           BusName = "org.freedesktop.Notifications";
-          ExecStart = "${pkgs.dunst}/bin/dunst";
+          ExecStart = "${cfg.package}/bin/dunst";
         };
       };
     }
