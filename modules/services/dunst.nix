@@ -57,6 +57,13 @@ in {
     services.dunst = {
       enable = mkEnableOption "the dunst notification daemon";
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.dunst;
+        defaultText = literalExample "pkgs.dunst";
+        description = "Package providing <command>dunst</command>.";
+      };
+
       iconTheme = mkOption {
         type = themeType;
         default = hicolorTheme;
@@ -140,7 +147,7 @@ in {
         Service = {
           Type = "dbus";
           BusName = "org.freedesktop.Notifications";
-          ExecStart = "${pkgs.dunst}/bin/dunst";
+          ExecStart = "${cfg.package}/bin/dunst";
         };
       };
     }
