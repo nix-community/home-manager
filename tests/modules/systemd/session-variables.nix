@@ -15,6 +15,11 @@
         V_int=1
         V_str=2
       ''}
+
+      sessionVarsFile=home-path/etc/profile.d/hm-session-vars.sh
+      assertFileExists $sessionVarsFile
+      assertFileContains $sessionVarsFile \
+        'export $(${pkgs.systemd}/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)'
     '';
   };
 }

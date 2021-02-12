@@ -1965,7 +1965,7 @@ in
           The option 'services.sxhkd.extraPath' has been deprecated.
         '';
       }
-      
+
       {
         time = "2021-05-06T20:47:37+00:00";
         condition = hostPlatform.isLinux;
@@ -1978,6 +1978,26 @@ in
         time = "2021-05-06T11:01:41+00:00";
         message = ''
           A new module is available: 'programs.nix-index'.
+        '';
+      }
+
+      {
+        time = "2021-05-10T18:50:07+00:00";
+        message = ''
+          A new module is available: 'xdg.systemDirs'. Options are:
+
+          - xdg.systemDirs.config
+
+            Extra directory names to add to $XDG_CONFIG_DIRS in the user
+            session.
+
+          - xdg.systemDirs.data
+
+            Extra directory names to add to $XDG_DATA_DIRS in the user
+            session.
+
+          These variables are visible in both systemd user services and
+          login shells.
         '';
       }
     ];
