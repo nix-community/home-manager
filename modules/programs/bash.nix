@@ -30,8 +30,8 @@ in
       };
 
       historyFile = mkOption {
-        type = types.str;
-        default = "$HOME/.bash_history";
+        type = types.nullOr types.str;
+        default = null;
         description = "Location of the bash history file.";
       };
 
@@ -157,9 +157,11 @@ in
       historyControlStr =
         concatStringsSep "\n" (mapAttrsToList (n: v: "${n}=${v}") (
           {
-            HISTFILE = "\"${cfg.historyFile}\"";
             HISTFILESIZE = toString cfg.historyFileSize;
             HISTSIZE = toString cfg.historySize;
+          }
+          // optionalAttrs (cfg.historyFile != null) {
+            HISTFILE = "\"${cfg.historyFile}\"";
           }
           // optionalAttrs (cfg.historyControl != []) {
             HISTCONTROL = concatStringsSep ":" cfg.historyControl;
