@@ -26,12 +26,30 @@ in {
   in [
     (mkRemovedOptionModule [ "services" moduleName "extraOptions" ]
       "All ${programName} configuration is now available through services.${moduleName}.settings instead.")
-    (mkRenamed [ "brightness" "day" ] "brightness-day")
-    (mkRenamed [ "brightness" "night" ] "brightness-night")
   ];
 
   options = {
     enable = mkEnableOption programName;
+
+    brightness = {
+      day = mkOption {
+        type = types.str;
+        default = "1";
+        description = ''
+          Screen brightness to apply during the day,
+          between <literal>0.1</literal> and <literal>1.0</literal>.
+        '';
+      };
+
+      night = mkOption {
+        type = types.str;
+        default = "1";
+        description = ''
+          Screen brightness to apply during the night,
+          between <literal>0.1</literal> and <literal>1.0</literal>.
+        '';
+      };
+    };
 
     dawnTime = mkOption {
       type = types.nullOr types.str;
@@ -165,6 +183,8 @@ in {
       ${mainSection} = {
         temp-day = cfg.temperature.day;
         temp-night = cfg.temperature.night;
+        brightness-day = cfg.brightness.day;
+        brightness-night = cfg.brightness.night;
         location-provider = cfg.provider;
         dawn-time = mkIf (cfg.dawnTime != null) cfg.dawnTime;
         dusk-time = mkIf (cfg.duskTime != null) cfg.duskTime;
