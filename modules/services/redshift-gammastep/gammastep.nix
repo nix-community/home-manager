@@ -19,7 +19,7 @@ let
   };
 
 in {
-  meta = commonOptions.meta;
+  inherit (commonOptions) imports meta;
   options.services.gammastep = commonOptions.options;
   config = mkIf config.services.gammastep.enable commonOptions.config;
 }
