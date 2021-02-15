@@ -360,6 +360,9 @@ When using flakes, switch to new configurations as you do for the
 whole system (e. g. `nixos-rebuild switch --flake <path>`) instead of
 using the `home-manager` command line tool.
 
+Note that all external files referenced by your configuration via `home.file.*` or `builtins.readFile` need to be inside your flake directory.
+Otherwise you will get a `access to path is forbidden in restricted mode` error.
+
 Releases
 --------
 
