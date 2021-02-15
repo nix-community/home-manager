@@ -4,7 +4,7 @@
   config = {
     services.gammastep = {
       enable = true;
-      brightness.day = 1.00;
+      brightness.day = 1.0;
       brightness.night = 0.75;
       provider = "manual";
       dawnTime = "6:00-7:45";

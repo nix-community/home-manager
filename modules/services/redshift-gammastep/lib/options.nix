@@ -183,8 +183,10 @@ in {
       ${mainSection} = {
         temp-day = cfg.temperature.day;
         temp-night = cfg.temperature.night;
-        brightness-day = mkIf (cfg.brightness.day != null) (toString cfg.brightness.day);
-        brightness-night = mkIf (cfg.brightness.day != null) (toString cfg.brightness.night);
+        brightness-day =
+          mkIf (cfg.brightness.day != null) (toString cfg.brightness.day);
+        brightness-night =
+          mkIf (cfg.brightness.day != null) (toString cfg.brightness.night);
         location-provider = cfg.provider;
         dawn-time = mkIf (cfg.dawnTime != null) cfg.dawnTime;
         dusk-time = mkIf (cfg.duskTime != null) cfg.duskTime;

@@ -5,7 +5,7 @@
     services.redshift = {
       enable = true;
       brightness = {
-        day = 1.00;
+        day = 1.0;
         night = 0.75;
       };
       provider = "manual";
