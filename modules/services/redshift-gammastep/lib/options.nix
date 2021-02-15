@@ -33,8 +33,8 @@ in {
 
     brightness = {
       day = mkOption {
-        type = types.str;
-        default = "1";
+        type = with types; nullOr (either str float);
+        default = null;
         description = ''
           Screen brightness to apply during the day,
           between <literal>0.1</literal> and <literal>1.0</literal>.
@@ -42,8 +42,8 @@ in {
       };
 
       night = mkOption {
-        type = types.str;
-        default = "1";
+        type = with types; nullOr (either str float);
+        default = null;
         description = ''
           Screen brightness to apply during the night,
           between <literal>0.1</literal> and <literal>1.0</literal>.
@@ -183,8 +183,8 @@ in {
       ${mainSection} = {
         temp-day = cfg.temperature.day;
         temp-night = cfg.temperature.night;
-        brightness-day = cfg.brightness.day;
-        brightness-night = cfg.brightness.night;
+        brightness-day = mkIf (cfg.brightness.day != null) (toString cfg.brightness.day);
+        brightness-night = mkIf (cfg.brightness.day != null) (toString cfg.brightness.night);
         location-provider = cfg.provider;
         dawn-time = mkIf (cfg.dawnTime != null) cfg.dawnTime;
         dusk-time = mkIf (cfg.duskTime != null) cfg.duskTime;

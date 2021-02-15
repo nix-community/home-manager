@@ -4,6 +4,8 @@
   config = {
     services.redshift = {
       enable = true;
+      brightness.day = 1.00;
+      brightness.night = 0.75;
       provider = "manual";
       latitude = 0.0;
       longitude = "0.0";
