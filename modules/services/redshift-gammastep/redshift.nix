@@ -18,7 +18,7 @@ let
   };
 
 in {
-  meta = commonOptions.meta;
+  inherit (commonOptions) imports meta;
   options.services.redshift = commonOptions.options;
   config = mkIf config.services.redshift.enable commonOptions.config;
 }
