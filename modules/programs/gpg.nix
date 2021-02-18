@@ -5,21 +5,24 @@ with lib;
 let
   cfg = config.programs.gpg;
 
-  cfgText =
-    concatStringsSep "\n"
-    (attrValues
-    (mapAttrs (key: value:
-      if isString value
-      then "${key} ${value}"
-      else optionalString value key)
-    cfg.settings));
+  mkKeyValue = key: value:
+    if isString value
+    then "${key} ${value}"
+    else optionalString value key;
 
-in {
+  cfgText = generators.toKeyValue {
+    inherit mkKeyValue;
+    listsAsDuplicateKeys = true;
+  } cfg.settings;
+
+  primitiveType = types.oneOf [ types.str types.bool ];
+in
+{
   options.programs.gpg = {
     enable = mkEnableOption "GnuPG";
 
     settings = mkOption {
-      type = types.attrsOf (types.either types.str types.bool);
+      type = types.attrsOf (types.either primitiveType (types.listOf types.str));
       example = {
         no-comments = false;
         s2k-cipher-algo = "AES128";
