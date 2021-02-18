@@ -23,10 +23,12 @@ in
 
     settings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
-      example = {
-        no-comments = false;
-        s2k-cipher-algo = "AES128";
-      };
+      example = literalExample ''
+        {
+          no-comments = false;
+          s2k-cipher-algo = "AES128";
+        }
+      '';
       description = ''
         GnuPG configuration options. Available options are described
         in the gpg manpage:
