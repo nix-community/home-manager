@@ -9,7 +9,10 @@ let
   extendedLib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
   hmModule = types.submoduleWith {
-    specialArgs = { lib = extendedLib; };
+    specialArgs = { 
+      lib = extendedLib; 
+      darwinConfig = config;
+    };
     modules = [
       ({ name, ... }: {
         imports = import ../modules/modules.nix {
