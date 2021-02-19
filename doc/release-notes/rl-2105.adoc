@@ -101,6 +101,16 @@ https://github.com/jonls/redshift/blob/master/redshift.conf.sample[redshift.conf
 https://gitlab.com/chinstrap/gammastep/-/blob/master/gammastep.conf.sample[gammastep.conf.sample]
 for the available additional options in each program.
 
+* The `programs.neovim.configure` is deprecated in favor of other `programs.neovim` options;
+please use the other options at your disposal:
++
+[source,nix]
+----
+configure.packages.*.opt  -> programs.neovim.plugins = [ { plugin = ...; optional = true; }]
+configure.packages.*.start  -> programs.neovim.plugins = [ { plugin = ...; }]
+configure.customRC -> programs.neovim.extraConfig
+----
+
 [[sec-release-21.05-state-version-changes]]
 === State Version Changes
 
