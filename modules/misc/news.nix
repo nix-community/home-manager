@@ -1852,6 +1852,17 @@ in
           A new module is available: 'programs.sbt'.
         '';
       }
+
+      {
+        time = "2021-02-20T00:00:00+00:00";
+        condition = config.services.polybar.enable;
+        message = ''
+          The polybar configuration can now be written in a more nix-friendly format.
+          The new 'services.polybar.settings' option is an alternative to
+          'services.polybar.config' that supports nested keys and converts nix
+          lists to polybar-style 'foo-0, foo-1, ...' lists.
+        '';
+      }
     ];
   };
 }
