@@ -9827,6 +9827,7 @@ man page for more examples.
                     &lt;home-manager/modules/services/polybar.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.polybar.config"></a><a class="term" href="options.html#opt-services.polybar.config"><code class="option">services.polybar.config</code></a></span></dt><dd><p>Polybar configuration. Can be either path to a file, or set of attributes
 that will be used to create the final configuration.
+See also <code class="option">services.polybar.settings</code> for a more nix-friendly format.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of string or boolean or signed integer or list of stringsss or path convertible to it</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
@@ -9872,6 +9873,55 @@ Note, this script must start all bars in the background and then terminate.
 </p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         "polybar bar &amp;"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/polybar.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/polybar.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.polybar.settings"></a><a class="term" href="options.html#opt-services.polybar.settings"><code class="option">services.polybar.settings</code></a></span></dt><dd><p>Polybar configuration. This takes a nix attrset and converts it to the
+strange data format that polybar uses.
+Each entry will be converted to a section in the output file.
+Several things are treated specially: nested keys are converted
+to dash-separated keys; the special <code class="literal">text</code> key is ignored as a nested key,
+to allow mixing different levels of nesting; and lists are converted to
+polybar's <code class="literal">foo-0, foo-1, ...</code> format.
+</p><p>
+For example:
+</p><pre class="programlisting nix">
+"module/volume" = {
+  type = "internal/pulseaudio";
+  format.volume = "&lt;ramp-volume&gt; &lt;label-volume&gt;";
+  label.muted.text = "🔇";
+  label.muted.foreground = "#666";
+  ramp.volume = ["🔈" "🔉" "🔊"];
+  click.right = "pavucontrol &amp;";
+}
+</pre><p>
+becomes:
+</p><pre class="programlisting ini">
+[module/volume]
+type=internal/pulseaudio
+format-volume=&lt;ramp-volume&gt; &lt;label-volume&gt;
+label-muted=🔇
+label-muted-foreground=#666
+ramp-volume-0=🔈
+ramp-volume-1=🔉
+ramp-volume-2=🔊
+click-right=pavucontrol &amp;
+</pre><p>
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute sets</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  "module/volume" = {
+    type = "internal/pulseaudio";
+    format.volume = "&lt;ramp-volume&gt; &lt;label-volume&gt;";
+    label.muted.text = "🔇";
+    label.muted.foreground = "#666";
+    ramp.volume = ["🔈" "🔉" "🔊"];
+    click.right = "pavucontrol &amp;";
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/polybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/polybar.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.pulseeffects.enable"></a><a class="term" href="options.html#opt-services.pulseeffects.enable"><code class="option">services.pulseeffects.enable</code></a></span></dt><dd><p>Whether to enable Pulseeffects daemon.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
