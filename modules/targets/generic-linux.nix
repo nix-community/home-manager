@@ -32,10 +32,27 @@ in {
       dataDirs = concatStringsSep ":"
         (map (profile: "${profile}/share") profiles
           ++ config.targets.genericLinux.extraXdgDataDirs);
-    in { XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:}$XDG_DATA_DIRS"; };
+
+      # https://github.com/archlinux/svntogit-packages/blob/packages/ncurses/trunk/PKGBUILD
+      # https://salsa.debian.org/debian/ncurses/-/blob/master/debian/rules
+      # https://src.fedoraproject.org/rpms/ncurses/blob/main/f/ncurses.spec
+      # https://gitweb.gentoo.org/repo/gentoo.git/tree/sys-libs/ncurses/ncurses-6.2-r1.ebuild
+      distroTerminfoDirs = concatStringsSep ":" [
+        "/etc/terminfo" # debian, fedora, gentoo
+        "/lib/terminfo" # debian
+        "/usr/share/terminfo" # package default, all distros
+      ];
+    in {
+      XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:}$XDG_DATA_DIRS";
+      TERMINFO_DIRS =
+        "${profileDirectory}/share/terminfo:$TERMINFO_DIRS\${TERMINFO_DIRS:+:}${distroTerminfoDirs}";
+    };
 
     home.sessionVariablesExtra = ''
       . "${pkgs.nix}/etc/profile.d/nix.sh"
+
+      # reset TERM with new TERMINFO available (if any)
+      export TERM="$TERM"
     '';
 
     # We need to source both nix.sh and hm-session-vars.sh as noted in
