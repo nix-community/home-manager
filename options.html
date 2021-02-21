@@ -3292,13 +3292,11 @@ or checksum database.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.settings"></a><a class="term" href="options.html#opt-programs.gpg.settings"><code class="option">programs.gpg.settings</code></a></span></dt><dd><p>GnuPG configuration options. Available options are described
 in the gpg manpage:
 <a class="link" href="https://gnupg.org/documentation/manpage.html" target="_top">https://gnupg.org/documentation/manpage.html</a>.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or booleans</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        
-        {
-        no-comments = false; s2k-cipher-algo = "AES128"; 
-        }
-    
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or boolean or list of stringss</p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  no-comments = false;
+  s2k-cipher-algo = "AES128";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gpg.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.home-manager.enable"></a><a class="term" href="options.html#opt-programs.home-manager.enable"><code class="option">programs.home-manager.enable</code></a></span></dt><dd><p>Whether to enable Home Manager.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
