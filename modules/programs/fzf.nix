@@ -7,6 +7,11 @@ let
   cfg = config.programs.fzf;
 
 in {
+  imports = [
+    (mkRemovedOptionModule [ "programs" "fzf" "historyWidgetCommand" ]
+      "This option is no longer supported by FZF.")
+  ];
+
   options.programs.fzf = {
     enable = mkEnableOption "fzf - a command-line fuzzy finder";
 
@@ -74,15 +79,6 @@ in {
       '';
     };
 
-    historyWidgetCommand = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      description = ''
-        The command that gets executed as the source for fzf for the
-        CTRL-R keybinding.
-      '';
-    };
-
     historyWidgetOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -124,7 +120,6 @@ in {
       (filterAttrs (n: v: v != [ ] && v != null) {
         FZF_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
         FZF_ALT_C_OPTS = cfg.changeDirWidgetOptions;
-        FZF_CTRL_R_COMMAND = cfg.historyWidgetCommand;
         FZF_CTRL_R_OPTS = cfg.historyWidgetOptions;
         FZF_CTRL_T_COMMAND = cfg.fileWidgetCommand;
         FZF_CTRL_T_OPTS = cfg.fileWidgetOptions;
