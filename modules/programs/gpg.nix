@@ -5,25 +5,30 @@ with lib;
 let
   cfg = config.programs.gpg;
 
-  cfgText =
-    concatStringsSep "\n"
-    (attrValues
-    (mapAttrs (key: value:
-      if isString value
-      then "${key} ${value}"
-      else optionalString value key)
-    cfg.settings));
+  mkKeyValue = key: value:
+    if isString value
+    then "${key} ${value}"
+    else optionalString value key;
 
-in {
+  cfgText = generators.toKeyValue {
+    inherit mkKeyValue;
+    listsAsDuplicateKeys = true;
+  } cfg.settings;
+
+  primitiveType = types.oneOf [ types.str types.bool ];
+in
+{
   options.programs.gpg = {
     enable = mkEnableOption "GnuPG";
 
     settings = mkOption {
-      type = types.attrsOf (types.either types.str types.bool);
-      example = {
-        no-comments = false;
-        s2k-cipher-algo = "AES128";
-      };
+      type = types.attrsOf (types.either primitiveType (types.listOf types.str));
+      example = literalExample ''
+        {
+          no-comments = false;
+          s2k-cipher-algo = "AES128";
+        }
+      '';
       description = ''
         GnuPG configuration options. Available options are described
         in the gpg manpage:

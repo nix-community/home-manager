@@ -11,6 +11,10 @@ with lib;
         no-comments = false;
         s2k-cipher-algo = "AES128";
         throw-keyids = true;
+        trusted-key = [
+          "0xXXXXXXXXXXXXX"
+          "0xYYYYYYYYYYYYY"
+        ];
       };
     };
 
