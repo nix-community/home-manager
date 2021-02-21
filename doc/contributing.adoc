@@ -91,7 +91,7 @@ All contributed code _must_ pass the test suite.
 ==== Add relevant documentation
 :docbook: https://tdg.docbook.org/
 :asciidoc: https://asciidoc.org/
-:docbook-rocks: https://docbook.rocks/
+:docbook-rocks: https://berbiche.github.io/docbook.rocks/
 
 Many code changes require changing the documentation as well. Module options should be documented with DocBook. See {docbook-rocks}[DocBook rocks!] for a quick introduction and {docbook}[DocBook 5: The Definitive Guide] for in-depth information of DocBook. Home Manager is itself documented using a combination of DocBook and {asciidoc}[AsciiDoc]. All text is hosted in Home Manager's Git repository.
 
