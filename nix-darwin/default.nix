@@ -9,7 +9,10 @@ let
   extendedLib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
   hmModule = types.submoduleWith {
-    specialArgs = { lib = extendedLib; };
+    specialArgs = { 
+      lib = extendedLib; 
+      darwinConfig = config;
+    } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
         imports = import ../modules/modules.nix {
@@ -26,7 +29,7 @@ let
           home.homeDirectory = config.users.users.${name}.home;
         };
       })
-    ];
+    ] ++ cfg.sharedModules;
   };
 
 in
@@ -52,6 +55,24 @@ in
         description = ''
           On activation move existing files by appending the given
           file extension rather than exiting with an error.
+        '';
+      };
+
+      extraSpecialArgs = mkOption {
+        type = types.attrs;
+        default = { };
+        example = literalExample "{ modulesPath = ../modules; }";
+        description = ''
+          Extra <literal>specialArgs</literal> passed to Home Manager.
+        '';
+      };
+
+      sharedModules = mkOption {
+        type = with types; listOf (oneOf [ attrs (functionTo attrs) path ]);
+        default = [ ];
+        example = literalExample "[ { home.packages = [ nixpkgs-fmt ]; } ]";
+        description = ''
+          Extra modules added to all users.
         '';
       };
 
