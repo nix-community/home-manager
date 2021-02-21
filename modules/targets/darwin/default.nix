@@ -19,7 +19,7 @@ let
   writableDefaults = filterAttrs (domain: attrs: attrs != { }) nonNullDefaults;
   activationCmds = mapAttrsToList toActivationCmd writableDefaults;
 in {
-  imports = [ ./keybindings.nix ./linkapps.nix ./search.nix ];
+  imports = [ ./fonts.nix ./keybindings.nix ./linkapps.nix ./search.nix ];
 
   options.targets.darwin.defaults = mkOption {
     type = types.submodule ./options.nix;
