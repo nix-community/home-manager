@@ -9,7 +9,7 @@ let
 in {
   imports = [
     (mkRemovedOptionModule [ "programs" "fzf" "historyWidgetCommand" ]
-      "This option is no longer supported by FZF.")
+      "This option is no longer supported by fzf.")
   ];
 
   options.programs.fzf = {
