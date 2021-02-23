@@ -80,6 +80,15 @@ in {
       description = "The Videos directory.";
     };
 
+    dirsUpdate = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to automatically run <command>xdg-user-dirs-update</command> to
+        create the XDG directories at <literal>$HOME</literal>.
+      '';
+    };
+
     extraConfig = mkOption {
       type = with types; attrsOf str;
       default = { };
@@ -106,5 +115,15 @@ in {
     in generators.toKeyValue { } wrapped;
 
     xdg.configFile."user-dirs.conf".text = "enabled=False";
+
+    home.activation.xdgUserDirsUpdate =
+      lib.hm.dag.entryAfter [ "writeBoundary" ] (if cfg.dirsUpdate then ''
+        # Hack needed since user-dirs.conf is set to enabled=False
+        export XDG_CONFIG_HOME=$(${pkgs.coreutils}/bin/mktemp -d /tmp/hm-xdg-user-dirs-update.XXXXXX)
+        echo "enabled=True" > "$XDG_CONFIG_HOME/user-dirs.conf"
+        echo "filename_encoding=locale" >> "$XDG_CONFIG_HOME/user-dirs.conf"
+        $DRY_RUN_CMD ${pkgs.xdg-user-dirs}/bin/xdg-user-dirs-update
+      '' else
+        "");
   };
 }
