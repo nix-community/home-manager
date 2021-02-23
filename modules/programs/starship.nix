@@ -103,7 +103,7 @@ in {
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      if [ -z "$INSIDE_EMACS" ]; then
+      if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
         eval "$(${cfg.package}/bin/starship init zsh)"
       fi
     '';
