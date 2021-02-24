@@ -74,7 +74,20 @@ function setHomeManagerNixPath() {
     done
 }
 
+# get activationPackage of homeConfig reference, defaults to $USER if no attr is spedified
+function setFlakeAttribute() {
+    case $1 in
+        *#*) local name="${1#*#}";;
+        *)   local name="$USER";;
+    esac
+    export FLAKE_CONFIG_URI="${1%#*}#homeConfigurations.${name}"
+}
+
 function doInstantiate() {
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        errorEcho "Can't instantiate a flake configuration"
+        exit 1
+    fi
     setConfigFile
     setHomeManagerNixPath
 
@@ -178,6 +191,16 @@ function doBuild() {
         return 1
     fi
 
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        local exitCode=0
+        nix build \
+            "${PASSTHROUGH_OPTS[@]}" \
+             ${DRY_RUN+--dry-run} \
+            "$FLAKE_CONFIG_URI.activationPackage" \
+            || exitCode=1
+        return $exitCode
+    fi
+
     setWorkDir
 
     local newsInfo
@@ -194,6 +217,15 @@ function doBuild() {
 }
 
 function doSwitch() {
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        local exitCode=0
+        nix run \
+            "${PASSTHROUGH_OPTS[@]}" \
+            "$FLAKE_CONFIG_URI.activationPackage" \
+            || exitCode=1
+        return $exitCode
+    fi
+
     setWorkDir
 
     local newsInfo
@@ -409,15 +441,16 @@ function doHelp() {
     echo
     echo "Options"
     echo
-    echo "  -f FILE      The home configuration file."
-    echo "               Default is '~/.config/nixpkgs/home.nix'."
-    echo "  -A ATTRIBUTE Optional attribute that selects a configuration"
-    echo "               expression in the configuration file."
-    echo "  -I PATH      Add a path to the Nix expression search path."
-    echo "  -b EXT       Move existing files to new path rather than fail."
-    echo "  -v           Verbose output"
-    echo "  -n           Do a dry run, only prints what actions would be taken"
-    echo "  -h           Print this help"
+    echo "  -f FILE           The home configuration file."
+    echo "                    Default is '~/.config/nixpkgs/home.nix'."
+    echo "  -A ATTRIBUTE      Optional attribute that selects a configuration"
+    echo "                    expression in the configuration file."
+    echo "  -I PATH           Add a path to the Nix expression search path."
+    echo "  --flake flake-uri Use home-manager configuration at flake-uri"
+    echo "  -b EXT            Move existing files to new path rather than fail."
+    echo "  -v                Verbose output"
+    echo "  -n                Do a dry run, only prints what actions would be taken"
+    echo "  -h                Print this help"
     echo
     echo "Options passed on to nix-build(1)"
     echo
@@ -489,6 +522,21 @@ while [[ $# -gt 0 ]]; do
         -f|--file)
             HOME_MANAGER_CONFIG="$1"
             shift
+            ;;
+        --flake)
+            setFlakeAttribute "$1"
+            shift
+            ;;
+        --recreate-lock-file|--no-update-lock-file|--no-write-lock-file|--no-registries|--commit-lock-file)
+            PASSTHROUGH_OPTS+=("$opt")
+            ;;
+        --update-input)
+            PASSTHROUGH_OPTS+=("$opt" "$1")
+            shift
+            ;;
+        --override-input)
+            PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
+            shift 2
             ;;
         -h|--help)
             doHelp

@@ -67,6 +67,10 @@
    </arg>
     
    <arg>
+    --flake <replaceable>flake-uri</replaceable>
+   </arg>
+    
+   <arg>
     -b <replaceable>ext</replaceable>
    </arg>
     
@@ -340,6 +344,18 @@
       Home Manager profile using a specific Nixpkgs run <command>home-manager
       -I nixpkgs=/absolute/path/to/nixpkgs build</command>. By default
       <literal>&lt;nixpkgs&gt;</literal> is used.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--flake <replaceable>flake-uri[#name]</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Build home-manager configuration from the flake, which must contain the
+      output homeConfigurations.name. If no name is specified it
+      defaults to your username.
      </para>
     </listitem>
    </varlistentry>
