@@ -552,6 +552,9 @@ in
 
             cp ${activationScript} $out/activate
 
+            mkdir $out/bin
+            ln -s $out/activate $out/bin/home-manager-generation
+
             substituteInPlace $out/activate \
               --subst-var-by GENERATION_DIR $out
 
