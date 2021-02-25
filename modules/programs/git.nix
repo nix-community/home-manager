@@ -276,21 +276,26 @@ in {
 
         genIdentity = name: account:
           with account;
-          nameValuePair "sendemail.${name}" ({
-            smtpEncryption = if smtp.tls.enable then
-              (if smtp.tls.useStartTls
-              || versionOlder config.home.stateVersion "20.09" then
-                "tls"
-              else
-                "ssl")
-            else
-              "";
-            smtpServer = smtp.host;
-            smtpUser = userName;
+          nameValuePair "sendemail.${name}" (if account.msmtp.enable then {
+            smtpServer = "${pkgs.msmtp}/bin/msmtp";
+            envelopeSender = true;
             from = address;
-          } // optionalAttrs (smtp.port != null) {
-            smtpServerPort = smtp.port;
-          });
+          } else
+            {
+              smtpEncryption = if smtp.tls.enable then
+                (if smtp.tls.useStartTls
+                || versionOlder config.home.stateVersion "20.09" then
+                  "tls"
+                else
+                  "ssl")
+              else
+                "";
+              smtpServer = smtp.host;
+              smtpUser = userName;
+              from = address;
+            } // optionalAttrs (smtp.port != null) {
+              smtpServerPort = smtp.port;
+            });
       in mapAttrs' genIdentity
       (filterAttrs hasSmtp config.accounts.email.accounts);
     }
