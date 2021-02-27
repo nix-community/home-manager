@@ -6,6 +6,8 @@ with lib;
   imports = [ ../../accounts/email-test-accounts.nix ];
 
   config = {
+    accounts.email.accounts.hm-account.smtp.tls.certificatesFile =
+      "/etc/test/certificates.crt";
     programs.git = {
       enable = true;
       package = pkgs.gitMinimal;
