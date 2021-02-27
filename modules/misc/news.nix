@@ -1914,6 +1914,13 @@ in
         '';
       }
 
+      {
+        time = "2021-04-28T10:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new service is available: 'services.mpris-proxy'.
+        '';
+      }
     ];
   };
 }
