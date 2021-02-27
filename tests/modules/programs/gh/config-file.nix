@@ -15,7 +15,7 @@
       assertFileExists home-files/.config/gh/config.yml
       assertFileContent home-files/.config/gh/config.yml ${
         builtins.toFile "config-file.yml" ''
-          {"aliases":{"co":"pr checkout"},"editor":"vim","gitProtocol":"https"}''
+          {"aliases":{"co":"pr checkout"},"editor":"vim","git_protocol":"https"}''
       }
     '';
   };
