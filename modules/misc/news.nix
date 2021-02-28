@@ -1863,6 +1863,15 @@ in
           lists to polybar-style 'foo-0, foo-1, ...' lists.
         '';
       }
+      {
+        time = "2021-02-25T22:36:43+00:00";
+        condition = config.programs.git.enable
+          && any config.accounts.email.accounts (account: account.msmtp.enable);
+        message = ''
+          Git will now defer to msmtp for sending emails if
+          'accounts.email.accounts.<name>.msmtp.enable' is true.
+        '';
+      }
     ];
   };
 }
