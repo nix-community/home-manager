@@ -278,7 +278,7 @@ in {
           with account;
           nameValuePair "sendemail.${name}" (if account.msmtp.enable then {
             smtpServer = "${pkgs.msmtp}/bin/msmtp";
-            envelopeSender = true;
+            envelopeSender = "auto";
             from = address;
           } else
             {

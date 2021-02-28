@@ -39,7 +39,7 @@ with lib;
       assertGitConfig "sendemail.hm@example.com.from" "hm@example.com"
       assertGitConfig "sendemail.hm-account.from" "hm@example.org"
       assertGitConfig "sendemail.hm@example.com.smtpServer" "${pkgs.msmtp}/bin/msmtp"
-      assertGitConfig "sendemail.hm@example.com.envelopeSender" "true"
+      assertGitConfig "sendemail.hm@example.com.envelopeSender" "auto"
     '';
   };
 }
