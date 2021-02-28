@@ -84,6 +84,7 @@ import nmt {
     ./modules/misc/debug
     ./modules/misc/numlock
     ./modules/misc/pam
+    ./modules/misc/qt
     ./modules/misc/xdg
     ./modules/misc/xsession
     ./modules/programs/abook
