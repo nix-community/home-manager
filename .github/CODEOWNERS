@@ -142,6 +142,9 @@
 
 /modules/programs/texlive.nix                         @rycee
 
+/modules/programs/thunderbird.nix                     @chisui
+/tests/modules/programs/thunderbird                   @chisui
+
 /modules/programs/waybar.nix                          @berbiche
 /tests/modules/programs/waybar                        @berbiche
 
