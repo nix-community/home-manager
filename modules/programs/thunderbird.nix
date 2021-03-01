@@ -50,26 +50,26 @@ let
   };
 
   mkFilters = mail: f:
-    let filtersCfg = f (msgFiltersLib mail);
-    in ''
-      version="9"
-      logging="no"
-      ${concatStrings (mapAttrsToList (name: value: ''
+    let
+      filtersCfg = f (msgFiltersLib mail);
+      mkAction = { action, actionValue }:
+        ''
+          action="${action}"${
+            if actionValue == null then "" else ''actionValue="${actionValue}"''
+          }'';
+      mkFilter = name: value: ''
         name="${name}"
         enabled="${if value.enabled then "yes" else "no"}"
         type="${
           toString (builtins.foldl' (a: b: a + b) 0 (value.when filterFlags))
         }"
-        ${
-          concatMapStrings (action: ''
-            action="${action.action}"
-            ${if action.actionValue != null then
-              ''actionValue="${action.actionValue}"''
-            else
-              ""}'') value.actions
-        }}
+        ${concatMapStrings mkAction value.actions}
         condition="${value.condition}"
-      '') filtersCfg)}'';
+      '';
+    in ''
+      version="9"
+      logging="no"
+      ${concatStrings (mapAttrsToList mkFilter filtersCfg)}'';
 
   msgFiltersLib = mail:
     let
@@ -182,7 +182,7 @@ in {
                               </para><para>
                               Flags:
                               ${concatStrings (mapAttrsToList (name: value: ''
-                                ${name} = ${value}
+                                ${name} = ${toString value}
                               '') filterFlags)}
                             '';
                           };
@@ -193,18 +193,7 @@ in {
                           };
                           actions = mkOption {
                             description = "filter actions";
-                            type = types.listOf (types.submodule {
-                              options = {
-                                action = mkOption {
-                                  type = types.str;
-                                  description = "name of the action";
-                                };
-                                actionValue = mkOption {
-                                  type = types.nullOr types.str;
-                                  description = "name of the action";
-                                };
-                              };
-                            });
+                            type = types.listOf types.unspecified;
                           };
                         };
                       })));
