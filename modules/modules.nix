@@ -124,6 +124,7 @@ let
     (loadModule ./programs/taskwarrior.nix { })
     (loadModule ./programs/termite.nix { })
     (loadModule ./programs/texlive.nix { })
+    (loadModule ./programs/thunderbird.nix { })
     (loadModule ./programs/tmux.nix { })
     (loadModule ./programs/urxvt.nix { })
     (loadModule ./programs/vim.nix { })
