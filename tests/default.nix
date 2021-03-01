@@ -72,7 +72,6 @@ import nmt {
     ./modules/programs/ssh
     ./modules/programs/starship
     ./modules/programs/texlive
-    ./modules/programs/thunderbird
     ./modules/programs/tmux
     ./modules/programs/vscode
     ./modules/programs/zplug
@@ -96,6 +95,7 @@ import nmt {
     ./modules/programs/neovim   # Broken package dependency on Darwin.
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
+    ./modules/programs/thunderbird
     ./modules/programs/waybar
     ./modules/services/dropbox
     ./modules/services/emacs
