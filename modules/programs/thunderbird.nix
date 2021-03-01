@@ -8,7 +8,7 @@ let
 
   thunderbirdConfigPath = ".thunderbird";
 
-  profilesPath =  thunderbirdConfigPath;
+  profilesPath = thunderbirdConfigPath;
 
   profiles = flip mapAttrs' cfg.profiles (_: profile:
     nameValuePair "Profile${toString profile.id}" {
