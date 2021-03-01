@@ -49,32 +49,62 @@ let
     every-10-min = 256;
   };
 
+  mkDat = let
+    toDatVal = val:
+      if isBool val then (if val then "yes" else "no") else toString val;
+    mkLine = { key, val }: ''
+      ${key}="${toDatVal val}"
+             '';
+  in concatMapStrings mkLine;
+
   mkFilters = mail: f:
     let
       filtersCfg = f (msgFiltersLib mail);
+
       mkAction = { action, actionValue }:
-        ''
-          action="${action}"${
-            if actionValue == null then "" else ''actionValue="${actionValue}"''
-          }'';
-      mkFilter = name: value: ''
-        name="${name}"
-        enabled="${if value.enabled then "yes" else "no"}"
-        type="${
-          toString (builtins.foldl' (a: b: a + b) 0 (value.when filterFlags))
-        }"
-        ${concatMapStrings mkAction value.actions}
-        condition="${value.condition}"
-      '';
-    in ''
-      version="9"
-      logging="no"
-      ${concatStrings (mapAttrsToList mkFilter filtersCfg)}'';
+        ([{
+          key = "action";
+          val = action;
+        }] ++ (optional (actionValue != null) {
+          key = "actionValue";
+          val = actionValue;
+        }));
+      mkFilter = name: value:
+        ([
+          {
+            key = "name";
+            val = name;
+          }
+          {
+            key = "enabled";
+            val = value.enabled;
+          }
+          {
+            key = "type";
+            val = foldl' (a: b: a + b) 0 (value.when filterFlags);
+          }
+        ] ++ (concatMap mkAction value.actions) ++ [{
+          key = "condition";
+          val = value.condition;
+        }]);
+      msgFilterHeader = [
+        {
+          key = "version";
+          val = 9;
+        }
+        {
+          key = "logging";
+          val = false;
+        }
+      ];
+    in mkDat
+    (msgFilterHeader ++ (flatten (mapAttrsToList mkFilter filtersCfg)));
 
   msgFiltersLib = mail:
     let
       # should work be enough for most mail addresses
       escapedMail = replaceChars [ "@" ] [ "%40" ] mail;
+      mailHost = elemAt (builtins.split "@" mail) 2;
       conditions = op: cx: concatStringsSep " " (map (c: "${op} (${c})") cx);
       mkAction = action: actionValue: { inherit action actionValue; };
       mkFolder = pre: dir: "${pre}/${dir}";
@@ -82,7 +112,7 @@ let
       mark-read = mkAction "Mark read" null;
       move-to = mkAction "Move to folder";
       copy-to = mkAction "Copy to folder";
-      imap-folder = mkFolder "imap://${escapedMail}";
+      imap-folder = mkFolder "imap://${escapedMail}@mail.${mailHost}";
       local-folder = mkFolder "mailbox://nobody@Local%20Folders/";
       forward-to = mkAction "Forward";
       change-priority = mkAction "Change priority";

@@ -5,5 +5,5 @@ enabled="yes"
 type="17"
 action="Mark read"
 action="Move to folder"
-actionValue="imap://some.one%40somewhere.net/some/folder"}
+actionValue="imap://some.one%40somewhere.net@mail.somewhere.net/some/folder"
 condition="AND (subject,contains,hello)"
