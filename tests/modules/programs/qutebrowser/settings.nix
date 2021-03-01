@@ -35,6 +35,7 @@ with lib;
         home-files/.config/qutebrowser/config.py \
         ${
           pkgs.writeText "qutebrowser-expected-config.py" ''
+            config.load_autoconfig(False)
             c.colors.hints.bg = "#000000"
             c.colors.hints.fg = "#ffffff"
             c.colors.tabs.bar.bg = "#000000"
