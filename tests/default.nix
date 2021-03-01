@@ -72,6 +72,7 @@ import nmt {
     ./modules/programs/ssh
     ./modules/programs/starship
     ./modules/programs/texlive
+    ./modules/programs/thunderbird
     ./modules/programs/tmux
     ./modules/programs/vscode
     ./modules/programs/zplug
