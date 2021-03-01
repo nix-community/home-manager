@@ -4,24 +4,16 @@ with lib;
 
 let
 
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
-
   cfg = config.programs.thunderbird;
 
-  thunderbirdConfigPath = if isDarwin then
-    "Library/Application Support/Thunderbird"
-  else
-    ".thunderbird";
+  thunderbirdConfigPath = ".thunderbird";
 
-  profilesPath = if isDarwin then
-    "${thunderbirdConfigPath}/Profiles"
-  else
-    thunderbirdConfigPath;
+  profilesPath =  thunderbirdConfigPath;
 
   profiles = flip mapAttrs' cfg.profiles (_: profile:
     nameValuePair "Profile${toString profile.id}" {
       Name = profile.name;
-      Path = if isDarwin then "Profiles/${profile.path}" else profile.path;
+      Path = profile.path;
       IsRelative = 1;
       Default = if profile.isDefault then 1 else 0;
     }) // {
