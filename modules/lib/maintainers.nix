@@ -19,6 +19,12 @@
     github = "owm111";
     githubId = 7798336;
   };
+  chisui = {
+    email = "philipp.dargel@neuland-bfi.de";
+    name = "Philipp Dargel";
+    github = "chisui";
+    githubId = 4526429;
+  };
   cwyc = {
     email = "cwyc@users.noreply.github.com";
     name = "cwyc";
