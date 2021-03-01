@@ -221,7 +221,7 @@ function doSwitch() {
 function doListGens() {
     # Whether to colorize the generations output.
     local color="never"
-    if [[ -t 1 ]]; then
+    if [[ ! -v NO_COLOR && -t 1 ]]; then
         color="always"
     fi
 

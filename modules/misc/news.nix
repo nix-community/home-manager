@@ -1873,6 +1873,13 @@ in
           'accounts.email.accounts.<name>.msmtp.enable' is true.
         '';
       }
+      {
+        time = "2021-03-03T22:16:05+00:00";
+        message = ''
+          Home Manager now respects the 'NO_COLOR' environment variable as per
+          https://no-color.org/.
+        '';
+      }
     ];
   };
 }

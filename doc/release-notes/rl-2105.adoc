@@ -111,6 +111,9 @@ configure.packages.*.start  -> programs.neovim.plugins = [ { plugin = ...; }]
 configure.customRC -> programs.neovim.extraConfig
 ----
 
+* Home Manager now respects the `NO_COLOR` environment variable as per
+https://no-color.org/[].
+
 [[sec-release-21.05-state-version-changes]]
 === State Version Changes
 
