@@ -69,6 +69,8 @@ let
   # Mapping from names to defaults
   meters = {
     Clock = 2;
+    Date = 2;
+    DateTime = 2;
     LoadAverage = 2;
     Load = 2;
     Memory = 1;
@@ -105,6 +107,10 @@ let
     "CPU(6)" = 1;
     "CPU(7)" = 1;
     "CPU(8)" = 1;
+    SELinux = 2;
+    Systemd = 2;
+    DiskIO = 2;
+    NetworkIO = 2;
   };
 
   singleMeterType = let
