@@ -186,6 +186,9 @@ in
 
       programs.bash.initExtra = gpgInitStr;
       programs.zsh.initExtra = gpgInitStr;
+      programs.fish.interactiveShellInit = ''
+        set -gx GPG_TTY (tty)
+      '';
     }
 
     (mkIf (cfg.sshKeys != null) {
