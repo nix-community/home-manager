@@ -75,6 +75,8 @@ let
     Load = 2;
     Memory = 1;
     Swap = 1;
+    Zram = 2;
+    HugePages = 2;
     Tasks = 2;
     Uptime = 2;
     Battery = 2;
@@ -82,6 +84,7 @@ let
     AllCPUs = 1;
     AllCPUs2 = 1;
     AllCPUs4 = 1;
+    AllCPUs8 = 1;
     LeftCPUs = 1;
     RightCPUs = 1;
     Right = 1;
@@ -90,6 +93,8 @@ let
     RightCPUs2 = 1;
     LeftCPUs4 = 1;
     RightCPUs4 = 1;
+    LeftCPUs8 = 1;
+    RightCPUs8 = 1;
     Blank = 2;
     PressureStallCPUSome = 2;
     PressureStallIOSome = 2;
