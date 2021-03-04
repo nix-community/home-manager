@@ -60,6 +60,7 @@ in rec {
           The size of the font.
         '';
       };
+    };
   };
 
   gvariant = mkOptionType rec {
