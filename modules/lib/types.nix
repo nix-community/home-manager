@@ -47,12 +47,19 @@ in rec {
 
       name = mkOption {
         type = types.str;
-        example = "DejaVu Sans 8";
+        example = "DejaVu Sans";
         description = ''
-          The family name and size of the font within the package.
+          The family name of the font within the package.
         '';
       };
-    };
+
+      size = mkOption {
+        type = types.int;
+        example = "8";
+        description = ''
+          The size of the font.
+        '';
+      };
   };
 
   gvariant = mkOptionType rec {

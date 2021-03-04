@@ -128,7 +128,7 @@ in {
   };
 
   config = mkIf cfg.enable (let
-    ini = optionalAttrs (cfg.font != null) { gtk-font-name = cfg.font.name; }
+    ini = optionalAttrs (cfg.font != null) { gtk-font-name = "${cfg.font.name} ${toString cfg.font.size}"; }
       // optionalAttrs (cfg.theme != null) { gtk-theme-name = cfg.theme.name; }
       // optionalAttrs (cfg.iconTheme != null) {
         gtk-icon-theme-name = cfg.iconTheme.name;
