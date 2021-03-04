@@ -55,6 +55,7 @@ import nmt {
     ./modules/programs/gpg
     ./modules/programs/i3status
     ./modules/programs/kakoune
+    ./modules/programs/kitty
     ./modules/programs/lf
     ./modules/programs/lieer
     ./modules/programs/man
