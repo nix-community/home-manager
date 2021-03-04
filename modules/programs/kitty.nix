@@ -80,10 +80,9 @@ in {
       # See https://sw.kovidgoyal.net/kitty/conf.html
 
       ${optionalString (cfg.font != null) ''
-          font_family ${cfg.font.name}
-          font_size ${toString cfg.font.size}
-        ''
-      }
+        font_family ${cfg.font.name}
+        font_size ${toString cfg.font.size}
+      ''}
 
       ${toKittyConfig cfg.settings}
 
