@@ -24,8 +24,8 @@ let
 
   masterSlaveMapping = {
     none = "None";
-    imap = "Master";
-    maildir = "Slave";
+    imap = "Far";
+    maildir = "Near";
     both = "Both";
   };
 
@@ -85,8 +85,8 @@ let
   genAccountWideChannel = account:
     with account;
     genSection "Channel ${name}" ({
-      Master = ":${name}-remote:";
-      Slave = ":${name}-local:";
+      Far = ":${name}-remote:";
+      Near = ":${name}-local:";
       Patterns = mbsync.patterns;
       Create = masterSlaveMapping.${mbsync.create};
       Remove = masterSlaveMapping.${mbsync.remove};
@@ -115,8 +115,8 @@ let
             else
               "";
         in genSection "Channel ${groupName}-${channel.name}" ({
-          Master = ":${storeName}-remote:${channel.masterPattern}";
-          Slave = ":${storeName}-local:${channel.slavePattern}";
+          Far = ":${storeName}-remote:${channel.masterPattern}";
+          Near = ":${storeName}-local:${channel.slavePattern}";
         } // channel.extraConfig) + genChannelPatterns channel.patterns;
       # Given the group name, and a attr set of channels within that group,
       # Generate a list of strings for each channels' configuration.
