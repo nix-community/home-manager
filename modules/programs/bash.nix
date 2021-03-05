@@ -111,23 +111,21 @@ in
         '';
       };
 
-      bashrcExtra = mkOption {
-        # Hide for now, may want to rename in the future.
-        visible = false;
-        default = "";
-        type = types.lines;
-        description = ''
-          Extra commands that should be added to
-          <filename>~/.bashrc</filename>.
-        '';
-      };
-
       initExtra = mkOption {
         default = "";
         type = types.lines;
         description = ''
           Extra commands that should be run when initializing an
           interactive shell.
+        '';
+      };
+
+      bashrcExtra = mkOption {
+        default = "";
+        type = types.lines;
+        description = ''
+          Extra commands that should be placed in <filename>~/.bashrc</filename>.
+          Note that these commands will be run even in non-interactive shells.
         '';
       };
 
@@ -171,19 +169,6 @@ in
           }
         ));
     in mkIf cfg.enable {
-      programs.bash.bashrcExtra = ''
-        # Commands that should be applied only for interactive shells.
-        if [[ $- == *i* ]]; then
-          ${historyControlStr}
-
-          ${shoptsStr}
-
-          ${aliasesStr}
-
-          ${cfg.initExtra}
-        fi
-      '';
-
       home.file.".bash_profile".text = ''
         # -*- mode: sh -*-
 
@@ -208,6 +193,17 @@ in
         # -*- mode: sh -*-
 
         ${cfg.bashrcExtra}
+
+        # Commands that should be applied only for interactive shells.
+        [[ $- == *i* ]] || return
+
+        ${historyControlStr}
+
+        ${shoptsStr}
+
+        ${aliasesStr}
+
+        ${cfg.initExtra}
       '';
 
       home.file.".bash_logout" = mkIf (cfg.logoutExtra != "") {
