@@ -129,7 +129,10 @@ in {
 
   config = mkIf cfg.enable (let
     ini = optionalAttrs (cfg.font != null) {
-      gtk-font-name = "${cfg.font.name} ${toString cfg.font.size}";
+      gtk-font-name = let
+        fontSize =
+          optionalString (cfg.font.size != null) " ${toString cfg.font.size}";
+      in "${cfg.font.name}" + fontSize;
     } // optionalAttrs (cfg.theme != null) { gtk-theme-name = cfg.theme.name; }
       // optionalAttrs (cfg.iconTheme != null) {
         gtk-icon-theme-name = cfg.iconTheme.name;

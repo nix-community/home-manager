@@ -54,7 +54,8 @@ in rec {
       };
 
       size = mkOption {
-        type = types.int;
+        type = types.nullOr types.int;
+        default = null;
         example = "8";
         description = ''
           The size of the font.

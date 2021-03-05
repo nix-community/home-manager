@@ -81,7 +81,8 @@ in {
 
       ${optionalString (cfg.font != null) ''
         font_family ${cfg.font.name}
-        font_size ${toString cfg.font.size}
+        ${optionalString (cfg.font.size != null)
+        "font_size ${toString cfg.font.size}"}
       ''}
 
       ${toKittyConfig cfg.settings}
