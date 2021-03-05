@@ -51,6 +51,14 @@ in {
       '';
     };
 
+    loadAutoconfig = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Load settings configured via the GUI.
+      '';
+    };
+
     searchEngines = mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -256,7 +264,12 @@ in {
     home.packages = [ cfg.package ];
 
     xdg.configFile."qutebrowser/config.py".text = concatStringsSep "\n" ([ ]
-      ++ mapAttrsToList (formatLine "c.") cfg.settings
+      ++ [
+        "${if cfg.loadAutoconfig then
+          "config.load_autoconfig()"
+        else
+          "config.load_autoconfig(False)"}"
+      ] ++ mapAttrsToList (formatLine "c.") cfg.settings
       ++ mapAttrsToList (formatDictLine "c.aliases") cfg.aliases
       ++ mapAttrsToList (formatDictLine "c.url.searchengines") cfg.searchEngines
       ++ mapAttrsToList (formatDictLine "c.bindings.key_mappings")
