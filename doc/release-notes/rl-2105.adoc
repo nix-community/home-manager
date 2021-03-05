@@ -71,6 +71,34 @@ programs.rofi.extraConfig = {
   modi = "drun,emoji,ssh";
 };
 ----
++
+* The <<opt-programs.rofi.theme>> option now supports defining a theme
+using an attribute set, the following configuration is now possible:
++
+[source,nix]
+----
+programs.rofi.theme = let
+  # Necessary to avoid quoting non-string values
+  inherit (config.lib.formats.rasi) mkLiteral;
+in {
+   "@import" = "~/.config/rofi/theme.rasi";
+
+  "*" = {
+    background-color = mkLiteral "#000000";
+    foreground-color = mkLiteral "rgba ( 250, 251, 252, 100 % )";
+    border-color = mkLiteral "#FFFFFF";
+    width = 512;
+  };
+
+  "#textbox-prompt-colon" = {
+    expand = false;
+    str = ":";
+    margin = mkLiteral "0px 0.3em 0em 0em";
+    text-color = mkLiteral "@foreground-color";
+  };
+};
+----
+
 
 * The `services.redshift.extraOptions` and `services.gammastep.extraOptions`
 options were removed in favor of <<opt-services.redshift.settings>> and
