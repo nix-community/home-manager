@@ -22,6 +22,11 @@ let
       CertificateFile = toString tls.certificatesFile;
     };
 
+  imports = [
+    (mkRenamedOptionModule [ "programs" "mbsync" "masterSlaveMapping" ]
+      [ "programs" "mbsync" "nearFarMapping" ])
+  ];
+
   nearFarMapping = {
     none = "None";
     imap = "Far";
