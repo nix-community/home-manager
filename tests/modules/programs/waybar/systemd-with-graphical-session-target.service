@@ -4,6 +4,7 @@ WantedBy=graphical-session.target
 [Service]
 BusName=fr.arouillard.waybar
 ExecStart=@waybar@/bin/waybar
+KillMode=mixed
 Restart=always
 RestartSec=1sec
 Type=dbus

@@ -378,6 +378,7 @@ in {
           ExecStart = "${cfg.package}/bin/waybar";
           Restart = "always";
           RestartSec = "1sec";
+          KillMode = "mixed";
         };
 
         Install = { WantedBy = [ "graphical-session.target" ]; };
