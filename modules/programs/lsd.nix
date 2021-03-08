@@ -10,10 +10,10 @@ let
 
   aliases = {
     ls = "${pkgs.lsd}/bin/lsd";
-    ll = "ls -l";
-    la = "ls -a";
-    lt = "ls --tree";
-    lla = "ls -la";
+    ll = "${pkgs.lsd}/bin/lsd -l";
+    la = "${pkgs.lsd}/bin/lsd -a";
+    lt = "${pkgs.lsd}/bin/lsd --tree";
+    lla = "${pkgs.lsd}/bin/lsd -la";
   };
 
 in {
