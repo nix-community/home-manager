@@ -309,6 +309,11 @@ in {
       };
     })
 
+    (mkIf (cfg.ignores != [ ]) {
+      programs.git.iniContent.core.excludesFile =
+        mkDefault "${config.xdg.configHome}/git/ignore";
+    })
+
     (mkIf (cfg.aliases != { }) { programs.git.iniContent.alias = cfg.aliases; })
 
     (mkIf (lib.isAttrs cfg.extraConfig) {
