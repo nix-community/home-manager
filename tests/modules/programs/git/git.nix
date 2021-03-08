@@ -93,6 +93,10 @@ in {
       assertFileContent home-files/.config/git/config ${
         substituteExpected ./git-expected.conf
       }
+      assertFileExists home-files/.config/git/ignore
+      assertFileContent home-files/.config/git/ignore ${
+        substituteExpected ./git-ignore-expected.conf
+      }
     '';
   };
 }
