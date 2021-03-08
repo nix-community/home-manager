@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.lsd;
 
+  yamlFormat = pkgs.formats.yaml { };
+
   aliases = {
     ls = "${pkgs.lsd}/bin/lsd";
     ll = "ls -l";
@@ -27,6 +29,21 @@ in {
         Whether to enable recommended lsd aliases.
       '';
     };
+
+    settings = mkOption {
+      type = yamlFormat.type;
+      default = { };
+      example = {
+        date = "relative";
+        ignore-globs = [ ".git" ".hg" ];
+      };
+      description = ''
+        Configuration written to
+        <filename>~/.config/lsd/config.yaml</filename>. See
+        <link xlink:href="https://github.com/Peltoche/lsd#config-file-content"/>
+        for supported values.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -37,5 +54,9 @@ in {
     programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
 
     programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
+
+    xdg.configFile."lsd/config.yaml" = mkIf (cfg.settings != { }) {
+      source = yamlFormat.generate "lsd-config" cfg.settings;
+    };
   };
 }
