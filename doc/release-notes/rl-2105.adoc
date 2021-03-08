@@ -50,8 +50,8 @@ As a result of this change, <<opt-programs.mpv.package>> is no longer the
 resulting derivation. Use the newly introduced `programs.mpv.finalPackage`
 instead.
 
-* The <<opt-programs.rofi.extraConfig>> option is now an attrset rather
-than a string. To migrate, move the each line into the attrset,
+* The <<opt-programs.rofi.extraConfig>> option is now an attribute set rather
+than a string. To migrate, move each line into the attribute set,
 removing the `rofi.` prefix from the keys. For example,
 +
 [source,nix]
@@ -71,6 +71,34 @@ programs.rofi.extraConfig = {
   modi = "drun,emoji,ssh";
 };
 ----
++
+* The <<opt-programs.rofi.theme>> option now supports defining a theme
+using an attribute set, the following configuration is now possible:
++
+[source,nix]
+----
+programs.rofi.theme = let
+  # Necessary to avoid quoting non-string values
+  inherit (config.lib.formats.rasi) mkLiteral;
+in {
+   "@import" = "~/.config/rofi/theme.rasi";
+
+  "*" = {
+    background-color = mkLiteral "#000000";
+    foreground-color = mkLiteral "rgba ( 250, 251, 252, 100 % )";
+    border-color = mkLiteral "#FFFFFF";
+    width = 512;
+  };
+
+  "#textbox-prompt-colon" = {
+    expand = false;
+    str = ":";
+    margin = mkLiteral "0px 0.3em 0em 0em";
+    text-color = mkLiteral "@foreground-color";
+  };
+};
+----
+
 
 * The `services.redshift.extraOptions` and `services.gammastep.extraOptions`
 options were removed in favor of <<opt-services.redshift.settings>> and
@@ -113,6 +141,22 @@ configure.customRC -> programs.neovim.extraConfig
 
 * Home Manager now respects the `NO_COLOR` environment variable as per
 https://no-color.org/[].
+
+* Qt module now supports <<opt-qt.style.name>> to specify a theme name and
+<<opt-qt.style.package>> to specify a theme package. If you have set
+<<opt-qt.platformTheme>> to `gnome`, a <<opt-qt.style.package>> compatible
+with both Qt and Gtk is now required to be set. For instance:
++
+[source,nix]
+----
+qt = {
+  platformTheme = "gnome";
+  style = {
+    name = "adwaita-dark";
+    package = pkgs.adwaita-qt;
+  };
+};
+----
 
 [[sec-release-21.05-state-version-changes]]
 === State Version Changes
