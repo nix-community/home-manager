@@ -6,16 +6,7 @@ let
 
   cfg = config.programs.starship;
 
-  configFile = config:
-    pkgs.runCommand "config.toml" {
-      buildInputs = [ pkgs.remarshal ];
-      preferLocalBuild = true;
-      allowSubstitutes = false;
-    } ''
-      remarshal -if json -of toml \
-        < ${pkgs.writeText "config.json" (builtins.toJSON config)} \
-        > $out
-    '';
+  tomlFormat = pkgs.formats.toml { };
 
 in {
   meta.maintainers = [ maintainers.marsam ];
@@ -93,8 +84,9 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."starship.toml" =
-      mkIf (cfg.settings != { }) { source = configFile cfg.settings; };
+    xdg.configFile."starship.toml" = mkIf (cfg.settings != { }) {
+      source = tomlFormat.generate "starship-config" cfg.settings;
+    };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
