@@ -6,16 +6,7 @@ let
 
   cfg = config.programs.broot;
 
-  configFile = config:
-    pkgs.runCommand "conf.toml" {
-      buildInputs = [ pkgs.remarshal ];
-      preferLocalBuild = true;
-      allowSubstitutes = false;
-    } ''
-      remarshal -if json -of toml \
-        < ${pkgs.writeText "verbs.json" (builtins.toJSON config)} \
-        > $out
-    '';
+  tomlFormat = pkgs.formats.toml { };
 
   brootConf = {
     verbs = cfg.verbs;
@@ -194,7 +185,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."broot/conf.toml".source = configFile brootConf;
+    xdg.configFile."broot/conf.toml".source =
+      tomlFormat.generate "broot-config" brootConf;
 
     # Dummy file to prevent broot from trying to reinstall itself
     xdg.configFile."broot/launcher/installed-v1".text = "";
