@@ -9,7 +9,7 @@ in {
     programs.waybar = {
       inherit package;
       enable = true;
-      settings = [{
+      settings = {
         layer = "top";
         position = "top";
         height = 30;
@@ -47,7 +47,7 @@ in {
             in "${dummyScript}/bin/dummy";
           };
         };
-      }];
+      };
     };
 
     nmt.script = ''

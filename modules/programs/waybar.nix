@@ -3,7 +3,7 @@
 let
   inherit (lib)
     any attrByPath attrNames concatMap concatMapStringsSep elem elemAt filter
-    filterAttrs flip foldl' hasPrefix head length mergeAttrs optionalAttrs
+    filterAttrs foldl' hasPrefix head length mergeAttrs optionalAttrs
     stringLength subtractLists types unique;
   inherit (lib.options) literalExample mkEnableOption mkOption;
   inherit (lib.modules) mkIf mkMerge;
@@ -11,7 +11,7 @@ let
   cfg = config.programs.waybar;
 
   # Used when generating warnings
-  modulesPath = "programs.waybar.settings.[].modules";
+  modulesPath = "programs.waybar.settings.modules";
 
   jsonFormat = pkgs.formats.json { };
 
@@ -199,42 +199,40 @@ in {
     };
 
     settings = mkOption {
-      type = listOf waybarBarConfig;
-      default = [ ];
+      type = nullOr waybarBarConfig;
+      default = null;
       description = ''
         Configuration for Waybar, see <link
           xlink:href="https://github.com/Alexays/Waybar/wiki/Configuration"/>
         for supported values.
       '';
       example = literalExample ''
-        [
-          {
-            layer = "top";
-            position = "top";
-            height = 30;
-            output = [
-              "eDP-1"
-              "HDMI-A-1"
-            ];
-            modules-left = [ "sway/workspaces" "sway/mode" "wlr/taskbar" ];
-            modules-center = [ "sway/window" "custom/hello-from-waybar" ];
-            modules-right = [ "mpd" "custom/mymodule#with-css-id" "temperature" ];
-            modules = {
-              "sway/workspaces" = {
-                disable-scroll = true;
-                all-outputs = true;
-              };
-              "custom/hello-from-waybar" = {
-                format = "hello {}";
-                max-length = 40;
-                interval = "once";
-                exec = pkgs.writeShellScript "hello-from-waybar" '''
-                  echo "from within waybar"
-                ''';
-              };
+        {
+          layer = "top";
+          position = "top";
+          height = 30;
+          output = [
+            "eDP-1"
+            "HDMI-A-1"
+          ];
+          modules-left = [ "sway/workspaces" "sway/mode" "wlr/taskbar" ];
+          modules-center = [ "sway/window" "custom/hello-from-waybar" ];
+          modules-right = [ "mpd" "custom/mymodule#with-css-id" "temperature" ];
+          modules = {
+            "sway/workspaces" = {
+              disable-scroll = true;
+              all-outputs = true;
             };
-          }
-        ]
+            "custom/hello-from-waybar" = {
+              format = "hello {}";
+              max-length = 40;
+              interval = "once";
+              exec = pkgs.writeShellScript "hello-from-waybar" '''
+                echo "from within waybar"
+              ''';
+            };
+          };
+        }
       '';
     };
 
@@ -283,8 +281,9 @@ in {
             optionalAttrs (configuration.modules != { }) configuration.modules;
         in removeNulls (settingsWithoutModules // settingsModules);
       # The clean list of configurations
-      finalConfiguration = map makeConfiguration cfg.settings;
-    in writePrettyJSON "waybar-config.json" finalConfiguration;
+      finalConfiguration = makeConfiguration cfg.settings;
+      # waybar expects a top-level list 
+    in writePrettyJSON "waybar-config.json" [ finalConfiguration ];
 
     #
     # Warnings are generated based on the following things:
@@ -302,8 +301,11 @@ in {
       mkUndefinedModuleWarning = settings: name:
         let
           # Locations where the module is undefined (a combination modules-{left,center,right})
-          locations = flip filter [ "left" "center" "right" ]
-            (x: elem name settings."modules-${x}");
+          locations = filter (x: elem name settings."modules-${x}") [
+            "left"
+            "center"
+            "right"
+          ];
           mkPath = loc: "'${modulesPath}-${loc}'";
           # The modules-{left,center,right} configuration that includes
           # an undefined module
@@ -315,7 +317,7 @@ in {
         + "module name. A custom module's name must start with 'custom/' "
         + "like 'custom/mymodule' for instance";
 
-      allFaultyModules = flip map cfg.settings (settings:
+      allFaultyModules = (settings:
         let
           allModules = unique
             (concatMap (x: attrByPath [ "modules-${x}" ] [ ] settings) [
@@ -341,20 +343,19 @@ in {
           undef = undefinedModules;
           unref = unreferencedModules;
           invalidName = invalidModuleNames;
-        });
+        }) cfg.settings;
 
-      allWarnings = flip concatMap allFaultyModules
-        ({ settings, undef, unref, invalidName }:
-          let
-            unreferenced = map mkUnreferencedModuleWarning unref;
-            undefined = map (mkUndefinedModuleWarning settings) undef;
-            invalid = map mkInvalidModuleNameWarning invalidName;
-          in undefined ++ unreferenced ++ invalid);
+      allWarnings = ({ settings, undef, unref, invalidName }:
+        let
+          unreferenced = map mkUnreferencedModuleWarning unref;
+          undefined = map (mkUndefinedModuleWarning settings) undef;
+          invalid = map mkInvalidModuleNameWarning invalidName;
+        in undefined ++ unreferenced ++ invalid) allFaultyModules;
     in allWarnings;
 
   in mkIf cfg.enable (mkMerge [
     { home.packages = [ cfg.package ]; }
-    (mkIf (cfg.settings != [ ]) {
+    (mkIf (cfg.settings != null) {
       # Generate warnings about defined but unreferenced modules
       inherit warnings;
 

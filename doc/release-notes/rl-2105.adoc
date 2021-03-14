@@ -158,6 +158,26 @@ qt = {
 };
 ----
 
+* The <<opt-programs.waybar.settings>> option is now an attribute set rather
+than a list of attributes. To migrate, just remove the outermost `[]` from
+your configuration. For example,
++
+[source,nix]
+----
+programs.waybar.settings = [{
+  # your settings
+}];
+----
++
+becomes
++
+[source,nix]
+----
+programs.waybar.settings = {
+  # your settings
+};
+----
+
 [[sec-release-21.05-state-version-changes]]
 === State Version Changes
 

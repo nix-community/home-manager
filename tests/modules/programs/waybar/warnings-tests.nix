@@ -9,7 +9,7 @@ in {
     programs.waybar = {
       inherit package;
       enable = true;
-      settings = [{
+      settings = {
         modules-left = [ "custom/my-module" ];
         modules-center =
           [ "this_module_is_not_a_valid_default_module_nor_custom_module" ];
@@ -23,15 +23,15 @@ in {
           "battery#bat1" = { };
           "custom/my-module" = { };
         };
-      }];
+      };
     };
 
     test.asserts.warnings.expected = [
-      "The module 'this_module_is_not_a_valid_default_module_nor_custom_module' defined in 'programs.waybar.settings.[].modules-center' is neither a default module or a custom module declared in 'programs.waybar.settings.[].modules'"
+      "The module 'this_module_is_not_a_valid_default_module_nor_custom_module' defined in 'programs.waybar.settings.modules-center' is neither a default module or a custom module declared in 'programs.waybar.settings.modules'"
 
-      "The module 'custom/this_custom_module_doesn't_have_a_definition_in_modules' defined in 'programs.waybar.settings.[].modules-right' is neither a default module or a custom module declared in 'programs.waybar.settings.[].modules'"
+      "The module 'custom/this_custom_module_doesn't_have_a_definition_in_modules' defined in 'programs.waybar.settings.modules-right' is neither a default module or a custom module declared in 'programs.waybar.settings.modules'"
 
-      "The module 'custom/this_module_is_not_referenced' defined in 'programs.waybar.settings.[].modules' is not referenced in either `modules-left`, `modules-center` or `modules-right` of Waybar's options"
+      "The module 'custom/this_module_is_not_referenced' defined in 'programs.waybar.settings.modules' is not referenced in either `modules-left`, `modules-center` or `modules-right` of Waybar's options"
     ];
 
     nmt.script = ''
