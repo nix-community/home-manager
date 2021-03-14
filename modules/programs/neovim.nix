@@ -44,7 +44,7 @@ let
   # A function to get the configuration string (if any) from an element of 'plugins'
   pluginConfig = p:
     if p ? plugin && (p.config or "") != "" then ''
-      " ${p.plugin.pname} {{{
+      " ${p.plugin.pname or p.plugin.name} {{{
       ${p.config}
       " }}}
     '' else
