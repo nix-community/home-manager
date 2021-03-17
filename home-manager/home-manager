@@ -80,7 +80,7 @@ function setFlakeAttribute() {
         *#*) local name="${1#*#}";;
         *)   local name="$USER";;
     esac
-    export FLAKE_CONFIG_URI="${1%#*}#homeConfigurations.${name}"
+    export FLAKE_CONFIG_URI="${1%#*}#homeConfigurations.\"${name}\""
 }
 
 function doInstantiate() {
