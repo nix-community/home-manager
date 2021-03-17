@@ -353,7 +353,7 @@
     </term>
     <listitem>
      <para>
-      Build home-manager configuration from the flake, which must contain the
+      Build Home Manager configuration from the flake, which must contain the
       output homeConfigurations.name. If no name is specified it
       defaults to your username.
      </para>
