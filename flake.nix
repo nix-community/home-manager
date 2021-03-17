@@ -3,8 +3,10 @@
 
   outputs = { self, nixpkgs }: rec {
     nixosModules.home-manager = import ./nixos;
+    nixosModule = self.nixosModules.home-manager;
 
     darwinModules.home-manager = import ./nix-darwin;
+    darwinModule = self.darwinModules.home-manager;
 
     lib = {
       hm = import ./modules/lib { lib = nixpkgs.lib; };
