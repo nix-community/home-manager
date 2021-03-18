@@ -5,7 +5,9 @@ with lib;
 let
 
   browserModule = defaultPkg: name: visible:
-    let browser = (builtins.parseDrvName defaultPkg.name).name;
+    let
+      browser = (builtins.parseDrvName defaultPkg.name).name;
+      isProprietaryChrome = hasPrefix "Google Chrome" name;
     in {
       enable = mkOption {
         inherit visible;
@@ -22,7 +24,9 @@ let
         defaultText = literalExample "pkgs.${browser}";
         description = "The ${name} package to use.";
       };
-
+    } // optionalAttrs (!isProprietaryChrome) {
+      # Extensions do not work with Google Chrome
+      # see https://github.com/nix-community/home-manager/issues/1383
       extensions = mkOption {
         inherit visible;
         type = with types;
@@ -129,10 +133,19 @@ let
 
     in mkIf cfg.enable {
       home.packages = [ cfg.package ];
-      home.file = listToAttrs (map extensionJson cfg.extensions);
+      home.file = listToAttrs (map extensionJson (cfg.extensions or [ ]));
     };
 
 in {
+  # Extensions do not work with the proprietary Google Chrome version
+  # see https://github.com/nix-community/home-manager/issues/1383
+  imports = map (flip mkRemovedOptionModule
+    "The `extensions` option does not work on Google Chrome anymore.") [
+      [ "programs" "google-chrome" "extensions" ]
+      [ "programs" "google-chrome-beta" "extensions" ]
+      [ "programs" "google-chrome-dev" "extensions" ]
+    ];
+
   options.programs = {
     chromium = browserModule pkgs.chromium "Chromium" true;
     google-chrome = browserModule pkgs.google-chrome "Google Chrome" false;
