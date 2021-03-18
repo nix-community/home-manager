@@ -76,11 +76,19 @@ function setHomeManagerNixPath() {
 
 # get activationPackage of homeConfig reference, defaults to $USER if no attr is spedified
 function setFlakeAttribute() {
+    local flake="${1%#*}"
     case $1 in
-        *#*) local name="${1#*#}";;
-        *)   local name="$USER";;
+        *#*)
+            local name="${1#*#}"
+        ;;
+        *)
+            local name="$USER@$(hostname)"
+            if [ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$name\"")" = "false" ]; then
+                name="$USER"
+            fi
+        ;;
     esac
-    export FLAKE_CONFIG_URI="${1%#*}#homeConfigurations.\"${name}\""
+    export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$name\""
 }
 
 function doInstantiate() {

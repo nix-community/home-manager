@@ -354,8 +354,8 @@
     <listitem>
      <para>
       Build Home Manager configuration from the flake, which must contain the
-      output homeConfigurations.name. If no name is specified it
-      defaults to your username.
+      output homeConfigurations.name. If no name is specified it will first try
+      username@hostname and then username.
      </para>
     </listitem>
    </varlistentry>
