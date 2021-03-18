@@ -354,6 +354,8 @@ in {
     })
 
     (mkIf cfg.delta.enable {
+      home.packages = [ pkgs.delta ];
+
       programs.git.iniContent = let deltaCommand = "${pkgs.delta}/bin/delta";
       in {
         core.pager = deltaCommand;
