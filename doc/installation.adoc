@@ -230,7 +230,7 @@ home-manager.users.eve = { pkgs, ... }: {
 };
 ----
 
-and after a `darwin-rebuild --switch` the user eve's environment
+and after a `darwin-rebuild switch` the user eve's environment
 should include a basic Bash configuration and the packages atool and
 httpie.
 
