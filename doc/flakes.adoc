@@ -34,7 +34,7 @@ file, it can be imported. A minimal flake.nix may look like this:
 ----
 
 In your system's configuration flake.nix, you will have to add two inputs:
-home-manager itself and your home-manager confgiguration.
+home-manager itself and your home-manager configuration.
 
 as an input and
 import the output from your home-manager flake.nix for any host you wish tho
