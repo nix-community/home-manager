@@ -75,7 +75,7 @@ in {
       };
 
       sharedModules = mkOption {
-        type = with types; listOf (oneOf [ attrs (functionTo attrs) path ]);
+        type = with types; listOf anything;
         default = [ ];
         example = literalExample "[ { home.packages = [ nixpkgs-fmt ]; } ]";
         description = ''
