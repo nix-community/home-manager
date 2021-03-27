@@ -189,6 +189,7 @@ let
       # GPG section
       set crypt_use_gpgme = yes
       set crypt_autosign = ${yesno (gpg.signByDefault or false)}
+      set crypt_opportunistic_encrypt = ${yesno (gpg.encryptByDefault or false)}
       set pgp_use_gpg_agent = yes
       set mbox_type = ${if maildir != null then "Maildir" else "mbox"}
       set sort = "${cfg.sort}"

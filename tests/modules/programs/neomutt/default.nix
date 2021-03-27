@@ -6,4 +6,5 @@
   neomutt-with-binds-with-warning = ./neomutt-with-binds-with-warning.nix;
   neomutt-with-binds-invalid-settings =
     ./neomutt-with-binds-invalid-settings.nix;
+  neomutt-with-gpg = ./neomutt-with-gpg.nix;
 }
