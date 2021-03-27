@@ -66,7 +66,7 @@ in {
       settings = mkOption {
         type = with types; attrsOf (attrsOf eitherStrBoolIntList);
         default = { };
-        description = "Configuration written to ~/.config/dunstrc";
+        description = "Configuration written to ~/.config/dunst/dunstrc";
         example = literalExample ''
           {
             global = {
