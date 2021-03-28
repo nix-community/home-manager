@@ -54,21 +54,23 @@ let
   bindModule = types.submodule {
     options = {
       map = mkOption {
-        type = types.enum [
-          "alias"
-          "attach"
-          "browser"
-          "compose"
-          "editor"
-          "generic"
-          "index"
-          "mix"
-          "pager"
-          "pgp"
-          "postpone"
-          "query"
-          "smime"
-        ];
+        type = let
+          menus = [
+            "alias"
+            "attach"
+            "browser"
+            "compose"
+            "editor"
+            "generic"
+            "index"
+            "mix"
+            "pager"
+            "pgp"
+            "postpone"
+            "query"
+            "smime"
+          ];
+        in with types; either (enum menus) (listOf (enum menus));
         default = "index";
         description = "Select the menu to bind the command to.";
       };
@@ -154,11 +156,16 @@ let
     set sidebar_format = '${cfg.sidebar.format}'
   '';
 
-  bindSection = concatMapStringsSep "\n"
-    (bind: ''bind ${bind.map} ${bind.key} "${bind.action}"'') cfg.binds;
+  genBindMapper = bindType:
+    concatMapStringsSep "\n" (bind:
+      ''
+        ${bindType} ${
+          concatStringsSep "," (toList bind.map)
+        } ${bind.key} "${bind.action}"'');
 
-  macroSection = concatMapStringsSep "\n"
-    (bind: ''macro ${bind.map} ${bind.key} "${bind.action}"'') cfg.macros;
+  bindSection = (genBindMapper "bind") cfg.binds;
+
+  macroSection = (genBindMapper "macro") cfg.macros;
 
   mailCheckSection = ''
     set mail_check_stats
