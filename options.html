@@ -12909,4 +12909,22 @@ version used to build xmonad and the packages listed in
         pkgs.haskellPackages
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.haskell.packages.ghc784</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/xmonad.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.xmonad.libFiles"></a><a class="term" href="options.html#opt-xsession.windowManager.xmonad.libFiles"><code class="option">xsession.windowManager.xmonad.libFiles</code></a></span></dt><dd><p>Additional files that will be saved in
+<code class="filename">~/.xmonad/lib/</code> and included in the configuration
+build. The keys are the file names while the values are paths to the
+contents of the files.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of paths</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  "Tools.hs" = pkgs.writeText "Tools.hs" ''
+     module Tools where
+     screenshot = "scrot"
+   '';
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/xmonad.nix&gt;
                 </a></code></td></tr></table></dd></dl></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="index.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="nixos-options.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Home Manager Manual </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Appendix B. NixOS Module Options</td></tr></table></div></body></html>
