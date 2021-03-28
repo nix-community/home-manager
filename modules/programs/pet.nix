@@ -36,6 +36,15 @@ let
           Example output of the command.
         '';
       };
+
+      tag = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = literalExample ''["git" "nixpkgs"]'';
+        description = ''
+          List of tags attached to the command.
+        '';
+      };
     };
   };
 
