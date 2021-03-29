@@ -421,6 +421,7 @@ function doHelp() {
     echo
     echo "Options passed on to nix-build(1)"
     echo
+    echo "  --arg(str) NAME VALUE    Override inputs passed to home-manager.nix"
     echo "  --cores NUM"
     echo "  --keep-failed"
     echo "  --keep-going"
@@ -497,7 +498,7 @@ while [[ $# -gt 0 ]]; do
         -n|--dry-run)
             export DRY_RUN=1
             ;;
-        --option)
+        --option|--arg|--argstr)
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
             shift 2
             ;;
