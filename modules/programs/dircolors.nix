@@ -204,8 +204,8 @@ in {
     };
 
     home.file.".dir_colors".text = concatStringsSep "\n" ([ ]
-      ++ optional (cfg.extraConfig != "") cfg.extraConfig
-      ++ mapAttrsToList formatLine cfg.settings) + "\n";
+      ++ mapAttrsToList formatLine cfg.settings ++ [ "" ]
+      ++ optional (cfg.extraConfig != "") cfg.extraConfig);
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       eval $(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)

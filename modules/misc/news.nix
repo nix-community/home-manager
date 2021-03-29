@@ -1880,6 +1880,13 @@ in
           https://no-color.org/.
         '';
       }
+      {
+        time = "2021-03-29T21:05:50+00:00";
+        message = ''
+          Configuration specified by 'programs.dircolors.extraConfig' is now
+          applied after 'programs.dircolors.settings'.
+        '';
+      }
     ];
   };
 }
