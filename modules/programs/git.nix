@@ -61,7 +61,8 @@ let
   signModule = types.submodule {
     options = {
       key = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
+        default = null;
         description = "The default GPG signing key fingerprint.";
       };
 
@@ -303,7 +304,7 @@ in {
 
     (mkIf (cfg.signing != null) {
       programs.git.iniContent = {
-        user.signingKey = cfg.signing.key;
+        user.signingKey = mkIf (cfg.signing.key != null) cfg.signing.key;
         commit.gpgSign = cfg.signing.signByDefault;
         gpg.program = cfg.signing.gpgPath;
       };
