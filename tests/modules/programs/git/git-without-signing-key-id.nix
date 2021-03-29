@@ -7,6 +7,7 @@
 
       signing = {
         gpgPath = "path-to-gpg";
+        key = null;
         signByDefault = true;
       };
     };
