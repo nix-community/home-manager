@@ -1951,6 +1951,12 @@ directory.
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/vte.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/vte.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bash.bashrcExtra"></a><a class="term" href="options.html#opt-programs.bash.bashrcExtra"><code class="option">programs.bash.bashrcExtra</code></a></span></dt><dd><p>Extra commands that should be placed in <code class="filename">~/.bashrc</code>.
+Note that these commands will be run even in non-interactive shells.
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        ""
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bash.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/bash.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bash.historyControl"></a><a class="term" href="options.html#opt-programs.bash.historyControl"><code class="option">programs.bash.historyControl</code></a></span></dt><dd><p>Controlling how commands are saved on the history list.</p><p><span class="emphasis"><em>Type:</em></span> list of one of "erasedups", "ignoredups", "ignorespace"s</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         [
