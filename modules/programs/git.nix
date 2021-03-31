@@ -62,7 +62,12 @@ let
     options = {
       key = mkOption {
         type = types.nullOr types.str;
-        description = "The default GPG signing key fingerprint.";
+        description = ''
+          The default GPG signing key fingerprint.
+          </para><para>
+          Set to <literal>null</literal> to let GnuPG decide what signing key
+          to use depending on commit’s author.
+        '';
       };
 
       signByDefault = mkOption {
