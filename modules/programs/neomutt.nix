@@ -323,5 +323,11 @@ in {
         source ${accountFilename primary}
       '';
     };
+
+    warnings =
+      let hasOldBinds = binds: (filter (b: !(isList b.map)) binds) != [ ];
+      in mkIf (hasOldBinds (cfg.binds ++ cfg.macros)) [
+        "Specifying 'programs.neomutt.(binds|macros).map' as a string is deprecated, use a list of strings instead. See https://github.com/nix-community/home-manager/pull/1885."
+      ];
   };
 }

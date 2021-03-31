@@ -27,7 +27,7 @@ with lib;
         {
           action = "complete-query";
           key = "<Tab>";
-          map = [ "editor" ];
+          map = "editor";
         }
         {
           action = "sidebar-prev";
@@ -40,7 +40,7 @@ with lib;
         {
           action = "<save-message>?<tab>";
           key = "s";
-          map = [ "index" ];
+          map = "index";
         }
         {
           action = "<change-folder>?<change-dir><home>^K=<enter><tab>";
@@ -52,6 +52,10 @@ with lib;
 
     nixpkgs.overlays =
       [ (self: super: { neomutt = pkgs.writeScriptBin "dummy-neomutt" ""; }) ];
+
+    test.asserts.warnings.expected = [
+      "Specifying 'programs.neomutt.(binds|macros).map' as a string is deprecated, use a list of strings instead. See https://github.com/nix-community/home-manager/pull/1885."
+    ];
 
     nmt.script = ''
       assertFileExists home-files/.config/neomutt/neomuttrc
