@@ -129,6 +129,10 @@ https://github.com/jonls/redshift/blob/master/redshift.conf.sample[redshift.conf
 https://gitlab.com/chinstrap/gammastep/-/blob/master/gammastep.conf.sample[gammastep.conf.sample]
 for the available additional options in each program.
 
+* Specifying `programs.neomutt.binds.map` or `programs.neomutt.macros.map` as a
+  single string is now deprecated in favor of specfiying it as a list of
+  strings.
+
 * The `programs.neovim.configure` is deprecated in favor of other `programs.neovim` options;
 please use the other options at your disposal:
 +
