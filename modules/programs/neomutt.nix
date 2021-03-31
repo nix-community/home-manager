@@ -324,6 +324,14 @@ in {
       '';
     };
 
+    assertions = [{
+      assertion =
+        ((filter (b: (length (toList b.map)) == 0) (cfg.binds ++ cfg.macros))
+          == [ ]);
+      message =
+        "The 'programs.neomutt.(binds|macros).map' list must contain at least one element.";
+    }];
+
     warnings =
       let hasOldBinds = binds: (filter (b: !(isList b.map)) binds) != [ ];
       in mkIf (hasOldBinds (cfg.binds ++ cfg.macros)) [
