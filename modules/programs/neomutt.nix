@@ -312,16 +312,16 @@ in {
         ${optionalString cfg.vimKeys
         "source ${pkgs.neomutt}/share/doc/neomutt/vim-keys/vim-keys.rc"}
 
-        # Extra configuration
-        ${optionsStr cfg.settings}
-
-        ${cfg.extraConfig}
-
         # Register accounts
         ${concatMapStringsSep "\n" registerAccount neomuttAccounts}
 
         # Source primary account
         source ${accountFilename primary}
+
+        # Extra configuration
+        ${optionsStr cfg.settings}
+
+        ${cfg.extraConfig}
       '';
     };
 
