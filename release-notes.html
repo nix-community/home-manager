@@ -76,7 +76,11 @@ example:
 };</pre><p class="simpara">It is recommended to check either
 <a class="link" href="https://github.com/jonls/redshift/blob/master/redshift.conf.sample" target="_top">redshift.conf.sample</a> or
 <a class="link" href="https://gitlab.com/chinstrap/gammastep/-/blob/master/gammastep.conf.sample" target="_top">gammastep.conf.sample</a>
-for the available additional options in each program.</p></li><li class="listitem"><p class="simpara">
+for the available additional options in each program.</p></li><li class="listitem">
+Specifying <code class="literal">programs.neomutt.binds.map</code> or <code class="literal">programs.neomutt.macros.map</code> as a
+  single string is now deprecated in favor of specfiying it as a list of
+  strings.
+</li><li class="listitem"><p class="simpara">
 The <code class="literal">programs.neovim.configure</code> is deprecated in favor of other <code class="literal">programs.neovim</code> options;
 please use the other options at your disposal:
 </p><pre class="programlisting nix">configure.packages.*.opt  -&gt; programs.neovim.plugins = [ { plugin = ...; optional = true; }]
