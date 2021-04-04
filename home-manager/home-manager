@@ -74,24 +74,31 @@ function setHomeManagerNixPath() {
     done
 }
 
-# get activationPackage of homeConfig reference, defaults to $USER if no attr is spedified
 function setFlakeAttribute() {
-    local flake="${1%#*}"
-    case $1 in
-        *#*)
-            local name="${1#*#}"
-        ;;
-        *)
-            local name="$USER@$(hostname)"
-            if [ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$name\"")" = "false" ]; then
-                name="$USER"
-            fi
-        ;;
-    esac
-    export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$name\""
+    local configFlake="${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/flake.nix"
+    if [[ -z $FLAKE_ARG && ! -v HOME_MANAGER_CONFIG && -e "$configFlake" ]]; then
+        FLAKE_ARG="$(dirname "$(readlink -f "$configFlake")")"
+    fi
+
+    if [[ -n "$FLAKE_ARG" ]]; then
+        local flake="${FLAKE_ARG%#*}"
+        case $FLAKE_ARG in
+            *#*)
+                local name="${FLAKE_ARG#*#}"
+            ;;
+            *)
+                local name="$USER@$(hostname)"
+                if [ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$name\"")" = "false" ]; then
+                    name="$USER"
+                fi
+            ;;
+        esac
+        export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$name\""
+    fi
 }
 
 function doInstantiate() {
+    setFlakeAttribute
     if [[ -v FLAKE_CONFIG_URI ]]; then
         errorEcho "Can't instantiate a flake configuration"
         exit 1
@@ -199,6 +206,7 @@ function doBuild() {
         return 1
     fi
 
+    setFlakeAttribute
     if [[ -v FLAKE_CONFIG_URI ]]; then
         local exitCode=0
         nix build \
@@ -225,6 +233,7 @@ function doBuild() {
 }
 
 function doSwitch() {
+    setFlakeAttribute
     if [[ -v FLAKE_CONFIG_URI ]]; then
         local exitCode=0
         nix run \
@@ -507,6 +516,7 @@ HOME_MANAGER_CONFIG_ATTRIBUTE=""
 PASSTHROUGH_OPTS=()
 COMMAND=""
 COMMAND_ARGS=()
+FLAKE_ARG=""
 
 while [[ $# -gt 0 ]]; do
     opt="$1"
@@ -532,7 +542,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --flake)
-            setFlakeAttribute "$1"
+            FLAKE_ARG="$1"
             shift
             ;;
         --recreate-lock-file|--no-update-lock-file|--no-write-lock-file|--no-registries|--commit-lock-file)

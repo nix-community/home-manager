@@ -164,7 +164,7 @@
   <title>Description</title>
   <para>
    This command updates the user environment so that it corresponds to the
-   configuration specified in <filename>~/.config/nixpkgs/home.nix</filename>.
+      configuration specified in <filename>~/.config/nixpkgs/home.nix</filename> or <filename>~/.config/nixpkgs/flake.nix</filename>.
   </para>
   <para>
    All operations using this tool expects a sub-command that indicates the
