@@ -14,7 +14,7 @@ jobs:
     - uses: cachix/install-nix-action@v12
       with:
         nix_path: nixpkgs=channel:nixos-unstable
-    - uses: cachix/cachix-action@v8
+    - uses: cachix/cachix-action@v9
       with:
         name: nix-community
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
