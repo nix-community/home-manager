@@ -7,7 +7,7 @@ let
   cfg = config.services.gpg-agent;
 
   gpgInitStr = ''
-    GPG_TTY="$(tty)"
+    GPG_TTY="$TTY"
     export GPG_TTY
   ''
   + optionalString cfg.enableSshSupport
