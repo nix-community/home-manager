@@ -132,12 +132,12 @@ in {
       }/bin/xmonad-${pkgs.hostPlatform.system}";
 
   in mkIf cfg.enable (mkMerge [
-    {
-      home.packages = [ (lowPrio xmonad) ];
-      xsession.windowManager.command = xmonadBin;
-    }
-
+    { home.packages = [ (lowPrio xmonad) ]; }
+    (mkIf (cfg.config == null) {
+      xsession.windowManager.command = "${xmonad}/bin/xmonad";
+    })
     (mkIf (cfg.config != null) {
+      xsession.windowManager.command = xmonadBin;
       home.file.".xmonad/xmonad.hs".source = cfg.config;
       home.file.".xmonad/xmonad-${pkgs.hostPlatform.system}" = {
         source = xmonadBin;
