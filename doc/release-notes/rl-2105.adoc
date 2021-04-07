@@ -162,6 +162,16 @@ qt = {
 };
 ----
 
+* The library type `fontType` now has a `size` attribute in addition to `name`. For example:
++
+[source,nix]
+----
+font = {
+  name = "DejaVu Sans";
+  size = 8;
+};
+----
+
 [[sec-release-21.05-state-version-changes]]
 === State Version Changes
 
