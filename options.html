@@ -852,9 +852,16 @@ is assumed to already be available in your profile.
         null
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.dejavu_fonts</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/gtk.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/gtk.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-gtk.font.name"></a><a class="term" href="options.html#opt-gtk.font.name"><code class="option">gtk.font.name</code></a></span></dt><dd><p>The family name and size of the font within the package.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-gtk.font.name"></a><a class="term" href="options.html#opt-gtk.font.name"><code class="option">gtk.font.name</code></a></span></dt><dd><p>The family name of the font within the package.
 </p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        "DejaVu Sans 8"
+        "DejaVu Sans"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/gtk.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/gtk.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-gtk.font.size"></a><a class="term" href="options.html#opt-gtk.font.size"><code class="option">gtk.font.size</code></a></span></dt><dd><p>The size of the font.
+</p><p><span class="emphasis"><em>Type:</em></span> null or signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "8"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/gtk.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/gtk.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-gtk.gtk2.extraConfig"></a><a class="term" href="options.html#opt-gtk.gtk2.extraConfig"><code class="option">gtk.gtk2.extraConfig</code></a></span></dt><dd><p>Extra configuration lines to add verbatim to
@@ -3058,7 +3065,11 @@ every time a new commit is checked out on your repository.
         "\${pkgs.gnupg}/bin/gpg2"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/git.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.signing.key"></a><a class="term" href="options.html#opt-programs.git.signing.key"><code class="option">programs.git.signing.key</code></a></span></dt><dd><p>The default GPG signing key fingerprint.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.signing.key"></a><a class="term" href="options.html#opt-programs.git.signing.key"><code class="option">programs.git.signing.key</code></a></span></dt><dd><p>The default GPG signing key fingerprint.
+</p><p>
+Set to <code class="literal">null</code> to let GnuPG decide what signing key
+to use depending on commit’s author.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/git.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.signing.signByDefault"></a><a class="term" href="options.html#opt-programs.git.signing.signByDefault"><code class="option">programs.git.signing.signByDefault</code></a></span></dt><dd><p>Whether commits should be signed by default.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
@@ -4350,9 +4361,16 @@ is assumed to already be available in your profile.
         null
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.dejavu_fonts</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kitty.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/kitty.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kitty.font.name"></a><a class="term" href="options.html#opt-programs.kitty.font.name"><code class="option">programs.kitty.font.name</code></a></span></dt><dd><p>The family name and size of the font within the package.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kitty.font.name"></a><a class="term" href="options.html#opt-programs.kitty.font.name"><code class="option">programs.kitty.font.name</code></a></span></dt><dd><p>The family name of the font within the package.
 </p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        "DejaVu Sans 8"
+        "DejaVu Sans"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kitty.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/kitty.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kitty.font.size"></a><a class="term" href="options.html#opt-programs.kitty.font.size"><code class="option">programs.kitty.font.size</code></a></span></dt><dd><p>The size of the font.
+</p><p><span class="emphasis"><em>Type:</em></span> null or signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "8"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kitty.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/kitty.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kitty.keybindings"></a><a class="term" href="options.html#opt-programs.kitty.keybindings"><code class="option">programs.kitty.keybindings</code></a></span></dt><dd><p>Mapping of keybindings to actions.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -7511,7 +7529,7 @@ manually set any options not listed above.
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.package"></a><a class="term" href="options.html#opt-programs.vscode.package"><code class="option">programs.vscode.package</code></a></span></dt><dd><p>Version of Visual Studio Code to install.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        <em class="replaceable"><code>(build of vscode-1.54.3)</code></em>
+        <em class="replaceable"><code>(build of vscode-1.55.0)</code></em>
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.vscodium</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.extensions"></a><a class="term" href="options.html#opt-programs.vscode.extensions"><code class="option">programs.vscode.extensions</code></a></span></dt><dd><p>The extensions Visual Studio Code should be started with.
