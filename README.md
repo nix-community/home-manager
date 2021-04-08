@@ -29,7 +29,7 @@ learn.
 In some cases Home Manager cannot detect whether it will overwrite a
 previous manual configuration. For example, the Gnome Terminal module
 will write to your dconf store and cannot tell whether a configuration
-that it is about to be overwrite was from a previous Home Manager
+that it is about to be overwritten was from a previous Home Manager
 generation or from manual configuration.
 
 Home Manager targets [NixOS][] unstable and NixOS version 20.09 (the
