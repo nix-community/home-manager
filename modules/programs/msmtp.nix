@@ -37,6 +37,8 @@ let
     ${cfg.extraConfig}
 
     ${concatStringsSep "\n\n" (map accountStr mailAccounts)}
+
+    ${cfg.extraAccounts}
   '';
 
 in {
@@ -50,6 +52,15 @@ in {
         default = "";
         description = ''
           Extra configuration lines to add to <filename>~/.msmtprc</filename>.
+          See <link xlink:href="https://marlam.de/msmtp/msmtprc.txt"/> for examples.
+        '';
+      };
+
+      extraAccounts = mkOption {
+        type = types.lines;
+        default = "";
+        description = ''
+          Extra configuration lines to add to the end of <filename>~/.msmtprc</filename>.
           See <link xlink:href="https://marlam.de/msmtp/msmtprc.txt"/> for examples.
         '';
       };
