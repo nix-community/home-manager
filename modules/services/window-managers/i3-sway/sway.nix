@@ -153,7 +153,12 @@ let
         default = { };
         example = { "*" = { xkb_variant = "dvorak"; }; };
         description = ''
-          An attribute set that defines input modules. See man sway_input for options.
+          An attribute set that defines input modules. See
+          <citerefentry>
+            <refentrytitle>sway-input</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry>
+          for options.
         '';
       };
 
@@ -162,7 +167,26 @@ let
         default = { };
         example = { "HDMI-A-2" = { bg = "~/path/to/background.png fill"; }; };
         description = ''
-          An attribute set that defines output modules. See man sway_output for options.
+          An attribute set that defines output modules. See
+          <citerefentry>
+            <refentrytitle>sway-output</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry>
+          for options.
+        '';
+      };
+
+      seat = mkOption {
+        type = types.attrsOf (types.attrsOf types.str);
+        default = { };
+        example = { "*" = { hide_cursor = "when-typing enable"; }; };
+        description = ''
+          An attribute set that defines seat modules. See
+          <citerefentry>
+            <refentrytitle>sway-input</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry>
+          for options.
         '';
       };
 
@@ -227,19 +251,15 @@ let
     ${if always then "exec_always" else "exec"} ${command}
   '';
 
-  inputStr = name: attrs: ''
-    input "${name}" {
+  moduleStr = moduleType: name: attrs: ''
+    ${moduleType} "${name}" {
     ${concatStringsSep "\n"
     (mapAttrsToList (name: value: "${name} ${value}") attrs)}
     }
   '';
-
-  outputStr = name: attrs: ''
-    output "${name}" {
-    ${concatStringsSep "\n"
-    (mapAttrsToList (name: value: "${name} ${value}") attrs)}
-    }
-  '';
+  inputStr = moduleStr "input";
+  outputStr = moduleStr "output";
+  seatStr = moduleStr "seat";
 
   configFile = pkgs.writeText "sway.conf" ((if cfg.config != null then
     with cfg.config; ''
@@ -274,15 +294,19 @@ let
           lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
       }}
       ${keycodebindingsStr keycodebindings}
-      ${concatStringsSep "\n" (mapAttrsToList inputStr input)}
-      ${concatStringsSep "\n" (mapAttrsToList outputStr output)}
-      ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
-      ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
-      ${concatStringsSep "\n" (map barStr bars)}
-      ${optionalString (gaps != null) gapsStr}
-      ${concatStringsSep "\n" (map floatingCriteriaStr floating.criteria)}
-      ${concatStringsSep "\n" (map windowCommandsStr window.commands)}
-      ${concatStringsSep "\n" (map startupEntryStr startup)}
+      ${concatStringsSep "\n" (
+        # Append all of the lists together to avoid unnecessary whitespace.
+        mapAttrsToList inputStr input # inputs
+        ++ mapAttrsToList outputStr output # outputs
+        ++ mapAttrsToList seatStr seat # seats
+        ++ mapAttrsToList modeStr modes # modes
+        ++ mapAttrsToList assignStr assigns # assigns
+        ++ map barStr bars # bars
+        ++ optional (gaps != null) gapsStr # gaps
+        ++ map floatingCriteriaStr floating.criteria # floating
+        ++ map windowCommandsStr window.commands # window commands
+        ++ map startupEntryStr startup # startup
+      )}
     ''
   else
     "") + "\n" + (if cfg.systemdIntegration then ''
