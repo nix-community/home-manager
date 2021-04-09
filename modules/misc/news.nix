@@ -1863,6 +1863,7 @@ in
           lists to polybar-style 'foo-0, foo-1, ...' lists.
         '';
       }
+
       {
         time = "2021-02-25T22:36:43+00:00";
         condition = config.programs.git.enable && any (msmtp: msmtp.enable)
@@ -1873,6 +1874,7 @@ in
           'accounts.email.accounts.<name>.msmtp.enable' is true.
         '';
       }
+
       {
         time = "2021-03-03T22:16:05+00:00";
         message = ''
@@ -1880,11 +1882,19 @@ in
           https://no-color.org/.
         '';
       }
+
       {
         time = "2021-03-29T21:05:50+00:00";
         message = ''
           Configuration specified by 'programs.dircolors.extraConfig' is now
           applied after 'programs.dircolors.settings'.
+        '';
+      }
+
+      {
+        time = "2021-04-11T20:44:54+00:00";
+        message = ''
+          A new module is available: 'programs.exa'.
         '';
       }
     ];

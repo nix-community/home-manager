@@ -57,6 +57,8 @@
 
 /modules/programs/emacs.nix                           @rycee
 
+/modules/programs/exa.nix                             @kalhauge
+
 /modules/programs/firefox.nix                         @rycee
 
 /modules/programs/gh.nix                              @Gerschtli

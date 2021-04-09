@@ -31,6 +31,12 @@
     github = "olmokramer";
     githubId = 3612514;
   };
+  kalhauge = {
+    name = "Christian Gram Kalhauge";
+    email = "kalhauge@users.noreply.github.com";
+    github = "kalhauge";
+    githubId = 1182166;
+  };
   kubukoz = {
     name = "Jakub Kozłowski";
     email = "kubukoz@users.noreply.github.com";
