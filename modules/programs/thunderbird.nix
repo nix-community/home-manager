@@ -44,59 +44,34 @@ let
   mkDat = let
     toDatVal = val:
       if isBool val then (if val then "yes" else "no") else toString val;
-    mkLine = { key, val }: ''
-      ${key}="${toDatVal val}"
-             '';
-  in concatMapStrings mkLine;
+    mkLine = mapAttrsToList (key: val:
+      optional (val != null) ''
+        ${key}="${toDatVal val}"
+      '');
+  in d: concatStrings (flatten (concatMap mkLine d));
 
-  mkFilters = mail: f:
+  mkFilters = { mail, host, filters }@account:
     let
-      filtersCfg = f (msgFiltersLib mail);
+      filtersCfg = filters (msgFiltersLib account);
 
       mkAction = { action, actionValue }:
-        ([{
-          key = "action";
-          val = action;
-        }] ++ (optional (actionValue != null) {
-          key = "actionValue";
-          val = actionValue;
-        }));
-      mkFilter = name: value:
+        ([{ inherit action; }]
+          ++ (optional (actionValue != null) { inherit actionValue; }));
+      mkFilter = { name, enable, when, actions, condition }:
         ([
-          {
-            key = "name";
-            val = name;
-          }
-          {
-            key = "enabled";
-            val = value.enabled;
-          }
-          {
-            key = "type";
-            val = foldl' (a: b: a + b) 0 (value.when filterFlags);
-          }
-        ] ++ (concatMap mkAction value.actions) ++ [{
-          key = "condition";
-          val = value.condition;
-        }]);
-      msgFilterHeader = [
-        {
-          key = "version";
-          val = 9;
-        }
-        {
-          key = "logging";
-          val = false;
-        }
-      ];
+          { inherit name; }
+          { inherit enabled; }
+          { type = foldl' (a: b: a + b) 0 (when filterFlags); }
+        ] ++ (concatMap mkAction actions)
+          ++ [{ inherit condition; }]);
+      msgFilterHeader = [ { version = 9; } { logging = false; } ];
     in mkDat
-    (msgFilterHeader ++ (flatten (mapAttrsToList mkFilter filtersCfg)));
+    (msgFilterHeader ++ (concatMap mkFilter filtersCfg));
 
-  msgFiltersLib = mail:
+  msgFiltersLib = { mail, host }:
     let
       # should work be enough for most mail addresses
       escapedMail = replaceChars [ "@" ] [ "%40" ] mail;
-      mailHost = elemAt (builtins.split "@" mail) 2;
       conditions = op: cx: concatStringsSep " " (map (c: "${op} (${c})") cx);
       mkAction = action: actionValue: { inherit action actionValue; };
       mkFolder = pre: dir: "${pre}/${dir}";
@@ -104,7 +79,7 @@ let
       mark-read = mkAction "Mark read" null;
       move-to = mkAction "Move to folder";
       copy-to = mkAction "Copy to folder";
-      imap-folder = mkFolder "imap://${escapedMail}@mail.${mailHost}";
+      imap-folder = mkFolder "imap://${escapedMail}@${host}";
       local-folder = mkFolder "mailbox://nobody@Local%20Folders/";
       forward-to = mkAction "Forward";
       change-priority = mkAction "Change priority";
@@ -165,6 +140,7 @@ in {
               example = literalExample ''
                 {
                   "some.address@homepage.net" = {
+                    host = "mail.homepage.net";
                     filters = msgFilters: with msgFilters; {
                       "move to work folder" = {
                         condition = all [ "from,ends-with,@work.com" ];
@@ -177,12 +153,17 @@ in {
               type = types.attrsOf (types.submodule ({ config, name, ... }: {
                 options = {
                   filters = mkOption {
-                    default = { };
-                    description =
-                      "Attribute set of mail filters. key is the filter name";
-                    type = types.functionTo (types.attrsOf (types.submodule
+                    default = [ ];
+                    description = ''
+                      Attribute set of mail filters. The Order in this list is the execution Order.
+                    '';
+                    type = types.functionTo (types.listOf (types.submodule
                       ({ config, name, ... }: {
                         options = {
+                          name = mkOption {
+                            type = types.str;
+                            description = "Name of the filter.";
+                          };
                           enabled = mkOption {
                             type = types.bool;
                             default = true;
@@ -355,14 +336,10 @@ in {
           recursive = true;
           force = true;
         };
-      }] ++ flip mapAttrsToList profile.accounts (mail: account:
-        let
-          hostName = builtins.elemAt (builtins.split "@" mail) 2;
-          imapMailPath = "${profilePath}/ImapMail/mail.${hostName}";
-        in {
-          "${imapMailPath}/msgFilterRules.dat" =
+      }] ++ flip mapAttrsToList profile.accounts (mail: account: {
+          "${profilePaht}/ImapMail/${account.host}/msgFilterRules.dat" =
             mkIf (builtins.hasAttr "filters" account) {
-              text = mkFilters mail account.filters;
+              text = mkFilters ({ inherit mail; } // account);
             };
         }))));
   };
