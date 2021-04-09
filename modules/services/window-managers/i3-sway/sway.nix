@@ -322,7 +322,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.alexarice ];
+  meta.maintainers = with maintainers; [ alexarice sumnerevans ];
 
   options.wayland.windowManager.sway = {
     enable = mkEnableOption "sway wayland compositor";

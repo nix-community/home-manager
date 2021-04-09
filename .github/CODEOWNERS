@@ -236,7 +236,7 @@
 
 /modules/services/unison.nix                          @pacien
 
-/modules/services/window-managers/i3-sway/sway.nix    @alexarice
+/modules/services/window-managers/i3-sway/sway.nix    @alexarice @sumnerevans
 
 /modules/services/wlsunset.nix                        @matrss
 /tests/modules/services/wlsunset                      @matrss
