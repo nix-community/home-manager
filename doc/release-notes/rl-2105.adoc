@@ -179,4 +179,5 @@ The state version in this release includes the changes below. These
 changes are only active if the `home.stateVersion` option is set to
 "21.05" or later.
 
-* Nothing has happened.
+* The `newsboat` module now stores generated configuration in
+  `$XDG_CONFIG_HOME/newsboat`.
