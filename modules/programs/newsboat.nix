@@ -33,6 +33,8 @@ let
   '';
 
 in {
+  meta.maintainers = [ maintainers.sumnerevans ];
+
   options = {
     programs.newsboat = {
       enable = mkEnableOption "the Newsboat feed reader";
