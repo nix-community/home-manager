@@ -1,9 +1,7 @@
 { config, lib, pkgs, ... }:
 with lib;
-let
-  cfg = config.programs.scmpuff;
-in
-{
+let cfg = config.programs.scmpuff;
+in {
   meta.maintainers = [ maintainers.cpcloud ];
 
   options.programs.scmpuff = {
