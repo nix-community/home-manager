@@ -35,11 +35,11 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf (cfg.enable && cfg.enableBashIntegration) ''
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       eval "$(${cfg.package}/bin/scmpuff init -s)"
     '';
 
-    programs.zsh.initExtra = mkIf (cfg.enable && cfg.enableZshIntegration) ''
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/scmpuff init -s)"
     '';
   };
