@@ -138,8 +138,12 @@ in {
         gtk-icon-theme-name = cfg.iconTheme.name;
       };
 
-    dconfIni = optionalAttrs (cfg.font != null) { font-name = cfg.font.name; }
-      // optionalAttrs (cfg.theme != null) { gtk-theme = cfg.theme.name; }
+    dconfIni = optionalAttrs (cfg.font != null) {
+      font-name = let
+        fontSize =
+          optionalString (cfg.font.size != null) " ${toString cfg.font.size}";
+      in "${cfg.font.name}" + fontSize;
+    } // optionalAttrs (cfg.theme != null) { gtk-theme = cfg.theme.name; }
       // optionalAttrs (cfg.iconTheme != null) {
         icon-theme = cfg.iconTheme.name;
       };
