@@ -73,6 +73,10 @@ in {
           an absolute path or <literal>null</literal> in which case
           <filename>~/.xmonad/xmonad.hs</filename> will not be managed
           by Home Manager.
+
+          If this option is set to a non-<literal>null</literal> value,
+          recompilation of xmonad outside of home-manager (e.g. via
+          <command>xmonad --recompile</command>) will fail.
         '';
       };
 
@@ -138,7 +142,6 @@ in {
     })
     (mkIf (cfg.config != null) {
       xsession.windowManager.command = xmonadBin;
-      home.file.".xmonad/xmonad.hs".source = cfg.config;
       home.file.".xmonad/xmonad-${pkgs.hostPlatform.system}" = {
         source = xmonadBin;
         onChange = ''
@@ -150,11 +153,5 @@ in {
         '';
       };
     })
-
-    {
-      home.file = mapAttrs' (name: value:
-        attrsets.nameValuePair (".xmonad/lib/" + name) { source = value; })
-        cfg.libFiles;
-    }
   ]);
 }
