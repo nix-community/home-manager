@@ -11426,7 +11426,9 @@ on workspace with a single container.
         5
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.input"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.input"><code class="option">wayland.windowManager.sway.config.input</code></a></span></dt><dd><p>An attribute set that defines input modules. See man sway_input for options.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.input"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.input"><code class="option">wayland.windowManager.sway.config.input</code></a></span></dt><dd><p>An attribute set that defines input modules. See
+<span class="citerefentry"><span class="refentrytitle">sway-input</span>(5)</span>
+for options.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
@@ -11510,7 +11512,9 @@ for more advanced setup use 'sway.extraConfig'.
         "Mod4"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.output"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.output"><code class="option">wayland.windowManager.sway.config.output</code></a></span></dt><dd><p>An attribute set that defines output modules. See man sway_output for options.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.output"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.output"><code class="option">wayland.windowManager.sway.config.output</code></a></span></dt><dd><p>An attribute set that defines output modules. See
+<span class="citerefentry"><span class="refentrytitle">sway-output</span>(5)</span>
+for options.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
@@ -11531,6 +11535,27 @@ for more advanced setup use 'sway.extraConfig'.
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.right"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.right"><code class="option">wayland.windowManager.sway.config.right</code></a></span></dt><dd><p>Home row direction key for moving right.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         "l"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.seat"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.seat"><code class="option">wayland.windowManager.sway.config.seat</code></a></span></dt><dd><p>An attribute set that defines seat modules. See
+<span class="citerefentry"><span class="refentrytitle">sway-input</span>(5)</span>
+for options.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        * = 
+        {
+        hide_cursor = "when-typing enable"; 
+        }
+    ; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.startup"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.startup"><code class="option">wayland.windowManager.sway.config.startup</code></a></span></dt><dd><p>Commands that should be executed at startup.
