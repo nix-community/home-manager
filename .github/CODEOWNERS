@@ -142,6 +142,7 @@
 /tests/modules/programs/sbt                           @kubukoz
 
 /modules/programs/scmpuff.nix                         @cpcloud
+/tests/modules/programs/scmpuff                       @cpcloud
 
 /modules/programs/ssh.nix                             @rycee
 
