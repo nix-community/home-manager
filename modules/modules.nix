@@ -127,6 +127,7 @@ let
     (loadModule ./programs/termite.nix { })
     (loadModule ./programs/texlive.nix { })
     (loadModule ./programs/tmux.nix { })
+    (loadModule ./programs/topgrade.nix { })
     (loadModule ./programs/urxvt.nix { })
     (loadModule ./programs/vim.nix { })
     (loadModule ./programs/vscode.nix { })
