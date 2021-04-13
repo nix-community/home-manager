@@ -10,6 +10,8 @@ let
 
 in {
 
+  meta.maintainers = [ hm.maintainers.msfjarvis ];
+
   options.programs.topgrade = {
     enable = mkEnableOption "topgrade";
 
