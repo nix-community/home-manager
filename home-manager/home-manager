@@ -93,7 +93,7 @@ function setFlakeAttribute() {
                 fi
             ;;
         esac
-        export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$name\""
+        export FLAKE_CONFIG_URI="$flake#homeConfigurations.$name"
     fi
 }
 
@@ -212,7 +212,7 @@ function doBuild() {
         nix build \
             "${PASSTHROUGH_OPTS[@]}" \
              ${DRY_RUN+--dry-run} \
-            "$FLAKE_CONFIG_URI.activationPackage" \
+            "'$FLAKE_CONFIG_URI.activationPackage'" \
             || exitCode=1
         return $exitCode
     fi
