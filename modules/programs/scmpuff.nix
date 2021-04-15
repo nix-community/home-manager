@@ -6,7 +6,7 @@ in {
 
   options.programs.scmpuff = {
     enable = mkEnableOption
-      "Work with git from the command line quicker, by substituting numeric shortcuts for files.";
+      "scmpuff, a command line tool that allows you to work quicker with Git by substituting numeric shortcuts for files";
 
     package = mkOption {
       type = types.package;
