@@ -240,6 +240,7 @@ in
           ExecStart = "${pkgs.gnupg}/bin/gpg-agent --supervised"
             + optionalString cfg.verbose " --verbose";
           ExecReload = "${pkgs.gnupg}/bin/gpgconf --reload gpg-agent";
+          Environment = "GNUPGHOME=${homedir}";
         };
       };
 
