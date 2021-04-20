@@ -97,6 +97,7 @@ let
     (loadModule ./programs/msmtp.nix { })
     (loadModule ./programs/mu.nix { })
     (loadModule ./programs/ncmpcpp.nix { })
+    (loadModule ./programs/ncspot.nix { })
     (loadModule ./programs/ne.nix { })
     (loadModule ./programs/neomutt.nix { })
     (loadModule ./programs/neovim.nix { })

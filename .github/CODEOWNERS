@@ -103,6 +103,8 @@
 /tests/modules/programs/ncmpcpp                       @olmokramer
 /tests/modules/programs/ncmpcpp-linux                 @olmokramer
 
+/modules/programs/ncspot.nix                          @marsam
+
 /modules/programs/ne.nix                              @cwyc
 /tests/modules/programs/ne                            @cwyc
 
