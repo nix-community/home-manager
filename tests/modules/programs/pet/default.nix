@@ -1,0 +1,1 @@
+{ pet-snippets = ./snippets.nix; }

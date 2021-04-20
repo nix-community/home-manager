@@ -66,6 +66,7 @@ import nmt {
     ./modules/programs/neomutt
     ./modules/programs/newsboat
     ./modules/programs/nushell
+    ./modules/programs/pet
     ./modules/programs/powerline-go
     ./modules/programs/qutebrowser
     ./modules/programs/readline
