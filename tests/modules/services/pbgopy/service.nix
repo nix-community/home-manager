@@ -16,7 +16,7 @@
       assertFileExists $serviceFile
 
       assertFileContains $serviceFile \
-        'ExecStart=@pbgopy@/bin/pbgopy serve --ttl 24h'
+        'ExecStart=@pbgopy@/bin/pbgopy serve --port 9090 --ttl 24h'
     '';
   };
 }
