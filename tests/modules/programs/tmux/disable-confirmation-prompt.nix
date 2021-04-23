@@ -18,8 +18,8 @@ with lib;
     ];
 
     nmt.script = ''
-      assertFileExists home-files/.tmux.conf
-      assertFileContent home-files/.tmux.conf \
+      assertFileExists home-files/.config/tmux/tmux.conf
+      assertFileContent home-files/.config/tmux/tmux.conf \
         ${./disable-confirmation-prompt.conf}
     '';
   };

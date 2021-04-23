@@ -109,7 +109,7 @@ let
         }
     )];
 
-    home.file.".tmux.conf".text = ''
+    xdg.configFile."tmux/tmux.conf".text = ''
       # ============================================= #
       # Load plugins with Home Manager                #
       # --------------------------------------------- #
@@ -335,10 +335,9 @@ in
         };
       })
 
-      # config file ~/.tmux.conf
-      { home.file.".tmux.conf".text = mkBefore tmuxConf; }
+      { xdg.configFile."tmux/tmux.conf".text = mkBefore tmuxConf; }
       (mkIf (cfg.plugins != []) configPlugins)
-      { home.file.".tmux.conf".text = mkAfter cfg.extraConfig; }
+      { xdg.configFile."tmux/tmux.conf".text = mkAfter cfg.extraConfig; }
     ])
   );
 }

@@ -42,8 +42,10 @@ with lib;
     ];
 
     nmt.script = ''
-      assertFileExists home-files/.tmux.conf
-      assertFileContent home-files/.tmux.conf ${./emacs-with-plugins.conf}
+      assertFileExists home-files/.config/tmux/tmux.conf
+      assertFileContent home-files/.config/tmux/tmux.conf ${
+        ./emacs-with-plugins.conf
+      }
     '';
   };
 }
