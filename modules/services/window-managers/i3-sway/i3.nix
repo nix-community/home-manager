@@ -204,6 +204,8 @@ let
     '';
 
 in {
+  meta.maintainers = with maintainers; [ sumnerevans ];
+
   options = {
     xsession.windowManager.i3 = {
       enable = mkEnableOption "i3 window manager.";

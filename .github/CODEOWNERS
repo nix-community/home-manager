@@ -244,7 +244,13 @@
 
 /modules/services/unison.nix                          @pacien
 
+/modules/services/window-managers/i3-sway/i3.nix      @sumnerevans
+/tests/modules/services/window-managers/i3            @sumnerevans
+
+/modules/services/window-managers/i3-sway/lib         @sumnerevans
+
 /modules/services/window-managers/i3-sway/sway.nix    @alexarice @sumnerevans
+/tests/modules/services/window-managers/sway          @sumnerevans
 
 /modules/services/wlsunset.nix                        @matrss
 /tests/modules/services/wlsunset                      @matrss
