@@ -21,6 +21,14 @@ in
   options.programs.gpg = {
     enable = mkEnableOption "GnuPG";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.gnupg;
+      defaultText = literalExample "pkgs.gnupg";
+      example = literalExample "pkgs.gnupg23";
+      description = "The Gnupg package to use (also used the gpg-agent service).";
+    };
+
     settings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
       example = literalExample ''
@@ -67,7 +75,7 @@ in
       use-agent = mkDefault true;
     };
 
-    home.packages = [ pkgs.gnupg ];
+    home.packages = [ cfg.package ];
     home.sessionVariables = {
       GNUPGHOME = cfg.homedir;
     };
