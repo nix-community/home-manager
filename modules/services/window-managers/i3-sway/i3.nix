@@ -15,9 +15,9 @@ let
   configModule = types.submodule {
     options = {
       inherit (commonOptions)
-        fonts window floating focus assigns modifier workspaceLayout
-        workspaceAutoBackAndForth keycodebindings colors bars startup gaps menu
-        terminal;
+        fontNames fontSize window floating focus assigns modifier
+        workspaceLayout workspaceAutoBackAndForth keycodebindings colors bars
+        startup gaps menu terminal;
 
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
@@ -140,7 +140,8 @@ let
 
   inherit (commonFunctions)
     keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
-    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString;
+    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
+    fontConfigStr;
 
   startupEntryStr = { command, always, notification, workspace, ... }: ''
     ${if always then "exec_always" else "exec"} ${
@@ -155,7 +156,7 @@ let
 
   configFile = pkgs.writeText "i3.conf" ((if cfg.config != null then
     with cfg.config; ''
-      font pango:${concatStringsSep ", " fonts}
+      ${fontConfigStr fontNames fontSize}
       floating_modifier ${floating.modifier}
       ${windowBorderString window floating}
       hide_edge_borders ${window.hideEdgeBorders}

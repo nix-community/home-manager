@@ -7,14 +7,23 @@ let
   isI3 = moduleName == "i3";
   isSway = !isI3;
 
-  fonts = mkOption {
+  fontNames = mkOption {
     type = types.listOf types.str;
-    default = [ "monospace 8" ];
+    default = [ "monospace" ];
     description = ''
       Font list used for window titles. Only FreeType fonts are supported.
       The order here is important (e.g. icons font should go before the one used for text).
     '';
-    example = [ "FontAwesome 10" "Terminus 10" ];
+    example = [ "FontAwesome" "Terminus" ];
+  };
+
+  fontSize = mkOption {
+    type = types.float;
+    default = 8.0;
+    description = ''
+      The font size to use for window titles.
+    '';
+    example = 11.5;
   };
 
   startupModule = types.submodule {
@@ -69,7 +78,8 @@ let
           '';
         });
     in {
-      fonts = fonts // optionalAttrs versionAtLeast2009 { default = [ ]; };
+      fontNames = fontNames;
+      fontSize = fontSize;
 
       extraConfig = mkOption {
         type = types.lines;
@@ -310,7 +320,7 @@ let
 
   criteriaModule = types.attrsOf types.str;
 in {
-  inherit fonts;
+  inherit fontNames fontSize;
 
   window = mkOption {
     type = types.submodule {
@@ -605,7 +615,8 @@ in {
       workspaceButtons = true;
       workspaceNumbers = true;
       statusCommand = "${pkgs.i3status}/bin/i3status";
-      fonts = [ "monospace 8" ];
+      fontNames = [ "monospace" ];
+      fontSize = 8.0;
       trayOutput = "primary";
       colors = {
         background = "#000000";

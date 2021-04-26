@@ -15,7 +15,7 @@ let
   configModule = types.submodule {
     options = {
       inherit (commonOptions)
-        fonts window floating focus assigns workspaceLayout
+        fontNames fontSize window floating focus assigns workspaceLayout
         workspaceAutoBackAndForth modifier keycodebindings colors bars startup
         gaps menu terminal;
 
@@ -245,7 +245,8 @@ let
 
   inherit (commonFunctions)
     keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
-    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString;
+    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
+    fontConfigStr;
 
   startupEntryStr = { command, always, ... }: ''
     ${if always then "exec_always" else "exec"} ${command}
@@ -263,7 +264,7 @@ let
 
   configFile = pkgs.writeText "sway.conf" ((if cfg.config != null then
     with cfg.config; ''
-      font pango:${concatStringsSep ", " fonts}
+      ${fontConfigStr fontNames fontSize}
       floating_modifier ${floating.modifier}
       ${windowBorderString window floating}
       hide_edge_borders ${window.hideEdgeBorders}
