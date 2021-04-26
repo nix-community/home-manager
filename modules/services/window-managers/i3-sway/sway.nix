@@ -15,7 +15,7 @@ let
   configModule = types.submodule {
     options = {
       inherit (commonOptions)
-        fontNames fontSize window floating focus assigns workspaceLayout
+        font window floating focus assigns workspaceLayout
         workspaceAutoBackAndForth modifier keycodebindings colors bars startup
         gaps menu terminal;
 
@@ -264,7 +264,7 @@ let
 
   configFile = pkgs.writeText "sway.conf" ((if cfg.config != null then
     with cfg.config; ''
-      ${fontConfigStr fontNames fontSize}
+      ${fontConfigStr font}
       floating_modifier ${floating.modifier}
       ${windowBorderString window floating}
       hide_edge_borders ${window.hideEdgeBorders}

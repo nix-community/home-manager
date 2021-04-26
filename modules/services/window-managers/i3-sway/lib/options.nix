@@ -7,23 +7,37 @@ let
   isI3 = moduleName == "i3";
   isSway = !isI3;
 
-  fontNames = mkOption {
-    type = types.listOf types.str;
-    default = [ "monospace" ];
-    description = ''
-      Font list used for window titles. Only FreeType fonts are supported.
-      The order here is important (e.g. icons font should go before the one used for text).
-    '';
-    example = [ "FontAwesome" "Terminus" ];
-  };
+  fontOptions = types.submodule {
+    options = {
+      names = mkOption {
+        type = types.listOf types.str;
+        default = [ "monospace" ];
+        defaultText = literalExample ''[ "monospace" ]'';
+        description = ''
+          List of font names list used for window titles. Only FreeType fonts are supported.
+          The order here is important (e.g. icons font should go before the one used for text).
+        '';
+        example = literalExample ''[ "FontAwesome" "Terminus" ]'';
+      };
 
-  fontSize = mkOption {
-    type = types.float;
-    default = 8.0;
-    description = ''
-      The font size to use for window titles.
-    '';
-    example = 11.5;
+      style = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          The font style to use for window titles.
+        '';
+        example = "Bold Semi-Condensed";
+      };
+
+      size = mkOption {
+        type = types.float;
+        default = 8.0;
+        description = ''
+          The font size to use for window titles.
+        '';
+        example = 11.5;
+      };
+    };
   };
 
   startupModule = types.submodule {
@@ -78,8 +92,10 @@ let
           '';
         });
     in {
-      fontNames = fontNames;
-      fontSize = fontSize;
+      font = mkOption {
+        type = fontOptions;
+        default = { };
+      };
 
       extraConfig = mkOption {
         type = types.lines;
@@ -320,7 +336,10 @@ let
 
   criteriaModule = types.attrsOf types.str;
 in {
-  inherit fontNames fontSize;
+  font = mkOption {
+    type = fontOptions;
+    default = { };
+  };
 
   window = mkOption {
     type = types.submodule {
@@ -615,8 +634,10 @@ in {
       workspaceButtons = true;
       workspaceNumbers = true;
       statusCommand = "${pkgs.i3status}/bin/i3status";
-      fontNames = [ "monospace" ];
-      fontSize = 8.0;
+      font = {
+        names = [ "monospace" ];
+        size = 8.0;
+      };
       trayOutput = "primary";
       colors = {
         background = "#000000";

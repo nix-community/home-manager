@@ -15,9 +15,9 @@ let
   configModule = types.submodule {
     options = {
       inherit (commonOptions)
-        fontNames fontSize window floating focus assigns modifier
-        workspaceLayout workspaceAutoBackAndForth keycodebindings colors bars
-        startup gaps menu terminal;
+        font window floating focus assigns modifier workspaceLayout
+        workspaceAutoBackAndForth keycodebindings colors bars startup gaps menu
+        terminal;
 
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
@@ -156,7 +156,7 @@ let
 
   configFile = pkgs.writeText "i3.conf" ((if cfg.config != null then
     with cfg.config; ''
-      ${fontConfigStr fontNames fontSize}
+      ${fontConfigStr font}
       floating_modifier ${floating.modifier}
       ${windowBorderString window floating}
       hide_edge_borders ${window.hideEdgeBorders}
