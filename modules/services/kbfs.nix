@@ -6,9 +6,7 @@ let
 
   cfg = config.services.kbfs;
 
-in
-
-{
+in {
   options = {
     services.kbfs = {
       enable = mkEnableOption "Keybase File System";
@@ -24,11 +22,8 @@ in
 
       extraFlags = mkOption {
         type = types.listOf types.str;
-        default = [];
-        example = [
-          "-label kbfs"
-          "-mount-type normal"
-        ];
+        default = [ ];
+        example = [ "-label kbfs" "-mount-type normal" ];
         description = ''
           Additional flags to pass to the Keybase filesystem on launch.
         '';
@@ -44,21 +39,18 @@ in
         After = [ "keybase.service" ];
       };
 
-      Service =
-        let
-          mountPoint = "\"%h/${cfg.mountPoint}\"";
-        in {
-          Environment = "PATH=/run/wrappers/bin KEYBASE_SYSTEMD=1";
-          ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mountPoint}";
-          ExecStart ="${pkgs.kbfs}/bin/kbfsfuse ${toString cfg.extraFlags} ${mountPoint}";
-          ExecStopPost = "/run/wrappers/bin/fusermount -u ${mountPoint}";
-          Restart = "on-failure";
-          PrivateTmp = true;
-        };
-
-      Install = {
-        WantedBy = [ "default.target" ];
+      Service = let mountPoint = ''"%h/${cfg.mountPoint}"'';
+      in {
+        Environment = "PATH=/run/wrappers/bin KEYBASE_SYSTEMD=1";
+        ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mountPoint}";
+        ExecStart =
+          "${pkgs.kbfs}/bin/kbfsfuse ${toString cfg.extraFlags} ${mountPoint}";
+        ExecStopPost = "/run/wrappers/bin/fusermount -u ${mountPoint}";
+        Restart = "on-failure";
+        PrivateTmp = true;
       };
+
+      Install.WantedBy = [ "default.target" ];
     };
 
     home.packages = [ pkgs.kbfs ];

@@ -36,8 +36,6 @@ find . -name '*.nix' \
   ! -path ./modules/programs/tmux.nix \
   ! -path ./modules/programs/zsh.nix \
   ! -path ./modules/services/gpg-agent.nix \
-  ! -path ./modules/services/kbfs.nix \
-  ! -path ./modules/services/keybase.nix \
   ! -path ./modules/services/mpd.nix \
   ! -path ./modules/services/sxhkd.nix \
   ! -path ./modules/systemd.nix \
