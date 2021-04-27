@@ -181,6 +181,7 @@ let
     (loadModule ./services/plan9port.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/playerctld.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/polybar.nix { })
+    (loadModule ./services/poweralertd.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/pulseeffects.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/random-background.nix { })
     (loadModule ./services/redshift-gammastep/redshift.nix { })

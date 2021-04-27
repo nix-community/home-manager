@@ -1906,6 +1906,14 @@ in
         '';
       }
 
+      {
+        time = "2021-04-26T07:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new service is available: 'services.poweralertd'.
+        '';
+      }
+
     ];
   };
 }
