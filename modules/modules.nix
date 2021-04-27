@@ -173,6 +173,7 @@ let
     (loadModule ./services/nextcloud-client.nix { })
     (loadModule ./services/owncloud-client.nix { })
     (loadModule ./services/parcellite.nix { })
+    (loadModule ./services/pass-secret-service.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/password-store-sync.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/pasystray.nix { })
     (loadModule ./services/pbgopy.nix { condition = hostPlatform.isLinux; })

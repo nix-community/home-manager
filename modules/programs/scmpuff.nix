@@ -5,8 +5,9 @@ in {
   meta.maintainers = [ maintainers.cpcloud ];
 
   options.programs.scmpuff = {
-    enable = mkEnableOption
-      "scmpuff, a command line tool that allows you to work quicker with Git by substituting numeric shortcuts for files";
+    enable = mkEnableOption ''
+      scmpuff, a command line tool that allows you to work quicker with Git by
+      substituting numeric shortcuts for files'';
 
     package = mkOption {
       type = types.package;

@@ -211,6 +211,8 @@
 
 /modules/services/parcellite.nix                      @gleber
 
+/modules/services/pass-secret-service.nix             @cab404
+
 /modules/services/password-store-sync.nix             @pacien
 
 /modules/services/pasystray.nix                       @pltanton
