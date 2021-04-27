@@ -15,6 +15,11 @@ let
     listsAsDuplicateKeys = true;
   } cfg.settings;
 
+  scdaemonCfgText = generators.toKeyValue {
+    inherit mkKeyValue;
+    listsAsDuplicateKeys = true;
+  } cfg.scdaemonSettings;
+
   primitiveType = types.oneOf [ types.str types.bool ];
 in
 {
@@ -41,6 +46,20 @@ in
         GnuPG configuration options. Available options are described
         in the gpg manpage:
         <link xlink:href="https://gnupg.org/documentation/manpage.html"/>.
+      '';
+    };
+
+    scdaemonSettings = mkOption {
+      type = types.attrsOf (types.either primitiveType (types.listOf types.str));
+      example = literalExample ''
+        {
+          disable-ccid = true;
+        }
+      '';
+      description = ''
+        SCdaemon configuration options. Available options are described
+        in the gpg scdaemon manpage:
+        <link xlink:href="https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html"/>.
       '';
     };
 
@@ -75,11 +94,17 @@ in
       use-agent = mkDefault true;
     };
 
+    programs.gpg.scdaemonSettings = {
+      # no defaults for scdaemon
+    };
+
     home.packages = [ cfg.package ];
     home.sessionVariables = {
       GNUPGHOME = cfg.homedir;
     };
 
     home.file."${cfg.homedir}/gpg.conf".text = cfgText;
+
+    home.file."${cfg.homedir}/scdaemon.conf".text = scdaemonCfgText;
   };
 }
