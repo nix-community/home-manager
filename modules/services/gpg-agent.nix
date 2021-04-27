@@ -5,6 +5,7 @@ with lib;
 let
 
   cfg = config.services.gpg-agent;
+  gpgPkg = config.programs.gpg.package;
 
   homedir = config.programs.gpg.homedir;
 
@@ -13,7 +14,7 @@ let
     export GPG_TTY
   ''
   + optionalString cfg.enableSshSupport
-      "${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null";
+      "${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null";
 
   # mimic `gpgconf` output for use in `systemd` unit definitions.
   # we cannot use `gpgconf` directly because it heavily depends on system
@@ -204,7 +205,7 @@ in
 
       home.sessionVariables =
         optionalAttrs cfg.enableSshSupport {
-          SSH_AUTH_SOCK = "$(${pkgs.gnupg}/bin/gpgconf --list-dirs agent-ssh-socket)";
+          SSH_AUTH_SOCK = "$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)";
         };
 
       programs.bash.initExtra = gpgInitStr;
@@ -222,7 +223,7 @@ in
     # The systemd units below are direct translations of the
     # descriptions in the
     #
-    #   ${pkgs.gnupg}/share/doc/gnupg/examples/systemd-user
+    #   ${gpgPkg}/share/doc/gnupg/examples/systemd-user
     #
     # directory.
     {
@@ -237,9 +238,9 @@ in
         };
 
         Service = {
-          ExecStart = "${pkgs.gnupg}/bin/gpg-agent --supervised"
+          ExecStart = "${gpgPkg}/bin/gpg-agent --supervised"
             + optionalString cfg.verbose " --verbose";
-          ExecReload = "${pkgs.gnupg}/bin/gpgconf --reload gpg-agent";
+          ExecReload = "${gpgPkg}/bin/gpgconf --reload gpg-agent";
           Environment = "GNUPGHOME=${homedir}";
         };
       };
