@@ -1914,6 +1914,12 @@ in
         '';
       }
 
+      {
+        time = "2021-04-28T06:03:52+00:00";
+        message = ''
+          A new module is available: 'programs.topgrade'.
+        '';
+      }
     ];
   };
 }
