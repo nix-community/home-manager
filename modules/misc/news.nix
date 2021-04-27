@@ -1897,6 +1897,15 @@ in
           A new module is available: 'programs.exa'.
         '';
       }
+
+      {
+        time = "2021-04-23T10:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.pass-secret-service'.
+        '';
+      }
+
     ];
   };
 }
