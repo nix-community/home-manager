@@ -18,11 +18,11 @@ in {
     systemd.user.services.pass-secret-service = {
       Unit = { Description = "Pass libsecret service"; };
       Service = {
-        Install = { WantedBy = [ "default.target" ]; };
         # pass-secret-service doesn't use environment variables for some reason.
         ExecStart =
           "${pkgs.pass-secret-service}/bin/pass_secret_service --path ${config.programs.password-store.settings.PASSWORD_STORE_DIR}";
       };
+      Install = { WantedBy = [ "default.target" ]; };
     };
   };
 }
