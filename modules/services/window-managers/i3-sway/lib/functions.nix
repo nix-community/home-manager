@@ -120,6 +120,15 @@ rec {
     ${optionalString (smartBorders != "off") "smart_borders ${smartBorders}"}
   '';
 
+  windowBorderString = window: floating:
+    let
+      titlebarString = { titlebar, border, ... }:
+        "${if titlebar then "normal" else "pixel"} ${toString border}";
+    in concatStringsSep "\n" [
+      "default_border ${titlebarString window}"
+      "default_floating_border ${titlebarString floating}"
+    ];
+
   floatingCriteriaStr = criteria:
     "for_window ${criteriaStr criteria} floating enable";
   windowCommandsStr = { command, criteria, ... }:

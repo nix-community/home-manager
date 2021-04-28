@@ -245,7 +245,7 @@ let
 
   inherit (commonFunctions)
     keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
-    floatingCriteriaStr windowCommandsStr colorSetStr;
+    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString;
 
   startupEntryStr = { command, always, ... }: ''
     ${if always then "exec_always" else "exec"} ${command}
@@ -265,12 +265,7 @@ let
     with cfg.config; ''
       font pango:${concatStringsSep ", " fonts}
       floating_modifier ${floating.modifier}
-      default_border ${if window.titlebar then "normal" else "pixel"} ${
-        toString window.border
-      }
-      default_floating_border ${
-        if floating.titlebar then "normal" else "pixel"
-      } ${toString floating.border}
+      ${windowBorderString window floating}
       hide_edge_borders ${window.hideEdgeBorders}
       focus_wrapping ${if focus.forceWrapping then "yes" else "no"}
       focus_follows_mouse ${focus.followMouse}
