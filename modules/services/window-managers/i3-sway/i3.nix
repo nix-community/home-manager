@@ -17,7 +17,7 @@ let
       inherit (commonOptions)
         fonts window floating focus assigns modifier workspaceLayout
         workspaceAutoBackAndForth keycodebindings colors bars startup gaps menu
-        terminal;
+        terminal defaultWorkspace workspaceOutputAssign;
 
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
@@ -141,7 +141,7 @@ let
   inherit (commonFunctions)
     keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
     floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
-    fontConfigStr;
+    fontConfigStr keybindingDefaultWorkspace keybindingsRest workspaceOutputStr;
 
   startupEntryStr = { command, always, notification, workspace, ... }: ''
     ${if always then "exec_always" else "exec"} ${
@@ -156,6 +156,8 @@ let
 
   configFile = pkgs.writeText "i3.conf" ((if cfg.config != null then
     with cfg.config; ''
+      ${concatStringsSep "" (map workspaceOutputStr workspaceOutputAssign)}
+
       ${fontConfigStr fonts}
       floating_modifier ${floating.modifier}
       ${windowBorderString window floating}
@@ -176,7 +178,8 @@ let
       client.placeholder ${colorSetStr colors.placeholder}
       client.background ${colors.background}
 
-      ${keybindingsStr { inherit keybindings; }}
+      ${keybindingsStr { keybindings = keybindingDefaultWorkspace; }}
+      ${keybindingsStr { keybindings = keybindingsRest; }}
       ${keycodebindingsStr keycodebindings}
       ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
       ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}

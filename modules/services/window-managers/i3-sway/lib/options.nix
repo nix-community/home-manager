@@ -819,4 +819,17 @@ in {
     description = "Default launcher to use.";
     example = "bemenu-run";
   };
+
+  defaultWorkspace = mkOption {
+    type = types.nullOr types.str;
+    default = null;
+    description =
+      "Has to be the value of the keybinding (of the default Workspace).";
+  };
+
+  workspaceOutputAssign = mkOption {
+    type = types.listOf (types.attrsOf (types.str));
+    default = [ ];
+    description = "Assign workspaces to outputs.";
+  };
 }

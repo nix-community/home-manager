@@ -8,6 +8,13 @@ rec {
       concatStringsSep " " (mapAttrsToList (k: v: ''${k}="${v}"'') criteria)
     }]";
 
+  keybindingDefaultWorkspace = filterAttrs (n: v:
+    cfg.config.defaultWorkspace != null && v == cfg.config.defaultWorkspace)
+    cfg.config.keybindings;
+  keybindingsRest = filterAttrs (n: v:
+    cfg.config.defaultWorkspace == null || v != cfg.config.defaultWorkspace)
+    cfg.config.keybindings;
+
   keybindingsStr = { keybindings, bindsymArgs ? "" }:
     concatStringsSep "\n" (mapAttrsToList (keycomb: action:
       optionalString (action != null) "bindsym ${
@@ -147,4 +154,7 @@ rec {
     "for_window ${criteriaStr criteria} floating enable";
   windowCommandsStr = { command, criteria, ... }:
     "for_window ${criteriaStr criteria} ${command}";
+  workspaceOutputStr = item: ''
+    workspace "${item.workspace}" output ${item.output}
+  '';
 }

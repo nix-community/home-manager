@@ -7,7 +7,7 @@ with lib;
     xsession.windowManager.i3 = {
       enable = true;
 
-      config.focus.followMouse = false;
+      config.defaultWorkspace = "workspace number 1";
     };
 
     nixpkgs.overlays = [ (import ./i3-overlay.nix) ];
@@ -15,7 +15,7 @@ with lib;
     nmt.script = ''
       assertFileExists home-files/.config/i3/config
       assertFileContent home-files/.config/i3/config \
-        ${./i3-followmouse-expected.conf}
+        ${./i3-workspace-default-expected.conf}
     '';
   };
 }
