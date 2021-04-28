@@ -1915,11 +1915,20 @@ in
       }
 
       {
-        time = "2021-04-28T06:03:52+00:00";
+        time = "2021-04-28T10:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new service is available: 'services.mpris-proxy'.
+        '';
+      }
+
+      {
+        time = "2021-04-28T12:00:00+00:00";
         message = ''
           A new module is available: 'programs.topgrade'.
         '';
       }
+
     ];
   };
 }

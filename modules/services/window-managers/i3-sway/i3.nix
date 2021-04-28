@@ -140,7 +140,7 @@ let
 
   inherit (commonFunctions)
     keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
-    floatingCriteriaStr windowCommandsStr colorSetStr;
+    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString;
 
   startupEntryStr = { command, always, notification, workspace, ... }: ''
     ${if always then "exec_always" else "exec"} ${
@@ -157,12 +157,7 @@ let
     with cfg.config; ''
       font pango:${concatStringsSep ", " fonts}
       floating_modifier ${floating.modifier}
-      new_window ${if window.titlebar then "normal" else "pixel"} ${
-        toString window.border
-      }
-      new_float ${if floating.titlebar then "normal" else "pixel"} ${
-        toString floating.border
-      }
+      ${windowBorderString window floating}
       hide_edge_borders ${window.hideEdgeBorders}
       force_focus_wrapping ${if focus.forceWrapping then "yes" else "no"}
       focus_follows_mouse ${if focus.followMouse then "yes" else "no"}
@@ -209,6 +204,8 @@ let
     '';
 
 in {
+  meta.maintainers = with maintainers; [ sumnerevans ];
+
   options = {
     xsession.windowManager.i3 = {
       enable = mkEnableOption "i3 window manager.";
