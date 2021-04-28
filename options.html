@@ -3320,6 +3320,14 @@ or checksum database.
         "${config.home.homeDirectory}/.gnupg"
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">"${config.xdg.dataHome}/gnupg"</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.scdaemonSettings"></a><a class="term" href="options.html#opt-programs.gpg.scdaemonSettings"><code class="option">programs.gpg.scdaemonSettings</code></a></span></dt><dd><p>SCdaemon configuration options. Available options are described
+in the gpg scdaemon manpage:
+<a class="link" href="https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html" target="_top">https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html</a>.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or boolean or list of stringss</p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  disable-ccid = true;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gpg.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.settings"></a><a class="term" href="options.html#opt-programs.gpg.settings"><code class="option">programs.gpg.settings</code></a></span></dt><dd><p>GnuPG configuration options. Available options are described
 in the gpg manpage:
 <a class="link" href="https://gnupg.org/documentation/manpage.html" target="_top">https://gnupg.org/documentation/manpage.html</a>.
