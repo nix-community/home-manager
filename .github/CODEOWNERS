@@ -150,6 +150,9 @@
 
 /modules/programs/texlive.nix                         @rycee
 
+/modules/programs/topgrade.nix                        @msfjarvis
+/tests/modules/programs/topgrade                      @msfjarvis
+
 /modules/programs/waybar.nix                          @berbiche
 /tests/modules/programs/waybar                        @berbiche
 

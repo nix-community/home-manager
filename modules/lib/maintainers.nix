@@ -71,4 +71,14 @@
     githubId = 46252070;
     name = "Sara Johnsson";
   };
+  msfjarvis = {
+    email = "me@msfjarvis.dev";
+    github = "msfjarvis";
+    githubId = "13348378";
+    name = "Harsh Shandilya";
+    keys = [{
+      longkeyid = "rsa4096/0xB7843F823355E9B9";
+      fingerprint = "8F87 050B 0F9C B841 1515  7399 B784 3F82 3355 E9B9";
+    }];
+  };
 }

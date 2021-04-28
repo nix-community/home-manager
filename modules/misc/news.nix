@@ -1921,6 +1921,14 @@ in
           A new service is available: 'services.mpris-proxy'.
         '';
       }
+
+      {
+        time = "2021-04-28T12:00:00+00:00";
+        message = ''
+          A new module is available: 'programs.topgrade'.
+        '';
+      }
+
     ];
   };
 }
