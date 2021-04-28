@@ -205,6 +205,8 @@
 
 /modules/services/mpdris2.nix                         @pjones
 
+/modules/services/mpris-proxy.nix                     @ThibautMarty
+
 /modules/services/muchsync.nix                        @pacien
 
 /modules/services/network-manager-applet.nix          @rycee
