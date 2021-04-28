@@ -6,7 +6,6 @@ with lib;
   config = {
     programs.kitty = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy-kitty" "";
       settings = {
         scrollback_lines = 10000;
         enable_audio_bell = false;
@@ -21,6 +20,9 @@ with lib;
         "ctrl+f>2" = "set_font_size 20";
       };
     };
+
+    nixpkgs.overlays =
+      [ (self: super: { kitty = pkgs.writeScriptBin "dummy-kitty" ""; }) ];
 
     nmt.script = ''
       assertFileExists home-files/.config/kitty/kitty.conf
