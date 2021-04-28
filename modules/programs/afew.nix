@@ -6,9 +6,7 @@ let
 
   cfg = config.programs.afew;
 
-in
-
-{
+in {
   options.programs.afew = {
     enable = mkEnableOption "the afew initial tagging script for Notmuch";
 

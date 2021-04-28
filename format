@@ -29,7 +29,6 @@ find . -name '*.nix' \
   ! -path ./modules/misc/nixpkgs.nix \
   ! -path ./modules/misc/xdg.nix \
   ! -path ./modules/modules.nix \
-  ! -path ./modules/programs/afew.nix \
   ! -path ./modules/programs/bash.nix \
   ! -path ./modules/programs/firefox.nix \
   ! -path ./modules/programs/gpg.nix \
