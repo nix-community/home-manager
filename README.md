@@ -73,6 +73,19 @@ Home Manager can be used in three primary ways:
    installation][manual nix-darwin install] in the manual for a
    description of this setup.
 
+Translations
+------------
+
+Home Manager has basic support for internationalization through
+[gettext](https://www.gnu.org/software/gettext/). The translations are
+hosted by [Weblate](https://weblate.org/). If you would like to
+contribute to the translation effort then start by going to the
+[Home Manager Weblate project](https://hosted.weblate.org/engage/home-manager/).
+
+<a href="https://hosted.weblate.org/engage/home-manager/">
+<img src="https://hosted.weblate.org/widgets/home-manager/-/multi-auto.svg" alt="Translation status" />
+</a>
+
 Nix Flakes
 ----------
 

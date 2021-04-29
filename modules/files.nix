@@ -80,7 +80,7 @@ in
             (filterAttrs (n: v: v.force) cfg));
 
         check = pkgs.writeText "check" ''
-          . ${./lib-bash/color-echo.sh}
+          ${config.lib.bash.initHomeManagerLib}
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
@@ -192,7 +192,7 @@ in
         '';
 
         cleanup = pkgs.writeShellScript "cleanup" ''
-          . ${./lib-bash/color-echo.sh}
+          ${config.lib.bash.initHomeManagerLib}
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
@@ -230,7 +230,7 @@ in
       in
         ''
           function linkNewGen() {
-            echo "Creating home file links in $HOME"
+            _i "Creating home file links in %s" "$HOME"
 
             local newGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
@@ -243,7 +243,7 @@ in
               return
             fi
 
-            echo "Cleaning up orphan links from $HOME"
+            _i "Cleaning up orphan links from %s" "$HOME"
 
             local newGenFiles oldGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
@@ -259,11 +259,11 @@ in
           cleanOldGen
 
           if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
-            echo "Creating profile generation $newGenNum"
+            _i "Creating profile generation %s" "$newGenNum"
             $DRY_RUN_CMD nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"
           else
-            echo "No change so reusing latest profile generation $oldGenNum"
+            _i "No change so reusing latest profile generation %s" "$oldGenNum"
           fi
 
           linkNewGen
