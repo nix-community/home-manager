@@ -116,7 +116,7 @@ let
       identityFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
         default = [ ];
-        apply = p: if p == null then [ ] else if isString p then [ p ] else p;
+        apply = p: if p == null then [ ] else toList p;
         description = ''
           Specifies files from which the user identity is read.
           Identities will be tried in the given order.
@@ -193,7 +193,7 @@ let
       certificateFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
         default = [ ];
-        apply = p: if p == null then [ ] else if isString p then [ p ] else p;
+        apply = p: if p == null then [ ] else toList p;
         description = ''
           Specifies files from which the user certificate is read.
         '';
@@ -442,7 +442,7 @@ in {
     assertions = [{
       assertion = let
         # `builtins.any`/`lib.lists.any` does not return `true` if there are no elements.
-        any' = pred: items: if items == [ ] then true else any pred items;
+        any' = pred: items: (items == [ ]) || any pred items;
         # Check that if `entry.address` is defined, and is a path, that `entry.port` has not
         # been defined.
         noPathWithPort = entry:
