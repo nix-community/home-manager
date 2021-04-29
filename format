@@ -27,7 +27,6 @@ find . -name '*.nix' \
   ! -path ./modules/modules.nix \
   ! -path ./modules/programs/bash.nix \
   ! -path ./modules/programs/firefox.nix \
-  ! -path ./modules/programs/gpg.nix \
   ! -path ./modules/programs/tmux.nix \
   ! -path ./modules/programs/zsh.nix \
   ! -path ./modules/services/mpd.nix \
@@ -36,7 +35,6 @@ find . -name '*.nix' \
   ! -path ./nix-darwin/default.nix \
   ! -path ./tests/default.nix \
   ! -path ./tests/modules/home-environment/session-variables.nix \
-  ! -path ./tests/modules/programs/gpg/override-defaults.nix \
   ! -path ./tests/modules/programs/zsh/session-variables.nix \
   ! -path ./tests/modules/services/sxhkd/service.nix \
   ! -path ./tests/modules/systemd/services.nix \
