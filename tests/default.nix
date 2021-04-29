@@ -102,6 +102,7 @@ import nmt {
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
     ./modules/programs/waybar
+    ./modules/services/barrier
     ./modules/services/dropbox
     ./modules/services/emacs
     ./modules/services/fluidsynth

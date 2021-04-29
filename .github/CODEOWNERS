@@ -164,6 +164,9 @@
 
 /modules/programs/zsh/prezto.nix                      @NickHu
 
+/modules/services/barrier.nix                         @Kritnich
+/tests/modules/services/barrier                       @Kritnich
+
 /modules/services/caffeine.nix                        @uvNikita
 
 /modules/services/cbatticon.nix                       @pmiddend

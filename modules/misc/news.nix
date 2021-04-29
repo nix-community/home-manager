@@ -1929,6 +1929,13 @@ in
         '';
       }
 
+      {
+        time = "2021-04-30T22:05:01+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new service is available: 'services.barrier'.
+        '';
+      }
     ];
   };
 }
