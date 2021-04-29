@@ -22,6 +22,10 @@ let
     merge = mergeOneOption;
   };
 
+
+  # Currently, upstream Neovim is pinned on Lua 5.1 for LuaJIT support.
+  # This will need to be updated if Neovim ever migrates to a newer
+  # version of Lua.
   extraLua51PackageType = mkOptionType {
     name = "extra-lua51-packages";
     description = "lua5.1 packages in lua5_1.withPackages format";
