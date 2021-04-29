@@ -30,7 +30,6 @@ find . -name '*.nix' \
   ! -path ./modules/services/mpd.nix \
   ! -path ./modules/services/sxhkd.nix \
   ! -path ./modules/systemd.nix \
-  ! -path ./tests/default.nix \
   ! -path ./tests/modules/home-environment/session-variables.nix \
   ! -path ./tests/modules/programs/zsh/session-variables.nix \
   ! -path ./tests/modules/services/sxhkd/service.nix \
