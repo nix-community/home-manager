@@ -116,6 +116,9 @@ in
     #
     #     date --iso-8601=second --universal
     #
+    # On darwin (or BSD like systems) use
+    #
+    #     date -u +'%Y-%m-%dT%H:%M:%S+00:00'
     news.entries = [
       {
         time = "2017-09-01T10:56:28+00:00";
