@@ -32,7 +32,6 @@ find . -name '*.nix' \
   ! -path ./modules/programs/bash.nix \
   ! -path ./modules/programs/firefox.nix \
   ! -path ./modules/programs/gpg.nix \
-  ! -path ./modules/programs/ssh.nix \
   ! -path ./modules/programs/tmux.nix \
   ! -path ./modules/programs/zsh.nix \
   ! -path ./modules/services/mpd.nix \
