@@ -1936,6 +1936,13 @@ in
           A new service is available: 'services.barrier'.
         '';
       }
+
+      {
+        time = "2021-05-01T15:16:08+00:00";
+        message = ''
+          A new module is available: 'programs.lazygit'.
+        '';
+      }
     ];
   };
 }
