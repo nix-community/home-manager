@@ -1,14 +1,15 @@
 #!@bash@/bin/bash
 
 # Prepare to use tools from Nixpkgs.
-PATH=@coreutils@/bin:@findutils@/bin:@gnused@/bin:@less@/bin:@nixos-option@/bin${PATH:+:}$PATH
+PATH=@DEP_PATH@${PATH:+:}$PATH
 
 set -euo pipefail
 
-function errorEcho() {
-    # shellcheck disable=2048,2086
-    echo $* >&2
-}
+export TEXTDOMAIN=home-manager
+export TEXTDOMAINDIR=@OUT@/share/locale
+
+# shellcheck disable=1091
+source @HOME_MANAGER_LIB@
 
 function setVerboseAndDryRun() {
     if [[ -v VERBOSE ]]; then
@@ -39,7 +40,8 @@ function setWorkDir() {
 function setConfigFile() {
     if [[ -v HOME_MANAGER_CONFIG ]] ; then
         if [[ ! -e "$HOME_MANAGER_CONFIG" ]] ; then
-            errorEcho "No configuration file found at $HOME_MANAGER_CONFIG"
+            _i "No configuration file found at %s" \
+               "$HOME_MANAGER_CONFIG" >&2
             exit 1
         fi
 
@@ -57,8 +59,8 @@ function setConfigFile() {
         fi
     done
 
-    errorEcho "No configuration file found." \
-         "Please create one at $defaultConfFile"
+    _i "No configuration file found. Please create one at %s" \
+       "$defaultConfFile" >&2
     exit 1
 }
 
@@ -100,7 +102,7 @@ function setFlakeAttribute() {
 function doInspectOption() {
     setFlakeAttribute
     if [[ -v FLAKE_CONFIG_URI ]]; then
-        errorEcho "Can't inspect options of a flake configuration"
+        _iError "Can't inspect options of a flake configuration"
         exit 1
     fi
     setConfigFile
@@ -140,7 +142,7 @@ function doInspectOption() {
 function doInstantiate() {
     setFlakeAttribute
     if [[ -v FLAKE_CONFIG_URI ]]; then
-        errorEcho "Can't instantiate a flake configuration"
+        _i "Can't instantiate a flake configuration" >&2
         exit 1
     fi
     setConfigFile
@@ -212,20 +214,16 @@ function presentNews() {
     elif [[ "$newsDisplay" == "silent" ]]; then
         return
     elif [[ "$newsDisplay" == "notify" ]]; then
-        local msg
-        if [[ $newsNumUnread -eq 1 ]]; then
-            msg="There is an unread and relevant news item.\n"
-            msg+="Read it by running the command '$(basename "$0") news'."
-        else
-            msg="There are $newsNumUnread unread and relevant news items.\n"
-            msg+="Read them by running the command '$(basename "$0") news'."
-        fi
+        local cmd msg
+        cmd="$(basename "$0")"
+        msg="$(_ip \
+                $'There is %d unread and relevant news item.\nRead it by running the command "%s news".' \
+                $'There are %d unread and relevant news items.\nRead them by running the command "%s news".' \
+                "$newsNumUnread" "$newsNumUnread" "$cmd")"
 
         # Not actually an error but here stdout is reserved for
         # nix-build output.
-        errorEcho
-        errorEcho -e "$msg"
-        errorEcho
+        echo $'\n'"$msg"$'\n' >&2
 
         if [[ -v DISPLAY ]] && type -P notify-send > /dev/null; then
             notify-send "Home Manager" "$msg"
@@ -233,13 +231,14 @@ function presentNews() {
     elif [[ "$newsDisplay" == "show" ]]; then
         doShowNews --unread
     else
-        errorEcho "Unknown 'news.display' setting '$newsDisplay'."
+        _i 'Unknown "news.display" setting "%s".' "$newsDisplay" >&2
     fi
 }
 
 function doEdit() {
     if [[ ! -v EDITOR || -z $EDITOR ]]; then
-        errorEcho "Please set the \$EDITOR environment variable"
+        # shellcheck disable=2016
+        _i 'Please set the $EDITOR environment variable' >&2
         return 1
     fi
 
@@ -254,7 +253,7 @@ function doEdit() {
 
 function doBuild() {
     if [[ ! -w . ]]; then
-        errorEcho "Cannot run build in read-only directory";
+        _i 'Cannot run build in read-only directory' >&2
         return 1
     fi
 
@@ -336,11 +335,11 @@ function doRmGenerations() {
         local linkName="home-manager-$generationId-link"
 
         if [[ ! -e $linkName ]]; then
-            errorEcho "No generation with ID $generationId"
+            _i 'No generation with ID %s' "$generationId" >&2
         elif [[ $linkName == $(readlink home-manager) ]]; then
-            errorEcho "Cannot remove the current generation $generationId"
+            _i 'Cannot remove the current generation %s' "$generationId" >&2
         else
-            echo Removing generation $generationId
+            _i 'Removing generation %s' "$generationId"
             $DRY_RUN_CMD rm $VERBOSE_ARG $linkName
         fi
     done
@@ -366,7 +365,7 @@ function doExpireGenerations() {
         # shellcheck disable=2086
         doRmGenerations $generations
     elif [[ -v VERBOSE ]]; then
-        echo "No generations to expire"
+        _i "No generations to expire"
     fi
 }
 
@@ -376,7 +375,7 @@ function doListPackages() {
     if [[ -n "$outPath" ]] ; then
         nix-store -q --references "$outPath" | sed 's/[^-]*-//'
     else
-        errorEcho "No home-manager packages seem to be installed."
+        _i 'No home-manager packages seem to be installed.' >&2
     fi
 }
 
@@ -433,7 +432,7 @@ function doShowNews() {
             ${PAGER:-less} "$newsFileUnread"
             ;;
         *)
-            errorEcho "Unknown argument $1"
+            _i 'Unknown argument %s' "$1"
             return 1
     esac
 
@@ -448,19 +447,19 @@ function doShowNews() {
 function doUninstall() {
     setVerboseAndDryRun
 
-    echo "This will remove Home Manager from your system."
+    _i 'This will remove Home Manager from your system.'
 
     if [[ -v DRY_RUN ]]; then
-        echo "This is a dry run, nothing will actually be uninstalled."
+        _i 'This is a dry run, nothing will actually be uninstalled.'
     fi
 
     local confirmation
-    read -r -n 1 -p "Really uninstall Home Manager? [y/n] " confirmation
+    read -r -n 1 -p "$(_i 'Really uninstall Home Manager?') [y/n] " confirmation
     echo
 
     case $confirmation in
         y|Y)
-            echo "Switching to empty Home Manager configuration..."
+            _i "Switching to empty Home Manager configuration..."
             HOME_MANAGER_CONFIG="$(mktemp --tmpdir home-manager.XXXXXXXXXX)"
             echo "{ lib, ... }: { home.file = lib.mkForce {}; }" > "$HOME_MANAGER_CONFIG"
             doSwitch
@@ -472,28 +471,28 @@ function doUninstall() {
                 "$NIX_STATE_DIR/gcroots/per-user/$USER/current-home"
             ;;
         *)
-            echo "Yay!"
+            _i "Yay!"
             exit 0
             ;;
     esac
 
     local deleteProfiles
     read -r -n 1 \
-         -p 'Remove all Home Manager generations? [y/n] ' \
+         -p "$(_i 'Remove all Home Manager generations?') [y/n] " \
          deleteProfiles
     echo
 
     case $deleteProfiles in
         y|Y)
             doRmAllGenerations
-            echo "All generations are now eligible for garbage collection."
+            _i 'All generations are now eligible for garbage collection.'
             ;;
         *)
-            echo "Leaving generations but they may still be garbage collected."
+            _i 'Leaving generations but they may still be garbage collected.'
             ;;
     esac
 
-    echo "Home Manager is uninstalled but your home.nix is left untouched."
+    _i "Home Manager is uninstalled but your home.nix is left untouched."
 }
 
 function doHelp() {
@@ -643,8 +642,8 @@ while [[ $# -gt 0 ]]; do
                     COMMAND_ARGS+=("$opt")
                     ;;
                 *)
-                    errorEcho "$0: unknown option '$opt'"
-                    errorEcho "Run '$0 --help' for usage help"
+                    _iError "%s: unknown option '%s'" "$0" "$opt" >&2
+                    _i "Run '%s --help' for usage help" "$0" >&2
                     exit 1
                     ;;
             esac
@@ -678,7 +677,7 @@ case $COMMAND in
         ;;
     expire-generations)
         if [[ ${#COMMAND_ARGS[@]} != 1 ]]; then
-            errorEcho "expire-generations expects one argument, got ${#COMMAND_ARGS[@]}."
+            _i 'expire-generations expects one argument, got %d.' "${#COMMAND_ARGS[@]}" >&2
             exit 1
         else
             doExpireGenerations "${COMMAND_ARGS[@]}"
@@ -700,7 +699,7 @@ case $COMMAND in
         doHelp
         ;;
     *)
-        errorEcho "Unknown command: $COMMAND"
+        _iError 'Unknown command: %s' "$COMMAND" >&2
         doHelp >&2
         exit 1
         ;;

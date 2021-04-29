@@ -1,0 +1,36 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -I https://github.com/NixOS/nixpkgs/archive/05f0934825c2a0750d4888c4735f9420c906b388.tar.gz -i bash -p gettext
+
+set -euo pipefail
+shopt -s globstar
+
+function run() {
+  packageName="$1"
+  output="$2"
+  domain="$3"
+  shift 3
+
+  xgettext -v --package-name="$packageName" \
+           --copyright-holder='Home Manager contributors' \
+           --msgid-bugs-address=https://github.com/nix-community/home-manager/issues \
+           -L Shell -k \
+           -k_i:1 --flag=_i:1:c-format \
+           -k_iError:1 --flag=_i:1:c-format \
+           -k_iWarn:1 --flag=_i:1:c-format \
+           -k_iNote:1 --flag=_i:1:c-format \
+           -k_ip:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           -k_ipError:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           -k_ipWarn:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           -k_ipNote:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           -o "$output" -d "$domain" "$@"
+}
+
+run 'Home Manager' \
+    home-manager/po/home-manager.pot \
+    home-manager \
+    home-manager/home-manager
+
+run 'Home Manager Modules' \
+    modules/po/hm-modules.pot \
+    hm-modules \
+    modules/**/*.{nix,sh}

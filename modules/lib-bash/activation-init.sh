@@ -50,7 +50,7 @@ else
     export VERBOSE_ARG=""
 fi
 
-echo "Starting home manager activation"
+_i "Starting Home Manager activation"
 
 # Verify that we can connect to the Nix store and/or daemon. This will
 # also create the necessary directories in profiles and gcroots.

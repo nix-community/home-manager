@@ -1,4 +1,5 @@
-{ runCommand, lib, bash, callPackage, coreutils, findutils, gnused, less
+{ runCommand, lib, bash, callPackage, coreutils, findutils, gettext, gnused
+, less
 # used for pkgs.path for nixos-option
 , pkgs
 
@@ -16,6 +17,7 @@ let
 
 in runCommand "home-manager" {
   preferLocalBuild = true;
+  nativeBuildInputs = [ gettext ];
   meta = with lib; {
     description = "A user environment configurator";
     maintainers = [ maintainers.rycee ];
@@ -27,12 +29,12 @@ in runCommand "home-manager" {
 
   substituteInPlace $out/bin/home-manager \
     --subst-var-by bash "${bash}" \
-    --subst-var-by coreutils "${coreutils}" \
-    --subst-var-by findutils "${findutils}" \
-    --subst-var-by gnused "${gnused}" \
-    --subst-var-by less "${less}" \
-    --subst-var-by nixos-option "${nixos-option}" \
-    --subst-var-by HOME_MANAGER_PATH '${pathStr}'
+    --subst-var-by DEP_PATH "${
+      lib.makeBinPath [ coreutils findutils gettext gnused less nixos-option ]
+    }" \
+    --subst-var-by HOME_MANAGER_LIB '${../lib/bash/home-manager.sh}' \
+    --subst-var-by HOME_MANAGER_PATH '${pathStr}' \
+    --subst-var-by OUT "$out"
 
   install -D -m755 ${./completion.bash} \
     $out/share/bash-completion/completions/home-manager
@@ -40,4 +42,14 @@ in runCommand "home-manager" {
     $out/share/zsh/site-functions/_home-manager
   install -D -m755 ${./completion.fish} \
     $out/share/fish/vendor_completions.d/home-manager.fish
+
+  install -D -m755 ${../lib/bash/home-manager.sh} \
+    "$out/share/bash/home-manager.sh"
+
+  for path in ${./po}/*.po; do
+    lang="''${path##*/}"
+    lang="''${lang%%.*}"
+    mkdir -p "$out/share/locale/$lang/LC_MESSAGES"
+    msgfmt -o "$out/share/locale/$lang/LC_MESSAGES/home-manager.mo" "$path"
+  done
 ''

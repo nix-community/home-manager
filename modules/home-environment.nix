@@ -605,10 +605,32 @@ in
         ''
     );
 
+    # Text containing Bash commands that will initialize the Home Manager Bash
+    # library. Most importantly, this will prepare for using translated strings
+    # in the `hm-modules` text domain.
+    lib.bash.initHomeManagerLib =
+      let
+        domainDir = pkgs.runCommand "hm-modules-messages" {
+          nativeBuildInputs = [ pkgs.gettext ];
+        } ''
+          for path in ${./po}/*.po; do
+            lang="''${path##*/}"
+            lang="''${lang%%.*}"
+            mkdir -p "$out/$lang/LC_MESSAGES"
+            msgfmt -o "$out/$lang/LC_MESSAGES/hm-modules.mo" "$path"
+          done
+        '';
+      in
+        ''
+          export TEXTDOMAIN=hm-modules
+          export TEXTDOMAINDIR=${domainDir}
+          source ${../lib/bash/home-manager.sh}
+        '';
+
     home.activationPackage =
       let
         mkCmd = res: ''
-            noteEcho Activating ${res.name}
+            _iNote "Activating %s" "${res.name}"
             ${res.data}
           '';
         sortedCommands = hm.dag.topoSort cfg.activation;
@@ -622,14 +644,15 @@ in
         # Programs that always should be available on the activation
         # script's PATH.
         activationBinPaths = lib.makeBinPath (
-          [
-            pkgs.bash
-            pkgs.coreutils
-            pkgs.diffutils        # For `cmp` and `diff`.
-            pkgs.findutils
-            pkgs.gnugrep
-            pkgs.gnused
-            pkgs.ncurses          # For `tput`.
+          with pkgs; [
+            bash
+            coreutils
+            diffutils           # For `cmp` and `diff`.
+            findutils
+            gettext
+            gnugrep
+            gnused
+            ncurses             # For `tput`.
           ] ++ config.home.extraActivationPath
         )
         + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
@@ -641,8 +664,7 @@ in
           cd $HOME
 
           export PATH="${activationBinPaths}"
-
-          . ${./lib-bash/color-echo.sh}
+          ${config.lib.bash.initHomeManagerLib}
 
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
