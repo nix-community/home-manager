@@ -505,7 +505,7 @@ in
         # See https://github.com/nix-community/home-manager/issues/177.
         HISTSIZE="${toString cfg.history.size}"
         SAVEHIST="${toString cfg.history.save}"
-        ${if cfg.history.ignorePatterns != [] then "HISTORY_IGNORE=${lib.escapeShellArg "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"}" else ""}
+        ${optionalString (cfg.history.ignorePatterns != []) "HISTORY_IGNORE=${lib.escapeShellArg "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"}"}
         ${if versionAtLeast config.home.stateVersion "20.03"
           then ''HISTFILE="${cfg.history.path}"''
           else ''HISTFILE="$HOME/${cfg.history.path}"''}
