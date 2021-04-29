@@ -24,7 +24,6 @@ find . -name '*.nix' \
   ! -path ./modules/home-environment.nix \
   ! -path ./modules/lib/default.nix \
   ! -path ./modules/lib/file-type.nix \
-  ! -path ./modules/manual.nix \
   ! -path ./modules/misc/nixpkgs.nix \
   ! -path ./modules/misc/xdg.nix \
   ! -path ./modules/modules.nix \
