@@ -493,7 +493,24 @@ in
         ''
       else
         ''
-          $DRY_RUN_CMD nix-env -i ${cfg.path}
+          if ! $DRY_RUN_CMD nix-env -i ${cfg.path} ; then
+            cat <<EOF
+
+          Oops, nix-env failed to install your new Home Manager profile!
+
+          Perhaps there is a conflict with a package that was installed using
+          'nix-env -i'? Try running
+
+              nix-env -q
+
+          and if there is a conflicting package you can remove it with
+
+              nix-env -e {package name}
+
+          Then try activating your Home Manager configuration again.
+          EOF
+            exit 1
+          fi
         ''
     );
 
