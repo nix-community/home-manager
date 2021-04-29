@@ -18,7 +18,6 @@ esac
 find . -name '*.nix' \
   ! -path ./modules/programs/irssi.nix \
   \
-  ! -path ./home-manager/home-manager.nix \
   ! -path ./modules/default.nix \
   ! -path ./modules/files.nix \
   ! -path ./modules/home-environment.nix \
