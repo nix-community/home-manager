@@ -864,6 +864,11 @@ is assumed to already be available in your profile.
         "8"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/gtk.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/gtk.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-gtk.gtk2.configLocation"></a><a class="term" href="options.html#opt-gtk.gtk2.configLocation"><code class="option">gtk.gtk2.configLocation</code></a></span></dt><dd><p>The location to put the GTK configuration file.
+</p><p><span class="emphasis"><em>Type:</em></span> path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "${config.home.homeDirectory}/.gtkrc-2.0"
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">"${config.xdg.configHome}/gtk-2.0/gtkrc"</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/gtk.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/gtk.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-gtk.gtk2.extraConfig"></a><a class="term" href="options.html#opt-gtk.gtk2.extraConfig"><code class="option">gtk.gtk2.extraConfig</code></a></span></dt><dd><p>Extra configuration lines to add verbatim to
 <code class="filename">~/.gtkrc-2.0</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
