@@ -92,6 +92,18 @@ in {
             <filename>~/.gtkrc-2.0</filename>.
           '';
         };
+
+        configLocation = mkOption {
+          type = types.path;
+          default = "${config.home.homeDirectory}/.gtkrc-2.0";
+          defaultText =
+            literalExample ''"''${config.home.homeDirectory}/.gtkrc-2.0"'';
+          example =
+            literalExample ''"''${config.xdg.configHome}/gtk-2.0/gtkrc"'';
+          description = ''
+            The location to put the GTK configuration file.
+          '';
+        };
       };
 
       gtk3 = {
@@ -154,9 +166,11 @@ in {
     home.packages = optionalPackage cfg.font ++ optionalPackage cfg.theme
       ++ optionalPackage cfg.iconTheme;
 
-    home.file.".gtkrc-2.0".text =
+    home.file.${cfg2.configLocation}.text =
       concatStringsSep "\n" (mapAttrsToList formatGtk2Option ini) + "\n"
       + cfg2.extraConfig;
+
+    home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
 
     xdg.configFile."gtk-3.0/settings.ini".text =
       toGtk3Ini { Settings = ini // cfg3.extraConfig; };

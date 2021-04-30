@@ -86,6 +86,7 @@ import nmt {
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     ./modules/config/i18n
     ./modules/misc/debug
+    ./modules/misc/gtk
     ./modules/misc/numlock
     ./modules/misc/pam
     ./modules/misc/qt
@@ -106,10 +107,10 @@ import nmt {
     ./modules/services/fluidsynth
     ./modules/services/kanshi
     ./modules/services/lieer
-    ./modules/services/redshift-gammastep
     ./modules/services/pbgopy
     ./modules/services/playerctld
     ./modules/services/polybar
+    ./modules/services/redshift-gammastep
     ./modules/services/sxhkd
     ./modules/services/window-managers/i3
     ./modules/services/window-managers/sway
