@@ -8725,6 +8725,46 @@ but are substituted anywhere on a line.
         "adwaita-dark"
       </code></p><p><span class="emphasis"><em>Related packages:</em></span> </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">pkgs.adwaita-qt</code> (adwaita-qt-1.1.4): A style to bend Qt applications to look like they belong into GNOME Shell</p></li><li class="listitem"><p><code class="literal">pkgs.libsForQt5.qtstyleplugins</code> (qtstyleplugins-unstable-2017-03-11): Additional style plugins for Qt5, including BB10, GTK, Cleanlooks, Motif, Plastique</p></li></ul></div><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/qt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.barrier.client.enable"></a><a class="term" href="options.html#opt-services.barrier.client.enable"><code class="option">services.barrier.client.enable</code></a></span></dt><dd><p>Whether to enable Barrier Client daemon.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/barrier.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/barrier.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.barrier.client.enableCrypto"></a><a class="term" href="options.html#opt-services.barrier.client.enableCrypto"><code class="option">services.barrier.client.enableCrypto</code></a></span></dt><dd><p>Whether to enable crypto (SSL) plugin.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/barrier.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/barrier.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.barrier.client.enableDragDrop"></a><a class="term" href="options.html#opt-services.barrier.client.enableDragDrop"><code class="option">services.barrier.client.enableDragDrop</code></a></span></dt><dd><p>Whether to enable file drag &amp; drop.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/barrier.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/barrier.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.barrier.client.extraFlags"></a><a class="term" href="options.html#opt-services.barrier.client.extraFlags"><code class="option">services.barrier.client.extraFlags</code></a></span></dt><dd><p>Additional flags to pass to <span class="command"><strong>barrierc</strong></span>.
+See <span class="command"><strong>barrierc --help</strong></span>.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [ "-f" ]
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/barrier.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/barrier.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.barrier.client.name"></a><a class="term" href="options.html#opt-services.barrier.client.name"><code class="option">services.barrier.client.name</code></a></span></dt><dd><p>Screen name of client. Defaults to hostname.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/barrier.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/barrier.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.barrier.client.server"></a><a class="term" href="options.html#opt-services.barrier.client.server"><code class="option">services.barrier.client.server</code></a></span></dt><dd><p>Server to connect to formatted as
+<code class="literal">&lt;host&gt;[:&lt;port&gt;]</code>.
+Port defaults to <code class="literal">24800</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/barrier.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/barrier.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.barrier.client.tray"></a><a class="term" href="options.html#opt-services.barrier.client.tray"><code class="option">services.barrier.client.tray</code></a></span></dt><dd><p>Whether to enable the system tray icon.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/barrier.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/barrier.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.blueman-applet.enable"></a><a class="term" href="options.html#opt-services.blueman-applet.enable"><code class="option">services.blueman-applet.enable</code></a></span></dt><dd><p>Whether to enable the Blueman applet.
 </p><p>
 Note, for the applet to work, the 'blueman' service should
