@@ -63,7 +63,7 @@ let
       ignorePatterns = mkOption {
         type = types.listOf types.str;
         default = [];
-        example = [ "rm *" "pkill *" ];
+        example = literalExample ''[ "rm *" "pkill *" ]'';
         description = ''
           Do not enter command lines into the history list
           if they match any one of the given shell patterns.
