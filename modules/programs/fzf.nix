@@ -98,7 +98,7 @@ in {
         default = [ ];
         example = literalExample ''[ "-d 40%" ]'';
         description = ''
-          If <option>programs.fzf.tmux.enableShellIntegration</option> is set to true,
+          If <option>programs.fzf.tmux.enableShellIntegration</option> is set to <literal>true</literal>,
           shell integration will use these options for fzf-tmux.
           See <command>fzf-tmux --help</command> for available options.
         '';
