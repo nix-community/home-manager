@@ -8170,6 +8170,16 @@ if they are duplicates of the previous event.
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/zsh.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zsh.history.ignorePatterns"></a><a class="term" href="options.html#opt-programs.zsh.history.ignorePatterns"><code class="option">programs.zsh.history.ignorePatterns</code></a></span></dt><dd><p>Do not enter command lines into the history list
+if they match any one of the given shell patterns.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ "rm *" "pkill *" ]</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/zsh.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zsh.history.ignoreSpace"></a><a class="term" href="options.html#opt-programs.zsh.history.ignoreSpace"><code class="option">programs.zsh.history.ignoreSpace</code></a></span></dt><dd><p>Do not enter command lines into the history list
 if the first character is a space.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
