@@ -2889,6 +2889,24 @@ CTRL-T keybinding.
     
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fzf.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/fzf.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.fzf.tmux.enableShellIntegration"></a><a class="term" href="options.html#opt-programs.fzf.tmux.enableShellIntegration"><code class="option">programs.fzf.tmux.enableShellIntegration</code></a></span></dt><dd><p>Whether to enable setting <code class="literal">FZF_TMUX=1</code> which causes shell integration to use fzf-tmux
+.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fzf.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/fzf.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.fzf.tmux.shellIntegrationOptions"></a><a class="term" href="options.html#opt-programs.fzf.tmux.shellIntegrationOptions"><code class="option">programs.fzf.tmux.shellIntegrationOptions</code></a></span></dt><dd><p>If <code class="option">programs.fzf.tmux.enableShellIntegration</code> is set to <code class="literal">true</code>,
+shell integration will use these options for fzf-tmux.
+See <span class="command"><strong>fzf-tmux --help</strong></span> for available options.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ "-d 40%" ]</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fzf.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/fzf.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.enable"></a><a class="term" href="options.html#opt-programs.gh.enable"><code class="option">programs.gh.enable</code></a></span></dt><dd><p>Whether to enable GitHub CLI tool.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
