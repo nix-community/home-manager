@@ -370,14 +370,13 @@ in {
             "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
           Documentation = "https://github.com/Alexays/Waybar/wiki";
           PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
         };
 
         Service = {
-          Type = "dbus";
-          BusName = "fr.arouillard.waybar";
           ExecStart = "${cfg.package}/bin/waybar";
-          Restart = "always";
-          RestartSec = "1sec";
+          ExecReload = "kill -SIGUSR2 $MAINPID";
+          Restart = "on-failure";
           KillMode = "mixed";
         };
 
