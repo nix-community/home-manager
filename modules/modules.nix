@@ -85,6 +85,7 @@ let
     (loadModule ./programs/kakoune.nix { })
     (loadModule ./programs/keychain.nix { })
     (loadModule ./programs/kitty.nix { })
+    (loadModule ./programs/lazygit.nix { })
     (loadModule ./programs/lesspipe.nix { })
     (loadModule ./programs/lf.nix { })
     (loadModule ./programs/lsd.nix { })

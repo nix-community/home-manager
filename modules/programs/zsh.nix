@@ -60,6 +60,16 @@ let
         description = "History file location";
       };
 
+      ignorePatterns = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = literalExample ''[ "rm *" "pkill *" ]'';
+        description = ''
+          Do not enter command lines into the history list
+          if they match any one of the given shell patterns.
+        '';
+      };
+
       ignoreDups = mkOption {
         type = types.bool;
         default = true;
@@ -495,6 +505,7 @@ in
         # See https://github.com/nix-community/home-manager/issues/177.
         HISTSIZE="${toString cfg.history.size}"
         SAVEHIST="${toString cfg.history.save}"
+        ${optionalString (cfg.history.ignorePatterns != []) "HISTORY_IGNORE=${lib.escapeShellArg "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"}"}
         ${if versionAtLeast config.home.stateVersion "20.03"
           then ''HISTFILE="${cfg.history.path}"''
           else ''HISTFILE="$HOME/${cfg.history.path}"''}
