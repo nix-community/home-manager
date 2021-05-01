@@ -1951,6 +1951,7 @@ in
         time = "2021-04-27T00:00:00+00:00";
         message = ''
           A new module is available: 'programs.ncspot'.
+        '';
       }
 
     ];
