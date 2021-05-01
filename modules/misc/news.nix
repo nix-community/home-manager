@@ -116,6 +116,9 @@ in
     #
     #     date --iso-8601=second --universal
     #
+    # On darwin (or BSD like systems) use
+    #
+    #     date -u +'%Y-%m-%dT%H:%M:%S+00:00'
     news.entries = [
       {
         time = "2017-09-01T10:56:28+00:00";
@@ -1934,6 +1937,13 @@ in
         condition = hostPlatform.isLinux;
         message = ''
           A new service is available: 'services.barrier'.
+        '';
+      }
+
+      {
+        time = "2021-05-01T15:16:08+00:00";
+        message = ''
+          A new module is available: 'programs.lazygit'.
         '';
       }
     ];
