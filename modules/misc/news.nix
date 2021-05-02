@@ -1954,6 +1954,18 @@ in
         '';
       }
 
+      {
+        time = "2021-05-02T11:22:42+00:00";
+        condition = hostPlatform.isLinux && config.services.sxhkd.enable;
+        message = ''
+          The sxhkd service now is started using 'xsession.initExtra',
+          therefore this module loses systemd service management capabilities
+          and works only if Home Manager starts the user X session.
+
+          The option 'services.sxhkd.extraPath' has been deprecated.
+        '';
+      }
+
     ];
   };
 }
