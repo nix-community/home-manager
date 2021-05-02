@@ -39,22 +39,31 @@ rec {
     concatStringsSep "\n"
     (map (c: "assign ${criteriaStr c} ${workspace}") criteria);
 
-  fontConfigStr = { names, style, size }:
-    optionalString (names != [ ]) concatStringsSep " " (filter (x: x != "") [
-      "font"
-      "pango:${concatStringsSep ", " names}"
-      style
-      (toString size)
-    ]);
+  fontConfigStr = let
+    toFontStr = { names, style ? "", size ? "" }:
+      optionalString (names != [ ]) concatStringsSep " " (filter (x: x != "") [
+        "font"
+        "pango:${concatStringsSep ", " names}"
+        style
+        size
+      ]);
+  in fontCfg:
+  if isList fontCfg then
+    toFontStr { names = fontCfg; }
+  else
+    toFontStr {
+      inherit (fontCfg) names style;
+      size = toString fontCfg.size;
+    };
 
-  barStr = { id, font, mode, hiddenState, position, workspaceButtons
+  barStr = { id, fonts, mode, hiddenState, position, workspaceButtons
     , workspaceNumbers, command, statusCommand, colors, trayOutput, extraConfig
     , ... }:
     let colorsNotNull = lib.filterAttrs (n: v: v != null) colors != { };
     in ''
       bar {
         ${optionalString (id != null) "id ${id}"}
-        ${fontConfigStr font}
+        ${fontConfigStr fonts}
         ${optionalString (mode != null) "mode ${mode}"}
         ${optionalString (hiddenState != null) "hidden_state ${hiddenState}"}
         ${optionalString (position != null) "position ${position}"}

@@ -15,7 +15,7 @@ let
   configModule = types.submodule {
     options = {
       inherit (commonOptions)
-        font window floating focus assigns workspaceLayout
+        fonts window floating focus assigns workspaceLayout
         workspaceAutoBackAndForth modifier keycodebindings colors bars startup
         gaps menu terminal;
 
@@ -264,7 +264,7 @@ let
 
   configFile = pkgs.writeText "sway.conf" ((if cfg.config != null then
     with cfg.config; ''
-      ${fontConfigStr font}
+      ${fontConfigStr fonts}
       floating_modifier ${floating.modifier}
       ${windowBorderString window floating}
       hide_edge_borders ${window.hideEdgeBorders}
@@ -411,6 +411,13 @@ in {
   };
 
   config = mkIf cfg.enable {
+    warnings = (optional (isList cfg.config.fonts)
+      "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
+      ++ flatten (map (b:
+        optional (isList b.fonts)
+        "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
+        cfg.config.bars);
+
     home.packages = optional (cfg.package != null) cfg.package
       ++ optional cfg.xwayland pkgs.xwayland;
     xdg.configFile."sway/config" = {

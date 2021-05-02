@@ -15,7 +15,7 @@ let
   configModule = types.submodule {
     options = {
       inherit (commonOptions)
-        font window floating focus assigns modifier workspaceLayout
+        fonts window floating focus assigns modifier workspaceLayout
         workspaceAutoBackAndForth keycodebindings colors bars startup gaps menu
         terminal;
 
@@ -156,7 +156,7 @@ let
 
   configFile = pkgs.writeText "i3.conf" ((if cfg.config != null then
     with cfg.config; ''
-      ${fontConfigStr font}
+      ${fontConfigStr fonts}
       floating_modifier ${floating.modifier}
       ${windowBorderString window floating}
       hide_edge_borders ${window.hideEdgeBorders}
@@ -257,6 +257,15 @@ in {
       xsession.windowManager.i3.package =
         mkDefault (if (cfg.config.gaps != null) then pkgs.i3-gaps else pkgs.i3);
     })
+
+    {
+      warnings = (optional (isList cfg.config.fonts)
+        "Specifying i3.config.fonts as a list is deprecated. Use the attrset version instead.")
+        ++ flatten (map (b:
+          optional (isList b.fonts)
+          "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
+          cfg.config.bars);
+    }
 
     (mkIf (cfg.config != null
       && (any (s: s.workspace != null) cfg.config.startup)) {

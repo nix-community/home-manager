@@ -92,8 +92,8 @@ let
           '';
         });
     in {
-      font = mkOption {
-        type = fontOptions;
+      fonts = mkOption {
+        type = with types; either (listOf str) fontOptions;
         default = { };
       };
 
@@ -336,8 +336,8 @@ let
 
   criteriaModule = types.attrsOf types.str;
 in {
-  font = mkOption {
-    type = fontOptions;
+  fonts = mkOption {
+    type = with types; either (listOf str) fontOptions;
     default = { };
   };
 
@@ -634,7 +634,7 @@ in {
       workspaceButtons = true;
       workspaceNumbers = true;
       statusCommand = "${pkgs.i3status}/bin/i3status";
-      font = {
+      fonts = {
         names = [ "monospace" ];
         size = 8.0;
       };
