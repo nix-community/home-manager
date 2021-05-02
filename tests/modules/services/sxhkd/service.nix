@@ -1,22 +1,31 @@
 { config, pkgs, ... }:
+
+let 
+  expectedFileRegex = ''
+      systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd \
+       @sxhkd@/bin/sxhkd -m 1 &
+  '';
+in
+
 {
   config = {
+    xsession = {
+      enable = true;
+      windowManager.command = "";
+    };
+
     services.sxhkd = {
       enable = true;
       package = pkgs.runCommandLocal "dummy-package" { } "mkdir $out" // { outPath = "@sxhkd@"; };
       extraOptions = [ "-m 1" ];
-      extraPath = "/home/the-user/bin:/extra/path/bin";
     };
 
     nmt.script = ''
-      serviceFile=home-files/.config/systemd/user/sxhkd.service
+      xsessionFile=home-files/.xsession
 
-      assertFileExists $serviceFile
+      assertFileExists $xsessionFile
 
-      assertFileRegex $serviceFile 'ExecStart=@sxhkd@/bin/sxhkd -m 1'
-
-      assertFileRegex $serviceFile \
-        'Environment=PATH=.*\.nix-profile/bin:/home/the-user/bin:/extra/path/bin'
+      assertFileRegex $xsessionFile ${expectedFileRegex}
     '';
   };
 }
