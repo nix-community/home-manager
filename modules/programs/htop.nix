@@ -193,7 +193,55 @@ in {
 
     settings = mkOption {
       type = types.attrs;
-      default = { };
+      default = {
+        account_guest_in_cpu_meter = false;
+        color_scheme = 0;
+        cpu_count_from_zero = false;
+        delay = 15;
+        detailed_cpu_time = false;
+        enable_mouse = true;
+        fields = with config.lib.htop.fields; [
+          PID
+          USER
+          PRIORITY
+          NICE
+          M_SIZE
+          M_RESIDENT
+          M_SHARE
+          STATE
+          PERCENT_CPU
+          PERCENT_MEM
+          TIME
+          COMM
+        ];
+        header_margin = true;
+        hide_kernel_threads = true;
+        hide_threads = false;
+        hide_userland_threads = false;
+        highlight_base_name = false;
+        highlight_megabytes = true;
+        highlight_threads = true;
+        shadow_other_users = false;
+        show_cpu_frequency = false;
+        show_cpu_usage = false;
+        show_program_path = true;
+        show_thread_names = false;
+        sort_direction = 1;
+        sort_key = config.lib.htop.fields.PERCENT_CPU;
+        tree_view = false;
+        update_process_names = false;
+        vim_mode = false;
+      } // (with config.lib.htop;
+        leftMeters {
+          AllCPUs = modes.Bar;
+          Memory = modes.Bar;
+          Swap = modes.Bar;
+        }) // (with config.lib.htop;
+          rightMeters {
+            Tasks = modes.Text;
+            LoadAverage = modes.Text;
+            Uptime = modes.Text;
+          });
       example = literalExample ''
         {
           color_scheme = 6;
@@ -237,21 +285,8 @@ in {
     };
 
     fields = mkOption {
-      type = types.listOf (types.enum (attrNames fields));
-      default = [
-        "PID"
-        "USER"
-        "PRIORITY"
-        "NICE"
-        "M_SIZE"
-        "M_RESIDENT"
-        "M_SHARE"
-        "STATE"
-        "PERCENT_CPU"
-        "PERCENT_MEM"
-        "TIME"
-        "COMM"
-      ];
+      type = types.nullOr (types.listOf (types.enum (attrNames fields)));
+      default = null;
       example = [
         "PID"
         "USER"
@@ -270,8 +305,8 @@ in {
     };
 
     sortKey = mkOption {
-      type = types.enum (attrNames fields);
-      default = "PERCENT_CPU";
+      type = types.nullOr (types.enum (attrNames fields));
+      default = null;
       example = "TIME";
       description = ''
         Deprecated. Please use programs.htop.settings.sort_key instead.
@@ -281,8 +316,8 @@ in {
     };
 
     sortDescending = mkOption {
-      type = types.bool;
-      default = true;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.sort_direction instead.
 
@@ -291,8 +326,8 @@ in {
     };
 
     hideThreads = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.hide_threads instead.
 
@@ -301,8 +336,8 @@ in {
     };
 
     hideKernelThreads = mkOption {
-      type = types.bool;
-      default = true;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.hide_kernel_threads instead.
 
@@ -311,8 +346,8 @@ in {
     };
 
     hideUserlandThreads = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.hide_userland_threads instead.
 
@@ -321,8 +356,8 @@ in {
     };
 
     shadowOtherUsers = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.shadow_other_users instead.
 
@@ -331,8 +366,8 @@ in {
     };
 
     showThreadNames = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.show_thread_names instead.
 
@@ -341,8 +376,8 @@ in {
     };
 
     showProgramPath = mkOption {
-      type = types.bool;
-      default = true;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.show_program_path instead.
 
@@ -351,8 +386,8 @@ in {
     };
 
     highlightBaseName = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.highlight_base_name instead.
 
@@ -361,8 +396,8 @@ in {
     };
 
     highlightMegabytes = mkOption {
-      type = types.bool;
-      default = true;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.highlight_megabytes instead.
 
@@ -371,8 +406,8 @@ in {
     };
 
     highlightThreads = mkOption {
-      type = types.bool;
-      default = true;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.highlight_threads instead.
 
@@ -381,8 +416,8 @@ in {
     };
 
     treeView = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.tree_view instead.
 
@@ -391,8 +426,8 @@ in {
     };
 
     headerMargin = mkOption {
-      type = types.bool;
-      default = true;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.header_margin instead.
 
@@ -401,8 +436,8 @@ in {
     };
 
     detailedCpuTime = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.detailed_cpu_time instead.
 
@@ -411,8 +446,8 @@ in {
     };
 
     cpuCountFromZero = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.cpu_count_from_zero instead.
 
@@ -421,8 +456,8 @@ in {
     };
 
     showCpuUsage = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.show_cpu_usage instead.
 
@@ -431,8 +466,8 @@ in {
     };
 
     showCpuFrequency = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.show_cpu_frequency instead.
 
@@ -441,8 +476,8 @@ in {
     };
 
     updateProcessNames = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.update_process_names instead.
 
@@ -451,8 +486,8 @@ in {
     };
 
     accountGuestInCpuMeter = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.account_guest_in_cpu_meter instead.
 
@@ -461,8 +496,8 @@ in {
     };
 
     colorScheme = mkOption {
-      type = types.enum [ 0 1 2 3 4 5 6 ];
-      default = 0;
+      type = types.nullOr (types.enum [ 0 1 2 3 4 5 6 ]);
+      default = null;
       example = 6;
       description = ''
         Deprecated. Please use programs.htop.settings.color_scheme instead.
@@ -472,8 +507,8 @@ in {
     };
 
     enableMouse = mkOption {
-      type = types.bool;
-      default = true;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.enable_mouse instead.
 
@@ -482,8 +517,8 @@ in {
     };
 
     delay = mkOption {
-      type = types.int;
-      default = 15;
+      type = types.nullOr types.int;
+      default = null;
       example = 2;
       description = ''
         Deprecated. Please use programs.htop.settings.delay instead.
@@ -502,10 +537,7 @@ in {
 
         Meters shown in the header.
       '';
-      default = {
-        left = [ "AllCPUs" "Memory" "Swap" ];
-        right = [ "Tasks" "LoadAverage" "Uptime" ];
-      };
+      default = null;
       example = {
         left = [
           "Memory"
@@ -531,12 +563,12 @@ in {
           }
         ];
       };
-      type = meterType;
+      type = types.nullOr meterType;
     };
 
     vimMode = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Deprecated. Please use programs.htop.settings.vim_mode instead.
 
@@ -546,51 +578,76 @@ in {
   };
 
   config = mkIf cfg.enable {
-    warnings = optional (cfg.settings == { }) ''
-      All individual programs.htop.* options are deprecated. Please use
-      programs.htop.settings instead.
-    '';
-
     lib.htop = { inherit fields modes leftMeters rightMeters; };
 
     home.packages = [ pkgs.htop ];
 
     xdg.configFile."htop/htoprc".text = let
-      leftMeters = map (m: m.kind) cfg.meters.left;
-      leftModes = map (m: m.mode) cfg.meters.left;
-      rightMeters = map (m: m.kind) cfg.meters.right;
-      rightModes = map (m: m.mode) cfg.meters.right;
 
-      settings' = {
-        fields = map (n: fields.${n}) cfg.fields;
-        sort_key = fields.${cfg.sortKey};
-        sort_direction = cfg.sortDescending;
-        hide_threads = cfg.hideThreads;
-        hide_kernel_threads = cfg.hideKernelThreads;
-        hide_userland_threads = cfg.hideUserlandThreads;
-        shadow_other_users = cfg.shadowOtherUsers;
-        show_thread_names = cfg.showThreadNames;
-        show_program_path = cfg.showProgramPath;
-        highlight_base_name = cfg.highlightBaseName;
-        highlight_megabytes = cfg.highlightMegabytes;
-        highlight_threads = cfg.highlightThreads;
-        tree_view = cfg.treeView;
-        header_margin = cfg.headerMargin;
-        detailed_cpu_time = cfg.detailedCpuTime;
-        cpu_count_from_zero = cfg.cpuCountFromZero;
-        show_cpu_usage = cfg.showCpuUsage;
-        show_cpu_frequency = cfg.showCpuFrequency;
-        update_process_names = cfg.updateProcessNames;
-        account_guest_in_cpu_meter = cfg.accountGuestInCpuMeter;
-        color_scheme = cfg.colorScheme;
-        enable_mouse = cfg.enableMouse;
-        delay = cfg.delay;
+      deprecate = settingsKey: optionKey: optionValue:
+        let
+          warn' = warn
+            "htop: programs.htop.${optionKey} is deprecated; please is programs.htop.settings.${settingsKey} instead";
+        in if !isNull optionValue then
+          warn' settingsKey optionKey optionValue
+        else if hasAttr settingsKey cfg.settings then
+          cfg.settings.${settingsKey}
+        else
+          null;
+
+      deprecate' = settingsKey: optionKey:
+        deprecate settingsKey optionKey cfg.${optionKey};
+
+      ifNonNull = x: y: if isNull x then null else y;
+
+      leftMeters = deprecate "left_meters" "meters.left"
+        (ifNonNull cfg.meters (map (m: m.kind) cfg.meters.left));
+      leftModes = deprecate "left_meter_modes" "meters.left"
+        (ifNonNull cfg.meters (map (m: m.mode) cfg.meters.left));
+      rightMeters = deprecate "right_meters" "meters.right"
+        (ifNonNull cfg.meters (map (m: m.kind) cfg.meters.right));
+      rightModes = deprecate "right_meter_modes" "meters.right"
+        (ifNonNull cfg.meters (map (m: m.mode) cfg.meters.right));
+
+      settings' = cfg.settings // (filterAttrs (_: v: !isNull v) {
+        fields = deprecate "fields" "fields"
+          (ifNonNull cfg.fields (map (n: fields.${n}) cfg.fields));
+        sort_key = deprecate "sort_key" "sortKey"
+          (ifNonNull cfg.sortKey fields.${cfg.sortKey});
+        sort_direction = deprecate' "sort_direction" "sortDescending";
+        hide_threads = deprecate' "hide_threads" "hideThreads";
+        hide_kernel_threads =
+          deprecate' "hide_kernel_threads" "hideKernelThreads";
+        hide_userland_threads =
+          deprecate' "hide_userland_threads" "hideUserlandThreads";
+        shadow_other_users = deprecate' "shadow_other_users" "shadowOtherUsers";
+        show_thread_names = deprecate' "show_thread_names" "showThreadNames";
+        show_program_path = deprecate' "show_program_path" "showProgramPath";
+        highlight_base_name =
+          deprecate' "highlight_base_name" "highlightBaseName";
+        highlight_megabytes =
+          deprecate' "highlight_megabytes" "highlightMegabytes";
+        highlight_threads = deprecate' "highlight_threads" "highlightThreads";
+        tree_view = deprecate' "tree_view" "treeView";
+        header_margin = deprecate' "header_margin" "headerMargin";
+        detailed_cpu_time = deprecate' "detailed_cpu_time" "detailedCpuTime";
+        cpu_count_from_zero =
+          deprecate' "cpu_count_from_zero" "cpuCountFromZero";
+        show_cpu_usage = deprecate' "show_cpu_usage" "showCpuUsage";
+        show_cpu_frequency = deprecate' "show_cpu_frequency" "showCpuFrequency";
+        update_process_names =
+          deprecate' "update_process_names" "updateProcessNames";
+        account_guest_in_cpu_meter =
+          deprecate' "account_guest_in_cpu_meter" "accountGuestInCpuMeter";
+        color_scheme = deprecate' "color_scheme" "colorScheme";
+        enable_mouse = deprecate' "enable_mouse" "enableMouse";
+        delay = deprecate' "delay" "delay";
         left_meters = leftMeters;
         left_meter_modes = leftModes;
         right_meters = rightMeters;
         right_meter_modes = rightModes;
-        vim_mode = cfg.vimMode;
-      } // cfg.settings;
+        vim_mode = deprecate' "vim_mode" "vimMode";
+      });
     in concatStringsSep "\n" (mapAttrsToList formatOption settings');
   };
 }
