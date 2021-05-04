@@ -95,6 +95,12 @@ let
       fonts = mkOption {
         type = with types; either (listOf str) fontOptions;
         default = { };
+        example = {
+          names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
+          style = "Bold Semi-Condensed";
+          size = 11.0;
+        };
+        description = "Font configuration for this bar.";
       };
 
       extraConfig = mkOption {
@@ -339,6 +345,12 @@ in {
   fonts = mkOption {
     type = with types; either (listOf str) fontOptions;
     default = { };
+    example = {
+      names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
+      style = "Bold Semi-Condensed";
+      size = 11.0;
+    };
+    description = "Font configuration for window titles, nagbar...";
   };
 
   window = mkOption {
