@@ -7,14 +7,37 @@ let
   isI3 = moduleName == "i3";
   isSway = !isI3;
 
-  fonts = mkOption {
-    type = types.listOf types.str;
-    default = [ "monospace 8" ];
-    description = ''
-      Font list used for window titles. Only FreeType fonts are supported.
-      The order here is important (e.g. icons font should go before the one used for text).
-    '';
-    example = [ "FontAwesome 10" "Terminus 10" ];
+  fontOptions = types.submodule {
+    options = {
+      names = mkOption {
+        type = types.listOf types.str;
+        default = [ "monospace" ];
+        defaultText = literalExample ''[ "monospace" ]'';
+        description = ''
+          List of font names list used for window titles. Only FreeType fonts are supported.
+          The order here is important (e.g. icons font should go before the one used for text).
+        '';
+        example = literalExample ''[ "FontAwesome" "Terminus" ]'';
+      };
+
+      style = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          The font style to use for window titles.
+        '';
+        example = "Bold Semi-Condensed";
+      };
+
+      size = mkOption {
+        type = types.float;
+        default = 8.0;
+        description = ''
+          The font size to use for window titles.
+        '';
+        example = 11.5;
+      };
+    };
   };
 
   startupModule = types.submodule {
@@ -69,7 +92,10 @@ let
           '';
         });
     in {
-      fonts = fonts // optionalAttrs versionAtLeast2009 { default = [ ]; };
+      fonts = mkOption {
+        type = with types; either (listOf str) fontOptions;
+        default = { };
+      };
 
       extraConfig = mkOption {
         type = types.lines;
@@ -310,7 +336,10 @@ let
 
   criteriaModule = types.attrsOf types.str;
 in {
-  inherit fonts;
+  fonts = mkOption {
+    type = with types; either (listOf str) fontOptions;
+    default = { };
+  };
 
   window = mkOption {
     type = types.submodule {
@@ -605,7 +634,10 @@ in {
       workspaceButtons = true;
       workspaceNumbers = true;
       statusCommand = "${pkgs.i3status}/bin/i3status";
-      fonts = [ "monospace 8" ];
+      fonts = {
+        names = [ "monospace" ];
+        size = 8.0;
+      };
       trayOutput = "primary";
       colors = {
         background = "#000000";
