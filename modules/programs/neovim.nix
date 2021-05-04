@@ -175,8 +175,8 @@ in {
 
       extraLuaPackages = mkOption {
         type = with types; either extraLua51PackageType (listOf package);
-        default = (_: [ ]);
-        defaultText = "ps: []";
+        default = [ ];
+        defaultText = "[]";
         example = literalExample "(ps: with ps; [ luautf8 ])";
         description = ''
           A function in lua5_1.withPackages format, which returns a
