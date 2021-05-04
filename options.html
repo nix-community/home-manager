@@ -11392,13 +11392,18 @@ null for state version ≥ 20.09
         ""
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.fonts"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.fonts"><code class="option">wayland.windowManager.sway.config.bars.*.fonts</code></a></span></dt><dd><p>This option has no description.</p><p><span class="emphasis"><em>Type:</em></span> list of strings or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.fonts"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.fonts"><code class="option">wayland.windowManager.sway.config.bars.*.fonts</code></a></span></dt><dd><p>Font configuration for this bar.</p><p><span class="emphasis"><em>Type:</em></span> list of strings or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
         
         }
     
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
+  style = "Bold Semi-Condensed";
+  size = 11.0;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.hiddenState"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.hiddenState"><code class="option">wayland.windowManager.sway.config.bars.*.hiddenState</code></a></span></dt><dd><p>The default bar mode when 'bar.mode' == 'hide'.</p><p><span class="emphasis"><em>Type:</em></span> one of "hide", "show"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         hide for state version &lt; 20.09,
@@ -11602,13 +11607,18 @@ See <a class="link" href="https://i3wm.org/docs/userguide.html#focus_on_window_a
         "none"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.fonts"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.fonts"><code class="option">wayland.windowManager.sway.config.fonts</code></a></span></dt><dd><p>This option has no description.</p><p><span class="emphasis"><em>Type:</em></span> list of strings or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.fonts"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.fonts"><code class="option">wayland.windowManager.sway.config.fonts</code></a></span></dt><dd><p>Font configuration for window titles, nagbar...</p><p><span class="emphasis"><em>Type:</em></span> list of strings or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
         
         }
     
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
+  style = "Bold Semi-Condensed";
+  size = 11.0;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.gaps"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.gaps"><code class="option">wayland.windowManager.sway.config.gaps</code></a></span></dt><dd><p>Gaps related settings.
 </p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -12705,13 +12715,18 @@ null for state version ≥ 20.09
         ""
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.fonts"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.fonts"><code class="option">xsession.windowManager.i3.config.bars.*.fonts</code></a></span></dt><dd><p>This option has no description.</p><p><span class="emphasis"><em>Type:</em></span> list of strings or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.fonts"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.fonts"><code class="option">xsession.windowManager.i3.config.bars.*.fonts</code></a></span></dt><dd><p>Font configuration for this bar.</p><p><span class="emphasis"><em>Type:</em></span> list of strings or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
         
         }
     
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
+  style = "Bold Semi-Condensed";
+  size = 11.0;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.hiddenState"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.hiddenState"><code class="option">xsession.windowManager.i3.config.bars.*.hiddenState</code></a></span></dt><dd><p>The default bar mode when 'bar.mode' == 'hide'.</p><p><span class="emphasis"><em>Type:</em></span> one of "hide", "show"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         hide for state version &lt; 20.09,
@@ -12904,13 +12919,18 @@ See <a class="link" href="https://i3wm.org/docs/userguide.html#focus_on_window_a
         "none"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.fonts"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.fonts"><code class="option">xsession.windowManager.i3.config.fonts</code></a></span></dt><dd><p>This option has no description.</p><p><span class="emphasis"><em>Type:</em></span> list of strings or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.fonts"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.fonts"><code class="option">xsession.windowManager.i3.config.fonts</code></a></span></dt><dd><p>Font configuration for window titles, nagbar...</p><p><span class="emphasis"><em>Type:</em></span> list of strings or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
         
         }
     
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
+  style = "Bold Semi-Condensed";
+  size = 11.0;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.gaps"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.gaps"><code class="option">xsession.windowManager.i3.config.gaps</code></a></span></dt><dd><p>i3Gaps related settings. The i3-gaps package must be used for these features to work.
 </p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
