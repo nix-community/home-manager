@@ -5414,12 +5414,6 @@ list of Python 3 packages required for your plugins to work.
         "ps: []"
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">(ps: with ps; [ python-language-server ])</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/neovim.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.neovim.extraPythonPackages"></a><a class="term" href="options.html#opt-programs.neovim.extraPythonPackages"><code class="option">programs.neovim.extraPythonPackages</code></a></span></dt><dd><p>A function in python.withPackages format, which returns a
-list of Python 2 packages required for your plugins to work.
-</p><p><span class="emphasis"><em>Type:</em></span> python packages in python.withPackages format or list of packages</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        "ps: []"
-      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">(ps: with ps; [ pandas jedi ])</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/programs/neovim.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.neovim.plugins"></a><a class="term" href="options.html#opt-programs.neovim.plugins"><code class="option">programs.neovim.plugins</code></a></span></dt><dd><p>List of vim plugins to install optionally associated with
 configuration to be placed in init.vim.
 
@@ -5460,12 +5454,6 @@ This option is mutually exclusive with <code class="varname">configure</code>.
 use Node plugins.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/programs/neovim.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.neovim.withPython"></a><a class="term" href="options.html#opt-programs.neovim.withPython"><code class="option">programs.neovim.withPython</code></a></span></dt><dd><p>Enable Python 2 provider. Set to <code class="literal">true</code> to
-use Python 2 plugins.
-</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/neovim.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.neovim.withPython3"></a><a class="term" href="options.html#opt-programs.neovim.withPython3"><code class="option">programs.neovim.withPython3</code></a></span></dt><dd><p>Enable Python 3 provider. Set to <code class="literal">true</code> to
