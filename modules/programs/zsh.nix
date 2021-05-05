@@ -56,6 +56,10 @@ let
         default = if versionAtLeast stateVersion "20.03"
           then "$HOME/.zsh_history"
           else relToDotDir ".zsh_history";
+        defaultText = literalExample ''
+          "$HOME/.zsh_history" if state version ≥ 20.03,
+          "$ZDOTDIR/.zsh_history" otherwise
+        '';
         example = literalExample ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
         description = "History file location";
       };
