@@ -79,17 +79,13 @@ let
     options = let
       versionAtLeast2009 = versionAtLeast config.home.stateVersion "20.09";
       mkNullableOption = { type, default, ... }@args:
-        mkOption (args // optionalAttrs versionAtLeast2009 {
+        mkOption (args // {
           type = types.nullOr type;
-          default = null;
-          example = default;
-        } // {
+          default = if versionAtLeast2009 then null else default;
           defaultText = literalExample ''
-            ${
-              if isString default then default else "See code"
-            } for state version < 20.09,
-            null for state version ≥ 20.09
+            null for state version ≥ 20.09, as example otherwise
           '';
+          example = default;
         });
     in {
       fonts = mkOption {
@@ -167,11 +163,9 @@ let
           "\${pkgs.waybar}/bin/waybar";
       };
 
-      statusCommand = mkOption {
-        type = types.nullOr types.str;
-        default =
-          if versionAtLeast2009 then null else "${pkgs.i3status}/bin/i3status";
-        example = "i3status";
+      statusCommand = mkNullableOption {
+        type = types.str;
+        default = "${pkgs.i3status}/bin/i3status";
         description = "Command that will be used to get status lines.";
       };
 
@@ -687,6 +681,7 @@ in {
       };
     }] else
       [ { } ];
+    defaultText = literalExample "see code";
     description = ''
       ${capitalModuleName} bars settings blocks. Set to empty list to remove bars completely.
     '';
