@@ -258,14 +258,14 @@ in {
         mkDefault (if (cfg.config.gaps != null) then pkgs.i3-gaps else pkgs.i3);
     })
 
-    {
+    (mkIf (cfg.config != null) {
       warnings = (optional (isList cfg.config.fonts)
         "Specifying i3.config.fonts as a list is deprecated. Use the attrset version instead.")
         ++ flatten (map (b:
           optional (isList b.fonts)
           "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
           cfg.config.bars);
-    }
+    })
 
     (mkIf (cfg.config != null
       && (any (s: s.workspace != null) cfg.config.startup)) {
