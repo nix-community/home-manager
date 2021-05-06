@@ -17,7 +17,8 @@ let
       description = "Whether to enable ${name}.";
     };
 
-  isFloat = x: isString x && builtins.match "^[+-]?([0-9]*[.])?[0-9]+$" x != null;
+  isFloat = x:
+    isString x && builtins.match "^[+-]?([0-9]*[.])?[0-9]+$" x != null;
 
   float = mkOptionType {
     name = "float";
@@ -130,7 +131,8 @@ in {
       };
 
       AppleShowScrollBars = mkOption {
-        type = types.nullOr (types.enum [ "WhenScrolling" "Automatic" "Always" ]);
+        type =
+          types.nullOr (types.enum [ "WhenScrolling" "Automatic" "Always" ]);
         default = null;
         description = ''
           When to show the scrollbars. Options are 'WhenScrolling', 'Automatic' and 'Always'.
