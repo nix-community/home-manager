@@ -17,13 +17,13 @@ let
       description = "Whether to enable ${name}.";
     };
 
-  isFloat = x:
+  isFloatStr = x:
     isString x && builtins.match "^[+-]?([0-9]*[.])?[0-9]+$" x != null;
 
-  float = mkOptionType {
+  floatStr = mkOptionType {
     name = "float";
     description = "float";
-    check = isFloat;
+    check = isFloatStr;
     merge = options.mergeOneOption;
   };
 
@@ -204,7 +204,7 @@ in {
       };
 
       NSWindowResizeTime = mkOption {
-        type = types.nullOr float;
+        type = types.nullOr floatStr;
         default = null;
         example = "0.20";
         description = ''
@@ -269,7 +269,7 @@ in {
       };
 
       "com.apple.sound.beep.volume" = mkOption {
-        type = types.nullOr float;
+        type = types.nullOr floatStr;
         default = null;
         description = ''
           # Apple menu > System Preferences > Sound
@@ -308,7 +308,7 @@ in {
       };
 
       "com.apple.trackpad.scaling" = mkOption {
-        type = types.nullOr float;
+        type = types.nullOr floatStr;
         default = null;
         description = ''
           Configures the trackpad tracking speed (0 to 3).  The default is "1".
@@ -324,7 +324,7 @@ in {
       };
 
       "com.apple.springing.delay" = mkOption {
-        type = types.nullOr float;
+        type = types.nullOr floatStr;
         default = null;
         example = "1.0";
         description = ''
