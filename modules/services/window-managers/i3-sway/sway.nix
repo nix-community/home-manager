@@ -410,34 +410,38 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    warnings = (optional (isList cfg.config.fonts)
-      "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
-      ++ flatten (map (b:
-        optional (isList b.fonts)
-        "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
-        cfg.config.bars);
+  config = mkIf cfg.enable (mkMerge [
+    (mkIf (cfg.config != null) {
+      warnings = (optional (isList cfg.config.fonts)
+        "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
+        ++ flatten (map (b:
+          optional (isList b.fonts)
+          "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
+          cfg.config.bars);
+    })
 
-    home.packages = optional (cfg.package != null) cfg.package
-      ++ optional cfg.xwayland pkgs.xwayland;
-    xdg.configFile."sway/config" = {
-      source = configFile;
-      onChange = ''
-        swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep -x sway || ${pkgs.coreutils}/bin/true).sock
-        if [ -S $swaySocket ]; then
-          echo "Reloading sway"
-          $DRY_RUN_CMD ${pkgs.sway}/bin/swaymsg -s $swaySocket reload
-        fi
-      '';
-    };
-    systemd.user.targets.sway-session = mkIf cfg.systemdIntegration {
-      Unit = {
-        Description = "sway compositor session";
-        Documentation = [ "man:systemd.special(7)" ];
-        BindsTo = [ "graphical-session.target" ];
-        Wants = [ "graphical-session-pre.target" ];
-        After = [ "graphical-session-pre.target" ];
+    {
+      home.packages = optional (cfg.package != null) cfg.package
+        ++ optional cfg.xwayland pkgs.xwayland;
+      xdg.configFile."sway/config" = {
+        source = configFile;
+        onChange = ''
+          swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep -x sway || ${pkgs.coreutils}/bin/true).sock
+          if [ -S $swaySocket ]; then
+            echo "Reloading sway"
+            $DRY_RUN_CMD ${pkgs.sway}/bin/swaymsg -s $swaySocket reload
+          fi
+        '';
       };
-    };
-  };
+      systemd.user.targets.sway-session = mkIf cfg.systemdIntegration {
+        Unit = {
+          Description = "sway compositor session";
+          Documentation = [ "man:systemd.special(7)" ];
+          BindsTo = [ "graphical-session.target" ];
+          Wants = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session-pre.target" ];
+        };
+      };
+    }
+  ]);
 }
