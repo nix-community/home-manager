@@ -81,4 +81,10 @@
       fingerprint = "8F87 050B 0F9C B841 1515  7399 B784 3F82 3355 E9B9";
     }];
   };
+  ambroisie = {
+    email = "bruno.home-manager@belanyi.fr";
+    github = "ambroisie";
+    githubId = 12465195;
+    name = "Bruno BELANYI";
+  };
 }

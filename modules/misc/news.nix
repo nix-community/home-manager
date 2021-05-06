@@ -1961,6 +1961,13 @@ in
           A new module is available: 'services.etesync-dav'
         '';
       }
+
+      {
+        time = "2021-05-06T11:01:41+00:00";
+        message = ''
+          A new module is available: 'programs.nix-index'.
+        '';
+      }
     ];
   };
 }

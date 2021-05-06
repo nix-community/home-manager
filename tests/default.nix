@@ -65,6 +65,7 @@ import nmt {
     ./modules/programs/ne
     ./modules/programs/neomutt
     ./modules/programs/newsboat
+    ./modules/programs/nix-index
     ./modules/programs/nushell
     ./modules/programs/pet
     ./modules/programs/powerline-go
