@@ -163,7 +163,7 @@ The commit messages should follow the {seven-rules}[seven rules]. We also ask yo
 {long description}
 ----
 
-where `{component}` refers to the code component (or module) your change affects, `{description}` is a very brief description of your change, and `{long description}` is an optional clarifying description. Note, `{description}` should start with a lower case letter. As a rare exception, if there is no clear component, or your change affects many components, then the `{component}` part is optional. See <<ex-commit-message>> for a commit message that fulfills these requirements.
+where `{component}` refers to the code component (or module) your change affects, `{description}` is a very brief description of your change, and `{long description}` is an optional clarifying description. As a rare exception, if there is no clear component, or your change affects many components, then the `{component}` part is optional. See <<ex-commit-message>> for a commit message that fulfills these requirements.
 
 [[ex-commit-message]]
 .Compliant commit message
