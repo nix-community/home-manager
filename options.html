@@ -11305,15 +11305,7 @@ on criteria.
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars"><code class="option">wayland.windowManager.sway.config.bars</code></a></span></dt><dd><p>Sway bars settings blocks. Set to empty list to remove bars completely.
 </p><p><span class="emphasis"><em>Type:</em></span> list of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        
-        [
-        
-        {
-        
-        }
-     
-        ]
-    
+        see code
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors"><code class="option">wayland.windowManager.sway.config.bars.*.colors</code></a></span></dt><dd><p>Bar color settings. All color classes can be specified using submodules
@@ -11331,57 +11323,85 @@ See <a class="link" href="https://i3wm.org/docs/userguide.html#_colors" target="
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.activeWorkspace"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.activeWorkspace"><code class="option">wayland.windowManager.sway.config.bars.*.colors.activeWorkspace</code></a></span></dt><dd><p>Border, background and text color for a workspace button when the workspace is active.
-</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        background = "#5f676a"; border = "#333333"; text = "#ffffff"; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.background"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.background"><code class="option">wayland.windowManager.sway.config.bars.*.colors.background</code></a></span></dt><dd><p>Background color of the bar.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        #000000 for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.background"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.background"><code class="option">wayland.windowManager.sway.config.bars.*.colors.background</code></a></span></dt><dd><p>Background color of the bar.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "#000000"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.bindingMode"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.bindingMode"><code class="option">wayland.windowManager.sway.config.bars.*.colors.bindingMode</code></a></span></dt><dd><p>Border, background and text color for the binding mode indicator</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.bindingMode"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.bindingMode"><code class="option">wayland.windowManager.sway.config.bars.*.colors.bindingMode</code></a></span></dt><dd><p>Border, background and text color for the binding mode indicator</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        background = "#900000"; border = "#2f343a"; text = "#ffffff"; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.focusedWorkspace"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.focusedWorkspace"><code class="option">wayland.windowManager.sway.config.bars.*.colors.focusedWorkspace</code></a></span></dt><dd><p>Border, background and text color for a workspace button when the workspace has focus.
-</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        background = "#285577"; border = "#4c7899"; text = "#ffffff"; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.inactiveWorkspace"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.inactiveWorkspace"><code class="option">wayland.windowManager.sway.config.bars.*.colors.inactiveWorkspace</code></a></span></dt><dd><p>Border, background and text color for a workspace button when the workspace does not
 have focus and is not active.
-</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        background = "#222222"; border = "#333333"; text = "#888888"; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.separator"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.separator"><code class="option">wayland.windowManager.sway.config.bars.*.colors.separator</code></a></span></dt><dd><p>Text color to be used for the separator.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        #666666 for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.separator"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.separator"><code class="option">wayland.windowManager.sway.config.bars.*.colors.separator</code></a></span></dt><dd><p>Text color to be used for the separator.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "#666666"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.statusline"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.statusline"><code class="option">wayland.windowManager.sway.config.bars.*.colors.statusline</code></a></span></dt><dd><p>Text color to be used for the statusline.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        #ffffff for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.statusline"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.statusline"><code class="option">wayland.windowManager.sway.config.bars.*.colors.statusline</code></a></span></dt><dd><p>Text color to be used for the statusline.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "#ffffff"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.colors.urgentWorkspace"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.colors.urgentWorkspace"><code class="option">wayland.windowManager.sway.config.bars.*.colors.urgentWorkspace</code></a></span></dt><dd><p>Border, background and text color for a workspace button when the workspace contains
 a window with the urgency hint set.
-</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        background = "#900000"; border = "#2f343a"; text = "#ffffff"; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.command"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.command"><code class="option">wayland.windowManager.sway.config.bars.*.command</code></a></span></dt><dd><p>Command that will be used to start a bar.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -11407,10 +11427,11 @@ null for state version ≥ 20.09
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.hiddenState"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.hiddenState"><code class="option">wayland.windowManager.sway.config.bars.*.hiddenState</code></a></span></dt><dd><p>The default bar mode when 'bar.mode' == 'hide'.</p><p><span class="emphasis"><em>Type:</em></span> one of "hide", "show"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        hide for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.hiddenState"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.hiddenState"><code class="option">wayland.windowManager.sway.config.bars.*.hiddenState</code></a></span></dt><dd><p>The default bar mode when 'bar.mode' == 'hide'.</p><p><span class="emphasis"><em>Type:</em></span> null or one of "hide", "show"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "hide"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.id"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.id"><code class="option">wayland.windowManager.sway.config.bars.*.id</code></a></span></dt><dd><p>Specifies the bar ID for the configured bar instance.
@@ -11420,40 +11441,46 @@ to the position of the embedding bar block in the config file.
         null
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.mode"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.mode"><code class="option">wayland.windowManager.sway.config.bars.*.mode</code></a></span></dt><dd><p>Bar visibility mode.</p><p><span class="emphasis"><em>Type:</em></span> one of "dock", "hide", "invisible"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        dock for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.mode"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.mode"><code class="option">wayland.windowManager.sway.config.bars.*.mode</code></a></span></dt><dd><p>Bar visibility mode.</p><p><span class="emphasis"><em>Type:</em></span> null or one of "dock", "hide", "invisible"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "dock"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.position"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.position"><code class="option">wayland.windowManager.sway.config.bars.*.position</code></a></span></dt><dd><p>The edge of the screen swaybar should show up.</p><p><span class="emphasis"><em>Type:</em></span> one of "top", "bottom"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        bottom for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.position"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.position"><code class="option">wayland.windowManager.sway.config.bars.*.position</code></a></span></dt><dd><p>The edge of the screen swaybar should show up.</p><p><span class="emphasis"><em>Type:</em></span> null or one of "top", "bottom"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "bottom"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.statusCommand"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.statusCommand"><code class="option">wayland.windowManager.sway.config.bars.*.statusCommand</code></a></span></dt><dd><p>Command that will be used to get status lines.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        "\${pkgs.i3status}/bin/i3status"
+        null for state version ≥ 20.09, as example otherwise
+
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        "i3status"
+        "\${pkgs.i3status}/bin/i3status"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.trayOutput"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.trayOutput"><code class="option">wayland.windowManager.sway.config.bars.*.trayOutput</code></a></span></dt><dd><p>Where to output tray.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        primary for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.trayOutput"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.trayOutput"><code class="option">wayland.windowManager.sway.config.bars.*.trayOutput</code></a></span></dt><dd><p>Where to output tray.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "primary"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.workspaceButtons"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.workspaceButtons"><code class="option">wayland.windowManager.sway.config.bars.*.workspaceButtons</code></a></span></dt><dd><p>Whether workspace buttons should be shown or not.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.workspaceButtons"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.workspaceButtons"><code class="option">wayland.windowManager.sway.config.bars.*.workspaceButtons</code></a></span></dt><dd><p>Whether workspace buttons should be shown or not.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.workspaceNumbers"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.workspaceNumbers"><code class="option">wayland.windowManager.sway.config.bars.*.workspaceNumbers</code></a></span></dt><dd><p>Whether workspace numbers should be displayed within the workspace buttons.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bars._.workspaceNumbers"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bars._.workspaceNumbers"><code class="option">wayland.windowManager.sway.config.bars.*.workspaceNumbers</code></a></span></dt><dd><p>Whether workspace numbers should be displayed within the workspace buttons.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.bindkeysToCode"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.bindkeysToCode"><code class="option">wayland.windowManager.sway.config.bindkeysToCode</code></a></span></dt><dd><p>Whether to make use of <code class="option">--to-code</code> in keybindings.
@@ -12628,15 +12655,7 @@ on criteria.
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars"><code class="option">xsession.windowManager.i3.config.bars</code></a></span></dt><dd><p>i3 bars settings blocks. Set to empty list to remove bars completely.
 </p><p><span class="emphasis"><em>Type:</em></span> list of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        
-        [
-        
-        {
-        
-        }
-     
-        ]
-    
+        see code
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors"><code class="option">xsession.windowManager.i3.config.bars.*.colors</code></a></span></dt><dd><p>Bar color settings. All color classes can be specified using submodules
@@ -12654,57 +12673,85 @@ See <a class="link" href="https://i3wm.org/docs/userguide.html#_colors" target="
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.activeWorkspace"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.activeWorkspace"><code class="option">xsession.windowManager.i3.config.bars.*.colors.activeWorkspace</code></a></span></dt><dd><p>Border, background and text color for a workspace button when the workspace is active.
-</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        background = "#5f676a"; border = "#333333"; text = "#ffffff"; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.background"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.background"><code class="option">xsession.windowManager.i3.config.bars.*.colors.background</code></a></span></dt><dd><p>Background color of the bar.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        #000000 for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.background"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.background"><code class="option">xsession.windowManager.i3.config.bars.*.colors.background</code></a></span></dt><dd><p>Background color of the bar.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "#000000"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.bindingMode"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.bindingMode"><code class="option">xsession.windowManager.i3.config.bars.*.colors.bindingMode</code></a></span></dt><dd><p>Border, background and text color for the binding mode indicator</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.bindingMode"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.bindingMode"><code class="option">xsession.windowManager.i3.config.bars.*.colors.bindingMode</code></a></span></dt><dd><p>Border, background and text color for the binding mode indicator</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        background = "#900000"; border = "#2f343a"; text = "#ffffff"; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.focusedWorkspace"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.focusedWorkspace"><code class="option">xsession.windowManager.i3.config.bars.*.colors.focusedWorkspace</code></a></span></dt><dd><p>Border, background and text color for a workspace button when the workspace has focus.
-</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        background = "#285577"; border = "#4c7899"; text = "#ffffff"; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.inactiveWorkspace"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.inactiveWorkspace"><code class="option">xsession.windowManager.i3.config.bars.*.colors.inactiveWorkspace</code></a></span></dt><dd><p>Border, background and text color for a workspace button when the workspace does not
 have focus and is not active.
-</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        background = "#222222"; border = "#333333"; text = "#888888"; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.separator"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.separator"><code class="option">xsession.windowManager.i3.config.bars.*.colors.separator</code></a></span></dt><dd><p>Text color to be used for the separator.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        #666666 for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.separator"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.separator"><code class="option">xsession.windowManager.i3.config.bars.*.colors.separator</code></a></span></dt><dd><p>Text color to be used for the separator.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "#666666"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.statusline"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.statusline"><code class="option">xsession.windowManager.i3.config.bars.*.colors.statusline</code></a></span></dt><dd><p>Text color to be used for the statusline.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        #ffffff for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.statusline"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.statusline"><code class="option">xsession.windowManager.i3.config.bars.*.colors.statusline</code></a></span></dt><dd><p>Text color to be used for the statusline.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "#ffffff"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.colors.urgentWorkspace"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.colors.urgentWorkspace"><code class="option">xsession.windowManager.i3.config.bars.*.colors.urgentWorkspace</code></a></span></dt><dd><p>Border, background and text color for a workspace button when the workspace contains
 a window with the urgency hint set.
-</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        background = "#900000"; border = "#2f343a"; text = "#ffffff"; 
+        }
+    
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.command"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.command"><code class="option">xsession.windowManager.i3.config.bars.*.command</code></a></span></dt><dd><p>Command that will be used to start a bar.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -12730,10 +12777,11 @@ null for state version ≥ 20.09
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.hiddenState"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.hiddenState"><code class="option">xsession.windowManager.i3.config.bars.*.hiddenState</code></a></span></dt><dd><p>The default bar mode when 'bar.mode' == 'hide'.</p><p><span class="emphasis"><em>Type:</em></span> one of "hide", "show"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        hide for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.hiddenState"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.hiddenState"><code class="option">xsession.windowManager.i3.config.bars.*.hiddenState</code></a></span></dt><dd><p>The default bar mode when 'bar.mode' == 'hide'.</p><p><span class="emphasis"><em>Type:</em></span> null or one of "hide", "show"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "hide"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.id"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.id"><code class="option">xsession.windowManager.i3.config.bars.*.id</code></a></span></dt><dd><p>Specifies the bar ID for the configured bar instance.
@@ -12743,40 +12791,46 @@ to the position of the embedding bar block in the config file.
         null
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.mode"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.mode"><code class="option">xsession.windowManager.i3.config.bars.*.mode</code></a></span></dt><dd><p>Bar visibility mode.</p><p><span class="emphasis"><em>Type:</em></span> one of "dock", "hide", "invisible"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        dock for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.mode"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.mode"><code class="option">xsession.windowManager.i3.config.bars.*.mode</code></a></span></dt><dd><p>Bar visibility mode.</p><p><span class="emphasis"><em>Type:</em></span> null or one of "dock", "hide", "invisible"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "dock"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.position"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.position"><code class="option">xsession.windowManager.i3.config.bars.*.position</code></a></span></dt><dd><p>The edge of the screen i3bar should show up.</p><p><span class="emphasis"><em>Type:</em></span> one of "top", "bottom"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        bottom for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.position"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.position"><code class="option">xsession.windowManager.i3.config.bars.*.position</code></a></span></dt><dd><p>The edge of the screen i3bar should show up.</p><p><span class="emphasis"><em>Type:</em></span> null or one of "top", "bottom"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "bottom"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.statusCommand"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.statusCommand"><code class="option">xsession.windowManager.i3.config.bars.*.statusCommand</code></a></span></dt><dd><p>Command that will be used to get status lines.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        "\${pkgs.i3status}/bin/i3status"
+        null for state version ≥ 20.09, as example otherwise
+
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        "i3status"
+        "\${pkgs.i3status}/bin/i3status"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.trayOutput"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.trayOutput"><code class="option">xsession.windowManager.i3.config.bars.*.trayOutput</code></a></span></dt><dd><p>Where to output tray.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        primary for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.trayOutput"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.trayOutput"><code class="option">xsession.windowManager.i3.config.bars.*.trayOutput</code></a></span></dt><dd><p>Where to output tray.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "primary"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.workspaceButtons"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.workspaceButtons"><code class="option">xsession.windowManager.i3.config.bars.*.workspaceButtons</code></a></span></dt><dd><p>Whether workspace buttons should be shown or not.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.workspaceButtons"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.workspaceButtons"><code class="option">xsession.windowManager.i3.config.bars.*.workspaceButtons</code></a></span></dt><dd><p>Whether workspace buttons should be shown or not.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.workspaceNumbers"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.workspaceNumbers"><code class="option">xsession.windowManager.i3.config.bars.*.workspaceNumbers</code></a></span></dt><dd><p>Whether workspace numbers should be displayed within the workspace buttons.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        See code for state version &lt; 20.09,
-null for state version ≥ 20.09
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.bars._.workspaceNumbers"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.bars._.workspaceNumbers"><code class="option">xsession.windowManager.i3.config.bars.*.workspaceNumbers</code></a></span></dt><dd><p>Whether workspace numbers should be displayed within the workspace buttons.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null for state version ≥ 20.09, as example otherwise
 
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.colors"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.colors"><code class="option">xsession.windowManager.i3.config.colors</code></a></span></dt><dd><p>Color settings. All color classes can be specified using submodules
