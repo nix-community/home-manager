@@ -21,17 +21,7 @@ in {
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        dmenu = dummy-package // { outPath = "@dmenu@"; };
-        rxvt-unicode-unwrapped = dummy-package // {
-          outPath = "@rxvt-unicode-unwrapped@";
-        };
-        i3status = dummy-package // { outPath = "@i3status@"; };
-        sway = dummy-package // { outPath = "@sway@"; };
-        xwayland = dummy-package // { outPath = "@xwayland@"; };
-      })
-    ];
+    nixpkgs.overlays = [ (import ./sway-overlay.nix) ];
 
     nmt.script = ''
       assertFileExists home-files/.config/sway/config
