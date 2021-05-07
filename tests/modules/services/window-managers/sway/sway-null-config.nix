@@ -2,17 +2,13 @@
 
 with lib;
 
-let
-
-  dummy-package = pkgs.runCommandLocal "dummy-package" { } "mkdir $out";
-
-in {
+{
   config = {
     wayland.windowManager.sway = {
       enable = true;
-      package = dummy-package // { outPath = "@sway"; };
-      # overriding findutils causes issues
-      config.menu = "${pkgs.dmenu}/bin/dmenu_run";
+      config = null;
+      systemdIntegration = false;
+      package = pkgs.sway;
     };
 
     nixpkgs.overlays = [ (import ./sway-overlay.nix) ];
@@ -20,7 +16,7 @@ in {
     nmt.script = ''
       assertFileExists home-files/.config/sway/config
       assertFileContent home-files/.config/sway/config \
-        ${./sway-default.conf}
+        ${pkgs.writeText "expected" "\n"}
     '';
   };
 }

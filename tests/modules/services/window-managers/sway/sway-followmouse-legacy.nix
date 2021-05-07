@@ -19,21 +19,7 @@ in {
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        dmenu = dummy-package // { outPath = "@dmenu@"; };
-        rxvt-unicode-unwrapped = dummy-package // {
-          outPath = "@rxvt-unicode-unwrapped@";
-        };
-        sway = dummy-package // { outPath = "@sway@"; };
-        sway-unwrapped = dummy-package // {
-          outPath = "@sway-unwrapped@";
-          version = "1";
-        };
-        swaybg = dummy-package // { outPath = "@swaybg@"; };
-        xwayland = dummy-package // { outPath = "@xwayland@"; };
-      })
-    ];
+    nixpkgs.overlays = [ (import ./sway-overlay.nix) ];
 
     nmt.script = ''
       assertFileExists home-files/.config/sway/config

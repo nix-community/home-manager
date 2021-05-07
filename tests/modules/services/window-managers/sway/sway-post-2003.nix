@@ -17,17 +17,7 @@ in {
       config.menu = "${pkgs.dmenu}/bin/dmenu_run";
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        dmenu = dummy-package // { outPath = "@dmenu@"; };
-        rxvt-unicode-unwrapped = dummy-package // {
-          outPath = "@rxvt-unicode-unwrapped@";
-        };
-        sway = dummy-package // { outPath = "@sway@"; };
-        i3status = dummy-package // { outPath = "@i3status@"; };
-        xwayland = dummy-package // { outPath = "@xwayland@"; };
-      })
-    ];
+    nixpkgs.overlays = [ (import ./sway-overlay.nix) ];
 
     nmt.script = ''
       assertFileExists home-files/.config/sway/config
