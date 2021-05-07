@@ -19,6 +19,11 @@ let
 in
 
 {
+  imports = [
+    (mkRemovedOptionModule ["services" "sxhkd" "extraPath"]
+    "This option is no longer needed and can be removed.")
+  ];
+
   options.services.sxhkd = {
     enable = mkEnableOption "simple X hotkey daemon";
 
@@ -57,44 +62,19 @@ in
           i3-msg {workspace,move container to workspace} {1-10}
       '';
     };
-
-    extraPath = mkOption {
-      default = "";
-      type = types.envVar;
-      description = ''
-        Additional <envar>PATH</envar> entries to search for commands.
-      '';
-      example = "/home/some-user/bin:/extra/path/bin";
-    };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.sxhkd ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."sxhkd/sxhkdrc".text = concatStringsSep "\n" [
       keybindingsStr
       cfg.extraConfig
     ];
 
-    systemd.user.services.sxhkd = {
-      Unit = {
-        Description = "simple X hotkey daemon";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
-      };
-
-      Service = {
-        Environment =
-          "PATH="
-          + "${config.home.profileDirectory}/bin"
-          + optionalString (cfg.extraPath != "") ":"
-          + cfg.extraPath;
-        ExecStart = "${cfg.package}/bin/sxhkd ${toString cfg.extraOptions}";
-      };
-
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
-    };
+    xsession.initExtra = ''
+      systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd \
+        ${cfg.package}/bin/sxhkd ${toString cfg.extraOptions} &
+    '';
   };
 }
