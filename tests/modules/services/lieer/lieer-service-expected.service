@@ -1,4 +1,5 @@
 [Service]
+Environment=NOTMUCH_CONFIG=/home/hm-user/.config/notmuch/notmuchrc
 ExecStart=@lieer@/bin/gmi sync
 Type=oneshot
 WorkingDirectory=/home/hm-user/Mail/hm@example.com

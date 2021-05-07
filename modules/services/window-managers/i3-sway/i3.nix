@@ -140,7 +140,8 @@ let
 
   inherit (commonFunctions)
     keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
-    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString;
+    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
+    fontConfigStr;
 
   startupEntryStr = { command, always, notification, workspace, ... }: ''
     ${if always then "exec_always" else "exec"} ${
@@ -155,7 +156,7 @@ let
 
   configFile = pkgs.writeText "i3.conf" ((if cfg.config != null then
     with cfg.config; ''
-      font pango:${concatStringsSep ", " fonts}
+      ${fontConfigStr fonts}
       floating_modifier ${floating.modifier}
       ${windowBorderString window floating}
       hide_edge_borders ${window.hideEdgeBorders}
@@ -256,6 +257,15 @@ in {
       xsession.windowManager.i3.package =
         mkDefault (if (cfg.config.gaps != null) then pkgs.i3-gaps else pkgs.i3);
     })
+
+    {
+      warnings = (optional (isList cfg.config.fonts)
+        "Specifying i3.config.fonts as a list is deprecated. Use the attrset version instead.")
+        ++ flatten (map (b:
+          optional (isList b.fonts)
+          "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
+          cfg.config.bars);
+    }
 
     (mkIf (cfg.config != null
       && (any (s: s.workspace != null) cfg.config.startup)) {

@@ -124,9 +124,10 @@ let
   genMaildirAccountConfig = account:
     with account;
     let
-      folderHook = mapAttrsToList setOption (genCommonFolderHooks account // {
-        folder = "'${account.maildir.absPath}'";
-      });
+      folderHook = mapAttrsToList setOption (genCommonFolderHooks account
+        // optionalAttrs cfg.changeFolderWhenSourcingAccount {
+          folder = "'${account.maildir.absPath}'";
+        });
     in ''
       ${concatStringsSep "\n" folderHook}
     '';
@@ -265,6 +266,11 @@ in {
         default = { };
         description = "Extra configuration appended to the end.";
       };
+
+      changeFolderWhenSourcingAccount =
+        mkEnableOption "changing the folder when sourcing an account" // {
+          default = true;
+        };
 
       extraConfig = mkOption {
         type = types.lines;
