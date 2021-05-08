@@ -317,7 +317,7 @@ in {
           aliasElements = builtins.map (takeSubmodule mkAlias) aliases;
           matchElements = builtins.map (takeSubmodule mkMatch) matches;
         in lib.hm.xml.genXMLFile {
-          doctype = "SYSTEM 'fonts.dtd'";
+          doctypeSystem = "fonts.dtd";
           root = {
             name = "fontconfig";
             children = includeElements ++ dirElements ++ [ cacheDirElement ]

@@ -1,21 +1,23 @@
-{ libxslt, libxml2, runCommand }:
+{ lib, libxslt, libxml2, runCommand }:
 
 rec {
+  escapeXML = lib.replaceStrings [ ''"'' "'" "<" ">" "&" ] [
+    "&quot;"
+    "&apos;"
+    "&lt;"
+    "&gt;"
+    "&amp;"
+  ];
   genXMLFile = input:
     runCommand "generated-xml" {
-      input = builtins.toXML input;
-
-      prefix = ''
-        <?xml version="1.0" encoding="utf-8"?>
-      '' + (if input ? doctype then
-        "<!DOCTYPE ${input.root.name} ${input.doctype}>"
-      else
-        "");
+      input = builtins.toXML input.root;
 
       stylesheet = builtins.toFile "stylesheet.xsl" ''
         <?xml version='1.0' encoding='UTF-8'?>
         <xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='1.0'>
-          <xsl:output method="xml" encoding="utf-8" omit-xml-declaration="yes" />
+          <xsl:output method="xml" encoding="utf-8" doctype-system="${
+            escapeXML input.doctypeSystem or ""
+          }" />
           <xsl:template match='attrs[attr[@name="name"]]'>
             <xsl:element name='{attr[@name="name"]/string/@value}'>
               <xsl:for-each select='attr[@name="attrs"]/attrs/*[string]'>
@@ -30,7 +32,7 @@ rec {
         </xsl:stylesheet>
       '';
     } ''
-      (echo "$prefix"; echo "$input" | ${libxslt}/bin/xsltproc $stylesheet -) | ${libxml2}/bin/xmllint --format - > $out
+      echo "$input" | ${libxslt}/bin/xsltproc $stylesheet - | ${libxml2}/bin/xmllint --format - > $out
     '';
   genXML = input: builtins.readFile (genXMLFile input);
 }
