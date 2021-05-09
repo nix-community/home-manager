@@ -103,6 +103,7 @@ let
     (loadModule ./programs/neomutt.nix { })
     (loadModule ./programs/neovim.nix { })
     (loadModule ./programs/newsboat.nix { })
+    (loadModule ./programs/nix-index.nix { })
     (loadModule ./programs/noti.nix { })
     (loadModule ./programs/notmuch.nix { })
     (loadModule ./programs/nushell.nix { })

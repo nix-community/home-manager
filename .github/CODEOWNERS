@@ -113,6 +113,9 @@
 /modules/programs/newsboat.nix                        @sumnerevans
 /tests/modules/programs/newsboat                      @sumnerevans
 
+/modules/programs/nix-index.nix                       @ambroisie
+/tests/modules/programs/nix-index                     @ambroisie
+
 /modules/programs/noti.nix                            @marsam
 
 /modules/programs/nushell.nix                         @Philipp-M
