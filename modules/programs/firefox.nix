@@ -282,7 +282,7 @@ in
           if isDarwin then
             cfg.package
           else if versionAtLeast config.home.stateVersion "19.09" then
-            cfg.package.override { cfg = fcfg; }
+            cfg.package.override (old: { cfg = old.cfg or {} // fcfg; })
           else
             (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
       in
