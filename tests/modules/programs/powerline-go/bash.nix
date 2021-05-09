@@ -18,6 +18,9 @@ with lib;
       };
     };
 
+    nixpkgs.overlays =
+      [ (self: super: { powerline-go = pkgs.writeScriptBin "dummy-pkg" ""; }) ];
+
     nmt.script = ''
       assertFileExists home-files/.bashrc
       assertFileContains \
