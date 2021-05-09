@@ -6,8 +6,6 @@ let
 
   cfg = config.programs.home-manager;
 
-  dag = config.lib.dag;
-
 in {
   meta.maintainers = [ maintainers.rycee ];
 

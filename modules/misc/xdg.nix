@@ -6,8 +6,6 @@ let
 
   cfg = config.xdg;
 
-  dag = config.lib.dag;
-
   fileType = (import ../lib/file-type.nix {
     inherit (config.home) homeDirectory;
     inherit lib pkgs;

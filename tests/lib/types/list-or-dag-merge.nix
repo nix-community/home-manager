@@ -4,7 +4,7 @@ with lib;
 
 let
 
-  dag = config.lib.dag;
+  dag = lib.hm.dag;
 
   result = let
     sorted = dag.topoSort config.tested.dag;
