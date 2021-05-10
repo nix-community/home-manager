@@ -135,8 +135,6 @@ let
         else if isBool value # Bool formats to '0'/'1' with toString
         then
           (boolToStr value)
-        else if isList value then
-          ("")
         else
           toString value;
       in "${key} = ${value'},";
@@ -648,7 +646,7 @@ in {
     };
 
     config = mkOption {
-      type = attrsOf (either genericType (listOf genericType));
+      type = attrsOf genericType;
       default = { };
       description = ''
         Set any simple value.
