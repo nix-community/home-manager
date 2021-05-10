@@ -150,6 +150,9 @@
 
 /modules/programs/powerline-go.nix                    @DamienCassou
 
+/modules/programs/rbw.nix                             @ambroisie
+/tests/modules/programs/rbw                           @ambroisie
+
 /modules/programs/rofi.nix                            @thiagokokada
 /tests/modules/programs/rofi                          @thiagokokada
 
