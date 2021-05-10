@@ -2,11 +2,18 @@
 with lib;
 let
   cfg = config.programs.wezterm;
-  eitherStrBoolInt = with types; either str (either bool int);
 
   genericType = with types; oneOf [ str bool int float ];
 
   boolToStr = boolVal: if boolVal then "true" else "false";
+
+  formatBindings = bindings:
+    pipe bindings [
+      (x: builtins.concatStringsSep "\n" x)
+      (x: lib.strings.removeSuffix "\n" x)
+      (x: builtins.replaceStrings [ "\n  \n" ] [ "\n" ] x)
+      (x: builtins.replaceStrings [ "\n" ] [ "\n    " ] x)
+    ];
 
   toWeztermKeybindings = bindings:
     let
@@ -21,20 +28,11 @@ let
           key = "${binding.key}",
           ${getAction binding}
         },'';
-      # Map bindings to string
       mapped = builtins.map mapBinding bindings;
-      # Join them together with indentation so it looks nice
-      joined = builtins.concatStringsSep "\n" mapped;
-      # Strip the trailing empty line
-      trimmed = lib.strings.removeSuffix "\n" joined;
-      # Remove empty lines
-      stripped = builtins.replaceStrings [ "\n  \n" ] [ "\n" ] trimmed;
-      # Indent properly
-      indented = builtins.replaceStrings [ "\n" ] [ "\n    " ] stripped;
     in ''
       -- Keybinds
         keys = [
-          ${indented}
+          ${formatBindings mapped}
         ],'';
 
   toWeztermMousebindings = bindings:
@@ -58,14 +56,10 @@ let
           ${getAction binding}
         },'';
       mapped = builtins.map mapBinding bindings;
-      joined = builtins.concatStringsSep "\n" mapped;
-      trimmed = lib.strings.removeSuffix "\n" joined;
-      stripped = builtins.replaceStrings [ "\n  \n" ] [ "\n" ] trimmed;
-      indented = builtins.replaceStrings [ "\n" ] [ "\n    " ] stripped;
     in ''
       -- Mouse Binds
         mouse_bindings = [
-          ${indented}
+          ${formatBindings mapped}
         ],'';
 
   toWeztermTabColors = tab: indent:
@@ -241,59 +235,31 @@ let
       };
     };
 
+  mkColor = default: desc:
+    mkOption {
+      type = types.str;
+      default = default;
+      description = desc;
+      example = default;
+    };
+
   weztermColorschemeCursorType = with types;
     submodule {
       options = {
-        foreground = mkOption {
-          type = str;
-          default = "#000000";
-          description = ''
-            Overrides the text color when the current cell is occupied by the cursor.
-          '';
-          example = "#000000";
-        };
-
-        background = mkOption {
-          type = str;
-          default = "#52AD70";
-          description = ''
-            Overrides the cell background color when the current cell is occupied by the cursor and the cursor style is set to Block.
-          '';
-          example = "#52AD70";
-        };
-
-        border = mkOption {
-          type = str;
-          default = "#52AD70";
-          description = ''
-            Specifies the border color of the cursor when the cursor style is set to Block,
-            of the color of the vertical or horizontal bar when the cursor style is set to Bar or Underline.
-          '';
-          example = "#52AD70";
-        };
+        foreground = mkColor "#000000"
+          "Overrides the text color when the current cell is occupied by the cursor.";
+        background = mkColor "#52AD70"
+          "Overrides the cell background color when the current cell is occupied by the cursor and the cursor style is set to Block.";
+        border = mkColor "#52AD70"
+          "Specifies the border color of the cursor when the cursor style is set to Block,";
       };
     };
 
   weztermColorschemeSelectionType = with types;
     submodule {
       options = {
-        foreground = mkOption {
-          type = str;
-          default = "#000000";
-          description = ''
-            The foreground color of selected text.
-          '';
-          example = "#000000";
-        };
-
-        background = mkOption {
-          type = str;
-          default = "#FFFACD";
-          description = ''
-            The background color of selected text.
-          '';
-          example = "#FFFACD";
-        };
+        foreground = mkColor "#000000" "The foreground color of selected text.";
+        background = mkColor "#FFFACD" "The background color of selected text.";
       };
     };
 
@@ -308,14 +274,7 @@ let
             "#1B1032"
           else
             "#3B3052";
-        in mkOption {
-          type = str;
-          default = default;
-          description = ''
-            The color of the background area for the tab.
-          '';
-          example = default;
-        };
+        in mkColor default "The color of the background area for the tab.";
 
         foreground = let
           default = if tabType == "active" then
@@ -324,14 +283,7 @@ let
             "#808080"
           else
             "#909090";
-        in mkOption {
-          type = str;
-          default = default;
-          description = ''
-            The color of the text for the tab.
-          '';
-          example = default;
-        };
+        in mkColor default "The color of the text for the tab.";
 
         intensity = mkOption {
           type = enum [ "Half" "Normal" "Bold" ];
@@ -377,14 +329,8 @@ let
   weztermColorschemeTabBarType = with types;
     submodule {
       options = {
-        background = mkOption {
-          type = str;
-          default = "#0B0022";
-          description = ''
-            The color of the strip that goes along the top of the window.
-          '';
-          example = "#0B0022";
-        };
+        background = mkColor "#0B0022"
+          "The color of the strip that goes along the top of the window.";
 
         activeTab = mkOption {
           type = weztermColorschemeTabBarTabType "active";
@@ -447,14 +393,7 @@ let
     let
       name = if isAnsi then "ansi" else "bright";
       default = if isAnsi then defaultAnsi else defaultBright;
-    in mkOption {
-      type = str;
-      default = default;
-      description = ''
-        The ${name} ${colorName} color.
-      '';
-      example = default;
-    };
+    in mkColor default "The ${name} ${colorName} color.";
 
   weztermColorschemeBase16Type = with types;
     isAnsi:
@@ -474,23 +413,12 @@ let
   weztermColorschemeType = with types;
     submodule {
       options = {
-        foreground = mkOption {
-          type = str;
-          default = "#C0C0C0";
-          description = ''
-            The default text color.
-          '';
-          example = "#C0C0C0";
-        };
+        foreground = mkColor "#C0C0C0" "The default text color.";
+        background = mkColor "#000000" "The default background color.";
 
-        background = mkOption {
-          type = str;
-          default = "#000000";
-          description = ''
-            The default background color.
-          '';
-          example = "#000000";
-        };
+        scrollbarThumb = mkColor "#222222" ''
+          The color of the scrollbar "thumb"; the portion that represents the current viewport'';
+        split = mkColor "#444444" "The color of the split lines between panes";
 
         cursor = mkOption {
           type = weztermColorschemeCursorType;
@@ -519,24 +447,6 @@ let
               background = "#000000";
             }
           '';
-        };
-
-        scrollbarThumb = mkOption {
-          type = str;
-          default = "#222222";
-          description = ''
-            The color of the scrollbar "thumb"; the portion that represents the current viewport
-          '';
-          example = "#222222";
-        };
-
-        split = mkOption {
-          type = str;
-          default = "#444444";
-          description = ''
-            The color of the split lines between panes
-          '';
-          example = "#444444";
         };
 
         tabBar = mkOption {
@@ -616,13 +526,11 @@ in {
         Mapping of keybindings to actions.
       '';
       example = literalExample ''
-        [
-          {
+        [{
             modifiers = [ "SHIFT" "CTRL" ];
             key = "l";
             action = "wezterm.action {ActivateTabRelative = 1}";
-          };
-        ]
+        }]
       '';
     };
 
@@ -633,15 +541,13 @@ in {
         Mapping of mouse bindings to actions.
       '';
       example = literalExample ''
-        [
-          {
+        [{
             button = "Left";
             event = "Up";
             count = 1;
             modifiers = [ "CTRL" ];
             action = "\"OpenLinkAtMouseCursor\"";
-          }
-        ]
+        }]
       '';
     };
 
@@ -654,7 +560,6 @@ in {
       example = literalExample ''
         enable_wayland = true;
         font_size = 10.0;
-        line_height = 1.0;
       '';
     };
 
