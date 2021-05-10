@@ -7,20 +7,15 @@ in {
 
   options = {
     services.devilspie2 = {
-      enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable Devilspie2, a window matching utility,
-          allowing the user to perform scripted actions on windows as they are created.
-        '';
-      };
+      enable = mkEnableOption ''
+        Devilspie2, a window matching utility, allowing the user to
+        perform scripted actions on windows as they are created'';
 
       config = mkOption {
         type = types.lines;
         default = "";
         description = ''
-          Content of file placed in devilspie2 config directory.
+          Content of file placed in the devilspie2 config directory.
         '';
         example = ''
           if (get_window_class() == "Gnome-terminal") then
