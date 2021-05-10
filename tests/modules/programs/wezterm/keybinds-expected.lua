@@ -4,7 +4,7 @@ local wezterm = require("wezterm")
 
 return {
   -- Keybinds
-  keys = [
+  keys = {
     {
       key = "l",
     },
@@ -17,7 +17,7 @@ return {
       key = "h",
       action = wezterm.action {ActivateTabRelative = -1},
     },
-  ],
+  },
 
   
 
@@ -34,8 +34,8 @@ return {
     selection_fg = "#000000",
     scrollbar_thumb = "#222222",
     split = "#444444",
-    ansi = [ "#000000", "#000080", "#008080", "#008000", "#800080", "#800000", "#C0C0C0", "#808000" ],
-    brights = [ "#808080", "#0000FF", "#00FFFF", "#00FF00", "#FF00FF", "#FF0000", "#FFFFFF", "#FFFF00" ],
+    ansi = { "#000000", "#000080", "#008080", "#008000", "#800080", "#800000", "#C0C0C0", "#808000" },
+    brights = { "#808080", "#0000FF", "#00FFFF", "#00FF00", "#FF00FF", "#FF0000", "#FFFFFF", "#FFFF00" },
     tab_bar = {
       background = "#0B0022",
       active_tab = {

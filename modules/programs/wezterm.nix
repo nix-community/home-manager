@@ -31,9 +31,9 @@ let
       mapped = builtins.map mapBinding bindings;
     in ''
       -- Keybinds
-        keys = [
+        keys = {
           ${formatBindings mapped}
-        ],'';
+        },'';
 
   toWeztermMousebindings = bindings:
     let
@@ -58,9 +58,9 @@ let
       mapped = builtins.map mapBinding bindings;
     in ''
       -- Mouse Binds
-        mouse_bindings = [
+        mouse_bindings = {
           ${formatBindings mapped}
-        ],'';
+        },'';
 
   toWeztermTabColors = tab: indent:
     let
@@ -83,7 +83,7 @@ let
       values = attrsets.attrVals nameList colors;
       mapped = lists.forEach values (color: ''"${color}"'');
       joined = builtins.concatStringsSep ", " mapped;
-    in "[ ${joined} ]";
+    in "{ ${joined} }";
 
   toWeztermColorscheme = colors: indent:
     let
