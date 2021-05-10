@@ -232,7 +232,7 @@ let
           type = str;
           default = "";
           description = ''
-            The code called when the keybinding is executed.
+            The code called when the mouse binding is executed.
           '';
           example = literalExample ''
             "OpenLinkAtMouseCursor"
