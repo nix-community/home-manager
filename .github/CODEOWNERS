@@ -34,6 +34,9 @@
 
 /modules/misc/xdg-user-dirs.nix                       @pacien
 
+/modules/misc/xdg-system-dirs.nix                     @tadfisher
+/tests/modules/misc/xdg/system-dirs.nix               @tadfisher
+
 /modules/programs/aria2.nix                           @JustinLovinger
 
 /modules/programs/autojump.nix                        @evanjs

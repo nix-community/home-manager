@@ -15,6 +15,7 @@ let
     export XDG_CACHE_HOME="/home/hm-user/.cache"
     export XDG_CONFIG_HOME="/home/hm-user/.config"
     export XDG_DATA_HOME="/home/hm-user/.local/share"
+    export $(${pkgs.systemd}/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
   '';
 
   darwinExpected = ''
