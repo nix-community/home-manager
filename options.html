@@ -11304,21 +11304,6 @@ GNU/Linux distributions other than NixOS.
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/targets/generic-linux.nix#blob-path" target="_top">
                     &lt;home-manager/modules/targets/generic-linux.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-targets.genericLinux.extraXdgDataDirs"></a><a class="term" href="options.html#opt-targets.genericLinux.extraXdgDataDirs"><code class="option">targets.genericLinux.extraXdgDataDirs</code></a></span></dt><dd><p>List of directory names to add to <code class="envar">XDG_DATA_DIRS</code>.
-</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        
-        [
-        
-        ]
-    
-      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        
-        [
-        "/usr/share" "/usr/local/share" 
-        ]
-    
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/targets/generic-linux.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/targets/generic-linux.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.enable"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.enable"><code class="option">wayland.windowManager.sway.enable</code></a></span></dt><dd><p>Whether to enable sway wayland compositor.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
@@ -12286,6 +12271,26 @@ the list is attempted, and so on.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-mime-apps.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/xdg-mime-apps.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.systemDirs.config"></a><a class="term" href="options.html#opt-xdg.systemDirs.config"><code class="option">xdg.systemDirs.config</code></a></span></dt><dd><p>Directory names to add to <code class="envar">XDG_CONFIG_DIRS</code>
+in the user session.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ "/etc/xdg" ]</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-system-dirs.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-system-dirs.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.systemDirs.data"></a><a class="term" href="options.html#opt-xdg.systemDirs.data"><code class="option">xdg.systemDirs.data</code></a></span></dt><dd><p>Directory names to add to <code class="envar">XDG_DATA_DIRS</code>
+in the user session.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ "/usr/share" "/usr/local/share" ]</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-system-dirs.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-system-dirs.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.userDirs.enable"></a><a class="term" href="options.html#opt-xdg.userDirs.enable"><code class="option">xdg.userDirs.enable</code></a></span></dt><dd><p>Whether to manage <code class="filename">$XDG_CONFIG_HOME/user-dirs.dirs</code>.
 </p><p>
 The generated file is read-only.
