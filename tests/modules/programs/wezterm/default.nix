@@ -1,5 +1,1 @@
-{
-  wezterm-everything = ./everything.nix;
-  wezterm-keybindings = ./keybinds.nix;
-  wezterm-options = ./options.nix;
-}
+{ wezterm-everything = ./everything.nix; }
