@@ -65,7 +65,7 @@ let
 
   toWeztermBase16Colors = colors:
     let
-      values = with colors; [ black red green yellow magenta cyan blue white ];
+      values = with colors; [ black red green yellow blue magenta cyan white ];
       joined = concatStringsSep ''", "'' values;
     in ''{ "${joined}" }'';
 
