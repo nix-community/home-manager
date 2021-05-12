@@ -36,11 +36,34 @@ with lib; {
         }
       ];
 
-      config = {
+      settings = {
         enable_wayland = true;
         font_size = 10.0;
         line_height = 1.0;
       };
+
+      extraSettings = ''
+        wezterm.on("trigger-vim-with-scrollback", function(window, pane)
+          local scrollback = pane:get_lines_as_text();
+
+          local name = os.tmpname();
+          local f = io.open(name, "w+");
+          f:write(scrollback);
+          f:flush();
+          f:close();
+
+          window:perform_action(wezterm.action{SpawnCommandInNewWindow={
+            args={"vim", name}}
+          }, pane)
+
+          wezterm.sleep_ms(1000);
+          os.remove(name);
+        end)
+      '';
+
+      extraReturnSettings = ''
+        font = wezterm.font("FiraCode Nerd Font Mono"),
+      '';
     };
 
     nmt.script = ''

@@ -4,7 +4,7 @@ with lib; {
     programs.wezterm = {
       enable = true;
 
-      config = {
+      settings = {
         font_size = 0.0;
         font_sharper = "Harfbuzz";
       };

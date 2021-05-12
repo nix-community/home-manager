@@ -9,57 +9,43 @@ let
 
   formatBindings = bindings:
     pipe bindings [
-      (x: builtins.concatStringsSep "\n" x)
-      (x: lib.strings.removeSuffix "\n" x)
-      (x: builtins.replaceStrings [ "\n  \n" ] [ "\n" ] x)
-      (x: builtins.replaceStrings [ "\n" ] [ "\n    " ] x)
+      (concatStringsSep "\n")
+      (removeSuffix "\n")
+      (replaceStrings [ "\n  \n" ] [ "\n" ])
+      (replaceStrings [ "\n" ] [ "\n    " ])
     ];
 
-  toWeztermKeybindings = bindings:
-    let
-      getMods = binding:
-        optionalString (binding.modifiers != [ ])
-        ''mods = "${builtins.concatStringsSep "|" binding.modifiers}",'';
-      getAction = binding:
-        optionalString (binding.action != "") "action = ${binding.action},";
-      mapBinding = binding: ''
-        {
-          ${getMods binding}
-          key = "${binding.key}",
-          ${getAction binding}
-        },'';
-      mapped = builtins.map mapBinding bindings;
-    in ''
-      -- Keybinds
-        keys = {
-          ${formatBindings mapped}
-        },'';
+  toBindingMods = binding:
+    optionalString (binding.modifiers != [ ])
+    ''mods = "${concatStringsSep "|" binding.modifiers}",'';
 
-  toWeztermMousebindings = bindings:
+  toBindingAction = binding:
+    optionalString (binding.action != "") "action = ${binding.action},";
+
+  toWeztermBindings = bindings: isKeyBinding:
     let
-      getMods = binding:
-        optionalString (binding.modifiers != [ ])
-        ''mods = "${builtins.concatStringsSep "|" binding.modifiers}",'';
-      getAction = binding:
-        optionalString (binding.action != "") "action = ${binding.action},";
-      getEvent = binding: ''
-        event = {
-            ${binding.event} = {
-              streak = ${toString binding.count},
-              button = "${binding.button}",
-            },
-          },'';
+      name = if isKeyBinding then "keys" else "mouse_bindings";
+      comment_name = if isKeyBinding then "Key Bindings" else "Mouse Bindings";
+      midBinding = binding:
+        if isKeyBinding then
+          ''key = "${binding.key}",''
+        else ''
+          event = {
+              ${binding.event} = {
+                streak = ${toString binding.count},
+                button = "${binding.button}",
+              },
+            },'';
       mapBinding = binding: ''
         {
-          ${getMods binding}
-          ${getEvent binding}
-          ${getAction binding}
+          ${toBindingMods binding}
+          ${midBinding binding}
+          ${toBindingAction binding}
         },'';
-      mapped = builtins.map mapBinding bindings;
     in ''
-      -- Mouse Binds
-        mouse_bindings = {
-          ${formatBindings mapped}
+      -- ${comment_name}
+        ${name} = {
+          ${formatBindings (map mapBinding bindings)}
         },'';
 
   toWeztermTabColors = tab: indent:
@@ -73,17 +59,15 @@ let
           strikethrough = ${boolToStr tab.strikethrough},
           underline = "${tab.underline}",
         }''; # No comma bc they're added in toWeztermColorscheme
-    in builtins.replaceStrings [ "\n" ] [''
+    in replaceStrings [ "\n" ] [''
 
       ${indent}''] formatted;
 
   toWeztermBase16Colors = colors:
     let
-      nameList = attrsets.attrNames colors;
-      values = attrsets.attrVals nameList colors;
-      mapped = lists.forEach values (color: ''"${color}"'');
-      joined = builtins.concatStringsSep ", " mapped;
-    in "{ ${joined} }";
+      values = with colors; [ black red green yellow magenta cyan blue white ];
+      joined = concatStringsSep ''", "'' values;
+    in ''{ "${joined}" }'';
 
   toWeztermColorscheme = colors: indent:
     let
@@ -103,17 +87,17 @@ let
           tab_bar = {
             background = "${colors.tabBar.background}",
             active_tab = ${
-              toWeztermTabColors colors.tabBar.activeTab "${indent}  "
+              toWeztermTabColors colors.tabBar.activeTab "  ${indent}"
             },
             inactive_tab = ${
-              toWeztermTabColors colors.tabBar.inactiveTab "${indent}  "
+              toWeztermTabColors colors.tabBar.inactiveTab "  ${indent}"
             },
             inactive_tab_hover = ${
-              toWeztermTabColors colors.tabBar.inactiveTabHover "${indent}  "
+              toWeztermTabColors colors.tabBar.inactiveTabHover "  ${indent}"
             },
           },
         },'';
-    in builtins.replaceStrings [ "\n" ] [''
+    in replaceStrings [ "\n" ] [''
 
       ${indent}''] formatted;
 
@@ -121,42 +105,56 @@ let
     -- Colors
       colors = ${toWeztermColorscheme colors "  "}'';
 
-  toWeztermConfig' = generators.toKeyValue {
+  toWeztermSettings' = generators.toKeyValue {
     mkKeyValue = key: value:
       let
         value' = if isString value then
           ''"${value}"''
-        else if isBool value # Bool formats to '0'/'1' with toString
-        then
+        else if isBool value then
           (boolToStr value)
         else
           toString value;
       in "${key} = ${value'},";
   };
 
-  toWeztermConfig = config:
+  toWeztermSettings = settings:
     let
-      mapped = toWeztermConfig' config;
-      indented = builtins.replaceStrings [ "\n" ] [ "\n  " ] mapped;
-      trimmed = lib.strings.removeSuffix "\n  " indented;
+      mapped = toWeztermSettings' settings;
+      indented = replaceStrings [ "\n" ] [ "\n  " ] mapped;
+      trimmed = removeSuffix "\n  " indented;
     in ''
-      -- Config
+      -- Settings
         ${trimmed}'';
+
+  mkBindingMods = with types;
+    mkOption {
+      type = listOf
+        (enum [ "CTRL" "SUPER" "CMD" "WIN" "SHIFT" "ALT" "OPT" "LEADER" ]);
+      default = [ ];
+      description = ''
+        The binding modifier key(s).
+      '';
+      example = literalExample ''
+        [ "CTRL" ]
+      '';
+    };
+
+  mkBindingAction = with types;
+    example:
+    mkOption {
+      type = str;
+      default = "";
+      description = ''
+        The code called when the binding is executed.
+        You can set an action to <code>null</code> to disable the default assignment.
+      '';
+      example = example;
+    };
 
   weztermKeybindType = with types;
     submodule {
       options = {
-        modifiers = mkOption {
-          type = listOf
-            (enum [ "CTRL" "SUPER" "CMD" "WIN" "SHIFT" "ALT" "OPT" "LEADER" ]);
-          default = [ ];
-          description = ''
-            The keybinding modifier key(s).
-          '';
-          example = literalExample ''
-            [ "CTRL" "SHIFT" ]
-          '';
-        };
+        modifiers = mkBindingMods;
 
         key = mkOption {
           type = str;
@@ -167,33 +165,15 @@ let
           example = "l";
         };
 
-        action = mkOption {
-          type = str;
-          default = "";
-          description = ''
-            The code called when the keybinding is executed.
-          '';
-          example = literalExample ''
-            wezterm.action {ActivateTabRelative = 1}
-          '';
-        };
+        action = mkBindingAction
+          (literalExample "wezterm.action {ActivateTabRelative = 1}");
       };
     };
 
   weztermMousebindType = with types;
     submodule {
       options = {
-        modifiers = mkOption {
-          type = listOf
-            (enum [ "CTRL" "SUPER" "CMD" "WIN" "SHIFT" "ALT" "OPT" "LEADER" ]);
-          default = [ ];
-          description = ''
-            The mouse binding modifier key(s).
-          '';
-          example = literalExample ''
-            [ "CTRL" ]
-          '';
-        };
+        modifiers = mkBindingMods;
 
         button = mkOption {
           type = enum [ "Left" "Right" "Middle" ];
@@ -222,16 +202,7 @@ let
           example = 1;
         };
 
-        action = mkOption {
-          type = str;
-          default = "";
-          description = ''
-            The code called when the mouse binding is executed.
-          '';
-          example = literalExample ''
-            "OpenLinkAtMouseCursor"
-          '';
-        };
+        action = mkBindingAction (literalExample ''"OpenLinkAtMouseCursor"'');
       };
     };
 
@@ -249,9 +220,9 @@ let
         foreground = mkColor "#000000"
           "Overrides the text color when the current cell is occupied by the cursor.";
         background = mkColor "#52AD70"
-          "Overrides the cell background color when the current cell is occupied by the cursor and the cursor style is set to Block.";
+          "Overrides the cell background color when the current cell is occupied by the cursor and the cursor style is set to <literal>Block</literal>.";
         border = mkColor "#52AD70"
-          "Specifies the border color of the cursor when the cursor style is set to Block,";
+          "Specifies the border color of the cursor when the cursor style is set to <literal>Block</literal>.";
       };
     };
 
@@ -289,39 +260,36 @@ let
           type = enum [ "Half" "Normal" "Bold" ];
           default = "Normal";
           description = ''
-            Specify whether you want "Half", "Normal" or "Bold" intensity for the label shown for this tab.
-            The default is "Normal".
+            Specify whether you want <literal>Half</literal>, <literal>Normal</literal> or <literal>Bold</literal> intensity for the label shown for this tab.
           '';
-          example = "Normal";
+          example = literalExample "Normal";
         };
 
         underline = mkOption {
           type = enum [ "None" "Single" "Double" ];
           default = "None";
           description = ''
-            Specify whether you want "None", "Single" or "Double" underline for label shown for this tab.
-            The default is "None".
+            Specify whether you want <literal>None</literal>, <literal>Single</literal> or <literal>Double</literal> underline for label shown for this tab.
           '';
-          example = "None";
+          example = literalExample "None";
         };
 
-        italic = let defaultStr = boolToStr (tabType == "inactive_hover");
-        in mkOption {
+        italic = mkOption {
           type = bool;
-          default = (tabType == "inactive_hover");
+          default = tabType == "inactive_hover";
           description = ''
-            Specify whether you want the text to be italic (true) or not (false) for this tab. The default is ${defaultStr}.
+            Specify whether you want the text to be italic (<literal>true</literal>) or not (<literal>false</literal>) for this tab.
           '';
-          example = defaultStr;
+          example = literalExample "true";
         };
 
         strikethrough = mkOption {
           type = bool;
           default = false;
           description = ''
-            Specify whether you want the text to be rendered with strikethrough (true) or not (false) for this tab. The default is false.
+            Specify whether you want the text to be rendered with strikethrough (<literal>true</literal>) or not (<literal>false</literal>) for this tab.
           '';
-          example = "false";
+          example = literalExample "false";
         };
       };
     };
@@ -417,7 +385,7 @@ let
         background = mkColor "#000000" "The default background color.";
 
         scrollbarThumb = mkColor "#222222" ''
-          The color of the scrollbar "thumb"; the portion that represents the current viewport'';
+          The color of the scrollbar "thumb"; the portion that represents the current viewport.'';
         split = mkColor "#444444" "The color of the split lines between panes";
 
         cursor = mkOption {
@@ -505,7 +473,7 @@ let
     };
 
 in {
-  meta.maintainers = with lib.maintainers; [ l3af ];
+  meta.maintainers = with lib.hm.maintainers; [ l3af ];
 
   options.programs.wezterm = with types; {
     enable = mkEnableOption "Wezterm terminal emulator";
@@ -551,7 +519,7 @@ in {
       '';
     };
 
-    config = mkOption {
+    settings = mkOption {
       type = attrsOf genericType;
       default = { };
       description = ''
@@ -577,7 +545,15 @@ in {
       '';
     };
 
-    extraConfig = mkOption {
+    extraSettings = mkOption {
+      default = "";
+      type = lines;
+      description = ''
+        Additional configuration to add outside of the statement.
+      '';
+    };
+
+    extraReturnSettings = mkOption {
       default = "";
       type = lines;
       description = ''
@@ -594,22 +570,24 @@ in {
 
       local wezterm = require("wezterm")
 
+      ${cfg.extraSettings}
+
       return {
         ${
           optionalString (cfg.keybindings != [ ])
-          (toWeztermKeybindings cfg.keybindings)
+          (toWeztermBindings cfg.keybindings true)
         }
 
         ${
           optionalString (cfg.mousebindings != [ ])
-          (toWeztermMousebindings cfg.mousebindings)
+          (toWeztermBindings cfg.mousebindings false)
         }
 
-        ${optionalString (cfg.config != { }) (toWeztermConfig cfg.config)}
+        ${optionalString (cfg.settings != { }) (toWeztermSettings cfg.settings)}
 
         ${toWeztermColors cfg.colors}
 
-        ${cfg.extraConfig}
+        ${cfg.extraReturnSettings}
       }
 
     '';

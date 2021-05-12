@@ -2,12 +2,14 @@
 
 local wezterm = require("wezterm")
 
+
+
 return {
   
 
   
 
-  -- Config
+  -- Settings
   font_sharper = "Harfbuzz",
   font_size = 0.000000,
 
@@ -22,8 +24,8 @@ return {
     selection_fg = "#000000",
     scrollbar_thumb = "#222222",
     split = "#444444",
-    ansi = { "#000000", "#000080", "#008080", "#008000", "#800080", "#800000", "#C0C0C0", "#808000" },
-    brights = { "#808080", "#0000FF", "#00FFFF", "#00FF00", "#FF00FF", "#FF0000", "#FFFFFF", "#FFFF00" },
+    ansi = { "#000000", "#800000", "#008000", "#808000", "#800080", "#008080", "#000080", "#C0C0C0" },
+    brights = { "#808080", "#FF0000", "#00FF00", "#FFFF00", "#FF00FF", "#00FFFF", "#0000FF", "#FFFFFF" },
     tab_bar = {
       background = "#0B0022",
       active_tab = {

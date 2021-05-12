@@ -2,8 +2,26 @@
 
 local wezterm = require("wezterm")
 
+wezterm.on("trigger-vim-with-scrollback", function(window, pane)
+  local scrollback = pane:get_lines_as_text();
+
+  local name = os.tmpname();
+  local f = io.open(name, "w+");
+  f:write(scrollback);
+  f:flush();
+  f:close();
+
+  window:perform_action(wezterm.action{SpawnCommandInNewWindow={
+    args={"vim", name}}
+  }, pane)
+
+  wezterm.sleep_ms(1000);
+  os.remove(name);
+end)
+
+
 return {
-  -- Keybinds
+  -- Key Bindings
   keys = {
     {
       key = "l",
@@ -19,7 +37,7 @@ return {
     },
   },
 
-  -- Mouse Binds
+  -- Mouse Bindings
   mouse_bindings = {
     {
       mods = "CTRL",
@@ -42,7 +60,7 @@ return {
     },
   },
 
-  -- Config
+  -- Settings
   enable_wayland = true,
   font_size = 10.000000,
   line_height = 1.000000,
@@ -58,8 +76,8 @@ return {
     selection_fg = "#000000",
     scrollbar_thumb = "#222222",
     split = "#444444",
-    ansi = { "#000000", "#000080", "#008080", "#008000", "#800080", "#800000", "#C0C0C0", "#808000" },
-    brights = { "#808080", "#0000FF", "#00FFFF", "#00FF00", "#FF00FF", "#FF0000", "#FFFFFF", "#FFFF00" },
+    ansi = { "#000000", "#800000", "#008000", "#808000", "#800080", "#008080", "#000080", "#C0C0C0" },
+    brights = { "#808080", "#FF0000", "#00FF00", "#FFFF00", "#FF00FF", "#00FFFF", "#0000FF", "#FFFFFF" },
     tab_bar = {
       background = "#0B0022",
       active_tab = {
@@ -89,6 +107,7 @@ return {
     },
   },
 
-  
+  font = wezterm.font("FiraCode Nerd Font Mono"),
+
 }
 
