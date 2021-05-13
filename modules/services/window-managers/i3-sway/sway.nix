@@ -17,7 +17,7 @@ let
       inherit (commonOptions)
         fonts window floating focus assigns workspaceLayout
         workspaceAutoBackAndForth modifier keycodebindings colors bars startup
-        gaps menu terminal;
+        gaps menu terminal defaultWorkspace;
 
       left = mkOption {
         type = types.str;
@@ -246,7 +246,7 @@ let
   inherit (commonFunctions)
     keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
     floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
-    fontConfigStr;
+    fontConfigStr keybindingDefaultWorkspace keybindingsRest;
 
   startupEntryStr = { command, always, ... }: ''
     ${if always then "exec_always" else "exec"} ${command}
@@ -285,7 +285,12 @@ let
       client.background ${colors.background}
 
       ${keybindingsStr {
-        inherit keybindings;
+        keybindings = keybindingDefaultWorkspace;
+        bindsymArgs =
+          lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+      }}
+      ${keybindingsStr {
+        keybindings = keybindingsRest;
         bindsymArgs =
           lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
       }}
