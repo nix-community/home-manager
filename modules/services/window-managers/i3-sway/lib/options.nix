@@ -831,4 +831,35 @@ in {
     '';
     example = "workspace number 9";
   };
+
+  workspaceOutputAssign = mkOption {
+    type = with types;
+      let
+        workspaceOutputOpts = submodule {
+          options = {
+            workspace = mkOption {
+              type = str;
+              default = "";
+              example = "Web";
+              description = ''
+                Name of the workspace to assign.
+              '';
+            };
+
+            output = mkOption {
+              type = str;
+              default = "";
+              example = "eDP";
+              description = ''
+                Name of the output from <command>
+                  ${if isSway then "swaymsg" else "i3-msg"} -t get_outputs
+                </command>.
+              '';
+            };
+          };
+        };
+      in listOf workspaceOutputOpts;
+    default = [ ];
+    description = "Assign workspaces to outputs.";
+  };
 }

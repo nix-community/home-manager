@@ -155,4 +155,6 @@ rec {
     "for_window ${criteriaStr criteria} floating enable";
   windowCommandsStr = { command, criteria, ... }:
     "for_window ${criteriaStr criteria} ${command}";
+  workspaceOutputStr = item:
+    ''workspace "${item.workspace}" output ${item.output}'';
 }
