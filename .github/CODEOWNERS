@@ -64,6 +64,9 @@
 
 /modules/programs/firefox.nix                         @rycee
 
+/modules/programs/foot.nix                            @plabadens
+/tests/modules/programs/foot                          @plabadens
+
 /modules/programs/gh.nix                              @Gerschtli
 /tests/modules/programs/gh                            @Gerschtli
 

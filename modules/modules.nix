@@ -68,6 +68,7 @@ let
     (loadModule ./programs/feh.nix { })
     (loadModule ./programs/firefox.nix { })
     (loadModule ./programs/fish.nix { })
+    (loadModule ./programs/foot.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/fzf.nix { })
     (loadModule ./programs/getmail.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/gh.nix { })

@@ -96,6 +96,7 @@ import nmt {
     ./modules/programs/abook
     ./modules/programs/autorandr
     ./modules/programs/firefox
+    ./modules/programs/foot
     ./modules/programs/getmail
     ./modules/programs/i3status-rust
     ./modules/programs/ncmpcpp-linux

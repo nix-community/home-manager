@@ -2021,6 +2021,14 @@ in
           for discussion.
         '';
       }
+
+      {
+        time = "2021-05-18T20:28:50+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.foot'.
+        '';
+      }
     ];
   };
 }

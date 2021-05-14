@@ -1,0 +1,12 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@foot@/bin/foot --server
+Restart=on-failure
+
+[Unit]
+After=graphical-session.target
+Description=Fast, lightweight and minimalistic Wayland terminal emulator.
+Documentation=man:foot(1)
+PartOf=graphical-session.target
