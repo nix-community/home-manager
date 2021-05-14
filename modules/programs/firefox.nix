@@ -86,6 +86,17 @@ in
           then pkgs.firefox
           else pkgs.firefox-unwrapped;
         defaultText = literalExample "pkgs.firefox";
+        example = literalExample ''
+          pkgs.firefox.override {
+            # See nixpkgs' firefox/wrapper.nix to check which options you can use
+            cfg = {
+              # Gnome shell native connector
+              enableGnomeExtensions = true;
+              # Tridactyl native connector
+              enableTridactylNative = true;
+            };
+          }
+        '';
         description = ''
           The Firefox package to use. If state version ≥ 19.09 then
           this should be a wrapped Firefox package. For earlier state
@@ -263,6 +274,13 @@ in
         }
       )
     ];
+
+    warnings = optional (cfg.enableGnomeExtensions or false) ''
+      Using 'programs.firefox.enableGnomeExtensions' has been deprecated and
+      will be removed in the future. Please change to overriding the package
+      configuration using 'programs.firefox.package' instead. You can refer to
+      its example for how to do this.
+    '';
 
     home.packages =
       let
