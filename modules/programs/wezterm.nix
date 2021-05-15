@@ -482,7 +482,7 @@ in {
       default = pkgs.wezterm;
       defaultText = "pkgs.wezterm";
       description = ''
-        Wezterm package to use. Set to <code>null</code> to use default package.
+        The Wezterm package to use.
       '';
     };
 
