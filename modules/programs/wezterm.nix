@@ -7,17 +7,9 @@ let
 
   boolToStr = boolVal: if boolVal then "true" else "false";
 
-  formatBindings = bindings:
-    pipe bindings [
-      (concatStringsSep "\n")
-      (removeSuffix "\n")
-      (replaceStrings [ "\n  \n" ] [ "\n" ])
-      (replaceStrings [ "\n" ] [ "\n    " ])
-    ];
-
   toBindingMods = binding:
     optionalString (binding.modifiers != [ ])
-    ''mods = "${concatStringsSep "|" binding.modifiers}",'';
+    ''mods="${concatStringsSep "|" binding.modifiers}",'';
 
   toBindingAction = binding:
     optionalString (binding.action != "") "action = ${binding.action},";
@@ -25,87 +17,43 @@ let
   toWeztermBindings = bindings: isKeyBinding:
     let
       name = if isKeyBinding then "keys" else "mouse_bindings";
-      comment_name = if isKeyBinding then "Key Bindings" else "Mouse Bindings";
       midBinding = binding:
         if isKeyBinding then
-          ''key = "${binding.key}",''
+          ''key="${binding.key}",''
         else ''
-          event = {
-              ${binding.event} = {
-                streak = ${toString binding.count},
-                button = "${binding.button}",
-              },
-            },'';
+          event={${binding.event}={streak=${toString binding.count},
+          button="${binding.button}"}},'';
       mapBinding = binding: ''
-        {
-          ${toBindingMods binding}
-          ${midBinding binding}
-          ${toBindingAction binding}
-        },'';
-    in ''
-      -- ${comment_name}
-        ${name} = {
-          ${formatBindings (map mapBinding bindings)}
-        },'';
+        {${toBindingMods binding}${midBinding binding}
+        ${toBindingAction binding}},'';
+    in "${name}={${toString (map mapBinding bindings)}},";
 
-  toWeztermTabColors = tab: indent:
-    let
-      formatted = ''
-        {
-          bg_color = "${tab.background}",
-          fg_color = "${tab.foreground}",
-          intensity = "${tab.intensity}",
-          italic = ${boolToStr tab.italic},
-          strikethrough = ${boolToStr tab.strikethrough},
-          underline = "${tab.underline}",
-        }''; # No comma bc they're added in toWeztermColorscheme
-    in replaceStrings [ "\n" ] [''
-
-      ${indent}''] formatted;
+  toWeztermTabColors = tab: ''
+    {bg_color="${tab.background}",fg_color="${tab.foreground}",
+    intensity="${tab.intensity}",italic=${boolToStr tab.italic},
+    underline="${tab.underline}",strikethrough=${boolToStr tab.strikethrough}}'';
 
   toWeztermBase16Colors = colors:
     let
       values = with colors; [ black red green yellow blue magenta cyan white ];
-      joined = concatStringsSep ''", "'' values;
-    in ''{ "${joined}" }'';
+    in ''{"${(concatStringsSep ''","'' values)}"}'';
 
-  toWeztermColorscheme = colors: indent:
-    let
-      formatted = ''
-        {
-          foreground = "${colors.foreground}",
-          background = "${colors.background}",
-          cursor_bg = "${colors.cursor.background}",
-          cursor_fg = "${colors.cursor.foreground}",
-          cursor_border = "${colors.cursor.border}",
-          selection_bg = "${colors.selection.background}",
-          selection_fg = "${colors.selection.foreground}",
-          scrollbar_thumb = "${colors.scrollbarThumb}",
-          split = "${colors.split}",
-          ansi = ${toWeztermBase16Colors colors.ansi},
-          brights = ${toWeztermBase16Colors colors.bright},
-          tab_bar = {
-            background = "${colors.tabBar.background}",
-            active_tab = ${
-              toWeztermTabColors colors.tabBar.activeTab "  ${indent}"
-            },
-            inactive_tab = ${
-              toWeztermTabColors colors.tabBar.inactiveTab "  ${indent}"
-            },
-            inactive_tab_hover = ${
-              toWeztermTabColors colors.tabBar.inactiveTabHover "  ${indent}"
-            },
-          },
-        },'';
-    in replaceStrings [ "\n" ] [''
+  toWeztermColorscheme = colors: ''
+    {foreground="${colors.foreground}",background="${colors.background}",
+    cursor_bg="${colors.cursor.background}",cursor_fg="${colors.cursor.foreground}",
+    cursor_border="${colors.cursor.border}",selection_bg="${colors.selection.background}",
+    selection_fg="${colors.selection.foreground}",scrollbar_thumb="${colors.scrollbarThumb}",
+    split="${colors.split}",ansi=${toWeztermBase16Colors colors.ansi},
+    brights=${toWeztermBase16Colors colors.bright},tab_bar={
+    background="${colors.tabBar.background}",
+    active_tab=${toWeztermTabColors colors.tabBar.activeTab},
+    inactive_tab=${toWeztermTabColors colors.tabBar.inactiveTab},
+    inactive_tab_hover=${toWeztermTabColors colors.tabBar.inactiveTabHover},
+    }},'';
 
-      ${indent}''] formatted;
+  toWeztermColors = colors: "colors = ${toWeztermColorscheme colors}";
 
-  toWeztermColors = colors: ''
-    -- Colors
-      colors = ${toWeztermColorscheme colors "  "}'';
-
-  toWeztermSettings' = generators.toKeyValue {
+  toWeztermSettings = generators.toKeyValue {
     mkKeyValue = key: value:
       let
         value' = if isString value then
@@ -116,15 +64,6 @@ let
           toString value;
       in "${key} = ${value'},";
   };
-
-  toWeztermSettings = settings:
-    let
-      mapped = toWeztermSettings' settings;
-      indented = replaceStrings [ "\n" ] [ "\n  " ] mapped;
-      trimmed = removeSuffix "\n  " indented;
-    in ''
-      -- Settings
-        ${trimmed}'';
 
   mkBindingMods = with types;
     mkOption {
@@ -575,26 +514,32 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = [ cfg.package pkgs.luaformatter ];
 
-    xdg.configFile."wezterm/wezterm.lua".text = ''
-      -- Generated by Home Manager.
+    xdg.configFile.weztermHMSettings = {
+      target = "wezterm/wezterm.lua";
+      source = let
+        code = ''
+          -- Generated by Home Manager.
 
-      local wezterm = require("wezterm")
-      ${cfg.extraSettings}
-
-      return {
-      ${concatStringsSep "\n" [
-        (optionalString (cfg.keybindings != [ ])
-          (toWeztermBindings cfg.keybindings true))
-        (optionalString (cfg.mousebindings != [ ])
-          (toWeztermBindings cfg.mousebindings false))
-        (optionalString (cfg.settings != { }) (toWeztermSettings cfg.settings))
-        (toWeztermColors cfg.colors)
-      ]}
-        ${cfg.extraReturnSettings}
-      }
-
-    '';
+          local wezterm = require("wezterm")
+          ${cfg.extraSettings}
+          return {${
+            concatStringsSep "\n" [
+              (optionalString (cfg.keybindings != [ ])
+                (toWeztermBindings cfg.keybindings true))
+              (optionalString (cfg.mousebindings != [ ])
+                (toWeztermBindings cfg.mousebindings false))
+              (optionalString (cfg.settings != { })
+                (toWeztermSettings cfg.settings))
+              (toWeztermColors cfg.colors)
+              cfg.extraReturnSettings
+            ]}}'';
+      in pkgs.runCommand "format" { } ''
+        ${pkgs.luaformatter}/bin/lua-format --indent-width=2 --no-use-tab <<EOF >$out
+        ${code}
+        EOF
+      '';
+    };
   };
 }
