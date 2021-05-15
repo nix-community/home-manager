@@ -216,12 +216,17 @@ let
   weztermColorschemeCursorType = with types;
     submodule {
       options = {
-        foreground = mkColor "#000000"
-          "Overrides the text color when the current cell is occupied by the cursor.";
-        background = mkColor "#52AD70"
-          "Overrides the cell background color when the current cell is occupied by the cursor and the cursor style is set to <literal>Block</literal>.";
-        border = mkColor "#52AD70"
-          "Specifies the border color of the cursor when the cursor style is set to <literal>Block</literal>.";
+        foreground = mkColor "#000000" ''
+          Overrides the text color when the current cell is occupied by the cursor.
+        '';
+        background = mkColor "#52AD70" ''
+          Overrides the cell background color when the current cell is occupied
+          by the cursor and the cursor style is set to <literal>Block</literal>.
+        '';
+        border = mkColor "#52AD70" ''
+          Specifies the border color of the cursor when the cursor style is
+          set to <literal>Block</literal>.
+        '';
       };
     };
 
@@ -259,7 +264,8 @@ let
           type = enum [ "Half" "Normal" "Bold" ];
           default = "Normal";
           description = ''
-            Specify whether you want <literal>Half</literal>, <literal>Normal</literal> or <literal>Bold</literal> intensity for the label shown for this tab.
+            Specify whether you want <literal>Half</literal>, <literal>Normal</literal>
+            or <literal>Bold</literal> intensity for the label shown for this tab.
           '';
           example = literalExample "Normal";
         };
@@ -268,7 +274,8 @@ let
           type = enum [ "None" "Single" "Double" ];
           default = "None";
           description = ''
-            Specify whether you want <literal>None</literal>, <literal>Single</literal> or <literal>Double</literal> underline for label shown for this tab.
+            Specify whether you want <literal>None</literal>, <literal>Single</literal>
+            or <literal>Double</literal> underline for label shown for this tab.
           '';
           example = literalExample "None";
         };
@@ -277,7 +284,8 @@ let
           type = bool;
           default = tabType == "inactive_hover";
           description = ''
-            Specify whether you want the text to be italic (<literal>true</literal>) or not (<literal>false</literal>) for this tab.
+            Specify whether you want the text to be italic (<literal>true</literal>)
+            or not (<literal>false</literal>) for this tab.
           '';
           example = literalExample "true";
         };
@@ -286,7 +294,8 @@ let
           type = bool;
           default = false;
           description = ''
-            Specify whether you want the text to be rendered with strikethrough (<literal>true</literal>) or not (<literal>false</literal>) for this tab.
+            Specify whether you want the text to be rendered with
+            strikethrough (<literal>true</literal>) or not (<literal>false</literal>) for this tab.
           '';
           example = literalExample "false";
         };
@@ -384,7 +393,9 @@ let
         background = mkColor "#000000" "The default background color.";
 
         scrollbarThumb = mkColor "#222222" ''
-          The color of the scrollbar "thumb"; the portion that represents the current viewport.'';
+          The color of the scrollbar "thumb"; the portion that represents
+          the current viewport.
+        '';
         split = mkColor "#444444" "The color of the split lines between panes";
 
         cursor = mkOption {
