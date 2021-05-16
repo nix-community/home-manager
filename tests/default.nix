@@ -193,6 +193,7 @@ in import nmtSrc {
     ./modules/programs/freetube
     ./modules/programs/fuzzel
     ./modules/programs/getmail
+    ./modules/programs/gnome-shell
     ./modules/programs/gnome-terminal
     ./modules/programs/hexchat
     ./modules/programs/i3blocks
