@@ -37,11 +37,17 @@ in {
 
   config = mkMerge [
     (mkIf (cfg.config != [ ]) {
+      home.sessionVariables.XDG_CONFIG_DIRS =
+        "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
+
       systemd.user.sessionVariables.XDG_CONFIG_DIRS =
         "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
     })
 
     (mkIf (cfg.data != [ ]) {
+      home.sessionVariables.XDG_DATA_DIRS =
+        "${dataDirs}\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
+
       systemd.user.sessionVariables.XDG_DATA_DIRS =
         "${dataDirs}\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
     })
