@@ -137,6 +137,7 @@ import nmt {
     ./modules/programs/firefox
     ./modules/programs/foot
     ./modules/programs/getmail
+    ./modules/programs/gnome-shell
     ./modules/programs/gnome-terminal
     ./modules/programs/hexchat
     ./modules/programs/i3status-rust
