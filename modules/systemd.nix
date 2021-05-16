@@ -333,11 +333,6 @@ in
             unset systemdStatus
           ''
       );
-
-      # Export environment variables in systemd.user.sessionVariables to login shells.
-      home.sessionVariablesExtra = optionalString (cfg.sessionVariables != {}) ''
-        export $(${pkgs.systemd}/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
-      '';
     })
   ];
 }

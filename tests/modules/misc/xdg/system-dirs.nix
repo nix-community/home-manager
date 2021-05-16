@@ -19,7 +19,9 @@
       sessionVarsFile=home-path/etc/profile.d/hm-session-vars.sh
       assertFileExists $sessionVarsFile
       assertFileContains $sessionVarsFile \
-        'export $(${pkgs.systemd}/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)'
+        'export XDG_CONFIG_DIRS="/etc/xdg:/foo/bar''${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}"'
+      assertFileContains $sessionVarsFile \
+        'export XDG_DATA_DIRS="/usr/local/share:/usr/share:/baz/quux''${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}"'
     '';
   };
 }
