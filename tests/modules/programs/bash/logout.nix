@@ -16,7 +16,11 @@ with lib;
       assertFileExists home-files/.bash_logout
       assertFileContent \
         home-files/.bash_logout \
-        ${./logout-expected.txt}
+        ${
+          pkgs.writeShellScript "logout-expected" ''
+            clear-console
+          ''
+        }
     '';
   };
 }
