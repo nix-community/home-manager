@@ -11610,6 +11610,14 @@ contents (when restoring layouts). Border and indicator are ignored.
     
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.defaultWorkspace"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.defaultWorkspace"><code class="option">wayland.windowManager.sway.config.defaultWorkspace</code></a></span></dt><dd><p>The default workspace to show when sway is launched.
+This must to correspond to the value of the keybinding of the default workspace.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "workspace number 9"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.down"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.down"><code class="option">wayland.windowManager.sway.config.down</code></a></span></dt><dd><p>Home row direction key for moving down.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         "j"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
@@ -12971,6 +12979,14 @@ contents (when restoring layouts). Border and indicator are ignored.
         background = "#900000"; border = "#2f343a"; childBorder = "#900000"; indicator = "#900000"; text = "#ffffff"; 
         }
     
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.defaultWorkspace"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.defaultWorkspace"><code class="option">xsession.windowManager.i3.config.defaultWorkspace</code></a></span></dt><dd><p>The default workspace to show when i3 is launched.
+This must to correspond to the value of the keybinding of the default workspace.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "workspace number 9"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.floating"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.floating"><code class="option">xsession.windowManager.i3.config.floating</code></a></span></dt><dd><p>Floating window settings.</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
