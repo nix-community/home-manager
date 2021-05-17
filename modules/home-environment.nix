@@ -541,9 +541,7 @@ in
         ]
         + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
-        activationScript = pkgs.writeScript "activation-script" ''
-          #!${pkgs.runtimeShell}
-
+        activationScript = pkgs.writeShellScript "activation-script" ''
           set -eu
           set -o pipefail
 
