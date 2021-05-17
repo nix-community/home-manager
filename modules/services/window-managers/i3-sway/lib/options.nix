@@ -819,4 +819,16 @@ in {
     description = "Default launcher to use.";
     example = "bemenu-run";
   };
+
+  defaultWorkspace = mkOption {
+    type = types.nullOr types.str;
+    default = null;
+    description = ''
+      The default workspace to show when ${
+        if isSway then "sway" else "i3"
+      } is launched.
+      This must to correspond to the value of the keybinding of the default workspace.
+    '';
+    example = "workspace number 9";
+  };
 }
