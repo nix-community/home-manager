@@ -11,9 +11,9 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-files/.gtkrc-2.0
-      assertFileContents home-files/.gtkrc-2.0 ${
+      assertFileContent home-files/.gtkrc-2.0 ${
         ./gtk-basic-config-expected.conf
-      } 
+      }
       assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
           'GTK2_RC_FILES=.*/.gtkrc-2.0'
     '';
