@@ -11,8 +11,8 @@ in {
 
     package = mkOption {
       type = types.package;
-      default = pkgs.gitAndTools.scmpuff;
-      defaultText = literalExample "pkgs.gitAndTools.scmpuff";
+      default = pkgs.scmpuff;
+      defaultText = literalExample "pkgs.scmpuff";
       description = "Package providing the <command>scmpuff</command> tool.";
     };
 

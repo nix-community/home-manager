@@ -9,7 +9,7 @@
       assertFileExists home-files/.zshrc
       assertFileContains \
         home-files/.zshrc \
-        'eval "$(${pkgs.gitAndTools.scmpuff}/bin/scmpuff init -s)"'
+        'eval "$(${pkgs.scmpuff}/bin/scmpuff init -s)"'
     '';
   };
 }

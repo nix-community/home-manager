@@ -9,7 +9,7 @@
     };
 
     nmt.script = ''
-      assertFileNotRegex home-files/.zshrc '${pkgs.gitAndTools.scmpuff} init -s'
+      assertFileNotRegex home-files/.zshrc '${pkgs.scmpuff} init -s'
     '';
   };
 }

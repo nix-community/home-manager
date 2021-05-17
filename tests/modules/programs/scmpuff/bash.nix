@@ -9,7 +9,7 @@
       assertFileExists home-files/.bashrc
       assertFileContains \
         home-files/.bashrc \
-        'eval "$(${pkgs.gitAndTools.scmpuff}/bin/scmpuff init -s)"'
+        'eval "$(${pkgs.scmpuff}/bin/scmpuff init -s)"'
     '';
   };
 }

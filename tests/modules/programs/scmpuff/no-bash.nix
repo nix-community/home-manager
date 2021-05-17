@@ -9,7 +9,7 @@
     };
 
     nmt.script = ''
-      assertFileNotRegex home-files/.bashrc '${pkgs.gitAndTools.scmpuff}/bin/scmpuff'
+      assertFileNotRegex home-files/.bashrc '${pkgs.scmpuff}/bin/scmpuff'
     '';
   };
 }

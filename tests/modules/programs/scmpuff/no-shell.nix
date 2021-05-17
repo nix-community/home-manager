@@ -11,8 +11,8 @@
     };
 
     nmt.script = ''
-      assertFileNotRegex home-files/.zshrc '${pkgs.gitAndTools.scmpuff} init -s'
-      assertFileNotRegex home-files/.bashrc '${pkgs.gitAndTools.scmpuff} init -s'
+      assertFileNotRegex home-files/.zshrc '${pkgs.scmpuff} init -s'
+      assertFileNotRegex home-files/.bashrc '${pkgs.scmpuff} init -s'
     '';
   };
 }
