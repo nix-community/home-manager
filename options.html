@@ -2780,6 +2780,45 @@ initialisation.
         ""
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fish.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/fish.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.foot.enable"></a><a class="term" href="options.html#opt-programs.foot.enable"><code class="option">programs.foot.enable</code></a></span></dt><dd><p>Whether to enable Foot terminal.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/foot.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/foot.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.foot.package"></a><a class="term" href="options.html#opt-programs.foot.package"><code class="option">programs.foot.package</code></a></span></dt><dd><p>The foot package to install</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.foot
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/foot.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/foot.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.foot.server.enable"></a><a class="term" href="options.html#opt-programs.foot.server.enable"><code class="option">programs.foot.server.enable</code></a></span></dt><dd><p>Whether to enable Foot terminal server.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/foot.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/foot.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.foot.settings"></a><a class="term" href="options.html#opt-programs.foot.settings"><code class="option">programs.foot.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/foot/foot.ini</code>. See <a class="link" href="https://codeberg.org/dnkl/foot/src/branch/master/foot.ini" target="_top">https://codeberg.org/dnkl/foot/src/branch/master/foot.ini</a>
+for a list of available options.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of INI atom (null, bool, int, float or string)ss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  main = {
+    term = "xterm-256color";
+
+    font = "Fira Code:size=11";
+    dpi-aware = "yes";
+  };
+
+  mouse = {
+    hide-when-typing = "yes";
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/foot.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/foot.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.fzf.enable"></a><a class="term" href="options.html#opt-programs.fzf.enable"><code class="option">programs.fzf.enable</code></a></span></dt><dd><p>Whether to enable fzf - a command-line fuzzy finder.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
