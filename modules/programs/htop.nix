@@ -200,7 +200,7 @@ in {
         delay = 15;
         detailed_cpu_time = false;
         enable_mouse = true;
-        fields = with config.lib.htop.fields; [
+        fields = with fields; [
           PID
           USER
           PRIORITY
@@ -227,21 +227,19 @@ in {
         show_program_path = true;
         show_thread_names = false;
         sort_direction = 1;
-        sort_key = config.lib.htop.fields.PERCENT_CPU;
+        sort_key = fields.PERCENT_CPU;
         tree_view = false;
         update_process_names = false;
         vim_mode = false;
-      } // (with config.lib.htop;
-        leftMeters {
-          AllCPUs = modes.Bar;
-          Memory = modes.Bar;
-          Swap = modes.Bar;
-        }) // (with config.lib.htop;
-          rightMeters {
-            Tasks = modes.Text;
-            LoadAverage = modes.Text;
-            Uptime = modes.Text;
-          });
+      } // (leftMeters {
+        AllCPUs = modes.Bar;
+        Memory = modes.Bar;
+        Swap = modes.Bar;
+      }) // (rightMeters {
+        Tasks = modes.Text;
+        LoadAverage = modes.Text;
+        Uptime = modes.Text;
+      });
       example = literalExample ''
         {
           color_scheme = 6;
