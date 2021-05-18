@@ -172,6 +172,24 @@ font = {
 };
 ----
 
+* The <<opt-programs.htop.settings>> option is introduced to replace individual
+options in `programs.htop`. To migrate, set the htop options directly in
+<<opt-programs.htop.settings>>. For example:
++
+[source,nix]
+----
+programs.htop = {
+  enabled = true;
+  settings = {
+     color_scheme = 5;
+     delay = 15;
+     highlight_base_name = 1;
+     highlight_megabytes = 1;
+     highlight_threads = 1;
+  };
+};
+----
+
 [[sec-release-21.05-state-version-changes]]
 === State Version Changes
 

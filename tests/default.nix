@@ -53,6 +53,7 @@ import nmt {
     ./modules/programs/gh
     ./modules/programs/git
     ./modules/programs/gpg
+    ./modules/programs/htop
     ./modules/programs/i3status
     ./modules/programs/kakoune
     ./modules/programs/kitty
