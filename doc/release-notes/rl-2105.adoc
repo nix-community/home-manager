@@ -173,7 +173,7 @@ font = {
 ----
 
 * The <<opt-programs.htop.settings>> option is introduced to replace individual
-options in <<opt-programs.htop>>. To migrate, set the htop options directly in
+options in `programs.htop`. To migrate, set the htop options directly in
 <<opt-programs.htop.settings>>. For example:
 +
 [source,nix]
