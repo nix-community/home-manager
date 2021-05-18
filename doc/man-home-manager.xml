@@ -132,6 +132,10 @@
    </arg>
 
    <arg>
+    --debug
+   </arg>
+
+   <arg>
     --keep-failed
    </arg>
 
@@ -447,6 +451,18 @@
     </term>
     <term>
      <option>--max-jobs <replaceable>number</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--debug</option>
     </term>
     <listitem>
      <para>

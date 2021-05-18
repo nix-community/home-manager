@@ -7,6 +7,7 @@ _arguments \
   '-I[search path]:PATH:_files -/' \
   '-b[backup files]:EXT:()' \
   '--cores[cores]:NUM:()' \
+  '--debug[debug]' \
   '--keep-failed[keep failed]' \
   '--keep-going[keep going]' \
   '(-h --help)'{--help,-h}'[help]' \
@@ -42,11 +43,14 @@ case "$state" in
       build|switch)
         _arguments \
           '--cores[cores]:NUM:()' \
+          '--debug[debug]' \
           '--keep-failed[keep failed]' \
           '--keep-going[keep going]' \
           '--max-jobs[max jobs]:NUM:()' \
+          '--no-substitute[no substitute]' \
           '--option[option]:NAME VALUE:()' \
-          '--show-trace[show trace]'
+          '--show-trace[show trace]' \
+          '--substitute[substitute]'
         ;;
     esac
 esac
