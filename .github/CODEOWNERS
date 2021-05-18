@@ -75,6 +75,8 @@
 
 /modules/programs/home-manager.nix                    @rycee
 
+/modules/programs/htop.nix                            @bjpbakker
+
 /modules/programs/i3status.nix                        @JustinLovinger
 
 /modules/programs/i3status-rust.nix                   @workflow
