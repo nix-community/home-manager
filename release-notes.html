@@ -104,6 +104,19 @@ The library type <code class="literal">fontType</code> now has a <code class="li
 </p><pre class="programlisting nix">font = {
   name = "DejaVu Sans";
   size = 8;
+};</pre></li><li class="listitem"><p class="simpara">
+The <a class="xref" href="options.html#opt-programs.htop.settings"><code class="option">programs.htop.settings</code></a> option is introduced to replace individual
+options in <code class="literal">programs.htop</code>. To migrate, set the htop options directly in
+<a class="xref" href="options.html#opt-programs.htop.settings"><code class="option">programs.htop.settings</code></a>. For example:
+</p><pre class="programlisting nix">programs.htop = {
+  enabled = true;
+  settings = {
+     color_scheme = 5;
+     delay = 15;
+     highlight_base_name = 1;
+     highlight_megabytes = 1;
+     highlight_threads = 1;
+  };
 };</pre></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-21.05-state-version-changes"></a>E.1.2. State Version Changes</h3></div></div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
 "21.05" or later.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
