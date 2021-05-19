@@ -587,7 +587,7 @@ in {
           warn' = warn
             "htop: programs.htop.${optionKey} is deprecated; please is programs.htop.settings.${settingsKey} instead";
         in if !isNull optionValue then
-          warn' settingsKey optionKey optionValue
+          warn' optionValue
         else if hasAttr settingsKey cfg.settings then
           cfg.settings.${settingsKey}
         else
