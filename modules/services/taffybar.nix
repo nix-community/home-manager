@@ -27,16 +27,17 @@ in {
     systemd.user.services.taffybar = {
       Unit = {
         Description = "Taffybar desktop bar";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
+        PartOf = [ "tray.target" ];
       };
 
       Service = {
+        Type = "dbus";
+        BusName = "org.taffybar.Bar";
         ExecStart = "${cfg.package}/bin/taffybar";
         Restart = "on-failure";
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = { WantedBy = [ "tray.target" ]; };
     };
 
     xsession.importedVariables = [ "GDK_PIXBUF_MODULE_FILE" ];
