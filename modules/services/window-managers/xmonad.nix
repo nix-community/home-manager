@@ -73,6 +73,11 @@ in {
           an absolute path or <literal>null</literal> in which case
           <filename>~/.xmonad/xmonad.hs</filename> will not be managed
           by Home Manager.
+          </para>
+          <para>
+          If this option is set to a non-<literal>null</literal> value,
+          recompilation of xmonad outside of Home Manager (e.g. via
+          <command>xmonad --recompile</command>) will fail.
         '';
       };
 
