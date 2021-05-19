@@ -2547,7 +2547,16 @@ this should be a wrapped Firefox package. For earlier state
 versions it should be an unwrapped Firefox package.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         pkgs.firefox
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix#blob-path" target="_top">
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.firefox.override {
+  # See nixpkgs' firefox/wrapper.nix to check which options you can use
+  cfg = {
+    # Gnome shell native connector
+    enableGnomeExtensions = true;
+    # Tridactyl native connector
+    enableTridactylNative = true;
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/firefox.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.extensions"></a><a class="term" href="options.html#opt-programs.firefox.extensions"><code class="option">programs.firefox.extensions</code></a></span></dt><dd><p>List of Firefox add-on packages to install. Some
 pre-packaged add-ons are accessible from NUR,
