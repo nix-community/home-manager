@@ -46,6 +46,9 @@ in
         GnuPG configuration options. Available options are described
         in the gpg manpage:
         <link xlink:href="https://gnupg.org/documentation/manpage.html"/>.
+        </para>
+        <para>
+        Note that lists are converted to duplicate keys.
       '';
     };
 
