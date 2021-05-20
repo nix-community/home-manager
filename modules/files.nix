@@ -39,6 +39,17 @@ in
   };
 
   config = {
+    assertions = [(
+      let
+        conflicts = mapAttrsToList (n: v: n)
+          (filterAttrs (n: v: v.recursive && v.onChange != "") cfg);
+      in {
+        assertion = conflicts == [];
+        message = ''
+          Cannot use 'home.file.<name>.onChange' when 'home.file.<name>.recursive' is enabled:
+              ${concatStringsSep ", " conflicts}'';
+      })];
+
     lib.file.mkOutOfStoreSymlink = path:
       let
         pathStr = toString path;
@@ -236,12 +247,22 @@ in
 
     home.activation.checkFilesChanged = hm.dag.entryBefore ["linkGeneration"] (
       ''
+        function _cmp() {
+          if [[ -d $1 && -d $2 ]]; then
+            diff -rq "$1" "$2" &> /dev/null
+          else
+            cmp --quiet "$1" "$2"
+          fi
+        }
         declare -A changedFiles
       '' + concatMapStrings (v: ''
-        cmp --quiet "${sourceStorePath v}" "${homeDirectory}/${v.target}" \
+        _cmp "${sourceStorePath v}" "${homeDirectory}/${v.target}" \
           && changedFiles["${v.target}"]=0 \
           || changedFiles["${v.target}"]=1
       '') (filter (v: v.onChange != "") (attrValues cfg))
+      + ''
+        unset -f _cmp
+      ''
     );
 
     home.activation.onFilesChange = hm.dag.entryAfter ["linkGeneration"] (
