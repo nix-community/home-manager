@@ -2016,7 +2016,7 @@ in
 
           See
 
-            https://github.com/nix-community/home-manager/pulls/1257
+            https://github.com/nix-community/home-manager/pull/1257
 
           for discussion.
         '';
