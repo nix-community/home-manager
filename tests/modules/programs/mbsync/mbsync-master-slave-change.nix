@@ -5,6 +5,11 @@ with lib;
 {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
+  test.asserts.warnings.expected = [
+    "mbsync channels no longer use masterPattern. Use farPattern in its place."
+    "mbsync channels no longer use slavePattern. Use nearPattern in its place."
+  ];
+
   config = {
     programs.mbsync = {
       enable = true;
@@ -74,6 +79,11 @@ with lib;
         };
       };
     };
+
+    test.asserts.warnings.expected = [
+      "mbsync channels no longer use masterPattern. use farPattern in its place."
+      "mbsync channels no longer use slavePattern. Use nearPattern in its place."
+    ];
 
     nmt.script = ''
       assertFileExists home-files/.mbsyncrc

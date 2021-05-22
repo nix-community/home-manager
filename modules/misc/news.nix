@@ -2029,6 +2029,23 @@ in
           A new module is available: 'programs.foot'.
         '';
       }
+
+      {
+        time = "2021-04-13T07:19:36+00:00";
+        message = ''
+          mbsync channels no longer accepts the masterPattern or slavePattern
+          attribute keys. This is due to an upstream change.
+          They have been renamed: masterPattern -> farPattern, and
+          slavePattern -> nearPattern.
+          This is a stateful change, where the database file(s) used to keep track
+          of mail are silently upgraded once you upgrade both your configuration file
+          and the mbsync program.
+
+          Note that this change is non-reversible, meaning once you choose to switch to
+          near/farPattern, you can no longer use your previous slave/masterPattern
+          configuration file.
+        '';
+      }
     ];
   };
 }

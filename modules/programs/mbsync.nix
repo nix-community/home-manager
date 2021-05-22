@@ -10,6 +10,24 @@ let
   mbsyncAccounts =
     filter (a: a.mbsync.enable) (attrValues config.accounts.email.accounts);
 
+  # Given a SINGLE group's channels attribute set, return true if ANY of the channel's
+  # patterns use the invalidOption attribute set value name.
+  channelInvalidOption = channels: invalidOption:
+    any (c: c) (mapAttrsToList (c: hasAttr invalidOption) channels);
+
+  # Given a SINGLE account's groups attribute set, return true if ANY of the account's group's channel's patterns use the invalidOption attribute set value name.
+  groupInvalidOption = groups: invalidOption:
+    any (g: g) (mapAttrsToList (groupName: groupVals:
+      channelInvalidOption groupVals.channels invalidOption) groups);
+
+  # Given all accounts (ensure that accounts passed in here ARE mbsync-using accounts)
+  # return true if ANY of the account's groups' channels' patterns use the
+  # invalidOption attribute set value name.
+  accountInvalidOption = accounts: invalidOption:
+    any (a: a)
+    (map (account: groupInvalidOption account.mbsync.groups invalidOption)
+      mbsyncAccounts);
+
   genTlsConfig = tls:
     {
       SSLType = if !tls.enable then
@@ -22,10 +40,18 @@ let
       CertificateFile = toString tls.certificatesFile;
     };
 
-  masterSlaveMapping = {
+  imports = [
+    (mkRenamedOptionModule [ "programs" "mbsync" "masterSlaveMapping" ] [
+      "programs"
+      "mbsync"
+      "nearFarMapping"
+    ])
+  ];
+
+  nearFarMapping = {
     none = "None";
-    imap = "Master";
-    maildir = "Slave";
+    imap = "Far";
+    maildir = "Near";
     both = "Both";
   };
 
@@ -88,18 +114,18 @@ let
   genAccountWideChannel = account:
     with account;
     genSection "Channel ${name}" ({
-      Master = ":${name}-remote:";
-      Slave = ":${name}-local:";
+      Far = ":${name}-remote:";
+      Near = ":${name}-local:";
       Patterns = mbsync.patterns;
-      Create = masterSlaveMapping.${mbsync.create};
-      Remove = masterSlaveMapping.${mbsync.remove};
-      Expunge = masterSlaveMapping.${mbsync.expunge};
+      Create = nearFarMapping.${mbsync.create};
+      Remove = nearFarMapping.${mbsync.remove};
+      Expunge = nearFarMapping.${mbsync.expunge};
       SyncState = "*";
     } // mbsync.extraConfig.channel) + "\n";
 
   # Given the attr set of groups, return a string of channels that will direct
   # mail to the proper directories, according to the pattern used in channel's
-  # master pattern definition.
+  # "far" pattern definition.
   genGroupChannelConfig = storeName: groups:
     let
       # Given the name of the group this channel is part of and the channel
@@ -118,8 +144,8 @@ let
             else
               "";
         in genSection "Channel ${groupName}-${channel.name}" ({
-          Master = ":${storeName}-remote:${channel.masterPattern}";
-          Slave = ":${storeName}-local:${channel.slavePattern}";
+          Far = ":${storeName}-remote:${channel.farPattern}";
+          Near = ":${storeName}-local:${channel.nearPattern}";
         } // channel.extraConfig) + genChannelPatterns channel.patterns;
       # Given the group name, and a attr set of channels within that group,
       # Generate a list of strings for each channels' configuration.
@@ -206,50 +232,66 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = let
-      checkAccounts = pred: msg:
-        let badAccounts = filter pred mbsyncAccounts;
-        in {
-          assertion = badAccounts == [ ];
-          message = "mbsync: ${msg} for accounts: "
-            + concatMapStringsSep ", " (a: a.name) badAccounts;
-        };
-    in [
-      (checkAccounts (a: a.maildir == null) "Missing maildir configuration")
-      (checkAccounts (a: a.imap == null) "Missing IMAP configuration")
-      (checkAccounts (a: a.passwordCommand == null) "Missing passwordCommand")
-      (checkAccounts (a: a.userName == null) "Missing username")
-    ];
+  config = mkIf cfg.enable (mkMerge [
+    {
+      assertions = let
+        checkAccounts = pred: msg:
+          let badAccounts = filter pred mbsyncAccounts;
+          in {
+            assertion = badAccounts == [ ];
+            message = "mbsync: ${msg} for accounts: "
+              + concatMapStringsSep ", " (a: a.name) badAccounts;
+          };
+      in [
+        (checkAccounts (a: a.maildir == null) "Missing maildir configuration")
+        (checkAccounts (a: a.imap == null) "Missing IMAP configuration")
+        (checkAccounts (a: a.passwordCommand == null) "Missing passwordCommand")
+        (checkAccounts (a: a.userName == null) "Missing username")
+      ];
+    }
 
-    home.packages = [ cfg.package ];
+    (mkIf (accountInvalidOption mbsyncAccounts "masterPattern") {
+      warnings = [
+        "mbsync channels no longer use masterPattern. Use farPattern in its place."
+      ];
+    })
 
-    programs.notmuch.new.ignore = [ ".uidvalidity" ".mbsyncstate" ];
+    (mkIf (accountInvalidOption mbsyncAccounts "slavePattern") {
+      warnings = [
+        "mbsync channels no longer use slavePattern. Use nearPattern in its place."
+      ];
+    })
 
-    home.file.".mbsyncrc".text = let
-      accountsConfig = map genAccountConfig mbsyncAccounts;
-      # Only generate this kind of Group configuration if there are ANY accounts
-      # that do NOT have a per-account groups/channels option(s) specified.
-      groupsConfig =
-        if any (account: account.mbsync.groups == { }) mbsyncAccounts then
-          mapAttrsToList genGroupConfig cfg.groups
-        else
-          [ ];
-    in ''
-      # Generated by Home Manager.
+    {
+      home.packages = [ cfg.package ];
 
-    ''
-    + concatStringsSep "\n" (optional (cfg.extraConfig != "") cfg.extraConfig)
-    + concatStringsSep "\n\n" accountsConfig
-    + concatStringsSep "\n" groupsConfig;
+      programs.notmuch.new.ignore = [ ".uidvalidity" ".mbsyncstate" ];
 
-    home.activation = mkIf (mbsyncAccounts != [ ]) {
-      createMaildir =
-        hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-          $DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG ${
-            concatMapStringsSep " " (a: a.maildir.absPath) mbsyncAccounts
-          }
-        '';
-    };
-  };
+      home.file.".mbsyncrc".text = let
+        accountsConfig = map genAccountConfig mbsyncAccounts;
+        # Only generate this kind of Group configuration if there are ANY accounts
+        # that do NOT have a per-account groups/channels option(s) specified.
+        groupsConfig =
+          if any (account: account.mbsync.groups == { }) mbsyncAccounts then
+            mapAttrsToList genGroupConfig cfg.groups
+          else
+            [ ];
+      in ''
+        # Generated by Home Manager.
+
+      ''
+      + concatStringsSep "\n" (optional (cfg.extraConfig != "") cfg.extraConfig)
+      + concatStringsSep "\n\n" accountsConfig
+      + concatStringsSep "\n" groupsConfig;
+
+      home.activation = mkIf (mbsyncAccounts != [ ]) {
+        createMaildir =
+          hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+            $DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG ${
+              concatMapStringsSep " " (a: a.maildir.absPath) mbsyncAccounts
+            }
+          '';
+      };
+    }
+  ]);
 }

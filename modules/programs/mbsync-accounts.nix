@@ -50,13 +50,13 @@ let
         '';
       };
 
-      masterPattern = mkOption {
+      farPattern = mkOption {
         type = types.str;
         default = "";
         example = "[Gmail]/Sent Mail";
         description = ''
           IMAP4 patterns for which mailboxes on the remote mail server to sync.
-          If <literal>Patterns</literal> are specified, <literal>masterPattern</literal>
+          If <literal>Patterns</literal> are specified, <literal>farPattern</literal>
           is interpreted as a prefix which is not matched against the patterns,
           and is not affected by mailbox list overrides.
           </para><para>
@@ -65,14 +65,14 @@ let
         '';
       };
 
-      slavePattern = mkOption {
+      nearPattern = mkOption {
         type = types.str;
         default = "";
         example = "Sent";
         description = ''
-          Name for where mail coming from the master mail server will end up
-          locally. The mailbox specified by the master's pattern will be placed
-          in this directory.
+          Name for where mail coming from the remote (far) mail server will end up
+          locally. The mailbox specified by the far pattern will be placed in
+          this directory.
           </para><para>
           If this is left as the default, then mbsync will default to the pattern
           <literal>INBOX</literal>.
@@ -85,7 +85,7 @@ let
         example = [ "INBOX" ];
         description = ''
           Instead of synchronizing <emphasis>just</emphasis> the mailboxes that
-          match the <literal>masterPattern</literal>, use it as a prefix which is
+          match the <literal>farPattern</literal>, use it as a prefix which is
           not matched against the patterns, and is not affected by mailbox list
           overrides.
         '';
