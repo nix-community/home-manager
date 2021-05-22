@@ -74,12 +74,8 @@ with lib;
           ${config.services.syncthing.tray.package.pname} = {
             Unit = {
               Description = config.services.syncthing.tray.package.pname;
-              After = [
-                "graphical-session-pre.target"
-                "polybar.service"
-                "taffybar.service"
-                "stalonetray.service"
-              ];
+              Requires = [ "tray.target" ];
+              After = [ "graphical-session-pre.target" "tray.target" ];
               PartOf = [ "graphical-session.target" ];
             };
 
@@ -100,12 +96,8 @@ with lib;
           "syncthingtray" = {
             Unit = {
               Description = "syncthingtray";
-              After = [
-                "graphical-session-pre.target"
-                "polybar.service"
-                "taffybar.service"
-                "stalonetray.service"
-              ];
+              Requires = [ "tray.target" ];
+              After = [ "graphical-session-pre.target" "tray.target" ];
               PartOf = [ "graphical-session.target" ];
             };
 

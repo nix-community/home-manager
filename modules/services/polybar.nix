@@ -197,8 +197,7 @@ in {
     systemd.user.services.polybar = {
       Unit = {
         Description = "Polybar status bar";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
+        PartOf = [ "tray.target" ];
         X-Restart-Triggers =
           [ "${config.xdg.configFile."polybar/config".source}" ];
       };
@@ -212,7 +211,7 @@ in {
         Restart = "on-failure";
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = { WantedBy = [ "tray.target" ]; };
     };
   };
 

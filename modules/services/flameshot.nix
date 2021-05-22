@@ -18,12 +18,8 @@ in {
     systemd.user.services.flameshot = {
       Unit = {
         Description = "Flameshot screenshot tool";
-        After = [
-          "graphical-session-pre.target"
-          "polybar.service"
-          "stalonetray.service"
-          "taffybar.service"
-        ];
+        Requires = [ "tray.target" ];
+        After = [ "graphical-session-pre.target" "tray.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

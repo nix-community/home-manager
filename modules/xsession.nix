@@ -110,12 +110,21 @@ in {
         };
       };
 
-      # A basic graphical session target for Home Manager.
-      targets.hm-graphical-session = {
-        Unit = {
-          Description = "Home Manager X session";
-          Requires = [ "graphical-session-pre.target" ];
-          BindsTo = [ "graphical-session.target" ];
+      targets = {
+        # A basic graphical session target for Home Manager.
+        hm-graphical-session = {
+          Unit = {
+            Description = "Home Manager X session";
+            Requires = [ "graphical-session-pre.target" ];
+            BindsTo = [ "graphical-session.target" "tray.target" ];
+          };
+        };
+
+        tray = {
+          Unit = {
+            Description = "Home Manager System Tray";
+            Requires = [ "graphical-session-pre.target" ];
+          };
         };
       };
     };

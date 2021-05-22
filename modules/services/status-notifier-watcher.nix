@@ -29,16 +29,17 @@ in {
     systemd.user.services.status-notifier-watcher = {
       Unit = {
         Description = "SNI watcher";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
+        PartOf = [ "tray.target" ];
         Before = [ "taffybar.service" ];
       };
 
-      Service = { ExecStart = "${cfg.package}/bin/status-notifier-watcher"; };
-
-      Install = {
-        WantedBy = [ "graphical-session.target" "taffybar.service" ];
+      Service = {
+        Type = "dbus";
+        BusName = "org.kde.StatusNotifierWatcher";
+        ExecStart = "${cfg.package}/bin/status-notifier-watcher";
       };
+
+      Install = { WantedBy = [ "tray.target" "taffybar.service" ]; };
     };
   };
 }
