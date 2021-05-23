@@ -6,7 +6,7 @@ with lib;
   config = {
     nixpkgs.overlays = [
       (self: super: rec {
-        emacs = pkgs.writeShellScriptBin "dummy-emacs-26.3" "" // {
+        emacs = pkgs.writeShellScriptBin "dummy-emacs-28.0.5" "" // {
           outPath = "@emacs@";
         };
         emacsPackagesFor = _:
@@ -17,24 +17,21 @@ with lib;
     programs.emacs.enable = true;
     services.emacs.enable = true;
     services.emacs.client.enable = true;
-    services.emacs.socketActivation.enable = true;
 
     nmt.script = ''
-      assertFileExists home-files/.config/systemd/user/emacs.socket
+      assertPathNotExists home-files/.config/systemd/user/emacs.socket
       assertFileExists home-files/.config/systemd/user/emacs.service
       assertFileExists home-path/share/applications/emacsclient.desktop
 
-      assertFileContent home-files/.config/systemd/user/emacs.socket \
-                        ${./emacs-socket-26-emacs.socket}
       assertFileContent home-files/.config/systemd/user/emacs.service \
                         ${
                           pkgs.substituteAll {
                             inherit (pkgs) runtimeShell;
-                            src = ./emacs-socket-26-emacs.service;
+                            src = ./emacs-service-emacs.service;
                           }
                         }
       assertFileContent home-path/share/applications/emacsclient.desktop \
-                        ${./emacs-emacsclient.desktop}
+                        ${./emacs-28-emacsclient.desktop}
     '';
   };
 }

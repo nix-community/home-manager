@@ -2,9 +2,7 @@
 
 with lib;
 
-let
-
-in {
+{
   config = {
     nixpkgs.overlays = [
       (self: super: rec {
@@ -19,20 +17,17 @@ in {
     programs.emacs.enable = true;
     services.emacs.enable = true;
     services.emacs.client.enable = true;
-    services.emacs.socketActivation.enable = true;
 
     nmt.script = ''
-      assertFileExists home-files/.config/systemd/user/emacs.socket
+      assertPathNotExists home-files/.config/systemd/user/emacs.socket
       assertFileExists home-files/.config/systemd/user/emacs.service
       assertFileExists home-path/share/applications/emacsclient.desktop
 
-      assertFileContent home-files/.config/systemd/user/emacs.socket \
-                        ${./emacs-socket-emacs.socket}
       assertFileContent home-files/.config/systemd/user/emacs.service \
                         ${
                           pkgs.substituteAll {
                             inherit (pkgs) runtimeShell;
-                            src = ./emacs-socket-emacs.service;
+                            src = ./emacs-service-emacs.service;
                           }
                         }
       assertFileContent home-path/share/applications/emacsclient.desktop \
