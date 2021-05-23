@@ -2031,7 +2031,8 @@ in
       }
 
       {
-        time = "2021-04-13T07:19:36+00:00";
+        time = "2021-05-23T18:31:38+00:00";
+        condition = config.programs.mbsync.enable;
         message = ''
           mbsync channels no longer accepts the masterPattern or slavePattern
           attribute keys. This is due to an upstream change.
