@@ -6,7 +6,8 @@ let
 
   cfg = config.services.nextcloud-client;
 
-in {
+in
+{
   options = {
     services.nextcloud-client = {
       enable = mkEnableOption "Nextcloud Client";
@@ -21,8 +22,8 @@ in {
       runInBackground = mkOption {
         type = types.bool;
         default = false;
-        defaultText = literalExample "false";
-        description = "Whether to start the Nextcloud client in the background.";
+        description =
+          "Whether to start the Nextcloud client in the background.";
       };
     };
   };
