@@ -38,7 +38,7 @@ in {
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";
         ExecStart = "${cfg.package}/bin/nextcloud"
-          + (if cfg.runInBackground then " --background" else "");
+          + (optionalString cfg.runInBackground " --background");
       };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
