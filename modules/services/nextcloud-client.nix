@@ -22,7 +22,7 @@ in {
         type = types.bool;
         default = false;
         defaultText = literalExample "false";
-        description = "Whether to run the nextcloud client in the background.";
+        description = "Whether to start the Nextcloud client in the background.";
       };
     };
   };
