@@ -6,8 +6,7 @@ let
 
   cfg = config.services.nextcloud-client;
 
-in
-{
+in {
   options = {
     services.nextcloud-client = {
       enable = mkEnableOption "Nextcloud Client";
