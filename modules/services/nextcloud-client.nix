@@ -17,6 +17,13 @@ in {
         defaultText = literalExample "pkgs.nextcloud-client";
         description = "The package to use for the nextcloud client binary.";
       };
+
+      startInBackground = mkOption {
+        type = types.bool;
+        default = false;
+        description =
+          "Whether to start the Nextcloud client in the background.";
+      };
     };
   };
 
@@ -30,7 +37,8 @@ in {
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";
-        ExecStart = "${cfg.package}/bin/nextcloud";
+        ExecStart = "${cfg.package}/bin/nextcloud"
+          + (optionalString cfg.startInBackground " --background");
       };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
