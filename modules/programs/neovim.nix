@@ -227,6 +227,7 @@ in {
         extraPython3Packages withPython3 withNodeJs withRuby viAlias vimAlias;
       configure = cfg.configure // moduleConfigure;
       plugins = cfg.plugins;
+      customRC = cfg.extraConfig;
     };
 
   in mkIf cfg.enable {
