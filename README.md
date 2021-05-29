@@ -48,8 +48,7 @@ Contact
 -------
 
 You can chat with us on IRC in the channel [#home-manager][] on
-[freenode][]. The [channel logs][] are hosted courtesy of
-[samueldr][].
+[oftc][].
 
 Installation
 ------------
@@ -370,9 +369,8 @@ an issue.
 [Z shell]: http://zsh.sourceforge.net/
 [manual]: https://nix-community.github.io/home-manager/
 [configuration options]: https://nix-community.github.io/home-manager/options.html
-[#home-manager]: https://webchat.freenode.net/?url=irc%3A%2F%2Firc.freenode.net%2Fhome-manager
-[freenode]: https://freenode.net/
-[channel logs]: https://logs.nix.samueldr.com/home-manager/
+[#home-manager]: https://webchat.oftc.net/?channels=home-manager
+[oftc]: https://oftc.net/
 [samueldr]: https://github.com/samueldr/
 [Nix Pills]: https://nixos.org/nixos/nix-pills/
 [Nix Flakes]: https://nixos.wiki/wiki/Flakes
