@@ -37,6 +37,16 @@
     github = "kalhauge";
     githubId = 1182166;
   };
+  kamadorueda = {
+    name = "Kevin Amado";
+    email = "kamadorueda@gmail.com";
+    github = "kamadorueda";
+    githubId = 47480384;
+    keys = [{
+      longkeyid = "rsa4096/0x04D0CEAF916A9A40";
+      fingerprint = "2BE3 BAFD 793E A349 ED1F  F00F 04D0 CEAF 916A 9A40";
+    }];
+  };
   kubukoz = {
     name = "Jakub Kozłowski";
     email = "kubukoz@users.noreply.github.com";

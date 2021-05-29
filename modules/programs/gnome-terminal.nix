@@ -187,6 +187,12 @@ let
         '';
       };
 
+      boldIsBright = mkOption {
+        default = null;
+        type = types.nullOr types.bool;
+        description = "Whether bold text is shown in bright colors.";
+      };
+
       deleteBinding = mkOption {
         default = "delete-sequence";
         type = eraseBinding;
@@ -234,6 +240,12 @@ let
         type = types.bool;
         description = "Turn on/off the terminal's bell.";
       };
+
+      transparencyPercent = mkOption {
+        default = null;
+        type = types.nullOr (types.ints.between 0 100);
+        description = "Background transparency in percent.";
+      };
     };
   });
 
@@ -241,6 +253,7 @@ let
     {
       audible-bell = pcfg.audibleBell;
       visible-name = pcfg.visibleName;
+      scroll-on-output = pcfg.scrollOnOutput;
       scrollbar-policy = if pcfg.showScrollbar then "always" else "never";
       scrollback-lines = pcfg.scrollbackLines;
       cursor-shape = pcfg.cursorShape;
@@ -273,7 +286,9 @@ let
       } else {
         bold-color-same-as-fg = false;
         bold-color = pcfg.colors.boldColor;
-      }) // (if (pcfg.colors.cursor != null) then {
+      }) // optionalAttrs (pcfg.boldIsBright != null) {
+        bold-is-bright = pcfg.boldIsBright;
+      } // (if (pcfg.colors.cursor != null) then {
         cursor-colors-set = true;
         cursor-foreground-color = pcfg.colors.cursor.foreground;
         cursor-background-color = pcfg.colors.cursor.background;
@@ -285,10 +300,14 @@ let
         highlight-background-color = pcfg.colors.highlight.background;
       } else {
         highlight-colors-set = false;
-      })));
+      }) // optionalAttrs (pcfg.transparencyPercent != null) {
+        background-transparency-percent = pcfg.transparencyPercent;
+        use-theme-transparency = false;
+        use-transparent-background = true;
+      }));
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with maintainers; [ kamadorueda rycee ];
 
   options = {
     programs.gnome-terminal = {

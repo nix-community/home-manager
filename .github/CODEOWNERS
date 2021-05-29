@@ -77,7 +77,7 @@
 
 /modules/programs/git.nix                             @rycee
 
-/modules/programs/gnome-terminal.nix                  @rycee
+/modules/programs/gnome-terminal.nix                  @kamadorueda @rycee
 
 /modules/programs/go.nix                              @rvolosatovs
 
