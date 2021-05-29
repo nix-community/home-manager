@@ -44,7 +44,7 @@ The first option is good if you only temporarily want to use your clone.
 
 [[sec-guidelines]]
 === Guidelines
-:irc-home-manager: https://webchat.freenode.net/?url=irc%3A%2F%2Firc.freenode.net%2Fhome-manager
+:irc-home-manager: https://webchat.oftc.net/?channels=home-manager
 :valuable-options: https://github.com/Infinisil/rfcs/blob/config-option/rfcs/0042-config-option.md#valuable-options
 :rfc-42: https://github.com/Infinisil/rfcs/blob/config-option/rfcs/0042-config-option.md
 :assertions: https://nixos.org/manual/nixos/stable/index.html#sec-assertions
