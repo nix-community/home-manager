@@ -143,6 +143,8 @@
 
 /modules/programs/pidgin.nix                          @rycee
 
+/modules/programs/piston-cli.nix                      @ethancedwards8
+
 /modules/programs/powerline-go.nix                    @DamienCassou
 
 /modules/programs/rofi.nix                            @thiagokokada

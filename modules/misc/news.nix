@@ -2047,6 +2047,13 @@ in
           configuration file.
         '';
       }
+
+      {
+        time = "2021-05-30T15:22:10+00:00";
+        message = ''
+          A new module is available: 'programs.piston-cli'.
+        '';
+      }
     ];
   };
 }
