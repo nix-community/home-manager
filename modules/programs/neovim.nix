@@ -51,8 +51,8 @@ let
         (map (x: if x ? plugin && x.optional == true then x.plugin else null)
           cfg.plugins);
     };
-    customRC = cfg.extraConfig
-      + pkgs.lib.concatMapStrings pluginConfig cfg.plugins;
+    customRC = pkgs.lib.concatMapStrings pluginConfig cfg.plugins
+      + cfg.extraConfig;
   };
 
   extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
