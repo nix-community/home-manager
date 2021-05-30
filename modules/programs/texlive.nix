@@ -13,7 +13,7 @@ in {
 
   options = {
     programs.texlive = {
-      enable = mkEnableOption "Texlive";
+      enable = mkEnableOption "TeX Live";
 
       extraPackages = mkOption {
         default = tpkgs: { inherit (tpkgs) collection-basic; };
@@ -21,12 +21,12 @@ in {
         example = literalExample ''
           tpkgs: { inherit (tpkgs) collection-fontsrecommended algorithms; }
         '';
-        description = "Extra packages available to Texlive.";
+        description = "Extra packages available to TeX Live.";
       };
 
       package = mkOption {
         type = types.package;
-        description = "Resulting customized Texlive package.";
+        description = "Resulting customized TeX Live package.";
         readOnly = true;
       };
     };
