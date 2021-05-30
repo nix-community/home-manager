@@ -83,8 +83,8 @@ with lib;
             <emphasis>after</emphasis> the new files have been linked
             into place.
             </para><para>
-            Note, this option cannot be used when <literal>recursive</literal>
-            is enabled.
+            Note, this code is always run when <literal>recursive</literal> is
+            enabled.
           '';
         };
 

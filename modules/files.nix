@@ -39,17 +39,6 @@ in
   };
 
   config = {
-    assertions = [(
-      let
-        conflicts = mapAttrsToList (n: v: n)
-          (filterAttrs (n: v: v.recursive && v.onChange != "") cfg);
-      in {
-        assertion = conflicts == [];
-        message = ''
-          Cannot use 'home.file.<name>.onChange' when 'home.file.<name>.recursive' is enabled:
-              ${concatStringsSep ", " conflicts}'';
-      })];
-
     lib.file.mkOutOfStoreSymlink = path:
       let
         pathStr = toString path;
