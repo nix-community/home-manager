@@ -35,7 +35,8 @@ let
 
   # Match the default socket path for the Emacs version so emacsclient continues
   # to work without wrapping it.
-  socketPath = "%t/emacs/server";
+  socketDir = "%t/emacs";
+  socketPath = "${socketDir}/server";
 
 in {
   meta.maintainers = [ maintainers.tadfisher ];
@@ -112,6 +113,13 @@ in {
           SuccessExitStatus = 15;
 
           Restart = "on-failure";
+        } // optionalAttrs (cfg.socketActivation.enable) {
+          # Use read-only directory permissions to prevent emacs from
+          # deleting systemd's socket file before exiting.
+          ExecStartPost =
+            "${pkgs.coreutils}/bin/chmod --changes -w ${socketDir}";
+          ExecStopPost =
+            "${pkgs.coreutils}/bin/chmod --changes +w ${socketDir}";
         };
       } // optionalAttrs (!cfg.socketActivation.enable) {
         Install = { WantedBy = [ "default.target" ]; };
