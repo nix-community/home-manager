@@ -1,7 +1,7 @@
 <!--
 
-Please check if there already exists a relevant issue before creating
-a new one.
+Don't forget to check if there already exists a relevant issue before
+creating a new one.
 
 -->
 
