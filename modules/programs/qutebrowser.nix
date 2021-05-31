@@ -32,6 +32,8 @@ let
         ''config.bind("${k}", "${escape [ ''"'' ] c}", mode="${m}")'';
     in concatStringsSep "\n" (mapAttrsToList (formatKeyBinding m) b);
 
+  formatQuickmarks = n: s: "${n} ${s}";
+
 in {
   options.programs.qutebrowser = {
     enable = mkEnableOption "qutebrowser";
@@ -251,6 +253,21 @@ in {
       '';
     };
 
+    quickmarks = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = ''
+        Quickmarks to add to qutebrowser's <filename>quickmarks</filename> file.
+        Note that when Home Manager manages your quickmarks, you cannot edit them at runtime.
+      '';
+      example = literalExample ''
+        {
+          nixpkgs = "https://github.com/NixOS/nixpkgs";
+          home-manager = "https://github.com/nix-community/home-manager";
+        }
+      '';
+    };
+
     extraConfig = mkOption {
       type = types.lines;
       default = "";
@@ -274,13 +291,26 @@ in {
       ++ optional (!cfg.enableDefaultBindings) "c.bindings.default = {}"
       ++ mapAttrsToList formatKeyBindings cfg.keyBindings
       ++ optional (cfg.extraConfig != "") cfg.extraConfig);
+
+    quickmarksFile = optionals (cfg.quickmarks != { }) concatStringsSep "\n"
+      ((mapAttrsToList formatQuickmarks cfg.quickmarks));
   in mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     home.file.".qutebrowser/config.py" =
       mkIf pkgs.stdenv.hostPlatform.isDarwin { text = qutebrowserConfig; };
 
+    home.file.".qutebrowser/quickmarks" =
+      mkIf (cfg.quickmarks != { } && pkgs.stdenv.hostPlatform.isDarwin) {
+        text = quickmarksFile;
+      };
+
     xdg.configFile."qutebrowser/config.py" =
       mkIf pkgs.stdenv.hostPlatform.isLinux { text = qutebrowserConfig; };
+
+    xdg.configFile."qutebrowser/quickmarks" =
+      mkIf (cfg.quickmarks != { } && pkgs.stdenv.hostPlatform.isLinux) {
+        text = quickmarksFile;
+      };
   };
 }
