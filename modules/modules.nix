@@ -215,6 +215,7 @@ let
     (loadModule ./services/wlsunset.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xcape.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xembed-sni-proxy.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./services/xidlehook.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xscreensaver.nix { })
     (loadModule ./services/xsuspender.nix { condition = hostPlatform.isLinux; })
     (loadModule ./systemd.nix { })
