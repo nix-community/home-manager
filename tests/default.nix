@@ -113,6 +113,7 @@ import nmt {
     ./modules/services/fluidsynth
     ./modules/services/kanshi
     ./modules/services/lieer
+    ./modules/services/pantalaimon
     ./modules/services/pbgopy
     ./modules/services/playerctld
     ./modules/services/polybar
