@@ -3646,19 +3646,19 @@ This superseedes any other (deprecated) settings in this module.
         ]
     ; header_margin = true; hide_kernel_threads = true; hide_threads = false; hide_userland_threads = false; highlight_base_name = false; highlight_megabytes = true; highlight_threads = true; left_meter_modes = 
         [
-        1 1 1 
+        1 1 1 2 
         ]
     ; left_meters = 
         [
-        "AllCPUs" "Memory" "Swap" 
+        "AllCPUs2" "Memory" "Swap" "Zram" 
         ]
     ; right_meter_modes = 
         [
-        2 2 2 
+        2 2 2 2 
         ]
     ; right_meters = 
         [
-        "LoadAverage" "Tasks" "Uptime" 
+        "Tasks" "LoadAverage" "Uptime" "Systemd" 
         ]
     ; shadow_other_users = false; show_cpu_frequency = false; show_cpu_usage = false; show_program_path = true; show_thread_names = false; sort_direction = 1; sort_key = 46; tree_view = false; update_process_names = false; vim_mode = false; 
         }
@@ -3684,17 +3684,17 @@ This superseedes any other (deprecated) settings in this module.
   highlight_base_name = 1;
   highlight_megabytes = 1;
   highlight_threads = 1;
-} // (with config.lib.htop; leftMeters {
-  AllCPUs2 = modes.Bar;
-  Memory = modes.Bar;
-  Swap = modes.Bar;
-  Zram = modes.Text;
-}) // (with config.lib.htop; rightMeters {
-  Tasks = modes.Text;
-  LoadAverage = modes.Text;
-  Uptime = modes.Text;
-  Systemd = modes.Text;
-})
+} // (with config.lib.htop; leftMeters [
+  (bar "AllCPUs2")
+  (bar "Memory")
+  (bar "Swap")
+  (text "Zram")
+]) // (with config.lib.htop; rightMeters [
+  (text "Tasks")
+  (text "LoadAverage")
+  (text "Uptime")
+  (text "Systemd")
+]);
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/htop.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/htop.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.htop.shadowOtherUsers"></a><a class="term" href="options.html#opt-programs.htop.shadowOtherUsers"><code class="option">programs.htop.shadowOtherUsers</code></a></span></dt><dd><p>Deprecated. Please use programs.htop.settings.shadow_other_users instead.
