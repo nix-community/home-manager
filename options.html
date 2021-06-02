@@ -12429,6 +12429,90 @@ must be set.
         "~/.local/share"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/xdg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries"></a><a class="term" href="options.html#opt-xdg.desktopEntries"><code class="option">xdg.desktopEntries</code></a></span></dt><dd><p>Desktop Entries allow applications to be shown in your desktop environment's app launcher. </p><p>
+You can define entries for programs without entries or override existing entries. </p><p>
+See <a class="link" href="https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#recognized-keys" target="_top">https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#recognized-keys</a> for more information on options.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  firefox = {
+    name = "Firefox";
+    genericName = "Web Browser";
+    exec = "firefox %U";
+    terminal = false;
+    categories = [ "Application" "Network" "WebBrowser" ];
+    mimeType = [ "text/html" "text/xml" ];
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.categories"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.categories"><code class="option">xdg.desktopEntries.&lt;name&gt;.categories</code></a></span></dt><dd><p>Categories in which the entry should be shown in a menu.</p><p><span class="emphasis"><em>Type:</em></span> null or list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.comment"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.comment"><code class="option">xdg.desktopEntries.&lt;name&gt;.comment</code></a></span></dt><dd><p>Tooltip for the entry.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.exec"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.exec"><code class="option">xdg.desktopEntries.&lt;name&gt;.exec</code></a></span></dt><dd><p>Program to execute, possibly with arguments.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.extraConfig"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.extraConfig"><code class="option">xdg.desktopEntries.&lt;name&gt;.extraConfig</code></a></span></dt><dd><p>Extra configuration. Will be appended to the end of the file and 
+may thus contain extra sections.
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        ""
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.fileValidation"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.fileValidation"><code class="option">xdg.desktopEntries.&lt;name&gt;.fileValidation</code></a></span></dt><dd><p>Whether to validate the generated desktop file.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.genericName"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.genericName"><code class="option">xdg.desktopEntries.&lt;name&gt;.genericName</code></a></span></dt><dd><p>Generic name of the application.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.icon"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.icon"><code class="option">xdg.desktopEntries.&lt;name&gt;.icon</code></a></span></dt><dd><p>Icon to display in file manager, menus, etc.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.mimeType"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.mimeType"><code class="option">xdg.desktopEntries.&lt;name&gt;.mimeType</code></a></span></dt><dd><p>The MIME type(s) supported by this application.</p><p><span class="emphasis"><em>Type:</em></span> null or list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.name"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.name"><code class="option">xdg.desktopEntries.&lt;name&gt;.name</code></a></span></dt><dd><p>Specific name of the application.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.settings"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.settings"><code class="option">xdg.desktopEntries.&lt;name&gt;.settings</code></a></span></dt><dd><p>Extra key-value pairs to add to the <code class="literal">[Desktop Entry]</code> section. 
+This may override other values.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of Concatenated strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  Keywords = "calc;math";
+  DBusActivatable = "false";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.startupNotify"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.startupNotify"><code class="option">xdg.desktopEntries.&lt;name&gt;.startupNotify</code></a></span></dt><dd><p>If true, it is KNOWN that the application will send a "remove" 
+message when started with the <code class="literal">DESKTOP_STARTUP_ID</code> 
+environment variable set. If false, it is KNOWN that the application 
+does not work with startup notification at all.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.terminal"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.terminal"><code class="option">xdg.desktopEntries.&lt;name&gt;.terminal</code></a></span></dt><dd><p>Whether the program runs in a terminal window.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.type"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.type"><code class="option">xdg.desktopEntries.&lt;name&gt;.type</code></a></span></dt><dd><p>The type of the desktop entry.</p><p><span class="emphasis"><em>Type:</em></span> one of "Application", "Link", "Directory"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "Application"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-desktop-entries.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.mime.enable"></a><a class="term" href="options.html#opt-xdg.mime.enable"><code class="option">xdg.mime.enable</code></a></span></dt><dd><p>Whether to install programs and files to support the
 XDG Shared MIME-info specification and XDG MIME Applications
 specification at
