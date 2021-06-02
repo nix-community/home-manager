@@ -108,6 +108,7 @@ import nmt {
     ./modules/programs/rbw
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
+    ./modules/programs/terminator
     ./modules/programs/waybar
     ./modules/services/barrier
     ./modules/services/dropbox
