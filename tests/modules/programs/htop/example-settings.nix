@@ -27,18 +27,14 @@ with lib;
       highlight_megabytes = 1;
       highlight_threads = 1;
     } // (with config.lib.htop;
-      leftMeters {
-        AllCPUs2 = modes.Bar;
-        Memory = modes.Bar;
-        Swap = modes.Bar;
-        Zram = modes.Text;
-      }) // (with config.lib.htop;
-        rightMeters {
-          Tasks = modes.Text;
-          LoadAverage = modes.Text;
-          Uptime = modes.Text;
-          Systemd = modes.Text;
-        });
+      leftMeters [ (bar "AllCPUs2") (bar "Memory") (bar "Swap") (text "Zram") ])
+      // (with config.lib.htop;
+        rightMeters [
+          (text "Tasks")
+          (text "LoadAverage")
+          (text "Uptime")
+          (text "Systemd")
+        ]);
 
     nmt.script = ''
       assertFileExists home-files/.config/htop/htoprc
