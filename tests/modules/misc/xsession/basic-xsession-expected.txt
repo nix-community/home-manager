@@ -1,5 +1,5 @@
 if [ -z "$HM_XPROFILE_SOURCED" ]; then
-  . ~/.xprofile
+  . "/home/hm-user/.xprofile"
 fi
 unset HM_XPROFILE_SOURCED
 
