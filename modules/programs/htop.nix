@@ -10,10 +10,14 @@ let
     let v' = if isBool v then (if v then "1" else "0") else toString v;
     in "${n}=${v'}";
 
-  formatMeters = side: meters: {
-    "${side}_meters" = mapAttrsToList (x: _: x) meters;
-    "${side}_meter_modes" = mapAttrsToList (_: y: y) meters;
-  };
+  formatMeters = side: meters:
+    let
+      warn' = warn "htop: meters should be passed as a list";
+      meters' = if isList meters then meters else warn' [ meters ];
+    in {
+      "${side}_meters" = concatMap (mapAttrsToList (x: _: x)) meters';
+      "${side}_meter_modes" = concatMap (mapAttrsToList (_: y: y)) meters';
+    };
   leftMeters = formatMeters "left";
   rightMeters = formatMeters "right";
 
@@ -79,6 +83,14 @@ let
     Graph = 3;
     LED = 4;
   };
+
+  # Utilities for constructing meters
+  meter = mode: name: { ${name} = mode; };
+  bar = meter modes.Bar;
+  text = meter modes.Text;
+  graph = meter modes.Graph;
+  led = meter modes.LED;
+  blank = text "Blank";
 
   # Mapping from names to defaults
   meters = {
@@ -231,15 +243,17 @@ in {
         tree_view = false;
         update_process_names = false;
         vim_mode = false;
-      } // (leftMeters {
-        AllCPUs = modes.Bar;
-        Memory = modes.Bar;
-        Swap = modes.Bar;
-      }) // (rightMeters {
-        Tasks = modes.Text;
-        LoadAverage = modes.Text;
-        Uptime = modes.Text;
-      });
+      } // (leftMeters [
+        (bar "AllCPUs2")
+        (bar "Memory")
+        (bar "Swap")
+        (text "Zram")
+      ]) // (rightMeters [
+        (text "Tasks")
+        (text "LoadAverage")
+        (text "Uptime")
+        (text "Systemd")
+      ]);
       example = literalExample ''
         {
           color_scheme = 6;
@@ -262,17 +276,17 @@ in {
           highlight_base_name = 1;
           highlight_megabytes = 1;
           highlight_threads = 1;
-        } // (with config.lib.htop; leftMeters {
-          AllCPUs2 = modes.Bar;
-          Memory = modes.Bar;
-          Swap = modes.Bar;
-          Zram = modes.Text;
-        }) // (with config.lib.htop; rightMeters {
-          Tasks = modes.Text;
-          LoadAverage = modes.Text;
-          Uptime = modes.Text;
-          Systemd = modes.Text;
-        })
+        } // (with config.lib.htop; leftMeters [
+          (bar "AllCPUs2")
+          (bar "Memory")
+          (bar "Swap")
+          (text "Zram")
+        ]) // (with config.lib.htop; rightMeters [
+          (text "Tasks")
+          (text "LoadAverage")
+          (text "Uptime")
+          (text "Systemd")
+        ]);
       '';
       description = ''
         Configuration options to add to
@@ -576,7 +590,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    lib.htop = { inherit fields modes leftMeters rightMeters; };
+    lib.htop = {
+      inherit fields modes leftMeters rightMeters bar text graph led blank;
+    };
 
     home.packages = [ pkgs.htop ];
 
