@@ -155,8 +155,11 @@ in {
           Type = "dbus";
           BusName = "org.freedesktop.Notifications";
           ExecStart = "${cfg.package}/bin/dunst";
-          Environment = optionalString (cfg.waylandDisplay != "")
-            "WAYLAND_DISPLAY=${cfg.waylandDisplay}";
+          Environment = [
+            "DISPLAY:=0"
+            (optionalString (cfg.waylandDisplay != "")
+              "WAYLAND_DISPLAY=${cfg.waylandDisplay}")
+          ];
         };
       };
     }
