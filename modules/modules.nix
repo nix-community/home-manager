@@ -125,6 +125,7 @@ let
     (loadModule ./programs/rofi-pass.nix {  })
     (loadModule ./programs/rtorrent.nix { })
     (loadModule ./programs/scmpuff.nix { })
+    (loadModule ./programs/senpai.nix { })
     (loadModule ./programs/skim.nix { })
     (loadModule ./programs/starship.nix { })
     (loadModule ./programs/sbt.nix { })
