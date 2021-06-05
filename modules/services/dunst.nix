@@ -103,7 +103,7 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ (getOutput "man" pkgs.dunst) ];
+      home.packages = [ cfg.package ];
 
       xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
         "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
