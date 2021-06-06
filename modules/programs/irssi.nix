@@ -35,6 +35,9 @@ let
           use_ssl = "${boolStr v.server.ssl.enable}";
           ssl_verify = "${boolStr v.server.ssl.verify}";
           autoconnect = "${boolStr v.server.autoConnect}";
+          ${lib.optionalString (v.server.ssl.certificateFile != null) ''
+          ssl_cert = "${v.server.ssl.certificateFile}";
+          ''}
         }
       ''));
 
@@ -117,6 +120,15 @@ let
             type = types.bool;
             default = true;
             description = "Whether the SSL certificate should be verified.";
+          };
+
+          certificateFile = mkOption {
+            type = types.nullOr types.path;
+            default = null;
+            description = ''
+              Path to a file containing the certificate used for
+              client authentication to the server.
+            '';
           };
         };
 

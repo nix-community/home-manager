@@ -35,7 +35,7 @@ in {
       example = literalExample ''
         {
           ETESYNC_LISTEN_ADDRESS = "localhost";
-          ETESYNC_LISTEN_PORT = 37385;
+          ETESYNC_LISTEN_PORT = 37358;
         }
       '';
       description = ''

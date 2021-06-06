@@ -2,7 +2,6 @@
 WantedBy=graphical-session.target
 
 [Service]
-Environment=PATH=@foot@/bin
 ExecStart=@foot@/bin/foot --server
 Restart=on-failure
 

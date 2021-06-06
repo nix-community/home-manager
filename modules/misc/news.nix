@@ -2047,7 +2047,14 @@ in
           configuration file.
         '';
       }
-
+      
+      {
+        time = "2021-05-10T20:41:44+00:00";
+        message = ''
+          A new module is available: 'programs.rbw'.
+        '';
+      }
+      
       {
         time = "2021-05-30T15:22:10+00:00";
         message = ''

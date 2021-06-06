@@ -7,4 +7,5 @@
   sway-null-package = ./sway-null-package.nix;
   sway-modules = ./sway-modules.nix;
   sway-workspace-default = ./sway-workspace-default.nix;
+  sway-workspace-output = ./sway-workspace-output.nix;
 }

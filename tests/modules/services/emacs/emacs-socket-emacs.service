@@ -1,9 +1,13 @@
 [Service]
 ExecStart=@runtimeShell@ -l -c "@emacs@/bin/emacs --fg-daemon='%t/emacs/server'"
-ExecStop=@emacs@/bin/emacsclient --eval '(kill-emacs 0)'
+ExecStartPost=@coreutils@/bin/chmod --changes -w %t/emacs
+ExecStopPost=@coreutils@/bin/chmod --changes +w %t/emacs
 Restart=on-failure
+SuccessExitStatus=15
+Type=notify
 
 [Unit]
-Description=Emacs: the extensible, self-documenting text editor
+Description=Emacs text editor
 Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+RefuseManualStart=true
 X-RestartIfChanged=false

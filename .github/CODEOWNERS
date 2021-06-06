@@ -37,6 +37,11 @@
 /modules/misc/xdg-system-dirs.nix                     @tadfisher
 /tests/modules/misc/xdg/system-dirs.nix               @tadfisher
 
+/modules/misc/xdg-desktop-entries.nix                 @cwyc
+/tests/modules/misc/xdg/desktop-entries.nix           @cwyc
+/tests/modules/misc/xdg/desktop-full-expected.desktop @cwyc
+/tests/modules/misc/xdg/desktop-min-expected.desktop  @cwyc
+
 /modules/programs/aria2.nix                           @JustinLovinger
 
 /modules/programs/autojump.nix                        @evanjs
@@ -146,6 +151,9 @@
 /modules/programs/piston-cli.nix                      @ethancedwards8
 
 /modules/programs/powerline-go.nix                    @DamienCassou
+
+/modules/programs/rbw.nix                             @ambroisie
+/tests/modules/programs/rbw                           @ambroisie
 
 /modules/programs/rofi.nix                            @thiagokokada
 /tests/modules/programs/rofi                          @thiagokokada

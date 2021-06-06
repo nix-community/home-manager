@@ -12,47 +12,47 @@
  </refnamediv>
  <refsynopsisdiv>
   <cmdsynopsis>
-   <command>home-manager</command> <group choice="req"> 
+   <command>home-manager</command> <group choice="req">
    <arg choice="plain">
     build
    </arg>
-    
+
    <arg choice="plain">
     instantiate
    </arg>
-    
+
    <arg choice="plain">
     edit
    </arg>
-    
+
    <arg choice="plain">
     expire-generations <replaceable>timestamp</replaceable>
    </arg>
-    
+
    <arg choice="plain">
     generations
    </arg>
-    
+
    <arg choice="plain">
     help
    </arg>
-    
+
    <arg choice="plain">
     news
    </arg>
-    
+
    <arg choice="plain">
     packages
    </arg>
-    
+
    <arg choice="plain">
     remove-generations <replaceable>ID …</replaceable>
    </arg>
-    
+
    <arg choice="plain">
     switch
    </arg>
-    
+
    <arg choice="plain">
     uninstall
    </arg>
@@ -61,63 +61,63 @@
    <arg>
     -A <replaceable>attrPath</replaceable>
    </arg>
-    
+
    <arg>
     -I <replaceable>path</replaceable>
    </arg>
-    
+
    <arg>
     --flake <replaceable>flake-uri</replaceable>
    </arg>
-    
+
    <arg>
     -b <replaceable>ext</replaceable>
    </arg>
-    
+
    <arg>
-    <group choice="req"> 
+    <group choice="req">
     <arg choice="plain">
      -f
     </arg>
-     
+
     <arg choice="plain">
      --file
     </arg>
      </group> <replaceable>path</replaceable>
    </arg>
-    
+
    <arg>
-    <group choice="req"> 
+    <group choice="req">
     <arg choice="plain">
      -h
     </arg>
-     
+
     <arg choice="plain">
      --help
     </arg>
      </group>
    </arg>
-    
+
    <arg>
-    <group choice="req"> 
+    <group choice="req">
     <arg choice="plain">
      -n
     </arg>
-     
+
     <arg choice="plain">
      --dry-run
     </arg>
      </group>
    </arg>
-    
+
    <arg>
     --option <replaceable>name</replaceable> <replaceable>value</replaceable>
    </arg>
-    
+
    <arg>
     --cores <replaceable>number</replaceable>
    </arg>
-    
+
    <arg>
      <group choice="req">
        <arg choice="plain">
@@ -130,29 +130,33 @@
      </group>
      <replaceable>number</replaceable>
    </arg>
-    
+
+   <arg>
+    --debug
+   </arg>
+
    <arg>
     --keep-failed
    </arg>
-    
+
    <arg>
     --keep-going
    </arg>
-    
+
    <arg>
     --show-trace
    </arg>
-    
+
    <arg>
     --(no-)substitute
    </arg>
-    
+
    <arg>
-    <group choice="req"> 
+    <group choice="req">
     <arg choice="plain">
      -v
     </arg>
-     
+
     <arg choice="plain">
      --verbose
     </arg>
@@ -447,6 +451,18 @@
     </term>
     <term>
      <option>--max-jobs <replaceable>number</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--debug</option>
     </term>
     <listitem>
      <para>

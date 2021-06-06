@@ -32,7 +32,7 @@ will write to your dconf store and cannot tell whether a configuration
 that it is about to be overwritten was from a previous Home Manager
 generation or from manual configuration.
 
-Home Manager targets [NixOS][] unstable and NixOS version 20.09 (the
+Home Manager targets [NixOS][] unstable and NixOS version 21.05 (the
 current stable version), it may or may not work on other Linux
 distributions and NixOS versions.
 
@@ -75,10 +75,10 @@ Currently the easiest way to install Home Manager is as follows:
     $ nix-channel --update
     ```
 
-    and if you follow a Nixpkgs version 20.09 channel you can run
+    and if you follow a Nixpkgs version 21.05 channel you can run
 
     ```console
-    $ nix-channel --add https://github.com/nix-community/home-manager/archive/release-20.09.tar.gz home-manager
+    $ nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
     $ nix-channel --update
     ```
 
@@ -366,7 +366,7 @@ Home Manager is developed against `nixpkgs-unstable` branch, which
 often causes it to contain tweaks for changes/packages not yet
 released in stable NixOS. To avoid breaking users' configurations,
 Home Manager is released in branches corresponding to NixOS releases
-(e.g. `release-20.09`). These branches get fixes, but usually not new
+(e.g. `release-21.05`). These branches get fixes, but usually not new
 modules. If you need a module to be backported, then feel free to open
 an issue.
 

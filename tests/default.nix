@@ -55,6 +55,7 @@ import nmt {
     ./modules/programs/gpg
     ./modules/programs/htop
     ./modules/programs/i3status
+    ./modules/programs/irsii
     ./modules/programs/kakoune
     ./modules/programs/kitty
     ./modules/programs/lf
@@ -102,6 +103,7 @@ import nmt {
     ./modules/programs/i3status-rust
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.
+    ./modules/programs/rbw
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
     ./modules/programs/waybar

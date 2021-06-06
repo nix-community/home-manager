@@ -38,7 +38,7 @@ in {
     # "AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files"
     home.packages = [ cfg.package pkgs.at-spi2-core ];
 
-    # Will need to add `services.dbus.packages = with pkgs; [ gnome3.dconf ];`
+    # Will need to add `services.dbus.packages = with pkgs; [ gnome.dconf ];`
     # to /etc/nixos/configuration.nix for daemon to work correctly
 
     systemd.user.services.pulseeffects = {

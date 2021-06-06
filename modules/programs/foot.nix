@@ -66,7 +66,6 @@ in {
         };
 
         Service = {
-          Environment = "PATH=${cfg.package}/bin";
           ExecStart = "${cfg.package}/bin/foot --server";
           Restart = "on-failure";
         };

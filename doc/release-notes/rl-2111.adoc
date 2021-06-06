@@ -1,0 +1,21 @@
+[[sec-release-21.11]]
+== Release 21.11
+
+This is the current unstable branch and the information in this
+section is therefore not final.
+
+[[sec-release-21.11-highlights]]
+=== Highlights
+
+This release has the following notable changes:
+
+* Nothing has happened.
+
+[[sec-release-21.11-state-version-changes]]
+=== State Version Changes
+
+The state version in this release includes the changes below. These
+changes are only active if the `home.stateVersion` option is set to
+"21.11" or later.
+
+* Nothing has happened.
