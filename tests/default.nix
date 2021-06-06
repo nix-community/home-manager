@@ -102,6 +102,7 @@ import nmt {
     ./modules/programs/i3status-rust
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.
+    ./modules/programs/rbw
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
     ./modules/programs/waybar
