@@ -6409,6 +6409,67 @@ for options.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qutebrowser.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/qutebrowser.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rbw.enable"></a><a class="term" href="options.html#opt-programs.rbw.enable"><code class="option">programs.rbw.enable</code></a></span></dt><dd><p>Whether to enable rwb, a CLI Bitwarden client.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rbw.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rbw.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rbw.package"></a><a class="term" href="options.html#opt-programs.rbw.package"><code class="option">programs.rbw.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>rbw</strong></span> tool and its
+<span class="command"><strong>rbw-agent</strong></span> daemon.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.rbw
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rbw.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rbw.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rbw.settings"></a><a class="term" href="options.html#opt-programs.rbw.settings"><code class="option">programs.rbw.settings</code></a></span></dt><dd><p>rbw configuration, if not defined the configuration will not be
+managed by Home Manager.
+</p><p><span class="emphasis"><em>Type:</em></span> null or JSON value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  email = "name@example.com";
+  lock_timeout = 300;
+  pinentry = "gnome3";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rbw.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rbw.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rbw.settings.base_url"></a><a class="term" href="options.html#opt-programs.rbw.settings.base_url"><code class="option">programs.rbw.settings.base_url</code></a></span></dt><dd><p>The base-url for a self-hosted bitwarden installation.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "bitwarden.example.com"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rbw.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rbw.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rbw.settings.email"></a><a class="term" href="options.html#opt-programs.rbw.settings.email"><code class="option">programs.rbw.settings.email</code></a></span></dt><dd><p>The email address for your bitwarden account.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "name@example.com"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rbw.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rbw.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rbw.settings.identity_url"></a><a class="term" href="options.html#opt-programs.rbw.settings.identity_url"><code class="option">programs.rbw.settings.identity_url</code></a></span></dt><dd><p>The identity url for your bitwarden installation.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "identity.example.com"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rbw.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rbw.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rbw.settings.lock_timeout"></a><a class="term" href="options.html#opt-programs.rbw.settings.lock_timeout"><code class="option">programs.rbw.settings.lock_timeout</code></a></span></dt><dd><p>The amount of time that your login information should be cached.
+</p><p><span class="emphasis"><em>Type:</em></span> unsigned integer, meaning &gt;=0</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        3600
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        300
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rbw.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rbw.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rbw.settings.pinentry"></a><a class="term" href="options.html#opt-programs.rbw.settings.pinentry"><code class="option">programs.rbw.settings.pinentry</code></a></span></dt><dd><p>Which pinentry interface to use. Beware that
+<code class="literal">pinentry-gnome3</code> may not work on non-Gnome
+systems. You can fix it by adding the following to your
+system configuration:
+</p><pre class="programlisting nix">
+services.dbus.packages = [ pkgs.gcr ];
+</pre><p>
+For this reason, the default is <code class="literal">gtk2</code> for
+now.
+</p><p><span class="emphasis"><em>Type:</em></span> package or one of "curses", "tty", "gtk2", "qt", "emacs", "gnome3"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "gtk2"
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "gnome3"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rbw.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/rbw.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.readline.enable"></a><a class="term" href="options.html#opt-programs.readline.enable"><code class="option">programs.readline.enable</code></a></span></dt><dd><p>Whether to enable readline.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
