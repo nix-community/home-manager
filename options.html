@@ -6185,6 +6185,32 @@ documentation for details.
     
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ pkgs.pidgin-otr pkgs.pidgin-osd ]</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pidgin.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/pidgin.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.piston-cli.enable"></a><a class="term" href="options.html#opt-programs.piston-cli.enable"><code class="option">programs.piston-cli.enable</code></a></span></dt><dd><p>Whether to enable piston-cli, code runner.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/piston-cli.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/piston-cli.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.piston-cli.package"></a><a class="term" href="options.html#opt-programs.piston-cli.package"><code class="option">programs.piston-cli.package</code></a></span></dt><dd><p>The piston-cli package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.piston-cli
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/piston-cli.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/piston-cli.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.piston-cli.settings"></a><a class="term" href="options.html#opt-programs.piston-cli.settings"><code class="option">programs.piston-cli.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/piston-cli/config.yml</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  theme = "emacs";
+  box_style = "MINIMAL_DOUBLE_HEAD";
+  prompt_continuation = "...";
+  prompt_start = "&gt;&gt;&gt;";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/piston-cli.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/piston-cli.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.powerline-go.enable"></a><a class="term" href="options.html#opt-programs.powerline-go.enable"><code class="option">programs.powerline-go.enable</code></a></span></dt><dd><p>Whether to enable Powerline-go, a beautiful and useful low-latency prompt for your shell.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
