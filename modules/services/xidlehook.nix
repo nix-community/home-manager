@@ -9,29 +9,26 @@ let
 
   notEmpty = list: filter (x: x != "" && x != null) (flatten list);
 
-  timers =
-    let
-      toTimer = timer:
-        "--timer ${toString timer.delay} ${escapeShellArgs [ timer.command timer.canceller ]}";
-    in
-      map toTimer (filter (timer: timer.command != null) cfg.timers);
+  timers = let
+    toTimer = timer:
+      "--timer ${toString timer.delay} ${
+        escapeShellArgs [ timer.command timer.canceller ]
+      }";
+  in map toTimer (filter (timer: timer.command != null) cfg.timers);
 
   script = pkgs.writeShellScript "xidlehook" ''
     ${concatStringsSep "\n"
-    (mapAttrsToList (name: value: "export ${name}=${value}") cfg.environment or {})
-  }
-    ${concatStringsSep " " (
-    notEmpty [
+    (mapAttrsToList (name: value: "export ${name}=${value}")
+      cfg.environment or { })}
+    ${concatStringsSep " " (notEmpty [
       "${cfg.package}/bin/xidlehook"
       (optionalString cfg.once "--once")
       (optionalString cfg.not-when-fullscreen "--not-when-fullscreen")
       (optionalString cfg.not-when-audio "--not-when-audio")
       timers
-    ]
-  )}
+    ])}
   '';
-in
-{
+in {
   meta.maintainers = [ maintainers.dschrempf ];
 
   options.services.xidlehook = {
@@ -46,7 +43,7 @@ in
 
     environment = mkOption {
       type = types.attrsOf types.str;
-      default = {};
+      default = { };
       example = literalExample ''
         {
           "primary-display" = "$(xrandr | awk '/ primary/{print $1}')";
@@ -75,42 +72,40 @@ in
     once = mkEnableOption "running the program once and exiting";
 
     timers = mkOption {
-      type = types.listOf (
-        types.submodule {
-          options = {
-            delay = mkOption {
-              type = types.ints.unsigned;
-              example = 60;
-              description = "Time before executing the command.";
-            };
-            command = mkOption {
-              type = types.nullOr types.str;
-              example = literalExample ''
-                ''${pkgs.libnotify}/bin/notify-send "Idle" "Sleeping in 1 minute"
-              '';
-              description = ''
-                Command executed after the idle timeout is reached.
-                Path to executables are accepted.
-                The command is automatically escaped.
-              '';
-            };
-            canceller = mkOption {
-              type = types.str;
-              default = "";
-              example = literalExample ''
-                ''${pkgs.libnotify}/bin/notify-send "Idle" "Resuming activity"
-              '';
-              description = ''
-                Command executed when the user becomes active again.
-                This is only executed if the next timer has not been reached.
-                Path to executables are accepted.
-                The command is automatically escaped.
-              '';
-            };
+      type = types.listOf (types.submodule {
+        options = {
+          delay = mkOption {
+            type = types.ints.unsigned;
+            example = 60;
+            description = "Time before executing the command.";
           };
-        }
-      );
-      default = [];
+          command = mkOption {
+            type = types.nullOr types.str;
+            example = literalExample ''
+              ''${pkgs.libnotify}/bin/notify-send "Idle" "Sleeping in 1 minute"
+            '';
+            description = ''
+              Command executed after the idle timeout is reached.
+              Path to executables are accepted.
+              The command is automatically escaped.
+            '';
+          };
+          canceller = mkOption {
+            type = types.str;
+            default = "";
+            example = literalExample ''
+              ''${pkgs.libnotify}/bin/notify-send "Idle" "Resuming activity"
+            '';
+            description = ''
+              Command executed when the user becomes active again.
+              This is only executed if the next timer has not been reached.
+              Path to executables are accepted.
+              The command is automatically escaped.
+            '';
+          };
+        };
+      });
+      default = [ ];
       example = literalExample ''
         [
           {
