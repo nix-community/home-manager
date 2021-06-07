@@ -2049,6 +2049,20 @@ in
       }
 
       {
+        time = "2021-05-10T20:41:44+00:00";
+        message = ''
+          A new module is available: 'programs.rbw'.
+        '';
+      }
+
+      {
+        time = "2021-05-30T15:22:10+00:00";
+        message = ''
+          A new module is available: 'programs.piston-cli'.
+        '';
+      }
+
+      {
         time = "2021-06-02T04:24:10+00:00";
         condition = hostPlatform.isLinux;
         message = ''

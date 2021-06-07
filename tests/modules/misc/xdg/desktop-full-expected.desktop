@@ -1,0 +1,16 @@
+[Desktop Entry]
+Categories=Network;WebBrowser;
+Comment=My Application
+DBusActivatable=false
+Exec=test --option
+GenericName=Web Browser
+Icon=test
+Keywords=calc;math
+MimeType=text/html;text/xml;
+Name=Test
+StartupNotify=false
+Terminal=true
+Type=Application
+[X-ExtraSection]
+Exec=foo -o
+

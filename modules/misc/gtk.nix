@@ -33,7 +33,7 @@ let
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = literalExample "pkgs.gnome3.gnome_themes_standard";
+        example = literalExample "pkgs.gnome.gnome_themes_standard";
         description = ''
           Package providing the theme. This package will be installed
           to your profile. If <literal>null</literal> then the theme

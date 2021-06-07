@@ -473,6 +473,7 @@ function doHelp() {
     echo
     echo "  --arg(str) NAME VALUE    Override inputs passed to home-manager.nix"
     echo "  --cores NUM"
+    echo "  --debug"
     echo "  --keep-failed"
     echo "  --keep-going"
     echo "  -j, --max-jobs NUM"
@@ -572,7 +573,7 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;
-        --keep-failed|--keep-going|--show-trace\
+        --debug|--keep-failed|--keep-going|--show-trace\
             |--substitute|--no-substitute)
             PASSTHROUGH_OPTS+=("$opt")
             ;;
@@ -580,7 +581,7 @@ while [[ $# -gt 0 ]]; do
             export VERBOSE=1
             ;;
         --version)
-            echo 21.05
+            echo 21.11
             exit 0
             ;;
         *)

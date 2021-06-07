@@ -6,14 +6,21 @@ let
 
   cfg = config.programs.texlive;
 
-  texlivePkgs = cfg.extraPackages pkgs.texlive;
+  texlive = cfg.packageSet;
+  texlivePkgs = cfg.extraPackages texlive;
 
 in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
     programs.texlive = {
-      enable = mkEnableOption "Texlive";
+      enable = mkEnableOption "TeX Live";
+
+      packageSet = mkOption {
+        default = pkgs.texlive;
+        defaultText = literalExample "pkgs.texlive";
+        description = "TeX Live package set to use.";
+      };
 
       extraPackages = mkOption {
         default = tpkgs: { inherit (tpkgs) collection-basic; };
@@ -21,12 +28,12 @@ in {
         example = literalExample ''
           tpkgs: { inherit (tpkgs) collection-fontsrecommended algorithms; }
         '';
-        description = "Extra packages available to Texlive.";
+        description = "Extra packages available to TeX Live.";
       };
 
       package = mkOption {
         type = types.package;
-        description = "Resulting customized Texlive package.";
+        description = "Resulting customized TeX Live package.";
         readOnly = true;
       };
     };
@@ -41,6 +48,6 @@ in {
 
     home.packages = [ cfg.package ];
 
-    programs.texlive.package = pkgs.texlive.combine texlivePkgs;
+    programs.texlive.package = texlive.combine texlivePkgs;
   };
 }

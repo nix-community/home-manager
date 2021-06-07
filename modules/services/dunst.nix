@@ -25,7 +25,7 @@ let
     options = {
       package = mkOption {
         type = types.package;
-        example = literalExample "pkgs.gnome3.adwaita-icon-theme";
+        example = literalExample "pkgs.gnome.adwaita-icon-theme";
         description = "Package providing the theme.";
       };
 
@@ -103,7 +103,7 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ (getOutput "man" pkgs.dunst) ];
+      home.packages = [ cfg.package ];
 
       xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
         "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";

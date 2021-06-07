@@ -51,8 +51,7 @@ let
         (map (x: if x ? plugin && x.optional == true then x.plugin else null)
           cfg.plugins);
     };
-    customRC = cfg.extraConfig
-      + pkgs.lib.concatMapStrings pluginConfig cfg.plugins;
+    beforePlugins = "";
   };
 
   extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
@@ -242,11 +241,14 @@ in {
 
     home.packages = [ cfg.finalPackage ];
 
-    xdg.configFile."nvim/init.vim".text = neovimConfig.neovimRcContent;
+    xdg.configFile = mkIf (neovimConfig.neovimRcContent != "") {
+      "nvim/init.vim".text = neovimConfig.neovimRcContent;
+    };
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {
         wrapperArgs = (lib.escapeShellArgs neovimConfig.wrapperArgs) + " "
           + extraMakeWrapperArgs;
+        wrapRc = false;
       });
 
     programs.bash.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };

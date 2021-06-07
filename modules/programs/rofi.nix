@@ -261,7 +261,7 @@ in {
       description = ''
         Path to the terminal which will be used to run console applications
       '';
-      example = "\${pkgs.gnome3.gnome_terminal}/bin/gnome-terminal";
+      example = "\${pkgs.gnome.gnome_terminal}/bin/gnome-terminal";
     };
 
     separator = mkOption {

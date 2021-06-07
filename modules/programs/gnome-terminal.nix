@@ -315,7 +315,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.gnome3.gnome-terminal ];
+    home.packages = [ pkgs.gnome.gnome-terminal ];
 
     dconf.settings = let dconfPath = "org/gnome/terminal/legacy";
     in {
