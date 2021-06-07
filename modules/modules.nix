@@ -185,6 +185,7 @@ let
     (loadModule ./services/network-manager-applet.nix { })
     (loadModule ./services/nextcloud-client.nix { })
     (loadModule ./services/owncloud-client.nix { })
+    (loadModule ./services/pantalaimon.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/parcellite.nix { })
     (loadModule ./services/pass-secret-service.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/password-store-sync.nix { condition = hostPlatform.isLinux; })

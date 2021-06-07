@@ -2069,6 +2069,14 @@ in
           A new module is available: 'services.xidlehook'.
         '';
       }
+
+      {
+        time = "2021-06-07T20:44:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.pantalaimon'.
+        '';
+      }
     ];
   };
 }

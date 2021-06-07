@@ -246,6 +246,9 @@
 
 /modules/services/network-manager-applet.nix          @rycee
 
+/modules/services/pantalaimon.nix                     @jojosch
+/tests/modules/services/pantalaimon                   @jojosch
+
 /modules/services/parcellite.nix                      @gleber
 
 /modules/services/pass-secret-service.nix             @cab404
