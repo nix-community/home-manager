@@ -6864,6 +6864,44 @@ substituting numeric shortcuts for files.</p><p><span class="emphasis"><em>Type:
         pkgs.scmpuff
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/scmpuff.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/scmpuff.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.senpai.enable"></a><a class="term" href="options.html#opt-programs.senpai.enable"><code class="option">programs.senpai.enable</code></a></span></dt><dd><p>Whether to enable senpai.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/senpai.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/senpai.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.senpai.package"></a><a class="term" href="options.html#opt-programs.senpai.package"><code class="option">programs.senpai.package</code></a></span></dt><dd><p>The <code class="literal">senpai</code> package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.senpai
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/senpai.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/senpai.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.senpai.config"></a><a class="term" href="options.html#opt-programs.senpai.config"><code class="option">programs.senpai.config</code></a></span></dt><dd><p>Configuration for senpai. For a complete list of options, see
+<span class="citerefentry"><span class="refentrytitle">senpai</span>(5)</span>.
+</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  addr = "libera.chat:6697";
+  nick = "nicholas";
+  password = "verysecurepassword";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/senpai.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/senpai.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.senpai.config.addr"></a><a class="term" href="options.html#opt-programs.senpai.config.addr"><code class="option">programs.senpai.config.addr</code></a></span></dt><dd><p>The address (host[:port]) of the IRC server. senpai uses TLS
+connections by default unless you specify no-tls option. TLS
+connections default to port 6697, plain-text use port 6667.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/senpai.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/senpai.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.senpai.config.nick"></a><a class="term" href="options.html#opt-programs.senpai.config.nick"><code class="option">programs.senpai.config.nick</code></a></span></dt><dd><p>Your nickname, sent with a NICK IRC message. It mustn't contain
+spaces or colons (:).
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/senpai.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/senpai.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.senpai.config.no-tls"></a><a class="term" href="options.html#opt-programs.senpai.config.no-tls"><code class="option">programs.senpai.config.no-tls</code></a></span></dt><dd><p>Disables TLS encryption.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/senpai.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/senpai.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.senpai.config.password"></a><a class="term" href="options.html#opt-programs.senpai.config.password"><code class="option">programs.senpai.config.password</code></a></span></dt><dd><p>Your password, used for SASL authentication. Note that it will
+reside world-readable in the Nix store.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/senpai.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/senpai.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.skim.enable"></a><a class="term" href="options.html#opt-programs.skim.enable"><code class="option">programs.skim.enable</code></a></span></dt><dd><p>Whether to enable skim - a command-line fuzzy finder.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
