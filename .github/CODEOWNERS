@@ -167,6 +167,8 @@
 /modules/programs/scmpuff.nix                         @cpcloud
 /tests/modules/programs/scmpuff                       @cpcloud
 
+/modules/programs/senpai.nix                          @malte-v
+
 /modules/programs/ssh.nix                             @rycee
 
 /modules/programs/starship.nix                        @marsam

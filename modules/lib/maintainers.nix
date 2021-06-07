@@ -87,4 +87,10 @@
     githubId = 12465195;
     name = "Bruno BELANYI";
   };
+  malvo = {
+    email = "malte@malvo.org";
+    github = "malte-v";
+    githubId = 34393802;
+    name = "Malte Voos";
+  };
 }
