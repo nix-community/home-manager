@@ -2061,6 +2061,14 @@ in
           A new module is available: 'programs.piston-cli'.
         '';
       }
+
+      {
+        time = "2021-06-02T04:24:10+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.xidlehook'.
+        '';
+      }
     ];
   };
 }

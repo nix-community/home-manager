@@ -300,6 +300,8 @@
 
 /modules/services/xembed-sni-proxy.nix                @rycee
 
+/modules/services/xidlehook.nix                       @dschrempf
+
 /modules/services/xscreensaver.nix                    @rycee
 
 /modules/services/xsuspender.nix                      @offlinehacker
