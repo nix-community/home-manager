@@ -118,6 +118,7 @@ let
     (loadModule ./programs/pazi.nix { })
     (loadModule ./programs/pet.nix { })
     (loadModule ./programs/pidgin.nix { })
+    (loadModule ./programs/piston-cli.nix { })
     (loadModule ./programs/powerline-go.nix { })
     (loadModule ./programs/qutebrowser.nix { })
     (loadModule ./programs/rbw.nix { })
