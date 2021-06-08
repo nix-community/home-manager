@@ -2,8 +2,9 @@
 
 let 
   expectedFileRegex = ''
-      systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd \
-       @sxhkd@/bin/sxhkd -m 1 &
+    systemctl --user stop sxhkd.scope 2> /dev/null || true
+    systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd \
+     @sxhkd@/bin/sxhkd -m 1 &
   '';
 in
 

@@ -73,6 +73,7 @@ in
     ];
 
     xsession.initExtra = ''
+      systemctl --user stop sxhkd.scope 2> /dev/null || true
       systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd \
         ${cfg.package}/bin/sxhkd ${toString cfg.extraOptions} &
     '';
