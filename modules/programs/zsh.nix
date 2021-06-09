@@ -279,6 +279,12 @@ in
         type = types.bool;
       };
 
+      completionInit = mkOption {
+        default = "autoload -U compinit && compinit";
+        description = "Initialization commands to run when completion is enabled.";
+        type = types.lines;
+      };
+
       enableAutosuggestions = mkOption {
         default = false;
         description = "Enable zsh autosuggestions";
@@ -469,7 +475,7 @@ in
         # calling it twice causes slight start up slowdown
         # as all $fpath entries will be traversed again.
         ${optionalString (cfg.enableCompletion && !cfg.oh-my-zsh.enable && !cfg.prezto.enable)
-          "autoload -U compinit && compinit"
+          cfg.completionInit
         }
 
         ${optionalString cfg.enableAutosuggestions
@@ -500,7 +506,7 @@ in
             (builtins.readFile "${pkgs.zsh-prezto}/share/zsh-prezto/runcoms/zshrc")}
 
         ${concatStrings (map (plugin: ''
-          if [ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]; then
+          if [[ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]]; then
             source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
           fi
         '') cfg.plugins)}
