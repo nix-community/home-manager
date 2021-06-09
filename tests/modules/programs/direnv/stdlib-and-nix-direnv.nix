@@ -7,7 +7,7 @@ in {
   config = {
     programs.bash.enable = true;
     programs.direnv.enable = true;
-    programs.direnv.enableNixDirenvIntegration = true;
+    programs.direnv.nix-direnv.enable = true;
     programs.direnv.stdlib = expectedContent;
 
     nmt.script = ''

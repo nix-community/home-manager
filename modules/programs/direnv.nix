@@ -9,6 +9,14 @@ let
   tomlFormat = pkgs.formats.toml { };
 
 in {
+  imports = [
+    (mkRenamedOptionModule [
+      "programs"
+      "direnv"
+      "enableNixDirenvIntegration"
+    ] [ "programs" "direnv" "nix-direnv" "enable" ])
+  ];
+
   meta.maintainers = [ maintainers.rycee ];
 
   options.programs.direnv = {
@@ -63,10 +71,14 @@ in {
       '';
     };
 
-    enableNixDirenvIntegration = mkEnableOption ''
-      <link
-          xlink:href="https://github.com/nix-community/nix-direnv">nix-direnv</link>,
-          a fast, persistent use_nix implementation for direnv'';
+    nix-direnv = {
+      enable = mkEnableOption ''
+        <link
+            xlink:href="https://github.com/nix-community/nix-direnv">nix-direnv</link>,
+            a fast, persistent use_nix implementation for direnv'';
+      enableFlakes = mkEnableOption "Flake support in nix-direnv";
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -77,9 +89,11 @@ in {
     };
 
     xdg.configFile."direnv/direnvrc" = let
+      package =
+        pkgs.nix-direnv.override { inherit (cfg.nix-direnv) enableFlakes; };
       text = concatStringsSep "\n" (optional (cfg.stdlib != "") cfg.stdlib
-        ++ optional cfg.enableNixDirenvIntegration
-        "source ${pkgs.nix-direnv}/share/nix-direnv/direnvrc");
+        ++ optional cfg.nix-direnv.enable
+        "source ${package}/share/nix-direnv/direnvrc");
     in mkIf (text != "") { inherit text; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
