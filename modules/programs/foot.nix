@@ -51,7 +51,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."foot/foot.ini" = mkIf (cfg.settings != { }) {
+    xdg.configFile."foot/foot.ini" = {
       source = iniFormat.generate "foot.ini" cfg.settings;
     };
 

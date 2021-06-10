@@ -11,7 +11,10 @@ in {
     };
 
     nmt.script = ''
-      assertPathNotExists home-files/.config/foot/foot.ini
+      assertFileExists home-files/.config/foot/foot.ini
+      assertFileContent \
+        home-files/.config/foot/foot.ini \
+        ${builtins.toFile "test" ""}
 
       assertFileContent \
         home-files/.config/systemd/user/foot.service \
