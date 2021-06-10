@@ -23,6 +23,8 @@ let
           toString v;
     in "${n}: ${formatValue v}";
 
+  xrdbMerge = "${pkgs.xorg.xrdb}/bin/xrdb -merge ~/.Xresources";
+
 in {
   meta.maintainers = [ maintainers.rycee ];
 
@@ -45,7 +47,7 @@ in {
         X server resources that should be set.
         Booleans are formatted as "true" or "false" respectively.
         List elements are recursively formatted as a string and joined by commas.
-        All other values are directly formatted using builtins.toString. 
+        All other values are directly formatted using builtins.toString.
         Note, that 2-dimensional lists are not supported and specifying one will throw an exception.
         If this and all other xresources options are
         <code>null</code>, then this feature is disabled and no
@@ -84,9 +86,11 @@ in {
           (mapAttrsToList formatLine cfg.properties)) + "\n";
         onChange = ''
           if [[ -v DISPLAY ]] ; then
-            $DRY_RUN_CMD ${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources
+            $DRY_RUN_CMD ${xrdbMerge}
           fi
         '';
       };
+
+      xsession.initExtra = xrdbMerge;
     };
 }
