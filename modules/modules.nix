@@ -93,6 +93,7 @@ let
     (loadModule ./programs/lf.nix { })
     (loadModule ./programs/lsd.nix { })
     (loadModule ./programs/man.nix { })
+    (loadModule ./programs/mangohud.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/matplotlib.nix { })
     (loadModule ./programs/mbsync.nix { })
     (loadModule ./programs/mcfly.nix { })

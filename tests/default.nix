@@ -101,6 +101,7 @@ import nmt {
     ./modules/programs/foot
     ./modules/programs/getmail
     ./modules/programs/i3status-rust
+    ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.
     ./modules/programs/rbw

@@ -104,6 +104,9 @@
 
 /modules/programs/matplotlib.nix                      @rprospero
 
+/modules/programs/mangohud.nix                        @ZerataX
+/tests/modules/programs/mangohud                      @ZerataX
+
 /modules/programs/mbsync.nix                          @KarlJoad
 /tests/modules/programs/mbsync                        @KarlJoad
 
