@@ -5016,6 +5016,56 @@ this option.
         false
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/man.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/man.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.enable"></a><a class="term" href="options.html#opt-programs.mangohud.enable"><code class="option">programs.mangohud.enable</code></a></span></dt><dd><p>Whether to enable Mangohud.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mangohud.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mangohud.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.enableSessionWide"></a><a class="term" href="options.html#opt-programs.mangohud.enableSessionWide"><code class="option">programs.mangohud.enableSessionWide</code></a></span></dt><dd><p>Sets environment variables so that 
+MangoHud is started on any application that supports it.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mangohud.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mangohud.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.package"></a><a class="term" href="options.html#opt-programs.mangohud.package"><code class="option">programs.mangohud.package</code></a></span></dt><dd><p>The Mangohud package to install.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.mangohud
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mangohud.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mangohud.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.settings"></a><a class="term" href="options.html#opt-programs.mangohud.settings"><code class="option">programs.mangohud.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">~/.config/MangoHud/MangoHud.conf</code>. See
+<a class="link" href="https://github.com/flightlessmango/MangoHud/blob/master/bin/MangoHud.conf" target="_top">https://github.com/flightlessmango/MangoHud/blob/master/bin/MangoHud.conf</a>
+for the default configuration.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of boolean or signed integer or floating point number or string or path or list of signed integer or stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  output_folder = ~/Documents/mangohud/;
+  full = true;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mangohud.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mangohud.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.settingsPerApplication"></a><a class="term" href="options.html#opt-programs.mangohud.settingsPerApplication"><code class="option">programs.mangohud.settingsPerApplication</code></a></span></dt><dd><p>Sets MangoHud settings per application.
+Configuration written to
+<code class="filename">~/.config/MangoHud/{application_name}.conf</code>. See
+<a class="link" href="https://github.com/flightlessmango/MangoHud/blob/master/bin/MangoHud.conf" target="_top">https://github.com/flightlessmango/MangoHud/blob/master/bin/MangoHud.conf</a>
+for the default configuration.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of boolean or signed integer or floating point number or string or path or list of signed integer or stringsss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  mpv = {
+    no_display = true;
+  }
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mangohud.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mangohud.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.matplotlib.enable"></a><a class="term" href="options.html#opt-programs.matplotlib.enable"><code class="option">programs.matplotlib.enable</code></a></span></dt><dd><p>Whether to enable matplotlib, a plotting library for python.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
@@ -9153,7 +9203,7 @@ but are substituted anywhere on a line.
         null
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         "adwaita-dark"
-      </code></p><p><span class="emphasis"><em>Related packages:</em></span> </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">pkgs.adwaita-qt</code> (adwaita-qt-1.3.0): A style to bend Qt applications to look like they belong into GNOME Shell</p></li><li class="listitem"><p><code class="literal">pkgs.libsForQt5.qtstyleplugins</code> (qtstyleplugins-unstable-2017-03-11): Additional style plugins for Qt5, including BB10, GTK, Cleanlooks, Motif, Plastique</p></li></ul></div><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt.nix#blob-path" target="_top">
+      </code></p><p><span class="emphasis"><em>Related packages:</em></span> </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">pkgs.adwaita-qt</code> (adwaita-qt-1.3.1): A style to bend Qt applications to look like they belong into GNOME Shell</p></li><li class="listitem"><p><code class="literal">pkgs.libsForQt5.qtstyleplugins</code> (qtstyleplugins-unstable-2017-03-11): Additional style plugins for Qt5, including BB10, GTK, Cleanlooks, Motif, Plastique</p></li></ul></div><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/qt.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.barrier.client.enable"></a><a class="term" href="options.html#opt-services.barrier.client.enable"><code class="option">services.barrier.client.enable</code></a></span></dt><dd><p>Whether to enable Barrier Client daemon.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
