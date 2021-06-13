@@ -58,5 +58,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
     home.sessionVariables = cfg.settings;
+
+    xsession.importedVariables = mkIf config.xsession.enable
+      (mapAttrsToList (name: value: name) cfg.settings);
   };
 }
