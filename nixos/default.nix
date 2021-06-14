@@ -130,6 +130,8 @@ in {
 
         unitConfig = { RequiresMountsFor = usercfg.home.homeDirectory; };
 
+        stopIfChanged = false;
+
         serviceConfig = {
           User = usercfg.home.username;
           Type = "oneshot";
