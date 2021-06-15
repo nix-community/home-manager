@@ -2374,13 +2374,6 @@ for options.
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/direnv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/direnv.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.direnv.enableNixDirenvIntegration"></a><a class="term" href="options.html#opt-programs.direnv.enableNixDirenvIntegration"><code class="option">programs.direnv.enableNixDirenvIntegration</code></a></span></dt><dd><p>Whether to enable <a class="link" href="https://github.com/nix-community/nix-direnv" target="_top">nix-direnv</a>,
-    a fast, persistent use_nix implementation for direnv.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        false
-      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        true
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/direnv.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/programs/direnv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.direnv.enableZshIntegration"></a><a class="term" href="options.html#opt-programs.direnv.enableZshIntegration"><code class="option">programs.direnv.enableZshIntegration</code></a></span></dt><dd><p>Whether to enable Zsh integration.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         true
@@ -2398,6 +2391,19 @@ for the full list of options.
         
         }
     
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/direnv.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/direnv.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.direnv.nix-direnv.enable"></a><a class="term" href="options.html#opt-programs.direnv.nix-direnv.enable"><code class="option">programs.direnv.nix-direnv.enable</code></a></span></dt><dd><p>Whether to enable <a class="link" href="https://github.com/nix-community/nix-direnv" target="_top">nix-direnv</a>,
+    a fast, persistent use_nix implementation for direnv.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/direnv.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/direnv.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.direnv.nix-direnv.enableFlakes"></a><a class="term" href="options.html#opt-programs.direnv.nix-direnv.enableFlakes"><code class="option">programs.direnv.nix-direnv.enableFlakes</code></a></span></dt><dd><p>Whether to enable Flake support in nix-direnv.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/direnv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/direnv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.direnv.stdlib"></a><a class="term" href="options.html#opt-programs.direnv.stdlib"><code class="option">programs.direnv.stdlib</code></a></span></dt><dd><p>Custom stdlib written to
@@ -8113,7 +8119,7 @@ manually set any options not listed above.
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.package"></a><a class="term" href="options.html#opt-programs.vscode.package"><code class="option">programs.vscode.package</code></a></span></dt><dd><p>Version of Visual Studio Code to install.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        <em class="replaceable"><code>(build of vscode-1.56.2)</code></em>
+        <em class="replaceable"><code>(build of vscode-1.57.0)</code></em>
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.vscodium</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.extensions"></a><a class="term" href="options.html#opt-programs.vscode.extensions"><code class="option">programs.vscode.extensions</code></a></span></dt><dd><p>The extensions Visual Studio Code should be started with.
