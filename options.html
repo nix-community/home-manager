@@ -6451,6 +6451,20 @@ a key is bound (via <code class="literal">bindings.default</code> or
         false
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qutebrowser.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/qutebrowser.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.qutebrowser.quickmarks"></a><a class="term" href="options.html#opt-programs.qutebrowser.quickmarks"><code class="option">programs.qutebrowser.quickmarks</code></a></span></dt><dd><p>Quickmarks to add to qutebrowser's <code class="filename">quickmarks</code> file.
+Note that when Home Manager manages your quickmarks, you cannot edit them at runtime.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  nixpkgs = "https://github.com/NixOS/nixpkgs";
+  home-manager = "https://github.com/nix-community/home-manager";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qutebrowser.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/qutebrowser.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.qutebrowser.searchEngines"></a><a class="term" href="options.html#opt-programs.qutebrowser.searchEngines"><code class="option">programs.qutebrowser.searchEngines</code></a></span></dt><dd><p>Search engines that can be used via the address bar. Maps a search
 engine name (such as <code class="literal">DEFAULT</code>, or
 <code class="literal">ddg</code>) to a URL with a <code class="literal">{}</code>
