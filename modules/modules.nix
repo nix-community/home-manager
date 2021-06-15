@@ -25,6 +25,7 @@ let
     (loadModule ./config/i18n.nix { condition = hostPlatform.isLinux; })
     (loadModule ./files.nix { })
     (loadModule ./home-environment.nix { })
+    (loadModule ./i18n/input-method/default.nix { condition = hostPlatform.isLinux; })
     (loadModule ./manual.nix { })
     (loadModule ./misc/dconf.nix { })
     (loadModule ./misc/debug.nix { })

@@ -88,6 +88,7 @@ import nmt {
     ./modules/targets-darwin
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     ./modules/config/i18n
+    ./modules/i18n/input-method
     ./modules/misc/debug
     ./modules/misc/gtk
     ./modules/misc/numlock

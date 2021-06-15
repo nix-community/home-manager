@@ -109,4 +109,10 @@
     githubId = 34393802;
     name = "Malte Voos";
   };
+  kranzes = {
+    email = "personal@ilanjoselevich.com";
+    github = "Kranzes";
+    githubId = 56614642;
+    name = "Ilan Joselevich";
+  };
 }

@@ -4,6 +4,9 @@
 
 /modules/home-environment.nix                         @rycee
 
+/modules/i18n/input-method		                @Kranzes
+/tests/modules/i18n/input-method                      @Kranzes
+
 /modules/misc/dconf.nix                               @gnidorah @rycee
 
 /modules/misc/fontconfig.nix                          @rycee
