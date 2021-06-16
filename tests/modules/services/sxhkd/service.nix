@@ -1,15 +1,5 @@
 { config, pkgs, ... }:
 
-let
-
-  expectedFileRegex = ''
-    systemctl --user stop sxhkd.scope 2> /dev/null || true
-    systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd \
-     @sxhkd@/bin/sxhkd -m 1 &
-  '';
-
-in
-
 {
   config = {
     xsession = {
@@ -28,7 +18,11 @@ in
 
       assertFileExists $xsessionFile
 
-      assertFileRegex $xsessionFile ${expectedFileRegex}
+      assertFileContains $xsessionFile \
+        'systemctl --user stop sxhkd.scope 2> /dev/null || true'
+
+      assertFileContains $xsessionFile \
+        'systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd @sxhkd@/bin/sxhkd -m 1 &'
     '';
   };
 }

@@ -72,10 +72,12 @@ in
       cfg.extraConfig
     ];
 
-    xsession.initExtra = ''
-      systemctl --user stop sxhkd.scope 2> /dev/null || true
-      systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd \
-        ${cfg.package}/bin/sxhkd ${toString cfg.extraOptions} &
-    '';
+    xsession.initExtra =
+      let
+        sxhkdCommand = "${cfg.package}/bin/sxhkd ${toString cfg.extraOptions}";
+      in ''
+        systemctl --user stop sxhkd.scope 2> /dev/null || true
+        systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd ${sxhkdCommand} &
+      '';
   };
 }
