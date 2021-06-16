@@ -67,7 +67,6 @@ in {
       bspc rule -a sun-awt-X11-XDialogPeer state=floating
 
       ${cfg.extraConfig}
-
       ${concatMapStringsSep "\n" formatStartupProgram cfg.startupPrograms}
     '';
 
