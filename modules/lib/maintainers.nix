@@ -25,6 +25,12 @@
     github = "cwyc";
     githubId = 16950437;
   };
+  chisui = {
+    name = "Philipp Dargel";
+    email = "chisui@users.noreply.github.com";
+    github = "chisui";
+    githubId = 4526429;
+  };
   olmokramer = {
     name = "Olmo Kramer";
     email = "olmokramer@users.noreply.github.com";

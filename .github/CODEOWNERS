@@ -178,6 +178,8 @@
 
 /modules/programs/starship.nix                        @marsam
 
+/modules/programs/terminator.nix                      @chisui
+
 /modules/programs/texlive.nix                         @rycee
 
 /modules/programs/topgrade.nix                        @msfjarvis

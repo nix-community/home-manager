@@ -137,6 +137,7 @@ let
     (loadModule ./programs/termite.nix { })
     (loadModule ./programs/texlive.nix { })
     (loadModule ./programs/tmux.nix { })
+    (loadModule ./programs/terminator.nix { condition = hostPlatform.isLinux; })
     (loadModule ./programs/topgrade.nix { })
     (loadModule ./programs/urxvt.nix { })
     (loadModule ./programs/vim.nix { })
