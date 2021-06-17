@@ -7533,6 +7533,33 @@ Home Manager will attempt to create this directory.
         ""
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/taskwarrior.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/taskwarrior.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.terminator.enable"></a><a class="term" href="options.html#opt-programs.terminator.enable"><code class="option">programs.terminator.enable</code></a></span></dt><dd><p>Whether to enable terminator, a tiling terminal emulator.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/terminator.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/terminator.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.terminator.package"></a><a class="term" href="options.html#opt-programs.terminator.package"><code class="option">programs.terminator.package</code></a></span></dt><dd><p>terminator package to install.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        <em class="replaceable"><code>(build of terminator-2.1.1)</code></em>
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.terminator</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/terminator.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/terminator.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.terminator.config"></a><a class="term" href="options.html#opt-programs.terminator.config"><code class="option">programs.terminator.config</code></a></span></dt><dd><p>configuration for terminator.
+</p><p>
+For a list of all possible options refer to the
+<span class="citerefentry"><span class="refentrytitle">terminator_config</span>(5)</span>
+man page.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of anythings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  global_config.borderless = true;
+  profiles.default.background_color = "#002b36";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/terminator.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/terminator.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.termite.enable"></a><a class="term" href="options.html#opt-programs.termite.enable"><code class="option">programs.termite.enable</code></a></span></dt><dd><p>Whether to enable Termite VTE-based terminal.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
