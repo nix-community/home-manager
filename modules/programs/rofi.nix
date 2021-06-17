@@ -207,6 +207,17 @@ in {
       '';
     };
 
+    plugins = mkOption {
+      default = [ ];
+      type = types.listOf types.package;
+      description = ''
+        List of rofi plugins to be installed.
+      '';
+      example = literalExample ''
+        [ pkgs.rofi-calc ];
+      '';
+    };
+
     width = mkOption {
       default = null;
       type = types.nullOr types.int;
@@ -405,7 +416,10 @@ in {
       inherit value;
     };
 
-    home.packages = [ cfg.package ];
+    home.packages = let
+      rofiWithPlugins = cfg.package.override
+        (old: rec { plugins = (old.plugins or [ ]) ++ cfg.plugins; });
+    in [ rofiWithPlugins ];
 
     home.file."${cfg.configPath}".text = toRasi {
       configuration = ({
