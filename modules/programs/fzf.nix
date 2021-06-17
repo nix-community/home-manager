@@ -148,20 +148,20 @@ in {
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-        . ${pkgs.fzf}/share/fzf/completion.bash
-        . ${pkgs.fzf}/share/fzf/key-bindings.bash
+        . ${cfg.package}/share/fzf/completion.bash
+        . ${cfg.package}/share/fzf/key-bindings.bash
       fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       if [[ $options[zle] = on ]]; then
-        . ${pkgs.fzf}/share/fzf/completion.zsh
-        . ${pkgs.fzf}/share/fzf/key-bindings.zsh
+        . ${cfg.package}/share/fzf/completion.zsh
+        . ${cfg.package}/share/fzf/key-bindings.zsh
       fi
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      source ${pkgs.fzf}/share/fzf/key-bindings.fish && fzf_key_bindings
+      source ${cfg.package}/share/fzf/key-bindings.fish && fzf_key_bindings
     '';
   };
 }
