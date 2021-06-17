@@ -150,6 +150,7 @@ let
     (loadModule ./programs/zplug.nix { })
     (loadModule ./programs/zsh.nix { })
     (loadModule ./programs/zsh/prezto.nix { })
+    (loadModule ./programs/xmobar.nix { })
     (loadModule ./services/barrier.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/blueman-applet.nix { })
     (loadModule ./services/caffeine.nix { condition = hostPlatform.isLinux; })

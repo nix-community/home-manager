@@ -321,3 +321,5 @@
 /modules/xresources.nix                               @rycee
 
 /modules/xsession.nix                                 @rycee
+
+/modules/xmobar.nix                                   @t4ccer
