@@ -78,7 +78,15 @@ in {
       };
 
       settings = mkOption {
-        type = with types; attrsOf (attrsOf eitherStrBoolIntList);
+        type = types.submodule {
+          freeformType = with types; attrsOf (attrsOf eitherStrBoolIntList);
+          options = {
+            global.icon_path = mkOption {
+              type = types.separatedString ":";
+              description = "Paths where dunst will look for icons.";
+            };
+          };
+        };
         default = { };
         description = "Configuration written to ~/.config/dunst/dunstrc";
         example = literalExample ''
@@ -138,11 +146,14 @@ in {
           "status"
           "stock"
         ];
-      in concatStringsSep ":" (concatMap (theme:
-        concatMap (basePath:
-          map (category:
-            "${basePath}/share/icons/${theme.name}/${theme.size}/${category}")
-          categories) basePaths) themes);
+
+        mkPath = { basePath, theme, category }:
+          "${basePath}/share/icons/${theme.name}/${theme.size}/${category}";
+      in concatMapStringsSep ":" mkPath (cartesianProductOfSets {
+        basePath = basePaths;
+        theme = themes;
+        category = categories;
+      });
 
       systemd.user.services.dunst = {
         Unit = {
