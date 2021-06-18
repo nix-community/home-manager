@@ -5,7 +5,7 @@ with lib;
 let cfg = config.programs.xmobar;
 in {
   options.programs.xmobar = {
-    enable = mkEnableOption "Xmobar: a minimalistic status bar";
+    enable = mkEnableOption "Xmobar, a minimalistic status bar";
 
     package = mkOption {
       default = pkgs.haskellPackages.xmobar;
