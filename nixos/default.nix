@@ -144,10 +144,35 @@ in {
           TimeoutStartSec = 90;
           SyslogIdentifier = "hm-activate-${username}";
 
-          # The activation script is run by a login shell to make sure
-          # that the user is given a sane Nix environment.
-          ExecStart =
-            "${pkgs.runtimeShell} -l ${usercfg.home.activationPackage}/activate";
+          ExecStart = let
+            systemctl =
+              "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$UID} systemctl";
+
+            sed = "${pkgs.gnused}/bin/sed";
+
+            exportedSystemdVariables = concatStringsSep "|" [
+              "DBUS_SESSION_BUS_ADDRESS"
+              "DISPLAY"
+              "WAYLAND_DISPLAY"
+              "XAUTHORITY"
+              "XDG_RUNTIME_DIR"
+            ];
+
+            setupEnv = pkgs.writeScript "hm-setup-env" ''
+              #! ${pkgs.runtimeShell} -el
+
+              # The activation script is run by a login shell to make sure
+              # that the user is given a sane environment.
+              # If the user is logged in, import variables from their current
+              # session environment.
+              eval "$(
+                ${systemctl} --user show-environment 2> /dev/null \
+                | ${sed} -En '/^(${exportedSystemdVariables})=/s/^/export /p'
+              )"
+
+              exec "$1/activate"
+            '';
+          in "${setupEnv} ${usercfg.home.activationPackage}";
         };
       }) cfg.users;
   };
