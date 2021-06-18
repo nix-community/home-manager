@@ -81,9 +81,9 @@ import nmt {
     ./modules/programs/tmux
     ./modules/programs/topgrade
     ./modules/programs/vscode
+    ./modules/programs/xmobar
     ./modules/programs/zplug
     ./modules/programs/zsh
-    ./modules/programs/xmobar
     ./modules/xresources
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
     ./modules/targets-darwin
