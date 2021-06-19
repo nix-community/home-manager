@@ -417,7 +417,10 @@ in {
     home.packages = let
       rofiWithPlugins = cfg.package.override
         (old: rec { plugins = (old.plugins or [ ]) ++ cfg.plugins; });
-    in [ rofiWithPlugins ];
+    in if builtins.hasAttr "override" cfg.package then
+      [ rofiWithPlugins ]
+    else
+      [ cfg.package ];
 
     home.file."${cfg.configPath}".text = toRasi {
       configuration = ({
