@@ -157,7 +157,7 @@ in {
     settings = mkOption {
       type = with types;
         let primitive = either bool (either int (either float str));
-        in attrsOf primitive;
+        in attrsOf (either primitive (listOf primitive));
       default = { };
       description = "General settings given to <literal>bspc config</literal>.";
       example = {
