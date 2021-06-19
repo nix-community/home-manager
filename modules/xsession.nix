@@ -33,8 +33,13 @@ in {
           in
             "''${xmonad}/bin/xmonad";
         '';
+        default = ''test -n "$1" && eval "$@"'';
         description = ''
-          Window manager start command.
+          Command to use to start the window manager.
+          </para><para>
+          The default value allows integration with NixOS' generated xserver configuration.
+          </para><para>
+          Extra actions and commands can be specified in <option>xsession.initExtra</option>.
         '';
       };
 
