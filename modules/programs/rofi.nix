@@ -213,7 +213,7 @@ in {
       description = ''
         List of rofi plugins to be installed.
       '';
-      example = literalExample ''[ pkgs.rofi-calc ]'';
+      example = literalExample "[ pkgs.rofi-calc ]";
     };
 
     width = mkOption {
