@@ -293,6 +293,9 @@
 
 /modules/services/unison.nix                          @pacien
 
+/modules/services/window-managers/bspwm               @ncfavier
+/tests/modules/services/window-managers/bspwm         @ncfavier
+
 /modules/services/window-managers/i3-sway/i3.nix      @sumnerevans
 /tests/modules/services/window-managers/i3            @sumnerevans
 

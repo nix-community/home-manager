@@ -5,70 +5,72 @@ with lib;
 let
 
   cfg = config.xsession.windowManager.bspwm;
-  bspwm = cfg.package;
 
-  camelToSnake = s:
-    builtins.replaceStrings lib.upperChars (map (c: "_${c}") lib.lowerChars) s;
+  camelToSnake =
+    builtins.replaceStrings upperChars (map (c: "_${c}") lowerChars);
 
-  formatConfig = n: v:
+  formatMonitor = monitor: desktops:
+    "bspc monitor ${strings.escapeShellArg monitor} -d ${
+      strings.escapeShellArgs desktops
+    }";
+
+  formatSetting = n: v:
     let
-      formatList = x:
-        if isList x then
-          throw "can not convert 2-dimensional lists to bspwm format"
-        else
-          formatValue x;
+      vStr = if isBool v then
+        boolToString v
+      else if isInt v || isFloat v then
+        toString v
+      else if isString v then
+        strings.escapeShellArg v
+      else
+        throw "unsupported setting type for ${n}";
+    in "bspc config ${strings.escapeShellArg n} ${vStr}";
 
-      formatValue = v:
-        if isBool v then
-          (if v then "true" else "false")
-        else if isList v then
-          concatMapStringsSep ", " formatList v
-        else if isString v then
-          "${lib.strings.escapeShellArg v}"
-        else
-          toString v;
-    in "bspc config ${n} ${formatValue v}";
-
-  formatMonitors = n: v: "bspc monitor ${n} -d ${concatStringsSep " " v}";
-
-  formatRules = target: directiveOptions:
+  formatRule = target: directives:
     let
       formatDirective = n: v:
-        if isBool v then
-          (if v then "${camelToSnake n}=on" else "${camelToSnake n}=off")
-        else if (n == "desktop" || n == "node") then
-          "${camelToSnake n}='${v}'"
-        else
-          "${camelToSnake n}=${lib.strings.escapeShellArg v}";
+        let
+          vStr = if isBool v then
+            if v then "on" else "off"
+          else if isInt v || isFloat v then
+            toString v
+          else if isString v then
+            v
+          else
+            throw "unsupported rule attribute type for ${n}";
+        in "${camelToSnake n}=${vStr}";
 
-      directives =
-        filterAttrs (n: v: v != null && !(lib.strings.hasPrefix "_" n))
-        directiveOptions;
-      directivesStr = builtins.concatStringsSep " "
-        (mapAttrsToList formatDirective directives);
-    in "bspc rule -a ${target} ${directivesStr}";
+      directivesStr = strings.escapeShellArgs (mapAttrsToList formatDirective
+        (filterAttrs (n: v: v != null) directives));
+    in "bspc rule -a ${strings.escapeShellArg target} ${directivesStr}";
 
-  formatStartupPrograms = map (s: "${s} &");
+  formatStartupProgram = s: "${s} &";
 
 in {
-  options = import ./options.nix {
-    inherit pkgs;
-    inherit lib;
-  };
+  meta.maintainers = [ maintainers.ncfavier ];
+
+  options = import ./options.nix { inherit pkgs lib; };
 
   config = mkIf cfg.enable {
-    home.packages = [ bspwm ];
-    xsession.windowManager.command = let
-      configFile = pkgs.writeShellScript "bspwmrc" (concatStringsSep "\n"
-        ((mapAttrsToList formatMonitors cfg.monitors)
-          ++ (mapAttrsToList formatConfig cfg.settings)
-          ++ (mapAttrsToList formatRules cfg.rules) ++ [''
-            # java gui fixes
-            export _JAVA_AWT_WM_NONREPARENTING=1
-            bspc rule -a sun-awt-X11-XDialogPeer state=floating
-          ''] ++ [ cfg.extraConfig ]
-          ++ (formatStartupPrograms cfg.startupPrograms)));
-      configCmdOpt = optionalString (cfg.settings != null) "-c ${configFile}";
-    in "${cfg.package}/bin/bspwm ${configCmdOpt}";
+    home.packages = [ cfg.package ];
+
+    xdg.configFile."bspwm/bspwmrc".source = pkgs.writeShellScript "bspwmrc" ''
+      ${concatStringsSep "\n" (mapAttrsToList formatMonitor cfg.monitors)}
+
+      ${concatStringsSep "\n" (mapAttrsToList formatSetting cfg.settings)}
+
+      bspc rule -r '*'
+      ${concatStringsSep "\n" (mapAttrsToList formatRule cfg.rules)}
+
+      # java gui fixes
+      export _JAVA_AWT_WM_NONREPARENTING=1
+      bspc rule -a sun-awt-X11-XDialogPeer state=floating
+
+      ${cfg.extraConfig}
+      ${concatMapStringsSep "\n" formatStartupProgram cfg.startupPrograms}
+    '';
+
+    xsession.windowManager.command =
+      "${cfg.package}/bin/bspwm -c ${config.xdg.configHome}/bspwm/bspwmrc";
   };
 }

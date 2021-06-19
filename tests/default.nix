@@ -123,6 +123,7 @@ import nmt {
     ./modules/services/redshift-gammastep
     ./modules/services/sxhkd
     ./modules/services/syncthing
+    ./modules/services/window-managers/bspwm
     ./modules/services/window-managers/i3
     ./modules/services/window-managers/sway
     ./modules/services/wlsunset
