@@ -13,6 +13,7 @@ with lib;
         split_ratio = 0.52;
         gapless_monocle = true;
         external_rules_command = "/path/to/external rules command";
+        ignore_ewmh_fullscreen = [ "enter" "exit" ];
       };
       rules."*" = {
         sticky = true;

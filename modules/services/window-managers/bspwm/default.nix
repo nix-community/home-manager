@@ -10,39 +10,29 @@ let
     builtins.replaceStrings upperChars (map (c: "_${c}") lowerChars);
 
   formatMonitor = monitor: desktops:
-    "bspc monitor ${strings.escapeShellArg monitor} -d ${
-      strings.escapeShellArgs desktops
-    }";
+    "bspc monitor ${escapeShellArg monitor} -d ${escapeShellArgs desktops}";
 
-  formatSetting = n: v:
-    let
-      vStr = if isBool v then
-        boolToString v
-      else if isInt v || isFloat v then
-        toString v
-      else if isString v then
-        strings.escapeShellArg v
-      else
-        throw "unsupported setting type for ${n}";
-    in "bspc config ${strings.escapeShellArg n} ${vStr}";
+  formatValue = v:
+    if isList v then
+      concatMapStringsSep "," formatValue v
+    else if isBool v then
+      if v then "on" else "off"
+    else if isInt v || isFloat v then
+      toString v
+    else if isString v then
+      v
+    else
+      throw "unsupported type"; # should not happen
+
+  formatSetting = n: v: "bspc config ${escapeShellArgs [ n (formatValue v) ]}";
 
   formatRule = target: directives:
     let
-      formatDirective = n: v:
-        let
-          vStr = if isBool v then
-            if v then "on" else "off"
-          else if isInt v || isFloat v then
-            toString v
-          else if isString v then
-            v
-          else
-            throw "unsupported rule attribute type for ${n}";
-        in "${camelToSnake n}=${vStr}";
+      formatDirective = n: v: "${camelToSnake n}=${formatValue v}";
 
-      directivesStr = strings.escapeShellArgs (mapAttrsToList formatDirective
+      directivesStr = escapeShellArgs (mapAttrsToList formatDirective
         (filterAttrs (n: v: v != null) directives));
-    in "bspc rule -a ${strings.escapeShellArg target} ${directivesStr}";
+    in "bspc rule -a ${escapeShellArg target} ${directivesStr}";
 
   formatStartupProgram = s: "${s} &";
 
