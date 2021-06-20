@@ -53,6 +53,7 @@ complete -c home-manager -x -l "arg" -d "Override inputs passed to home-manager.
 complete -c home-manager -x -l "argstr" -d "Like --arg but the value is a string"
 complete -c home-manager -x -l "cores" -d "Threads per job (e.g. -j argument to make)"
 complete -c home-manager -x -l "debug"
+complete -c home-manager -x -l "impure"
 complete -c home-manager -f -l "keep-failed" -d "Keep temporary directory used by failed builds"
 complete -c home-manager -f -l "keep-going" -d "Keep going in case of failed builds"
 complete -c home-manager -x -s j -l "max-jobs" -d "Max number of build jobs in parallel"

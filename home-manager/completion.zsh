@@ -8,6 +8,7 @@ _arguments \
   '-b[backup files]:EXT:()' \
   '--cores[cores]:NUM:()' \
   '--debug[debug]' \
+  '--impure[impure]' \
   '--keep-failed[keep failed]' \
   '--keep-going[keep going]' \
   '(-h --help)'{--help,-h}'[help]' \
@@ -46,6 +47,7 @@ case "$state" in
         _arguments \
           '--cores[cores]:NUM:()' \
           '--debug[debug]' \
+          '--impure[impure]' \
           '--keep-failed[keep failed]' \
           '--keep-going[keep going]' \
           '--max-jobs[max jobs]:NUM:()' \
