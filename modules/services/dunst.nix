@@ -95,7 +95,8 @@ in {
       settings = mkOption {
         type = with types; attrsOf (attrsOf eitherStrBoolIntList);
         default = { };
-        description = "Configuration written to ~/.config/dunst/dunstrc";
+        description =
+          "Configuration written to <filename>$XDG_CONFIG_HOME/dunst/dunstrc</filename>.";
         example = literalExample ''
           {
             global = {
