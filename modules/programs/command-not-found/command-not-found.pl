@@ -1,4 +1,4 @@
-#! @perl@/bin/perl -w @perlFlags@
+#! @perl@/bin/perl -w
 
 use strict;
 use DBI;
@@ -29,16 +29,17 @@ if (!defined $res || scalar @$res == 0) {
         exec("nix-shell", "-p", $package, "--run", shell_quote("exec", @ARGV));
     } else {
         print STDERR <<EOF;
-The program ‘$program’ is currently not installed. You can install it by typing:
-  nix-env -iA nixos.$package
+The program '$program' is not in your PATH. You can make it available in an
+ephemeral shell by typing:
+  nix-shell -p $package
 EOF
     }
 } else {
     print STDERR <<EOF;
-The program ‘$program’ is currently not installed. It is provided by
-several packages. You can install it by typing one of the following:
+The program '$program' is not in your PATH. It is provided by several packages.
+You can make it available in an ephemeral shell by typing one of the following:
 EOF
-    print STDERR "  nix-env -iA nixos.$_->{package}\n" foreach @$res;
+    print STDERR "  nix-shell -p $_->{package}\n" foreach @$res;
 }
 
 exit 127;
