@@ -279,7 +279,7 @@ then result in
 $ home-manager switch
 …
 Activating checkLinkTargets
-Existing file '/home/jdoe/.gitconfig' is in the way
+Existing file '/home/jdoe/.config/git/config' is in the way
 Please move the above files and try again
 ```
 
