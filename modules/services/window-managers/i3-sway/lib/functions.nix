@@ -103,6 +103,18 @@ rec {
             "separator ${colors.separator}"
           }
           ${
+            optionalString (colors.focusedBackground != null)
+            "focused_background ${colors.focusedBackground}"
+          }
+          ${
+            optionalString (colors.focusedStatusline != null)
+            "focused_statusline ${colors.focusedStatusline}"
+          }
+          ${
+            optionalString (colors.focusedSeparator != null)
+            "focused_separator ${colors.focusedSeparator}"
+          }
+          ${
             optionalString (colors.focusedWorkspace != null)
             "focused_workspace ${barColorSetStr colors.focusedWorkspace}"
           }

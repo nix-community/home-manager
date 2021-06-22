@@ -1,4 +1,5 @@
 {
+  sway-bar-focused-colors = ./sway-bar-focused-colors.nix;
   sway-default = ./sway-default.nix;
   sway-post-2003 = ./sway-post-2003.nix;
   sway-followmouse = ./sway-followmouse.nix;

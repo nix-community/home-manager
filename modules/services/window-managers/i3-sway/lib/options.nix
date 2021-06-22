@@ -190,6 +190,30 @@ let
               description = "Text color to be used for the separator.";
             };
 
+            focusedBackground = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description =
+                "Background color of the bar on the currently focused monitor output.";
+              example = "#000000";
+            };
+
+            focusedStatusline = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description =
+                "Text color to be used for the statusline on the currently focused monitor output.";
+              example = "#ffffff";
+            };
+
+            focusedSeparator = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description =
+                "Text color to be used for the separator on the currently focused monitor output.";
+              example = "#666666";
+            };
+
             focusedWorkspace = mkNullableOption {
               type = barColorSetModule;
               default = {
