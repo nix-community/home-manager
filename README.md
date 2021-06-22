@@ -142,7 +142,7 @@ configuration generations.
 As an example, let us expand the initial configuration file from the
 installation above to install the htop and fortune packages, install
 Emacs with a few extra packages enabled, install Firefox with
-smooth scrolling enabled, and enable the user gpg-agent service.
+smooth scrolling disabled, and enable the user gpg-agent service.
 
 To satisfy the above setup we should elaborate the
 `~/.config/nixpkgs/home.nix` file as follows:
@@ -279,7 +279,7 @@ then result in
 $ home-manager switch
 …
 Activating checkLinkTargets
-Existing file '/home/jdoe/.gitconfig' is in the way
+Existing file '/home/jdoe/.config/git/config' is in the way
 Please move the above files and try again
 ```
 
