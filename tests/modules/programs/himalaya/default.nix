@@ -1,0 +1,1 @@
+{ himalaya = ./himalaya.nix; }
