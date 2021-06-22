@@ -6,6 +6,10 @@ with lib;
   config = {
     services.syncthing.tray = true;
 
+    nixpkgs.overlays = [
+      (self: super: { syncthingtray-minimal = pkgs.writeScriptBin "dummy" ""; })
+    ];
+
     test.asserts.warnings.expected = [
       "Specifying 'services.syncthing.tray' as a boolean is deprecated, set 'services.syncthing.tray.enable' instead. See https://github.com/nix-community/home-manager/pull/1257."
     ];

@@ -11,15 +11,19 @@ with lib;
 
     nixpkgs.overlays = [
       (self: super: {
-        firefox-unwrapped = pkgs.runCommand "firefox-0" {
+        firefox-unwrapped = pkgs.runCommandLocal "firefox-0" {
           meta.description = "I pretend to be Firefox";
-          preferLocalBuild = true;
-          allowSubstitutes = false;
         } ''
           mkdir -p "$out/bin"
           touch "$out/bin/firefox"
           chmod 755 "$out/bin/firefox"
         '';
+
+        chrome-gnome-shell =
+          pkgs.runCommandLocal "dummy-chrome-gnome-shell" { } ''
+            mkdir -p $out/lib/mozilla/native-messaging-hosts
+            touch $out/lib/mozilla/native-messaging-hosts/dummy
+          '';
       })
     ];
 
