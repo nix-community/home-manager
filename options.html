@@ -14060,6 +14060,10 @@ start.
 an absolute path or <code class="literal">null</code> in which case
 <code class="filename">~/.xmonad/xmonad.hs</code> will not be managed
 by Home Manager.
+</p><p>
+If this option is set to a non-<code class="literal">null</code> value,
+recompilation of xmonad outside of Home Manager (e.g. via
+<span class="command"><strong>xmonad --recompile</strong></span>) will fail.
 </p><p><span class="emphasis"><em>Type:</em></span> null or path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.writeText "xmonad.hs" ''
