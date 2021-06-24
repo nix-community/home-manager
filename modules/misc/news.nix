@@ -2087,6 +2087,7 @@ in
 
       {
         time = "2021-06-16T01:26:16+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           The xmonad module now compiles the configuration before
           linking the binary to the place xmonad expects to find
