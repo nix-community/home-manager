@@ -57,7 +57,7 @@ with lib;
 
     nmt.script = ''
       dconfIni=$(grep -oPm 1 '/nix/store/[a-z0-9]*?-hm-dconf.ini' $TESTED/activate)
-      TESTED= assertFileContent $dconfIni ${./gnome-terminal-1.conf}
+      assertFileContent $dconfIni ${./gnome-terminal-1.conf}
     '';
   };
 }
