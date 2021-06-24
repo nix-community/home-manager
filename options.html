@@ -1292,6 +1292,84 @@ undefined for state version ≥ 20.09
         "jane.doe"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix#blob-path" target="_top">
                     &lt;home-manager/modules/home-environment.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-i18n.inputMethod.enabled"></a><a class="term" href="options.html#opt-i18n.inputMethod.enabled"><code class="option">i18n.inputMethod.enabled</code></a></span></dt><dd><p>Select the enabled input method. Input methods is a software to input
+symbols that are not available on standard input devices.
+</p><p>
+Input methods are specially used to input Chinese, Japanese and Korean
+characters.
+</p><p>
+Currently the following input methods are available in Home Manager:
+
+</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">fcitx</code></span></dt><dd><p>
+    A customizable lightweight input method
+    extra input engines can be added using
+    <code class="literal">i18n.inputMethod.fcitx.engines</code>.
+  </p></dd><dt><span class="term"><code class="literal">fcitx5</code></span></dt><dd><p>
+    The next generation of fcitx,
+    addons (including engines, dictionaries, skins) can be added using
+    <code class="literal">i18n.inputMethod.fcitx5.addons</code>.
+  </p></dd><dt><span class="term"><code class="literal">nabi</code></span></dt><dd><p>
+    A Korean input method based on XIM. Nabi doesn't support Qt 5.
+  </p></dd><dt><span class="term"><code class="literal">uim</code></span></dt><dd><p>
+    The universal input method, is a library with a XIM bridge.
+    uim mainly support Chinese, Japanese and Korean.
+  </p></dd><dt><span class="term"><code class="literal">hime</code></span></dt><dd><p>An extremely easy-to-use input method framework.</p></dd><dt><span class="term"><code class="literal">kime</code></span></dt><dd><p>A Korean IME.</p></dd></dl></div><p>
+</p><p><span class="emphasis"><em>Type:</em></span> null or one of "fcitx", "fcitx5", "nabi", "uim", "hime", "kime"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "fcitx"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/default.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/i18n/input-method/default.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-i18n.inputMethod.fcitx.engines"></a><a class="term" href="options.html#opt-i18n.inputMethod.fcitx.engines"><code class="option">i18n.inputMethod.fcitx.engines</code></a></span></dt><dd><p>Enabled Fcitx engines. Available engines are: <code class="literal">anthy</code>, <code class="literal">chewing</code>, <code class="literal">cloudpinyin</code>, <code class="literal">hangul</code>, <code class="literal">libpinyin</code>, <code class="literal">m17n</code>, <code class="literal">mozc</code>, <code class="literal">rime</code>, <code class="literal">skk</code>, <code class="literal">table-extra</code>, <code class="literal">table-other</code>, <code class="literal">unikey</code>.</p><p><span class="emphasis"><em>Type:</em></span> list of packages</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">with pkgs.fcitx-engines; [ mozc hangul ]</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/i18n/input-method/fcitx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-i18n.inputMethod.fcitx5.addons"></a><a class="term" href="options.html#opt-i18n.inputMethod.fcitx5.addons"><code class="option">i18n.inputMethod.fcitx5.addons</code></a></span></dt><dd><p>Enabled Fcitx5 addons.
+</p><p><span class="emphasis"><em>Type:</em></span> list of packages</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">with pkgs; [ fcitx5-rime ]</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-i18n.inputMethod.kime.config"></a><a class="term" href="options.html#opt-i18n.inputMethod.kime.config"><code class="option">i18n.inputMethod.kime.config</code></a></span></dt><dd><p>kime configuration. Refer to
+<a class="link" href="https://github.com/Riey/kime/blob/develop/docs/CONFIGURATION.md" target="_top">https://github.com/Riey/kime/blob/develop/docs/CONFIGURATION.md</a>
+for details on supported values.
+</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  daemon = {
+    modules = ["Xim" "Indicator"];
+  };
+
+  indicator = {
+    icon_color = "White";
+  };
+
+  engine = {
+    hangul = {
+      layout = "dubeolsik";
+    };
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/kime.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/i18n/input-method/kime.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-i18n.inputMethod.uim.toolbar"></a><a class="term" href="options.html#opt-i18n.inputMethod.uim.toolbar"><code class="option">i18n.inputMethod.uim.toolbar</code></a></span></dt><dd><p>Selected UIM toolbar.
+</p><p><span class="emphasis"><em>Type:</em></span> one of "gtk", "gtk3", "gtk-systray", "gtk3-systray", "qt4"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "gtk"
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "gtk-systray"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/uim.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/i18n/input-method/uim.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-lib"></a><a class="term" href="options.html#opt-lib"><code class="option">lib</code></a></span></dt><dd><p>This option allows modules to define helper functions,
 constants, etc.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute sets</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
