@@ -23,6 +23,8 @@
                     &lt;home-manager/modules/programs/mbsync.nix&gt;
                 </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/himalaya.nix&gt;
                 </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/getmail.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/getmail.nix&gt;
                 </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/astroid.nix#blob-path" target="_top">
@@ -201,6 +203,26 @@ disable <code class="literal">readAll</code>.
         false
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
                     &lt;home-manager/modules/accounts/email.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.himalaya.enable"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.himalaya.enable"><code class="option">accounts.email.accounts.&lt;name&gt;.himalaya.enable</code></a></span></dt><dd><p>Whether to enable the himalaya mail client for this account
+.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/himalaya.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.himalaya.settings"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.himalaya.settings"><code class="option">accounts.email.accounts.&lt;name&gt;.himalaya.settings</code></a></span></dt><dd><p>Extra settings to add to this <span class="command"><strong>himalaya</strong></span>
+account configuration.
+</p><p><span class="emphasis"><em>Type:</em></span> TOML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  default-page-size = 50;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/himalaya.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.imap"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.imap"><code class="option">accounts.email.accounts.&lt;name&gt;.imap</code></a></span></dt><dd><p>The IMAP configuration to use for this account.
 </p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
@@ -3505,6 +3527,29 @@ Note that lists are converted to duplicate keys.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.himalaya.enable"></a><a class="term" href="options.html#opt-programs.himalaya.enable"><code class="option">programs.himalaya.enable</code></a></span></dt><dd><p>Whether to enable himalaya mail client.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/himalaya.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.himalaya.package"></a><a class="term" href="options.html#opt-programs.himalaya.package"><code class="option">programs.himalaya.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>himalaya</strong></span> mail client.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.himalaya
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/himalaya.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.himalaya.settings"></a><a class="term" href="options.html#opt-programs.himalaya.settings"><code class="option">programs.himalaya.settings</code></a></span></dt><dd><p>Global <span class="command"><strong>himalaya</strong></span> configuration values.
+</p><p><span class="emphasis"><em>Type:</em></span> TOML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  default-page-size = 50;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/himalaya.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.home-manager.enable"></a><a class="term" href="options.html#opt-programs.home-manager.enable"><code class="option">programs.home-manager.enable</code></a></span></dt><dd><p>Whether to enable Home Manager.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
