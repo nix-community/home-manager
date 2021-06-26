@@ -84,6 +84,9 @@
 
 /modules/programs/go.nix                              @rvolosatovs
 
+/modules/programs/himalaya.nix                        @ambroisie
+/tests/modules/programs/himalaya                      @ambroisie
+
 /modules/programs/home-manager.nix                    @rycee
 
 /modules/programs/htop.nix                            @bjpbakker

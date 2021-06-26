@@ -2111,6 +2111,13 @@ in
           A new module is available: 'i18n.inputMethod'.
         '';
       }
+
+      {
+        time = "2021-06-22T14:43:53+00:00";
+        message = ''
+          A new module is available: 'programs.himalaya'.
+        '';
+      }
     ];
   };
 }
