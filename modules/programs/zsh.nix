@@ -290,6 +290,11 @@ in
         description = "Enable zsh autosuggestions";
       };
 
+      enableSyntaxHighlighting = mkOption {
+        default = false;
+        description = "Enable zsh syntax highlighting";
+      };
+
       history = mkOption {
         type = historyModule;
         default = {};
@@ -480,6 +485,10 @@ in
 
         ${optionalString cfg.enableAutosuggestions
           "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+        }
+
+        ${optionalString cfg.enableSyntaxHighlighting
+          "source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
         }
 
         # Environment variables
