@@ -7,8 +7,8 @@ let
   nmt = pkgs.fetchFromGitLab {
     owner = "rycee";
     repo = "nmt";
-    rev = "873ac8cbd362376088b306cee769db37c3cd9b43";
-    sha256 = "0s0r0hj6046k6kvfh4j8cvxcq8dv5c4801hs81b11cqlvalyf9y4";
+    rev = "89924d8e6e0fcf866a11324d32c6bcaa89cda506";
+    sha256 = "02wzrbmpdpgig58a1rhz8sb0p2rvbapnlcmhi4d4bi8w9md6pmdl";
   };
 
   modules = import ../modules/modules.nix {
