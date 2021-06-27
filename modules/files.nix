@@ -162,7 +162,7 @@ in
     # source and target generation.
     home.activation.linkGeneration = hm.dag.entryAfter ["writeBoundary"] (
       let
-        link = pkgs.writeText "link" ''
+        link = pkgs.writeShellScript "link" ''
           newGenFiles="$1"
           shift
           for sourcePath in "$@" ; do
@@ -177,7 +177,7 @@ in
           done
         '';
 
-        cleanup = pkgs.writeText "cleanup" ''
+        cleanup = pkgs.writeShellScript "cleanup" ''
           . ${./lib-bash/color-echo.sh}
 
           # A symbolic link whose target path matches this pattern will be
@@ -257,7 +257,9 @@ in
     );
 
     home.activation.checkFilesChanged = hm.dag.entryBefore ["linkGeneration"] (
-      ''
+      let
+        homeDirArg = escapeShellArg homeDirectory;
+      in ''
         function _cmp() {
           if [[ -d $1 && -d $2 ]]; then
             diff -rq "$1" "$2" &> /dev/null
@@ -266,11 +268,15 @@ in
           fi
         }
         declare -A changedFiles
-      '' + concatMapStrings (v: ''
-        _cmp ${escapeShellArg (sourceStorePath v)} ${escapeShellArg homeDirectory}/${escapeShellArg v.target} \
-          && changedFiles[${escapeShellArg v.target}]=0 \
-          || changedFiles[${escapeShellArg v.target}]=1
-      '') (filter (v: v.onChange != "") (attrValues cfg))
+      '' + concatMapStrings (v:
+        let
+          sourceArg = escapeShellArg (sourceStorePath v);
+          targetArg = escapeShellArg v.target;
+        in ''
+          _cmp ${sourceArg} ${homeDirArg}/${targetArg} \
+            && changedFiles[${targetArg}]=0 \
+            || changedFiles[${targetArg}]=1
+        '') (filter (v: v.onChange != "") (attrValues cfg))
       + ''
         unset -f _cmp
       ''
@@ -286,12 +292,10 @@ in
 
     # Symlink directories and files that have the right execute bit.
     # Copy files that need their execute bit changed.
-    home-files = pkgs.runCommand
+    home-files = pkgs.runCommandLocal
       "home-manager-files"
       {
         nativeBuildInputs = [ pkgs.xorg.lndir ];
-        preferLocalBuild = true;
-        allowSubstitutes = false;
       }
       (''
         mkdir -p $out
