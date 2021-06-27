@@ -39,6 +39,28 @@ in
   };
 
   config = {
+    assertions = [(
+      let
+        dups =
+          attrNames
+            (filterAttrs (n: v: v > 1)
+            (foldAttrs (acc: v: acc + v) 0
+            (mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)));
+        dupsStr = concatStringsSep ", " dups;
+      in {
+        assertion = dups == [];
+        message = ''
+          Conflicting managed target files: ${dupsStr}
+
+          This may happen, for example, if you have a configuration similar to
+
+              home.file = {
+                conflict1 = { source = ./foo.nix; target = "baz"; };
+                conflict2 = { source = ./bar.nix; target = "baz"; };
+              }'';
+      })
+    ];
+
     lib.file.mkOutOfStoreSymlink = path:
       let
         pathStr = toString path;
@@ -282,6 +304,15 @@ in
           local relTarget="$2"
           local executable="$3"
           local recursive="$4"
+
+          # If the target already exists then we have a collision. Note, this
+          # should not happen due to the assertion found in the 'files' module.
+          # We therefore simply log the conflict and otherwise ignore it, mainly
+          # to make the `files-target-config` test work as expected.
+          if [[ -e "$realOut/$relTarget" ]]; then
+            echo "File conflict for file '$relTarget'" >&2
+            return
+          fi
 
           # Figure out the real absolute path to the target.
           local target
