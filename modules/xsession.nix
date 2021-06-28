@@ -18,8 +18,18 @@ in {
         default = ".xsession";
         example = ".xsession-hm";
         description = ''
-          Path, relative <envar>HOME</envar>, where Home Manager
+          Path, relative to <envar>HOME</envar>, where Home Manager
           should write the X session script.
+        '';
+      };
+
+      profilePath = mkOption {
+        type = types.str;
+        default = ".xprofile";
+        example = ".xprofile-hm";
+        description = ''
+          Path, relative to <envar>HOME</envar>, where Home Manager
+          should write the X profile script.
         '';
       };
 
@@ -129,7 +139,7 @@ in {
       };
     };
 
-    home.file.".xprofile".text = ''
+    home.file.${cfg.profilePath}.text = ''
       . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
       if [ -e "$HOME/.profile" ]; then
@@ -154,7 +164,7 @@ in {
       executable = true;
       text = ''
         if [ -z "$HM_XPROFILE_SOURCED" ]; then
-          . ~/.xprofile
+          . "${config.home.homeDirectory}/${cfg.profilePath}"
         fi
         unset HM_XPROFILE_SOURCED
 
