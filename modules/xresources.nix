@@ -80,7 +80,8 @@ in {
       type = types.str;
       default = "${config.home.homeDirectory}/.Xresources";
       defaultText = "$HOME/.Xresources";
-      description = "Path where Home Manager should link the <filename>.Xresources</filename> file.";
+      description =
+        "Path where Home Manager should link the <filename>.Xresources</filename> file.";
     };
   };
 
