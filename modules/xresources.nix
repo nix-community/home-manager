@@ -23,7 +23,7 @@ let
           toString v;
     in "${n}: ${formatValue v}";
 
-  xrdbMerge = "${pkgs.xorg.xrdb}/bin/xrdb -merge ~/.Xresources";
+  xrdbMerge = "${pkgs.xorg.xrdb}/bin/xrdb -merge ${cfg.path}";
 
 in {
   meta.maintainers = [ maintainers.rycee ];
@@ -75,11 +75,19 @@ in {
         <filename>~/.Xresources</filename> link is produced.
       '';
     };
+
+    xresources.path = mkOption {
+      type = types.str;
+      default = "${config.home.homeDirectory}/.Xresources";
+      defaultText = "$HOME/.Xresources";
+      description =
+        "Path where Home Manager should link the <filename>.Xresources</filename> file.";
+    };
   };
 
   config = mkIf ((cfg.properties != null && cfg.properties != { })
     || cfg.extraConfig != "") {
-      home.file.".Xresources" = {
+      home.file.${cfg.path} = {
         text = concatStringsSep "\n" ([ ]
           ++ optional (cfg.extraConfig != "") cfg.extraConfig
           ++ optionals (cfg.properties != null)
