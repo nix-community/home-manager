@@ -194,6 +194,9 @@
 /modules/programs/waybar.nix                          @berbiche
 /tests/modules/programs/waybar                        @berbiche
 
+/modules/programs/xmobar.nix                          @t4ccer
+/tests/modules/programs/xmobar                        @t4ccer
+
 /modules/programs/z-lua.nix                           @marsam
 
 /modules/programs/zathura.nix                         @rprospero

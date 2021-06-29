@@ -146,6 +146,7 @@ let
     (loadModule ./programs/vscode.nix { })
     (loadModule ./programs/vscode/haskell.nix { })
     (loadModule ./programs/waybar.nix { condition = hostPlatform.isLinux; })
+    (loadModule ./programs/xmobar.nix { })
     (loadModule ./programs/z-lua.nix { })
     (loadModule ./programs/zathura.nix { })
     (loadModule ./programs/zoxide.nix { })

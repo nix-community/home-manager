@@ -112,6 +112,7 @@ import nmt {
     ./modules/programs/rofi-pass
     ./modules/programs/terminator
     ./modules/programs/waybar
+    ./modules/programs/xmobar
     ./modules/services/barrier
     ./modules/services/dropbox
     ./modules/services/emacs
