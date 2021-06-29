@@ -40,8 +40,13 @@ in {
           }
       '';
       type = types.lines;
-      description =
-        "Extra configuration lines to add to ~/.config/xmobar/.xmobarrc";
+      description = ''
+        Extra configuration lines to add to
+        <filename>$XDG_CONFIG_HOME/xmobar/.xmobarrc</filename>.
+        See
+        <link xlink:href="https://xmobar.org/#configuration" />
+        for options.
+      '';
     };
   };
 
