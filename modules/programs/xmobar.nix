@@ -9,6 +9,7 @@ in {
 
     package = mkOption {
       default = pkgs.haskellPackages.xmobar;
+      defaultText = literalExample "pkgs.haskellPackages.xmobar";
       type = types.package;
       description = ''
         Package providing the <command>xmobar</command> binary.
