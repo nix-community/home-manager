@@ -8584,6 +8584,45 @@ window#waybar {
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/waybar.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.xmobar.enable"></a><a class="term" href="options.html#opt-programs.xmobar.enable"><code class="option">programs.xmobar.enable</code></a></span></dt><dd><p>Whether to enable Xmobar, a minimalistic status bar.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/xmobar.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/xmobar.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.xmobar.package"></a><a class="term" href="options.html#opt-programs.xmobar.package"><code class="option">programs.xmobar.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>xmobar</strong></span> binary.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.haskellPackages.xmobar
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/xmobar.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/xmobar.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.xmobar.extraConfig"></a><a class="term" href="options.html#opt-programs.xmobar.extraConfig"><code class="option">programs.xmobar.extraConfig</code></a></span></dt><dd><p>Extra configuration lines to add to
+<code class="filename">$XDG_CONFIG_HOME/xmobar/.xmobarrc</code>.
+See
+<a class="link" href="https://xmobar.org/#configuration" target="_top">https://xmobar.org/#configuration</a>
+for options.
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        ""
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">Config
+  { font        = "Fira Code"
+  , borderColor = "#d0d0d0"
+  , border      = FullB
+  , borderWidth = 3
+  , bgColor     = "#222"
+  , fgColor     = "grey"
+  , position    = TopSize C 99 30
+  , commands    =
+      [ Run Cpu ["-t", "cpu: &lt;fc=#4eb4fa&gt;&lt;bar&gt; &lt;total&gt;%&lt;/fc&gt;"] 10
+      , Run Network "enp3s0" ["-S", "True", "-t", "eth: &lt;fc=#4eb4fa&gt;&lt;rx&gt;&lt;/fc&gt;/&lt;fc=#4eb4fa&gt;&lt;tx&gt;&lt;/fc&gt;"] 10
+      , Run Memory ["-t","mem: &lt;fc=#4eb4fa&gt;&lt;usedbar&gt; &lt;usedratio&gt;%&lt;/fc&gt;"] 10
+      , Run Date "date: &lt;fc=#4eb4fa&gt;%a %d %b %Y %H:%M:%S &lt;/fc&gt;" "date" 10
+      , Run StdinReader
+      ]
+  , sepChar     = "%"
+  , alignSep    = "}{"
+  , template    = "  %StdinReader% | %cpu% | %memory% | %enp3s0%  }{%date%  "
+  }
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/xmobar.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/xmobar.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.z-lua.enable"></a><a class="term" href="options.html#opt-programs.z-lua.enable"><code class="option">programs.z-lua.enable</code></a></span></dt><dd><p>Whether to enable z.lua.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
