@@ -81,7 +81,6 @@ import nmt {
     ./modules/programs/tmux
     ./modules/programs/topgrade
     ./modules/programs/vscode
-    ./modules/programs/xmobar
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/xresources
@@ -111,6 +110,7 @@ import nmt {
     ./modules/programs/rofi-pass
     ./modules/programs/terminator
     ./modules/programs/waybar
+    ./modules/programs/xmobar
     ./modules/services/barrier
     ./modules/services/dropbox
     ./modules/services/emacs
