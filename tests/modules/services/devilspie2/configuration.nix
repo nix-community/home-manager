@@ -28,6 +28,12 @@
       assertFileExists $configlua
 
       assertFileContent $configlua ${./config.lua}
+
+      serviceFile=home-files/.config/systemd/user/devilspie2.service
+
+      assertFileExists $serviceFile
+
+      assertFileRegex $serviceFile 'ExecStart=.*/bin/devilspie2'
     '';
   };
 }
