@@ -60,7 +60,7 @@ let
             if builtins.isString val then
               "${pkgs.pinentry.${val}}/bin/pinentry"
             else
-              "${val}/bin/pinentry";
+              "${val}/${val.binaryPath or "bin/pinentry"}";
         };
       };
     };
