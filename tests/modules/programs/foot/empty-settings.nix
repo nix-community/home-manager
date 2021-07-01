@@ -10,10 +10,7 @@ with lib;
       [ (self: super: { foot = pkgs.writeScriptBin "dummy-foot" ""; }) ];
 
     nmt.script = ''
-      assertFileExists home-files/.config/foot/foot.ini
-      assertFileContent \
-        home-files/.config/foot/foot.ini \
-        ${builtins.toFile "test" ""}
+      assertPathNotExists home-files/.config/foot
     '';
   };
 }
