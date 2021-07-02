@@ -390,6 +390,21 @@ in
         Extra commands to run in the Home Manager profile builder.
       '';
     };
+
+    home.enableNixpkgsReleaseCheck = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Determines whether to check for release version mismatch between Home
+        Manager and Nixpkgs. Using mismatched versions is likely to cause errors
+        and unexpected behavior. It is therefore highly recommended to use a
+        release of Home Manager than corresponds with your chosen release of
+        Nixpkgs.
+        </para><para>
+        When this option is enabled and a mismatch is detected then a warning
+        will be printed when the user configuration is being built.
+      '';
+    };
   };
 
   config = {
@@ -403,6 +418,31 @@ in
         message = "Home directory could not be determined";
       }
     ];
+
+    warnings =
+      let
+        hmRelease = fileContents ../.release;
+        nixpkgsRelease = pkgs.lib.trivial.release;
+        releaseMismatch =
+          config.home.enableNixpkgsReleaseCheck
+          && hmRelease != nixpkgsRelease;
+      in
+        optional releaseMismatch ''
+          You are using
+
+            Home Manager version ${hmRelease} and
+            Nixpkgs version ${nixpkgsRelease}.
+
+          Using mismatched versions is likely to cause errors and unexpected
+          behavior. It is therefore highly recommended to use a release of Home
+          Manager than corresponds with your chosen release of Nixpkgs.
+
+          If you insist then you can disable this warning by adding
+
+            home.enableNixpkgsReleaseCheck = false;
+
+          to your configuration.
+        '';
 
     home.username =
       mkIf (versionOlder config.home.stateVersion "20.09")
