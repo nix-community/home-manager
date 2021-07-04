@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecStart=@setxkbmap@/bin/setxkbmap -layout 'us' -variant ''
+ExecStart=@setxkbmap@/bin/setxkbmap -layout 'us' -variant '' -option ''
 RemainAfterExit=true
 Type=oneshot
 
