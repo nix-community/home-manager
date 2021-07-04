@@ -976,6 +976,18 @@ configured to find those symbols.
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/debug.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/debug.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-home.enableNixpkgsReleaseCheck"></a><a class="term" href="options.html#opt-home.enableNixpkgsReleaseCheck"><code class="option">home.enableNixpkgsReleaseCheck</code></a></span></dt><dd><p>Determines whether to check for release version mismatch between Home
+Manager and Nixpkgs. Using mismatched versions is likely to cause errors
+and unexpected behavior. It is therefore highly recommended to use a
+release of Home Manager than corresponds with your chosen release of
+Nixpkgs.
+</p><p>
+When this option is enabled and a mismatch is detected then a warning
+will be printed when the user configuration is being built.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/home-environment.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-home.packages"></a><a class="term" href="options.html#opt-home.packages"><code class="option">home.packages</code></a></span></dt><dd><p>The set of packages to appear in the user environment.</p><p><span class="emphasis"><em>Type:</em></span> list of packages</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         [
