@@ -193,4 +193,10 @@
     githubId = 9267430;
     name = "Philipp Mildenberger";
   };
+  pinage404 = {
+    name = "pinage404";
+    email = "pinage404@gmail.com";
+    github = "pinage404";
+    githubId = 6325757;
+  };
 }
