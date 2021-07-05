@@ -4,14 +4,40 @@
 with lib;
 
 let
-  fonts = mkOption {
-    type = types.listOf types.str;
-    default = [ "monospace 8" ];
-    description = ''
-      Font list used for window titles. Only FreeType fonts are supported.
-      The order here is important (e.g. icons font should go before the one used for text).
-    '';
-    example = [ "FontAwesome 10" "Terminus 10" ];
+  isI3 = moduleName == "i3";
+  isSway = !isI3;
+
+  fontOptions = types.submodule {
+    options = {
+      names = mkOption {
+        type = types.listOf types.str;
+        default = [ "monospace" ];
+        defaultText = literalExample ''[ "monospace" ]'';
+        description = ''
+          List of font names list used for window titles. Only FreeType fonts are supported.
+          The order here is important (e.g. icons font should go before the one used for text).
+        '';
+        example = literalExample ''[ "FontAwesome" "Terminus" ]'';
+      };
+
+      style = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          The font style to use for window titles.
+        '';
+        example = "Bold Semi-Condensed";
+      };
+
+      size = mkOption {
+        type = types.float;
+        default = 8.0;
+        description = ''
+          The font size to use for window titles.
+        '';
+        example = 11.5;
+      };
+    };
   };
 
   startupModule = types.submodule {
@@ -26,7 +52,7 @@ let
         default = false;
         description = "Whether to run command on each ${moduleName} restart.";
       };
-    } // optionalAttrs (moduleName == "i3") {
+    } // optionalAttrs isI3 {
       notification = mkOption {
         type = types.bool;
         default = true;
@@ -42,7 +68,7 @@ let
         description = ''
           Launch application on a particular workspace. DEPRECATED:
           Use <varname><link linkend="opt-xsession.windowManager.i3.config.assigns">xsession.windowManager.i3.config.assigns</link></varname>
-          instead. See <link xlink:href="https://github.com/rycee/home-manager/issues/265"/>.
+          instead. See <link xlink:href="https://github.com/nix-community/home-manager/issues/265"/>.
         '';
       };
     };
@@ -53,20 +79,27 @@ let
     options = let
       versionAtLeast2009 = versionAtLeast config.home.stateVersion "20.09";
       mkNullableOption = { type, default, ... }@args:
-        mkOption (args // optionalAttrs versionAtLeast2009 {
+        mkOption (args // {
           type = types.nullOr type;
-          default = null;
-          example = default;
-        } // {
+          default = if versionAtLeast2009 then null else default;
           defaultText = literalExample ''
-            ${
-              if isString default then default else "See code"
-            } for state version < 20.09,
-            null for state version ≥ 20.09
+            null for state version ≥ 20.09, as example otherwise
           '';
+          example = default;
         });
     in {
-      fonts = fonts // optionalAttrs versionAtLeast2009 { default = [ ]; };
+      fonts = mkOption {
+        type = with types; either (listOf str) fontOptions;
+        default = { };
+        example = literalExample ''
+          {
+            names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
+            style = "Bold Semi-Condensed";
+            size = 11.0;
+          }
+        '';
+        description = "Font configuration for this bar.";
+      };
 
       extraConfig = mkOption {
         type = types.lines;
@@ -117,20 +150,22 @@ let
 
       command = mkOption {
         type = types.str;
-        default = "${cfg.package}/bin/${moduleName}bar";
+        default = let
+          # If the user uses the "system" Sway (i.e. cfg.package == null) then the bar has
+          # to come from a different package
+          pkg = if isSway && isNull cfg.package then pkgs.sway else cfg.package;
+        in "${pkg}/bin/${moduleName}bar";
         defaultText = "i3bar";
         description = "Command that will be used to start a bar.";
-        example = if moduleName == "i3" then
+        example = if isI3 then
           "\${pkgs.i3-gaps}/bin/i3bar -t"
         else
           "\${pkgs.waybar}/bin/waybar";
       };
 
-      statusCommand = mkOption {
-        type = types.nullOr types.str;
-        default =
-          if versionAtLeast2009 then null else "${pkgs.i3status}/bin/i3status";
-        example = "i3status";
+      statusCommand = mkNullableOption {
+        type = types.str;
+        default = "${pkgs.i3status}/bin/i3status";
         description = "Command that will be used to get status lines.";
       };
 
@@ -153,6 +188,30 @@ let
               type = types.str;
               default = "#666666";
               description = "Text color to be used for the separator.";
+            };
+
+            focusedBackground = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description =
+                "Background color of the bar on the currently focused monitor output.";
+              example = "#000000";
+            };
+
+            focusedStatusline = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description =
+                "Text color to be used for the statusline on the currently focused monitor output.";
+              example = "#ffffff";
+            };
+
+            focusedSeparator = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description =
+                "Text color to be used for the separator on the currently focused monitor output.";
+              example = "#666666";
             };
 
             focusedWorkspace = mkNullableOption {
@@ -303,7 +362,18 @@ let
 
   criteriaModule = types.attrsOf types.str;
 in {
-  inherit fonts;
+  fonts = mkOption {
+    type = with types; either (listOf str) fontOptions;
+    default = { };
+    example = literalExample ''
+      {
+        names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
+        style = "Bold Semi-Condensed";
+        size = 11.0;
+      }
+    '';
+    description = "Font configuration for window titles, nagbar...";
+  };
 
   window = mkOption {
     type = types.submodule {
@@ -311,7 +381,7 @@ in {
         titlebar = mkOption {
           type = types.bool;
           default = !isGaps;
-          defaultText = if moduleName == "i3" then
+          defaultText = if isI3 then
             "xsession.windowManager.i3.package != nixpkgs.i3-gaps (titlebar should be disabled for i3-gaps)"
           else
             "false";
@@ -354,7 +424,7 @@ in {
         titlebar = mkOption {
           type = types.bool;
           default = !isGaps;
-          defaultText = if moduleName == "i3" then
+          defaultText = if isI3 then
             "xsession.windowManager.i3.package != nixpkgs.i3-gaps (titlebar should be disabled for i3-gaps)"
           else
             "false";
@@ -408,14 +478,14 @@ in {
         };
 
         followMouse = mkOption {
-          type = if moduleName == "sway" then
+          type = if isSway then
             types.either (types.enum [ "yes" "no" "always" ]) types.bool
           else
             types.bool;
-          default = if moduleName == "sway" then "yes" else true;
+          default = if isSway then "yes" else true;
           description = "Whether focus should follow the mouse.";
           apply = val:
-            if (moduleName == "sway" && isBool val) then
+            if (isSway && isBool val) then
               (if val then "yes" else "no")
             else
               val;
@@ -598,7 +668,10 @@ in {
       workspaceButtons = true;
       workspaceNumbers = true;
       statusCommand = "${pkgs.i3status}/bin/i3status";
-      fonts = [ "monospace 8" ];
+      fonts = {
+        names = [ "monospace" ];
+        size = 8.0;
+      };
       trayOutput = "primary";
       colors = {
         background = "#000000";
@@ -632,6 +705,7 @@ in {
       };
     }] else
       [ { } ];
+    defaultText = literalExample "see code";
     description = ''
       ${capitalModuleName} bars settings blocks. Set to empty list to remove bars completely.
     '';
@@ -645,13 +719,22 @@ in {
 
       See <link xlink:href="https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup"/>.
     '';
-    example = literalExample ''
-      [
-      { command = "systemctl --user restart polybar"; always = true; notification = false; }
-      { command = "dropbox start"; notification = false; }
-      { command = "firefox"; workspace = "1: web"; }
-      ];
-    '';
+    example = if isI3 then
+      literalExample ''
+        [
+        { command = "systemctl --user restart polybar"; always = true; notification = false; }
+        { command = "dropbox start"; notification = false; }
+        { command = "firefox"; workspace = "1: web"; }
+        ];
+      ''
+    else
+      literalExample ''
+        [
+        { command = "systemctl --user restart waybar"; always = true; }
+        { command = "dropbox start"; }
+        { command = "firefox"; }
+        ]
+      '';
   };
 
   gaps = mkOption {
@@ -734,7 +817,7 @@ in {
       };
     });
     default = null;
-    description = if moduleName == "sway" then ''
+    description = if isSway then ''
       Gaps related settings.
     '' else ''
       i3Gaps related settings. The i3-gaps package must be used for these features to work.
@@ -743,7 +826,7 @@ in {
 
   terminal = mkOption {
     type = types.str;
-    default = if moduleName == "i3" then
+    default = if isI3 then
       "i3-sensible-terminal"
     else
       "${pkgs.rxvt-unicode-unwrapped}/bin/urxvt";
@@ -753,11 +836,54 @@ in {
 
   menu = mkOption {
     type = types.str;
-    default = if moduleName == "sway" then
+    default = if isSway then
       "${pkgs.dmenu}/bin/dmenu_path | ${pkgs.dmenu}/bin/dmenu | ${pkgs.findutils}/bin/xargs swaymsg exec --"
     else
       "${pkgs.dmenu}/bin/dmenu_run";
     description = "Default launcher to use.";
     example = "bemenu-run";
+  };
+
+  defaultWorkspace = mkOption {
+    type = types.nullOr types.str;
+    default = null;
+    description = ''
+      The default workspace to show when ${
+        if isSway then "sway" else "i3"
+      } is launched.
+      This must to correspond to the value of the keybinding of the default workspace.
+    '';
+    example = "workspace number 9";
+  };
+
+  workspaceOutputAssign = mkOption {
+    type = with types;
+      let
+        workspaceOutputOpts = submodule {
+          options = {
+            workspace = mkOption {
+              type = str;
+              default = "";
+              example = "Web";
+              description = ''
+                Name of the workspace to assign.
+              '';
+            };
+
+            output = mkOption {
+              type = str;
+              default = "";
+              example = "eDP";
+              description = ''
+                Name of the output from <command>
+                  ${if isSway then "swaymsg" else "i3-msg"} -t get_outputs
+                </command>.
+              '';
+            };
+          };
+        };
+      in listOf workspaceOutputOpts;
+    default = [ ];
+    description = "Assign workspaces to outputs.";
   };
 }

@@ -21,13 +21,6 @@ with lib;
       };
     };
 
-    home.file.result.text = builtins.toJSON
-      (map (a: a.message) (filter (a: !a.assertion) config.assertions));
-
-    nmt.script = ''
-      assertFileContent home-files/result ${
-        ./forwards-paths-with-ports-error.json
-      }
-    '';
+    test.asserts.assertions.expected = [ "Forwarded paths cannot have ports." ];
   };
 }

@@ -1,7 +1,7 @@
 #!@bash@/bin/bash
 
 # Prepare to use tools from Nixpkgs.
-PATH=@coreutils@/bin:@findutils@/bin:@gnused@/bin:@less@/bin${PATH:+:}$PATH
+PATH=@coreutils@/bin:@findutils@/bin:@gnused@/bin:@less@/bin:@nixos-option@/bin${PATH:+:}$PATH
 
 set -euo pipefail
 
@@ -74,7 +74,75 @@ function setHomeManagerNixPath() {
     done
 }
 
+function setFlakeAttribute() {
+    local configFlake="${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/flake.nix"
+    if [[ -z $FLAKE_ARG && ! -v HOME_MANAGER_CONFIG && -e "$configFlake" ]]; then
+        FLAKE_ARG="$(dirname "$(readlink -f "$configFlake")")"
+    fi
+
+    if [[ -n "$FLAKE_ARG" ]]; then
+        local flake="${FLAKE_ARG%#*}"
+        case $FLAKE_ARG in
+            *#*)
+                local name="${FLAKE_ARG#*#}"
+            ;;
+            *)
+                local name="$USER@$(hostname)"
+                if [ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$name\"")" = "false" ]; then
+                    name="$USER"
+                fi
+            ;;
+        esac
+        export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$name\""
+    fi
+}
+
+function doInspectOption() {
+    setFlakeAttribute
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        errorEcho "Can't inspect options of a flake configuration"
+        exit 1
+    fi
+    setConfigFile
+    setHomeManagerNixPath
+
+    local extraArgs=("$@")
+
+    for p in "${EXTRA_NIX_PATH[@]}"; do
+        extraArgs=("${extraArgs[@]}" "-I" "$p")
+    done
+
+    if [[ -v VERBOSE ]]; then
+        extraArgs=("${extraArgs[@]}" "--show-trace")
+    fi
+
+    local HOME_MANAGER_CONFIG_NIX HOME_MANAGER_CONFIG_ATTRIBUTE_NIX
+    HOME_MANAGER_CONFIG_NIX=${HOME_MANAGER_CONFIG//'\'/'\\'}
+    HOME_MANAGER_CONFIG_NIX=${HOME_MANAGER_CONFIG_NIX//'"'/'\"'}
+    HOME_MANAGER_CONFIG_NIX=${HOME_MANAGER_CONFIG_NIX//$'\n'/$'\\n'}
+    HOME_MANAGER_CONFIG_ATTRIBUTE_NIX=${HOME_MANAGER_CONFIG_ATTRIBUTE//'\'/'\\'}
+    HOME_MANAGER_CONFIG_ATTRIBUTE_NIX=${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX//'"'/'\"'}
+    HOME_MANAGER_CONFIG_ATTRIBUTE_NIX=${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX//$'\n'/$'\\n'}
+    local modulesExpr
+    modulesExpr="let confPath = \"${HOME_MANAGER_CONFIG_NIX}\"; "
+    modulesExpr+="confAttr = \"${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX}\"; in "
+    modulesExpr+="(import <home-manager/modules> {"
+    modulesExpr+=" configuration = if confAttr == \"\" then confPath else (import confPath).\${confAttr};"
+    modulesExpr+=" pkgs = import <nixpkgs> {}; check = true; })"
+
+    nixos-option \
+        --options_expr "$modulesExpr.options" \
+        --config_expr "$modulesExpr.config" \
+        "${extraArgs[@]}" \
+        "${PASSTHROUGH_OPTS[@]}"
+}
+
 function doInstantiate() {
+    setFlakeAttribute
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        errorEcho "Can't instantiate a flake configuration"
+        exit 1
+    fi
     setConfigFile
     setHomeManagerNixPath
 
@@ -165,13 +233,28 @@ function doEdit() {
 
     setConfigFile
 
-    exec "$EDITOR" "$HOME_MANAGER_CONFIG"
+    # Don't quote $EDITOR in order to support values including options, e.g.,
+    # "code --wait".
+    #
+    # shellcheck disable=2086
+    exec $EDITOR "$HOME_MANAGER_CONFIG"
 }
 
 function doBuild() {
     if [[ ! -w . ]]; then
         errorEcho "Cannot run build in read-only directory";
         return 1
+    fi
+
+    setFlakeAttribute
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        local exitCode=0
+        nix build \
+            "${PASSTHROUGH_OPTS[@]}" \
+             ${DRY_RUN+--dry-run} \
+            "$FLAKE_CONFIG_URI.activationPackage" \
+            || exitCode=1
+        return $exitCode
     fi
 
     setWorkDir
@@ -190,6 +273,16 @@ function doBuild() {
 }
 
 function doSwitch() {
+    setFlakeAttribute
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        local exitCode=0
+        nix run \
+            "${PASSTHROUGH_OPTS[@]}" \
+            "$FLAKE_CONFIG_URI.activationPackage" \
+            || exitCode=1
+        return $exitCode
+    fi
+
     setWorkDir
 
     local newsInfo
@@ -217,7 +310,7 @@ function doSwitch() {
 function doListGens() {
     # Whether to colorize the generations output.
     local color="never"
-    if [[ -t 1 ]]; then
+    if [[ ! -v NO_COLOR && -t 1 ]]; then
         color="always"
     fi
 
@@ -405,22 +498,25 @@ function doHelp() {
     echo
     echo "Options"
     echo
-    echo "  -f FILE      The home configuration file."
-    echo "               Default is '~/.config/nixpkgs/home.nix'."
-    echo "  -A ATTRIBUTE Optional attribute that selects a configuration"
-    echo "               expression in the configuration file."
-    echo "  -I PATH      Add a path to the Nix expression search path."
-    echo "  -b EXT       Move existing files to new path rather than fail."
-    echo "  -v           Verbose output"
-    echo "  -n           Do a dry run, only prints what actions would be taken"
-    echo "  -h           Print this help"
+    echo "  -f FILE           The home configuration file."
+    echo "                    Default is '~/.config/nixpkgs/home.nix'."
+    echo "  -A ATTRIBUTE      Optional attribute that selects a configuration"
+    echo "                    expression in the configuration file."
+    echo "  -I PATH           Add a path to the Nix expression search path."
+    echo "  --flake flake-uri Use home-manager configuration at flake-uri"
+    echo "  -b EXT            Move existing files to new path rather than fail."
+    echo "  -v                Verbose output"
+    echo "  -n                Do a dry run, only prints what actions would be taken"
+    echo "  -h                Print this help"
     echo
     echo "Options passed on to nix-build(1)"
     echo
+    echo "  --arg(str) NAME VALUE    Override inputs passed to home-manager.nix"
     echo "  --cores NUM"
+    echo "  --debug"
     echo "  --keep-failed"
     echo "  --keep-going"
-    echo "  --max-jobs NUM"
+    echo "  -j, --max-jobs NUM"
     echo "  --option NAME VALUE"
     echo "  --show-trace"
     echo "  --(no-)substitute"
@@ -430,6 +526,9 @@ function doHelp() {
     echo "  help         Print this help"
     echo
     echo "  edit         Open the home configuration in \$EDITOR"
+    echo
+    echo "  option OPTION.NAME"
+    echo "               Inspect configuration option named OPTION.NAME."
     echo
     echo "  build        Build configuration into result directory"
     echo
@@ -462,12 +561,13 @@ HOME_MANAGER_CONFIG_ATTRIBUTE=""
 PASSTHROUGH_OPTS=()
 COMMAND=""
 COMMAND_ARGS=()
+FLAKE_ARG=""
 
 while [[ $# -gt 0 ]]; do
     opt="$1"
     shift
     case $opt in
-        build|instantiate|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
+        build|instantiate|option|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
             COMMAND="$opt"
             ;;
         -A)
@@ -486,6 +586,21 @@ while [[ $# -gt 0 ]]; do
             HOME_MANAGER_CONFIG="$1"
             shift
             ;;
+        --flake)
+            FLAKE_ARG="$1"
+            shift
+            ;;
+        --recreate-lock-file|--no-update-lock-file|--no-write-lock-file|--no-registries|--commit-lock-file)
+            PASSTHROUGH_OPTS+=("$opt")
+            ;;
+        --update-input)
+            PASSTHROUGH_OPTS+=("$opt" "$1")
+            shift
+            ;;
+        --override-input)
+            PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
+            shift 2
+            ;;
         -h|--help)
             doHelp
             exit 0
@@ -493,24 +608,28 @@ while [[ $# -gt 0 ]]; do
         -n|--dry-run)
             export DRY_RUN=1
             ;;
-        --option)
+        --option|--arg|--argstr)
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
             shift 2
             ;;
-        --max-jobs|--cores)
+        -j|--max-jobs|--cores)
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;
-        --keep-failed|--keep-going|--show-trace\
+        --debug|--keep-failed|--keep-going|--show-trace\
             |--substitute|--no-substitute)
             PASSTHROUGH_OPTS+=("$opt")
             ;;
         -v|--verbose)
             export VERBOSE=1
             ;;
+        --version)
+            echo 21.11
+            exit 0
+            ;;
         *)
             case $COMMAND in
-                expire-generations|remove-generations)
+                expire-generations|remove-generations|option)
                     COMMAND_ARGS+=("$opt")
                     ;;
                 *)
@@ -554,6 +673,9 @@ case $COMMAND in
         else
             doExpireGenerations "${COMMAND_ARGS[@]}"
         fi
+        ;;
+    option)
+        doInspectOption "${COMMAND_ARGS[@]}"
         ;;
     packages)
         doListPackages

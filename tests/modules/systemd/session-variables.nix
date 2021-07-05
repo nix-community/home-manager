@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 {
   config = {
     systemd.user.sessionVariables = {
@@ -12,7 +10,11 @@ with lib;
     nmt.script = ''
       envFile=home-files/.config/environment.d/10-home-manager.conf
       assertFileExists $envFile
-      assertFileContent $envFile ${./session-variables-expected.conf}
+      assertFileContent $envFile ${pkgs.writeText "expected" ''
+        LOCALE_ARCHIVE_2_27=${pkgs.glibcLocales}/lib/locale/locale-archive
+        V_int=1
+        V_str=2
+      ''}
     '';
   };
 }

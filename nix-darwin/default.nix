@@ -9,7 +9,10 @@ let
   extendedLib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
   hmModule = types.submoduleWith {
-    specialArgs = { lib = extendedLib; };
+    specialArgs = {
+      lib = extendedLib;
+      darwinConfig = config;
+    } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
         imports = import ../modules/modules.nix {
@@ -26,7 +29,7 @@ let
           home.homeDirectory = config.users.users.${name}.home;
         };
       })
-    ];
+    ] ++ cfg.sharedModules;
   };
 
 in
@@ -36,7 +39,7 @@ in
     home-manager = {
       useUserPackages = mkEnableOption ''
         installation of user packages through the
-        <option>users.users.‹name?›.packages</option> option.
+        <option>users.users.&lt;name?&gt;.packages</option> option.
       '';
 
       useGlobalPkgs = mkEnableOption ''
@@ -55,11 +58,36 @@ in
         '';
       };
 
+      extraSpecialArgs = mkOption {
+        type = types.attrs;
+        default = { };
+        example = literalExample "{ modulesPath = ../modules; }";
+        description = ''
+          Extra <literal>specialArgs</literal> passed to Home Manager.
+        '';
+      };
+
+      sharedModules = mkOption {
+        type = with types;
+          listOf (anything // {
+            inherit (submodule { }) check;
+            description = "Home Manager modules";
+          });
+        default = [ ];
+        example = literalExample "[ { home.packages = [ nixpkgs-fmt ]; } ]";
+        description = ''
+          Extra modules added to all users.
+        '';
+      };
+
       verbose = mkEnableOption "verbose output on activation";
 
       users = mkOption {
         type = types.attrsOf hmModule;
         default = {};
+        # Set as not visible to prevent the entire submodule being included in
+        # the documentation.
+        visible = false;
         description = ''
           Per-user Home Manager configuration.
         '';

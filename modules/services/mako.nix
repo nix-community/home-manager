@@ -271,6 +271,15 @@ in {
         '';
       };
 
+      extraConfig = mkOption {
+        default = "";
+        type = types.lines;
+        example = literalExample ''
+          [urgency=low]
+          border-color=#b8bb26
+        '';
+        description = "Additional configuration.";
+      };
     };
   };
 
@@ -311,6 +320,8 @@ in {
       ${optionalInteger "default-timeout" cfg.defaultTimeout}
       ${optionalBoolean "ignore-timeout" cfg.ignoreTimeout}
       ${optionalString "group-by" cfg.groupBy}
+
+      ${cfg.extraConfig}
     '';
   };
 }

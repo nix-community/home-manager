@@ -6,16 +6,7 @@ let
 
   cfg = config.programs.nushell;
 
-  configFile = config:
-    pkgs.runCommand "config.toml" {
-      buildInputs = [ pkgs.remarshal ];
-      preferLocalBuild = true;
-      allowSubstitutes = false;
-    } ''
-      remarshal -if json -of toml \
-        < ${pkgs.writeText "config.json" (builtins.toJSON config)} \
-        > $out
-    '';
+  tomlFormat = pkgs.formats.toml { };
 
 in {
   meta.maintainers = [ maintainers.Philipp-M ];
@@ -53,7 +44,7 @@ in {
         Configuration written to
         <filename>~/.config/nushell/config.toml</filename>.
         </para><para>
-        See <link xlink:href="https://www.nushell.sh/book/en/configuration.html" /> for the full list
+        See <link xlink:href="https://www.nushell.sh/book/configuration.html" /> for the full list
         of options.
       '';
     };
@@ -62,7 +53,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."nu/config.toml" =
-      mkIf (cfg.settings != { }) { source = configFile cfg.settings; };
+    xdg.configFile."nu/config.toml" = mkIf (cfg.settings != { }) {
+      source = tomlFormat.generate "nushell-config" cfg.settings;
+    };
   };
 }

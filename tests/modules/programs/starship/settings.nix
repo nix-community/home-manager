@@ -10,9 +10,17 @@ with lib;
       settings = mkMerge [
         {
           add_newline = false;
-          prompt_order = [ "line_break" "package" "line_break" "character" ];
+          format = concatStrings [
+            "$line_break"
+            "$package"
+            "$line_break"
+            "$character"
+          ];
           scan_timeout = 10;
-          character.symbol = "➜";
+          character = {
+            success_symbol = "➜";
+            error_symbol = "➜";
+          };
           package.disabled = true;
           memory_usage.threshold = -1;
           aws.style = "bold blue";

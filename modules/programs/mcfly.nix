@@ -27,6 +27,14 @@ in {
       '';
     };
 
+    enableFuzzySearch = mkOption {
+      default = false;
+      type = types.bool;
+      description = ''
+        Whether to enable fuzzy searching.
+      '';
+    };
+
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
@@ -66,12 +74,16 @@ in {
 
       programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
         source "${pkgs.mcfly}/share/mcfly/mcfly.fish"
-        mcfly_key_bindings
+        if status is-interactive
+          mcfly_key_bindings
+        end
       '';
 
       home.sessionVariables.MCFLY_KEY_SCHEME = cfg.keyScheme;
     }
 
     (mkIf cfg.enableLightTheme { home.sessionVariables.MCFLY_LIGHT = "TRUE"; })
+
+    (mkIf cfg.enableFuzzySearch { home.sessionVariables.MCFLY_FUZZY = "TRUE"; })
   ]);
 }

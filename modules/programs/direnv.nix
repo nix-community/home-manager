@@ -5,25 +5,25 @@ with lib;
 let
 
   cfg = config.programs.direnv;
-  configFile = config:
-    pkgs.runCommand "config.toml" {
-      buildInputs = [ pkgs.remarshal ];
-      preferLocalBuild = true;
-      allowSubstitutes = false;
-    } ''
-      remarshal -if json -of toml \
-        < ${pkgs.writeText "config.json" (builtins.toJSON config)} \
-        > $out
-    '';
+
+  tomlFormat = pkgs.formats.toml { };
 
 in {
+  imports = [
+    (mkRenamedOptionModule [
+      "programs"
+      "direnv"
+      "enableNixDirenvIntegration"
+    ] [ "programs" "direnv" "nix-direnv" "enable" ])
+  ];
+
   meta.maintainers = [ maintainers.rycee ];
 
   options.programs.direnv = {
     enable = mkEnableOption "direnv, the environment switcher";
 
     config = mkOption {
-      type = types.attrs;
+      type = tomlFormat.type;
       default = { };
       description = ''
         Configuration written to
@@ -71,22 +71,29 @@ in {
       '';
     };
 
-    enableNixDirenvIntegration = mkEnableOption ''
-      <link
-          xlink:href="https://github.com/nix-community/nix-direnv">nix-direnv</link>,
-          a fast, persistent use_nix implementation for direnv'';
+    nix-direnv = {
+      enable = mkEnableOption ''
+        <link
+            xlink:href="https://github.com/nix-community/nix-direnv">nix-direnv</link>,
+            a fast, persistent use_nix implementation for direnv'';
+      enableFlakes = mkEnableOption "Flake support in nix-direnv";
+    };
+
   };
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.direnv ];
 
-    xdg.configFile."direnv/config.toml" =
-      mkIf (cfg.config != { }) { source = configFile cfg.config; };
+    xdg.configFile."direnv/config.toml" = mkIf (cfg.config != { }) {
+      source = tomlFormat.generate "direnv-config" cfg.config;
+    };
 
     xdg.configFile."direnv/direnvrc" = let
+      package =
+        pkgs.nix-direnv.override { inherit (cfg.nix-direnv) enableFlakes; };
       text = concatStringsSep "\n" (optional (cfg.stdlib != "") cfg.stdlib
-        ++ optional cfg.enableNixDirenvIntegration
-        "source ${pkgs.nix-direnv}/share/nix-direnv/direnvrc");
+        ++ optional cfg.nix-direnv.enable
+        "source ${package}/share/nix-direnv/direnvrc");
     in mkIf (text != "") { inherit text; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
@@ -101,7 +108,7 @@ in {
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      eval (${pkgs.direnv}/bin/direnv hook fish)
+      ${pkgs.direnv}/bin/direnv hook fish | source
     '';
   };
 }

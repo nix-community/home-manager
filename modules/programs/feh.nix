@@ -6,8 +6,22 @@ let
 
   cfg = config.programs.feh;
 
-  disableBinding = func: key: func;
-  enableBinding = func: key: "${func} ${toString key}";
+  bindingsOf = t: with types; attrsOf (nullOr (either t (listOf t)));
+
+  renderBindings = bindings:
+    let
+      enabled = filterAttrs (n: v: v != null) bindings;
+      disabled = filterAttrs (n: v: v == null) bindings;
+      render = mapAttrsToList renderBinding;
+    in concatStringsSep "\n" (render disabled ++ render enabled);
+
+  renderBinding = func: key:
+    if key == null then
+      func
+    else if isList key then
+      concatStringsSep " " ([ func ] ++ map toString key)
+    else
+      "${func} ${toString key}";
 
 in {
   options.programs.feh = {
@@ -15,14 +29,16 @@ in {
 
     buttons = mkOption {
       default = { };
-      type = with types; attrsOf (nullOr (either str int));
+      type = with types; bindingsOf (either str int);
       example = {
         zoom_in = 4;
         zoom_out = "C-4";
+        prev_img = [ 3 "C-3" ];
       };
       description = ''
         Override feh's default mouse button mapping. If you want to disable an
-        action, set its value to null.
+        action, set its value to null. If you want to bind multiple buttons to
+        an action, set its value to a list.
         See <link xlink:href="https://man.finalrewind.org/1/feh/#x425554544f4e53"/> for
         default bindings and available commands.
       '';
@@ -30,14 +46,16 @@ in {
 
     keybindings = mkOption {
       default = { };
-      type = types.attrsOf (types.nullOr types.str);
+      type = bindingsOf types.str;
       example = {
         zoom_in = "plus";
         zoom_out = "minus";
+        prev_img = [ "h" "Left" ];
       };
       description = ''
         Override feh's default keybindings. If you want to disable a keybinding
-        set its value to null.
+        set its value to null. If you want to bind multiple keys to an action,
+        set its value to a list.
         See <link xlink:href="https://man.finalrewind.org/1/feh/#x4b455953"/> for
         default bindings and available commands.
       '';
@@ -53,18 +71,11 @@ in {
 
     home.packages = [ pkgs.feh ];
 
-    xdg.configFile."feh/buttons".text = ''
-      ${concatStringsSep "\n" (mapAttrsToList disableBinding
-        (filterAttrs (n: v: v == null) cfg.buttons))}
-      ${concatStringsSep "\n" (mapAttrsToList enableBinding
-        (filterAttrs (n: v: v != null) cfg.buttons))}
-    '';
+    xdg.configFile."feh/buttons" =
+      mkIf (cfg.buttons != { }) { text = renderBindings cfg.buttons + "\n"; };
 
-    xdg.configFile."feh/keys".text = ''
-      ${concatStringsSep "\n" (mapAttrsToList disableBinding
-        (filterAttrs (n: v: v == null) cfg.keybindings))}
-      ${concatStringsSep "\n" (mapAttrsToList enableBinding
-        (filterAttrs (n: v: v != null) cfg.keybindings))}
-    '';
+    xdg.configFile."feh/keys" = mkIf (cfg.keybindings != { }) {
+      text = renderBindings cfg.keybindings + "\n";
+    };
   };
 }

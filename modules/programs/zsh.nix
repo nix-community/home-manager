@@ -22,6 +22,10 @@ let
     mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases
   );
 
+  dirHashesStr = concatStringsSep "\n" (
+    mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
+  );
+
   zdotdir = "$HOME/" + cfg.dotDir;
 
   bindkeyCommands = {
@@ -52,8 +56,22 @@ let
         default = if versionAtLeast stateVersion "20.03"
           then "$HOME/.zsh_history"
           else relToDotDir ".zsh_history";
+        defaultText = literalExample ''
+          "$HOME/.zsh_history" if state version ≥ 20.03,
+          "$ZDOTDIR/.zsh_history" otherwise
+        '';
         example = literalExample ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
         description = "History file location";
+      };
+
+      ignorePatterns = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = literalExample ''[ "rm *" "pkill *" ]'';
+        description = ''
+          Do not enter command lines into the history list
+          if they match any one of the given shell patterns.
+        '';
       };
 
       ignoreDups = mkOption {
@@ -234,6 +252,21 @@ in
         type = types.attrsOf types.str;
       };
 
+      dirHashes = mkOption {
+        default = {};
+        example = literalExample ''
+          {
+            docs  = "$HOME/Documents";
+            vids  = "$HOME/Videos";
+            dl    = "$HOME/Downloads";
+          }
+        '';
+        description = ''
+          An attribute set that adds to named directory hash table.
+        '';
+        type = types.attrsOf types.str;
+      };
+
       enableCompletion = mkOption {
         default = true;
         description = ''
@@ -246,9 +279,20 @@ in
         type = types.bool;
       };
 
+      completionInit = mkOption {
+        default = "autoload -U compinit && compinit";
+        description = "Initialization commands to run when completion is enabled.";
+        type = types.lines;
+      };
+
       enableAutosuggestions = mkOption {
         default = false;
         description = "Enable zsh autosuggestions";
+      };
+
+      enableSyntaxHighlighting = mkOption {
+        default = false;
+        description = "Enable zsh syntax highlighting";
       };
 
       history = mkOption {
@@ -281,6 +325,12 @@ in
         default = "";
         type = types.lines;
         description = "Extra commands that should be added to <filename>.zshrc</filename>.";
+      };
+
+      initExtraFirst = mkOption {
+        default = "";
+        type = types.lines;
+        description = "Commands that should be added to top of <filename>.zshrc</filename>.";
       };
 
       envExtra = mkOption {
@@ -398,6 +448,8 @@ in
         ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
 
       home.file."${relToDotDir ".zshrc"}".text = ''
+        ${cfg.initExtraFirst}
+
         typeset -U path cdpath fpath manpath
 
         ${optionalString (cfg.cdpath != []) ''
@@ -424,15 +476,19 @@ in
           fpath+="$HOME/${pluginsDir}/${plugin.name}"
         '') cfg.plugins)}
 
-        # Oh-My-Zsh calls compinit during initialization,
-        # calling it twice causes sight start up slowdown
+        # Oh-My-Zsh/Prezto calls compinit during initialization,
+        # calling it twice causes slight start up slowdown
         # as all $fpath entries will be traversed again.
-        ${optionalString (cfg.enableCompletion && !cfg.oh-my-zsh.enable)
-          "autoload -U compinit && compinit"
+        ${optionalString (cfg.enableCompletion && !cfg.oh-my-zsh.enable && !cfg.prezto.enable)
+          cfg.completionInit
         }
 
         ${optionalString cfg.enableAutosuggestions
           "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+        }
+
+        ${optionalString cfg.enableSyntaxHighlighting
+          "source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
         }
 
         # Environment variables
@@ -455,16 +511,20 @@ in
             source $ZSH/oh-my-zsh.sh
         ''}
 
+        ${optionalString cfg.prezto.enable
+            (builtins.readFile "${pkgs.zsh-prezto}/share/zsh-prezto/runcoms/zshrc")}
+
         ${concatStrings (map (plugin: ''
-          if [ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]; then
+          if [[ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]]; then
             source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
           fi
         '') cfg.plugins)}
 
         # History options should be set in .zshrc and after oh-my-zsh sourcing.
-        # See https://github.com/rycee/home-manager/issues/177.
+        # See https://github.com/nix-community/home-manager/issues/177.
         HISTSIZE="${toString cfg.history.size}"
         SAVEHIST="${toString cfg.history.save}"
+        ${optionalString (cfg.history.ignorePatterns != []) "HISTORY_IGNORE=${lib.escapeShellArg "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"}"}
         ${if versionAtLeast config.home.stateVersion "20.03"
           then ''HISTFILE="${cfg.history.path}"''
           else ''HISTFILE="$HOME/${cfg.history.path}"''}
@@ -485,12 +545,15 @@ in
 
         # Global Aliases
         ${globalAliasesStr}
+
+        # Named Directory Hashes
+        ${dirHashesStr}
       '';
     }
 
     (mkIf cfg.oh-my-zsh.enable {
       # Make sure we create a cache directory since some plugins expect it to exist
-      # See: https://github.com/rycee/home-manager/issues/761
+      # See: https://github.com/nix-community/home-manager/issues/761
       home.file."${config.xdg.cacheHome}/oh-my-zsh/.keep".text = "";
     })
 

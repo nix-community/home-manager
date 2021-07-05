@@ -10,9 +10,34 @@ with lib;
       enable = mkEnableOption "Syncthing continuous file synchronization";
 
       tray = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether to enable QSyncthingTray service.";
+        type = with types;
+          either bool (submodule {
+            options = {
+              enable = mkOption {
+                type = types.bool;
+                default = false;
+                description = "Whether to enable a syncthing tray service.";
+              };
+
+              command = mkOption {
+                type = types.str;
+                default = "syncthingtray";
+                defaultText = literalExample "syncthingtray";
+                example = literalExample "qsyncthingtray";
+                description = "Syncthing tray command to use.";
+              };
+
+              package = mkOption {
+                type = types.package;
+                default = pkgs.syncthingtray-minimal;
+                defaultText = literalExample "pkgs.syncthingtray-minimal";
+                example = literalExample "pkgs.qsyncthingtray";
+                description = "Syncthing tray package to use.";
+              };
+            };
+          });
+        default = { enable = false; };
+        description = "Syncthing tray service configuration.";
       };
     };
   };
@@ -43,28 +68,49 @@ with lib;
       };
     })
 
-    (mkIf config.services.syncthing.tray {
-      systemd.user.services = {
-        qsyncthingtray = {
-          Unit = {
-            Description = "QSyncthingTray";
-            After = [
-              "graphical-session-pre.target"
-              "polybar.service"
-              "taffybar.service"
-              "stalonetray.service"
-            ];
-            PartOf = [ "graphical-session.target" ];
-          };
+    (mkIf (isAttrs config.services.syncthing.tray
+      && config.services.syncthing.tray.enable) {
+        systemd.user.services = {
+          ${config.services.syncthing.tray.package.pname} = {
+            Unit = {
+              Description = config.services.syncthing.tray.package.pname;
+              Requires = [ "tray.target" ];
+              After = [ "graphical-session-pre.target" "tray.target" ];
+              PartOf = [ "graphical-session.target" ];
+            };
 
-          Service = {
-            Environment = "PATH=${config.home.profileDirectory}/bin";
-            ExecStart = "${pkgs.qsyncthingtray}/bin/QSyncthingTray";
-          };
+            Service = {
+              ExecStart =
+                "${config.services.syncthing.tray.package}/bin/${config.services.syncthing.tray.command}";
+            };
 
-          Install = { WantedBy = [ "graphical-session.target" ]; };
+            Install = { WantedBy = [ "graphical-session.target" ]; };
+          };
         };
-      };
-    })
+      })
+
+    # deprecated
+    (mkIf (isBool config.services.syncthing.tray
+      && config.services.syncthing.tray) {
+        systemd.user.services = {
+          "syncthingtray" = {
+            Unit = {
+              Description = "syncthingtray";
+              Requires = [ "tray.target" ];
+              After = [ "graphical-session-pre.target" "tray.target" ];
+              PartOf = [ "graphical-session.target" ];
+            };
+
+            Service = {
+              ExecStart = "${pkgs.syncthingtray-minimal}/bin/syncthingtray";
+            };
+
+            Install = { WantedBy = [ "graphical-session.target" ]; };
+          };
+        };
+        warnings = [
+          "Specifying 'services.syncthing.tray' as a boolean is deprecated, set 'services.syncthing.tray.enable' instead. See https://github.com/nix-community/home-manager/pull/1257."
+        ];
+      })
   ];
 }

@@ -1,0 +1,5 @@
+[[snippets]]
+command = "git log -p -G <regex>"
+description = "git: search full history for regex"
+output = ""
+tag = ["git", "regex"]

@@ -6,6 +6,7 @@
 
     accounts = {
       "hm@example.com" = {
+        primary = true;
         address = "hm@example.com";
         userName = "home.manager";
         realName = "H. M. Test";

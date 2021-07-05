@@ -6,6 +6,14 @@ let
 
   cfg = config.programs.gnome-terminal;
 
+  eraseBinding = types.enum [
+    "auto"
+    "ascii-backspace"
+    "ascii-delete"
+    "delete-sequence"
+    "tty"
+  ];
+
   backForeSubModule = types.submodule ({ ... }: {
     options = {
       foreground = mkOption {
@@ -136,17 +144,123 @@ let
         type = types.bool;
         description = "Run command as a login shell.";
       };
+
+      backspaceBinding = mkOption {
+        default = "ascii-delete";
+        type = eraseBinding;
+        description = ''
+          Which string the terminal should send to an application when the user
+          presses the <emphasis>Backspace</emphasis> key.
+
+          <variablelist>
+            <varlistentry>
+              <term><literal>auto</literal></term>
+              <listitem><para>
+                Attempt to determine the right value from the terminal's IO settings.
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>ascii-backspace</literal></term>
+              <listitem><para>
+                Send an ASCII backspace character (0x08).
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>ascii-delete</literal></term>
+              <listitem><para>
+                Send an ASCII delete character (0x7F).
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>delete-sequence</literal></term>
+              <listitem><para>
+                Send the <quote>@7</quote> control sequence.
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>tty</literal></term>
+              <listitem><para>
+                Send terminal’s <quote>erase</quote> setting.
+              </para></listitem>
+            </varlistentry>
+          </variablelist>
+        '';
+      };
+
+      boldIsBright = mkOption {
+        default = null;
+        type = types.nullOr types.bool;
+        description = "Whether bold text is shown in bright colors.";
+      };
+
+      deleteBinding = mkOption {
+        default = "delete-sequence";
+        type = eraseBinding;
+        description = ''
+          Which string the terminal should send to an application when the user
+          presses the <emphasis>Delete</emphasis> key.
+
+          <variablelist>
+            <varlistentry>
+              <term><literal>auto</literal></term>
+              <listitem><para>
+                Send the <quote>@7</quote> control sequence.
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>ascii-backspace</literal></term>
+              <listitem><para>
+                Send an ASCII backspace character (0x08).
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>ascii-delete</literal></term>
+              <listitem><para>
+                Send an ASCII delete character (0x7F).
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>delete-sequence</literal></term>
+              <listitem><para>
+                Send the <quote>@7</quote> control sequence.
+              </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>tty</literal></term>
+              <listitem><para>
+                Send terminal’s <quote>erase</quote> setting.
+              </para></listitem>
+            </varlistentry>
+          </variablelist>
+        '';
+      };
+
+      audibleBell = mkOption {
+        default = true;
+        type = types.bool;
+        description = "Turn on/off the terminal's bell.";
+      };
+
+      transparencyPercent = mkOption {
+        default = null;
+        type = types.nullOr (types.ints.between 0 100);
+        description = "Background transparency in percent.";
+      };
     };
   });
 
   buildProfileSet = pcfg:
     {
+      audible-bell = pcfg.audibleBell;
       visible-name = pcfg.visibleName;
+      scroll-on-output = pcfg.scrollOnOutput;
       scrollbar-policy = if pcfg.showScrollbar then "always" else "never";
       scrollback-lines = pcfg.scrollbackLines;
       cursor-shape = pcfg.cursorShape;
       cursor-blink-mode = pcfg.cursorBlinkMode;
       login-shell = pcfg.loginShell;
+      backspace-binding = pcfg.backspaceBinding;
+      delete-binding = pcfg.deleteBinding;
     } // (if (pcfg.customCommand != null) then {
       use-custom-command = true;
       custom-command = pcfg.customCommand;
@@ -172,7 +286,9 @@ let
       } else {
         bold-color-same-as-fg = false;
         bold-color = pcfg.colors.boldColor;
-      }) // (if (pcfg.colors.cursor != null) then {
+      }) // optionalAttrs (pcfg.boldIsBright != null) {
+        bold-is-bright = pcfg.boldIsBright;
+      } // (if (pcfg.colors.cursor != null) then {
         cursor-colors-set = true;
         cursor-foreground-color = pcfg.colors.cursor.foreground;
         cursor-background-color = pcfg.colors.cursor.background;
@@ -184,10 +300,14 @@ let
         highlight-background-color = pcfg.colors.highlight.background;
       } else {
         highlight-colors-set = false;
-      })));
+      }) // optionalAttrs (pcfg.transparencyPercent != null) {
+        background-transparency-percent = pcfg.transparencyPercent;
+        use-theme-transparency = false;
+        use-transparent-background = true;
+      }));
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with maintainers; [ kamadorueda rycee ];
 
   options = {
     programs.gnome-terminal = {
@@ -214,7 +334,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.gnome3.gnome-terminal ];
+    home.packages = [ pkgs.gnome.gnome-terminal ];
 
     dconf.settings = let dconfPath = "org/gnome/terminal/legacy";
     in {

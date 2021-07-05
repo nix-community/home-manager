@@ -6,6 +6,8 @@ let
 
   cfg = config.services.xsuspender;
 
+  iniFormat = pkgs.formats.ini { };
+
   xsuspenderOptions = types.submodule {
     options = {
       matchWmClassContains = mkOption {
@@ -139,7 +141,7 @@ in {
       };
 
       iniContent = mkOption {
-        type = types.attrsOf types.attrs;
+        type = iniFormat.type;
         internal = true;
       };
     };
@@ -170,7 +172,8 @@ in {
     # To make the xsuspender tool available.
     home.packages = [ pkgs.xsuspender ];
 
-    xdg.configFile."xsuspender.conf".text = generators.toINI { } cfg.iniContent;
+    xdg.configFile."xsuspender.conf".source =
+      iniFormat.generate "xsuspender.conf" cfg.iniContent;
 
     systemd.user.services.xsuspender = {
       Unit = {

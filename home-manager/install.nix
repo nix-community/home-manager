@@ -45,7 +45,7 @@ runCommand "home-manager-install" {
       # You can update Home Manager without changing this value. See
       # the Home Manager release notes for a list of state version
       # changes in each release.
-      home.stateVersion = "20.09";
+      home.stateVersion = "21.11";
     }
     EOF
     fi
@@ -71,7 +71,7 @@ runCommand "home-manager-install" {
 
     Uh oh, the installation failed! Please create an issue at
 
-        https://github.com/rycee/home-manager/issues
+        https://github.com/nix-community/home-manager/issues
 
     if the error seems to be the fault of Home Manager.
     EOF

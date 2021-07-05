@@ -17,7 +17,7 @@ let
       inherit (commonOptions)
         fonts window floating focus assigns workspaceLayout
         workspaceAutoBackAndForth modifier keycodebindings colors bars startup
-        gaps menu terminal;
+        gaps menu terminal defaultWorkspace workspaceOutputAssign;
 
       left = mkOption {
         type = types.str;
@@ -153,7 +153,12 @@ let
         default = { };
         example = { "*" = { xkb_variant = "dvorak"; }; };
         description = ''
-          An attribute set that defines input modules. See man sway_input for options.
+          An attribute set that defines input modules. See
+          <citerefentry>
+            <refentrytitle>sway-input</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry>
+          for options.
         '';
       };
 
@@ -162,7 +167,26 @@ let
         default = { };
         example = { "HDMI-A-2" = { bg = "~/path/to/background.png fill"; }; };
         description = ''
-          An attribute set that defines output modules. See man sway_output for options.
+          An attribute set that defines output modules. See
+          <citerefentry>
+            <refentrytitle>sway-output</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry>
+          for options.
+        '';
+      };
+
+      seat = mkOption {
+        type = types.attrsOf (types.attrsOf types.str);
+        default = { };
+        example = { "*" = { hide_cursor = "when-typing enable"; }; };
+        description = ''
+          An attribute set that defines seat modules. See
+          <citerefentry>
+            <refentrytitle>sway-input</refentrytitle>
+            <manvolnum>5</manvolnum>
+          </citerefentry>
+          for options.
         '';
       };
 
@@ -221,36 +245,28 @@ let
 
   inherit (commonFunctions)
     keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
-    floatingCriteriaStr windowCommandsStr colorSetStr;
+    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
+    fontConfigStr keybindingDefaultWorkspace keybindingsRest workspaceOutputStr;
 
   startupEntryStr = { command, always, ... }: ''
     ${if always then "exec_always" else "exec"} ${command}
   '';
 
-  inputStr = name: attrs: ''
-    input "${name}" {
+  moduleStr = moduleType: name: attrs: ''
+    ${moduleType} "${name}" {
     ${concatStringsSep "\n"
     (mapAttrsToList (name: value: "${name} ${value}") attrs)}
     }
   '';
-
-  outputStr = name: attrs: ''
-    output "${name}" {
-    ${concatStringsSep "\n"
-    (mapAttrsToList (name: value: "${name} ${value}") attrs)}
-    }
-  '';
+  inputStr = moduleStr "input";
+  outputStr = moduleStr "output";
+  seatStr = moduleStr "seat";
 
   configFile = pkgs.writeText "sway.conf" ((if cfg.config != null then
     with cfg.config; ''
-      font pango:${concatStringsSep ", " fonts}
+      ${fontConfigStr fonts}
       floating_modifier ${floating.modifier}
-      default_border ${if window.titlebar then "normal" else "pixel"} ${
-        toString window.border
-      }
-      default_floating_border ${
-        if floating.titlebar then "normal" else "pixel"
-      } ${toString floating.border}
+      ${windowBorderString window floating}
       hide_edge_borders ${window.hideEdgeBorders}
       focus_wrapping ${if focus.forceWrapping then "yes" else "no"}
       focus_follows_mouse ${focus.followMouse}
@@ -269,20 +285,30 @@ let
       client.background ${colors.background}
 
       ${keybindingsStr {
-        inherit keybindings;
+        keybindings = keybindingDefaultWorkspace;
+        bindsymArgs =
+          lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+      }}
+      ${keybindingsStr {
+        keybindings = keybindingsRest;
         bindsymArgs =
           lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
       }}
       ${keycodebindingsStr keycodebindings}
-      ${concatStringsSep "\n" (mapAttrsToList inputStr input)}
-      ${concatStringsSep "\n" (mapAttrsToList outputStr output)}
-      ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
-      ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
-      ${concatStringsSep "\n" (map barStr bars)}
-      ${optionalString (gaps != null) gapsStr}
-      ${concatStringsSep "\n" (map floatingCriteriaStr floating.criteria)}
-      ${concatStringsSep "\n" (map windowCommandsStr window.commands)}
-      ${concatStringsSep "\n" (map startupEntryStr startup)}
+      ${concatStringsSep "\n" (
+        # Append all of the lists together to avoid unnecessary whitespace.
+        mapAttrsToList inputStr input # inputs
+        ++ mapAttrsToList outputStr output # outputs
+        ++ mapAttrsToList seatStr seat # seats
+        ++ mapAttrsToList modeStr modes # modes
+        ++ mapAttrsToList assignStr assigns # assigns
+        ++ map barStr bars # bars
+        ++ optional (gaps != null) gapsStr # gaps
+        ++ map floatingCriteriaStr floating.criteria # floating
+        ++ map windowCommandsStr window.commands # window commands
+        ++ map startupEntryStr startup # startup
+        ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
+      )}
     ''
   else
     "") + "\n" + (if cfg.systemdIntegration then ''
@@ -298,7 +324,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.alexarice ];
+  meta.maintainers = with maintainers; [ alexarice sumnerevans ];
 
   options.wayland.windowManager.sway = {
     enable = mkEnableOption "sway wayland compositor";
@@ -390,27 +416,38 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = optional (cfg.package != null) cfg.package
-      ++ optional cfg.xwayland pkgs.xwayland;
-    xdg.configFile."sway/config" = {
-      source = configFile;
-      onChange = ''
-        swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep -x sway).sock
-        if [ -S $swaySocket ]; then
-          echo "Reloading sway"
-          $DRY_RUN_CMD ${pkgs.sway}/bin/swaymsg -s $swaySocket reload
-        fi
-      '';
-    };
-    systemd.user.targets.sway-session = mkIf cfg.systemdIntegration {
-      Unit = {
-        Description = "sway compositor session";
-        Documentation = [ "man:systemd.special(7)" ];
-        BindsTo = [ "graphical-session.target" ];
-        Wants = [ "graphical-session-pre.target" ];
-        After = [ "graphical-session-pre.target" ];
+  config = mkIf cfg.enable (mkMerge [
+    (mkIf (cfg.config != null) {
+      warnings = (optional (isList cfg.config.fonts)
+        "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
+        ++ flatten (map (b:
+          optional (isList b.fonts)
+          "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
+          cfg.config.bars);
+    })
+
+    {
+      home.packages = optional (cfg.package != null) cfg.package
+        ++ optional cfg.xwayland pkgs.xwayland;
+      xdg.configFile."sway/config" = {
+        source = configFile;
+        onChange = ''
+          swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep -x sway || ${pkgs.coreutils}/bin/true).sock
+          if [ -S $swaySocket ]; then
+            echo "Reloading sway"
+            $DRY_RUN_CMD ${pkgs.sway}/bin/swaymsg -s $swaySocket reload
+          fi
+        '';
       };
-    };
-  };
+      systemd.user.targets.sway-session = mkIf cfg.systemdIntegration {
+        Unit = {
+          Description = "sway compositor session";
+          Documentation = [ "man:systemd.special(7)" ];
+          BindsTo = [ "graphical-session.target" ];
+          Wants = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session-pre.target" ];
+        };
+      };
+    }
+  ]);
 }

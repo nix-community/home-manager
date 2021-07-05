@@ -9,6 +9,36 @@ let
   eitherStrBoolIntList = with types;
     either str (either bool (either int (listOf str)));
 
+  # Convert a key/val pair to the insane format that polybar uses.
+  # Each input key/val pair may return several output key/val pairs.
+  convertPolybarKeyVal = key: val:
+    # Convert { foo = [ "a" "b" ]; }
+    # to {
+    #   foo-0 = "a";
+    #   foo-1 = "b";
+    # }
+    if isList val then
+      concatLists (imap0 (i: convertPolybarKeyVal "${key}-${toString i}") val)
+      # Convert {
+      #   foo.text = "a";
+      #   foo.font = 1;
+      # } to {
+      #   foo = "a";
+      #   foo-font = 1;
+      # }
+    else if isAttrs val && !lib.isDerivation val then
+      concatLists (mapAttrsToList
+        (k: convertPolybarKeyVal (if k == "text" then key else "${key}-${k}"))
+        val)
+      # Base case
+    else
+      [ (nameValuePair key val) ];
+
+  convertPolybarSection = _: attrs:
+    listToAttrs (concatLists (mapAttrsToList convertPolybarKeyVal attrs));
+
+  # Converts an attrset to INI text, quoting values as expected by polybar.
+  # This does no more fancy conversion.
   toPolybarIni = generators.toINI {
     mkKeyValue = key: value:
       let
@@ -24,8 +54,11 @@ let
       in "${key}=${value'}";
   };
 
-  configFile = pkgs.writeText "polybar.conf"
-    (toPolybarIni cfg.config + "\n" + cfg.extraConfig);
+  configFile = pkgs.writeText "polybar.conf" ''
+    ${toPolybarIni cfg.config}
+    ${toPolybarIni (mapAttrs convertPolybarSection cfg.settings)}
+    ${cfg.extraConfig}
+  '';
 
 in {
   options = {
@@ -54,6 +87,7 @@ in {
         description = ''
           Polybar configuration. Can be either path to a file, or set of attributes
           that will be used to create the final configuration.
+          See also <option>services.polybar.settings</option> for a more nix-friendly format.
         '';
         default = { };
         example = literalExample ''
@@ -72,6 +106,56 @@ in {
               date = "%d.%m.%y";
               time = "%H:%M";
               label = "%time%  %date%";
+            };
+          }
+        '';
+      };
+
+      settings = mkOption {
+        type = types.attrsOf types.attrs;
+        description = ''
+          Polybar configuration. This takes a nix attrset and converts it to the
+          strange data format that polybar uses.
+          Each entry will be converted to a section in the output file.
+          Several things are treated specially: nested keys are converted
+          to dash-separated keys; the special <literal>text</literal> key is ignored as a nested key,
+          to allow mixing different levels of nesting; and lists are converted to
+          polybar's <literal>foo-0, foo-1, ...</literal> format.
+          </para><para>
+          For example:
+          <programlisting language="nix">
+          "module/volume" = {
+            type = "internal/pulseaudio";
+            format.volume = "&lt;ramp-volume&gt; &lt;label-volume&gt;";
+            label.muted.text = "🔇";
+            label.muted.foreground = "#666";
+            ramp.volume = ["🔈" "🔉" "🔊"];
+            click.right = "pavucontrol &amp;";
+          }
+          </programlisting>
+          becomes:
+          <programlisting language="ini">
+          [module/volume]
+          type=internal/pulseaudio
+          format-volume=&lt;ramp-volume&gt; &lt;label-volume&gt;
+          label-muted=🔇
+          label-muted-foreground=#666
+          ramp-volume-0=🔈
+          ramp-volume-1=🔉
+          ramp-volume-2=🔊
+          click-right=pavucontrol &amp;
+          </programlisting>
+        '';
+        default = { };
+        example = literalExample ''
+          {
+            "module/volume" = {
+              type = "internal/pulseaudio";
+              format.volume = "<ramp-volume> <label-volume>";
+              label.muted.text = "🔇";
+              label.muted.foreground = "#666";
+              ramp.volume = ["🔈" "🔉" "🔊"];
+              click.right = "pavucontrol &";
             };
           }
         '';
@@ -113,8 +197,7 @@ in {
     systemd.user.services.polybar = {
       Unit = {
         Description = "Polybar status bar";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
+        PartOf = [ "tray.target" ];
         X-Restart-Triggers =
           [ "${config.xdg.configFile."polybar/config".source}" ];
       };
@@ -128,7 +211,7 @@ in {
         Restart = "on-failure";
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = { WantedBy = [ "tray.target" ]; };
     };
   };
 

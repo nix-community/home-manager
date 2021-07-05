@@ -6,6 +6,8 @@ with lib;
   imports = [ ../../accounts/email-test-accounts.nix ];
 
   config = {
+    accounts.email.accounts.hm-account.smtp.tls.certificatesFile =
+      "/etc/test/certificates.crt";
     programs.git = {
       enable = true;
       package = pkgs.gitMinimal;
@@ -18,7 +20,7 @@ with lib;
     nmt.script = ''
       function assertGitConfig() {
         local value
-        value=$(${pkgs.git}/bin/git config \
+        value=$(${pkgs.gitMinimal}/bin/git config \
           --file $TESTED/home-files/.config/git/config \
           --get $1)
         if [[ $value != $2 ]]; then

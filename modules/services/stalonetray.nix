@@ -56,11 +56,10 @@ in {
       systemd.user.services.stalonetray = {
         Unit = {
           Description = "Stalonetray system tray";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
+          PartOf = [ "tray.target" ];
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = { WantedBy = [ "tray.target" ]; };
 
         Service = {
           ExecStart = "${cfg.package}/bin/stalonetray";

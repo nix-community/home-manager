@@ -14,6 +14,7 @@ in {
   };
 
   config = mkIf cfg.enable {
+    home.packages = [ pkgs.rsibreak ];
     systemd.user.services.rsibreak = {
       Unit = {
         Description = "RSI break timer";

@@ -33,7 +33,7 @@ let
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = literalExample "pkgs.gnome3.gnome_themes_standard";
+        example = literalExample "pkgs.gnome.gnome_themes_standard";
         description = ''
           Package providing the theme. This package will be installed
           to your profile. If <literal>null</literal> then the theme
@@ -92,6 +92,18 @@ in {
             <filename>~/.gtkrc-2.0</filename>.
           '';
         };
+
+        configLocation = mkOption {
+          type = types.path;
+          default = "${config.home.homeDirectory}/.gtkrc-2.0";
+          defaultText =
+            literalExample ''"''${config.home.homeDirectory}/.gtkrc-2.0"'';
+          example =
+            literalExample ''"''${config.xdg.configHome}/gtk-2.0/gtkrc"'';
+          description = ''
+            The location to put the GTK configuration file.
+          '';
+        };
       };
 
       gtk3 = {
@@ -128,14 +140,22 @@ in {
   };
 
   config = mkIf cfg.enable (let
-    ini = optionalAttrs (cfg.font != null) { gtk-font-name = cfg.font.name; }
-      // optionalAttrs (cfg.theme != null) { gtk-theme-name = cfg.theme.name; }
+    ini = optionalAttrs (cfg.font != null) {
+      gtk-font-name = let
+        fontSize =
+          optionalString (cfg.font.size != null) " ${toString cfg.font.size}";
+      in "${cfg.font.name}" + fontSize;
+    } // optionalAttrs (cfg.theme != null) { gtk-theme-name = cfg.theme.name; }
       // optionalAttrs (cfg.iconTheme != null) {
         gtk-icon-theme-name = cfg.iconTheme.name;
       };
 
-    dconfIni = optionalAttrs (cfg.font != null) { font-name = cfg.font.name; }
-      // optionalAttrs (cfg.theme != null) { gtk-theme = cfg.theme.name; }
+    dconfIni = optionalAttrs (cfg.font != null) {
+      font-name = let
+        fontSize =
+          optionalString (cfg.font.size != null) " ${toString cfg.font.size}";
+      in "${cfg.font.name}" + fontSize;
+    } // optionalAttrs (cfg.theme != null) { gtk-theme = cfg.theme.name; }
       // optionalAttrs (cfg.iconTheme != null) {
         icon-theme = cfg.iconTheme.name;
       };
@@ -146,9 +166,11 @@ in {
     home.packages = optionalPackage cfg.font ++ optionalPackage cfg.theme
       ++ optionalPackage cfg.iconTheme;
 
-    home.file.".gtkrc-2.0".text =
+    home.file.${cfg2.configLocation}.text =
       concatStringsSep "\n" (mapAttrsToList formatGtk2Option ini) + "\n"
       + cfg2.extraConfig;
+
+    home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
 
     xdg.configFile."gtk-3.0/settings.ini".text =
       toGtk3Ini { Settings = ini // cfg3.extraConfig; };

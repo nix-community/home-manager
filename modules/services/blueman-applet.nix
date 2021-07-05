@@ -24,7 +24,8 @@ with lib;
     systemd.user.services.blueman-applet = {
       Unit = {
         Description = "Blueman applet";
-        After = [ "graphical-session-pre.target" ];
+        Requires = [ "tray.target" ];
+        After = [ "graphical-session-pre.target" "tray.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

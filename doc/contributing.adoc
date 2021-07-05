@@ -1,14 +1,14 @@
 [[ch-contributing]]
 == Contributing
 
-:open-issues: https://github.com/rycee/home-manager/issues
-:new-issue: https://github.com/rycee/home-manager/issues/new
+:open-issues: https://github.com/nix-community/home-manager/issues
+:new-issue: https://github.com/nix-community/home-manager/issues/new
 :fork-a-repo: https://help.github.com/articles/fork-a-repo/
 :create-a-pull-request: https://help.github.com/articles/creating-a-pull-request/
 :seven-rules: https://chris.beams.io/posts/git-commit/#seven-rules
-:news-nix: https://github.com/rycee/home-manager/blob/master/modules/misc/news.nix
+:news-nix: https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix
 :nixfmt: https://github.com/serokell/nixfmt/
-:example-commit-message: https://github.com/rycee/home-manager/commit/69f8e47e9e74c8d3d060ca22e18246b7f7d988ef
+:example-commit-message: https://github.com/nix-community/home-manager/commit/69f8e47e9e74c8d3d060ca22e18246b7f7d988ef
 
 Contributions to Home Manager are very welcome. To make the process as smooth as possible for both you and the Home Manager maintainers we provide some guidelines that we ask you to follow. See <<sec-contrib-getting-started>> for information on how to set up a suitable development environment and <<sec-guidelines>> for the actual guidelines.
 
@@ -44,9 +44,10 @@ The first option is good if you only temporarily want to use your clone.
 
 [[sec-guidelines]]
 === Guidelines
-:irc-home-manager: https://webchat.freenode.net/?url=irc%3A%2F%2Firc.freenode.net%2Fhome-manager
+:irc-home-manager: https://webchat.oftc.net/?channels=home-manager
 :valuable-options: https://github.com/Infinisil/rfcs/blob/config-option/rfcs/0042-config-option.md#valuable-options
 :rfc-42: https://github.com/Infinisil/rfcs/blob/config-option/rfcs/0042-config-option.md
+:assertions: https://nixos.org/manual/nixos/stable/index.html#sec-assertions
 
 If your contribution satisfy the following rules then there is a good chance it will be merged without too much trouble. The rules are enforced by the Home Manager maintainers and to a lesser extent the Home Manager CI system.
 
@@ -55,7 +56,9 @@ If you are uncertain how these rules affect the change you would like to make th
 [[sec-guidelines-back-compat]]
 ==== Maintain backward compatibility
 
-Your contribution should never cause another user's existing configuration to break. Home Manager is used in many different environments and you should consider how you change may effect others. For example,
+Your contribution should not cause another user's existing configuration to break unless there is a very good reason and the change should be announced to the user through an {assertions}[assertion] or similar.
+
+Remember that Home Manager is used in many different environments and you should consider how your change may effect others. For example,
 
 - Does your change work for people that do not use NixOS? Consider other GNU/Linux distributions and macOS.
 - Does your change work for people whose configuration is built on one system and deployed on another system?
@@ -88,7 +91,7 @@ All contributed code _must_ pass the test suite.
 ==== Add relevant documentation
 :docbook: https://tdg.docbook.org/
 :asciidoc: https://asciidoc.org/
-:docbook-rocks: https://docbook.rocks/
+:docbook-rocks: https://berbiche.github.io/docbook.rocks/
 
 Many code changes require changing the documentation as well. Module options should be documented with DocBook. See {docbook-rocks}[DocBook rocks!] for a quick introduction and {docbook}[DocBook 5: The Definitive Guide] for in-depth information of DocBook. Home Manager is itself documented using a combination of DocBook and {asciidoc}[AsciiDoc]. All text is hosted in Home Manager's Git repository.
 
@@ -160,7 +163,7 @@ The commit messages should follow the {seven-rules}[seven rules]. We also ask yo
 {long description}
 ----
 
-where `{component}` refers to the code component (or module) your change affects, `{description}` is a very brief description of your change, and `{long description}` is an optional clarifying description. Note, `{description}` should start with a lower case letter. As a rare exception, if there is no clear component, or your change affects many components, then the `{component}` part is optional. See <<ex-commit-message>> for a commit message that fulfills these requirements.
+where `{component}` refers to the code component (or module) your change affects, `{description}` is a very brief description of your change, and `{long description}` is an optional clarifying description. As a rare exception, if there is no clear component, or your change affects many components, then the `{component}` part is optional. See <<ex-commit-message>> for a commit message that fulfills these requirements.
 
 [[ex-commit-message]]
 .Compliant commit message

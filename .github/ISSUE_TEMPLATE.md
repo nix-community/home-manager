@@ -1,8 +1,16 @@
+<!--
+
+Don't forget to check if there already exists a relevant issue before
+creating a new one.
+
+-->
+
 ### Issue description
 
 <!--
 Please describe the issue. For support and help please use the IRC
-channel #home-manager @ freenode.net instead.
+channel #home-manager at irc.oftc.net or Matrix room
+https://matrix.to/#/#hm:rycee.net instead.
 -->
 
 ### Meta

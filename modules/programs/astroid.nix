@@ -7,6 +7,8 @@ let
 
   cfg = config.programs.astroid;
 
+  jsonFormat = pkgs.formats.json { };
+
   astroidAccounts =
     filterAttrs (n: v: v.astroid.enable) config.accounts.email.accounts;
 
@@ -36,19 +38,18 @@ let
     } // astroid.extraConfig;
 
   # See https://github.com/astroidmail/astroid/wiki/Configuration-Reference
-  configFile = mailAccounts:
-    let
-      template = fromJSON (readFile ./astroid-config-template.json);
-      astroidConfig = foldl' recursiveUpdate template [
-        {
-          astroid.notmuch_config = "${config.xdg.configHome}/notmuch/notmuchrc";
-          accounts = mapAttrs (n: accountAttr) astroidAccounts;
-          crypto.gpg.path = "${pkgs.gnupg}/bin/gpg";
-        }
-        cfg.extraConfig
-        cfg.externalEditor
-      ];
-    in builtins.toJSON astroidConfig;
+  finalConfig = let
+    template = fromJSON (readFile ./astroid-config-template.json);
+    astroidConfig = foldl' recursiveUpdate template [
+      {
+        astroid.notmuch_config = "${config.xdg.configHome}/notmuch/notmuchrc";
+        accounts = mapAttrs (n: accountAttr) astroidAccounts;
+        crypto.gpg.path = "${pkgs.gnupg}/bin/gpg";
+      }
+      cfg.extraConfig
+      cfg.externalEditor
+    ];
+  in astroidConfig;
 
 in {
   options = {
@@ -90,9 +91,13 @@ in {
       };
 
       extraConfig = mkOption {
-        type = types.attrs;
+        type = jsonFormat.type;
         default = { };
-        example = { poll.interval = 0; };
+        example = literalExample ''
+          {
+            poll.interval = 0;
+          }
+        '';
         description = ''
           JSON config that will override the default Astroid configuration.
         '';
@@ -107,13 +112,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ pkgs.astroid ];
 
-    xdg.configFile."astroid/config".source = pkgs.runCommand "out.json" {
-      json = configFile astroidAccounts;
-      preferLocalBuild = true;
-      allowSubstitutes = false;
-    } ''
-      echo -n "$json" | ${pkgs.jq}/bin/jq . > $out
-    '';
+    xdg.configFile."astroid/config".source =
+      jsonFormat.generate "astroid-config" finalConfig;
 
     xdg.configFile."astroid/poll.sh" = {
       executable = true;

@@ -62,6 +62,7 @@
 # generations
 # help
 # news
+# option
 # packages
 # remove-generations
 # switch
@@ -86,6 +87,7 @@
 #
 #   help
 #   edit
+#   option
 #   build
 #   switch
 #   generations
@@ -130,6 +132,9 @@
 #   help         Print this help
 #
 #   edit         Open the home configuration in $EDITOR
+#
+#   option OPTION.NAME
+#                Inspect configuration option named OPTION.NAME.
 #
 #   build        Build configuration into result directory
 #
@@ -278,14 +283,15 @@ _home-manager_completions ()
     #--------------------------#
 
     local Subcommands
-    Subcommands=( "help" "edit" "build" "instantiate" "switch" "generations" "remove-generations" "expire-generations" "packages" "news" "uninstall" )
+    Subcommands=( "help" "edit" "option" "build" "instantiate" "switch" "generations" "remove-generations" "expire-generations" "packages" "news" "uninstall" )
 
     # ^ « home-manager »'s subcommands.
 
     #--------------------------#
 
     local Options
-    Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" "--verbose" "--show-trace" )
+    Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" "--verbose" \
+              "--cores" "--debug" "--keep-failed" "--keep-going" "-j" "--max-jobs" "--no-substitute" "--show-trace" "--substitute")
 
     # ^ « home-manager »'s options.
 
@@ -353,4 +359,4 @@ _home-manager_completions ()
 
 complete -F _home-manager_completions -o default home-manager
 
-#complete -W "help edit build switch generations remove-generations expire-generations packages news" home-manager
+#complete -W "help edit option build switch generations remove-generations expire-generations packages news" home-manager

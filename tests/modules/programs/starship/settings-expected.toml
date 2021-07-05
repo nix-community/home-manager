@@ -1,5 +1,5 @@
 add_newline = false
-prompt_order = ["line_break", "package", "line_break", "character"]
+format = "$line_break$package$line_break$character"
 scan_timeout = 10
 
 [aws]
@@ -18,7 +18,8 @@ style = "bold yellow"
 threshold = 30
 
 [character]
-symbol = "➜"
+error_symbol = "➜"
+success_symbol = "➜"
 
 [memory_usage]
 threshold = -1

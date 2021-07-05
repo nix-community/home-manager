@@ -86,25 +86,36 @@ in {
       example = { XDG_MISC_DIR = "$HOME/Misc"; };
       description = "Other user directories.";
     };
+
+    createDirectories =
+      mkEnableOption "automatic creation of the XDG user directories";
   };
 
-  config = mkIf cfg.enable {
+  config = let
+    directories = {
+      XDG_DESKTOP_DIR = cfg.desktop;
+      XDG_DOCUMENTS_DIR = cfg.documents;
+      XDG_DOWNLOAD_DIR = cfg.download;
+      XDG_MUSIC_DIR = cfg.music;
+      XDG_PICTURES_DIR = cfg.pictures;
+      XDG_PUBLICSHARE_DIR = cfg.publicShare;
+      XDG_TEMPLATES_DIR = cfg.templates;
+      XDG_VIDEOS_DIR = cfg.videos;
+    } // cfg.extraConfig;
+  in mkIf cfg.enable {
     xdg.configFile."user-dirs.dirs".text = let
-      options = {
-        XDG_DESKTOP_DIR = cfg.desktop;
-        XDG_DOCUMENTS_DIR = cfg.documents;
-        XDG_DOWNLOAD_DIR = cfg.download;
-        XDG_MUSIC_DIR = cfg.music;
-        XDG_PICTURES_DIR = cfg.pictures;
-        XDG_PUBLICSHARE_DIR = cfg.publicShare;
-        XDG_TEMPLATES_DIR = cfg.templates;
-        XDG_VIDEOS_DIR = cfg.videos;
-      } // cfg.extraConfig;
-
       # For some reason, these need to be wrapped with quotes to be valid.
-      wrapped = mapAttrs (_: value: ''"${value}"'') options;
+      wrapped = mapAttrs (_: value: ''"${value}"'') directories;
     in generators.toKeyValue { } wrapped;
 
     xdg.configFile."user-dirs.conf".text = "enabled=False";
+
+    home.activation = mkIf cfg.createDirectories {
+      createXdgUserDirectories = let
+        directoriesList = attrValues directories;
+        mkdir = (dir: ''$DRY_RUN_CMD mkdir -p $VERBOSE_ARG "${dir}"'');
+      in lib.hm.dag.entryAfter [ "writeBoundary" ]
+      (strings.concatMapStringsSep "\n" mkdir directoriesList);
+    };
   };
 }

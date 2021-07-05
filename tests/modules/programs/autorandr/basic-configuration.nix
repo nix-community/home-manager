@@ -17,10 +17,6 @@
               primary = true;
               position = "0x0";
               mode = "1920x1080";
-              scale = {
-                x = 2;
-                y = 4;
-              };
               transform = [
                 [ 0.6 0.0 0.0 ] # a b c
                 [ 0.0 0.6 0.0 ] # d e f
@@ -42,7 +38,18 @@
 
       assertFileExists $config
       assertFileContent $config \
-          ${./basic-configuration.conf}
+          ${
+            pkgs.writeText "basic-configuration.conf" ''
+              output DP1
+              off
+
+              output DP2
+              pos 0x0
+              crtc 0
+              primary
+              mode 1920x1080
+              transform 0.600000,0.000000,0.000000,0.000000,0.600000,0.000000,0.000000,0.000000,1.000000''
+          }
     '';
   };
 }

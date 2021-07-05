@@ -29,23 +29,17 @@ in {
     systemd.user.services.status-notifier-watcher = {
       Unit = {
         Description = "SNI watcher";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
+        PartOf = [ "tray.target" ];
         Before = [ "taffybar.service" ];
       };
 
       Service = {
+        Type = "dbus";
+        BusName = "org.kde.StatusNotifierWatcher";
         ExecStart = "${cfg.package}/bin/status-notifier-watcher";
-        # Delay the unit start a bit to allow the program to get fully
-        # set up before letting dependent services start. This is
-        # brittle and a better solution using, e.g., `BusName=` might
-        # be possible.
-        ExecStartPost = "${pkgs.coreutils}/bin/sleep 1";
       };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" "taffybar.service" ];
-      };
+      Install = { WantedBy = [ "tray.target" "taffybar.service" ]; };
     };
   };
 }

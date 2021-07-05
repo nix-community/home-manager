@@ -150,7 +150,7 @@ in {
       type = types.package;
       default = pkgs.bspwm;
       defaultText = literalExample "pkgs.bspwm";
-      description = "bspwm package to use.";
+      description = "The bspwm package to use.";
       example = literalExample "pkgs.bspwm-unstable";
     };
 
@@ -159,7 +159,7 @@ in {
         let primitive = either bool (either int (either float str));
         in attrsOf (either primitive (listOf primitive));
       default = { };
-      description = "bspwm configuration";
+      description = "General settings given to <literal>bspc config</literal>.";
       example = {
         "border_width" = 2;
         "split_ratio" = 0.52;
@@ -170,7 +170,8 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = "Additional configuration to add.";
+      description =
+        "Additional shell commands to be run at the end of the config file.";
       example = ''
         bspc subscribe all > ~/bspc-report.log &
       '';
@@ -179,14 +180,16 @@ in {
     monitors = mkOption {
       type = types.attrsOf (types.listOf types.str);
       default = { };
-      description = "bspc monitor configurations";
+      description =
+        "Specifies the names of desktops to create on each monitor.";
       example = { "HDMI-0" = [ "web" "terminal" "III" "IV" ]; };
     };
 
     rules = mkOption {
       type = types.attrsOf rule;
       default = { };
-      description = "bspc rules";
+      description =
+        "Rule configuration. The keys of the attribute set are the targets of the rules.";
       example = literalExample ''
         {
           "Gimp" = {

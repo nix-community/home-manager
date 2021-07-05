@@ -1,0 +1,200 @@
+[[sec-release-21.05]]
+== Release 21.05
+
+The 21.05 release branch became the stable branch in May, 2021.
+
+[[sec-release-21.05-highlights]]
+=== Highlights
+
+This release has the following notable changes:
+
+* The <<opt-programs.broot.verbs>> option is now a list rather than an
+attribute set. To migrate, move the keys of the attrset into the list
+items' `invocation` keys. For example,
++
+[source,nix]
+----
+programs.broot.verbs = {
+  "p" = { execution = ":parent"; };
+};
+----
++
+becomes
++
+[source,nix]
+----
+programs.broot.verbs = [
+  {
+    invocation = "p";
+    execution = ":parent";
+  }
+];
+----
+
+* The <<opt-programs.mpv.package>> option has been changed to allow custom
+derivations. The following configuration is now possible:
++
+[source,nix]
+----
+programs.mpv.package = (pkgs.wrapMpv (pkgs.mpv-unwrapped.override {
+  vapoursynthSupport = true;
+}) {
+  extraMakeWrapperArgs = [
+    "--prefix" "LD_LIBRARY_PATH" ":" "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+  ];
+});
+----
++
+As a result of this change, <<opt-programs.mpv.package>> is no longer the
+resulting derivation. Use the newly introduced `programs.mpv.finalPackage`
+instead.
+
+* The <<opt-programs.rofi.extraConfig>> option is now an attribute set rather
+than a string. To migrate, move each line into the attribute set,
+removing the `rofi.` prefix from the keys. For example,
++
+[source,nix]
+----
+programs.rofi.extraConfig = ''
+  rofi.show-icons: true
+  rofi.modi: drun,emoji,ssh
+'';
+----
++
+becomes
++
+[source,nix]
+----
+programs.rofi.extraConfig = {
+  show-icons = true;
+  modi = "drun,emoji,ssh";
+};
+----
++
+* The <<opt-programs.rofi.theme>> option now supports defining a theme
+using an attribute set, the following configuration is now possible:
++
+[source,nix]
+----
+programs.rofi.theme = let
+  # Necessary to avoid quoting non-string values
+  inherit (config.lib.formats.rasi) mkLiteral;
+in {
+   "@import" = "~/.config/rofi/theme.rasi";
+
+  "*" = {
+    background-color = mkLiteral "#000000";
+    foreground-color = mkLiteral "rgba ( 250, 251, 252, 100 % )";
+    border-color = mkLiteral "#FFFFFF";
+    width = 512;
+  };
+
+  "#textbox-prompt-colon" = {
+    expand = false;
+    str = ":";
+    margin = mkLiteral "0px 0.3em 0em 0em";
+    text-color = mkLiteral "@foreground-color";
+  };
+};
+----
+
+
+* The `services.redshift.extraOptions` and `services.gammastep.extraOptions`
+options were removed in favor of <<opt-services.redshift.settings>> and
+`services.gammastep.settings`, that are now an attribute set rather
+than a string. They also support new features not available before, for
+example:
++
+[source,nix]
+----
+services.redshift = {
+  dawnTime = "6:00-7:45";
+  duskTime = "18:35-20:15";
+  settings = {
+    redshift = {
+      gamma = 0.8;
+      adjustment-method = "randr";
+    };
+
+    randr = {
+      screen = 0;
+    };
+  };
+};
+----
++
+It is recommended to check either
+https://github.com/jonls/redshift/blob/master/redshift.conf.sample[redshift.conf.sample] or
+https://gitlab.com/chinstrap/gammastep/-/blob/master/gammastep.conf.sample[gammastep.conf.sample]
+for the available additional options in each program.
+
+* Specifying `programs.neomutt.binds.map` or `programs.neomutt.macros.map` as a
+  single string is now deprecated in favor of specfiying it as a list of
+  strings.
+
+* The `programs.neovim.configure` is deprecated in favor of other `programs.neovim` options;
+please use the other options at your disposal:
++
+[source,nix]
+----
+configure.packages.*.opt  -> programs.neovim.plugins = [ { plugin = ...; optional = true; }]
+configure.packages.*.start  -> programs.neovim.plugins = [ { plugin = ...; }]
+configure.customRC -> programs.neovim.extraConfig
+----
+
+* Home Manager now respects the `NO_COLOR` environment variable as per
+https://no-color.org/[].
+
+* Qt module now supports <<opt-qt.style.name>> to specify a theme name and
+<<opt-qt.style.package>> to specify a theme package. If you have set
+<<opt-qt.platformTheme>> to `gnome`, a <<opt-qt.style.package>> compatible
+with both Qt and Gtk is now required to be set. For instance:
++
+[source,nix]
+----
+qt = {
+  platformTheme = "gnome";
+  style = {
+    name = "adwaita-dark";
+    package = pkgs.adwaita-qt;
+  };
+};
+----
+
+* The library type `fontType` now has a `size` attribute in addition to `name`. For example:
++
+[source,nix]
+----
+font = {
+  name = "DejaVu Sans";
+  size = 8;
+};
+----
+
+* The <<opt-programs.htop.settings>> option is introduced to replace individual
+options in `programs.htop`. To migrate, set the htop options directly in
+<<opt-programs.htop.settings>>. For example:
++
+[source,nix]
+----
+programs.htop = {
+  enabled = true;
+  settings = {
+     color_scheme = 5;
+     delay = 15;
+     highlight_base_name = 1;
+     highlight_megabytes = 1;
+     highlight_threads = 1;
+  };
+};
+----
+
+[[sec-release-21.05-state-version-changes]]
+=== State Version Changes
+
+The state version in this release includes the changes below. These
+changes are only active if the `home.stateVersion` option is set to
+"21.05" or later.
+
+* The `newsboat` module now stores generated configuration in
+  `$XDG_CONFIG_HOME/newsboat`.

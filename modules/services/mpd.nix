@@ -41,8 +41,17 @@ in {
         '';
       };
 
-     musicDirectory = mkOption {
-        type = types.path;
+      package = mkOption {
+        type = types.package;
+        default = pkgs.mpd;
+        defaultText = "pkgs.mpd";
+        description = ''
+          The MPD package to run.
+        '';
+      };
+
+      musicDirectory = mkOption {
+        type = with types; either path str;
         default = "${config.home.homeDirectory}/music";
         defaultText = "$HOME/music";
         apply = toString;       # Prevent copies to Nix store.
@@ -87,7 +96,14 @@ in {
         '';
       };
 
-     network = {
+      network = {
+        startWhenNeeded = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+           Enable systemd socket activation.
+          '';
+        };
 
         listenAddress = mkOption {
           type = types.str;
@@ -134,15 +150,32 @@ in {
         Description = "Music Player Daemon";
       };
 
-      Install = {
+      Install = mkIf (!cfg.network.startWhenNeeded) {
         WantedBy = [ "default.target" ];
       };
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";
-        ExecStart = "${pkgs.mpd}/bin/mpd --no-daemon ${mpdConf}";
+        ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf}";
         Type = "notify";
         ExecStartPre = ''${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
+      };
+    };
+    systemd.user.sockets.mpd = mkIf cfg.network.startWhenNeeded {
+      Socket = {
+        ListenStream = let
+          listen =
+            if cfg.network.listenAddress == "any"
+            then toString cfg.network.port
+            else "${cfg.network.listenAddress}:${toString cfg.network.port}";
+        in [ listen "%t/mpd/socket" ];
+
+        Backlog = 5;
+        KeepAlive = true;
+      };
+
+      Install = {
+        WantedBy = [ "sockets.target" ];
       };
     };
   };

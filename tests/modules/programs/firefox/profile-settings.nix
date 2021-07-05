@@ -6,7 +6,12 @@ with lib;
   config = {
     programs.firefox = {
       enable = true;
-      profiles.test.settings = { "general.smoothScroll" = false; };
+      profiles.basic.isDefault = true;
+
+      profiles.test = {
+        id = 1;
+        settings = { "general.smoothScroll" = false; };
+      };
     };
 
     nixpkgs.overlays = [
@@ -27,6 +32,8 @@ with lib;
       assertFileRegex \
         home-path/bin/firefox \
         MOZ_APP_LAUNCHER
+
+      assertDirectoryExists home-files/.mozilla/firefox/basic
 
       assertFileContent \
         home-files/.mozilla/firefox/test/user.js \

@@ -1,17 +1,41 @@
-{ config, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 with lib;
 
 let
 
   cfg = config.services.gpg-agent;
+  gpgPkg = config.programs.gpg.package;
+
+  homedir = config.programs.gpg.homedir;
 
   gpgInitStr = ''
     GPG_TTY="$(tty)"
     export GPG_TTY
   ''
   + optionalString cfg.enableSshSupport
-      "${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null";
+      "${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null";
+
+  # mimic `gpgconf` output for use in `systemd` unit definitions.
+  # we cannot use `gpgconf` directly because it heavily depends on system
+  # state, but we need the values at build time. original:
+  # https://github.com/gpg/gnupg/blob/c6702d77d936b3e9d91b34d8fdee9599ab94ee1b/common/homedir.c#L672-L681
+  gpgconf = dir: let
+    f = pkgs.runCommand dir {} ''
+      PATH=${pkgs.coreutils}/bin:${pkgs.xxd}/bin:$PATH
+
+      if [[ ${homedir} = ${options.programs.gpg.homedir.default} ]]
+      then
+        echo -n "%t/gnupg/${dir}" > $out
+      else
+        hash=$(echo -n ${homedir} | sha1sum -b | xxd -r -p | base32 | \
+               cut -c -24 | tr '[:upper:]' '[:lower:]' | \
+               tr abcdefghijklmnopqrstuvwxyz234567 \
+                  ybndrfg8ejkmcpqxot1uwisza345h769)
+         echo -n "%t/gnupg/d.$hash/${dir}" > $out
+      fi
+    '';
+    in "${builtins.readFile f}";
 
 in
 
@@ -154,7 +178,7 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.file.".gnupg/gpg-agent.conf".text = concatStringsSep "\n" (
+      home.file."${homedir}/gpg-agent.conf".text = concatStringsSep "\n" (
         optional (cfg.enableSshSupport) "enable-ssh-support"
         ++
         optional (!cfg.grabKeyboardAndMouse) "no-grab"
@@ -181,22 +205,25 @@ in
 
       home.sessionVariables =
         optionalAttrs cfg.enableSshSupport {
-          SSH_AUTH_SOCK = "$(${pkgs.gnupg}/bin/gpgconf --list-dirs agent-ssh-socket)";
+          SSH_AUTH_SOCK = "$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)";
         };
 
       programs.bash.initExtra = gpgInitStr;
       programs.zsh.initExtra = gpgInitStr;
+      programs.fish.interactiveShellInit = ''
+        set -gx GPG_TTY (tty)
+      '';
     }
 
     (mkIf (cfg.sshKeys != null) {
       # Trailing newlines are important
-      home.file.".gnupg/sshcontrol".text = concatMapStrings (s: "${s}\n") cfg.sshKeys;
+      home.file."${homedir}/sshcontrol".text = concatMapStrings (s: "${s}\n") cfg.sshKeys;
     })
 
     # The systemd units below are direct translations of the
     # descriptions in the
     #
-    #   ${pkgs.gnupg}/share/doc/gnupg/examples/systemd-user
+    #   ${gpgPkg}/share/doc/gnupg/examples/systemd-user
     #
     # directory.
     {
@@ -211,9 +238,10 @@ in
         };
 
         Service = {
-          ExecStart = "${pkgs.gnupg}/bin/gpg-agent --supervised"
+          ExecStart = "${gpgPkg}/bin/gpg-agent --supervised"
             + optionalString cfg.verbose " --verbose";
-          ExecReload = "${pkgs.gnupg}/bin/gpgconf --reload gpg-agent";
+          ExecReload = "${gpgPkg}/bin/gpgconf --reload gpg-agent";
+          Environment = "GNUPGHOME=${homedir}";
         };
       };
 
@@ -224,7 +252,7 @@ in
         };
 
         Socket = {
-          ListenStream = "%t/gnupg/S.gpg-agent";
+          ListenStream = gpgconf "S.gpg-agent";
           FileDescriptorName = "std";
           SocketMode = "0600";
           DirectoryMode = "0700";
@@ -244,7 +272,7 @@ in
         };
 
         Socket = {
-          ListenStream = "%t/gnupg/S.gpg-agent.ssh";
+          ListenStream = gpgconf "S.gpg-agent.ssh";
           FileDescriptorName = "ssh";
           Service = "gpg-agent.service";
           SocketMode = "0600";
@@ -265,7 +293,7 @@ in
         };
 
         Socket = {
-          ListenStream = "%t/gnupg/S.gpg-agent.extra";
+          ListenStream = gpgconf "S.gpg-agent.extra";
           FileDescriptorName = "extra";
           Service = "gpg-agent.service";
           SocketMode = "0600";

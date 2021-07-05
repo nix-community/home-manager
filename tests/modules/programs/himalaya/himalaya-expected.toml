@@ -1,0 +1,18 @@
+downloads-dir = "/data/download"
+name = ""
+
+["hm@example.com"]
+default = true
+default-page-size = 50
+email = "hm@example.com"
+imap-host = "imap.example.com"
+imap-login = "home.manager"
+imap-passwd-cmd = "'password-command'"
+imap-port = 995
+imap-starttls = false
+name = "H. M. Test"
+smtp-host = "smtp.example.com"
+smtp-login = "home.manager"
+smtp-passwd-cmd = "'password-command'"
+smtp-port = 465
+smtp-starttls = false

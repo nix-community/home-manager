@@ -61,8 +61,13 @@ let
   signModule = types.submodule {
     options = {
       key = mkOption {
-        type = types.str;
-        description = "The default GPG signing key fingerprint.";
+        type = types.nullOr types.str;
+        description = ''
+          The default GPG signing key fingerprint.
+          </para><para>
+          Set to <literal>null</literal> to let GnuPG decide what signing key
+          to use depending on commit’s author.
+        '';
       };
 
       signByDefault = mkOption {
@@ -101,7 +106,7 @@ let
       };
 
       contents = mkOption {
-        type = types.attrs;
+        type = types.attrsOf types.anything;
         default = { };
         description = ''
           Configuration to include. If empty then a path must be given.
@@ -276,28 +281,34 @@ in {
 
         genIdentity = name: account:
           with account;
-          nameValuePair "sendemail.${name}" ({
-            smtpEncryption = if smtp.tls.enable then
-              (if smtp.tls.useStartTls
-              || versionOlder config.home.stateVersion "20.09" then
-                "tls"
-              else
-                "ssl")
-            else
-              "";
-            smtpServer = smtp.host;
-            smtpUser = userName;
+          nameValuePair "sendemail.${name}" (if account.msmtp.enable then {
+            smtpServer = "${pkgs.msmtp}/bin/msmtp";
+            envelopeSender = "auto";
             from = address;
-          } // optionalAttrs (smtp.port != null) {
-            smtpServerPort = smtp.port;
-          });
+          } else
+            {
+              smtpEncryption = if smtp.tls.enable then
+                (if smtp.tls.useStartTls
+                || versionOlder config.home.stateVersion "20.09" then
+                  "tls"
+                else
+                  "ssl")
+              else
+                "";
+              smtpSslCertPath = mkIf smtp.tls.enable smtp.tls.certificatesFile;
+              smtpServer = smtp.host;
+              smtpUser = userName;
+              from = address;
+            } // optionalAttrs (smtp.port != null) {
+              smtpServerPort = smtp.port;
+            });
       in mapAttrs' genIdentity
       (filterAttrs hasSmtp config.accounts.email.accounts);
     }
 
     (mkIf (cfg.signing != null) {
       programs.git.iniContent = {
-        user.signingKey = cfg.signing.key;
+        user.signingKey = mkIf (cfg.signing.key != null) cfg.signing.key;
         commit.gpgSign = cfg.signing.signByDefault;
         gpg.program = cfg.signing.gpgPath;
       };
@@ -348,13 +359,14 @@ in {
     })
 
     (mkIf cfg.delta.enable {
-      programs.git.iniContent =
-        let deltaCommand = "${pkgs.gitAndTools.delta}/bin/delta";
-        in {
-          core.pager = deltaCommand;
-          interactive.diffFilter = "${deltaCommand} --color-only";
-          delta = cfg.delta.options;
-        };
+      home.packages = [ pkgs.delta ];
+
+      programs.git.iniContent = let deltaCommand = "${pkgs.delta}/bin/delta";
+      in {
+        core.pager = deltaCommand;
+        interactive.diffFilter = "${deltaCommand} --color-only";
+        delta = cfg.delta.options;
+      };
     })
   ]);
 }

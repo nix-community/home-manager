@@ -6,13 +6,11 @@ with lib;
   config = {
     programs.kakoune = {
       enable = true;
-      plugins = [ pkgs.kakounePlugins.kak-powerline ];
+      plugins = [ pkgs.kakounePlugins.kak-prelude ];
     };
 
-    nmt.script = let plugins_kak = "home-path/share/kak/plugins.kak";
-    in ''
-      assertFileRegex ${plugins_kak} \
-        '^source "/nix/store/.*-kak-powerline/share/kak/autoload/plugins/powerline/.*.kak"$'
+    nmt.script = ''
+      assertDirectoryNotEmpty home-path/share/kak/autoload/plugins
     '';
   };
 }

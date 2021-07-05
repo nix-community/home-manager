@@ -82,6 +82,9 @@ with lib;
             generations. The script will be run
             <emphasis>after</emphasis> the new files have been linked
             into place.
+            </para><para>
+            Note, this code is always run when <literal>recursive</literal> is
+            enabled.
           '';
         };
 

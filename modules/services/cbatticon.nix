@@ -103,7 +103,8 @@ in {
     systemd.user.services.cbatticon = {
       Unit = {
         Description = "cbatticon system tray battery icon";
-        After = [ "graphical-session-pre.target" ];
+        Requires = [ "tray.target" ];
+        After = [ "graphical-session-pre.target" "tray.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

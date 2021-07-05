@@ -1,5 +1,7 @@
 # The check for terminal output and color support is heavily inspired
 # by https://unix.stackexchange.com/a/10065.
+#
+# Allow opt out by respecting the `NO_COLOR` environment variable.
 
 function setupColors() {
     normalColor=""
@@ -7,8 +9,8 @@ function setupColors() {
     warnColor=""
     noteColor=""
 
-    # Check if stdout is a terminal.
-    if [[ -t 1 ]]; then
+    # Enable colors for terminals, and allow opting out.
+    if [[ ! -v NO_COLOR && -t 1 ]]; then
         # See if it supports colors.
         local ncolors
         ncolors=$(tput colors)

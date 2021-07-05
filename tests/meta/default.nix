@@ -1,1 +1,0 @@
-{ meta-formatting = ./formatting.nix; }

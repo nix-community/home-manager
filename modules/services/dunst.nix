@@ -25,7 +25,7 @@ let
     options = {
       package = mkOption {
         type = types.package;
-        example = literalExample "pkgs.gnome3.adwaita-icon-theme";
+        example = literalExample "pkgs.gnome.adwaita-icon-theme";
         description = "Package providing the theme.";
       };
 
@@ -57,16 +57,38 @@ in {
     services.dunst = {
       enable = mkEnableOption "the dunst notification daemon";
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.dunst;
+        defaultText = literalExample "pkgs.dunst";
+        description = "Package providing <command>dunst</command>.";
+      };
+
       iconTheme = mkOption {
         type = themeType;
         default = hicolorTheme;
         description = "Set the icon theme.";
       };
 
+      waylandDisplay = mkOption {
+        type = types.str;
+        default = "";
+        description =
+          "Set the service's <envar>WAYLAND_DISPLAY</envar> environment variable.";
+      };
+
       settings = mkOption {
-        type = with types; attrsOf (attrsOf eitherStrBoolIntList);
+        type = types.submodule {
+          freeformType = with types; attrsOf (attrsOf eitherStrBoolIntList);
+          options = {
+            global.icon_path = mkOption {
+              type = types.separatedString ":";
+              description = "Paths where dunst will look for icons.";
+            };
+          };
+        };
         default = { };
-        description = "Configuration written to ~/.config/dunstrc";
+        description = "Configuration written to ~/.config/dunst/dunstrc";
         example = literalExample ''
           {
             global = {
@@ -89,7 +111,7 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ (getOutput "man" pkgs.dunst) ];
+      home.packages = [ cfg.package ];
 
       xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
         "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
@@ -118,16 +140,20 @@ in {
           "emotes"
           "filesystem"
           "intl"
+          "legacy"
           "mimetypes"
           "places"
           "status"
           "stock"
         ];
-      in concatStringsSep ":" (concatMap (theme:
-        concatMap (basePath:
-          map (category:
-            "${basePath}/share/icons/${theme.name}/${theme.size}/${category}")
-          categories) basePaths) themes);
+
+        mkPath = { basePath, theme, category }:
+          "${basePath}/share/icons/${theme.name}/${theme.size}/${category}";
+      in concatMapStringsSep ":" mkPath (cartesianProductOfSets {
+        basePath = basePaths;
+        theme = themes;
+        category = categories;
+      });
 
       systemd.user.services.dunst = {
         Unit = {
@@ -139,7 +165,9 @@ in {
         Service = {
           Type = "dbus";
           BusName = "org.freedesktop.Notifications";
-          ExecStart = "${pkgs.dunst}/bin/dunst";
+          ExecStart = "${cfg.package}/bin/dunst";
+          Environment = optionalString (cfg.waylandDisplay != "")
+            "WAYLAND_DISPLAY=${cfg.waylandDisplay}";
         };
       };
     }

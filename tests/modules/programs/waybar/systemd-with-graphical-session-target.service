@@ -2,15 +2,13 @@
 WantedBy=graphical-session.target
 
 [Service]
-BusName=fr.arouillard.waybar
+ExecReload=kill -SIGUSR2 $MAINPID
 ExecStart=@waybar@/bin/waybar
-Restart=always
-RestartSec=1sec
-Type=dbus
+KillMode=mixed
+Restart=on-failure
 
 [Unit]
-After=dbus.service
+After=graphical-session.target
 Description=Highly customizable Wayland bar for Sway and Wlroots based compositors.
 Documentation=https://github.com/Alexays/Waybar/wiki
 PartOf=graphical-session.target
-Requisite=dbus.service

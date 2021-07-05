@@ -1,0 +1,12 @@
+[Install]
+WantedBy=sockets.target
+
+[Socket]
+DirectoryMode=0700
+FileDescriptorName=server
+ListenStream=%t/emacs/server
+SocketMode=0600
+
+[Unit]
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/

@@ -39,6 +39,28 @@ in
   };
 
   config = {
+    assertions = [(
+      let
+        dups =
+          attrNames
+            (filterAttrs (n: v: v > 1)
+            (foldAttrs (acc: v: acc + v) 0
+            (mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)));
+        dupsStr = concatStringsSep ", " dups;
+      in {
+        assertion = dups == [];
+        message = ''
+          Conflicting managed target files: ${dupsStr}
+
+          This may happen, for example, if you have a configuration similar to
+
+              home.file = {
+                conflict1 = { source = ./foo.nix; target = "baz"; };
+                conflict2 = { source = ./bar.nix; target = "baz"; };
+              }'';
+      })
+    ];
+
     lib.file.mkOutOfStoreSymlink = path:
       let
         pathStr = toString path;
@@ -53,7 +75,7 @@ in
         # Paths that should be forcibly overwritten by Home Manager.
         # Caveat emptor!
         forcedPaths =
-          concatMapStringsSep " " (p: ''"$HOME/${p}"'')
+          concatMapStringsSep " " (p: ''"$HOME"/${escapeShellArg p}'')
             (mapAttrsToList (n: v: v.target)
             (filterAttrs (n: v: v.force) cfg));
 
@@ -62,7 +84,7 @@ in
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e "${builtins.storeDir}")/*-home-manager-files/*"
+          homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
 
           forcedPaths=(${forcedPaths})
 
@@ -140,7 +162,7 @@ in
     # source and target generation.
     home.activation.linkGeneration = hm.dag.entryAfter ["writeBoundary"] (
       let
-        link = pkgs.writeText "link" ''
+        link = pkgs.writeShellScript "link" ''
           newGenFiles="$1"
           shift
           for sourcePath in "$@" ; do
@@ -155,12 +177,12 @@ in
           done
         '';
 
-        cleanup = pkgs.writeText "cleanup" ''
+        cleanup = pkgs.writeShellScript "cleanup" ''
           . ${./lib-bash/color-echo.sh}
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e "${builtins.storeDir}")/*-home-manager-files/*"
+          homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
 
           newGenFiles="$1"
           shift 1
@@ -235,18 +257,34 @@ in
     );
 
     home.activation.checkFilesChanged = hm.dag.entryBefore ["linkGeneration"] (
-      ''
+      let
+        homeDirArg = escapeShellArg homeDirectory;
+      in ''
+        function _cmp() {
+          if [[ -d $1 && -d $2 ]]; then
+            diff -rq "$1" "$2" &> /dev/null
+          else
+            cmp --quiet "$1" "$2"
+          fi
+        }
         declare -A changedFiles
-      '' + concatMapStrings (v: ''
-        cmp --quiet "${sourceStorePath v}" "${homeDirectory}/${v.target}" \
-          && changedFiles["${v.target}"]=0 \
-          || changedFiles["${v.target}"]=1
-      '') (filter (v: v.onChange != "") (attrValues cfg))
+      '' + concatMapStrings (v:
+        let
+          sourceArg = escapeShellArg (sourceStorePath v);
+          targetArg = escapeShellArg v.target;
+        in ''
+          _cmp ${sourceArg} ${homeDirArg}/${targetArg} \
+            && changedFiles[${targetArg}]=0 \
+            || changedFiles[${targetArg}]=1
+        '') (filter (v: v.onChange != "") (attrValues cfg))
+      + ''
+        unset -f _cmp
+      ''
     );
 
     home.activation.onFilesChange = hm.dag.entryAfter ["linkGeneration"] (
       concatMapStrings (v: ''
-        if [[ ${"$\{changedFiles"}["${v.target}"]} -eq 1 ]]; then
+        if [[ ''${changedFiles[${escapeShellArg v.target}]} -eq 1 ]]; then
           ${v.onChange}
         fi
       '') (filter (v: v.onChange != "") (attrValues cfg))
@@ -254,12 +292,10 @@ in
 
     # Symlink directories and files that have the right execute bit.
     # Copy files that need their execute bit changed.
-    home-files = pkgs.runCommand
+    home-files = pkgs.runCommandLocal
       "home-manager-files"
       {
         nativeBuildInputs = [ pkgs.xorg.lndir ];
-        preferLocalBuild = true;
-        allowSubstitutes = false;
       }
       (''
         mkdir -p $out
@@ -272,6 +308,15 @@ in
           local relTarget="$2"
           local executable="$3"
           local recursive="$4"
+
+          # If the target already exists then we have a collision. Note, this
+          # should not happen due to the assertion found in the 'files' module.
+          # We therefore simply log the conflict and otherwise ignore it, mainly
+          # to make the `files-target-config` test work as expected.
+          if [[ -e "$realOut/$relTarget" ]]; then
+            echo "File conflict for file '$relTarget'" >&2
+            return
+          fi
 
           # Figure out the real absolute path to the target.
           local target

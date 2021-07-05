@@ -1,1 +1,4 @@
-{ powerline-go-standard = ./standard.nix; }
+{
+  powerline-go-bash = ./bash.nix;
+  powerline-go-zsh = ./zsh.nix;
+}

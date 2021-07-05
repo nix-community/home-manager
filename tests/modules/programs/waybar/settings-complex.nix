@@ -24,7 +24,8 @@ in {
           "memory"
           "backlight"
           "tray"
-          "battery"
+          "battery#bat1"
+          "battery#bat2"
           "clock"
         ];
 

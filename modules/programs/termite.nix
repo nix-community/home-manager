@@ -6,13 +6,6 @@ let
 
   cfg = config.programs.termite;
 
-  vteInitStr = ''
-    # See https://github.com/thestinger/termite#id1
-    if [[ $TERM == xterm-termite ]]; then
-      . ${pkgs.termite.vte-ng}/etc/profile.d/vte.sh
-    fi
-  '';
-
 in {
   options = {
     programs.termite = {
@@ -48,6 +41,10 @@ in {
           Settings dynamic title allows the terminal and the shell to
           update the terminal's title.
         '';
+      };
+
+      enableVteIntegration = mkEnableOption "Shell VTE integration" // {
+        default = true;
       };
 
       fullscreen = mkOption {
@@ -123,7 +120,7 @@ in {
       browser = mkOption {
         default = null;
         type = types.nullOr types.str;
-        example = "${pkgs.xdg_utils}/xdg-open";
+        example = "${pkgs.xdg-utils}/xdg-open";
         description = ''
           Set the default browser for opening links. If its not set, $BROWSER is read.
           If that's not set, url hints will be disabled.
@@ -381,7 +378,7 @@ in {
       ${cfg.hintsExtra}
     '';
 
-    programs.bash.initExtra = vteInitStr;
-    programs.zsh.initExtra = vteInitStr;
+    programs.bash.enableVteIntegration = lib.mkDefault cfg.enableVteIntegration;
+    programs.zsh.enableVteIntegration = lib.mkDefault cfg.enableVteIntegration;
   });
 }

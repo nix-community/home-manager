@@ -67,6 +67,8 @@ in
   meta.maintainers = [ maintainers.rycee ];
 
   imports = [
+    (mkRemovedOptionModule ["programs" "firefox" "enableAdobeFlash"]
+      "Support for this option has been removed.")
     (mkRemovedOptionModule ["programs" "firefox" "enableGoogleTalk"]
       "Support for this option has been removed.")
     (mkRemovedOptionModule ["programs" "firefox" "enableIcedTea"]
@@ -84,6 +86,17 @@ in
           then pkgs.firefox
           else pkgs.firefox-unwrapped;
         defaultText = literalExample "pkgs.firefox";
+        example = literalExample ''
+          pkgs.firefox.override {
+            # See nixpkgs' firefox/wrapper.nix to check which options you can use
+            cfg = {
+              # Gnome shell native connector
+              enableGnomeExtensions = true;
+              # Tridactyl native connector
+              enableTridactylNative = true;
+            };
+          }
+        '';
         description = ''
           The Firefox package to use. If state version ≥ 19.09 then
           this should be a wrapped Firefox package. For earlier state
@@ -215,10 +228,15 @@ in
         description = "Attribute set of Firefox profiles.";
       };
 
-      enableAdobeFlash = mkOption {
+      enableGnomeExtensions = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether to enable the unfree Adobe Flash plugin.";
+        description = ''
+          Whether to enable the GNOME Shell native host connector. Note, you
+          also need to set the NixOS option
+          <literal>services.gnome3.chrome-gnome-shell.enable</literal> to
+          <literal>true</literal>.
+        '';
       };
     };
   };
@@ -257,11 +275,18 @@ in
       )
     ];
 
+    warnings = optional (cfg.enableGnomeExtensions or false) ''
+      Using 'programs.firefox.enableGnomeExtensions' has been deprecated and
+      will be removed in the future. Please change to overriding the package
+      configuration using 'programs.firefox.package' instead. You can refer to
+      its example for how to do this.
+    '';
+
     home.packages =
       let
         # The configuration expected by the Firefox wrapper.
         fcfg = {
-          enableAdobeFlash = cfg.enableAdobeFlash;
+          enableGnomeExtensions = cfg.enableGnomeExtensions;
         };
 
         # A bit of hackery to force a config into the wrapper.
@@ -275,7 +300,7 @@ in
           if isDarwin then
             cfg.package
           else if versionAtLeast config.home.stateVersion "19.09" then
-            cfg.package.override { cfg = fcfg; }
+            cfg.package.override (old: { cfg = old.cfg or {} // fcfg; })
           else
             (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
       in
@@ -293,6 +318,8 @@ in
         };
       }]
       ++ flip mapAttrsToList cfg.profiles (_: profile: {
+        "${profilesPath}/${profile.path}/.keep".text = "";
+
         "${profilesPath}/${profile.path}/chrome/userChrome.css" =
           mkIf (profile.userChrome != "") {
             text = profile.userChrome;

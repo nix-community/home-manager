@@ -1,4 +1,4 @@
-# Test that keybdinings.json is created correctly.
+# Test that keybindings.json is created correctly.
 { config, lib, pkgs, ... }:
 
 with lib;
@@ -20,6 +20,11 @@ let
       command = "deleteFile";
       when = "explorerViewletVisible";
     }
+    {
+      key = "ctrl+r";
+      command = "run";
+      args = { command = "echo file"; };
+    }
   ];
 
   targetPath = if pkgs.stdenv.hostPlatform.isDarwin then
@@ -27,23 +32,39 @@ let
   else
     ".config/Code/User/keybindings.json";
 
-  expectedJson = pkgs.writeText "expected.json" (builtins.toJSON bindings);
+  expectedJson = pkgs.writeText "expected.json" ''
+    [
+      {
+        "command": "editor.action.clipboardCopyAction",
+        "key": "ctrl+c",
+        "when": "textInputFocus && false"
+      },
+      {
+        "command": "deleteFile",
+        "key": "ctrl+c",
+        "when": ""
+      },
+      {
+        "command": "deleteFile",
+        "key": "d",
+        "when": "explorerViewletVisible"
+      },
+      {
+        "args": {
+          "command": "echo file"
+        },
+        "command": "run",
+        "key": "ctrl+r"
+      }
+    ]
+  '';
 in {
   config = {
     programs.vscode = {
       enable = true;
       keybindings = bindings;
+      package = pkgs.writeScriptBin "vscode" "" // { pname = "vscode"; };
     };
-
-    nixpkgs.overlays = [
-      (self: super: {
-        vscode = pkgs.runCommandLocal "vscode" { pname = "vscode"; } ''
-          mkdir -p $out/bin
-          touch $out/bin/code
-          chmod +x $out/bin/code;
-        '';
-      })
-    ];
 
     nmt.script = ''
       assertFileExists "home-files/${targetPath}"

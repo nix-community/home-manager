@@ -27,6 +27,7 @@ let
   defaultResize   = 5;
   defaultShortcut = "b";
   defaultTerminal = "screen";
+  defaultShell    = null;
 
   boolToStr = value: if value then "on" else "off";
 
@@ -41,7 +42,10 @@ let
     set  -g default-terminal "${cfg.terminal}"
     set  -g base-index      ${toString cfg.baseIndex}
     setw -g pane-base-index ${toString cfg.baseIndex}
-
+    ${optionalString (cfg.shell != null) ''
+      # We need to set default-shell before calling new-session
+      set  -g default-shell "${cfg.shell}"
+    ''}
     ${optionalString cfg.newSession "new-session"}
 
     ${optionalString cfg.reverseSplit ''
@@ -64,13 +68,21 @@ let
       bind -r L resize-pane -R ${toString cfg.resizeAmount}
     ''}
 
-    ${optionalString (cfg.shortcut != defaultShortcut) ''
-      # rebind main key: C-${cfg.shortcut}
-      unbind C-${defaultShortcut}
-      set -g prefix C-${cfg.shortcut}
-      bind ${cfg.shortcut} send-prefix
-      bind C-${cfg.shortcut} last-window
-    ''}
+    ${if cfg.prefix != null
+        then ''
+          # rebind main key: ${cfg.prefix}
+          unbind C-${defaultShortcut}
+          set -g prefix ${cfg.prefix}
+          bind ${cfg.prefix} send-prefix
+        ''
+        else optionalString (cfg.shortcut != defaultShortcut) ''
+          # rebind main key: C-${cfg.shortcut}
+          unbind C-${defaultShortcut}
+          set -g prefix C-${cfg.shortcut}
+          bind ${cfg.shortcut} send-prefix
+          bind C-${cfg.shortcut} last-window
+        ''
+     }
 
     ${optionalString cfg.disableConfirmationPrompt ''
       bind-key & kill-window
@@ -97,7 +109,7 @@ let
         }
     )];
 
-    home.file.".tmux.conf".text = ''
+    xdg.configFile."tmux/tmux.conf".text = ''
       # ============================================= #
       # Load plugins with Home Manager                #
       # --------------------------------------------- #
@@ -234,6 +246,15 @@ in
         '';
       };
 
+      prefix = mkOption {
+        default = null;
+        example = "C-a";
+        type = types.nullOr types.str;
+        description = ''
+          Set the prefix key. Overrules the "shortcut" option when set.
+        '';
+      };
+
       shortcut = mkOption {
         default = defaultShortcut;
         example = "a";
@@ -248,6 +269,13 @@ in
         example = "screen-256color";
         type = types.str;
         description = "Set the $TERM variable.";
+      };
+
+      shell = mkOption {
+        default = defaultShell;
+        example = "\${pkgs.zsh}/bin/zsh";
+        type = with types; nullOr str;
+        description = "Set the default-shell tmux variable.";
       };
 
       secureSocket = mkOption {
@@ -307,10 +335,9 @@ in
         };
       })
 
-      # config file ~/.tmux.conf
-      { home.file.".tmux.conf".text = mkBefore tmuxConf; }
+      { xdg.configFile."tmux/tmux.conf".text = mkBefore tmuxConf; }
       (mkIf (cfg.plugins != []) configPlugins)
-      { home.file.".tmux.conf".text = mkAfter cfg.extraConfig; }
+      { xdg.configFile."tmux/tmux.conf".text = mkAfter cfg.extraConfig; }
     ])
   );
 }

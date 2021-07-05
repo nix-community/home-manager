@@ -2,10 +2,15 @@
 
 with lib;
 
-{
+let
+
+  dummy-package = pkgs.runCommandLocal "dummy-package" { } "mkdir $out";
+
+in {
   config = {
     wayland.windowManager.sway = {
       enable = true;
+      package = dummy-package // { outPath = "@sway"; };
 
       config = {
         focus.followMouse = "always";
@@ -14,19 +19,7 @@ with lib;
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        dmenu = super.dmenu // { outPath = "@dmenu@"; };
-        rxvt-unicode-unwrapped = super.rxvt-unicode-unwrapped // {
-          outPath = "@rxvt-unicode-unwrapped@";
-        };
-        sway-unwrapped =
-          pkgs.runCommandLocal "dummy-sway-unwrapped" { version = "1"; }
-          "mkdir $out";
-        swaybg = pkgs.writeScriptBin "dummy-swaybg" "";
-        xwayland = pkgs.writeScriptBin "xwayland" "";
-      })
-    ];
+    nixpkgs.overlays = [ (import ./sway-overlay.nix) ];
 
     nmt.script = ''
       assertFileExists home-files/.config/sway/config

@@ -5,11 +5,13 @@ with lib;
 let
   cfg = config.services.dwm-status;
 
+  jsonFormat = pkgs.formats.json { };
+
   features = [ "audio" "backlight" "battery" "cpu_load" "network" "time" ];
 
-  configText = builtins.toJSON ({ inherit (cfg) order; } // cfg.extraConfig);
+  finalConfig = { inherit (cfg) order; } // cfg.extraConfig;
 
-  configFile = pkgs.writeText "dwm-status.json" configText;
+  configFile = jsonFormat.generate "dwm-status.json" finalConfig;
 
 in {
   options = {
@@ -30,7 +32,7 @@ in {
       };
 
       extraConfig = mkOption {
-        type = types.attrs;
+        type = jsonFormat.type;
         default = { };
         example = literalExample ''
           {

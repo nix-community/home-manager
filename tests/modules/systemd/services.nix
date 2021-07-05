@@ -10,6 +10,7 @@ with lib;
       };
 
       Service = {
+        Environment = [ "VAR1=1" "VAR2=2" ];
         ExecStart = ''/some/exec/start/command --with-arguments "%i"'';
       };
     };
@@ -17,7 +18,16 @@ with lib;
     nmt.script = ''
       serviceFile=home-files/.config/systemd/user/test-service@.service
       assertFileExists $serviceFile
-      assertFileContent $serviceFile ${./services-expected.conf}
+      assertFileContent $serviceFile \
+        ${builtins.toFile "services-expected.conf" ''
+          [Service]
+          Environment=VAR1=1
+          Environment=VAR2=2
+          ExecStart=/some/exec/start/command --with-arguments "%i"
+
+          [Unit]
+          Description=A basic test service
+        ''}
     '';
   };
 }

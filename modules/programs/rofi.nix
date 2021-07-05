@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-with builtins;
 
 let
 
@@ -71,20 +70,8 @@ let
     };
   };
 
-  valueToString = value:
-    if isBool value then (if value then "true" else "else") else toString value;
-
   windowColorsToString = window:
     concatStringsSep ", " (with window; [ background border separator ]);
-
-  rowsColorsToString = rows: ''
-    ${optionalString (rows.normal != null)
-    (setOption "color-normal" (rowColorsToString rows.normal))}
-    ${optionalString (rows.active != null)
-    (setOption "color-active" (rowColorsToString rows.active))}
-    ${optionalString (rows.urgent != null)
-    (setOption "color-urgent" (rowColorsToString rows.urgent))}
-  '';
 
   rowColorsToString = row:
     concatStringsSep ", " (with row; [
@@ -95,15 +82,62 @@ let
       highlight.foreground
     ]);
 
-  setOption = name: value:
-    optionalString (value != null) "rofi.${name}: ${valueToString value}";
+  mkColorScheme = colors:
+    if colors != null then
+      with colors; {
+        color-window =
+          if (window != null) then (windowColorsToString window) else null;
+        color-normal = if (rows != null && rows.normal != null) then
+          (rowColorsToString rows.normal)
+        else
+          null;
+        color-active = if (rows != null && rows.active != null) then
+          (rowColorsToString rows.active)
+        else
+          null;
+        color-urgent = if (rows != null && rows.active != null) then
+          (rowColorsToString rows.urgent)
+        else
+          null;
+      }
+    else
+      { };
 
-  setColorScheme = colors:
-    optionalString (colors != null) ''
-      ${optionalString (colors.window != null) setOption "color-window"
-      (windowColorsToString colors.window)}
-      ${optionalString (colors.rows != null) (rowsColorsToString colors.rows)}
-    '';
+  mkValueString = value:
+    if isBool value then
+      if value then "true" else "false"
+    else if isInt value then
+      toString value
+    else if value._type or "" == "literal" then
+      value.value
+    else if isString value then
+      ''"${value}"''
+    else if isList value then
+      "[ ${strings.concatStringsSep "," (map mkValueString value)} ]"
+    else
+      abort "Unhandled value type ${builtins.typeOf value}";
+
+  mkKeyValue = { sep ? ": ", end ? ";" }:
+    name: value:
+    "${name}${sep}${mkValueString value}${end}";
+
+  mkRasiSection = name: value:
+    if isAttrs value then
+      let
+        toRasiKeyValue = generators.toKeyValue { mkKeyValue = mkKeyValue { }; };
+        # Remove null values so the resulting config does not have empty lines
+        configStr = toRasiKeyValue (filterAttrs (_: v: v != null) value);
+      in ''
+        ${name} {
+        ${configStr}}
+      ''
+    else
+      mkKeyValue {
+        sep = " ";
+        end = "";
+      } name value;
+
+  toRasi = attrs: concatStringsSep "\n" (mapAttrsToList mkRasiSection attrs);
 
   locationsMap = {
     center = 0;
@@ -117,14 +151,45 @@ let
     left = 8;
   };
 
+  primitive = with types; (oneOf [ str int bool rasiLiteral ]);
+
+  # Either a `section { foo: "bar"; }` or a `@import/@theme "some-text"`
+  configType = with types;
+    (either (attrsOf (either primitive (listOf primitive))) str);
+
+  rasiLiteral = types.submodule {
+    options = {
+      _type = mkOption {
+        type = types.enum [ "literal" ];
+        internal = true;
+      };
+
+      value = mkOption {
+        type = types.str;
+        internal = true;
+      };
+    };
+  } // {
+    description = "Rasi literal string";
+  };
+
+  themeType = with types; attrsOf configType;
+
   themeName = if (cfg.theme == null) then
     null
-  else if (lib.isString cfg.theme) then
+  else if (isString cfg.theme) then
     cfg.theme
+  else if (isAttrs cfg.theme) then
+    "custom"
   else
-    lib.removeSuffix ".rasi" (baseNameOf cfg.theme);
+    removeSuffix ".rasi" (baseNameOf cfg.theme);
 
-  themePath = if (lib.isString cfg.theme) then null else cfg.theme;
+  themePath = if (isString cfg.theme) then
+    null
+  else if (isAttrs cfg.theme) then
+    "custom"
+  else
+    cfg.theme;
 
 in {
   options.programs.rofi = {
@@ -140,6 +205,15 @@ in {
       example = literalExample ''
         pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
       '';
+    };
+
+    plugins = mkOption {
+      default = [ ];
+      type = types.listOf types.package;
+      description = ''
+        List of rofi plugins to be installed.
+      '';
+      example = literalExample "[ pkgs.rofi-calc ]";
     };
 
     width = mkOption {
@@ -196,7 +270,7 @@ in {
       description = ''
         Path to the terminal which will be used to run console applications
       '';
-      example = "\${pkgs.gnome3.gnome_terminal}/bin/gnome-terminal";
+      example = "\${pkgs.gnome.gnome_terminal}/bin/gnome-terminal";
     };
 
     separator = mkOption {
@@ -220,7 +294,7 @@ in {
 
     location = mkOption {
       default = "center";
-      type = types.enum (builtins.attrNames locationsMap);
+      type = types.enum (attrNames locationsMap);
       description = "The location rofi appears on the screen.";
     };
 
@@ -274,25 +348,54 @@ in {
 
     theme = mkOption {
       default = null;
-      type = with types; nullOr (either str path);
-      example = "Arc";
+      type = with types; nullOr (oneOf [ str path themeType ]);
+      example = literalExample ''
+        let
+          inherit (config.lib.formats.rasi) mkLiteral;
+        in {
+          "*" = {
+            background-color = mkLiteral "#000000";
+            foreground-color = mkLiteral "rgba ( 250, 251, 252, 100 % )";
+            border-color = mkLiteral "#FFFFFF";
+            width = 512;
+          };
+
+          "#inputbar" = {
+            children = map mkLiteral [ "prompt" "entry" ];
+          };
+
+          "#textbox-prompt-colon" = {
+            expand = false;
+            str = ":";
+            margin = mkLiteral "0px 0.3em 0em 0em";
+            text-color = mkLiteral "@foreground-color";
+          };
+        }
+      '';
       description = ''
-        Name of theme or path to theme file in rasi format. Available
-        named themes can be viewed using the
+        Name of theme or path to theme file in rasi format or attribute set with
+        theme configuration. Available named themes can be viewed using the
         <command>rofi-theme-selector</command> tool.
       '';
     };
 
     configPath = mkOption {
-      default = "${config.xdg.configHome}/rofi/config";
-      defaultText = "$XDG_CONFIG_HOME/rofi/config";
+      default = "${config.xdg.configHome}/rofi/config.rasi";
+      defaultText = "$XDG_CONFIG_HOME/rofi/config.rasi";
       type = types.str;
       description = "Path where to put generated configuration file.";
     };
 
     extraConfig = mkOption {
-      default = "";
-      type = types.lines;
+      default = { };
+      example = literalExample ''
+        {
+          modi = "drun,emoji,ssh";
+          kb-primary-paste = "Control+V,Shift+Insert";
+          kb-secondary-paste = "Control+v,Insert";
+        }
+      '';
+      type = configType;
       description = "Additional configuration to add.";
     };
 
@@ -306,33 +409,47 @@ in {
       '';
     }];
 
-    home.packages = [ cfg.package ];
-
-    home.file."${cfg.configPath}".text = ''
-      ${setOption "width" cfg.width}
-      ${setOption "lines" cfg.lines}
-      ${setOption "font" cfg.font}
-      ${setOption "bw" cfg.borderWidth}
-      ${setOption "eh" cfg.rowHeight}
-      ${setOption "padding" cfg.padding}
-      ${setOption "separator-style" cfg.separator}
-      ${setOption "hide-scrollbar"
-      (if (cfg.scrollbar != null) then (!cfg.scrollbar) else cfg.scrollbar)}
-      ${setOption "terminal" cfg.terminal}
-      ${setOption "cycle" cfg.cycle}
-      ${setOption "fullscreen" cfg.fullscreen}
-      ${setOption "location" (builtins.getAttr cfg.location locationsMap)}
-      ${setOption "xoffset" cfg.xoffset}
-      ${setOption "yoffset" cfg.yoffset}
-
-      ${setColorScheme cfg.colors}
-      ${setOption "theme" themeName}
-
-      ${cfg.extraConfig}
-    '';
-
-    xdg.dataFile = mkIf (themePath != null) {
-      "rofi/themes/${themeName}.rasi".source = themePath;
+    lib.formats.rasi.mkLiteral = value: {
+      _type = "literal";
+      inherit value;
     };
+
+    home.packages = let
+      rofiWithPlugins = cfg.package.override
+        (old: rec { plugins = (old.plugins or [ ]) ++ cfg.plugins; });
+      rofiPackage = if builtins.hasAttr "override" cfg.package then
+        rofiWithPlugins
+      else
+        cfg.package;
+    in [ rofiPackage ];
+
+    home.file."${cfg.configPath}".text = toRasi {
+      configuration = ({
+        width = cfg.width;
+        lines = cfg.lines;
+        font = cfg.font;
+        bw = cfg.borderWidth;
+        eh = cfg.rowHeight;
+        padding = cfg.padding;
+        separator-style = cfg.separator;
+        hide-scrollbar =
+          if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
+        terminal = cfg.terminal;
+        cycle = cfg.cycle;
+        fullscreen = cfg.fullscreen;
+        location = (getAttr cfg.location locationsMap);
+        xoffset = cfg.xoffset;
+        yoffset = cfg.yoffset;
+        theme = themeName;
+      } // (mkColorScheme cfg.colors) // cfg.extraConfig);
+    };
+
+    xdg.dataFile = mkIf (themePath != null) (if themePath == "custom" then {
+      "rofi/themes/${themeName}.rasi".text = toRasi cfg.theme;
+    } else {
+      "rofi/themes/${themeName}.rasi".source = themePath;
+    });
   };
+
+  meta.maintainers = with maintainers; [ thiagokokada ];
 }

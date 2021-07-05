@@ -16,15 +16,7 @@ with lib;
         };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        dmenu = super.dmenu // { outPath = "@dmenu@"; };
-
-        i3 = super.i3 // { outPath = "@i3@"; };
-
-        i3status = super.i3status // { outPath = "@i3status@"; };
-      })
-    ];
+    nixpkgs.overlays = [ (import ./i3-overlay.nix) ];
 
     nmt.script = ''
       assertFileExists home-files/.config/i3/config

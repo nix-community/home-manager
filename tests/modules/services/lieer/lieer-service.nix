@@ -9,8 +9,14 @@ with lib;
     services.lieer.enable = true;
 
     accounts.email.accounts = {
-      "hm@example.com".lieer.enable = true;
-      "hm@example.com".lieer.sync.enable = true;
+      "hm@example.com" = {
+        flavor = "gmail.com";
+        lieer = {
+          enable = true;
+          sync.enable = true;
+        };
+        notmuch.enable = true;
+      };
     };
 
     nixpkgs.overlays = [

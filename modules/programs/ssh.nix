@@ -26,7 +26,8 @@ let
     };
 
     port = mkOption {
-      type = types.port;
+      type = types.nullOr types.port;
+      default = null;
       example = 8080;
       description = "Specifies port number to bind on bind address.";
     };
@@ -42,13 +43,15 @@ let
 
       host = {
         address = mkOption {
-          type = types.str;
+          type = types.nullOr types.str;
+          default = null;
           example = "example.org";
           description = "The address where to forward the traffic to.";
         };
 
         port = mkOption {
-          type = types.port;
+          type = types.nullOr types.port;
+          default = null;
           example = 80;
           description = "Specifies port number to forward the traffic to.";
         };
@@ -450,7 +453,7 @@ in
             any' = pred: items: if items == [] then true else any pred items;
             # Check that if `entry.address` is defined, and is a path, that `entry.port` has not
             # been defined.
-            noPathWithPort =  entry: entry ? address && isPath entry.address -> !(entry ? port);
+            noPathWithPort =  entry: entry.address != null && isPath entry.address -> entry.port == null;
             checkDynamic = block: any' noPathWithPort block.dynamicForwards;
             checkBindAndHost = fwd: noPathWithPort fwd.bind && noPathWithPort fwd.host;
             checkLocal = block: any' checkBindAndHost block.localForwards;

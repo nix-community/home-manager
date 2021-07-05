@@ -7,8 +7,20 @@ let
   cfg = config.programs.fzf;
 
 in {
+  imports = [
+    (mkRemovedOptionModule [ "programs" "fzf" "historyWidgetCommand" ]
+      "This option is no longer supported by fzf.")
+  ];
+
   options.programs.fzf = {
     enable = mkEnableOption "fzf - a command-line fuzzy finder";
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.fzf;
+      defaultText = literalExample "pkgs.fzf";
+      description = "Package providing the <command>fzf</command> tool.";
+    };
 
     defaultCommand = mkOption {
       type = types.nullOr types.str;
@@ -67,15 +79,6 @@ in {
       '';
     };
 
-    historyWidgetCommand = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      description = ''
-        The command that gets executed as the source for fzf for the
-        CTRL-R keybinding.
-      '';
-    };
-
     historyWidgetOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -83,6 +86,23 @@ in {
       description = ''
         Command line options for the CTRL-R keybinding.
       '';
+    };
+
+    tmux = {
+      enableShellIntegration = mkEnableOption ''
+        setting <literal>FZF_TMUX=1</literal> which causes shell integration to use fzf-tmux
+      '';
+
+      shellIntegrationOptions = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = literalExample ''[ "-d 40%" ]'';
+        description = ''
+          If <option>programs.fzf.tmux.enableShellIntegration</option> is set to <literal>true</literal>,
+          shell integration will use these options for fzf-tmux.
+          See <command>fzf-tmux --help</command> for available options.
+        '';
+      };
     };
 
     enableBashIntegration = mkOption {
@@ -111,36 +131,37 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.fzf ];
+    home.packages = [ cfg.package ];
 
     home.sessionVariables = mapAttrs (n: v: toString v)
       (filterAttrs (n: v: v != [ ] && v != null) {
         FZF_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
         FZF_ALT_C_OPTS = cfg.changeDirWidgetOptions;
-        FZF_CTRL_R_COMMAND = cfg.historyWidgetCommand;
         FZF_CTRL_R_OPTS = cfg.historyWidgetOptions;
         FZF_CTRL_T_COMMAND = cfg.fileWidgetCommand;
         FZF_CTRL_T_OPTS = cfg.fileWidgetOptions;
         FZF_DEFAULT_COMMAND = cfg.defaultCommand;
         FZF_DEFAULT_OPTS = cfg.defaultOptions;
+        FZF_TMUX = if cfg.tmux.enableShellIntegration then "1" else null;
+        FZF_TMUX_OPTS = cfg.tmux.shellIntegrationOptions;
       });
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-        . ${pkgs.fzf}/share/fzf/completion.bash
-        . ${pkgs.fzf}/share/fzf/key-bindings.bash
+        . ${cfg.package}/share/fzf/completion.bash
+        . ${cfg.package}/share/fzf/key-bindings.bash
       fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       if [[ $options[zle] = on ]]; then
-        . ${pkgs.fzf}/share/fzf/completion.zsh
-        . ${pkgs.fzf}/share/fzf/key-bindings.zsh
+        . ${cfg.package}/share/fzf/completion.zsh
+        . ${cfg.package}/share/fzf/key-bindings.zsh
       fi
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      source ${pkgs.fzf}/share/fzf/key-bindings.fish && fzf_key_bindings
+      source ${cfg.package}/share/fzf/key-bindings.fish && fzf_key_bindings
     '';
   };
 }

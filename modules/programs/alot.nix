@@ -7,8 +7,11 @@ let
 
   cfg = config.programs.alot;
 
-  alotAccounts =
+  enabledAccounts =
     filter (a: a.notmuch.enable) (attrValues config.accounts.email.accounts);
+
+  # sorted: primary first
+  alotAccounts = sort (a: b: !(a.primary -> b.primary)) enabledAccounts;
 
   boolStr = v: if v then "True" else "False";
 

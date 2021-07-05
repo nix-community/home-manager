@@ -23,7 +23,7 @@ in {
 
     config = mkOption {
       default = { };
-      type = types.attrs;
+      type = types.attrsOf types.anything;
       description = ''
         Add terms to the <filename>matplotlibrc</filename> file to
         control the default matplotlib behavior.

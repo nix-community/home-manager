@@ -106,17 +106,38 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && config.programs.bash.enable) {
-    programs.bash.initExtra = ''
-      function _update_ps1() {
-        local old_exit_status=$?
-        PS1="$(${pkgs.powerline-go}/bin/powerline-go -error $old_exit_status ${commandLineArguments})"
+  config = {
+    programs.bash.initExtra =
+      mkIf (cfg.enable && config.programs.bash.enable) ''
+        function _update_ps1() {
+          local old_exit_status=$?
+          PS1="$(${pkgs.powerline-go}/bin/powerline-go -error $old_exit_status ${commandLineArguments})"
+          ${cfg.extraUpdatePS1}
+          return $old_exit_status
+        }
+
+        if [ "$TERM" != "linux" ]; then
+          PROMPT_COMMAND="_update_ps1;$PROMPT_COMMAND"
+        fi
+      '';
+
+    programs.zsh.initExtra = mkIf (cfg.enable && config.programs.zsh.enable) ''
+      function powerline_precmd() {
+        PS1="$(${pkgs.powerline-go}/bin/powerline-go -error $? -shell zsh ${commandLineArguments})"
         ${cfg.extraUpdatePS1}
-        return $old_exit_status
+      }
+
+      function install_powerline_precmd() {
+        for s in "$\{precmd_functions[@]}"; do
+          if [ "$s" = "powerline_precmd" ]; then
+            return
+          fi
+        done
+        precmd_functions+=(powerline_precmd)
       }
 
       if [ "$TERM" != "linux" ]; then
-        PROMPT_COMMAND="_update_ps1;$PROMPT_COMMAND"
+        install_powerline_precmd
       fi
     '';
   };

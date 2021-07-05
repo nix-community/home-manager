@@ -1,0 +1,19 @@
+#inputbar {
+children: [ prompt,entry ];
+}
+
+#textbox-prompt-colon {
+expand: false;
+margin: 0px 0.3em 0em 0em;
+str: ":";
+text-color: @foreground-color;
+}
+
+* {
+background-color: #000000;
+border-color: #FFFFFF;
+foreground-color: rgba ( 250, 251, 252, 100 % );
+width: 512;
+}
+
+@import "~/.cache/wal/colors-rofi-dark"

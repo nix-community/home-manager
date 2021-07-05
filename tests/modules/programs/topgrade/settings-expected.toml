@@ -1,0 +1,8 @@
+cleanup = true
+disable = ["sdkman", "flutter", "node", "nix", "home_manager"]
+remote_topgrade_path = "bin/topgrade"
+remote_topgrades = ["backup", "ci"]
+set_title = false
+
+[commands]
+"Purge unused APT packages" = "sudo apt autoremove"

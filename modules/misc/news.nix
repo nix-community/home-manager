@@ -116,6 +116,9 @@ in
     #
     #     date --iso-8601=second --universal
     #
+    # On darwin (or BSD like systems) use
+    #
+    #     date -u +'%Y-%m-%dT%H:%M:%S+00:00'
     news.entries = [
       {
         time = "2017-09-01T10:56:28+00:00";
@@ -508,7 +511,7 @@ in
           configuration you can add
 
               imports = [
-                "''${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
+                "''${builtins.fetchTarball https://github.com/nix-community/home-manager/archive/master.tar.gz}/nixos"
               ];
 
           to your 'configuration.nix' file. This will introduce a new
@@ -1363,7 +1366,7 @@ in
 
           To learn more, see the installation section of the manual
 
-            https://rycee.gitlab.io/home-manager/#sec-install-nixos-module
+            https://nix-community.github.io/home-manager/#sec-install-nixos-module
         '';
       }
 
@@ -1647,6 +1650,472 @@ in
         time = "2020-09-01T18:38:18+00:00";
         message = ''
           A new module is available: 'programs.ncmpcpp'
+        '';
+      }
+
+      {
+        time = "2020-09-11T10:06:47+00:00";
+        condition = hostPlatform.isLinux && config.targets.genericLinux.enable;
+        message = ''
+          A new option 'targets.genericLinux.extraXdgDataDirs' is available
+          to setup the user environment with the OS's data files.
+
+          This is useful for example to get Bash completion for
+          'systemctl' which shouldn't be installed through Home Manager.
+
+          This is also useful to have non Home Manager applications
+          available in menus.
+        '';
+      }
+
+      {
+        time = "2020-09-09T06:54:59+00:00";
+        condition = config.programs.man.enable;
+        message = ''
+          A new option 'programs.man.generateCaches' was added to
+          support the apropos command.
+        '';
+      }
+
+      {
+        time = "2020-09-22T21:03:28+00:00";
+        message = ''
+          A new module is available: 'programs.pet'.
+        '';
+      }
+
+      {
+        time = "2020-09-29T21:21:44+00:00";
+        message = ''
+          A new module is available: 'programs.mu'.
+        '';
+      }
+
+      {
+        time = "2020-10-08T21:28:16+00:00";
+        message = ''
+          A new module is available: 'programs.autojump'
+
+          The option `programs.bash.enableAutojump` is deprecated and this new
+          module should be used instead.
+        '';
+      }
+
+      {
+        time = "2020-10-12T00:12:23+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          A new zsh submodule is available: 'programs.zsh.prezto'.
+        '';
+      }
+
+      {
+        time = "2020-10-22T21:10:38+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.gammastep'.
+        '';
+      }
+
+      {
+        time = "2020-10-22T21:30:42+00:00";
+        message = ''
+          A new module is available: 'programs.gh'.
+        '';
+      }
+
+      {
+        time = "2020-11-01T11:17:02+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.caffeine'.
+        '';
+      }
+
+      {
+        time = "2020-11-05T22:59:21+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.i3status-rust'.
+        '';
+      }
+
+      {
+        time = "2020-11-14T13:02:40+00:00";
+        condition = config.programs.broot.enable;
+        message = ''
+          The 'programs.broot.verbs' option is now a list rather than an
+          attribute set. To migrate, move the keys of the attrset into the
+          list items' 'invocation' keys. For example,
+
+            programs.broot.verbs = {
+              "p" = { execution = ":parent"; };
+            };
+
+          becomes
+
+            programs.broot.verbs = [
+              {
+                invocation = "p";
+                execution = ":parent";
+              }
+            ];
+        '';
+      }
+
+      {
+        time = "2020-12-01T20:46:14+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.wlsunset'.
+        '';
+      }
+
+      {
+        time = "2020-12-09T22:34:33+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.pbgopy'.
+        '';
+      }
+
+      {
+        time = "2020-12-18T22:22:25+00:00";
+        message = ''
+          A new module is available: 'programs.rofi.pass'.
+        '';
+      }
+
+      {
+        time = "2020-12-31T14:16:47+00:00";
+        message = ''
+          A new module is available: 'programs.octant'.
+        '';
+      }
+
+      {
+        time = "2021-01-01T08:51:11+00:00";
+        condition = config.pam.sessionVariables != {};
+        message = ''
+          The option 'pam.sessionVariables' will be deprecated in the future.
+          This is due to PAM 1.5.0 deprecating reading of the user environment.
+          The deprecation will not take place immediately but you may wish to
+          consider alternatives to PAM environment variables.
+
+          See
+
+            https://github.com/nix-community/home-manager/issues/1691
+
+          for discussion.
+        '';
+      }
+
+      {
+        time = "2021-01-02T07:49:15+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.plan9port'.
+        '';
+      }
+
+      {
+        time = "2021-01-31T11:23:30+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.playerctld'.
+        '';
+      }
+
+      {
+        time = "2021-01-28T15:07:34+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          New options are available for 'targets.darwin':
+
+          - targets.darwin.defaults
+
+            This adds options for configuring macOS through the defaults(1)
+            system.
+
+          - targets.darwin.keybindings
+
+            This adds options for configuring the default keybindings for macOS
+            text fields.
+
+          - targets.darwin.search
+
+            This adds options for configuring the default search engine for
+            macOS.
+        '';
+      }
+
+      {
+        time = "2021-02-04T22:28:26+00:00";
+        message = ''
+          A new module is available: 'programs.sbt'.
+        '';
+      }
+
+      {
+        time = "2021-02-20T00:00:00+00:00";
+        condition = config.services.polybar.enable;
+        message = ''
+          The polybar configuration can now be written in a more nix-friendly format.
+          The new 'services.polybar.settings' option is an alternative to
+          'services.polybar.config' that supports nested keys and converts nix
+          lists to polybar-style 'foo-0, foo-1, ...' lists.
+        '';
+      }
+
+      {
+        time = "2021-02-25T22:36:43+00:00";
+        condition = config.programs.git.enable && any (msmtp: msmtp.enable)
+          (mapAttrsToList (name: account: account.msmtp)
+            config.accounts.email.accounts);
+        message = ''
+          Git will now defer to msmtp for sending emails if
+          'accounts.email.accounts.<name>.msmtp.enable' is true.
+        '';
+      }
+
+      {
+        time = "2021-03-03T22:16:05+00:00";
+        message = ''
+          Home Manager now respects the 'NO_COLOR' environment variable as per
+          https://no-color.org/.
+        '';
+      }
+
+      {
+        time = "2021-03-29T21:05:50+00:00";
+        message = ''
+          Configuration specified by 'programs.dircolors.extraConfig' is now
+          applied after 'programs.dircolors.settings'.
+        '';
+      }
+
+      {
+        time = "2021-04-11T20:44:54+00:00";
+        message = ''
+          A new module is available: 'programs.exa'.
+        '';
+      }
+
+      {
+        time = "2021-04-23T10:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.pass-secret-service'.
+        '';
+      }
+
+      {
+        time = "2021-04-26T07:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new service is available: 'services.poweralertd'.
+        '';
+      }
+
+      {
+        time = "2021-04-28T10:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new service is available: 'services.mpris-proxy'.
+        '';
+      }
+
+      {
+        time = "2021-04-28T12:00:00+00:00";
+        message = ''
+          A new module is available: 'programs.topgrade'.
+        '';
+      }
+
+      {
+        time = "2021-04-30T22:05:01+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new service is available: 'services.barrier'.
+        '';
+      }
+
+      {
+        time = "2021-05-01T15:16:08+00:00";
+        message = ''
+          A new module is available: 'programs.lazygit'.
+        '';
+      }
+
+      {
+        time = "2021-04-27T00:00:00+00:00";
+        message = ''
+          A new module is available: 'programs.ncspot'.
+        '';
+      }
+
+      {
+        time = "2021-05-02T11:22:42+00:00";
+        condition = hostPlatform.isLinux && config.services.sxhkd.enable;
+        message = ''
+          The sxhkd service now is started using 'xsession.initExtra',
+          therefore this module loses systemd service management capabilities
+          and works only if Home Manager starts the user X session.
+
+          The option 'services.sxhkd.extraPath' has been deprecated.
+        '';
+      }
+
+      {
+        time = "2021-05-06T20:47:37+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.etesync-dav'
+        '';
+      }
+
+      {
+        time = "2021-05-06T11:01:41+00:00";
+        message = ''
+          A new module is available: 'programs.nix-index'.
+        '';
+      }
+
+      {
+        time = "2021-05-10T18:50:07+00:00";
+        message = ''
+          A new module is available: 'xdg.systemDirs'. Options are:
+
+          - xdg.systemDirs.config
+
+            Extra directory names to add to $XDG_CONFIG_DIRS in the user
+            session.
+
+          - xdg.systemDirs.data
+
+            Extra directory names to add to $XDG_DATA_DIRS in the user
+            session.
+
+          These variables are visible in both systemd user services and
+          login shells.
+        '';
+      }
+
+      {
+        time = "2021-05-18T12:22:42+00:00";
+        condition = config.services.syncthing != {};
+        message = ''
+          Setting 'services.syncthing.tray' as a boolean will be deprecated in
+          the future.
+
+          This is to make the syncthing tray package configurable, with
+          `services.syncthing.tray.package`, following QSyncthingTray becoming
+          no longer actively maintained. The default syncthing tray package has
+          also changed to https://github.com/Martchus/syncthingtray. To
+          continue as before, set `services.syncthing.tray.enable`.
+
+          See
+
+            https://github.com/nix-community/home-manager/pull/1257
+
+          for discussion.
+        '';
+      }
+
+      {
+        time = "2021-05-18T20:28:50+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.foot'.
+        '';
+      }
+
+      {
+        time = "2021-05-23T18:31:38+00:00";
+        condition = config.programs.mbsync.enable;
+        message = ''
+          mbsync channels no longer accepts the masterPattern or slavePattern
+          attribute keys. This is due to an upstream change.
+          They have been renamed: masterPattern -> farPattern, and
+          slavePattern -> nearPattern.
+          This is a stateful change, where the database file(s) used to keep track
+          of mail are silently upgraded once you upgrade both your configuration file
+          and the mbsync program.
+
+          Note that this change is non-reversible, meaning once you choose to switch to
+          near/farPattern, you can no longer use your previous slave/masterPattern
+          configuration file.
+        '';
+      }
+
+      {
+        time = "2021-05-10T20:41:44+00:00";
+        message = ''
+          A new module is available: 'programs.rbw'.
+        '';
+      }
+
+      {
+        time = "2021-05-30T15:22:10+00:00";
+        message = ''
+          A new module is available: 'programs.piston-cli'.
+        '';
+      }
+
+      {
+        time = "2021-06-02T04:24:10+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.xidlehook'.
+        '';
+      }
+
+      {
+        time = "2021-06-07T20:44:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.pantalaimon'.
+        '';
+      }
+
+      {
+        time = "2021-06-12T05:00:22+00:00";
+        message = ''
+          A new module is available: 'programs.mangohud'.
+        '';
+      }
+
+      {
+        time = "2021-06-16T01:26:16+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          The xmonad module now compiles the configuration before
+          linking the binary to the place xmonad expects to find
+          the compiled configuration (the binary).
+
+          This breaks recompilation of xmonad (i.e. the 'q' binding or
+          'xmonad --recompile').
+
+          If this behavior is undesirable, do not use the
+          'xsession.windowManager.xmonad.config' option. Instead, set the
+          contents of the configuration file with
+          'home.file.".xmonad/config.hs".text = "content of the file"'
+          or 'home.file.".xmonad/config.hs".source = ./path-to-config'.
+        '';
+      }
+
+      {
+        time = "2021-06-24T22:36:11+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'i18n.inputMethod'.
+        '';
+      }
+
+      {
+        time = "2021-06-22T14:43:53+00:00";
+        message = ''
+          A new module is available: 'programs.himalaya'.
         '';
       }
     ];

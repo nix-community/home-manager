@@ -30,11 +30,17 @@ with lib;
       })
     ];
 
-    nmt.script = ''
+    nmt.script = let
+      qutebrowserConfig = if pkgs.stdenv.hostPlatform.isDarwin then
+        ".qutebrowser/config.py"
+      else
+        ".config/qutebrowser/config.py";
+    in ''
       assertFileContent \
-        home-files/.config/qutebrowser/config.py \
+        home-files/${qutebrowserConfig} \
         ${
           pkgs.writeText "qutebrowser-expected-config.py" ''
+            config.load_autoconfig(False)
             c.colors.hints.bg = "#000000"
             c.colors.hints.fg = "#ffffff"
             c.colors.tabs.bar.bg = "#000000"

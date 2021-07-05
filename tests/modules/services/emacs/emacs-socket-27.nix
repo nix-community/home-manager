@@ -8,7 +8,7 @@ in {
   config = {
     nixpkgs.overlays = [
       (self: super: rec {
-        emacs = pkgs.writeShellScriptBin "dummy-emacs-27.0.91" "" // {
+        emacs = pkgs.writeShellScriptBin "dummy-emacs-27.2" "" // {
           outPath = "@emacs@";
         };
         emacsPackagesFor = _:
@@ -27,16 +27,16 @@ in {
       assertFileExists home-path/share/applications/emacsclient.desktop
 
       assertFileContent home-files/.config/systemd/user/emacs.socket \
-                        ${./emacs-socket-27-emacs.socket}
+                        ${./emacs-socket-emacs.socket}
       assertFileContent home-files/.config/systemd/user/emacs.service \
                         ${
                           pkgs.substituteAll {
-                            inherit (pkgs) runtimeShell;
-                            src = ./emacs-socket-27-emacs.service;
+                            inherit (pkgs) runtimeShell coreutils;
+                            src = ./emacs-socket-emacs.service;
                           }
                         }
       assertFileContent home-path/share/applications/emacsclient.desktop \
-                        ${./emacs-emacsclient.desktop}
+                        ${./emacs-27-emacsclient.desktop}
     '';
   };
 }

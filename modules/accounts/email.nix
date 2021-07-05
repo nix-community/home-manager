@@ -332,7 +332,10 @@ let
       (mkIf (config.flavor == "gmail.com") {
         userName = mkDefault config.address;
 
-        imap = { host = "imap.gmail.com"; };
+        imap = {
+          host = "imap.gmail.com";
+          port = 993;
+        };
 
         smtp = {
           host = "smtp.gmail.com";

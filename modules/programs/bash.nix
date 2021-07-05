@@ -11,6 +11,14 @@ in
 {
   meta.maintainers = [ maintainers.rycee ];
 
+  imports = [
+    (mkRenamedOptionModule [ "programs" "bash" "enableAutojump" ] [
+      "programs"
+      "autojump"
+      "enable"
+    ])
+  ];
+
   options = {
     programs.bash = {
       enable = mkEnableOption "GNU Bourne-Again SHell";
@@ -22,8 +30,8 @@ in
       };
 
       historyFile = mkOption {
-        type = types.str;
-        default = "$HOME/.bash_history";
+        type = types.nullOr types.str;
+        default = null;
         description = "Location of the bash history file.";
       };
 
@@ -94,12 +102,6 @@ in
         '';
       };
 
-      enableAutojump = mkOption {
-        default = false;
-        type = types.bool;
-        description = "Enable the autojump navigation tool.";
-      };
-
       profileExtra = mkOption {
         default = "";
         type = types.lines;
@@ -109,23 +111,21 @@ in
         '';
       };
 
-      bashrcExtra = mkOption {
-        # Hide for now, may want to rename in the future.
-        visible = false;
-        default = "";
-        type = types.lines;
-        description = ''
-          Extra commands that should be added to
-          <filename>~/.bashrc</filename>.
-        '';
-      };
-
       initExtra = mkOption {
         default = "";
         type = types.lines;
         description = ''
           Extra commands that should be run when initializing an
           interactive shell.
+        '';
+      };
+
+      bashrcExtra = mkOption {
+        default = "";
+        type = types.lines;
+        description = ''
+          Extra commands that should be placed in <filename>~/.bashrc</filename>.
+          Note that these commands will be run even in non-interactive shells.
         '';
       };
 
@@ -155,9 +155,11 @@ in
       historyControlStr =
         concatStringsSep "\n" (mapAttrsToList (n: v: "${n}=${v}") (
           {
-            HISTFILE = "\"${cfg.historyFile}\"";
             HISTFILESIZE = toString cfg.historyFileSize;
             HISTSIZE = toString cfg.historySize;
+          }
+          // optionalAttrs (cfg.historyFile != null) {
+            HISTFILE = "\"${cfg.historyFile}\"";
           }
           // optionalAttrs (cfg.historyControl != []) {
             HISTCONTROL = concatStringsSep ":" cfg.historyControl;
@@ -167,25 +169,7 @@ in
           }
         ));
     in mkIf cfg.enable {
-      programs.bash.bashrcExtra = ''
-        # Commands that should be applied only for interactive shells.
-        if [[ $- == *i* ]]; then
-          ${historyControlStr}
-
-          ${shoptsStr}
-
-          ${aliasesStr}
-
-          ${optionalString cfg.enableAutojump
-            ". ${pkgs.autojump}/share/autojump/autojump.bash"}
-
-          ${cfg.initExtra}
-        fi
-      '';
-
-      home.file.".bash_profile".text = ''
-        # -*- mode: sh -*-
-
+      home.file.".bash_profile".source = pkgs.writeShellScript "bash_profile" ''
         # include .profile if it exists
         [[ -f ~/.profile ]] && . ~/.profile
 
@@ -193,9 +177,7 @@ in
         [[ -f ~/.bashrc ]] && . ~/.bashrc
       '';
 
-      home.file.".profile".text = ''
-        # -*- mode: sh -*-
-
+      home.file.".profile".source = pkgs.writeShellScript "profile" ''
         . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
         ${sessionVarsStr}
@@ -203,22 +185,24 @@ in
         ${cfg.profileExtra}
       '';
 
-      home.file.".bashrc".text = ''
-        # -*- mode: sh -*-
-
+      home.file.".bashrc".source = pkgs.writeShellScript "bashrc" ''
         ${cfg.bashrcExtra}
+
+        # Commands that should be applied only for interactive shells.
+        [[ $- == *i* ]] || return
+
+        ${historyControlStr}
+
+        ${shoptsStr}
+
+        ${aliasesStr}
+
+        ${cfg.initExtra}
       '';
 
       home.file.".bash_logout" = mkIf (cfg.logoutExtra != "") {
-        text = ''
-          # -*- mode: sh -*-
-
-          ${cfg.logoutExtra}
-        '';
+        source = pkgs.writeShellScript "bash_logout" cfg.logoutExtra;
       };
-
-      home.packages =
-        optional (cfg.enableAutojump) pkgs.autojump;
     }
   );
 }

@@ -6,12 +6,14 @@ let
 
   cfg = config.services.hound;
 
-  configFile = pkgs.writeText "hound-config.json" (builtins.toJSON {
+  jsonFormat = pkgs.formats.json { };
+
+  configFile = jsonFormat.generate "hound-config.json" {
     max-concurrent-indexers = cfg.maxConcurrentIndexers;
     dbpath = cfg.databasePath;
     repos = cfg.repositories;
     health-check-url = "/healthz";
-  });
+  };
 
   houndOptions = [ "--addr ${cfg.listenAddress}" "--conf ${configFile}" ];
 
@@ -41,7 +43,7 @@ in {
     };
 
     repositories = mkOption {
-      type = types.attrsOf (types.uniq types.attrs);
+      type = types.attrsOf jsonFormat.type;
       default = { };
       example = literalExample ''
         {

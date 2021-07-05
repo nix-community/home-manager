@@ -19,8 +19,27 @@ let
 in
 
 {
+  imports = [
+    (mkRemovedOptionModule ["services" "sxhkd" "extraPath"]
+    "This option is no longer needed and can be removed.")
+  ];
+
   options.services.sxhkd = {
     enable = mkEnableOption "simple X hotkey daemon";
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.sxhkd;
+      defaultText = "pkgs.sxhkd";
+      description = "Package containing the <command>sxhkd</command> executable.";
+    };
+
+    extraOptions = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "Command line arguments to invoke <command>sxhkd</command> with.";
+      example = literalExample ''[ "-m 1" ]'';
+    };
 
     keybindings = mkOption {
       type = types.attrsOf (types.nullOr types.str);
@@ -43,44 +62,22 @@ in
           i3-msg {workspace,move container to workspace} {1-10}
       '';
     };
-
-    extraPath = mkOption {
-      default = "";
-      type = types.envVar;
-      description = ''
-        Additional <envar>PATH</envar> entries to search for commands.
-      '';
-      example = "/home/some-user/bin:/extra/path/bin";
-    };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.sxhkd ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."sxhkd/sxhkdrc".text = concatStringsSep "\n" [
       keybindingsStr
       cfg.extraConfig
     ];
 
-    systemd.user.services.sxhkd = {
-      Unit = {
-        Description = "simple X hotkey daemon";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
-      };
-
-      Service = {
-        Environment =
-          "PATH="
-          + "${config.home.profileDirectory}/bin"
-          + optionalString (cfg.extraPath != "") ":"
-          + cfg.extraPath;
-        ExecStart = "${pkgs.sxhkd}/bin/sxhkd";
-      };
-
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
-    };
+    xsession.initExtra =
+      let
+        sxhkdCommand = "${cfg.package}/bin/sxhkd ${toString cfg.extraOptions}";
+      in ''
+        systemctl --user stop sxhkd.scope 2> /dev/null || true
+        systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd ${sxhkdCommand} &
+      '';
   };
 }

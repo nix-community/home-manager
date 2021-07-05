@@ -12,47 +12,51 @@
  </refnamediv>
  <refsynopsisdiv>
   <cmdsynopsis>
-   <command>home-manager</command> <group choice="req"> 
+   <command>home-manager</command> <group choice="req">
    <arg choice="plain">
     build
    </arg>
-    
+
    <arg choice="plain">
     instantiate
    </arg>
-    
+
    <arg choice="plain">
     edit
    </arg>
-    
+
    <arg choice="plain">
     expire-generations <replaceable>timestamp</replaceable>
    </arg>
-    
+
    <arg choice="plain">
     generations
    </arg>
-    
+
    <arg choice="plain">
     help
    </arg>
-    
+
    <arg choice="plain">
     news
    </arg>
-    
+
+   <arg choice="plain">
+    option <replaceable>option.name</replaceable>
+   </arg>
+
    <arg choice="plain">
     packages
    </arg>
-    
+
    <arg choice="plain">
     remove-generations <replaceable>ID …</replaceable>
    </arg>
-    
+
    <arg choice="plain">
     switch
    </arg>
-    
+
    <arg choice="plain">
     uninstall
    </arg>
@@ -61,85 +65,102 @@
    <arg>
     -A <replaceable>attrPath</replaceable>
    </arg>
-    
+
    <arg>
     -I <replaceable>path</replaceable>
    </arg>
-    
+
+   <arg>
+    --flake <replaceable>flake-uri</replaceable>
+   </arg>
+
    <arg>
     -b <replaceable>ext</replaceable>
    </arg>
-    
+
    <arg>
-    <group choice="req"> 
+    <group choice="req">
     <arg choice="plain">
      -f
     </arg>
-     
+
     <arg choice="plain">
      --file
     </arg>
      </group> <replaceable>path</replaceable>
    </arg>
-    
+
    <arg>
-    <group choice="req"> 
+    <group choice="req">
     <arg choice="plain">
      -h
     </arg>
-     
+
     <arg choice="plain">
      --help
     </arg>
      </group>
    </arg>
-    
+
    <arg>
-    <group choice="req"> 
+    <group choice="req">
     <arg choice="plain">
      -n
     </arg>
-     
+
     <arg choice="plain">
      --dry-run
     </arg>
      </group>
    </arg>
-    
+
    <arg>
     --option <replaceable>name</replaceable> <replaceable>value</replaceable>
    </arg>
-    
+
    <arg>
     --cores <replaceable>number</replaceable>
    </arg>
-    
+
    <arg>
-    --max-jobs <replaceable>number</replaceable>
+     <group choice="req">
+       <arg choice="plain">
+         -j
+       </arg>
+
+       <arg choice="plain">
+         --max-jobs
+       </arg>
+     </group>
+     <replaceable>number</replaceable>
    </arg>
-    
+
+   <arg>
+    --debug
+   </arg>
+
    <arg>
     --keep-failed
    </arg>
-    
+
    <arg>
     --keep-going
    </arg>
-    
+
    <arg>
     --show-trace
    </arg>
-    
+
    <arg>
     --(no-)substitute
    </arg>
-    
+
    <arg>
-    <group choice="req"> 
+    <group choice="req">
     <arg choice="plain">
      -v
     </arg>
-     
+
     <arg choice="plain">
      --verbose
     </arg>
@@ -151,7 +172,7 @@
   <title>Description</title>
   <para>
    This command updates the user environment so that it corresponds to the
-   configuration specified in <filename>~/.config/nixpkgs/home.nix</filename>.
+      configuration specified in <filename>~/.config/nixpkgs/home.nix</filename> or <filename>~/.config/nixpkgs/flake.nix</filename>.
   </para>
   <para>
    All operations using this tool expects a sub-command that indicates the
@@ -230,6 +251,18 @@
      <listitem>
       <para>
        Show news entries in a pager.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>
+      <option>option <replaceable>option.name</replaceable></option>
+     </term>
+     <listitem>
+      <para>
+       Inspect the given option name in the home configuration, like <citerefentry>
+       <refentrytitle>nixos-option</refentrytitle>
+       <manvolnum>8</manvolnum> </citerefentry>.
       </para>
      </listitem>
     </varlistentry>
@@ -336,6 +369,18 @@
    </varlistentry>
    <varlistentry>
     <term>
+     <option>--flake <replaceable>flake-uri[#name]</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Build Home Manager configuration from the flake, which must contain the
+      output homeConfigurations.name. If no name is specified it will first try
+      username@hostname and then username.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
      <option>-b <replaceable>extension</replaceable></option>
     </term>
     <listitem>
@@ -418,7 +463,22 @@
    </varlistentry>
    <varlistentry>
     <term>
+     <option>-j <replaceable>number</replaceable></option>
+    </term>
+    <term>
      <option>--max-jobs <replaceable>number</replaceable></option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--debug</option>
     </term>
     <listitem>
      <para>
@@ -512,7 +572,7 @@
   <para>
    Please report any bugs on the
    <link
-   xlink:href="https://github.com/rycee/home-manager/issues">project
+   xlink:href="https://github.com/nix-community/home-manager/issues">project
    issue tracker</link>.
   </para>
  </refsection>

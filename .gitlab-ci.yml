@@ -1,8 +1,7 @@
 image: nixos/nix:latest
 
 variables:
-  # Pinned 2020-03-28.
-  NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/05f0934825c2a0750d4888c4735f9420c906b388.tar.gz"
+  NIX_PATH: "nixpkgs=channel:nixos-unstable"
 
 stages:
   - test

@@ -1,0 +1,5 @@
+[Desktop Entry]
+Exec=test --option
+Name=Test
+Terminal=false
+Type=Application

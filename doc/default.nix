@@ -26,27 +26,78 @@ let
     }];
   };
 
-  hmModulesDocs = nmd.buildModulesDocs {
+  buildModulesDocs = args:
+    nmd.buildModulesDocs ({
+      moduleRootPaths = [ ./.. ];
+      mkModuleUrl = path:
+        "https://github.com/nix-community/home-manager/blob/master/${path}#blob-path";
+      channelName = "home-manager";
+    } // args);
+
+  hmModulesDocs = buildModulesDocs {
     modules = import ../modules/modules.nix {
       inherit lib pkgs;
       check = false;
     } ++ [ scrubbedPkgsModule ];
-    moduleRootPaths = [ ./.. ];
-    mkModuleUrl = path:
-      "https://github.com/rycee/home-manager/blob/master/${path}#blob-path";
-    channelName = "home-manager";
     docBook.id = "home-manager-options";
+  };
+
+  nixosModuleDocs = buildModulesDocs {
+    modules = let
+      nixosModule = module: pkgs.path + "/nixos/modules" + module;
+      mockedNixos = with lib; {
+        options = {
+          environment.pathsToLink = mkSinkUndeclaredOptions { };
+          systemd.services = mkSinkUndeclaredOptions { };
+          users.users = mkSinkUndeclaredOptions { };
+        };
+      };
+    in [
+      ../nixos/default.nix
+      mockedNixos
+      (nixosModule "/misc/assertions.nix")
+      scrubbedPkgsModule
+    ];
+    docBook = {
+      id = "nixos-options";
+      optionIdPrefix = "nixos-opt";
+    };
+  };
+
+  nixDarwinModuleDocs = buildModulesDocs {
+    modules = let
+      nixosModule = module: pkgs.path + "/nixos/modules" + module;
+      mockedNixDarwin = with lib; {
+        options = {
+          environment.pathsToLink = mkSinkUndeclaredOptions { };
+          system.activationScripts.postActivation.text =
+            mkSinkUndeclaredOptions { };
+          users.users = mkSinkUndeclaredOptions { };
+        };
+      };
+    in [
+      ../nix-darwin/default.nix
+      mockedNixDarwin
+      (nixosModule "/misc/assertions.nix")
+      scrubbedPkgsModule
+    ];
+    docBook = {
+      id = "nix-darwin-options";
+      optionIdPrefix = "nix-darwin-opt";
+    };
   };
 
   docs = nmd.buildDocBookDocs {
     pathName = "home-manager";
-    modulesDocs = [ hmModulesDocs ];
+    modulesDocs = [ hmModulesDocs nixDarwinModuleDocs nixosModuleDocs ];
     documentsDirectory = ./.;
     documentType = "book";
     chunkToc = ''
       <toc>
         <d:tocentry xmlns:d="http://docbook.org/ns/docbook" linkend="book-home-manager-manual"><?dbhtml filename="index.html"?>
           <d:tocentry linkend="ch-options"><?dbhtml filename="options.html"?></d:tocentry>
+          <d:tocentry linkend="ch-nixos-options"><?dbhtml filename="nixos-options.html"?></d:tocentry>
+          <d:tocentry linkend="ch-nix-darwin-options"><?dbhtml filename="nix-darwin-options.html"?></d:tocentry>
           <d:tocentry linkend="ch-tools"><?dbhtml filename="tools.html"?></d:tocentry>
           <d:tocentry linkend="ch-release-notes"><?dbhtml filename="release-notes.html"?></d:tocentry>
         </d:tocentry>

@@ -17,7 +17,16 @@ with lib;
       assertFileExists home-files/.profile
       assertFileContent \
         home-files/.profile \
-        ${./session-variables-expected.txt}
+        ${
+          pkgs.writeShellScript "session-variables-expected" ''
+            . "/home/hm-user/.nix-profile/etc/profile.d/hm-session-vars.sh"
+
+            export V1="v1"
+            export V2="v2-v1"
+
+
+          ''
+        }
     '';
   };
 }

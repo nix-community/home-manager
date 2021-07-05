@@ -30,6 +30,13 @@ in {
     programs.jq = {
       enable = mkEnableOption "the jq command-line JSON processor";
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.jq;
+        defaultText = literalExample "pkgs.jq";
+        description = "jq package to use.";
+      };
+
       colors = mkOption {
         description = ''
           The colors used in colored JSON output.</para>
@@ -51,12 +58,12 @@ in {
 
         default = {
           null = "1;30";
-          false = "0;39";
-          true = "0;39";
-          numbers = "0;39";
+          false = "0;37";
+          true = "0;37";
+          numbers = "0;37";
           strings = "0;32";
-          arrays = "1;39";
-          objects = "1;39";
+          arrays = "1;37";
+          objects = "1;37";
         };
 
         type = colorsType;
@@ -65,7 +72,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.jq ];
+    home.packages = [ cfg.package ];
 
     home.sessionVariables = let c = cfg.colors;
     in {

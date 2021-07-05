@@ -6,7 +6,35 @@ let
   cfg = config.programs.newsboat;
   wrapQuote = x: ''"${x}"'';
 
+  urlsFileContents = let
+    mkUrlEntry = u:
+      concatStringsSep " " ([ u.url ] ++ map wrapQuote u.tags
+        ++ optional (u.title != null) (wrapQuote "~${u.title}"));
+    urls = map mkUrlEntry cfg.urls;
+
+    mkQueryEntry = n: v: ''"query:${n}:${escape [ ''"'' ] v}"'';
+    queries = mapAttrsToList mkQueryEntry cfg.queries;
+  in concatStringsSep "\n"
+  (if versionAtLeast config.home.stateVersion "20.03" then
+    queries ++ urls
+  else
+    urls ++ queries) + "\n";
+
+  configFileContents = ''
+    max-items ${toString cfg.maxItems}
+    browser ${cfg.browser}
+    reload-threads ${toString cfg.reloadThreads}
+    auto-reload ${if cfg.autoReload then "yes" else "no"}
+    ${optionalString (cfg.reloadTime != null)
+    (toString "reload-time ${toString cfg.reloadTime}")}
+    prepopulate-query-feeds yes
+
+    ${cfg.extraConfig}
+  '';
+
 in {
+  meta.maintainers = [ maintainers.sumnerevans ];
+
   options = {
     programs.newsboat = {
       enable = mkEnableOption "the Newsboat feed reader";
@@ -71,7 +99,7 @@ in {
 
       browser = mkOption {
         type = types.str;
-        default = "${pkgs.xdg_utils}/bin/xdg-open";
+        default = "${pkgs.xdg-utils}/bin/xdg-open";
         description = "External browser to use.";
       };
 
@@ -94,30 +122,16 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.newsboat ];
-    home.file.".newsboat/urls".text = let
-      mkUrlEntry = u:
-        concatStringsSep " " ([ u.url ] ++ map wrapQuote u.tags
-          ++ optional (u.title != null) (wrapQuote "~${u.title}"));
-      urls = map mkUrlEntry cfg.urls;
 
-      mkQueryEntry = n: v: ''"query:${n}:${escape [ ''"'' ] v}"'';
-      queries = mapAttrsToList mkQueryEntry cfg.queries;
-    in concatStringsSep "\n"
-    (if versionAtLeast config.home.stateVersion "20.03" then
-      queries ++ urls
-    else
-      urls ++ queries) + "\n";
-
-    home.file.".newsboat/config".text = ''
-      max-items ${toString cfg.maxItems}
-      browser ${cfg.browser}
-      reload-threads ${toString cfg.reloadThreads}
-      auto-reload ${if cfg.autoReload then "yes" else "no"}
-      ${optionalString (cfg.reloadTime != null)
-      (toString "reload-time ${toString cfg.reloadTime}")}
-      prepopulate-query-feeds yes
-
-      ${cfg.extraConfig}
-    '';
+    # Use ~/.newsboat on stateVersion < 21.05 and use ~/.config/newsboat for
+    # stateVersion >= 21.05.
+    home.file = mkIf (versionOlder config.home.stateVersion "21.05") {
+      ".newsboat/urls".text = urlsFileContents;
+      ".newsboat/config".text = configFileContents;
+    };
+    xdg.configFile = mkIf (versionAtLeast config.home.stateVersion "21.05") {
+      "newsboat/urls".text = urlsFileContents;
+      "newsboat/config".text = configFileContents;
+    };
   };
 }

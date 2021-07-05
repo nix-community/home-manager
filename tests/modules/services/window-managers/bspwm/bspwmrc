@@ -1,0 +1,19 @@
+bspc monitor 'focused' -d 'desktop 1' 'd'\''esk top'
+
+bspc config 'border_width' '2'
+bspc config 'external_rules_command' '/path/to/external rules command'
+bspc config 'gapless_monocle' 'on'
+bspc config 'ignore_ewmh_fullscreen' 'enter,exit'
+bspc config 'split_ratio' '0.520000'
+
+bspc rule -r '*'
+bspc rule -a '*' 'center=off' 'desktop=d'\''esk top#next' 'split_dir=north' 'sticky=on'
+
+# java gui fixes
+export _JAVA_AWT_WM_NONREPARENTING=1
+bspc rule -a sun-awt-X11-XDialogPeer state=floating
+
+extra config
+
+foo &
+bar || qux &
