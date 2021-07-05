@@ -159,6 +159,7 @@ let
     (loadModule ./services/cbatticon.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/clipmenu.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/compton.nix { })
+    (loadModule ./services/devilspie2.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/dropbox.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/dunst.nix { })
     (loadModule ./services/dwm-status.nix { condition = hostPlatform.isLinux; })

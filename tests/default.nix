@@ -114,6 +114,7 @@ import nmt {
     ./modules/programs/waybar
     ./modules/programs/xmobar
     ./modules/services/barrier
+    ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs
     ./modules/services/fluidsynth
