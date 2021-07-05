@@ -9568,6 +9568,22 @@ percent symbol).
         "pkgs.clipmenu"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipmenu.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/clipmenu.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.devilspie2.enable"></a><a class="term" href="options.html#opt-services.devilspie2.enable"><code class="option">services.devilspie2.enable</code></a></span></dt><dd><p>Whether to enable Devilspie2, a window matching utility, allowing the user to
+perform scripted actions on windows as they are created.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/devilspie2.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/devilspie2.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.devilspie2.config"></a><a class="term" href="options.html#opt-services.devilspie2.config"><code class="option">services.devilspie2.config</code></a></span></dt><dd><p>Content of file placed in the devilspie2 config directory.
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        ""
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
+if (get_window_class() == "Gnome-terminal") then
+    make_always_on_top();
+end
+''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/devilspie2.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/devilspie2.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.dropbox.enable"></a><a class="term" href="options.html#opt-services.dropbox.enable"><code class="option">services.dropbox.enable</code></a></span></dt><dd><p>Whether to enable Dropbox daemon.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
