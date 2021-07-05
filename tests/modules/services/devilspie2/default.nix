@@ -1,3 +1,1 @@
-{
-  devilspie2-configuration = ./configuration.nix;
-}
+{ devilspie2-configuration = ./configuration.nix; }
