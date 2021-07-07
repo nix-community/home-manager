@@ -61,6 +61,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.lieer" pkgs
+        lib.platforms.linux)
+    ];
+
     programs.lieer.enable = true;
     systemd.user.services = listToAttrs (map serviceUnit syncAccounts);
     systemd.user.timers = listToAttrs (map timerUnit syncAccounts);

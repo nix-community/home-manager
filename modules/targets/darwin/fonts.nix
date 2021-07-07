@@ -12,16 +12,18 @@ let
   fonts = "${fontsEnv}/share/fonts";
 in {
   # macOS won't recognize symlinked fonts
-  config.home.activation.copyFonts = hm.dag.entryAfter [ "writeBoundary" ] ''
-    copyFonts() {
-      rm -rf ${homeDir}/Library/Fonts/HomeManager || :
+  config = mkIf pkgs.hostPlatform.isDarwin {
+    home.activation.copyFonts = hm.dag.entryAfter [ "writeBoundary" ] ''
+      copyFonts() {
+        rm -rf ${homeDir}/Library/Fonts/HomeManager || :
 
-      local f
-      find -L "${fonts}" -type f -printf '%P\0' | while IFS= read -rd "" f; do
-        $DRY_RUN_CMD install $VERBOSE_ARG -Dm644 -T \
-          "${fonts}/$f" "${homeDir}/Library/Fonts/HomeManager/$f"
-      done
-    }
-    copyFonts
-  '';
+        local f
+        find -L "${fonts}" -type f -printf '%P\0' | while IFS= read -rd "" f; do
+          $DRY_RUN_CMD install $VERBOSE_ARG -Dm644 -T \
+            "${fonts}/$f" "${homeDir}/Library/Fonts/HomeManager/$f"
+        done
+      }
+      copyFonts
+    '';
+  };
 }

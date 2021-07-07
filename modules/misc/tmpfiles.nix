@@ -25,6 +25,11 @@ in {
   };
 
   config = mkIf (cfg.rules != [ ]) {
+    assertions = [
+      (hm.assertions.assertPlatform "systemd.user.tmpfiles" pkgs
+        platforms.linux)
+    ];
+
     xdg = {
       dataFile."user-tmpfiles.d/home-manager.conf" = {
         text = ''

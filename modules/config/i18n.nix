@@ -36,7 +36,7 @@ let
 in {
   meta.maintainers = with maintainers; [ midchildan ];
 
-  config = {
+  config = mkIf pkgs.hostPlatform.isLinux {
     # For shell sessions.
     home.sessionVariables = localeVars;
 

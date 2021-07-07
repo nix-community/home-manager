@@ -29,6 +29,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.taskwarrior-sync" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.taskwarrior-sync = {
       Unit = { Description = "Taskwarrior sync"; };
       Service = {

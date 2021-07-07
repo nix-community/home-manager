@@ -25,6 +25,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.xsettingsd" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.xsettingsd = {
       Unit = {
         Description = "xsettingsd";

@@ -16,7 +16,10 @@ in {
       mkEnableOption "the Plan 9 file system for interprocess messaging";
   };
 
-  config = {
+  config = mkIf (cfg.fontsrv.enable || cfg.plumber.enable) {
+    assertions = [
+      (hm.assertions.assertPlatform "services.plan9port" pkgs platforms.linux)
+    ];
 
     systemd.user.services.fontsrv = mkIf cfg.fontsrv.enable {
       Unit.Description = "the Plan 9 file system access to host fonts";

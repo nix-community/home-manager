@@ -65,6 +65,11 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.sxhkd" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile."sxhkd/sxhkdrc".text = concatStringsSep "\n" [

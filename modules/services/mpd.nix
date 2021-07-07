@@ -143,6 +143,10 @@ in {
   ###### implementation
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.mpd" pkgs
+        lib.platforms.linux)
+    ];
 
     systemd.user.services.mpd = {
       Unit = {

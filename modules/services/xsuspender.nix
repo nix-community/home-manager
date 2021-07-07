@@ -148,6 +148,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.xsuspender" pkgs
+        lib.platforms.linux)
+    ];
+
     services.xsuspender.iniContent = let
       mkSection = values:
         filterAttrs (_: v: v != null) {

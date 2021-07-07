@@ -27,6 +27,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.devilspie2" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.devilspie2 = {
       Service.ExecStart = "${pkgs.devilspie2}/bin/devilspie2";
       Unit = {

@@ -402,12 +402,15 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [{
-      assertion = cfg.theme == null || cfg.colors == null;
-      message = ''
-        Cannot use the rofi options 'theme' and 'colors' simultaneously.
-      '';
-    }];
+    assertions = [
+      (hm.assertions.assertPlatform "programs.rofi" pkgs platforms.linux)
+      {
+        assertion = cfg.theme == null || cfg.colors == null;
+        message = ''
+          Cannot use the rofi options 'theme' and 'colors' simultaneously.
+        '';
+      }
+    ];
 
     lib.formats.rasi.mkLiteral = value: {
       _type = "literal";

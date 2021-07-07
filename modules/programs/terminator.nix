@@ -63,7 +63,12 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "programs.terminator" pkgs platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
+
     xdg.configFile."terminator/config" =
       mkIf (cfg.config != { }) { text = toConfigObject cfg.config; };
   };

@@ -43,6 +43,11 @@ in {
   };
 
   config = mkIf (activationCmds != [ ]) {
+    assertions = [
+      (hm.assertions.assertPlatform "targets.darwin.defaults" pkgs
+        platforms.darwin)
+    ];
+
     home.activation.setDarwinDefaults = hm.dag.entryAfter [ "writeBoundary" ] ''
       $VERBOSE_ECHO "Configuring macOS user defaults"
       ${concatStringsSep "\n" activationCmds}

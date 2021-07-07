@@ -9,11 +9,16 @@ in {
     enable = mkEnableOption "Pass libsecret service";
   };
   config = mkIf serviceCfg.enable {
-    assertions = [{
-      assertion = config.programs.password-store.enable;
-      message = "The 'services.pass-secret-service' module requires"
-        + " 'programs.password-store.enable = true'.";
-    }];
+    assertions = [
+      (hm.assertions.assertPlatform "services.pass-secret-service" pkgs
+        platforms.linux)
+
+      {
+        assertion = config.programs.password-store.enable;
+        message = "The 'services.pass-secret-service' module requires"
+          + " 'programs.password-store.enable = true'.";
+      }
+    ];
 
     systemd.user.services.pass-secret-service = {
       Unit = { Description = "Pass libsecret service"; };

@@ -25,6 +25,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.gnome-keyring" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.gnome-keyring = {
       Unit = {
         Description = "GNOME Keyring";

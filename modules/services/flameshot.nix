@@ -13,6 +13,11 @@ in {
   options = { services.flameshot = { enable = mkEnableOption "Flameshot"; }; };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.flameshot" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ package ];
 
     systemd.user.services.flameshot = {

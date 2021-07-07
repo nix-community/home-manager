@@ -14,234 +14,225 @@ with lib;
 
 let
 
-  hostPlatform = pkgs.stdenv.hostPlatform;
-
-  loadModule = file: { condition ? true }: {
-    inherit file condition;
-  };
-
-  allModules = [
-    (loadModule ./accounts/email.nix { })
-    (loadModule ./config/i18n.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./files.nix { })
-    (loadModule ./home-environment.nix { })
-    (loadModule ./i18n/input-method/default.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./manual.nix { })
-    (loadModule ./misc/dconf.nix { })
-    (loadModule ./misc/debug.nix { })
-    (loadModule ./misc/fontconfig.nix { })
-    (loadModule ./misc/gtk.nix { })
-    (loadModule ./misc/lib.nix { })
-    (loadModule ./misc/news.nix { })
-    (loadModule ./misc/nixpkgs.nix { condition = useNixpkgsModule; })
-    (loadModule ./misc/numlock.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./misc/pam.nix { })
-    (loadModule ./misc/qt.nix { })
-    (loadModule ./misc/submodule-support.nix { })
-    (loadModule ./misc/tmpfiles.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./misc/version.nix { })
-    (loadModule ./misc/vte.nix { })
-    (loadModule ./misc/xdg-system-dirs.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./misc/xdg-desktop-entries.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./misc/xdg-mime.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./misc/xdg-mime-apps.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./misc/xdg-user-dirs.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./misc/xdg.nix { })
-    (loadModule ./programs/abook.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./programs/afew.nix { })
-    (loadModule ./programs/alacritty.nix { })
-    (loadModule ./programs/alot.nix { })
-    (loadModule ./programs/aria2.nix { })
-    (loadModule ./programs/astroid.nix { })
-    (loadModule ./programs/autojump.nix { })
-    (loadModule ./programs/autorandr.nix { })
-    (loadModule ./programs/bash.nix { })
-    (loadModule ./programs/bat.nix { })
-    (loadModule ./programs/beets.nix { })
-    (loadModule ./programs/broot.nix { })
-    (loadModule ./programs/browserpass.nix { })
-    (loadModule ./programs/chromium.nix { })
-    (loadModule ./programs/command-not-found/command-not-found.nix { })
-    (loadModule ./programs/dircolors.nix { })
-    (loadModule ./programs/direnv.nix { })
-    (loadModule ./programs/eclipse.nix { })
-    (loadModule ./programs/emacs.nix { })
-    (loadModule ./programs/exa.nix { })
-    (loadModule ./programs/feh.nix { })
-    (loadModule ./programs/firefox.nix { })
-    (loadModule ./programs/fish.nix { })
-    (loadModule ./programs/foot.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./programs/fzf.nix { })
-    (loadModule ./programs/getmail.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./programs/gh.nix { })
-    (loadModule ./programs/git.nix { })
-    (loadModule ./programs/gnome-terminal.nix { })
-    (loadModule ./programs/go.nix { })
-    (loadModule ./programs/gpg.nix { })
-    (loadModule ./programs/himalaya.nix { })
-    (loadModule ./programs/home-manager.nix { })
-    (loadModule ./programs/htop.nix { })
-    (loadModule ./programs/i3status.nix { })
-    (loadModule ./programs/i3status-rust.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./programs/info.nix { })
-    (loadModule ./programs/irssi.nix { })
-    (loadModule ./programs/lieer.nix { })
-    (loadModule ./programs/jq.nix { })
-    (loadModule ./programs/kakoune.nix { })
-    (loadModule ./programs/keychain.nix { })
-    (loadModule ./programs/kitty.nix { })
-    (loadModule ./programs/lazygit.nix { })
-    (loadModule ./programs/lesspipe.nix { })
-    (loadModule ./programs/lf.nix { })
-    (loadModule ./programs/lsd.nix { })
-    (loadModule ./programs/man.nix { })
-    (loadModule ./programs/mangohud.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./programs/matplotlib.nix { })
-    (loadModule ./programs/mbsync.nix { })
-    (loadModule ./programs/mcfly.nix { })
-    (loadModule ./programs/mercurial.nix { })
-    (loadModule ./programs/mpv.nix { })
-    (loadModule ./programs/msmtp.nix { })
-    (loadModule ./programs/mu.nix { })
-    (loadModule ./programs/ncmpcpp.nix { })
-    (loadModule ./programs/ncspot.nix { })
-    (loadModule ./programs/ne.nix { })
-    (loadModule ./programs/neomutt.nix { })
-    (loadModule ./programs/neovim.nix { })
-    (loadModule ./programs/newsboat.nix { })
-    (loadModule ./programs/nix-index.nix { })
-    (loadModule ./programs/noti.nix { })
-    (loadModule ./programs/notmuch.nix { })
-    (loadModule ./programs/nushell.nix { })
-    (loadModule ./programs/obs-studio.nix { })
-    (loadModule ./programs/octant.nix { })
-    (loadModule ./programs/offlineimap.nix { })
-    (loadModule ./programs/opam.nix { })
-    (loadModule ./programs/password-store.nix { })
-    (loadModule ./programs/pazi.nix { })
-    (loadModule ./programs/pet.nix { })
-    (loadModule ./programs/pidgin.nix { })
-    (loadModule ./programs/piston-cli.nix { })
-    (loadModule ./programs/powerline-go.nix { })
-    (loadModule ./programs/qutebrowser.nix { })
-    (loadModule ./programs/rbw.nix { })
-    (loadModule ./programs/readline.nix { })
-    (loadModule ./programs/rofi.nix { })
-    (loadModule ./programs/rofi-pass.nix {  })
-    (loadModule ./programs/rtorrent.nix { })
-    (loadModule ./programs/scmpuff.nix { })
-    (loadModule ./programs/senpai.nix { })
-    (loadModule ./programs/skim.nix { })
-    (loadModule ./programs/sm64ex.nix { })
-    (loadModule ./programs/starship.nix { })
-    (loadModule ./programs/sbt.nix { })
-    (loadModule ./programs/ssh.nix { })
-    (loadModule ./programs/taskwarrior.nix { })
-    (loadModule ./programs/termite.nix { })
-    (loadModule ./programs/texlive.nix { })
-    (loadModule ./programs/tmux.nix { })
-    (loadModule ./programs/terminator.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./programs/topgrade.nix { })
-    (loadModule ./programs/urxvt.nix { })
-    (loadModule ./programs/vim.nix { })
-    (loadModule ./programs/vscode.nix { })
-    (loadModule ./programs/vscode/haskell.nix { })
-    (loadModule ./programs/waybar.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./programs/xmobar.nix { })
-    (loadModule ./programs/z-lua.nix { })
-    (loadModule ./programs/zathura.nix { })
-    (loadModule ./programs/zoxide.nix { })
-    (loadModule ./programs/zplug.nix { })
-    (loadModule ./programs/zsh.nix { })
-    (loadModule ./programs/zsh/prezto.nix { })
-    (loadModule ./services/barrier.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/blueman-applet.nix { })
-    (loadModule ./services/caffeine.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/cbatticon.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/clipmenu.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/compton.nix { })
-    (loadModule ./services/devilspie2.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/dropbox.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/dunst.nix { })
-    (loadModule ./services/dwm-status.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/emacs.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/etesync-dav.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/flameshot.nix { })
-    (loadModule ./services/fluidsynth.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/redshift-gammastep/gammastep.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/getmail.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/gnome-keyring.nix { })
-    (loadModule ./services/gpg-agent.nix { })
-    (loadModule ./services/grobi.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/hound.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/imapnotify.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/kanshi.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/kbfs.nix { })
-    (loadModule ./services/kdeconnect.nix { })
-    (loadModule ./services/keepassx.nix { })
-    (loadModule ./services/keybase.nix { })
-    (loadModule ./services/keynav.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/lieer.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/lorri.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/mako.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/mbsync.nix { })
-    (loadModule ./services/mpd.nix { })
-    (loadModule ./services/mpdris2.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/mpris-proxy.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/muchsync.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/network-manager-applet.nix { })
-    (loadModule ./services/nextcloud-client.nix { })
-    (loadModule ./services/owncloud-client.nix { })
-    (loadModule ./services/pantalaimon.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/parcellite.nix { })
-    (loadModule ./services/pass-secret-service.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/password-store-sync.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/pasystray.nix { })
-    (loadModule ./services/pbgopy.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/picom.nix { })
-    (loadModule ./services/plan9port.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/playerctld.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/polybar.nix { })
-    (loadModule ./services/poweralertd.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/pulseeffects.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/random-background.nix { })
-    (loadModule ./services/redshift-gammastep/redshift.nix { })
-    (loadModule ./services/rsibreak.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/screen-locker.nix { })
-    (loadModule ./services/stalonetray.nix { })
-    (loadModule ./services/status-notifier-watcher.nix { })
-    (loadModule ./services/spotifyd.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/sxhkd.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/syncthing.nix { })
-    (loadModule ./services/taffybar.nix { })
-    (loadModule ./services/tahoe-lafs.nix { })
-    (loadModule ./services/taskwarrior-sync.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/udiskie.nix { })
-    (loadModule ./services/unclutter.nix { })
-    (loadModule ./services/unison.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/window-managers/awesome.nix { })
-    (loadModule ./services/window-managers/bspwm/default.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/window-managers/i3-sway/i3.nix { })
-    (loadModule ./services/window-managers/i3-sway/sway.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/window-managers/xmonad.nix { })
-    (loadModule ./services/wlsunset.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/xcape.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/xembed-sni-proxy.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/xidlehook.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/xscreensaver.nix { })
-    (loadModule ./services/xsettingsd.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./services/xsuspender.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./systemd.nix { })
-    (loadModule ./targets/darwin { condition = hostPlatform.isDarwin; })
-    (loadModule ./targets/generic-linux.nix { condition = hostPlatform.isLinux; })
-    (loadModule ./xcursor.nix { })
-    (loadModule ./xresources.nix { })
-    (loadModule ./xsession.nix { })
-    (loadModule (pkgs.path + "/nixos/modules/misc/assertions.nix") { })
-    (loadModule (pkgs.path + "/nixos/modules/misc/meta.nix") { })
-  ];
-
-  modules = map (getAttr "file") (filter (getAttr "condition") allModules);
+  modules = [
+    ./accounts/email.nix
+    ./config/i18n.nix
+    ./files.nix
+    ./home-environment.nix
+    ./i18n/input-method/default.nix
+    ./manual.nix
+    ./misc/dconf.nix
+    ./misc/debug.nix
+    ./misc/fontconfig.nix
+    ./misc/gtk.nix
+    ./misc/lib.nix
+    ./misc/news.nix
+    ./misc/numlock.nix
+    ./misc/pam.nix
+    ./misc/qt.nix
+    ./misc/submodule-support.nix
+    ./misc/tmpfiles.nix
+    ./misc/version.nix
+    ./misc/vte.nix
+    ./misc/xdg-desktop-entries.nix
+    ./misc/xdg-mime-apps.nix
+    ./misc/xdg-mime.nix
+    ./misc/xdg-system-dirs.nix
+    ./misc/xdg-user-dirs.nix
+    ./misc/xdg.nix
+    ./programs/abook.nix
+    ./programs/afew.nix
+    ./programs/alacritty.nix
+    ./programs/alot.nix
+    ./programs/aria2.nix
+    ./programs/astroid.nix
+    ./programs/autojump.nix
+    ./programs/autorandr.nix
+    ./programs/bash.nix
+    ./programs/bat.nix
+    ./programs/beets.nix
+    ./programs/broot.nix
+    ./programs/browserpass.nix
+    ./programs/chromium.nix
+    ./programs/command-not-found/command-not-found.nix
+    ./programs/dircolors.nix
+    ./programs/direnv.nix
+    ./programs/eclipse.nix
+    ./programs/emacs.nix
+    ./programs/exa.nix
+    ./programs/feh.nix
+    ./programs/firefox.nix
+    ./programs/fish.nix
+    ./programs/foot.nix
+    ./programs/fzf.nix
+    ./programs/getmail.nix
+    ./programs/gh.nix
+    ./programs/git.nix
+    ./programs/gnome-terminal.nix
+    ./programs/go.nix
+    ./programs/gpg.nix
+    ./programs/himalaya.nix
+    ./programs/home-manager.nix
+    ./programs/htop.nix
+    ./programs/i3status-rust.nix
+    ./programs/i3status.nix
+    ./programs/info.nix
+    ./programs/irssi.nix
+    ./programs/jq.nix
+    ./programs/kakoune.nix
+    ./programs/keychain.nix
+    ./programs/kitty.nix
+    ./programs/lazygit.nix
+    ./programs/lesspipe.nix
+    ./programs/lf.nix
+    ./programs/lieer.nix
+    ./programs/lsd.nix
+    ./programs/man.nix
+    ./programs/mangohud.nix
+    ./programs/matplotlib.nix
+    ./programs/mbsync.nix
+    ./programs/mcfly.nix
+    ./programs/mercurial.nix
+    ./programs/mpv.nix
+    ./programs/msmtp.nix
+    ./programs/mu.nix
+    ./programs/ncmpcpp.nix
+    ./programs/ncspot.nix
+    ./programs/ne.nix
+    ./programs/neomutt.nix
+    ./programs/neovim.nix
+    ./programs/newsboat.nix
+    ./programs/nix-index.nix
+    ./programs/noti.nix
+    ./programs/notmuch.nix
+    ./programs/nushell.nix
+    ./programs/obs-studio.nix
+    ./programs/octant.nix
+    ./programs/offlineimap.nix
+    ./programs/opam.nix
+    ./programs/password-store.nix
+    ./programs/pazi.nix
+    ./programs/pet.nix
+    ./programs/pidgin.nix
+    ./programs/piston-cli.nix
+    ./programs/powerline-go.nix
+    ./programs/qutebrowser.nix
+    ./programs/rbw.nix
+    ./programs/readline.nix
+    ./programs/rofi-pass.nix
+    ./programs/rofi.nix
+    ./programs/rtorrent.nix
+    ./programs/sbt.nix
+    ./programs/scmpuff.nix
+    ./programs/senpai.nix
+    ./programs/skim.nix
+    ./programs/sm64ex.nix
+    ./programs/ssh.nix
+    ./programs/starship.nix
+    ./programs/taskwarrior.nix
+    ./programs/terminator.nix
+    ./programs/termite.nix
+    ./programs/texlive.nix
+    ./programs/tmux.nix
+    ./programs/topgrade.nix
+    ./programs/urxvt.nix
+    ./programs/vim.nix
+    ./programs/vscode.nix
+    ./programs/vscode/haskell.nix
+    ./programs/waybar.nix
+    ./programs/xmobar.nix
+    ./programs/z-lua.nix
+    ./programs/zathura.nix
+    ./programs/zoxide.nix
+    ./programs/zplug.nix
+    ./programs/zsh.nix
+    ./programs/zsh/prezto.nix
+    ./services/barrier.nix
+    ./services/blueman-applet.nix
+    ./services/caffeine.nix
+    ./services/cbatticon.nix
+    ./services/clipmenu.nix
+    ./services/compton.nix
+    ./services/devilspie2.nix
+    ./services/dropbox.nix
+    ./services/dunst.nix
+    ./services/dwm-status.nix
+    ./services/emacs.nix
+    ./services/etesync-dav.nix
+    ./services/flameshot.nix
+    ./services/fluidsynth.nix
+    ./services/getmail.nix
+    ./services/gnome-keyring.nix
+    ./services/gpg-agent.nix
+    ./services/grobi.nix
+    ./services/hound.nix
+    ./services/imapnotify.nix
+    ./services/kanshi.nix
+    ./services/kbfs.nix
+    ./services/kdeconnect.nix
+    ./services/keepassx.nix
+    ./services/keybase.nix
+    ./services/keynav.nix
+    ./services/lieer.nix
+    ./services/lorri.nix
+    ./services/mako.nix
+    ./services/mbsync.nix
+    ./services/mpd.nix
+    ./services/mpdris2.nix
+    ./services/mpris-proxy.nix
+    ./services/muchsync.nix
+    ./services/network-manager-applet.nix
+    ./services/nextcloud-client.nix
+    ./services/owncloud-client.nix
+    ./services/pantalaimon.nix
+    ./services/parcellite.nix
+    ./services/pass-secret-service.nix
+    ./services/password-store-sync.nix
+    ./services/pasystray.nix
+    ./services/pbgopy.nix
+    ./services/picom.nix
+    ./services/plan9port.nix
+    ./services/playerctld.nix
+    ./services/polybar.nix
+    ./services/poweralertd.nix
+    ./services/pulseeffects.nix
+    ./services/random-background.nix
+    ./services/redshift-gammastep/gammastep.nix
+    ./services/redshift-gammastep/redshift.nix
+    ./services/rsibreak.nix
+    ./services/screen-locker.nix
+    ./services/spotifyd.nix
+    ./services/stalonetray.nix
+    ./services/status-notifier-watcher.nix
+    ./services/sxhkd.nix
+    ./services/syncthing.nix
+    ./services/taffybar.nix
+    ./services/tahoe-lafs.nix
+    ./services/taskwarrior-sync.nix
+    ./services/udiskie.nix
+    ./services/unclutter.nix
+    ./services/unison.nix
+    ./services/window-managers/awesome.nix
+    ./services/window-managers/bspwm/default.nix
+    ./services/window-managers/i3-sway/i3.nix
+    ./services/window-managers/i3-sway/sway.nix
+    ./services/window-managers/xmonad.nix
+    ./services/wlsunset.nix
+    ./services/xcape.nix
+    ./services/xembed-sni-proxy.nix
+    ./services/xidlehook.nix
+    ./services/xscreensaver.nix
+    ./services/xsettingsd.nix
+    ./services/xsuspender.nix
+    ./systemd.nix
+    ./targets/darwin
+    ./targets/generic-linux.nix
+    ./xcursor.nix
+    ./xresources.nix
+    ./xsession.nix
+    (pkgs.path + "/nixos/modules/misc/assertions.nix")
+    (pkgs.path + "/nixos/modules/misc/meta.nix")
+  ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix;
 
   pkgsModule = { config, ... }: {
     config = {

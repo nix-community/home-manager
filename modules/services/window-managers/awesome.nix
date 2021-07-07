@@ -45,7 +45,13 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "xsession.windowManager.awesome" pkgs
+        platforms.linux)
+    ];
+
     home.packages = [ awesome ];
+
     xsession.windowManager.command = "${awesome}/bin/awesome "
       + optionalString cfg.noArgb "--no-argb " + makeSearchPath cfg.luaModules;
   };

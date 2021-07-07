@@ -98,6 +98,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.cbatticon" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ package ];
 
     systemd.user.services.cbatticon = {

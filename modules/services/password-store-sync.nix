@@ -33,11 +33,16 @@ in {
   };
 
   config = mkIf serviceCfg.enable {
-    assertions = [{
-      assertion = programCfg.enable;
-      message = "The 'services.password-store-sync' module requires"
-        + " 'programs.password-store.enable = true'.";
-    }];
+    assertions = [
+      (hm.assertions.assertPlatform "services.password-store-sync" pkgs
+        platforms.linux)
+
+      {
+        assertion = programCfg.enable;
+        message = "The 'services.password-store-sync' module requires"
+          + " 'programs.password-store.enable = true'.";
+      }
+    ];
 
     systemd.user.services.password-store-sync = {
       Unit = { Description = "Password store sync"; };

@@ -27,6 +27,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "targets.genericLinux" pkgs platforms.linux)
+    ];
+
     xdg.systemDirs.data = [
       # Nix profiles
       "\${NIX_STATE_DIR:-/nix/var/nix}/profiles/default/share"

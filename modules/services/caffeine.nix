@@ -14,6 +14,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.caffeine" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.caffeine = {
       Unit = { Description = "caffeine"; };
 

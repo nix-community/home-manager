@@ -156,12 +156,16 @@ in {
       (name: remoteCfg: nameValuePair "muchsync-${name}" (gen name remoteCfg))
       cfg.remotes;
   in mkIf (cfg.remotes != { }) {
-    assertions = [{
-      assertion = config.programs.notmuch.enable;
-      message = ''
-        The muchsync module requires 'programs.notmuch.enable = true'.
-      '';
-    }];
+    assertions = [
+      (hm.assertions.assertPlatform "services.muchsync" pkgs platforms.linux)
+
+      {
+        assertion = config.programs.notmuch.enable;
+        message = ''
+          The muchsync module requires 'programs.notmuch.enable = true'.
+        '';
+      }
+    ];
 
     systemd.user.services = mapRemotes (name: remoteCfg: {
       Unit = { Description = "muchsync sync service (${name})"; };

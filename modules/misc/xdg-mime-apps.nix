@@ -73,6 +73,9 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions =
+      [ (hm.assertions.assertPlatform "xdg.mimeApps" pkgs platforms.linux) ];
+
     # Deprecated but still used by some applications.
     xdg.dataFile."applications/mimeapps.list".source =
       config.xdg.configFile."mimeapps.list".source;

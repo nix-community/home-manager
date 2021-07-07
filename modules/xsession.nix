@@ -85,6 +85,9 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions =
+      [ (hm.assertions.assertPlatform "xsession" pkgs platforms.linux) ];
+
     xsession.importedVariables = [
       "DBUS_SESSION_BUS_ADDRESS"
       "DISPLAY"

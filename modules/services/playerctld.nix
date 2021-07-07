@@ -21,6 +21,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.playerctld" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.playerctld = {
       Unit.Description = "MPRIS media player daemon";
 

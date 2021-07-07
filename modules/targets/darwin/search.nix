@@ -20,6 +20,11 @@ in {
   };
 
   config = mkIf (cfg.search != null) {
+    assertions = [
+      (hm.assertions.assertPlatform "targets.darwin.search" pkgs
+        platforms.darwin)
+    ];
+
     targets.darwin.defaults = {
       NSGlobalDomain.NSPreferredWebServices = {
         NSWebServicesProviderWebSearch = {

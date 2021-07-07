@@ -292,7 +292,11 @@ in {
     optionalString = name: val:
       lib.optionalString (val != null) "${name}=${val}";
   in mkIf cfg.enable {
+    assertions =
+      [ (hm.assertions.assertPlatform "services.mako" pkgs platforms.linux) ];
+
     home.packages = [ pkgs.mako ];
+
     xdg.configFile."mako/config".text = ''
       ${optionalInteger "max-visible" cfg.maxVisible}
       ${optionalString "sort" cfg.sort}

@@ -16,6 +16,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.network-manager-applet" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.network-manager-applet = {
       Unit = {
         Description = "Network Manager applet";

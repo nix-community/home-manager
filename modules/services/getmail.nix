@@ -37,6 +37,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.getmail" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.getmail = {
       Unit = { Description = "getmail email fetcher"; };
       Service = { ExecStart = "${pkgs.getmail}/bin/getmail ${configFiles}"; };

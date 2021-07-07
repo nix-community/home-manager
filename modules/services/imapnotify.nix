@@ -77,6 +77,8 @@ in {
             + concatMapStringsSep ", " (a: a.name) badAccounts;
         };
     in [
+      (lib.hm.assertions.assertPlatform "services.imapnotify" pkgs
+        lib.platforms.linux)
       (checkAccounts (a: a.maildir == null) "maildir configuration")
       (checkAccounts (a: a.imap == null) "IMAP configuration")
       (checkAccounts (a: a.passwordCommand == null) "password command")
