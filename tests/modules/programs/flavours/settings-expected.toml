@@ -1,0 +1,19 @@
+shell = "bash -c '{}'"
+[[item]]
+file = "~/.config/sway/config"
+hook = "swaymsg reload"
+light = false
+subtemplate = "colors"
+template = "sway"
+
+[[item]]
+file = "~/.config/waybar/colors.css"
+rewrite = true
+template = "waybar"
+
+[[item]]
+end = "/* End Flavours */"
+file = "~/.config/beautifuldiscord/style.css"
+start = "/* Start Flavours */"
+subtemplate = "css-variables"
+template = "styles"

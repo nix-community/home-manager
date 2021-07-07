@@ -72,6 +72,9 @@
 
 /modules/programs/firefox.nix                         @rycee
 
+/modules/programs/flavours.nix                        @misterio77
+/tests/modules/programs/flavours                      @misterio77
+
 /modules/programs/foot.nix                            @plabadens
 /tests/modules/programs/foot                          @plabadens
 

@@ -50,6 +50,7 @@ import nmt {
     ./modules/programs/direnv
     ./modules/programs/feh
     ./modules/programs/fish
+    ./modules/programs/flavours
     ./modules/programs/gh
     ./modules/programs/git
     ./modules/programs/gpg

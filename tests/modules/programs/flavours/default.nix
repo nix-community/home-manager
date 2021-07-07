@@ -1,0 +1,1 @@
+{ flavours-settings = ./settings.nix; }
