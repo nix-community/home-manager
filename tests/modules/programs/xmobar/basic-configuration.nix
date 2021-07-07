@@ -6,6 +6,7 @@ with lib;
   config = {
     programs.xmobar = {
       enable = true;
+      package = pkgs.writeScriptBin "dummy" "";
       extraConfig = ''
         Config
           { font        = "Fira Code"
