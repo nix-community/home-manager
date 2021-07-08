@@ -12,7 +12,7 @@ in {
   meta.maintainers = [ maintainers.misterio77 ];
 
   options.programs.flavours = {
-    enable = mkEnableOption "Flavours";
+    enable = mkEnableOption "Flavours, a base16 manager";
 
     package = mkOption {
       type = types.package;
