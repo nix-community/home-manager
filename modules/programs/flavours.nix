@@ -47,7 +47,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>~/.config/flavours/config.toml</filename>.
+        <filename>$XDG_CONFIG_HOME/flavours/config.toml</filename>.
         </para><para>
         See <link xlink:href="https://github.com/Misterio77/flavours#setup" /> for all options
         and some examples.
