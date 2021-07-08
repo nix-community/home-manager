@@ -2118,6 +2118,13 @@ in
           A new module is available: 'programs.himalaya'.
         '';
       }
+
+      {
+        time = "2021-07-07T00:58:43+00:00";
+        message = ''
+          A new module is available: 'programs.flavours'.
+        '';
+      }
     ];
   };
 }
