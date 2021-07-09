@@ -166,14 +166,26 @@ in {
     home.packages = optionalPackage cfg.font ++ optionalPackage cfg.theme
       ++ optionalPackage cfg.iconTheme;
 
-    home.file.${cfg2.configLocation}.text =
-      concatStringsSep "\n" (mapAttrsToList formatGtk2Option ini) + "\n"
-      + cfg2.extraConfig;
+    home.file.${cfg2.configLocation} = {
+      text = concatStringsSep "\n" (mapAttrsToList formatGtk2Option ini) + "\n"
+        + cfg2.extraConfig;
+      onChange = mkIf (cfg.theme != null)
+        (let xsettingsd = "${pkgs.xsettingsd}/bin/xsettingsd";
+        in ''
+          timeout 2 ${xsettingsd} -c <(echo 'Net/ThemeName "${cfg.theme.name}"') & true
+        '');
+    };
 
     home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
 
-    xdg.configFile."gtk-3.0/settings.ini".text =
-      toGtk3Ini { Settings = ini // cfg3.extraConfig; };
+    xdg.configFile."gtk-3.0/settings.ini" = {
+      text = toGtk3Ini { Settings = ini // cfg3.extraConfig; };
+      onChange = mkIf (cfg.theme != null)
+        (let gsettings = "${pkgs.glib}/bin/gsettings";
+        in ''
+          ${gsettings} set org.gnome.desktop.interface gtk-theme ${cfg.theme.name} || true
+        '');
+    };
 
     xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
 
