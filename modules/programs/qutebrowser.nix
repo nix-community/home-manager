@@ -306,7 +306,25 @@ in {
       };
 
     xdg.configFile."qutebrowser/config.py" =
-      mkIf pkgs.stdenv.hostPlatform.isLinux { text = qutebrowserConfig; };
+      mkIf pkgs.stdenv.hostPlatform.isLinux {
+        text = qutebrowserConfig;
+        onChange = ''
+          hash="$(echo -n $USER | md5sum | cut -d' ' -f1)"
+          socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/qutebrowser/ipc-$hash"
+          if [ -S $socket ]; then
+            echo "Reloading qutebrowser"
+            command=${
+              escapeShellArg (builtins.toJSON {
+                args = [ ":config-source" ];
+                target_arg = null;
+                protocol_version = 1;
+              })
+            }
+            $DRY_RUN_CMD echo $command | ${pkgs.socat}/bin/socat -lf /dev/null - UNIX-CONNECT:$socket
+          fi
+          unset hash socket command
+        '';
+      };
 
     xdg.configFile."qutebrowser/quickmarks" =
       mkIf (cfg.quickmarks != { } && pkgs.stdenv.hostPlatform.isLinux) {
