@@ -132,6 +132,7 @@ let
     (loadModule ./programs/scmpuff.nix { })
     (loadModule ./programs/senpai.nix { })
     (loadModule ./programs/skim.nix { })
+    (loadModule ./programs/sm64ex.nix { })
     (loadModule ./programs/starship.nix { })
     (loadModule ./programs/sbt.nix { })
     (loadModule ./programs/ssh.nix { })

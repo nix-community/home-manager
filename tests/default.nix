@@ -76,6 +76,7 @@ import nmt {
     ./modules/programs/readline
     ./modules/programs/sbt
     ./modules/programs/scmpuff
+    ./modules/programs/sm64ex
     ./modules/programs/ssh
     ./modules/programs/starship
     ./modules/programs/texlive

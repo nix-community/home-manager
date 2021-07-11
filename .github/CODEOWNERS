@@ -180,6 +180,9 @@
 
 /modules/programs/senpai.nix                          @malte-v
 
+/modules/programs/sm64ex.nix                          @ivarwithoutbones
+/tests/modules/programs/sm64ex                        @ivarwithoutbones
+
 /modules/programs/ssh.nix                             @rycee
 
 /modules/programs/starship.nix                        @marsam
