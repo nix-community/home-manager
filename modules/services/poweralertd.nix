@@ -11,6 +11,11 @@ in {
     mkEnableOption "the Upower-powered power alerterd";
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.poweralertd" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.poweralertd = {
       Unit = {
         Description = "UPower-powered power alerter";

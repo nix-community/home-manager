@@ -37,6 +37,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.unclutter" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.unclutter = {
       Unit = {
         Description = "unclutter";

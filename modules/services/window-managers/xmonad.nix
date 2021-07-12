@@ -137,10 +137,23 @@ in {
       }/bin/xmonad-${pkgs.hostPlatform.system}";
 
   in mkIf cfg.enable (mkMerge [
-    { home.packages = [ (lowPrio xmonad) ]; }
+    {
+      assertions = [
+        (hm.assertions.assertPlatform "xsession.windowManager.xmonad" pkgs
+          platforms.linux)
+      ];
+
+      home.packages = [ (lowPrio xmonad) ];
+
+      home.file = mapAttrs' (name: value:
+        attrsets.nameValuePair (".xmonad/lib/" + name) { source = value; })
+        cfg.libFiles;
+    }
+
     (mkIf (cfg.config == null) {
       xsession.windowManager.command = "${xmonad}/bin/xmonad";
     })
+
     (mkIf (cfg.config != null) {
       xsession.windowManager.command = xmonadBin;
       home.file.".xmonad/xmonad.hs".source = cfg.config;
@@ -156,10 +169,5 @@ in {
       };
     })
 
-    {
-      home.file = mapAttrs' (name: value:
-        attrsets.nameValuePair (".xmonad/lib/" + name) { source = value; })
-        cfg.libFiles;
-    }
   ]);
 }

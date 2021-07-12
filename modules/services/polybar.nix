@@ -191,6 +191,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.polybar" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
     xdg.configFile."polybar/config".source = configFile;
 

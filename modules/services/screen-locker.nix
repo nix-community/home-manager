@@ -53,6 +53,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.screen-locker" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.xautolock-session = {
       Unit = {
         Description = "xautolock, session locker service";

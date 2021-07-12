@@ -10,7 +10,9 @@ in {
   options = {
     xdg.mime.enable = mkOption {
       type = types.bool;
-      default = true;
+      default = pkgs.hostPlatform.isLinux;
+      defaultText =
+        literalExample "true if host platform is Linux, false otherwise";
       description = ''
         Whether to install programs and files to support the
         XDG Shared MIME-info specification and XDG MIME Applications
@@ -24,6 +26,9 @@ in {
   };
 
   config = mkIf config.xdg.mime.enable {
+    assertions =
+      [ (hm.assertions.assertPlatform "xdg.mime" pkgs platforms.linux) ];
+
     home.packages = [
       # Explicitly install package to provide basic mime types.
       pkgs.shared-mime-info

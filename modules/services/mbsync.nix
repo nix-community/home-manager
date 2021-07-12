@@ -76,6 +76,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.mbsync" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.mbsync = {
       Unit = { Description = "mbsync mailbox synchronization"; };
 

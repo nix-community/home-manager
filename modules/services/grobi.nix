@@ -71,6 +71,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.grobi" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.grobi = {
       Unit = {
         Description = "grobi display auto config daemon";

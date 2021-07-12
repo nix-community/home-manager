@@ -249,6 +249,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "programs.i3status-rust" pkgs
+        platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile = mapAttrs' (cfgFileSuffix: cfg:

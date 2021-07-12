@@ -427,8 +427,14 @@ in {
     })
 
     {
+      assertions = [
+        (hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs
+          platforms.linux)
+      ];
+
       home.packages = optional (cfg.package != null) cfg.package
         ++ optional cfg.xwayland pkgs.xwayland;
+
       xdg.configFile."sway/config" = {
         source = configFile;
         onChange = ''
@@ -439,6 +445,7 @@ in {
           fi
         '';
       };
+
       systemd.user.targets.sway-session = mkIf cfg.systemdIntegration {
         Unit = {
           Description = "sway compositor session";

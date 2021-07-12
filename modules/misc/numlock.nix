@@ -12,6 +12,10 @@ in {
   options = { xsession.numlock.enable = mkEnableOption "Num Lock"; };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "xsession.numlock" pkgs platforms.linux)
+    ];
+
     systemd.user.services.numlockx = {
       Unit = {
         Description = "NumLockX";

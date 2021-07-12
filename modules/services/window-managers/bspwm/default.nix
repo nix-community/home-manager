@@ -42,6 +42,11 @@ in {
   options = import ./options.nix { inherit pkgs lib; };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "xsession.windowManager.bspwm" pkgs
+        platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile."bspwm/bspwmrc".source = pkgs.writeShellScript "bspwmrc" ''

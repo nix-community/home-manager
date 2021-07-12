@@ -55,6 +55,10 @@ in {
   };
 
   config = mkIf (cfg != null) {
+    assertions = [
+      (hm.assertions.assertPlatform "xsession.pointerCursor" pkgs
+        platforms.linux)
+    ];
 
     home.packages = [ cfg.package ];
 

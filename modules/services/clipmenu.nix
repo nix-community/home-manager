@@ -21,6 +21,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.clipmenu" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     systemd.user.services.clipmenu = {

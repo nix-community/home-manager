@@ -73,6 +73,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.wlsunset" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.wlsunset = {
       Unit = {
         Description = "Day/night gamma adjustments for Wayland compositors.";

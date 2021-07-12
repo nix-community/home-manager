@@ -14,6 +14,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.rsibreak" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ pkgs.rsibreak ];
     systemd.user.services.rsibreak = {
       Unit = {

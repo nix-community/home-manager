@@ -28,6 +28,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.dropbox" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ pkgs.dropbox-cli ];
 
     systemd.user.services.dropbox = {

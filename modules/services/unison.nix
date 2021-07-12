@@ -93,6 +93,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.unison" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services = makeDefs (name: pairCfg: {
       Unit = {
         Description = "Unison pair sync (${name})";

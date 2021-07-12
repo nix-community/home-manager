@@ -22,6 +22,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.parcellite" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     systemd.user.services.parcellite = {

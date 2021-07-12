@@ -75,6 +75,11 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
+      assertions = [
+        (lib.hm.assertions.assertPlatform "services.emacs" pkgs
+          lib.platforms.linux)
+      ];
+
       systemd.user.services.emacs = {
         Unit = {
           Description = "Emacs text editor";

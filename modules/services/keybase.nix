@@ -10,6 +10,11 @@ in {
   options.services.keybase.enable = mkEnableOption "Keybase";
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.keybase" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ pkgs.keybase ];
 
     systemd.user.services.keybase = {

@@ -26,6 +26,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.status-notifier-watcher" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.status-notifier-watcher = {
       Unit = {
         Description = "SNI watcher";

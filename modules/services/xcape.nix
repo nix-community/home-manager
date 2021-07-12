@@ -53,6 +53,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.xcape" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.xcape = {
       Unit = {
         Description = "xcape";

@@ -132,6 +132,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.xidlehook" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.xidlehook = {
       Unit = {
         Description = "xidlehook service";

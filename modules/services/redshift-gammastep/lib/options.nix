@@ -146,20 +146,25 @@ in {
   };
 
   config = {
-    assertions = [{
-      assertion = (cfg.settings ? ${mainSection}.dawn-time || cfg.settings
-        ? ${mainSection}.dusk-time)
-        || (cfg.settings.${mainSection}.location-provider) == "geoclue2"
-        || ((cfg.settings.${mainSection}.location-provider) == "manual"
-          && (cfg.settings ? manual.lat || cfg.settings ? manual.lon));
-      message = ''
-        In order for ${programName} to know the time of action, you need to set one of
-          - services.${moduleName}.provider = "geoclue2" for automatically inferring your location
-            (you also need to enable Geoclue2 service separately)
-          - services.${moduleName}.longitude and .latitude for specifying your location manually
-          - services.${moduleName}.dawnTime and .duskTime for specifying the times manually
-      '';
-    }];
+    assertions = [
+      (hm.assertions.assertPlatform "services.${moduleName}" pkgs
+        platforms.linux)
+
+      {
+        assertion = (cfg.settings ? ${mainSection}.dawn-time || cfg.settings
+          ? ${mainSection}.dusk-time)
+          || (cfg.settings.${mainSection}.location-provider) == "geoclue2"
+          || ((cfg.settings.${mainSection}.location-provider) == "manual"
+            && (cfg.settings ? manual.lat || cfg.settings ? manual.lon));
+        message = ''
+          In order for ${programName} to know the time of action, you need to set one of
+            - services.${moduleName}.provider = "geoclue2" for automatically inferring your location
+              (you also need to enable Geoclue2 service separately)
+            - services.${moduleName}.longitude and .latitude for specifying your location manually
+            - services.${moduleName}.dawnTime and .duskTime for specifying the times manually
+        '';
+      }
+    ];
 
     services.${moduleName}.settings = {
       ${mainSection} = {

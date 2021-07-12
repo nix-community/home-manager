@@ -32,6 +32,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.kbfs" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.kbfs = {
       Unit = {
         Description = "Keybase File System";

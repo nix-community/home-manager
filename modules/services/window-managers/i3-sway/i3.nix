@@ -241,8 +241,15 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
+      assertions = [
+        (hm.assertions.assertPlatform "xsession.windowManager.i3" pkgs
+          platforms.linux)
+      ];
+
       home.packages = [ cfg.package ];
+
       xsession.windowManager.command = "${cfg.package}/bin/i3";
+
       xdg.configFile."i3/config" = {
         source = checkI3Config;
         onChange = ''

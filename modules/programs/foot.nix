@@ -49,6 +49,9 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions =
+      [ (hm.assertions.assertPlatform "programs.foot" pkgs platforms.linux) ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile."foot/foot.ini" = mkIf (cfg.settings != { }) {

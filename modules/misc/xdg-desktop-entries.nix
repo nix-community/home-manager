@@ -171,8 +171,13 @@ in {
     '';
   };
 
-  config.home.packages = mkIf (config.xdg.desktopEntries != { })
-    (map hiPrio # we need hiPrio to override existing entries
+  config = mkIf (config.xdg.desktopEntries != { }) {
+    assertions = [
+      (hm.assertions.assertPlatform "xdg.desktopEntries" pkgs platforms.linux)
+    ];
+
+    home.packages = (map hiPrio # we need hiPrio to override existing entries
       (attrsets.mapAttrsToList makeFile config.xdg.desktopEntries));
+  };
 
 }

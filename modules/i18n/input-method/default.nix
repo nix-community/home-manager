@@ -95,6 +95,10 @@ in {
   };
 
   config = mkIf (cfg.enabled != null) {
+    assertions = [
+      (hm.assertions.assertPlatform "i18n.inputMethod" pkgs platforms.linux)
+    ];
+
     home.packages = [ cfg.package gtk2Cache gtk3Cache ];
   };
 

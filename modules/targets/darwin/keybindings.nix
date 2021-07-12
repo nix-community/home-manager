@@ -31,6 +31,11 @@ in {
   };
 
   config = mkIf (cfg.keybindings != { }) {
+    assertions = [
+      (hm.assertions.assertPlatform "targets.darwin.keybindings" pkgs
+        platforms.darwin)
+    ];
+
     # NOTE: just copy the files because symlinks won't be recognized by macOS
     home.activation.setCocoaKeybindings =
       hm.dag.entryAfter [ "writeBoundary" ] ''

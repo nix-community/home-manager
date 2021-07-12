@@ -28,6 +28,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.nextcloud-client" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.nextcloud-client = {
       Unit = {
         Description = "Nextcloud Client";

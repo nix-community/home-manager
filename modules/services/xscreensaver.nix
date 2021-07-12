@@ -29,6 +29,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.xscreensaver" pkgs
+        lib.platforms.linux)
+    ];
+
     # To make the xscreensaver-command tool available.
     home.packages = [ pkgs.xscreensaver ];
 

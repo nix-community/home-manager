@@ -36,6 +36,12 @@ in {
   };
 
   config = mkMerge [
+    (mkIf (cfg.config != [ ] || cfg.data != [ ]) {
+      assertions = [
+        (hm.assertions.assertPlatform "xdg.systemDirs" pkgs platforms.linux)
+      ];
+    })
+
     (mkIf (cfg.config != [ ]) {
       home.sessionVariables.XDG_CONFIG_DIRS =
         "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";

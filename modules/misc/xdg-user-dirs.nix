@@ -103,6 +103,9 @@ in {
       XDG_VIDEOS_DIR = cfg.videos;
     } // cfg.extraConfig;
   in mkIf cfg.enable {
+    assertions =
+      [ (hm.assertions.assertPlatform "xdg.userDirs" pkgs platforms.linux) ];
+
     xdg.configFile."user-dirs.dirs".text = let
       # For some reason, these need to be wrapped with quotes to be valid.
       wrapped = mapAttrs (_: value: ''"${value}"'') directories;

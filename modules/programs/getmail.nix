@@ -55,6 +55,10 @@ in {
   };
 
   config = mkIf getmailEnabled {
+    assertions = [
+      (hm.assertions.assertPlatform "programs.getmail" pkgs platforms.linux)
+    ];
+
     home.file = foldl' (a: b: a // b) { }
       (map (a: { "${renderConfigFilepath a}".text = renderAccountConfig a; })
         accounts);

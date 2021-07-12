@@ -51,6 +51,11 @@ in {
   };
 
   config = mkIf cfg.client.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.barrier" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.barrierc = {
       Unit = {
         Description = "Barrier Client daemon";

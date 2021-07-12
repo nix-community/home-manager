@@ -10,6 +10,11 @@ in {
   options.services.keynav = { enable = mkEnableOption "keynav"; };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.keynav" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.keynav = {
       Unit = {
         Description = "keynav";

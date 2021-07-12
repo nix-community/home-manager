@@ -82,24 +82,25 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      home.packages = [ cfg.package ];
+  config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "programs.mangohud" pkgs platforms.linux)
+    ];
 
-      home.sessionVariables = mkIf cfg.enableSessionWide {
-        MANGOHUD = 1;
-        MANGOHUD_DLSYM = 1;
-      };
+    home.packages = [ cfg.package ];
 
-      xdg.configFile."MangoHud/MangoHud.conf" =
+    home.sessionVariables = mkIf cfg.enableSessionWide {
+      MANGOHUD = 1;
+      MANGOHUD_DLSYM = 1;
+    };
+
+    xdg.configFile = {
+      "MangoHud/MangoHud.conf" =
         mkIf (cfg.settings != { }) { text = renderSettings cfg.settings; };
-    }
-    {
-      xdg.configFile = mapAttrs'
-        (n: v: nameValuePair "MangoHud/${n}.conf" { text = renderSettings v; })
-        cfg.settingsPerApplication;
-    }
-  ]);
+    } // mapAttrs'
+      (n: v: nameValuePair "MangoHud/${n}.conf" { text = renderSettings v; })
+      cfg.settingsPerApplication;
+  };
 
   meta.maintainers = with maintainers; [ zeratax ];
 }

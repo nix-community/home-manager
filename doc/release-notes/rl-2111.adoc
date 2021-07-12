@@ -9,7 +9,29 @@ section is therefore not final.
 
 This release has the following notable changes:
 
-* Nothing has happened.
+* All Home Manager modules are now loaded on all platforms. With this
+change you will get a more descriptive error message if you attempt to
+enable a module that is incompatible with the host platform.
++
+Previously, modules that were platform specific would only be loaded
+on that particular platform. For example, a module defining a
+https://systemd.io/[systemd] service would only be loaded when the
+host platform was Linux. This reduced evaluation times, simplified the
+generated documentation, and made it impossible to accidentally use
+modules that do not support the host platform.
++
+While the above benefits are quite nice, avoiding module loads also
+brings a few problems. For example, the
+https://nix-community.github.io/home-manager/[public documentation]
+will only show the options available for Linux hosts and the
+documentation cannot make references to options within modules that
+are unavailable on some hosts. Finally, users who wish to use the same
+configuration file for different platforms cannot do so, even if the
+platform incompatible options are unused.
++
+Ultimately, the benefits of loading all modules won and the behavior
+has now changed. For associated discussion see
+https://github.com/nix-community/home-manager/issues/1906[issue #1906].
 
 [[sec-release-21.11-state-version-changes]]
 === State Version Changes
