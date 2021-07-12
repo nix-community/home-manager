@@ -104,7 +104,7 @@ in {
                 args = optional (layout != null) "-layout '${layout}'"
                   ++ optional (variant != null) "-variant '${variant}'"
                   ++ optional (model != null) "-model '${model}'"
-                  ++ map (v: "-option '${v}'") options;
+                  ++ [ "-option ''" ] ++ map (v: "-option '${v}'") options;
               in "${pkgs.xorg.setxkbmap}/bin/setxkbmap ${toString args}";
           };
         };
