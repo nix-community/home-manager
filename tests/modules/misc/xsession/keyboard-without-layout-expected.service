@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecStart=@setxkbmap@/bin/setxkbmap -option 'ctrl:nocaps' -option 'altwin:no_win'
+ExecStart=@setxkbmap@/bin/setxkbmap -option '' -option 'ctrl:nocaps' -option 'altwin:no_win'
 RemainAfterExit=true
 Type=oneshot
 
