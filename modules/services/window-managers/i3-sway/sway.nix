@@ -300,7 +300,7 @@ let
         mapAttrsToList inputStr input # inputs
         ++ mapAttrsToList outputStr output # outputs
         ++ mapAttrsToList seatStr seat # seats
-        ++ mapAttrsToList modeStr modes # modes
+        ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
         ++ mapAttrsToList assignStr assigns # assigns
         ++ map barStr bars # bars
         ++ optional (gaps != null) gapsStr # gaps

@@ -179,7 +179,7 @@ let
       ${keybindingsStr { keybindings = keybindingDefaultWorkspace; }}
       ${keybindingsStr { keybindings = keybindingsRest; }}
       ${keycodebindingsStr keycodebindings}
-      ${concatStringsSep "\n" (mapAttrsToList modeStr modes)}
+      ${concatStringsSep "\n" (mapAttrsToList (modeStr false) modes)}
       ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
       ${concatStringsSep "\n" (map barStr bars)}
       ${optionalString (gaps != null) gapsStr}

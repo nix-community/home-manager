@@ -37,9 +37,12 @@ rec {
     ];
   barColorSetStr = c: concatStringsSep " " [ c.border c.background c.text ];
 
-  modeStr = name: keybindings: ''
+  modeStr = bindkeysToCode: name: keybindings: ''
     mode "${name}" {
-    ${keybindingsStr { inherit keybindings; }}
+    ${keybindingsStr {
+      inherit keybindings;
+      bindsymArgs = lib.optionalString bindkeysToCode "--to-code";
+    }}
     }
   '';
 
