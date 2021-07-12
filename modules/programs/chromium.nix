@@ -114,10 +114,12 @@ let
         brave = "BraveSoftware/Brave-Browser";
       };
 
+      linuxDirs = { brave = "BraveSoftware/Brave-Browser"; };
+
       configDir = if pkgs.stdenv.isDarwin then
-        "Library/Application Support/${getAttr browser darwinDirs}"
+        "Library/Application Support/" + (darwinDirs."${browser}" or browser)
       else
-        "${config.xdg.configHome}/${browser}";
+        "${config.xdg.configHome}/" + (linuxDirs."${browser}" or browser);
 
       extensionJson = ext:
         assert ext.crxPath != null -> ext.version != null;
