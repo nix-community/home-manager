@@ -7255,6 +7255,70 @@ CTRL-T keybinding.
     
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/skim.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/skim.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sm64ex.enable"></a><a class="term" href="options.html#opt-programs.sm64ex.enable"><code class="option">programs.sm64ex.enable</code></a></span></dt><dd><p>Whether to enable sm64ex.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sm64ex.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sm64ex.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sm64ex.package"></a><a class="term" href="options.html#opt-programs.sm64ex.package"><code class="option">programs.sm64ex.package</code></a></span></dt><dd><p>The sm64ex package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        <em class="replaceable"><code>(build of sm64ex-unstable-2020-10-09)</code></em>
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sm64ex.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sm64ex.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sm64ex.baserom"></a><a class="term" href="options.html#opt-programs.sm64ex.baserom"><code class="option">programs.sm64ex.baserom</code></a></span></dt><dd><p>The path to the Super Mario 64 baserom to extract assets from.</p><p><span class="emphasis"><em>Type:</em></span> null or path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">/home/foo/baserom.us.z64</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sm64ex.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sm64ex.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sm64ex.extraCompileFlags"></a><a class="term" href="options.html#opt-programs.sm64ex.extraCompileFlags"><code class="option">programs.sm64ex.extraCompileFlags</code></a></span></dt><dd><p>Extra flags to pass to the compiler. See
+<a class="link" href="https://github.com/sm64pc/sm64ex/wiki/Build-options" target="_top">https://github.com/sm64pc/sm64ex/wiki/Build-options</a>
+for more information.
+</p><p><span class="emphasis"><em>Type:</em></span> null or list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[
+  "BETTERCAMERA=1"
+  "NODRAWINGDISTANCE=1"
+];
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sm64ex.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sm64ex.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sm64ex.region"></a><a class="term" href="options.html#opt-programs.sm64ex.region"><code class="option">programs.sm64ex.region</code></a></span></dt><dd><p>Your baserom's region. Note that only "us", "eu", and "jp" are supported.
+</p><p><span class="emphasis"><em>Type:</em></span> null or one of "us", "eu", "jp"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        us
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">jp</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sm64ex.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sm64ex.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sm64ex.settings"></a><a class="term" href="options.html#opt-programs.sm64ex.settings"><code class="option">programs.sm64ex.settings</code></a></span></dt><dd><p>Settings for sm64ex's <code class="filename">~/.local/share/sm64pc/sm64config.txt</code> file.</p><p><span class="emphasis"><em>Type:</em></span> null or attribute set of string or signed integer or boolean or list of stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  fullscreen = false;
+  window_x = 0;
+  window_y = 0;
+  window_w = 1920;
+  window_h = 1080;
+  vsync = 1;
+  texture_filtering = 1;
+  master_volume = 127;
+  music_volume = 127;
+  sfx_volume = 127;
+  env_volume = 127;
+  key_a = [ "0026" "1000" "1103" ];
+  key_b = [ "0033" "1002" "1101" ];
+  key_start = [ "0039" "1006" "ffff" ];
+  key_l = [ "0034" "1007" "1104" ];
+  key_r = [ "0036" "100a" "1105" ];
+  key_z = [ "0025" "1009" "1102" ];
+  key_cup = [ "100b" "ffff" "ffff" ];
+  key_cdown = [ "100c" "ffff" "ffff" ];
+  key_cleft = [ "100d" "ffff" "ffff" ];
+  key_cright = [ "100e" "ffff" "ffff" ];
+  key_stickup = [ "0011" "ffff" "ffff" ];
+  key_stickdown = [ "001f" "ffff" "ffff" ];
+  key_stickleft = [ "001e" "ffff" "ffff" ];
+  key_stickright = [ "0020" "ffff" "ffff" ];
+  stick_deadzone = 16;
+  rumble_strength = 10;
+  skip_intro = 1;
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sm64ex.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sm64ex.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ssh.enable"></a><a class="term" href="options.html#opt-programs.ssh.enable"><code class="option">programs.ssh.enable</code></a></span></dt><dd><p>Whether to enable SSH client configuration.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
