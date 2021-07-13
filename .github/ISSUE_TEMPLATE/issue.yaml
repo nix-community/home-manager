@@ -1,0 +1,45 @@
+name: Bug Report
+description: File a bug/issue
+title: 'bug: '
+labels: [bug, triage]
+
+assignees:
+- nix-community/home-manager
+
+body:
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: |
+      Please search to see if an issue already exists for the bug you encountered.
+    options:
+    - label: I have searched the existing issues
+      required: true
+- type: textarea
+  attributes:
+    label: Issue description
+    description: |
+      Please describe the issue.
+
+      For support and help please use the IRC channel #home-manager at irc.oftc.net or
+      Matrix room <https://matrix.to/#/#hm:rycee.net> instead.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Maintainer CC
+    description: |
+      Please @ people who are in the `meta.maintainers` list of the offending module.
+      If in doubt, check `git blame` for whoever last touched something.
+  validations:
+    required: false
+- type: textarea
+  id: system
+  attributes:
+    label: System information
+    description: |
+      Please run `nix-shell -p nix-info --run "nix-info -m"` and paste the result.
+    render: markdown
+  validations:
+    required: true
+
