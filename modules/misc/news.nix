@@ -2125,6 +2125,14 @@ in
           A new module is available: 'programs.sm64ex'.
         '';
       }
+
+      {
+        time = "2021-07-15T13:38:32+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.xsettingsd'.
+        '';
+      }
     ];
   };
 }

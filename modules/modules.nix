@@ -229,6 +229,7 @@ let
     (loadModule ./services/xembed-sni-proxy.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xidlehook.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xscreensaver.nix { })
+    (loadModule ./services/xsettingsd.nix { condition = hostPlatform.isLinux; })
     (loadModule ./services/xsuspender.nix { condition = hostPlatform.isLinux; })
     (loadModule ./systemd.nix { })
     (loadModule ./targets/darwin { condition = hostPlatform.isDarwin; })
