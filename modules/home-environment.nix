@@ -578,6 +578,7 @@ in
           pkgs.gnugrep
           pkgs.gnused
           pkgs.ncurses          # For `tput`.
+          pkgs.nix
         ]
         + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
