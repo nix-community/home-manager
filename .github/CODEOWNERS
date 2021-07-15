@@ -238,6 +238,8 @@
 
 /modules/services/fluidsynth.nix                      @Valodim
 
+/modules/services/git-sync.nix                        @IvanMalison
+
 /modules/services/gnome-keyring.nix                   @rycee
 
 /modules/services/gpg-agent.nix                       @rycee

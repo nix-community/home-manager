@@ -2172,6 +2172,14 @@ in
           A new module is available: 'services.easyeffects'.
         '';
       }
+
+      {
+        time = "2021-08-16T21:59:02+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.git-sync'.
+        '';
+      }
     ];
   };
 }
