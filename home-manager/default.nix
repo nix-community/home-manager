@@ -39,4 +39,6 @@ in runCommand "home-manager" {
     $out/share/bash-completion/completions/home-manager
   install -D -m755 ${./completion.zsh} \
     $out/share/zsh/site-functions/_home-manager
+  install -D -m755 ${./completion.fish} \
+    $out/share/fish/completions/home-manager.fish
 ''
