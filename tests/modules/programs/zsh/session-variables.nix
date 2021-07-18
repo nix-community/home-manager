@@ -13,11 +13,8 @@ with lib;
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        zsh = pkgs.writeScriptBin "dummy-zsh" "";
-      })
-    ];
+    nixpkgs.overlays =
+      [ (self: super: { zsh = pkgs.writeScriptBin "dummy-zsh" ""; }) ];
 
     nmt.script = ''
       assertFileExists home-files/.zshrc

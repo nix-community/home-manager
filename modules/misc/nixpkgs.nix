@@ -6,40 +6,31 @@ with lib;
 
 let
 
-  isConfig = x:
-    builtins.isAttrs x || builtins.isFunction x;
+  isConfig = x: builtins.isAttrs x || builtins.isFunction x;
 
-  optCall = f: x:
-    if builtins.isFunction f
-    then f x
-    else f;
+  optCall = f: x: if builtins.isFunction f then f x else f;
 
   mergeConfig = lhs_: rhs_:
     let
       lhs = optCall lhs_ { inherit pkgs; };
       rhs = optCall rhs_ { inherit pkgs; };
-    in
-    lhs // rhs //
-    optionalAttrs (lhs ? packageOverrides) {
+    in lhs // rhs // optionalAttrs (lhs ? packageOverrides) {
       packageOverrides = pkgs:
-        optCall lhs.packageOverrides pkgs //
-        optCall (attrByPath ["packageOverrides"] ({}) rhs) pkgs;
-    } //
-    optionalAttrs (lhs ? perlPackageOverrides) {
+        optCall lhs.packageOverrides pkgs
+        // optCall (attrByPath [ "packageOverrides" ] ({ }) rhs) pkgs;
+    } // optionalAttrs (lhs ? perlPackageOverrides) {
       perlPackageOverrides = pkgs:
-        optCall lhs.perlPackageOverrides pkgs //
-        optCall (attrByPath ["perlPackageOverrides"] ({}) rhs) pkgs;
+        optCall lhs.perlPackageOverrides pkgs
+        // optCall (attrByPath [ "perlPackageOverrides" ] ({ }) rhs) pkgs;
     };
 
   configType = mkOptionType {
     name = "nixpkgs-config";
     description = "nixpkgs config";
     check = x:
-      let traceXIfNot = c:
-            if c x then true
-            else lib.traceSeqN 1 x false;
+      let traceXIfNot = c: if c x then true else lib.traceSeqN 1 x false;
       in traceXIfNot isConfig;
-    merge = args: fold (def: mergeConfig def.value) {};
+    merge = args: fold (def: mergeConfig def.value) { };
   };
 
   overlayType = mkOptionType {
@@ -49,13 +40,9 @@ let
     merge = lib.mergeOneOption;
   };
 
-  _pkgs = import pkgsPath (
-    filterAttrs (n: v: v != null) config.nixpkgs
-  );
+  _pkgs = import pkgsPath (filterAttrs (n: v: v != null) config.nixpkgs);
 
-in
-
-{
+in {
   options.nixpkgs = {
     config = mkOption {
       default = null;
@@ -91,17 +78,16 @@ in
 
     overlays = mkOption {
       default = null;
-      example = literalExample
-        ''
-          [ (self: super: {
-              openssh = super.openssh.override {
-                hpnSupport = true;
-                withKerberos = true;
-                kerberos = self.libkrb5;
-              };
+      example = literalExample ''
+        [ (self: super: {
+            openssh = super.openssh.override {
+              hpnSupport = true;
+              withKerberos = true;
+              kerberos = self.libkrb5;
             };
-          ) ]
-        '';
+          };
+        ) ]
+      '';
       type = types.nullOr (types.listOf overlayType);
       description = ''
         List of overlays to use with the Nix Packages collection. (For
@@ -144,9 +130,10 @@ in
     _module.args = {
       pkgs = mkOverride modules.defaultPriority _pkgs;
       pkgs_i686 =
-        if _pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86
-        then _pkgs.pkgsi686Linux
-        else { };
+        if _pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86 then
+          _pkgs.pkgsi686Linux
+        else
+          { };
     };
   };
 }

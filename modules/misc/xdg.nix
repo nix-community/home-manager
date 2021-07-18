@@ -16,14 +16,10 @@ let
   defaultDataHome = "${config.home.homeDirectory}/.local/share";
 
   getXdgDir = name: fallback:
-    let
-      value = builtins.getEnv name;
-    in
-      if value != "" then value else fallback;
+    let value = builtins.getEnv name;
+    in if value != "" then value else fallback;
 
-in
-
-{
+in {
   options.xdg = {
     enable = mkEnableOption "management of XDG base directories";
 
@@ -37,7 +33,7 @@ in
 
     configFile = mkOption {
       type = fileType "<varname>xdg.configHome</varname>" cfg.configHome;
-      default = {};
+      default = { };
       description = ''
         Attribute set of files to link into the user's XDG
         configuration home.
@@ -54,7 +50,7 @@ in
 
     dataFile = mkOption {
       type = fileType "<varname>xdg.dataHome</varname>" cfg.dataHome;
-      default = {};
+      default = { };
       description = ''
         Attribute set of files to link into the user's XDG
         data home.

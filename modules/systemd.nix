@@ -7,27 +7,28 @@ let
   inherit (lib) getAttr hm isBool literalExample mkIf mkMerge mkOption types;
 
   # From <nixpkgs/nixos/modules/system/boot/systemd-lib.nix>
-  mkPathSafeName = lib.replaceChars ["@" ":" "\\" "[" "]"] ["-" "-" "-" "" ""];
+  mkPathSafeName =
+    lib.replaceChars [ "@" ":" "\\" "[" "]" ] [ "-" "-" "-" "" "" ];
 
-  enabled = cfg.services != {}
-      || cfg.slices != {}
-      || cfg.sockets != {}
-      || cfg.targets != {}
-      || cfg.timers != {}
-      || cfg.paths != {}
-      || cfg.mounts != {}
-      || cfg.automounts != {}
-      || cfg.sessionVariables != {};
+  enabled = cfg.services != { } # \
+    || cfg.slices != { } # \
+    || cfg.sockets != { } # \
+    || cfg.targets != { } # \
+    || cfg.timers != { } # \
+    || cfg.paths != { } # \
+    || cfg.mounts != { } # \
+    || cfg.automounts != { } # \
+    || cfg.sessionVariables != { };
 
   toSystemdIni = lib.generators.toINI {
     listsAsDuplicateKeys = true;
     mkKeyValue = key: value:
       let
-        value' =
-          if isBool value then (if value then "true" else "false")
-          else toString value;
-      in
-        "${key}=${value'}";
+        value' = if isBool value then
+          (if value then "true" else "false")
+        else
+          toString value;
+      in "${key}=${value'}";
   };
 
   buildService = style: name: serviceCfg:
@@ -43,32 +44,26 @@ let
         destination = lib.escapeShellArg "/${filename}";
       } + "/${filename}";
 
-      wantedBy = target:
-        {
-          name = "systemd/user/${target}.wants/${filename}";
-          value = { inherit source; };
-        };
-    in
-      lib.singleton {
-        name = "systemd/user/${filename}";
+      wantedBy = target: {
+        name = "systemd/user/${target}.wants/${filename}";
         value = { inherit source; };
-      }
-      ++
-      map wantedBy (serviceCfg.Install.WantedBy or []);
+      };
+    in lib.singleton {
+      name = "systemd/user/${filename}";
+      value = { inherit source; };
+    } ++ map wantedBy (serviceCfg.Install.WantedBy or [ ]);
 
   buildServices = style: serviceCfgs:
     lib.concatLists (lib.mapAttrsToList (buildService style) serviceCfgs);
 
   servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
 
-  unitType = unitKind: with types;
-    let
-      primitive = either bool (either int str);
-    in
-      attrsOf (attrsOf (attrsOf (either primitive (listOf primitive))))
-      // {
-        description = "systemd ${unitKind} unit configuration";
-      };
+  unitType = unitKind:
+    with types;
+    let primitive = either bool (either int str);
+    in attrsOf (attrsOf (attrsOf (either primitive (listOf primitive)))) // {
+      description = "systemd ${unitKind} unit configuration";
+    };
 
   unitDescription = type: ''
     Definition of systemd per-user ${type} units. Attributes are
@@ -82,31 +77,29 @@ let
     </citerefentry>.
   '';
 
-  unitExample = type: literalExample ''
-    {
-      ${lib.toLower type}-name = {
-        Unit = {
-          Description = "Example description";
-          Documentation = [ "man:example(1)" "man:example(5)" ];
-        };
+  unitExample = type:
+    literalExample ''
+      {
+        ${lib.toLower type}-name = {
+          Unit = {
+            Description = "Example description";
+            Documentation = [ "man:example(1)" "man:example(5)" ];
+          };
 
-        ${type} = {
-          …
+          ${type} = {
+            …
+          };
         };
       };
-    };
-  '';
+    '';
 
-  sessionVariables = mkIf (cfg.sessionVariables != {}) {
-    "environment.d/10-home-manager.conf".text =
-      lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (n: v: "${n}=${toString v}") cfg.sessionVariables
-      ) + "\n";
-    };
+  sessionVariables = mkIf (cfg.sessionVariables != { }) {
+    "environment.d/10-home-manager.conf".text = lib.concatStringsSep "\n"
+      (lib.mapAttrsToList (n: v: "${n}=${toString v}") cfg.sessionVariables)
+      + "\n";
+  };
 
-in
-
-{
+in {
   meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
@@ -123,56 +116,56 @@ in
       };
 
       services = mkOption {
-        default = {};
+        default = { };
         type = unitType "service";
         description = unitDescription "service";
         example = unitExample "Service";
       };
 
       slices = mkOption {
-        default = {};
+        default = { };
         type = unitType "slices";
         description = unitDescription "slices";
         example = unitExample "Slices";
       };
 
       sockets = mkOption {
-        default = {};
+        default = { };
         type = unitType "socket";
         description = unitDescription "socket";
         example = unitExample "Socket";
       };
 
       targets = mkOption {
-        default = {};
+        default = { };
         type = unitType "target";
         description = unitDescription "target";
         example = unitExample "Target";
       };
 
       timers = mkOption {
-        default = {};
+        default = { };
         type = unitType "timer";
         description = unitDescription "timer";
         example = unitExample "Timer";
       };
 
       paths = mkOption {
-        default = {};
+        default = { };
         type = unitType "path";
         description = unitDescription "path";
         example = unitExample "Path";
       };
 
       mounts = mkOption {
-        default = {};
+        default = { };
         type = unitType "mount";
         description = unitDescription "mount";
         example = unitExample "Mount";
       };
 
       automounts = mkOption {
-        default = {};
+        default = { };
         type = unitType "automount";
         description = unitDescription "automount";
         example = unitExample "Automount";
@@ -180,10 +173,9 @@ in
 
       startServices = mkOption {
         default = "suggest";
-        type = with types; either bool (enum ["suggest" "legacy" "sd-switch"]);
-        apply = p:
-          if isBool p then if p then "legacy" else "suggest"
-          else p;
+        type = with types;
+          either bool (enum [ "suggest" "legacy" "sd-switch" ]);
+        apply = p: if isBool p then if p then "legacy" else "suggest" else p;
         description = ''
           Whether new or changed services that are wanted by active targets
           should be started. Additionally, stop obsolete services from the
@@ -231,7 +223,7 @@ in
       };
 
       sessionVariables = mkOption {
-        default = {};
+        default = { };
         type = with types; attrsOf (either int str);
         example = { EDITOR = "vim"; };
         description = ''
@@ -248,54 +240,44 @@ in
 
   config = mkMerge [
     {
-      assertions = [
-        {
-          assertion = enabled -> pkgs.stdenv.isLinux;
-          message =
-            let
-              names = lib.concatStringsSep ", " (
-                  lib.attrNames (
-                      cfg.services // cfg.slices // cfg.sockets // cfg.targets
-                      // cfg.timers // cfg.paths // cfg.mounts // cfg.sessionVariables
-                  )
-              );
-            in
-              "Must use Linux for modules that require systemd: " + names;
-        }
-      ];
+      assertions = [{
+        assertion = enabled -> pkgs.stdenv.isLinux;
+        message = let
+          names = lib.concatStringsSep ", " (lib.attrNames ( # \
+            cfg.services # \
+            // cfg.slices # \
+            // cfg.sockets # \
+            // cfg.targets # \
+            // cfg.timers # \
+            // cfg.paths # \
+            // cfg.mounts # \
+            // cfg.sessionVariables));
+        in "Must use Linux for modules that require systemd: " + names;
+      }];
     }
 
     # If we run under a Linux system we assume that systemd is
     # available, in particular we assume that systemctl is in PATH.
     (mkIf pkgs.stdenv.isLinux {
       xdg.configFile = mkMerge [
-        (lib.listToAttrs (
-          (buildServices "service" cfg.services)
-          ++
-          (buildServices "slices" cfg.slices)
-          ++
-          (buildServices "socket" cfg.sockets)
-          ++
-          (buildServices "target" cfg.targets)
-          ++
-          (buildServices "timer" cfg.timers)
-          ++
-          (buildServices "path" cfg.paths)
-          ++
-          (buildServices "mount" cfg.mounts)
-          ++
-          (buildServices "automount" cfg.automounts)
-          ))
+        (lib.listToAttrs ((buildServices "service" cfg.services)
+          ++ (buildServices "slices" cfg.slices)
+          ++ (buildServices "socket" cfg.sockets)
+          ++ (buildServices "target" cfg.targets)
+          ++ (buildServices "timer" cfg.timers)
+          ++ (buildServices "path" cfg.paths)
+          ++ (buildServices "mount" cfg.mounts)
+          ++ (buildServices "automount" cfg.automounts)))
 
-          sessionVariables
-        ];
+        sessionVariables
+      ];
 
       # Run systemd service reload if user is logged in. If we're
       # running this from the NixOS module then XDG_RUNTIME_DIR is not
       # set and systemd commands will fail. We'll therefore have to
       # set it ourselves in that case.
-      home.activation.reloadSystemd = hm.dag.entryAfter ["linkGeneration"] (
-        let
+      home.activation.reloadSystemd = hm.dag.entryAfter [ "linkGeneration" ]
+        (let
           cmd = {
             suggest = ''
               PATH=${dirOf cfg.systemctlPath}:$PATH \
@@ -306,44 +288,41 @@ in
               ${pkgs.ruby}/bin/ruby ${./systemd-activate.rb} \
                 "''${oldGenPath=}" "$newGenPath" "${servicesStartTimeoutMs}"
             '';
-            sd-switch =
-              let
-                timeoutArg =
-                  if cfg.servicesStartTimeoutMs != 0 then
-                    "--timeout " + servicesStartTimeoutMs
-                  else
-                    "";
-              in ''
-                ${pkgs.sd-switch}/bin/sd-switch \
-                  ''${DRY_RUN:+--dry-run} $VERBOSE_ARG ${timeoutArg} \
-                  ''${oldGenPath:+--old-units $oldGenPath/home-files/.config/systemd/user} \
-                  --new-units $newGenPath/home-files/.config/systemd/user
-              '';
+            sd-switch = let
+              timeoutArg = if cfg.servicesStartTimeoutMs != 0 then
+                "--timeout " + servicesStartTimeoutMs
+              else
+                "";
+            in ''
+              ${pkgs.sd-switch}/bin/sd-switch \
+                ''${DRY_RUN:+--dry-run} $VERBOSE_ARG ${timeoutArg} \
+                ''${oldGenPath:+--old-units $oldGenPath/home-files/.config/systemd/user} \
+                --new-units $newGenPath/home-files/.config/systemd/user
+            '';
           };
 
-          ensureRuntimeDir = "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$(id -u)}";
+          ensureRuntimeDir =
+            "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$(id -u)}";
 
           systemctl = "${ensureRuntimeDir} ${cfg.systemctlPath}";
-        in
-          ''
-            systemdStatus=$(${systemctl} --user is-system-running 2>&1 || true)
+        in ''
+          systemdStatus=$(${systemctl} --user is-system-running 2>&1 || true)
 
-            if [[ $systemdStatus == 'running' || $systemdStatus == 'degraded' ]]; then
-              if [[ $systemdStatus == 'degraded' ]]; then
-                warnEcho "The user systemd session is degraded:"
-                ${systemctl} --user --no-pager --state=failed
-                warnEcho "Attempting to reload services anyway..."
-              fi
-
-              ${ensureRuntimeDir} \
-                ${getAttr cfg.startServices cmd}
-            else
-              echo "User systemd daemon not running. Skipping reload."
+          if [[ $systemdStatus == 'running' || $systemdStatus == 'degraded' ]]; then
+            if [[ $systemdStatus == 'degraded' ]]; then
+              warnEcho "The user systemd session is degraded:"
+              ${systemctl} --user --no-pager --state=failed
+              warnEcho "Attempting to reload services anyway..."
             fi
 
-            unset systemdStatus
-          ''
-      );
+            ${ensureRuntimeDir} \
+              ${getAttr cfg.startServices cmd}
+          else
+            echo "User systemd daemon not running. Skipping reload."
+          fi
+
+          unset systemdStatus
+        '');
     })
   ];
 }

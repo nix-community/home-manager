@@ -9,7 +9,9 @@
 
     services.sxhkd = {
       enable = true;
-      package = pkgs.runCommandLocal "dummy-package" { } "mkdir $out" // { outPath = "@sxhkd@"; };
+      package = pkgs.runCommandLocal "dummy-package" { } "mkdir $out" // {
+        outPath = "@sxhkd@";
+      };
       extraOptions = [ "-m 1" ];
     };
 

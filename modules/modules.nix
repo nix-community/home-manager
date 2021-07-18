@@ -1,14 +1,13 @@
 { pkgs
 
-  # Note, this should be "the standard library" + HM extensions.
+# Note, this should be "the standard library" + HM extensions.
 , lib
 
-  # Whether to enable module type checking.
+# Whether to enable module type checking.
 , check ? true
 
-# If disabled, the pkgs attribute passed to this function is used instead.
-, useNixpkgsModule ? true
-}:
+  # If disabled, the pkgs attribute passed to this function is used instead.
+, useNixpkgsModule ? true }:
 
 with lib;
 
@@ -237,8 +236,8 @@ let
   pkgsModule = { config, ... }: {
     config = {
       _module.args.baseModules = modules;
-      _module.args.pkgsPath = lib.mkDefault (
-        if versionAtLeast config.home.stateVersion "20.09" then
+      _module.args.pkgsPath = lib.mkDefault
+        (if versionAtLeast config.home.stateVersion "20.09" then
           pkgs.path
         else
           <nixpkgs>);
@@ -250,6 +249,4 @@ let
     };
   };
 
-in
-
-  modules ++ [ pkgsModule ]
+in modules ++ [ pkgsModule ]
