@@ -14,6 +14,7 @@ with lib;
           meta.description = "I pretend to be Firefox";
           preferLocalBuild = true;
           allowSubstitutes = false;
+          passthru.gtk3 = null;
         } ''
           mkdir -p "$out/bin"
           touch "$out/bin/firefox"

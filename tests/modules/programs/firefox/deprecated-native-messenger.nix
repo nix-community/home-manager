@@ -13,6 +13,7 @@ with lib;
       (self: super: {
         firefox-unwrapped = pkgs.runCommandLocal "firefox-0" {
           meta.description = "I pretend to be Firefox";
+          passthru.gtk3 = null;
         } ''
           mkdir -p "$out/bin"
           touch "$out/bin/firefox"
