@@ -61,6 +61,8 @@ with lib;
             Restart = "on-failure";
             SuccessExitStatus = [ 3 4 ];
             RestartForceExitStatus = [ 3 4 ];
+            NoNewPrivileges = true;
+            PrivateUsers = true;
           };
 
           Install = { WantedBy = [ "default.target" ]; };
