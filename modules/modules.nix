@@ -182,6 +182,7 @@ let
     ./services/muchsync.nix
     ./services/network-manager-applet.nix
     ./services/nextcloud-client.nix
+    ./services/notify-osd.nix
     ./services/owncloud-client.nix
     ./services/pantalaimon.nix
     ./services/parcellite.nix

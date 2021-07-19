@@ -266,6 +266,8 @@
 
 /modules/services/network-manager-applet.nix          @rycee
 
+/modules/services/notify-osd.nix                      @imalison
+
 /modules/services/pantalaimon.nix                     @jojosch
 /tests/modules/services/pantalaimon                   @jojosch
 
