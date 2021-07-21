@@ -2141,6 +2141,13 @@ in
         '';
       }
 
+      {
+        time = "2021-07-23T22:22:31+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.trayer'.
+        '';
+      }
     ];
   };
 }
