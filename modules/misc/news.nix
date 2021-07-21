@@ -2141,6 +2141,12 @@ in
         '';
       }
 
+      {
+        time = "2021-07-21T22:18:22+02:00";
+        message = ''
+          A new module is available: 'services.trayer'.
+        '';
+      }
     ];
   };
 }
