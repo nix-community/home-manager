@@ -8,12 +8,10 @@ with lib;
       enable = true;
       coc = {
         enable = true;
-        extraConfig = ''
-          {
-            // my variable
-            "foo": "bar"
-          }
-        '';
+        extraConfig = {
+          # my variable
+          foo = "bar";
+        };
       };
     };
 

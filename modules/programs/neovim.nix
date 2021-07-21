@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.neovim;
 
+  jsonFormat = pkgs.formats.json { };
+
   extraPython3PackageType = mkOptionType {
     name = "extra-python3-packages";
     description = "python3 packages in python.withPackages format";
@@ -222,9 +224,9 @@ in {
         enable = mkEnableOption "Coc";
 
         extraConfig = mkOption {
-          type = types.lines;
-          default = "";
-          example = ''
+          type = jsonFormat.type;
+          default = { };
+          example = literalExample ''
             {
               "suggest.noselect": true,
               "suggest.enablePreview": true,
@@ -277,8 +279,9 @@ in {
     xdg.configFile."nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
       text = neovimConfig.neovimRcContent;
     };
-    xdg.configFile."nvim/coc-settings.json" =
-      mkIf cfg.coc.enable { text = cfg.coc.extraConfig; };
+    xdg.configFile."nvim/coc-settings.json" = mkIf cfg.coc.enable {
+      source = jsonFormat.generate "coc-settings.json" cfg.coc.extraConfig;
+    };
 
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {
