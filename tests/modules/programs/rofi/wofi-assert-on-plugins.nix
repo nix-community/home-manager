@@ -2,20 +2,20 @@
 
 with lib;
 
-{
-let
-  dummyPackage = x: pkgs.runCommandLocal "dummy-${x}" { } "";
-in
-{
+let dummyPackage = x: pkgs.runCommandLocal "dummy-${x}" { } "";
+in {
   config = {
     programs.rofi = {
       enable = true;
       package = pkgs.wofi;
       plugins = [ pkgs.rofi-calc ];
     };
-    
+
     nixpkgs.overlays = [
-      (self: super: { rofi = dummyPackage "rofi"; rofi-calc = dummyPackage "rofi-calc"; })
+      (self: super: {
+        wofi = dummyPackage "wofi";
+        rofi-calc = dummyPackage "rofi-calc";
+      })
     ];
 
     test.asserts.assertions.expected = [''
@@ -23,4 +23,4 @@ in
     ''];
   };
 }
-}
+
