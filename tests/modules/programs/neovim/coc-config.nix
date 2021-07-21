@@ -8,7 +8,7 @@ with lib;
       enable = true;
       coc = {
         enable = true;
-        extraConfig = {
+        settings = {
           # my variable
           foo = "bar";
         };

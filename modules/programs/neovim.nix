@@ -223,7 +223,7 @@ in {
       coc = {
         enable = mkEnableOption "Coc";
 
-        extraConfig = mkOption {
+        settings = mkOption {
           type = jsonFormat.type;
           default = { };
           example = literalExample ''
@@ -280,7 +280,7 @@ in {
       text = neovimConfig.neovimRcContent;
     };
     xdg.configFile."nvim/coc-settings.json" = mkIf cfg.coc.enable {
-      source = jsonFormat.generate "coc-settings.json" cfg.coc.extraConfig;
+      source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
     };
 
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
