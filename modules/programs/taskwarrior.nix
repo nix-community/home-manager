@@ -98,8 +98,6 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ pkgs.taskwarrior ];
 
-    home.file."${cfg.dataLocation}/.keep".text = "";
-
     home.file.".taskrc".text = ''
       data.location=${cfg.dataLocation}
       ${includeTheme cfg.colorTheme}
