@@ -23,7 +23,13 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.volnoti" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
+
     systemd.user.services.volnoti = {
       Unit = { Description = "volnoti"; };
 
