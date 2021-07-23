@@ -11414,6 +11414,34 @@ for more information about the format.
         "*:0/5"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/taskwarrior-sync.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/taskwarrior-sync.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.trayer.enable"></a><a class="term" href="options.html#opt-services.trayer.enable"><code class="option">services.trayer.enable</code></a></span></dt><dd><p>Whether to enable trayer, the lightweight GTK2+ systray for UNIX desktops.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/trayer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/trayer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.trayer.package"></a><a class="term" href="options.html#opt-services.trayer.package"><code class="option">services.trayer.package</code></a></span></dt><dd><p>The package to use for the trayer binary.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.trayer
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.trayer</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/trayer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/trayer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.trayer.settings"></a><a class="term" href="options.html#opt-services.trayer.settings"><code class="option">services.trayer.settings</code></a></span></dt><dd><p>Trayer configuration as a set of attributes. Further details can be
+found at <a class="link" href="https://github.com/sargon/trayer-srg" target="_top">https://github.com/sargon/trayer-srg</a>.
+
+</p><div class="informaltable"><table class="informaltable" border="0"><colgroup><col /><col /><col /><col /></colgroup><thead><tr><th>Property Name</th><th>Type</th><th>Values</th><th>Default</th></tr></thead><tbody><tr><td><code class="varname">SetDockType</code></td><td>boolean</td><td>true|false</td><td>true</td></tr><tr><td><code class="varname">SetPartialStrut</code></td><td>boolean</td><td>true|false</td><td>true</td></tr><tr><td><code class="varname">align</code></td><td>string</td><td>left|right|center</td><td>center</td></tr><tr><td><code class="varname">alpha</code></td><td>signed integer</td><td>number</td><td>127</td></tr><tr><td><code class="varname">distance</code></td><td>signed integer</td><td>number</td><td>0</td></tr><tr><td><code class="varname">distancefrom</code></td><td>string</td><td>left|right|top|bottom</td><td>top</td></tr><tr><td><code class="varname">edge</code></td><td>string</td><td>left|right|top|bottom|none</td><td>bottom</td></tr><tr><td><code class="varname">expand</code></td><td>boolean</td><td>true|false</td><td>true</td></tr><tr><td><code class="varname">height</code></td><td>signed integer</td><td>number</td><td>26</td></tr><tr><td><code class="varname">heighttype</code></td><td>string</td><td>request|pixel</td><td>pixel</td></tr><tr><td><code class="varname">iconspacing</code></td><td>signed integer</td><td>number</td><td>0</td></tr><tr><td><code class="varname">margin</code></td><td>signed integer</td><td>number</td><td>0</td></tr><tr><td><code class="varname">monitor</code></td><td>string</td><td>number|primary</td><td>0</td></tr><tr><td><code class="varname">padding</code></td><td>signed integer</td><td>number</td><td>0</td></tr><tr><td><code class="varname">tint</code></td><td>string</td><td>int</td><td>0xFFFFFFFF</td></tr><tr><td><code class="varname">transparent</code></td><td>boolean</td><td>true|false</td><td>false</td></tr><tr><td><code class="varname">width</code></td><td>signed integer</td><td>number</td><td>100</td></tr><tr><td><code class="varname">widthtype</code></td><td>string</td><td>request|pixel|percent</td><td>percent</td></tr></tbody></table></div><p>
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of null or string or boolean or signed integers</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  edge = "top";
+  padding = 6;
+  SetDockType = true;
+  tint = "0x282c34";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/trayer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/trayer.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.udiskie.enable"></a><a class="term" href="options.html#opt-services.udiskie.enable"><code class="option">services.udiskie.enable</code></a></span></dt><dd><p>Whether to enable udiskie mount daemon.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
