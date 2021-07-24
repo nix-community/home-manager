@@ -226,22 +226,26 @@ in {
         settings = mkOption {
           type = jsonFormat.type;
           default = { };
-          example = literalExample ''
-            {
-              "suggest.noselect": true,
-              "suggest.enablePreview": true,
-              "suggest.enablePreselect":false,
-              "suggest.disableKind": true,
-              "languageserver": {
-                "haskell": {
-                  "command": "haskell-language-server-wrapper",
-                  "args": ["--lsp"],
-                  "rootPatterns": ["*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"],
-                  "filetypes": ["haskell", "lhaskell"]
-                }
-              }
-            }
-          '';
+          example = {
+            "suggest.noselect" = true;
+            "suggest.enablePreview" = true;
+            "suggest.enablePreselect" = false;
+            "suggest.disableKind" = true;
+            languageserver = {
+              haskell = {
+                command = "haskell-language-server-wrapper";
+                args = [ "--lsp" ];
+                rootPatterns = [
+                  "*.cabal"
+                  "stack.yaml"
+                  "cabal.project"
+                  "package.yaml"
+                  "hie.yaml"
+                ];
+                filetypes = [ "haskell" "lhaskell" ];
+              };
+            };
+          };
           description = ''
             Extra configuration lines to add to
             <filename>$XDG_CONFIG_HOME/nvim/coc-settings.json</filename>
