@@ -40,5 +40,5 @@ in runCommand "home-manager" {
   install -D -m755 ${./completion.zsh} \
     $out/share/zsh/site-functions/_home-manager
   install -D -m755 ${./completion.fish} \
-    $out/share/fish/completions/home-manager.fish
+    $out/share/fish/vendor_completions.d/home-manager.fish
 ''
