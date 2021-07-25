@@ -6,6 +6,12 @@ in {
 
   meta.maintainers = with maintainers; [ kritnich ];
 
+  imports = [
+    (mkRemovedOptionModule [ "services" "barrier" "client" "tray" ] ''
+      The tray option is non-functional and has been removed.
+    '')
+  ];
+
   options.services.barrier = {
 
     client = {
@@ -28,8 +34,6 @@ in {
           Port defaults to <literal>24800</literal>.
         '';
       };
-
-      tray = mkEnableOption "the system tray icon" // { default = true; };
 
       enableCrypto = mkEnableOption "crypto (SSL) plugin" // {
         default = true;
@@ -66,7 +70,6 @@ in {
       Service.ExecStart = with cfg.client;
         toString ([ "${pkgs.barrier}/bin/barrierc" ]
           ++ optional (name != null) "--name ${name}"
-          ++ optional (!tray) "--no-tray"
           ++ optional enableCrypto "--enable-crypto"
           ++ optional enableDragDrop "--enable-drag-drop" ++ extraFlags
           ++ [ server ]);
