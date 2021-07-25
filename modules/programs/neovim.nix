@@ -266,7 +266,7 @@ in {
         extraPython3Packages withPython3 withNodeJs withRuby viAlias vimAlias;
       configure = cfg.configure // moduleConfigure;
       plugins = cfg.plugins
-        ++ (if cfg.coc.enable then [ pkgs.vimPlugins.coc-nvim ] else [ ]);
+        ++ optionals cfg.coc.enable [ pkgs.vimPlugins.coc-nvim ];
       customRC = cfg.extraConfig;
     };
 
