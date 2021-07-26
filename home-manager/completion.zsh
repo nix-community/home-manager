@@ -48,6 +48,7 @@ case "$state" in
           '--keep-failed[keep failed]' \
           '--keep-going[keep going]' \
           '--max-jobs[max jobs]:NUM:()' \
+          '--no-out-link[no out link]' \
           '--no-substitute[no substitute]' \
           '--option[option]:NAME VALUE:()' \
           '--show-trace[show trace]' \
