@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.neovim;
 
+  jsonFormat = pkgs.formats.json { };
+
   extraPython3PackageType = mkOptionType {
     name = "extra-python3-packages";
     description = "python3 packages in python.withPackages format";
@@ -217,6 +219,44 @@ in {
           This option is mutually exclusive with <varname>configure</varname>.
         '';
       };
+
+      coc = {
+        enable = mkEnableOption "Coc";
+
+        settings = mkOption {
+          type = jsonFormat.type;
+          default = { };
+          example = literalExample ''
+            {
+              "suggest.noselect" = true;
+              "suggest.enablePreview" = true;
+              "suggest.enablePreselect" = false;
+              "suggest.disableKind" = true;
+              languageserver = {
+                haskell = {
+                  command = "haskell-language-server-wrapper";
+                  args = [ "--lsp" ];
+                  rootPatterns = [
+                    "*.cabal"
+                    "stack.yaml"
+                    "cabal.project"
+                    "package.yaml"
+                    "hie.yaml"
+                  ];
+                  filetypes = [ "haskell" "lhaskell" ];
+                };
+              };
+            };
+          '';
+          description = ''
+            Extra configuration lines to add to
+            <filename>$XDG_CONFIG_HOME/nvim/coc-settings.json</filename>
+            See
+            <link xlink:href="https://github.com/neoclide/coc.nvim/wiki/Using-the-configuration-file" />
+            for options.
+          '';
+        };
+      };
     };
   };
 
@@ -225,7 +265,8 @@ in {
       inherit (cfg)
         extraPython3Packages withPython3 withNodeJs withRuby viAlias vimAlias;
       configure = cfg.configure // moduleConfigure;
-      plugins = cfg.plugins;
+      plugins = cfg.plugins
+        ++ optionals cfg.coc.enable [ pkgs.vimPlugins.coc-nvim ];
       customRC = cfg.extraConfig;
     };
 
@@ -241,9 +282,13 @@ in {
 
     home.packages = [ cfg.finalPackage ];
 
-    xdg.configFile = mkIf (neovimConfig.neovimRcContent != "") {
-      "nvim/init.vim".text = neovimConfig.neovimRcContent;
+    xdg.configFile."nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
+      text = neovimConfig.neovimRcContent;
     };
+    xdg.configFile."nvim/coc-settings.json" = mkIf cfg.coc.enable {
+      source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
+    };
+
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {
         wrapperArgs = (lib.escapeShellArgs neovimConfig.wrapperArgs) + " "
