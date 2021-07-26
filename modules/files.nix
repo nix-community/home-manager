@@ -106,7 +106,8 @@ in
               $VERBOSE_ECHO "Skipping collision check for $targetPath"
             elif [[ -e "$targetPath" \
                 && ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
-              if [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
+              if [[ ! -L "$targetPath" \
+                  && -v HOME_MANAGER_BACKUP_EXT && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
                 if [[ -e "$backup" ]]; then
                   errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath'"
@@ -160,101 +161,101 @@ in
     # and a failure during the intermediate state FA ∩ FB will not
     # result in lost links because this set of links are in both the
     # source and target generation.
-    home.activation.linkGeneration = hm.dag.entryAfter ["writeBoundary"] (
-      let
-        link = pkgs.writeShellScript "link" ''
-          newGenFiles="$1"
-          shift
-          for sourcePath in "$@" ; do
-            relativePath="''${sourcePath#$newGenFiles/}"
-            targetPath="$HOME/$relativePath"
-            if [[ -e "$targetPath" && ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
-              backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-              $DRY_RUN_CMD mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
-            fi
-            $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
-            $DRY_RUN_CMD ln -nsf $VERBOSE_ARG "$sourcePath" "$targetPath"
-          done
-        '';
+    home.activation.linkGeneration = hm.dag.entryAfter ["writeBoundary"] (''
+      function clean() {
+        # A symbolic link whose target path matches this pattern will be
+        # considered part of a Home Manager generation.
+        local homeFilePattern
+        homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
 
-        cleanup = pkgs.writeShellScript "cleanup" ''
-          . ${./lib-bash/color-echo.sh}
+        local newGenFiles="$1"
+        local relativePath="$2"
+        local targetPath="$HOME/$relativePath"
+        if [[ -e "$newGenFiles/$relativePath" ]] ; then
+          $VERBOSE_ECHO "Checking $targetPath: exists"
+        elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
+          warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
+        else
+          $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
+          $DRY_RUN_CMD rm $VERBOSE_ARG "$targetPath"
 
-          # A symbolic link whose target path matches this pattern will be
-          # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
+          # Recursively delete empty parent directories.
+          targetDir="$(dirname "$relativePath")"
+          if [[ "$targetDir" != "." ]] ; then
+            pushd "$HOME" > /dev/null
 
-          newGenFiles="$1"
-          shift 1
-          for relativePath in "$@" ; do
-            targetPath="$HOME/$relativePath"
-            if [[ -e "$newGenFiles/$relativePath" ]] ; then
-              $VERBOSE_ECHO "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
-              warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
-            else
-              $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
-              $DRY_RUN_CMD rm $VERBOSE_ARG "$targetPath"
+            # Call rmdir with a relative path excluding $HOME.
+            # Otherwise, it might try to delete $HOME and exit
+            # with a permission error.
+            $DRY_RUN_CMD rmdir $VERBOSE_ARG \
+                -p --ignore-fail-on-non-empty \
+                "$targetDir"
 
-              # Recursively delete empty parent directories.
-              targetDir="$(dirname "$relativePath")"
-              if [[ "$targetDir" != "." ]] ; then
-                pushd "$HOME" > /dev/null
-
-                # Call rmdir with a relative path excluding $HOME.
-                # Otherwise, it might try to delete $HOME and exit
-                # with a permission error.
-                $DRY_RUN_CMD rmdir $VERBOSE_ARG \
-                    -p --ignore-fail-on-non-empty \
-                    "$targetDir"
-
-                popd > /dev/null
-              fi
-            fi
-          done
-        '';
-      in
-        ''
-          function linkNewGen() {
-            echo "Creating home file links in $HOME"
-
-            local newGenFiles
-            newGenFiles="$(readlink -e "$newGenPath/home-files")"
-            find "$newGenFiles" \( -type f -or -type l \) \
-              -exec bash ${link} "$newGenFiles" {} +
-          }
-
-          function cleanOldGen() {
-            if [[ ! -v oldGenPath ]] ; then
-              return
-            fi
-
-            echo "Cleaning up orphan links from $HOME"
-
-            local newGenFiles oldGenFiles
-            newGenFiles="$(readlink -e "$newGenPath/home-files")"
-            oldGenFiles="$(readlink -e "$oldGenPath/home-files")"
-
-            # Apply the cleanup script on each leaf in the old
-            # generation. The find command below will print the
-            # relative path of the entry.
-            find "$oldGenFiles" '(' -type f -or -type l ')' -printf '%P\0' \
-              | xargs -0 bash ${cleanup} "$newGenFiles"
-          }
-
-          cleanOldGen
-
-          if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
-            echo "Creating profile generation $newGenNum"
-            $DRY_RUN_CMD nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
-            $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"
-          else
-            echo "No change so reusing latest profile generation $oldGenNum"
+            popd > /dev/null
           fi
+        fi
+      }
 
-          linkNewGen
-        ''
-    );
+      function cleanOldGen() {
+        if [[ ! -v oldGenPath ]] ; then
+          return
+        fi
+
+        echo "Cleaning up orphan links from $HOME"
+
+        local newGenFiles oldGenFiles
+        newGenFiles="$(readlink -e "$newGenPath/home-files")"
+        oldGenFiles="$(readlink -e "$oldGenPath/home-files")"
+
+        # Apply the cleanup script on each leaf in the old
+        # generation. The find command below will print the
+        # relative path of the entry.
+        find "$oldGenFiles" '(' -type f -or -type l ')' -printf '%P\0' \
+          | while IFS= read -r -d "" relativePath ; do \
+              clean "$newGenFiles" "$relativePath"; \
+            done
+      }
+
+      function link() {
+        local newGenFiles="$1"
+        local sourcePath="$2"
+        local relativePath="''${sourcePath#$newGenFiles/}"
+        local targetPath="$HOME/$relativePath"
+        if [[ -e "$targetPath" && ! -L "$targetPath" \
+            && -v HOME_MANAGER_BACKUP_EXT && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
+          local backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
+          $DRY_RUN_CMD mv $VERBOSE_ARG "$targetPath" "$backup" \
+            || errorEcho "Moving '$targetPath' failed!"
+        fi
+        $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
+        $DRY_RUN_CMD ln -nsf $VERBOSE_ARG "$sourcePath" "$targetPath"
+      }
+
+      function linkNewGen() {
+        echo "Creating home file links in $HOME"
+
+        local newGenFiles
+        newGenFiles="$(readlink -e "$newGenPath/home-files")"
+        find "$newGenFiles" \( -type f -or -type l \) -print0 \
+          | while IFS= read -r -d "" sourcePath ; do \
+              link "$newGenFiles" "$sourcePath"; \
+            done
+      }
+
+      cleanOldGen
+
+      if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
+        echo "Creating profile generation $newGenNum"
+        $DRY_RUN_CMD nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
+        $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"
+      else
+        echo "No change so reusing latest profile generation $oldGenNum"
+      fi
+
+      linkNewGen
+
+      unset -f clean cleanOldGen link linkNewGen
+    '');
 
     home.activation.checkFilesChanged = hm.dag.entryBefore ["linkGeneration"] (
       let
