@@ -5,9 +5,9 @@ function setupVars() {
     local profilesPath="$nixStateDir/profiles/per-user/$USER"
     local gcPath="$nixStateDir/gcroots/per-user/$USER"
 
-    genProfilePath="$profilesPath/home-manager"
-    newGenPath="@GENERATION_DIR@";
-    newGenGcPath="$gcPath/current-home"
+    declare -gr genProfilePath="$profilesPath/home-manager"
+    declare -gr newGenPath="@GENERATION_DIR@";
+    declare -gr newGenGcPath="$gcPath/current-home"
 
     local greatestGenNum
     greatestGenNum=$( \
@@ -16,14 +16,15 @@ function setupVars() {
             | sed -E 's/ *([[:digit:]]+) .*/\1/')
 
     if [[ -n $greatestGenNum ]] ; then
-        oldGenNum=$greatestGenNum
-        newGenNum=$((oldGenNum + 1))
+        declare -gr oldGenNum=$greatestGenNum
+        declare -gr newGenNum=$((oldGenNum + 1))
     else
-        newGenNum=1
+        declare -gr newGenNum=1
     fi
 
     if [[ -e $profilesPath/home-manager ]] ; then
         oldGenPath="$(readlink -e "$profilesPath/home-manager")"
+        declare -gr oldGenPath
     fi
 
     $VERBOSE_ECHO "Sanity checking oldGenNum and oldGenPath"
