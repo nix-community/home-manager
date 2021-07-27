@@ -5,9 +5,17 @@ function setupVars() {
     local profilesPath="$nixStateDir/profiles/per-user/$USER"
     local gcPath="$nixStateDir/gcroots/per-user/$USER"
 
-    genProfilePath="$profilesPath/home-manager"
-    newGenPath="@GENERATION_DIR@";
-    newGenGcPath="$gcPath/current-home"
+    declare -gr genProfilePath="$profilesPath/home-manager"
+    declare -gr newGenPath="@GENERATION_DIR@";
+    declare -gr newGenGcPath="$gcPath/current-home"
+
+    declare -g newGenLayoutVersion
+    if [[ -f $newGenPath/version ]]; then
+        newGenLayoutVersion=$(< "$newGenPath/version")
+    else
+        newGenLayoutVersion=0
+    fi
+    readonly newGenLayoutVersion
 
     local greatestGenNum
     greatestGenNum=$( \
@@ -23,7 +31,14 @@ function setupVars() {
     fi
 
     if [[ -e $profilesPath/home-manager ]] ; then
+        declare -g oldGenPath oldGenLayoutVersion
         oldGenPath="$(readlink -e "$profilesPath/home-manager")"
+        if [[ -f $oldGenPath/version ]]; then
+            oldGenLayoutVersion=$(< "$oldGenPath/version")
+        else
+            oldGenLayoutVersion=0
+        fi
+        readonly oldGenPath oldGenLayoutVersion
     fi
 
     $VERBOSE_ECHO "Sanity checking oldGenNum and oldGenPath"

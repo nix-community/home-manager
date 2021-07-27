@@ -163,11 +163,12 @@ in
     home.activation.linkGeneration = hm.dag.entryAfter ["writeBoundary"] (
       let
         link = pkgs.writeShellScript "link" ''
-          newGenFiles="$1"
-          shift
+          rootPath="$1"
+          newGenFiles="$2"
+          shift 2
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
-            targetPath="$HOME/$relativePath"
+            targetPath="$rootPath/$relativePath"
             if [[ -e "$targetPath" && ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
               backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
               $DRY_RUN_CMD mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
@@ -184,10 +185,11 @@ in
           # considered part of a Home Manager generation.
           homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
 
-          newGenFiles="$1"
-          shift 1
+          rootPath="$1"
+          newGenFiles="$2"
+          shift 2
           for relativePath in "$@" ; do
-            targetPath="$HOME/$relativePath"
+            targetPath="$rootPath/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath: exists"
             elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
@@ -199,7 +201,8 @@ in
               # Recursively delete empty parent directories.
               targetDir="$(dirname "$relativePath")"
               if [[ "$targetDir" != "." ]] ; then
-                pushd "$HOME" > /dev/null
+                # TODO
+                # pushd "$HOME" > /dev/null
 
                 # Call rmdir with a relative path excluding $HOME.
                 # Otherwise, it might try to delete $HOME and exit
@@ -208,7 +211,7 @@ in
                     -p --ignore-fail-on-non-empty \
                     "$targetDir"
 
-                popd > /dev/null
+                # popd > /dev/null
               fi
             fi
           done
@@ -216,12 +219,17 @@ in
       in
         ''
           function linkNewGen() {
-            echo "Creating home file links in $HOME"
+            echo "Creating home file links"
+
+            local rootPath=
+            if [[ $newGenLayoutVersion -eq 0 ]] ; then
+              rootPath="$HOME"
+            fi
 
             local newGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
             find "$newGenFiles" \( -type f -or -type l \) \
-              -exec bash ${link} "$newGenFiles" {} +
+              -exec bash ${link} "$rootPath" "$newGenFiles" {} +
           }
 
           function cleanOldGen() {
@@ -229,17 +237,35 @@ in
               return
             fi
 
-            echo "Cleaning up orphan links from $HOME"
+            echo "Cleaning up orphan links"
 
             local newGenFiles oldGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
             oldGenFiles="$(readlink -e "$oldGenPath/home-files")"
 
-            # Apply the cleanup script on each leaf in the old
-            # generation. The find command below will print the
-            # relative path of the entry.
-            find "$oldGenFiles" '(' -type f -or -type l ')' -printf '%P\0' \
-              | xargs -0 bash ${cleanup} "$newGenFiles"
+            # When transitioning from layout 0 to 1 we need to prefix all old
+            # paths with the home directory. Conversely, if we ever go from
+            # layout 1 to 0 we need to "subtract" the home directory from the
+            # old generation path, this is done by appending an "antiprefix" to
+            # the layout 1 paths.
+            local prefix= antiprefix=
+            if [[ $oldGenLayoutVersion -eq 0 && $newGenLayoutVersion -ge 1 ]] ; then
+              prefix="''${HOME#/}/"
+            elif [[ $oldGenLayoutVersion -ge 1 && $newGenLayoutVersion -eq 0 ]] ; then
+              antiprefix="/$HOME"
+            fi
+
+            local rootPath=
+            if [[ $newGenLayoutVersion -eq 0 ]] ; then
+              rootPath="$HOME"
+            fi
+
+            $VERBOSE_ECHO "Orphan link cleanup uses prefix=$prefix antiprefix=$antiprefix rootPath=$rootPath"
+
+            # Apply the cleanup script on each leaf in the old generation. The
+            # find command below will print the relative path of the entry.
+            find "$oldGenFiles$antiprefix" '(' -type f -or -type l ')' -printf "$prefix%P\0" \
+              | xargs -0 bash ${cleanup} "$rootPath" "$newGenFiles"
           }
 
           cleanOldGen

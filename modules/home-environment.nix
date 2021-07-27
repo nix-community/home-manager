@@ -622,6 +622,13 @@ in
             mkdir $out/bin
             ln -s $out/activate $out/bin/home-manager-generation
 
+            # The generation directory layout version.
+            #
+            # - Version 0 (also implied when file is missing) means
+            #   "legacy layout".
+            # - Version 1 adds full home file paths.
+            echo 0 > $out/version
+
             substituteInPlace $out/activate \
               --subst-var-by GENERATION_DIR $out
 
