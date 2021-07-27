@@ -132,6 +132,15 @@ in {
         '';
       };
 
+      generatedConfigViml = mkOption {
+        type = types.lines;
+        visible = true;
+        readOnly = true;
+        description = ''
+          Generated vimscript config.
+        '';
+      };
+
       package = mkOption {
         type = types.package;
         default = pkgs.neovim-unwrapped;
@@ -279,6 +288,8 @@ in {
         configure.packages.*.start  -> programs.neovim.plugins = [ { plugin = ...; }]
         configure.customRC -> programs.neovim.extraConfig
     '';
+
+    programs.neovim.generatedConfigViml = neovimConfig.neovimRcContent;
 
     home.packages = [ cfg.finalPackage ];
 
