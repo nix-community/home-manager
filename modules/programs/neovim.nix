@@ -24,6 +24,12 @@ let
         default = "";
       };
 
+      luaConfig = mkOption {
+        type = types.lines;
+        description = "lua for this plugin to be placed in init.vim";
+        default = "";
+      };
+
       optional = mkEnableOption "optional" // {
         description = "Don't load by default (load with :packadd)";
       };
@@ -40,6 +46,14 @@ let
     if p ? plugin && (p.config or "") != "" then ''
       " ${p.plugin.pname or p.plugin.name} {{{
       ${p.config}
+      " }}}
+    '' else
+      "";
+
+  pluginConfigLua = p:
+    if p ? plugin && (p.luaConfig or "") != "" then ''
+      -- ${p.plugin.pname or p.plugin.name} {{{
+      ${p.luaConfig}
       " }}}
     '' else
       "";
@@ -138,6 +152,15 @@ in {
         readOnly = true;
         description = ''
           Generated vimscript config.
+        '';
+      };
+
+      generatedConfigLua = mkOption {
+        type = types.lines;
+        visible = true;
+        readOnly = true;
+        description = ''
+          Generated lua config
         '';
       };
 
@@ -290,12 +313,17 @@ in {
     '';
 
     programs.neovim.generatedConfigViml = neovimConfig.neovimRcContent;
+    programs.neovim.generatedConfigLua = lib.concatMapStrings pluginConfigLua cfg.plugins;
 
     home.packages = [ cfg.finalPackage ];
 
-    xdg.configFile."nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
-      text = neovimConfig.neovimRcContent;
+    xdg.configFile = {
+      "nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
+        text = neovimConfig.neovimRcContent;
+      };
+      "nvim/init2.lua".text = mkIf (neovimRcLuaContent != "") programs.neovim.generatedConfigLua;
     };
+
     xdg.configFile."nvim/coc-settings.json" = mkIf cfg.coc.enable {
       source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
     };
