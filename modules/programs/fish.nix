@@ -164,8 +164,8 @@ in {
         default = { };
         example = literalExample ''
           {
-            ll = "ls -l";
-            ".." = "cd ..";
+            g = "git";
+            "..." = "cd ../..";
           }
         '';
         description = ''
