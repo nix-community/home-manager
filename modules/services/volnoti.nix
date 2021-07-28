@@ -10,15 +10,17 @@ in {
   meta.maintainers = [ maintainers.imalison ];
 
   options = {
-    services.volnoti = { enable = mkEnableOption "Volnoti volume HUD daemon"; };
+    services.volnoti = {
+      enable = mkEnableOption "Volnoti volume HUD daemon";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.volnoti;
-      defaultText = literalExample "pkgs.volnoti";
-      description = ''
-        Package containing the <command>volnoti</command> program.
-      '';
+      package = mkOption {
+        type = types.package;
+        default = pkgs.volnoti;
+        defaultText = literalExample "pkgs.volnoti";
+        description = ''
+          Package containing the <command>volnoti</command> program.
+        '';
+      };
     };
   };
 
