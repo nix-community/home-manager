@@ -214,7 +214,6 @@ in {
           initialisation.
         '';
       };
-      };
     };
 
     programs.fish.plugins = mkOption {
