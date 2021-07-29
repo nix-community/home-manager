@@ -15,7 +15,7 @@ with lib;
       extraPython3Packages = (ps: with ps; [ jedi pynvim ]);
     };
     nmt.script = ''
-      vimrc="home-files/.config/nvim/init.vim"
+      vimrc="home-files/.config/nvim/init.lua"
       assertPathNotExists "$vimrc"
     '';
   };

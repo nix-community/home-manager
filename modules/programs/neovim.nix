@@ -20,7 +20,7 @@ let
     options = {
       config = mkOption {
         type = types.lines;
-        description = "vimscript for this plugin to be placed in init.vim";
+        description = "vimscript for this plugin to be placed in init.lua";
         default = "";
       };
 
@@ -221,7 +221,7 @@ in {
         '';
         description = ''
           List of vim plugins to install optionally associated with
-          configuration to be placed in init.vim.
+          configuration to be placed in init.lua.
 
           </para><para>
 
@@ -293,7 +293,7 @@ in {
 
     home.packages = [ cfg.finalPackage ];
 
-    xdg.configFile."nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
+    xdg.configFile."nvim/init.lua" = mkIf (neovimConfig.neovimRcContent != "") {
       text = neovimConfig.neovimRcContent;
     };
     xdg.configFile."nvim/coc-settings.json" = mkIf cfg.coc.enable {
