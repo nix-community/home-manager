@@ -89,6 +89,8 @@ let
   blank = text "Blank";
 
 in {
+  meta.maintainers = [ maintainers.bjpbakker ];
+
   options.programs.htop = {
     enable = mkEnableOption "htop";
 
