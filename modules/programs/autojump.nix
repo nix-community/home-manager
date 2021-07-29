@@ -49,7 +49,7 @@ in {
       . ${package}/share/autojump/autojump.zsh
     '';
 
-    programs.fish.promptInit = mkIf cfg.enableFishIntegration ''
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
       . ${package}/share/autojump/autojump.fish
     '';
   };
