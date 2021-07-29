@@ -4,6 +4,8 @@ with lib;
 
 let
 
+  inherit (config.home) stateVersion;
+
   cfg = config.home;
 
   languageSubModule = types.submodule {
@@ -220,7 +222,11 @@ in
 
     home.keyboard = mkOption {
       type = types.nullOr keyboardSubModule;
-      default = {};
+      default = if versionAtLeast stateVersion "21.11" then null else { };
+      defaultText = literalExpression ''
+        "{ }"  for state version < 21.11,
+        "null" for state version ≥ 21.11
+      '';
       description = ''
         Keyboard configuration. Set to <literal>null</literal> to
         disable Home Manager keyboard management.

@@ -44,4 +44,4 @@ The state version in this release includes the changes below. These
 changes are only active if the `home.stateVersion` option is set to
 "21.11" or later.
 
-* Nothing has happened.
+* The <<opt-home.keyboard>> option now defaults to `null`, meaning that Home Manager won't do any keyboard layout management. For example, `setxkbmap` won't be run in X sessions.
