@@ -88,7 +88,10 @@ when managing home configuration together with system configuration.
 +
 This file can be sourced directly by POSIX.2-like shells such as
 https://www.gnu.org/software/bash/[Bash] or
-http://zsh.sourceforge.net/[Z shell].
+http://zsh.sourceforge.net/[Z shell]. https://fishshell.com[Fish]
+users can use utilities such as
+https://github.com/oh-my-fish/plugin-foreign-env[foreign-env] or
+https://github.com/bouk/babelfish[babelfish].
 +
 For example, if you use Bash then add
 +
@@ -97,9 +100,7 @@ For example, if you use Bash then add
 . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 ----
 +
-to your `~/.profile` file. For fish shell, it is possible to use
-https://github.com/oh-my-fish/plugin-foreign-env[foreign-env] to
-source the file.
+to your `~/.profile` file.
 
 If instead of using channels you want to run Home Manager from a Git
 checkout of the repository then you can use the
