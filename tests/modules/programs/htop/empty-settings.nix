@@ -7,7 +7,7 @@ with lib;
     programs.htop.enable = true;
 
     nmt.script = ''
-      assertFileExists home-files/.config/htop/htoprc
+      assertPathNotExists home-files/.config/htop
     '';
   };
 }
