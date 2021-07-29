@@ -20,7 +20,7 @@ let
     options = {
       config = mkOption {
         type = types.lines;
-        description = "vimscript for this plugin to be placed in init.lua";
+        description = "lua for this plugin to be placed in init.lua";
         default = "";
       };
 
@@ -137,7 +137,7 @@ in {
         visible = true;
         readOnly = true;
         description = ''
-          Generated vimscript config.
+          Generated lua config.
         '';
       };
 
