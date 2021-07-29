@@ -145,9 +145,27 @@ in {
 
     home.packages = [ pkgs.htop ];
 
-    xdg.configFile."htop/htoprc" = mkIf (cfg.settings != { }) {
-      text = concatStringsSep "\n" (mapAttrsToList formatOption cfg.settings)
-        + "\n";
+    xdg.configFile."htop/htoprc" = let
+      defaults = {
+        fields = with fields; [
+          PID
+          USER
+          PRIORITY
+          NICE
+          M_SIZE
+          M_RESIDENT
+          M_SHARE
+          STATE
+          PERCENT_CPU
+          PERCENT_MEM
+          TIME
+          COMM
+        ];
+      };
+
+    in mkIf (cfg.settings != { }) {
+      text = concatStringsSep "\n"
+        (mapAttrsToList formatOption (defaults // cfg.settings)) + "\n";
     };
   };
 }
