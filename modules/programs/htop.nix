@@ -146,7 +146,8 @@ in {
     home.packages = [ pkgs.htop ];
 
     xdg.configFile."htop/htoprc" = mkIf (cfg.settings != { }) {
-      text = concatStringsSep "\n" (mapAttrsToList formatOption cfg.settings);
+      text = concatStringsSep "\n" (mapAttrsToList formatOption cfg.settings)
+        + "\n";
     };
   };
 }

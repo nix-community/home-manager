@@ -37,7 +37,9 @@ with lib;
         ]);
 
     nmt.script = ''
-      assertFileExists home-files/.config/htop/htoprc
+      htoprc=home-files/.config/htop/htoprc
+      assertFileExists $htoprc
+      assertFileContent $htoprc ${./example-htoprc.txt}
     '';
   };
 }
