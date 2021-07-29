@@ -214,13 +214,6 @@ in {
           initialisation.
         '';
       };
-
-      promptInit = mkOption {
-        type = types.lines;
-        default = "";
-        description = ''
-          Shell script code used to initialise fish prompt.
-        '';
       };
     };
 
@@ -381,9 +374,6 @@ in {
 
           # Aliases
           ${aliasesStr}
-
-          # Prompt initialisation
-          ${cfg.promptInit}
 
           # Interactive shell intialisation
           ${cfg.interactiveShellInit}
