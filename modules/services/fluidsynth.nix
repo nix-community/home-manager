@@ -21,6 +21,15 @@ in {
         '';
       };
 
+      soundService = mkOption {
+        type = types.str;
+        default = "pulseaudio";
+        example = "pipewire-pulse";
+        description = ''
+          The systemd sound service to depend on.
+        '';
+      };
+
       extraOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
@@ -46,8 +55,8 @@ in {
       Unit = {
         Description = "FluidSynth Daemon";
         Documentation = "man:fluidsynth(1)";
-        BindsTo = [ "pulseaudio.service" ];
-        After = [ "pulseaudio.service" ];
+        BindsTo = [ (cfg.soundService + ".service") ];
+        After = [ (cfg.soundService + ".service") ];
       };
 
       Install = { WantedBy = [ "default.target" ]; };
