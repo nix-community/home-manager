@@ -255,8 +255,7 @@ in {
         onChange = ''
           i3Socket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*
           if [ -S $i3Socket ]; then
-            echo "Reloading i3"
-            $DRY_RUN_CMD ${cfg.package}/bin/i3-msg -s $i3Socket reload 1>/dev/null
+            ${cfg.package}/bin/i3-msg -s $i3Socket reload >/dev/null
           fi
         '';
       };

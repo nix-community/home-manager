@@ -161,9 +161,8 @@ in {
         source = xmonadBin;
         onChange = ''
           # Attempt to restart xmonad if X is running.
-          if [[ -v DISPLAY ]] ; then
-            echo "Restarting xmonad"
-            $DRY_RUN_CMD ${config.xsession.windowManager.command} --restart
+          if [[ -v DISPLAY ]]; then
+            ${config.xsession.windowManager.command} --restart
           fi
         '';
       };

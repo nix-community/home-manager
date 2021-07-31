@@ -93,8 +93,8 @@ in {
           ++ optionals (cfg.properties != null)
           (mapAttrsToList formatLine cfg.properties)) + "\n";
         onChange = ''
-          if [[ -v DISPLAY ]] ; then
-            $DRY_RUN_CMD ${xrdbMerge}
+          if [[ -v DISPLAY ]]; then
+            ${xrdbMerge}
           fi
         '';
       };

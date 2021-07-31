@@ -298,8 +298,13 @@ in
 
     home.activation.onFilesChange = hm.dag.entryAfter ["linkGeneration"] (
       concatMapStrings (v: ''
-        if [[ ''${changedFiles[${escapeShellArg v.target}]} -eq 1 ]]; then
-          ${v.onChange}
+        if (( ''${changedFiles[${escapeShellArg v.target}]} == 1 )); then
+          if [[ -v DRY_RUN || -v VERBOSE ]]; then
+            echo "Running onChange hook for" ${escapeShellArg v.target}
+          fi
+          if [[ ! -v DRY_RUN ]]; then
+            ${v.onChange}
+          fi
         fi
       '') (filter (v: v.onChange != "") (attrValues cfg))
     );

@@ -6,14 +6,6 @@ let
 
   cfg = config.programs.i3status-rust;
 
-  restartI3 = ''
-    i3Socket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*
-    if [ -S $i3Socket ]; then
-      echo "Reloading i3"
-      $DRY_RUN_CMD ${config.xsession.windowManager.i3.package}/bin/i3-msg -s $i3Socket restart 1>/dev/null
-    fi
-  '';
-
   settingsFormat = pkgs.formats.toml { };
 
 in {
@@ -258,7 +250,12 @@ in {
 
     xdg.configFile = mapAttrs' (cfgFileSuffix: cfg:
       nameValuePair ("i3status-rust/config-${cfgFileSuffix}.toml") ({
-        onChange = mkIf config.xsession.windowManager.i3.enable restartI3;
+        onChange = mkIf config.xsession.windowManager.i3.enable ''
+          i3Socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*"
+          if [[ -S $i3Socket ]]; then
+            ${config.xsession.windowManager.i3.package}/bin/i3-msg -s $i3Socket restart >/dev/null
+          fi
+        '';
 
         source = settingsFormat.generate ("config-${cfgFileSuffix}.toml") ({
           theme = cfg.theme;

@@ -309,10 +309,9 @@ in {
       mkIf pkgs.stdenv.hostPlatform.isLinux {
         text = qutebrowserConfig;
         onChange = ''
-          hash="$(echo -n $USER | md5sum | cut -d' ' -f1)"
+          hash="$(echo -n "$USER" | md5sum | cut -d' ' -f1)"
           socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/qutebrowser/ipc-$hash"
-          if [ -S $socket ]; then
-            echo "Reloading qutebrowser"
+          if [[ -S $socket ]]; then
             command=${
               escapeShellArg (builtins.toJSON {
                 args = [ ":config-source" ];
@@ -320,7 +319,7 @@ in {
                 protocol_version = 1;
               })
             }
-            $DRY_RUN_CMD echo $command | ${pkgs.socat}/bin/socat -lf /dev/null - UNIX-CONNECT:$socket
+            echo "$command" | ${pkgs.socat}/bin/socat -lf /dev/null - UNIX-CONNECT:"$socket"
           fi
           unset hash socket command
         '';
