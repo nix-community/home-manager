@@ -41,6 +41,7 @@ let
       dnd           = { shadow = ${toJSON (!cfg.noDNDShadow)}; };
       popup_menu    = { opacity = ${cfg.menuOpacity}; };
       dropdown_menu = { opacity = ${cfg.menuOpacity}; };
+      ${cfg.extraWintypes}
     };
 
     # other options
@@ -266,6 +267,21 @@ in {
       example = literalExample "pkgs.picom";
       description = ''
         picom derivation to use.
+      '';
+    };
+
+    extraWintypes = mkOption {
+      type = types.str;
+      default = "";
+      example = ''
+        tooltip = { 
+          fade = true
+          shadow = true
+        }
+        dock = { opacity = 0.75 }
+      '';
+      description = ''
+        Additional wintypes.
       '';
     };
 
