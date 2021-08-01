@@ -2149,6 +2149,15 @@ in
           A new module is available: 'services.trayer'.
         '';
       }
+      {
+        time = "2021-09-08T19:46:25.315Z";
+        message = ''
+          The neovim module has a new option: 'neovim.initExtra'.
+
+          This adds extra vimscript configuration to add to the top of the
+          generated configuration file.
+        '';
+      }
     ];
   };
 }
