@@ -280,6 +280,8 @@
 /modules/services/pbgopy.nix                          @ivarwithoutbones
 /tests/modules/services/pbgopy                        @ivarwithoutbones
 
+/modules/services/picom.nix                           @khrj
+
 /modules/services/plan9port.nix                       @ehmry
 
 /modules/services/playerctld.nix                      @fendse

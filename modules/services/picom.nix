@@ -51,6 +51,7 @@ let
   '' + cfg.extraOptions);
 
 in {
+  meta.maintainers = with maintainers; [ khushraj ];
 
   options.services.picom = {
     enable = mkEnableOption "Picom X11 compositor";
