@@ -56,7 +56,7 @@ let
 
       ssl = if imap.tls.enable then {
         ssl = true;
-        sslcacertfile = imap.tls.certificatesFile;
+        sslcacertfile = toString imap.tls.certificatesFile;
         starttls = imap.tls.useStartTls;
       } else {
         ssl = false;

@@ -21,11 +21,12 @@ let
         user = userName;
         tls = onOff smtp.tls.enable;
         tls_starttls = onOff smtp.tls.useStartTls;
-        tls_trust_file = smtp.tls.certificatesFile;
       } // optionalAttrs (msmtp.tls.fingerprint != null) {
         tls_fingerprint = msmtp.tls.fingerprint;
       } // optionalAttrs (smtp.port != null) { port = toString smtp.port; }
-        // optionalAttrs (passwordCommand != null) {
+        // optionalAttrs (smtp.tls.certificatesFile != null) {
+          tls_trust_file = smtp.tls.certificatesFile;
+        } // optionalAttrs (passwordCommand != null) {
           passwordeval = toString passwordCommand;
         } // msmtp.extraConfig) ++ optional primary ''
 

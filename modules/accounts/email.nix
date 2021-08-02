@@ -71,7 +71,7 @@ let
       };
 
       certificatesFile = mkOption {
-        type = types.path;
+        type = types.nullOr types.path;
         default = config.accounts.email.certificatesFile;
         defaultText = "config.accounts.email.certificatesFile";
         description = ''
@@ -354,7 +354,7 @@ let
 in {
   options.accounts.email = {
     certificatesFile = mkOption {
-      type = types.path;
+      type = types.nullOr types.path;
       default = "/etc/ssl/certs/ca-certificates.crt";
       description = ''
         Path to default file containing certificate authorities that

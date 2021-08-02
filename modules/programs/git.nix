@@ -295,7 +295,8 @@ in {
                   "ssl")
               else
                 "";
-              smtpSslCertPath = mkIf smtp.tls.enable smtp.tls.certificatesFile;
+              smtpSslCertPath =
+                mkIf smtp.tls.enable (toString smtp.tls.certificatesFile);
               smtpServer = smtp.host;
               smtpUser = userName;
               from = address;
