@@ -84,6 +84,8 @@
 
 /modules/programs/i3status-rust.nix                   @workflow
 
+/modules/programs/java.nix                            @ShamrockLee
+
 /modules/programs/keychain.nix                        @marsam
 
 /modules/programs/lazygit.nix                         @kalhauge

@@ -2047,6 +2047,13 @@ in
           configuration file.
         '';
       }
+
+      {
+        time = "2021-10-03T20:00:52+00:00";
+        message = ''
+          A new module is available: 'programs.java'.
+        '';
+      }
     ];
   };
 }
