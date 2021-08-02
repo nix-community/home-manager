@@ -274,7 +274,7 @@ in {
     extraWintypes = mkOption {
       type = types.str;
       default = "";
-      example = ''
+      example = literalExample ''
         tooltip = { 
           fade = true
           shadow = true
