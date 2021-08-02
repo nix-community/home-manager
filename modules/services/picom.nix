@@ -275,11 +275,11 @@ in {
       type = types.str;
       default = "";
       example = literalExample ''
-        tooltip = { 
-          fade = true
-          shadow = true
-        }
-        dock = { opacity = 0.75 }
+        tooltip = {
+          fade = true;
+          shadow = true;
+        };
+        dock = { opacity = 0.75; };
       '';
       description = ''
         Additional wintypes.
