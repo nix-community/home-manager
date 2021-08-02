@@ -289,7 +289,7 @@ in {
     extraOptions = mkOption {
       type = types.str;
       default = "";
-      example = ''
+      example = literalExample ''
         unredir-if-possible = true;
         dbe = true;
       '';
