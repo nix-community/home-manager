@@ -2157,6 +2157,13 @@ in
           A new module is available: 'services.notify-osd'.
         '';
       }
+
+      {
+        time = "2021-08-10T21:28:40+00:00";
+        message = ''
+          A new module is available: 'programs.java'.
+        '';
+      }
     ];
   };
 }

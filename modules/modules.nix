@@ -77,6 +77,7 @@ let
     ./programs/i3status.nix
     ./programs/info.nix
     ./programs/irssi.nix
+    ./programs/java.nix
     ./programs/jq.nix
     ./programs/kakoune.nix
     ./programs/keychain.nix
