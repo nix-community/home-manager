@@ -140,5 +140,14 @@ in {
         install_powerline_precmd
       fi
     '';
+
+    # https://github.com/justjanne/powerline-go#fish
+    programs.fish.promptInit =
+      mkIf (cfg.enable && config.programs.fish.enable) ''
+        function fish_prompt
+            eval ${pkgs.powerline-go}/bin/powerline-go -error $status -jobs (count (jobs -p)) ${commandLineArguments}
+            ${cfg.extraUpdatePS1}
+        end
+      '';
   };
 }
