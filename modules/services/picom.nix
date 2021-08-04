@@ -41,6 +41,7 @@ let
       dnd           = { shadow = ${toJSON (!cfg.noDNDShadow)}; };
       popup_menu    = { opacity = ${cfg.menuOpacity}; };
       dropdown_menu = { opacity = ${cfg.menuOpacity}; };
+      tooltip       = { opacity = ${cfg.tooltipOpacity}; };
     };
 
     # other options
@@ -216,6 +217,15 @@ in {
       example = "0.8";
       description = ''
         Opacity of dropdown and popup menu.
+      '';
+    };
+
+    tooltipOpacity = mkOption {
+      type = types.str;
+      default = "1.0";
+      example = "0.8";
+      description = ''
+        Opacity of tooltips.
       '';
     };
 
