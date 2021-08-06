@@ -46,6 +46,13 @@ in {
       }];
     };
 
+    # Needed to avoid error with dummy fish package.
+    xdg.dataFile."fish/home-manager_generated_completions".source =
+      lib.mkForce (builtins.toFile "empty" "");
+
+    nixpkgs.overlays =
+      [ (self: super: { fish = pkgs.writeScriptBin "dummy" ""; }) ];
+
     nmt = {
       description =
         "if fish.plugins set, check conf.d file exists and contents match";

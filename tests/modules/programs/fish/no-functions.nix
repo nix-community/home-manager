@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -9,6 +9,13 @@ with lib;
 
       functions = { };
     };
+
+    # Needed to avoid error with dummy fish package.
+    xdg.dataFile."fish/home-manager_generated_completions".source =
+      lib.mkForce (builtins.toFile "empty" "");
+
+    nixpkgs.overlays =
+      [ (self: super: { fish = pkgs.writeScriptBin "dummy" ""; }) ];
 
     nmt = {
       description =
