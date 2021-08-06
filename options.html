@@ -2569,6 +2569,15 @@ necessary to use the Lombok class annotations.
         pkgs.emacs
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.emacs25-nox</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/emacs.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/emacs.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.emacs.extraConfig"></a><a class="term" href="options.html#opt-programs.emacs.extraConfig"><code class="option">programs.emacs.extraConfig</code></a></span></dt><dd><p>Configuration to include in the Emacs default init file. See
+<a class="link" href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Init-File.html" target="_top">https://www.gnu.org/software/emacs/manual/html_node/elisp/Init-File.html</a>
+for more.
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        ""
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
+(setq standard-indent 2)
+''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/emacs.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/emacs.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.emacs.extraPackages"></a><a class="term" href="options.html#opt-programs.emacs.extraPackages"><code class="option">programs.emacs.extraPackages</code></a></span></dt><dd><p>Extra packages available to Emacs. To get a list of
 available packages run:
 <span class="command"><strong>nix-env -f '&lt;nixpkgs&gt;' -qaP -A emacsPackages</strong></span>.
