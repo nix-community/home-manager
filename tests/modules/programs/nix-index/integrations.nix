@@ -1,4 +1,5 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
+
 let
   fishRegex = ''
     function __fish_command_not_found_handler --on-event fish_command_not_found
@@ -11,8 +12,18 @@ in {
     programs.fish.enable = true;
     programs.zsh.enable = true;
 
-    nixpkgs.overlays =
-      [ (self: super: { zsh = pkgs.writeScriptBin "dummy-zsh" ""; }) ];
+    # Needed to avoid error with dummy fish package.
+    xdg.dataFile."fish/home-manager_generated_completions".source =
+      lib.mkForce (builtins.toFile "empty" "");
+
+    nixpkgs.overlays = [
+      (self: super:
+        let dummy = pkgs.writeScriptBin "dummy" "";
+        in {
+          zsh = dummy;
+          fish = dummy;
+        })
+    ];
 
     programs.nix-index.enable = true;
 
