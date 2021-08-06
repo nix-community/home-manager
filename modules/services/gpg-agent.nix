@@ -205,7 +205,7 @@ in
 
       home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''
         if [[ -z "$SSH_AUTH_SOCK" ]]; then
-          export SSH_AUTH_SOCK=$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)
+          export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
         fi
       '';
 
