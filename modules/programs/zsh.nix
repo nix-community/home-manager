@@ -410,7 +410,13 @@ in
     })
 
     (mkIf (cfg.profileExtra != "") {
-      home.file."${relToDotDir ".zprofile"}".text = cfg.profileExtra;
+      home.file."${relToDotDir ".zprofile"}".text = ''
+        # Only execute this file once per shell.
+        if [ -n "$__HM_ZPROFILE_SOURCED" ]; then return; fi
+        __HM_ZPROFILE_SOURCED=1
+
+        ${cfg.profileExtra}
+      '';
     })
 
     (mkIf (cfg.loginExtra != "") {
@@ -438,6 +444,10 @@ in
       # already set correctly (by e.g. spawning a zsh inside a zsh), all env
       # vars still get exported
       home.file.".zshenv".text = ''
+        # Only execute this file once per shell.
+        if [ -n "$__HM_ZSHENV_SOURCED" ]; then return; fi
+        __HM_ZSHENV_SOURCED=1
+
         source ${zdotdir}/.zshenv
       '';
     })
@@ -448,6 +458,10 @@ in
         ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
 
       home.file."${relToDotDir ".zshrc"}".text = ''
+        # Only execute this file once per shell.
+        if [ -n "$__HM_ZSHRC_SOURCED" ]; then return; fi
+        __HM_ZSHRC_SOURCED=1
+
         ${cfg.initExtraFirst}
 
         typeset -U path cdpath fpath manpath
