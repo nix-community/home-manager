@@ -170,6 +170,10 @@ in
         ));
     in mkIf cfg.enable {
       home.file.".bash_profile".source = pkgs.writeShellScript "bash_profile" ''
+        # Only execute this file once per shell.
+        if [ -n "$__HM_BASH_PROFILE_SOURCED" ]; then return; fi
+        __HM_BASH_PROFILE_SOURCED=1
+
         # include .profile if it exists
         [[ -f ~/.profile ]] && . ~/.profile
 
@@ -178,6 +182,10 @@ in
       '';
 
       home.file.".profile".source = pkgs.writeShellScript "profile" ''
+        # Only execute this file once per shell.
+        if [ -n "$__HM_PROFILE_SOURCED" ]; then return; fi
+        __HM_PROFILE_SOURCED=1
+
         . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
         ${sessionVarsStr}
@@ -186,6 +194,10 @@ in
       '';
 
       home.file.".bashrc".source = pkgs.writeShellScript "bashrc" ''
+        # Only execute this file once per shell.
+        if [ -n "$__HM_BASHRC_SOURCED" ]; then return; fi
+        __HM_BASHRC_SOURCED=1
+
         ${cfg.bashrcExtra}
 
         # Commands that should be applied only for interactive shells.
