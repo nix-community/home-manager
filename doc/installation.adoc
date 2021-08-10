@@ -224,7 +224,7 @@ For example, a nix-darwin configuration may include the lines
 
 [source,nix]
 ----
-user.users.eve = {
+users.users.eve = {
   name = "eve";
   home = "/Users/eve";
 }
