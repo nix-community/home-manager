@@ -1,0 +1,10 @@
+[Service]
+BusName=org.freedesktop.Notifications
+ExecStart=@fnott@/bin/fnott -c /home/hm-user/.config/fnott/fnott.ini
+Type=dbus
+
+[Unit]
+After=graphical-session-pre.target
+Description=Fnott notification daemon
+Documentation=man:fnott(1)
+PartOf=graphical-session.target

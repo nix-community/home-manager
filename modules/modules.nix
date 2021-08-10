@@ -162,6 +162,7 @@ let
     ./services/etesync-dav.nix
     ./services/flameshot.nix
     ./services/fluidsynth.nix
+    ./services/fnott.nix
     ./services/getmail.nix
     ./services/git-sync.nix
     ./services/gnome-keyring.nix

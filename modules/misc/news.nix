@@ -2180,6 +2180,14 @@ in
           A new module is available: 'services.git-sync'.
         '';
       }
+
+      {
+        time = "2021-08-26T06:40:59+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.fnott'.
+        '';
+      }
     ];
   };
 }

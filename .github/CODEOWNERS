@@ -238,6 +238,9 @@
 
 /modules/services/fluidsynth.nix                      @Valodim
 
+/modules/services/fnott.nix                           @polykernel
+/tests/modules/services/fnott                         @polykernel
+
 /modules/services/git-sync.nix                        @IvanMalison
 
 /modules/services/gnome-keyring.nix                   @rycee

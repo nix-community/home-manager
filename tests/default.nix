@@ -120,6 +120,7 @@ import nmt {
     ./modules/services/dropbox
     ./modules/services/emacs
     ./modules/services/fluidsynth
+    ./modules/services/fnott
     ./modules/services/git-sync
     ./modules/services/kanshi
     ./modules/services/lieer
