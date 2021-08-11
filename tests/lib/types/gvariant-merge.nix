@@ -26,7 +26,11 @@ in {
 
         { string = "foo"; }
         { string = "foo"; }
-        { escapedString = "' \\"; }
+        {
+          escapedString = ''
+            '\
+          '';
+        }
 
         { tuple = mkTuple [ 1 [ "foo" ] ]; }
 
@@ -47,7 +51,7 @@ in {
             bool = true
             emptyArray1 = @as []
             emptyArray2 = @as []
-            escapedString = '\' \\'
+            escapedString = '\'\\\n'
             float = 3.140000
             int = 42
             list = @as ['one','two']
