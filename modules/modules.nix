@@ -157,6 +157,7 @@ let
     ./services/dropbox.nix
     ./services/dunst.nix
     ./services/dwm-status.nix
+    ./services/easyeffects.nix
     ./services/emacs.nix
     ./services/etesync-dav.nix
     ./services/flameshot.nix
