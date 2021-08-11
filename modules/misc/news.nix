@@ -2164,6 +2164,14 @@ in
           A new module is available: 'programs.java'.
         '';
       }
+
+      {
+        time = "2021-08-11T13:55:51+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.easyeffects'.
+        '';
+      }
     ];
   };
 }
