@@ -2180,7 +2180,7 @@ this option) to command strings or directly to build outputs.
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bat.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/bat.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bat.config"></a><a class="term" href="options.html#opt-programs.bat.config"><code class="option">programs.bat.config</code></a></span></dt><dd><p>Bat configuration.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or list of stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
         
@@ -2189,7 +2189,11 @@ this option) to command strings or directly to build outputs.
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         
         {
-        pager = "less -FR"; theme = "TwoDark"; 
+        map-syntax = 
+        [
+        "*.jenkinsfile:Groovy" "*.props:Java Properties" 
+        ]
+    ; pager = "less -FR"; theme = "TwoDark"; 
         }
     
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bat.nix#blob-path" target="_top">
