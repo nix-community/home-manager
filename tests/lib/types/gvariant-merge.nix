@@ -33,8 +33,10 @@ in {
         { uint64 = mkUint64 42; }
         { uint64 = mkUint64 42; }
 
-        { list = [ "one" ]; }
-        { list = mkArray type.string [ "two" ]; }
+        { array1 = [ "one" ]; }
+        { array1 = mkArray type.string [ "two" ]; }
+        { array2 = mkArray type.uint32 [ 1 ]; }
+        { array2 = mkArray type.uint32 [ 2 ]; }
 
         { emptyArray1 = [ ]; }
         { emptyArray2 = mkEmptyArray type.uint32; }
@@ -63,15 +65,16 @@ in {
         home-files/result.txt \
         ${
           pkgs.writeText "expected.txt" ''
+            array1 = @as ['one','two']
+            array2 = @au [1,2]
             bool = true
             emptyArray1 = @as []
-            emptyArray2 = @as []
+            emptyArray2 = @au []
             escapedString = '\'\\\n'
             float = 3.140000
             int = -42
             int16 = @n -42
             int64 = @x -42
-            list = @as ['one','two']
             maybe1 = @ms nothing
             maybe2 = just @u 4
             string = 'foo'

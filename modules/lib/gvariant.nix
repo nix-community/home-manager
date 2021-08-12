@@ -71,6 +71,8 @@ in rec {
 
   inherit type typeOf;
 
+  isGVariant = v: v._type or "" == "gvariant";
+
   isArray = hasPrefix "a";
   isMaybe = hasPrefix "m";
   isTuple = hasPrefix "(";
