@@ -17,7 +17,12 @@ with lib;
     };
 
     nixpkgs.overlays = [
-      (self: super: { rofi-pass = pkgs.writeScriptBin "dummy-rofi-pass" ""; })
+      (self: super:
+        let dummy = pkgs.writeScriptBin "dummy" "";
+        in {
+          rofi = dummy;
+          rofi-pass = dummy;
+        })
     ];
 
     nmt.script = ''
