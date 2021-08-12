@@ -15,8 +15,23 @@ in {
 
         { float = 3.14; }
 
-        { int = 42; }
-        { int = 42; }
+        { int = -42; }
+        { int = -42; }
+
+        { uint32 = mkUint32 42; }
+        { uint32 = mkUint32 42; }
+
+        { int16 = mkInt16 (-42); }
+        { int16 = mkInt16 (-42); }
+
+        { uint16 = mkUint16 42; }
+        { uint16 = mkUint16 42; }
+
+        { int64 = mkInt64 (-42); }
+        { int64 = mkInt64 (-42); }
+
+        { uint64 = mkUint64 42; }
+        { uint64 = mkUint64 42; }
 
         { list = [ "one" ]; }
         { list = mkArray type.string [ "two" ]; }
@@ -53,12 +68,17 @@ in {
             emptyArray2 = @as []
             escapedString = '\'\\\n'
             float = 3.140000
-            int = 42
+            int = -42
+            int16 = @n -42
+            int64 = @x -42
             list = @as ['one','two']
             maybe1 = @ms nothing
             maybe2 = just @u 4
             string = 'foo'
             tuple = @(ias) (1,@as ['foo'])
+            uint16 = @q 42
+            uint32 = @u 42
+            uint64 = @t 42
           ''
         }
     '';
