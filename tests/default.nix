@@ -45,6 +45,7 @@ import nmt {
     ./modules/programs/aria2
     ./modules/programs/autojump
     ./modules/programs/bash
+    ./modules/programs/bat
     ./modules/programs/browserpass
     ./modules/programs/dircolors
     ./modules/programs/direnv

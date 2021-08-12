@@ -6,6 +6,11 @@ let
 
   cfg = config.programs.bat;
 
+  toConfigFile = generators.toKeyValue {
+    mkKeyValue = k: v: "--${k}=${lib.escapeShellArg v}";
+    listsAsDuplicateKeys = true;
+  };
+
 in {
   meta.maintainers = [ maintainers.marsam ];
 
@@ -13,11 +18,12 @@ in {
     enable = mkEnableOption "bat, a cat clone with wings";
 
     config = mkOption {
-      type = types.attrsOf types.str;
+      type = with types; attrsOf (either str (listOf str));
       default = { };
       example = {
         theme = "TwoDark";
         pager = "less -FR";
+        map-syntax = [ "*.jenkinsfile:Groovy" "*.props:Java Properties" ];
       };
       description = ''
         Bat configuration.
@@ -48,10 +54,8 @@ in {
     home.packages = [ pkgs.bat ];
 
     xdg.configFile = mkMerge ([{
-      "bat/config" = mkIf (cfg.config != { }) {
-        text = concatStringsSep "\n"
-          (mapAttrsToList (n: v: ''--${n}="${v}"'') cfg.config);
-      };
+      "bat/config" =
+        mkIf (cfg.config != { }) { text = toConfigFile cfg.config; };
     }] ++ flip mapAttrsToList cfg.themes
       (name: body: { "bat/themes/${name}.tmTheme" = { text = body; }; }));
   };
