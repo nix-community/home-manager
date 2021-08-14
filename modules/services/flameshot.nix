@@ -34,6 +34,15 @@ in {
         Environment = "PATH=${config.home.profileDirectory}/bin";
         ExecStart = "${package}/bin/flameshot";
         Restart = "on-abort";
+
+        # Sandboxing.
+        LockPersonality = true;
+        MemoryDenyWriteExecute = true;
+        NoNewPrivileges = true;
+        PrivateUsers = true;
+        RestrictNamespaces = true;
+        SystemCallArchitectures = "native";
+        SystemCallFilter = "@system-service";
       };
     };
   };
