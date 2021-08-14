@@ -523,6 +523,7 @@ function doHelp() {
     echo "  --show-trace"
     echo "  --(no-)substitute"
     echo "  --no-out-link            Do not create a symlink to the output path"
+    echo "  --builders VALUE"
     echo
     echo "Commands"
     echo
@@ -618,7 +619,7 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
             shift 2
             ;;
-        -j|--max-jobs|--cores)
+        -j|--max-jobs|--cores|--builders)
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;

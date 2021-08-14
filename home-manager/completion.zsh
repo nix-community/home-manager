@@ -16,6 +16,7 @@ _arguments \
   '(-f --file)'{--file,-f}'[configuration file]:FILE:_files' \
   '(-j --max-jobs)'{--max-jobs,-j}'[max jobs]:NUM:()' \
   '--option[option]:NAME VALUE:()' \
+  '--builders[builders]:SPEC:()' \
   '--show-trace[show trace]' \
   '1: :->cmds' \
   '*:: :->args' && ret=0
@@ -52,7 +53,8 @@ case "$state" in
           '--no-substitute[no substitute]' \
           '--option[option]:NAME VALUE:()' \
           '--show-trace[show trace]' \
-          '--substitute[substitute]'
+          '--substitute[substitute]' \
+          '--builders[builders]:SPEC:()'
         ;;
     esac
 esac

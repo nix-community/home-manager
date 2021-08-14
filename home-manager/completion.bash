@@ -292,7 +292,8 @@ _home-manager_completions ()
     local Options
     Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" "--verbose" \
               "--cores" "--debug" "--keep-failed" "--keep-going" "-j" "--max-jobs" \
-              "--no-substitute" "--no-out-link" "--show-trace" "--substitute")
+              "--no-substitute" "--no-out-link" "--show-trace" "--substitute" \
+              "--builders")
 
     # ^ « home-manager »'s options.
 
