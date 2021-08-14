@@ -61,8 +61,15 @@ with lib;
             Restart = "on-failure";
             SuccessExitStatus = [ 3 4 ];
             RestartForceExitStatus = [ 3 4 ];
+
+            # Sandboxing.
+            LockPersonality = true;
+            MemoryDenyWriteExecute = true;
             NoNewPrivileges = true;
             PrivateUsers = true;
+            RestrictNamespaces = true;
+            SystemCallArchitectures = "native";
+            SystemCallFilter = "@system-service";
           };
 
           Install = { WantedBy = [ "default.target" ]; };
