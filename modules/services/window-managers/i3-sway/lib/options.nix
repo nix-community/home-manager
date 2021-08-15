@@ -538,7 +538,7 @@ in {
   };
 
   workspaceLayout = mkOption {
-    type = types.enum [ "default" "stacked" "tabbed" ];
+    type = types.enum [ "default" "stacking" "tabbed" ];
     default = "default";
     example = "tabbed";
     description = ''
