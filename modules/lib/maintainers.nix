@@ -121,4 +121,10 @@
     githubId = 5646732;
     name = "Andreas Mager";
   };
+  bjpbakker = {
+    email = "bart@thesoftwarecraft.com";
+    github = "bjpbakker";
+    githubId = 605641;
+    name = "Bart Bakker";
+  };
 }

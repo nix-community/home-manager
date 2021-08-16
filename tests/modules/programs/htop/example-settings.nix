@@ -36,8 +36,13 @@ with lib;
           (text "Systemd")
         ]);
 
+    nixpkgs.overlays =
+      [ (self: super: { htop = pkgs.writeScriptBin "dummy" ""; }) ];
+
     nmt.script = ''
-      assertFileExists home-files/.config/htop/htoprc
+      htoprc=home-files/.config/htop/htoprc
+      assertFileExists $htoprc
+      assertFileContent $htoprc ${./example-htoprc.txt}
     '';
   };
 }
