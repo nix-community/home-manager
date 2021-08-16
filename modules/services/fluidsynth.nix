@@ -22,7 +22,7 @@ in {
       };
 
       soundService = mkOption {
-        type = types.str;
+        type = types.enum [ "jack" "pipewire-pulse" "pulseaudio" ]
         default = "pulseaudio";
         example = "pipewire-pulse";
         description = ''
