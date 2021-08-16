@@ -9748,6 +9748,36 @@ permanently for a password.
         "hourly"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/getmail.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/getmail.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.git-sync.enable"></a><a class="term" href="options.html#opt-services.git-sync.enable"><code class="option">services.git-sync.enable</code></a></span></dt><dd><p>Whether to enable git-sync services.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/git-sync.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/git-sync.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.git-sync.package"></a><a class="term" href="options.html#opt-services.git-sync.package"><code class="option">services.git-sync.package</code></a></span></dt><dd><p>Package containing the <span class="command"><strong>git-sync</strong></span> program.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.git-sync
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/git-sync.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/git-sync.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.git-sync.repositories"></a><a class="term" href="options.html#opt-services.git-sync.repositories"><code class="option">services.git-sync.repositories</code></a></span></dt><dd><p>The repositories that should be synchronized.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of submodules</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/git-sync.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/git-sync.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.git-sync.repositories._name_.interval"></a><a class="term" href="options.html#opt-services.git-sync.repositories._name_.interval"><code class="option">services.git-sync.repositories.&lt;name&gt;.interval</code></a></span></dt><dd><p>The interval, specified in seconds, at which the synchronization will
+be triggered even without filesystem changes.
+</p><p><span class="emphasis"><em>Type:</em></span> signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        500
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/git-sync.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/git-sync.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.git-sync.repositories._name_.path"></a><a class="term" href="options.html#opt-services.git-sync.repositories._name_.path"><code class="option">services.git-sync.repositories.&lt;name&gt;.path</code></a></span></dt><dd><p>The path at which to sync the repository</p><p><span class="emphasis"><em>Type:</em></span> path</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/git-sync.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/git-sync.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.git-sync.repositories._name_.uri"></a><a class="term" href="options.html#opt-services.git-sync.repositories._name_.uri"><code class="option">services.git-sync.repositories.&lt;name&gt;.uri</code></a></span></dt><dd><p>The URI of the remote to be synchronized. This is only used in the
+event that the directory does not already exist. See
+<a class="link" href="https://git-scm.com/docs/git-clone#_git_urls" target="_top">https://git-scm.com/docs/git-clone#_git_urls</a>
+for the supported URIs.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "git+ssh://user@example.com:/~[user]/path/to/repo.git"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/git-sync.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/git-sync.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gnome-keyring.enable"></a><a class="term" href="options.html#opt-services.gnome-keyring.enable"><code class="option">services.gnome-keyring.enable</code></a></span></dt><dd><p>Whether to enable GNOME Keyring.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
