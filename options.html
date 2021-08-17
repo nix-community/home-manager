@@ -3251,13 +3251,26 @@ matches. Allowed conditions are described in
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/git.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.includes._.contents"></a><a class="term" href="options.html#opt-programs.git.includes._.contents"><code class="option">programs.git.includes.*.contents</code></a></span></dt><dd><p>Configuration to include. If empty then a path must be given.
+
+This follows the configuration structure as described in
+<span class="citerefentry"><span class="refentrytitle">git-config</span>(1)</span>.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of anythings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
         
         }
     
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  user = {
+    email = "bob@work.example.com";
+    name = "Bob Work";
+    signingKey = "1A2B3C4D5E6F7G8H";
+  };
+  commit = {
+    gpgSign = true;
+  };
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/git.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.includes._.path"></a><a class="term" href="options.html#opt-programs.git.includes._.path"><code class="option">programs.git.includes.*.path</code></a></span></dt><dd><p>Path of the configuration file to include.</p><p><span class="emphasis"><em>Type:</em></span> string or path</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/git.nix&gt;
