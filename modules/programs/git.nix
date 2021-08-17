@@ -108,8 +108,26 @@ let
       contents = mkOption {
         type = types.attrsOf types.anything;
         default = { };
+        example = literalExample ''
+          {
+            user = {
+              email = "bob@work.example.com";
+              name = "Bob Work";
+              signingKey = "1A2B3C4D5E6F7G8H";
+            };
+            commit = {
+              gpgSign = true;
+            };
+          };
+        '';
         description = ''
           Configuration to include. If empty then a path must be given.
+
+          This follows the configuration structure as described in
+          <citerefentry>
+            <refentrytitle>git-config</refentrytitle>
+            <manvolnum>1</manvolnum>
+          </citerefentry>.
         '';
       };
     };
