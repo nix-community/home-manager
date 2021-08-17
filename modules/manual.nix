@@ -6,7 +6,7 @@ let
 
   cfg = config.manual;
 
-  docs = import ../doc { inherit lib pkgs; };
+  docs = import ../docs { inherit lib pkgs; };
 
 in
 

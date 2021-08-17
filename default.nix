@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
 
 rec {
-  docs = with import ./doc { inherit pkgs; }; {
+  docs = with import ./docs { inherit pkgs; }; {
     html = manual.html;
     manPages = manPages;
     json = options.json;
