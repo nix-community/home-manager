@@ -4,9 +4,10 @@ with lib;
 
 rec {
   criteriaStr = criteria:
-    "[${
-      concatStringsSep " " (mapAttrsToList (k: v: ''${k}="${v}"'') criteria)
-    }]";
+    let
+      toCriteria = k: v:
+        if builtins.isBool v && v then "${k}" else ''${k}="${v}"'';
+    in "[${concatStringsSep " " (mapAttrsToList toCriteria criteria)}]";
 
   keybindingDefaultWorkspace = filterAttrs (n: v:
     cfg.config.defaultWorkspace != null && v == cfg.config.defaultWorkspace)
