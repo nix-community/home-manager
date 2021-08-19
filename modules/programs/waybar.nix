@@ -366,11 +366,21 @@ in {
       # Generate warnings about defined but unreferenced modules
       inherit warnings;
 
-      xdg.configFile."waybar/config".source = configSource;
+      xdg.configFile."waybar/config" = {
+        source = configSource;
+        onChange = ''
+          ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
+        '';
+      };
     })
 
     (mkIf (cfg.style != null) {
-      xdg.configFile."waybar/style.css".text = cfg.style;
+      xdg.configFile."waybar/style.css" = {
+        text = cfg.style;
+        onChange = ''
+          ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
+        '';
+      };
     })
 
     (mkIf cfg.systemd.enable {
