@@ -32,6 +32,19 @@ in {
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
 
+    darwinLaunchOptions = mkOption {
+      type = types.nullOr (types.listOf types.str);
+      default = null;
+      description = "Command-line options to use when launched by Mac OS GUI";
+      example = literalExample ''
+        [
+          "--single-instance"
+          "--directory=/tmp/my-dir"
+          "--listen-on=unix:/tmp/my-socket"
+        ]
+      '';
+    };
+
     settings = mkOption {
       type = types.attrsOf eitherStrBoolInt;
       default = { };
@@ -107,5 +120,10 @@ in {
 
       ${cfg.extraConfig}
     '';
+
+    xdg.configFile."kitty/macos-launch-services-cmdline" =
+      mkIf (!(isNull cfg.darwinLaunchOptions)) {
+        text = concatStringsSep " " cfg.darwinLaunchOptions;
+      };
   };
 }
