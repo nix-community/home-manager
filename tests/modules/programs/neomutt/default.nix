@@ -8,4 +8,5 @@
     ./neomutt-with-binds-invalid-settings.nix;
   neomutt-with-gpg = ./neomutt-with-gpg.nix;
   neomutt-no-folder-change = ./neomutt-no-folder-change.nix;
+  neomutt-with-named-mailboxes = ./neomutt-with-named-mailboxes.nix;
 }

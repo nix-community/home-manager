@@ -2,7 +2,25 @@
 
 with lib;
 
-{
+let
+  extraMailboxOptions = {
+    options = {
+      mailbox = mkOption {
+        type = types.str;
+        example = "Sent";
+        description = "Name of mailbox folder to be included";
+      };
+
+      name = mkOption {
+        type = types.nullOr types.str;
+        example = "Junk";
+        default = null;
+        description = "Name to display";
+      };
+    };
+  };
+
+in {
   options.neomutt = {
     enable = mkEnableOption "NeoMutt";
 
@@ -31,6 +49,19 @@ with lib;
       description = ''
         Extra lines to add to the folder hook for this account.
       '';
+    };
+
+    mailboxName = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = "==== <mailbox-name> ===";
+      description = "Use a different name as mailbox name";
+    };
+
+    extraMailboxes = mkOption {
+      type = with types; listOf (either str (submodule extraMailboxOptions));
+      default = [ ];
+      description = "List of extra mailboxes";
     };
   };
 }

@@ -30,7 +30,7 @@ let
 
       format = mkOption {
         type = types.str;
-        default = "%B%?F? [%F]?%* %?N?%N/?%S";
+        default = "%D%?F? [%F]?%* %?N?%N/?%S";
         description = ''
           Sidebar format. Check neomutt documentation for details.
         '';
@@ -133,10 +133,25 @@ let
     '';
 
   registerAccount = account:
-    with account; ''
+    let
+      mailboxes = if account.neomutt.mailboxName == null then
+        "mailboxes"
+      else
+        ''named-mailboxes "${account.neomutt.mailboxName}"'';
+      extraMailboxes = concatMapStringsSep "\n" (extra:
+        if isString extra then
+          ''mailboxes "${account.maildir.absPath}/${extra}"''
+        else if extra.name == null then
+          ''mailboxes "${account.maildir.absPath}/${extra.mailbox}"''
+        else
+          ''
+            named-mailboxes "${extra.name}" "${account.maildir.absPath}/${extra.mailbox}"'')
+        account.neomutt.extraMailboxes;
+    in with account; ''
       # register account ${name}
-      mailboxes "${account.maildir.absPath}/${folders.inbox}"
-      folder-hook ${account.maildir.absPath}/ " \
+      ${mailboxes} "${maildir.absPath}/${folders.inbox}"
+      ${extraMailboxes}
+      folder-hook ${maildir.absPath}/ " \
           source ${accountFilename account} "
     '';
 
