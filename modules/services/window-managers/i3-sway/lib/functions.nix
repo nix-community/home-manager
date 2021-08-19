@@ -6,7 +6,10 @@ rec {
   criteriaStr = criteria:
     let
       toCriteria = k: v:
-        if builtins.isBool v && v then "${k}" else ''${k}="${v}"'';
+        if builtins.isBool v then
+          (if v then "${k}" else "")
+        else
+          ''${k}="${v}"'';
     in "[${concatStringsSep " " (mapAttrsToList toCriteria criteria)}]";
 
   keybindingDefaultWorkspace = filterAttrs (n: v:
