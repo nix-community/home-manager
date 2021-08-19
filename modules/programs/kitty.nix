@@ -25,6 +25,9 @@ let
     mkKeyValue = key: command: "map ${key} ${command}";
   };
 
+  toKittyEnv =
+    generators.toKeyValue { mkKeyValue = name: value: "env ${name}=${value}"; };
+
 in {
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
@@ -65,6 +68,17 @@ in {
       '';
     };
 
+    environment = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = "Environment variables to set or override.";
+      example = literalExample ''
+        {
+          "LS_COLORS" = "1";
+        }
+      '';
+    };
+
     extraConfig = mkOption {
       default = "";
       type = types.lines;
@@ -88,6 +102,8 @@ in {
       ${toKittyConfig cfg.settings}
 
       ${toKittyKeybindings cfg.keybindings}
+
+      ${toKittyEnv cfg.environment}
 
       ${cfg.extraConfig}
     '';

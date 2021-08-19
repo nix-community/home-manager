@@ -19,6 +19,8 @@ with lib;
         "ctrl+c" = "copy_or_interrupt";
         "ctrl+f>2" = "set_font_size 20";
       };
+
+      environment = { LS_COLORS = "1"; };
     };
 
     nixpkgs.overlays =
