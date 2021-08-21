@@ -203,10 +203,11 @@ in
         [ cfg.extraConfig ]
       );
 
-      home.sessionVariables =
-        optionalAttrs cfg.enableSshSupport {
-          SSH_AUTH_SOCK = "$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)";
-        };
+      home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''
+        if [[ -z "$SSH_AUTH_SOCK" ]]; then
+          export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
+        fi
+      '';
 
       programs.bash.initExtra = gpgInitStr;
       programs.zsh.initExtra = gpgInitStr;
