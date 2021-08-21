@@ -128,7 +128,7 @@ in
           done
 
           if [[ -v collision ]] ; then
-            errorEcho "Please move the above files and try again or use -b <ext> to move automatically."
+            errorEcho "Please move the above files and try again or use 'home-manager switch -b backup' to back up existing files automatically."
             exit 1
           fi
         '';
