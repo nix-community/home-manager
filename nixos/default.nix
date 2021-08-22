@@ -129,6 +129,7 @@ in {
         wantedBy = [ "multi-user.target" ];
         wants = [ "nix-daemon.socket" ];
         after = [ "nix-daemon.socket" ];
+        before = [ "systemd-user-sessions.service" ];
 
         environment = serviceEnvironment;
 
