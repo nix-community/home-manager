@@ -12359,7 +12359,7 @@ module to install Sway.
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.assigns"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.assigns"><code class="option">wayland.windowManager.sway.config.assigns</code></a></span></dt><dd><p>An attribute set that assigns applications to workspaces based
 on criteria.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of list of attribute set of stringsss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of list of attribute set of string or booleansss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
         
@@ -12664,7 +12664,7 @@ This must to correspond to the value of the keybinding of the default workspace.
         2
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.floating.criteria"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.floating.criteria"><code class="option">wayland.windowManager.sway.config.floating.criteria</code></a></span></dt><dd><p>List of criteria for windows that should be opened in a floating mode.</p><p><span class="emphasis"><em>Type:</em></span> list of attribute set of stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.floating.criteria"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.floating.criteria"><code class="option">wayland.windowManager.sway.config.floating.criteria</code></a></span></dt><dd><p>List of criteria for windows that should be opened in a floating mode.</p><p><span class="emphasis"><em>Type:</em></span> list of attribute set of string or booleanss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         [
         
@@ -13014,13 +13014,15 @@ See <code class="option">for_window</code> swaywm option documentation.
         "border pixel 1"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.window.commands._.criteria"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.window.commands._.criteria"><code class="option">wayland.windowManager.sway.config.window.commands.*.criteria</code></a></span></dt><dd><p>Criteria of the windows on which command should be executed.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        
-        {
-        title = "x200: ~/work"; 
-        }
-    
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.window.commands._.criteria"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.window.commands._.criteria"><code class="option">wayland.windowManager.sway.config.window.commands.*.criteria</code></a></span></dt><dd><p>Criteria of the windows on which command should be executed.
+</p><p>
+A value of <code class="literal">true</code> is equivalent to using an empty
+criteria (which is different from an empty string criteria).
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or booleans</p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  title = "x200: ~/work";
+  floating = true;
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.config.window.hideEdgeBorders"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.config.window.hideEdgeBorders"><code class="option">wayland.windowManager.sway.config.window.hideEdgeBorders</code></a></span></dt><dd><p>Hide window borders adjacent to the screen edges.</p><p><span class="emphasis"><em>Type:</em></span> one of "none", "vertical", "horizontal", "both", "smart"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         "none"
@@ -13887,7 +13889,7 @@ If 'i3.config.gaps' settings are specified, 'pkgs.i3-gaps' will be set as a defa
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.assigns"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.assigns"><code class="option">xsession.windowManager.i3.config.assigns</code></a></span></dt><dd><p>An attribute set that assigns applications to workspaces based
 on criteria.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of list of attribute set of stringsss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of list of attribute set of string or booleansss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
         
@@ -14181,7 +14183,7 @@ This must to correspond to the value of the keybinding of the default workspace.
         2
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.floating.criteria"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.floating.criteria"><code class="option">xsession.windowManager.i3.config.floating.criteria</code></a></span></dt><dd><p>List of criteria for windows that should be opened in a floating mode.</p><p><span class="emphasis"><em>Type:</em></span> list of attribute set of stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.floating.criteria"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.floating.criteria"><code class="option">xsession.windowManager.i3.config.floating.criteria</code></a></span></dt><dd><p>List of criteria for windows that should be opened in a floating mode.</p><p><span class="emphasis"><em>Type:</em></span> list of attribute set of string or booleanss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         [
         
@@ -14469,13 +14471,15 @@ See <code class="option">for_window</code> i3wm option documentation.
         "border pixel 1"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.window.commands._.criteria"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.window.commands._.criteria"><code class="option">xsession.windowManager.i3.config.window.commands.*.criteria</code></a></span></dt><dd><p>Criteria of the windows on which command should be executed.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        
-        {
-        title = "x200: ~/work"; 
-        }
-    
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.window.commands._.criteria"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.window.commands._.criteria"><code class="option">xsession.windowManager.i3.config.window.commands.*.criteria</code></a></span></dt><dd><p>Criteria of the windows on which command should be executed.
+</p><p>
+A value of <code class="literal">true</code> is equivalent to using an empty
+criteria (which is different from an empty string criteria).
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or booleans</p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  title = "x200: ~/work";
+  floating = true;
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.config.window.hideEdgeBorders"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.config.window.hideEdgeBorders"><code class="option">xsession.windowManager.i3.config.window.hideEdgeBorders</code></a></span></dt><dd><p>Hide window borders adjacent to the screen edges.</p><p><span class="emphasis"><em>Type:</em></span> one of "none", "vertical", "horizontal", "both", "smart"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         "none"
