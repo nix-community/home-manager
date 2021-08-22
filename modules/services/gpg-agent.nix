@@ -20,22 +20,19 @@ let
   # we cannot use `gpgconf` directly because it heavily depends on system
   # state, but we need the values at build time. original:
   # https://github.com/gpg/gnupg/blob/c6702d77d936b3e9d91b34d8fdee9599ab94ee1b/common/homedir.c#L672-L681
-  gpgconf = dir: let
-    f = pkgs.runCommand dir {} ''
-      PATH=${pkgs.coreutils}/bin:${pkgs.xxd}/bin:$PATH
+  gpgconf = dir:
+    if homedir == options.programs.gpg.homedir.default then
+      "%t/gnupg/${dir}"
+    else
+      builtins.readFile (pkgs.runCommand dir {} ''
+        PATH=${pkgs.xxd}/bin:$PATH
 
-      if [[ ${homedir} = ${options.programs.gpg.homedir.default} ]]
-      then
-        echo -n "%t/gnupg/${dir}" > $out
-      else
         hash=$(echo -n ${homedir} | sha1sum -b | xxd -r -p | base32 | \
                cut -c -24 | tr '[:upper:]' '[:lower:]' | \
                tr abcdefghijklmnopqrstuvwxyz234567 \
                   ybndrfg8ejkmcpqxot1uwisza345h769)
-         echo -n "%t/gnupg/d.$hash/${dir}" > $out
-      fi
-    '';
-    in "${builtins.readFile f}";
+        echo -n "%t/gnupg/d.$hash/${dir}" > "$out"
+      '');
 
 in
 
