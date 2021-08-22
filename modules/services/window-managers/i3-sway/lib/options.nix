@@ -353,14 +353,23 @@ let
 
       criteria = mkOption {
         type = criteriaModule;
-        description =
-          "Criteria of the windows on which command should be executed.";
-        example = { title = "x200: ~/work"; };
+        description = ''
+          Criteria of the windows on which command should be executed.
+          </para><para>
+          A value of <literal>true</literal> is equivalent to using an empty
+          criteria (which is different from an empty string criteria).
+        '';
+        example = literalExample ''
+          {
+            title = "x200: ~/work";
+            floating = true;
+          };
+        '';
       };
     };
   };
 
-  criteriaModule = types.attrsOf types.str;
+  criteriaModule = types.attrsOf (types.either types.str types.bool);
 in {
   fonts = mkOption {
     type = with types; either (listOf str) fontOptions;
