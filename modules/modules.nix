@@ -148,6 +148,7 @@ let
     ./programs/zsh.nix
     ./programs/zsh/prezto.nix
     ./services/barrier.nix
+    ./services/betterlockscreen.nix
     ./services/blueman-applet.nix
     ./services/caffeine.nix
     ./services/cbatticon.nix
