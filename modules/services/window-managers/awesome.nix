@@ -30,7 +30,7 @@ in {
           List of lua packages available for being
           used in the Awesome configuration.
         '';
-        example = literalExample "[ luaPackages.oocairo ]";
+        example = literalExample "[ pkgs.luaPackages.vicious ]";
       };
 
       noArgb = mkOption {
