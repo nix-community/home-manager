@@ -75,7 +75,14 @@ in
           # Warn if closing shell with running jobs.
           "checkjobs"
         ];
-        description = "Shell options to set.";
+        example = [
+          "extglob"
+          "-cdspell"
+        ];
+        description = ''
+          Shell options to set. Prefix an option with
+          <quote><literal>-</literal></quote> to unset.
+        '';
       };
 
       sessionVariables = mkOption {
@@ -146,8 +153,10 @@ in
         mapAttrsToList (k: v: "alias ${k}=${escapeShellArg v}") cfg.shellAliases
       );
 
-      shoptsStr = concatStringsSep "\n" (
-        map (v: "shopt -s ${v}") cfg.shellOptions
+      shoptsStr = let
+        switch = v: if hasPrefix "-" v then "-u" else "-s";
+      in concatStringsSep "\n" (
+          map (v: "shopt ${switch v} ${removePrefix "-" v}") cfg.shellOptions
       );
 
       sessionVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
