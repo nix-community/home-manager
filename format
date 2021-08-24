@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/05f0934825c2a0750d4888c4735f9420c906b388.tar.gz -i bash -p findutils nixfmt
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/5edf5b60c3d8f82b5fc5e73e822b6f7460584945.tar.gz -i bash -p findutils nixfmt
 
 CHECK_ARG=
 
