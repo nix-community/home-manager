@@ -7,7 +7,7 @@ with lib;
     programs.kitty = {
       enable = true;
 
-      darwinLaunchOptions = [
+      darwinLaunchOptions = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [
         "--single-instance"
         "--directory=/tmp/my-dir"
         "--listen-on=unix:/tmp/my-socket"
@@ -38,6 +38,7 @@ with lib;
       assertFileContent \
         home-files/.config/kitty/kitty.conf \
         ${./example-settings-expected.conf}
+    '' + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
       assertFileContent \
         home-files/.config/kitty/macos-launch-services-cmdline \
         ${./example-macos-launch-services-cmdline}

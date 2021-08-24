@@ -100,6 +100,14 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [{
+      assertion = (cfg.darwinLaunchOptions != null)
+        -> pkgs.stdenv.hostPlatform.isDarwin;
+      message = ''
+        kitty: darwinLaunchOptions is only available on darwin.
+      '';
+    }];
+
     home.packages = [ pkgs.kitty ] ++ optionalPackage cfg.font;
 
     xdg.configFile."kitty/kitty.conf".text = ''
