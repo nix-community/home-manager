@@ -231,6 +231,13 @@ in {
     programs.neomutt = {
       enable = mkEnableOption "the NeoMutt mail client";
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.neomutt;
+        defaultText = literalExample "pkgs.neomutt";
+        description = "The neomutt package to use.";
+      };
+
       sidebar = mkOption {
         type = sidebarModule;
         default = { };
@@ -300,7 +307,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.neomutt ];
+    home.packages = [ cfg.package ];
     home.file = let
       rcFile = account: {
         "${accountFilename account}".text = accountStr account;
