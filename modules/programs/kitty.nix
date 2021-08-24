@@ -130,7 +130,7 @@ in {
     '';
 
     xdg.configFile."kitty/macos-launch-services-cmdline" =
-      mkIf (!(isNull cfg.darwinLaunchOptions)) {
+      mkIf (cfg.darwinLaunchOptions != null) {
         text = concatStringsSep " " cfg.darwinLaunchOptions;
       };
   };
