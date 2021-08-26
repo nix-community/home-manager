@@ -104,7 +104,7 @@ in {
       assertion = (cfg.darwinLaunchOptions != null)
         -> pkgs.stdenv.hostPlatform.isDarwin;
       message = ''
-        kitty: darwinLaunchOptions is only available on darwin.
+        The 'programs.kitty.darwinLaunchOptions' option is only available on darwin.
       '';
     }];
 
