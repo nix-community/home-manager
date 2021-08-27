@@ -6,6 +6,13 @@ with lib;
   config = {
     programs.kitty = {
       enable = true;
+
+      darwinLaunchOptions = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [
+        "--single-instance"
+        "--directory=/tmp/my-dir"
+        "--listen-on=unix:/tmp/my-socket"
+      ];
+
       settings = {
         scrollback_lines = 10000;
         enable_audio_bell = false;
@@ -19,6 +26,8 @@ with lib;
         "ctrl+c" = "copy_or_interrupt";
         "ctrl+f>2" = "set_font_size 20";
       };
+
+      environment = { LS_COLORS = "1"; };
     };
 
     nixpkgs.overlays =
@@ -29,6 +38,10 @@ with lib;
       assertFileContent \
         home-files/.config/kitty/kitty.conf \
         ${./example-settings-expected.conf}
+    '' + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+      assertFileContent \
+        home-files/.config/kitty/macos-launch-services-cmdline \
+        ${./example-macos-launch-services-cmdline}
     '';
   };
 }

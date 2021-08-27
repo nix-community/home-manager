@@ -25,9 +25,25 @@ let
     mkKeyValue = key: command: "map ${key} ${command}";
   };
 
+  toKittyEnv =
+    generators.toKeyValue { mkKeyValue = name: value: "env ${name}=${value}"; };
+
 in {
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
+
+    darwinLaunchOptions = mkOption {
+      type = types.nullOr (types.listOf types.str);
+      default = null;
+      description = "Command-line options to use when launched by Mac OS GUI";
+      example = literalExample ''
+        [
+          "--single-instance"
+          "--directory=/tmp/my-dir"
+          "--listen-on=unix:/tmp/my-socket"
+        ]
+      '';
+    };
 
     settings = mkOption {
       type = types.attrsOf eitherStrBoolInt;
@@ -65,6 +81,17 @@ in {
       '';
     };
 
+    environment = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = "Environment variables to set or override.";
+      example = literalExample ''
+        {
+          "LS_COLORS" = "1";
+        }
+      '';
+    };
+
     extraConfig = mkOption {
       default = "";
       type = types.lines;
@@ -73,6 +100,14 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [{
+      assertion = (cfg.darwinLaunchOptions != null)
+        -> pkgs.stdenv.hostPlatform.isDarwin;
+      message = ''
+        The 'programs.kitty.darwinLaunchOptions' option is only available on darwin.
+      '';
+    }];
+
     home.packages = [ pkgs.kitty ] ++ optionalPackage cfg.font;
 
     xdg.configFile."kitty/kitty.conf".text = ''
@@ -89,7 +124,14 @@ in {
 
       ${toKittyKeybindings cfg.keybindings}
 
+      ${toKittyEnv cfg.environment}
+
       ${cfg.extraConfig}
     '';
+
+    xdg.configFile."kitty/macos-launch-services-cmdline" =
+      mkIf (cfg.darwinLaunchOptions != null) {
+        text = concatStringsSep " " cfg.darwinLaunchOptions;
+      };
   };
 }
