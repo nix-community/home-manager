@@ -4499,6 +4499,26 @@ supported plugins run:
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kitty.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/kitty.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kitty.darwinLaunchOptions"></a><a class="term" href="options.html#opt-programs.kitty.darwinLaunchOptions"><code class="option">programs.kitty.darwinLaunchOptions</code></a></span></dt><dd><p>Command-line options to use when launched by Mac OS GUI</p><p><span class="emphasis"><em>Type:</em></span> null or list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[
+  "--single-instance"
+  "--directory=/tmp/my-dir"
+  "--listen-on=unix:/tmp/my-socket"
+]
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kitty.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/kitty.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kitty.environment"></a><a class="term" href="options.html#opt-programs.kitty.environment"><code class="option">programs.kitty.environment</code></a></span></dt><dd><p>Environment variables to set or override.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  "LS_COLORS" = "1";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kitty.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/kitty.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kitty.extraConfig"></a><a class="term" href="options.html#opt-programs.kitty.extraConfig"><code class="option">programs.kitty.extraConfig</code></a></span></dt><dd><p>Additional configuration to add.</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         ""
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kitty.nix#blob-path" target="_top">
