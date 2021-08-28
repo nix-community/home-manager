@@ -6,7 +6,7 @@ let
   cfg = config.services.fnott;
 
   concatStringsSep' = sep: list:
-    concatStringsSep sep (filter (str: str != "") list);
+    concatStringsSep sep (filter (x: x != "") list);
 
   mkKeyValue = generators.mkKeyValueDefault { } "=";
   genINI = generators.toINI { };
@@ -31,6 +31,15 @@ in {
         description = "Package providing <command>fnott</command>.";
       };
 
+      extraFlags = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = [ "-s" ];
+        description = ''
+          Extra arguments to use for executing fnott.
+        '';
+      };
+
       configFile = mkOption {
         type = types.either types.str types.path;
         default = "${config.xdg.configHome}/fnott/fnott.ini";
@@ -45,15 +54,6 @@ in {
           written to <filename>$XDG_CONFIG_HOME/fnott/fnott.ini</filename>
           regardless of this option. This allows using a mutable configuration file
           generated from the immutable one, useful in scenarios where live reloading is desired.
-        '';
-      };
-
-      extraFlags = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        example = [ "-s" ];
-        description = ''
-          Extra arguments to use for executing fnott.
         '';
       };
 
@@ -107,24 +107,21 @@ in {
         Type = "dbus";
         BusName = "org.freedesktop.Notifications";
         ExecStart = concatStringsSep' " " [
-          "${cfg.package}/bin/fnott -c ${cfg.configFile}"
+          "${cfg.package}/bin/fnott"
+          "-c ${escapeShellArg cfg.configFile}"
           (escapeShellArgs cfg.extraFlags)
         ];
       };
     };
 
-    # FIXME: Remove after next version release (https://codeberg.org/dnkl/fnott/pulls/24).
-    xdg.configFile."fnott/fnott.ini" = mkIf (cfg.settings != { }) (mkMerge [
-      { text = genINI cfg.settings; }
-      (mkIf (cfg.settings ? main) {
-        text = mkForce (concatStringsSep' "\n" [
-          ''
-            ${concatStringsSep "\n"
-            (mapAttrsToList mkKeyValue cfg.settings.main)}
-          ''
-          (genINI (removeAttrs cfg.settings [ "main" ]))
-        ]);
-      })
-    ]);
+    xdg.configFile."fnott/fnott.ini" = {
+      # FIXME: Remove after next version release (https://codeberg.org/dnkl/fnott/pulls/24).
+      text = concatStringsSep' "\n" [
+        (optionalString (cfg.settings ? main) ''
+          ${concatStringsSep "\n" (mapAttrsToList mkKeyValue cfg.settings.main)}
+        '')
+        (genINI (removeAttrs cfg.settings [ "main" ]))
+      ];
+    };
   };
 }

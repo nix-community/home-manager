@@ -8,8 +8,6 @@
     };
 
     nmt.script = ''
-      assertPathNotExists home-files/.config/fnott/fnott.ini
-
       assertFileContent \
         home-files/.config/systemd/user/fnott.service \
         ${./systemd-user-service-expected.service}
