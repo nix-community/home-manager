@@ -11,6 +11,7 @@ let
   brootConf = {
     verbs = cfg.verbs;
     skin = cfg.skin;
+    modal = cfg.modal;
   };
 
 in {
@@ -40,6 +41,14 @@ in {
       type = types.bool;
       description = ''
         Whether to enable Fish integration.
+      '';
+    };
+
+    modal = mkOption {
+      default = false;
+      type = types.bool;
+      description = ''
+        Whether to enable modal (vim) mode.
       '';
     };
 
