@@ -65,18 +65,15 @@ in {
       home.packages = [ pkgs.mcfly ];
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        source "${pkgs.mcfly}/share/mcfly/mcfly.bash"
+        eval "$(${pkgs.mcfly}/bin/mcfly init bash)"
       '';
 
       programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-        source "${pkgs.mcfly}/share/mcfly/mcfly.zsh"
+        eval "$(${pkgs.mcfly}/bin/mcfly init zsh)"
       '';
 
       programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-        source "${pkgs.mcfly}/share/mcfly/mcfly.fish"
-        if status is-interactive
-          mcfly_key_bindings
-        end
+        ${pkgs.mcfly}/bin/mcfly init fish | source
       '';
 
       home.sessionVariables.MCFLY_KEY_SCHEME = cfg.keyScheme;
