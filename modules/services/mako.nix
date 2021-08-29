@@ -297,35 +297,40 @@ in {
 
     home.packages = [ pkgs.mako ];
 
-    xdg.configFile."mako/config".text = ''
-      ${optionalInteger "max-visible" cfg.maxVisible}
-      ${optionalString "sort" cfg.sort}
-      ${optionalString "output" cfg.output}
-      ${optionalString "layer" cfg.layer}
-      ${optionalString "anchor" cfg.anchor}
+    xdg.configFile."mako/config" = {
+      onChange = ''
+        ${pkgs.mako}/bin/makoctl reload || true
+      '';
+      text = ''
+        ${optionalInteger "max-visible" cfg.maxVisible}
+        ${optionalString "sort" cfg.sort}
+        ${optionalString "output" cfg.output}
+        ${optionalString "layer" cfg.layer}
+        ${optionalString "anchor" cfg.anchor}
 
-      ${optionalString "font" cfg.font}
-      ${optionalString "background-color" cfg.backgroundColor}
-      ${optionalString "text-color" cfg.textColor}
-      ${optionalInteger "width" cfg.width}
-      ${optionalInteger "height" cfg.height}
-      ${optionalString "margin" cfg.margin}
-      ${optionalString "padding" cfg.padding}
-      ${optionalInteger "border-size" cfg.borderSize}
-      ${optionalString "border-color" cfg.borderColor}
-      ${optionalInteger "border-radius" cfg.borderRadius}
-      ${optionalString "progress-color" cfg.progressColor}
-      ${optionalBoolean "icons" cfg.icons}
-      ${optionalInteger "max-icon-size" cfg.maxIconSize}
-      ${optionalString "icon-path" cfg.iconPath}
-      ${optionalBoolean "markup" cfg.markup}
-      ${optionalBoolean "actions" cfg.actions}
-      ${optionalString "format" cfg.format}
-      ${optionalInteger "default-timeout" cfg.defaultTimeout}
-      ${optionalBoolean "ignore-timeout" cfg.ignoreTimeout}
-      ${optionalString "group-by" cfg.groupBy}
+        ${optionalString "font" cfg.font}
+        ${optionalString "background-color" cfg.backgroundColor}
+        ${optionalString "text-color" cfg.textColor}
+        ${optionalInteger "width" cfg.width}
+        ${optionalInteger "height" cfg.height}
+        ${optionalString "margin" cfg.margin}
+        ${optionalString "padding" cfg.padding}
+        ${optionalInteger "border-size" cfg.borderSize}
+        ${optionalString "border-color" cfg.borderColor}
+        ${optionalInteger "border-radius" cfg.borderRadius}
+        ${optionalString "progress-color" cfg.progressColor}
+        ${optionalBoolean "icons" cfg.icons}
+        ${optionalInteger "max-icon-size" cfg.maxIconSize}
+        ${optionalString "icon-path" cfg.iconPath}
+        ${optionalBoolean "markup" cfg.markup}
+        ${optionalBoolean "actions" cfg.actions}
+        ${optionalString "format" cfg.format}
+        ${optionalInteger "default-timeout" cfg.defaultTimeout}
+        ${optionalBoolean "ignore-timeout" cfg.ignoreTimeout}
+        ${optionalString "group-by" cfg.groupBy}
 
-      ${cfg.extraConfig}
-    '';
+        ${cfg.extraConfig}
+      '';
+    };
   };
 }
