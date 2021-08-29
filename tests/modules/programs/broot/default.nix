@@ -1,0 +1,1 @@
+{ broot = ./broot.nix; }

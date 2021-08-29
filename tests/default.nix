@@ -46,6 +46,7 @@ import nmt {
     ./modules/programs/autojump
     ./modules/programs/bash
     ./modules/programs/bat
+    ./modules/programs/broot
     ./modules/programs/browserpass
     ./modules/programs/dircolors
     ./modules/programs/direnv
