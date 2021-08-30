@@ -44,13 +44,7 @@ in {
       '';
     };
 
-    modal = mkOption {
-      default = false;
-      type = types.bool;
-      description = ''
-        Whether to enable modal (vim) mode.
-      '';
-    };
+    modal = mkEnableOption "modal (vim) mode";
 
     verbs = mkOption {
       type = with types; listOf (attrsOf (either bool str));
