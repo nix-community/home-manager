@@ -12,6 +12,7 @@ let
     specialArgs = {
       lib = extendedLib;
       darwinConfig = config;
+      osConfig = config;
     } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
