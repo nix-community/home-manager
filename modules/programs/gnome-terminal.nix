@@ -48,7 +48,7 @@ let
 
       palette = mkOption {
         type = types.listOf types.str;
-        description = "The terminal palette.";
+        description = "The terminal palette: a list of 16 strings.";
       };
 
       cursor = mkOption {
@@ -75,13 +75,58 @@ let
 
       visibleName = mkOption {
         type = types.str;
-        description = "The profile name.";
+        description =
+          "The profile name. If null, the profile name will be the same as the nix attribute.";
       };
 
       colors = mkOption {
         default = null;
         type = types.nullOr profileColorsSubModule;
-        description = "The terminal colors, null to use system default.";
+        description = ''
+          The terminal colors, null to use system default.
+
+          A color can be a string containing one of the following:
+
+          <itemizedlist>
+            <listitem>
+              <para>
+                A standard name as specified in the 
+                <link xlink:href="http://dev.w3.org/csswg/css-color/#named-colors">
+                  CSS standard
+                </link>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                A hexadecimal value 
+                (#rgb, #rrggbb, #rrrgggbbb, #rrrrggggbbbb)
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                A hexadecimal value with the alpha component 
+                (#rgba, #rrggbbaa, #rrrrggggbbbbaaaa)
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                A RGB color prefixed with "rgb" (rgb(r,g,b))
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                A RGBA color prefixed with "rgba" (rgba(r,g,b,a))
+              </para>
+            </listitem>
+          </itemizedlist>
+
+          In the case of rgb(r,g,b) and rgb(r,g,b,a), the value for r,g,b and a
+          (respectively red, green, blue, and alpha) are either integers between 
+          0 and 255, or floating point numbers between 0. and 1.
+
+          The alpha can be set, but will be ignored 
+          (colors have always full opacity).
+        '';
       };
 
       cursorBlinkMode = mkOption {
@@ -252,7 +297,8 @@ let
   buildProfileSet = pcfg:
     {
       audible-bell = pcfg.audibleBell;
-      visible-name = pcfg.visibleName;
+      visible-name =
+        if (pcfg.visibleName != null) then pcfg.visibleName else attrNames pcfg;
       scroll-on-output = pcfg.scrollOnOutput;
       scrollbar-policy = if pcfg.showScrollbar then "always" else "never";
       scrollback-lines = pcfg.scrollbackLines;
@@ -334,6 +380,22 @@ in {
   };
 
   config = mkIf cfg.enable {
+
+    assertions = [
+      {
+        assertion = all (x: x == 16) (mapAttrsToList
+          (n: v: if v ? colors.palette then length v.colors.palette else 16)
+          cfg.profile);
+        message = "A palette needs to contain exactly 16 colors";
+      }
+      {
+        assertion = any (x: x)
+          (mapAttrsToList (n: v: if v ? default then v.default else false)
+            cfg.profile);
+        message = "At least one profile needs to be set as default";
+      }
+    ];
+
     home.packages = [ pkgs.gnome.gnome-terminal ];
 
     dconf.settings = let dconfPath = "org/gnome/terminal/legacy";
