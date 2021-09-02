@@ -141,6 +141,7 @@ in {
           User = usercfg.home.username;
           Type = "oneshot";
           RemainAfterExit = "yes";
+          TimeoutStartSec = 90;
           SyslogIdentifier = "hm-activate-${username}";
 
           # The activation script is run by a login shell to make sure
