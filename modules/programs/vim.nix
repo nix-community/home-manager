@@ -124,6 +124,13 @@ in {
         description = "Resulting customized vim package";
         readOnly = true;
       };
+
+      packageConfigurable = mkOption {
+        type = types.package;
+        description = "Configurable vim package";
+        default = pkgs.vim_configurable;
+        defaultText = "pkgs.vim_configurable";
+      };
     };
   };
 
@@ -135,7 +142,7 @@ in {
       ${cfg.extraConfig}
     '';
 
-    vim = pkgs.vim_configurable.customize {
+    vim = cfg.packageConfigurable.customize {
       name = "vim";
       vimrcConfig = {
         inherit customRC;
