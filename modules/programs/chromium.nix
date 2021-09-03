@@ -4,6 +4,14 @@ with lib;
 
 let
 
+  supportedBrowsers = [
+    "chromium"
+    "google-chrome"
+    "google-chrome-beta"
+    "google-chrome-dev"
+    "brave"
+  ];
+
   browserModule = defaultPkg: name: visible:
     let
       browser = (builtins.parseDrvName defaultPkg.name).name;
@@ -11,10 +19,10 @@ let
     in {
       enable = mkOption {
         inherit visible;
+        type = types.bool;
         default = false;
         example = true;
         description = "Whether to enable ${name}.";
-        type = lib.types.bool;
       };
 
       package = mkOption {
@@ -23,6 +31,25 @@ let
         default = defaultPkg;
         defaultText = literalExpression "pkgs.${browser}";
         description = "The ${name} package to use.";
+      };
+
+      commandLineArgs = mkOption {
+        inherit visible;
+        type = types.listOf types.str;
+        default = [ ];
+        example = [ "--enable-logging=stderr" "--ignore-gpu-blocklist" ];
+        description = ''
+          List of command-line arguments to be passed to ${name}.
+          </para><para>
+          Note this option does not have any effect when using a
+          custom package for <option>programs.${browser}.package</option>.
+          </para><para>
+          For a list of common switches, see
+          <link xlink:href="https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.cc">Chrome switches</link>.
+          </para><para>
+          To search switches for other components, see
+          <link xlink:href="https://source.chromium.org/search?q=file:switches.cc&amp;ss=chromium%2Fchromium%2Fsrc">Chromium codesearch</link>.
+        '';
       };
     } // optionalAttrs (!isProprietaryChrome) {
       # Extensions do not work with Google Chrome
@@ -105,6 +132,7 @@ let
 
       drvName = (builtins.parseDrvName cfg.package.name).name;
       browser = if drvName == "ungoogled-chromium" then "chromium" else drvName;
+      isProprietaryChrome = hasPrefix "google-chrome" drvName;
 
       darwinDirs = {
         chromium = "Chromium";
@@ -135,8 +163,18 @@ let
 
     in mkIf cfg.enable {
       home.packages = [ cfg.package ];
-      home.file = listToAttrs (map extensionJson (cfg.extensions or [ ]));
+      home.file = optionalAttrs (!isProprietaryChrome)
+        (listToAttrs (map extensionJson cfg.extensions));
     };
+
+  browserPkgs = genAttrs supportedBrowsers (browser:
+    let cfg = config.programs.${browser};
+    in if cfg.commandLineArgs != [ ] then
+      pkgs.${browser}.override {
+        commandLineArgs = concatStringsSep " " cfg.commandLineArgs;
+      }
+    else
+      pkgs.${browser});
 
 in {
   # Extensions do not work with the proprietary Google Chrome version
@@ -149,20 +187,16 @@ in {
     ];
 
   options.programs = {
-    chromium = browserModule pkgs.chromium "Chromium" true;
-    google-chrome = browserModule pkgs.google-chrome "Google Chrome" false;
+    chromium = browserModule browserPkgs.chromium "Chromium" true;
+    google-chrome =
+      browserModule browserPkgs.google-chrome "Google Chrome" false;
     google-chrome-beta =
-      browserModule pkgs.google-chrome-beta "Google Chrome Beta" false;
+      browserModule browserPkgs.google-chrome-beta "Google Chrome Beta" false;
     google-chrome-dev =
-      browserModule pkgs.google-chrome-dev "Google Chrome Dev" false;
-    brave = browserModule pkgs.brave "Brave Browser" false;
+      browserModule browserPkgs.google-chrome-dev "Google Chrome Dev" false;
+    brave = browserModule browserPkgs.brave "Brave Browser" false;
   };
 
-  config = mkMerge [
-    (browserConfig config.programs.chromium)
-    (browserConfig config.programs.google-chrome)
-    (browserConfig config.programs.google-chrome-beta)
-    (browserConfig config.programs.google-chrome-dev)
-    (browserConfig config.programs.brave)
-  ];
+  config = mkMerge
+    (map (browser: browserConfig config.programs.${browser}) supportedBrowsers);
 }
