@@ -121,6 +121,14 @@ in {
         '';
       };
 
+      withRemote = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Install neovim-remote into the user environment.
+        '';
+      };
+
       extraPython3Packages = mkOption {
         type = with types; either extraPython3PackageType (listOf package);
         default = (_: [ ]);
@@ -291,7 +299,8 @@ in {
 
     programs.neovim.generatedConfigViml = neovimConfig.neovimRcContent;
 
-    home.packages = [ cfg.finalPackage ];
+    home.packages = [ cfg.finalPackage ]
+      ++ (optional cfg.withRemote pkgs.neovim-remote);
 
     xdg.configFile."nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
       text = neovimConfig.neovimRcContent;
