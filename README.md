@@ -107,9 +107,8 @@ Currently the easiest way to install Home Manager is as follows:
     $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
     ```
 
-    file in your shell configuration. Unfortunately, in this specific
-    case we currently only support POSIX.2-like shells such as
-    [Bash][] or [Z shell][].
+    file in your shell configuration. This file can be sourced
+    directly by POSIX.2-like shells such as [Bash][] or [Z shell][].
 
     For example, if you use Bash then add
 
@@ -124,7 +123,9 @@ Currently the easiest way to install Home Manager is as follows:
     . "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
     ```
 
-    to your `~/.profile` file.
+    to your `~/.profile` file. For fish shell, it is possible to use
+    [foreign-env](https://github.com/oh-my-fish/plugin-foreign-env) to
+    source the file.
 
 If instead of using channels you want to run Home Manager from a Git
 checkout of the repository then you can use the
