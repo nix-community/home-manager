@@ -26,10 +26,10 @@ let
           "${cfg.config.modifier}+Shift+q" = "kill";
           "${cfg.config.modifier}+d" = "exec ${cfg.config.menu}";
 
-          "${cfg.config.modifier}+Left" = "focus left";
-          "${cfg.config.modifier}+Down" = "focus down";
-          "${cfg.config.modifier}+Up" = "focus up";
-          "${cfg.config.modifier}+Right" = "focus right";
+          "${cfg.config.modifier}+j" = "focus left";
+          "${cfg.config.modifier}+k" = "focus down";
+          "${cfg.config.modifier}+l" = "focus up";
+          "${cfg.config.modifier}+;" = "focus right";
 
           "${cfg.config.modifier}+Shift+Left" = "move left";
           "${cfg.config.modifier}+Shift+Down" = "move down";
