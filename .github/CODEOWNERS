@@ -407,13 +407,13 @@
 /modules/services/window-managers/herbstluftwm        @olmokramer
 /tests/modules/services/window-managers/herbstluftwm  @olmokramer
 
-/modules/services/window-managers/i3-sway/i3.nix      @sumnerevans
-/tests/modules/services/window-managers/i3            @sumnerevans
+/modules/services/window-managers/i3-sway/i3.nix      @sumnerevans @sebtm
+/tests/modules/services/window-managers/i3            @sumnerevans @sebtm
 
-/modules/services/window-managers/i3-sway/lib         @sumnerevans
+/modules/services/window-managers/i3-sway/lib         @sumnerevans @sebtm
 
-/modules/services/window-managers/i3-sway/sway.nix    @alexarice @sumnerevans
-/tests/modules/services/window-managers/sway          @sumnerevans
+/modules/services/window-managers/i3-sway/sway.nix    @alexarice @sumnerevans @sebtm
+/tests/modules/services/window-managers/sway          @sumnerevans @sebtm
 
 /modules/services/window-managers/i3-sway/swaynag.nix @polykernel
 
