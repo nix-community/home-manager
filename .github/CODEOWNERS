@@ -214,6 +214,8 @@
 /modules/services/barrier.nix                         @Kritnich
 /tests/modules/services/barrier                       @Kritnich
 
+/modules/services/betterlockscreen.nix                @SebTM
+
 /modules/services/caffeine.nix                        @uvNikita
 
 /modules/services/cbatticon.nix                       @pmiddend
