@@ -8211,7 +8211,7 @@ manually set any options not listed above.
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.package"></a><a class="term" href="options.html#opt-programs.vscode.package"><code class="option">programs.vscode.package</code></a></span></dt><dd><p>Version of Visual Studio Code to install.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        <em class="replaceable"><code>(build of vscode-1.59.1)</code></em>
+        <em class="replaceable"><code>(build of vscode-1.60.0)</code></em>
       </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.vscodium</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.extensions"></a><a class="term" href="options.html#opt-programs.vscode.extensions"><code class="option">programs.vscode.extensions</code></a></span></dt><dd><p>The extensions Visual Studio Code should be started with.
@@ -9328,7 +9328,7 @@ but are substituted anywhere on a line.
         null
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         "gnome"
-      </code></p><p><span class="emphasis"><em>Related packages:</em></span> </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">pkgs.qgnomeplatform</code> (qgnomeplatform-0.6.1): QPlatformTheme for a better Qt application inclusion in GNOME</p></li><li class="listitem"><p><code class="literal">pkgs.libsForQt5.qtstyleplugins</code> (qtstyleplugins-unstable-2017-03-11): Additional style plugins for Qt5, including BB10, GTK, Cleanlooks, Motif, Plastique</p></li></ul></div><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt.nix#blob-path" target="_top">
+      </code></p><p><span class="emphasis"><em>Related packages:</em></span> </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">pkgs.qgnomeplatform</code> (qgnomeplatform-0.8.0): QPlatformTheme for a better Qt application inclusion in GNOME</p></li><li class="listitem"><p><code class="literal">pkgs.libsForQt5.qtstyleplugins</code> (qtstyleplugins-unstable-2017-03-11): Additional style plugins for Qt5, including BB10, GTK, Cleanlooks, Motif, Plastique</p></li></ul></div><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/qt.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-qt.style.package"></a><a class="term" href="options.html#opt-qt.style.package"><code class="option">qt.style.package</code></a></span></dt><dd><p>Theme package to be used in Qt5 applications.</p><p><span class="emphasis"><em>Type:</em></span> null or package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         null
@@ -9380,6 +9380,29 @@ See <span class="command"><strong>barrierc --help</strong></span>.
 Port defaults to <code class="literal">24800</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/barrier.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/barrier.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.betterlockscreen.enable"></a><a class="term" href="options.html#opt-services.betterlockscreen.enable"><code class="option">services.betterlockscreen.enable</code></a></span></dt><dd><p>Whether to enable betterlockscreen, a screen-locker module.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/betterlockscreen.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/betterlockscreen.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.betterlockscreen.package"></a><a class="term" href="options.html#opt-services.betterlockscreen.package"><code class="option">services.betterlockscreen.package</code></a></span></dt><dd><p>Package providing <span class="command"><strong>betterlockscreen</strong></span>.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.betterlockscreen
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/betterlockscreen.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/betterlockscreen.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.betterlockscreen.arguments"></a><a class="term" href="options.html#opt-services.betterlockscreen.arguments"><code class="option">services.betterlockscreen.arguments</code></a></span></dt><dd><p>List of arguments appended to <code class="literal">./betterlockscreen --lock [args]</code></p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/betterlockscreen.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/betterlockscreen.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.betterlockscreen.inactiveInterval"></a><a class="term" href="options.html#opt-services.betterlockscreen.inactiveInterval"><code class="option">services.betterlockscreen.inactiveInterval</code></a></span></dt><dd><p>Value used for <code class="option">services.screen-locker.inactiveInterval</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        10
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/betterlockscreen.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/betterlockscreen.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.blueman-applet.enable"></a><a class="term" href="options.html#opt-services.blueman-applet.enable"><code class="option">services.blueman-applet.enable</code></a></span></dt><dd><p>Whether to enable the Blueman applet.
 </p><p>
 Note, for the applet to work, the 'blueman' service should
