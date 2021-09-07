@@ -37,6 +37,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.betterlockscreen" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     services.screen-locker = {
