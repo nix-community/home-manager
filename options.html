@@ -2179,10 +2179,18 @@ this option) to command strings or directly to build outputs.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bash.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/bash.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bash.shellOptions"></a><a class="term" href="options.html#opt-programs.bash.shellOptions"><code class="option">programs.bash.shellOptions</code></a></span></dt><dd><p>Shell options to set.</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bash.shellOptions"></a><a class="term" href="options.html#opt-programs.bash.shellOptions"><code class="option">programs.bash.shellOptions</code></a></span></dt><dd><p>Shell options to set. Prefix an option with
+<span class="quote">“<span class="quote"><code class="literal">-</code></span>”</span> to unset.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         [
         "histappend" "checkwinsize" "extglob" "globstar" "checkjobs" 
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        [
+        "extglob" "-cdspell" 
         ]
     
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bash.nix#blob-path" target="_top">
