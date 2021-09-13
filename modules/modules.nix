@@ -50,6 +50,7 @@ let
     ./programs/bash.nix
     ./programs/bat.nix
     ./programs/beets.nix
+    ./programs/bottom.nix
     ./programs/broot.nix
     ./programs/browserpass.nix
     ./programs/chromium.nix

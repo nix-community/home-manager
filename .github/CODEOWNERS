@@ -58,6 +58,9 @@
 
 /modules/programs/beets.nix                           @rycee
 
+/modules/programs/bottom.nix                          @polykernel
+/tests/modules/programs/bottom                        @polykernel
+
 /modules/programs/broot.nix                           @aheaume
 
 /modules/programs/dircolors.nix                       @JustinLovinger
