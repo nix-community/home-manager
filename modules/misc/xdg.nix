@@ -15,7 +15,7 @@ let
   defaultConfigHome = "${config.home.homeDirectory}/.config";
   defaultDataHome = "${config.home.homeDirectory}/.local/share";
 
-  getXdgDir = name: fallback:
+  getEnvFallback = name: fallback:
     let value = builtins.getEnv name;
     in if value != "" then value else fallback;
 
@@ -26,6 +26,7 @@ in {
     cacheHome = mkOption {
       type = types.path;
       defaultText = "~/.cache";
+      apply = toString;
       description = ''
         Absolute path to directory holding application caches.
       '';
@@ -43,6 +44,7 @@ in {
     configHome = mkOption {
       type = types.path;
       defaultText = "~/.config";
+      apply = toString;
       description = ''
         Absolute path to directory holding application configurations.
       '';
@@ -60,6 +62,7 @@ in {
     dataHome = mkOption {
       type = types.path;
       defaultText = "~/.local/share";
+      apply = toString;
       description = ''
         Absolute path to directory holding application data.
       '';
@@ -81,9 +84,11 @@ in {
 
     # Legacy non-deterministic setup.
     (mkIf (!cfg.enable && versionOlder config.home.stateVersion "20.09") {
-      xdg.cacheHome = getXdgDir "XDG_CACHE_HOME" defaultCacheHome;
-      xdg.configHome = getXdgDir "XDG_CONFIG_HOME" defaultConfigHome;
-      xdg.dataHome = getXdgDir "XDG_DATA_HOME" defaultDataHome;
+      xdg.cacheHome =
+        mkDefault (getEnvFallback "XDG_CACHE_HOME" defaultCacheHome);
+      xdg.configHome =
+        mkDefault (getEnvFallback "XDG_CONFIG_HOME" defaultConfigHome);
+      xdg.dataHome = mkDefault (getEnvFallback "XDG_DATA_HOME" defaultDataHome);
     })
 
     # "Modern" deterministic setup.
@@ -95,13 +100,11 @@ in {
 
     {
       home.file = mkMerge [
-        (mapAttrs'
-          (name: file: nameValuePair "${config.xdg.configHome}/${name}" file)
+        (mapAttrs' (name: file: nameValuePair "${cfg.configHome}/${name}" file)
           cfg.configFile)
-        (mapAttrs'
-          (name: file: nameValuePair "${config.xdg.dataHome}/${name}" file)
+        (mapAttrs' (name: file: nameValuePair "${cfg.dataHome}/${name}" file)
           cfg.dataFile)
-        { "${config.xdg.cacheHome}/.keep".text = ""; }
+        { "${cfg.cacheHome}/.keep".text = ""; }
       ];
     }
   ];
