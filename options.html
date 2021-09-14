@@ -5,9 +5,7 @@
         
         }
     
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/lieer.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/lieer.nix&gt;
-                </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/imapnotify.nix#blob-path" target="_top">
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/imapnotify.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/imapnotify.nix&gt;
                 </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/offlineimap.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/offlineimap.nix&gt;
@@ -310,31 +308,6 @@ Note, if set then the system default may still be accepted.
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lieer.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.dropNonExistingLabels"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.dropNonExistingLabels"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.dropNonExistingLabels</code></a></span></dt><dd><p>Allow missing labels on the Gmail side to be dropped.
-</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        false
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/programs/lieer.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.ignoreTagsLocal"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.ignoreTagsLocal"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.ignoreTagsLocal</code></a></span></dt><dd><p>Set custom tags to ignore when syncing from local to
-remote (after translations).
-</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        
-        [
-        
-        ]
-    
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/programs/lieer.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.ignoreTagsRemote"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.ignoreTagsRemote"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.ignoreTagsRemote</code></a></span></dt><dd><p>Set custom tags to ignore when syncing from remote to
-local (before translations).
-</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        
-        [
-        "CATEGORY_FORUMS" "CATEGORY_PROMOTIONS" "CATEGORY_UPDATES" "CATEGORY_SOCIAL" "CATEGORY_PERSONAL" 
-        ]
-    
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/programs/lieer.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.notmuchSetupWarning"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.notmuchSetupWarning"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.notmuchSetupWarning</code></a></span></dt><dd><p>Warn if Notmuch is not also enabled for this account.
 </p><p>
 This can safely be disabled if <span class="command"><strong>notmuch init</strong></span>
@@ -344,17 +317,88 @@ Manager.
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lieer.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.replaceSlashWithDot"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.replaceSlashWithDot"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.replaceSlashWithDot</code></a></span></dt><dd><p>Replace '/' with '.' in Gmail labels.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.settings"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.settings"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.settings</code></a></span></dt><dd><p>Settings which are applied to <code class="filename">.gmailieer.json</code>
+for the account.
+</p><p>
+See the <a class="link" href="https://github.com/gauteh/lieer/" target="_top">lieer manual</a>
+for documentation of settings not explicitly covered by this module.
+</p><p><span class="emphasis"><em>Type:</em></span> JSON value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.settings.drop_non_existing_label"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.settings.drop_non_existing_label"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.settings.drop_non_existing_label</code></a></span></dt><dd><p>Allow missing labels on the Gmail side to be dropped.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.settings.file_extension"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.settings.file_extension"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.settings.file_extension</code></a></span></dt><dd><p>Extension to include in local file names, which can be useful
+for indexing with third-party programs.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        ""
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "mbox"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.settings.ignore_empty_history"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.settings.ignore_empty_history"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.settings.ignore_empty_history</code></a></span></dt><dd><p>Work around a Gmail API quirk where an empty change history
+is sometimes returned.
+</p><p>
+See this
+<a class="link" href="https://github.com/gauteh/lieer/issues/120" target="_top">GitHub issue</a>
+for more details.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.settings.ignore_remote_labels"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.settings.ignore_remote_labels"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.settings.ignore_remote_labels</code></a></span></dt><dd><p>Set Gmail labels to ignore when syncing from remote labels to
+local tags (before translations).
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        "CATEGORY_FORUMS" "CATEGORY_PROMOTIONS" "CATEGORY_UPDATES" "CATEGORY_SOCIAL" "CATEGORY_PERSONAL" 
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.settings.ignore_tags"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.settings.ignore_tags"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.settings.ignore_tags</code></a></span></dt><dd><p>Set labels to ignore when syncing from local tags to
+remote labels (after translations).
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.settings.local_trash_tag"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.settings.local_trash_tag"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.settings.local_trash_tag</code></a></span></dt><dd><p>Local tag to which the remote Gmail 'TRASH' label is translated.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "trash"
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.settings.remove_local_messages"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.settings.remove_local_messages"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.settings.remove_local_messages</code></a></span></dt><dd><p>Remove local messages that have been deleted on the remote.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.settings.replace_slash_with_dot"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.settings.replace_slash_with_dot"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.settings.replace_slash_with_dot</code></a></span></dt><dd><p>Replace '/' with '.' in Gmail labels.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.settings.timeout"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.settings.timeout"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.settings.timeout</code></a></span></dt><dd><p>HTTP timeout in seconds. 0 means forever or system timeout.
+</p><p><span class="emphasis"><em>Type:</em></span> unsigned integer, meaning &gt;=0</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        600
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lieer.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.sync.enable"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.sync.enable"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.sync.enable</code></a></span></dt><dd><p>Whether to enable lieer synchronization service.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         true
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/lieer.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/lieer.nix&gt;
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.sync.frequency"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.sync.frequency"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.sync.frequency</code></a></span></dt><dd><p>How often to synchronize the account.
 </p><p>
 This value is passed to the systemd timer configuration as the
@@ -363,11 +407,6 @@ onCalendar option. See
 for more information about the format.
 </p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         "*:0/5"
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/lieer.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/lieer.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.timeout"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.timeout"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.timeout</code></a></span></dt><dd><p>HTTP timeout in seconds. 0 means forever or system timeout.
-</p><p><span class="emphasis"><em>Type:</em></span> unsigned integer, meaning &gt;=0</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        0
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lieer.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.maildir"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.maildir"><code class="option">accounts.email.accounts.&lt;name&gt;.maildir</code></a></span></dt><dd><p>Maildir configuration for this account.
@@ -4759,6 +4798,11 @@ All string options are quoted with double quotes.
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lieer.package"></a><a class="term" href="options.html#opt-programs.lieer.package"><code class="option">programs.lieer.package</code></a></span></dt><dd><p>lieer package to use.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        "pkgs.gmailieer"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lieer.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lsd.enable"></a><a class="term" href="options.html#opt-programs.lsd.enable"><code class="option">programs.lsd.enable</code></a></span></dt><dd><p>Whether to enable lsd.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
