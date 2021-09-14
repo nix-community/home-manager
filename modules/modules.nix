@@ -212,9 +212,9 @@ let
     ./services/sxhkd.nix
     ./services/syncthing.nix
     ./services/taffybar.nix
-    ./services/trayer.nix
     ./services/tahoe-lafs.nix
     ./services/taskwarrior-sync.nix
+    ./services/trayer.nix
     ./services/udiskie.nix
     ./services/unclutter.nix
     ./services/unison.nix
