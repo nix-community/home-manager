@@ -134,6 +134,7 @@ let
     ./programs/terminator.nix
     ./programs/termite.nix
     ./programs/texlive.nix
+    ./programs/thunderbird.nix
     ./programs/tmux.nix
     ./programs/topgrade.nix
     ./programs/urxvt.nix

@@ -197,6 +197,8 @@
 
 /modules/programs/texlive.nix                         @rycee
 
+/modules/programs/thunderbird.nix                     @jkarlson
+
 /modules/programs/topgrade.nix                        @msfjarvis
 /tests/modules/programs/topgrade                      @msfjarvis
 

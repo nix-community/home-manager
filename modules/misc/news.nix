@@ -2203,6 +2203,13 @@ in
           A new module is available: 'programs.bottom'.
         '';
       }
+
+      {
+        time = "2021-09-15T09:44:35+00:00";
+        message = ''
+          A new module is available: 'programs.thunderbird'.
+        '';
+      }
     ];
   };
 }
