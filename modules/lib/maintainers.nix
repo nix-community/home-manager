@@ -127,4 +127,10 @@
     githubId = 605641;
     name = "Bart Bakker";
   };
+  geowy = {
+    email = "github@georgewyatt.fastmail.com";
+    github = "geowy";
+    githubId = 5038349;
+    name = "George Wyatt";
+  };
 }

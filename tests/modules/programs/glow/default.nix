@@ -1,0 +1,1 @@
+{ glow-settings = ./settings.nix; }
