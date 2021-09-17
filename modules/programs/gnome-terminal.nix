@@ -33,34 +33,57 @@ let
       foregroundColor = mkOption {
         type = types.str;
         description = "The foreground color.";
+        example = "rgba(0.9,0.9.0.8,1.0)";
       };
 
       backgroundColor = mkOption {
         type = types.str;
         description = "The background color.";
+        example = "rgb(37,45,37)";
       };
 
       boldColor = mkOption {
         default = null;
         type = types.nullOr types.str;
         description = "The bold color, null to use same as foreground.";
+        example = "#fff";
       };
 
       palette = mkOption {
         type = types.listOf types.str;
         description = "The terminal palette: a list of 16 strings.";
+        example = [
+          "#000000"
+          "#AA0000"
+          "#00AA00"
+          "#AA5500"
+          "#0000AA"
+          "#AA00AA"
+          "#00AAAA"
+          "#AAAAAA"
+          "#555555"
+          "#FF5555"
+          "#55FF55"
+          "#FFFF55"
+          "#5555FF"
+          "#FF55FF"
+          "#55FFFF"
+          "#FFFFFF"
+        ];
       };
 
       cursor = mkOption {
         default = null;
         type = types.nullOr backForeSubModule;
         description = "The color for the terminal cursor.";
+        example = "#abcf";
       };
 
       highlight = mkOption {
         default = null;
         type = types.nullOr backForeSubModule;
         description = "The colors for the terminal’s highlighted area.";
+        example = "rgb(0.75,0.,0.)";
       };
     };
   });
@@ -374,7 +397,11 @@ in {
       profile = mkOption {
         default = { };
         type = types.attrsOf profileSubModule;
-        description = "A set of Gnome Terminal profiles.";
+        description = ''
+          A set of Gnome Terminal profiles. The attribute name of each profile must be an 
+          <link xlink:href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</link> 
+        '';
+        example = { "e0b782ed-6aca-44eb-8c75-62b3706b6220" = { }; };
       };
     };
   };
