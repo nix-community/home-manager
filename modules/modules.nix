@@ -71,6 +71,7 @@ let
     ./programs/glow.nix
     ./programs/gnome-terminal.nix
     ./programs/go.nix
+    ./programs/gotop.nix
     ./programs/gpg.nix
     ./programs/himalaya.nix
     ./programs/home-manager.nix

@@ -86,6 +86,9 @@
 /modules/programs/glow.nix                            @geowy
 /tests/modules/programs/glow                          @geowy
 
+/modules/programs/gotop.nix                           @geowy
+/tests/modules/programs/gotop                         @geowy
+
 /modules/programs/gnome-terminal.nix                  @kamadorueda @rycee
 
 /modules/programs/go.nix                              @rvolosatovs

@@ -56,6 +56,7 @@ import nmt {
     ./modules/programs/gh
     ./modules/programs/git
     ./modules/programs/glow
+    ./modules/programs/gotop
     ./modules/programs/gpg
     ./modules/programs/himalaya
     ./modules/programs/htop

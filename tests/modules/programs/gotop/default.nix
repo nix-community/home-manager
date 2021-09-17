@@ -1,0 +1,1 @@
+{ gotop-settings = ./settings.nix; }
