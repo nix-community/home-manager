@@ -18,9 +18,14 @@
       darwinModules.home-manager = import ./nix-darwin;
       darwinModule = self.darwinModules.home-manager;
 
-      packages = forAllSystems (system: {
-        home-manager = nixpkgsFor.${system}.callPackage ./home-manager { };
-      });
+      packages = forAllSystems (system:
+        let docs = import ./docs { pkgs = nixpkgsFor.${system}; };
+        in {
+          home-manager = nixpkgsFor.${system}.callPackage ./home-manager { };
+          docs-html = docs.manual.html;
+          docs-manpages = docs.manPages;
+          docs-json = docs.options.json;
+        });
 
       defaultPackage =
         forAllSystems (system: self.packages.${system}.home-manager);
