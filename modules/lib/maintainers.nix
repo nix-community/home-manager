@@ -133,11 +133,16 @@
     github = "hawkw";
     githubId = 2796466;
   };
-
   pamplemousse = {
     name = "Xavier Maso";
     email = "xav.maso@gmail.com";
     github = "pamplemousse";
     githubId = 2647236;
+  };
+  onny = {
+    name = "onny";
+    email = "onny@project-insanity.org";
+    github = "onny";
+    githubId = 757752;
   };
 }

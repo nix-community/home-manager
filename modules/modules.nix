@@ -196,6 +196,7 @@ let
     ./services/network-manager-applet.nix
     ./services/nextcloud-client.nix
     ./services/notify-osd.nix
+    ./services/opensnitch-ui.nix
     ./services/owncloud-client.nix
     ./services/pantalaimon.nix
     ./services/parcellite.nix

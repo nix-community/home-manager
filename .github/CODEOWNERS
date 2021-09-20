@@ -304,6 +304,8 @@
 
 /modules/services/notify-osd.nix                      @imalison
 
+/modules/services/opensnitch-ui.nix                   @onny
+
 /modules/services/pantalaimon.nix                     @jojosch
 /tests/modules/services/pantalaimon                   @jojosch
 
