@@ -9,7 +9,7 @@ let
   '';
 
   renderCredential = cred: ''
-    credentials += Credentials("${cred.realm}", "${cred.host}", "${cred.user}", "${cred.passwordCommand}".!!)
+    credentials += Credentials("${cred.realm}", "${cred.host}", "${cred.user}", "${cred.passwordCommand}".lazyLines.mkString("\n"))
   '';
 
   renderCredentials = creds: ''
