@@ -81,8 +81,8 @@
 /modules/programs/foot.nix                            @plabadens
 /tests/modules/programs/foot                          @plabadens
 
-/modules/programs/gh.nix                              @Gerschtli
-/tests/modules/programs/gh                            @Gerschtli
+/modules/programs/gh.nix                              @Gerschtli @berbiche
+/tests/modules/programs/gh                            @Gerschtli @berbiche
 
 /modules/programs/git.nix                             @rycee
 

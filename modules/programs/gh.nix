@@ -6,50 +6,96 @@ let
 
   cfg = config.programs.gh;
 
+  yamlFormat = pkgs.formats.yaml { };
+
+  settingsType = types.submodule {
+    freeformType = yamlFormat.type;
+    # These options are only here for the mkRenamedOptionModule support
+    options = {
+      aliases = mkOption {
+        type = with types; attrsOf str;
+        default = { };
+        example = literalExample ''
+          {
+            co = "pr checkout";
+            pv = "pr view";
+          }
+        '';
+        description = ''
+          Aliases that allow you to create nicknames for gh commands.
+        '';
+      };
+      editor = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          The editor that gh should run when creating issues, pull requests, etc.
+          If blank, will refer to environment.
+        '';
+      };
+      git_protocol = mkOption {
+        type = types.str;
+        default = "https";
+        example = "ssh";
+        description = ''
+          The protocol to use when performing Git operations.
+        '';
+      };
+    };
+  };
+
 in {
-  meta.maintainers = [ maintainers.gerschtli ];
+  meta.maintainers = [ maintainers.gerschtli maintainers.berbiche ];
+
+  imports = (map (x:
+    mkRenamedOptionModule [ "programs" "gh" x ] [
+      "programs"
+      "gh"
+      "settings"
+      x
+    ]) [ "aliases" "editor" ]) ++ [
+      (mkRenamedOptionModule [ "programs" "gh" "gitProtocol" ] [
+        "programs"
+        "gh"
+        "settings"
+        "git_protocol"
+      ])
+    ];
 
   options.programs.gh = {
     enable = mkEnableOption "GitHub CLI tool";
 
-    aliases = mkOption {
-      type = with types; attrsOf str;
+    package = mkOption {
+      type = types.package;
+      default = pkgs.gh;
+      defaultText = literalExample "pkgs.gh";
+      description = "Package providing <command>gh</command>.";
+    };
+
+    settings = mkOption {
+      type = settingsType;
       default = { };
+      description =
+        "Configuration written to <filename>$XDG_CONFIG_HOME/gh/config.yml</filename>.";
       example = literalExample ''
         {
-          co = "pr checkout";
-          pv = "pr view";
-        }
-      '';
-      description = ''
-        Aliases that allow you to create nicknames for gh commands.
-      '';
-    };
+          git_protocol = "ssh";
 
-    editor = mkOption {
-      type = types.str;
-      default = "";
-      description = ''
-        The editor that gh should run when creating issues, pull requests, etc.
-        If blank, will refer to environment.
-      '';
-    };
+          prompt = "enabled";
 
-    gitProtocol = mkOption {
-      type = types.enum [ "https" "ssh" ];
-      default = "https";
-      description = ''
-        The protocol to use when performing Git operations.
+          aliases = {
+            co = "pr checkout";
+            pv = "pr view";
+          };
+        };
       '';
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.gh ];
+    home.packages = [ cfg.package ];
 
-    xdg.configFile."gh/config.yml".text = builtins.toJSON {
-      inherit (cfg) aliases editor;
-      git_protocol = cfg.gitProtocol;
-    };
+    xdg.configFile."gh/config.yml".source =
+      yamlFormat.generate "gh-config.yml" cfg.settings;
   };
 }
