@@ -178,14 +178,8 @@ in {
 
     home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
 
-    xdg.configFile."gtk-3.0/settings.ini" = {
-      text = toGtk3Ini { Settings = ini // cfg3.extraConfig; };
-      onChange = mkIf (cfg.theme != null)
-        (let gsettings = "${pkgs.glib}/bin/gsettings";
-        in ''
-          ${gsettings} set org.gnome.desktop.interface gtk-theme ${cfg.theme.name} || true
-        '');
-    };
+    xdg.configFile."gtk-3.0/settings.ini".text =
+      toGtk3Ini { Settings = ini // cfg3.extraConfig; };
 
     xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
 
