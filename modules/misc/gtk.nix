@@ -172,7 +172,7 @@ in {
       onChange = mkIf (cfg.theme != null)
         (let xsettingsd = "${pkgs.xsettingsd}/bin/xsettingsd";
         in ''
-          timeout 2 ${xsettingsd} -c <(echo 'Net/ThemeName "${cfg.theme.name}"') & true
+          timeout 2 ${xsettingsd} -c <(echo 'Net/ThemeName "${cfg.theme.name}"') &> /dev/null &
         '');
     };
 
