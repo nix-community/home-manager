@@ -100,7 +100,7 @@ error: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name ca.desrt.
 The solution on NixOS is to add
 
 [source,nix]
-services.dbus.packages = with pkgs; [ gnome.dconf ];
+programs.dconf.enable = true;
 
 to your system configuration.
 

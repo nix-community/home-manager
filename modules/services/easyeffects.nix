@@ -16,10 +16,9 @@ in {
       Easyeffects daemon.
       Note, it is necessary to add
       <programlisting language="nix">
-      services.dbus.packages = with pkgs; [ gnome.dconf ];
+      programs.dconf.enable = true;
       </programlisting>
-      to your system configuration for the daemon to work correctly
-    '';
+      to your system configuration for the daemon to work correctly'';
 
     preset = mkOption {
       type = types.str;
