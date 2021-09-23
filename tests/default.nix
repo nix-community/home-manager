@@ -132,6 +132,7 @@ import nmt {
     ./modules/services/playerctld
     ./modules/services/polybar
     ./modules/services/redshift-gammastep
+    ./modules/services/screen-locker
     ./modules/services/sxhkd
     ./modules/services/syncthing
     ./modules/services/trayer
