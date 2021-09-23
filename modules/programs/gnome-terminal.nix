@@ -52,24 +52,26 @@ let
       palette = mkOption {
         type = types.listOf types.str;
         description = "The terminal palette: a list of 16 strings.";
-        example = [
-          "#000000"
-          "#AA0000"
-          "#00AA00"
-          "#AA5500"
-          "#0000AA"
-          "#AA00AA"
-          "#00AAAA"
-          "#AAAAAA"
-          "#555555"
-          "#FF5555"
-          "#55FF55"
-          "#FFFF55"
-          "#5555FF"
-          "#FF55FF"
-          "#55FFFF"
-          "#FFFFFF"
-        ];
+        example = literalExample ''
+          [
+            "#000000"
+            "#AA0000"
+            "#00AA00"
+            "#AA5500"
+            "#0000AA"
+            "#AA00AA"
+            "#00AAAA"
+            "#AAAAAA"
+            "#555555"
+            "#FF5555"
+            "#55FF55"
+            "#FFFF55"
+            "#5555FF"
+            "#FF55FF"
+            "#55FFFF"
+            "#FFFFFF"
+          ]
+        '';
       };
 
       cursor = mkOption {
@@ -99,7 +101,7 @@ let
       visibleName = mkOption {
         type = types.str;
         description =
-          "The profile name. If null, the profile name will be the same as the nix attribute.";
+          "The profile name. This is what will show up as a name in the Gnome Terminal preferences window.";
       };
 
       colors = mkOption {
@@ -107,6 +109,8 @@ let
         type = types.nullOr profileColorsSubModule;
         description = ''
           The terminal colors, null to use system default.
+
+          </para><para>
 
           A color can be a string containing one of the following:
 
@@ -146,6 +150,8 @@ let
           In the case of rgb(r,g,b) and rgb(r,g,b,a), the value for r,g,b and a
           (respectively red, green, blue, and alpha) are either integers between 
           0 and 255, or floating point numbers between 0. and 1.
+
+          </para><para>
 
           The alpha can be set, but will be ignored 
           (colors have always full opacity).
@@ -320,8 +326,7 @@ let
   buildProfileSet = pcfg:
     {
       audible-bell = pcfg.audibleBell;
-      visible-name =
-        if (pcfg.visibleName != null) then pcfg.visibleName else attrNames pcfg;
+      visible-name = pcfg.visibleName;
       scroll-on-output = pcfg.scrollOnOutput;
       scrollbar-policy = if pcfg.showScrollbar then "always" else "never";
       scrollback-lines = pcfg.scrollbackLines;
@@ -399,9 +404,13 @@ in {
         type = types.attrsOf profileSubModule;
         description = ''
           A set of Gnome Terminal profiles. The attribute name of each profile must be an 
-          <link xlink:href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</link> 
+          <link xlink:href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</link>.
         '';
-        example = { "e0b782ed-6aca-44eb-8c75-62b3706b6220" = { }; };
+        example = literalExample ''
+          { 
+            "e0b782ed-6aca-44eb-8c75-62b3706b6220" = { }; 
+          }
+        '';
       };
     };
   };
@@ -413,13 +422,13 @@ in {
         assertion = all (x: x == 16) (mapAttrsToList
           (n: v: if v ? colors.palette then length v.colors.palette else 16)
           cfg.profile);
-        message = "A palette needs to contain exactly 16 colors";
+        message = "A palette needs to contain exactly 16 colors.";
       }
       {
-        assertion = any (x: x)
+        assertion = length (filter (x: x)
           (mapAttrsToList (n: v: if v ? default then v.default else false)
-            cfg.profile);
-        message = "At least one profile needs to be set as default";
+            cfg.profile)) == 1;
+        message = "One and only one profile must be set as default.";
       }
     ];
 
