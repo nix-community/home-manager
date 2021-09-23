@@ -9702,10 +9702,9 @@ desired.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.easyeffects.enable"></a><a class="term" href="options.html#opt-services.easyeffects.enable"><code class="option">services.easyeffects.enable</code></a></span></dt><dd><p>Whether to enable Easyeffects daemon.
 Note, it is necessary to add
 </p><pre class="programlisting nix">
-services.dbus.packages = with pkgs; [ gnome.dconf ];
+programs.dconf.enable = true;
 </pre><p>
-to your system configuration for the daemon to work correctly
-.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+to your system configuration for the daemon to work correctly.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         true
@@ -11147,7 +11146,12 @@ click-right=pavucontrol &amp;
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/poweralertd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/poweralertd.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.pulseeffects.enable"></a><a class="term" href="options.html#opt-services.pulseeffects.enable"><code class="option">services.pulseeffects.enable</code></a></span></dt><dd><p>Whether to enable Pulseeffects daemon.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.pulseeffects.enable"></a><a class="term" href="options.html#opt-services.pulseeffects.enable"><code class="option">services.pulseeffects.enable</code></a></span></dt><dd><p>Whether to enable Pulseeffects daemon
+Note, it is necessary to add
+</p><pre class="programlisting nix">
+programs.dconf.enable = true;
+</pre><p>
+to your system configuration for the daemon to work correctly.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         true
