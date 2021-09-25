@@ -227,6 +227,26 @@ in
       '';
     };
 
+    home.shellAliases = mkOption {
+      type = with types; attrsOf str;
+      default = { };
+      example = literalExample ''
+        {
+          g = "git";
+          "..." = "cd ../..";
+        }
+      '';
+      description = ''
+        An attribute set that maps aliases (the top level attribute names
+        in this option) to command strings or directly to build outputs.
+        </para><para>
+        This option should only be used to manage simple aliases that are
+        compatible across all shells. If you need to use a shell specific
+        feature then make sure to use a shell specific option, for example
+        <xref linkend="opt-programs.bash.shellAliases"/> for Bash.
+      '';
+    };
+
     home.sessionVariables = mkOption {
       default = {};
       type = types.attrs;
@@ -466,6 +486,10 @@ in
         && config.submoduleSupport.externalPackageInstall
       then "/etc/profiles/per-user/${cfg.username}"
       else cfg.homeDirectory + "/.nix-profile";
+      
+    programs.bash.shellAliases = cfg.shellAliases;
+    programs.zsh.shellAliases = cfg.shellAliases;
+    programs.fish.shellAliases = cfg.shellAliases;
 
     home.sessionVariables =
       let
