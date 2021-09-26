@@ -24,11 +24,7 @@ with lib;
       '';
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        qutebrowser = pkgs.writeScriptBin "dummy-qutebrowser" "";
-      })
-    ];
+    test.stubs.qutebrowser = { };
 
     nmt.script = let
       qutebrowserConfig = if pkgs.stdenv.hostPlatform.isDarwin then

@@ -44,8 +44,7 @@
       ];
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { ncmpcpp = pkgs.writeScriptBin "dummy-ncmpcpp" ""; }) ];
+    test.stubs.ncmpcpp = { };
 
     nmt.script = ''
       assertFileContent \

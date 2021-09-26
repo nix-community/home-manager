@@ -6,7 +6,7 @@ with lib;
   config = {
     programs.xmobar = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy" "";
+      package = config.lib.test.mkStubPackage { };
       extraConfig = ''
         Config
           { font        = "Fira Code"

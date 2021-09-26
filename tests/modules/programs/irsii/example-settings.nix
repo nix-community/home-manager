@@ -19,13 +19,12 @@ with lib;
       };
     };
 
+    test.stubs.irsii = { };
+
     nmt.script = ''
       assertFileContent \
         home-files/.irssi/config \
         ${./example-settings-expected.config}
     '';
-
-    nixpkgs.overlays =
-      [ (self: super: { irsii = pkgs.writeScriptBin "dummy-irsii" ""; }) ];
   };
 }

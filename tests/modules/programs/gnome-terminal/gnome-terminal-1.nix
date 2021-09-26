@@ -4,13 +4,6 @@ with lib;
 
 {
   config = {
-    nixpkgs.overlays = [
-      (self: super: {
-        gnome.gnome-terminal =
-          pkgs.writeScriptBin "dummy-gnome3-gnome-terminal" "";
-      })
-    ];
-
     programs.gnome-terminal = {
       enable = true;
       profile = {
@@ -54,6 +47,14 @@ with lib;
       };
       showMenubar = false;
     };
+
+    nixpkgs.overlays = [
+      (self: super: {
+        gnome.gnome-terminal = config.lib.test.mkStubPackage { };
+      })
+    ];
+
+    test.stubs.dconf = { };
 
     nmt.script = ''
       dconfIni=$(grep -oPm 1 '/nix/store/[a-z0-9]*?-hm-dconf.ini' $TESTED/activate)

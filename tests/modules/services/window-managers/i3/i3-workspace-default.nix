@@ -1,21 +1,17 @@
 { config, lib, ... }:
 
-with lib;
-
 {
-  config = {
-    xsession.windowManager.i3 = {
-      enable = true;
+  imports = [ ./i3-stubs.nix ];
 
-      config.defaultWorkspace = "workspace number 1";
-    };
+  xsession.windowManager.i3 = {
+    enable = true;
 
-    nixpkgs.overlays = [ (import ./i3-overlay.nix) ];
-
-    nmt.script = ''
-      assertFileExists home-files/.config/i3/config
-      assertFileContent home-files/.config/i3/config \
-        ${./i3-workspace-default-expected.conf}
-    '';
+    config.defaultWorkspace = "workspace number 1";
   };
+
+  nmt.script = ''
+    assertFileExists home-files/.config/i3/config
+    assertFileContent home-files/.config/i3/config \
+      ${./i3-workspace-default-expected.conf}
+  '';
 }

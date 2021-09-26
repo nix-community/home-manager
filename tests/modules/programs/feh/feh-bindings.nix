@@ -17,8 +17,7 @@
       prev_img = [ "h" "Left" ];
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { feh = pkgs.writeScriptBin "dummy-feh" ""; }) ];
+    test.stubs.feh = { };
 
     nmt.script = ''
       assertFileContent \

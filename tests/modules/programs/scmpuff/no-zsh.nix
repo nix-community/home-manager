@@ -8,8 +8,7 @@
       zsh.enable = true;
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { zsh = pkgs.writeScriptBin "dummy" ""; }) ];
+    test.stubs.zsh = { };
 
     nmt.script = ''
       assertFileNotRegex home-files/.zshrc '${pkgs.scmpuff} init -s'

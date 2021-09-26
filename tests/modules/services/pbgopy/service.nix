@@ -2,13 +2,7 @@
   config = {
     services.pbgopy.enable = true;
 
-    nixpkgs.overlays = [
-      (self: super: {
-        pbgopy = pkgs.writeScriptBin "dummy-pbgopy" "" // {
-          outPath = "@pbgopy@";
-        };
-      })
-    ];
+    test.stubs.pbgopy = { };
 
     nmt.script = ''
       serviceFile=home-files/.config/systemd/user/pbgopy.service

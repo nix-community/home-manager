@@ -1,30 +1,22 @@
 { config, lib, pkgs, ... }:
 
-with lib;
+{
+  imports = [ ./sway-stubs.nix ];
 
-let
+  wayland.windowManager.sway = {
+    enable = true;
+    package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
 
-  dummy-package = pkgs.runCommandLocal "dummy-package" { } "mkdir $out";
-
-in {
-  config = {
-    wayland.windowManager.sway = {
-      enable = true;
-      package = dummy-package // { outPath = "@sway"; };
-
-      config = {
-        focus.followMouse = "always";
-        menu = "${pkgs.dmenu}/bin/dmenu_run";
-        bars = [ ];
-      };
+    config = {
+      focus.followMouse = "always";
+      menu = "${pkgs.dmenu}/bin/dmenu_run";
+      bars = [ ];
     };
-
-    nixpkgs.overlays = [ (import ./sway-overlay.nix) ];
-
-    nmt.script = ''
-      assertFileExists home-files/.config/sway/config
-      assertFileContent home-files/.config/sway/config \
-        ${./sway-followmouse-expected.conf}
-    '';
   };
+
+  nmt.script = ''
+    assertFileExists home-files/.config/sway/config
+    assertFileContent home-files/.config/sway/config \
+      ${./sway-followmouse-expected.conf}
+  '';
 }

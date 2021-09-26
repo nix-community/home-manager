@@ -44,9 +44,7 @@ with lib;
       ];
     };
 
-    nixpkgs.overlays = [
-      (self: super: { starship = pkgs.writeScriptBin "dummy-starship" ""; })
-    ];
+    test.stubs.starship = { };
 
     nmt.script = ''
       assertFileContent \

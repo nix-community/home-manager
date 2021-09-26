@@ -7,15 +7,11 @@
       platformTheme = "gnome";
       style = {
         name = "adwaita";
-        package = pkgs.dummyTheme;
+        package = config.lib.test.mkStubPackage { };
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        dummyTheme = pkgs.runCommandLocal "theme" { } "mkdir $out";
-      })
-    ];
+    test.stubs.qgnomeplatform = { };
 
     nmt.script = ''
       assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \

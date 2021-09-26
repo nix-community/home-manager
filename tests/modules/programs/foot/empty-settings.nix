@@ -6,8 +6,7 @@ with lib;
   config = {
     programs.foot.enable = true;
 
-    nixpkgs.overlays =
-      [ (self: super: { foot = pkgs.writeScriptBin "dummy-foot" ""; }) ];
+    test.stubs.foot = { };
 
     nmt.script = ''
       assertPathNotExists home-files/.config/foot

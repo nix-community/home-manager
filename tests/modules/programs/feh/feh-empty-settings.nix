@@ -4,8 +4,7 @@
   config = {
     programs.feh.enable = true;
 
-    nixpkgs.overlays =
-      [ (self: super: { feh = pkgs.writeScriptBin "dummy-feh" ""; }) ];
+    test.stubs.feh = { };
 
     nmt.script = ''
       assertPathNotExists home-files/.config/feh/buttons

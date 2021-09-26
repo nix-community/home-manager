@@ -16,14 +16,10 @@ in {
     xdg.dataFile."fish/home-manager_generated_completions".source =
       lib.mkForce (builtins.toFile "empty" "");
 
-    nixpkgs.overlays = [
-      (self: super:
-        let dummy = pkgs.writeScriptBin "dummy" "";
-        in {
-          zsh = dummy;
-          fish = dummy;
-        })
-    ];
+    test.stubs = {
+      zsh = { };
+      fish = { };
+    };
 
     programs.nix-index.enable = true;
 

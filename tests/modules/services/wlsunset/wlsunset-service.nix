@@ -4,9 +4,7 @@
   config = {
     services.wlsunset = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy-wlsunset" "" // {
-        outPath = "@wlsunset@";
-      };
+      package = config.lib.test.mkStubPackage { outPath = "@wlsunset@"; };
       latitude = "12.3";
       longitude = "128.8";
       temperature.day = 6000;

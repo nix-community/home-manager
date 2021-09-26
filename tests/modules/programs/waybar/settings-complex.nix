@@ -2,12 +2,10 @@
 
 with lib;
 
-let
-  package = pkgs.writeScriptBin "dummy-waybar" "" // { outPath = "@waybar@"; };
-in {
+{
   config = {
     programs.waybar = {
-      inherit package;
+      package = config.lib.test.mkStubPackage { outPath = "@waybar@"; };
       enable = true;
       settings = [{
         layer = "top";
@@ -41,9 +39,7 @@ in {
             format = "hello from {}";
             exec = let
               dummyScript =
-                pkgs.writeShellScriptBin "dummy" "echo within waybar" // {
-                  outPath = "@dummy@";
-                };
+                config.lib.test.mkStubPackage { outPath = "@dummy@"; };
             in "${dummyScript}/bin/dummy";
           };
         };

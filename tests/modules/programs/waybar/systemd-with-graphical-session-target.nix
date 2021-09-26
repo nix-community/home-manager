@@ -2,12 +2,10 @@
 
 with lib;
 
-let
-  package = pkgs.writeScriptBin "dummy-waybar" "" // { outPath = "@waybar@"; };
-in {
+{
   config = {
     programs.waybar = {
-      inherit package;
+      package = config.lib.test.mkStubPackage { outPath = "@waybar@"; };
       enable = true;
       systemd.enable = true;
     };

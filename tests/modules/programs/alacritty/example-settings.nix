@@ -6,7 +6,7 @@ with lib;
   config = {
     programs.alacritty = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy-alacritty" "";
+      package = config.lib.test.mkStubPackage { };
 
       settings = {
         window.dimensions = {

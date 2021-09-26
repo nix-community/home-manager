@@ -7,13 +7,7 @@
       path = "${config.home.homeDirectory}/dropbox";
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        dropbox-cli = pkgs.writeScriptBin "dummy-dropbox-cli" "" // {
-          outPath = "@dropbox-cli@";
-        };
-      })
-    ];
+    test.stubs.dropbox-cli = { };
 
     nmt.script = ''
       serviceFile=home-files/.config/systemd/user/dropbox.service

@@ -20,8 +20,7 @@ with lib;
       '';
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { aria2 = pkgs.writeScriptBin "dummy-aria2" ""; }) ];
+    test.stubs.aria2 = { };
 
     nmt.script = ''
       assertFileContent \

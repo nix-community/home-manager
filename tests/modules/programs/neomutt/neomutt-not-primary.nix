@@ -13,8 +13,7 @@ with lib;
 
     programs.neomutt.enable = true;
 
-    nixpkgs.overlays =
-      [ (self: super: { neomutt = pkgs.writeScriptBin "dummy-neomutt" ""; }) ];
+    test.stubs.neomutt = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/neomutt/neomuttrc

@@ -1,22 +1,18 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 {
-  config = {
-    wayland.windowManager.sway = {
-      enable = true;
-      config = null;
-      systemdIntegration = false;
-      package = pkgs.sway;
-    };
+  imports = [ ./sway-stubs.nix ];
 
-    nixpkgs.overlays = [ (import ./sway-overlay.nix) ];
-
-    nmt.script = ''
-      assertFileExists home-files/.config/sway/config
-      assertFileContent home-files/.config/sway/config \
-        ${pkgs.writeText "expected" "\n"}
-    '';
+  wayland.windowManager.sway = {
+    enable = true;
+    package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
+    config = null;
+    systemdIntegration = false;
   };
+
+  nmt.script = ''
+    assertFileExists home-files/.config/sway/config
+    assertFileContent home-files/.config/sway/config \
+      ${pkgs.writeText "expected" "\n"}
+  '';
 }

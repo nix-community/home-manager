@@ -4,7 +4,7 @@
   config = {
     services.fnott = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy-foot" "" // { outPath = "@fnott@"; };
+      package = config.lib.test.mkStubPackage { outPath = "@fnott@"; };
     };
 
     nmt.script = ''

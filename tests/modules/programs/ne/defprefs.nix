@@ -19,8 +19,7 @@ in {
       automaticPreferences.".default" = autopref;
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { ne = pkgs.writeScriptBin "dummy-ne" ""; }) ];
+    test.stubs.ne = { };
 
     nmt = {
       description =

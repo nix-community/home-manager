@@ -50,8 +50,7 @@ with lib;
       ];
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { neomutt = pkgs.writeScriptBin "dummy-neomutt" ""; }) ];
+    test.stubs.neomutt = { };
 
     test.asserts.warnings.expected = [
       "Specifying 'programs.neomutt.(binds|macros).map' as a string is deprecated, use a list of strings instead. See https://github.com/nix-community/home-manager/pull/1885."

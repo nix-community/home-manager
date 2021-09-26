@@ -50,8 +50,7 @@ in {
     xdg.dataFile."fish/home-manager_generated_completions".source =
       lib.mkForce (builtins.toFile "empty" "");
 
-    nixpkgs.overlays =
-      [ (self: super: { fish = pkgs.writeScriptBin "dummy" ""; }) ];
+    test.stubs.fish = { };
 
     nmt = {
       description =

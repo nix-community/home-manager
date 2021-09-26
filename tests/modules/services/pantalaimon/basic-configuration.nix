@@ -4,9 +4,7 @@
   config = {
     services.pantalaimon = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy-pantalaimon" "" // {
-        outPath = "@pantalaimon@";
-      };
+      package = config.lib.test.mkStubPackage { outPath = "@pantalaimon@"; };
       settings = {
         Default = {
           LogLevel = "Debug";

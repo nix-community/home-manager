@@ -6,7 +6,7 @@ with lib;
   config = {
     programs.bottom = {
       enable = true;
-      package = pkgs.writeShellScriptBin "dummy" "";
+      package = config.lib.test.mkStubPackage { };
 
       settings = {
         flags = {

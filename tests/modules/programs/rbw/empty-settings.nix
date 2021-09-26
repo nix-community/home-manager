@@ -1,4 +1,5 @@
 { pkgs, ... }:
+
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
@@ -7,13 +8,11 @@ let
   else
     ".config/rbw/config.json";
 in {
-  config = {
-    programs.rbw.enable = true;
+  imports = [ ./rbw-stubs.nix ];
 
-    nixpkgs.overlays = [ (import ./overlay.nix) ];
+  programs.rbw.enable = true;
 
-    nmt.script = ''
-      assertPathNotExists home-files/${path}
-    '';
-  };
+  nmt.script = ''
+    assertPathNotExists home-files/${path}
+  '';
 }

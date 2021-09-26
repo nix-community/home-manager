@@ -30,8 +30,7 @@ with lib;
       environment = { LS_COLORS = "1"; };
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { kitty = pkgs.writeScriptBin "dummy-kitty" ""; }) ];
+    test.stubs.kitty = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/kitty/kitty.conf

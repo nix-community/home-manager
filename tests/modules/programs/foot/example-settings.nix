@@ -6,7 +6,7 @@ with lib;
   config = {
     programs.foot = {
       enable = true;
-      package = pkgs.writeShellScriptBin "dummy-foot" "";
+      package = config.lib.test.mkStubPackage { };
 
       settings = {
         main = {

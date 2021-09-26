@@ -19,13 +19,7 @@ with lib;
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        gmailieer = pkgs.writeScriptBin "dummy-gmailieer" "" // {
-          outPath = "@lieer@";
-        };
-      })
-    ];
+    test.stubs.gmailieer = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/lieer-hm-example-com.service

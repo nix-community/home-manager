@@ -4,7 +4,7 @@
   config = {
     programs.mangohud = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy-mangohud" "";
+      package = config.lib.test.mkStubPackage { };
       settings = {
         output_folder = /home/user/Documents/mangohud;
         fps_limit = [ 30 60 ];

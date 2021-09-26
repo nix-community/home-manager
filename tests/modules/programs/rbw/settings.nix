@@ -1,4 +1,5 @@
 { pkgs, ... }:
+
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
@@ -17,23 +18,21 @@ let
     }
   '';
 in {
-  config = {
-    programs.rbw = {
-      enable = true;
-      settings = {
-        email = "name@example.com";
-        base_url = "bitwarden.example.com";
-        identity_url = "identity.example.com";
-        lock_timeout = 300;
-        pinentry = "gnome3";
-      };
+  imports = [ ./rbw-stubs.nix ];
+
+  programs.rbw = {
+    enable = true;
+    settings = {
+      email = "name@example.com";
+      base_url = "bitwarden.example.com";
+      identity_url = "identity.example.com";
+      lock_timeout = 300;
+      pinentry = "gnome3";
     };
-
-    nixpkgs.overlays = [ (import ./overlay.nix) ];
-
-    nmt.script = ''
-      assertFileExists home-files/${path}
-      assertFileContent home-files/${path} '${expected}'
-    '';
   };
+
+  nmt.script = ''
+    assertFileExists home-files/${path}
+    assertFileContent home-files/${path} '${expected}'
+  '';
 }

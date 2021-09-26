@@ -22,9 +22,7 @@ with lib;
       queries = { "foo" = ''rssurl =~ "example.com"''; };
     };
 
-    nixpkgs.overlays = [
-      (self: super: { newsboat = pkgs.writeScriptBin "dummy-newsboat" ""; })
-    ];
+    test.stubs.newsboat = { };
 
     # The format didn't change since 20.03, just the location.
     nmt.script = ''

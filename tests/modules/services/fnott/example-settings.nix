@@ -4,7 +4,7 @@
   config = {
     services.fnott = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy-fnott" "";
+      package = config.lib.test.mkStubPackage { };
 
       settings = {
         main = { notification-margin = 5; };

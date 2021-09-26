@@ -9,6 +9,8 @@ with lib;
       gtk2.extraConfig = "gtk-can-change-accels = 1";
     };
 
+    test.stubs.dconf = { };
+
     nmt.script = ''
       assertFileExists home-files/.gtkrc-2.0
       assertFileContent home-files/.gtkrc-2.0 ${

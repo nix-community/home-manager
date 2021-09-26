@@ -23,8 +23,7 @@ with lib;
 
     programs.alot = { enable = true; };
 
-    nixpkgs.overlays =
-      [ (self: super: { alot = pkgs.writeScriptBin "dummy-alot" ""; }) ];
+    test.stubs.alot = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/alot/config

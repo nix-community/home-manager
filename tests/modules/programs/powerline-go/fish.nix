@@ -22,14 +22,10 @@ with lib;
     xdg.dataFile."fish/home-manager_generated_completions".source =
       mkForce (builtins.toFile "empty" "");
 
-    nixpkgs.overlays = [
-      (self: super:
-        let dummy = pkgs.writeScriptBin "dummy" "";
-        in {
-          powerline-go = dummy;
-          fish = dummy;
-        })
-    ];
+    test.stubs = {
+      powerline-go = { };
+      fish = { };
+    };
 
     nmt.script = ''
       assertFileExists home-files/.config/fish/config.fish

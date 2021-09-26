@@ -11,8 +11,7 @@ with lib;
   config = {
     programs.zsh.enable = true;
 
-    nixpkgs.overlays =
-      [ (self: super: { zsh = pkgs.writeScriptBin "dummy-zsh" ""; }) ];
+    test.stubs.zsh = { };
 
     nmt.script = ''
       assertFileContains home-files/.zshrc "HISTORY_IGNORE='(echo *|rm *)'"

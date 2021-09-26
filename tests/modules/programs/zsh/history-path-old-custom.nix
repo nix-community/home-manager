@@ -10,8 +10,7 @@ with lib;
       history.path = "some/directory/zsh_history";
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { zsh = pkgs.writeScriptBin "dummy-zsh" ""; }) ];
+    test.stubs.zsh = { };
 
     nmt.script = ''
       assertFileRegex home-files/.zshrc '^HISTFILE="$HOME/some/directory/zsh_history"$'

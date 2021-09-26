@@ -4,7 +4,7 @@
   config = {
     services.polybar = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy-polybar" "";
+      package = config.lib.test.mkStubPackage { };
       script = "polybar bar &";
       config = {
         "bar/top" = {

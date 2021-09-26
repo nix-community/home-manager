@@ -17,8 +17,7 @@ with lib;
     programs.neomutt.enable = true;
     programs.neomutt.changeFolderWhenSourcingAccount = false;
 
-    nixpkgs.overlays =
-      [ (self: super: { neomutt = pkgs.writeScriptBin "dummy-neomutt" ""; }) ];
+    test.stubs.neomutt = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/neomutt/hm@example.com

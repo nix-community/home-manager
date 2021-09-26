@@ -79,14 +79,10 @@ in {
       }
     ];
 
-    nixpkgs.overlays = [
-      (self: super: {
-        git-lfs = pkgs.writeScriptBin "dummy-git-lfs" "";
-        delta = pkgs.writeScriptBin "dummy-delta" "" // {
-          outPath = "@delta@";
-        };
-      })
-    ];
+    test.stubs = {
+      git-lfs = { };
+      delta = { };
+    };
 
     nmt.script = ''
       assertFileExists home-files/.config/git/config

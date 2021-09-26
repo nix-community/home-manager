@@ -9,9 +9,7 @@ with lib;
       enableDefault = true;
     };
 
-    nixpkgs.overlays = [
-      (self: super: { i3status = pkgs.writeScriptBin "dummy-i3status" ""; })
-    ];
+    test.stubs.i3status = { };
 
     nmt.script = ''
       assertFileContent \

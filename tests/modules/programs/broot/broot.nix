@@ -9,8 +9,7 @@ with lib;
       modal = true;
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { broot = pkgs.writeScriptBin "dummy" ""; }) ];
+    test.stubs.broot = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/broot/conf.toml

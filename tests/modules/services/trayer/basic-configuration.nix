@@ -4,9 +4,7 @@
   config = {
     services.trayer = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy-trayer" "" // {
-        outPath = "@trayer@";
-      };
+      package = config.lib.test.mkStubPackage { outPath = "@trayer@"; };
       settings = {
         edge = "top";
         padding = 6;

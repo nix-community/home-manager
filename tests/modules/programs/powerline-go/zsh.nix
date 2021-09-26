@@ -18,12 +18,10 @@ with lib;
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        powerline-go = pkgs.writeScriptBin "dummy-pkg" "";
-        zsh = pkgs.writeScriptBin "dummy-pkg" "";
-      })
-    ];
+    test.stubs = {
+      powerline-go = { };
+      zsh = { };
+    };
 
     nmt.script = ''
       assertFileExists home-files/.zshrc

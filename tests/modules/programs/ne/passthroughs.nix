@@ -53,8 +53,7 @@ in {
       inherit automaticPreferences;
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { ne = pkgs.writeScriptBin "dummy-ne" ""; }) ];
+    test.stubs.ne = { };
 
     nmt = {
       description = "Check that configuration files are correctly written";

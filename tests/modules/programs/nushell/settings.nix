@@ -22,8 +22,7 @@ with lib;
       ];
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { nushell = pkgs.writeScriptBin "dummy-nushell" ""; }) ];
+    test.stubs.nushell = { };
 
     nmt.script = ''
       assertFileContent \

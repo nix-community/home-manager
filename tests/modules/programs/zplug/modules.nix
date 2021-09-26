@@ -21,16 +21,14 @@ with lib;
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        zsh = pkgs.writeScriptBin "dummy-zsh" "";
-        zplug = pkgs.writeScriptBin "dummy-zplug" "";
-      })
-    ];
+    test.stubs = {
+      zplug = { };
+      zsh = { };
+    };
 
     nmt.script = ''
-      assertFileRegex home-files/.zshrc \
-        '^source ${builtins.storeDir}/.*zplug.*/init\.zsh$'
+      assertFileContains home-files/.zshrc \
+        'source @zplug@/init.zsh'
 
       assertFileContains home-files/.zshrc \
         'zplug "plugins/git", from:oh-my-zsh'

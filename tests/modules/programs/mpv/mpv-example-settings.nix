@@ -29,9 +29,7 @@
       defaultProfiles = [ "gpu-hq" ];
     };
 
-    nixpkgs.overlays = [
-      (self: super: { mpvDummy = pkgs.runCommandLocal "mpv" { } "mkdir $out"; })
-    ];
+    test.stubs.mpvDummy = { };
 
     nmt.script = ''
       assertFileContent \

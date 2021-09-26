@@ -2,7 +2,7 @@
   config = {
     services.kanshi = {
       enable = true;
-      package = pkgs.writeScriptBin "dummy-kanshi" "";
+      package = config.lib.test.mkStubPackage { };
       profiles = {
         nomad = {
           outputs = [{

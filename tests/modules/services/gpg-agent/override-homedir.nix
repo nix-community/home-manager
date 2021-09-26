@@ -10,8 +10,7 @@ with lib;
       homedir = "${config.home.homeDirectory}/foo/bar";
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { gnupg = pkgs.writeScriptBin "dummy-gnupg" ""; }) ];
+    test.stubs.gnupg = { };
 
     nmt.script = ''
       in="${config.systemd.user.sockets.gpg-agent.Socket.ListenStream}"

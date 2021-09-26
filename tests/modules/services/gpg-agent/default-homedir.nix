@@ -7,8 +7,7 @@ with lib;
     services.gpg-agent.enable = true;
     programs.gpg.enable = true;
 
-    nixpkgs.overlays =
-      [ (self: super: { gnupg = pkgs.writeScriptBin "dummy-gnupg" ""; }) ];
+    test.stubs.gnupg = { };
 
     nmt.script = ''
       in="${config.systemd.user.sockets.gpg-agent.Socket.ListenStream}"

@@ -7,7 +7,7 @@ with lib;
 
   config = {
     programs.lieer.enable = true;
-    programs.lieer.package = pkgs.writeScriptBin "dummy-gmailieer" "";
+    programs.lieer.package = config.lib.test.mkStubPackage { };
 
     accounts.email.accounts."hm@example.com" = {
       flavor = "gmail.com";

@@ -8,8 +8,7 @@
       };
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { terminator = pkgs.writeScriptBin "dummy" ""; }) ];
+    test.stubs.terminator = { };
 
     nmt.script = ''
       assertFileContent home-files/.config/terminator/config ${

@@ -6,8 +6,7 @@ with lib;
   config = {
     programs.htop.enable = true;
 
-    nixpkgs.overlays =
-      [ (self: super: { htop = pkgs.writeScriptBin "dummy" ""; }) ];
+    test.stubs.htop = { };
 
     nmt.script = ''
       assertPathNotExists home-files/.config/htop

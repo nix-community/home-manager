@@ -7,12 +7,10 @@
     services.mpd.enable = true;
     services.mpd.musicDirectory = "/home/user/music";
 
-    nixpkgs.overlays = [
-      (self: super: {
-        ncmpcpp = pkgs.writeScriptBin "dummy-ncmpcpp" "";
-        mpd = pkgs.writeScriptBin "dummy-mpd" "";
-      })
-    ];
+    test.stubs = {
+      ncmpcpp = { };
+      mpd = { };
+    };
 
     nmt.script = ''
       assertFileContent \

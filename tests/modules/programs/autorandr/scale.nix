@@ -17,6 +17,8 @@
       };
     };
 
+    test.stubs.autorandr = { };
+
     nmt.script = ''
       config=home-files/.config/autorandr/default/config
 

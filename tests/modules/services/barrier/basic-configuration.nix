@@ -7,8 +7,7 @@
       server = "testServer";
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { barrier = pkgs.writeScriptBin "dummy-barrier" ""; }) ];
+    test.stubs.barrier = { };
 
     nmt.script = ''
       clientServiceFile=home-files/.config/systemd/user/barrierc.service

@@ -1,34 +1,32 @@
-{ config, pkgs, ... }: {
-  config = {
-    services.sxhkd = {
-      enable = true;
+{ config, pkgs, ... }:
 
-      package = pkgs.runCommandLocal "dummy-package" { } "mkdir $out" // {
-        outPath = "@sxhkd@";
-      };
+{
+  services.sxhkd = {
+    enable = true;
 
-      keybindings = {
-        "super + a" = "run command a";
-        "super + b" = null;
-        "super + Shift + b" = "run command b";
-      };
+    package = config.lib.test.mkStubPackage { outPath = "@sxhkd@"; };
 
-      extraConfig = ''
-        super + c
-          call command c
-
-        # comment
-        super + d
-          call command d
-      '';
+    keybindings = {
+      "super + a" = "run command a";
+      "super + b" = null;
+      "super + Shift + b" = "run command b";
     };
 
-    nmt.script = ''
-      sxhkdrc=home-files/.config/sxhkd/sxhkdrc
+    extraConfig = ''
+      super + c
+        call command c
 
-      assertFileExists $sxhkdrc
-
-      assertFileContent $sxhkdrc ${./sxhkdrc}
+      # comment
+      super + d
+        call command d
     '';
   };
+
+  nmt.script = ''
+    sxhkdrc=home-files/.config/sxhkd/sxhkdrc
+
+    assertFileExists $sxhkdrc
+
+    assertFileContent $sxhkdrc ${./sxhkdrc}
+  '';
 }

@@ -1,11 +1,9 @@
 { config, lib, pkgs, ... }:
 
-let
-  package = pkgs.writeShellScriptBin "dummy-foot" "" // { outPath = "@foot@"; };
-in {
+{
   config = {
     programs.foot = {
-      inherit package;
+      package = config.lib.test.mkStubPackage { outPath = "@foot@"; };
       enable = true;
       server.enable = true;
     };

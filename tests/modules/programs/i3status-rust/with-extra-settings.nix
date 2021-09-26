@@ -102,11 +102,7 @@ with lib;
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        i3status-rust = pkgs.writeScriptBin "dummy-i3status-rust" "";
-      })
-    ];
+    test.stubs.i3status-rust = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/i3status-rust/config-extra-settings.toml 

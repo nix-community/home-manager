@@ -17,8 +17,7 @@ with lib;
       };
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { rofi = pkgs.writeScriptBin "dummy-rofi" ""; }) ];
+    test.stubs.rofi = { };
 
     test.asserts.assertions.expected = [''
       Cannot use the rofi options 'theme' and 'colors' simultaneously.

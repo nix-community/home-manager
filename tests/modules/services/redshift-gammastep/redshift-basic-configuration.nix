@@ -16,13 +16,7 @@
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        redshift = pkgs.writeScriptBin "dummy-redshift" "" // {
-          outPath = "@redshift@";
-        };
-      })
-    ];
+    test.stubs.redshift = { };
 
     nmt.script = ''
       assertFileContent \

@@ -18,8 +18,7 @@ with lib;
       '';
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { bat = pkgs.writeScriptBin "dummy" ""; }) ];
+    test.stubs.bat = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/bat/config

@@ -39,8 +39,7 @@ with lib;
       };
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { sm64ex = pkgs.writeScriptBin "dummy-sm64ex" ""; }) ];
+    test.stubs.sm64ex = { };
 
     nmt.script = ''
       assertFileContent \

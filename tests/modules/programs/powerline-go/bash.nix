@@ -18,8 +18,7 @@ with lib;
       };
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { powerline-go = pkgs.writeScriptBin "dummy-pkg" ""; }) ];
+    test.stubs.powerline-go = { };
 
     nmt.script = ''
       assertFileExists home-files/.bashrc

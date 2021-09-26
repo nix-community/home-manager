@@ -4,8 +4,7 @@
   config = {
     programs.ncmpcpp.enable = true;
 
-    nixpkgs.overlays =
-      [ (self: super: { ncmpcpp = pkgs.writeScriptBin "dummy-ncmpcpp" ""; }) ];
+    test.stubs.ncmpcpp = { };
 
     nmt.script = ''
       assertPathNotExists home-files/.config/ncmpcpp/config

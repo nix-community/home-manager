@@ -7,8 +7,7 @@ with lib;
     programs.htop.enable = true;
     programs.htop.settings = { color_scheme = 6; };
 
-    nixpkgs.overlays =
-      [ (self: super: { htop = pkgs.writeScriptBin "dummy" ""; }) ];
+    test.stubs.htop = { };
 
     # Test that the 'fields' key is written in addition to the customized
     # settings or htop won't read the options.

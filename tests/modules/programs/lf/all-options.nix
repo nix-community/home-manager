@@ -75,8 +75,7 @@ in {
       };
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { lf = pkgs.writeScriptBin "dummy-lf" ""; }) ];
+    test.stubs.lf = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/lf/lfrc

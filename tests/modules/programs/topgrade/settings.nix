@@ -25,9 +25,7 @@ with lib;
       ];
     };
 
-    nixpkgs.overlays = [
-      (self: super: { topgrade = pkgs.writeScriptBin "dummy-topgrade" ""; })
-    ];
+    test.stubs.topgrade = { };
 
     nmt.script = ''
       assertFileContent \

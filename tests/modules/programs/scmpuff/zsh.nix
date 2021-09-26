@@ -5,8 +5,7 @@
       zsh.enable = true;
     };
 
-    nixpkgs.overlays =
-      [ (self: super: { zsh = pkgs.writeScriptBin "dummy" ""; }) ];
+    test.stubs.zsh = { };
 
     nmt.script = ''
       assertFileExists home-files/.zshrc

@@ -1,4 +1,5 @@
 { pkgs, ... }:
+
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
@@ -17,17 +18,15 @@ let
     }
   '';
 in {
-  config = {
-    programs.rbw = {
-      enable = true;
-      settings = { email = "name@example.com"; };
-    };
+  imports = [ ./rbw-stubs.nix ];
 
-    nixpkgs.overlays = [ (import ./overlay.nix) ];
-
-    nmt.script = ''
-      assertFileExists home-files/${path}
-      assertFileContent home-files/${path} '${expected}'
-    '';
+  programs.rbw = {
+    enable = true;
+    settings = { email = "name@example.com"; };
   };
+
+  nmt.script = ''
+    assertFileExists home-files/${path}
+    assertFileContent home-files/${path} '${expected}'
+  '';
 }

@@ -16,13 +16,7 @@
       };
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        gammastep = pkgs.writeScriptBin "dummy-gammastep" "" // {
-          outPath = "@gammastep@";
-        };
-      })
-    ];
+    test.stubs.gammastep = { };
 
     nmt.script = ''
       assertFileContent \
