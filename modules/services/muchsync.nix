@@ -173,7 +173,7 @@ in {
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
         Environment = [
-          ''"PATH=${pkgs.notmuch}/bin"''
+          ''"PATH=${config.programs.notmuch.package}/bin"''
           ''"NOTMUCH_CONFIG=${config.home.sessionVariables.NOTMUCH_CONFIG}"''
           ''"NMBGIT=${config.home.sessionVariables.NMBGIT}"''
         ];

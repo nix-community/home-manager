@@ -19,7 +19,7 @@ with lib;
       default = {
         type = "shellcommand";
         command =
-          "'${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients  date:6M..'";
+          "'${config.programs.notmuch.package}/bin/notmuch address --format=json --output=recipients  date:6M..'";
         regexp = "'\\[?{" + ''
           "name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"''
           + "}[,\\]]?'";

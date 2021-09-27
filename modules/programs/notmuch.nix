@@ -3,6 +3,7 @@
 with lib;
 
 let
+
   cfg = config.programs.notmuch;
 
   mkIniKeyValue = key: value:
@@ -188,7 +189,7 @@ in {
       hook = name: cmds: {
         "${notmuchIni.database.path}/.notmuch/hooks/${name}".source =
           pkgs.writeShellScript name ''
-            export PATH="${pkgs.notmuch}/bin''${PATH:+:}$PATH"
+            export PATH="${cfg.package}/bin''${PATH:+:}$PATH"
             export NOTMUCH_CONFIG="${config.xdg.configHome}/notmuch/notmuchrc"
             export NMBGIT="${config.xdg.dataHome}/notmuch/nmbug"
 

@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, config, ... }:
 
 with lib;
 
@@ -18,7 +18,7 @@ with lib;
       default = "";
       example = {
         mail =
-          "\${pkgs.notmuch}/bin/notmuch new && \${pkgs.libnotify}/bin/notify-send 'New mail arrived'";
+          "\${config.programs.notmuch.package}/bin/notmuch new && \${pkgs.libnotify}/bin/notify-send 'New mail arrived'";
       };
       description = "Shell commands to run after onNotify event.";
     };
