@@ -18,7 +18,7 @@ in {
         and set <code>LS_COLORS</code>.
       '';
     };
-    
+
     path = mkOption {
       type = types.str;
       default = "${config.home.homeDirectory}/.dir_colors";
