@@ -211,7 +211,7 @@ in {
       ".xspf" = mkDefault "00;36";
     };
 
-    home.file.".dir_colors".text = concatStringsSep "\n" ([ ]
+    home.file.${cfg.path}.text = concatStringsSep "\n" ([ ]
       ++ mapAttrsToList formatLine cfg.settings ++ [ "" ]
       ++ optional (cfg.extraConfig != "") cfg.extraConfig);
 
