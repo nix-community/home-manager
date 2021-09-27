@@ -20,7 +20,7 @@ in {
     };
 
     path = mkOption {
-      type = types.str;
+      type = types.path;
       default = "${config.home.homeDirectory}/.dir_colors";
       defaultText = "$HOME/.dir_colors";
       description =
