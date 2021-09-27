@@ -24,7 +24,7 @@ in {
       default = "${config.home.homeDirectory}/.dir_colors";
       defaultText = "$HOME/.dir_colors";
       description =
-        "Path where Home Manager should link the <filename>.dir_colors</filename> file.";
+        "The path where Home Manager should link the <filename>.dir_colors</filename> file.";
     };
 
     enableBashIntegration = mkOption {
