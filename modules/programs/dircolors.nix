@@ -18,6 +18,14 @@ in {
         and set <code>LS_COLORS</code>.
       '';
     };
+    
+    path = mkOption {
+      type = types.str;
+      default = "${config.home.homeDirectory}/.dir_colors";
+      defaultText = "$HOME/.dir_colors";
+      description =
+        "Path where Home Manager should link the <filename>.dir_colors</filename> file.";
+    };
 
     enableBashIntegration = mkOption {
       type = types.bool;
@@ -208,16 +216,16 @@ in {
       ++ optional (cfg.extraConfig != "") cfg.extraConfig);
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval $(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)
+      eval $(${pkgs.coreutils}/bin/dircolors -b ${cfg.path})
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      eval (${pkgs.coreutils}/bin/dircolors -c ~/.dir_colors)
+      eval (${pkgs.coreutils}/bin/dircolors -c ${cfg.path})
     '';
 
     # Set `LS_COLORS` before Oh My Zsh and `initExtra`.
     programs.zsh.initExtraBeforeCompInit = mkIf cfg.enableZshIntegration ''
-      eval $(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)
+      eval $(${pkgs.coreutils}/bin/dircolors -b ${cfg.path})
     '';
   };
 }
