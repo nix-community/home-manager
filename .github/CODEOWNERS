@@ -361,3 +361,5 @@
 /modules/xsession.nix                                 @rycee
 
 /modules/services/volnoti.nix                         @IvanMalison
+
+Makefile                                              @thiagokokada
