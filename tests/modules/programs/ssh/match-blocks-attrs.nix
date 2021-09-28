@@ -41,6 +41,12 @@ with lib;
           identityFile = [ "file1" "file2" ];
           port = 516;
         };
+
+        withExec = {
+          hostname = "1.2.3.4";
+          host = "execHost";
+          exec = "nc -G 1 -z %h %p";
+        };
       };
     };
 

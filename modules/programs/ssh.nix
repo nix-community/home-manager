@@ -60,7 +60,7 @@ let
   matchBlockModule = types.submodule ({ dagName, ... }: {
     options = {
       host = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
         example = "*.example.org";
         description = ''
           The host pattern used by this conditional block.
@@ -71,6 +71,15 @@ let
         type = types.nullOr types.port;
         default = null;
         description = "Specifies port number to connect on remote host.";
+      };
+
+      exec = mkOption {
+        default = null;
+        type = types.nullOr types.str;
+        example = "ping -c 1 -W 1 %h";
+        description = ''
+          Specifies a command to be executed to determine whether this match block should be applied.
+        '';
       };
 
       forwardAgent = mkOption {
@@ -280,7 +289,15 @@ let
   });
 
   matchBlockStr = cf: concatStringsSep "\n" (
-    ["Host ${cf.host}"]
+    (
+      if cf.exec != null
+      then [ (concatStringsSep " " (
+          ["Match"]
+          ++ optional (cf.host != null)          "host \"${cf.host}\""
+          ++ optional (cf.exec != null)          "exec \"${cf.exec}\""
+      )) ]
+      else ["Host ${cf.host}"]
+    )
     ++ optional (cf.port != null)            "  Port ${toString cf.port}"
     ++ optional (cf.forwardAgent != null)    "  ForwardAgent ${lib.hm.booleans.yesNo cf.forwardAgent}"
     ++ optional cf.forwardX11                "  ForwardX11 yes"
