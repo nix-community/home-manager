@@ -17,6 +17,7 @@ with lib;
     programs.emacs.enable = true;
     services.emacs.enable = true;
     services.emacs.client.enable = true;
+    services.emacs.extraOptions = [ "-f" "exwm-enable" ];
 
     nmt.script = ''
       assertPathNotExists home-files/.config/systemd/user/emacs.socket

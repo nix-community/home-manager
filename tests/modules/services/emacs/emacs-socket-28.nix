@@ -19,6 +19,7 @@ in {
     programs.emacs.enable = true;
     services.emacs.enable = true;
     services.emacs.client.enable = true;
+    services.emacs.extraOptions = [ "-f" "exwm-enable" ];
     services.emacs.socketActivation.enable = true;
 
     nmt.script = ''
