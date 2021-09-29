@@ -12,6 +12,7 @@ let
     specialArgs = {
       lib = extendedLib;
       nixosConfig = config;
+      modulesPath = ../modules;
     } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
@@ -72,7 +73,6 @@ in {
       extraSpecialArgs = mkOption {
         type = types.attrs;
         default = { };
-        example = literalExample "{ modulesPath = ../modules; }";
         description = ''
           Extra <literal>specialArgs</literal> passed to Home Manager.
         '';
