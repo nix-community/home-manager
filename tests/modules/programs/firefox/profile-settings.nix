@@ -12,6 +12,19 @@ with lib;
         id = 1;
         settings = { "general.smoothScroll" = false; };
       };
+
+      profiles.bookmarks = {
+        id = 2;
+        settings = { "general.smoothScroll" = false; };
+        bookmarks = {
+          wikipedia = {
+            keyword = "wiki";
+            url =
+              "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
+          };
+          "kernel.org" = { url = "https://www.kernel.org"; };
+        };
+      };
     };
 
     nixpkgs.overlays = [
@@ -39,6 +52,21 @@ with lib;
       assertFileContent \
         home-files/.mozilla/firefox/test/user.js \
         ${./profile-settings-expected-user.js}
+
+      bookmarksUserJs=$(normalizeStorePaths \
+        home-files/.mozilla/firefox/bookmarks/user.js)
+
+      assertFileContent \
+        $bookmarksUserJs \
+        ${./profile-settings-expected-bookmarks-user.js}
+
+      bookmarksFile="$(sed -n \
+        '/browser.bookmarks.file/ {s|^.*\(/nix/store[^"]*\).*|\1|;p}' \
+        $TESTED/home-files/.mozilla/firefox/bookmarks/user.js)"
+
+      assertFileContent \
+        $bookmarksFile \
+        ${./profile-settings-expected-bookmarks.html}
     '';
   };
 }
