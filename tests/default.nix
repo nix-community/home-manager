@@ -139,6 +139,7 @@ import nmt {
     ./modules/services/window-managers/i3
     ./modules/services/window-managers/sway
     ./modules/services/wlsunset
+    ./modules/services/xsettingsd
     ./modules/systemd
     ./modules/targets-linux
   ] ++ lib.optionals enableBig [

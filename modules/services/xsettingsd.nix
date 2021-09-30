@@ -6,6 +6,20 @@ let
 
   cfg = config.services.xsettingsd;
 
+  renderSettings = settings:
+    concatStrings (mapAttrsToList renderSetting settings);
+
+  renderSetting = key: value: ''
+    ${key} ${renderValue value}
+  '';
+
+  renderValue = value:
+    {
+      int = toString value;
+      bool = if value then "1" else "0";
+      string = ''"${value}"'';
+    }.${builtins.typeOf value};
+
 in {
   meta.maintainers = [ maintainers.imalison ];
 
@@ -20,6 +34,34 @@ in {
         description = ''
           Package containing the <command>xsettingsd</command> program.
         '';
+      };
+
+      settings = mkOption {
+        type = with types; attrsOf (oneOf [ bool int str ]);
+        default = { };
+        example = literalExample ''
+          {
+            "Net/ThemeName" = "Numix";
+            "Xft/Antialias" = true;
+            "Xft/Hinting" = true;
+            "Xft/RGBA" = "rgb";
+          }
+        '';
+        description = ''
+          Xsettingsd options for configuration file. See
+          <link xlink:href="https://github.com/derat/xsettingsd/wiki/Settings"/>
+          for documentation on these values.
+        '';
+      };
+
+      configFile = mkOption {
+        type = types.nullOr types.package;
+        internal = true;
+        readOnly = true;
+        default = if cfg.settings == { } then
+          null
+        else
+          pkgs.writeText "xsettingsd.conf" (renderSettings cfg.settings);
       };
     };
   };
@@ -41,7 +83,9 @@ in {
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";
-        ExecStart = "${cfg.package}/bin/xsettingsd";
+        ExecStart = "${cfg.package}/bin/xsettingsd"
+          + optionalString (cfg.configFile != null)
+          " -c ${escapeShellArg cfg.configFile}";
         Restart = "on-abort";
       };
     };
