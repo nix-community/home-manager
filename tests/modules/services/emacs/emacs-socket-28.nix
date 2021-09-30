@@ -10,9 +10,9 @@ in {
       (self: super: rec {
         emacs = pkgs.writeShellScriptBin "dummy-emacs-28.0.5" "" // {
           outPath = "@emacs@";
+          pkgs =
+            makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
         };
-        emacsPackagesFor = _:
-          makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
       })
     ];
 

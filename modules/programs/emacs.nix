@@ -6,11 +6,7 @@ let
 
   cfg = config.programs.emacs;
 
-  # Copied from all-packages.nix, with modifications to support
-  # overrides.
-  emacsPackages = let epkgs = pkgs.emacsPackagesFor cfg.package;
-  in epkgs.overrideScope' cfg.overrides;
-
+  emacsPackages = cfg.package.pkgs.overrideScope' cfg.overrides;
   emacsWithPackages = emacsPackages.emacsWithPackages;
 
   createConfPackage = epkgs:
