@@ -167,7 +167,7 @@ in {
       ++ optionalPackage cfg.iconTheme;
 
     home.file.${cfg2.configLocation}.text =
-      concatStringsSep "\n" (mapAttrsToList formatGtk2Option ini) + "\n"
+      concatMapStrings (l: l + "\n") (mapAttrsToList formatGtk2Option ini)
       + cfg2.extraConfig;
 
     home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
@@ -178,7 +178,7 @@ in {
     xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
 
     xdg.configFile."gtk-3.0/bookmarks" = mkIf (cfg3.bookmarks != [ ]) {
-      text = concatStringsSep "\n" cfg3.bookmarks;
+      text = concatMapStrings (l: l + "\n") cfg3.bookmarks;
     };
 
     dconf.settings."org/gnome/desktop/interface" = dconfIni;
