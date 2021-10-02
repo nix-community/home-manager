@@ -11,7 +11,7 @@
           }];
         };
         desktop = {
-          exec = ''echo "1 two 3"'';
+          exec = [ ''echo "1 two 3"'' ''echo "4 five 6"'' ];
           outputs = [
             {
               criteria = "eDP-1";
@@ -31,6 +31,13 @@
               transform = "flipped-270";
             }
           ];
+        };
+        backwardsCompat = {
+          outputs = [{
+            criteria = "LVDS-1";
+            status = "enable";
+          }];
+          exec = ''echo "7 eight 9"'';
         };
       };
       extraConfig = ''
