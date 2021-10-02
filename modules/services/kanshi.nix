@@ -104,23 +104,26 @@ let
       };
 
       exec = mkOption {
-        type = types.nullOr types.str;
-        default = null;
+        type = with types; coercedTo str singleton (listOf str);
+        default = [ ];
         example =
-          "\${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1";
+          "[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]";
         description = ''
-          Command executed after the profile is succesfully applied.
+          Commands executed after the profile is succesfully applied.
+          Note that if you provide multiple commands, they will be
+          executed asynchronously with no guaranteed ordering.
         '';
       };
     };
   };
 
   profileStr = name:
-    { outputs, exec, ... }:
-    ''
+    { outputs, exec, ... }: ''
       profile ${name} {
-        ${concatStringsSep "\n  " (map outputStr outputs)}
-    '' + optionalString (exec != null) "  exec ${exec}\n" + ''
+        ${
+          concatStringsSep "\n  "
+          (map outputStr outputs ++ map (cmd: "exec ${cmd}") exec)
+        }
       }
     '';
 in {
