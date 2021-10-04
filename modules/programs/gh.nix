@@ -49,7 +49,7 @@ in {
       description = ''
         A pager program to send command output to, e.g. "less".
         Set the value to "cat" to disable the pager.
-        '';
+      '';
     };
 
     prompt = mkOption {
@@ -59,7 +59,7 @@ in {
         When to interactively prompt.
         This is a global config that cannot be overridden by hostname.
         Supported values: enabled, disabled.
-        '';
+      '';
     };
   };
 
