@@ -7,6 +7,8 @@ let
   cfg = config.services.screen-locker;
 
 in {
+  meta.maintainers = [ lib.hm.maintainers.jrobsonchase ];
+
   imports = let
     origOpt = name: [ "services" "screen-locker" name ];
     xautolockOpt = name: [ "services" "screen-locker" "xautolock" name ];

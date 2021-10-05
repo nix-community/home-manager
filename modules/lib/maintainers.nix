@@ -127,4 +127,10 @@
     githubId = 605641;
     name = "Bart Bakker";
   };
+  jrobsonchase = {
+    email = "josh@robsonchase.com";
+    github = "jrobsonchase";
+    githubId = 1553581;
+    name = "Josh Robson Chase";
+  };
 }
