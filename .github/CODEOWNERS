@@ -311,6 +311,9 @@
 /modules/services/redshift-gammastep                  @rycee @petabyteboy @thiagokokada
 /tests/modules/redshift-gammastep                     @thiagokokada
 
+/modules/services/screen-locker.nix                   @jrobsonchase
+/tests/modules/services/screen-locker                 @jrobsonchase
+
 /modules/services/status-notifier-watcher.nix         @pltanton
 
 /modules/services/syncthing.nix                       @rycee
