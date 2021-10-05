@@ -51,6 +51,14 @@ in {
         description = "Use xautolock for time-based locking.";
       };
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.xautolock;
+        description = ''
+          Package providing the <command>xautolock</command> binary.
+        '';
+      };
+
       detectSleep = mkOption {
         type = types.bool;
         default = true;
@@ -71,6 +79,14 @@ in {
     };
 
     xss-lock = {
+      package = mkOption {
+        type = types.package;
+        default = pkgs.xss-lock;
+        description = ''
+          Package providing the <command>xss-lock</command> binary.
+        '';
+      };
+
       extraOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
@@ -99,7 +115,7 @@ in {
 
         Service = {
           ExecStart = concatStringsSep " "
-            ([ "${pkgs.xss-lock}/bin/xss-lock" "-s \${XDG_SESSION_ID}" ]
+            ([ "${cfg.xss-lock.package}/bin/xss-lock" "-s \${XDG_SESSION_ID}" ]
               ++ cfg.xss-lock.extraOptions ++ [ "-- ${cfg.lockCmd}" ]);
         };
       };
@@ -120,7 +136,7 @@ in {
 
         Service = {
           ExecStart = concatStringsSep " " ([
-            "${pkgs.xautolock}/bin/xautolock"
+            "${cfg.xautolock.package}/bin/xautolock"
             "-time ${toString cfg.inactiveInterval}"
             "-locker '${pkgs.systemd}/bin/loginctl lock-session \${XDG_SESSION_ID}'"
           ] ++ optional cfg.xautolock.detectSleep "-detectsleep"
