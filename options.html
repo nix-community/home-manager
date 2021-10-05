@@ -5977,6 +5977,75 @@ use Python 3 plugins.
         pkgs.nix-index
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nix-index.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/nix-index.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nnn.enable"></a><a class="term" href="options.html#opt-programs.nnn.enable"><code class="option">programs.nnn.enable</code></a></span></dt><dd><p>Whether to enable nnn.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nnn.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nnn.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nnn.package"></a><a class="term" href="options.html#opt-programs.nnn.package"><code class="option">programs.nnn.package</code></a></span></dt><dd><p>Package containing the <span class="command"><strong>nnn</strong></span> program.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.nnn
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.nnn.override ({ withNerdIcons = true; });</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nnn.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nnn.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nnn.bookmarks"></a><a class="term" href="options.html#opt-programs.nnn.bookmarks"><code class="option">programs.nnn.bookmarks</code></a></span></dt><dd><p>Directory bookmarks.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  d = "~/Documents";
+  D = "~/Downloads";
+  p = "~/Pictures";
+  v = "~/Videos";
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nnn.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nnn.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nnn.extraPackages"></a><a class="term" href="options.html#opt-programs.nnn.extraPackages"><code class="option">programs.nnn.extraPackages</code></a></span></dt><dd><p>Extra packages available to nnn.
+</p><p><span class="emphasis"><em>Type:</em></span> list of packages</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        [
+        
+        ]
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">with pkgs; [ ffmpegthumbnailer mediainfo sxiv ]</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nnn.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nnn.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nnn.plugins"></a><a class="term" href="options.html#opt-programs.nnn.plugins"><code class="option">programs.nnn.plugins</code></a></span></dt><dd><p>Manage nnn plugins.
+</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nnn.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nnn.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nnn.plugins.mappings"></a><a class="term" href="options.html#opt-programs.nnn.plugins.mappings"><code class="option">programs.nnn.plugins.mappings</code></a></span></dt><dd><p>Key mappings to the plugins.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  c = "fzcd";
+  f = "finder";
+  v = "imgview";
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nnn.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nnn.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nnn.plugins.src"></a><a class="term" href="options.html#opt-programs.nnn.plugins.src"><code class="option">programs.nnn.plugins.src</code></a></span></dt><dd><p>Path to the plugin folder.
+</p><p><span class="emphasis"><em>Type:</em></span> null or path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        null
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">(pkgs.fetchFromGitHub {
+  owner = "jarun";
+  repo = "nnn";
+  rev = "v4.0";
+  sha256 = "sha256-Hpc8YaJeAzJoEi7aJ6DntH2VLkoR6ToP6tPYn3llR7k=";
+}) + "/plugins";
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nnn.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nnn.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.noti.enable"></a><a class="term" href="options.html#opt-programs.noti.enable"><code class="option">programs.noti.enable</code></a></span></dt><dd><p>Whether to enable Noti.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
