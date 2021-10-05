@@ -2221,6 +2221,13 @@ in
           A new module is available: 'programs.atuin'.
         '';
       }
+
+      {
+        time = "2021-10-05T22:15:00+00:00";
+        message = ''
+          A new module is available: 'programs.nnn'.
+        '';
+      }
     ];
   };
 }

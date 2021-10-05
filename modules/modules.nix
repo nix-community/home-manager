@@ -105,6 +105,7 @@ let
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/nix-index.nix
+    ./programs/nnn.nix
     ./programs/noti.nix
     ./programs/notmuch.nix
     ./programs/nushell.nix
