@@ -146,19 +146,25 @@ in {
         FZF_TMUX_OPTS = cfg.tmux.shellIntegrationOptions;
       });
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+    # Note, since fzf unconditionally binds C-r we use `mkOrder` to make the
+    # initialization show up a bit earlier. This is to make initialization of
+    # other history managers, like mcfly or atuin, take precedence.
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
       if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
         . ${cfg.package}/share/fzf/completion.bash
         . ${cfg.package}/share/fzf/key-bindings.bash
       fi
-    '';
+    '');
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    # Note, since fzf unconditionally binds C-r we use `mkOrder` to make the
+    # initialization show up a bit earlier. This is to make initialization of
+    # other history managers, like mcfly or atuin, take precedence.
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200 ''
       if [[ $options[zle] = on ]]; then
         . ${cfg.package}/share/fzf/completion.zsh
         . ${cfg.package}/share/fzf/key-bindings.zsh
       fi
-    '';
+    '');
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
       source ${cfg.package}/share/fzf/key-bindings.fish && fzf_key_bindings
