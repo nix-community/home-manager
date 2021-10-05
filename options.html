@@ -11356,14 +11356,12 @@ Available options for Redshift described in
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/screen-locker.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/screen-locker.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.screen-locker.enableDetectSleep"></a><a class="term" href="options.html#opt-services.screen-locker.enableDetectSleep"><code class="option">services.screen-locker.enableDetectSleep</code></a></span></dt><dd><p>Whether to reset timers when awaking from sleep.
-</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        true
-      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/screen-locker.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/screen-locker.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.screen-locker.inactiveInterval"></a><a class="term" href="options.html#opt-services.screen-locker.inactiveInterval"><code class="option">services.screen-locker.inactiveInterval</code></a></span></dt><dd><p>Inactive time interval in minutes after which session will be locked.
 The minimum is 1 minute, and the maximum is 1 hour.
+If <code class="option">xautolock.enable</code> is true, it will use this setting.
 See <a class="link" href="https://linux.die.net/man/1/xautolock" target="_top">https://linux.die.net/man/1/xautolock</a>.
+Otherwise, this will be used with <span class="command"><strong>xset</strong></span> to configure
+the X server's screensaver timeout.
 </p><p><span class="emphasis"><em>Type:</em></span> signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         10
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/screen-locker.nix#blob-path" target="_top">
@@ -11372,7 +11370,23 @@ See <a class="link" href="https://linux.die.net/man/1/xautolock" target="_top">h
         "\${pkgs.i3lock}/bin/i3lock -n -c 000000"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/screen-locker.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/screen-locker.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.screen-locker.xautolockExtraOptions"></a><a class="term" href="options.html#opt-services.screen-locker.xautolockExtraOptions"><code class="option">services.screen-locker.xautolockExtraOptions</code></a></span></dt><dd><p>Extra command-line arguments to pass to <span class="command"><strong>xautolock</strong></span>.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.screen-locker.xautolock.enable"></a><a class="term" href="options.html#opt-services.screen-locker.xautolock.enable"><code class="option">services.screen-locker.xautolock.enable</code></a></span></dt><dd><p>Use xautolock for time-based locking.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/screen-locker.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/screen-locker.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.screen-locker.xautolock.package"></a><a class="term" href="options.html#opt-services.screen-locker.xautolock.package"><code class="option">services.screen-locker.xautolock.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>xautolock</strong></span> binary.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        <em class="replaceable"><code>(build of xautolock-2.2-7-ga23dd5c)</code></em>
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/screen-locker.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/screen-locker.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.screen-locker.xautolock.detectSleep"></a><a class="term" href="options.html#opt-services.screen-locker.xautolock.detectSleep"><code class="option">services.screen-locker.xautolock.detectSleep</code></a></span></dt><dd><p>Whether to reset xautolock timers when awaking from sleep.
+No effect if <code class="option">xautolock.enable</code> is false.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/screen-locker.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/screen-locker.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.screen-locker.xautolock.extraOptions"></a><a class="term" href="options.html#opt-services.screen-locker.xautolock.extraOptions"><code class="option">services.screen-locker.xautolock.extraOptions</code></a></span></dt><dd><p>Extra command-line arguments to pass to <span class="command"><strong>xautolock</strong></span>.
+No effect if <code class="option">xautolock.enable</code> is false.
 </p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         [
@@ -11381,7 +11395,12 @@ See <a class="link" href="https://linux.die.net/man/1/xautolock" target="_top">h
     
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/screen-locker.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/screen-locker.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.screen-locker.xssLockExtraOptions"></a><a class="term" href="options.html#opt-services.screen-locker.xssLockExtraOptions"><code class="option">services.screen-locker.xssLockExtraOptions</code></a></span></dt><dd><p>Extra command-line arguments to pass to <span class="command"><strong>xss-lock</strong></span>.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.screen-locker.xss-lock.package"></a><a class="term" href="options.html#opt-services.screen-locker.xss-lock.package"><code class="option">services.screen-locker.xss-lock.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>xss-lock</strong></span> binary.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        <em class="replaceable"><code>(build of xss-lock-unstable-2018-05-31)</code></em>
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/screen-locker.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/screen-locker.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.screen-locker.xss-lock.extraOptions"></a><a class="term" href="options.html#opt-services.screen-locker.xss-lock.extraOptions"><code class="option">services.screen-locker.xss-lock.extraOptions</code></a></span></dt><dd><p>Extra command-line arguments to pass to <span class="command"><strong>xss-lock</strong></span>.
 </p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         [
