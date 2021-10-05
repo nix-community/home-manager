@@ -10,6 +10,9 @@
       xautolock = { enable = false; };
     };
 
+    test.stubs.i3lock = { };
+    test.stubs.xss-lock = { };
+
     nmt.script = ''
       xssService=home-files/.config/systemd/user/xss-lock.service
 

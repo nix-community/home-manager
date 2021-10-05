@@ -11,6 +11,9 @@
       enableDetectSleep = true;
     };
 
+    test.stubs.i3lock = { };
+    test.stubs.xss-lock = { };
+
     # Use the same verification script as the basic configuration. The result
     # with the old options should be identical.
     nmt.script = (import ./basic-configuration.nix {

@@ -14,6 +14,9 @@
       };
     };
 
+    test.stubs.i3lock = { };
+    test.stubs.xss-lock = { };
+
     nmt.script = ''
       xssService=home-files/.config/systemd/user/xss-lock.service
       xautolockService=home-files/.config/systemd/user/xautolock-session.service
