@@ -133,4 +133,10 @@
     githubId = 1553581;
     name = "Josh Robson Chase";
   };
+  hawkw = {
+    name = "Eliza Weisman";
+    email = "eliza@elizas.website";
+    github = "hawkw";
+    githubId = 2796466;
+  };
 }

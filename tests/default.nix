@@ -46,6 +46,7 @@ import nmt {
     ./modules/programs/alacritty
     ./modules/programs/alot
     ./modules/programs/aria2
+    ./modules/programs/atuin
     ./modules/programs/autojump
     ./modules/programs/bash
     ./modules/programs/bat

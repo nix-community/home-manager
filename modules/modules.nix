@@ -45,6 +45,7 @@ let
     ./programs/alot.nix
     ./programs/aria2.nix
     ./programs/astroid.nix
+    ./programs/atuin.nix
     ./programs/autojump.nix
     ./programs/autorandr.nix
     ./programs/bash.nix

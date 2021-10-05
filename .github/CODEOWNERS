@@ -50,6 +50,9 @@
 /modules/programs/autojump.nix                        @evanjs
 /tests/modules/programs/autojump                      @evanjs
 
+/modules/programs/atuin.nix                           @hawkw
+/tests/modules/programs/atuin                         @hawkw
+
 /modules/programs/autorandr.nix                       @uvNikita
 
 /modules/programs/bash.nix                            @rycee

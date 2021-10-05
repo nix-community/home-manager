@@ -2214,6 +2214,13 @@ in
           'services.screen-locker'.
         '';
       }
+
+      {
+        time = "2021-10-05T20:55:07+00:00";
+        message = ''
+          A new module is available: 'programs.atuin'.
+        '';
+      }
     ];
   };
 }
