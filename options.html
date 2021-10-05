@@ -1871,6 +1871,51 @@ See <a class="link" href="https://github.com/astroidmail/astroid/wiki/Customizin
         "mbsync gmail"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/astroid.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/astroid.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.atuin.enable"></a><a class="term" href="options.html#opt-programs.atuin.enable"><code class="option">programs.atuin.enable</code></a></span></dt><dd><p>Whether to enable atuin.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        false
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/atuin.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/atuin.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.atuin.enableBashIntegration"></a><a class="term" href="options.html#opt-programs.atuin.enableBashIntegration"><code class="option">programs.atuin.enableBashIntegration</code></a></span></dt><dd><p>Whether to enable Atuin's Bash integration. This will bind
+<code class="literal">ctrl-r</code> to open the Atuin history.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/atuin.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/atuin.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.atuin.enableZshIntegration"></a><a class="term" href="options.html#opt-programs.atuin.enableZshIntegration"><code class="option">programs.atuin.enableZshIntegration</code></a></span></dt><dd><p>Whether to enable Atuin's Zsh integration.
+</p><p>
+If enabled, this will bind <code class="literal">ctrl-r</code> and the up-arrow
+key to open the Atuin history.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        true
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/atuin.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/atuin.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.atuin.package"></a><a class="term" href="options.html#opt-programs.atuin.package"><code class="option">programs.atuin.package</code></a></span></dt><dd><p>The package to use for atuin.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        pkgs.atuin
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/atuin.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/atuin.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.atuin.settings"></a><a class="term" href="options.html#opt-programs.atuin.settings"><code class="option">programs.atuin.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">~/.config/atuin/config.toml</code>.
+</p><p>
+See <a class="link" href="https://github.com/ellie/atuin/blob/main/docs/config.md" target="_top">https://github.com/ellie/atuin/blob/main/docs/config.md</a> for the full list
+of options.
+</p><p><span class="emphasis"><em>Type:</em></span> Atuin configuration</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  auto_sync = true;
+  sync_frequency = "5m";
+  sync_address = "https://api.atuin.sh";
+  search_mode = "prefix";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/atuin.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/atuin.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.autojump.enable"></a><a class="term" href="options.html#opt-programs.autojump.enable"><code class="option">programs.autojump.enable</code></a></span></dt><dd><p>Whether to enable autojump.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         false
       </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
