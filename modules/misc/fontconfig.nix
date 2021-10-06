@@ -66,7 +66,9 @@ in {
       fi
 
       # Remove the fontconfig directory if no files were available.
-      rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig
+      if [[ -d $out/lib/fontconfig ]] ; then
+        rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig
+      fi
     '';
 
     xdg.configFile = {
