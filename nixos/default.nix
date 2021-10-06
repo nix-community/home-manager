@@ -12,6 +12,7 @@ let
     specialArgs = {
       lib = extendedLib;
       nixosConfig = config;
+      osConfig = config;
       modulesPath = ../modules;
     } // cfg.extraSpecialArgs;
     modules = [
