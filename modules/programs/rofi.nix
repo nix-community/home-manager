@@ -3,6 +3,9 @@
 with lib;
 
 let
+  rofiVersion = cfg.package.version or cfg.package.unwrapped.version;
+  isVersionNew = (versionAtLeast rofiVersion "1.7.0");
+  isVersionOld = (versionOlder rofiVersion "1.7.0");
 
   cfg = config.programs.rofi;
 
@@ -221,6 +224,7 @@ in {
       type = types.nullOr types.int;
       description = "Window width";
       example = 100;
+      visible = false;
     };
 
     lines = mkOption {
@@ -228,6 +232,7 @@ in {
       type = types.nullOr types.int;
       description = "Number of lines";
       example = 10;
+      visible = false;
     };
 
     borderWidth = mkOption {
@@ -235,6 +240,7 @@ in {
       type = types.nullOr types.int;
       description = "Border width";
       example = 1;
+      visible = false;
     };
 
     rowHeight = mkOption {
@@ -242,6 +248,7 @@ in {
       type = types.nullOr types.int;
       description = "Row height (in chars)";
       example = 1;
+      visible = false;
     };
 
     padding = mkOption {
@@ -249,6 +256,7 @@ in {
       type = types.nullOr types.int;
       description = "Padding";
       example = 400;
+      visible = false;
     };
 
     font = mkOption {
@@ -262,6 +270,7 @@ in {
       default = null;
       type = types.nullOr types.bool;
       description = "Whether to show a scrollbar.";
+      visible = false;
     };
 
     terminal = mkOption {
@@ -278,6 +287,7 @@ in {
       type = types.nullOr (types.enum [ "none" "dash" "solid" ]);
       description = "Separator style";
       example = "solid";
+      visible = false;
     };
 
     cycle = mkOption {
@@ -290,6 +300,7 @@ in {
       default = null;
       type = types.nullOr types.bool;
       description = "Whether to run rofi fullscreen.";
+      visible = false;
     };
 
     location = mkOption {
@@ -344,6 +355,7 @@ in {
           };
         };
       '';
+      visible = false;
     };
 
     theme = mkOption {
@@ -401,7 +413,16 @@ in {
 
   };
 
-  config = mkIf cfg.enable {
+  config = let
+    mkDeprecatedOption = option: {
+      assertion = isVersionOld || isVersionNew && cfg.${option} == null;
+      message = ''
+        Option `programs.rofi.${option}` was removed from upstream on version '1.7.0'.
+
+        Use `programs.rofi.theme` or downgrade rofi using `programs.rofi.package` instead.
+      '';
+    };
+  in mkIf cfg.enable {
     assertions = [
       (hm.assertions.assertPlatform "programs.rofi" pkgs platforms.linux)
       {
@@ -410,6 +431,15 @@ in {
           Cannot use the rofi options 'theme' and 'colors' simultaneously.
         '';
       }
+      (mkDeprecatedOption "width")
+      (mkDeprecatedOption "lines")
+      (mkDeprecatedOption "borderWidth")
+      (mkDeprecatedOption "rowHeight")
+      (mkDeprecatedOption "padding")
+      (mkDeprecatedOption "separator")
+      (mkDeprecatedOption "scrollbar")
+      (mkDeprecatedOption "fullscreen")
+      (mkDeprecatedOption "colors")
     ];
 
     lib.formats.rasi.mkLiteral = value: {
@@ -428,23 +458,27 @@ in {
 
     home.file."${cfg.configPath}".text = toRasi {
       configuration = ({
-        width = cfg.width;
-        lines = cfg.lines;
         font = cfg.font;
-        bw = cfg.borderWidth;
-        eh = cfg.rowHeight;
-        padding = cfg.padding;
-        separator-style = cfg.separator;
-        hide-scrollbar =
-          if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
         terminal = cfg.terminal;
         cycle = cfg.cycle;
-        fullscreen = cfg.fullscreen;
         location = (getAttr cfg.location locationsMap);
         xoffset = cfg.xoffset;
         yoffset = cfg.yoffset;
         theme = themeName;
-      } // (mkColorScheme cfg.colors) // cfg.extraConfig);
+      } // (if isVersionOld then
+        {
+          width = cfg.width;
+          lines = cfg.lines;
+          bw = cfg.borderWidth;
+          eh = cfg.rowHeight;
+          padding = cfg.padding;
+          separator-style = cfg.separator;
+          hide-scrollbar =
+            if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
+          fullscreen = cfg.fullscreen;
+        } // (mkColorScheme cfg.colors)
+      else
+        { }) // cfg.extraConfig);
     };
 
     xdg.dataFile = mkIf (themePath != null) (if themePath == "custom" then {

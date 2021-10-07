@@ -17,7 +17,8 @@ with lib;
       };
     };
 
-    test.stubs.rofi = { };
+    # Only makes sense to test on older versions
+    test.stubs.rofi = { version = "1.6.0"; };
 
     test.asserts.assertions.expected = [''
       Cannot use the rofi options 'theme' and 'colors' simultaneously.
