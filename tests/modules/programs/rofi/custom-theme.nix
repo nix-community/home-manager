@@ -29,7 +29,7 @@ with lib;
       };
     };
 
-    test.stubs.rofi = { };
+    test.stubs.rofi = { version = "1.7.0"; };
 
     nmt.script = ''
       assertFileContent \

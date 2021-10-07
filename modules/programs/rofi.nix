@@ -6,6 +6,10 @@ let
 
   cfg = config.programs.rofi;
 
+  rofiVersion = cfg.package.version or cfg.package.unwrapped.version;
+  isVersionNew = (versionAtLeast rofiVersion "1.7.0");
+  isVersionOld = (versionOlder rofiVersion "1.7.0");
+
   colorOption = description:
     mkOption {
       type = types.str;
@@ -221,6 +225,7 @@ in {
       type = types.nullOr types.int;
       description = "Window width";
       example = 100;
+      visible = false;
     };
 
     lines = mkOption {
@@ -228,6 +233,7 @@ in {
       type = types.nullOr types.int;
       description = "Number of lines";
       example = 10;
+      visible = false;
     };
 
     borderWidth = mkOption {
@@ -235,6 +241,7 @@ in {
       type = types.nullOr types.int;
       description = "Border width";
       example = 1;
+      visible = false;
     };
 
     rowHeight = mkOption {
@@ -242,6 +249,7 @@ in {
       type = types.nullOr types.int;
       description = "Row height (in chars)";
       example = 1;
+      visible = false;
     };
 
     padding = mkOption {
@@ -249,6 +257,7 @@ in {
       type = types.nullOr types.int;
       description = "Padding";
       example = 400;
+      visible = false;
     };
 
     font = mkOption {
@@ -262,6 +271,7 @@ in {
       default = null;
       type = types.nullOr types.bool;
       description = "Whether to show a scrollbar.";
+      visible = false;
     };
 
     terminal = mkOption {
@@ -278,6 +288,7 @@ in {
       type = types.nullOr (types.enum [ "none" "dash" "solid" ]);
       description = "Separator style";
       example = "solid";
+      visible = false;
     };
 
     cycle = mkOption {
@@ -290,6 +301,7 @@ in {
       default = null;
       type = types.nullOr types.bool;
       description = "Whether to run rofi fullscreen.";
+      visible = false;
     };
 
     location = mkOption {
@@ -344,6 +356,7 @@ in {
           };
         };
       '';
+      visible = false;
     };
 
     theme = mkOption {
@@ -412,6 +425,22 @@ in {
       }
     ];
 
+    imports = let
+      mkRemovedOptionRofi = option:
+        (mkRemovedOptionModule [ "programs" "rofi" option ]
+          "Option ${option} was removed from upstream from version '1.7.0'. Use `programs.rofi.themes` or downgrade instead.");
+    in mkIf isVersionNew [
+      (mkRemovedOptionRofi "width")
+      (mkRemovedOptionRofi "lines")
+      (mkRemovedOptionRofi "borderWidth")
+      (mkRemovedOptionRofi "rowHeight")
+      (mkRemovedOptionRofi "padding")
+      (mkRemovedOptionRofi "separator")
+      (mkRemovedOptionRofi "scrollbar")
+      (mkRemovedOptionRofi "fullscreen")
+      (mkRemovedOptionRofi "colors")
+    ];
+
     lib.formats.rasi.mkLiteral = value: {
       _type = "literal";
       inherit value;
@@ -428,23 +457,27 @@ in {
 
     home.file."${cfg.configPath}".text = toRasi {
       configuration = ({
-        width = cfg.width;
-        lines = cfg.lines;
         font = cfg.font;
-        bw = cfg.borderWidth;
-        eh = cfg.rowHeight;
-        padding = cfg.padding;
-        separator-style = cfg.separator;
-        hide-scrollbar =
-          if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
         terminal = cfg.terminal;
         cycle = cfg.cycle;
-        fullscreen = cfg.fullscreen;
         location = (getAttr cfg.location locationsMap);
         xoffset = cfg.xoffset;
         yoffset = cfg.yoffset;
         theme = themeName;
-      } // (mkColorScheme cfg.colors) // cfg.extraConfig);
+      } // (if isVersionOld then
+        {
+          width = cfg.width;
+          lines = cfg.lines;
+          bw = cfg.borderWidth;
+          eh = cfg.rowHeight;
+          padding = cfg.padding;
+          separator-style = cfg.separator;
+          hide-scrollbar =
+            if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
+          fullscreen = cfg.fullscreen;
+        } // (mkColorScheme cfg.colors)
+      else
+        { }) // cfg.extraConfig);
     };
 
     xdg.dataFile = mkIf (themePath != null) (if themePath == "custom" then {

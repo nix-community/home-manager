@@ -42,6 +42,7 @@ import nmt {
     ./lib/types
     ./modules/files
     ./modules/home-environment
+    ./modules/programs/rofi
     ./modules/misc/fontconfig
     ./modules/programs/alacritty
     ./modules/programs/alot
@@ -115,7 +116,6 @@ import nmt {
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.
     ./modules/programs/rbw
-    ./modules/programs/rofi
     ./modules/programs/rofi-pass
     ./modules/programs/terminator
     ./modules/programs/waybar
