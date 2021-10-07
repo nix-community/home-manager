@@ -17,7 +17,7 @@ with lib;
     };
 
     test.stubs = {
-      rofi = { };
+      rofi = { version = "1.7.0"; };
       rofi-pass = { };
     };
 
