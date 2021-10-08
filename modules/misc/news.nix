@@ -537,23 +537,6 @@ in
       }
 
       {
-        time = "2018-02-09T21:14:42+00:00";
-        condition = with config.programs.rofi; enable && colors != null;
-        message = ''
-          The new and preferred way to configure the rofi theme is
-          using rasi themes through the 'programs.rofi.theme' option.
-          This option can take as value either the name of a
-          pre-installed theme or the path to a theme file.
-
-          A rasi theme can be generated from an Xresources config
-          using 'rofi -dump-theme'.
-
-          The option 'programs.rofi.colors' is still supported but may
-          become deprecated and removed in the future.
-        '';
-      }
-
-      {
         time = "2018-02-19T21:45:26+00:00";
         message = ''
           A new module is available: 'programs.pidgin'
@@ -2226,6 +2209,20 @@ in
         time = "2021-10-05T22:15:00+00:00";
         message = ''
           A new module is available: 'programs.nnn'.
+        '';
+      }
+
+      {
+        time = "2021-10-08T22:16:50+00:00";
+        condition = hostPlatform.isLinux && config.programs.rofi.enable;
+        message = ''
+          Rofi version '1.7.0' removed many options that were used by the module
+          and replaced them with custom themes, which are more flexible and
+          powerful.
+
+          You can replicate your old configuration by moving those options to
+          'programs.rofi.theme'. Keep in mind that the syntax is different so
+          you may need to do some changes.
         '';
       }
     ];

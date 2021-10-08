@@ -6,109 +6,12 @@ let
 
   cfg = config.programs.rofi;
 
-  colorOption = description:
-    mkOption {
-      type = types.str;
-      description = description;
-    };
-
-  rowColorSubmodule = types.submodule {
-    options = {
-      background = colorOption "Background color";
-      foreground = colorOption "Foreground color";
-      backgroundAlt = colorOption "Alternative background color";
-      highlight = mkOption {
-        type = types.submodule {
-          options = {
-            background = colorOption "Highlight background color";
-            foreground = colorOption "Highlight foreground color";
-          };
-        };
-        description = "Color settings for highlighted row.";
-      };
-    };
-  };
-
-  windowColorSubmodule = types.submodule {
-    options = {
-      background = colorOption "Window background color";
-      border = colorOption "Window border color";
-      separator = colorOption "Separator color";
-    };
-  };
-
-  colorsSubmodule = types.submodule {
-    options = {
-      window = mkOption {
-        default = null;
-        type = windowColorSubmodule;
-        description = "Window color settings.";
-      };
-      rows = mkOption {
-        default = null;
-        type = types.submodule {
-          options = {
-            normal = mkOption {
-              default = null;
-              type = types.nullOr rowColorSubmodule;
-              description = "Normal row color settings.";
-            };
-            active = mkOption {
-              default = null;
-              type = types.nullOr rowColorSubmodule;
-              description = "Active row color settings.";
-            };
-            urgent = mkOption {
-              default = null;
-              type = types.nullOr rowColorSubmodule;
-              description = "Urgent row color settings.";
-            };
-          };
-        };
-        description = "Rows color settings.";
-      };
-    };
-  };
-
-  windowColorsToString = window:
-    concatStringsSep ", " (with window; [ background border separator ]);
-
-  rowColorsToString = row:
-    concatStringsSep ", " (with row; [
-      background
-      foreground
-      backgroundAlt
-      highlight.background
-      highlight.foreground
-    ]);
-
-  mkColorScheme = colors:
-    if colors != null then
-      with colors; {
-        color-window =
-          if (window != null) then (windowColorsToString window) else null;
-        color-normal = if (rows != null && rows.normal != null) then
-          (rowColorsToString rows.normal)
-        else
-          null;
-        color-active = if (rows != null && rows.active != null) then
-          (rowColorsToString rows.active)
-        else
-          null;
-        color-urgent = if (rows != null && rows.active != null) then
-          (rowColorsToString rows.urgent)
-        else
-          null;
-      }
-    else
-      { };
-
   mkValueString = value:
     if isBool value then
       if value then "true" else "false"
     else if isInt value then
       toString value
-    else if value._type or "" == "literal" then
+    else if (value._type or "") == "literal" then
       value.value
     else if isString value then
       ''"${value}"''
@@ -216,52 +119,11 @@ in {
       example = literalExample "[ pkgs.rofi-calc ]";
     };
 
-    width = mkOption {
-      default = null;
-      type = types.nullOr types.int;
-      description = "Window width";
-      example = 100;
-    };
-
-    lines = mkOption {
-      default = null;
-      type = types.nullOr types.int;
-      description = "Number of lines";
-      example = 10;
-    };
-
-    borderWidth = mkOption {
-      default = null;
-      type = types.nullOr types.int;
-      description = "Border width";
-      example = 1;
-    };
-
-    rowHeight = mkOption {
-      default = null;
-      type = types.nullOr types.int;
-      description = "Row height (in chars)";
-      example = 1;
-    };
-
-    padding = mkOption {
-      default = null;
-      type = types.nullOr types.int;
-      description = "Padding";
-      example = 400;
-    };
-
     font = mkOption {
       default = null;
       type = types.nullOr types.str;
       example = "Droid Sans Mono 14";
       description = "Font to use.";
-    };
-
-    scrollbar = mkOption {
-      default = null;
-      type = types.nullOr types.bool;
-      description = "Whether to show a scrollbar.";
     };
 
     terminal = mkOption {
@@ -273,23 +135,10 @@ in {
       example = "\${pkgs.gnome.gnome_terminal}/bin/gnome-terminal";
     };
 
-    separator = mkOption {
-      default = null;
-      type = types.nullOr (types.enum [ "none" "dash" "solid" ]);
-      description = "Separator style";
-      example = "solid";
-    };
-
     cycle = mkOption {
       default = null;
       type = types.nullOr types.bool;
       description = "Whether to cycle through the results list.";
-    };
-
-    fullscreen = mkOption {
-      default = null;
-      type = types.nullOr types.bool;
-      description = "Whether to run rofi fullscreen.";
     };
 
     location = mkOption {
@@ -314,43 +163,17 @@ in {
       '';
     };
 
-    colors = mkOption {
-      default = null;
-      type = types.nullOr colorsSubmodule;
-      description = ''
-        Color scheme settings. Colors can be specified in CSS color
-        formats. This option may become deprecated in the future and
-        therefore the <varname>programs.rofi.theme</varname> option
-        should be used whenever possible.
-      '';
-      example = literalExample ''
-        colors = {
-          window = {
-            background = "argb:583a4c54";
-            border = "argb:582a373e";
-            separator = "#c3c6c8";
-          };
-
-          rows = {
-            normal = {
-              background = "argb:58455a64";
-              foreground = "#fafbfc";
-              backgroundAlt = "argb:58455a64";
-              highlight = {
-                background = "#00bcd4";
-                foreground = "#fafbfc";
-              };
-            };
-          };
-        };
-      '';
-    };
-
     theme = mkOption {
       default = null;
       type = with types; nullOr (oneOf [ str path themeType ]);
       example = literalExample ''
         let
+          # Use `mkLiteral` for string-like values that should show without
+          # quotes, e.g.:
+          # {
+          #   foo = "abc"; => foo: "abc";
+          #   bar = mkLiteral "abc"; => bar: abc;
+          # };
           inherit (config.lib.formats.rasi) mkLiteral;
         in {
           "*" = {
@@ -401,16 +224,25 @@ in {
 
   };
 
+  imports = let
+    mkRemovedOptionRofi = option:
+      (mkRemovedOptionModule [ "programs" "rofi" option ]
+        "Please use a Rofi theme instead.");
+  in map mkRemovedOptionRofi [
+    "width"
+    "lines"
+    "borderWidth"
+    "rowHeight"
+    "padding"
+    "separator"
+    "scrollbar"
+    "fullscreen"
+    "colors"
+  ];
+
   config = mkIf cfg.enable {
-    assertions = [
-      (hm.assertions.assertPlatform "programs.rofi" pkgs platforms.linux)
-      {
-        assertion = cfg.theme == null || cfg.colors == null;
-        message = ''
-          Cannot use the rofi options 'theme' and 'colors' simultaneously.
-        '';
-      }
-    ];
+    assertions =
+      [ (hm.assertions.assertPlatform "programs.rofi" pkgs platforms.linux) ];
 
     lib.formats.rasi.mkLiteral = value: {
       _type = "literal";
@@ -428,23 +260,14 @@ in {
 
     home.file."${cfg.configPath}".text = toRasi {
       configuration = ({
-        width = cfg.width;
-        lines = cfg.lines;
         font = cfg.font;
-        bw = cfg.borderWidth;
-        eh = cfg.rowHeight;
-        padding = cfg.padding;
-        separator-style = cfg.separator;
-        hide-scrollbar =
-          if (cfg.scrollbar != null) then (!cfg.scrollbar) else null;
         terminal = cfg.terminal;
         cycle = cfg.cycle;
-        fullscreen = cfg.fullscreen;
         location = (getAttr cfg.location locationsMap);
         xoffset = cfg.xoffset;
         yoffset = cfg.yoffset;
         theme = themeName;
-      } // (mkColorScheme cfg.colors) // cfg.extraConfig);
+      } // cfg.extraConfig);
     };
 
     xdg.dataFile = mkIf (themePath != null) (if themePath == "custom" then {

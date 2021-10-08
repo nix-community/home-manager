@@ -33,6 +33,10 @@ Ultimately, the benefits of loading all modules won and the behavior
 has now changed. For associated discussion see
 https://github.com/nix-community/home-manager/issues/1906[issue #1906].
 
+* Rofi version 1.7.0 removed many options that were used by the module and replaced them with custom themes, which are more flexible and powerful.
++
+You can replicate your old configuration by moving those options to <<opt-programs.rofi.theme>>. Keep in mind that the syntax is different so you may need to do some changes.
+
 [[sec-release-21.11-state-version-changes]]
 === State Version Changes
 
