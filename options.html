@@ -3312,7 +3312,29 @@ See <span class="command"><strong>fzf-tmux --help</strong></span> for available 
         true
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gh.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.aliases"></a><a class="term" href="options.html#opt-programs.gh.aliases"><code class="option">programs.gh.aliases</code></a></span></dt><dd><p>Aliases that allow you to create nicknames for gh commands.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.package"></a><a class="term" href="options.html#opt-programs.gh.package"><code class="option">programs.gh.package</code></a></span></dt><dd><p>Package providing <span class="command"><strong>gh</strong></span>.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        _type = "literalExpression"; text = "pkgs.gh"; 
+        }
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gh.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.settings"></a><a class="term" href="options.html#opt-programs.gh.settings"><code class="option">programs.gh.settings</code></a></span></dt><dd><p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/gh/config.yml</code>.</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        
+        {
+        
+        }
+    
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        
+        {
+        _type = "literalExpression"; text = "{\n  git_protocol = \"ssh\";\n\n  prompt = \"enabled\";\n\n  aliases = {\n    co = \"pr checkout\";\n    pv = \"pr view\";\n  };\n};\n"; 
+        }
+    
+      </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gh.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.settings.aliases"></a><a class="term" href="options.html#opt-programs.gh.settings.aliases"><code class="option">programs.gh.settings.aliases</code></a></span></dt><dd><p>Aliases that allow you to create nicknames for gh commands.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         
         {
@@ -3327,15 +3349,17 @@ See <span class="command"><strong>fzf-tmux --help</strong></span> for available 
     
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gh.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.editor"></a><a class="term" href="options.html#opt-programs.gh.editor"><code class="option">programs.gh.editor</code></a></span></dt><dd><p>The editor that gh should run when creating issues, pull requests, etc.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.settings.editor"></a><a class="term" href="options.html#opt-programs.gh.settings.editor"><code class="option">programs.gh.settings.editor</code></a></span></dt><dd><p>The editor that gh should run when creating issues, pull requests, etc.
 If blank, will refer to environment.
 </p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         ""
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gh.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.gitProtocol"></a><a class="term" href="options.html#opt-programs.gh.gitProtocol"><code class="option">programs.gh.gitProtocol</code></a></span></dt><dd><p>The protocol to use when performing Git operations.
-</p><p><span class="emphasis"><em>Type:</em></span> one of "https", "ssh"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.settings.git_protocol"></a><a class="term" href="options.html#opt-programs.gh.settings.git_protocol"><code class="option">programs.gh.settings.git_protocol</code></a></span></dt><dd><p>The protocol to use when performing Git operations.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         "https"
+      </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        "ssh"
       </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gh.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.enable"></a><a class="term" href="options.html#opt-programs.git.enable"><code class="option">programs.git.enable</code></a></span></dt><dd><p>Whether to enable Git.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
