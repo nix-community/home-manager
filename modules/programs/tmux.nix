@@ -218,8 +218,8 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.tmux;
-        defaultText = literalExample "pkgs.tmux";
-        example = literalExample "pkgs.tmux";
+        defaultText = literalExpression "pkgs.tmux";
+        example = literalExpression "pkgs.tmux";
         description = "The tmux package to install";
       };
 
@@ -302,7 +302,7 @@ in
           run at the top of your configuration.
         '';
         default = [ ];
-        example = literalExample ''
+        example = literalExpression ''
           with pkgs; [
             tmuxPlugins.cpu
             {

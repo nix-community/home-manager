@@ -42,7 +42,7 @@ in {
       config = mkOption {
         type = types.attrsOf types.anything;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             confirmation = false;
             report.minimal.filter = "status:pending";

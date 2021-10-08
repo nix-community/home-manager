@@ -31,7 +31,7 @@ in {
         </citerefentry>
         for options.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           listen-port = 60000;
           dht-listen-port = 60000;

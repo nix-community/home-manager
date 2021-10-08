@@ -78,7 +78,7 @@ in {
         package = mkOption {
           type = types.nullOr types.package;
           default = null;
-          example = literalExample "pkgs.adwaita-qt";
+          example = literalExpression "pkgs.adwaita-qt";
           description = "Theme package to be used in Qt5 applications.";
         };
       };

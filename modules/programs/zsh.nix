@@ -56,18 +56,18 @@ let
         default = if versionAtLeast stateVersion "20.03"
           then "$HOME/.zsh_history"
           else relToDotDir ".zsh_history";
-        defaultText = literalExample ''
+        defaultText = literalDocbook ''
           "$HOME/.zsh_history" if state version ≥ 20.03,
           "$ZDOTDIR/.zsh_history" otherwise
         '';
-        example = literalExample ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
+        example = literalExpression ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
         description = "History file location";
       };
 
       ignorePatterns = mkOption {
         type = types.listOf types.str;
         default = [];
-        example = literalExample ''[ "rm *" "pkill *" ]'';
+        example = literalExpression ''[ "rm *" "pkill *" ]'';
         description = ''
           Do not enter command lines into the history list
           if they match any one of the given shell patterns.
@@ -224,7 +224,7 @@ in
 
       shellAliases = mkOption {
         default = {};
-        example = literalExample ''
+        example = literalExpression ''
           {
             ll = "ls -l";
             ".." = "cd ..";
@@ -239,7 +239,7 @@ in
 
       shellGlobalAliases = mkOption {
         default = {};
-        example = literalExample ''
+        example = literalExpression ''
           {
             UUID = "$(uuidgen | tr -d \\n)";
             G = "| grep";
@@ -254,7 +254,7 @@ in
 
       dirHashes = mkOption {
         default = {};
-        example = literalExample ''
+        example = literalExpression ''
           {
             docs  = "$HOME/Documents";
             vids  = "$HOME/Videos";
@@ -360,7 +360,7 @@ in
       plugins = mkOption {
         type = types.listOf pluginModule;
         default = [];
-        example = literalExample ''
+        example = literalExpression ''
           [
             {
               # will source zsh-autosuggestions.plugin.zsh

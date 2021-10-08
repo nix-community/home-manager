@@ -33,7 +33,7 @@ let
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = literalExample "pkgs.gnome.gnome_themes_standard";
+        example = literalExpression "pkgs.gnome.gnome_themes_standard";
         description = ''
           Package providing the theme. This package will be installed
           to your profile. If <literal>null</literal> then the theme
@@ -97,9 +97,9 @@ in {
           type = types.path;
           default = "${config.home.homeDirectory}/.gtkrc-2.0";
           defaultText =
-            literalExample ''"''${config.home.homeDirectory}/.gtkrc-2.0"'';
+            literalExpression ''"''${config.home.homeDirectory}/.gtkrc-2.0"'';
           example =
-            literalExample ''"''${config.xdg.configHome}/gtk-2.0/gtkrc"'';
+            literalExpression ''"''${config.xdg.configHome}/gtk-2.0/gtkrc"'';
           description = ''
             The location to put the GTK configuration file.
           '';

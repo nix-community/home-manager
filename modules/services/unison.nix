@@ -47,7 +47,7 @@ let
 
       roots = mkOption {
         type = pairOf types.str;
-        example = literalExample ''
+        example = literalExpression ''
           [
             "/home/user/documents"
             "ssh://remote/documents"
@@ -78,7 +78,7 @@ in {
     pairs = mkOption {
       type = with types; attrsOf (submodule pairOptions);
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           roots = [
             "/home/user/documents"

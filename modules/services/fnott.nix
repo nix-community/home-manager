@@ -27,7 +27,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.fnott;
-        defaultText = literalExample "pkgs.fnott";
+        defaultText = literalExpression "pkgs.fnott";
         description = "Package providing <command>fnott</command>.";
       };
 
@@ -72,7 +72,7 @@ in {
           xlink:href="https://codeberg.org/dnkl/fnott/src/branch/master/fnott.ini"/>
           for an example configuration.
         '';
-        example = literalExample ''
+        example = literalExpression ''
           {
             main = {
               notification-margin = 5;

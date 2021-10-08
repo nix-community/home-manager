@@ -15,7 +15,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.playerctl;
-      defaultText = literalExample "pkgs.playerctl";
+      defaultText = literalExpression "pkgs.playerctl";
       description = "The playerctl package to use.";
     };
   };

@@ -31,7 +31,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.mangohud;
-        defaultText = literalExample "pkgs.mangohud";
+        defaultText = literalExpression "pkgs.mangohud";
         description = "The Mangohud package to install.";
       };
 
@@ -47,7 +47,7 @@ in {
       settings = mkOption {
         type = with types; attrsOf settingsType;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             output_folder = ~/Documents/mangohud/;
             full = true;
@@ -64,7 +64,7 @@ in {
       settingsPerApplication = mkOption {
         type = with types; attrsOf (attrsOf settingsType);
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             mpv = {
               no_display = true;

@@ -47,7 +47,7 @@ in {
     package = mkOption {
       type = types.package;
       default = if emacsCfg.enable then emacsCfg.finalPackage else pkgs.emacs;
-      defaultText = literalExample ''
+      defaultText = literalExpression ''
         if config.programs.emacs.enable then config.programs.emacs.finalPackage
         else pkgs.emacs
       '';

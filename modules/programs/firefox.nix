@@ -107,8 +107,8 @@ in {
           pkgs.firefox
         else
           pkgs.firefox-unwrapped;
-        defaultText = literalExample "pkgs.firefox";
-        example = literalExample ''
+        defaultText = literalExpression "pkgs.firefox";
+        example = literalExpression ''
           pkgs.firefox.override {
             # See nixpkgs' firefox/wrapper.nix to check which options you can use
             cfg = {
@@ -129,7 +129,7 @@ in {
       extensions = mkOption {
         type = types.listOf types.package;
         default = [ ];
-        example = literalExample ''
+        example = literalExpression ''
           with pkgs.nur.repos.rycee.firefox-addons; [
             https-everywhere
             privacy-badger
@@ -182,7 +182,7 @@ in {
             settings = mkOption {
               type = with types; attrsOf (either bool (either int str));
               default = { };
-              example = literalExample ''
+              example = literalExpression ''
                 {
                   "browser.startup.homepage" = "https://nixos.org";
                   "browser.search.region" = "GB";
@@ -254,7 +254,7 @@ in {
                 };
               }));
               default = { };
-              example = literalExample ''
+              example = literalExpression ''
                 {
                   wikipedia = {
                     keyword = "wiki";

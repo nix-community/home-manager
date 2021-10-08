@@ -12,7 +12,7 @@ in {
       type = types.bool;
       default = pkgs.hostPlatform.isLinux;
       defaultText =
-        literalExample "true if host platform is Linux, false otherwise";
+        literalExpression "true if host platform is Linux, false otherwise";
       description = ''
         Whether to install programs and files to support the
         XDG Shared MIME-info specification and XDG MIME Applications

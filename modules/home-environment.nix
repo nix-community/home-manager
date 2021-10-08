@@ -115,7 +115,7 @@ let
           if versionAtLeast config.home.stateVersion "19.09"
           then null
           else "us";
-        defaultText = literalExample "null";
+        defaultText = literalExpression "null";
         description = ''
           Keyboard layout. If <literal>null</literal>, then the system
           configuration will be used.
@@ -149,7 +149,7 @@ let
           if versionAtLeast config.home.stateVersion "19.09"
           then null
           else "";
-        defaultText = literalExample "null";
+        defaultText = literalExpression "null";
         example = "colemak";
         description = ''
           X keyboard variant. If <literal>null</literal>, then the
@@ -182,7 +182,7 @@ in
   options = {
     home.username = mkOption {
       type = types.str;
-      defaultText = literalExample ''
+      defaultText = literalDocbook ''
         "$USER"   for state version < 20.09,
         undefined for state version ≥ 20.09
       '';
@@ -192,7 +192,7 @@ in
 
     home.homeDirectory = mkOption {
       type = types.path;
-      defaultText = literalExample ''
+      defaultText = literalDocbook ''
         "$HOME"   for state version < 20.09,
         undefined for state version ≥ 20.09
       '';
@@ -321,7 +321,7 @@ in
     home.activation = mkOption {
       type = hm.types.dagOf types.str;
       default = {};
-      example = literalExample ''
+      example = literalExpression ''
         {
           myActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] '''
             $DRY_RUN_CMD ln -s $VERBOSE_ARG \

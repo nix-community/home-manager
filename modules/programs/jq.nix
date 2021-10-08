@@ -33,7 +33,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.jq;
-        defaultText = literalExample "pkgs.jq";
+        defaultText = literalExpression "pkgs.jq";
         description = "jq package to use.";
       };
 
@@ -44,7 +44,7 @@ in {
           <para>See <link xlink:href="https://stedolan.github.io/jq/manual/#Colors"/>.
         '';
 
-        example = literalExample ''
+        example = literalExpression ''
           {
             null    = "1;30";
             false   = "0;31";

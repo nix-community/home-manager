@@ -18,14 +18,14 @@ in {
 
       packageSet = mkOption {
         default = pkgs.texlive;
-        defaultText = literalExample "pkgs.texlive";
+        defaultText = literalExpression "pkgs.texlive";
         description = "TeX Live package set to use.";
       };
 
       extraPackages = mkOption {
         default = tpkgs: { inherit (tpkgs) collection-basic; };
         defaultText = "tpkgs: { inherit (tpkgs) collection-basic; }";
-        example = literalExample ''
+        example = literalExpression ''
           tpkgs: { inherit (tpkgs) collection-fontsrecommended algorithms; }
         '';
         description = "Extra packages available to TeX Live.";

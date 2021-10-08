@@ -97,7 +97,7 @@ in {
     settings = mkOption {
       type = types.attrs;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           color_scheme = 6;
           cpu_count_from_one = 0;

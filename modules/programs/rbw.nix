@@ -73,7 +73,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.rbw;
-      defaultText = literalExample "pkgs.rbw";
+      defaultText = literalExpression "pkgs.rbw";
       description = ''
         Package providing the <command>rbw</command> tool and its
         <command>rbw-agent</command> daemon.
@@ -83,7 +83,7 @@ in {
     settings = mkOption {
       type = types.nullOr settingsModule;
       default = null;
-      example = literalExample ''
+      example = literalExpression ''
         {
           email = "name@example.com";
           lock_timeout = 300;

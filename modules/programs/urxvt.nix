@@ -13,7 +13,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.rxvt_unicode;
-      defaultText = literalExample "pkgs.rxvt_unicode";
+      defaultText = literalExpression "pkgs.rxvt_unicode";
       description = "rxvt-unicode package to install.";
     };
 
@@ -28,7 +28,7 @@ in {
       type = types.attrsOf types.str;
       default = { };
       description = "Mapping of keybindings to actions";
-      example = literalExample ''
+      example = literalExpression ''
         {
           "Shift-Control-C" = "eval:selection_to_clipboard";
           "Shift-Control-V" = "eval:paste_clipboard";

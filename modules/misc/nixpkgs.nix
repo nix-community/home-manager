@@ -78,7 +78,7 @@ in {
 
     overlays = mkOption {
       default = null;
-      example = literalExample ''
+      example = literalExpression ''
         [ (self: super: {
             openssh = super.openssh.override {
               hpnSupport = true;

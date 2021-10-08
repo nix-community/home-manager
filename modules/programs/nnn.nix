@@ -14,7 +14,7 @@ let
     options = {
       src = mkOption {
         type = with types; nullOr path;
-        example = literalExample ''
+        example = literalExpression ''
           (pkgs.fetchFromGitHub {
             owner = "jarun";
             repo = "nnn";
@@ -34,7 +34,7 @@ let
           Key mappings to the plugins.
         '';
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             c = "fzcd";
             f = "finder";
@@ -54,9 +54,9 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.nnn;
-        defaultText = literalExample "pkgs.nnn";
+        defaultText = literalExpression "pkgs.nnn";
         example =
-          literalExample "pkgs.nnn.override ({ withNerdIcons = true; });";
+          literalExpression "pkgs.nnn.override ({ withNerdIcons = true; });";
         description = ''
           Package containing the <command>nnn</command> program.
         '';
@@ -76,7 +76,7 @@ in {
         description = ''
           Directory bookmarks.
         '';
-        example = literalExample ''
+        example = literalExpression ''
           {
             d = "~/Documents";
             D = "~/Downloads";
@@ -90,7 +90,7 @@ in {
       extraPackages = mkOption {
         type = with types; listOf package;
         example =
-          literalExample "with pkgs; [ ffmpegthumbnailer mediainfo sxiv ]";
+          literalExpression "with pkgs; [ ffmpegthumbnailer mediainfo sxiv ]";
         description = ''
           Extra packages available to nnn.
         '';

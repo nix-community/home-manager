@@ -22,16 +22,16 @@ with lib;
               command = mkOption {
                 type = types.str;
                 default = "syncthingtray";
-                defaultText = literalExample "syncthingtray";
-                example = literalExample "qsyncthingtray";
+                defaultText = literalExpression ''"syncthingtray"'';
+                example = literalExpression ''"qsyncthingtray"'';
                 description = "Syncthing tray command to use.";
               };
 
               package = mkOption {
                 type = types.package;
                 default = pkgs.syncthingtray-minimal;
-                defaultText = literalExample "pkgs.syncthingtray-minimal";
-                example = literalExample "pkgs.qsyncthingtray";
+                defaultText = literalExpression "pkgs.syncthingtray-minimal";
+                example = literalExpression "pkgs.qsyncthingtray";
                 description = "Syncthing tray package to use.";
               };
             };

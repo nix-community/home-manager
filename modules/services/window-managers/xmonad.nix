@@ -22,8 +22,8 @@ in {
 
       haskellPackages = mkOption {
         default = pkgs.haskellPackages;
-        defaultText = literalExample "pkgs.haskellPackages";
-        example = literalExample "pkgs.haskell.packages.ghc784";
+        defaultText = literalExpression "pkgs.haskellPackages";
+        example = literalExpression "pkgs.haskell.packages.ghc784";
         description = ''
           The <varname>haskellPackages</varname> used to build xmonad
           and other packages. This can be used to change the GHC
@@ -35,7 +35,7 @@ in {
       extraPackages = mkOption {
         default = self: [ ];
         defaultText = "self: []";
-        example = literalExample ''
+        example = literalExpression ''
           haskellPackages: [
             haskellPackages.xmonad-contrib
             haskellPackages.monad-logger
@@ -58,7 +58,7 @@ in {
       config = mkOption {
         type = types.nullOr types.path;
         default = null;
-        example = literalExample ''
+        example = literalExpression ''
           pkgs.writeText "xmonad.hs" '''
             import XMonad
             main = xmonad defaultConfig
@@ -84,7 +84,7 @@ in {
       libFiles = mkOption {
         type = types.attrsOf (types.oneOf [ types.path ]);
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             "Tools.hs" = pkgs.writeText "Tools.hs" '''
                module Tools where

@@ -74,7 +74,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.git-sync;
-        defaultText = literalExample "pkgs.git-sync";
+        defaultText = literalExpression "pkgs.git-sync";
         description = ''
           Package containing the <command>git-sync</command> program.
         '';

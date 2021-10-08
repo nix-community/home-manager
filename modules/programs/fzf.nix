@@ -18,7 +18,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.fzf;
-      defaultText = literalExample "pkgs.fzf";
+      defaultText = literalExpression "pkgs.fzf";
       description = "Package providing the <command>fzf</command> tool.";
     };
 
@@ -96,7 +96,7 @@ in {
       shellIntegrationOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = literalExample ''[ "-d 40%" ]'';
+        example = literalExpression ''[ "-d 40%" ]'';
         description = ''
           If <option>programs.fzf.tmux.enableShellIntegration</option> is set to <literal>true</literal>,
           shell integration will use these options for fzf-tmux.

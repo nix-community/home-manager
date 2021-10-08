@@ -202,7 +202,7 @@ in {
       description = ''
         Package providing the <command>rofi</command> binary.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
       '';
     };
@@ -213,7 +213,7 @@ in {
       description = ''
         List of rofi plugins to be installed.
       '';
-      example = literalExample "[ pkgs.rofi-calc ]";
+      example = literalExpression "[ pkgs.rofi-calc ]";
     };
 
     width = mkOption {
@@ -323,7 +323,7 @@ in {
         therefore the <varname>programs.rofi.theme</varname> option
         should be used whenever possible.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         colors = {
           window = {
             background = "argb:583a4c54";
@@ -349,7 +349,7 @@ in {
     theme = mkOption {
       default = null;
       type = with types; nullOr (oneOf [ str path themeType ]);
-      example = literalExample ''
+      example = literalExpression ''
         let
           inherit (config.lib.formats.rasi) mkLiteral;
         in {
@@ -388,7 +388,7 @@ in {
 
     extraConfig = mkOption {
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           modi = "drun,emoji,ssh";
           kb-primary-paste = "Control+V,Shift+Insert";

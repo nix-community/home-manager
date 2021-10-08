@@ -17,9 +17,9 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.spotifyd;
-      defaultText = literalExample "pkgs.spotifyd";
+      defaultText = literalExpression "pkgs.spotifyd";
       example =
-        literalExample "(pkgs.spotifyd.override { withKeyring = true; })";
+        literalExpression "(pkgs.spotifyd.override { withKeyring = true; })";
       description = ''
         The <literal>spotifyd</literal> package to use.
         Can be used to specify extensions.
@@ -30,7 +30,7 @@ in {
       type = tomlFormat.type;
       default = { };
       description = "Configuration for spotifyd";
-      example = literalExample ''
+      example = literalExpression ''
         {
           global = {
             username = "Alex";

@@ -41,7 +41,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.vscode;
-        example = literalExample "pkgs.vscodium";
+        example = literalExpression "pkgs.vscodium";
         description = ''
           Version of Visual Studio Code to install.
         '';
@@ -50,7 +50,7 @@ in {
       userSettings = mkOption {
         type = jsonFormat.type;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             "update.channel" = "none";
             "[nix]"."editor.tabSize" = 2;
@@ -94,7 +94,7 @@ in {
           };
         });
         default = [ ];
-        example = literalExample ''
+        example = literalExpression ''
           [
             {
               key = "ctrl+c";
@@ -112,7 +112,7 @@ in {
       extensions = mkOption {
         type = types.listOf types.package;
         default = [ ];
-        example = literalExample "[ pkgs.vscode-extensions.bbenoist.Nix ]";
+        example = literalExpression "[ pkgs.vscode-extensions.bbenoist.Nix ]";
         description = ''
           The extensions Visual Studio Code should be started with.
           These will override but not delete manually installed ones.

@@ -36,7 +36,7 @@ in {
           entry = either prim (listOf prim);
         in nullOr (attrsOf entry);
       default = null;
-      example = literalExample ''
+      example = literalExpression ''
         {
           "Emacs*toolBar" = 0;
           "XTerm*faceName" = "dejavu sans mono";
@@ -58,7 +58,7 @@ in {
     xresources.extraConfig = mkOption {
       type = types.lines;
       default = "";
-      example = literalExample ''
+      example = literalExpression ''
         builtins.readFile (
             pkgs.fetchFromGitHub {
                 owner = "solarized";

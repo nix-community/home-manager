@@ -76,7 +76,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.sbt;
-      defaultText = literalExample "pkgs.sbt";
+      defaultText = literalExpression "pkgs.sbt";
       description = "The package with sbt to be installed.";
     };
 
@@ -89,7 +89,7 @@ in {
     plugins = mkOption {
       type = types.listOf (sbtTypes.plugin);
       default = [ ];
-      example = literalExample ''
+      example = literalExpression ''
         [
           {
             org = "net.virtual-void";
@@ -111,7 +111,7 @@ in {
     credentials = mkOption {
       type = types.listOf (sbtTypes.credential);
       default = [ ];
-      example = literalExample ''
+      example = literalExpression ''
         [{
           realm = "Sonatype Nexus Repository Manager";
           host = "example.com";

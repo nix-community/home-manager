@@ -106,7 +106,7 @@ in {
     package = mkOption {
       type = types.package;
       default = defaultPackage;
-      defaultText = literalExample examplePackage;
+      defaultText = literalExpression examplePackage;
       description = ''
         ${programName} derivation to use.
       '';
@@ -124,7 +124,7 @@ in {
     settings = mkOption {
       type = types.submodule { freeformType = settingsFormat.type; };
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           ${mainSection} = {
             adjustment-method = "randr";

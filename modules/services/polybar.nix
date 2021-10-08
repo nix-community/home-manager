@@ -68,9 +68,9 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.polybar;
-        defaultText = literalExample "pkgs.polybar";
+        defaultText = literalExpression "pkgs.polybar";
         description = "Polybar package to install.";
-        example = literalExample ''
+        example = literalExpression ''
           pkgs.polybar.override {
             i3GapsSupport = true;
             alsaSupport = true;
@@ -90,7 +90,7 @@ in {
           See also <option>services.polybar.settings</option> for a more nix-friendly format.
         '';
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             "bar/top" = {
               monitor = "\''${env:MONITOR:eDP1}";
@@ -147,7 +147,7 @@ in {
           </programlisting>
         '';
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             "module/volume" = {
               type = "internal/pulseaudio";

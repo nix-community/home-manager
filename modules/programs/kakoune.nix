@@ -642,7 +642,7 @@ in {
       plugins = mkOption {
         type = with types; listOf package;
         default = [ ];
-        example = literalExample "[ pkgs.kakounePlugins.kak-fzf ]";
+        example = literalExpression "[ pkgs.kakounePlugins.kak-fzf ]";
         description = ''
           List of kakoune plugins to install. To get a list of
           supported plugins run:

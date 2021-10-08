@@ -15,7 +15,7 @@ in {
     aliases = mkOption {
       type = with types; attrsOf str;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           co = "pr checkout";
           pv = "pr view";

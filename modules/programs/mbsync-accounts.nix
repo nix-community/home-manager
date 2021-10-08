@@ -192,7 +192,7 @@ in {
     extraConfig.channel = mkOption {
       type = extraConfigType;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           MaxMessages = 10000;
           MaxSize = "1m";
@@ -222,7 +222,7 @@ in {
     extraConfig.account = mkOption {
       type = extraConfigType;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           PipelineDepth = 10;
           Timeout = 60;

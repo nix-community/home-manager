@@ -36,7 +36,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.terminator;
-      example = literalExample "pkgs.terminator";
+      example = literalExpression "pkgs.terminator";
       description = "terminator package to install.";
     };
 
@@ -53,7 +53,7 @@ in {
         man page.
       '';
       type = types.attrsOf types.anything;
-      example = literalExample ''
+      example = literalExpression ''
         {
           global_config.borderless = true;
           profiles.default.background_color = "#002b36";
