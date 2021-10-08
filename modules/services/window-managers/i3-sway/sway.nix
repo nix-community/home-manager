@@ -312,7 +312,9 @@ let
     ''
   else
     "") + "\n" + (if cfg.systemdIntegration then ''
-      exec "systemctl --user import-environment; systemctl --user start sway-session.target"
+      exec "systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK"
+      exec "hash dbus-update-activation-environment 2>/dev/null && dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK"
+      exec "systemctl --user start sway-session.target"
     '' else
       "") + cfg.extraConfig);
 
