@@ -4,4 +4,10 @@
 nixpkgsLib:
 
 let mkHmLib = import ./.;
-in nixpkgsLib.extend (self: super: { hm = mkHmLib { lib = super; }; })
+in nixpkgsLib.extend (self: super: {
+  hm = mkHmLib { lib = self; };
+
+  # For forward compatibility.
+  literalExpression = super.literalExpression or super.literalExample;
+  literalDocBook = super.literalDocBook or super.literalExample;
+})
