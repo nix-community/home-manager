@@ -109,9 +109,9 @@ in {
 
       package = mkOption {
         default = pkgs.trayer;
-        defaultText = literalExample "pkgs.trayer";
+        defaultText = literalExpression "pkgs.trayer";
         type = types.package;
-        example = literalExample "pkgs.trayer";
+        example = literalExpression "pkgs.trayer";
         description = "The package to use for the trayer binary.";
       };
 
@@ -141,7 +141,7 @@ in {
           </tbody></tgroup></informaltable>
         '';
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             edge = "top";
             padding = 6;

@@ -15,8 +15,8 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.parcellite;
-      defaultText = literalExample "pkgs.parcellite";
-      example = literalExample "pkgs.clipit";
+      defaultText = literalExpression "pkgs.parcellite";
+      example = literalExpression "pkgs.clipit";
       description = "Parcellite derivation to use.";
     };
   };

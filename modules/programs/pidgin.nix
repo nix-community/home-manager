@@ -16,13 +16,13 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.pidgin;
-        defaultText = literalExample "pkgs.pidgin";
+        defaultText = literalExpression "pkgs.pidgin";
         description = "The Pidgin package to use.";
       };
 
       plugins = mkOption {
         default = [ ];
-        example = literalExample "[ pkgs.pidgin-otr pkgs.pidgin-osd ]";
+        example = literalExpression "[ pkgs.pidgin-otr pkgs.pidgin-osd ]";
         description = "Plugins that should be available to Pidgin.";
       };
     };

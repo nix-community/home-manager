@@ -105,7 +105,7 @@ let
           This may override other values.
         '';
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             Keywords = "calc;math";
             DBusActivatable = "false";
@@ -157,7 +157,7 @@ in {
     '';
     default = { };
     type = types.attrsOf (types.submodule desktopEntry);
-    example = literalExample ''
+    example = literalExpression ''
       {
         firefox = {
           name = "Firefox";

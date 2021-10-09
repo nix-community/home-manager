@@ -60,7 +60,7 @@ in {
         </citerefentry>
         for options.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           colors = true;
           color_good = "#e0e0e0";
@@ -99,7 +99,7 @@ in {
               </citerefentry>
               for options.
             '';
-            example = literalExample ''
+            example = literalExpression ''
               {
                 format = "♪ %volume";
                 format_muted = "♪ muted (%volume)";
@@ -119,7 +119,7 @@ in {
         </citerefentry>
         for options.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           "volume master" = {
             position = 1;

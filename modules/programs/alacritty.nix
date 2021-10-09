@@ -13,14 +13,14 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.alacritty;
-        defaultText = literalExample "pkgs.alacritty";
+        defaultText = literalExpression "pkgs.alacritty";
         description = "The Alacritty package to install.";
       };
 
       settings = mkOption {
         type = yamlFormat.type;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             window.dimensions = {
               lines = 3;

@@ -31,9 +31,9 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.beets;
-        defaultText = literalExample "pkgs.beets";
+        defaultText = literalExpression "pkgs.beets";
         example =
-          literalExample "(pkgs.beets.override { enableCheck = true; })";
+          literalExpression "(pkgs.beets.override { enableCheck = true; })";
         description = ''
           The <literal>beets</literal> package to use.
           Can be used to specify extensions.

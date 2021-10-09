@@ -44,7 +44,7 @@ in {
       extraFlags = mkOption {
         type = types.listOf types.str;
         default = [ "-f" ];
-        defaultText = literalExample ''[ "-f" ]'';
+        defaultText = literalExpression ''[ "-f" ]'';
         description = ''
           Additional flags to pass to <command>barrierc</command>.
           See <command>barrierc --help</command>.

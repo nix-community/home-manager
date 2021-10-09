@@ -93,7 +93,7 @@ in {
       extraConfig = mkOption {
         type = jsonFormat.type;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             poll.interval = 0;
           }

@@ -97,7 +97,7 @@ in
       shellAliases = mkOption {
         default = {};
         type = types.attrsOf types.str;
-        example = literalExample ''
+        example = literalExpression ''
           {
             ll = "ls -l";
             ".." = "cd ..";

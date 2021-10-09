@@ -16,14 +16,14 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.go;
-        defaultText = literalExample "pkgs.go";
+        defaultText = literalExpression "pkgs.go";
         description = "The Go package to use.";
       };
 
       packages = mkOption {
         type = with types; attrsOf path;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             "golang.org/x/text" = builtins.fetchGit "https://go.googlesource.com/text";
             "golang.org/x/time" = builtins.fetchGit "https://go.googlesource.com/time";

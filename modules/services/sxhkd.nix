@@ -34,14 +34,14 @@ in {
       default = [ ];
       description =
         "Command line arguments to invoke <command>sxhkd</command> with.";
-      example = literalExample ''[ "-m 1" ]'';
+      example = literalExpression ''[ "-m 1" ]'';
     };
 
     keybindings = mkOption {
       type = types.attrsOf (types.nullOr types.str);
       default = { };
       description = "An attribute set that assigns hotkeys to commands.";
-      example = literalExample ''
+      example = literalExpression ''
         {
           "super + shift + {r,c}" = "i3-msg {restart,reload}";
           "super + {s,w}"         = "i3-msg {stacking,tabbed}";
@@ -53,7 +53,7 @@ in {
       default = "";
       type = types.lines;
       description = "Additional configuration to add.";
-      example = literalExample ''
+      example = literalExpression ''
         super + {_,shift +} {1-9,0}
           i3-msg {workspace,move container to workspace} {1-10}
       '';

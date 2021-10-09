@@ -59,7 +59,7 @@ in {
               <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/blocks.md"/>
               for block options.
             '';
-            example = literalExample ''
+            example = literalExpression ''
               [
                 {
                   block = "disk_space";
@@ -91,7 +91,7 @@ in {
               Any extra options to add to i3status-rust
               <filename>config</filename>.
             '';
-            example = literalExample ''
+            example = literalExpression ''
               {
                 theme =  {
                   name = "solarized-dark";
@@ -181,7 +181,7 @@ in {
         </citerefentry>
         for options.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         bottom = {
           blocks = [
             {
@@ -234,7 +234,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.i3status-rust;
-      defaultText = literalExample "pkgs.i3status-rust";
+      defaultText = literalExpression "pkgs.i3status-rust";
       description = "Package providing i3status-rust";
     };
 

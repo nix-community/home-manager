@@ -23,7 +23,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.bottom;
-        defaultText = literalExample "pkgs.bottom";
+        defaultText = literalExpression "pkgs.bottom";
         description = "Package providing <command>bottom</command>.";
       };
 
@@ -38,7 +38,7 @@ in {
           See <link xlink:href="https://github.com/ClementTsang/bottom/blob/master/sample_configs/default_config.toml"/>
           for the default configuration.
         '';
-        example = literalExample ''
+        example = literalExpression ''
           {
             flags = {
               avg_cpu = true;

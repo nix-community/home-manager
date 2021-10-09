@@ -99,7 +99,7 @@ let
           Consider to use <code>lib.mkOptionDefault</code> function to extend or override
           default keybindings instead of specifying all of them from scratch.
         '';
-        example = literalExample ''
+        example = literalExpression ''
           let
             modifier = config.xsession.windowManager.i3.config.modifier;
           in lib.mkOptionDefault {
@@ -216,8 +216,8 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.i3;
-        defaultText = literalExample "pkgs.i3";
-        example = literalExample "pkgs.i3-gaps";
+        defaultText = literalExpression "pkgs.i3";
+        example = literalExpression "pkgs.i3-gaps";
         description = ''
           i3 package to use.
           If 'i3.config.gaps' settings are specified, 'pkgs.i3-gaps' will be set as a default package.

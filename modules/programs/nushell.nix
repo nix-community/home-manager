@@ -17,7 +17,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.nushell;
-      defaultText = literalExample "pkgs.nushell";
+      defaultText = literalExpression "pkgs.nushell";
       description = "The package to use for nushell.";
     };
 
@@ -31,7 +31,7 @@ in {
           entries = entryOrAttrsOf (entryOrAttrsOf entry);
         in attrsOf entries // { description = "Nushell configuration"; };
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           edit_mode = "vi";
           startup = [ "alias la [] { ls -a }" "alias e [msg] { echo $msg }" ];

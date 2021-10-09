@@ -29,14 +29,14 @@ in
     package = mkOption {
       type = types.package;
       default = pkgs.gnupg;
-      defaultText = literalExample "pkgs.gnupg";
-      example = literalExample "pkgs.gnupg23";
+      defaultText = literalExpression "pkgs.gnupg";
+      example = literalExpression "pkgs.gnupg23";
       description = "The Gnupg package to use (also used the gpg-agent service).";
     };
 
     settings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
-      example = literalExample ''
+      example = literalExpression ''
         {
           no-comments = false;
           s2k-cipher-algo = "AES128";
@@ -54,7 +54,7 @@ in
 
     scdaemonSettings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
-      example = literalExample ''
+      example = literalExpression ''
         {
           disable-ccid = true;
         }
@@ -68,9 +68,9 @@ in
 
     homedir = mkOption {
       type = types.path;
-      example = literalExample "\"\${config.xdg.dataHome}/gnupg\"";
+      example = literalExpression "\"\${config.xdg.dataHome}/gnupg\"";
       default = "${config.home.homeDirectory}/.gnupg";
-      defaultText = literalExample "\"\${config.home.homeDirectory}/.gnupg\"";
+      defaultText = literalExpression "\"\${config.home.homeDirectory}/.gnupg\"";
       description = "Directory to store keychains and configuration.";
     };
   };

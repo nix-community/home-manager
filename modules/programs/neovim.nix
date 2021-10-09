@@ -125,7 +125,7 @@ in {
         type = with types; either extraPython3PackageType (listOf package);
         default = (_: [ ]);
         defaultText = "ps: []";
-        example = literalExample "(ps: with ps; [ python-language-server ])";
+        example = literalExpression "(ps: with ps; [ python-language-server ])";
         description = ''
           A function in python.withPackages format, which returns a
           list of Python 3 packages required for your plugins to work.
@@ -144,7 +144,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.neovim-unwrapped;
-        defaultText = literalExample "pkgs.neovim-unwrapped";
+        defaultText = literalExpression "pkgs.neovim-unwrapped";
         description = "The package to use for the neovim binary.";
       };
 
@@ -158,7 +158,7 @@ in {
       configure = mkOption {
         type = types.attrsOf types.anything;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           configure = {
               customRC = $''''
               " here your custom configuration goes!
@@ -210,7 +210,7 @@ in {
       plugins = mkOption {
         type = with types; listOf (either package pluginWithConfigType);
         default = [ ];
-        example = literalExample ''
+        example = literalExpression ''
           with pkgs.vimPlugins; [
             yankring
             vim-nix
@@ -235,7 +235,7 @@ in {
         settings = mkOption {
           type = jsonFormat.type;
           default = { };
-          example = literalExample ''
+          example = literalExpression ''
             {
               "suggest.noselect" = true;
               "suggest.enablePreview" = true;

@@ -32,7 +32,7 @@ in {
     settings = mkOption {
       type = types.attrsOf (types.oneOf [ types.str types.int ]);
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           ETESYNC_LISTEN_ADDRESS = "localhost";
           ETESYNC_LISTEN_PORT = 37358;

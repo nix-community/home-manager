@@ -170,7 +170,7 @@ in
 
       networks = mkOption {
         default = {};
-        example = literalExample ''
+        example = literalExpression ''
           {
             freenode = {
               nick = "hmuser";

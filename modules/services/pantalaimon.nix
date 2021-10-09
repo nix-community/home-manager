@@ -17,7 +17,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.pantalaimon;
-        defaultText = literalExample "pkgs.pantalaimon";
+        defaultText = literalExpression "pkgs.pantalaimon";
         description =
           "Package providing the <command>pantalaimon</command> executable to use.";
       };
@@ -25,8 +25,8 @@ in {
       settings = mkOption {
         type = iniFmt.type;
         default = { };
-        defaultText = literalExample "{ }";
-        example = literalExample ''
+        defaultText = literalExpression "{ }";
+        example = literalExpression ''
           {
             Default = {
               LogLevel = "Debug";

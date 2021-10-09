@@ -8,7 +8,7 @@ let
 
   defaultHieNixExe = hie-nix.hies + "/bin/hie-wrapper";
   defaultHieNixExeText =
-    literalExample ''"''${pkgs.hie-nix.hies}/bin/hie-wrapper"'';
+    literalExpression ''"''${pkgs.hie-nix.hies}/bin/hie-wrapper"'';
 
   hie-nix = pkgs.hie-nix or (abort ''
     vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
@@ -42,7 +42,7 @@ in {
         overlay or set this option. Example overlay configuration:
         <programlisting language="nix">${exampleOverlay}</programlisting>
       '';
-      example = literalExample ''
+      example = literalExpression ''
         (import ~/src/haskell-ide-engine {}).hies + "/bin/hie-wrapper";
       '';
     };

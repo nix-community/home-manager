@@ -73,7 +73,7 @@ in {
           may use '~' to represent your home directory but you should
           protect it to avoid shell substitution.
         '';
-        example = literalExample ''
+        example = literalExpression ''
           { "\\~/projects/home-manager" = "prj:home-manager"; }
         '';
       };
@@ -85,7 +85,7 @@ in {
           This can be any key/value pair as described in
           <link xlink:href="https://github.com/justjanne/powerline-go"/>.
         '';
-        example = literalExample ''
+        example = literalExpression ''
           {
             hostname-only-if-ssh = true;
             numeric-exit-codes = true;

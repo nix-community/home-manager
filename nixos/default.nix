@@ -86,7 +86,7 @@ in {
             description = "Home Manager modules";
           });
         default = [ ];
-        example = literalExample "[ { home.packages = [ nixpkgs-fmt ]; } ]";
+        example = literalExpression "[ { home.packages = [ nixpkgs-fmt ]; } ]";
         description = ''
           Extra modules added to all users.
         '';

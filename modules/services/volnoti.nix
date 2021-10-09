@@ -16,7 +16,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.volnoti;
-        defaultText = literalExample "pkgs.volnoti";
+        defaultText = literalExpression "pkgs.volnoti";
         description = ''
           Package containing the <command>volnoti</command> program.
         '';

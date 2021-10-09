@@ -149,9 +149,9 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.bspwm;
-      defaultText = literalExample "pkgs.bspwm";
+      defaultText = literalExpression "pkgs.bspwm";
       description = "The bspwm package to use.";
-      example = literalExample "pkgs.bspwm-unstable";
+      example = literalExpression "pkgs.bspwm-unstable";
     };
 
     settings = mkOption {
@@ -190,7 +190,7 @@ in {
       default = { };
       description =
         "Rule configuration. The keys of the attribute set are the targets of the rules.";
-      example = literalExample ''
+      example = literalExpression ''
         {
           "Gimp" = {
             desktop = "^8";

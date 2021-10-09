@@ -17,14 +17,14 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.ncspot;
-      defaultText = literalExample "pkgs.ncspot";
+      defaultText = literalExpression "pkgs.ncspot";
       description = "The package to use for ncspot.";
     };
 
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           shuffle = true;
           gapless = true;

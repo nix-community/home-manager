@@ -3,9 +3,9 @@
 let
   inherit (lib)
     any attrByPath attrNames concatMap concatMapStringsSep elem elemAt filter
-    filterAttrs flip foldl' hasPrefix head length mergeAttrs optionalAttrs
-    stringLength subtractLists types unique;
-  inherit (lib.options) literalExample mkEnableOption mkOption;
+    filterAttrs flip foldl' hasPrefix head length literalExpression mergeAttrs
+    optionalAttrs stringLength subtractLists types unique;
+  inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf mkMerge;
 
   cfg = config.programs.waybar;
@@ -82,7 +82,7 @@ let
         output = mkOption {
           type = nullOr (either str (listOf str));
           default = null;
-          example = literalExample ''
+          example = literalExpression ''
             [ "DP-1" "!DP-2" "!DP-3" ]
           '';
           description = ''
@@ -118,7 +118,7 @@ let
           type = listOf str;
           default = [ ];
           description = "Modules that will be displayed on the left.";
-          example = literalExample ''
+          example = literalExpression ''
             [ "sway/workspaces" "sway/mode" "wlr/taskbar" ]
           '';
         };
@@ -127,7 +127,7 @@ let
           type = listOf str;
           default = [ ];
           description = "Modules that will be displayed in the center.";
-          example = literalExample ''
+          example = literalExpression ''
             [ "sway/window" ]
           '';
         };
@@ -136,7 +136,7 @@ let
           type = listOf str;
           default = [ ];
           description = "Modules that will be displayed on the right.";
-          example = literalExample ''
+          example = literalExpression ''
             [ "mpd" "custom/mymodule#with-css-id" "temperature" ]
           '';
         };
@@ -145,7 +145,7 @@ let
           type = jsonFormat.type;
           default = { };
           description = "Modules configuration.";
-          example = literalExample ''
+          example = literalExpression ''
             {
               "sway/window" = {
                 max-length = 50;
@@ -206,7 +206,7 @@ in {
           xlink:href="https://github.com/Alexays/Waybar/wiki/Configuration"/>
         for supported values.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         [
           {
             layer = "top";

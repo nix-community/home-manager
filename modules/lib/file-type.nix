@@ -21,7 +21,7 @@ with lib;
               absPath = if hasPrefix "/" p then p else "${basePath}/${p}";
             in
               removePrefix (homeDirectory + "/") absPath;
-          defaultText = literalExample "<name>";
+          defaultText = literalExpression "<name>";
           description = ''
             Path to target file relative to ${basePathDesc}.
           '';

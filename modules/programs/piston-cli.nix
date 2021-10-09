@@ -14,14 +14,14 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.piston-cli;
-      defaultText = literalExample "pkgs.piston-cli";
+      defaultText = literalExpression "pkgs.piston-cli";
       description = "The piston-cli package to use.";
     };
 
     settings = mkOption {
       type = yamlFormat.type;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           theme = "emacs";
           box_style = "MINIMAL_DOUBLE_HEAD";

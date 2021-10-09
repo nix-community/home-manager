@@ -21,7 +21,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.dwm-status;
-        defaultText = literalExample "pkgs.dwm-status";
+        defaultText = literalExpression "pkgs.dwm-status";
         example = "pkgs.dwm-status.override { enableAlsaUtils = false; }";
         description = "Which dwm-status package to use.";
       };
@@ -34,7 +34,7 @@ in {
       extraConfig = mkOption {
         type = jsonFormat.type;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             separator = "#";
 

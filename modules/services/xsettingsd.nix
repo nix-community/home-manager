@@ -30,7 +30,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.xsettingsd;
-        defaultText = literalExample "pkgs.xsettingsd";
+        defaultText = literalExpression "pkgs.xsettingsd";
         description = ''
           Package containing the <command>xsettingsd</command> program.
         '';
@@ -39,7 +39,7 @@ in {
       settings = mkOption {
         type = with types; attrsOf (oneOf [ bool int str ]);
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             "Net/ThemeName" = "Numix";
             "Xft/Antialias" = true;

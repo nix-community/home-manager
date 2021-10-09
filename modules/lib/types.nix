@@ -37,7 +37,7 @@ in rec {
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = literalExample "pkgs.dejavu_fonts";
+        example = literalExpression "pkgs.dejavu_fonts";
         description = ''
           Package providing the font. This package will be installed
           to your profile. If <literal>null</literal> then the font

@@ -153,7 +153,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.fish;
-        defaultText = literalExample "pkgs.fish";
+        defaultText = literalExpression "pkgs.fish";
         description = ''
           The fish package to install. May be used to change the version.
         '';
@@ -162,7 +162,7 @@ in {
       shellAliases = mkOption {
         type = with types; attrsOf str;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             g = "git";
             "..." = "cd ../..";
@@ -227,7 +227,7 @@ in {
     programs.fish.plugins = mkOption {
       type = types.listOf pluginModule;
       default = [ ];
-      example = literalExample ''
+      example = literalExpression ''
         [
           {
             name = "z";
@@ -261,7 +261,7 @@ in {
     programs.fish.functions = mkOption {
       type = with types; attrsOf (either lines functionModule);
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           __fish_command_not_found_handler = {
             body = "__fish_default_command_not_found_handler $argv[1]";

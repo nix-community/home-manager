@@ -274,7 +274,7 @@ in {
       extraConfig = mkOption {
         default = "";
         type = types.lines;
-        example = literalExample ''
+        example = literalExpression ''
           [urgency=low]
           border-color=#b8bb26
         '';

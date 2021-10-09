@@ -12,7 +12,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.scmpuff;
-      defaultText = literalExample "pkgs.scmpuff";
+      defaultText = literalExpression "pkgs.scmpuff";
       description = "Package providing the <command>scmpuff</command> tool.";
     };
 

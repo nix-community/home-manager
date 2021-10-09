@@ -40,7 +40,7 @@ let
       tag = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = literalExample ''["git" "nixpkgs"]'';
+        example = literalExpression ''["git" "nixpkgs"]'';
         description = ''
           List of tags attached to the command.
         '';
@@ -64,7 +64,7 @@ in {
     selectcmdPackage = mkOption {
       type = types.package;
       default = pkgs.fzf;
-      defaultText = literalExample "pkgs.fzf";
+      defaultText = literalExpression "pkgs.fzf";
       description = ''
         The package needed for the <varname>settings.selectcmd</varname>.
       '';

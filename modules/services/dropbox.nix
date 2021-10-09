@@ -20,7 +20,7 @@ in {
         type = types.path;
         default = "${config.home.homeDirectory}/Dropbox";
         defaultText =
-          literalExample ''"''${config.home.homeDirectory}/Dropbox"'';
+          literalExpression ''"''${config.home.homeDirectory}/Dropbox"'';
         apply = toString; # Prevent copies to Nix store.
         description = "Where to put the Dropbox directory.";
       };

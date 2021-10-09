@@ -33,7 +33,7 @@ in {
     themes = mkOption {
       type = types.attrsOf types.lines;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           dracula = builtins.readFile (pkgs.fetchFromGitHub {
             owner = "dracula";

@@ -19,7 +19,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.starship;
-      defaultText = literalExample "pkgs.starship";
+      defaultText = literalExpression "pkgs.starship";
       description = "The package to use for the starship binary.";
     };
 
@@ -33,7 +33,7 @@ in {
           entries = entryOrAttrsOf (entryOrAttrsOf entry);
         in attrsOf entries // { description = "Starship configuration"; };
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           add_newline = false;
           format = lib.concatStrings [

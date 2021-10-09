@@ -27,7 +27,7 @@ in {
       settings = mkOption {
         type = with types; attrsOf (attrsOf hm.types.gvariant);
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             "org/gnome/calculator" = {
               button-mode = "programming";

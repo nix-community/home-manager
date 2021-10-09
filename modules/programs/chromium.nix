@@ -21,7 +21,7 @@ let
         inherit visible;
         type = types.package;
         default = defaultPkg;
-        defaultText = literalExample "pkgs.${browser}";
+        defaultText = literalExpression "pkgs.${browser}";
         description = "The ${name} package to use.";
       };
     } // optionalAttrs (!isProprietaryChrome) {
@@ -72,7 +72,7 @@ let
             };
           in listOf (coercedTo str (v: { id = v; }) extensionType);
         default = [ ];
-        example = literalExample ''
+        example = literalExpression ''
           [
             { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # ublock origin
             {

@@ -262,8 +262,8 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.picom;
-      defaultText = literalExample "pkgs.picom";
-      example = literalExample "pkgs.picom";
+      defaultText = literalExpression "pkgs.picom";
+      example = literalExpression "pkgs.picom";
       description = ''
         picom derivation to use.
       '';

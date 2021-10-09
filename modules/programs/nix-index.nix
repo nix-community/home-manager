@@ -9,7 +9,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.nix-index;
-      defaultText = literalExample "pkgs.nix-index";
+      defaultText = literalExpression "pkgs.nix-index";
       description = "Package providing the <command>nix-index</command> tool.";
     };
 

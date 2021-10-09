@@ -217,7 +217,7 @@ let
       localForwards = mkOption {
         type = types.listOf forwardModule;
         default = [];
-        example = literalExample ''
+        example = literalExpression ''
           [
             {
               bind.port = 8080;
@@ -238,7 +238,7 @@ let
       remoteForwards = mkOption {
         type = types.listOf forwardModule;
         default = [];
-        example = literalExample ''
+        example = literalExpression ''
           [
             {
               bind.port = 8080;
@@ -259,7 +259,7 @@ let
       dynamicForwards = mkOption {
         type = types.listOf dynamicForwardModule;
         default = [];
-        example = literalExample ''
+        example = literalExpression ''
           [ { port = 8080; } ];
         '';
         description = ''
@@ -417,7 +417,7 @@ in
     matchBlocks = mkOption {
       type = hm.types.listOrDagOf matchBlockModule;
       default = {};
-      example = literalExample ''
+      example = literalExpression ''
         {
           "john.example.com" = {
             hostname = "example.com";

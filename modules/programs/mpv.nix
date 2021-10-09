@@ -62,7 +62,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.mpv;
-        example = literalExample
+        example = literalExpression
           "pkgs.wrapMpv (pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }) { youtubeSupport = true; }";
         description = ''
           Package providing mpv.
@@ -81,7 +81,7 @@ in {
       scripts = mkOption {
         type = with types; listOf (either package str);
         default = [ ];
-        example = literalExample "[ pkgs.mpvScripts.mpris ]";
+        example = literalExpression "[ pkgs.mpvScripts.mpris ]";
         description = ''
           List of scripts to use with mpv.
         '';
@@ -99,7 +99,7 @@ in {
         '';
         type = mpvOptions;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             profile = "gpu-hq";
             force-window = true;
@@ -117,7 +117,7 @@ in {
         '';
         type = mpvProfiles;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             fast = {
               vo = "vdpau";
@@ -152,7 +152,7 @@ in {
         '';
         type = mpvBindings;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             WHEEL_UP = "seek 10";
             WHEEL_DOWN = "seek -10";

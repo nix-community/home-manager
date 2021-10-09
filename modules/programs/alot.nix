@@ -200,7 +200,7 @@ in {
           handle_mouse = true;
           prefer_plaintext = true;
         };
-        example = literalExample ''
+        example = literalExpression ''
           {
             auto_remove_unread = true;
             ask_subject = false;

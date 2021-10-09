@@ -51,7 +51,7 @@ in {
         See <command>dircolors --print-database</command>
         for options.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           OTHER_WRITABLE = "30;46";
           ".sh" = "01;32";

@@ -25,7 +25,7 @@ with lib;
           + "}[,\\]]?'";
         shellcommand_external_filtering = "False";
       };
-      example = literalExample ''
+      example = literalExpression ''
         {
           type = "shellcommand";
           command = "abook --mutt-query";

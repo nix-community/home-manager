@@ -15,8 +15,8 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.pass;
-      defaultText = literalExample "pkgs.pass";
-      example = literalExample ''
+      defaultText = literalExpression "pkgs.pass";
+      example = literalExpression ''
         pkgs.pass.withExtensions (exts: [ exts.pass-otp ])
       '';
       description = ''
@@ -31,10 +31,10 @@ in {
       default = {
         PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
       };
-      defaultText = literalExample ''
+      defaultText = literalExpression ''
         { PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store"; }
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           PASSWORD_STORE_DIR = "/some/directory";
           PASSWORD_STORE_KEY = "12345678";

@@ -23,7 +23,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.pulseeffects-legacy;
-      defaultText = literalExample "pkgs.pulseeffects-legacy";
+      defaultText = literalExpression "pkgs.pulseeffects-legacy";
       description = "Pulseeffects package to use.";
     };
 

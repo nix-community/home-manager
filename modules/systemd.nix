@@ -4,7 +4,7 @@ let
 
   cfg = config.systemd.user;
 
-  inherit (lib) getAttr hm isBool literalExample mkIf mkMerge mkOption types;
+  inherit (lib) getAttr hm isBool literalExpression mkIf mkMerge mkOption types;
 
   # From <nixpkgs/nixos/modules/system/boot/systemd-lib.nix>
   mkPathSafeName =
@@ -78,7 +78,7 @@ let
   '';
 
   unitExample = type:
-    literalExample ''
+    literalExpression ''
       {
         ${lib.toLower type}-name = {
           Unit = {

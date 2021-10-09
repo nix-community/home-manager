@@ -14,7 +14,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.nextcloud-client;
-        defaultText = literalExample "pkgs.nextcloud-client";
+        defaultText = literalExpression "pkgs.nextcloud-client";
         description = "The package to use for the nextcloud client binary.";
       };
 

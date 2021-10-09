@@ -15,7 +15,7 @@ let
       aliases = mkOption {
         type = with types; attrsOf str;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             co = "pr checkout";
             pv = "pr view";
@@ -68,7 +68,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.gh;
-      defaultText = literalExample "pkgs.gh";
+      defaultText = literalExpression "pkgs.gh";
       description = "Package providing <command>gh</command>.";
     };
 
@@ -77,7 +77,7 @@ in {
       default = { };
       description =
         "Configuration written to <filename>$XDG_CONFIG_HOME/gh/config.yml</filename>.";
-      example = literalExample ''
+      example = literalExpression ''
         {
           git_protocol = "ssh";
 
