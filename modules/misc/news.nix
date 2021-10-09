@@ -2225,6 +2225,15 @@ in
           you may need to do some changes.
         '';
       }
+      {
+        time = "2021-10-09T16:32:15+00:00";
+        message = ''
+          The neovim module has a new option: 'neovim.initExtra'.
+
+          This adds extra vimscript configuration to the top of the
+          generated configuration file.
+        '';
+      }
     ];
   };
 }
