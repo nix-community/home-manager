@@ -71,15 +71,15 @@ Currently the easiest way to install Home Manager is as follows:
     Nixpkgs master or an unstable channel you can run
 
     ```console
-    $ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-    $ nix-channel --update
+    nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+    nix-channel --update
     ```
 
     and if you follow a Nixpkgs version 21.05 channel you can run
 
     ```console
-    $ nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
-    $ nix-channel --update
+    nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
+    nix-channel --update
     ```
 
     On NixOS you may need to log out and back in for the channel to
@@ -94,7 +94,7 @@ Currently the easiest way to install Home Manager is as follows:
 3.  Install Home Manager and create the first Home Manager generation:
 
     ```console
-    $ nix-shell '<home-manager>' -A install
+    nix-shell '<home-manager>' -A install
     ```
 
     Once finished, Home Manager should be active and available in your
@@ -192,13 +192,13 @@ To satisfy the above setup we should elaborate the
 To activate this configuration you can then run
 
 ```console
-$ home-manager switch
+home-manager switch
 ```
 
 or if you are not feeling so lucky,
 
 ```console
-$ home-manager build
+home-manager build
 ```
 
 which will create a `result` link to a directory containing an
@@ -209,7 +209,7 @@ descriptions and usage examples, is available in the [Home Manager
 manual][configuration options] or offline by running
 
 ```console
-$ man home-configuration.nix
+man home-configuration.nix
 ```
 
 Rollbacks
@@ -223,7 +223,7 @@ do so are
     wish to rollback to:
 
     ```console
-    $ home-manager generations
+    home-manager generations
     2018-01-04 11:56 : id 765 -> /nix/store/kahm1rxk77mnvd2l8pfvd4jkkffk5ijk-home-manager-generation
     2018-01-03 10:29 : id 764 -> /nix/store/2wsmsliqr5yynqkdyjzb1y57pr5q2lsj-home-manager-generation
     2018-01-01 12:21 : id 763 -> /nix/store/mv960kl9chn2lal5q8lnqdp1ygxngcd1-home-manager-generation
@@ -241,7 +241,7 @@ do so are
 3.  Run the `activate` script inside the copied store path:
 
     ```console
-    $ /nix/store/mv960kl9chn2lal5q8lnqdp1ygxngcd1-home-manager-generation/activate
+    /nix/store/mv960kl9chn2lal5q8lnqdp1ygxngcd1-home-manager-generation/activate
     Starting home manager activation
     …
     ```
@@ -277,7 +277,7 @@ to your configuration. Attempting to switch to the generation will
 then result in
 
 ```console
-$ home-manager switch
+home-manager switch
 …
 Activating checkLinkTargets
 Existing file '/home/jdoe/.config/git/config' is in the way
