@@ -124,6 +124,7 @@ import nmt {
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs
+    ./modules/services/flameshot
     ./modules/services/fluidsynth
     ./modules/services/fnott
     ./modules/services/git-sync
