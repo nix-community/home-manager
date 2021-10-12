@@ -40,7 +40,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.mpdris2;
-      defaultText = literalExample "pkgs.mpdris2";
+      defaultText = literalExpression "pkgs.mpdris2";
       description = "The mpDris2 package to use.";
     };
 

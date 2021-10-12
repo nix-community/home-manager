@@ -108,7 +108,7 @@ let
       contents = mkOption {
         type = types.attrsOf types.anything;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             user = {
               email = "bob@work.example.com";
@@ -146,7 +146,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.git;
-        defaultText = literalExample "pkgs.git";
+        defaultText = literalExpression "pkgs.git";
         description = ''
           Git package to install. Use <varname>pkgs.gitAndTools.gitFull</varname>
           to gain access to <command>git send-email</command> for instance.
@@ -213,7 +213,7 @@ in {
       includes = mkOption {
         type = types.listOf includeModule;
         default = [ ];
-        example = literalExample ''
+        example = literalExpression ''
           [
             { path = "~/path/to/config.inc"; }
             {

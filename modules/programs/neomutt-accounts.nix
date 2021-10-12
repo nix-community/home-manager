@@ -30,7 +30,7 @@ in {
         "msmtpq --read-envelope-from --read-recipients"
       else
         null;
-      defaultText = literalExample ''
+      defaultText = literalExpression ''
         if config.msmtp.enable then
           "msmtpq --read-envelope-from --read-recipients"
         else

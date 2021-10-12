@@ -132,7 +132,7 @@ in {
       extraConfig.mbnames = mkOption {
         type = extraConfigType;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             filename = "~/.config/mutt/mailboxes";
             header = "'mailboxes '";

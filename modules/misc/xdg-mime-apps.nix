@@ -30,7 +30,7 @@ in {
     associations.added = mkOption {
       type = types.attrsOf strListOrSingleton;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           "mimetype1" = [ "foo1.desktop" "foo2.desktop" "foo3.desktop" ];
           "mimetype2" = "foo4.desktop";
@@ -57,7 +57,7 @@ in {
     defaultApplications = mkOption {
       type = types.attrsOf strListOrSingleton;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           "mimetype1" = [ "default1.desktop" "default2.desktop" ];
         }

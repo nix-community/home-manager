@@ -106,7 +106,7 @@ let
       transform = mkOption {
         type = types.nullOr (matrixOf 3 3 types.float);
         default = null;
-        example = literalExample ''
+        example = literalExpression ''
           [
             [ 0.6 0.0 0.0 ]
             [ 0.0 0.6 0.0 ]
@@ -169,7 +169,7 @@ let
           exclusive.
         '';
         default = null;
-        example = literalExample ''
+        example = literalExpression ''
           {
             x = 1.25;
             y = 1.25;
@@ -280,7 +280,7 @@ in {
         type = globalHooksModule;
         description = "Global hook scripts";
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             postswitch = {
               "notify-i3" = "''${pkgs.i3}/bin/i3-msg restart";
@@ -312,7 +312,7 @@ in {
         type = types.attrsOf profileModule;
         description = "Autorandr profiles specification.";
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             "work" = {
               fingerprint = {

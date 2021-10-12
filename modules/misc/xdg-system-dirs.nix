@@ -17,7 +17,7 @@ in {
     config = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = literalExample ''[ "/etc/xdg" ]'';
+      example = literalExpression ''[ "/etc/xdg" ]'';
       description = ''
         Directory names to add to <envar>XDG_CONFIG_DIRS</envar>
         in the user session.
@@ -27,7 +27,7 @@ in {
     data = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = literalExample ''[ "/usr/share" "/usr/local/share" ]'';
+      example = literalExpression ''[ "/usr/share" "/usr/local/share" ]'';
       description = ''
         Directory names to add to <envar>XDG_DATA_DIRS</envar>
         in the user session.

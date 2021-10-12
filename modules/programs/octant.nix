@@ -28,14 +28,14 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.octant;
-        defaultText = literalExample "pkgs.octant";
-        example = literalExample "pkgs.octant-other";
+        defaultText = literalExpression "pkgs.octant";
+        example = literalExpression "pkgs.octant-other";
         description = "The Octant package to use.";
       };
 
       plugins = mkOption {
         default = [ ];
-        example = literalExample "[ pkgs.starboard-octant-plugin ]";
+        example = literalExpression "[ pkgs.starboard-octant-plugin ]";
         description = "Optional Octant plugins.";
         type = types.listOf types.package;
       };

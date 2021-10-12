@@ -35,7 +35,7 @@ in {
 
       windowManager.command = mkOption {
         type = types.str;
-        example = literalExample ''
+        example = literalExpression ''
           let
             xmonad = pkgs.xmonad-with-packages.override {
               packages = self: [ self.xmonad-contrib self.taffybar ];

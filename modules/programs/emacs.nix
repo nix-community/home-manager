@@ -29,8 +29,8 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.emacs;
-        defaultText = literalExample "pkgs.emacs";
-        example = literalExample "pkgs.emacs25-nox";
+        defaultText = literalExpression "pkgs.emacs";
+        example = literalExpression "pkgs.emacs25-nox";
         description = "The Emacs package to use.";
       };
 
@@ -55,7 +55,7 @@ in {
         default = self: [ ];
         type = hm.types.selectorFunction;
         defaultText = "epkgs: []";
-        example = literalExample "epkgs: [ epkgs.emms epkgs.magit ]";
+        example = literalExpression "epkgs: [ epkgs.emms epkgs.magit ]";
         description = ''
           Extra packages available to Emacs. To get a list of
           available packages run:
@@ -67,7 +67,7 @@ in {
         default = self: super: { };
         type = hm.types.overlayFunction;
         defaultText = "self: super: {}";
-        example = literalExample ''
+        example = literalExpression ''
           self: super: rec {
             haskell-mode = self.melpaPackages.haskell-mode;
             # ...

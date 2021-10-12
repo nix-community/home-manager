@@ -18,15 +18,15 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.topgrade;
-      defaultText = literalExample "pkgs.topgrade";
+      defaultText = literalExpression "pkgs.topgrade";
       description = "The package to use for the topgrade binary.";
     };
 
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
-      defaultText = literalExample "{ }";
-      example = literalExample ''
+      defaultText = literalExpression "{ }";
+      example = literalExpression ''
         {
           assume_yes = true;
           disable = [

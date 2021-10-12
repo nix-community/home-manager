@@ -128,7 +128,7 @@ let
           Consider to use <code>lib.mkOptionDefault</code> function to extend or override
           default keybindings instead of specifying all of them from scratch.
         '';
-        example = literalExample ''
+        example = literalExpression ''
           let
             modifier = config.wayland.windowManager.sway.config.modifier;
           in lib.mkOptionDefault {
@@ -332,7 +332,7 @@ in {
     package = mkOption {
       type = with types; nullOr package;
       default = defaultSwayPackage;
-      defaultText = literalExample "${pkgs.sway}";
+      defaultText = literalExpression "${pkgs.sway}";
       description = ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.

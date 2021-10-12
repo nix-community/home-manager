@@ -11,7 +11,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.senpai;
-      defaultText = literalExample "pkgs.senpai";
+      defaultText = literalExpression "pkgs.senpai";
       description = "The <literal>senpai</literal> package to use.";
     };
     config = mkOption {
@@ -48,7 +48,7 @@ in {
           };
         };
       };
-      example = literalExample ''
+      example = literalExpression ''
         {
           addr = "libera.chat:6697";
           nick = "nicholas";

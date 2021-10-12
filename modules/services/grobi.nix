@@ -31,7 +31,7 @@ in {
       rules = mkOption {
         type = with types; listOf (attrsOf eitherStrBoolIntList);
         default = [ ];
-        example = literalExample ''
+        example = literalExpression ''
           [
             {
               name = "Home";

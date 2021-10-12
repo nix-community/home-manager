@@ -49,7 +49,7 @@ in {
     automaticPreferences = mkOption {
       type = types.attrsOf types.lines;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           nix = '''
             TAB 0

@@ -18,8 +18,8 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.isync;
-      defaultText = literalExample "pkgs.isync";
-      example = literalExample "pkgs.isync";
+      defaultText = literalExpression "pkgs.isync";
+      example = literalExpression "pkgs.isync";
       description = "The package to use for the mbsync binary.";
     };
 

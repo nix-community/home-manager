@@ -19,8 +19,8 @@ in {
     settings = mkOption {
       type = yamlFormat.type;
       default = { };
-      defaultText = literalExample "{ }";
-      example = literalExample ''
+      defaultText = literalExpression "{ }";
+      example = literalExpression ''
         {
           gui.theme = {
             lightTheme = true;

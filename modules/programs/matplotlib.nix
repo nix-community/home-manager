@@ -28,7 +28,7 @@ in {
         Add terms to the <filename>matplotlibrc</filename> file to
         control the default matplotlib behavior.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           backend = "Qt5Agg";
           axes = {

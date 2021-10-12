@@ -10,7 +10,7 @@ let
     options = {
       package = mkOption {
         type = types.package;
-        example = literalExample "pkgs.vanilla-dmz";
+        example = literalExpression "pkgs.vanilla-dmz";
         description = "Package providing the cursor theme.";
       };
 

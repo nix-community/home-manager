@@ -16,7 +16,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.obs-studio;
-        defaultText = literalExample "pkgs.obs-studio";
+        defaultText = literalExpression "pkgs.obs-studio";
         description = ''
           OBS Studio package to install.
         '';
@@ -31,7 +31,7 @@ in {
 
       plugins = mkOption {
         default = [ ];
-        example = literalExample "[ pkgs.obs-studio-plugins.wlrobs ]";
+        example = literalExpression "[ pkgs.obs-studio-plugins.wlrobs ]";
         description = "Optional OBS plugins.";
         type = types.listOf types.package;
       };

@@ -44,7 +44,7 @@ in {
     environment = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           "primary-display" = "$(xrandr | awk '/ primary/{print $1}')";
         }
@@ -81,7 +81,7 @@ in {
           };
           command = mkOption {
             type = types.nullOr types.str;
-            example = literalExample ''
+            example = literalExpression ''
               ''${pkgs.libnotify}/bin/notify-send "Idle" "Sleeping in 1 minute"
             '';
             description = ''
@@ -93,7 +93,7 @@ in {
           canceller = mkOption {
             type = types.str;
             default = "";
-            example = literalExample ''
+            example = literalExpression ''
               ''${pkgs.libnotify}/bin/notify-send "Idle" "Resuming activity"
             '';
             description = ''
@@ -106,7 +106,7 @@ in {
         };
       });
       default = [ ];
-      example = literalExample ''
+      example = literalExpression ''
         [
           {
             delay = 60;

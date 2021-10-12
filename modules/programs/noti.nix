@@ -26,7 +26,7 @@ in {
         </citerefentry>.
         for the full list of options.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           say = {
             voice = "Alex";

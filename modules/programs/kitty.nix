@@ -36,7 +36,7 @@ in {
       type = types.nullOr (types.listOf types.str);
       default = null;
       description = "Command-line options to use when launched by Mac OS GUI";
-      example = literalExample ''
+      example = literalExpression ''
         [
           "--single-instance"
           "--directory=/tmp/my-dir"
@@ -48,7 +48,7 @@ in {
     settings = mkOption {
       type = types.attrsOf eitherStrBoolInt;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           scrollback_lines = 10000;
           enable_audio_bell = false;
@@ -73,7 +73,7 @@ in {
       type = types.attrsOf types.str;
       default = { };
       description = "Mapping of keybindings to actions.";
-      example = literalExample ''
+      example = literalExpression ''
         {
           "ctrl+c" = "copy_or_interrupt";
           "ctrl+f>2" = "set_font_size 20";
@@ -85,7 +85,7 @@ in {
       type = types.attrsOf types.str;
       default = { };
       description = "Environment variables to set or override.";
-      example = literalExample ''
+      example = literalExpression ''
         {
           "LS_COLORS" = "1";
         }

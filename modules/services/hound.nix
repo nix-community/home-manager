@@ -45,7 +45,7 @@ in {
     repositories = mkOption {
       type = types.attrsOf jsonFormat.type;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           SomeGitRepo = {
             url = "https://www.github.com/YourOrganization/RepoOne.git";

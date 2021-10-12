@@ -15,7 +15,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.zoxide;
-      defaultText = literalExample "pkgs.zoxide";
+      defaultText = literalExpression "pkgs.zoxide";
       description = ''
         Zoxide package to install.
       '';

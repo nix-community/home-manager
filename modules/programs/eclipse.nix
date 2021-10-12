@@ -16,8 +16,8 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.eclipses.eclipse-platform;
-        defaultText = literalExample "pkgs.eclipses.eclipse-platform";
-        example = literalExample "pkgs.eclipses.eclipse-java";
+        defaultText = literalExpression "pkgs.eclipses.eclipse-platform";
+        example = literalExpression "pkgs.eclipses.eclipse-java";
         description = ''
           The Eclipse package to install.
         '';

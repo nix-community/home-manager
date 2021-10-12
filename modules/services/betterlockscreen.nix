@@ -14,7 +14,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.betterlockscreen;
-        defaultText = literalExample "pkgs.betterlockscreen";
+        defaultText = literalExpression "pkgs.betterlockscreen";
         description = "Package providing <command>betterlockscreen</command>.";
       };
 

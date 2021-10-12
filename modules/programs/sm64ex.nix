@@ -44,11 +44,11 @@ in {
       type = types.nullOr (types.enum [ "us" "eu" "jp" ]);
       default = null;
       defaultText =
-        literalExample "us"; # This is set both in nixpkgs and upstream
+        literalExpression "us"; # This is set both in nixpkgs and upstream
       description = ''
         Your baserom's region. Note that only "us", "eu", and "jp" are supported.
       '';
-      example = literalExample "jp";
+      example = literalExpression "jp";
     };
 
     baserom = mkOption {
@@ -56,7 +56,7 @@ in {
       default = null;
       description =
         "The path to the Super Mario 64 baserom to extract assets from.";
-      example = literalExample "/home/foo/baserom.us.z64";
+      example = literalExpression "/home/foo/baserom.us.z64";
     };
 
     extraCompileFlags = mkOption {
@@ -67,7 +67,7 @@ in {
         <link xlink:href="https://github.com/sm64pc/sm64ex/wiki/Build-options"/>
         for more information.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         [
           "BETTERCAMERA=1"
           "NODRAWINGDISTANCE=1"
@@ -81,7 +81,7 @@ in {
       default = null;
       description =
         "Settings for sm64ex's <filename>~/.local/share/sm64pc/sm64config.txt</filename> file.";
-      example = literalExample ''
+      example = literalExpression ''
         {
           fullscreen = false;
           window_x = 0;

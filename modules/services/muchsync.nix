@@ -135,7 +135,7 @@ in {
     remotes = mkOption {
       type = with types; attrsOf (submodule syncOptions);
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           server = {
             frequency = "*:0/10";

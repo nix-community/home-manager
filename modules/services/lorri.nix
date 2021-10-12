@@ -15,7 +15,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.lorri;
-      defaultText = literalExample "pkgs.lorri";
+      defaultText = literalExpression "pkgs.lorri";
       description = "Which lorri package to install.";
     };
   };

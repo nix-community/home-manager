@@ -16,7 +16,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.foot;
-      defaultText = literalExample "pkgs.foot";
+      defaultText = literalExpression "pkgs.foot";
       description = "The foot package to install";
     };
 
@@ -31,7 +31,7 @@ in {
         xlink:href="https://codeberg.org/dnkl/foot/src/branch/master/foot.ini"/>
         for a list of available options.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           main = {
             term = "xterm-256color";

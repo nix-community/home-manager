@@ -67,7 +67,7 @@ in {
           execution = "less {file}";
         }
       ];
-      example = literalExample ''
+      example = literalExpression ''
         [
           { invocation = "p"; execution = ":parent"; }
           { invocation = "edit"; shortcut = "e"; execution = "$EDITOR {file}" ; }
@@ -124,14 +124,14 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.broot;
-      defaultText = literalExample "pkgs.broot";
+      defaultText = literalExpression "pkgs.broot";
       description = "Package providing broot";
     };
 
     skin = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           status_normal_fg = "grayscale(18)";
           status_normal_bg = "grayscale(3)";

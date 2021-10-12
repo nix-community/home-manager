@@ -137,7 +137,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.kanshi;
-      defaultText = literalExample "pkgs.kanshi";
+      defaultText = literalExpression "pkgs.kanshi";
       description = ''
         kanshi derivation to use.
       '';
@@ -149,7 +149,7 @@ in {
       description = ''
         List of profiles.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         undocked = {
           outputs = [
             {

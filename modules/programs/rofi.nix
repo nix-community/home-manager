@@ -105,7 +105,7 @@ in {
       description = ''
         Package providing the <command>rofi</command> binary.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
       '';
     };
@@ -116,7 +116,7 @@ in {
       description = ''
         List of rofi plugins to be installed.
       '';
-      example = literalExample "[ pkgs.rofi-calc ]";
+      example = literalExpression "[ pkgs.rofi-calc ]";
     };
 
     font = mkOption {
@@ -166,7 +166,7 @@ in {
     theme = mkOption {
       default = null;
       type = with types; nullOr (oneOf [ str path themeType ]);
-      example = literalExample ''
+      example = literalExpression ''
         let
           # Use `mkLiteral` for string-like values that should show without
           # quotes, e.g.:
@@ -211,7 +211,7 @@ in {
 
     extraConfig = mkOption {
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           modi = "drun,emoji,ssh";
           kb-primary-paste = "Control+V,Shift+Insert";

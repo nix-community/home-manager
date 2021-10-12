@@ -45,7 +45,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.himalaya;
-        defaultText = literalExample "pkgs.himalaya";
+        defaultText = literalExpression "pkgs.himalaya";
         description = ''
           Package providing the <command>himalaya</command> mail client.
         '';
@@ -54,7 +54,7 @@ in {
       settings = mkOption {
         type = tomlFormat.type;
         default = { };
-        example = lib.literalExample ''
+        example = lib.literalExpression ''
           {
             default-page-size = 50;
           }
@@ -76,7 +76,7 @@ in {
             settings = mkOption {
               type = tomlFormat.type;
               default = { };
-              example = lib.literalExample ''
+              example = lib.literalExpression ''
                 {
                   default-page-size = 50;
                 }

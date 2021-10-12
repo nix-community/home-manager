@@ -25,7 +25,7 @@ let
     options = {
       package = mkOption {
         type = types.package;
-        example = literalExample "pkgs.gnome.adwaita-icon-theme";
+        example = literalExpression "pkgs.gnome.adwaita-icon-theme";
         description = "Package providing the theme.";
       };
 
@@ -60,7 +60,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.dunst;
-        defaultText = literalExample "pkgs.dunst";
+        defaultText = literalExpression "pkgs.dunst";
         description = "Package providing <command>dunst</command>.";
       };
 
@@ -105,7 +105,7 @@ in {
         default = { };
         description =
           "Configuration written to <filename>$XDG_CONFIG_HOME/dunst/dunstrc</filename>.";
-        example = literalExample ''
+        example = literalExpression ''
           {
             global = {
               geometry = "300x5-30+50";

@@ -19,7 +19,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.awesome;
-        defaultText = literalExample "pkgs.awesome";
+        defaultText = literalExpression "pkgs.awesome";
         description = "Package to use for running the Awesome WM.";
       };
 
@@ -30,7 +30,7 @@ in {
           List of lua packages available for being
           used in the Awesome configuration.
         '';
-        example = literalExample "[ pkgs.luaPackages.vicious ]";
+        example = literalExpression "[ pkgs.luaPackages.vicious ]";
       };
 
       noArgb = mkOption {

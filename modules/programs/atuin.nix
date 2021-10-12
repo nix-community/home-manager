@@ -17,7 +17,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.atuin;
-      defaultText = literalExample "pkgs.atuin";
+      defaultText = literalExpression "pkgs.atuin";
       description = "The package to use for atuin.";
     };
 
@@ -50,7 +50,7 @@ in {
           entries = entryOrAttrsOf (entryOrAttrsOf entry);
         in attrsOf entries // { description = "Atuin configuration"; };
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           auto_sync = true;
           sync_frequency = "5m";

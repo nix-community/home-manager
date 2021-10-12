@@ -234,7 +234,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.neomutt;
-        defaultText = literalExample "pkgs.neomutt";
+        defaultText = literalExpression "pkgs.neomutt";
         description = "The neomutt package to use.";
       };
 

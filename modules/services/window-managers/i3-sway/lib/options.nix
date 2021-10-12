@@ -12,12 +12,12 @@ let
       names = mkOption {
         type = types.listOf types.str;
         default = [ "monospace" ];
-        defaultText = literalExample ''[ "monospace" ]'';
+        defaultText = literalExpression ''[ "monospace" ]'';
         description = ''
           List of font names list used for window titles. Only FreeType fonts are supported.
           The order here is important (e.g. icons font should go before the one used for text).
         '';
-        example = literalExample ''[ "FontAwesome" "Terminus" ]'';
+        example = literalExpression ''[ "FontAwesome" "Terminus" ]'';
       };
 
       style = mkOption {
@@ -82,7 +82,7 @@ let
         mkOption (args // {
           type = types.nullOr type;
           default = if versionAtLeast2009 then null else default;
-          defaultText = literalExample ''
+          defaultText = literalExpression ''
             null for state version ≥ 20.09, as example otherwise
           '';
           example = default;
@@ -91,7 +91,7 @@ let
       fonts = mkOption {
         type = with types; either (listOf str) fontOptions;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
             style = "Bold Semi-Condensed";
@@ -359,7 +359,7 @@ let
           A value of <literal>true</literal> is equivalent to using an empty
           criteria (which is different from an empty string criteria).
         '';
-        example = literalExample ''
+        example = literalExpression ''
           {
             title = "x200: ~/work";
             floating = true;
@@ -374,7 +374,7 @@ in {
   fonts = mkOption {
     type = with types; either (listOf str) fontOptions;
     default = { };
-    example = literalExample ''
+    example = literalExpression ''
       {
         names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
         style = "Bold Semi-Condensed";
@@ -531,7 +531,7 @@ in {
       An attribute set that assigns applications to workspaces based
       on criteria.
     '';
-    example = literalExample ''
+    example = literalExpression ''
       {
       "1: web" = [{ class = "^Firefox$"; }];
       "0: extra" = [{ class = "^Firefox$"; window_role = "About"; }];
@@ -714,7 +714,7 @@ in {
       };
     }] else
       [ { } ];
-    defaultText = literalExample "see code";
+    defaultText = literalExpression "see code";
     description = ''
       ${capitalModuleName} bars settings blocks. Set to empty list to remove bars completely.
     '';
@@ -729,7 +729,7 @@ in {
       See <link xlink:href="https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup"/>.
     '';
     example = if isI3 then
-      literalExample ''
+      literalExpression ''
         [
         { command = "systemctl --user restart polybar"; always = true; notification = false; }
         { command = "dropbox start"; notification = false; }
@@ -737,7 +737,7 @@ in {
         ];
       ''
     else
-      literalExample ''
+      literalExpression ''
         [
         { command = "systemctl --user restart waybar"; always = true; }
         { command = "dropbox start"; }

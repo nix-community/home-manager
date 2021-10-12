@@ -13,9 +13,9 @@ in {
 
       package = mkOption {
         default = pkgs.stalonetray;
-        defaultText = literalExample "pkgs.stalonetray";
+        defaultText = literalExpression "pkgs.stalonetray";
         type = types.package;
-        example = literalExample "pkgs.stalonetray";
+        example = literalExpression "pkgs.stalonetray";
         description = "The package to use for the Stalonetray binary.";
       };
 

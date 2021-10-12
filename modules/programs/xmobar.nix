@@ -9,7 +9,7 @@ in {
 
     package = mkOption {
       default = pkgs.haskellPackages.xmobar;
-      defaultText = literalExample "pkgs.haskellPackages.xmobar";
+      defaultText = literalExpression "pkgs.haskellPackages.xmobar";
       type = types.package;
       description = ''
         Package providing the <command>xmobar</command> binary.
@@ -18,7 +18,7 @@ in {
 
     extraConfig = mkOption {
       default = "";
-      example = literalExample ''
+      example = literalExpression ''
         Config
           { font        = "Fira Code"
           , borderColor = "#d0d0d0"

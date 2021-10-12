@@ -41,7 +41,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.qutebrowser;
-      defaultText = literalExample "pkgs.qutebrowser";
+      defaultText = literalExpression "pkgs.qutebrowser";
       description = "Qutebrowser package to install.";
     };
 
@@ -77,7 +77,7 @@ in {
         prepending the search engine name to the search term, for example
         <literal>:open google qutebrowser</literal>.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           w = "https://en.wikipedia.org/wiki/Special:Search?search={}&go=Go&ns0=1";
           aw = "https://wiki.archlinux.org/?search={}";
@@ -95,7 +95,7 @@ in {
         See <link xlink:href="https://qutebrowser.org/doc/help/settings.html"/>
         for options.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           colors = {
             hints = {
@@ -239,7 +239,7 @@ in {
           </varlistentry>
         </variablelist>
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           normal = {
             "<Ctrl-v>" = "spawn mpv {url}";
@@ -260,7 +260,7 @@ in {
         Quickmarks to add to qutebrowser's <filename>quickmarks</filename> file.
         Note that when Home Manager manages your quickmarks, you cannot edit them at runtime.
       '';
-      example = literalExample ''
+      example = literalExpression ''
         {
           nixpkgs = "https://github.com/NixOS/nixpkgs";
           home-manager = "https://github.com/nix-community/home-manager";

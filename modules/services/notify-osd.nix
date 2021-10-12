@@ -16,7 +16,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.notify-osd;
-        defaultText = literalExample "pkgs.notify-osd";
+        defaultText = literalExpression "pkgs.notify-osd";
         description = ''
           Package containing the <command>notify-osd</command> program.
         '';

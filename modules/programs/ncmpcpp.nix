@@ -53,12 +53,12 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.ncmpcpp;
-      defaultText = literalExample "pkgs.ncmpcpp";
+      defaultText = literalExpression "pkgs.ncmpcpp";
       description = ''
         Package providing the <code>ncmpcpp</code> command.
       '';
       example =
-        literalExample "pkgs.ncmpcpp.override { visualizerSupport = true; }";
+        literalExpression "pkgs.ncmpcpp.override { visualizerSupport = true; }";
     };
 
     mpdMusicDir = mkOption {
@@ -68,7 +68,7 @@ in {
         mpdCfg.musicDirectory
       else
         null;
-      defaultText = literalExample ''
+      defaultText = literalExpression ''
         if pkgs.stdenv.hostPlatform.isLinux && config.services.mpd.enable then
           config.services.mpd.musicDirectory
         else
@@ -101,7 +101,7 @@ in {
       type = types.listOf bindingType;
       default = [ ];
       description = "List of keybindings.";
-      example = literalExample ''
+      example = literalExpression ''
         [
           { key = "j"; command = "scroll_down"; }
           { key = "k"; command = "scroll_up"; }
