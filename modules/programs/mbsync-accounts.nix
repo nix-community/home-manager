@@ -94,7 +94,7 @@ let
       extraConfig = mkOption {
         type = extraConfigType;
         default = { };
-        example = ''
+        example = literalExample ''
           {
             Create = "both";
             CopyArrivalDate = "yes";
