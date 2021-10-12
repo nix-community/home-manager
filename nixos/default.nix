@@ -81,8 +81,11 @@ in {
 
       sharedModules = mkOption {
         type = with types;
-          listOf (anything // {
+        # TODO: use types.raw once this PR is merged: https://github.com/NixOS/nixpkgs/pull/132448
+          listOf (mkOptionType {
+            name = "submodule";
             inherit (submodule { }) check;
+            merge = lib.options.mergeOneOption;
             description = "Home Manager modules";
           });
         default = [ ];
