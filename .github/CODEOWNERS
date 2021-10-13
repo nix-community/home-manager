@@ -275,6 +275,8 @@
 
 /modules/services/lorri.nix                           @Gerschtli
 
+/modules/services/lxqt-policykit-agent.nix            @bobvanderlinden
+
 /modules/services/mako.nix                            @onny
 
 /modules/services/mbsync.nix                          @pjones
