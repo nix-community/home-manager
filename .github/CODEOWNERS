@@ -19,6 +19,8 @@
 
 /modules/misc/news.nix                                @rycee
 
+/modules/misc/nixpkgs-disabled.nix                    @thiagokokada
+
 /modules/misc/numlock.nix                             @evanjs
 /tests/modules/misc/numlock                           @evanjs
 

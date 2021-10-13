@@ -242,7 +242,8 @@ let
     ./xsession.nix
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
-  ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix;
+  ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
+    ++ optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
 
   pkgsModule = { config, ... }: {
     config = {
