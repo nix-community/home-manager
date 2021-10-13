@@ -75,12 +75,6 @@
       fingerprint = "F0E0 0311 126A CD72 4392  25E6 68BF 2EAE 6D91 CAFF";
     }];
   };
-  thiagokokada = {
-    email = "thiagokokada@gmail.com";
-    name = "Thiago Kenji Okada";
-    github = "thiagokokada";
-    githubId = 844343;
-  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
