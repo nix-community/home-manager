@@ -139,4 +139,10 @@
     github = "hawkw";
     githubId = 2796466;
   };
+  bobvanderlinden = {
+    name = "Bob van der Linden";
+    email = "bobvanderlinden@gmail.com";
+    github = "bobvanderlinden";
+    githubId = 6375609;
+  };
 }
