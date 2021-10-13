@@ -182,6 +182,7 @@ let
     ./services/keynav.nix
     ./services/lieer.nix
     ./services/lorri.nix
+    ./services/lxqt-policykit-agent.nix
     ./services/mako.nix
     ./services/mbsync.nix
     ./services/mpd.nix
