@@ -15,6 +15,11 @@ with lib; {
   };
 
   config = mkIf config.services.lxqt-policykit-agent.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.lxqt-policykit-agent" pkgs
+        lib.platforms.linux)
+    ];
+
     systemd.user.services.lxqt-policykit-agent = {
       Unit = {
         Description = "LXQT PolicyKit Agent";
