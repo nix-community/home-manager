@@ -8,15 +8,7 @@ let
   concatStringsSep' = sep: list:
     concatStringsSep sep (filter (x: x != "") list);
 
-  mkKeyValue = generators.mkKeyValueDefault { } "=";
-  genINI = generators.toINI { };
-
-  iniFormatType = with types;
-    let
-      iniAtom = types.nullOr (types.oneOf [ bool int float str ]) // {
-        description = "INI atom (null, bool, int, float or string)";
-      };
-    in attrsOf (attrsOf iniAtom);
+  iniFormat = pkgs.formats.ini { };
 in {
   options = {
     services.fnott = {
@@ -58,7 +50,7 @@ in {
       };
 
       settings = mkOption {
-        type = iniFormatType;
+        type = iniFormat.type;
         default = { };
         description = ''
           Configuration written to
@@ -114,14 +106,7 @@ in {
       };
     };
 
-    xdg.configFile."fnott/fnott.ini" = {
-      # FIXME: Remove after next version release (https://codeberg.org/dnkl/fnott/pulls/24).
-      text = concatStringsSep' "\n" [
-        (optionalString (cfg.settings ? main) ''
-          ${concatStringsSep "\n" (mapAttrsToList mkKeyValue cfg.settings.main)}
-        '')
-        (genINI (removeAttrs cfg.settings [ "main" ]))
-      ];
-    };
+    xdg.configFile."fnott/fnott.ini".source =
+      iniFormat.generate "fnott.ini" cfg.settings;
   };
 }
