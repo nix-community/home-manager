@@ -50,7 +50,11 @@ let
       };
 
       palette = mkOption {
-        type = types.listOf types.str;
+        type = let baseType = types.listOf types.str;
+        in baseType // {
+          check = x: baseType.check x && length x == 16;
+          description = "list of 16 color values";
+        };
         description = "The terminal palette: a list of 16 strings.";
         example = literalExample ''
           [
@@ -100,15 +104,17 @@ let
 
       visibleName = mkOption {
         type = types.str;
-        description =
-          "The profile name. This is what will show up as a name in the Gnome Terminal preferences window.";
+        description = ''
+          The profile name. This is what will show up as a name in the
+          Gnome Terminal preferences window.
+        '';
       };
 
       colors = mkOption {
         default = null;
         type = types.nullOr profileColorsSubModule;
         description = ''
-          The terminal colors, null to use system default.
+          The terminal colors, <literal>null</literal> to use system default.
 
           </para><para>
 
