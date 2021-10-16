@@ -31,6 +31,14 @@ in {
       type = types.listOf pluginModule;
       description = "List of zplug plugins.";
     };
+
+    zplugHome = mkOption {
+      type = types.path;
+      default = "${config.home.homeDirectory}/.zplug";
+      defaultText = "~/.zplug";
+      apply = toString;
+      description = "Path to zplug home directory.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -38,6 +46,8 @@ in {
 
     programs.zsh.initExtraBeforeCompInit = ''
       source ${pkgs.zplug}/init.zsh
+
+      export ZPLUG_HOME=${cfg.zplugHome}
 
       ${optionalString (cfg.plugins != [ ]) ''
         ${concatStrings (map (plugin: ''

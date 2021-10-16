@@ -8,6 +8,7 @@ with lib;
       enable = true;
       zplug = {
         enable = true;
+        zplugHome = ~/.customZplugHome;
         plugins = [
           {
             name = "plugins/git";
@@ -43,6 +44,9 @@ with lib;
 
       assertFileRegex home-files/.zshrc \
         '^zplug load$'
+
+      assertFileContains home-files/.zshrc \
+        'export ZPLUG_HOME=${config.programs.zsh.zplug.zplugHome}'
     '';
   };
 }
