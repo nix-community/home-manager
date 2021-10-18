@@ -10,7 +10,7 @@ updates:
 
   - package-ecosystem: "github-actions"
     directory: "/"
-    target-branch: "release-20.09"
+    target-branch: "release-21.05"
     schedule:
       interval: "weekly"
     commit-message:
