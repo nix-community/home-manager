@@ -44,17 +44,19 @@ let
         143;
 
       toJSON = builtins.toJSON;
-    in toJSON {
+    in toJSON ({
       inherit (account.imap) host;
       inherit port;
       tls = account.imap.tls.enable;
       username = account.userName;
       passwordCmd =
         lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
-      onNewMail = account.imapnotify.onNotify;
-      onNewMailPost = account.imapnotify.onNotifyPost;
       inherit (account.imapnotify) boxes;
-    });
+    } // optionalAttrs (account.imapnotify.onNotify != "") {
+      onNewMail = account.imapnotify.onNotify;
+    } // optionalAttrs (account.imapnotify.onNotifyPost != "") {
+      onNewMailPost = account.imapnotify.onNotifyPost;
+    }));
 
 in {
   meta.maintainers = [ maintainers.nickhu ];
