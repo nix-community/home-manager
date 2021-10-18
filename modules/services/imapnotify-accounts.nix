@@ -29,5 +29,12 @@ with lib;
       example = [ "Inbox" "[Gmail]/MyLabel" ];
       description = "IMAP folders to watch.";
     };
+
+    extraConfig = mkOption {
+      type = with types; attrsOf (oneOf [ bool int str ]);
+      default = { };
+      example = { wait = 10; };
+      description = "Additional configuration to add for this account.";
+    };
   };
 }

@@ -56,7 +56,7 @@ let
       onNewMail = account.imapnotify.onNotify;
     } // optionalAttrs (account.imapnotify.onNotifyPost != "") {
       onNewMailPost = account.imapnotify.onNotifyPost;
-    }));
+    } // account.imapnotify.extraConfig));
 
 in {
   meta.maintainers = [ maintainers.nickhu ];
