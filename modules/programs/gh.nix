@@ -90,6 +90,11 @@ in {
         };
       '';
     };
+
+    enableGitCredentialHelper =
+      mkEnableOption "the gh git credential helper for github.com" // {
+        default = true;
+      };
   };
 
   config = mkIf cfg.enable {
@@ -97,5 +102,9 @@ in {
 
     xdg.configFile."gh/config.yml".source =
       yamlFormat.generate "gh-config.yml" cfg.settings;
+
+    programs.git.extraConfig.credential."https://github.com".helper =
+      mkIf cfg.enableGitCredentialHelper
+      "${cfg.package}/bin/gh auth git-credential";
   };
 }
