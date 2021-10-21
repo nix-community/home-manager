@@ -123,6 +123,7 @@ import nmt {
     ./modules/programs/gnome-terminal
     ./modules/programs/hexchat
     ./modules/programs/i3status-rust
+    ./modules/programs/kodi
     ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.

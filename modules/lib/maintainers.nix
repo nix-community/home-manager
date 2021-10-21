@@ -19,6 +19,12 @@
     github = "CarlosLoboxyz";
     githubId = 86011416;
   };
+  dwagenk = {
+    email = "dwagenk@mailbox.org";
+    github = "dwagenk";
+    githubId = 32838899;
+    name = "Daniel Wagenknecht";
+  };
   justinlovinger = {
     name = "Justin Lovinger";
     email = "git@justinlovinger.com";

@@ -114,6 +114,9 @@
 
 /modules/programs/keychain.nix                        @marsam
 
+/modules/programs/kodi.nix                            @dwagenk
+/tests/modules/programs/kodi                          @dwagenk
+
 /modules/programs/lazygit.nix                         @kalhauge
 
 /modules/programs/less.nix                            @pamplemousse
