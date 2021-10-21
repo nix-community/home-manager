@@ -66,8 +66,11 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
+      readOnly = true;
       description = ''
-        Whether to enable Fish integration.
+        Whether to enable Fish integration. Note, enabling the direnv module
+        will always active its functionality for Fish since the direnv package
+        automatically gets loaded in Fish.
       '';
     };
 
@@ -105,10 +108,6 @@ in {
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
-    '';
-
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      ${pkgs.direnv}/bin/direnv hook fish | source
     '';
   };
 }
