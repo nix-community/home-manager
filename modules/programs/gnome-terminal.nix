@@ -388,18 +388,15 @@ in {
   config = mkIf cfg.enable {
 
     assertions = [
-      {
-        assertion = all (x: x == 16) (mapAttrsToList
-          (n: v: if v ? colors.palette then length v.colors.palette else 16)
-          cfg.profile);
-        message = "A palette needs to contain exactly 16 colors.";
-      }
-      {
-        assertion = length (filter (x: x)
-          (mapAttrsToList (n: v: if v ? default then v.default else false)
-            cfg.profile)) == 1;
-        message = "One and only one profile must be set as default.";
-      }
+      (let
+        defaults = catAttrs "visibleName"
+          (filter (a: a.default) (attrValues cfg.profile));
+      in {
+        assertion = length defaults == 1;
+        message = "One and only one profile must be set as default but found "
+          + toString (length defaults) + optionalString (length defaults > 1)
+          (", namely " + concatStringsSep ", " defaults);
+      })
     ];
 
     home.packages = [ pkgs.gnome.gnome-terminal ];
