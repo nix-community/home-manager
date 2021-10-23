@@ -118,44 +118,8 @@ let
 
           </para><para>
 
-          A color can be a string containing one of the following:
-
-          <itemizedlist>
-            <listitem>
-              <para>
-                A standard name as specified in the 
-                <link xlink:href="http://dev.w3.org/csswg/css-color/#named-colors">
-                  CSS standard
-                </link>
-              </para>
-            </listitem>
-            <listitem>
-              <para>
-                A hexadecimal value 
-                (#rgb, #rrggbb, #rrrgggbbb, #rrrrggggbbbb)
-              </para>
-            </listitem>
-            <listitem>
-              <para>
-                A hexadecimal value with the alpha component 
-                (#rgba, #rrggbbaa, #rrrrggggbbbbaaaa)
-              </para>
-            </listitem>
-            <listitem>
-              <para>
-                A RGB color prefixed with "rgb" (rgb(r,g,b))
-              </para>
-            </listitem>
-            <listitem>
-              <para>
-                A RGBA color prefixed with "rgba" (rgba(r,g,b,a))
-              </para>
-            </listitem>
-          </itemizedlist>
-
-          In the case of rgb(r,g,b) and rgb(r,g,b,a), the value for r,g,b and a
-          (respectively red, green, blue, and alpha) are either integers between 
-          0 and 255, or floating point numbers between 0. and 1.
+          The valid string format for colors is described in the
+          <link xlink:href="https://docs.gtk.org/gtk3/css-overview.html#colors">GTK documentation</link>.
 
           </para><para>
 
