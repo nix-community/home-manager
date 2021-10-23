@@ -2714,6 +2714,158 @@ Note that lists are converted to duplicate keys.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.enable"></a><a class="term" href="options.html#opt-programs.hexchat.enable"><code class="option">programs.hexchat.enable</code></a></span></dt><dd><p>Whether to enable HexChat, a graphical IRC client.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels"></a><a class="term" href="options.html#opt-programs.hexchat.channels"><code class="option">programs.hexchat.channels</code></a></span></dt><dd><p>Configures <code class="filename">~/.config/hexchat/servlist.conf</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  freenode = {
+    autojoin = [
+      "#home-manager"
+      "#linux"
+      "#nixos"
+    ];
+    charset = "UTF-8 (Unicode)";
+    commands = [
+      "ECHO Buzz Lightyear sent you a message: 'To Infinity... and Beyond!'"
+    ];
+    loginMethod = sasl;
+    nickname = "my_nickname";
+    nickname2 = "my_secondchoice";
+    options = {
+      acceptInvalidSSLCertificates = false;
+      autoconnect = true;
+      bypassProxy = true;
+      connectToSelectedServerOnly = true;
+      useGlobalUserInformation = false;
+      forceSSL = false;
+    };
+    password = "my_password";
+    realName = "my_realname";
+    servers = [
+      "chat.freenode.net"
+      "irc.freenode.net"
+    ];
+    userName = "my_username";
+  };
+}</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.autojoin"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.autojoin"><code class="option">programs.hexchat.channels.&lt;name&gt;.autojoin</code></a></span></dt><dd><p>Channels list to autojoin on connecting to server.</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        [
+        "#home-manager" "#linux" "#nix" 
+        ]
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.charset"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.charset"><code class="option">programs.hexchat.channels.&lt;name&gt;.charset</code></a></span></dt><dd><p>Character set.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"UTF-8 (Unicode)"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.commands"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.commands"><code class="option">programs.hexchat.channels.&lt;name&gt;.commands</code></a></span></dt><dd><p>Commands to be executed on connecting to server.</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">[ "ECHO Greetings fellow Nixer! ]</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.loginMethod"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.loginMethod"><code class="option">programs.hexchat.channels.&lt;name&gt;.loginMethod</code></a></span></dt><dd><p>The login method. The allowed options are:
+</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">null</code></span></dt><dd><p>Default</p></dd><dt><span class="term"><code class="literal">"nickServMsg"</code></span></dt><dd><p>NickServ (/MSG NickServ + password)</p></dd><dt><span class="term"><code class="literal">"nickServ"</code></span></dt><dd><p>NickServ (/NICKSERV + password)</p></dd><dt><span class="term"><code class="literal">"challengeAuth"</code></span></dt><dd><p>Challenge Auth (username + password)</p></dd><dt><span class="term"><code class="literal">"sasl"</code></span></dt><dd><p>SASL (username + password)</p></dd><dt><span class="term"><code class="literal">"serverPassword"</code></span></dt><dd><p>Server password (/PASS password)</p></dd><dt><span class="term"><code class="literal">"saslExternal"</code></span></dt><dd><p>SASL EXTERNAL (cert)</p></dd><dt><span class="term"><code class="literal">"customCommands"</code></span></dt><dd><p>Use "commands" field for auth. For example
+      </p><pre class="programlisting nix">
+commands = [ "/msg NickServ IDENTIFY my_password" ]
+</pre><p>
+      </p></dd></dl></div><p>
+</p><p><span class="emphasis"><em>Type:</em></span> null or one of "challengeAuth", "customCommands", "nickServ", "nickServMsg", "sasl", "saslExternal", "serverPassword"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.nickname"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.nickname"><code class="option">programs.hexchat.channels.&lt;name&gt;.nickname</code></a></span></dt><dd><p>Primary nickname.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.nickname2"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.nickname2"><code class="option">programs.hexchat.channels.&lt;name&gt;.nickname2</code></a></span></dt><dd><p>Secondary nickname.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.options"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.options"><code class="option">programs.hexchat.channels.&lt;name&gt;.options</code></a></span></dt><dd><p>Channel options.</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        {
+        autoconnect = true; useGlobalUserInformation = true; 
+        }
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.options.acceptInvalidSSLCertificates"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.options.acceptInvalidSSLCertificates"><code class="option">programs.hexchat.channels.&lt;name&gt;.options.acceptInvalidSSLCertificates</code></a></span></dt><dd><p>Accept invalid SSL certificates.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.options.autoconnect"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.options.autoconnect"><code class="option">programs.hexchat.channels.&lt;name&gt;.options.autoconnect</code></a></span></dt><dd><p>Autoconnect to network.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.options.bypassProxy"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.options.bypassProxy"><code class="option">programs.hexchat.channels.&lt;name&gt;.options.bypassProxy</code></a></span></dt><dd><p>Bypass proxy.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.options.connectToSelectedServerOnly"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.options.connectToSelectedServerOnly"><code class="option">programs.hexchat.channels.&lt;name&gt;.options.connectToSelectedServerOnly</code></a></span></dt><dd><p>Connect to selected server only.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.options.forceSSL"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.options.forceSSL"><code class="option">programs.hexchat.channels.&lt;name&gt;.options.forceSSL</code></a></span></dt><dd><p>Use SSL for all servers.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.options.useGlobalUserInformation"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.options.useGlobalUserInformation"><code class="option">programs.hexchat.channels.&lt;name&gt;.options.useGlobalUserInformation</code></a></span></dt><dd><p>Use global user information.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.password"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.password"><code class="option">programs.hexchat.channels.&lt;name&gt;.password</code></a></span></dt><dd><p>Password to use. Note this password will be readable by all user's
+in the Nix store.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.realName"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.realName"><code class="option">programs.hexchat.channels.&lt;name&gt;.realName</code></a></span></dt><dd><p>Real name. Is used to populate the real name field that appears when
+someone uses the <code class="literal">WHOIS</code> command on your nick.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.servers"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.servers"><code class="option">programs.hexchat.channels.&lt;name&gt;.servers</code></a></span></dt><dd><p>IRC Server Address List.</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        [
+        "chat.freenode.net" "irc.freenode.net" 
+        ]
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels._name_.userName"></a><a class="term" href="options.html#opt-programs.hexchat.channels._name_.userName"><code class="option">programs.hexchat.channels.&lt;name&gt;.userName</code></a></span></dt><dd><p>User name. Part of your <code class="literal">user@host</code> hostmask that
+appears to other on IRC.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.overwriteConfigFiles"></a><a class="term" href="options.html#opt-programs.hexchat.overwriteConfigFiles"><code class="option">programs.hexchat.overwriteConfigFiles</code></a></span></dt><dd><p>Enables overwriting HexChat configuration files
+(<code class="filename">hexchat.conf</code>, <code class="filename">servlist.conf</code>).
+Any existing HexChat configuration will be lost. Certify to back-up any
+previous configuration before enabling this.
+</p><p>
+Enabling this setting is recommended, because everytime HexChat
+application is closed it overwrites Nix/Home Manager provided
+configuration files, causing:
+</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+    Nix/Home Manager provided configuration to be out of sync with
+    actual active HexChat configuration.
+  </p></li><li class="listitem"><p>
+    Blocking Nix/Home Manager updates until configuration files are
+    manually removed.
+  </p></li></ol></div><p>
+</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.settings"></a><a class="term" href="options.html#opt-programs.hexchat.settings"><code class="option">programs.hexchat.settings</code></a></span></dt><dd><p>Configuration for <code class="filename">~/.config/hexchat/hexchat.conf</code>, see
+<a class="link" href="https://hexchat.readthedocs.io/en/latest/settings.html#list-of-settings" target="_top">https://hexchat.readthedocs.io/en/latest/settings.html#list-of-settings</a>
+for supported values.
+</p><p><span class="emphasis"><em>Type:</em></span> null or attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  irc_nick1 = "mynick";
+  irc_username = "bob";
+  irc_realname = "Bart Simpson";
+  text_font = "Monospace 14";
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.theme"></a><a class="term" href="options.html#opt-programs.hexchat.theme"><code class="option">programs.hexchat.theme</code></a></span></dt><dd><p>Theme package for HexChat. Expects a derivation containing decompressed
+theme files. <code class="literal">.hct</code> file format requires unzip
+decompression, as seen in example.
+</p><p><span class="emphasis"><em>Type:</em></span> null or package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">stdenv.mkDerivation rec {
+  name = "hexchat-theme-MatriY";
+  buildInputs = [ pkgs.unzip ];
+  src = fetchurl {
+      url = "https://dl.hexchat.net/themes/MatriY.hct";
+      sha256 = "sha256-ffkFJvySfl0Hwja3y7XCiNJceUrGvlEoEm97eYNMTZc=";
+  };
+  unpackPhase = "unzip ${src}";
+  installPhase = "cp -r . $out";
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/hexchat.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.himalaya.enable"></a><a class="term" href="options.html#opt-programs.himalaya.enable"><code class="option">programs.himalaya.enable</code></a></span></dt><dd><p>Whether to enable himalaya mail client.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/himalaya.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.himalaya.package"></a><a class="term" href="options.html#opt-programs.himalaya.package"><code class="option">programs.himalaya.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>himalaya</strong></span> mail client.
