@@ -178,6 +178,7 @@ let
     ./services/easyeffects.nix
     ./services/emacs.nix
     ./services/etesync-dav.nix
+    ./services/espanso.nix
     ./services/flameshot.nix
     ./services/fluidsynth.nix
     ./services/fnott.nix
