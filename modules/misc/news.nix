@@ -2417,6 +2417,14 @@ in
           A new module is available: 'programs.eww'.
         '';
       }
+
+      {
+        time = "2022-02-17T23:11:13+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.espanso'.
+        '';
+      }
     ];
   };
 }
