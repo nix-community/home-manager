@@ -13,6 +13,12 @@
     github = "amesgen";
     githubId = 15369874;
   };
+  austreelis = {
+    email = "github@accounts.austreelis.net";
+    github = "Austreelis";
+    githubId = 56743515;
+    name = "Morgane Austreelis";
+  };
   CarlosLoboxyz = {
     name = "Carlos Lobo";
     email = "86011416+CarlosLoboxyz@users.noreply.github.com";

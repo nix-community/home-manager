@@ -2395,6 +2395,14 @@ in
           A new module is available: 'programs.kodi'.
         '';
       }
+
+      {
+        time = "2022-02-03T23:23:49+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.twmn'.
+        '';
+      }
     ];
   };
 }

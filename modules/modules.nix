@@ -236,6 +236,7 @@ let
     ./services/tahoe-lafs.nix
     ./services/taskwarrior-sync.nix
     ./services/trayer.nix
+    ./services/twmn.nix
     ./services/udiskie.nix
     ./services/unclutter.nix
     ./services/unison.nix

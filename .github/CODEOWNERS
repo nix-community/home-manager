@@ -370,6 +370,9 @@
 /modules/services/trayer.nix                          @AndreasMager
 /tests/modules/services/trayer                        @AndreasMager
 
+/modules/services/twmn.nix                            @Austreelis
+/tests/modules/services/twmn                          @Austreelis
+
 /modules/services/udiskie.nix                         @rycee
 
 /modules/services/unison.nix                          @pacien
