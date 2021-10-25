@@ -66,7 +66,7 @@ let
         commands = mkOption {
           type = listOf str;
           default = [ ];
-          example = literalExample ''[ "ECHO Greetings fellow Nixer! ]'';
+          example = literalExpression ''[ "ECHO Greetings fellow Nixer! ]'';
           description = "Commands to be executed on connecting to server.";
         };
 
@@ -237,7 +237,7 @@ in {
     channels = mkOption {
       type = attrsOf modChannelOption;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           freenode = {
             autojoin = [
@@ -277,7 +277,7 @@ in {
     settings = mkOption {
       default = null;
       type = nullOr (attrsOf str);
-      example = literalExample ''
+      example = literalExpression ''
         {
           irc_nick1 = "mynick";
           irc_username = "bob";
@@ -320,7 +320,7 @@ in {
     theme = mkOption {
       type = nullOr package;
       default = null;
-      example = literalExample ''
+      example = literalExpression ''
         stdenv.mkDerivation rec {
           name = "hexchat-theme-MatriY";
           buildInputs = [ pkgs.unzip ];
