@@ -72,7 +72,11 @@ in {
       description = ''
         Whether to enable Fish integration. Note, enabling the direnv module
         will always active its functionality for Fish since the direnv package
-        automatically gets loaded in Fish.
+        automatically gets loaded in Fish. If this is not the case try adding
+        <programlisting language="nix">
+          environment.pathsToLink = [ "/share/fish" ];
+        </programlisting>
+        to the system configuration.
       '';
     };
 
