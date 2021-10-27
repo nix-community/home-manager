@@ -86,7 +86,7 @@ in {
 
             # https://code.visualstudio.com/docs/getstarted/keybindings#_command-arguments
             args = mkOption {
-              type = types.nullOr (types.attrs);
+              type = types.nullOr (jsonFormat.type);
               default = null;
               example = { direction = "up"; };
               description = "Optional arguments for a command.";
