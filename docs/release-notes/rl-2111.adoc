@@ -45,3 +45,14 @@ changes are only active if the `home.stateVersion` option is set to
 "21.11" or later.
 
 * The <<opt-home.keyboard>> option now defaults to `null`, meaning that Home Manager won't do any keyboard layout management. For example, `setxkbmap` won't be run in X sessions.
+
+* The <<opt-programs.pet.settings>> option no longer place its value inside a `General` attribute.
+For example, is you before had
++
+[source,nix]
+programs.pet.settings.editor = "nvim";
++
+then you now need
++
+[source,nix]
+programs.pet.settings.General.editor = "nvim";

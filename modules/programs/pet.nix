@@ -80,16 +80,25 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.pet.settings = {
-      selectcmd = mkDefault "fzf";
-      snippetfile = config.xdg.configHome + "/pet/snippet.toml";
-    };
+    programs.pet.settings = let
+      defaultGeneral = {
+        selectcmd = mkDefault "fzf";
+        snippetfile = config.xdg.configHome + "/pet/snippet.toml";
+      };
+    in if versionAtLeast config.home.stateVersion "21.11" then {
+      General = defaultGeneral;
+    } else
+      defaultGeneral;
 
     home.packages = [ pkgs.pet cfg.selectcmdPackage ];
 
     xdg.configFile = {
-      "pet/config.toml".source =
-        format.generate "config.toml" { General = cfg.settings; };
+      "pet/config.toml".source = format.generate "config.toml"
+        (if versionAtLeast config.home.stateVersion "21.11" then
+          cfg.settings
+        else {
+          General = cfg.settings;
+        });
       "pet/snippet.toml".source =
         format.generate "snippet.toml" { snippets = cfg.snippets; };
     };
