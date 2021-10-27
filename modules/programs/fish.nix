@@ -146,6 +146,16 @@ let
     (mapAttrsToList (k: v: "alias ${k} ${escapeShellArg v}") cfg.shellAliases);
 
 in {
+  imports = [
+    (mkRemovedOptionModule [ "programs" "fish" "promptInit" ] ''
+      Prompt is now configured through the
+
+        programs.fish.interactiveShellInit
+
+      option. Please change to use that instead.
+    '')
+  ];
+
   options = {
     programs.fish = {
       enable = mkEnableOption "fish, the friendly interactive shell";
@@ -212,14 +222,6 @@ in {
         description = ''
           Shell script code called during interactive fish shell
           initialisation.
-        '';
-      };
-
-      promptInit = mkOption {
-        type = types.lines;
-        default = "";
-        description = ''
-          Shell script code used to initialise fish prompt.
         '';
       };
     };
@@ -364,9 +366,6 @@ in {
 
           # Aliases
           ${aliasesStr}
-
-          # Prompt initialisation
-          ${cfg.promptInit}
 
           # Interactive shell intialisation
           ${cfg.interactiveShellInit}
