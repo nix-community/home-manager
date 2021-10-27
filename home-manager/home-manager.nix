@@ -5,9 +5,10 @@
 , newsReadIdsFile ? null
 }:
 
-with pkgs.lib;
-
 let
+  inherit (pkgs.lib)
+    concatMapStringsSep fileContents filter length optionalString removeSuffix
+    replaceStrings splitString;
 
   env = import ../modules {
     configuration =
