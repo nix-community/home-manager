@@ -1,7 +1,8 @@
 { homeDirectory, lib, pkgs }:
 
-with lib;
-
+let
+  inherit (lib) hasPrefix hm literalExpression mkDefault mkIf mkOption removePrefix types;
+in
 {
   # Constructs a type suitable for a `home.file` like option. The
   # target path may be either absolute or relative, in which case it

@@ -1,8 +1,10 @@
 { dag, lib }:
 
-with lib;
-
 let
+  inherit (lib)
+    concatStringsSep defaultFunctor fixedWidthNumber imap1 isAttrs isList length
+    listToAttrs mapAttrs mkIf mkOption mkOptionType nameValuePair stringLength
+    types warn;
 
   isDagEntry = e: isAttrs e && (e ? data) && (e ? after) && (e ? before);
 

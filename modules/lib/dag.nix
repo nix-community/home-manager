@@ -9,9 +9,8 @@
 
 { lib }:
 
-with lib;
-
-rec {
+let inherit (lib) all any filterAttrs mapAttrs mapAttrsToList toposort;
+in rec {
 
   emptyDag = { };
 

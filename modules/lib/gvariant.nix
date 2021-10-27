@@ -5,9 +5,9 @@
 
 { lib }:
 
-with lib;
-
 let
+  inherit (lib)
+    concatMapStringsSep concatStrings escape hasPrefix head replaceStrings;
 
   mkPrimitive = t: v: {
     _type = "gvariant";

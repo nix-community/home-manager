@@ -1,8 +1,9 @@
 { lib }:
 
-with lib;
-
-{
+let
+  inherit (lib)
+    genList length lowerChars replaceStrings stringToCharacters upperChars;
+in {
   # Figures out a valid Nix store name for the given path.
   storeFileName = path:
     let

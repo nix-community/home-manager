@@ -1,9 +1,6 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
-let
-
+let inherit (lib) concatStringsSep hm mapAttrsToList mkMerge mkOption types;
 in {
   options.examples = mkOption { type = types.attrsOf hm.types.gvariant; };
 
