@@ -252,7 +252,7 @@ function doBuild() {
         nix build \
             "${PASSTHROUGH_OPTS[@]}" \
              ${DRY_RUN+--dry-run} \
-             ${NO_OUT_LINK+--no-out-link} \
+             ${NO_OUT_LINK+--no-link} \
             "$FLAKE_CONFIG_URI.activationPackage" \
             || exitCode=1
         return $exitCode
