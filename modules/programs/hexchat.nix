@@ -321,21 +321,16 @@ in {
       type = nullOr package;
       default = null;
       example = literalExpression ''
-        stdenv.mkDerivation rec {
-          name = "hexchat-theme-MatriY";
-          buildInputs = [ pkgs.unzip ];
-          src = fetchurl {
-              url = "https://dl.hexchat.net/themes/MatriY.hct";
-              sha256 = "sha256-ffkFJvySfl0Hwja3y7XCiNJceUrGvlEoEm97eYNMTZc=";
-          };
-          unpackPhase = "unzip ''${src}";
-          installPhase = "cp -r . $out";
+        source = pkgs.fetchzip {
+          url = "https://dl.hexchat.net/themes/Monokai.hct#Monokai.zip";
+          sha256 = "sha256-WCdgEr8PwKSZvBMs0fN7E2gOjNM0c2DscZGSKSmdID0=";
+          stripRoot = false;
         };
       '';
       description = ''
         Theme package for HexChat. Expects a derivation containing decompressed
-        theme files. <literal>.hct</literal> file format requires unzip
-        decompression, as seen in example.
+        theme files. Note, <literal>.hct</literal> files are actually ZIP files,
+        as seen in example.
       '';
     };
   };
