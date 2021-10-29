@@ -258,7 +258,7 @@ let
       _module.check = check;
       lib = lib.hm;
     } // optionalAttrs useNixpkgsModule {
-      nixpkgs.system = mkDefault pkgs.system;
+      nixpkgs.system = mkDefault pkgs.stdenv.hostPlatform.system;
     };
   };
 
