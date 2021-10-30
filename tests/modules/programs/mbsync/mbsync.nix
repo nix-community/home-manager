@@ -75,6 +75,8 @@ with lib;
       };
     };
 
+    test.stubs.isync = { };
+
     nmt.script = ''
       assertFileExists home-files/.mbsyncrc
       assertFileContent home-files/.mbsyncrc ${./mbsync-expected.conf}

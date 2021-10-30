@@ -85,6 +85,8 @@ with lib;
       "mbsync channels no longer use slavePattern. Use nearPattern in its place."
     ];
 
+    test.stubs.isync = { };
+
     nmt.script = ''
       assertFileExists home-files/.mbsyncrc
       assertFileContent home-files/.mbsyncrc ${./mbsync-expected.conf}
