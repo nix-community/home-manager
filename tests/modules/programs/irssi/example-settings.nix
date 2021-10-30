@@ -19,7 +19,7 @@ with lib;
       };
     };
 
-    test.stubs.irsii = { };
+    test.stubs.irssi = { };
 
     nmt.script = ''
       assertFileContent \

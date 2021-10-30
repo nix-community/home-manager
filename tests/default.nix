@@ -63,7 +63,7 @@ import nmt {
     ./modules/programs/himalaya
     ./modules/programs/htop
     ./modules/programs/i3status
-    ./modules/programs/irsii
+    ./modules/programs/irssi
     ./modules/programs/kakoune
     ./modules/programs/kitty
     ./modules/programs/lf
