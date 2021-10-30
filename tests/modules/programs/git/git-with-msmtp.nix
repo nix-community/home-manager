@@ -16,6 +16,8 @@ with lib;
 
     home.stateVersion = "20.09";
 
+    test.stubs.msmtp = { };
+
     nmt.script = ''
       function assertGitConfig() {
         local value
@@ -29,12 +31,7 @@ with lib;
 
       assertFileExists home-files/.config/git/config
       assertFileContent home-files/.config/git/config \
-                        ${
-                          pkgs.substituteAll {
-                            inherit (pkgs) msmtp;
-                            src = ./git-with-msmtp-expected.conf;
-                          }
-                        }
+        ${./git-with-msmtp-expected.conf}
 
       assertGitConfig "sendemail.hm@example.com.from" "hm@example.com"
       assertGitConfig "sendemail.hm-account.from" "hm@example.org"
