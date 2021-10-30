@@ -107,7 +107,7 @@ in
             elif [[ -e "$targetPath" \
                 && ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               # The target file already exists and it isn't a symlink owned by Home Manager.
-              if cmp -s $sourcePath $targetPath; then
+              if cmp -s "$sourcePath" "$targetPath"; then
                 # First compare the files' content. If they're equal, we're fine.
                 warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be skipped since they are the same"
               elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
@@ -180,7 +180,7 @@ in
               $DRY_RUN_CMD mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
             fi
 
-            if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s $sourcePath $targetPath ; then
+            if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
               # The target exists but is identical – don't do anything.
               $VERBOSE_ECHO "Skipping '$targetPath' as it is identical to '$sourcePath'"
             else
