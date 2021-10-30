@@ -2849,17 +2849,12 @@ for supported values.
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/hexchat.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.theme"></a><a class="term" href="options.html#opt-programs.hexchat.theme"><code class="option">programs.hexchat.theme</code></a></span></dt><dd><p>Theme package for HexChat. Expects a derivation containing decompressed
-theme files. <code class="literal">.hct</code> file format requires unzip
-decompression, as seen in example.
-</p><p><span class="emphasis"><em>Type:</em></span> null or package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">stdenv.mkDerivation rec {
-  name = "hexchat-theme-MatriY";
-  buildInputs = [ pkgs.unzip ];
-  src = fetchurl {
-      url = "https://dl.hexchat.net/themes/MatriY.hct";
-      sha256 = "sha256-ffkFJvySfl0Hwja3y7XCiNJceUrGvlEoEm97eYNMTZc=";
-  };
-  unpackPhase = "unzip ${src}";
-  installPhase = "cp -r . $out";
+theme files. Note, <code class="literal">.hct</code> files are actually ZIP files,
+as seen in example.
+</p><p><span class="emphasis"><em>Type:</em></span> null or package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">source = pkgs.fetchzip {
+  url = "https://dl.hexchat.net/themes/Monokai.hct#Monokai.zip";
+  sha256 = "sha256-WCdgEr8PwKSZvBMs0fN7E2gOjNM0c2DscZGSKSmdID0=";
+  stripRoot = false;
 };
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/hexchat.nix&gt;
