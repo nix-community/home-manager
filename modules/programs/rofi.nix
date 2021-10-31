@@ -1,8 +1,10 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib)
+    attrNames filterAttrs generators getAttr hm isAttrs isBool isInt isList
+    isString literalExpression maintainers mapAttrsToList mkEnableOption mkIf
+    mkOption mkRemovedOptionModule platforms removeSuffix strings types;
 
   cfg = config.programs.rofi;
 
@@ -40,7 +42,8 @@ let
         end = "";
       } name value;
 
-  toRasi = attrs: concatStringsSep "\n" (mapAttrsToList mkRasiSection attrs);
+  toRasi = attrs:
+    strings.concatStringsSep "\n" (mapAttrsToList mkRasiSection attrs);
 
   locationsMap = {
     center = 0;
@@ -283,5 +286,5 @@ in {
     });
   };
 
-  meta.maintainers = with maintainers; [ thiagokokada ];
+  meta.maintainers = [ maintainers.thiagokokada ];
 }
