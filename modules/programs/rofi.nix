@@ -105,8 +105,14 @@ in {
       description = ''
         Package providing the <command>rofi</command> binary.
       '';
-      example = literalExpression ''
-        pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
+    };
+
+    finalPackage = mkOption {
+      type = types.package;
+      readOnly = true;
+      visible = false;
+      description = ''
+        Resulting rofi package.
       '';
     };
 
@@ -240,7 +246,13 @@ in {
     "colors"
   ];
 
-  config = mkIf cfg.enable {
+  config = let
+    rofiPackage = if cfg.plugins != [ ] then
+      cfg.package.override
+      (old: rec { plugins = (old.plugins or [ ]) ++ cfg.plugins; })
+    else
+      cfg.package;
+  in mkIf cfg.enable {
     assertions =
       [ (hm.assertions.assertPlatform "programs.rofi" pkgs platforms.linux) ];
 
@@ -249,14 +261,8 @@ in {
       inherit value;
     };
 
-    home.packages = let
-      rofiWithPlugins = cfg.package.override
-        (old: rec { plugins = (old.plugins or [ ]) ++ cfg.plugins; });
-      rofiPackage = if builtins.hasAttr "override" cfg.package then
-        rofiWithPlugins
-      else
-        cfg.package;
-    in [ rofiPackage ];
+    home.packages = [ rofiPackage ];
+    programs.rofi.finalPackage = rofiPackage;
 
     home.file."${cfg.configPath}".text = toRasi {
       configuration = ({
