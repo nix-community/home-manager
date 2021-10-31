@@ -7,53 +7,51 @@ let
   cfg = config.programs.irssi;
 
   boolStr = b: if b then "yes" else "no";
-  quoteStr = s: escape ["\""] s;
+  quoteStr = s: escape [ ''"'' ] s;
+
+  # Comma followed by newline.
+  cnl = ''
+    ,
+  '';
 
   assignFormat = set:
     concatStringsSep "\n"
-      (mapAttrsToList (k: v: "  ${k} = \"${quoteStr v}\";") set);
+    (mapAttrsToList (k: v: "  ${k} = \"${quoteStr v}\";") set);
 
-  chatnetString =
-    concatStringsSep "\n"
-      (flip mapAttrsToList cfg.networks
-      (k: v: ''
-        ${k} = {
-          type = "${v.type}";
-          nick = "${quoteStr v.nick}";
-          autosendcmd = "${concatMapStringsSep ";" quoteStr v.autoCommands}";
-        };
-      ''));
+  chatnetString = concatStringsSep "\n" (flip mapAttrsToList cfg.networks
+    (k: v: ''
+      ${k} = {
+        type = "${v.type}";
+        nick = "${quoteStr v.nick}";
+        autosendcmd = "${concatMapStringsSep ";" quoteStr v.autoCommands}";
+      };
+    ''));
 
-  serversString =
-    concatStringsSep ",\n"
-      (flip mapAttrsToList cfg.networks
-      (k: v: ''
-        {
-          chatnet = "${k}";
-          address = "${v.server.address}";
-          port = "${toString v.server.port}";
-          use_ssl = "${boolStr v.server.ssl.enable}";
-          ssl_verify = "${boolStr v.server.ssl.verify}";
-          autoconnect = "${boolStr v.server.autoConnect}";
-          ${lib.optionalString (v.server.ssl.certificateFile != null) ''
-          ssl_cert = "${v.server.ssl.certificateFile}";
-          ''}
+  serversString = concatStringsSep cnl (flip mapAttrsToList cfg.networks
+    (k: v: ''
+      {
+        chatnet = "${k}";
+        address = "${v.server.address}";
+        port = "${toString v.server.port}";
+        use_ssl = "${boolStr v.server.ssl.enable}";
+        ssl_verify = "${boolStr v.server.ssl.verify}";
+        autoconnect = "${boolStr v.server.autoConnect}";
+        ${
+          lib.optionalString (v.server.ssl.certificateFile != null) ''
+            ssl_cert = "${v.server.ssl.certificateFile}";
+          ''
         }
-      ''));
+      }
+    ''));
 
-  channelString =
-    concatStringsSep ",\n"
-      (flip mapAttrsToList cfg.networks
-      (k: v:
-        concatStringsSep ",\n"
-          (flip mapAttrsToList v.channels
-          (c: cv: ''
-            {
-              chatnet = "${k}";
-              name = "${c}";
-              autojoin = "${boolStr cv.autoJoin}";
-            }
-          ''))));
+  channelString = concatStringsSep cnl (flip mapAttrsToList cfg.networks (k: v:
+    concatStringsSep cnl (flip mapAttrsToList v.channels (c: cv: ''
+      {
+        chatnet = "${k}";
+        name = "${c}";
+        autojoin = "${boolStr cv.autoJoin}";
+      }
+    ''))));
 
   channelType = types.submodule {
     options = {
@@ -72,7 +70,7 @@ let
     };
   };
 
-  networkType = types.submodule ({ name, ...}: {
+  networkType = types.submodule ({ name, ... }: {
     options = {
       name = mkOption {
         visible = false;
@@ -93,7 +91,7 @@ let
 
       autoCommands = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         description = "List of commands to execute on connect.";
       };
 
@@ -142,14 +140,12 @@ let
       channels = mkOption {
         description = "Channels for the given network.";
         type = types.attrsOf channelType;
-        default = {};
+        default = { };
       };
     };
   });
 
-in
-
-{
+in {
 
   options = {
     programs.irssi = {
@@ -162,14 +158,17 @@ in
       };
 
       aliases = mkOption {
-        default = {};
-        example = { J = "join"; BYE = "quit";};
+        default = { };
+        example = {
+          J = "join";
+          BYE = "quit";
+        };
         description = "An attribute set that maps aliases to commands.";
         type = types.attrsOf types.str;
       };
 
       networks = mkOption {
-        default = {};
+        default = { };
         example = literalExpression ''
           {
             freenode = {

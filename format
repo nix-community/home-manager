@@ -12,12 +12,9 @@ case $1 in
         ;;
 esac
 
-# The first block of excludes are files where nixfmt does a poor job,
-# IMHO. The second block of excludes are files touched by open pull
-# requests and we want to avoid merge conflicts.
+# The excludes are for files touched by open pull requests and we want
+# to avoid merge conflicts.
 find . -name '*.nix' \
-  ! -path ./modules/programs/irssi.nix \
-  \
   ! -path ./home-manager/home-manager.nix \
   ! -path ./modules/default.nix \
   ! -path ./modules/files.nix \
