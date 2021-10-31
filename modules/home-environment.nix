@@ -274,11 +274,21 @@ in
       type = with types; listOf str;
       default = [ ];
       example = [
-        ".git/safe/../../bin"
+        "$HOME/.local/bin"
         "\${xdg.configHome}/emacs/bin"
-        "~/.local/bin"
+        ".git/safe/../../bin"
       ];
-      description = "Extra directories to add to <envar>PATH</envar>.";
+      description = ''
+        Extra directories to add to <envar>PATH</envar>.
+
+        </para><para>
+
+        These directories are added to the <envar>PATH</envar> variable in a
+        double-quoted context, so expressions like <code>$HOME</code> are
+        expanded by the shell. However, since expressions like <code>~</code> or
+        <code>*</code> are escaped, they will end up in the <envar>PATH</envar>
+        verbatim.
+      '';
     };
 
     home.sessionVariablesExtra = mkOption {
