@@ -34,8 +34,8 @@ let
 
   dummyPackage = pkgs.runCommandLocal "dummy" { } defaultBuildScript;
 
-  mkStubPackage = { name ? "dummy", outPath ? null, version ? null
-    , buildScript ? defaultBuildScript }:
+  mkStubPackage' = { name ? "dummy", outPath ? null, version ? null
+    , buildScript ? defaultBuildScript, ... }:
     let
       pkg = if name == "dummy" && buildScript == defaultBuildScript then
         dummyPackage
@@ -43,6 +43,8 @@ let
         pkgs.runCommandLocal name { } buildScript;
     in pkg // optionalAttrs (outPath != null) { inherit outPath; }
     // optionalAttrs (version != null) { inherit version; };
+
+  mkStubPackage = lib.makeOverridable mkStubPackage';
 
 in {
   options.test.stubs = mkOption {
