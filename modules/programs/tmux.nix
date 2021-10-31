@@ -23,11 +23,11 @@ let
     };
   };
 
-  defaultKeyMode  = "emacs";
-  defaultResize   = 5;
+  defaultKeyMode = "emacs";
+  defaultResize = 5;
   defaultShortcut = "b";
   defaultTerminal = "screen";
-  defaultShell    = null;
+  defaultShell = null;
 
   boolToStr = value: if value then "on" else "off";
 
@@ -56,7 +56,8 @@ let
     set -g status-keys ${cfg.keyMode}
     set -g mode-keys   ${cfg.keyMode}
 
-    ${optionalString (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
+    ${optionalString
+    (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
       bind h select-pane -L
       bind j select-pane -D
       bind k select-pane -U
@@ -68,21 +69,19 @@ let
       bind -r L resize-pane -R ${toString cfg.resizeAmount}
     ''}
 
-    ${if cfg.prefix != null
-        then ''
-          # rebind main key: ${cfg.prefix}
-          unbind C-${defaultShortcut}
-          set -g prefix ${cfg.prefix}
-          bind ${cfg.prefix} send-prefix
-        ''
-        else optionalString (cfg.shortcut != defaultShortcut) ''
-          # rebind main key: C-${cfg.shortcut}
-          unbind C-${defaultShortcut}
-          set -g prefix C-${cfg.shortcut}
-          bind ${cfg.shortcut} send-prefix
-          bind C-${cfg.shortcut} last-window
-        ''
-     }
+    ${if cfg.prefix != null then ''
+      # rebind main key: ${cfg.prefix}
+      unbind C-${defaultShortcut}
+      set -g prefix ${cfg.prefix}
+      bind ${cfg.prefix} send-prefix
+    '' else
+      optionalString (cfg.shortcut != defaultShortcut) ''
+        # rebind main key: C-${cfg.shortcut}
+        unbind C-${defaultShortcut}
+        set -g prefix C-${cfg.shortcut}
+        bind ${cfg.shortcut} send-prefix
+        bind C-${cfg.shortcut} last-window
+      ''}
 
     ${optionalString cfg.disableConfirmationPrompt ''
       bind-key & kill-window
@@ -96,18 +95,16 @@ let
   '';
 
   configPlugins = {
-    assertions = [(
-      let
+    assertions = [
+      (let
         hasBadPluginName = p: !(hasPrefix "tmuxplugin" (pluginName p));
         badPlugins = filter hasBadPluginName cfg.plugins;
-      in
-        {
-          assertion = badPlugins == [];
-          message =
-            "Invalid tmux plugin (not prefixed with \"tmuxplugins\"): "
-            + concatMapStringsSep ", " pluginName badPlugins;
-        }
-    )];
+      in {
+        assertion = badPlugins == [ ];
+        message = ''Invalid tmux plugin (not prefixed with "tmuxplugins"): ''
+          + concatMapStringsSep ", " pluginName badPlugins;
+      })
+    ];
 
     xdg.configFile."tmux/tmux.conf".text = ''
       # ============================================= #
@@ -115,21 +112,16 @@ let
       # --------------------------------------------- #
 
       ${(concatMapStringsSep "\n\n" (p: ''
-          # ${pluginName p}
-          # ---------------------
-          ${p.extraConfig or ""}
-          run-shell ${
-            if types.package.check p
-            then p.rtp
-            else p.plugin.rtp
-          }
+        # ${pluginName p}
+        # ---------------------
+        ${p.extraConfig or ""}
+        run-shell ${if types.package.check p then p.rtp else p.plugin.rtp}
       '') cfg.plugins)}
       # ============================================= #
     '';
   };
-in
 
-{
+in {
   options = {
     programs.tmux = {
       aggressiveResize = mkOption {
@@ -180,7 +172,7 @@ in
         description = ''
           Time in milliseconds for which tmux waits after an escape is
           input.
-       '';
+        '';
       };
 
       extraConfig = mkOption {
@@ -294,8 +286,9 @@ in
 
       plugins = mkOption {
         type = with types;
-          listOf (either package pluginModule)
-          // { description = "list of plugin packages or submodules"; };
+          listOf (either package pluginModule) // {
+            description = "list of plugin packages or submodules";
+          };
         description = ''
           List of tmux plugins to be included at the end of your tmux
           configuration. The sensible plugin, however, is defaulted to
@@ -322,22 +315,22 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    mkMerge ([
-      {
-        home.packages = [ cfg.package ]
-          ++ optional cfg.tmuxinator.enable pkgs.tmuxinator
-          ++ optional cfg.tmuxp.enable      pkgs.tmuxp;
-      }
-      (mkIf cfg.secureSocket {
-        home.sessionVariables = {
-          TMUX_TMPDIR = ''''${XDG_RUNTIME_DIR:-"/run/user/\$(id -u)"}'';
-        };
-      })
+  config = mkIf cfg.enable (mkMerge ([
+    {
+      home.packages = [ cfg.package ]
+        ++ optional cfg.tmuxinator.enable pkgs.tmuxinator
+        ++ optional cfg.tmuxp.enable pkgs.tmuxp;
+    }
 
-      { xdg.configFile."tmux/tmux.conf".text = mkBefore tmuxConf; }
-      (mkIf (cfg.plugins != []) configPlugins)
-      { xdg.configFile."tmux/tmux.conf".text = mkAfter cfg.extraConfig; }
-    ])
-  );
+    { xdg.configFile."tmux/tmux.conf".text = mkBefore tmuxConf; }
+    { xdg.configFile."tmux/tmux.conf".text = mkAfter cfg.extraConfig; }
+
+    (mkIf cfg.secureSocket {
+      home.sessionVariables = {
+        TMUX_TMPDIR = ''''${XDG_RUNTIME_DIR:-"/run/user/\$(id -u)"}'';
+      };
+    })
+
+    (mkIf (cfg.plugins != [ ]) configPlugins)
+  ]));
 }
