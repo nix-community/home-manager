@@ -841,11 +841,9 @@ undefined for state version ≥ 20.09
                     &lt;home-manager/modules/home-environment.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-home.keyboard"></a><a class="term" href="options.html#opt-home.keyboard"><code class="option">home.keyboard</code></a></span></dt><dd><p>Keyboard configuration. Set to <code class="literal">null</code> to
 disable Home Manager keyboard management.
-</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        {
-        
-        }
-    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix#blob-path" target="_top">
+</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> </p><pre class="programlisting">"{ }"  for state version &lt; 21.11,
+"null" for state version ≥ 21.11
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix#blob-path" target="_top">
                     &lt;home-manager/modules/home-environment.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-home.keyboard.layout"></a><a class="term" href="options.html#opt-home.keyboard.layout"><code class="option">home.keyboard.layout</code></a></span></dt><dd><p>Keyboard layout. If <code class="literal">null</code>, then the system
 configuration will be used.
