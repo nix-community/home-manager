@@ -170,10 +170,9 @@ in {
         ];
       };
 
-      before = if (hasAttr "header_layout" cfg.settings) then {
-        header_layout = cfg.settings.header_layout;
-      } else
-        { };
+      before = optionalAttrs (cfg.settings ? header_layout) {
+        inherit (cfg.settings) header_layout;
+      };
 
       settings = defaults // (removeAttrs cfg.settings (attrNames before));
 
