@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 with lib; {
-  meta.maintainers = [ maintainers.bobvanderlinden ];
+  meta.maintainers = [ hm.maintainers.bobvanderlinden ];
 
   options.services.lxqt-policykit-agent = {
     enable = mkEnableOption "LXQT Policykit Agent";
