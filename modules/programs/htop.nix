@@ -170,9 +170,18 @@ in {
         ];
       };
 
+      before = optionalAttrs (cfg.settings ? header_layout) {
+        inherit (cfg.settings) header_layout;
+      };
+
+      settings = defaults // (removeAttrs cfg.settings (attrNames before));
+
+      formatOptions = mapAttrsToList formatOption;
+
     in mkIf (cfg.settings != { }) {
-      text = concatStringsSep "\n"
-        (mapAttrsToList formatOption (defaults // cfg.settings)) + "\n";
+      text =
+        concatStringsSep "\n" (formatOptions before ++ formatOptions settings)
+        + "\n";
     };
   };
 }
