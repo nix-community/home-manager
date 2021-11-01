@@ -170,9 +170,19 @@ in {
         ];
       };
 
+      before = if (hasAttr "header_layout" cfg.settings) then {
+        header_layout = cfg.settings.header_layout;
+      } else
+        { };
+
+      settings = defaults // (removeAttrs cfg.settings (attrNames before));
+
+      formatOptions = mapAttrsToList formatOption;
+
     in mkIf (cfg.settings != { }) {
-      text = concatStringsSep "\n"
-        (mapAttrsToList formatOption (defaults // cfg.settings)) + "\n";
+      text =
+        concatStringsSep "\n" (formatOptions before ++ formatOptions settings)
+        + "\n";
     };
   };
 }
