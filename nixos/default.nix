@@ -74,8 +74,10 @@ in {
       extraSpecialArgs = mkOption {
         type = types.attrs;
         default = { };
+        example = literalExpression "{ inherit emacs-overlay; }";
         description = ''
-          Extra <literal>specialArgs</literal> passed to Home Manager.
+          Extra <literal>specialArgs</literal> passed to Home Manager. This
+          option can be used to pass additional arguments to all modules.
         '';
       };
 
