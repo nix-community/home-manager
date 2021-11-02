@@ -15,6 +15,7 @@ let
     export XDG_CACHE_HOME="/home/hm-user/.cache"
     export XDG_CONFIG_HOME="/home/hm-user/.config"
     export XDG_DATA_HOME="/home/hm-user/.local/share"
+    export XDG_STATE_HOME="/home/hm-user/.local/state"
   '';
 
   darwinExpected = ''
@@ -27,6 +28,7 @@ let
     export XDG_CACHE_HOME="/home/hm-user/.cache"
     export XDG_CONFIG_HOME="/home/hm-user/.config"
     export XDG_DATA_HOME="/home/hm-user/.local/share"
+    export XDG_STATE_HOME="/home/hm-user/.local/state"
   '';
 
   expected = pkgs.writeText "expected" (if isDarwin then darwinExpected else linuxExpected);
