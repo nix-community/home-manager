@@ -30,6 +30,15 @@
       defaultPackage =
         forAllSystems (system: self.packages.${system}.home-manager);
 
+      apps = forAllSystems (system: {
+        home-manager = {
+          type = "app";
+          program = "${defaultPackage.${system}}/bin/home-manager";
+        };
+      });
+
+      defaultApp = forAllSystems (system: apps.${system}.home-manager);
+
       lib = {
         hm = import ./modules/lib { lib = nixpkgs.lib; };
         homeManagerConfiguration = { configuration, system, homeDirectory
