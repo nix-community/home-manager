@@ -23,6 +23,9 @@ runCommand "home-manager-install" {
       if [[ -v XDG_DATA_HOME && $XDG_DATA_HOME != "$HOME/.local/share" ]]; then
         xdgVars="$xdgVars  xdg.dataHome = \"$XDG_DATA_HOME\";$nl"
       fi
+      if [[ -v XDG_STATE_HOME && $XDG_STATE_HOME != "$HOME/.local/state" ]]; then
+        xdgVars="$xdgVars  xdg.stateHome = \"$XDG_STATE_HOME\";$nl"
+      fi
 
       mkdir -p "$(dirname "$confFile")"
       cat > $confFile <<EOF

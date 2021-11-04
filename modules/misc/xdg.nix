@@ -14,6 +14,7 @@ let
   defaultCacheHome = "${config.home.homeDirectory}/.cache";
   defaultConfigHome = "${config.home.homeDirectory}/.config";
   defaultDataHome = "${config.home.homeDirectory}/.local/share";
+  defaultStateHome = "${config.home.homeDirectory}/.local/state";
 
   getEnvFallback = name: fallback:
     let value = builtins.getEnv name;
@@ -67,6 +68,15 @@ in {
         Absolute path to directory holding application data.
       '';
     };
+
+    stateHome = mkOption {
+      type = types.path;
+      defaultText = "~/.local/state";
+      apply = toString;
+      description = ''
+        Absolute path to directory holding application states.
+      '';
+    };
   };
 
   config = mkMerge [
@@ -74,11 +84,13 @@ in {
       xdg.cacheHome = mkDefault defaultCacheHome;
       xdg.configHome = mkDefault defaultConfigHome;
       xdg.dataHome = mkDefault defaultDataHome;
+      xdg.stateHome = mkDefault defaultStateHome;
 
       home.sessionVariables = {
         XDG_CACHE_HOME = cfg.cacheHome;
         XDG_CONFIG_HOME = cfg.configHome;
         XDG_DATA_HOME = cfg.dataHome;
+        XDG_STATE_HOME = cfg.stateHome;
       };
     })
 
@@ -96,6 +108,7 @@ in {
       xdg.cacheHome = mkDefault defaultCacheHome;
       xdg.configHome = mkDefault defaultConfigHome;
       xdg.dataHome = mkDefault defaultDataHome;
+      xdg.stateHome = mkDefault stateHome;
     })
 
     {
