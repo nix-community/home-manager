@@ -623,45 +623,53 @@ in {
       rightModes = deprecate "right_meter_modes" "meters.right"
         (ifNonNull cfg.meters (map (m: m.mode) cfg.meters.right));
 
-      settings' = cfg.settings // (filterAttrs (_: v: !isNull v) {
-        fields = deprecate "fields" "fields"
-          (ifNonNull cfg.fields (map (n: fields.${n}) cfg.fields));
-        sort_key = deprecate "sort_key" "sortKey"
-          (ifNonNull cfg.sortKey fields.${cfg.sortKey});
-        sort_direction = deprecate' "sort_direction" "sortDescending";
-        hide_threads = deprecate' "hide_threads" "hideThreads";
-        hide_kernel_threads =
-          deprecate' "hide_kernel_threads" "hideKernelThreads";
-        hide_userland_threads =
-          deprecate' "hide_userland_threads" "hideUserlandThreads";
-        shadow_other_users = deprecate' "shadow_other_users" "shadowOtherUsers";
-        show_thread_names = deprecate' "show_thread_names" "showThreadNames";
-        show_program_path = deprecate' "show_program_path" "showProgramPath";
-        highlight_base_name =
-          deprecate' "highlight_base_name" "highlightBaseName";
-        highlight_megabytes =
-          deprecate' "highlight_megabytes" "highlightMegabytes";
-        highlight_threads = deprecate' "highlight_threads" "highlightThreads";
-        tree_view = deprecate' "tree_view" "treeView";
-        header_margin = deprecate' "header_margin" "headerMargin";
-        detailed_cpu_time = deprecate' "detailed_cpu_time" "detailedCpuTime";
-        cpu_count_from_zero =
-          deprecate' "cpu_count_from_zero" "cpuCountFromZero";
-        show_cpu_usage = deprecate' "show_cpu_usage" "showCpuUsage";
-        show_cpu_frequency = deprecate' "show_cpu_frequency" "showCpuFrequency";
-        update_process_names =
-          deprecate' "update_process_names" "updateProcessNames";
-        account_guest_in_cpu_meter =
-          deprecate' "account_guest_in_cpu_meter" "accountGuestInCpuMeter";
-        color_scheme = deprecate' "color_scheme" "colorScheme";
-        enable_mouse = deprecate' "enable_mouse" "enableMouse";
-        delay = deprecate' "delay" "delay";
-        left_meters = leftMeters;
-        left_meter_modes = leftModes;
-        right_meters = rightMeters;
-        right_meter_modes = rightModes;
-        vim_mode = deprecate' "vim_mode" "vimMode";
-      });
-    in concatStringsSep "\n" (mapAttrsToList formatOption settings');
+      before = optionalAttrs (cfg.settings ? header_layout) {
+        inherit (cfg.settings) header_layout;
+      };
+
+      settings' = (removeAttrs cfg.settings (attrNames before))
+        // (filterAttrs (_: v: !isNull v) {
+          fields = deprecate "fields" "fields"
+            (ifNonNull cfg.fields (map (n: fields.${n}) cfg.fields));
+          sort_key = deprecate "sort_key" "sortKey"
+            (ifNonNull cfg.sortKey fields.${cfg.sortKey});
+          sort_direction = deprecate' "sort_direction" "sortDescending";
+          hide_threads = deprecate' "hide_threads" "hideThreads";
+          hide_kernel_threads =
+            deprecate' "hide_kernel_threads" "hideKernelThreads";
+          hide_userland_threads =
+            deprecate' "hide_userland_threads" "hideUserlandThreads";
+          shadow_other_users =
+            deprecate' "shadow_other_users" "shadowOtherUsers";
+          show_thread_names = deprecate' "show_thread_names" "showThreadNames";
+          show_program_path = deprecate' "show_program_path" "showProgramPath";
+          highlight_base_name =
+            deprecate' "highlight_base_name" "highlightBaseName";
+          highlight_megabytes =
+            deprecate' "highlight_megabytes" "highlightMegabytes";
+          highlight_threads = deprecate' "highlight_threads" "highlightThreads";
+          tree_view = deprecate' "tree_view" "treeView";
+          header_margin = deprecate' "header_margin" "headerMargin";
+          detailed_cpu_time = deprecate' "detailed_cpu_time" "detailedCpuTime";
+          cpu_count_from_zero =
+            deprecate' "cpu_count_from_zero" "cpuCountFromZero";
+          show_cpu_usage = deprecate' "show_cpu_usage" "showCpuUsage";
+          show_cpu_frequency =
+            deprecate' "show_cpu_frequency" "showCpuFrequency";
+          update_process_names =
+            deprecate' "update_process_names" "updateProcessNames";
+          account_guest_in_cpu_meter =
+            deprecate' "account_guest_in_cpu_meter" "accountGuestInCpuMeter";
+          color_scheme = deprecate' "color_scheme" "colorScheme";
+          enable_mouse = deprecate' "enable_mouse" "enableMouse";
+          delay = deprecate' "delay" "delay";
+          left_meters = leftMeters;
+          left_meter_modes = leftModes;
+          right_meters = rightMeters;
+          right_meter_modes = rightModes;
+          vim_mode = deprecate' "vim_mode" "vimMode";
+        });
+    in concatStringsSep "\n" (mapAttrsToList formatOption before
+      ++ mapAttrsToList formatOption settings');
   };
 }
