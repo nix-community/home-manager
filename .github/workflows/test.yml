@@ -19,6 +19,11 @@ jobs:
       with:
         name: nix-community
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+    - run: |
+        if grep -R --exclude stdlib-extended.nix literalExample modules ; then
+          echo "Error: literalExample should be replaced by literalExpression" > /dev/stderr
+          exit 1
+        fi
     - run: ./format -c
     - run: nix-shell . -A install
     - run: nix-shell --arg enableBig false --pure tests -A run.all
