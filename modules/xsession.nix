@@ -126,6 +126,29 @@ in {
               in "${pkgs.xorg.setxkbmap}/bin/setxkbmap ${toString args}";
           };
         };
+
+        xplugd = {
+          Unit = {
+            Description = "Rerun setxkbmap.service when I/O is changed";
+            After = [ "graphical-session-pre.target" ];
+            PartOf = [ "graphical-session.target" ];
+          };
+
+          Install = { WantedBy = [ "graphical-session.target" ]; };
+
+          Service = {
+            Type = "forking";
+            ExecStart = let
+              script = pkgs.writeShellScript "xplugrc" ''
+                case "$1,$3" in
+                  keyboard,connected)
+                  systemctl --user restart setxkbmap.service
+                  ;;
+                esac
+              '';
+            in "${pkgs.xplugd}/bin/xplugd ${script}";
+          };
+        };
       };
 
       targets = {
