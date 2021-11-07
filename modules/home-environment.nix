@@ -236,7 +236,7 @@ in
     home.shellAliases = mkOption {
       type = with types; attrsOf str;
       default = { };
-      example = literalExample ''
+      example = literalExpression ''
         {
           g = "git";
           "..." = "cd ../..";
