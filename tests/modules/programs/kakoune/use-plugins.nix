@@ -3,14 +3,14 @@
 with lib;
 
 {
-  config = {
-    programs.kakoune = {
-      enable = true;
-      plugins = [ pkgs.kakounePlugins.kak-prelude ];
-    };
+  imports = [ ./stubs.nix ];
 
-    nmt.script = ''
-      assertDirectoryNotEmpty home-path/share/kak/autoload/plugins
-    '';
+  programs.kakoune = {
+    enable = true;
+    plugins = [ pkgs.kakounePlugins.prelude-kak ];
   };
+
+  nmt.script = ''
+    assertDirectoryNotEmpty home-path/share/kak/autoload/plugins
+  '';
 }

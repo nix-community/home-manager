@@ -3,11 +3,11 @@
 with lib;
 
 {
-  config = {
-    programs.kakoune = { enable = true; };
+  imports = [ ./stubs.nix ];
 
-    nmt.script = ''
-      assertPathNotExists home-path/share/kak/autoload/plugins
-    '';
-  };
+  programs.kakoune = { enable = true; };
+
+  nmt.script = ''
+    assertPathNotExists home-path/share/kak/autoload/plugins
+  '';
 }
