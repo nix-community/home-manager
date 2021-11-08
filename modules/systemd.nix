@@ -258,7 +258,8 @@ in {
 
     # If we run under a Linux system we assume that systemd is
     # available, in particular we assume that systemctl is in PATH.
-    (mkIf pkgs.stdenv.isLinux {
+    # Do not install any user services if username is root.
+    (mkIf (pkgs.stdenv.isLinux && config.home.username != "root") {
       xdg.configFile = mkMerge [
         (lib.listToAttrs ((buildServices "service" cfg.services)
           ++ (buildServices "slices" cfg.slices)
