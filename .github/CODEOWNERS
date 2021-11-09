@@ -357,6 +357,9 @@
 /modules/services/window-managers/bspwm               @ncfavier
 /tests/modules/services/window-managers/bspwm         @ncfavier
 
+/modules/services/window-managers/herbstluftwm        @olmokramer
+/tests/modules/services/window-managers/herbstluftwm  @olmokramer
+
 /modules/services/window-managers/i3-sway/i3.nix      @sumnerevans
 /tests/modules/services/window-managers/i3            @sumnerevans
 

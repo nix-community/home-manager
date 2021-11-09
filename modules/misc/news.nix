@@ -2328,6 +2328,14 @@ in
           A new module is available: 'services.systembus-notify'.
         '';
       }
+
+      {
+        time = "2021-12-31T09:39:20+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xsession.windowManager.herbstluftwm'.
+        '';
+      }
     ];
   };
 }

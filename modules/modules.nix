@@ -231,6 +231,7 @@ let
     ./services/volnoti.nix
     ./services/window-managers/awesome.nix
     ./services/window-managers/bspwm/default.nix
+    ./services/window-managers/herbstluftwm.nix
     ./services/window-managers/i3-sway/i3.nix
     ./services/window-managers/i3-sway/sway.nix
     ./services/window-managers/i3-sway/swaynag.nix
