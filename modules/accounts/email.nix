@@ -188,7 +188,7 @@ let
       };
 
       flavor = mkOption {
-        type = types.enum [ "plain" "gmail.com" "runbox.com" ];
+        type = types.enum [ "plain" "gmail.com" "runbox.com" "fastmail.com" ];
         default = "plain";
         description = ''
           Some email providers have peculiar behavior that require
@@ -328,7 +328,17 @@ let
         name = name;
         maildir = mkOptionDefault { path = "${name}"; };
       }
-
+      (mkIf (config.flavor == "fastmail.com") {
+        userName = mkDefault config.address;
+        smtp = {
+          host = "smtp.fastmail.com";
+          port = if config.smtp.tls.useStartTls then 587 else 465;
+        };
+        imap = {
+          host = "imap.fastmail.com";
+          port = 993;
+        };
+      })
       (mkIf (config.flavor == "gmail.com") {
         userName = mkDefault config.address;
 
