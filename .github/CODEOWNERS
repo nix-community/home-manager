@@ -90,6 +90,9 @@
 
 /modules/programs/git.nix                             @rycee
 
+/modules/programs/gitui/gitui.nix                     @mifom
+/modules/programs/gitui/default_key_config.ron        @mifom
+
 /modules/programs/gnome-terminal.nix                  @kamadorueda @rycee
 
 /modules/programs/go.nix                              @rvolosatovs
