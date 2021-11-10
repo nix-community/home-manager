@@ -577,25 +577,23 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-          if nix-env -q | grep '^home-manager-path$'; then
-            $DRY_RUN_CMD nix-env -e home-manager-path
-          fi
+         nix profile list | grep 'home-manager-path$' | awk -F ' ' '{ print $4 }' | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
         ''
       else
         ''
-          if ! $DRY_RUN_CMD nix-env -i ${cfg.path} ; then
+          if ! $DRY_RUN_CMD nix profile install ${cfg.path} ; then
             cat <<EOF
 
-          Oops, nix-env failed to install your new Home Manager profile!
+          Oops, nix profile failed to install your new Home Manager profile!
 
           Perhaps there is a conflict with a package that was installed using
-          'nix-env -i'? Try running
+          'nix profile install ? Try running
 
-              nix-env -q
+              nix profile list
 
           and if there is a conflicting package you can remove it with
 
-              nix-env -e {package name}
+              nix profile remove {number | store path}
 
           Then try activating your Home Manager configuration again.
           EOF
