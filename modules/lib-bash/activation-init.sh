@@ -5,6 +5,7 @@ function setupVars() {
     local profilesPath="$nixStateDir/profiles/per-user/$USER"
     local gcPath="$nixStateDir/gcroots/per-user/$USER"
 
+    declare -gr nixProfilePath="$profilesPath/profile"
     declare -gr genProfilePath="$profilesPath/home-manager"
     declare -gr newGenPath="@GENERATION_DIR@";
     declare -gr newGenGcPath="$gcPath/current-home"

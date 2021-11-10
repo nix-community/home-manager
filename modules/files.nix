@@ -259,8 +259,18 @@ in
           cleanOldGen
 
           if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
-            _i "Creating profile generation %s" "$newGenNum"
-            $DRY_RUN_CMD nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
+            _i "Creating profile generation %s" $newGenNum
+            if [[ -e "$genProfilePath"/manifest.json ]] ; then
+              # Remove all packages from "$genProfilePath"
+              # `nix profile remove '.*' --profile "$genProfilePath"` was not working, so here is a workaround:
+              nix profile list --profile "$genProfilePath" \
+                | cut -d ' ' -f 4 \
+                | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG --profile "$genProfilePath"
+              $DRY_RUN_CMD nix profile install $VERBOSE_ARG --profile "$genProfilePath" "$newGenPath"
+            else
+              $DRY_RUN_CMD nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
+            fi
+
             $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"
           else
             _i "No change so reusing latest profile generation %s" "$oldGenNum"
