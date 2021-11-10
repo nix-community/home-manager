@@ -260,8 +260,6 @@ in
 
           if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
             echo "Creating profile generation $newGenNum"
-            $DRY_RUN_CMD nix profile remove '.*' $VERBOSE_ARG --profile "$genProfilePath"
-
             # Remove all packages from "$genProfilePath"
             # `nix profile remove '.*' --profile "$genProfilePath"` was not working, so here is a workaround:
             nix profile list --profile "$genProfilePath" | awk -F ' ' '{ print $4 }' | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG --profile "$genProfilePath"

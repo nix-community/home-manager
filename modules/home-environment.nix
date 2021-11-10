@@ -587,7 +587,7 @@ in
           Oops, nix profile failed to install your new Home Manager profile!
 
           Perhaps there is a conflict with a package that was installed using
-          'nix profile install ? Try running
+          'nix profile install' ? Try running
 
               nix profile list
 
