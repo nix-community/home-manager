@@ -89,6 +89,12 @@
     github = "matrss";
     githubId = 9308656;
   };
+  mifom = {
+    name = "mifom";
+    email = "mifom@users.noreply.github.com";
+    github = "mifom";
+    githubId = 23462908;
+  };
   seylerius = {
     email = "sable@seyleri.us";
     name = "Sable Seyler";

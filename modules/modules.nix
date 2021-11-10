@@ -70,6 +70,7 @@ let
     ./programs/getmail.nix
     ./programs/gh.nix
     ./programs/git.nix
+    ./programs/gitui.nix
     ./programs/gnome-terminal.nix
     ./programs/go.nix
     ./programs/gpg.nix
