@@ -11,6 +11,23 @@ export TEXTDOMAINDIR=@OUT@/share/locale
 # shellcheck disable=1091
 source @HOME_MANAGER_LIB@
 
+function removeByName() {
+  nix profile list \
+      | { grep "$1" || test $? = 1; } \
+      | cut -d ' ' -f 4 \
+      | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+}
+
+function setNixProfileCommands() {
+    if [[ -e ~/.nix-profile/manifest.json ]] ; then
+        LIST_OUTPATH_CMD="nix profile list"
+        REMOVE_CMD="removeByName"
+    else
+        LIST_OUTPATH_CMD="nix-env -q --outpath"
+        REMOVE_CMD="nix-env -q"
+    fi
+}
+
 function setVerboseAndDryRun() {
     if [[ -v VERBOSE ]]; then
         export VERBOSE_ARG="--verbose"
@@ -370,8 +387,9 @@ function doExpireGenerations() {
 }
 
 function doListPackages() {
+    setNixProfileCommands
     local outPath
-    outPath="$(nix-env -q --out-path | grep -o '/.*home-manager-path$')"
+    outPath="$($LIST_OUTPATH_CMD | grep -o '/.*home-manager-path$')"
     if [[ -n "$outPath" ]] ; then
         nix-store -q --references "$outPath" | sed 's/[^-]*-//'
     else
@@ -446,6 +464,7 @@ function doShowNews() {
 
 function doUninstall() {
     setVerboseAndDryRun
+    setNixProfileCommands
 
     _i 'This will remove Home Manager from your system.'
 
@@ -463,7 +482,7 @@ function doUninstall() {
             HOME_MANAGER_CONFIG="$(mktemp --tmpdir home-manager.XXXXXXXXXX)"
             echo "{ lib, ... }: { home.file = lib.mkForce {}; }" > "$HOME_MANAGER_CONFIG"
             doSwitch
-            $DRY_RUN_CMD nix-env -e home-manager-path || true
+            $DRY_RUN_CMD $REMOVE_CMD home-manager-path || true
             rm "$HOME_MANAGER_CONFIG"
             $DRY_RUN_CMD rm $VERBOSE_ARG -r \
                 "${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"

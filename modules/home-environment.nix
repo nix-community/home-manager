@@ -578,17 +578,41 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-          if nix-env -q | grep '^home-manager-path$'; then
-            $DRY_RUN_CMD nix-env -e home-manager-path
+          if [[ -e "$nixProfilePath"/manifest.json ]] ; then
+            nix profile list \
+            | { grep 'home-manager-path$' || test $? = 1; } \
+            | awk -F ' ' '{ print $4 }' \
+            | cut -d ' ' -f 4 \
+            | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+          else
+            if nix-env -q | grep '^home-manager-path$'; then
+              $DRY_RUN_CMD nix-env -e home-manager-path
+            fi
           fi
         ''
       else
         ''
-          if ! $DRY_RUN_CMD nix-env -i ${cfg.path} ; then
+          if [[ -e "$nixProfilePath"/manifest.json ]] ; then
+            INSTALL_CMD="nix profile install"
+            LIST_CMD="nix profile list"
+            REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
+          else
+            INSTALL_CMD="nix-env -i"
+            LIST_CMD="nix-env -q"
+            REMOVE_CMD_SYNTAX='nix-env -e {package name}'
+          fi
+          if ! $DRY_RUN_CMD $INSTALL_CMD ${cfg.path} ; then
             echo
-            _iError $'Oops, nix-env failed to install your new Home Manager profile!\n\nPerhaps there is a conflict with a package that was installed using\n"nix-env -i"? Try running\n\n    nix-env -q\n\nand if there is a conflicting package you can remove it with\n\n    nix-env -e {package name}\n\nThen try activating your Home Manager configuration again.'
+              if [[ -e "$nixProfilePath"/manifest.json ]] ; then
+                _iError $'Oops, 'nix profile' failed to install your new Home Manager profile!\n\nPerhaps there is a conflict with a package that was installed using\n"%s"? Try running\n\n    %s\n\nand if there is a conflicting package you can remove it with\n\n    %s\n\nThen try activating your Home Manager configuration again.' "$INSTALL_CMD" "$LIST_CMD" "$REMOVE_CMD_SYNTAX"
+              else
+                _iError $'Oops, nix-env failed to install your new Home Manager profile!\n\nPerhaps there is a conflict with a package that was installed using\n"%s"? Try running\n\n    %s\n\nand if there is a conflicting package you can remove it with\n\n    %s\n\nThen try activating your Home Manager configuration again.' "$INSTALL_CMD" "$LIST_CMD" "$REMOVE_CMD_SYNTAX"
+              fi
             exit 1
           fi
+          unset INSTALL_CMD
+          unset LIST_CMD
+          unset REMOVE_CMD_SYNTAX
         ''
     );
 
