@@ -31,7 +31,7 @@ in {
       default = false;
       description = ''
         Wether or not to install the autocomplete functionality. Normally this
-        is done by running `terraform -install-autocomplete`.
+        is done by running <literal>terraform -install-autocomplete</literal>.
       '';
     };
 
@@ -41,7 +41,7 @@ in {
     home.packages = [ cfg.package ];
 
     programs.bash.bashrcExtra = ''
-      complete -C ${cfg.package}/bin/terraform terraform
+      complete -C ${cfg.package}/bin/${cfg.package.pname} ${cfg.package.pname}
     '';
   };
 }
