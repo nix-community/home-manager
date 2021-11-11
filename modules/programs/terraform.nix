@@ -40,8 +40,9 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.bashrcExtra = ''
-      complete -C ${cfg.package}/bin/${cfg.package.pname} ${cfg.package.pname}
+    programs.bash.bashrcExtra = let program = "terraform";
+    in ''
+      complete -C ${cfg.package}/bin/${program} ${program}
     '';
   };
 }
