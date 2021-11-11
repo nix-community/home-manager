@@ -41,7 +41,7 @@ in {
     home.packages = [ cfg.package ];
 
     programs.bash.bashrcExtra = let program = "terraform";
-    in ''
+    in mkIf cfg.installCompletion ''
       complete -C ${cfg.package}/bin/${program} ${program}
     '';
   };
