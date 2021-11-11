@@ -133,4 +133,10 @@
     github = "hawkw";
     githubId = 2796466;
   };
+  bryanhonof = {
+    name = "Bryan Honof";
+    email = "bjth@inuits.eu";
+    github = "bryanhonof";
+    githubId = 5932804;
+  };
 }
