@@ -86,6 +86,7 @@ let
     ./programs/keychain.nix
     ./programs/kitty.nix
     ./programs/lazygit.nix
+    ./programs/less.nix
     ./programs/lesspipe.nix
     ./programs/lf.nix
     ./programs/lieer.nix
