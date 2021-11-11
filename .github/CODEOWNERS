@@ -113,6 +113,9 @@
 
 /modules/programs/lazygit.nix                         @kalhauge
 
+/modules/programs/less.nix                            @pamplemousse
+/tests/modules/programs/less                          @pamplemousse
+
 /modules/programs/lesspipe.nix                        @rycee
 
 /modules/programs/lf.nix                              @owm111

@@ -66,6 +66,7 @@ import nmt {
     ./modules/programs/irssi
     ./modules/programs/kakoune
     ./modules/programs/kitty
+    ./modules/programs/less
     ./modules/programs/lf
     ./modules/programs/lieer
     ./modules/programs/man
