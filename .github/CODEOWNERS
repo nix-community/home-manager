@@ -377,3 +377,5 @@
 /modules/services/volnoti.nix                         @IvanMalison
 
 Makefile                                              @thiagokokada
+
+/modules/programs/terraform.nix                       @bryanhonof
