@@ -136,6 +136,7 @@ let
     ./programs/taskwarrior.nix
     ./programs/terminator.nix
     ./programs/termite.nix
+    ./programs/terraform.nix
     ./programs/texlive.nix
     ./programs/tmux.nix
     ./programs/topgrade.nix
