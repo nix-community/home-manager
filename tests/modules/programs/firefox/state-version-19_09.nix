@@ -13,7 +13,6 @@ with lib;
         firefox-unwrapped = pkgs.runCommand "firefox-0" {
           meta.description = "I pretend to be Firefox";
           preferLocalBuild = true;
-          allowSubstitutes = false;
           passthru.gtk3 = null;
         } ''
           mkdir -p "$out/bin"

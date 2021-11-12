@@ -3,7 +3,6 @@
 runCommand "home-manager-install" {
   propagatedBuildInputs = [ home-manager ];
   preferLocalBuild = true;
-  allowSubstitutes = false;
   shellHookOnly = true;
   shellHook = ''
     confFile="''${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home.nix"

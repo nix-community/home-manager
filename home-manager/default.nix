@@ -16,7 +16,6 @@ let
 
 in runCommand "home-manager" {
   preferLocalBuild = true;
-  allowSubstitutes = false;
   meta = with lib; {
     description = "A user environment configurator";
     maintainers = [ maintainers.rycee ];

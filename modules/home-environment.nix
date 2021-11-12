@@ -652,7 +652,6 @@ in
           "home-manager-generation"
           {
             preferLocalBuild = true;
-            allowSubstitutes = false;
           }
           ''
             mkdir -p $out

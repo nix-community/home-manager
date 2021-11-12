@@ -310,7 +310,6 @@ in {
             nativeBuildInputs = [ pkgs.python2 ];
             buildInputs = [ cfg.package ];
             preferLocalBuild = true;
-            allowSubstitutes = false;
           } ''
             mkdir -p $out
             if [ -d $src/share/man ]; then
