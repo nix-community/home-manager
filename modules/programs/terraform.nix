@@ -45,7 +45,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package.withPlugins (p: with p; cfg.providers) ];
+    home.packages = [ (cfg.package.withPlugins (_: cfg.providers)) ];
 
     programs.bash.bashrcExtra = let program = "terraform";
     in mkIf cfg.installCompletion ''
