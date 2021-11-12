@@ -26,19 +26,26 @@ in {
       description = "The Terraform package to use";
     };
 
+    providers = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      description = "A list of Terraform providers.";
+    };
+
     installCompletion = mkOption {
       type = types.bool;
       default = false;
       description = ''
         Wether or not to install the autocomplete functionality. Normally this
         is done by running <literal>terraform -install-autocomplete</literal>.
+        Currently only installs for bash.
       '';
     };
 
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = [ cfg.package.withPlugins (p: with p; cfg.providers) ];
 
     programs.bash.bashrcExtra = let program = "terraform";
     in mkIf cfg.installCompletion ''
