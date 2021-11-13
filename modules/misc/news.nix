@@ -2233,6 +2233,13 @@ in
           A new module is available: 'programs.hexchat'.
         '';
       }
+
+      {
+        time = "2021-11-13T20:31:52+00:00";
+        message = ''
+          A new module is available: 'programs.terraform'.
+        '';
+      }
     ];
   };
 }
