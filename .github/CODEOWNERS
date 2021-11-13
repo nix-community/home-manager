@@ -390,6 +390,8 @@
 
 /modules/services/volnoti.nix                         @IvanMalison
 
+/modules/services/systembus-notify.nix                @asymmetric
+
 /modules/targets/darwin                               @midchildan
 /tests/modules/targets-darwin                         @midchildan
 

@@ -220,6 +220,7 @@ let
     ./services/status-notifier-watcher.nix
     ./services/sxhkd.nix
     ./services/syncthing.nix
+    ./services/systembus-notify.nix
     ./services/taffybar.nix
     ./services/tahoe-lafs.nix
     ./services/taskwarrior-sync.nix

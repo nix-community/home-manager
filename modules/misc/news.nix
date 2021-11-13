@@ -2320,6 +2320,14 @@ in
           A new module is available: 'services.opensnitch-ui'.
         '';
       }
+
+      {
+        time = "2021-12-21T22:17:30+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.systembus-notify'.
+        '';
+      }
     ];
   };
 }
