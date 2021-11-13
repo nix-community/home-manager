@@ -3,12 +3,13 @@
 file extension rather than exiting with an error.
 </p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"backup"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/nix-darwin/default.nix#blob-path" target="_top">
                     &lt;home-manager/nix-darwin/default.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="nix-darwin-opt-home-manager.extraSpecialArgs"></a><a class="term" href="nix-darwin-options.html#nix-darwin-opt-home-manager.extraSpecialArgs"><code class="option">home-manager.extraSpecialArgs</code></a></span></dt><dd><p>Extra <code class="literal">specialArgs</code> passed to Home Manager.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="nix-darwin-opt-home-manager.extraSpecialArgs"></a><a class="term" href="nix-darwin-options.html#nix-darwin-opt-home-manager.extraSpecialArgs"><code class="option">home-manager.extraSpecialArgs</code></a></span></dt><dd><p>Extra <code class="literal">specialArgs</code> passed to Home Manager. This
+option can be used to pass additional arguments to all modules.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
         }
-    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/nix-darwin/default.nix#blob-path" target="_top">
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">{ inherit emacs-overlay; }</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/nix-darwin/default.nix#blob-path" target="_top">
                     &lt;home-manager/nix-darwin/default.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="nix-darwin-opt-home-manager.sharedModules"></a><a class="term" href="nix-darwin-options.html#nix-darwin-opt-home-manager.sharedModules"><code class="option">home-manager.sharedModules</code></a></span></dt><dd><p>Extra modules added to all users.
 </p><p><span class="emphasis"><em>Type:</em></span> list of Home Manager moduless</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
