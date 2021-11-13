@@ -217,6 +217,11 @@ Home Manager is released in branches corresponding to NixOS releases
 modules. If you need a module to be backported, then feel free to open
 an issue.
 
+License
+-------
+
+This project is licensed under the terms of the [MIT license](LICENSE).
+
 [Bash]: https://www.gnu.org/software/bash/
 [Nix]: https://nixos.org/nix/
 [NixOS]: https://nixos.org/
