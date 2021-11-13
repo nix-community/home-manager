@@ -29,6 +29,7 @@
   </note>
  </preface>
  <xi:include href="installation.xml" />
+ <xi:include href="usage.xml" />
  <xi:include href="writing-modules.xml" />
  <xi:include href="contributing.xml" />
  <xi:include href="faq.xml" />
