@@ -248,14 +248,12 @@ function doBuild() {
 
     setFlakeAttribute
     if [[ -v FLAKE_CONFIG_URI ]]; then
-        local exitCode=0
         nix build \
             "${PASSTHROUGH_OPTS[@]}" \
              ${DRY_RUN+--dry-run} \
              ${NO_OUT_LINK+--no-link} \
             "$FLAKE_CONFIG_URI.activationPackage" \
-            || exitCode=1
-        return $exitCode
+            || return
     fi
 
     setWorkDir
@@ -263,26 +261,21 @@ function doBuild() {
     local newsInfo
     newsInfo=$(buildNews)
 
-    local exitCode
     doBuildAttr \
                 ${NO_OUT_LINK+--no-out-link} \
                 --attr activationPackage \
-        && exitCode=0 || exitCode=1
+        || return
 
     presentNews "$newsInfo"
-
-    return $exitCode
 }
 
 function doSwitch() {
     setFlakeAttribute
     if [[ -v FLAKE_CONFIG_URI ]]; then
-        local exitCode=0
         nix run \
             "${PASSTHROUGH_OPTS[@]}" \
             "$FLAKE_CONFIG_URI.activationPackage" \
-            || exitCode=1
-        return $exitCode
+            || return
     fi
 
     setWorkDir
@@ -291,7 +284,6 @@ function doSwitch() {
     newsInfo=$(buildNews)
 
     local generation
-    local exitCode=0
 
     # Build the generation and run the activate script. Note, we
     # specify an output link so that it is treated as a GC root. This
@@ -302,11 +294,9 @@ function doSwitch() {
     doBuildAttr \
                 --out-link "$generation" \
                 --attr activationPackage \
-        && "$generation/activate" || exitCode=1
+        && "$generation/activate" || return
 
     presentNews "$newsInfo"
-
-    return $exitCode
 }
 
 function doListGens() {
