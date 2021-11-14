@@ -8,7 +8,7 @@ Home Manager can be used in three primary ways:
 1. Using the standalone `home-manager` tool. For platforms other than
 NixOS and Darwin, this is the only available choice. It is also
 recommended for people on NixOS or Darwin that want to manage their
-home directory independent of the system as a whole. See
+home directory independently of the system as a whole. See
 <<sec-install-standalone>> for instructions on how to perform this
 installation.
 
@@ -27,6 +27,11 @@ for a description of this setup.
 
 :nix-allowed-users: https://nixos.org/nix/manual/#conf-allowed-users
 :nixos-allowed-users: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
+:bash: https://www.gnu.org/software/bash/
+:zsh: http://zsh.sourceforge.net/
+:fish: https://fishshell.com
+:plugin-foreign-env: https://github.com/oh-my-fish/plugin-foreign-env
+:babelfish: https://github.com/bouk/babelfish
 
 1. Make sure you have a working Nix installation. Specifically, make
 sure that your user is able to build and install Nix packages. For
@@ -40,9 +45,8 @@ option. On NixOS you can control this option using the
 Note that Nix 2.4 is not yet fully supported. Most significantly, Home
 Manager is incompatible with the new `nix profile`.
 
-2. Add the Home Manager channel that you wish to follow. If you are
-following Nixpkgs master or an unstable channel then this is done by
-running
+2. Add the appropriate Home Manager channel. If you are following
+Nixpkgs master or an unstable channel you can run
 +
 [source,console]
 ----
@@ -50,7 +54,7 @@ $ nix-channel --add https://github.com/nix-community/home-manager/archive/master
 $ nix-channel --update
 ----
 +
-and if you follow a Nixpkgs version 21.05 channel, you can run
+and if you follow a Nixpkgs version 21.05 channel you can run
 +
 [source,console]
 ----
@@ -90,11 +94,8 @@ file in your shell configuration. Alternatively source
 when managing home configuration together with system configuration.
 +
 This file can be sourced directly by POSIX.2-like shells such as
-https://www.gnu.org/software/bash/[Bash] or
-http://zsh.sourceforge.net/[Z shell]. https://fishshell.com[Fish]
-users can use utilities such as
-https://github.com/oh-my-fish/plugin-foreign-env[foreign-env] or
-https://github.com/bouk/babelfish[babelfish].
+{bash}[Bash] or {zsh}[Z shell]. {fish}[Fish] users can use utilities
+such as {plugin-foreign-env}[foreign-env] or {babelfish}[babelfish].
 +
 For example, if you use Bash then add
 +
@@ -109,6 +110,9 @@ If instead of using channels you want to run Home Manager from a Git
 checkout of the repository then you can use the
 <<opt-programs.home-manager.path>> option to specify the absolute path
 to the repository.
+
+Once installed you can see <<ch-usage>> for a more detailed
+description of Home Manager and how to use it.
 
 [[sec-install-nixos-module]]
 === NixOS module
@@ -162,6 +166,27 @@ home-manager.users.eve = { pkgs, ... }: {
 and after a `nixos-rebuild switch` the user eve's environment should
 include a basic Bash configuration and the packages atool and httpie.
 
+If you do not plan on having Home Manager manage your shell
+configuration then you must add either
+
+[source,bash]
+----
+. "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+----
+
+or
+
+[source,bash]
+----
+. "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
+----
+
+to your shell configuration, depending on whether
+<<nixos-opt-home-manager.useUserPackages>> is enabled. This file can
+be sourced directly by POSIX.2-like shells such as {bash}[Bash] or
+{zsh}[Z shell]. {fish}[Fish] users can use utilities such as
+{plugin-foreign-env}[foreign-env] or {babelfish}[babelfish].
+
 [NOTE]
 ====
 By default packages will be installed to `$HOME/.nix-profile` but they
@@ -189,6 +214,9 @@ This saves an extra Nixpkgs evaluation, adds consistency, and removes
 the dependency on `NIX_PATH`, which is otherwise used for importing
 Nixpkgs.
 ====
+
+Once installed you can see <<ch-usage>> for a more detailed
+description of Home Manager and how to use it.
 
 [[sec-install-nix-darwin-module]]
 === nix-darwin module
@@ -244,6 +272,27 @@ and after a `darwin-rebuild switch` the user eve's environment
 should include a basic Bash configuration and the packages atool and
 httpie.
 
+If you do not plan on having Home Manager manage your shell
+configuration then you must add either
+
+[source,bash]
+----
+. "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+----
+
+or
+
+[source,bash]
+----
+. "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
+----
+
+to your shell configuration, depending on whether
+<<nix-darwin-opt-home-manager.useUserPackages>> is enabled. This file
+can be sourced directly by POSIX.2-like shells such as {bash}[Bash] or
+{zsh}[Z shell]. {fish}[Fish] users can use utilities such as
+{plugin-foreign-env}[foreign-env] or {babelfish}[babelfish].
+
 [NOTE]
 ====
 By default user packages will not be ignored in favor of
@@ -271,3 +320,6 @@ This saves an extra Nixpkgs evaluation, adds consistency, and removes
 the dependency on `NIX_PATH`, which is otherwise used for importing
 Nixpkgs.
 ====
+
+Once installed you can see <<ch-usage>> for a more detailed
+description of Home Manager and how to use it.

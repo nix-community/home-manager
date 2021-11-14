@@ -53,87 +53,25 @@ You can chat with us on IRC in the channel [#home-manager][] on
 Installation
 ------------
 
-Currently the easiest way to install Home Manager is as follows:
+Home Manager can be used in three primary ways:
 
-1.  Make sure you have a working Nix installation. Specifically, make
-    sure that your user is able to build and install Nix packages. For
-    example, you should be able to successfully run a command like
-    `nix-instantiate '<nixpkgs>' -A hello` without having to switch to
-    the root user. For a multi-user install of Nix this means that
-    your user must be covered by the
-    [`allowed-users`][nixAllowedUsers] Nix option. On NixOS you can
-    control this option using the
-    [`nix.allowedUsers`][nixosAllowedUsers] system option.
+1. Using the standalone `home-manager` tool. For platforms other than
+   NixOS and Darwin, this is the only available choice. It is also
+   recommended for people on NixOS or Darwin that want to manage their
+   home directory independently of the system as a whole. See
+   [Standalone installation][manual standalone install] in the manual
+   for instructions on how to perform this installation.
 
-    Note that Nix 2.4 is not yet fully supported. Most significantly,
-    Home Manager is incompatible with the new `nix profile` command.
+2. As a module within a NixOS system configuration. This allows the
+   user profiles to be built together with the system when running
+   `nixos-rebuild`. See [NixOS module installation][manual nixos
+   install] in the manual for a description of this setup.
 
-2.  Add the appropriate Home Manager channel. If you are following
-    Nixpkgs master or an unstable channel you can run
-
-    ```shell
-    nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-    nix-channel --update
-    ```
-
-    and if you follow a Nixpkgs version 21.05 channel you can run
-
-    ```shell
-    nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
-    nix-channel --update
-    ```
-
-    On NixOS you may need to log out and back in for the channel to
-    become available. On non-NixOS you may have to add
-
-    ```shell
-    export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
-    ```
-
-    to your shell (see [nix#2033](https://github.com/NixOS/nix/issues/2033)).
-
-3.  Install Home Manager and create the first Home Manager generation:
-
-    ```shell
-    nix-shell '<home-manager>' -A install
-    ```
-
-    Once finished, Home Manager should be active and available in your
-    user environment.
-
-3.  If you do not plan on having Home Manager manage your shell
-    configuration then you must source the
-
-    ```shell
-    $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
-    ```
-
-    file in your shell configuration. This file can be sourced
-    directly by POSIX.2-like shells such as [Bash][] or [Z shell][].
-    [Fish][] users can use utilities such as [foreign-env][] or
-    [babelfish][].
-
-    For example, if you use Bash then add
-
-    ```bash
-    . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-    ```
-
-    or this when managing home configuration together with system
-    configuration
-
-    ```bash
-    . "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
-    ```
-
-    to your `~/.profile` file.
-
-If instead of using channels you want to run Home Manager from a Git
-checkout of the repository then you can use the
-`programs.home-manager.path` option to specify the absolute path to
-the repository.
-
-Once installed you can now read the [usage section][manual usage] of the manual.
+3. As a module within a [nix-darwin][] system configuration. This
+   allows the user profiles to be built together with the system when
+   running `darwin-rebuild`. See [nix-darwin module
+   installation][manual nix-darwin install] in the manual for a
+   description of this setup.
 
 Nix Flakes
 ----------
@@ -223,21 +161,17 @@ License
 
 This project is licensed under the terms of the [MIT license](LICENSE).
 
-[Bash]: https://www.gnu.org/software/bash/
 [Nix]: https://nixos.org/nix/
 [NixOS]: https://nixos.org/
 [Nixpkgs]: https://nixos.org/nixpkgs/
-[nixAllowedUsers]: https://nixos.org/nix/manual/#conf-allowed-users
-[nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
-[Z shell]: http://zsh.sourceforge.net/
 [manual]: https://nix-community.github.io/home-manager/
 [manual usage]: https://nix-community.github.io/home-manager/#ch-usage
 [configuration options]: https://nix-community.github.io/home-manager/options.html
 [#home-manager]: https://webchat.oftc.net/?channels=home-manager
 [OFTC]: https://oftc.net/
-[samueldr]: https://github.com/samueldr/
 [Nix Pills]: https://nixos.org/nixos/nix-pills/
 [Nix Flakes]: https://nixos.wiki/wiki/Flakes
-[Fish]: https://fishshell.com
-[foreign-env]: https://github.com/oh-my-fish/plugin-foreign-env
-[babelfish]: https://github.com/bouk/babelfish
+[nix-darwin]: https://github.com/LnL7/nix-darwin/
+[manual standalone install]: https://nix-community.github.io/home-manager/index.html#sec-install-standalone
+[manual nixos install]: https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module
+[manual nix-darwin install]: https://nix-community.github.io/home-manager/index.html#sec-install-nix-darwin-module
