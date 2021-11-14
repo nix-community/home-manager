@@ -65,7 +65,8 @@ Currently the easiest way to install Home Manager is as follows:
     control this option using the
     [`nix.allowedUsers`][nixosAllowedUsers] system option.
 
-    Note that Nix 2.4 (`nixUnstable`) is not yet supported.
+    Note that Nix 2.4 is not yet fully supported. Most significantly,
+    Home Manager is incompatible with the new `nix profile` command.
 
 2.  Add the appropriate Home Manager channel. If you are following
     Nixpkgs master or an unstable channel you can run

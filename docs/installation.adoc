@@ -36,6 +36,9 @@ root user. For a multi-user install of Nix this means that your user
 must be covered by the {nix-allowed-users}[`allowed-users`] Nix
 option. On NixOS you can control this option using the
 {nixos-allowed-users}[`nix.allowedUsers`] system option.
++
+Note that Nix 2.4 is not yet fully supported. Most significantly, Home
+Manager is incompatible with the new `nix profile`.
 
 2. Add the Home Manager channel that you wish to follow. If you are
 following Nixpkgs master or an unstable channel then this is done by
