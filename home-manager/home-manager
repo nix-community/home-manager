@@ -524,6 +524,7 @@ function doHelp() {
     echo "  --show-trace"
     echo "  --(no-)substitute"
     echo "  --no-out-link            Do not create a symlink to the output path"
+    echo "  --no-write-lock-file"
     echo "  --builders VALUE"
     echo
     echo "Commands"
@@ -625,7 +626,8 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --debug|--keep-failed|--keep-going|--show-trace\
-            |--substitute|--no-substitute|--impure)
+            |--substitute|--no-substitute|--impure\
+            |--no-write-lock-file)
             PASSTHROUGH_OPTS+=("$opt")
             ;;
         -v|--verbose)
