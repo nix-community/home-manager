@@ -5,7 +5,7 @@ Your use of Home Manager is centered around the configuration file, which is typ
 
 This configuration file can be _built_ and _activated_.
 
-Building a configuration produces a directory in the Nix store containing all files and programs that should be available in your home directory and Nix user profile, respectively. The build step also checks that the configuration is valid and it will fail with an error if you, for example, assign a value to an option that does not exist or assign a value of the wrong type. Some modules also have custom assertions that perform more detailed, module specific, checks.
+Building a configuration produces a directory in the Nix store that contains all files and programs that should be available in your home directory and Nix user profile, respectively. The build step also checks that the configuration is valid and it will fail with an error if you, for example, assign a value to an option that does not exist or assign a value of the wrong type. Some modules also have custom assertions that perform more detailed, module specific, checks.
 
 Concretely, if your configuration contains
 
