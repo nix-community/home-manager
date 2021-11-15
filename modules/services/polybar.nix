@@ -112,7 +112,9 @@ in {
       };
 
       settings = mkOption {
-        type = types.attrsOf types.attrs;
+        type = with types;
+          let ty = oneOf [ bool int float str (listOf ty) (attrsOf ty) ];
+          in attrsOf (attrsOf ty // { description = "attribute sets"; });
         description = ''
           Polybar configuration. This takes a nix attrset and converts it to the
           strange data format that polybar uses.
