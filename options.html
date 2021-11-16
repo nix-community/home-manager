@@ -5402,6 +5402,18 @@ should hash host names and addresses when they are added to
 the known hosts file.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ssh.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/ssh.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ssh.includes"></a><a class="term" href="options.html#opt-programs.ssh.includes"><code class="option">programs.ssh.includes</code></a></span></dt><dd><p>File globs of ssh config files that should be included via the
+<code class="literal">Include</code> directive.
+</p><p>
+See
+<span class="citerefentry"><span class="refentrytitle">ssh_config</span>(5)</span>
+for more information.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ssh.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/ssh.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ssh.matchBlocks"></a><a class="term" href="options.html#opt-programs.ssh.matchBlocks"><code class="option">programs.ssh.matchBlocks</code></a></span></dt><dd><p>Specify per-host settings. Note, if the order of rules matter
 then use the DAG functions to express the dependencies as
 shown in the example.
