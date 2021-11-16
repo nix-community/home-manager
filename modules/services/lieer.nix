@@ -24,7 +24,7 @@ let
 
       Service = {
         Type = "oneshot";
-        ExecStart = "${pkgs.gmailieer}/bin/gmi sync";
+        ExecStart = "${config.programs.lieer.package}/bin/gmi sync";
         WorkingDirectory = account.maildir.absPath;
         Environment =
           "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/notmuchrc";
