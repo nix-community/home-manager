@@ -65,7 +65,7 @@ let
       remotePassEval =
         let arglist = concatMapStringsSep "," (x: "'${x}'") passwordCommand;
         in optionalAttrs (passwordCommand != null) {
-          remotepasseval = ''get_pass("${name}", [${arglist}]).strip("\n")'';
+          remotepasseval = ''get_pass("${name}", [${arglist}]).strip(b"\n")'';
         };
     in toIni {
       "Account ${name}" = {
