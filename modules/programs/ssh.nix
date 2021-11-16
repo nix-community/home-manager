@@ -414,6 +414,22 @@ in
       '';
     };
 
+    includes = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = ''
+        File globs of ssh config files that should be included via the
+        <literal>Include</literal> directive.
+        </para><para>
+        See
+        <citerefentry>
+          <refentrytitle>ssh_config</refentrytitle>
+          <manvolnum>5</manvolnum>
+        </citerefentry>
+        for more information.
+      '';
+    };
+
     matchBlocks = mkOption {
       type = hm.types.listOrDagOf matchBlockModule;
       default = {};
@@ -474,9 +490,12 @@ in
           else abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}";
       in ''
       ${concatStringsSep "\n" (
-        mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)}
-
-      ${concatStringsSep "\n\n" (map (block: matchBlockStr block.data) matchBlocks)}
+        (mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)
+        ++ (optional (cfg.includes != [ ]) ''
+          Include ${concatStringsSep " " cfg.includes}
+        '')
+        ++ (map (block: matchBlockStr block.data) matchBlocks)
+      )}
 
       Host *
         ForwardAgent ${yn cfg.forwardAgent}
