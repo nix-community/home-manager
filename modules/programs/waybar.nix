@@ -2,72 +2,26 @@
 
 let
   inherit (lib)
-    any attrByPath attrNames concatMap concatMapStringsSep elem elemAt filter
-    filterAttrs flip foldl' hasPrefix head length literalExpression mergeAttrs
-    optionalAttrs stringLength subtractLists types unique;
+    all filterAttrs hasAttr isStorePath literalExpression optionalAttrs types;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf mkMerge;
 
   cfg = config.programs.waybar;
 
-  # Used when generating warnings
-  modulesPath = "programs.waybar.settings.[].modules";
-
   jsonFormat = pkgs.formats.json { };
 
-  # Taken from <https://github.com/Alexays/Waybar/blob/cc3acf8102c71d470b00fd55126aef4fb335f728/src/factory.cpp> (2020/10/10)
-  # Order is preserved from the file for easier matching
-  defaultModuleNames = [
-    "battery"
-    "sway/mode"
-    "sway/workspaces"
-    "sway/window"
-    "sway/language"
-    "wlr/taskbar"
-    "river/tags"
-    "idle_inhibitor"
-    "memory"
-    "cpu"
-    "clock"
-    "disk"
-    "tray"
-    "network"
-    "backlight"
-    "pulseaudio"
-    "mpd"
-    "sndio"
-    "temperature"
-    "bluetooth"
-  ];
-
-  # Allow specifying a CSS id after the default module name
-  isValidDefaultModuleName = x:
-    any (name:
-      let
-        res = builtins.split name x;
-        # if exact match of default module name
-      in if res == [ "" [ ] ] || res == [ "" [ ] "" ] then
-        true
-      else
-        head res == "" && length res >= 3 && hasPrefix "#" (elemAt res 2))
-    defaultModuleNames;
-
-  isValidCustomModuleName = x: hasPrefix "custom/" x && stringLength x > 7;
-
-  margins = let
-    mkMargin = name: {
-      "margin-${name}" = mkOption {
-        type = types.nullOr types.int;
-        default = null;
-        example = 10;
-        description = "Margins value without unit.";
-      };
+  mkMargin = name:
+    mkOption {
+      type = types.nullOr types.int;
+      default = null;
+      example = 10;
+      description = "Margin value without unit.";
     };
-    margins = map mkMargin [ "top" "left" "bottom" "right" ];
-  in foldl' mergeAttrs { } margins;
 
-  waybarBarConfig = with lib.types;
+  waybarBarConfig = with types;
     submodule {
+      freeformType = jsonFormat.type;
+
       options = {
         layer = mkOption {
           type = nullOr (enum [ "top" "bottom" ]);
@@ -164,7 +118,10 @@ let
           example = "20 5";
         };
 
-        inherit (margins) margin-top margin-left margin-bottom margin-right;
+        margin-left = mkMargin "left";
+        margin-right = mkMargin "right";
+        margin-bottom = mkMargin "bottom";
+        margin-top = mkMargin "top";
 
         name = mkOption {
           type = nullOr str;
@@ -192,9 +149,9 @@ in {
     package = mkOption {
       type = package;
       default = pkgs.waybar;
-      defaultText = "pkgs.waybar";
+      defaultText = literalExpression "pkgs.waybar";
       description = ''
-        Waybar package to use. Set to <code>null</code> to use the default module.
+        Waybar package to use. Set to <code>null</code> to use the default package.
       '';
     };
 
@@ -241,12 +198,17 @@ in {
     systemd.enable = mkEnableOption "Waybar systemd integration";
 
     style = mkOption {
-      type = nullOr str;
+      type = nullOr (either path str);
       default = null;
       description = ''
         CSS style of the bar.
+        </para>
+        <para>
         See <link xlink:href="https://github.com/Alexays/Waybar/wiki/Configuration"/>
         for the documentation.
+        </para>
+        <para>
+        If the value is set to a path literal, then the path will be used as the css file.
       '';
       example = ''
         * {
@@ -266,122 +228,62 @@ in {
   };
 
   config = let
-    writePrettyJSON = jsonFormat.generate;
+    # Removes nulls because Waybar ignores them.
+    # This is not recursive.
+    removeNulls = filterAttrs (_: v: v != null);
 
-    configSource = let
-      # Removes nulls because Waybar ignores them for most values
-      removeNulls = filterAttrs (_: v: v != null);
+    # Makes the actual valid configuration Waybar accepts
+    # (strips our custom settings before converting to JSON)
+    makeConfiguration = configuration:
+      let
+        # The "modules" option is not valid in the JSON
+        # as its descendants have to live at the top-level
+        settingsWithoutModules = removeAttrs configuration [ "modules" ];
+        settingsModules =
+          optionalAttrs (configuration.modules != { }) configuration.modules;
+      in removeNulls (settingsWithoutModules // settingsModules);
+    # The clean list of configurations
+    finalConfiguration = map makeConfiguration cfg.settings;
 
-      # Makes the actual valid configuration Waybar accepts
-      # (strips our custom settings before converting to JSON)
-      makeConfiguration = configuration:
-        let
-          # The "modules" option is not valid in the JSON
-          # as its descendants have to live at the top-level
-          settingsWithoutModules = removeAttrs configuration [ "modules" ];
-          settingsModules =
-            optionalAttrs (configuration.modules != { }) configuration.modules;
-        in removeNulls (settingsWithoutModules // settingsModules);
-      # The clean list of configurations
-      finalConfiguration = map makeConfiguration cfg.settings;
-    in writePrettyJSON "waybar-config.json" finalConfiguration;
-
-    #
-    # Warnings are generated based on the following things:
-    # 1. A `module` is referenced in any of `modules-{left,center,right}` that is neither
-    #    a default module name nor defined in `modules`.
-    # 2. A `module` is defined in `modules` but is not referenced in either of
-    #    `modules-{left,center,right}`.
-    # 3. A custom `module` configuration is defined in `modules` but has an invalid name
-    #    for a custom module (i.e. not "custom/my-module-name").
-    #
-    warnings = let
-      mkUnreferencedModuleWarning = name:
-        "The module '${name}' defined in '${modulesPath}' is not referenced "
-        + "in either `modules-left`, `modules-center` or `modules-right` of Waybar's options";
-      mkUndefinedModuleWarning = settings: name:
-        let
-          # Locations where the module is undefined (a combination modules-{left,center,right})
-          locations = flip filter [ "left" "center" "right" ]
-            (x: elem name settings."modules-${x}");
-          mkPath = loc: "'${modulesPath}-${loc}'";
-          # The modules-{left,center,right} configuration that includes
-          # an undefined module
-          path = concatMapStringsSep " and " mkPath locations;
-        in "The module '${name}' defined in ${path} is neither "
-        + "a default module or a custom module declared in '${modulesPath}'";
-      mkInvalidModuleNameWarning = name:
-        "The custom module '${name}' defined in '${modulesPath}' is not a valid "
-        + "module name. A custom module's name must start with 'custom/' "
-        + "like 'custom/mymodule' for instance";
-
-      allFaultyModules = flip map cfg.settings (settings:
-        let
-          allModules = unique
-            (concatMap (x: attrByPath [ "modules-${x}" ] [ ] settings) [
-              "left"
-              "center"
-              "right"
-            ]);
-          declaredModules = attrNames settings.modules;
-          # Modules declared in `modules` but not referenced in `modules-{left,center,right}`
-          unreferencedModules = subtractLists allModules declaredModules;
-          # Modules listed in modules-{left,center,right} that are not default modules
-          nonDefaultModules =
-            filter (x: !isValidDefaultModuleName x) allModules;
-          # Modules referenced in `modules-{left,center,right}` but not declared in `modules`
-          undefinedModules = subtractLists declaredModules nonDefaultModules;
-          # Check for invalid module names
-          invalidModuleNames = filter
-            (m: !isValidCustomModuleName m && !isValidDefaultModuleName m)
-            declaredModules;
-        in {
-          # The Waybar bar configuration (since config.settings is a list)
-          inherit settings;
-          undef = undefinedModules;
-          unref = unreferencedModules;
-          invalidName = invalidModuleNames;
-        });
-
-      allWarnings = flip concatMap allFaultyModules
-        ({ settings, undef, unref, invalidName }:
-          let
-            unreferenced = map mkUnreferencedModuleWarning unref;
-            undefined = map (mkUndefinedModuleWarning settings) undef;
-            invalid = map mkInvalidModuleNameWarning invalidName;
-          in undefined ++ unreferenced ++ invalid);
-    in allWarnings;
+    configSource = jsonFormat.generate "waybar-config.json" finalConfiguration;
 
   in mkIf cfg.enable (mkMerge [
     {
       assertions = [
         (lib.hm.assertions.assertPlatform "programs.waybar" pkgs
           lib.platforms.linux)
+        ({
+          assertion =
+            if lib.versionAtLeast config.home.stateVersion "22.05" then
+              all (x: !hasAttr "modules" x) cfg.settings
+            else
+              true;
+          message = ''
+            The `programs.waybar.settings.[].modules` option has been removed.
+            It is now possible to declare modules in the configuration without nesting them under the `modules` option.
+          '';
+        })
       ];
 
       home.packages = [ cfg.package ];
-    }
 
-    (mkIf (cfg.settings != [ ]) {
-      # Generate warnings about defined but unreferenced modules
-      inherit warnings;
-
-      xdg.configFile."waybar/config" = {
+      xdg.configFile."waybar/config" = mkIf (cfg.settings != [ ]) {
         source = configSource;
         onChange = ''
           ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
         '';
       };
-    })
 
-    (mkIf (cfg.style != null) {
-      xdg.configFile."waybar/style.css" = {
-        text = cfg.style;
+      xdg.configFile."waybar/style.css" = mkIf (cfg.style != null) {
+        source = if builtins.isPath cfg.style || isStorePath cfg.style then
+          cfg.style
+        else
+          pkgs.writeText "waybar/style.css" cfg.style;
         onChange = ''
           ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
         '';
       };
-    })
+    }
 
     (mkIf cfg.systemd.enable {
       systemd.user.services.waybar = {
