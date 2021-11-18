@@ -7,3 +7,8 @@
 .calloutlist img {
     width: 1.5em;
 }
+
+/** The console prompt, e.g., `$` and `#` should not be selectable. */
+.programlisting.console .hljs-meta {
+    user-select: none;
+}
