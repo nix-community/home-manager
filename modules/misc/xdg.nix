@@ -108,7 +108,7 @@ in {
       xdg.cacheHome = mkDefault defaultCacheHome;
       xdg.configHome = mkDefault defaultConfigHome;
       xdg.dataHome = mkDefault defaultDataHome;
-      xdg.stateHome = mkDefault stateHome;
+      xdg.stateHome = mkDefault defaultStateHome;
     })
 
     {
