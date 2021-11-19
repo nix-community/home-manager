@@ -6,8 +6,6 @@ let
 
   cfg = config.services.flameshot;
 
-  package = pkgs.flameshot;
-
   iniFormat = pkgs.formats.ini { };
 
   iniFile = iniFormat.generate "flameshot.ini" cfg.settings;
@@ -17,6 +15,13 @@ in {
 
   options.services.flameshot = {
     enable = mkEnableOption "Flameshot";
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.flameshot;
+      defaultText = literalExpression "pkgs.flameshot";
+      description = "Package providing <command>flameshot</command>.";
+    };
 
     settings = mkOption {
       type = iniFormat.type;
@@ -41,7 +46,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ package ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile = mkIf (cfg.settings != { }) {
       "flameshot/flameshot.ini".source = iniFile;
@@ -60,7 +65,7 @@ in {
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";
-        ExecStart = "${package}/bin/flameshot";
+        ExecStart = "${cfg.package}/bin/flameshot";
         Restart = "on-abort";
 
         # Sandboxing.
