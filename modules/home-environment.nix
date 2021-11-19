@@ -205,12 +205,13 @@ in
 
     home.profileDirectory = mkOption {
       type = types.path;
-      defaultText = "~/.nix-profile";
-      internal = true;
+      defaultText = literalExpression ''
+        "''${home.homeDirectory}/.nix-profile"  or
+        "/etc/profiles/per-user/''${home.username}"
+      '';
       readOnly = true;
       description = ''
-        The profile directory where Home Manager generations are
-        installed.
+        The profile directory where Home Manager generations are installed.
       '';
     };
 
@@ -502,7 +503,7 @@ in
         && config.submoduleSupport.externalPackageInstall
       then "/etc/profiles/per-user/${cfg.username}"
       else cfg.homeDirectory + "/.nix-profile";
-      
+
     programs.bash.shellAliases = cfg.shellAliases;
     programs.zsh.shellAliases = cfg.shellAliases;
     programs.fish.shellAliases = cfg.shellAliases;
