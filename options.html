@@ -915,6 +915,11 @@ version ≥ 19.09 and <code class="literal">""</code> otherwise.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-home.language.time"></a><a class="term" href="options.html#opt-home.language.time"><code class="option">home.language.time</code></a></span></dt><dd><p>The language to use for formatting times.
 </p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix#blob-path" target="_top">
                     &lt;home-manager/modules/home-environment.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-home.profileDirectory"></a><a class="term" href="options.html#opt-home.profileDirectory"><code class="option">home.profileDirectory</code></a></span></dt><dd><p>The profile directory where Home Manager generations are installed.
+</p><p><span class="emphasis"><em>Type:</em></span> path <span class="emphasis"><em>(read only)</em></span></p><p><span class="emphasis"><em>Default:</em></span> </p><pre class="programlisting">"${home.homeDirectory}/.nix-profile"  or
+"/etc/profiles/per-user/${home.username}"
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/home-environment.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-home.sessionPath"></a><a class="term" href="options.html#opt-home.sessionPath"><code class="option">home.sessionPath</code></a></span></dt><dd><p>Extra directories to add to <code class="envar">PATH</code>.
 
 </p><p>
