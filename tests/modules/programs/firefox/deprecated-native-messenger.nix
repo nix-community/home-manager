@@ -15,7 +15,7 @@ with lib;
           meta.description = "I pretend to be Firefox";
           passthru.gtk3 = null;
         } ''
-          mkdir -p "$out/bin"
+          mkdir -p "$out"/{bin,lib}
           touch "$out/bin/firefox"
           chmod 755 "$out/bin/firefox"
         '';
