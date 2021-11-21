@@ -19,6 +19,7 @@ let
     ./files.nix
     ./home-environment.nix
     ./i18n/input-method/default.nix
+    ./launchd/default.nix
     ./manual.nix
     ./misc/dconf.nix
     ./misc/debug.nix

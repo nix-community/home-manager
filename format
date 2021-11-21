@@ -19,6 +19,7 @@ find . -name '*.nix' \
   ! -path ./modules/default.nix \
   ! -path ./modules/files.nix \
   ! -path ./modules/home-environment.nix \
+  ! -path ./modules/launchd/launchd.nix \
   ! -path ./modules/lib/default.nix \
   ! -path ./modules/lib/file-type.nix \
   ! -path ./modules/manual.nix \

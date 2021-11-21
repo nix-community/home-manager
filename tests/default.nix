@@ -104,6 +104,7 @@ import nmt {
     ./modules/programs/zsh
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
+    ./modules/launchd
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
     ./modules/config/i18n

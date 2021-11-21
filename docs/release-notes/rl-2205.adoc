@@ -21,6 +21,9 @@ such as the `home-manager` command line tool and the activation script.
 If you would like to contribute to the translation effort
 then you can do so through the {hm-weblate}[Home Manager Weblate project].
 
+* A new module, `launchd.agents` was added.
+Use this to enable services based on macOS LaunchAgents.
+
 [[sec-release-22.05-state-version-changes]]
 === State Version Changes
 
