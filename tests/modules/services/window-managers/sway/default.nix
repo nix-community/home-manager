@@ -10,4 +10,6 @@
   sway-post-2003 = ./sway-post-2003.nix;
   sway-workspace-default = ./sway-workspace-default.nix;
   sway-workspace-output = ./sway-workspace-output.nix;
+  swaynag-example-settings = ./swaynag-example-settings.nix;
+  swaynag-empty-settings = ./swaynag-empty-settings.nix;
 }

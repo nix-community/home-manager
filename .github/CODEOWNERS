@@ -353,6 +353,8 @@
 /modules/services/window-managers/i3-sway/sway.nix    @alexarice @sumnerevans
 /tests/modules/services/window-managers/sway          @sumnerevans
 
+/modules/services/window-managers/i3-sway/swaynag.nix @polykernel
+
 /modules/services/wlsunset.nix                        @matrss
 /tests/modules/services/wlsunset                      @matrss
 
