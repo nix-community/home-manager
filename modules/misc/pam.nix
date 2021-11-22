@@ -4,10 +4,10 @@ with lib;
 
 let
 
-  vars = config.pam.sessionVariables;
+  cfg = config.pam;
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with maintainers; [ rycee veehaitch ];
 
   options = {
     pam.sessionVariables = mkOption {
@@ -26,10 +26,46 @@ in {
         therefore discouraged.
       '';
     };
+
+    pam.yubico.authorizedYubiKeys = {
+      ids = mkOption {
+        type = with types;
+          let
+            yubiKeyId = addCheck str (s: stringLength s == 12) // {
+              name = "yubiKeyId";
+              description = "string of length 12";
+            };
+          in listOf yubiKeyId;
+        default = [ ];
+        description = ''
+          List of authorized YubiKey token IDs. Refer to
+          <link xlink:href="https://developers.yubico.com/yubico-pam"/>
+          for details on how to obtain the token ID of a YubiKey.
+        '';
+      };
+
+      path = mkOption {
+        type = types.str;
+        default = ".yubico/authorized_yubikeys";
+        description = ''
+          File path to write the authorized YubiKeys,
+          relative to <envar>HOME</envar>.
+        '';
+      };
+    };
   };
 
-  config = mkIf (vars != { }) {
-    home.file.".pam_environment".text = concatStringsSep "\n"
-      (mapAttrsToList (n: v: ''${n} OVERRIDE="${toString v}"'') vars) + "\n";
-  };
+  config = mkMerge [
+    (mkIf (cfg.sessionVariables != { }) {
+      home.file.".pam_environment".text = concatStringsSep "\n"
+        (mapAttrsToList (n: v: ''${n} OVERRIDE="${toString v}"'')
+          cfg.sessionVariables) + "\n";
+    })
+
+    (mkIf (cfg.yubico.authorizedYubiKeys.ids != [ ]) {
+      home.file.${cfg.yubico.authorizedYubiKeys.path}.text =
+        concatStringsSep ":"
+        ([ config.home.username ] ++ cfg.yubico.authorizedYubiKeys.ids);
+    })
+  ];
 }
