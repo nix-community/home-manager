@@ -19,8 +19,8 @@ let
   ];
   expectedCredentialsSbt = pkgs.writeText "credentials.sbt" ''
     import scala.sys.process._
-    credentials += Credentials("Sonatype Nexus Repository Manager", "example.com", "user", "echo password".lazyLines.mkString("\n"))
-    credentials += Credentials("Sonatype Nexus Repository Manager X", "v2.example.com", "user1", "echo password1".lazyLines.mkString("\n"))
+    credentials += Credentials("Sonatype Nexus Repository Manager", "example.com", "user", "echo password".!!.trim)
+    credentials += Credentials("Sonatype Nexus Repository Manager X", "v2.example.com", "user1", "echo password1".!!.trim)
   '';
   credentialsSbtPath = ".sbt/1.0/credentials.sbt";
 in {
