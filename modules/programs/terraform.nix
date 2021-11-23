@@ -7,16 +7,15 @@ let
   cfg = config.programs.terraform;
 
 in {
-  meta.maintainers = [ maintainers.bryanhonof ];
+  meta.maintainers = [ hm.maintainers.bryanhonof ];
 
   options.programs.terraform = {
 
     enable = mkEnableOption ''
-      Terraform is an open-source infrastructure as code software tool that
+      <link xlink:href="https://www.terraform.io">Terraform</link>, an open-source infrastructure as code software tool that
       provides a consistent CLI workflow to manage hundreds of cloud services.
+      </para>
       Terraform codifies cloud APIs into declarative configuration files.
-
-      https://www.terraform.io/
     '';
 
     package = mkOption {
@@ -27,19 +26,30 @@ in {
     };
 
     providers = mkOption {
-      type = types.listOf types.package;
-      default = [ ];
-      description = "A list of Terraform providers.";
+      type = hm.types.selectorFunction;
+      default = providers: [ ];
+      defaultText = literalExpression "providers: [ ]";
+      example = literalExpression ''
+        providers: [ providers.consul providers.dyn ];
+      '';
+      description = ''
+        A list of Terraform providers.
+        </para>
+        <para>
+        A list of available providers can be obtained with either of the following commands:
+        <orderedlist numeration="arabic">
+          <listitem>
+            <para><command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A terraform-providers</command></para>
+          </listitem>
+          <listitem>
+            <para><command>nix search 'nixpkgs#terraform-providers'</command></para>
+          </listitem>
+        </orderedlist>
+      '';
     };
 
-    installCompletion = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Wether or not to install the autocomplete functionality. Normally this
-        is done by running <literal>terraform -install-autocomplete</literal>.
-        Currently only installs for bash.
-      '';
+    enableBashIntegration = mkEnableOption "Bash integration" // {
+      default = true;
     };
 
   };
@@ -47,9 +57,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ (cfg.package.withPlugins (_: cfg.providers)) ];
 
-    programs.bash.bashrcExtra = let program = "terraform";
-    in mkIf cfg.installCompletion ''
-      complete -C ${cfg.package}/bin/${program} ${program}
+    programs.bash.initExtra = mkIf cfg.installCompletion ''
+      complete -C ${cfg.package}/bin/terraform terraform
     '';
   };
 }
