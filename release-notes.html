@@ -20,7 +20,11 @@ platform incompatible options are unused.</p><p class="simpara">Ultimately, the 
 has now changed. For associated discussion see
 <a class="link" href="https://github.com/nix-community/home-manager/issues/1906" target="_top">issue #1906</a>.</p></li><li class="listitem"><p class="simpara">
 Rofi version 1.7.0 removed many options that were used by the module and replaced them with custom themes, which are more flexible and powerful.
-</p><p class="simpara">You can replicate your old configuration by moving those options to <a class="xref" href="options.html#opt-programs.rofi.theme"><code class="option">programs.rofi.theme</code></a>. Keep in mind that the syntax is different so you may need to do some changes.</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-21.11-state-version-changes"></a>E.1.2. State Version Changes</h3></div></div></div><p>The state version in this release includes the changes below. These
+</p><p class="simpara">You can replicate your old configuration by moving those options to <a class="xref" href="options.html#opt-programs.rofi.theme"><code class="option">programs.rofi.theme</code></a>. Keep in mind that the syntax is different so you may need to do some changes.</p></li><li class="listitem">
+Taskwarrior version 2.6.0 respects XDG Specification for the config file now.
+Option <a class="xref" href="options.html#opt-programs.taskwarrior.config"><code class="option">programs.taskwarrior.config</code></a> and friends now generate the config file at
+<code class="literal">$XDG_CONFIG_HOME/task/taskrc</code> instead of <code class="literal">~/.taskrc</code>.
+</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-21.11-state-version-changes"></a>E.1.2. State Version Changes</h3></div></div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
 "21.11" or later.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 The <a class="xref" href="options.html#opt-home.keyboard"><code class="option">home.keyboard</code></a> option now defaults to <code class="literal">null</code>, meaning that Home Manager won’t do any keyboard layout management. For example, <code class="literal">setxkbmap</code> won’t be run in X sessions.
