@@ -127,11 +127,13 @@ in {
     # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
     home.file = let
       subDir = "share/vscode/extensions";
-      toPaths = path:
-        # Links every dir in path to the extension path.
-        mapAttrsToList
-        (k: _: { "${extensionPath}/${k}".source = "${path}/${subDir}/${k}"; })
-        (builtins.readDir (path + "/${subDir}"));
+      toPaths = ext:
+        # Links every dir in ext to the extension path.
+        map (k: { "${extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; })
+        (if ext ? vscodeExtUniqueId then
+          [ ext.vscodeExtUniqueId ]
+        else
+          builtins.attrNames (builtins.readDir (ext + "/${subDir}")));
       toSymlink = concatMap toPaths cfg.extensions;
       dropNullFields = filterAttrs (_: v: v != null);
     in foldr (a: b: a // b) {
