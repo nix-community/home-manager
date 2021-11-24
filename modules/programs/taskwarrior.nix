@@ -6,16 +6,6 @@ let
 
   cfg = config.programs.taskwarrior;
 
-  themePath = theme: "${pkgs.taskwarrior}/share/doc/task/rc/${theme}.theme";
-
-  includeTheme = location:
-    if location == null then
-      ""
-    else if isString location then
-      "include ${themePath location}"
-    else
-      "include ${location}";
-
   formatValue = value:
     if isBool value then
       if value then "true" else "false"
@@ -59,7 +49,7 @@ in {
         '';
         description = ''
           Key-value configuration written to
-          <filename>~/.taskrc</filename>.
+          <filename>$XDG_CONFIG_HOME/task/taskrc</filename>.
         '';
       };
 
@@ -89,7 +79,7 @@ in {
         default = "";
         description = ''
           Additional content written at the end of
-          <filename>~/.taskrc</filename>.
+          <filename>$XDG_CONFIG_HOME/task/taskrc</filename>.
         '';
       };
     };
@@ -98,9 +88,12 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ pkgs.taskwarrior ];
 
-    home.file.".taskrc".text = ''
+    xdg.configFile."task/taskrc".text = ''
       data.location=${cfg.dataLocation}
-      ${includeTheme cfg.colorTheme}
+      ${optionalString (cfg.colorTheme != null) (if isString cfg.colorTheme then
+        "include ${cfg.colorTheme}.theme"
+      else
+        "include ${cfg.colorTheme}")}
 
       ${concatStringsSep "\n" (mapAttrsToList formatPair cfg.config)}
 

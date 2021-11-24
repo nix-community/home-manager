@@ -37,6 +37,10 @@ https://github.com/nix-community/home-manager/issues/1906[issue #1906].
 +
 You can replicate your old configuration by moving those options to <<opt-programs.rofi.theme>>. Keep in mind that the syntax is different so you may need to do some changes.
 
+* Taskwarrior version 2.6.0 respects XDG Specification for the config file now.
+Option <<opt-programs.taskwarrior.config>> and friends now generate the config file at
+`$XDG_CONFIG_HOME/task/taskrc` instead of `~/.taskrc`.
+
 [[sec-release-21.11-state-version-changes]]
 === State Version Changes
 
