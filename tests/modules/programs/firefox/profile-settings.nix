@@ -21,7 +21,7 @@ with lib;
           preferLocalBuild = true;
           allowSubstitutes = false;
         } ''
-          mkdir -p "$out/bin"
+          mkdir -p "$out"/{bin,lib}
           touch "$out/bin/firefox"
           chmod 755 "$out/bin/firefox"
         '';
