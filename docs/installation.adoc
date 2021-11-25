@@ -54,11 +54,11 @@ $ nix-channel --add https://github.com/nix-community/home-manager/archive/master
 $ nix-channel --update
 ----
 +
-and if you follow a Nixpkgs version 21.05 channel you can run
+and if you follow a Nixpkgs version 21.11 channel you can run
 +
 [source,console]
 ----
-$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.11.tar.gz home-manager
 $ nix-channel --update
 ----
 +
@@ -135,11 +135,11 @@ or an unstable channel, you can run
 # nix-channel --update
 ----
 
-and if you follow a Nixpkgs version 21.05 channel, you can run
+and if you follow a Nixpkgs version 21.11 channel, you can run
 
 [source,console]
 ----
-# nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
+# nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.11.tar.gz home-manager
 # nix-channel --update
 ----
 
@@ -237,11 +237,11 @@ or an unstable channel, you can run
 # nix-channel --update
 ----
 
-and if you follow a Nixpkgs version 21.05 channel, you can run
+and if you follow a Nixpkgs version 21.11 channel, you can run
 
 [source,console]
 ----
-# nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
+# nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.11.tar.gz home-manager
 # nix-channel --update
 ----
 

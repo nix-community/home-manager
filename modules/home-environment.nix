@@ -440,7 +440,7 @@ in
 
     home.enableNixpkgsReleaseCheck = mkOption {
       type = types.bool;
-      default = true;
+      default = false;          # Temporarily disabled until release stabilizes.
       description = ''
         Determines whether to check for release version mismatch between Home
         Manager and Nixpkgs. Using mismatched versions is likely to cause errors
