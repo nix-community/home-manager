@@ -577,7 +577,7 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-         nix profile list | grep 'home-manager-path$' | awk -F ' ' '{ print $4 }' | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+         nix profile list | { grep 'home-manager-path$' || test $? = 1; } | awk -F ' ' '{ print $4 }' | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
         ''
       else
         ''

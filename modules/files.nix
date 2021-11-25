@@ -247,7 +247,12 @@ in
 
             local newGenFiles oldGenFiles
             newGenFiles="$(readlink -e "$newGenPath/home-files")"
-            oldGenFiles="$(readlink -e "$oldGenPath/home-files")"
+            oldGenFiles="$(readlink -e "$oldGenPath/home-files" || echo -n "")"
+
+            if [[ -z "$oldGenFiles" ]] ; then
+              echo "Did not find old home-files in $oldGenPath"
+              return
+            fi
 
             # Apply the cleanup script on each leaf in the old
             # generation. The find command below will print the
