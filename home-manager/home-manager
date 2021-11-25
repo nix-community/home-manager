@@ -634,7 +634,7 @@ while [[ $# -gt 0 ]]; do
             export VERBOSE=1
             ;;
         --version)
-            echo 21.11
+            echo 22.05
             exit 0
             ;;
         *)
