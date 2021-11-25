@@ -5,6 +5,7 @@ with lib;
 {
   config = {
     services.gpg-agent.enable = true;
+    services.gpg-agent.pinentryFlavor = null; # Don't build pinentry package.
     programs.gpg.enable = true;
 
     test.stubs.gnupg = { };

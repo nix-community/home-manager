@@ -5,16 +5,17 @@ with lib;
 {
   config = {
     services.gpg-agent.enable = true;
+    services.gpg-agent.pinentryFlavor = null; # Don't build pinentry package.
     programs.gpg = {
       enable = true;
-      homedir = "${config.home.homeDirectory}/foo/bar";
+      homedir = "/path/to/hash";
     };
 
     test.stubs.gnupg = { };
 
     nmt.script = ''
       in="${config.systemd.user.sockets.gpg-agent.Socket.ListenStream}"
-      if [[ $in != "%t/gnupg/d."????????????????????????"/S.gpg-agent" ]]
+      if [[ $in != "%t/gnupg/d.wp4h7ks5zxy4dodqadgpbbpz/S.gpg-agent" ]]
       then
         echo $in
         fail "gpg-agent socket directory is malformed"

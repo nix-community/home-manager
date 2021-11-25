@@ -131,6 +131,7 @@ import nmt {
     ./modules/services/fluidsynth
     ./modules/services/fnott
     ./modules/services/git-sync
+    ./modules/services/gpg-agent
     ./modules/services/kanshi
     ./modules/services/lieer
     ./modules/services/pantalaimon
