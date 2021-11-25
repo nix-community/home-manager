@@ -55,9 +55,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ (cfg.package.withPlugins (_: cfg.providers)) ];
+    home.packages = [ (cfg.package.withPlugins cfg.providers) ];
 
-    programs.bash.initExtra = mkIf cfg.installCompletion ''
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       complete -C ${cfg.package}/bin/terraform terraform
     '';
   };
