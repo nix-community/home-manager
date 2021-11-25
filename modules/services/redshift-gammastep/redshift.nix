@@ -14,6 +14,7 @@ let
     mainExecutable = "redshift";
     appletExecutable = "redshift-gtk";
     xdgConfigFilePath = "redshift/redshift.conf";
+    xdgConfigDir = "redshift";
     serviceDocumentation = "http://jonls.dk/redshift/";
   };
 

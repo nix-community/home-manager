@@ -1,6 +1,6 @@
 { config, lib, pkgs, moduleName, mainSection, programName, defaultPackage
 , examplePackage, mainExecutable, appletExecutable, xdgConfigFilePath
-, serviceDocumentation }:
+, xdgConfigDir, serviceDocumentation }:
 
 with lib;
 
@@ -143,6 +143,48 @@ in {
         </citerefentry>.
       '';
     };
+
+    hooks = mkOption {
+      type = types.attrsOf (types.either types.path types.lines);
+      default = { };
+      example = literalExpression ''
+        {
+          "brightness.sh" = pkgs.writeShellScript "brightness.sh" '''
+            if [ "$1" = period-changed ]; then
+              case "$3" in
+                night)
+                  ''${pkgs.libnotify}/bin/notify-send "${programName}" "Changing to night mode"
+                  # do something else
+                  ;;
+                transition)
+                  # ...
+                  ;;
+                day)
+                  # ...
+                  ;;
+              esac
+            fi
+          ''';
+          "another-script.sh" = ./another-script.sh;
+        }
+      '';
+      description = ''
+        Hooks to execute whenever an event occur.
+        See
+        <citerefentry>
+          <refentrytitle>${moduleName}</refentrytitle>
+          <manvolnum>1</manvolnum>
+        </citerefentry>
+        for more information about hooks.
+        </para>
+        <para>
+        This option also accepts literal paths, the execute bit has to be set on the file.
+        </para
+        <para>
+        The script will inherit the environment of the systemd service, therefore the <envar>PATH</envar>
+        will likely be empty.
+      '';
+    };
   };
 
   config = {
@@ -180,8 +222,19 @@ in {
       };
     };
 
-    xdg.configFile.${xdgConfigFilePath}.source =
-      settingsFormat.generate xdgConfigFilePath cfg.settings;
+    xdg.configFile = mkMerge [
+      {
+        ${xdgConfigFilePath}.source =
+          settingsFormat.generate xdgConfigFilePath cfg.settings;
+      }
+      (mapAttrs' (k: v: {
+        name = "${xdgConfigDir}/${k}";
+        value.source = if builtins.isPath v || isStorePath v then
+          v
+        else
+          pkgs.writeText (hm.strings.storeFileName k) v;
+      }) cfg.hooks)
+    ];
 
     systemd.user.services.${moduleName} = {
       Unit = {

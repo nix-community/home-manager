@@ -15,6 +15,7 @@ let
     mainExecutable = "gammastep";
     appletExecutable = "gammastep-indicator";
     xdgConfigFilePath = "gammastep/config.ini";
+    xdgConfigDir = "gammastep";
     serviceDocumentation = "https://gitlab.com/chinstrap/gammastep/";
   };
 
