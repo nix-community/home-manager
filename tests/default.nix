@@ -22,6 +22,8 @@ let
       home.username = "hm-user";
       home.homeDirectory = "/home/hm-user";
 
+      home.enableNixpkgsReleaseCheck = false;
+
       # Avoid including documentation since this will cause
       # unnecessary rebuilds of the tests.
       manual.manpages.enable = false;
