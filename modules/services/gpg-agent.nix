@@ -21,18 +21,39 @@ let
   # state, but we need the values at build time. original:
   # https://github.com/gpg/gnupg/blob/c6702d77d936b3e9d91b34d8fdee9599ab94ee1b/common/homedir.c#L672-L681
   gpgconf = dir:
-    if homedir == options.programs.gpg.homedir.default then
+    let
+      hash = substring 0 24 (hexStringToBase32 (builtins.hashString "sha1" homedir));
+    in if homedir == options.programs.gpg.homedir.default then
       "%t/gnupg/${dir}"
     else
-      builtins.readFile (pkgs.runCommand dir {} ''
-        PATH=${pkgs.xxd}/bin:$PATH
+      "%t/gnupg/d.${hash}/${dir}";
 
-        hash=$(echo -n ${homedir} | sha1sum -b | xxd -r -p | base32 | \
-               cut -c -24 | tr '[:upper:]' '[:lower:]' | \
-               tr abcdefghijklmnopqrstuvwxyz234567 \
-                  ybndrfg8ejkmcpqxot1uwisza345h769)
-        echo -n "%t/gnupg/d.$hash/${dir}" > "$out"
-      '');
+  # Act like `xxd -r -p | base32` but with z-base-32 alphabet and no trailing padding.
+  # Written in Nix for purity.
+  hexStringToBase32 = let
+    mod = a: b: a - a / b * b;
+    pow2 = elemAt [ 1 2 4 8 16 32 64 128 256 ];
+    splitChars = s: init (tail (splitString "" s));
+
+    base32Alphabet = splitChars "ybndrfg8ejkmcpqxot1uwisza345h769";
+    hexToIntTable = listToAttrs (genList (x: { name = toLower (toHexString x); value = x; }) 16);
+
+    initState = { ret = ""; buf = 0; bufBits = 0; };
+    go = { ret, buf, bufBits }: hex:
+      let
+        buf' = buf * pow2 4 + hexToIntTable.${hex};
+        bufBits' = bufBits + 4;
+        extraBits = bufBits' - 5;
+      in if bufBits >= 5 then {
+        ret = ret + elemAt base32Alphabet (buf' / pow2 extraBits);
+        buf = mod buf' (pow2 extraBits);
+        bufBits = bufBits' - 5;
+      } else {
+        ret = ret;
+        buf = buf';
+        bufBits = bufBits';
+      };
+  in hexString: (foldl' go initState (splitChars hexString)).ret;
 
 in
 
