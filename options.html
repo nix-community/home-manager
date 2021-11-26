@@ -2719,6 +2719,49 @@ or checksum database.
                     &lt;home-manager/modules/programs/gpg.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.homedir"></a><a class="term" href="options.html#opt-programs.gpg.homedir"><code class="option">programs.gpg.homedir</code></a></span></dt><dd><p>Directory to store keychains and configuration.</p><p><span class="emphasis"><em>Type:</em></span> path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"${config.home.homeDirectory}/.gnupg"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"${config.xdg.dataHome}/gnupg"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.mutableKeys"></a><a class="term" href="options.html#opt-programs.gpg.mutableKeys"><code class="option">programs.gpg.mutableKeys</code></a></span></dt><dd><p>If set to <code class="literal">true</code>, you may manage your keyring as a user
+using the <code class="literal">gpg</code> command. Upon activation, the keyring
+will have managed keys added without overwriting unmanaged keys.
+</p><p>
+If set to <code class="literal">false</code>, the path
+<code class="filename">$GNUPGHOME/pubring.kbx</code> will become an immutable
+link to the Nix store, denying modifications.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.mutableTrust"></a><a class="term" href="options.html#opt-programs.gpg.mutableTrust"><code class="option">programs.gpg.mutableTrust</code></a></span></dt><dd><p>If set to <code class="literal">true</code>, you may manage trust as a user using
+the <span class="command"><strong>gpg</strong></span> command. Upon activation, trusted keys have
+their trust set without overwriting unmanaged keys.
+</p><p>
+If set to <code class="literal">false</code>, the path
+<code class="filename">$GNUPGHOME/trustdb.gpg</code> will be
+<span class="emphasis"><em>overwritten</em></span> on each activation, removing trust for
+any unmanaged keys. Be careful to make a backup of your old
+<code class="filename">trustdb.gpg</code> before switching to immutable trust!
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.publicKeys"></a><a class="term" href="options.html#opt-programs.gpg.publicKeys"><code class="option">programs.gpg.publicKeys</code></a></span></dt><dd><p>A list of public keys to be imported into GnuPG. Note, these key files
+will be copied into the world-readable Nix store.
+</p><p><span class="emphasis"><em>Type:</em></span> list of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ { source = ./pubkeys.txt; } ]
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.publicKeys._.source"></a><a class="term" href="options.html#opt-programs.gpg.publicKeys._.source"><code class="option">programs.gpg.publicKeys.*.source</code></a></span></dt><dd><p>Path of an OpenPGP public key file.
+</p><p><span class="emphasis"><em>Type:</em></span> path</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.publicKeys._.text"></a><a class="term" href="options.html#opt-programs.gpg.publicKeys._.text"><code class="option">programs.gpg.publicKeys.*.text</code></a></span></dt><dd><p>Text of an OpenPGP public key.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.publicKeys._.trust"></a><a class="term" href="options.html#opt-programs.gpg.publicKeys._.trust"><code class="option">programs.gpg.publicKeys.*.trust</code></a></span></dt><dd><p>The amount of trust you have in the key ownership and the care the
+owner puts into signing other keys. The available levels are
+</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">1</code></span></dt><dd><p>I don't know or won't say.</p></dd><dt><span class="term"><code class="literal">2</code></span></dt><dd><p>I do NOT trust.</p></dd><dt><span class="term"><code class="literal">3</code></span></dt><dd><p>I trust marginally.</p></dd><dt><span class="term"><code class="literal">4</code></span></dt><dd><p>I trust fully.</p></dd><dt><span class="term"><code class="literal">5</code></span></dt><dd><p>I trust ultimately.</p></dd></dl></div><p>
+</p><p>
+See <a class="link" href="https://www.gnupg.org/gph/en/manual/x334.html" target="_top">https://www.gnupg.org/gph/en/manual/x334.html</a>
+for more.
+</p><p><span class="emphasis"><em>Type:</em></span> null or one of 1, 2, 3, 4, 5</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gpg.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gpg.scdaemonSettings"></a><a class="term" href="options.html#opt-programs.gpg.scdaemonSettings"><code class="option">programs.gpg.scdaemonSettings</code></a></span></dt><dd><p>SCdaemon configuration options. Available options are described
 in the gpg scdaemon manpage:
 <a class="link" href="https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html" target="_top">https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html</a>.
