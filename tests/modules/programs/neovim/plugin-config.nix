@@ -23,7 +23,7 @@ with lib;
     };
 
     nmt.script = ''
-      vimrc="$TESTED/home-files/.config/nvim/init.vim"
+      vimrc="$TESTED/home-files/.config/nvim/plugin/home-manager.vim"
       vimrcNormalized="$(normalizeStorePaths "$vimrc")"
 
       assertFileExists "$vimrc"

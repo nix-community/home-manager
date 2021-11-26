@@ -54,6 +54,7 @@ let
           cfg.plugins);
     };
     beforePlugins = "";
+
   };
 
   extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
@@ -276,7 +277,10 @@ in {
       configure = cfg.configure // moduleConfigure;
       plugins = cfg.plugins
         ++ optionals cfg.coc.enable [ pkgs.vimPlugins.coc-nvim ];
-      customRC = cfg.extraConfig;
+      customRC = ''
+        filetype off
+        filetype on
+      '' + cfg.extraConfig;
     };
 
   in mkIf cfg.enable {
@@ -293,9 +297,10 @@ in {
 
     home.packages = [ cfg.finalPackage ];
 
-    xdg.configFile."nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
-      text = neovimConfig.neovimRcContent;
-    };
+    xdg.configFile."nvim/plugin/home-manager.vim" =
+      mkIf (neovimConfig.neovimRcContent != "") {
+        text = neovimConfig.neovimRcContent;
+      };
     xdg.configFile."nvim/coc-settings.json" = mkIf cfg.coc.enable {
       source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
     };
