@@ -35,10 +35,10 @@ let
         ${configStr}}
       ''
     else
-      mkKeyValue {
+      (mkKeyValue {
         sep = " ";
         end = "";
-      } name value;
+      } name value) + "\n";
 
   toRasi = attrs: concatStringsSep "\n" (mapAttrsToList mkRasiSection attrs);
 
@@ -266,9 +266,9 @@ in {
         location = (getAttr cfg.location locationsMap);
         xoffset = cfg.xoffset;
         yoffset = cfg.yoffset;
-        theme = themeName;
       } // cfg.extraConfig);
-    };
+      # @theme must go after configuration but attrs are output in alphabetical order ('@' first)
+    } + (optionalString (themeName != null) (toRasi { "@theme" = themeName; }));
 
     xdg.dataFile = mkIf (themePath != null) (if themePath == "custom" then {
       "rofi/themes/${themeName}.rasi".text = toRasi cfg.theme;
