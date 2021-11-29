@@ -19,6 +19,8 @@ let
   writableDefaults = filterAttrs (domain: attrs: attrs != { }) nonNullDefaults;
   activationCmds = mapAttrsToList toActivationCmd writableDefaults;
 in {
+  meta.maintainers = [ maintainers.midchildan ];
+
   imports = [ ./fonts.nix ./keybindings.nix ./linkapps.nix ./search.nix ];
 
   options.targets.darwin.defaults = mkOption {

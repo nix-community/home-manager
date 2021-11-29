@@ -381,4 +381,7 @@
 
 /modules/services/volnoti.nix                         @IvanMalison
 
+/modules/targets/darwin                               @midchildan
+/tests/modules/targets-darwin                         @midchildan
+
 Makefile                                              @thiagokokada
