@@ -11,6 +11,7 @@ with lib;
         enable = true;
         newline = true;
         modules = [ "nix-shell" ];
+        modulesRight = [ "git" ];
         pathAliases = { "\\~/project/foo" = "prj-foo"; };
         settings = {
           ignore-repos = [ "/home/me/project1" "/home/me/project2" ];
@@ -27,10 +28,10 @@ with lib;
       assertFileExists home-files/.zshrc
       assertFileContains \
         home-files/.zshrc \
-        'PS1='
+        'eval'
       assertFileContains \
         home-files/.zshrc \
-        '/bin/powerline-go -error $? -shell zsh -modules nix-shell -newline -path-aliases \~/project/foo=prj-foo -ignore-repos /home/me/project1,/home/me/project2'
+        '/bin/powerline-go -error $? -shell zsh -eval -modules nix-shell -modules-right git -newline -path-aliases \~/project/foo=prj-foo -ignore-repos /home/me/project1,/home/me/project2'
     '';
   };
 }

@@ -5,12 +5,13 @@ with lib;
 {
   config = {
     programs = {
-      zsh.enable = true;
+      bash.enable = true;
 
       powerline-go = {
         enable = true;
         newline = true;
         modules = [ "nix-shell" ];
+        modulesRight = [ "git" ];
         pathAliases = { "\\~/project/foo" = "prj-foo"; };
         settings = {
           ignore-repos = [ "/home/me/project1" "/home/me/project2" ];
@@ -18,19 +19,16 @@ with lib;
       };
     };
 
-    test.stubs = {
-      powerline-go = { };
-      zsh = { };
-    };
+    test.stubs.powerline-go = { };
 
     nmt.script = ''
-      assertFileExists home-files/.zshrc
+      assertFileExists home-files/.bashrc
       assertFileContains \
-        home-files/.zshrc \
-        'PS1='
+        home-files/.bashrc \
+        'eval'
       assertFileContains \
-        home-files/.zshrc \
-        '/bin/powerline-go -error $? -shell zsh -modules nix-shell -newline -path-aliases \~/project/foo=prj-foo -ignore-repos /home/me/project1,/home/me/project2'
+        home-files/.bashrc \
+        '/bin/powerline-go -error $old_exit_status -shell bash -eval -modules nix-shell -modules-right git -newline -path-aliases \~/project/foo=prj-foo -ignore-repos /home/me/project1,/home/me/project2'
     '';
   };
 }

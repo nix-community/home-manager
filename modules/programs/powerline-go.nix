@@ -19,22 +19,29 @@ let
       builtins.toString value;
 
   modulesArgument = optionalString (cfg.modules != null)
-    "-modules ${valueToString cfg.modules}";
+    " -modules ${valueToString cfg.modules}";
 
-  newlineArgument = optionalString cfg.newline "-newline";
+  modulesRightArgument = optionalString (cfg.modulesRight != null)
+    " -modules-right ${valueToString cfg.modulesRight}";
+
+  evalMode = cfg.modulesRight != null;
+
+  evalArgument = optionalString (evalMode) " -eval";
+
+  newlineArgument = optionalString cfg.newline " -newline";
 
   pathAliasesArgument = optionalString (cfg.pathAliases != null)
-    "-path-aliases ${valueToString cfg.pathAliases}";
+    " -path-aliases ${valueToString cfg.pathAliases}";
 
   otherSettingPairArgument = name: value:
-    if value == true then "-${name}" else "-${name} ${valueToString value}";
+    if value == true then " -${name}" else " -${name} ${valueToString value}";
 
   otherSettingsArgument = optionalString (cfg.settings != { })
-    (concatStringsSep " "
+    (concatStringsSep ""
       (mapAttrsToList otherSettingPairArgument cfg.settings));
 
   commandLineArguments = ''
-    ${modulesArgument} ${newlineArgument} ${pathAliasesArgument} ${otherSettingsArgument}
+    ${evalArgument}${modulesArgument}${modulesRightArgument}${newlineArgument}${pathAliasesArgument}${otherSettingsArgument}
   '';
 
 in {
@@ -54,6 +61,18 @@ in {
           <link xlink:href="https://github.com/justjanne/powerline-go"/>.
         '';
         example = [ "host" "ssh" "cwd" "gitlite" "jobs" "exit" ];
+      };
+
+      modulesRight = mkOption {
+        default = null;
+        type = types.nullOr (types.listOf types.str);
+        description = ''
+          List of module names to load to be displayed on the right side.
+          Currently not supported by bash. Specifying a value for this
+          option will force powerline-go to use the eval format to set
+          the prompt.
+        '';
+        example = [ "host" "venv" "git" ];
       };
 
       newline = mkOption {
@@ -111,7 +130,9 @@ in {
       mkIf (cfg.enable && config.programs.bash.enable) ''
         function _update_ps1() {
           local old_exit_status=$?
-          PS1="$(${pkgs.powerline-go}/bin/powerline-go -error $old_exit_status ${commandLineArguments})"
+          ${
+            if evalMode then "eval " else "PS1="
+          }"$(${pkgs.powerline-go}/bin/powerline-go -error $old_exit_status -shell bash${commandLineArguments})"
           ${cfg.extraUpdatePS1}
           return $old_exit_status
         }
@@ -123,7 +144,9 @@ in {
 
     programs.zsh.initExtra = mkIf (cfg.enable && config.programs.zsh.enable) ''
       function powerline_precmd() {
-        PS1="$(${pkgs.powerline-go}/bin/powerline-go -error $? -shell zsh ${commandLineArguments})"
+        ${
+          if evalMode then "eval " else "PS1="
+        }"$(${pkgs.powerline-go}/bin/powerline-go -error $? -shell zsh${commandLineArguments})"
         ${cfg.extraUpdatePS1}
       }
 
@@ -145,7 +168,7 @@ in {
     programs.fish.interactiveShellInit =
       mkIf (cfg.enable && config.programs.fish.enable) ''
         function fish_prompt
-            eval ${pkgs.powerline-go}/bin/powerline-go -error $status -jobs (count (jobs -p)) ${commandLineArguments}
+            eval ${pkgs.powerline-go}/bin/powerline-go -error $status -jobs (count (jobs -p))${commandLineArguments}
             ${cfg.extraUpdatePS1}
         end
       '';
