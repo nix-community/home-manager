@@ -98,7 +98,13 @@ in {
     "com.apple.menuextra.battery".ShowPercent = mkNullableOption {
       type = types.enum [ "YES" "NO" ];
       example = "NO";
-      description = "Whether to show battery percentage in the menu bar.";
+      description = ''
+        This option no longer works on macOS 11 and later. Instead, open System
+        Preferences, go to "Dock &amp; Menu Bar", select "Battery", and toggle
+        the checkbox labeled "Show Percentage."
+
+        Whether to show battery percentage in the menu bar.
+      '';
     };
 
     "com.apple.Safari" = {
@@ -125,20 +131,35 @@ in {
           </warning>
         '';
       };
-      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" =
-        mkNullableOption {
-          type = types.bool;
-          description = ''
-            Configures the web inspector.
+      "WebKitPreferences.developerExtrasEnabled" = mkNullableOption {
+        type = types.bool;
+        description = ''
+          Configures the web inspector.
 
-            <warning>
-              <para>
-                Instead of setting this option directly, set
-                <option>IncludeDevelopMenu</option> instead.
-              </para>
-            </warning>
-          '';
-        };
+          <warning>
+            <para>
+              Instead of setting this option directly, set
+              <option>IncludeDevelopMenu</option> instead.
+            </para>
+          </warning>
+        '';
+      };
+    };
+
+    "com.apple.Safari.SandboxBroker" = {
+      ShowDevelopMenu = mkNullableOption {
+        type = types.bool;
+        description = ''
+          Show the "Develop" menu in Safari's menubar.
+
+          <warning>
+            <para>
+              Instead of setting this option directly, set
+              <option>"com.apple.Safari".IncludeDevelopMenu</option> instead.
+            </para>
+          </warning>
+        '';
+      };
     };
 
     "com.googlecode.iterm2" = {
@@ -182,8 +203,11 @@ in {
   config = {
     "com.apple.Safari" = mkIf (safari.IncludeDevelopMenu != null) {
       WebKitDeveloperExtrasEnabledPreferenceKey = safari.IncludeDevelopMenu;
-      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" =
-        safari.IncludeDevelopMenu;
+      "WebKitPreferences.developerExtrasEnabled" = safari.IncludeDevelopMenu;
     };
+    "com.apple.Safari.SandboxBroker" =
+      mkIf (safari.IncludeDevelopMenu != null) {
+        ShowDevelopMenu = safari.IncludeDevelopMenu;
+      };
   };
 }

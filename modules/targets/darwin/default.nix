@@ -48,6 +48,24 @@ in {
         platforms.darwin)
     ];
 
+    warnings = let
+      batteryPercentage =
+        attrByPath [ "com.apple.menuextra.battery" "ShowPercent" ] null
+        cfg.defaults;
+      webkitDevExtras = attrByPath [
+        "com.apple.Safari"
+        "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled"
+      ] null cfg.defaults;
+    in optional (batteryPercentage != null) ''
+      The option 'com.apple.menuextra.battery.ShowPercent' no longer works on
+      macOS 11 and later. Instead, open System Preferences, go to "Dock &amp;
+      Menu Bar", select "Battery", and toggle the checkbox labeled "Show
+      Percentage."
+    '' ++ optional (webkitDevExtras != null) ''
+      The option 'com.apple.Safari.com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled'
+      is no longer present in recent versions of Safari.
+    '';
+
     home.activation.setDarwinDefaults = hm.dag.entryAfter [ "writeBoundary" ] ''
       $VERBOSE_ECHO "Configuring macOS user defaults"
       ${concatStringsSep "\n" activationCmds}
