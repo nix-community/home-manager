@@ -577,7 +577,7 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-         if [[ -e "$genProfilePath"/manifest.json ]] ; then
+         if [[ -e "$nixProfilePath"/manifest.json ]] ; then
            nix profile list | { grep 'home-manager-path$' || test $? = 1; } | awk -F ' ' '{ print $4 }' | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
          else
            if nix-env -q | grep '^home-manager-path$'; then
@@ -587,7 +587,7 @@ in
         ''
       else
         ''
-          if [[ -e "$genProfilePath"/manifest.json ]] ; then
+          if [[ -e "$nixProfilePath"/manifest.json ]] ; then
             INSTALL_CMD="nix profile install"
             LIST_CMD="nix profile list"
             REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
