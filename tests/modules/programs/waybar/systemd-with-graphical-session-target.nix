@@ -10,6 +10,7 @@ with lib;
       package = config.lib.test.mkStubPackage { outPath = "@waybar@"; };
       enable = true;
       systemd.enable = true;
+      systemd.target = "sway-session.target";
     };
 
     nmt.script = ''
