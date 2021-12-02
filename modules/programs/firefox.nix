@@ -370,8 +370,8 @@ in {
       "${profilesPath}/${profile.path}/chrome/userContent.css" =
         mkIf (profile.userContent != "") { text = profile.userContent; };
 
-      "${profilesPath}/${profile.path}/user.js" =
-        mkIf (profile.settings != { } || profile.extraConfig != "") {
+      "${profilesPath}/${profile.path}/user.js" = mkIf (profile.settings != { }
+        || profile.extraConfig != "" || profile.bookmarks != { }) {
           text =
             mkUserJs profile.settings profile.extraConfig profile.bookmarks;
         };
