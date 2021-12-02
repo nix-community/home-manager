@@ -32,7 +32,7 @@ will write to your dconf store and cannot tell whether a configuration
 that it is about to be overwritten was from a previous Home Manager
 generation or from manual configuration.
 
-Home Manager targets [NixOS][] unstable and NixOS version 21.05 (the
+Home Manager targets [NixOS][] unstable and NixOS version 21.11 (the
 current stable version), it may or may not work on other Linux
 distributions and NixOS versions.
 
@@ -152,7 +152,7 @@ Home Manager is developed against `nixpkgs-unstable` branch, which
 often causes it to contain tweaks for changes/packages not yet
 released in stable NixOS. To avoid breaking users' configurations,
 Home Manager is released in branches corresponding to NixOS releases
-(e.g. `release-21.05`). These branches get fixes, but usually not new
+(e.g. `release-21.11`). These branches get fixes, but usually not new
 modules. If you need a module to be backported, then feel free to open
 an issue.
 
