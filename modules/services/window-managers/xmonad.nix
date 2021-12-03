@@ -132,9 +132,9 @@ in {
 
           # The resulting binary name depends on the arch and os
           # https://github.com/xmonad/xmonad/blob/56b0f850bc35200ec23f05c079eca8b0a1f90305/src/XMonad/Core.hs#L565-L572
-          mv "$XMONAD_DATA_DIR/xmonad-${pkgs.hostPlatform.system}" $out/bin/
+          mv "$XMONAD_DATA_DIR/xmonad-${pkgs.stdenv.hostPlatform.system}" $out/bin/
         ''
-      }/bin/xmonad-${pkgs.hostPlatform.system}";
+      }/bin/xmonad-${pkgs.stdenv.hostPlatform.system}";
 
   in mkIf cfg.enable (mkMerge [
     {
@@ -157,7 +157,7 @@ in {
     (mkIf (cfg.config != null) {
       xsession.windowManager.command = xmonadBin;
       home.file.".xmonad/xmonad.hs".source = cfg.config;
-      home.file.".xmonad/xmonad-${pkgs.hostPlatform.system}" = {
+      home.file.".xmonad/xmonad-${pkgs.stdenv.hostPlatform.system}" = {
         source = xmonadBin;
         onChange = ''
           # Attempt to restart xmonad if X is running.

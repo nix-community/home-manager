@@ -10,7 +10,7 @@ in {
   options = {
     xdg.mime.enable = mkOption {
       type = types.bool;
-      default = pkgs.hostPlatform.isLinux;
+      default = pkgs.stdenv.hostPlatform.isLinux;
       defaultText =
         literalExpression "true if host platform is Linux, false otherwise";
       description = ''

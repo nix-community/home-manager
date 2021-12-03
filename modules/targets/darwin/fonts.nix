@@ -12,7 +12,7 @@ let
   fonts = "${fontsEnv}/share/fonts";
 in {
   # macOS won't recognize symlinked fonts
-  config = mkIf pkgs.hostPlatform.isDarwin {
+  config = mkIf pkgs.stdenv.hostPlatform.isDarwin {
     home.activation.copyFonts = hm.dag.entryAfter [ "writeBoundary" ] ''
       copyFonts() {
         rm -rf ${homeDir}/Library/Fonts/HomeManager || :
