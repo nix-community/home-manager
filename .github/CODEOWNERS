@@ -203,6 +203,8 @@
 /modules/programs/sm64ex.nix                          @ivarwithoutbones
 /tests/modules/programs/sm64ex                        @ivarwithoutbones
 
+/modules/programs/sqls.nix                            @marsam
+
 /modules/programs/ssh.nix                             @rycee
 
 /modules/programs/starship.nix                        @marsam

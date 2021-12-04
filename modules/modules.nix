@@ -132,6 +132,7 @@ let
     ./programs/senpai.nix
     ./programs/skim.nix
     ./programs/sm64ex.nix
+    ./programs/sqls.nix
     ./programs/ssh.nix
     ./programs/starship.nix
     ./programs/taskwarrior.nix
