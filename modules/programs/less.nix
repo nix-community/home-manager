@@ -19,7 +19,7 @@ in {
         '';
         description = ''
           Extra configuration for <command>less</command> written to
-          <filename>$HOME/.lesskey</filename>.
+          <filename>$XDG_CONFIG_HOME/lesskey</filename>.
         '';
       };
     };
@@ -27,6 +27,6 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.less ];
-    home.file.".lesskey".text = cfg.keys;
+    xdg.configFile."lesskey".text = cfg.keys;
   };
 }

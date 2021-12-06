@@ -15,8 +15,8 @@ with lib;
   test.stubs.less = { };
 
   nmt.script = ''
-    assertFileExists home-files/.lesskey
-    assertFileContent home-files/.lesskey ${
+    assertFileExists home-files/.config/lesskey
+    assertFileContent home-files/.config/lesskey ${
       builtins.toFile "less.expected" ''
         s        back-line
         t        forw-line
