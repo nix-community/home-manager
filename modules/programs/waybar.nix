@@ -156,7 +156,7 @@ in {
     };
 
     settings = mkOption {
-      type = listOf waybarBarConfig;
+      type = either (listOf waybarBarConfig) (attrsOf waybarBarConfig);
       default = [ ];
       description = ''
         Configuration for Waybar, see <link
@@ -164,8 +164,8 @@ in {
         for supported values.
       '';
       example = literalExpression ''
-        [
-          {
+        {
+          mainBar = {
             layer = "top";
             position = "top";
             height = 30;
@@ -190,8 +190,8 @@ in {
                 ''';
               };
             };
-          }
-        ]
+          };
+        }
       '';
     };
 
@@ -242,8 +242,15 @@ in {
         settingsModules =
           optionalAttrs (configuration.modules != { }) configuration.modules;
       in removeNulls (settingsWithoutModules // settingsModules);
+
+    # Allow using attrs for settings instead of a list in order to more easily override
+    settings = if builtins.isAttrs cfg.settings then
+      lib.attrValues cfg.settings
+    else
+      cfg.settings;
+
     # The clean list of configurations
-    finalConfiguration = map makeConfiguration cfg.settings;
+    finalConfiguration = map makeConfiguration settings;
 
     configSource = jsonFormat.generate "waybar-config.json" finalConfiguration;
 
@@ -255,7 +262,7 @@ in {
         ({
           assertion =
             if lib.versionAtLeast config.home.stateVersion "22.05" then
-              all (x: !hasAttr "modules" x) cfg.settings
+              all (x: !hasAttr "modules" x) settings
             else
               true;
           message = ''
@@ -267,7 +274,7 @@ in {
 
       home.packages = [ cfg.package ];
 
-      xdg.configFile."waybar/config" = mkIf (cfg.settings != [ ]) {
+      xdg.configFile."waybar/config" = mkIf (settings != [ ]) {
         source = configSource;
         onChange = ''
           ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true

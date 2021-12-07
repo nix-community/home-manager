@@ -43,5 +43,21 @@
       "all-outputs": true,
       "disable-scroll": true
     }
+  },
+  {
+    "modules-center": [
+      "clock"
+    ],
+    "modules-left": [
+      "sway/mode"
+    ],
+    "modules-right": [],
+    "output": [
+      "!DP-1"
+    ],
+    "position": "bottom",
+    "sway/mode": {
+      "tooltip": true
+    }
   }
 ]
