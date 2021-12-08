@@ -140,6 +140,8 @@
 
 /modules/programs/mu.nix                              @KarlJoad
 
+/modules/programs/navi.nix                            @marsam
+
 /modules/programs/ncmpcpp.nix                         @olmokramer
 /tests/modules/programs/ncmpcpp                       @olmokramer
 /tests/modules/programs/ncmpcpp-linux                 @olmokramer

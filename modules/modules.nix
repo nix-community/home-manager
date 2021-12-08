@@ -100,6 +100,7 @@ let
     ./programs/mpv.nix
     ./programs/msmtp.nix
     ./programs/mu.nix
+    ./programs/navi.nix
     ./programs/ncmpcpp.nix
     ./programs/ncspot.nix
     ./programs/ne.nix

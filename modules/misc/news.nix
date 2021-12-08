@@ -2297,6 +2297,13 @@ in
           A new module is available: 'programs.sqls'.
         '';
       }
+
+      {
+        time = "2021-12-11T11:55:12+00:00";
+        message = ''
+          A new module is available: 'programs.navi'.
+        '';
+      }
     ];
   };
 }
