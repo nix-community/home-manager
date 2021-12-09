@@ -39,7 +39,7 @@ in {
       };
       description = ''
         Configuration written to
-        <filename>~/.config/lsd/config.yaml</filename>. See
+        <filename>$XDG_CONFIG_HOME/lsd/config.yaml</filename>. See
         <link xlink:href="https://github.com/Peltoche/lsd#config-file-content"/>
         for supported values.
       '';

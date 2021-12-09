@@ -17,7 +17,7 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>~/.config/noti/noti.yaml</filename>.
+        <filename>$XDG_CONFIG_HOME/noti/noti.yaml</filename>.
         </para><para>
         See
         <citerefentry>

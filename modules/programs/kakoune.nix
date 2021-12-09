@@ -635,7 +635,7 @@ in {
         default = "";
         description = ''
           Extra configuration lines to add to
-          <filename>~/.config/kak/kakrc</filename>.
+          <filename>$XDG_CONFIG_HOME/kak/kakrc</filename>.
         '';
       };
 

@@ -270,7 +270,7 @@ in {
           };
         }'';
       description = ''
-        Configures <filename>~/.config/hexchat/servlist.conf</filename>.
+        Configures <filename>$XDG_CONFIG_HOME/hexchat/servlist.conf</filename>.
       '';
     };
 
@@ -286,7 +286,7 @@ in {
         };
       '';
       description = ''
-        Configuration for <filename>~/.config/hexchat/hexchat.conf</filename>, see
+        Configuration for <filename>$XDG_CONFIG_HOME/hexchat/hexchat.conf</filename>, see
         <link xlink:href="https://hexchat.readthedocs.io/en/latest/settings.html#list-of-settings"/>
         for supported values.
       '';

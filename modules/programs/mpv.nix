@@ -90,7 +90,7 @@ in {
       config = mkOption {
         description = ''
           Configuration written to
-          <filename>~/.config/mpv/mpv.conf</filename>. See
+          <filename>$XDG_CONFIG_HOME/mpv/mpv.conf</filename>. See
           <citerefentry>
             <refentrytitle>mpv</refentrytitle>
             <manvolnum>1</manvolnum>
@@ -112,7 +112,7 @@ in {
       profiles = mkOption {
         description = ''
           Sub-configuration options for specific profiles written to
-          <filename>~/.config/mpv/mpv.conf</filename>. See
+          <filename>$XDG_CONFIG_HOME/mpv/mpv.conf</filename>. See
           <option>programs.mpv.config</option> for more information.
         '';
         type = mpvProfiles;
@@ -143,7 +143,7 @@ in {
       bindings = mkOption {
         description = ''
           Input configuration written to
-          <filename>~/.config/mpv/input.conf</filename>. See
+          <filename>$XDG_CONFIG_HOME/mpv/input.conf</filename>. See
           <citerefentry>
             <refentrytitle>mpv</refentrytitle>
             <manvolnum>1</manvolnum>

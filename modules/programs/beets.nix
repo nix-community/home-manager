@@ -45,7 +45,7 @@ in {
         default = { };
         description = ''
           Configuration written to
-          <filename>~/.config/beets/config.yaml</filename>
+          <filename>$XDG_CONFIG_HOME/beets/config.yaml</filename>
         '';
       };
     };

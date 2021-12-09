@@ -32,7 +32,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>~/.config/ncspot/config.toml</filename>.
+        <filename>$XDG_CONFIG_HOME/ncspot/config.toml</filename>.
         </para><para>
         See <link xlink:href="https://github.com/hrkfdn/ncspot#configuration" />
         for the full list of options.

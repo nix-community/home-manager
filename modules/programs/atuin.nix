@@ -60,7 +60,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>~/.config/atuin/config.toml</filename>.
+        <filename>$XDG_CONFIG_HOME/atuin/config.toml</filename>.
         </para><para>
         See <link xlink:href="https://github.com/ellie/atuin/blob/main/docs/config.md" /> for the full list
         of options.

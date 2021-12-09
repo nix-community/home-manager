@@ -32,7 +32,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>~/.config/lazygit/config.yml</filename> on Linux
+        <filename>$XDG_CONFIG_HOME/lazygit/config.yml</filename> on Linux
         or <filename>~/Library/Application Support/lazygit/config.yml</filename> on Darwin. See
         <link xlink:href="https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md"/>
         for supported values.

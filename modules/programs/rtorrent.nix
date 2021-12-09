@@ -17,7 +17,7 @@ in {
       default = "";
       description = ''
         Configuration written to
-        <filename>~/.config/rtorrent/rtorrent.rc</filename>. See
+        <filename>$XDG_CONFIG_HOME/rtorrent/rtorrent.rc</filename>. See
         <link xlink:href="https://github.com/rakshasa/rtorrent/wiki/Config-Guide" />
         for explanation about possible values.
       '';

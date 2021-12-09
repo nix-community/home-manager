@@ -42,7 +42,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>~/.config/nushell/config.toml</filename>.
+        <filename>$XDG_CONFIG_HOME/nushell/config.toml</filename>.
         </para><para>
         See <link xlink:href="https://www.nushell.sh/book/configuration.html" /> for the full list
         of options.

@@ -55,7 +55,7 @@ in {
         '';
         description = ''
           Configuration written to
-          <filename>~/.config/MangoHud/MangoHud.conf</filename>. See
+          <filename>$XDG_CONFIG_HOME/MangoHud/MangoHud.conf</filename>. See
           <link xlink:href="https://github.com/flightlessmango/MangoHud/blob/master/bin/MangoHud.conf"/>
           for the default configuration.
         '';
@@ -74,7 +74,7 @@ in {
         description = ''
           Sets MangoHud settings per application.
           Configuration written to
-          <filename>~/.config/MangoHud/{application_name}.conf</filename>. See
+          <filename>$XDG_CONFIG_HOME/MangoHud/{application_name}.conf</filename>. See
           <link xlink:href="https://github.com/flightlessmango/MangoHud/blob/master/bin/MangoHud.conf"/>
           for the default configuration.
         '';

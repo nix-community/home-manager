@@ -51,7 +51,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>~/.config/starship.toml</filename>.
+        <filename>$XDG_CONFIG_HOME/starship.toml</filename>.
         </para><para>
         See <link xlink:href="https://starship.rs/config/" /> for the full list
         of options.

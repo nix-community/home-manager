@@ -42,7 +42,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>~/.config/topgrade.toml</filename>.
+        <filename>$XDG_CONFIG_HOME/topgrade.toml</filename>.
         </para><para>
         See <link xlink:href="https://github.com/r-darwish/topgrade/wiki/Step-list" /> for the full list
         of options.

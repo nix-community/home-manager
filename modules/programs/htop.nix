@@ -133,7 +133,7 @@ in {
       '';
       description = ''
         Configuration options to add to
-        <filename>~/.config/htop/htoprc</filename>.
+        <filename>$XDG_CONFIG_HOME/htop/htoprc</filename>.
       '';
     };
 

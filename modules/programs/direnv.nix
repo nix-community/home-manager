@@ -29,7 +29,7 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>~/.config/direnv/config.toml</filename>.
+        <filename>$XDG_CONFIG_HOME/direnv/config.toml</filename>.
         </para><para>
         See
         <citerefentry>
@@ -45,7 +45,7 @@ in {
       default = "";
       description = ''
         Custom stdlib written to
-        <filename>~/.config/direnv/direnvrc</filename>.
+        <filename>$XDG_CONFIG_HOME/direnv/direnvrc</filename>.
       '';
     };
 

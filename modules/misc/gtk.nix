@@ -123,7 +123,7 @@ in {
           };
           description = ''
             Extra configuration options to add to
-            <filename>~/.config/gtk-3.0/settings.ini</filename>.
+            <filename>$XDG_CONFIG_HOME/gtk-3.0/settings.ini</filename>.
           '';
         };
 
@@ -132,7 +132,7 @@ in {
           default = "";
           description = ''
             Extra configuration lines to add verbatim to
-            <filename>~/.config/gtk-3.0/gtk.css</filename>.
+            <filename>$XDG_CONFIG_HOME/gtk-3.0/gtk.css</filename>.
           '';
         };
       };

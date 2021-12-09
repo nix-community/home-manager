@@ -80,7 +80,7 @@ in {
         nullOr (attrsOf (either str (either int (either bool (listOf str)))));
       default = null;
       description =
-        "Settings for sm64ex's <filename>~/.local/share/sm64pc/sm64config.txt</filename> file.";
+        "Settings for sm64ex's <filename>$XDG_DATA_HOME/sm64pc/sm64config.txt</filename> file.";
       example = literalExpression ''
         {
           fullscreen = false;

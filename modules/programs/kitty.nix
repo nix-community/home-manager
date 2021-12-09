@@ -57,7 +57,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>~/.config/kitty/kitty.conf</filename>. See
+        <filename>$XDG_CONFIG_HOME/kitty/kitty.conf</filename>. See
         <link xlink:href="https://sw.kovidgoyal.net/kitty/conf.html" />
         for the documentation.
       '';
