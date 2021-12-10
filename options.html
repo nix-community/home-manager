@@ -674,7 +674,7 @@ is assumed to already be available in your profile.
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/gtk.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/gtk.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-gtk.gtk3.extraConfig"></a><a class="term" href="options.html#opt-gtk.gtk3.extraConfig"><code class="option">gtk.gtk3.extraConfig</code></a></span></dt><dd><p>Extra configuration options to add to
-<code class="filename">~/.config/gtk-3.0/settings.ini</code>.
+<code class="filename">$XDG_CONFIG_HOME/gtk-3.0/settings.ini</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of boolean or signed integer or strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
@@ -686,7 +686,7 @@ is assumed to already be available in your profile.
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/gtk.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/gtk.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-gtk.gtk3.extraCss"></a><a class="term" href="options.html#opt-gtk.gtk3.extraCss"><code class="option">gtk.gtk3.extraCss</code></a></span></dt><dd><p>Extra configuration lines to add verbatim to
-<code class="filename">~/.config/gtk-3.0/gtk.css</code>.
+<code class="filename">$XDG_CONFIG_HOME/gtk-3.0/gtk.css</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/gtk.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/gtk.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-gtk.iconTheme"></a><a class="term" href="options.html#opt-gtk.iconTheme"><code class="option">gtk.iconTheme</code></a></span></dt><dd><p>The icon theme to use.</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/gtk.nix#blob-path" target="_top">
@@ -1238,7 +1238,7 @@ message = Message from above
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.alacritty.package"></a><a class="term" href="options.html#opt-programs.alacritty.package"><code class="option">programs.alacritty.package</code></a></span></dt><dd><p>The Alacritty package to install.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.alacritty</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/alacritty.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/alacritty.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.alacritty.settings"></a><a class="term" href="options.html#opt-programs.alacritty.settings"><code class="option">programs.alacritty.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/alacritty/alacritty.yml</code>. See
+<code class="filename">$XDG_CONFIG_HOME/alacritty/alacritty.yml</code>. See
 <a class="link" href="https://github.com/jwilm/alacritty/blob/master/alacritty.yml" target="_top">https://github.com/jwilm/alacritty/blob/master/alacritty.yml</a>
 for the default configuration.
 </p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -1406,7 +1406,7 @@ key to open the Atuin history.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.atuin.package"></a><a class="term" href="options.html#opt-programs.atuin.package"><code class="option">programs.atuin.package</code></a></span></dt><dd><p>The package to use for atuin.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.atuin</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/atuin.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/atuin.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.atuin.settings"></a><a class="term" href="options.html#opt-programs.atuin.settings"><code class="option">programs.atuin.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/atuin/config.toml</code>.
+<code class="filename">$XDG_CONFIG_HOME/atuin/config.toml</code>.
 </p><p>
 See <a class="link" href="https://github.com/ellie/atuin/blob/main/docs/config.md" target="_top">https://github.com/ellie/atuin/blob/main/docs/config.md</a> for the full list
 of options.
@@ -1714,7 +1714,7 @@ Can be used to specify extensions.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.beets</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">(pkgs.beets.override { enableCheck = true; })</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/beets.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/beets.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.beets.settings"></a><a class="term" href="options.html#opt-programs.beets.settings"><code class="option">programs.beets.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/beets/config.yaml</code>
+<code class="filename">$XDG_CONFIG_HOME/beets/config.yaml</code>
 </p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
@@ -1941,7 +1941,7 @@ automatically gets loaded in Fish.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/direnv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/direnv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.direnv.config"></a><a class="term" href="options.html#opt-programs.direnv.config"><code class="option">programs.direnv.config</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/direnv/config.toml</code>.
+<code class="filename">$XDG_CONFIG_HOME/direnv/config.toml</code>.
 </p><p>
 See
 <span class="citerefentry"><span class="refentrytitle">direnv.toml</span>(1)</span>.
@@ -1956,7 +1956,7 @@ for the full list of options.
     a fast, persistent use_nix implementation for direnv.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/direnv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/direnv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.direnv.stdlib"></a><a class="term" href="options.html#opt-programs.direnv.stdlib"><code class="option">programs.direnv.stdlib</code></a></span></dt><dd><p>Custom stdlib written to
-<code class="filename">~/.config/direnv/direnvrc</code>.
+<code class="filename">$XDG_CONFIG_HOME/direnv/direnvrc</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/direnv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/direnv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.eclipse.enable"></a><a class="term" href="options.html#opt-programs.eclipse.enable"><code class="option">programs.eclipse.enable</code></a></span></dt><dd><p>Whether to enable Eclipse.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/eclipse.nix#blob-path" target="_top">
@@ -2783,7 +2783,7 @@ Note that lists are converted to duplicate keys.
                     &lt;home-manager/modules/programs/gpg.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.enable"></a><a class="term" href="options.html#opt-programs.hexchat.enable"><code class="option">programs.hexchat.enable</code></a></span></dt><dd><p>Whether to enable HexChat, a graphical IRC client.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/hexchat.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels"></a><a class="term" href="options.html#opt-programs.hexchat.channels"><code class="option">programs.hexchat.channels</code></a></span></dt><dd><p>Configures <code class="filename">~/.config/hexchat/servlist.conf</code>.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels"></a><a class="term" href="options.html#opt-programs.hexchat.channels"><code class="option">programs.hexchat.channels</code></a></span></dt><dd><p>Configures <code class="filename">$XDG_CONFIG_HOME/hexchat/servlist.conf</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
@@ -2907,7 +2907,7 @@ configuration files, causing:
   </p></li></ol></div><p>
 </p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/hexchat.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.settings"></a><a class="term" href="options.html#opt-programs.hexchat.settings"><code class="option">programs.hexchat.settings</code></a></span></dt><dd><p>Configuration for <code class="filename">~/.config/hexchat/hexchat.conf</code>, see
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.settings"></a><a class="term" href="options.html#opt-programs.hexchat.settings"><code class="option">programs.hexchat.settings</code></a></span></dt><dd><p>Configuration for <code class="filename">$XDG_CONFIG_HOME/hexchat/hexchat.conf</code>, see
 <a class="link" href="https://hexchat.readthedocs.io/en/latest/settings.html#list-of-settings" target="_top">https://hexchat.readthedocs.io/en/latest/settings.html#list-of-settings</a>
 for supported values.
 </p><p><span class="emphasis"><em>Type:</em></span> null or attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
@@ -2957,7 +2957,7 @@ attempted.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.htop.package"></a><a class="term" href="options.html#opt-programs.htop.package"><code class="option">programs.htop.package</code></a></span></dt><dd><p>Package containing the <span class="command"><strong>htop</strong></span> program.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.htop</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/htop.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/htop.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.htop.settings"></a><a class="term" href="options.html#opt-programs.htop.settings"><code class="option">programs.htop.settings</code></a></span></dt><dd><p>Configuration options to add to
-<code class="filename">~/.config/htop/htoprc</code>.
+<code class="filename">$XDG_CONFIG_HOME/htop/htoprc</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
@@ -3539,7 +3539,7 @@ the marker text will be displayed in the indentation if possible.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kakoune.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/kakoune.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kakoune.extraConfig"></a><a class="term" href="options.html#opt-programs.kakoune.extraConfig"><code class="option">programs.kakoune.extraConfig</code></a></span></dt><dd><p>Extra configuration lines to add to
-<code class="filename">~/.config/kak/kakrc</code>.
+<code class="filename">$XDG_CONFIG_HOME/kak/kakrc</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kakoune.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/kakoune.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kakoune.plugins"></a><a class="term" href="options.html#opt-programs.kakoune.plugins"><code class="option">programs.kakoune.plugins</code></a></span></dt><dd><p>List of kakoune plugins to install. To get a list of
@@ -3636,7 +3636,7 @@ is assumed to already be available in your profile.
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kitty.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/kitty.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kitty.settings"></a><a class="term" href="options.html#opt-programs.kitty.settings"><code class="option">programs.kitty.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/kitty/kitty.conf</code>. See
+<code class="filename">$XDG_CONFIG_HOME/kitty/kitty.conf</code>. See
 <a class="link" href="https://sw.kovidgoyal.net/kitty/conf.html" target="_top">https://sw.kovidgoyal.net/kitty/conf.html</a>
 for the documentation.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or boolean or signed integers</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -3653,7 +3653,7 @@ for the documentation.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lazygit.enable"></a><a class="term" href="options.html#opt-programs.lazygit.enable"><code class="option">programs.lazygit.enable</code></a></span></dt><dd><p>Whether to enable lazygit, a simple terminal UI for git commands.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lazygit.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lazygit.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lazygit.settings"></a><a class="term" href="options.html#opt-programs.lazygit.settings"><code class="option">programs.lazygit.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/lazygit/config.yml</code> on Linux
+<code class="filename">$XDG_CONFIG_HOME/lazygit/config.yml</code> on Linux
 or <code class="filename">~/Library/Application Support/lazygit/config.yml</code> on Darwin. See
 <a class="link" href="https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md" target="_top">https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md</a>
 for supported values.
@@ -3765,7 +3765,7 @@ All string options are quoted with double quotes.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lsd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lsd.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lsd.settings"></a><a class="term" href="options.html#opt-programs.lsd.settings"><code class="option">programs.lsd.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/lsd/config.yaml</code>. See
+<code class="filename">$XDG_CONFIG_HOME/lsd/config.yaml</code>. See
 <a class="link" href="https://github.com/Peltoche/lsd#config-file-content" target="_top">https://github.com/Peltoche/lsd#config-file-content</a>
 for supported values.
 </p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -3934,7 +3934,7 @@ MangoHud is started on any application that supports it.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.package"></a><a class="term" href="options.html#opt-programs.mangohud.package"><code class="option">programs.mangohud.package</code></a></span></dt><dd><p>The Mangohud package to install.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.mangohud</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mangohud.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mangohud.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.settings"></a><a class="term" href="options.html#opt-programs.mangohud.settings"><code class="option">programs.mangohud.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/MangoHud/MangoHud.conf</code>. See
+<code class="filename">$XDG_CONFIG_HOME/MangoHud/MangoHud.conf</code>. See
 <a class="link" href="https://github.com/flightlessmango/MangoHud/blob/master/bin/MangoHud.conf" target="_top">https://github.com/flightlessmango/MangoHud/blob/master/bin/MangoHud.conf</a>
 for the default configuration.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of boolean or signed integer or floating point number or string or path or list of signed integer or stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -3949,7 +3949,7 @@ for the default configuration.
                     &lt;home-manager/modules/programs/mangohud.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.settingsPerApplication"></a><a class="term" href="options.html#opt-programs.mangohud.settingsPerApplication"><code class="option">programs.mangohud.settingsPerApplication</code></a></span></dt><dd><p>Sets MangoHud settings per application.
 Configuration written to
-<code class="filename">~/.config/MangoHud/{application_name}.conf</code>. See
+<code class="filename">$XDG_CONFIG_HOME/MangoHud/{application_name}.conf</code>. See
 <a class="link" href="https://github.com/flightlessmango/MangoHud/blob/master/bin/MangoHud.conf" target="_top">https://github.com/flightlessmango/MangoHud/blob/master/bin/MangoHud.conf</a>
 for the default configuration.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of boolean or signed integer or floating point number or string or path or list of signed integer or stringsss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -4072,7 +4072,7 @@ control the default matplotlib behavior.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"><em class="replaceable"><code>(build of mpv-with-scripts-0.34.0)</code></em></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.wrapMpv (pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }) { youtubeSupport = true; }</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mpv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mpv.bindings"></a><a class="term" href="options.html#opt-programs.mpv.bindings"><code class="option">programs.mpv.bindings</code></a></span></dt><dd><p>Input configuration written to
-<code class="filename">~/.config/mpv/input.conf</code>. See
+<code class="filename">$XDG_CONFIG_HOME/mpv/input.conf</code>. See
 <span class="citerefentry"><span class="refentrytitle">mpv</span>(1)</span>
 for the full list of options.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -4087,7 +4087,7 @@ for the full list of options.
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mpv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mpv.config"></a><a class="term" href="options.html#opt-programs.mpv.config"><code class="option">programs.mpv.config</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/mpv/mpv.conf</code>. See
+<code class="filename">$XDG_CONFIG_HOME/mpv/mpv.conf</code>. See
 <span class="citerefentry"><span class="refentrytitle">mpv</span>(1)</span>
 for the full list of options.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean or floating point number or list of string or signed integer or boolean or floating point numberss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -4115,7 +4115,7 @@ by options set in <a class="xref" href="options.html#opt-programs.mpv.config"><c
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mpv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mpv.profiles"></a><a class="term" href="options.html#opt-programs.mpv.profiles"><code class="option">programs.mpv.profiles</code></a></span></dt><dd><p>Sub-configuration options for specific profiles written to
-<code class="filename">~/.config/mpv/mpv.conf</code>. See
+<code class="filename">$XDG_CONFIG_HOME/mpv/mpv.conf</code>. See
 <code class="option">programs.mpv.config</code> for more information.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of string or signed integer or boolean or floating point number or list of string or signed integer or boolean or floating point numbersss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
@@ -4205,7 +4205,7 @@ see
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ncspot.package"></a><a class="term" href="options.html#opt-programs.ncspot.package"><code class="option">programs.ncspot.package</code></a></span></dt><dd><p>The package to use for ncspot.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.ncspot</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ncspot.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/ncspot.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ncspot.settings"></a><a class="term" href="options.html#opt-programs.ncspot.settings"><code class="option">programs.ncspot.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/ncspot/config.toml</code>.
+<code class="filename">$XDG_CONFIG_HOME/ncspot/config.toml</code>.
 </p><p>
 See <a class="link" href="https://github.com/hrkfdn/ncspot#configuration" target="_top">https://github.com/hrkfdn/ncspot#configuration</a>
 for the full list of options.
@@ -4567,7 +4567,7 @@ use Python 3 plugins.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.noti.enable"></a><a class="term" href="options.html#opt-programs.noti.enable"><code class="option">programs.noti.enable</code></a></span></dt><dd><p>Whether to enable Noti.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noti.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/noti.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.noti.settings"></a><a class="term" href="options.html#opt-programs.noti.settings"><code class="option">programs.noti.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/noti/noti.yaml</code>.
+<code class="filename">$XDG_CONFIG_HOME/noti/noti.yaml</code>.
 </p><p>
 See
 <span class="citerefentry"><span class="refentrytitle">noti.yaml</span>(5)</span>.
@@ -4659,7 +4659,7 @@ exclusion.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.package"></a><a class="term" href="options.html#opt-programs.nushell.package"><code class="option">programs.nushell.package</code></a></span></dt><dd><p>The package to use for nushell.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.nushell</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/nushell.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.settings"></a><a class="term" href="options.html#opt-programs.nushell.settings"><code class="option">programs.nushell.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/nushell/config.toml</code>.
+<code class="filename">$XDG_CONFIG_HOME/nushell/config.toml</code>.
 </p><p>
 See <a class="link" href="https://www.nushell.sh/book/configuration.html" target="_top">https://www.nushell.sh/book/configuration.html</a> for the full list
 of options.
@@ -5220,7 +5220,7 @@ in {
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rtorrent.enable"></a><a class="term" href="options.html#opt-programs.rtorrent.enable"><code class="option">programs.rtorrent.enable</code></a></span></dt><dd><p>Whether to enable rTorrent.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtorrent.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/rtorrent.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.rtorrent.settings"></a><a class="term" href="options.html#opt-programs.rtorrent.settings"><code class="option">programs.rtorrent.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/rtorrent/rtorrent.rc</code>. See
+<code class="filename">$XDG_CONFIG_HOME/rtorrent/rtorrent.rc</code>. See
 <a class="link" href="https://github.com/rakshasa/rtorrent/wiki/Config-Guide" target="_top">https://github.com/rakshasa/rtorrent/wiki/Config-Guide</a>
 for explanation about possible values.
 </p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtorrent.nix#blob-path" target="_top">
@@ -5403,7 +5403,7 @@ for more information.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sm64ex.region"></a><a class="term" href="options.html#opt-programs.sm64ex.region"><code class="option">programs.sm64ex.region</code></a></span></dt><dd><p>Your baserom's region. Note that only "us", "eu", and "jp" are supported.
 </p><p><span class="emphasis"><em>Type:</em></span> null or one of "us", "eu", "jp"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">us</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">jp</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sm64ex.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/sm64ex.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sm64ex.settings"></a><a class="term" href="options.html#opt-programs.sm64ex.settings"><code class="option">programs.sm64ex.settings</code></a></span></dt><dd><p>Settings for sm64ex's <code class="filename">~/.local/share/sm64pc/sm64config.txt</code> file.</p><p><span class="emphasis"><em>Type:</em></span> null or attribute set of string or signed integer or boolean or list of stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sm64ex.settings"></a><a class="term" href="options.html#opt-programs.sm64ex.settings"><code class="option">programs.sm64ex.settings</code></a></span></dt><dd><p>Settings for sm64ex's <code class="filename">$XDG_DATA_HOME/sm64pc/sm64config.txt</code> file.</p><p><span class="emphasis"><em>Type:</em></span> null or attribute set of string or signed integer or boolean or list of stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
   fullscreen = false;
   window_x = 0;
   window_y = 0;
@@ -5667,7 +5667,7 @@ database, separated by whitespace. The default is
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.starship.package"></a><a class="term" href="options.html#opt-programs.starship.package"><code class="option">programs.starship.package</code></a></span></dt><dd><p>The package to use for the starship binary.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.starship</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/starship.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/starship.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.starship.settings"></a><a class="term" href="options.html#opt-programs.starship.settings"><code class="option">programs.starship.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/starship.toml</code>.
+<code class="filename">$XDG_CONFIG_HOME/starship.toml</code>.
 </p><p>
 See <a class="link" href="https://starship.rs/config/" target="_top">https://starship.rs/config/</a> for the full list
 of options.
@@ -5951,7 +5951,7 @@ is possible to override the sensible settings using the
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.topgrade.package"></a><a class="term" href="options.html#opt-programs.topgrade.package"><code class="option">programs.topgrade.package</code></a></span></dt><dd><p>The package to use for the topgrade binary.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.topgrade</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/topgrade.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/topgrade.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.topgrade.settings"></a><a class="term" href="options.html#opt-programs.topgrade.settings"><code class="option">programs.topgrade.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">~/.config/topgrade.toml</code>.
+<code class="filename">$XDG_CONFIG_HOME/topgrade.toml</code>.
 </p><p>
 See <a class="link" href="https://github.com/r-darwish/topgrade/wiki/Step-list" target="_top">https://github.com/r-darwish/topgrade/wiki/Step-list</a> for the full list
 of options.
@@ -6784,7 +6784,7 @@ but are substituted anywhere on a line.
     </p></dd><dt><span class="term"><code class="literal">gnome</code></span></dt><dd><p>Use GNOME theme with
       <a class="link" href="https://github.com/FedoraQt/QGnomePlatform" target="_top">qgnomeplatform</a>
     </p></dd></dl></div><p>
-</p><p><span class="emphasis"><em>Type:</em></span> null or one of "gtk", "gnome"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"gnome"</code></p><p><span class="emphasis"><em>Related packages:</em></span> </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">pkgs.qgnomeplatform</code> (qgnomeplatform-0.8.0): QPlatformTheme for a better Qt application inclusion in GNOME</p></li><li class="listitem"><p><code class="literal">pkgs.libsForQt5.qtstyleplugins</code> (qtstyleplugins-unstable-2017-03-11): Additional style plugins for Qt5, including BB10, GTK, Cleanlooks, Motif, Plastique</p></li></ul></div><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt.nix#blob-path" target="_top">
+</p><p><span class="emphasis"><em>Type:</em></span> null or one of "gtk", "gnome"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"gnome"</code></p><p><span class="emphasis"><em>Related packages:</em></span> </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">pkgs.qgnomeplatform</code> (qgnomeplatform-0.8.3): QPlatformTheme for a better Qt application inclusion in GNOME</p></li><li class="listitem"><p><code class="literal">pkgs.libsForQt5.qtstyleplugins</code> (qtstyleplugins-unstable-2017-03-11): Additional style plugins for Qt5, including BB10, GTK, Cleanlooks, Motif, Plastique</p></li></ul></div><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/qt.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-qt.style.package"></a><a class="term" href="options.html#opt-qt.style.package"><code class="option">qt.style.package</code></a></span></dt><dd><p>Theme package to be used in Qt5 applications.</p><p><span class="emphasis"><em>Type:</em></span> null or package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.adwaita-qt</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/qt.nix&gt;
@@ -7271,7 +7271,7 @@ now.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.grobi.executeAfter"></a><a class="term" href="options.html#opt-services.grobi.executeAfter"><code class="option">services.grobi.executeAfter</code></a></span></dt><dd><p>Commands to be run after an output configuration was
 changed. The Nix value declared here will be translated to
 JSON and written to the <code class="option">execute_after</code> key
-in <code class="filename">~/.config/grobi.conf</code>.
+in <code class="filename">$XDG_CONFIG_HOME/grobi.conf</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         
@@ -7288,7 +7288,7 @@ the first matching rule is applied and processing stops. See
 <a class="link" href="https://github.com/fd0/grobi/blob/master/doc/grobi.conf" target="_top">https://github.com/fd0/grobi/blob/master/doc/grobi.conf</a>
 for more information. The Nix value declared here will be
 translated to JSON and written to the <code class="option">rules</code>
-key in <code class="filename">~/.config/grobi.conf</code>.
+key in <code class="filename">$XDG_CONFIG_HOME/grobi.conf</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> list of attribute set of string or boolean or signed integer or list of stringsss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         
