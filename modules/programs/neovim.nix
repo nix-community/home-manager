@@ -16,7 +16,21 @@ let
     merge = mergeOneOption;
   };
 
-  plugins = cfg.plugins ++ optional cfg.coc.enable pkgs.vimPlugins.coc-nvim;
+  cocPluginPaths = map (p:
+    let
+      # coc.nvim is not able to expand pack paths, so we do it manually
+      plugin = p.plugin or p;
+      name = plugin.pname or plugin.name;
+    in "/pack/home-manager/start/${name}") cfg.coc.plugins;
+
+  plugins = cfg.plugins ++ optionals cfg.coc.enable (cfg.coc.plugins
+    ++ singleton {
+      plugin = pkgs.vimPlugins.coc-nvim;
+      config = concatMapStringsSep "\n"
+        (p: ''let &runtimepath .= ',' . split(&packpath, ',')[0] . "${p}"'')
+        cocPluginPaths;
+      optional = false;
+    });
 
   pluginWithConfigType = types.submodule {
     options = {
@@ -233,6 +247,20 @@ in {
 
       coc = {
         enable = mkEnableOption "Coc";
+
+        plugins = mkOption {
+          type = with types; listOf (either package pluginWithConfigType);
+          default = [ ];
+          example = literalExpression ''
+            with pkgs.vimPlugins; [
+              coc-json
+              coc-rust-analyzer
+            ]
+          '';
+          description = ''
+            List of coc.nvim extensions to install.
+          '';
+        };
 
         settings = mkOption {
           type = jsonFormat.type;
