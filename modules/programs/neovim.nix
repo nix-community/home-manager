@@ -16,6 +16,8 @@ let
     merge = mergeOneOption;
   };
 
+  plugins = cfg.plugins ++ optional cfg.coc.enable pkgs.vimPlugins.coc-nvim;
+
   pluginWithConfigType = types.submodule {
     options = {
       config = mkOption {
@@ -48,10 +50,10 @@ let
     packages.home-manager = {
       start = filter (f: f != null) (map
         (x: if x ? plugin && x.optional == true then null else (x.plugin or x))
-        cfg.plugins);
+        plugins);
       opt = filter (f: f != null)
         (map (x: if x ? plugin && x.optional == true then x.plugin else null)
-          cfg.plugins);
+          plugins);
     };
     beforePlugins = "";
   };
@@ -274,8 +276,7 @@ in {
       inherit (cfg)
         extraPython3Packages withPython3 withNodeJs withRuby viAlias vimAlias;
       configure = cfg.configure // moduleConfigure;
-      plugins = cfg.plugins
-        ++ optionals cfg.coc.enable [ pkgs.vimPlugins.coc-nvim ];
+      inherit plugins;
       customRC = cfg.extraConfig;
     };
 
