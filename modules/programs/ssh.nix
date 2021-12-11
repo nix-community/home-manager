@@ -493,6 +493,23 @@ in {
         for more information.
       '';
     };
+
+    configPath = mkOption {
+      type = types.path;
+      internal = true;
+      description = ''
+        Path to the ssh configuration.
+      '';
+    };
+
+    internallyManaged = mkOption {
+      type = types.bool;
+      default = true;
+      internal = true;
+      description = ''
+        Whether to link .ssh/config to programs.ssh.configPath
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -518,16 +535,17 @@ in {
 
     home.packages = optional (cfg.package != null) cfg.package;
 
-    home.file.".ssh/config".text = let
-      sortedMatchBlocks = hm.dag.topoSort cfg.matchBlocks;
-      sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
-      matchBlocks = if sortedMatchBlocks ? result then
-        sortedMatchBlocks.result
-      else
-        abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}";
-    in ''
-      ${concatStringsSep "\n"
-      ((mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)
+    home.file.".ssh/config".source = mkIf cfg.internallyManaged cfg.configPath;
+
+    programs.ssh.configPath =
+      let
+        sortedMatchBlocks = hm.dag.topoSort cfg.matchBlocks;
+        sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
+        matchBlocks =
+          sortedMatchBlocks.result or abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}";
+      in pkgs.writeText "ssh_config" ''
+      ${concatStringsSep "\n" (
+        (mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)
         ++ (optional (cfg.includes != [ ]) ''
           Include ${concatStringsSep " " cfg.includes}
         '') ++ (map (block: matchBlockStr block.name block.data) matchBlocks))}
