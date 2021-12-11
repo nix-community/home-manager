@@ -64,11 +64,15 @@ in {
     home.packages = [ cfg.package ];
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(${cfg.package}/bin/navi widget bash)"
+      if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+        eval "$(${cfg.package}/bin/navi widget bash)"
+      fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      eval "$(${cfg.package}/bin/navi widget zsh)"
+      if [[ $options[zle] = on ]]; then
+        eval "$(${cfg.package}/bin/navi widget zsh)"
+      fi
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
