@@ -7369,6 +7369,92 @@ key in <code class="filename">$XDG_CONFIG_HOME/grobi.conf</code>.
 ]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/grobi.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/grobi.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.enable"></a><a class="term" href="options.html#opt-services.gromit-mpx.enable"><code class="option">services.gromit-mpx.enable</code></a></span></dt><dd><p>Whether to enable Gromit-MPX annotation tool.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.package"></a><a class="term" href="options.html#opt-services.gromit-mpx.package"><code class="option">services.gromit-mpx.package</code></a></span></dt><dd><p>The gromit-mpx package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"pkgs.gromit-mpx"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.hotKey"></a><a class="term" href="options.html#opt-services.gromit-mpx.hotKey"><code class="option">services.gromit-mpx.hotKey</code></a></span></dt><dd><p>A keysym or raw keycode that toggles the activation state of
+gromit-mpx.  Set to <code class="literal">null</code> to disable the
+hotkey in which case you'll have to activate gromit-mpx
+manually using the command line.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string or positive integer, meaning &gt;0</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"F9"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"Insert"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.opacity"></a><a class="term" href="options.html#opt-services.gromit-mpx.opacity"><code class="option">services.gromit-mpx.opacity</code></a></span></dt><dd><p>Opacity of the drawing overlay.</p><p><span class="emphasis"><em>Type:</em></span> float between 0.0 and 1.0 (inclusive)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal"></code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.tools"></a><a class="term" href="options.html#opt-services.gromit-mpx.tools"><code class="option">services.gromit-mpx.tools</code></a></span></dt><dd><p>Tool definitions for gromit-mpx to use.
+</p><p><span class="emphasis"><em>Type:</em></span> list of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        {
+        color = "red"; device = "default"; size = 5; type = "pen"; 
+        }
+     
+        {
+        color = "blue"; device = "default"; modifiers = 
+        [
+        "SHIFT" 
+        ]
+    ; size = 5; type = "pen"; 
+        }
+     
+        {
+        color = "yellow"; device = "default"; modifiers = 
+        [
+        "CONTROL" 
+        ]
+    ; size = 5; type = "pen"; 
+        }
+     
+        {
+        arrowSize = 1; color = "green"; device = "default"; modifiers = 
+        [
+        "2" 
+        ]
+    ; size = 6; type = "pen"; 
+        }
+     
+        {
+        device = "default"; modifiers = 
+        [
+        "3" 
+        ]
+    ; size = 75; type = "eraser"; 
+        }
+     
+        ]
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.tools._.arrowSize"></a><a class="term" href="options.html#opt-services.gromit-mpx.tools._.arrowSize"><code class="option">services.gromit-mpx.tools.*.arrowSize</code></a></span></dt><dd><p>If not <code class="literal">null</code>, automatically draw an arrow
+at the end of a stroke with the given size.
+</p><p><span class="emphasis"><em>Type:</em></span> null or positive integer, meaning &gt;0</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">2</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.tools._.color"></a><a class="term" href="options.html#opt-services.gromit-mpx.tools._.color"><code class="option">services.gromit-mpx.tools.*.color</code></a></span></dt><dd><p>The stroke (or recolor) color of the tool.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"red"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"#ff00ff"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.tools._.device"></a><a class="term" href="options.html#opt-services.gromit-mpx.tools._.device"><code class="option">services.gromit-mpx.tools.*.device</code></a></span></dt><dd><p>Use this tool with the given xinput device.  The device with
+the name default works with any input.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"default"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.tools._.modifiers"></a><a class="term" href="options.html#opt-services.gromit-mpx.tools._.modifiers"><code class="option">services.gromit-mpx.tools.*.modifiers</code></a></span></dt><dd><p>Only activate this tool if the given modifiers are also active.
+</p><p><span class="emphasis"><em>Type:</em></span> list of one of "1", "2", "3", "4", "5", "SHIFT", "CONTROL", "ALT", "META"s</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        [
+        "SHIFT" 
+        ]
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.tools._.size"></a><a class="term" href="options.html#opt-services.gromit-mpx.tools._.size"><code class="option">services.gromit-mpx.tools.*.size</code></a></span></dt><dd><p>The tool size.</p><p><span class="emphasis"><em>Type:</em></span> positive integer, meaning &gt;0</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">5</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">3</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.tools._.type"></a><a class="term" href="options.html#opt-services.gromit-mpx.tools._.type"><code class="option">services.gromit-mpx.tools.*.type</code></a></span></dt><dd><p>Which type of tool this is.</p><p><span class="emphasis"><em>Type:</em></span> one of "pen", "eraser", "recolor"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"pen"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"eraser"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gromit-mpx.undoKey"></a><a class="term" href="options.html#opt-services.gromit-mpx.undoKey"><code class="option">services.gromit-mpx.undoKey</code></a></span></dt><dd><p>A keysym or raw keycode that causes gromit-mpx to undo the
+last stroke.  Use this key along with the shift key to redo an
+undone stoke.  Set to <code class="literal">null</code> to disable the
+undo hotkey.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string or positive integer, meaning &gt;0</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"F10"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/gromit-mpx.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.hound.enable"></a><a class="term" href="options.html#opt-services.hound.enable"><code class="option">services.hound.enable</code></a></span></dt><dd><p>Whether to enable hound.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/hound.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/hound.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.hound.databasePath"></a><a class="term" href="options.html#opt-services.hound.databasePath"><code class="option">services.hound.databasePath</code></a></span></dt><dd><p>The Hound database path.</p><p><span class="emphasis"><em>Type:</em></span> path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"$XDG_DATA_HOME/hound"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/hound.nix#blob-path" target="_top">
