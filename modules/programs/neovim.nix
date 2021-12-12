@@ -16,21 +16,7 @@ let
     merge = mergeOneOption;
   };
 
-  cocPluginPaths = map (p:
-    let
-      # coc.nvim is not able to expand pack paths, so we do it manually
-      plugin = p.plugin or p;
-      name = plugin.pname or plugin.name;
-    in "/pack/home-manager/start/${name}") cfg.coc.plugins;
-
-  plugins = cfg.plugins ++ optionals cfg.coc.enable (cfg.coc.plugins
-    ++ singleton {
-      plugin = pkgs.vimPlugins.coc-nvim;
-      config = concatMapStringsSep "\n"
-        (p: ''let &runtimepath .= ',' . split(&packpath, ',')[0] . "${p}"'')
-        cocPluginPaths;
-      optional = false;
-    });
+  cocConfig = map (p: "set runtimepath+=${p}") cfg.coc.plugins;
 
   pluginWithConfigType = types.submodule {
     options = {
@@ -64,10 +50,10 @@ let
     packages.home-manager = {
       start = filter (f: f != null) (map
         (x: if x ? plugin && x.optional == true then null else (x.plugin or x))
-        plugins);
+        cfg.plugins);
       opt = filter (f: f != null)
         (map (x: if x ? plugin && x.optional == true then x.plugin else null)
-          plugins);
+          cfg.plugins);
     };
     beforePlugins = "";
   };
@@ -248,8 +234,15 @@ in {
       coc = {
         enable = mkEnableOption "Coc";
 
+        package = mkOption {
+          type = types.package;
+          default = pkgs.vimPlugins.coc-nvim;
+          defaultText = literalExpression "pkgs.vimPlugins.coc-nvim";
+          description = "The package to use for the coc.nvim plugin.";
+        };
+
         plugins = mkOption {
-          type = with types; listOf (either package pluginWithConfigType);
+          type = with types; listOf package;
           default = [ ];
           example = literalExpression ''
             with pkgs.vimPlugins; [
@@ -304,40 +297,55 @@ in {
       inherit (cfg)
         extraPython3Packages withPython3 withNodeJs withRuby viAlias vimAlias;
       configure = cfg.configure // moduleConfigure;
-      inherit plugins;
+      inherit (cfg) plugins;
       customRC = cfg.extraConfig;
     };
 
-  in mkIf cfg.enable {
-    warnings = optional (cfg.configure != { }) ''
-      programs.neovim.configure is deprecated.
-      Other programs.neovim options can override its settings or ignore them.
-      Please use the other options at your disposal:
-        configure.packages.*.opt  -> programs.neovim.plugins = [ { plugin = ...; optional = true; }]
-        configure.packages.*.start  -> programs.neovim.plugins = [ { plugin = ...; }]
-        configure.customRC -> programs.neovim.extraConfig
-    '';
+  in mkMerge [
+    {
+      programs.neovim = {
+        generatedConfigViml = neovimConfig.neovimRcContent;
 
-    programs.neovim.generatedConfigViml = neovimConfig.neovimRcContent;
+        plugins = mkIf cfg.coc.enable [{
+          plugin = cfg.coc.package;
+          config = concatStringsSep "\n" cocConfig;
+          optional = false;
+        }];
+      };
+    }
+    (mkIf cfg.enable {
+      warnings = optional (cfg.configure != { }) ''
+        programs.neovim.configure is deprecated.
+        Other programs.neovim options can override its settings or ignore them.
+        Please use the other options at your disposal:
+          configure.packages.*.opt  -> programs.neovim.plugins = [ { plugin = ...; optional = true; }]
+          configure.packages.*.start  -> programs.neovim.plugins = [ { plugin = ...; }]
+          configure.customRC -> programs.neovim.extraConfig
+      '';
 
-    home.packages = [ cfg.finalPackage ];
+      home.packages = [ cfg.finalPackage ];
 
-    xdg.configFile."nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
-      text = neovimConfig.neovimRcContent;
-    };
-    xdg.configFile."nvim/coc-settings.json" = mkIf cfg.coc.enable {
-      source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
-    };
+      xdg.configFile."nvim/init.vim" =
+        mkIf (neovimConfig.neovimRcContent != "") {
+          text = neovimConfig.neovimRcContent;
+        };
+      xdg.configFile."nvim/coc-settings.json" = mkIf cfg.coc.enable {
+        source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
+      };
 
-    programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
-      (neovimConfig // {
-        wrapperArgs = (lib.escapeShellArgs neovimConfig.wrapperArgs) + " "
-          + extraMakeWrapperArgs;
-        wrapRc = false;
-      });
+      programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
+        (neovimConfig // {
+          wrapperArgs = (lib.escapeShellArgs neovimConfig.wrapperArgs) + " "
+            + extraMakeWrapperArgs;
+          wrapRc = false;
+        });
 
-    programs.bash.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
-    programs.fish.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
-    programs.zsh.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
-  };
+      programs.bash.shellAliases =
+        mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+      programs.fish.shellAliases =
+        mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+      programs.zsh.shellAliases =
+        mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+    })
+  ];
 }
