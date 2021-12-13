@@ -119,6 +119,9 @@ in
                 else
                   warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be moved to '$backup'"
                 fi
+              # The target file has somehow become an empty symlink, not known what causes this
+              elif link=$(readlink $targetPath) && [[ "$link" == "" ]]; then
+                warnEcho "Existing file '$targetPath' is a broken symlink, will be overwritten"
               else
                 # Fail if nothing else works
                 errorEcho "Existing file '$targetPath' is in the way of '$sourcePath'"
