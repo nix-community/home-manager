@@ -8,30 +8,32 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2021-12-13 00:45+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-12-13 20:50+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"home-manager/cli/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.10-dev\n"
 
 #: home-manager/home-manager:43
 msgid "No configuration file found at %s"
-msgstr ""
+msgstr "Fant ingen oppsettsfil i %s"
 
 #: home-manager/home-manager:62
 msgid "No configuration file found. Please create one at %s"
-msgstr ""
+msgstr "Fant ikke noenoppsettsfil. Opprett en i %s"
 
 #: home-manager/home-manager:105
 msgid "Can't inspect options of a flake configuration"
-msgstr ""
+msgstr "Kan ikke inspisere alternativer for et flake-oppsett"
 
 #: home-manager/home-manager:145
 msgid "Can't instantiate a flake configuration"
-msgstr ""
+msgstr "Kan ikke igangsette flak-oppsett"
 
 #: home-manager/home-manager:220
 msgid ""
@@ -41,93 +43,97 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
+"Det er %d ulest og relevant nyhetselement.\n"
+"Les det ved å kjøre kommandoen «%s news»."
 msgstr[1] ""
+"Det er %d uleste og relevant nyhetselementer.\n"
+"Les det ved å kjøre kommandoen «%s news»."
 
 #: home-manager/home-manager:234
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr ""
+msgstr "Ukjent «news.display»-innstilling «%s»."
 
 #: home-manager/home-manager:241
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
-msgstr ""
+msgstr "Sett «$EDITOR»-miljøvariabelen"
 
 #: home-manager/home-manager:256
 msgid "Cannot run build in read-only directory"
-msgstr ""
+msgstr "Kan ikke kjøre bygg i skrivebeskyttet mappe"
 
 #: home-manager/home-manager:338
 msgid "No generation with ID %s"
-msgstr ""
+msgstr "Ingen generering med ID-en %s"
 
 #: home-manager/home-manager:340
 msgid "Cannot remove the current generation %s"
-msgstr ""
+msgstr "Kan ikke fjerne nåværende generering %s"
 
 #: home-manager/home-manager:342
 msgid "Removing generation %s"
-msgstr ""
+msgstr "Fjerner generering %s"
 
 #: home-manager/home-manager:368
 msgid "No generations to expire"
-msgstr ""
+msgstr "Ingen genereringer til utløp"
 
 #: home-manager/home-manager:378
 msgid "No home-manager packages seem to be installed."
-msgstr ""
+msgstr "Ingen «home-manager»-pakker ser ut til å være installert."
 
 #: home-manager/home-manager:435
 msgid "Unknown argument %s"
-msgstr ""
+msgstr "Ukjent argument %s"
 
 #: home-manager/home-manager:450
 msgid "This will remove Home Manager from your system."
-msgstr ""
+msgstr "Dette vil fjerne Home Manager fra systemet ditt."
 
 #: home-manager/home-manager:453
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr ""
+msgstr "Dette er en testkjøring. Ingenting vil bli avinstallert."
 
 #: home-manager/home-manager:457
 msgid "Really uninstall Home Manager?"
-msgstr ""
+msgstr "Vil du avinstallere Home Manager?"
 
 #: home-manager/home-manager:462
 msgid "Switching to empty Home Manager configuration..."
-msgstr ""
+msgstr "Bytter til tomt Home Manager-oppsett …"
 
 #: home-manager/home-manager:474
 msgid "Yay!"
-msgstr ""
+msgstr "Hurra."
 
 #: home-manager/home-manager:481
 msgid "Remove all Home Manager generations?"
-msgstr ""
+msgstr "Fjern alle Home Manager-genereringer?"
 
 #: home-manager/home-manager:488
 msgid "All generations are now eligible for garbage collection."
-msgstr ""
+msgstr "Alle genereringer kan nå hentes av søppelinnsamling."
 
 #: home-manager/home-manager:491
 msgid "Leaving generations but they may still be garbage collected."
-msgstr ""
+msgstr "Levner genereringer, men de kan fremdeles hentes av søppelinnsamling."
 
 #: home-manager/home-manager:495
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr ""
+msgstr "Home Manager er avinstallert, men din home.nix er levnet uforandret."
 
 #: home-manager/home-manager:645
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: ukjent alternativ «%s»"
 
 #: home-manager/home-manager:646
 msgid "Run '%s --help' for usage help"
-msgstr ""
+msgstr "Kjør «%s --help» for brukshjelp"
 
 #: home-manager/home-manager:680
 msgid "expire-generations expects one argument, got %d."
-msgstr ""
+msgstr "«expire-generations» forventet ett argument, mottok %d."
 
 #: home-manager/home-manager:702
 msgid "Unknown command: %s"
-msgstr ""
+msgstr "Ukjent kommando: %s"
