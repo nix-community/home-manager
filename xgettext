@@ -22,13 +22,14 @@ function run() {
            -k_ipError:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
            -k_ipWarn:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
            -k_ipNote:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           --add-comments=translators: \
            -o "$output" -d "$domain" "$@"
 }
 
 run 'Home Manager' \
     home-manager/po/home-manager.pot \
     home-manager \
-    home-manager/home-manager
+    home-manager/home-manager home-manager/**/*.nix
 
 run 'Home Manager Modules' \
     modules/po/hm-modules.pot \
