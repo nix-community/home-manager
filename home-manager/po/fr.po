@@ -8,22 +8,26 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2021-12-13 00:45+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-12-14 18:09+0000\n"
+"Last-Translator: Guilloux Nicolas <novares.x@gmail.com>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/home-manager/cli/"
+"fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.10-dev\n"
 
 #: home-manager/home-manager:43
 msgid "No configuration file found at %s"
-msgstr ""
+msgstr "Aucun fichier de configuration trouvé à l'emplacement %s"
 
 #: home-manager/home-manager:62
 msgid "No configuration file found. Please create one at %s"
 msgstr ""
+"Aucun fichier de configuration trouvé. Veuillez en créer un à l'emplacement "
+"%s"
 
 #: home-manager/home-manager:105
 msgid "Can't inspect options of a flake configuration"
@@ -31,7 +35,7 @@ msgstr ""
 
 #: home-manager/home-manager:145
 msgid "Can't instantiate a flake configuration"
-msgstr ""
+msgstr "Impossible d'instancier une configuration flake"
 
 #: home-manager/home-manager:220
 msgid ""
@@ -41,72 +45,78 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
+"Il y a %d nouvel élément non lu et pertinent.\n"
+"Vous pouvez le lire en exécutant la commande \"%s news\"."
 msgstr[1] ""
+"Il y a %d nouveaux éléments non lus et pertinents.\n"
+"Vous pouvez les lire en exécutant la commande \"%s news\"."
 
 #: home-manager/home-manager:234
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr ""
+msgstr "Configuration \"news.display\" iconnue \"%s\"."
 
 #: home-manager/home-manager:241
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
-msgstr ""
+msgstr "Veuillez définir la variable d'environnement $EDITOR"
 
 #: home-manager/home-manager:256
 msgid "Cannot run build in read-only directory"
-msgstr ""
+msgstr "Impossible de lancer une compilation dans un dossier en écriture seule"
 
 #: home-manager/home-manager:338
 msgid "No generation with ID %s"
-msgstr ""
+msgstr "Aucune génération avec l'identifiant %s"
 
 #: home-manager/home-manager:340
 msgid "Cannot remove the current generation %s"
-msgstr ""
+msgstr "Impossible de supprimer la génération courante %s"
 
 #: home-manager/home-manager:342
 msgid "Removing generation %s"
-msgstr ""
+msgstr "Suppression de la génération %s"
 
 #: home-manager/home-manager:368
 msgid "No generations to expire"
-msgstr ""
+msgstr "Aucune génération expirée"
 
 #: home-manager/home-manager:378
 msgid "No home-manager packages seem to be installed."
-msgstr ""
+msgstr "Aucun paquet home-manager ne semble être installé."
 
 #: home-manager/home-manager:435
 msgid "Unknown argument %s"
-msgstr ""
+msgstr "Aucun argument %s"
 
 #: home-manager/home-manager:450
 msgid "This will remove Home Manager from your system."
-msgstr ""
+msgstr "Cela va supprimer Home Manager de votre système."
 
 #: home-manager/home-manager:453
+#, fuzzy
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr ""
+msgstr "C'est un \"dry run\", rien ne va pas être désinstaller."
 
 #: home-manager/home-manager:457
 msgid "Really uninstall Home Manager?"
-msgstr ""
+msgstr "Voulez-vous vraiment désinstaller Home Manager ?"
 
 #: home-manager/home-manager:462
 msgid "Switching to empty Home Manager configuration..."
-msgstr ""
+msgstr "Changement vers une configuration vierge de Home Manager..."
 
 #: home-manager/home-manager:474
 msgid "Yay!"
-msgstr ""
+msgstr "Yay !"
 
 #: home-manager/home-manager:481
 msgid "Remove all Home Manager generations?"
-msgstr ""
+msgstr "Supprimer toutes les générations de Home Manager ?"
 
 #: home-manager/home-manager:488
+#, fuzzy
 msgid "All generations are now eligible for garbage collection."
-msgstr ""
+msgstr "Toutes les générations sont maintenant éligibles à la suppression."
 
 #: home-manager/home-manager:491
 msgid "Leaving generations but they may still be garbage collected."
