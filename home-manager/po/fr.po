@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2021-12-13 00:45+0100\n"
-"PO-Revision-Date: 2021-12-14 18:09+0000\n"
-"Last-Translator: Guilloux Nicolas <novares.x@gmail.com>\n"
+"PO-Revision-Date: 2021-12-16 08:56+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/home-manager/cli/"
 "fr/>\n"
 "Language: fr\n"
@@ -31,7 +31,7 @@ msgstr ""
 
 #: home-manager/home-manager:105
 msgid "Can't inspect options of a flake configuration"
-msgstr ""
+msgstr "Impossible d'inspecter les options d'une configuration en flocons"
 
 #: home-manager/home-manager:145
 msgid "Can't instantiate a flake configuration"
@@ -93,9 +93,8 @@ msgid "This will remove Home Manager from your system."
 msgstr "Cela va supprimer Home Manager de votre système."
 
 #: home-manager/home-manager:453
-#, fuzzy
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr "C'est un \"dry run\", rien ne va pas être désinstaller."
+msgstr "C'est un essai, rien ne sera réellement désinstallé."
 
 #: home-manager/home-manager:457
 msgid "Really uninstall Home Manager?"
@@ -114,30 +113,33 @@ msgid "Remove all Home Manager generations?"
 msgstr "Supprimer toutes les générations de Home Manager ?"
 
 #: home-manager/home-manager:488
-#, fuzzy
 msgid "All generations are now eligible for garbage collection."
-msgstr "Toutes les générations sont maintenant éligibles à la suppression."
+msgstr ""
+"Toutes les générations sont maintenant éligibles pour la collecte des "
+"ordures."
 
 #: home-manager/home-manager:491
 msgid "Leaving generations but they may still be garbage collected."
 msgstr ""
+"Les générations sortantes mais elles peuvent encore être collectées par les "
+"ordures."
 
 #: home-manager/home-manager:495
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr ""
+msgstr "Home Manager est désinstallé mais votre home.nix reste intact."
 
 #: home-manager/home-manager:645
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s : option inconnue « %s »"
 
 #: home-manager/home-manager:646
 msgid "Run '%s --help' for usage help"
-msgstr ""
+msgstr "Exécuter « %s --help » pour de l'aide sur l'utilisation"
 
 #: home-manager/home-manager:680
 msgid "expire-generations expects one argument, got %d."
-msgstr ""
+msgstr "expire-generations attend un argument, a obtenu %d."
 
 #: home-manager/home-manager:702
 msgid "Unknown command: %s"
-msgstr ""
+msgstr "Commande inconnue : %s"
