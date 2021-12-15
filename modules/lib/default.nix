@@ -19,6 +19,7 @@ rec {
   assertions = import ./assertions.nix { inherit lib; };
 
   gvariant = import ./gvariant.nix { inherit lib; };
+  lists = import ./lists.nix { inherit lib; };
   maintainers = import ./maintainers.nix;
   strings = import ./strings.nix { inherit lib; };
   types = import ./types.nix { inherit dag gvariant lib; };
