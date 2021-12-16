@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2021-12-13 00:45+0100\n"
+"POT-Creation-Date: 2021-12-14 18:53+0100\n"
 "PO-Revision-Date: 2021-12-13 20:50+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
-"home-manager/cli/nb_NO/>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/home-"
+"manager/cli/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,3 +137,36 @@ msgstr "«expire-generations» forventet ett argument, mottok %d."
 #: home-manager/home-manager:702
 msgid "Unknown command: %s"
 msgstr "Ukjent kommando: %s"
+
+#: home-manager/install.nix:22
+msgid "Creating initial Home Manager configuration..."
+msgstr ""
+
+#: home-manager/install.nix:66
+msgid "Creating initial Home Manager generation..."
+msgstr ""
+
+#. translators: The "%s" specifier will be replaced by a file path.
+#: home-manager/install.nix:71
+msgid ""
+"All done! The home-manager tool should now be installed and you can edit\n"
+"\n"
+"    %s\n"
+"\n"
+"to configure Home Manager. Run 'man home-configuration.nix' to\n"
+"see all available options."
+msgstr ""
+
+#. translators: The "%s" specifier will be replaced by a URL.
+#: home-manager/install.nix:76
+msgid ""
+"Uh oh, the installation failed! Please create an issue at\n"
+"\n"
+"    %s\n"
+"\n"
+"if the error seems to be the fault of Home Manager."
+msgstr ""
+
+#: home-manager/install.nix:83
+msgid "This derivation is not buildable, please run it using nix-shell."
+msgstr ""
