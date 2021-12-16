@@ -1200,6 +1200,19 @@ therefore discouraged.
         }
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/pam.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/pam.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-pam.yubico.authorizedYubiKeys.ids"></a><a class="term" href="options.html#opt-pam.yubico.authorizedYubiKeys.ids"><code class="option">pam.yubico.authorizedYubiKeys.ids</code></a></span></dt><dd><p>List of authorized YubiKey token IDs. Refer to
+<a class="link" href="https://developers.yubico.com/yubico-pam" target="_top">https://developers.yubico.com/yubico-pam</a>
+for details on how to obtain the token ID of a YubiKey.
+</p><p><span class="emphasis"><em>Type:</em></span> list of string of length 12s</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/pam.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/pam.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-pam.yubico.authorizedYubiKeys.path"></a><a class="term" href="options.html#opt-pam.yubico.authorizedYubiKeys.path"><code class="option">pam.yubico.authorizedYubiKeys.path</code></a></span></dt><dd><p>File path to write the authorized YubiKeys,
+relative to <code class="envar">HOME</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">".yubico/authorized_yubikeys"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/pam.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/pam.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.abook.enable"></a><a class="term" href="options.html#opt-programs.abook.enable"><code class="option">programs.abook.enable</code></a></span></dt><dd><p>Whether to enable Abook.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/abook.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/abook.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.abook.extraConfig"></a><a class="term" href="options.html#opt-programs.abook.extraConfig"><code class="option">programs.abook.extraConfig</code></a></span></dt><dd><p>Extra lines added to <code class="filename">$HOME/.config/abook/abookrc</code>.
