@@ -18,11 +18,9 @@ Run tests:
 pages:
   stage: deploy
   script:
-    - mkdir -p ~/.config/nixpkgs
-    - echo '{ manual.html.enable = true; }' > ~/.config/nixpkgs/home.nix
-    - nix-shell . -A install
+    - nix-build -A docs.html
     - mkdir public
-    - cp -r ~/.nix-profile/share/doc/home-manager/* public/
+    - cp -r ./result/share/doc/home-manager/* public/
   artifacts:
     paths:
       - public
