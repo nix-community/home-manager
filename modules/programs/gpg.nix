@@ -40,30 +40,40 @@ let
       };
 
       trust = mkOption {
-        type = types.nullOr (types.enum [ 1 2 3 4 5 ]);
+        type = types.nullOr (types.enum ["unknown" 1 "never" 2 "marginal" 3 "full" 4 "ultimate" 5]);
         default = null;
+        apply = v:
+          if isString v then
+            {
+              unknown = 1;
+              never = 2;
+              marginal = 3;
+              full = 4;
+              ultimate = 5;
+            }.${v}
+          else v;
         description = ''
           The amount of trust you have in the key ownership and the care the
           owner puts into signing other keys. The available levels are
           <variablelist>
             <varlistentry>
-              <term><literal>1</literal></term>
+              <term><literal>unknown</literal> or <literal>1</literal></term>
               <listitem><para>I don't know or won't say.</para></listitem>
             </varlistentry>
             <varlistentry>
-              <term><literal>2</literal></term>
+              <term><literal>never</literal> or <literal>2</literal></term>
               <listitem><para>I do NOT trust.</para></listitem>
             </varlistentry>
             <varlistentry>
-              <term><literal>3</literal></term>
+              <term><literal>marginal</literal> or <literal>3</literal></term>
               <listitem><para>I trust marginally.</para></listitem>
             </varlistentry>
             <varlistentry>
-              <term><literal>4</literal></term>
+              <term><literal>full</literal> or <literal>4</literal></term>
               <listitem><para>I trust fully.</para></listitem>
             </varlistentry>
             <varlistentry>
-              <term><literal>5</literal></term>
+              <term><literal>ultimate</literal> or <literal>5</literal></term>
               <listitem><para>I trust ultimately.</para></listitem>
             </varlistentry>
           </variablelist>
@@ -94,7 +104,7 @@ let
         keyId="$(gpgKeyId "$1")"
         trust="$2"
         if [[ -n $keyId ]] ; then
-          echo -e "trust\n$trust\ny\nquit" \
+          { echo trust; echo "$trust"; (( trust == 5 )) && echo y; echo quit; } \
             | ${gpg} --no-tty --command-fd 0 --edit-key "$keyId"
         fi
       }
