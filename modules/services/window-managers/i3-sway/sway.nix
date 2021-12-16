@@ -311,10 +311,10 @@ let
       )}
     ''
   else
-    "") + "\n" + (if cfg.systemdIntegration then ''
-      exec "systemctl --user import-environment; systemctl --user start sway-session.target"
-    '' else
-      "") + cfg.extraConfig);
+    "") + (concatStringsSep "\n" ((optional cfg.systemdIntegration ''
+      exec "systemctl --user import-environment; systemctl --user start sway-session.target"'')
+      ++ (optional (!cfg.xwayland) "xwayland disable")
+      ++ [ cfg.extraConfig ])));
 
   defaultSwayPackage = pkgs.sway.override {
     extraSessionCommands = cfg.extraSessionCommands;
