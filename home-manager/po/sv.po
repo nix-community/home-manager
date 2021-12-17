@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2021-12-14 18:53+0100\n"
-"PO-Revision-Date: 2021-12-15 18:53+0000\n"
+"PO-Revision-Date: 2021-12-17 20:50+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/cli/"
 "sv/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.10\n"
 
 #: home-manager/home-manager:43
 msgid "No configuration file found at %s"
@@ -140,11 +140,11 @@ msgstr "Okänt kommando: %s"
 
 #: home-manager/install.nix:22
 msgid "Creating initial Home Manager configuration..."
-msgstr ""
+msgstr "Skapar initial Home Manager-konfiguration..."
 
 #: home-manager/install.nix:66
 msgid "Creating initial Home Manager generation..."
-msgstr ""
+msgstr "Skapar initial Home Manager-generation..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/install.nix:71
@@ -156,6 +156,12 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
+"Färdig! Verktyget home-manager borde nu vara installerat och du kan editera\n"
+"\n"
+"    %s\n"
+"\n"
+"för att konfigurera Home Manager. Kör 'man home-configuration.nix' för\n"
+"att se alla tillgängliga alternativ."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/install.nix:76
@@ -166,7 +172,12 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
+"Ajdå, installationen misslyckades! Skapa gärna en rapport på\n"
+"\n"
+"    %s\n"
+"\n"
+"om problemet verkar bero på något Home Manager gör fel."
 
 #: home-manager/install.nix:83
 msgid "This derivation is not buildable, please run it using nix-shell."
-msgstr ""
+msgstr "Denna derivation är inte byggbar, kör den med nix-shell istället."
