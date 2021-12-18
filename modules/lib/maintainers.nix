@@ -13,6 +13,12 @@
     github = "amesgen";
     githubId = 15369874;
   };
+  CarlosLoboxyz = {
+    name = "Carlos Lobo";
+    email = "86011416+CarlosLoboxyz@users.noreply.github.com";
+    github = "CarlosLoboxyz";
+    githubId = 86011416;
+  };
   justinlovinger = {
     name = "Justin Lovinger";
     email = "git@justinlovinger.com";

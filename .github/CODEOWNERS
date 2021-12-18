@@ -409,6 +409,8 @@
 /modules/targets/darwin                               @midchildan
 /tests/modules/targets-darwin                         @midchildan
 
+/modules/programs/tint2.nix                           @CarlosLoboxyz
+
 Makefile                                              @thiagokokada
 
 /modules/services/swayidle.nix                        @c0deaddict
