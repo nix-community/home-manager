@@ -6,10 +6,20 @@ This is the current unstable branch and the information in this section is there
 [[sec-release-22.05-highlights]]
 === Highlights
 
+:hm-weblate: https://hosted.weblate.org/projects/home-manager/
+
 This release has the following notable changes:
 
 * The `programs.waybar.settings.modules` option was removed.
 Waybar modules should now be declared directly under `programs.waybar.settings`.
+
+* Home Manager now partially support translation of texts into different languages.
+Note, the support is quite limited at the moment.
+Specifically, it only applies to parts of the system written in the Bash language,
+such as the `home-manager` command line tool and the activation script.
++
+If you would like to contribute to the translation effort
+then you can do so through the {hm-weblate}[Home Manager Weblate project].
 
 [[sec-release-22.05-state-version-changes]]
 === State Version Changes
