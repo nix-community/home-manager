@@ -7,6 +7,7 @@ let
   cfg = config.gtk;
   cfg2 = config.gtk.gtk2;
   cfg3 = config.gtk.gtk3;
+  cfg4 = config.gtk.gtk4;
 
   toGtk3Ini = generators.toINI {
     mkKeyValue = key: value:
@@ -136,6 +137,21 @@ in {
           '';
         };
       };
+
+      gtk4 = {
+        extraConfig = mkOption {
+          type = with types; attrsOf (either bool (either int str));
+          default = { };
+          example = {
+            gtk-cursor-blink = false;
+            gtk-recent-files-limit = 20;
+          };
+          description = ''
+            Extra configuration options to add to
+            <filename>$XDG_CONFIG_HOME/gtk-4.0/settings.ini</filename>.
+          '';
+        };
+      };
     };
   };
 
@@ -180,6 +196,9 @@ in {
     xdg.configFile."gtk-3.0/bookmarks" = mkIf (cfg3.bookmarks != [ ]) {
       text = concatMapStrings (l: l + "\n") cfg3.bookmarks;
     };
+
+    xdg.configFile."gtk-4.0/settings.ini".text =
+      toGtk3Ini { Settings = ini // cfg4.extraConfig; };
 
     dconf.settings."org/gnome/desktop/interface" = dconfIni;
   });
