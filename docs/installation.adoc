@@ -167,6 +167,15 @@ home-manager.users.eve = { pkgs, ... }: {
 and after a `nixos-rebuild switch` the user eve's environment should
 include a basic Bash configuration and the packages atool and httpie.
 
+[NOTE]
+====
+If `nixos-rebuild switch` does not result in the environment you expect,
+you can take a look at the output of the Home Manager activation script output using
+
+[source,console]
+$ systemctl status "home-manager-$USER.service"
+====
+
 If you do not plan on having Home Manager manage your shell
 configuration then you must add either
 
