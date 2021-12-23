@@ -197,6 +197,20 @@ in {
 
     systemd.enable = mkEnableOption "Waybar systemd integration";
 
+    systemd.target = mkOption {
+      type = str;
+      default = "graphical-session.target";
+      example = "sway-session.target";
+      description = ''
+        The systemd target that will automatically start the Waybar service.
+        </para>
+        <para>
+        When setting this value to <literal>"sway-session.target"</literal>,
+        make sure to also enable <option>wayland.windowManager.sway.systemdIntegration</option>,
+        otherwise the service may never be started.
+      '';
+    };
+
     style = mkOption {
       type = nullOr (either path str);
       default = null;
@@ -309,7 +323,7 @@ in {
           KillMode = "mixed";
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = { WantedBy = [ cfg.systemd.target ]; };
       };
     })
   ]);

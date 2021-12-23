@@ -1,5 +1,5 @@
 [Install]
-WantedBy=graphical-session.target
+WantedBy=sway-session.target
 
 [Service]
 ExecReload=kill -SIGUSR2 $MAINPID
