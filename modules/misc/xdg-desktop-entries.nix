@@ -147,7 +147,7 @@ let
       extraDesktopEntries = config.settings;
     };
 in {
-  meta.maintainers = with maintainers; [ cwyc ];
+  meta.maintainers = [ hm.maintainers.cwyc ];
 
   options.xdg.desktopEntries = mkOption {
     description = ''
