@@ -100,7 +100,7 @@ let
   cfg = config.services.trayer;
 
 in {
-  meta.maintainers = [ maintainers.mager ];
+  meta.maintainers = [ hm.maintainers.mager ];
 
   options = {
     services.trayer = {
