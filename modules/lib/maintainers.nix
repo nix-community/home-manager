@@ -157,4 +157,10 @@
     github = "t4ccer";
     githubId = 64430288;
   };
+  nurelin = {
+    name = "nurelin";
+    email = "nurelin@users.noreply.github.com";
+    github = "nurelin";
+    githubId = 5276274;
+  };
 }
