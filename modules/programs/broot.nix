@@ -15,7 +15,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.aheaume ];
+  meta.maintainers = [ hm.maintainers.aheaume ];
 
   options.programs.broot = {
     enable = mkEnableOption "Broot, a better way to navigate directories";

@@ -145,4 +145,10 @@
     github = "onny";
     githubId = 757752;
   };
+  aheaume = {
+    name = "aheaume";
+    email = "aheaume@users.noreply.github.com";
+    github = "aheaume";
+    githubId = 13830042;
+  };
 }
