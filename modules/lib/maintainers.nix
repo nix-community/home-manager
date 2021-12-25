@@ -163,4 +163,10 @@
     github = "nurelin";
     githubId = 5276274;
   };
+  pltanton = {
+    name = "pltanton";
+    email = "plotnikovanton@gmail.com";
+    github = "pltanton";
+    githubId = 4561823;
+  };
 }
