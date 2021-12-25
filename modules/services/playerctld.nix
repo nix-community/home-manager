@@ -7,7 +7,7 @@ let
   cfg = config.services.playerctld;
 
 in {
-  meta.maintainers = [ maintainers.fendse ];
+  meta.maintainers = [ hm.maintainers.fendse ];
 
   options.services.playerctld = {
     enable = mkEnableOption "playerctld daemon";
