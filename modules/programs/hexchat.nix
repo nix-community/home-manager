@@ -229,7 +229,7 @@ let
     ]);
 
 in {
-  meta.maintainers = with maintainers; [ superherointj thiagokokada ];
+  meta.maintainers = with maintainers; [ thiagokokada ];
 
   options.programs.hexchat = with types; {
     enable = mkEnableOption "HexChat, a graphical IRC client";

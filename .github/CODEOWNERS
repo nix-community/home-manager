@@ -92,7 +92,7 @@
 
 /modules/programs/go.nix                              @rvolosatovs
 
-/modules/programs/hexchat.nix                         @superherointj @thiagokokada
+/modules/programs/hexchat.nix                         @thiagokokada
 /tests/modules/programs/hexchat                       @thiagokokada
 
 /modules/programs/himalaya.nix                        @ambroisie
