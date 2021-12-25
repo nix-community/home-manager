@@ -7,7 +7,7 @@
 /modules/i18n/input-method                            @Kranzes
 /tests/modules/i18n/input-method                      @Kranzes
 
-/modules/misc/dconf.nix                               @gnidorah @rycee
+/modules/misc/dconf.nix                               @rycee
 
 /modules/misc/fontconfig.nix                          @rycee
 /tests/modules/misc/fontconfig                        @rycee

@@ -11,7 +11,7 @@ let
   mkIniKeyValue = key: value: "${key}=${toString (hm.gvariant.mkValue value)}";
 
 in {
-  meta.maintainers = [ maintainers.gnidorah maintainers.rycee ];
+  meta.maintainers = [ maintainers.rycee ];
 
   options = {
     dconf = {
