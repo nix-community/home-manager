@@ -49,33 +49,31 @@ in {
   };
 
   config = lib.mkIf (cfg != { }) {
-    home.activation.kconfig = let
-      kwriteconfig5 = "${pkgs.plasma5Packages.kconfig}/bin/kwriteconfig5";
-      qdbus = "${pkgs.libsForQt5.qt5.qttools.bin}/bin/qdbus";
-      dbusSend = "${pkgs.dbus}/bin/dbus-send";
-    in lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      source ${
+    home.activation.kconfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      . ${
         pkgs.runCommandLocal "kwriteconfig.sh" {
+          nativeBuildInputs = [ pkgs.jq ];
           passAsFile = [ "cfg" "jqScript" ];
           cfg = builtins.toJSON (lib.mapAttrsRecursive toKconfVal cfg);
-          jqScript = ''
-            . as $cfg|[
-              paths(strings)|
-              (. as $p|$cfg|getpath($p)) as $el|
-              .[0] as $file|
-              .[-1] as $key|
-              .[1:-2]|map("--group '\(.)'")|join(" ")|
-              "run ${kwriteconfig5} --file '${config.xdg.configHome}/\($file)' \(.) --key \($key) \($el)"
-            ]|join("\n")
-          '';
+          jqScript = let
+            getPaths = "[paths(scalars)]";
+            w =
+              "run ${pkgs.plasma5Packages.kconfig}/bin/kwriteconfig5 --file ${config.xdg.configHome}/";
+            g = ''" --group "'';
+            groupPortion = ".[1:-2]|join(${g})";
+            getVal = "$G|getpath($P)";
+            mkExecLn = ''
+              "${w}"+.[0]+${g}+(${groupPortion})+" --key "+.[-1]+(${getVal})'';
+            toSingleStr = ''join("\n")'';
+          in ". as $G|${getPaths}|map(. as $P|${mkExecLn})|${toSingleStr}";
         } ''jq -rf "$jqScriptPath" <"$cfgPath" >"$out"''
       }
 
       # TODO: some way to only call the dbus calls needed
-      run ${qdbus} org.kde.KWin /KWin reconfigure || echo "KWin reconfigure failed"
+      run ${pkgs.libsForQt5.qt5.qttools.bin}/bin/qdbus org.kde.KWin /KWin reconfigure || echo "KWin reconfigure failed"
       # the actual values are https://github.com/KDE/plasma-workspace/blob/c97dddf20df5702eb429b37a8c10b2c2d8199d4e/kcms/kcms-common_p.h#L13
       for changeType in {0..10}; do
-        run ${dbusSend} /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:$changeType int32:0 || echo "KGlobalSettings.notifyChange $changeType failed"
+        run ${pkgs.dbus}/bin/dbus-send /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:$changeType int32:0 || echo "KGlobalSettings.notifyChange failed"
       done
     '';
   };
