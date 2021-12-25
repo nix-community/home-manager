@@ -44,7 +44,7 @@ let
   });
 
 in {
-  meta.maintainers = with maintainers; [ olmokramer ];
+  meta.maintainers = [ hm.maintainers.olmokramer ];
 
   options.programs.ncmpcpp = {
     enable =
