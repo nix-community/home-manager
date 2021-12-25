@@ -151,4 +151,10 @@
     github = "aheaume";
     githubId = 13830042;
   };
+  t4ccer = {
+    name = "t4ccer";
+    email = "t4ccer@users.noreply.github.com";
+    github = "t4ccer";
+    githubId = 64430288;
+  };
 }
