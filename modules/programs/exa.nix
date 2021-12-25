@@ -15,7 +15,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.kalhauge ];
+  meta.maintainers = [ hm.maintainers.kalhauge ];
 
   options.programs.exa = {
     enable =
