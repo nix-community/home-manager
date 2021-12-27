@@ -136,7 +136,7 @@ in {
 
   config = (let
     customRC = ''
-      ${concatStringsSep "\n" (filter (v: v != "") (mapAttrsToList setExpr
+      ${concatStringsSep "\n" (remove "" (mapAttrsToList setExpr
         (builtins.intersectAttrs knownSettings cfg.settings)))}
 
       ${cfg.extraConfig}

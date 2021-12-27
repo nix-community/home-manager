@@ -46,10 +46,10 @@ let
 
   moduleConfigure = {
     packages.home-manager = {
-      start = filter (f: f != null) (map
+      start = remove null (map
         (x: if x ? plugin && x.optional == true then null else (x.plugin or x))
         cfg.plugins);
-      opt = filter (f: f != null)
+      opt = remove null
         (map (x: if x ? plugin && x.optional == true then x.plugin else null)
           cfg.plugins);
     };

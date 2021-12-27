@@ -5,8 +5,7 @@ with lib;
 let
   cfg = config.services.fnott;
 
-  concatStringsSep' = sep: list:
-    concatStringsSep sep (filter (x: x != "") list);
+  concatStringsSep' = sep: list: concatStringsSep sep (remove "" list);
 
   iniFormat = pkgs.formats.ini { };
 in {

@@ -212,7 +212,7 @@ let
   # Note: Missing option `D=`.
   transformChannel = channelName:
     let channel = cfg.channels.${channelName};
-    in concatStringsSep "\n" (filter (v: v != null) [
+    in concatStringsSep "\n" (remove null [
       "" # leave a space between one server and another
       (transformField "N" channelName)
       (loginMethod channel)

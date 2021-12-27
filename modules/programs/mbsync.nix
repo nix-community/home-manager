@@ -158,8 +158,8 @@ let
       genGroupsChannels = group:
         concatStringsSep "\n" (genChannelStrings group.name group.channels);
       # Generate all channel configurations for all groups for this account.
-    in concatStringsSep "\n" (filter (s: s != "")
-      (mapAttrsToList (name: group: genGroupsChannels group) groups));
+    in concatStringsSep "\n"
+    (remove "" (mapAttrsToList (name: group: genGroupsChannels group) groups));
 
   # Given the attr set of groups, return a string which maps channels to groups
   genAccountGroups = groups:
@@ -177,9 +177,9 @@ let
       # of the groups and its consituent channels.
       genGroupsStrings = mapAttrsToList (name: info:
         concatStringsSep "\n" (genGroupChannelString groups.${name})) groups;
-    in concatStringsSep "\n\n" (filter (s: s != "")
-      genGroupsStrings) # filter for the cases of empty groups
-    + "\n"; # Put all strings together.
+      # Join all non-empty groups.
+      combined = concatStringsSep "\n\n" (remove "" genGroupsStrings) + "\n";
+    in combined;
 
   genGroupConfig = name: channels:
     let

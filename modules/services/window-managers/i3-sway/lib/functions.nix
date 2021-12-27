@@ -56,12 +56,8 @@ rec {
 
   fontConfigStr = let
     toFontStr = { names, style ? "", size ? "" }:
-      optionalString (names != [ ]) concatStringsSep " " (filter (x: x != "") [
-        "font"
-        "pango:${concatStringsSep ", " names}"
-        style
-        size
-      ]);
+      optionalString (names != [ ]) concatStringsSep " "
+      (remove "" [ "font" "pango:${concatStringsSep ", " names}" style size ]);
   in fontCfg:
   if isList fontCfg then
     toFontStr { names = fontCfg; }
