@@ -38,7 +38,7 @@ in {
         description = ''
           Configuration written to
           <filename>$XDG_CONFIG_HOME/alacritty/alacritty.yml</filename>. See
-          <link xlink:href="https://github.com/jwilm/alacritty/blob/master/alacritty.yml"/>
+          <link xlink:href="https://github.com/alacritty/alacritty/blob/master/alacritty.yml"/>
           for the default configuration.
         '';
       };
