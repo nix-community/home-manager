@@ -5,7 +5,7 @@ with lib;
 let cfg = config.services.wlsunset;
 
 in {
-  meta.maintainers = [ maintainers.matrss ];
+  meta.maintainers = [ hm.maintainers.matrss ];
 
   options.services.wlsunset = {
     enable = mkEnableOption "Whether to enable wlsunset.";

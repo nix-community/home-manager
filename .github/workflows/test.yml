@@ -24,6 +24,7 @@ jobs:
           echo "Error: literalExample should be replaced by literalExpression" > /dev/stderr
           exit 1
         fi
+    - run: nix-build -A docs.jsonModuleMaintainers
     - run: ./format -c
     - run: nix-shell . -A install
     - run: nix-shell --arg enableBig false --pure tests -A run.all

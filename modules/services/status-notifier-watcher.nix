@@ -7,7 +7,7 @@ let
   cfg = config.services.status-notifier-watcher;
 
 in {
-  meta.maintainers = [ maintainers.pltanton ];
+  meta.maintainers = [ hm.maintainers.pltanton ];
 
   options = {
     services.status-notifier-watcher = {

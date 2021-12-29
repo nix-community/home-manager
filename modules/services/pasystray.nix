@@ -3,7 +3,7 @@
 with lib;
 
 {
-  meta.maintainers = [ maintainers.pltanton ];
+  meta.maintainers = [ hm.maintainers.pltanton ];
 
   options = {
     services.pasystray = { enable = mkEnableOption "PulseAudio system tray"; };

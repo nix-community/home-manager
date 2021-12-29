@@ -55,5 +55,5 @@ in {
     xdg.configFile."xmobar/.xmobarrc".text = cfg.extraConfig;
   };
 
-  meta.maintainers = with maintainers; [ t4ccer ];
+  meta.maintainers = [ hm.maintainers.t4ccer ];
 }

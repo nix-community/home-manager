@@ -145,4 +145,28 @@
     github = "onny";
     githubId = 757752;
   };
+  aheaume = {
+    name = "aheaume";
+    email = "aheaume@users.noreply.github.com";
+    github = "aheaume";
+    githubId = 13830042;
+  };
+  t4ccer = {
+    name = "t4ccer";
+    email = "t4ccer@users.noreply.github.com";
+    github = "t4ccer";
+    githubId = 64430288;
+  };
+  nurelin = {
+    name = "nurelin";
+    email = "nurelin@users.noreply.github.com";
+    github = "nurelin";
+    githubId = 5276274;
+  };
+  pltanton = {
+    name = "pltanton";
+    email = "plotnikovanton@gmail.com";
+    github = "pltanton";
+    githubId = 4561823;
+  };
 }

@@ -5,6 +5,7 @@ rec {
     html = manual.html;
     manPages = manPages;
     json = options.json;
+    jsonModuleMaintainers = jsonModuleMaintainers; # Unstable, mainly for CI.
   };
 
   home-manager = pkgs.callPackage ./home-manager { path = toString ./.; };

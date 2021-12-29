@@ -117,4 +117,14 @@ in {
   manPages = docs.manPages;
 
   manual = { inherit (docs) html htmlOpenTool; };
+
+  # Unstable, mainly for CI.
+  jsonModuleMaintainers = pkgs.writeText "hm-module-maintainers.json" (let
+    result = lib.evalModules {
+      modules = import ../modules/modules.nix {
+        inherit lib pkgs;
+        check = false;
+      } ++ [ scrubbedPkgsModule ];
+    };
+  in builtins.toJSON result.config.meta.maintainers);
 }

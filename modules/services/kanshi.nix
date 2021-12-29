@@ -128,7 +128,7 @@ let
     '';
 in {
 
-  meta.maintainers = [ maintainers.nurelin ];
+  meta.maintainers = [ hm.maintainers.nurelin ];
 
   options.services.kanshi = {
     enable = mkEnableOption
