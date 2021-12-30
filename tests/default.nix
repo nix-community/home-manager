@@ -89,6 +89,7 @@ import nmt {
     ./modules/programs/powerline-go
     ./modules/programs/qutebrowser
     ./modules/programs/readline
+    ./modules/programs/sagemath
     ./modules/programs/sbt
     ./modules/programs/scmpuff
     ./modules/programs/sm64ex

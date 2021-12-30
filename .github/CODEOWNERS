@@ -194,6 +194,9 @@
 
 /modules/programs/rtorrent.nix                        @marsam
 
+/modules/programs/sagemath.nix                        @kirelagin
+/tests/modules/programs/sagemath                      @kirelagin
+
 /modules/programs/sbt.nix                             @kubukoz
 /tests/modules/programs/sbt                           @kubukoz
 
