@@ -110,6 +110,14 @@ in {
       '';
     };
 
+    finalPackage = mkOption {
+      type = types.package;
+      readOnly = true;
+      description = ''
+        Resulting customized rofi package.
+      '';
+    };
+
     plugins = mkOption {
       default = [ ];
       type = types.listOf types.package;
@@ -249,14 +257,15 @@ in {
       inherit value;
     };
 
-    home.packages = let
+    programs.rofi.finalPackage = let
       rofiWithPlugins = cfg.package.override
         (old: rec { plugins = (old.plugins or [ ]) ++ cfg.plugins; });
-      rofiPackage = if builtins.hasAttr "override" cfg.package then
-        rofiWithPlugins
-      else
-        cfg.package;
-    in [ rofiPackage ];
+    in if builtins.hasAttr "override" cfg.package then
+      rofiWithPlugins
+    else
+      cfg.package;
+
+    home.packages = [ cfg.finalPackage ];
 
     home.file."${cfg.configPath}".text = toRasi {
       configuration = ({
