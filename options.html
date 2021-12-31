@@ -10040,6 +10040,67 @@ in
   "${xmonad}/bin/xmonad";
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/xsession.nix#blob-path" target="_top">
                     &lt;home-manager/modules/xsession.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.herbstluftwm.enable"></a><a class="term" href="options.html#opt-xsession.windowManager.herbstluftwm.enable"><code class="option">xsession.windowManager.herbstluftwm.enable</code></a></span></dt><dd><p>Whether to enable herbstluftwm window manager..</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.herbstluftwm.package"></a><a class="term" href="options.html#opt-xsession.windowManager.herbstluftwm.package"><code class="option">xsession.windowManager.herbstluftwm.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>herbstluftwm</strong></span> and
+<span class="command"><strong>herbstclient</strong></span> commands.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.herbstluftwm</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.herbstluftwm.extraConfig"></a><a class="term" href="options.html#opt-xsession.windowManager.herbstluftwm.extraConfig"><code class="option">xsession.windowManager.herbstluftwm.extraConfig</code></a></span></dt><dd><p>Extra configuration lines to add verbatim to
+<code class="filename">$XDG_CONFIG_HOME/herbstluftwm/autostart</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
+herbstclient set_layout max
+herbstclient detect_monitors
+''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.herbstluftwm.keybinds"></a><a class="term" href="options.html#opt-xsession.windowManager.herbstluftwm.keybinds"><code class="option">xsession.windowManager.herbstluftwm.keybinds</code></a></span></dt><dd><p>Herbstluftwm keybinds.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  Mod4-o = "split right";
+  Mod4-u = "split bottom";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.herbstluftwm.mousebinds"></a><a class="term" href="options.html#opt-xsession.windowManager.herbstluftwm.mousebinds"><code class="option">xsession.windowManager.herbstluftwm.mousebinds</code></a></span></dt><dd><p>Herbstluftwm mousebinds.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  Mod4-B1 = "move";
+  Mod4-B3 = "resize";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.herbstluftwm.rules"></a><a class="term" href="options.html#opt-xsession.windowManager.herbstluftwm.rules"><code class="option">xsession.windowManager.herbstluftwm.rules</code></a></span></dt><dd><p>Herbstluftwm rules.</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[
+  "windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' focus=on pseudotile=on"
+  "windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off"
+]
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.herbstluftwm.settings"></a><a class="term" href="options.html#opt-xsession.windowManager.herbstluftwm.settings"><code class="option">xsession.windowManager.herbstluftwm.settings</code></a></span></dt><dd><p>Herbstluftwm settings.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of boolean or signed integer or strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  gapless_grid = false;
+  window_border_width = 1;
+  window_border_active_color = "#FF0000";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.herbstluftwm.tags"></a><a class="term" href="options.html#opt-xsession.windowManager.herbstluftwm.tags"><code class="option">xsession.windowManager.herbstluftwm.tags</code></a></span></dt><dd><p>Tags to create on startup.</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ "work" "browser" "music" "gaming" ]
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.enable"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.enable"><code class="option">xsession.windowManager.i3.enable</code></a></span></dt><dd><p>Whether to enable i3 window manager..</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.package"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.package"><code class="option">xsession.windowManager.i3.package</code></a></span></dt><dd><p>i3 package to use.
