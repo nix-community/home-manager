@@ -86,6 +86,7 @@ import nmt {
     ./modules/programs/nix-index
     ./modules/programs/nnn
     ./modules/programs/nushell
+    ./modules/programs/pandoc
     ./modules/programs/pet
     ./modules/programs/powerline-go
     ./modules/programs/qutebrowser

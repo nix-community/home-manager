@@ -1,0 +1,9 @@
+\documentclass[a4paper]{scrartcl}
+
+$if(title)$\title{$title$}$endif$
+$if(author)$\author{$for(author)$$author$$sep$ \and $endfor$}$endif$
+
+\begin{document}
+\maketitle
+$body$
+\end{document}

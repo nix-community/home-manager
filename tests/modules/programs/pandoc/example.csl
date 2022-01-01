@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" default-locale="en-US">
+  <info>
+    <title>A trivial CSL style for tests</title>
+    <id>https://github.com/nix-community/home-manager/tree/master/tests/modules/tools/pandoc/example.csl</id>
+    <link href="https://github.com/nix-community/home-manager/tree/master/tests/modules/tools/pandoc/example.csl" rel="self"/>
+    <link href=""https://www.zotero.org/styles/association-for-computing-machinery rel="independent-parent"/>
+    <link href="http://aem.asm.org/" rel="documentation"/>
+    <category citation-format="numeric"/>
+    <category field="engineering"/>
+  </info>
+</style>

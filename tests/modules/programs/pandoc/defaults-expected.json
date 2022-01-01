@@ -1,0 +1,7 @@
+{
+  "citeproc": true,
+  "metadata": {
+    "author": "John Doe"
+  },
+  "pdf-engine": "xelatex"
+}

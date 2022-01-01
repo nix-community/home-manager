@@ -2380,6 +2380,13 @@ in
           A new module is available: 'programs.tint2'.
         '';
       }
+
+      {
+        time = "2022-01-22T17:39:20+00:00";
+        message = ''
+          A new module is available: 'programs.pandoc'.
+        '';
+      }
     ];
   };
 }

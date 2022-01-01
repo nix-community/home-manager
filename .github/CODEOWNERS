@@ -176,6 +176,9 @@
 
 /modules/programs/openssh.nix                         @rycee
 
+/modules/programs/pandoc.nix                          @kirelagin
+/tests/modules/programs/pandoc                        @kirelagin
+
 /modules/programs/password-store.nix                  @pacien
 
 /modules/programs/pazi.nix                            @marsam

@@ -117,6 +117,7 @@ let
     ./programs/octant.nix
     ./programs/offlineimap.nix
     ./programs/opam.nix
+    ./programs/pandoc.nix
     ./programs/password-store.nix
     ./programs/pazi.nix
     ./programs/pet.nix
