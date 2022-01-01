@@ -148,6 +148,7 @@ let
     ./programs/vim.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
+    ./programs/watson.nix
     ./programs/waybar.nix
     ./programs/xmobar.nix
     ./programs/z-lua.nix

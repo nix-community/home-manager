@@ -101,6 +101,7 @@ import nmt {
     ./modules/programs/tmux
     ./modules/programs/topgrade
     ./modules/programs/vscode
+    ./modules/programs/watson
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/xresources
