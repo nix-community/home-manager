@@ -43,11 +43,12 @@ complete -c home-manager -n "__fish_use_subcommand" -x -a "expire-generations" -
 complete -c home-manager -F -s f -l "file" -d "The home configuration file"
 complete -c home-manager -x -s A -d "Select an expression in the configuration file"
 complete -c home-manager -F -s I -d "Add a path to the Nix expression search path"
-complete -c home-manager -F -l "flake" -d "Use home-manager configuration at specified flake-uri"
+complete -c home-manager -F -l "flake" -d "Use Home Manager configuration at specified flake-uri"
 complete -c home-manager -F -s b -d "Move existing files to new path rather than fail"
 complete -c home-manager -f -s v -l "verbose" -d "Verbose output"
 complete -c home-manager -f -s n -l "dry-run" -d "Do a dry run, only prints what actions would be taken"
 complete -c home-manager -f -s h -l "help" -d "Print this help"
+complete -c home-manager -f -s h -l "version" -d "Print the Home Manager version"
 
 complete -c home-manager -x -l "arg" -d "Override inputs passed to home-manager.nix"
 complete -c home-manager -x -l "argstr" -d "Like --arg but the value is a string"

@@ -505,11 +505,12 @@ function doHelp() {
     echo "  -A ATTRIBUTE      Optional attribute that selects a configuration"
     echo "                    expression in the configuration file."
     echo "  -I PATH           Add a path to the Nix expression search path."
-    echo "  --flake flake-uri Use home-manager configuration at flake-uri"
+    echo "  --flake flake-uri Use Home Manager configuration at flake-uri"
     echo "  -b EXT            Move existing files to new path rather than fail."
     echo "  -v                Verbose output"
     echo "  -n                Do a dry run, only prints what actions would be taken"
     echo "  -h                Print this help"
+    echo "  --version         Print the Home Manager version"
     echo
     echo "Options passed on to nix-build(1)"
     echo

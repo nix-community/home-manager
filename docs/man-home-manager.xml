@@ -103,6 +103,10 @@
    </arg>
 
    <arg>
+    --version
+   </arg>
+
+   <arg>
     <group choice="req">
     <arg choice="plain">
      -n
@@ -428,6 +432,16 @@
     <listitem>
      <para>
       Prints usage information for the <command>home-manager</command> tool.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--version</option>
+    </term>
+    <listitem>
+     <para>
+      Prints the version number of the <command>home-manager</command> tool.
      </para>
     </listitem>
    </varlistentry>

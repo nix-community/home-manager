@@ -11,6 +11,7 @@ _arguments \
   '--impure[impure]' \
   '--keep-failed[keep failed]' \
   '--keep-going[keep going]' \
+  '--version[version]' \
   '(-h --help)'{--help,-h}'[help]' \
   '(-v --verbose)'{--verbose,-v}'[verbose]' \
   '(-n --dry-run)'{--dry-run,-n}'[dry run]' \
