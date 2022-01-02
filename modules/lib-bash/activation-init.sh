@@ -27,17 +27,12 @@ function setupVars() {
         declare -gr oldGenPath
     fi
 
-    $VERBOSE_ECHO "Sanity checking oldGenNum and oldGenPath"
+    $VERBOSE_RUN _i "Sanity checking oldGenNum and oldGenPath"
     if [[ -v oldGenNum && ! -v oldGenPath
             || ! -v oldGenNum && -v oldGenPath ]]; then
-        errorEcho "Invalid profile number and current profile values! These"
-        errorEcho "must be either both empty or both set but are now set to"
-        errorEcho "    '${oldGenNum:-}' and '${oldGenPath:-}'"
-        errorEcho "If you don't mind losing previous profile generations then"
-        errorEcho "the easiest solution is probably to run"
-        errorEcho "   rm $profilesPath/home-manager*"
-        errorEcho "   rm $gcPath/current-home"
-        errorEcho "and trying home-manager switch again. Good luck!"
+        _i $'The previous generation number and path are in conflict! These\nmust be either both empty or both set but are now set to\n\n    \'%s\' and \'%s\'\n\nIf you don\'t mind losing previous profile generations then\nthe easiest solution is probably to run\n\n   rm %s/home-manager*\n   rm %s/current-home\n\nand trying home-manager switch again. Good luck!' \
+           "${oldGenNum:-}" "${oldGenPath:-}" \
+           "$profilesPath" "$gcPath"
         exit 1
     fi
 }
@@ -45,34 +40,35 @@ function setupVars() {
 if [[ -v VERBOSE ]]; then
     export VERBOSE_ECHO=echo
     export VERBOSE_ARG="--verbose"
+    export VERBOSE_RUN=""
 else
     export VERBOSE_ECHO=true
     export VERBOSE_ARG=""
+    export VERBOSE_RUN=true
 fi
 
 _i "Starting Home Manager activation"
 
 # Verify that we can connect to the Nix store and/or daemon. This will
 # also create the necessary directories in profiles and gcroots.
-$VERBOSE_ECHO "Sanity checking Nix"
+$VERBOSE_RUN _i "Sanity checking Nix"
 nix-build --expr '{}' --no-out-link
 
 setupVars
 
 if [[ -v DRY_RUN ]] ; then
-    echo "This is a dry run"
+    _i "This is a dry run"
     export DRY_RUN_CMD=echo
 else
-    $VERBOSE_ECHO "This is a live run"
+    $VERBOSE_RUN _i "This is a live run"
     export DRY_RUN_CMD=""
 fi
 
 if [[ -v VERBOSE ]]; then
-    echo -n "Using Nix version: "
-    nix-env --version
+    _i 'Using Nix version: %s' "$(nix-env --version)"
 fi
 
-$VERBOSE_ECHO "Activation variables:"
+$VERBOSE_RUN _i "Activation variables:"
 if [[ -v oldGenNum ]] ; then
     $VERBOSE_ECHO "  oldGenNum=$oldGenNum"
     $VERBOSE_ECHO "  oldGenPath=$oldGenPath"

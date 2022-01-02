@@ -585,21 +585,8 @@ in
       else
         ''
           if ! $DRY_RUN_CMD nix-env -i ${cfg.path} ; then
-            cat <<EOF
-
-          Oops, nix-env failed to install your new Home Manager profile!
-
-          Perhaps there is a conflict with a package that was installed using
-          'nix-env -i'? Try running
-
-              nix-env -q
-
-          and if there is a conflicting package you can remove it with
-
-              nix-env -e {package name}
-
-          Then try activating your Home Manager configuration again.
-          EOF
+            echo
+            _iError $'Oops, nix-env failed to install your new Home Manager profile!\n\nPerhaps there is a conflict with a package that was installed using\n"nix-env -i"? Try running\n\n    nix-env -q\n\nand if there is a conflicting package you can remove it with\n\n    nix-env -e {package name}\n\nThen try activating your Home Manager configuration again.'
             exit 1
           fi
         ''
