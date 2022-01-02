@@ -10,7 +10,7 @@ let
 
   emacsBin = "${config.programs.emacs.finalPackage}/bin/emacs";
 
-in {
+in lib.mkIf config.test.enableBig {
   programs.emacs = {
     enable = true;
     package = pkgs.emacs-nox;

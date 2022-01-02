@@ -26,7 +26,9 @@ let
       # unnecessary rebuilds of the tests.
       manual.manpages.enable = false;
 
-      imports = [ ./asserts.nix ./stubs.nix ];
+      imports = [ ./asserts.nix ./big-test.nix ./stubs.nix ];
+
+      test.enableBig = enableBig;
     }
   ];
 
@@ -55,6 +57,7 @@ import nmt {
     ./modules/programs/browserpass
     ./modules/programs/dircolors
     ./modules/programs/direnv
+    ./modules/programs/emacs
     ./modules/programs/feh
     ./modules/programs/fish
     ./modules/programs/gh
@@ -101,6 +104,7 @@ import nmt {
   ] ++ lib.optionals isLinux [
     ./modules/config/i18n
     ./modules/i18n/input-method
+    ./modules/misc/debug
     ./modules/misc/gtk
     ./modules/misc/numlock
     ./modules/misc/pam
@@ -109,6 +113,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/programs/firefox
     ./modules/programs/foot
     ./modules/programs/getmail
     ./modules/programs/gnome-terminal
@@ -152,10 +157,5 @@ import nmt {
     ./modules/services/xsettingsd
     ./modules/systemd
     ./modules/targets-linux
-  ] ++ lib.optionals enableBig [
-    ./modules/programs/emacs
-  ] ++ lib.optionals (enableBig && isLinux) [
-    ./modules/misc/debug
-    ./modules/programs/firefox
   ]);
 }
