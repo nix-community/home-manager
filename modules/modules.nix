@@ -142,6 +142,7 @@ let
     ./programs/terminator.nix
     ./programs/termite.nix
     ./programs/texlive.nix
+    ./programs/timidity.nix
     ./programs/tmux.nix
     ./programs/topgrade.nix
     ./programs/urxvt.nix

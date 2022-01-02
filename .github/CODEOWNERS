@@ -221,6 +221,8 @@
 
 /modules/programs/texlive.nix                         @rycee
 
+/modules/programs/timidity.nix                        @amesgen
+
 /modules/programs/topgrade.nix                        @msfjarvis
 /tests/modules/programs/topgrade                      @msfjarvis
 
