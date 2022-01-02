@@ -26,16 +26,7 @@ with lib;
     in ''
       assertFileContent \
         "${configDir}/bottom/bottom.toml" \
-        ${
-          builtins.toFile "example-settings-expected.toml" ''
-            [colors]
-            low_battery_color = "red"
-
-            [flags]
-            avg_cpu = true
-            temperature_type = "c"
-          ''
-        }
+        ${./example-settings-expected.toml}
     '';
   };
 }
