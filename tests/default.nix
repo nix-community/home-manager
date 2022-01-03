@@ -146,6 +146,7 @@ import nmt {
     ./modules/services/polybar
     ./modules/services/redshift-gammastep
     ./modules/services/screen-locker
+    ./modules/services/swayidle
     ./modules/services/sxhkd
     ./modules/services/syncthing
     ./modules/services/trayer

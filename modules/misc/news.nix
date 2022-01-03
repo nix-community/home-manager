@@ -2336,6 +2336,14 @@ in
           A new module is available: 'xsession.windowManager.herbstluftwm'.
         '';
       }
+
+      {
+        time = "2022-01-03T10:34:45+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.swayidle'.
+        '';
+      }
     ];
   };
 }
