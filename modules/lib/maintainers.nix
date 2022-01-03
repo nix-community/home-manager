@@ -169,4 +169,10 @@
     github = "pltanton";
     githubId = 4561823;
   };
+  Philipp-M = {
+    email = "philipp@mildenberger.me";
+    github = "Philipp-M";
+    githubId = 9267430;
+    name = "Philipp Mildenberger";
+  };
 }

@@ -92,6 +92,9 @@
 
 /modules/programs/go.nix                              @rvolosatovs
 
+/modules/programs/helix.nix                           @Philipp-M
+/tests/modules/programs/helix                         @Philipp-M
+
 /modules/programs/hexchat.nix                         @thiagokokada
 /tests/modules/programs/hexchat                       @thiagokokada
 

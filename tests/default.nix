@@ -64,6 +64,7 @@ import nmt {
     ./modules/programs/gh
     ./modules/programs/git
     ./modules/programs/gpg
+    ./modules/programs/helix
     ./modules/programs/himalaya
     ./modules/programs/htop
     ./modules/programs/i3status
