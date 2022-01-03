@@ -399,3 +399,6 @@
 /tests/modules/targets-darwin                         @midchildan
 
 Makefile                                              @thiagokokada
+
+/modules/services/swayidle.nix                        @c0deaddict
+/tests/modules/services/swayidle                      @c0deaddict
