@@ -115,7 +115,16 @@ in {
         example = literalExpression "[ pkgs.vscode-extensions.bbenoist.Nix ]";
         description = ''
           The extensions Visual Studio Code should be started with.
-          These will override but not delete manually installed ones.
+        '';
+      };
+
+      immutableExtensionsDir = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Whether extensions can be installed or updated manually
+          or by Visual Studio Code.
         '';
       };
     };
@@ -124,26 +133,35 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-    home.file = let
-      subDir = "share/vscode/extensions";
-      toPaths = ext:
-        # Links every dir in ext to the extension path.
-        map (k: { "${extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; })
-        (if ext ? vscodeExtUniqueId then
-          [ ext.vscodeExtUniqueId ]
-        else
-          builtins.attrNames (builtins.readDir (ext + "/${subDir}")));
-      toSymlink = concatMap toPaths cfg.extensions;
-      dropNullFields = filterAttrs (_: v: v != null);
-    in foldr (a: b: a // b) {
-      "${configFilePath}" = mkIf (cfg.userSettings != { }) {
-        source = jsonFormat.generate "vscode-user-settings" cfg.userSettings;
-      };
-      "${keybindingsFilePath}" = mkIf (cfg.keybindings != [ ]) {
-        source = jsonFormat.generate "vscode-keybindings"
-          (map dropNullFields cfg.keybindings);
-      };
-    } toSymlink;
+    home.file = mkMerge [
+      (mkIf (cfg.userSettings != { }) {
+        "${configFilePath}".source =
+          jsonFormat.generate "vscode-user-settings" cfg.userSettings;
+      })
+      (mkIf (cfg.keybindings != { })
+        (let dropNullFields = filterAttrs (_: v: v != null);
+        in {
+          "${keybindingsFilePath}".source =
+            jsonFormat.generate "vscode-keybindings"
+            (map dropNullFields cfg.keybindings);
+        }))
+      (mkIf (cfg.extensions != [ ]) (let
+        combinedExtensionsDrv = pkgs.buildEnv {
+          name = "vscode-extensions";
+          paths = cfg.extensions;
+        };
+
+        extensionsFolder = "${combinedExtensionsDrv}/share/vscode/extensions";
+
+        # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
+        addSymlinkToExtension = k: {
+          "${extensionPath}/${k}".source = "${extensionsFolder}/${k}";
+        };
+        extensions = builtins.attrNames (builtins.readDir extensionsFolder);
+      in if cfg.immutableExtensionsDir then {
+        "${extensionPath}".source = extensionsFolder;
+      } else
+        mkMerge (map addSymlinkToExtension extensions)))
+    ];
   };
 }
