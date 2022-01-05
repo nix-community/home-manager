@@ -112,5 +112,12 @@ in {
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
     '';
+
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (
+      # Using mkAfter to make it more likely to appear after other
+      # manipulations of the prompt.
+      mkAfter ''
+        ${pkgs.direnv}/bin/direnv hook fish | source
+      '');
   };
 }
