@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-01-02 11:55+0100\n"
-"PO-Revision-Date: 2021-12-29 08:48+0000\n"
-"Last-Translator: WhiredPlanck <fungdaat31@outlook.com>\n"
+"PO-Revision-Date: 2022-01-05 00:56+0000\n"
+"Last-Translator: ethinx <eth2net@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "home-manager/modules/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -93,7 +93,7 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:68
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "正在使用的 Nix 版本: %s"
 
 #: modules/lib-bash/activation-init.sh:71
 msgid "Activation variables:"
