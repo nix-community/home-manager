@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2021-12-14 18:53+0100\n"
+"POT-Creation-Date: 2022-01-02 11:55+0100\n"
 "PO-Revision-Date: 2022-01-01 17:07+0000\n"
 "Last-Translator: Mario Rodas <rodasmario2@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/home-manager/cli/"
@@ -122,19 +122,19 @@ msgstr ""
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr ""
 
-#: home-manager/home-manager:645
+#: home-manager/home-manager:646
 msgid "%s: unknown option '%s'"
 msgstr ""
 
-#: home-manager/home-manager:646
+#: home-manager/home-manager:647
 msgid "Run '%s --help' for usage help"
 msgstr ""
 
-#: home-manager/home-manager:680
+#: home-manager/home-manager:681
 msgid "expire-generations expects one argument, got %d."
 msgstr ""
 
-#: home-manager/home-manager:702
+#: home-manager/home-manager:703
 msgid "Unknown command: %s"
 msgstr ""
 

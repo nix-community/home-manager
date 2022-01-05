@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2021-12-14 18:53+0100\n"
+"POT-Creation-Date: 2022-01-02 11:55+0100\n"
 "PO-Revision-Date: 2021-12-17 20:50+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/cli/"
@@ -122,19 +122,19 @@ msgstr "Låter generationer vara kvar men de kan fortfarande skräpsamlas."
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager är avinstallerad men din home.nix är orörd."
 
-#: home-manager/home-manager:645
+#: home-manager/home-manager:646
 msgid "%s: unknown option '%s'"
 msgstr "%s: okänt val '%s'"
 
-#: home-manager/home-manager:646
+#: home-manager/home-manager:647
 msgid "Run '%s --help' for usage help"
 msgstr "Kör '%s --help' för användarhjälp"
 
-#: home-manager/home-manager:680
+#: home-manager/home-manager:681
 msgid "expire-generations expects one argument, got %d."
 msgstr "expect-generations förväntar sig ett argument, fick %d."
 
-#: home-manager/home-manager:702
+#: home-manager/home-manager:703
 msgid "Unknown command: %s"
 msgstr "Okänt kommando: %s"
 

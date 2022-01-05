@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2021-12-14 18:53+0100\n"
+"POT-Creation-Date: 2022-01-02 11:55+0100\n"
 "PO-Revision-Date: 2021-12-28 12:41+0000\n"
 "Last-Translator: WhiredPlanck <fungdaat31@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -119,19 +119,19 @@ msgstr "保留世代，但它们仍然可能被垃圾回收。"
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager 已卸载，但未改动您的 home.nix 配置文件。"
 
-#: home-manager/home-manager:645
+#: home-manager/home-manager:646
 msgid "%s: unknown option '%s'"
 msgstr "%s：未知选项 ‘%s’"
 
-#: home-manager/home-manager:646
+#: home-manager/home-manager:647
 msgid "Run '%s --help' for usage help"
 msgstr "运行 ‘%s --help’ 获取用法帮助"
 
-#: home-manager/home-manager:680
+#: home-manager/home-manager:681
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations 须要一个参数，但获取到了 %d 个。"
 
-#: home-manager/home-manager:702
+#: home-manager/home-manager:703
 msgid "Unknown command: %s"
 msgstr "未知命令：%s"
 
