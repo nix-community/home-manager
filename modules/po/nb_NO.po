@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-01-02 11:55+0100\n"
-"PO-Revision-Date: 2021-12-13 20:50+0000\n"
+"PO-Revision-Date: 2022-01-03 12:56+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/home-"
-"manager/modules/nb_NO/>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"home-manager/modules/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
@@ -51,6 +51,18 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"nix-env kunne ikke installere din nye Home Manager-profil!\n"
+"\n"
+"Kanskje det er en konflikt med en pakke som ble installert ved bruk av\n"
+"«nix-env -i«? Prøv å kjøre\n"
+"\n"
+"    nix-env -q\n"
+"\n"
+"og hvis det er en pakke i konflikt kan du fjerne den med\n"
+"\n"
+"    nix-env -e {package name}\n"
+"\n"
+"for så å aktivere ditt Home Manager-oppsett igjen."
 
 #: modules/home-environment.nix:620
 msgid "Activating %s"
@@ -58,9 +70,10 @@ msgstr "Aktiverer %s …"
 
 #: modules/lib-bash/activation-init.sh:30
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr ""
+msgstr "Kontrollerer verdiene av oldGenNum og oldGenPath"
 
 #: modules/lib-bash/activation-init.sh:33
+#, fuzzy
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -75,6 +88,18 @@ msgid ""
 "\n"
 "and trying home-manager switch again. Good luck!"
 msgstr ""
+"Forrige generasjonstall og sti er i konflikt. Disse\n"
+"må enten begge være tomme, eller så må begge settes, men er nå\n"
+"\n"
+"    «%s« og «%s«\n"
+"\n"
+"Hvis du ikke bryr deg om å miste tidligere profilgenereringer\n"
+"er det enkleste å kjøre\n"
+"\n"
+"   rm %s/home-manager*\n"
+"   rm %s/current-home\n"
+"\n"
+"for så å prøve «home-manager»-bryteren igjen. Lykke til!"
 
 #: modules/lib-bash/activation-init.sh:50
 msgid "Starting Home Manager activation"
@@ -82,20 +107,20 @@ msgstr "Starter aktivering av hjemmebehandler …"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Kontrollerer at Nix fungerer"
 
 #: modules/lib-bash/activation-init.sh:60
 msgid "This is a dry run"
-msgstr ""
+msgstr "Dette er en simulert kjøring"
 
 #: modules/lib-bash/activation-init.sh:63
 msgid "This is a live run"
-msgstr ""
+msgstr "Dette er en virkelig kjøring"
 
 #: modules/lib-bash/activation-init.sh:68
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Bruker Nix-versjon: %s"
 
 #: modules/lib-bash/activation-init.sh:71
 msgid "Activation variables:"
-msgstr ""
+msgstr "Aktiveringsvariabler:"
