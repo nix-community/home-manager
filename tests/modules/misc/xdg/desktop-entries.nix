@@ -16,6 +16,8 @@ with lib;
         mimeType = [ "text/html" "text/xml" ];
         categories = [ "Network" "WebBrowser" ];
         startupNotify = false;
+        noDisplay = false;
+        prefersNonDefaultGPU = false;
         extraConfig = ''
           [X-ExtraSection]
           Exec=foo -o
