@@ -8,32 +8,29 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-01-02 11:55+0100\n"
-"PO-Revision-Date: 2021-12-16 08:56+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/home-manager/"
-"modules/fr/>\n"
-"Language: fr\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.10-dev\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
-msgstr "Création des liens de fichiers personnels dans %s"
+msgstr ""
 
 #: modules/files.nix:246
 msgid "Cleaning up orphan links from %s"
-msgstr "Nettoyage des liens orphelins de %s"
+msgstr ""
 
 #: modules/files.nix:262
 msgid "Creating profile generation %s"
-msgstr "Création de la génération de profil %s"
+msgstr ""
 
 #: modules/files.nix:266
 msgid "No change so reusing latest profile generation %s"
-msgstr "Pas de changement, réutilisation du dernier profil génération %s"
+msgstr ""
 
 #: modules/home-environment.nix:589
 msgid ""
@@ -53,7 +50,7 @@ msgstr ""
 
 #: modules/home-environment.nix:620
 msgid "Activating %s"
-msgstr "Activation de %s"
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:30
 msgid "Sanity checking oldGenNum and oldGenPath"
@@ -77,7 +74,7 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:50
 msgid "Starting Home Manager activation"
-msgstr "Démarrage de l'activation de Home Manager"
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Sanity checking Nix"
