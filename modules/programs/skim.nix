@@ -10,6 +10,13 @@ in {
   options.programs.skim = {
     enable = mkEnableOption "skim - a command-line fuzzy finder";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.skim;
+      defaultText = literalExpression "pkgs.skim";
+      description = "Package providing the <command>skim</command> tool.";
+    };
+
     defaultCommand = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -102,7 +109,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.skim ];
+    home.packages = [ cfg.package ];
 
     home.sessionVariables = mapAttrs (n: v: toString v)
       (filterAttrs (n: v: v != [ ] && v != null) {
