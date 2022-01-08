@@ -3,13 +3,7 @@
 {
   i18n.inputMethod = {
     enabled = "kime";
-    kime.config = {
-      engine = {
-        hangul = {
-          layout = "dubeolsik";
-        };
-      };
-    };
+    kime.config = { engine = { hangul = { layout = "dubeolsik"; }; }; };
   };
 
   nmt.script = ''
