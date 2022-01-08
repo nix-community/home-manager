@@ -48,11 +48,12 @@ in {
       replaceStrings [ "\\\\" ] [ "\\" ] (builtins.toJSON cfg.config);
 
     systemd.user.services.kime-daemon = {
-      Unit = { Description = "Kime input method editor"; };
-      PartOf = [ "graphical-session.target" ];
+      Unit = {
+        Description = "Kime input method editor";
+        PartOf = [ "graphical-session.target" ];
+      };
       Service.ExecStart = "${pkgs.kime}/bin/kime";
       Install.WantedBy = [ "graphical-session.target" ];
     };
   };
-
 }
