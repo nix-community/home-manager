@@ -250,6 +250,7 @@ let
     ./xcursor.nix
     ./xresources.nix
     ./xsession.nix
+    ./misc/nix.nix
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
   ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
