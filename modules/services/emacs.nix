@@ -87,7 +87,7 @@ in {
       example = !default;
       description = ''
         Whether to configure <command>emacsclient</command> as the default
-        editor using the <varname>EDITOR</varname> environment variable.
+        editor using the <envar>EDITOR</envar> environment variable.
       '';
     };
   };
