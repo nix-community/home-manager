@@ -402,3 +402,5 @@ Makefile                                              @thiagokokada
 
 /modules/services/swayidle.nix                        @c0deaddict
 /tests/modules/services/swayidle                      @c0deaddict
+
+/modules/programs/ion.nix                             @jo1gi

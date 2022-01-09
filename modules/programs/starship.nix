@@ -81,6 +81,14 @@ in {
         Whether to enable Fish integration.
       '';
     };
+
+    enableIonIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Ion integration.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -105,6 +113,12 @@ in {
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
       if test "$TERM" != "dumb"  -a \( -z "$INSIDE_EMACS"  -o "$INSIDE_EMACS" = "vterm" \)
         eval (${starshipCmd} init fish)
+      end
+    '';
+
+    programs.ion.initExtra = mkIf cfg.enableIonIntegration ''
+      if test $TERM != "dumb" && not exists -s INSIDE_EMACS || test $INSIDE_EMACS = "vterm"
+        eval $(${starshipCmd} init ion)
       end
     '';
   };
