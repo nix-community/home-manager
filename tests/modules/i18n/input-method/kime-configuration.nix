@@ -6,6 +6,8 @@
     kime.config = { engine = { hangul = { layout = "dubeolsik"; }; }; };
   };
 
+  test.stubs.kime = { };
+
   nmt.script = ''
     assertFileExists home-files/.config/systemd/user/kime-daemon.service
   '';
