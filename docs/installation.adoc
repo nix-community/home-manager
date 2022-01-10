@@ -62,14 +62,15 @@ $ nix-channel --add https://github.com/nix-community/home-manager/archive/releas
 $ nix-channel --update
 ----
 +
-On NixOS you may need to log out and back in for the channel to become
-available. On non-NixOS you may have to add
+On non-NixOS, you may have to add
 +
 [source,bash]
-export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
+export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
 +
-to your shell (see
-https://github.com/NixOS/nix/issues/2033[nix#2033]).
+to your shell (see https://github.com/NixOS/nix/issues/2033[nix#2033]
+and
+https://discourse.nixos.org/t/where-is-nix-path-supposed-to-be-set/16434/8[this
+reply on the Nix Discourse]).
 
 3. Run the Home Manager installation command and create the first Home
 Manager generation:
