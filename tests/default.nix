@@ -160,6 +160,7 @@ import nmt {
     ./modules/services/window-managers/sway
     ./modules/services/wlsunset
     ./modules/services/xsettingsd
+    ./modules/virtualisation/podman
     ./modules/systemd
     ./modules/targets-linux
   ]);

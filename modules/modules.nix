@@ -251,6 +251,9 @@ let
     ./xcursor.nix
     ./xresources.nix
     ./xsession.nix
+    ./virtualisation/containers.nix
+    ./virtualisation/podman/podman.nix
+    ./virtualisation/podman/podman-dnsname.nix
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
   ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
