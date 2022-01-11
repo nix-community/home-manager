@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-01-02 11:55+0100\n"
-"PO-Revision-Date: 2022-01-11 12:58+0000\n"
-"Last-Translator: Mauricio Scheffer <mauricioscheffer@gmail.com>\n"
+"PO-Revision-Date: 2022-01-11 21:45+0000\n"
+"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/home-manager/cli/"
 "es/>\n"
 "Language: es\n"
@@ -88,7 +88,7 @@ msgstr "Argumento desconocido %s"
 
 #: home-manager/home-manager:450
 msgid "This will remove Home Manager from your system."
-msgstr "Home-manager será borrado del sistema."
+msgstr "Home Manager será borrado del sistema."
 
 #: home-manager/home-manager:453
 msgid "This is a dry run, nothing will actually be uninstalled."
