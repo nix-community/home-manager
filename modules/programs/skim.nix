@@ -124,20 +124,20 @@ in {
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-        . ${pkgs.skim}/share/skim/completion.bash
-        . ${pkgs.skim}/share/skim/key-bindings.bash
+        . ${cfg.package}/share/skim/completion.bash
+        . ${cfg.package}/share/skim/key-bindings.bash
       fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       if [[ $options[zle] = on ]]; then
-        . ${pkgs.skim}/share/skim/completion.zsh
-        . ${pkgs.skim}/share/skim/key-bindings.zsh
+        . ${cfg.package}/share/skim/completion.zsh
+        . ${cfg.package}/share/skim/key-bindings.zsh
       fi
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      source ${pkgs.skim}/share/skim/key-bindings.fish && skim_key_bindings
+      source ${cfg.package}/share/skim/key-bindings.fish && skim_key_bindings
     '';
   };
 }
