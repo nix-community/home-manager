@@ -5,6 +5,7 @@ let
   cfg = config.services.podman;
 
 in {
+  meta.maintainers = [ lib.maintainers.MaeIsBad ];
   options = {
     services.podman = {
 
