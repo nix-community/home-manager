@@ -1,5 +1,4 @@
-{ lib, dag ? import ./dag.nix { inherit lib; }
-, gvariant ? import ./gvariant.nix { inherit lib; } }:
+{ lib, gvariant ? import ./gvariant.nix { inherit lib; } }:
 
 let
   inherit (lib)
@@ -7,7 +6,7 @@ let
     mergeAttrs mergeDefaultOption mergeOneOption mergeOptions mkOption
     mkOptionType showFiles showOption types;
 
-  typesDag = import ./types-dag.nix { inherit dag lib; };
+  typesDag = import ./types-dag.nix { inherit lib; };
 
   # Needed since the type is called gvariant and its merge attribute
   # must refer back to the type.
