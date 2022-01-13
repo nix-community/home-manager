@@ -38,7 +38,7 @@ let
   '';
 
 in {
-  meta.maintainers = [ lib.maintainers.MaeIsBad ];
+  meta.maintainers = [ lib.maintainers.bad ];
   imports = [
     ./podman-dnsname.nix
     #./podman-network-socket.nix

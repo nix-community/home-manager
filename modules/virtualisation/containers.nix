@@ -6,7 +6,7 @@ let
 
   toml = pkgs.formats.toml { };
 in {
-  meta.maintainers = [ lib.maintainers.MaeIsBad ];
+  meta.maintainers = [ lib.maintainers.bad ];
   options.virtualisation.containers = {
 
     enable = mkOption {

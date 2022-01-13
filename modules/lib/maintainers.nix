@@ -169,4 +169,10 @@
     github = "pltanton";
     githubId = 4561823;
   };
+  bad = {
+    name = "Mae Lib";
+    email = "git@badat.dev";
+    github = "MaeIsBad";
+    githubId = 26093674;
+  };
 }
