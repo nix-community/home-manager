@@ -48,7 +48,6 @@ in {
       "containersConf"
     ])
   ];
-
   options.services.podman = {
 
     enable = mkOption {

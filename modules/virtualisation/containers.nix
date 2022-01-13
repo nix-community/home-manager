@@ -95,6 +95,11 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+      assertions = [ {
+        # It may be possible to make a similar module for macos but I don't have a mac device to try
+        assertion = enabled -> pkgs.stdenv.isLinux;
+        message = "Containers module only works on linux"
+      }
 
     virtualisation.containers.containersConf.cniPlugins = [ pkgs.cni-plugins ];
 
