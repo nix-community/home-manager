@@ -1,12 +1,10 @@
-{ dag, lib }:
+{ lib }:
 
 let
   inherit (lib)
-    concatStringsSep defaultFunctor fixedWidthNumber imap1 isAttrs isList length
-    listToAttrs mapAttrs mkIf mkOrder mkOption mkOptionType nameValuePair
+    concatStringsSep defaultFunctor fixedWidthNumber hm imap1 isAttrs isList
+    length listToAttrs mapAttrs mkIf mkOrder mkOption mkOptionType nameValuePair
     stringLength types warn;
-
-  isDagEntry = e: isAttrs e && (e ? data) && (e ? after) && (e ? before);
 
   dagEntryOf = elemType:
     let
@@ -21,10 +19,10 @@ let
         };
       });
       maybeConvert = def:
-        if isDagEntry def.value then
+        if hm.dag.isEntry def.value then
           def.value
         else
-          dag.entryAnywhere (if def ? priority then
+          hm.dag.entryAnywhere (if def ? priority then
             mkOrder def.priority def.value
           else
             def.value);
