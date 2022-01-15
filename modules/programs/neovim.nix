@@ -318,7 +318,14 @@ in {
         configure.packages.*.opt  -> programs.neovim.plugins = [ { plugin = ...; optional = true; }]
         configure.packages.*.start  -> programs.neovim.plugins = [ { plugin = ...; }]
         configure.customRC -> programs.neovim.extraConfig
-    '';
+    ''
+    ++ optional (filter (p: isDerivation p) cfg.plugins != []) ''
+      All plugins should now be of type 'pluginWithConfigType' and not a package anymore, e.g.,
+        plugins = [ plenary-nvim ];
+      should now be:
+        plugins = [ { plugin = plenary-nvim; } ];
+    ''
+    ;
 
     programs.neovim.generatedConfigViml = neovimConfig.neovimRcContent;
 
