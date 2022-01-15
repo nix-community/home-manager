@@ -8,29 +8,32 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-01-02 11:55+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-01-15 01:53+0000\n"
+"Last-Translator: mainrs <github619064@zerotask.net>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/home-manager/"
+"modules/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
-msgstr ""
+msgstr "Erstelle home Dateiverknpfungen in %s"
 
 #: modules/files.nix:246
 msgid "Cleaning up orphan links from %s"
-msgstr ""
+msgstr "Bereinige verwaiste Links unter %s"
 
 #: modules/files.nix:262
 msgid "Creating profile generation %s"
-msgstr ""
+msgstr "Erstelle Profilgeneration %s"
 
 #: modules/files.nix:266
 msgid "No change so reusing latest profile generation %s"
-msgstr ""
+msgstr "Keine Änderungen. Benutze daher letzte Profilgeneration %s"
 
 #: modules/home-environment.nix:589
 msgid ""
@@ -47,14 +50,27 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"Ups, nix-env konnte Ihr neues Home Manager Profil nicht installieren!\n"
+"\n"
+"Vielleicht gibt es einen Konflikt mit einem Paket, welches über \"nix-env -"
+"i\" installiert wurde? Versuchen Sie\n"
+"\n"
+"    nix-env -q\n"
+"\n"
+"auszuführen und wenn es ein problematisches Paket gibt, entfernen Sie es "
+"mit\n"
+"\n"
+"    nix-env -e {package name}\n"
+"\n"
+"Versuchen Sie dann, Ihre Home Manager Konfiguration erneut zu aktivieren."
 
 #: modules/home-environment.nix:620
 msgid "Activating %s"
-msgstr ""
+msgstr "Aktiviere %s"
 
 #: modules/lib-bash/activation-init.sh:30
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr ""
+msgstr "Überprüfe zur Sicherheit oldGenNum und oldGenPath"
 
 #: modules/lib-bash/activation-init.sh:33
 msgid ""
@@ -71,27 +87,40 @@ msgid ""
 "\n"
 "and trying home-manager switch again. Good luck!"
 msgstr ""
+"Die vorherige Generationsnummer und -pfad stehen im Konflikt. Es\n"
+"müssen entweder beide leer sein oder beide haben den Wert\n"
+"\n"
+"    '%s' und '%s'\n"
+"\n"
+"Wenn es Ihnen nichts ausmacht frühere Generationen zu verlieren,\n"
+"dann ist die einfachste Lösung folgendes auszuführen:\n"
+"\n"
+"    rm %s/home-manager*\n"
+"    rm %s/current-home\n"
+"\n"
+"Führen Sie danach 'home-manager switch' aus. Viel Glück!"
 
 #: modules/lib-bash/activation-init.sh:50
 msgid "Starting Home Manager activation"
-msgstr ""
+msgstr "Starte Home Manager Aktivierung"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Überprüfe zur Sicherheit Nix"
 
 #: modules/lib-bash/activation-init.sh:60
 msgid "This is a dry run"
-msgstr ""
+msgstr "Dies ist ein Probelauf"
 
 #: modules/lib-bash/activation-init.sh:63
+#, fuzzy
 msgid "This is a live run"
-msgstr ""
+msgstr "Dies ist ein Live-Lauf"
 
 #: modules/lib-bash/activation-init.sh:68
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Nutze Nix Version: %s"
 
 #: modules/lib-bash/activation-init.sh:71
 msgid "Activation variables:"
-msgstr ""
+msgstr "Aktivierungsvariablen:"
