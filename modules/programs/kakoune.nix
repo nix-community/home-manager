@@ -530,20 +530,20 @@ let
 
     uiOptions = with cfg.config.ui;
       concatStringsSep " " [
-        "ncurses_set_title=${if setTitle then "true" else "false"}"
-        "ncurses_status_on_top=${
+        "terminal_set_title=${if setTitle then "true" else "false"}"
+        "terminal_status_on_top=${
           if (statusLine == "top") then "true" else "false"
         }"
-        "ncurses_assistant=${assistant}"
-        "ncurses_enable_mouse=${if enableMouse then "true" else "false"}"
-        "ncurses_change_colors=${if changeColors then "true" else "false"}"
+        "terminal_assistant=${assistant}"
+        "terminal_enable_mouse=${if enableMouse then "true" else "false"}"
+        "terminal_change_colors=${if changeColors then "true" else "false"}"
         "${optionalString (wheelDownButton != null)
-        "ncurses_wheel_down_button=${wheelDownButton}"}"
+        "terminal_wheel_down_button=${wheelDownButton}"}"
         "${optionalString (wheelUpButton != null)
-        "ncurses_wheel_up_button=${wheelUpButton}"}"
+        "terminal_wheel_up_button=${wheelUpButton}"}"
         "${optionalString (shiftFunctionKeys != null)
-        "ncurses_shift_function_key=${toString shiftFunctionKeys}"}"
-        "ncurses_builtin_key_parser=${
+        "terminal_shift_function_key=${toString shiftFunctionKeys}"}"
+        "terminal_builtin_key_parser=${
           if useBuiltinKeyParser then "true" else "false"
         }"
       ];
