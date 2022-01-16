@@ -73,7 +73,7 @@
 /modules/programs/bottom.nix                          @polykernel
 /tests/modules/programs/bottom                        @polykernel
 
-/modules/programs/broot.nix                           @aheaume
+/modules/programs/broot.nix                           @aheaume @dermetfan
 
 /modules/programs/dircolors.nix                       @JustinLovinger
 
