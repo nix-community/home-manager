@@ -47,8 +47,9 @@ all this out you can go ahead and read the rest of this text.
 Contact
 -------
 
-You can chat with us on IRC in the channel [#home-manager][] on
-[OFTC][].
+You can chat with us on IRC in the channel [#home-manager][] on [OFTC][].
+There is also a [Matrix roome](https://matrix.to/#/#hm:rycee.net),
+which is bridged to the IRC channel.
 
 Installation
 ------------

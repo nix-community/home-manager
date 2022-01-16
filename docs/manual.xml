@@ -16,6 +16,8 @@
    If you encounter problems then please reach out on the IRC channel
    <link xlink:href="https://webchat.oftc.net/?channels=home-manager">#home-manager</link>
    hosted by <link xlink:href="https://oftc.net/">OFTC</link>.
+   There is also a <link xlink:href="https://matrix.to/#/%23hm:rycee.net">Matrix room</link>,
+   which is bridged to the IRC channel.
    If your problem is caused by a bug in Home Manager then it should
    be reported on the
    <link xlink:href="https://github.com/nix-community/home-manager/issues">Home Manager issue tracker</link>.
