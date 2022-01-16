@@ -48,7 +48,7 @@ Contact
 -------
 
 You can chat with us on IRC in the channel [#home-manager][] on [OFTC][].
-There is also a [Matrix roome](https://matrix.to/#/#hm:rycee.net),
+There is also a [Matrix room](https://matrix.to/#/#hm:rycee.net),
 which is bridged to the IRC channel.
 
 Installation
