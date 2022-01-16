@@ -40,7 +40,12 @@ let
         end = "";
       } name value) + "\n";
 
-  toRasi = attrs: concatStringsSep "\n" (mapAttrsToList mkRasiSection attrs);
+  toRasi = attrs:
+    concatStringsSep "\n" (concatMap (mapAttrsToList mkRasiSection) [
+      (filterAttrs (n: _: n == "@theme") attrs)
+      (filterAttrs (n: _: n == "@import") attrs)
+      (removeAttrs attrs [ "@theme" "@import" ])
+    ]);
 
   locationsMap = {
     center = 0;

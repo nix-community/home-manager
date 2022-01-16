@@ -8,10 +8,7 @@
 
   programs.git.enable = true;
 
-  test.stubs = {
-    gh = { };
-    git = { };
-  };
+  test.stubs.gh = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config

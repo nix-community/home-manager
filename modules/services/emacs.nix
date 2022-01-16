@@ -80,6 +80,16 @@ in {
     socketActivation = {
       enable = mkEnableOption "systemd socket activation for the Emacs service";
     };
+
+    defaultEditor = mkOption rec {
+      type = types.bool;
+      default = false;
+      example = !default;
+      description = ''
+        Whether to configure <command>emacsclient</command> as the default
+        editor using the <envar>EDITOR</envar> environment variable.
+      '';
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -139,7 +149,16 @@ in {
         Install = { WantedBy = [ "default.target" ]; };
       };
 
-      home.packages = optional cfg.client.enable (hiPrio clientDesktopItem);
+      home = {
+        packages = optional cfg.client.enable (hiPrio clientDesktopItem);
+
+        sessionVariables = mkIf cfg.defaultEditor {
+          EDITOR = getBin (pkgs.writeShellScript "editor" ''
+            exec ${
+              getBin cfg.package
+            }/bin/emacsclient "''${@:---create-frame}"'');
+        };
+      };
     }
 
     (mkIf cfg.socketActivation.enable {

@@ -128,6 +128,7 @@ let
     ./programs/rofi-pass.nix
     ./programs/rofi.nix
     ./programs/rtorrent.nix
+    ./programs/sagemath.nix
     ./programs/sbt.nix
     ./programs/scmpuff.nix
     ./programs/senpai.nix

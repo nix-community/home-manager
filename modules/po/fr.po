@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-01-02 11:55+0100\n"
-"PO-Revision-Date: 2021-12-16 08:56+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"PO-Revision-Date: 2022-01-12 22:55+0000\n"
+"Last-Translator: 6KHCPCPO <lxh43qf2b@relay.firefox.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/home-manager/"
 "modules/fr/>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
@@ -50,6 +50,19 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"Oups, nix-env n'a pas réussi à installer votre nouveau profil de Home "
+"Manager\n"
+"\n"
+"Il y a peut-être un conflit avec un autre paquet qui a été installé avec\n"
+"« nix-env -i » ? Essayez d'éxecuter\n"
+"\n"
+"    nix-env -q\n"
+"\n"
+"et s'il y a un paquet en conflict, vous pourrez le supprimer avec\n"
+"\n"
+"    nix-env -e {package name}\n"
+"\n"
+"Après, essayez encore d'activer votre configuration de Home Manager."
 
 #: modules/home-environment.nix:620
 msgid "Activating %s"
@@ -57,7 +70,7 @@ msgstr "Activation de %s"
 
 #: modules/lib-bash/activation-init.sh:30
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr ""
+msgstr "Vérification rationnelle de oldGenNum et oldGenPath"
 
 #: modules/lib-bash/activation-init.sh:33
 msgid ""
@@ -74,6 +87,20 @@ msgid ""
 "\n"
 "and trying home-manager switch again. Good luck!"
 msgstr ""
+"Le numéro et le chemin de la génération dernière sont en conflit ! Ils "
+"doivent\n"
+"être vides ou les deux mis à\n"
+"\n"
+"    '%s' et '%s'\n"
+"\n"
+"Si ça ne vous dérange pas de perdre la génération dernière, la solution la "
+"plus\n"
+"simple est probablement d'exécuter\n"
+"\n"
+"   rm %s/home-manager*\n"
+"   rm %s/current-home\n"
+"\n"
+"et d'essayer encore home-manager switch. Bonne chance !"
 
 #: modules/lib-bash/activation-init.sh:50
 msgid "Starting Home Manager activation"
@@ -81,20 +108,20 @@ msgstr "Démarrage de l'activation de Home Manager"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Vérification rationnelle de Nix"
 
 #: modules/lib-bash/activation-init.sh:60
 msgid "This is a dry run"
-msgstr ""
+msgstr "Ceci est une course à sec"
 
 #: modules/lib-bash/activation-init.sh:63
 msgid "This is a live run"
-msgstr ""
+msgstr "Ceci est une course réelle"
 
 #: modules/lib-bash/activation-init.sh:68
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Usage de la version de Nix : %s"
 
 #: modules/lib-bash/activation-init.sh:71
 msgid "Activation variables:"
-msgstr ""
+msgstr "Variables d'activation :"

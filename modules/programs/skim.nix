@@ -10,6 +10,13 @@ in {
   options.programs.skim = {
     enable = mkEnableOption "skim - a command-line fuzzy finder";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.skim;
+      defaultText = literalExpression "pkgs.skim";
+      description = "Package providing the <command>skim</command> tool.";
+    };
+
     defaultCommand = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -102,7 +109,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.skim ];
+    home.packages = [ cfg.package ];
 
     home.sessionVariables = mapAttrs (n: v: toString v)
       (filterAttrs (n: v: v != [ ] && v != null) {
@@ -117,20 +124,20 @@ in {
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-        . ${pkgs.skim}/share/skim/completion.bash
-        . ${pkgs.skim}/share/skim/key-bindings.bash
+        . ${cfg.package}/share/skim/completion.bash
+        . ${cfg.package}/share/skim/key-bindings.bash
       fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       if [[ $options[zle] = on ]]; then
-        . ${pkgs.skim}/share/skim/completion.zsh
-        . ${pkgs.skim}/share/skim/key-bindings.zsh
+        . ${cfg.package}/share/skim/completion.zsh
+        . ${cfg.package}/share/skim/key-bindings.zsh
       fi
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      source ${pkgs.skim}/share/skim/key-bindings.fish && skim_key_bindings
+      source ${cfg.package}/share/skim/key-bindings.fish && skim_key_bindings
     '';
   };
 }
