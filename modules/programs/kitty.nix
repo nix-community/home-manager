@@ -35,7 +35,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.kitty;
-      defaultText = literalExample "pkgs.kitty";
+      defaultText = literalExpression "pkgs.kitty";
       description = ''
         Kitty package to install.
       '';
