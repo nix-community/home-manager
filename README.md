@@ -11,6 +11,9 @@ Before attempting to use Home Manager please read the warning below.
 For a more systematic overview of Home Manager and its available
 options, please see the [Home Manager manual][manual].
 
+If you would like to contribute to Home Manager
+then please have a look at the [contributing][] chapter of the manual.
+
 Words of warning
 ----------------
 
@@ -179,6 +182,7 @@ This project is licensed under the terms of the [MIT license](LICENSE).
 [NixOS]: https://nixos.org/
 [Nixpkgs]: https://nixos.org/nixpkgs/
 [manual]: https://nix-community.github.io/home-manager/
+[contributing]: https://nix-community.github.io/home-manager/#ch-contributing
 [manual usage]: https://nix-community.github.io/home-manager/#ch-usage
 [configuration options]: https://nix-community.github.io/home-manager/options.html
 [#home-manager]: https://webchat.oftc.net/?channels=home-manager
