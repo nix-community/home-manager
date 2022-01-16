@@ -898,7 +898,7 @@ in
 
           Note, on NixOS you may need to add
 
-              services.dbus.packages = with pkgs; [ gnome3.dconf ];
+              services.dbus.packages = with pkgs; [ dconf ];
 
           to the system configuration for this module to work as
           expected. In particular if you get the error message
