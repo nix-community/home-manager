@@ -197,12 +197,16 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."broot/conf.toml".source = tomlFormat.generate "broot-config"
-      (builtins.removeAttrs cfg.config
-        (optional (cfg.config.verbs == [ ]) "verbs"));
+    xdg.configFile."broot/conf.toml".source =
+      tomlFormat.generate "broot-config" cfg.config;
 
     # Dummy file to prevent broot from trying to reinstall itself
     xdg.configFile."broot/launcher/installed-v1".text = "";
+
+    programs.broot.config = builtins.fromJSON (builtins.readFile
+      (pkgs.runCommand "default-conf.json" {
+        nativeBuildInputs = [ pkgs.hjson ];
+      } "hjson -c ${cfg.package.src}/resources/default-conf.hjson > $out"));
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
       # Using mkAfter to make it more likely to appear after other
