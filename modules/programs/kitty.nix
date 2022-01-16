@@ -32,6 +32,15 @@ in {
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.kitty;
+      defaultText = literalExample "pkgs.kitty";
+      description = ''
+        Kitty package to install.
+      '';
+    };
+
     darwinLaunchOptions = mkOption {
       type = types.nullOr (types.listOf types.str);
       default = null;
@@ -108,7 +117,7 @@ in {
       '';
     }];
 
-    home.packages = [ pkgs.kitty ] ++ optionalPackage cfg.font;
+    home.packages = [ cfg.package ] ++ optionalPackage cfg.font;
 
     xdg.configFile."kitty/kitty.conf" = {
       text = ''
