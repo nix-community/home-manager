@@ -97,7 +97,8 @@ let
 
         modules = mkOption {
           type = jsonFormat.type;
-          default = { };
+          visible = false;
+          default = null;
           description = "Modules configuration.";
           example = literalExpression ''
             {
@@ -176,19 +177,18 @@ in {
             modules-left = [ "sway/workspaces" "sway/mode" "wlr/taskbar" ];
             modules-center = [ "sway/window" "custom/hello-from-waybar" ];
             modules-right = [ "mpd" "custom/mymodule#with-css-id" "temperature" ];
-            modules = {
-              "sway/workspaces" = {
-                disable-scroll = true;
-                all-outputs = true;
-              };
-              "custom/hello-from-waybar" = {
-                format = "hello {}";
-                max-length = 40;
-                interval = "once";
-                exec = pkgs.writeShellScript "hello-from-waybar" '''
-                  echo "from within waybar"
-                ''';
-              };
+
+            "sway/workspaces" = {
+              disable-scroll = true;
+              all-outputs = true;
+            };
+            "custom/hello-from-waybar" = {
+              format = "hello {}";
+              max-length = 40;
+              interval = "once";
+              exec = pkgs.writeShellScript "hello-from-waybar" '''
+                echo "from within waybar"
+              ''';
             };
           };
         }
@@ -244,7 +244,7 @@ in {
   config = let
     # Removes nulls because Waybar ignores them.
     # This is not recursive.
-    removeNulls = filterAttrs (_: v: v != null);
+    removeTopLevelNulls = filterAttrs (_: v: v != null);
 
     # Makes the actual valid configuration Waybar accepts
     # (strips our custom settings before converting to JSON)
@@ -254,8 +254,8 @@ in {
         # as its descendants have to live at the top-level
         settingsWithoutModules = removeAttrs configuration [ "modules" ];
         settingsModules =
-          optionalAttrs (configuration.modules != { }) configuration.modules;
-      in removeNulls (settingsWithoutModules // settingsModules);
+          optionalAttrs (configuration.modules != null) configuration.modules;
+      in removeTopLevelNulls (settingsWithoutModules // settingsModules);
 
     # Allow using attrs for settings instead of a list in order to more easily override
     settings = if builtins.isAttrs cfg.settings then
@@ -276,7 +276,7 @@ in {
         ({
           assertion =
             if lib.versionAtLeast config.home.stateVersion "22.05" then
-              all (x: !hasAttr "modules" x) settings
+              all (x: !hasAttr "modules" x || x.modules == null) settings
             else
               true;
           message = ''
