@@ -25,7 +25,7 @@ let
             { invocation = "view"; execution = "less {file}"; }
             {
               invocation = "blop {name}\\.{type}";
-              execution = "/bin/mkdir {parent}/{type} && /usr/bin/nvim {parent}/{type}/{name}.{type}";
+              execution = "mkdir {parent}/{type} && ''${pkgs.neovim}/bin/nvim {parent}/{type}/{name}.{type}";
               from_shell = true;
             }
           ]
