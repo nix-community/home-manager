@@ -43,9 +43,9 @@
       lib = {
         hm = import ./modules/lib { lib = nixpkgs.lib; };
         homeManagerConfiguration = { configuration, system, homeDirectory
-          , username, extraModules ? [ ], extraSpecialArgs ? { }
+          , username, stateVersion, extraModules ? [ ], extraSpecialArgs ? { }
           , pkgs ? builtins.getAttr system nixpkgs.outputs.legacyPackages
-          , check ? true, stateVersion ? "20.09" }@args:
+          , check ? true }@args:
           assert nixpkgs.lib.versionAtLeast stateVersion "20.09";
 
           import ./modules {
