@@ -8,7 +8,7 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
-  configModule = {
+  settingsModule = {
     freeformType = tomlFormat.type;
 
     options = {
@@ -145,19 +145,19 @@ in {
     (mkRenamedOptionModule [ "programs" "broot" "modal" ] [
       "programs"
       "broot"
-      "config"
+      "settings"
       "modal"
     ])
     (mkRenamedOptionModule [ "programs" "broot" "verbs" ] [
       "programs"
       "broot"
-      "config"
+      "settings"
       "verbs"
     ])
     (mkRenamedOptionModule [ "programs" "broot" "skin" ] [
       "programs"
       "broot"
-      "config"
+      "settings"
       "skin"
     ])
   ];
@@ -196,8 +196,8 @@ in {
       description = "Package providing broot";
     };
 
-    config = mkOption {
-      type = types.submodule configModule;
+    settings = mkOption {
+      type = types.submodule settingsModule;
       default = { };
       description = "Verbatim config entries";
     };
@@ -207,12 +207,12 @@ in {
     home.packages = [ cfg.package ];
 
     xdg.configFile."broot/conf.toml".source =
-      tomlFormat.generate "broot-config" cfg.config;
+      tomlFormat.generate "broot-config" cfg.settings;
 
     # Dummy file to prevent broot from trying to reinstall itself
     xdg.configFile."broot/launcher/installed-v1".text = "";
 
-    programs.broot.config = builtins.fromJSON (builtins.readFile
+    programs.broot.settings = builtins.fromJSON (builtins.readFile
       (pkgs.runCommand "default-conf.json" {
         nativeBuildInputs = [ pkgs.hjson ];
       } "hjson -c ${cfg.package.src}/resources/default-conf.hjson > $out"));

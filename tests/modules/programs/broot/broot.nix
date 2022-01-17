@@ -6,7 +6,7 @@ with lib;
   config = {
     programs.broot = {
       enable = true;
-      config.modal = true;
+      settings.modal = true;
     };
 
     nmt.script = ''
