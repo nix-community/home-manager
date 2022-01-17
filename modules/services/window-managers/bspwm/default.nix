@@ -65,6 +65,12 @@ in {
       ${concatMapStringsSep "\n" formatStartupProgram cfg.startupPrograms}
     '';
 
+    # for applications not started by bspwm, e.g. sxhkd
+    xsession.profileExtra = ''
+      # java gui fixes
+      export _JAVA_AWT_WM_NONREPARENTING=1
+    '';
+
     xsession.windowManager.command =
       "${cfg.package}/bin/bspwm -c ${config.xdg.configHome}/bspwm/bspwmrc";
   };
