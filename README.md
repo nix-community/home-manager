@@ -104,9 +104,10 @@ as follows:
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
+    # nix-darwin.url = "github:lnl7/nix-darwin";
   };
 
-  outputs = { home-manager, nixpkgs, ... }: {
+  outputs = inputs@{ home-manager, nixpkgs, ... }: {
     nixosConfigurations = {
       hostname = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -124,9 +125,30 @@ as follows:
         ];
       };
     };
+
+    # You do not need this unless you are using the nix-darwin project
+    darwinConfigurations = {
+      hostname = inputs.nix-darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        modules = [
+          ./configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.jdoe = import ./home.nix;
+          }
+        ];
+      };
+    };
   };
 }
 ```
+
+The Home Manager configuration is then part of the NixOS/Darwin configuration
+and is automatically rebuilt with the system when using the appropriate command
+for the system, such as `nixos-rebuild switch --flake <path>` for NixOS,
+and `darwin-rebuild switch --flake <path>` with nix-darwin.
 
 If you are not using NixOS you can place the following flake in
 `~/.config/nixpkgs/flake.nix` to load your standard Home Manager
@@ -158,9 +180,8 @@ configuration:
 Note, the Home Manager library is exported by the flake under
 `lib.hm`.
 
-When using flakes, switch to new configurations as you do for the
-whole system (e. g. `nixos-rebuild switch --flake <path>`) instead of
-using the `home-manager` command line tool.
+When using flakes, switch to new configurations with
+`home-manager switch --flake <path>`.
 
 Releases
 --------
