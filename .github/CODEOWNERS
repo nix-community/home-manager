@@ -426,3 +426,5 @@ Makefile                                              @thiagokokada
 /tests/modules/services/swayidle                      @c0deaddict
 
 /modules/programs/ion.nix                             @jo1gi
+
+/modules/services/plex-mpv-shim.nix                   @starcraft66
