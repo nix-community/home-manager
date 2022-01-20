@@ -40,6 +40,16 @@ in {
       '';
     };
 
+    enableFishIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Atuin's Fish integration.
+        </para><para>
+        If enabled, this will bind the up-arrow key to open the Atuin history.
+      '';
+    };
+
     settings = mkOption {
       type = with types;
         let
@@ -85,6 +95,10 @@ in {
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/atuin init zsh)"
+    '';
+
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+      ${cfg.package}/bin/atuin init fish | source
     '';
   };
 }
