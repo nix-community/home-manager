@@ -346,6 +346,9 @@
 
 /modules/services/mbsync.nix                          @pjones
 
+/modules/services/mopidy.nix                          @foo-dogsquared
+/tests/modules/services/mopidy                        @foo-dogsquared
+
 /modules/services/mpdris2.nix                         @pjones
 
 /modules/services/mpd-discord-rpc.nix                 @Kranzes

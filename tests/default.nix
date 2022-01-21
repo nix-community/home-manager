@@ -153,6 +153,7 @@ import nmt {
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/kanshi
     ./modules/services/lieer
+    ./modules/services/mopidy
     ./modules/services/mpd
     ./modules/services/pantalaimon
     ./modules/services/pbgopy
