@@ -212,6 +212,7 @@ let
     ./services/lorri.nix
     ./services/mako.nix
     ./services/mbsync.nix
+    ./services/mopidy.nix
     ./services/mpd.nix
     ./services/mpdris2.nix
     ./services/mpd-discord-rpc.nix

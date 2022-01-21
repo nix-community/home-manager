@@ -55,6 +55,12 @@
     github = "chisui";
     githubId = 4526429;
   };
+  foo-dogsquared = {
+    name = "Gabriel Arazas";
+    email = "foo.dogsquared@gmail.com";
+    github = "foo-dogsquared";
+    githubId = 34962634;
+  };
   olmokramer = {
     name = "Olmo Kramer";
     email = "olmokramer@users.noreply.github.com";
