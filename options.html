@@ -2810,6 +2810,116 @@ Note that lists are converted to duplicate keys.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.helix.enable"></a><a class="term" href="options.html#opt-programs.helix.enable"><code class="option">programs.helix.enable</code></a></span></dt><dd><p>Whether to enable helix text editor.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/helix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/helix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.helix.package"></a><a class="term" href="options.html#opt-programs.helix.package"><code class="option">programs.helix.package</code></a></span></dt><dd><p>The package to use for helix.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.helix</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/helix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/helix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.helix.languages"></a><a class="term" href="options.html#opt-programs.helix.languages"><code class="option">programs.helix.languages</code></a></span></dt><dd><p>Language specific configuration at
+<code class="filename">$XDG_CONFIG_HOME/helix/languages.toml</code>.
+</p><p>
+See <a class="link" href="https://docs.helix-editor.com/languages.html" target="_top">https://docs.helix-editor.com/languages.html</a>
+for more information.
+</p><p><span class="emphasis"><em>Type:</em></span> list of TOML values</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        [
+        
+        {
+        auto-format = false; name = "rust"; 
+        }
+     
+        ]
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/helix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/helix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.helix.settings"></a><a class="term" href="options.html#opt-programs.helix.settings"><code class="option">programs.helix.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/helix/config.toml</code>.
+</p><p>
+See <a class="link" href="https://docs.helix-editor.com/configuration.html" target="_top">https://docs.helix-editor.com/configuration.html</a>
+for the full list of options.
+</p><p><span class="emphasis"><em>Type:</em></span> TOML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  theme = "base16";
+  lsp.display-messages = true;
+  keys.normal = {
+    space.space = "file_picker";
+    space.w = ":w";
+    space.q = ":q";
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/helix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/helix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.helix.themes"></a><a class="term" href="options.html#opt-programs.helix.themes"><code class="option">programs.helix.themes</code></a></span></dt><dd><p>Each theme is written to
+<code class="filename">$XDG_CONFIG_HOME/helix/themes/theme-name.toml</code>.
+Where the name of each attribute is the theme-name (in the example "base16").
+</p><p>
+See <a class="link" href="https://docs.helix-editor.com/themes.html" target="_top">https://docs.helix-editor.com/themes.html</a>
+for the full list of options.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of TOML values</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  base16 = let
+    transparent = "none";
+    gray = "#665c54";
+    dark-gray = "#3c3836";
+    white = "#fbf1c7";
+    black = "#282828";
+    red = "#fb4934";
+    green = "#b8bb26";
+    yellow = "#fabd2f";
+    orange = "#fe8019";
+    blue = "#83a598";
+    magenta = "#d3869b";
+    cyan = "#8ec07c";
+  in {
+    "ui.menu" = transparent;
+    "ui.menu.selected" = { modifiers = [ "reversed" ]; };
+    "ui.linenr" = { fg = gray; bg = dark-gray; };
+    "ui.popup" = { modifiers = [ "reversed" ]; };
+    "ui.linenr.selected" = { fg = white; bg = black; modifiers = [ "bold" ]; };
+    "ui.selection" = { fg = black; bg = blue; };
+    "ui.selection.primary" = { modifiers = [ "reversed" ]; };
+    "comment" = { fg = gray; };
+    "ui.statusline" = { fg = white; bg = dark-gray; };
+    "ui.statusline.inactive" = { fg = dark-gray; bg = white; };
+    "ui.help" = { fg = dark-gray; bg = white; };
+    "ui.cursor" = { modifiers = [ "reversed" ]; };
+    "variable" = red;
+    "variable.builtin" = orange;
+    "constant.numeric" = orange;
+    "constant" = orange;
+    "attributes" = yellow;
+    "type" = yellow;
+    "ui.cursor.match" = { fg = yellow; modifiers = [ "underlined" ]; };
+    "string" = green;
+    "variable.other.member" = red;
+    "constant.character.escape" = cyan;
+    "function" = blue;
+    "constructor" = blue;
+    "special" = blue;
+    "keyword" = magenta;
+    "label" = magenta;
+    "namespace" = blue;
+    "diff.plus" = green;
+    "diff.delta" = yellow;
+    "diff.minus" = red;
+    "diagnostic" = { modifiers = [ "underlined" ]; };
+    "ui.gutter" = { bg = black; };
+    "info" = blue;
+    "hint" = dark-gray;
+    "debug" = dark-gray;
+    "warning" = yellow;
+    "error" = red;
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/helix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/helix.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.enable"></a><a class="term" href="options.html#opt-programs.hexchat.enable"><code class="option">programs.hexchat.enable</code></a></span></dt><dd><p>Whether to enable HexChat, a graphical IRC client.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/hexchat.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.hexchat.channels"></a><a class="term" href="options.html#opt-programs.hexchat.channels"><code class="option">programs.hexchat.channels</code></a></span></dt><dd><p>Configures <code class="filename">$XDG_CONFIG_HOME/hexchat/servlist.conf</code>.
@@ -6247,6 +6357,46 @@ overlay or set this option. Example overlay configuration:
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.watson.enable"></a><a class="term" href="options.html#opt-programs.watson.enable"><code class="option">programs.watson.enable</code></a></span></dt><dd><p>Whether to enable watson, a wonderful CLI to track your time.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/watson.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/watson.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.watson.enableBashIntegration"></a><a class="term" href="options.html#opt-programs.watson.enableBashIntegration"><code class="option">programs.watson.enableBashIntegration</code></a></span></dt><dd><p>Whether to enable watson's bash integration.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/watson.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/watson.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.watson.enableFishIntegration"></a><a class="term" href="options.html#opt-programs.watson.enableFishIntegration"><code class="option">programs.watson.enableFishIntegration</code></a></span></dt><dd><p>Whether to enable watson's fish integration.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/watson.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/watson.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.watson.enableZshIntegration"></a><a class="term" href="options.html#opt-programs.watson.enableZshIntegration"><code class="option">programs.watson.enableZshIntegration</code></a></span></dt><dd><p>Whether to enable watson's zsh integration.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/watson.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/watson.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.watson.package"></a><a class="term" href="options.html#opt-programs.watson.package"><code class="option">programs.watson.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>watson</strong></span>.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.watson</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/watson.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/watson.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.watson.settings"></a><a class="term" href="options.html#opt-programs.watson.settings"><code class="option">programs.watson.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/watson/config</code> on Linux or
+<code class="filename">$HOME/Library/Application Support/watson/config</code> on Darwin.
+</p><p>
+See <a class="link" href="https://github.com/TailorDev/Watson/blob/master/docs/user-guide/configuration.md" target="_top">https://github.com/TailorDev/Watson/blob/master/docs/user-guide/configuration.md</a>
+for an example configuration.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of INI atom (null, bool, int, float or string)ss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  backend = {
+    url = "https://api.crick.fr";
+    token = "yourapitoken";
+  };
+
+  options = {
+    stop_on_start = true;
+    stop_on_restart = false;
+    date_format = "%Y.%m.%d";
+    time_format = "%H:%M:%S%z";
+    week_start = "monday";
+    log_current = false;
+    pager = true;
+    report_current = false;
+    reverse_log = true;
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/watson.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/watson.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.enable"></a><a class="term" href="options.html#opt-programs.waybar.enable"><code class="option">programs.waybar.enable</code></a></span></dt><dd><p>Whether to enable Waybar.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/waybar.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.waybar.package"></a><a class="term" href="options.html#opt-programs.waybar.package"><code class="option">programs.waybar.package</code></a></span></dt><dd><p>Waybar package to use. Set to <code class="code">null</code> to use the default package.
