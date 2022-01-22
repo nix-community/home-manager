@@ -4928,6 +4928,45 @@ def get_pass(service, cmd):
                     &lt;home-manager/modules/programs/opam.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.opam.package"></a><a class="term" href="options.html#opt-programs.opam.package"><code class="option">programs.opam.package</code></a></span></dt><dd><p>Opam package to install.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.opam</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opam.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/opam.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.pandoc.enable"></a><a class="term" href="options.html#opt-programs.pandoc.enable"><code class="option">programs.pandoc.enable</code></a></span></dt><dd><p>Whether to enable pandoc.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pandoc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/pandoc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.pandoc.package"></a><a class="term" href="options.html#opt-programs.pandoc.package"><code class="option">programs.pandoc.package</code></a></span></dt><dd><p>The pandoc package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.pandoc</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pandoc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/pandoc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.pandoc.citationStyles"></a><a class="term" href="options.html#opt-programs.pandoc.citationStyles"><code class="option">programs.pandoc.citationStyles</code></a></span></dt><dd><p>List of .csl files to install.</p><p><span class="emphasis"><em>Type:</em></span> list of paths</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">[ path/to/file.csl ]</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pandoc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/pandoc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.pandoc.defaults"></a><a class="term" href="options.html#opt-programs.pandoc.defaults"><code class="option">programs.pandoc.defaults</code></a></span></dt><dd><p>Options to set by default.
+These will be converted to JSON and written to a defaults
+file (see Default files in pandoc documentation).
+</p><p><span class="emphasis"><em>Type:</em></span> JSON value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  metadata = {
+    author = "John Doe";
+  };
+  pdf-engine = "xelatex";
+  citeproc = true;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pandoc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/pandoc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.pandoc.defaultsFile"></a><a class="term" href="options.html#opt-programs.pandoc.defaultsFile"><code class="option">programs.pandoc.defaultsFile</code></a></span></dt><dd><p>Resulting defaults file.</p><p><span class="emphasis"><em>Type:</em></span> path <span class="emphasis"><em>(read only)</em></span></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pandoc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/pandoc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.pandoc.finalPackage"></a><a class="term" href="options.html#opt-programs.pandoc.finalPackage"><code class="option">programs.pandoc.finalPackage</code></a></span></dt><dd><p>Resulting package.</p><p><span class="emphasis"><em>Type:</em></span> package <span class="emphasis"><em>(read only)</em></span></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pandoc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/pandoc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.pandoc.templates"></a><a class="term" href="options.html#opt-programs.pandoc.templates"><code class="option">programs.pandoc.templates</code></a></span></dt><dd><p>Custom templates.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of paths</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  "default.latex" = path/to/your/template;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pandoc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/pandoc.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.password-store.enable"></a><a class="term" href="options.html#opt-programs.password-store.enable"><code class="option">programs.password-store.enable</code></a></span></dt><dd><p>Whether to enable Password store.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/password-store.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/password-store.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.password-store.package"></a><a class="term" href="options.html#opt-programs.password-store.package"><code class="option">programs.password-store.package</code></a></span></dt><dd><p>The <code class="literal">pass</code> package to use.
