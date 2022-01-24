@@ -33,7 +33,7 @@ in {
   meta.maintainers = [ lib.hm.maintainers.olmokramer ];
 
   options.xsession.windowManager.herbstluftwm = {
-    enable = lib.mkEnableOption "herbstluftwm window manager.";
+    enable = lib.mkEnableOption "herbstluftwm window manager";
 
     package = lib.mkOption {
       type = lib.types.package;

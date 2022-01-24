@@ -14,7 +14,7 @@ let
 in {
   options = {
     xsession.windowManager.awesome = {
-      enable = mkEnableOption "Awesome window manager.";
+      enable = mkEnableOption "Awesome window manager";
 
       package = mkOption {
         type = types.package;

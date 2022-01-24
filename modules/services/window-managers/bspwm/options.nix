@@ -144,7 +144,7 @@ let
 
 in {
   xsession.windowManager.bspwm = {
-    enable = mkEnableOption "bspwm window manager.";
+    enable = mkEnableOption "bspwm window manager";
 
     package = mkOption {
       type = types.package;

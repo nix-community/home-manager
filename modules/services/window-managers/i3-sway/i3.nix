@@ -211,7 +211,7 @@ in {
 
   options = {
     xsession.windowManager.i3 = {
-      enable = mkEnableOption "i3 window manager.";
+      enable = mkEnableOption "i3 window manager";
 
       package = mkOption {
         type = types.package;
