@@ -8,7 +8,7 @@ in {
   meta.maintainers = [ hm.maintainers.matrss ];
 
   options.services.wlsunset = {
-    enable = mkEnableOption "Whether to enable wlsunset.";
+    enable = mkEnableOption "wlsunset.";
 
     package = mkOption {
       type = types.package;
