@@ -8613,10 +8613,12 @@ The options are
         
         }
     </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  roots = [
-    "/home/user/documents"
-    "ssh://remote/documents"
-  ];
+  "my-documents" = {
+    roots = [
+      "/home/user/documents"
+      "ssh://remote/documents"
+    ];
+  };
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/unison.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/unison.nix&gt;
