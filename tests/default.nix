@@ -46,8 +46,7 @@ import nmt {
     ./modules/home-environment
     ./modules/misc/fontconfig
     ./modules/programs/alacritty
-    # TODO: Re-enable once https://github.com/NixOS/nixpkgs/pull/154309 is fixed
-    # ./modules/programs/alot
+    ./modules/programs/alot
     ./modules/programs/aria2
     ./modules/programs/atuin
     ./modules/programs/autojump
@@ -73,15 +72,13 @@ import nmt {
     ./modules/programs/kitty
     ./modules/programs/less
     ./modules/programs/lf
-    # TODO: Re-enable once https://github.com/NixOS/nixpkgs/pull/154309 is fixed
-    # ./modules/programs/lieer
+    ./modules/programs/lieer
     ./modules/programs/man
     ./modules/programs/mbsync
     ./modules/programs/mpv
     ./modules/programs/ncmpcpp
     ./modules/programs/ne
-    # TODO: Re-enable once https://github.com/NixOS/nixpkgs/pull/154309 is fixed
-    # ./modules/programs/neomutt
+    ./modules/programs/neomutt
     ./modules/programs/newsboat
     ./modules/programs/nix-index
     ./modules/programs/nnn
