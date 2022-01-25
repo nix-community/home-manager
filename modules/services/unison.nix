@@ -80,10 +80,12 @@ in {
       default = { };
       example = literalExpression ''
         {
-          roots = [
-            "/home/user/documents"
-            "ssh://remote/documents"
-          ];
+          "my-documents" = {
+            roots = [
+              "/home/user/documents"
+              "ssh://remote/documents"
+            ];
+          };
         }
       '';
       description = ''
