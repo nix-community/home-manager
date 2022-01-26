@@ -1881,6 +1881,26 @@ The possible attributes are:
                     &lt;home-manager/modules/programs/chromium.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.chromium.package"></a><a class="term" href="options.html#opt-programs.chromium.package"><code class="option">programs.chromium.package</code></a></span></dt><dd><p>The Chromium package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.chromium</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/chromium.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/chromium.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.chromium.commandLineArgs"></a><a class="term" href="options.html#opt-programs.chromium.commandLineArgs"><code class="option">programs.chromium.commandLineArgs</code></a></span></dt><dd><p>List of command-line arguments to be passed to Chromium.
+</p><p>
+Note this option does not have any effect when using a
+custom package for <code class="option">programs.chromium.package</code>.
+</p><p>
+For a list of common switches, see
+<a class="link" href="https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.cc" target="_top">Chrome switches</a>.
+</p><p>
+To search switches for other components, see
+<a class="link" href="https://source.chromium.org/search?q=file:switches.cc&amp;ss=chromium%2Fchromium%2Fsrc" target="_top">Chromium codesearch</a>.
+</p><p><span class="emphasis"><em>Type:</em></span> list of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        [
+        "--enable-logging=stderr" "--ignore-gpu-blocklist" 
+        ]
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/chromium.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/chromium.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.chromium.extensions"></a><a class="term" href="options.html#opt-programs.chromium.extensions"><code class="option">programs.chromium.extensions</code></a></span></dt><dd><p>List of Chromium extensions to install.
 To find the extension ID, check its URL on the
 <a class="link" href="https://chrome.google.com/webstore/category/extensions" target="_top">Chrome Web Store</a>.
