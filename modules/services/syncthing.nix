@@ -9,6 +9,15 @@ with lib;
     services.syncthing = {
       enable = mkEnableOption "Syncthing continuous file synchronization";
 
+      extraOptions = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = [ "--gui-apikey=apiKey" ];
+        description = ''
+          Extra command-line arguments to pass to <command>syncthing</command>.
+        '';
+      };
+
       tray = mkOption {
         type = with types;
           either bool (submodule {
@@ -57,7 +66,9 @@ with lib;
 
           Service = {
             ExecStart =
-              "${pkgs.syncthing}/bin/syncthing -no-browser -no-restart -logflags=0";
+              "${pkgs.syncthing}/bin/syncthing -no-browser -no-restart -logflags=0"
+              + optionalString (config.services.syncthing.extraOptions != [ ])
+              (" " + escapeShellArgs config.services.syncthing.extraOptions);
             Restart = "on-failure";
             SuccessExitStatus = [ 3 4 ];
             RestartForceExitStatus = [ 3 4 ];
