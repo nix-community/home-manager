@@ -3817,6 +3817,57 @@ for the documentation.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kitty.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/kitty.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kodi.enable"></a><a class="term" href="options.html#opt-programs.kodi.enable"><code class="option">programs.kodi.enable</code></a></span></dt><dd><p>Whether to enable Kodi.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kodi.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/kodi.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kodi.package"></a><a class="term" href="options.html#opt-programs.kodi.package"><code class="option">programs.kodi.package</code></a></span></dt><dd><p>The <code class="literal">kodi</code> package to use.
+Can be used to specify extensions.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.kodi</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{ pkgs.kodi.withPackages (exts: [ exts.pvr-iptvsimple ]) }
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kodi.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/kodi.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kodi.addonSettings"></a><a class="term" href="options.html#opt-programs.kodi.addonSettings"><code class="option">programs.kodi.addonSettings</code></a></span></dt><dd><p>Attribute set with the plugin namespace as toplevel key and the plugins
+settings as lower level key/value pairs.
+</p><p>
+Kodi will still show the settings of plugins configured via this
+mechanism in the GUI and they appear to be mutable. This however is
+not the case and the settings will stay as specified via Home Manager.
+</p><p><span class="emphasis"><em>Type:</em></span> null or attribute set of attribute set of stringss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{ "service.xbmc.versioncheck".versioncheck_enable = "false"; }
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kodi.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/kodi.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kodi.datadir"></a><a class="term" href="options.html#opt-programs.kodi.datadir"><code class="option">programs.kodi.datadir</code></a></span></dt><dd><p>Directory to store configuration and metadata.</p><p><span class="emphasis"><em>Type:</em></span> path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"${config.home.homeDirectory}/.kodi"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"${config.xdg.dataHome}/kodi"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kodi.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/kodi.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kodi.settings"></a><a class="term" href="options.html#opt-programs.kodi.settings"><code class="option">programs.kodi.settings</code></a></span></dt><dd><p>Configuration to write to the <code class="literal">advancedsettings.xml</code>
+file in kodis userdata directory. Settings specified here will be
+immutable from inside kodi and be hidden from the GUI settings dialog.
+</p><p>
+See <a class="link" href="https://kodi.wiki/view/Advancedsettings.xml" target="_top">https://kodi.wiki/view/Advancedsettings.xml</a> as
+reference for how settings need to be specified.
+</p><p>
+The innermost attributes must be of type str.
+</p><p><span class="emphasis"><em>Type:</em></span> null or attribute sets of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{ videolibrary.showemptytvshows = "true"; }
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kodi.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/kodi.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kodi.sources"></a><a class="term" href="options.html#opt-programs.kodi.sources"><code class="option">programs.kodi.sources</code></a></span></dt><dd><p>Contents to populate the file <code class="literal">sources.xml</code> in kodis
+userdata directory.
+</p><p>
+See <a class="link" href="https://kodi.wiki/view/Sources.xml" target="_top">https://kodi.wiki/view/Sources.xml</a> as
+reference for how sources need to be specified.
+</p><p>
+Kodi will still show the dialogs to modify sources in the GUI and they
+appear to be mutable. This however is not the case and the sources will
+stay as specified via Home Manager.
+</p><p>
+The innermost attributes must be of type str.
+</p><p><span class="emphasis"><em>Type:</em></span> null or attribute sets or lists of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  video = {
+    default = "movies";
+    source = [
+      { name = "videos"; path = "/path/to/videos"; allowsharing = "true"; }
+      { name = "movies"; path = "/path/to/movies"; allowsharing = "true"; }
+    ];
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kodi.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/kodi.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lazygit.enable"></a><a class="term" href="options.html#opt-programs.lazygit.enable"><code class="option">programs.lazygit.enable</code></a></span></dt><dd><p>Whether to enable lazygit, a simple terminal UI for git commands.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lazygit.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lazygit.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lazygit.settings"></a><a class="term" href="options.html#opt-programs.lazygit.settings"><code class="option">programs.lazygit.settings</code></a></span></dt><dd><p>Configuration written to
