@@ -80,6 +80,7 @@ let
     ./programs/i3status-rust.nix
     ./programs/i3status.nix
     ./programs/info.nix
+    ./programs/ion.nix
     ./programs/irssi.nix
     ./programs/java.nix
     ./programs/jq.nix

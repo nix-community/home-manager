@@ -32,5 +32,6 @@ in {
 
     programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
 
+    programs.ion.shellAliases = mkIf cfg.enableAliases aliases;
   };
 }
