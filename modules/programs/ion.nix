@@ -12,7 +12,7 @@ in {
   meta.maintainers = [ maintainers.jo1gi ];
 
   options.programs.ion = {
-    enable = mkEnableOption "The Ion Shell. Compatible with Redox and Linux.";
+    enable = mkEnableOption "the Ion Shell. Compatible with Redox and Linux";
 
     package = mkOption {
       type = types.package;
