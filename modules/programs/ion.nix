@@ -27,7 +27,7 @@ in {
       type = types.lines;
       default = "";
       description = ''
-        Ion script which is called during ion initialization
+        Ion script which is called during ion initialization.
       '';
     };
 
