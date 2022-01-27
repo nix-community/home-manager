@@ -1137,6 +1137,33 @@ The options are
     </p></dd></dl></div><p>
 </p><p><span class="emphasis"><em>Type:</em></span> one of "silent", "notify", "show"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"notify"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/news.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.registry"></a><a class="term" href="options.html#opt-nix.registry"><code class="option">nix.registry</code></a></span></dt><dd><p>User level flake registry.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/nix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.registry._name_.exact"></a><a class="term" href="options.html#opt-nix.registry._name_.exact"><code class="option">nix.registry.&lt;name&gt;.exact</code></a></span></dt><dd><p>Whether the <code class="option">from</code> reference needs to match exactly. If set,
+a <code class="option">from</code> reference like <code class="literal">nixpkgs</code> does not
+match with a reference like <code class="literal">nixpkgs/nixos-20.03</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/nix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.registry._name_.flake"></a><a class="term" href="options.html#opt-nix.registry._name_.flake"><code class="option">nix.registry.&lt;name&gt;.flake</code></a></span></dt><dd><p>The flake input to which <code class="option">from&gt;</code> is to be rewritten.
+</p><p><span class="emphasis"><em>Type:</em></span> null or attribute set</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">nixpkgs</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/nix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.registry._name_.from"></a><a class="term" href="options.html#opt-nix.registry._name_.from"><code class="option">nix.registry.&lt;name&gt;.from</code></a></span></dt><dd><p>The flake reference to be rewritten.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean or packages</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        {
+        id = "nixpkgs"; type = "indirect"; 
+        }
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/nix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.registry._name_.to"></a><a class="term" href="options.html#opt-nix.registry._name_.to"><code class="option">nix.registry.&lt;name&gt;.to</code></a></span></dt><dd><p>The flake reference to which <code class="option">from&gt;</code> is to be rewritten.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean or packages</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        {
+        owner = "my-org"; repo = "my-nixpkgs"; type = "github"; 
+        }
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/nix.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nixpkgs.config"></a><a class="term" href="options.html#opt-nixpkgs.config"><code class="option">nixpkgs.config</code></a></span></dt><dd><p>The configuration of the Nix Packages collection. (For
 details, see the Nixpkgs documentation.) It allows you to set
 package configuration options.
