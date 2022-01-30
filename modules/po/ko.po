@@ -8,29 +8,32 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-01-02 11:55+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-01-30 21:50+0000\n"
+"Last-Translator: 박수원 <bboxone@gmail.com>\n"
+"Language-Team: Korean <https://hosted.weblate.org/projects/home-manager/"
+"modules/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
-msgstr ""
+msgstr "home 파일 링크를 %s에 생성하는 중"
 
 #: modules/files.nix:246
 msgid "Cleaning up orphan links from %s"
-msgstr ""
+msgstr "%s에서 연결이 끊어진 링크 파일들을 지우는 중"
 
 #: modules/files.nix:262
 msgid "Creating profile generation %s"
-msgstr ""
+msgstr "profile 세대 %s를 생성하는 중"
 
 #: modules/files.nix:266
 msgid "No change so reusing latest profile generation %s"
-msgstr ""
+msgstr "바뀐 것이 없어서 가장 최근의 profile 세대 %s를 다시 사용하는 것으로 설정하는 중"
 
 #: modules/home-environment.nix:589
 msgid ""
@@ -47,14 +50,26 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"아이고, nix-env가 새로운 홈 매니저 profile을 설치하는데 실패했네요!\n"
+"\n"
+"혹시나 \"nix-env -i\"를 이용해서 설치된 패키지와 충돌이 일어난 것 일까요?\n"
+"다음의 명령어를 시도해보세요.\n"
+"\n"
+"    nix-env -q\n"
+"\n"
+"만약 충돌하는 패키지가 있다면 다음의 명령어로 제거할 수 있습니다.\n"
+"\n"
+"    nix-env -e {패키지 이름}\n"
+"\n"
+"그런 후, 다시 홈 매니저 설정을 활성화 해보세요."
 
 #: modules/home-environment.nix:620
 msgid "Activating %s"
-msgstr ""
+msgstr "%s를 활성화 하는 중"
 
 #: modules/lib-bash/activation-init.sh:30
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr ""
+msgstr "oldGenNum과 oldGenPath가 정상인지 확인 중"
 
 #: modules/lib-bash/activation-init.sh:33
 msgid ""
@@ -71,27 +86,39 @@ msgid ""
 "\n"
 "and trying home-manager switch again. Good luck!"
 msgstr ""
+"이전 세대 번호와 경로가 서로 충돌하고 있습니다! 이들은 둘 다 비어있든지\n"
+"아니면 둘 다 설정돼있어야 하는데 지금 이들은 다음으로 설정되어있습니다.\n"
+"\n"
+"    '%s' 와 '%s'\n"
+"\n"
+"만약 이전 profile 세대들을 잃는 것이 상관없다면\n"
+"가장 쉬운 해결 방법은 아마 다음의 명령어를 실행하는 것일 겁니다.\n"
+"\n"
+"   rm %s/home-manager*\n"
+"   rm %s/current-home\n"
+"\n"
+"그런 후 'home-manager switch'를 다시 시도해 보십시오. 행운을 빕니다!"
 
 #: modules/lib-bash/activation-init.sh:50
 msgid "Starting Home Manager activation"
-msgstr ""
+msgstr "홈 매니저 활성화를 시작하는 중"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Nix가 정상인지 확인 중"
 
 #: modules/lib-bash/activation-init.sh:60
 msgid "This is a dry run"
-msgstr ""
+msgstr "모의 실행 중 입니다"
 
 #: modules/lib-bash/activation-init.sh:63
 msgid "This is a live run"
-msgstr ""
+msgstr "모의 실행이 아닌 실제 실행 중 입니다"
 
 #: modules/lib-bash/activation-init.sh:68
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "사용 중인 Nix 버전: %s"
 
 #: modules/lib-bash/activation-init.sh:71
 msgid "Activation variables:"
-msgstr ""
+msgstr "활성화 변수들:"
