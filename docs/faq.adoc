@@ -45,7 +45,9 @@ You could also opt to unistall _all_ of the packages from your profile with `nix
 === Why are the session variables not set?
 :foreign-env: https://github.com/oh-my-fish/plugin-foreign-env
 
-Home Manager is only able to set session variables automatically if it manages your Bash, Z shell, or fish shell configuration. If you don't want to let Home Manager manage your shell then you will have to manually source the `~/.nix-profile/etc/profile.d/hm-session-vars.sh` file in an appropriate way. In Bash and Z shell this can be done by adding
+Home Manager is only able to set session variables automatically if it manages your Bash, Z shell, or fish shell configuration. To enable such management you use <<opt-programs.bash.enable>>, <<opt-programs.zsh.enable>>, or <<opt-programs.fish.enable>>.
+
+If you don't want to let Home Manager manage your shell then you will have to manually source the `~/.nix-profile/etc/profile.d/hm-session-vars.sh` file in an appropriate way. In Bash and Z shell this can be done by adding
 
 [source,bash]
 ----
