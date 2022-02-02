@@ -83,6 +83,12 @@
     github = "kubukoz";
     githubId = 894884;
   };
+  loicreynier = {
+    name = "Loïc Reynier";
+    email = "loic@loireynier.fr";
+    github = "loicreynier";
+    githubId = 88983487;
+  };
   matrss = {
     name = "Matthias Riße";
     email = "matrss@users.noreply.github.com";

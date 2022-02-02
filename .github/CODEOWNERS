@@ -201,6 +201,9 @@
 
 /modules/programs/powerline-go.nix                    @DamienCassou
 
+/modules/programs/pubs.nix                            @loicreynier
+/tests/modules/programs/pubs                          @loicreynier
+
 /modules/programs/rbw.nix                             @ambroisie
 /tests/modules/programs/rbw                           @ambroisie
 

@@ -86,6 +86,7 @@ import nmt {
     ./modules/programs/pandoc
     ./modules/programs/pet
     ./modules/programs/powerline-go
+    ./modules/programs/pubs
     ./modules/programs/qutebrowser
     ./modules/programs/readline
     ./modules/programs/sagemath
