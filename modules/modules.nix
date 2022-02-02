@@ -60,6 +60,7 @@ let
     ./programs/direnv.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
+    ./programs/eww.nix
     ./programs/exa.nix
     ./programs/feh.nix
     ./programs/firefox.nix

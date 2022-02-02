@@ -2410,6 +2410,13 @@ in
           A new module is available: 'programs.zellij'.
         '';
       }
+
+      {
+        time = "2022-02-17T17:12:46+00:00";
+        message = ''
+          A new module is available: 'programs.eww'.
+        '';
+      }
     ];
   };
 }
