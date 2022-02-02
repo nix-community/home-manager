@@ -2,7 +2,8 @@
 
 with lib;
 
-{
+let cfg = config.programs.man;
+in {
   options = {
     programs.man = {
       enable = mkOption {
@@ -13,6 +14,13 @@ with lib;
           command. This also includes "man" outputs of all
           <literal>home.packages</literal>.
         '';
+      };
+
+      package = mkOption {
+        type = types.package;
+        default = pkgs.man;
+        defaultText = literalExpression "pkgs.man";
+        description = "The man package to use.";
       };
 
       generateCaches = mkOption {
@@ -39,7 +47,7 @@ with lib;
   };
 
   config = mkIf config.programs.man.enable {
-    home.packages = [ pkgs.man ];
+    home.packages = [ cfg.package ];
     home.extraOutputsToInstall = [ "man" ];
 
     # This is mostly copy/pasted/adapted from NixOS' documentation.nix.
