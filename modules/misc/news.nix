@@ -2449,6 +2449,13 @@ in
           A new module is available: 'programs.just'.
         '';
       }
+
+      {
+        time = "2022-03-06T09:40:17+00:00";
+        message = ''
+          A new module is available: 'programs.pubs'.
+        '';
+      }
     ];
   };
 }
