@@ -8327,6 +8327,29 @@ man page for more examples.
                     &lt;home-manager/modules/services/playerctld.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.playerctld.package"></a><a class="term" href="options.html#opt-services.playerctld.package"><code class="option">services.playerctld.package</code></a></span></dt><dd><p>The playerctl package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.playerctl</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/playerctld.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/playerctld.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.plex-mpv-shim.enable"></a><a class="term" href="options.html#opt-services.plex-mpv-shim.enable"><code class="option">services.plex-mpv-shim.enable</code></a></span></dt><dd><p>Whether to enable Plex mpv shim.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/plex-mpv-shim.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/plex-mpv-shim.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.plex-mpv-shim.package"></a><a class="term" href="options.html#opt-services.plex-mpv-shim.package"><code class="option">services.plex-mpv-shim.package</code></a></span></dt><dd><p>The package to use for the Plex mpv shim.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.plex-mpv-shim</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/plex-mpv-shim.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/plex-mpv-shim.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.plex-mpv-shim.settings"></a><a class="term" href="options.html#opt-services.plex-mpv-shim.settings"><code class="option">services.plex-mpv-shim.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/plex-mpv-shim/config.json</code>. See
+<a class="link" href="https://github.com/iwalton3/plex-mpv-shim/blob/master/README.md" target="_top">https://github.com/iwalton3/plex-mpv-shim/blob/master/README.md</a>
+for the configuration documentation.
+</p><p><span class="emphasis"><em>Type:</em></span> JSON value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  adaptive_transcode = false;
+  allow_http = false;
+  always_transcode = false;
+  audio_ac3passthrough = false;
+  audio_dtspassthrough = false;
+  auto_play = true;
+  auto_transcode = true;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/plex-mpv-shim.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/plex-mpv-shim.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.polybar.enable"></a><a class="term" href="options.html#opt-services.polybar.enable"><code class="option">services.polybar.enable</code></a></span></dt><dd><p>Whether to enable Polybar status bar.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/polybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/polybar.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.polybar.package"></a><a class="term" href="options.html#opt-services.polybar.package"><code class="option">services.polybar.package</code></a></span></dt><dd><p>Polybar package to install.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.polybar</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.polybar.override {
