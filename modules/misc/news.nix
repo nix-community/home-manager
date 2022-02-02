@@ -2403,6 +2403,13 @@ in
           A new module is available: 'services.twmn'.
         '';
       }
+
+      {
+        time = "2022-02-16T23:50:35+00:00";
+        message = ''
+          A new module is available: 'programs.zellij'.
+        '';
+      }
     ];
   };
 }

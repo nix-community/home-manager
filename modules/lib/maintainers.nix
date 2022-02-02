@@ -205,4 +205,10 @@
     github = "pinage404";
     githubId = 6325757;
   };
+  mainrs = {
+    name = "mainrs";
+    email = "5113257+mainrs@users.noreply.github.com";
+    github = "mainrs";
+    githubId = 5113257;
+  };
 }

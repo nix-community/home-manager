@@ -245,6 +245,8 @@
 
 /modules/programs/zathura.nix                         @rprospero
 
+/modules/programs/zellij.nix                          @mainrs
+
 /modules/programs/zoxide.nix                          @marsam
 
 /modules/programs/zsh/prezto.nix                      @NickHu
