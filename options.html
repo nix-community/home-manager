@@ -6493,7 +6493,6 @@ manually set any options not listed above.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"><em class="replaceable"><code>(build of vscode-1.63.2)</code></em></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.vscodium</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.extensions"></a><a class="term" href="options.html#opt-programs.vscode.extensions"><code class="option">programs.vscode.extensions</code></a></span></dt><dd><p>The extensions Visual Studio Code should be started with.
-These will override but not delete manually installed ones.
 </p><p><span class="emphasis"><em>Type:</em></span> list of packages</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         
@@ -6515,6 +6514,10 @@ overlay or set this option. Example overlay configuration:
 </p><p><span class="emphasis"><em>Type:</em></span> path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"${pkgs.hie-nix.hies}/bin/hie-wrapper"</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">(import ~/src/haskell-ide-engine {}).hies + "/bin/hie-wrapper";
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode/haskell.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode/haskell.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.immutableExtensionsDir"></a><a class="term" href="options.html#opt-programs.vscode.immutableExtensionsDir"><code class="option">programs.vscode.immutableExtensionsDir</code></a></span></dt><dd><p>Whether extensions can be installed or updated manually
+or by Visual Studio Code.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.keybindings"></a><a class="term" href="options.html#opt-programs.vscode.keybindings"><code class="option">programs.vscode.keybindings</code></a></span></dt><dd><p>Keybindings written to Visual Studio Code's
 <code class="filename">keybindings.json</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> list of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
