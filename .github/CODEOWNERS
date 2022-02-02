@@ -76,6 +76,8 @@
 
 /modules/programs/emacs.nix                           @rycee
 
+/modules/programs/eww.nix                             @mainrs
+
 /modules/programs/exa.nix                             @kalhauge
 
 /modules/programs/firefox.nix                         @rycee
