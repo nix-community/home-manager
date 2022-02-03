@@ -88,7 +88,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ pkgs.taskwarrior ];
 
-    xdg.configFile."task/taskrc".text = ''
+    xdg.configFile."task/taskrc_".text = ''
       data.location=${cfg.dataLocation}
       ${optionalString (cfg.colorTheme != null) (if isString cfg.colorTheme then
         "include ${cfg.colorTheme}.theme"
@@ -98,6 +98,10 @@ in {
       ${concatStringsSep "\n" (mapAttrsToList formatPair cfg.config)}
 
       ${cfg.extraConfig}
+    '';
+    home.activation.regenDotTaskRc = hm.dag.entryAfter [ "writeBoundary" ] ''
+      $VERBOSE_ECHO "Copying taskwarrior taskrc"
+      $DRY_RUN_CMD echo "include ${xdg.configHome}/task/taskrc_" > ~/.taskrc
     '';
   };
 }
