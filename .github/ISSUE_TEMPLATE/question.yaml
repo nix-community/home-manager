@@ -41,9 +41,11 @@ body:
     options:
     - label: Do you use nix flakes?
       required: false
-    - label: Do you use home-manager as a standalone program?
+    - label: Do you use Home Manager as a standalone program?
       required: false
-    - label: Do you use home-manager as a NixOS module?
+    - label: Do you use Home Manager as a NixOS module?
+      required: false
+    - label: Do you use Home Manager as a nix-darwin module?
       required: false
   validations:
     required: false
