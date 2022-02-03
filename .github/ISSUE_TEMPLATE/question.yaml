@@ -20,7 +20,7 @@ body:
       Please @ people who are in the `meta.maintainers` list of the module in question.
       If in doubt, check `git blame` for whoever last touched something.
   validations:
-    required: false
+    required: true
 
 - type: markdown
   attributes:
