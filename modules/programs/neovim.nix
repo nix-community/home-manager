@@ -371,7 +371,7 @@ in {
           "nvim/init.lua" = let
             luaRcContent =
               lib.optionalString (neovimConfig.neovimRcContent != "")
-              "vim.cmd.source ${config.xdg.configHome}/nvim/init.vim"
+              "vim.cmd [[source ${config.xdg.configHome}/nvim/init.vim]]"
               + lib.optionalString hasLuaConfig
               config.programs.neovim.generatedConfigs.lua;
           in mkIf (luaRcContent != "") { text = luaRcContent; };
