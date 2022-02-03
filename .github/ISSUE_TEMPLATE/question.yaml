@@ -3,6 +3,8 @@ description: Ask a question
 title: 'question: '
 labels: [question]
 
+assignees: [rycee, berbiche]
+
 body:
 - type: textarea
   id: question
