@@ -29,6 +29,10 @@ let
 
           home.username = config.users.users.${name}.name;
           home.homeDirectory = config.users.users.${name}.home;
+
+          # Make activation script use same version of Nix as system as a whole.
+          # This avoids problems with Nix not being in PATH.
+          home.extraActivationPath = [ config.nix.package ];
         };
       })
     ] ++ cfg.sharedModules;
