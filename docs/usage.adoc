@@ -29,6 +29,7 @@ man home-configuration.nix
 
 Once a configuration is successfully built, it can be activated. The activation performs the steps necessary to make the files, programs, and services available in your user environment. The `home-manager switch` command performs a combined build and activation.
 
+[[sec-usage-configuration]]
 === Configuration Example
 
 A fresh install of Home Manager will generate a minimal `~/.config/nixpkgs/home.nix` file containing something like
@@ -128,6 +129,7 @@ home-manager build
 which will create a `result` link to a directory containing an
 activation script and the generated home directory files.
 
+[[sec-usage-rollbacks]]
 === Rollbacks
 
 While the `home-manager` tool does not explicitly support rollbacks at the moment it is relatively easy to perform one manually. The steps to do so are
@@ -162,6 +164,7 @@ Starting home manager activation
 …
 ----
 
+[[sec-usage-dotfiles]]
 === Keeping your ~ safe from harm
 
 To configure programs and services Home Manager must write various things to your home directory. To prevent overwriting any existing files when switching to a new generation, Home Manager will attempt to detect collisions between existing files and generated files. If any such collision is detected the activation will terminate before changing anything on your computer.
@@ -194,6 +197,7 @@ Existing file '/home/jdoe/.config/git/config' is in the way
 Please move the above files and try again
 ----
 
+[[sec-usage-graphical]]
 === Graphical services
 
 Home Manager includes a number of services intended to run in a graphical session, for example `xscreensaver` and `dunst`. Unfortunately, such services will not be started automatically unless you let Home Manager start your X session. That is, you have something like

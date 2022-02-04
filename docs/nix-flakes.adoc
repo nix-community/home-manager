@@ -1,0 +1,219 @@
+[[ch-nix-flakes]]
+== Nix Flakes
+
+:nixos-wiki-flakes: https://nixos.wiki/wiki/Flakes
+
+Home Manager includes a `flake.nix` file for compatibility with {nixos-wiki-flakes}[Nix Flakes].
+The support is still experimental and may change in backwards incompatible ways.
+
+[[sec-flakes-prerequisties]]
+=== Prerequisties
+
+* Install Nix 2.4 or have it in `nix-shell`.
+
+* Enable experimental features `nix-command` and `flakes`.
++
+Either set in `nix.conf`
++
+[source,bash]
+experimental-features = nix-command flakes
++
+or pass them to `nix` by
++
+[source,console]
+nix --experimental-features "nix-command flakes" your command
+
+* Prepare your Home Manager configuration (`home.nix`).
++
+Unlike the channel-based setup,
+`home.nix` will be evaluated when the flake is built,
+so it must be present before bootstrap of Home Manager from the flake.
+See <<sec-usage-configuration>> for introduction about
+writing a Home Manager configuration.
++
+[NOTE]
+====
+The `stateVersion` will be specified in the flake instead of in the configuration file.
+
+Remove the line containing `home.stateVersion` in the example.
+====
+
+[[sec-flakes-standalone]]
+=== Standalone setup
+
+1. Set up a flake with a `flake.nix` as follows:
++
+[source,nix]
+----
+{
+  description = "Home Manager configuration of Jane Doe";
+
+  inputs = {
+    # Specify the source of Home Manager and Nixpkgs
+    home-manager.url = "github:nix-community/home-manager";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  outputs = { home-manager, ... }:
+    let
+      system = "x86_64-linux";
+      username = "jdoe";
+    in {
+      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
+        # Specify the path to your home configuration here
+        configuration = import ./home.nix;
+
+        inherit system username;
+        homeDirectory = "/home/${username}";
+        # Update the state version as needed.
+        # See the changelog here:
+        # https://nix-community.github.io/home-manager/release-notes.html#sec-release-21.05
+        stateVersion = "21.11";
+
+        # Optionally use extraSpecialArgs
+        # to pass through arguments to home.nix
+      };
+    };
+}
+----
++
+[NOTE]
+====
+* The above example tracks the master branch of Home Manager
+and nixos-unstable branch of Nixpkgs.
+If you would like to use the `release-21.11` branch,
+change the `home-manager` input url to `github:nix-community/home-manager/release-21.11`
+and `nixpkgs` url to `github:NixOS/nixpkgs/nixos-21.11`.
+Make sure to also update to the `stateVersion` option accordingly.
+
+* The Home Manager library is exported by the flake under
+`lib.hm`.
+====
+
+2. Install Home Manager and apply the configuration by
++
+[source,console]
+----
+$ nix build --no-link <flake-uri>#homeConfigurations.jdoe.activationPackage
+$ "$(nix path-info <flake-uri>#homeConfigurations.jdoe.activationPackage)"/bin/activate
+----
++
+If `flake.nix` resides in `~/.config/nixpkgs`,
+`<flake-uri>` may be `~/.config/nixpkgs`
+as a Git tree or `path:~/.config/nixpkgs` if not.
+
+3. Since the release `21.05`,
+building a flake-based configuration is as simple as
++
+[source,console]
+$ home-manager switch --flake 'flake-uri#jdoe'
++
+once home-manager is installed.
++
+Here, `jdoe` is a configuration specified in the flake file,
+and `<flake-uri>#jdoe` will be expanded to
+`<flake-uri>#homeConfigurations.jdoe.activationPackage`
+and be built by Nix.
+
+[NOTE]
+====
+The flake inputs are not upgraded automatically when switching.
+The analogy to the command `home-manager --update ...` is `nix flake update`.
+
+If updating more than one input is undesirable,
+the command `nix flake lock --update-input <input-name>` can be used.
+
+You can also pass flake-related options
+such as `--recreate-lock-file` or `--update-input [input]`
+to `home-manager` when building/switching,
+and these options will be forwarded to `nix build`.
+See the {nixos-wiki-flakes}[NixOS Wiki page] for detail.
+====
+
+[[sec-flakes-nixos-module]]
+=== NixOS module
+
+To use Home Manager as a NixOS module,
+a bare-minimum `flake.nix` would be as follows:
+
+[source,nix]
+----
+{
+  description = "NixOS configuration";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  outputs = inputs@{ nixpkgs, home-manager, ... }: {
+    nixosConfigurations = {
+      hostname = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.jdoe = import ./home.nix;
+
+            # Optionally, use home-manager.extraSpecialArgs to pass
+            # arguments to home.nix
+          }
+        ];
+      };
+    };
+  };
+}
+----
+
+The Home Manager configuration is then part of the NixOS configuration
+and is automatically rebuilt with the system when using the appropriate command
+for the system, such as `nixos-rebuild switch --flake <flake-uri>`.
+
+[[sec-flakes-nix-darwin-module]]
+=== nix-darwin module
+
+The flake-based setup of the Home Manager nix-darwin module
+is similar to that of NixOS. The `flake.nix` would be:
+
+[source,nix]
+----
+{
+  description = "NixOS configuration";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nix-darwin.url = "github:lnl7/nix-darwin";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  outputs = inputs@{ nixpkgs, home-manager, nix-darwin, ... }: {
+    darwinConfigurations = {
+      hostname = nix-darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        modules = [
+          ./configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.jdoe = import ./home.nix;
+
+            # Optionally, use home-manager.extraSpecialArgs to pass
+            # arguments to home.nix
+          }
+        ];
+      };
+    };
+  };
+}
+----
+
+and it is also rebuilt with the nix-darwin generations.
+The rebuild command here may be `darwin-rebuild switch --flake <flake-uri>`.

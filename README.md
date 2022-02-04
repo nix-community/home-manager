@@ -77,6 +77,9 @@ Home Manager can be used in three primary ways:
    installation][manual nix-darwin install] in the manual for a
    description of this setup.
 
+Home Manager provides both the channel-based setup and the flake-based one.
+See [Nix Flakes][manual nix flakes] for a description of the flake-based setup.
+
 Translations
 ------------
 
@@ -89,99 +92,6 @@ contribute to the translation effort then start by going to the
 <a href="https://hosted.weblate.org/engage/home-manager/">
 <img src="https://hosted.weblate.org/widgets/home-manager/-/multi-auto.svg" alt="Translation status" />
 </a>
-
-Nix Flakes
-----------
-
-Home Manager includes a `flake.nix` file for compatibility with [Nix Flakes][]
-for those that wish to use it as a module. A bare-minimum `flake.nix` would be
-as follows:
-
-```nix
-{
-  description = "NixOS configuration";
-
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager";
-    # nix-darwin.url = "github:lnl7/nix-darwin";
-  };
-
-  outputs = inputs@{ home-manager, nixpkgs, ... }: {
-    nixosConfigurations = {
-      hostname = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.jdoe = import ./home.nix;
-
-            # Optionally, use home-manager.extraSpecialArgs to pass
-            # arguments to home.nix
-          }
-        ];
-      };
-    };
-
-    # You do not need this unless you are using the nix-darwin project
-    darwinConfigurations = {
-      hostname = inputs.nix-darwin.lib.darwinSystem {
-        system = "x86_64-darwin";
-        modules = [
-          ./configuration.nix
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.jdoe = import ./home.nix;
-          }
-        ];
-      };
-    };
-  };
-}
-```
-
-The Home Manager configuration is then part of the NixOS/Darwin configuration
-and is automatically rebuilt with the system when using the appropriate command
-for the system, such as `nixos-rebuild switch --flake <path>` for NixOS,
-and `darwin-rebuild switch --flake <path>` with nix-darwin.
-
-If you are not using NixOS you can place the following flake in
-`~/.config/nixpkgs/flake.nix` to load your standard Home Manager
-configuration:
-
-```nix
-{
-  description = "A Home Manager flake";
-
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-  };
-
-  outputs = inputs: {
-    homeConfigurations = {
-      jdoe = inputs.home-manager.lib.homeManagerConfiguration {
-        system = "x86_64-linux";
-        homeDirectory = "/home/jdoe";
-        username = "jdoe";
-        configuration.imports = [ ./home.nix ];
-      };
-    };
-  };
-}
-```
-
-Note, the Home Manager library is exported by the flake under
-`lib.hm`.
-
-When using flakes, switch to new configurations with
-`home-manager switch --flake <path>`.
 
 Releases
 --------
@@ -214,3 +124,4 @@ This project is licensed under the terms of the [MIT license](LICENSE).
 [manual standalone install]: https://nix-community.github.io/home-manager/index.html#sec-install-standalone
 [manual nixos install]: https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module
 [manual nix-darwin install]: https://nix-community.github.io/home-manager/index.html#sec-install-nix-darwin-module
+[manual nix flakes]: https://nix-community.github.io/home-manager/index.html#ch-nix-flakes
