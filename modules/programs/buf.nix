@@ -2,8 +2,7 @@
 
 with lib;
 
-let
-  cfg = config.programs.buf;
+let cfg = config.programs.buf;
 in {
   meta.maintainers = [ maintainers.lucperkins ];
 
