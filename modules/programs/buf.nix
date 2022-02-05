@@ -7,7 +7,7 @@ in {
   meta.maintainers = [ maintainers.lucperkins ];
 
   options.programs.buf = {
-    enable = mkEnableOption "The Buf CLI tool";
+    enable = mkEnableOption "Buf: a CLI tool for working with Protocol Buffers";
 
     package = mkOption {
       type = types.package;
