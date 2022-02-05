@@ -68,6 +68,8 @@
 
 /modules/programs/broot.nix                           @aheaume
 
+/modules/programs/buf.nix                             @lucperkins
+
 /modules/programs/dircolors.nix                       @JustinLovinger
 
 /modules/programs/direnv.nix                          @rycee

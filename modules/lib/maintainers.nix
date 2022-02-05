@@ -205,4 +205,10 @@
     github = "pinage404";
     githubId = 6325757;
   };
+  lucperkins = {
+    name = "Luc Perkins";
+    email = "lucperkins@gmail.com";
+    github = "lucperkins";
+    githubId = 1523104;
+  };
 }

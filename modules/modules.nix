@@ -54,6 +54,7 @@ let
     ./programs/bottom.nix
     ./programs/broot.nix
     ./programs/browserpass.nix
+    ./programs/buf.nix
     ./programs/chromium.nix
     ./programs/command-not-found/command-not-found.nix
     ./programs/dircolors.nix
