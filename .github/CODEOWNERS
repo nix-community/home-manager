@@ -69,6 +69,7 @@
 /modules/programs/broot.nix                           @aheaume
 
 /modules/programs/buf.nix                             @lucperkins
+/tests/modules/programs/buf                           @lucperkins
 
 /modules/programs/dircolors.nix                       @JustinLovinger
 
