@@ -27,7 +27,7 @@ let
           Type = "simple";
         } // optionalAttrs account.notmuch.enable {
           Environment =
-            "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/notmuchrc";
+            "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
         };
 
         Install = { WantedBy = [ "default.target" ]; };

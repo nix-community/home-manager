@@ -1,5 +1,5 @@
 [Service]
-Environment=NOTMUCH_CONFIG=/home/hm-user/.config/notmuch/notmuchrc
+Environment=NOTMUCH_CONFIG=/home/hm-user/.config/notmuch/default/config
 ExecStart=@gmailieer@/bin/gmi sync
 Type=oneshot
 WorkingDirectory=/home/hm-user/Mail/hm@example.com

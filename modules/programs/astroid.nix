@@ -42,7 +42,8 @@ let
     template = fromJSON (readFile ./astroid-config-template.json);
     astroidConfig = foldl' recursiveUpdate template [
       {
-        astroid.notmuch_config = "${config.xdg.configHome}/notmuch/notmuchrc";
+        astroid.notmuch_config =
+          "${config.xdg.configHome}/notmuch/default/config";
         accounts = mapAttrs (n: accountAttr) astroidAccounts;
         crypto.gpg.path = "${pkgs.gnupg}/bin/gpg";
       }

@@ -27,7 +27,7 @@ let
         ExecStart = "${config.programs.lieer.package}/bin/gmi sync";
         WorkingDirectory = account.maildir.absPath;
         Environment =
-          "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/notmuchrc";
+          "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
       };
     };
   };
