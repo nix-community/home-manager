@@ -1,22 +1,24 @@
 { config, lib, pkgs, ... }:
 
+with lib;
+
 let
   cfg = config.programs.buf;
 in {
-  meta.maintainers = [ lib.maintainers.lucperkins ];
+  meta.maintainers = [ maintainers.lucperkins ];
 
   options.programs.buf = {
-    enable = lib.mkEnableOption "The Buf CLI tool";
+    enable = mkEnableOption "The Buf CLI tool";
 
-    package = lib.mkOption {
-      type = lib.types.package;
+    package = mkOption {
+      type = types.package;
       default = pkgs.buf;
-      defaultText = lib.literalExpression "pkgs.buf";
+      defaultText = literalExpression "pkgs.buf";
       description = "Package providing <command>buf</command>.";
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
   };
 }
