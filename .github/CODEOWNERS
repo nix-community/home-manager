@@ -413,6 +413,9 @@ Makefile                                              @thiagokokada
 
 /modules/services/random-background.nix               @rycee
 
+/modules/services/recoll.nix                          @foo-dogsquared
+/tests/modules/recoll                                 @foo-dogsquared
+
 /modules/services/redshift-gammastep                  @rycee @petabyteboy @thiagokokada
 /tests/modules/redshift-gammastep                     @thiagokokada
 

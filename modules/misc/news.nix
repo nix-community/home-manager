@@ -624,6 +624,14 @@ in
           A new module is available: 'xsession.windowManager.spectrwm'.
         '';
       }
+
+      {
+        time = "2022-07-27T12:22:37+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.recoll'.
+        '';
+      }
     ];
   };
 }
