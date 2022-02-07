@@ -72,6 +72,18 @@ in {
       '';
     };
 
+    theme = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Apply a Kitty color theme. This option takes the friendly name of
+        any theme given by the command <command>kitty +kitten themes</command>.
+        See <link xlink:href="https://github.com/kovidgoyal/kitty-themes"/>
+        for more details.
+      '';
+      example = "Space Gray Eighties";
+    };
+
     font = mkOption {
       type = types.nullOr hm.types.fontType;
       default = null;
@@ -128,6 +140,13 @@ in {
           font_family ${cfg.font.name}
           ${optionalString (cfg.font.size != null)
           "font_size ${toString cfg.font.size}"}
+        ''}
+
+        ${optionalString (cfg.theme != null) ''
+          include ${pkgs.kitty-themes}/${
+            (head (filter (x: x.name == cfg.theme) (builtins.fromJSON
+              (builtins.readFile "${pkgs.kitty-themes}/themes.json")))).file
+          }
         ''}
 
         ${toKittyConfig cfg.settings}
