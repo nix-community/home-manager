@@ -44,6 +44,15 @@ in {
   options.services.emacs = {
     enable = mkEnableOption "the Emacs daemon";
 
+    shell = mkOption {
+      type = types.shellPackage;
+      default = pkgs.bash;
+      defaultText = literalExpression "pkgs.bash";
+      example = literalExpression "pkgs.zsh";
+      description =
+        "The shell that launches an Emacs daemon and should be the same as your shell.";
+    };
+
     package = mkOption {
       type = types.package;
       default = if emacsCfg.enable then emacsCfg.finalPackage else pkgs.emacs;
@@ -123,7 +132,9 @@ in {
           # worth investigating a more targeted approach for user services to
           # import the user environment.
           ExecStart = ''
-            ${pkgs.runtimeShell} -l -c "${emacsBinPath}/emacs --fg-daemon${
+            ${
+              cfg.shell + cfg.shell.shellPath
+            } -l -c "${emacsBinPath}/emacs --fg-daemon${
             # In case the user sets 'server-directory' or 'server-name' in
             # their Emacs config, we want to specify the socket path explicitly
             # so launching 'emacs.service' manually doesn't break emacsclient
