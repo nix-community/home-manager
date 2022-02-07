@@ -228,3 +228,18 @@ in your system configuration and
 ----
 
 in your Home Manager configuration.
+
+[[sec-updating]]
+=== Updating
+
+If you have installed Home Manager using the Nix channel method
+then updating Home Manager is done by first updating the channel.
+You can then switch to the updated Home Manager environment.
+
+[source,console]
+----
+$ nix-channel --update
+…
+unpacking channels...
+$ home-manager switch
+----
