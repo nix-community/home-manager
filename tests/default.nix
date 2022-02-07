@@ -171,6 +171,7 @@ import nmt {
     ./modules/services/picom
     ./modules/services/playerctld
     ./modules/services/polybar
+    ./modules/services/recoll
     ./modules/services/redshift-gammastep
     ./modules/services/screen-locker
     ./modules/services/swayidle

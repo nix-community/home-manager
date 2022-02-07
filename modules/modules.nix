@@ -242,6 +242,7 @@ let
     ./services/poweralertd.nix
     ./services/pulseeffects.nix
     ./services/random-background.nix
+    ./services/recoll.nix
     ./services/redshift-gammastep/gammastep.nix
     ./services/redshift-gammastep/redshift.nix
     ./services/rsibreak.nix
