@@ -34,6 +34,14 @@ let
   extensionPath = ".${extensionDir}/extensions";
 
 in {
+  imports = [
+    (mkChangedOptionModule [ "programs" "vscode" "immutableExtensionsDir" ] [
+      "programs"
+      "vscode"
+      "mutableExtensionsDir"
+    ] (config: !config.programs.vscode.immutableExtensionsDir))
+  ];
+
   options = {
     programs.vscode = {
       enable = mkEnableOption "Visual Studio Code";
@@ -118,10 +126,10 @@ in {
         '';
       };
 
-      immutableExtensionsDir = mkOption {
+      mutableExtensionsDir = mkOption {
         type = types.bool;
-        default = false;
-        example = true;
+        default = true;
+        example = false;
         description = ''
           Whether extensions can be installed or updated manually
           or by Visual Studio Code.
@@ -138,7 +146,7 @@ in {
         "${configFilePath}".source =
           jsonFormat.generate "vscode-user-settings" cfg.userSettings;
       })
-      (mkIf (cfg.keybindings != { })
+      (mkIf (cfg.keybindings != [ ])
         (let dropNullFields = filterAttrs (_: v: v != null);
         in {
           "${keybindingsFilePath}".source =
@@ -158,10 +166,11 @@ in {
           "${extensionPath}/${k}".source = "${extensionsFolder}/${k}";
         };
         extensions = builtins.attrNames (builtins.readDir extensionsFolder);
-      in if cfg.immutableExtensionsDir then {
+      in if cfg.mutableExtensionsDir then
+        mkMerge (map addSymlinkToExtension extensions)
+      else {
         "${extensionPath}".source = extensionsFolder;
-      } else
-        mkMerge (map addSymlinkToExtension extensions)))
+      }))
     ];
   };
 }
