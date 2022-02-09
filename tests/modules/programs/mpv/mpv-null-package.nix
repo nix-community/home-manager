@@ -4,7 +4,8 @@
   config = {
     programs.mpv = {
       enable = true;
-      package = null;
+
+      addToPath = false;
 
       bindings = {
         WHEEL_UP = "seek 10";

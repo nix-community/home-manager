@@ -49,33 +49,38 @@ let
   renderDefaultProfiles = profiles:
     renderOptions { profile = concatStringsSep "," profiles; };
 
-  mpvPackage = if cfg.package != null then
-    if cfg.scripts == [ ] then
-      cfg.package
-    else
-      pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; }
+  mpvPackage = if cfg.scripts == [ ] then
+    cfg.package
   else
-    null;
+    pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; };
 
 in {
   options = {
     programs.mpv = {
       enable = mkEnableOption "mpv";
 
-      package = mkOption {
-        type = with types; nullOr package;
-        default = pkgs.mpv;
-        example = literalExpression
-          "pkgs.wrapMpv (pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }) { youtubeSupport = true; }";
+      addToPath = mkOption {
+        type = types.bool;
+        default = true;
         description = ''
-          Package providing mpv. Set to <code>null</code> to not add any MPV
-          package to your path. This should be done if you want to use the
+          Whether to add MPV package to your path.
+          <code>addToPath = false;</code> should be set if you want to use
           system package or NixOS module.
         '';
       };
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.mpv;
+        example = literalExpression
+          "pkgs.wrapMpv (pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }) { youtubeSupport = true; }";
+        description = ''
+          Package providing mpv.
+        '';
+      };
+
       finalPackage = mkOption {
-        type = with types; nullOr package;
+        type = types.package;
         readOnly = true;
         visible = false;
         description = ''
@@ -176,7 +181,7 @@ in {
           The programs.mpv "package" option is mutually exclusive with "scripts" option.'';
       }];
     }
-    (mkIf (mpvPackage != null) {
+    (mkIf (cfg.addToPath) {
       home.packages = [ mpvPackage ];
       programs.mpv.finalPackage = mpvPackage;
     })
