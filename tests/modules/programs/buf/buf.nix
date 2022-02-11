@@ -5,9 +5,9 @@
     programs.buf = { enable = true; };
 
     nmt.script = ''
-      assertFileExists home-path/bin/buf
-      assertFileExists home-path/bin/protoc-gen-buf-breaking
-      assertFileExists home-path/bin/protoc-gen-buf-lint
+      assertFileIsExecutable home-path/bin/buf
+      assertFileIsExecutable home-path/bin/protoc-gen-buf-breaking
+      assertFileIsExecutable home-path/bin/protoc-gen-buf-lint
     '';
   };
 }
