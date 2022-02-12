@@ -1,0 +1,124 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager Modules package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager Modules\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2022-01-02 11:55+0100\n"
+"PO-Revision-Date: 2022-02-12 15:54+0000\n"
+"Last-Translator: Narazaki Shuji <shujinarazaki@protonmail.com>\n"
+"Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
+"modules/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.11-dev\n"
+
+#: modules/files.nix:233
+msgid "Creating home file links in %s"
+msgstr "ホームファイルのリンクを %s に作ります"
+
+#: modules/files.nix:246
+msgid "Cleaning up orphan links from %s"
+msgstr "%s から無効なリンクを消去しています"
+
+#: modules/files.nix:262
+msgid "Creating profile generation %s"
+msgstr "世代 %s のプロファイルを生成しています"
+
+#: modules/files.nix:266
+msgid "No change so reusing latest profile generation %s"
+msgstr "変更されていないので最新の世代 %s のプロファイルを再利用します"
+
+#: modules/home-environment.nix:589
+msgid ""
+"Oops, nix-env failed to install your new Home Manager profile!\n"
+"\n"
+"Perhaps there is a conflict with a package that was installed using\n"
+"\"nix-env -i\"? Try running\n"
+"\n"
+"    nix-env -q\n"
+"\n"
+"and if there is a conflicting package you can remove it with\n"
+"\n"
+"    nix-env -e {package name}\n"
+"\n"
+"Then try activating your Home Manager configuration again."
+msgstr ""
+"nix-envはHome managerの新しいプロファイルをインストールできませんでした！\n"
+"\n"
+"おそらく\"nix-env -i\"を使ってインストールしたパッケージが矛盾しているのでは？\n"
+"以下のコマンド\n"
+"\n"
+"nix-env -q\n"
+"\n"
+"を試してみて、もし衝突しているパッケージがあれば、\n"
+"\n"
+"nix-env -e {パッケージ名前}\n"
+"\n"
+"で削除し、再度Home Managerの設定の有効化を試してみてください。"
+
+#: modules/home-environment.nix:620
+msgid "Activating %s"
+msgstr "%s を有効化しています"
+
+#: modules/lib-bash/activation-init.sh:30
+msgid "Sanity checking oldGenNum and oldGenPath"
+msgstr "oldGenNum と oldGenPath の健全性検査をしています"
+
+#: modules/lib-bash/activation-init.sh:33
+msgid ""
+"The previous generation number and path are in conflict! These\n"
+"must be either both empty or both set but are now set to\n"
+"\n"
+"    '%s' and '%s'\n"
+"\n"
+"If you don't mind losing previous profile generations then\n"
+"the easiest solution is probably to run\n"
+"\n"
+"   rm %s/home-manager*\n"
+"   rm %s/current-home\n"
+"\n"
+"and trying home-manager switch again. Good luck!"
+msgstr ""
+"先行する世代番号とパスが矛盾しています！\n"
+"それらはどちらも空かどちらもセットされていなければいけません。しかし\n"
+"\n"
+"    '%s' と '%s'\n"
+"\n"
+"となっています。もしプロファイルの以前の世代を失っても構わないなら\n"
+"おそらくもっとも簡単な解決法は\n"
+"\n"
+"   rm %s/home-manager*\n"
+"   rm %s/current-home\n"
+"\n"
+"を実行して、home-manager switch を再び実行してみることでしょう。幸運を！"
+
+#: modules/lib-bash/activation-init.sh:50
+msgid "Starting Home Manager activation"
+msgstr "Home Managerの有効化を開始しました"
+
+#: modules/lib-bash/activation-init.sh:54
+msgid "Sanity checking Nix"
+msgstr "Nixの健全性検査中です"
+
+#: modules/lib-bash/activation-init.sh:60
+msgid "This is a dry run"
+msgstr "これは予行練習(dry run)です"
+
+#: modules/lib-bash/activation-init.sh:63
+msgid "This is a live run"
+msgstr "これは実際に実行します"
+
+#: modules/lib-bash/activation-init.sh:68
+msgid "Using Nix version: %s"
+msgstr "Nix バージョン %s を使用しています"
+
+#: modules/lib-bash/activation-init.sh:71
+msgid "Activation variables:"
+msgstr "有効化変数:"
