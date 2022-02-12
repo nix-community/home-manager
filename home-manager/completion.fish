@@ -64,3 +64,7 @@ complete -c home-manager -f -l "show-trace" -d "Print stack trace of evaluation 
 complete -c home-manager -f -l "substitute"
 complete -c home-manager -f -l "no-substitute"
 complete -c home-manager -f -l "no-out-link"
+complete -c home-manager -f -l "update-input"
+complete -c home-manager -f -l "override-input"
+complete -c home-manager -f -l "experimental-features"
+complete -c home-manager -f -l "extra-experimental-features"
