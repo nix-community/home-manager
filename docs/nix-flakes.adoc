@@ -18,10 +18,13 @@ Either set in `nix.conf`
 [source,bash]
 experimental-features = nix-command flakes
 +
-or pass them to `nix` by
+or pass them to `nix` and `home-manager` by
 +
 [source,console]
-nix --experimental-features "nix-command flakes" your command
+----
+$ nix --extra-experimental-features "nix-command flakes" <sub-commands>
+$ home-manager --extra-experimental-features "nix-command flakes" <sub-commands>
+----
 
 * Prepare your Home Manager configuration (`home.nix`).
 +
