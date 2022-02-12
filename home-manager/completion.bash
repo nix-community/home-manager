@@ -293,7 +293,9 @@ _home-manager_completions ()
     Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" \
               "--verbose" "--cores" "--debug" "--impure" "--keep-failed" \
               "--keep-going" "-j" "--max-jobs" "--no-substitute" "--no-out-link" \
-              "--show-trace" "--substitute" "--builders" "--version")
+              "--show-trace" "--substitute" "--builders" "--version" \
+              "--update-input" "--override-input" "--experimental-features" \
+              "--extra-experimental-features" )
 
     # ^ « home-manager »'s options.
 
