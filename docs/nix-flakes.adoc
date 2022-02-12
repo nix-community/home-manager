@@ -99,6 +99,7 @@ $ nix build --no-link <flake-uri>#homeConfigurations.jdoe.activationPackage
 $ "$(nix path-info <flake-uri>#homeConfigurations.jdoe.activationPackage)"/bin/activate
 ----
 +
+Substitute `<flake-uri>` with the flake URI of the configuration flake.
 If `flake.nix` resides in `~/.config/nixpkgs`,
 `<flake-uri>` may be `~/.config/nixpkgs`
 as a Git tree or `path:~/.config/nixpkgs` if not.
@@ -107,7 +108,7 @@ as a Git tree or `path:~/.config/nixpkgs` if not.
 building a flake-based configuration is as simple as
 +
 [source,console]
-$ home-manager switch --flake 'flake-uri#jdoe'
+$ home-manager switch --flake '<flake-uri>#jdoe'
 +
 once home-manager is installed.
 +
