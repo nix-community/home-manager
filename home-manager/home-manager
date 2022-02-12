@@ -608,6 +608,14 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
             shift 2
             ;;
+        --experimental-features)
+            PASSTHROUGH_OPTS+=("$opt" "$1")
+            shift
+            ;;
+        --extra-experimental-features)
+            PASSTHROUGH_OPTS+=("$opt" "$1")
+            shift
+            ;;
         --no-out-link)
             NO_OUT_LINK=1
             ;;
