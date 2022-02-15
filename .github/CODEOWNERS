@@ -157,6 +157,9 @@
 /modules/programs/ne.nix                              @cwyc
 /tests/modules/programs/ne                            @cwyc
 
+/modules/programs/neovim.nix                          @cdunster
+/tests/modules/programs/neovim                        @cdunster
+
 /modules/programs/newsboat.nix                        @sumnerevans
 /tests/modules/programs/newsboat                      @sumnerevans
 

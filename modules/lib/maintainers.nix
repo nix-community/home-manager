@@ -205,4 +205,10 @@
     github = "pinage404";
     githubId = 6325757;
   };
+  cdunster = {
+    name = "Callum Dunster";
+    email = "cdunster@users.noreply.github.com";
+    github = "cdunster";
+    githubId = 5011912;
+  };
 }
