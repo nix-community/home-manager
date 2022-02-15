@@ -28,8 +28,7 @@ let
       type = mkOption {
         type =
           types.either (types.enum [ "lua" "viml" "teal" "fennel" ]) types.str;
-        description =
-          "Language used in config. Configurations are aggregated per-language.";
+        description = "Language used in config section of this plugin.";
         default = "viml";
       };
 
@@ -311,14 +310,25 @@ in {
         config = "";
         optional = false;
       }) cfg.plugins;
-    suppressNotVimlConfig = p:
-      if p.type != "viml" then p // { config = ""; } else p;
+    convertConfigToViml = p:
+      if p.type == "viml" then
+        p
+      else if p.type == "lua" then
+        p // {
+          config = ''
+            lua << EOF
+          '' + p.config + ''
+
+            EOF'';
+        }
+      else
+        p // { config = ""; };
 
     neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
       inherit (cfg)
         extraPython3Packages withPython3 withNodeJs withRuby viAlias vimAlias;
       configure = cfg.configure // moduleConfigure;
-      plugins = (map suppressNotVimlConfig pluginsNormalized)
+      plugins = (map convertConfigToViml pluginsNormalized)
         ++ optionals cfg.coc.enable [{ plugin = pkgs.vimPlugins.coc-nvim; }];
       customRC = cfg.extraConfig;
     };
