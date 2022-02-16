@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-01-02 11:55+0100\n"
-"PO-Revision-Date: 2021-12-21 19:55+0000\n"
-"Last-Translator: Mikhail Chekan <chekoopa@mail.ru>\n"
+"PO-Revision-Date: 2022-02-16 08:56+0000\n"
+"Last-Translator: teu5us <paulkreuzmann@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/home-manager/"
 "modules/ru/>\n"
 "Language: ru\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
@@ -86,15 +86,15 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:60
 msgid "This is a dry run"
-msgstr ""
+msgstr "Это тестовый прогон"
 
 #: modules/lib-bash/activation-init.sh:63
 msgid "This is a live run"
-msgstr ""
+msgstr "Это рабочий прогон"
 
 #: modules/lib-bash/activation-init.sh:68
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Использую Nix версии: %s"
 
 #: modules/lib-bash/activation-init.sh:71
 msgid "Activation variables:"
