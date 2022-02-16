@@ -1,0 +1,11 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+Environment=PATH=@coreutils@/bin:@xdotool@/bin
+ExecStart=@fusuma@/bin/fusuma -c /home/hm-user/.config/fusuma/config.yaml
+
+[Unit]
+After=graphical-session-pre.target
+Description=Fusuma services
+PartOf=graphical-session.target

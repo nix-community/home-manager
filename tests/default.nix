@@ -144,6 +144,7 @@ import nmt {
     ./modules/services/flameshot
     ./modules/services/fluidsynth
     ./modules/services/fnott
+    ./modules/services/fusuma
     ./modules/services/git-sync
     ./modules/services/gpg-agent
     ./modules/services/gromit-mpx
