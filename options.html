@@ -4692,6 +4692,10 @@ set nocompatible
 set nobackup
 ''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/neovim.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.neovim.extraLuaPackages"></a><a class="term" href="options.html#opt-programs.neovim.extraLuaPackages"><code class="option">programs.neovim.extraLuaPackages</code></a></span></dt><dd><p>A function in lua5_1.withPackages format, which returns a
+list of Lua packages required for your plugins to work.
+</p><p><span class="emphasis"><em>Type:</em></span> lua5.1 packages in lua5_1.withPackages format or list of packages</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"[]"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">(ps: with ps; [ luautf8 ])</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/neovim.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.neovim.extraPackages"></a><a class="term" href="options.html#opt-programs.neovim.extraPackages"><code class="option">programs.neovim.extraPackages</code></a></span></dt><dd><p>Extra packages available to nvim.</p><p><span class="emphasis"><em>Type:</em></span> list of packages</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         
