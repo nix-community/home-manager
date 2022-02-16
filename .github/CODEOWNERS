@@ -87,6 +87,9 @@
 /modules/programs/foot.nix                            @plabadens
 /tests/modules/programs/foot                          @plabadens
 
+/modules/services/fusuma.nix                          @iosmanthus
+/tests/modules/services/fusuma                        @iosmanthus
+
 /modules/programs/gh.nix                              @Gerschtli @berbiche
 /tests/modules/programs/gh                            @Gerschtli @berbiche
 

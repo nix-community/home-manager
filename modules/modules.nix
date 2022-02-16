@@ -187,6 +187,7 @@ let
     ./services/flameshot.nix
     ./services/fluidsynth.nix
     ./services/fnott.nix
+    ./services/fusuma.nix
     ./services/getmail.nix
     ./services/git-sync.nix
     ./services/gnome-keyring.nix

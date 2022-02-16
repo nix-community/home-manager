@@ -2456,6 +2456,14 @@ in
           A new module is available: 'programs.pubs'.
         '';
       }
+
+      {
+        time = "2022-03-13T20:59:38+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.fusuma'.
+        '';
+      }
     ];
   };
 }

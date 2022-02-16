@@ -1,0 +1,12 @@
+interval:
+  swipe: 7
+swipe:
+  3:
+    left:
+      command: xdotool key ctrl+alt+Right
+  4:
+    left:
+      command: xdotool key ctrl+shift+alt+Right
+threshold:
+  swipe: 1
+
