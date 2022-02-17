@@ -6758,6 +6758,26 @@ for the full list of options.
         }
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zathura.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/zathura.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zellij.enable"></a><a class="term" href="options.html#opt-programs.zellij.enable"><code class="option">programs.zellij.enable</code></a></span></dt><dd><p>Whether to enable zellij.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zellij.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/zellij.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zellij.package"></a><a class="term" href="options.html#opt-programs.zellij.package"><code class="option">programs.zellij.package</code></a></span></dt><dd><p>The zellij package to install.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.zellij</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zellij.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/zellij.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zellij.settings"></a><a class="term" href="options.html#opt-programs.zellij.settings"><code class="option">programs.zellij.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/zellij/config.yaml</code>.
+</p><p>
+See <a class="link" href="https://zellij.dev/documentation" target="_top">https://zellij.dev/documentation</a> for the full
+list of options.
+</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  theme = "custom";
+  themes.custom.fg = 5;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zellij.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/zellij.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zoxide.enable"></a><a class="term" href="options.html#opt-programs.zoxide.enable"><code class="option">programs.zoxide.enable</code></a></span></dt><dd><p>Whether to enable zoxide.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zoxide.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/zoxide.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zoxide.enableBashIntegration"></a><a class="term" href="options.html#opt-programs.zoxide.enableBashIntegration"><code class="option">programs.zoxide.enableBashIntegration</code></a></span></dt><dd><p>Whether to enable Bash integration.
