@@ -99,7 +99,7 @@ Make sure to also update to the `stateVersion` option accordingly.
 [source,console]
 ----
 $ nix build --no-link <flake-uri>#homeConfigurations.jdoe.activationPackage
-$ "$(nix path-info <flake-uri>#homeConfigurations.jdoe.activationPackage)"/bin/activate
+$ "$(nix path-info <flake-uri>#homeConfigurations.jdoe.activationPackage)"/activate
 ----
 +
 Substitute `<flake-uri>` with the flake URI of the configuration flake.
