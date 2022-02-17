@@ -7434,6 +7434,49 @@ editor using the <code class="envar">EDITOR</code> environment variable.
                     &lt;home-manager/modules/services/emacs.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.emacs.socketActivation.enable"></a><a class="term" href="options.html#opt-services.emacs.socketActivation.enable"><code class="option">services.emacs.socketActivation.enable</code></a></span></dt><dd><p>Whether to enable systemd socket activation for the Emacs service.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/emacs.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/emacs.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.espanso.enable"></a><a class="term" href="options.html#opt-services.espanso.enable"><code class="option">services.espanso.enable</code></a></span></dt><dd><p>Whether to enable Espanso: cross platform text expander in Rust.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/espanso.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/espanso.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.espanso.package"></a><a class="term" href="options.html#opt-services.espanso.package"><code class="option">services.espanso.package</code></a></span></dt><dd><p>Which espanso package to use</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.espanso</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/espanso.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/espanso.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.espanso.settings"></a><a class="term" href="options.html#opt-services.espanso.settings"><code class="option">services.espanso.settings</code></a></span></dt><dd><p>The Espanso configuration to use. See
+<a class="link" href="https://espanso.org/docs/configuration/" target="_top">https://espanso.org/docs/configuration/</a>
+for a description of available options.
+</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        matches = 
+        [
+        
+        ]
+    ; 
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  matches = [
+    { # Simple text replacement
+      trigger = ":espanso";
+      replace = "Hi there!";
+    }
+    { # Dates
+      trigger = ":date";
+      replace = "{{mydate}}";
+      vars = [{
+        name = "mydate";
+        type = "date";
+        params = { format = "%m/%d/%Y"; };
+      }];
+    }
+    { # Shell commands
+      trigger = ":shell";
+      replace = "{{output}}";
+      vars = [{
+        name = "output";
+        type = "shell";
+        params = { cmd = "echo Hello from your shell"; };
+      }];
+    }
+  ];
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/espanso.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/espanso.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.etesync-dav.enable"></a><a class="term" href="options.html#opt-services.etesync-dav.enable"><code class="option">services.etesync-dav.enable</code></a></span></dt><dd><p>Whether to enable etesync-dav.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/etesync-dav.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/etesync-dav.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.etesync-dav.package"></a><a class="term" href="options.html#opt-services.etesync-dav.package"><code class="option">services.etesync-dav.package</code></a></span></dt><dd><p>The etesync-dav derivation to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"pkgs.etesync-dav"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/etesync-dav.nix#blob-path" target="_top">
