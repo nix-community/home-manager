@@ -7,7 +7,7 @@ let
   cfg = config.programs.eww;
 
 in {
-  meta.maintainers = [ maintainers.mainrs ];
+  meta.maintainers = [ hm.maintainers.mainrs ];
 
   options.programs.eww = {
     enable = mkEnableOption "eww";
