@@ -194,6 +194,8 @@
 
 /modules/programs/powerline-go.nix                    @DamienCassou
 
+/modules/programs/pylint.nix                          @florpe
+
 /modules/programs/rbw.nix                             @ambroisie
 /tests/modules/programs/rbw                           @ambroisie
 
