@@ -399,6 +399,9 @@
 
 /modules/services/window-managers/i3-sway/swaynag.nix @polykernel
 
+/modules/services/window-managers/leftwm.nix          @Steav005
+/tests/modules/services/window-managers/leftwm        @Steav005
+
 /modules/services/wlsunset.nix                        @matrss
 /tests/modules/services/wlsunset                      @matrss
 

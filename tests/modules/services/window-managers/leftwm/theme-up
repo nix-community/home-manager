@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+leftwm command "LoadTheme 
+$HOME/.config/leftwm/themes/current/theme.toml"
