@@ -119,6 +119,8 @@
 
 /modules/programs/java.nix                            @ShamrockLee
 
+/modules/programs/just.nix                            @maximsmol
+
 /modules/programs/keychain.nix                        @marsam
 
 /modules/programs/kodi.nix                            @dwagenk

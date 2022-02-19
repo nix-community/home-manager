@@ -87,6 +87,7 @@ let
     ./programs/irssi.nix
     ./programs/java.nix
     ./programs/jq.nix
+    ./programs/just.nix
     ./programs/kakoune.nix
     ./programs/keychain.nix
     ./programs/kitty.nix

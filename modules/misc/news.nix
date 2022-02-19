@@ -2442,6 +2442,13 @@ in
           Use this to enable services based on macOS LaunchAgents.
         '';
       }
+
+      {
+        time = "2022-03-06T08:50:32+00:00";
+        message = ''
+          A new module is available: 'programs.just'.
+        '';
+      }
     ];
   };
 }

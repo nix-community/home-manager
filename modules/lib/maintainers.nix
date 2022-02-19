@@ -111,6 +111,12 @@
     githubId = 46252070;
     name = "Sara Johnsson";
   };
+  maximsmol = {
+    email = "maximsmol@gmail.com";
+    github = "maximsmol";
+    githubId = 1472826;
+    name = "Max Smolin";
+  };
   msfjarvis = {
     email = "me@msfjarvis.dev";
     github = "msfjarvis";
