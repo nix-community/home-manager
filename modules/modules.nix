@@ -148,6 +148,7 @@ let
     ./programs/texlive.nix
     ./programs/timidity.nix
     ./programs/tint2.nix
+    ./programs/tiny.nix
     ./programs/tmux.nix
     ./programs/topgrade.nix
     ./programs/urxvt.nix

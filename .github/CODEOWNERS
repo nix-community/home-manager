@@ -231,6 +231,8 @@
 
 /modules/programs/timidity.nix                        @amesgen
 
+/modules/programs/tiny.nix                            @kmaasrud
+
 /modules/programs/topgrade.nix                        @msfjarvis
 /tests/modules/programs/topgrade                      @msfjarvis
 
