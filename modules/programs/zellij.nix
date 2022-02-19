@@ -7,6 +7,11 @@ let
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
 
+  configDir = if pkgs.stdenv.isDarwin then
+    "Library/Application Support/org.Zellij-Contributors.Zellij"
+  else
+    "${config.xdg.configHome}/zellij";
+
 in {
   meta.maintainers = [ hm.maintainers.mainrs ];
 
@@ -44,7 +49,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."zellij/config.yaml" = mkIf (cfg.settings != { }) {
+    home.file."${configDir}/config.yaml" = mkIf (cfg.settings != { }) {
       source = yamlFormat.generate "zellij.yaml" cfg.settings;
     };
   };
