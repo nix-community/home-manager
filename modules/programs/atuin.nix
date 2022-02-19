@@ -89,12 +89,16 @@ in {
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      source "${pkgs.bash-preexec}/share/bash/bash-preexec.sh"
-      eval "$(${cfg.package}/bin/atuin init bash)"
+      if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+        source "${pkgs.bash-preexec}/share/bash/bash-preexec.sh"
+        eval "$(${cfg.package}/bin/atuin init bash)"
+      fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      eval "$(${cfg.package}/bin/atuin init zsh)"
+      if [[ $options[zle] = on ]]; then
+        eval "$(${cfg.package}/bin/atuin init zsh)"
+      fi
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
