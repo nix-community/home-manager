@@ -4,6 +4,10 @@ with lib;
 let
   cfg = config.programs.tiny;
   format = pkgs.formats.yaml { };
+  configDir = if pkgs.stdenv.isDarwin then
+    "Library/Application Support/tiny"
+  else
+    "${config.xdg.configHome}/tiny";
 in {
   meta.maintaners = [ maintainers.kmaasrud ];
 
@@ -53,7 +57,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."tiny/config.yml" = mkIf (cfg.settings != { }) {
+    home.file."${configDir}/config.yml" = mkIf (cfg.settings != { }) {
       source = format.generate "tiny-config" cfg.settings;
     };
   };
