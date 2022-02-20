@@ -9,12 +9,13 @@ let
   themeSubmodule = types.submodule {
     options = {
       up = mkOption {
-        type = types.lines;
+        type = types.either types.package types.lines;
         default = "";
-        example = ''
+        example = literalExpression ''
+          '''
           #!/usr/bin/env bash
-
           leftwm command "LoadTheme $HOME/.config/leftwm/themes/current/theme.toml"
+          '''
         '';
         description = ''
           Script for starting a theme.
@@ -23,21 +24,21 @@ let
       };
 
       down = mkOption {
-        type = types.lines;
+        type = types.either types.package types.lines;
         default = "";
         description = ''
           Script for stoping a theme.
           Should restore LeftWM to an un-themed state.
         '';
-        example = ''
-          #!/usr/bin/env bash
-
-          leftwm command "UnloadTheme"
+        example = literalExpression ''
+          pkgs.writeShellScript '''
+            ''${config.xsession.windowManager.leftwm}/bin/leftwm command "UnloadTheme"
+          '''
         '';
       };
 
       theme = mkOption {
-        type = tomlFormat.type;
+        type = types.either types.package tomlFormat.type;
         default = { };
         description = ''
           See 
@@ -57,7 +58,7 @@ let
     };
   };
 in {
-  meta.maintainers = [ maintainers.autumnal ];
+  meta.maintainers = [ hm.maintainers.autumnal ];
 
   options = {
     xsession.windowManager.leftwm = {
@@ -84,7 +85,7 @@ in {
             keybind = [
               {
                 command = "Execute";
-                value = "${pkgs.alacritty}/bin/alacritty";
+                value = "''${pkgs.alacritty}/bin/alacritty";
                 modifier = ["modkey" "Shift"];
                 key = "Return";
               }
@@ -101,7 +102,7 @@ in {
       };
 
       themes = mkOption {
-        type = types.attrsOf themeSubmodule;
+        type = types.attrsOf (types.either types.package themeSubmodule);
         default = { };
         description = ''
           Theme configuration.
@@ -113,9 +114,9 @@ in {
         '';
         example = literalExpression ''
           {
-            "current" = { ... }
-            "nord" = { ... }
-            "onehalf" = { ... }
+            "current" = config.xsession.windowManager.leftwm.themes.onehalf;
+            "nord" = { ... };
+            "onehalf" = { ... };
           }
         '';
       };
@@ -136,26 +137,42 @@ in {
         };
       })
       # Themes
-      (listToAttrs (flatten (mapAttrsToList (name: theme: [
-        {
-          name = "leftwm/themes/${name}/up";
-          value = {
-            text = theme.up;
-            executable = true;
-          };
-        }
-        {
-          name = "leftwm/themes/${name}/down";
-          value = {
-            text = theme.down;
-            executable = true;
-          };
-        }
-        {
-          name = "leftwm/themes/${name}/theme.toml";
-          value.source = tomlFormat.generate "theme-${name}-config" theme.theme;
-        }
-      ]) cfg.themes)))
+      (listToAttrs (flatten (mapAttrsToList (name: theme:
+        [
+          (if isDerivation theme || isStorePath theme then [{
+            name = "leftwm/themes/${name}";
+            value.source = theme;
+          }] else [
+            {
+              name = "leftwm/themes/${name}/up";
+              value = {
+                executable = true;
+              } // (if isDerivation theme.up || isStorePath theme.up then {
+                source = theme.up;
+              } else {
+                text = theme.up;
+              });
+            }
+            {
+              name = "leftwm/themes/${name}/down";
+              value = {
+                executable = true;
+              } // (if isDerivation theme.down || isStorePath theme.down then {
+                source = theme.down;
+              } else {
+                text = theme.down;
+              });
+            }
+            {
+              name = "leftwm/themes/${name}/theme.toml";
+              value.source =
+                if isDerivation theme.theme || isStorePath theme.theme then
+                  theme.theme
+                else
+                  tomlFormat.generate "theme-${name}-config" theme.theme;
+            }
+          ])
+        ]) cfg.themes)))
     ]);
 
     home.packages = [ cfg.package ];
