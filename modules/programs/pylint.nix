@@ -17,8 +17,6 @@ let
   mkINIKeyVal = generators.mkKeyValueDefault { mkValueString = mkINIVal; } "=";
   mkINI = attrOfAttrs:
     generators.toINI { mkKeyValue = mkINIKeyVal; } attrOfAttrs;
-  writeINI = name: attrsOfAttrs: pkgs.writeText name (mkINI attrsOfAttrs);
-
 in {
   meta.maintainers = [ hm.maintainers.florpe ];
   options.programs.pylint = {
@@ -45,8 +43,7 @@ in {
   };
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    home.sessionVariables =
-      let pylintcfg = cfg.advanced // { BASIC = cfg.settings; };
-      in { PYLINTRC = writeINI ".pylintrc" pylintcfg; };
+    home.file.".pylintrc".text =
+      mkINI (cfg.advanced // { BASIC = cfg.settings; });
   };
 }
