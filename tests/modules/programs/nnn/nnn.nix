@@ -24,6 +24,8 @@
 
     test.stubs = {
       nnnDummy.buildScript = ''
+        runHook preInstall
+
         mkdir -p "$out/bin"
         touch "$out/bin/nnn"
         chmod +x "$out/bin/nnn"
@@ -40,17 +42,13 @@
       script = ''
         assertDirectoryExists home-files/.config/nnn/plugins
 
-        assertFileRegex \
-          home-path/bin/nnn \
-          "^export NNN_BMS='D:~/Downloads;d:~/Documents;p:~/Pictures;v:~/Videos'\''${NNN_BMS:+':'}\$NNN_BMS$"
+        for bookmark in 'export NNN_BMS' '~/Downloads' '~/Documents' '~/Pictures' '~/Videos'; do
+          assertFileRegex home-path/bin/nnn "$bookmark"
+        done
 
-        assertFileRegex \
-          home-path/bin/nnn \
-          "^export NNN_PLUG='c:fzcd;f:finder;v:imgview'\''${NNN_PLUG:+':'}\$NNN_PLUG$"
-
-        assertFileRegex \
-          home-path/bin/nnn \
-          "/nix/store/.*-"{foo,bar}"/bin"
+        for plugin in 'export NNN_PLUG' 'fzcd' 'finder' 'imgview'; do
+          assertFileRegex home-path/bin/nnn "$plugin"
+        done
       '';
     };
   };
