@@ -9,7 +9,7 @@ let
   else
     "${config.xdg.configHome}/tiny";
 in {
-  meta.maintainers = [ maintainers.kmaasrud ];
+  meta.maintainers = [ hm.maintainers.kmaasrud ];
 
   options = {
     programs.tiny = {
@@ -25,7 +25,7 @@ in {
       settings = mkOption {
         type = format.type;
         default = { };
-        defaultText = literalExpression "{  }";
+        defaultText = literalExpression "{ }";
         example = literalExpression ''
           {
             servers = [
