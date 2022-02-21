@@ -26,7 +26,7 @@ let
         smtp-passwd-cmd = lib.escapeShellArgs account.passwordCommand;
         smtp-host = account.smtp.host;
         smtp-port = account.smtp.port;
-        smtp-starttls = account.imap.tls.useStartTls;
+        smtp-starttls = account.smtp.tls.useStartTls;
       } // (lib.optionalAttrs (account.signature.showSignature == "append") {
         # FIXME: signature cannot be attached
         signature = account.signature.text;
