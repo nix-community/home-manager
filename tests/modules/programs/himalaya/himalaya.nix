@@ -13,6 +13,12 @@ with lib;
         settings = { default-page-size = 50; };
       };
 
+      folders = {
+        inbox = "In";
+        sent = "Out";
+        drafts = "Drafts";
+      };
+
       imap.port = 995;
       smtp.port = 465;
     };

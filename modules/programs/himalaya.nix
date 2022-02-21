@@ -14,6 +14,11 @@ let
         name = account.realName;
         default = account.primary;
 
+        inbox-folder = account.folders.inbox;
+        sent-folder = account.folders.sent;
+        draft-folder = account.folders.drafts;
+        # NOTE: himalaya does not support configuring the name of the trash folder
+
         # FIXME: does not support disabling TLS altogether
         # NOTE: does not accept sequence of strings for password commands
         imap-login = account.userName;
