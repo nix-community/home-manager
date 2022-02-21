@@ -19,7 +19,7 @@ in {
         type = types.package;
         default = pkgs.tiny;
         defaultText = literalExpression "pkgs.tiny";
-        description = "The tiny package to install.";
+        description = "The <command>tiny</command> package to install.";
       };
 
       settings = mkOption {
