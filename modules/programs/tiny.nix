@@ -9,11 +9,11 @@ let
   else
     "${config.xdg.configHome}/tiny";
 in {
-  meta.maintaners = [ maintainers.kmaasrud ];
+  meta.maintainers = [ maintainers.kmaasrud ];
 
   options = {
     programs.tiny = {
-      enable = mkEnableOption "tiny";
+      enable = mkEnableOption "tiny, a TUI IRC client written in Rust";
 
       package = mkOption {
         type = types.package;
@@ -25,6 +25,7 @@ in {
       settings = mkOption {
         type = format.type;
         default = { };
+        defaultText = literalExpression "{  }";
         example = literalExpression ''
           {
             servers = [
