@@ -376,8 +376,17 @@ in {
     home.packages = [ cfg.finalPackage ];
 
     xdg.configFile."nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
-      text = neovimConfig.neovimRcContent;
+      text = if hasAttr "lua" config.programs.neovim.generatedConfigs then
+        neovimConfig.neovimRcContent + ''
+
+          lua require('init-home-manager')''
+      else
+        neovimConfig.neovimRcContent;
     };
+    xdg.configFile."nvim/lua/init-home-manager.lua" =
+      mkIf (hasAttr "lua" config.programs.neovim.generatedConfigs) {
+        text = config.programs.neovim.generatedConfigs.lua;
+      };
     xdg.configFile."nvim/coc-settings.json" = mkIf cfg.coc.enable {
       source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
     };
