@@ -26,9 +26,13 @@ with lib;
     nmt.script = ''
       vimrc="$TESTED/home-files/.config/nvim/init.vim"
       vimrcNormalized="$(normalizeStorePaths "$vimrc")"
+      nvim="$TESTED/home-path/bin/nvim"
+
 
       assertFileExists "$vimrc"
       assertFileContent "$vimrcNormalized" "${./plugin-config.vim}"
+      assertFileRegex $nvim LUA_PATH
+      assertFileRegex $nvim LUA_CPATH
     '';
   };
 }

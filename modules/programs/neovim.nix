@@ -79,15 +79,15 @@ let
   extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
     ''--suffix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
   extraMakeWrapperLuaCArgs = lib.optionalString (cfg.extraLuaPackages != [ ]) ''
-    --suffix LUA_CPATH ";" "${
+    --run 'export LUA_CPATH="${
       lib.concatMapStringsSep ";" pkgs.lua51Packages.getLuaCPath
       cfg.extraLuaPackages
-    }"'';
+    };$LUA_CPATH"' '';
   extraMakeWrapperLuaArgs = lib.optionalString (cfg.extraLuaPackages != [ ]) ''
-    --suffix LUA_PATH ";" "${
+    --run 'export LUA_PATH="${
       lib.concatMapStringsSep ";" pkgs.lua51Packages.getLuaPath
       cfg.extraLuaPackages
-    }"'';
+    };$LUA_PATH"' '';
 
 in {
   imports = [
