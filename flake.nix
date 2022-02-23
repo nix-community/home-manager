@@ -45,11 +45,11 @@
         homeManagerConfiguration = { configuration, system, homeDirectory
           , username, extraModules ? [ ], extraSpecialArgs ? { }
           , pkgs ? builtins.getAttr system nixpkgs.outputs.legacyPackages
-          , check ? true, stateVersion ? "20.09" }@args:
+          , lib ? pkgs.lib, check ? true, stateVersion ? "20.09" }@args:
           assert nixpkgs.lib.versionAtLeast stateVersion "20.09";
 
           import ./modules {
-            inherit pkgs check extraSpecialArgs;
+            inherit pkgs lib check extraSpecialArgs;
             configuration = { ... }: {
               imports = [ configuration ] ++ extraModules;
               home = { inherit homeDirectory stateVersion username; };
