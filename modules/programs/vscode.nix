@@ -120,7 +120,7 @@ in {
       extensions = mkOption {
         type = types.listOf types.package;
         default = [ ];
-        example = literalExpression "[ pkgs.vscode-extensions.bbenoist.Nix ]";
+        example = literalExpression "[ pkgs.vscode-extensions.bbenoist.nix ]";
         description = ''
           The extensions Visual Studio Code should be started with.
         '';
