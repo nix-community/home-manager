@@ -2656,6 +2656,42 @@ to use depending on commit’s author.
                     &lt;home-manager/modules/programs/git.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.userName"></a><a class="term" href="options.html#opt-programs.git.userName"><code class="option">programs.git.userName</code></a></span></dt><dd><p>Default user name to use.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/git.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gitui.enable"></a><a class="term" href="options.html#opt-programs.gitui.enable"><code class="option">programs.gitui.enable</code></a></span></dt><dd><p>Whether to enable gitui, blazing fast terminal-ui for git written in rust.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gitui.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gitui.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gitui.package"></a><a class="term" href="options.html#opt-programs.gitui.package"><code class="option">programs.gitui.package</code></a></span></dt><dd><p>The package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"pkgs.gitui"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gitui.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gitui.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gitui.keyConfig"></a><a class="term" href="options.html#opt-programs.gitui.keyConfig"><code class="option">programs.gitui.keyConfig</code></a></span></dt><dd><p>Key config in Ron file format. This is written to
+<code class="filename">$XDG_CONFIG_HOME/gitui/key_config.ron</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> path or strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
+exit: Some(( code: Char('c'), modifiers: ( bits: 2,),)),
+quit: Some(( code: Char('q'), modifiers: ( bits: 0,),)),
+exit_popup: Some(( code: Esc, modifiers: ( bits: 0,),)),
+''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gitui.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gitui.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gitui.theme"></a><a class="term" href="options.html#opt-programs.gitui.theme"><code class="option">programs.gitui.theme</code></a></span></dt><dd><p>Theme in Ron file format. This is written to
+<code class="filename">$XDG_CONFIG_HOME/gitui/theme.ron</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> path or strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> </p><pre class="programlisting">''
+(
+  selected_tab: Reset,
+  command_fg: White,
+  selection_bg: Blue,
+  cmdbar_extra_lines_bg: Blue,
+  disabled_fg: DarkGray,
+  diff_line_add: Green,
+  diff_line_delete: Red,
+  diff_file_added: LightGreen,
+  diff_file_removed: LightRed,
+  diff_file_moved: LightMagenta,
+  diff_file_modified: Yellow,
+  commit_hash: Magenta,
+  commit_time: LightCyan,
+  commit_author: Green,
+  danger_fg: Red,
+  push_gauge_bg: Blue,
+  push_gauge_fg: Reset,
+)
+''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gitui.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gitui.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gnome-terminal.enable"></a><a class="term" href="options.html#opt-programs.gnome-terminal.enable"><code class="option">programs.gnome-terminal.enable</code></a></span></dt><dd><p>Whether to enable Gnome Terminal.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gnome-terminal.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gnome-terminal.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gnome-terminal.profile"></a><a class="term" href="options.html#opt-programs.gnome-terminal.profile"><code class="option">programs.gnome-terminal.profile</code></a></span></dt><dd><p>A set of Gnome Terminal profiles.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
