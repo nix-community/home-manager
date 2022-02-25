@@ -369,8 +369,7 @@ in {
 
     programs.neovim.generatedConfigs = let
       grouped = lib.lists.groupBy (x: x.type) pluginsNormalized;
-      concatConfigs =
-        lib.concatMapStrings (p: builtins.trace p.plugin.name p.config);
+      concatConfigs = lib.concatMapStrings (p: p.config);
     in mapAttrs (name: vals: concatConfigs vals) grouped;
 
     home.packages = [ cfg.finalPackage ];
