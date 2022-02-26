@@ -8,7 +8,10 @@ Note, the support is quite limited at the moment.
 Specifically, it only applies to parts of the system written in the Bash language,
 such as the <code class="literal">home-manager</code> command line tool and the activation script.
 </p><p class="simpara">If you would like to contribute to the translation effort
-then you can do so through the <a class="link" href="https://hosted.weblate.org/projects/home-manager/" target="_top">Home Manager Weblate project</a>.</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-22.05-state-version-changes"></a>E.1.2. State Version Changes</h3></div></div></div><p>The state version in this release includes the changes below.
+then you can do so through the <a class="link" href="https://hosted.weblate.org/projects/home-manager/" target="_top">Home Manager Weblate project</a>.</p></li><li class="listitem">
+A new module, <code class="literal">launchd.agents</code> was added.
+Use this to enable services based on macOS LaunchAgents.
+</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-22.05-state-version-changes"></a>E.1.2. State Version Changes</h3></div></div></div><p>The state version in this release includes the changes below.
 These changes are only active if the <code class="literal">home.stateVersion</code> option is set to "22.05" or later.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p class="simpara">
 The <a class="xref" href="options.html#opt-programs.waybar.settings"><code class="option">programs.waybar.settings</code></a> option now allows defining modules directly under <a class="xref" href="options.html#opt-programs.waybar.settings"><code class="option">programs.waybar.settings</code></a>.
 Defining modules under <code class="literal">programs.waybar.settings.modules</code> will now be an error.
