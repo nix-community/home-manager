@@ -217,4 +217,10 @@
     github = "mainrs";
     githubId = 5113257;
   };
+  kmaasrud = {
+    name = "Knut Magnus Aasrud";
+    email = "km@aasrud.com";
+    github = "kmaasrud";
+    githubId = 54394333;
+  };
 }
