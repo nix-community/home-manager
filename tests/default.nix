@@ -162,6 +162,7 @@ import nmt {
     ./modules/services/window-managers/bspwm
     ./modules/services/window-managers/herbstluftwm
     ./modules/services/window-managers/i3
+    ./modules/services/window-managers/leftwm
     ./modules/services/window-managers/sway
     ./modules/services/wlsunset
     ./modules/services/xsettingsd

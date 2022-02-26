@@ -217,4 +217,10 @@
     github = "mainrs";
     githubId = 5113257;
   };
+  autumnal = {
+    name = "Sven Friedrich";
+    email = "friedrich122112@googlemail.com";
+    github = "Steav005";
+    githubId = 20627275;
+  };
 }
