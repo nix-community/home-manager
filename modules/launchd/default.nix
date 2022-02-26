@@ -96,6 +96,7 @@ in {
           checkLaunchAgents() {
             local oldDir newDir dstDir err
             oldDir=""
+            err=0
             if [[ -n "''${oldGenPath:-}" ]]; then
               oldDir="$(readlink -m "$oldGenPath/LaunchAgents")" || err=$?
               if (( err )); then
@@ -135,6 +136,7 @@ in {
           setupLaunchAgents() {
             local oldDir newDir dstDir domain err
             oldDir=""
+            err=0
             if [[ -n "''${oldGenPath:-}" ]]; then
               oldDir="$(readlink -m "$oldGenPath/LaunchAgents")" || err=$?
               if (( err )); then
