@@ -18,9 +18,9 @@ let
     sticker_file        "${cfg.dataDir}/sticker.sql"
 
     ${optionalString (cfg.network.listenAddress != "any")
-      ''bind_to_address "${cfg.network.listenAddress}"''}
+    ''bind_to_address "${cfg.network.listenAddress}"''}
     ${optionalString (cfg.network.port != 6600)
-      ''port "${toString cfg.network.port}"''}
+    ''port "${toString cfg.network.port}"''}
 
     ${cfg.extraConfig}
   '';
@@ -54,7 +54,7 @@ in {
         type = with types; either path str;
         default = "${config.home.homeDirectory}/music";
         defaultText = "$HOME/music";
-        apply = toString;       # Prevent copies to Nix store.
+        apply = toString; # Prevent copies to Nix store.
         description = ''
           The directory where mpd reads music from.
         '';
@@ -63,8 +63,8 @@ in {
       playlistDirectory = mkOption {
         type = types.path;
         default = "${cfg.dataDir}/playlists";
-        defaultText = ''''${dataDir}/playlists'';
-        apply = toString;       # Prevent copies to Nix store.
+        defaultText = "\${dataDir}/playlists";
+        apply = toString; # Prevent copies to Nix store.
         description = ''
           The directory where mpd stores playlists.
         '';
@@ -89,7 +89,7 @@ in {
         type = types.path;
         default = "${config.xdg.dataHome}/${name}";
         defaultText = "$XDG_DATA_HOME/mpd";
-        apply = toString;       # Prevent copies to Nix store.
+        apply = toString; # Prevent copies to Nix store.
         description = ''
           The directory where MPD stores its state, tag cache,
           playlists etc.
@@ -101,7 +101,7 @@ in {
           type = types.bool;
           default = false;
           description = ''
-           Enable systemd socket activation.
+            Enable systemd socket activation.
           '';
         };
 
@@ -128,7 +128,7 @@ in {
       dbFile = mkOption {
         type = types.nullOr types.str;
         default = "${cfg.dataDir}/tag_cache";
-        defaultText = ''''${dataDir}/tag_cache'';
+        defaultText = "\${dataDir}/tag_cache";
         description = ''
           The path to MPD's database. If set to
           <literal>null</literal> the parameter is omitted from the
@@ -139,13 +139,11 @@ in {
 
   };
 
-
   ###### implementation
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.mpd" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.mpd" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.mpd = {
@@ -162,25 +160,24 @@ in {
         Environment = "PATH=${config.home.profileDirectory}/bin";
         ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf}";
         Type = "notify";
-        ExecStartPre = ''${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
+        ExecStartPre = ''
+          ${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
       };
     };
     systemd.user.sockets.mpd = mkIf cfg.network.startWhenNeeded {
       Socket = {
         ListenStream = let
-          listen =
-            if cfg.network.listenAddress == "any"
-            then toString cfg.network.port
-            else "${cfg.network.listenAddress}:${toString cfg.network.port}";
+          listen = if cfg.network.listenAddress == "any" then
+            toString cfg.network.port
+          else
+            "${cfg.network.listenAddress}:${toString cfg.network.port}";
         in [ listen "%t/mpd/socket" ];
 
         Backlog = 5;
         KeepAlive = true;
       };
 
-      Install = {
-        WantedBy = [ "sockets.target" ];
-      };
+      Install = { WantedBy = [ "sockets.target" ]; };
     };
   };
 
