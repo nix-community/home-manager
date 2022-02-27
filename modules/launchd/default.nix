@@ -42,19 +42,19 @@ let
     mapAttrs' (n: v: nameValuePair "${v.config.Label}.plist" (toAgent v.config))
     (filterAttrs (n: v: v.enable) cfg.agents);
 
-  agentsDrv = pkgs.runCommand "home-manager-agents" {
-    srcs = attrValues agentPlists;
-    dsts = attrNames agentPlists;
-  } ''
+  agentsDrv = pkgs.runCommand "home-manager-agents" { } ''
     mkdir -p "$out"
 
-    if [[ -n "$srcs" ]]; then
-      for (( i=0; i < "''${#srcs[@]}"; i+=1 )); do
-        src="''${srcs[i]}"
-        dst="''${dsts[i]}"
-        ln -s "$src" "$out/$dst"
-      done
-    fi
+    declare -A plists
+    plists=(${
+      concatStringsSep " "
+      (mapAttrsToList (name: value: "['${name}']='${value}'") agentPlists)
+    })
+
+    for dest in "''${!plists[@]}"; do
+      src="''${plists[$dest]}"
+      ln -s "$src" "$out/$dest"
+    done
   '';
 in {
   meta.maintainers = with maintainers; [ midchildan ];
