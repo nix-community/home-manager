@@ -5,58 +5,6 @@ with lib;
 let
   cfg = config.xsession.windowManager.leftwm;
   tomlFormat = pkgs.formats.toml { };
-
-  themeSubmodule = types.submodule {
-    options = {
-      up = mkOption {
-        type = types.either types.package types.lines;
-        default = "";
-        example = literalExpression ''
-          '''
-          #!/usr/bin/env bash
-          leftwm command "LoadTheme $HOME/.config/leftwm/themes/current/theme.toml"
-          '''
-        '';
-        description = ''
-          Script for starting a theme.
-          Should start theme specific programs and load <code>theme.toml</code>.
-        '';
-      };
-
-      down = mkOption {
-        type = types.either types.package types.lines;
-        default = "";
-        description = ''
-          Script for stoping a theme.
-          Should restore LeftWM to an un-themed state.
-        '';
-        example = literalExpression ''
-          pkgs.writeShellScript '''
-            ''${config.xsession.windowManager.leftwm}/bin/leftwm command "UnloadTheme"
-          '''
-        '';
-      };
-
-      theme = mkOption {
-        type = types.either types.package tomlFormat.type;
-        default = { };
-        description = ''
-          See 
-          <link xlink:href="https://github.com/leftwm/leftwm/wiki/Theme-Config">https://github.com/leftwm/leftwm/wiki/Theme-Config</link>
-          for available options.
-        '';
-        example = literalExpression ''
-          {
-            margin = 5;
-            border_width = 10;
-            default_border_color = "#37474F";
-            floating_border_color = "#225588";
-            focused_border_color = "#885522";
-          }
-        '';
-      };
-    };
-  };
 in {
   meta.maintainers = [ hm.maintainers.autumnal ];
 
@@ -102,20 +50,35 @@ in {
       };
 
       themes = mkOption {
-        type = types.attrsOf (types.either types.package themeSubmodule);
+        type = types.attrsOf
+          (types.either types.package (types.attrsOf types.package));
         default = { };
         description = ''
           Theme configuration.
           The keys of the attributes are the name of the theme.
+          Subattributes are files of the theme. Currently 
+          <varname>up</varname>,
+          <varname>down</varname> and
+          <varname>theme.toml</varname> are required by leftwm.
+          <varname>up</varname> and <varname>down</varname> are expected to be executable.
           </para>
           <para>
-          <varname>"current"</varname> is the default theme used by LeftWM. 
-          Symlinking themes to <code>$HOME/.config/leftwm/themes/current</code> instead is recommended by LeftWM.
+          <varname>"current"</varname> is the default theme used by LeftWM.
         '';
         example = literalExpression ''
           {
-            "current" = config.xsession.windowManager.leftwm.themes.onehalf;
-            "nord" = { ... };
+            "current" = {
+              up = pkgs.writeShellScript "up" '''
+                ...
+              ''';
+              down = pkgs.writeShellScript "down" '''
+                ...
+              ''';
+              "theme.toml" = (pkgs.formats.toml {}).generate "theme.toml" {
+                border_width = 10;
+                margin = 5;
+                ...
+            };
             "onehalf" = { ... };
           }
         '';
@@ -142,36 +105,15 @@ in {
           (if isDerivation theme || isStorePath theme then [{
             name = "leftwm/themes/${name}";
             value.source = theme;
-          }] else [
-            {
-              name = "leftwm/themes/${name}/up";
-              value = {
-                executable = true;
-              } // (if isDerivation theme.up || isStorePath theme.up then {
-                source = theme.up;
+          }] else
+            mapAttrsToList (file: fs: {
+              name = "leftwm/themes/${name}/${file}";
+              value = (if isDerivation fs || isStorePath fs then {
+                source = fs;
               } else {
-                text = theme.up;
+                text = fs;
               });
-            }
-            {
-              name = "leftwm/themes/${name}/down";
-              value = {
-                executable = true;
-              } // (if isDerivation theme.down || isStorePath theme.down then {
-                source = theme.down;
-              } else {
-                text = theme.down;
-              });
-            }
-            {
-              name = "leftwm/themes/${name}/theme.toml";
-              value.source =
-                if isDerivation theme.theme || isStorePath theme.theme then
-                  theme.theme
-                else
-                  tomlFormat.generate "theme-${name}-config" theme.theme;
-            }
-          ])
+            }) theme)
         ]) cfg.themes)))
     ]);
 
