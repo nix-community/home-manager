@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-01-02 11:55+0100\n"
-"PO-Revision-Date: 2022-02-03 13:58+0000\n"
-"Last-Translator: Tymoteusz Dolega <tymoteuszdolega@gmail.com>\n"
+"PO-Revision-Date: 2022-03-01 13:58+0000\n"
+"Last-Translator: Anon Ymous <mivon27841@shackvine.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/home-manager/"
 "modules/pl/>\n"
 "Language: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.11-dev\n"
+"X-Generator: Weblate 4.11.1-dev\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
@@ -58,7 +58,7 @@ msgstr "Aktywowanie %s"
 
 #: modules/lib-bash/activation-init.sh:30
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr ""
+msgstr "Sprawdzanie poprawności oldGenNum i oldGenPath"
 
 #: modules/lib-bash/activation-init.sh:33
 msgid ""
@@ -82,11 +82,12 @@ msgstr "Rozpoczynam aktywację Home Managera"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Sprawdzanie poprawności Nix"
 
 #: modules/lib-bash/activation-init.sh:60
+#, fuzzy
 msgid "This is a dry run"
-msgstr ""
+msgstr "To jest próbne wykonanie"
 
 #: modules/lib-bash/activation-init.sh:63
 msgid "This is a live run"
@@ -97,5 +98,6 @@ msgid "Using Nix version: %s"
 msgstr "Używając wersji Nix: %s"
 
 #: modules/lib-bash/activation-init.sh:71
+#, fuzzy
 msgid "Activation variables:"
-msgstr ""
+msgstr "Zmienne aktywacyjne:"
