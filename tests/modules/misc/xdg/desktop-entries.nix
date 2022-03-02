@@ -48,6 +48,13 @@ with lib;
       })
     ];
 
+    test.asserts.assertions.expected =
+      let currentFile = toString ./desktop-entries.nix;
+      in [''
+        The option definition `extraConfig' in `${currentFile}' no longer has any effect; please remove it.
+        The `extraConfig` option of `xdg.desktopEntries` has been removed following a change in Nixpkgs.
+      ''];
+
     nmt.script = ''
       assertFileExists home-path/share/applications/full.desktop
       assertFileExists home-path/share/applications/min.desktop
