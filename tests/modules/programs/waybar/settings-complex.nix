@@ -13,6 +13,7 @@ with lib;
         {
           layer = "top";
           position = "top";
+          spacing = 3;
           height = 30;
           output = [ "DP-1" ];
           modules-left = [ "sway/workspaces" "sway/mode" "custom/my-module" ];

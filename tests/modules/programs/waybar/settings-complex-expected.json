@@ -33,6 +33,7 @@
       "DP-1"
     ],
     "position": "top",
+    "spacing": 3,
     "sway/mode": {
       "tooltip": false
     },

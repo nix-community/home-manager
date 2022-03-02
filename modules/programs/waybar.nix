@@ -52,6 +52,13 @@ let
           description = "Bar position relative to the output.";
         };
 
+        spacing = mkOption {
+          type = nullOr ints.unsigned;
+          default = null;
+          example = 4;
+          description = "Size of gaps in between of the different modules.";
+        };
+
         height = mkOption {
           type = nullOr ints.unsigned;
           default = null;
@@ -170,6 +177,7 @@ in {
             layer = "top";
             position = "top";
             height = 30;
+            spacing = 4;
             output = [
               "eDP-1"
               "HDMI-A-1"
