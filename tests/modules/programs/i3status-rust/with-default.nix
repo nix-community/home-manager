@@ -28,8 +28,8 @@ with lib;
             [[block]]
             block = "memory"
             display_type = "memory"
-            format_mem = "{Mup}%"
-            format_swap = "{SUp}%"
+            format_mem = "{mem_used_percents}"
+            format_swap = "{swap_used_percents}"
 
             [[block]]
             block = "cpu"
