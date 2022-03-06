@@ -7,6 +7,8 @@ let
     imports = [
       (mkRemovedOptionModule [ "extraConfig" ]
         "The `extraConfig` option of `xdg.desktopEntries` has been removed following a change in Nixpkgs.")
+      (mkRemovedOptionModule [ "fileValidation" ]
+        "Validation of the desktop file is always enabled.")
     ];
     options = {
       # Since this module uses the nixpkgs/pkgs/build-support/make-desktopitem function,
@@ -118,10 +120,35 @@ let
         '';
       };
 
-      fileValidation = mkOption {
-        type = types.bool;
-        description = "Whether to validate the generated desktop file.";
-        default = true;
+      actions = mkOption {
+        type = types.attrsOf (types.submodule ({ name, ... }: {
+          options.name = mkOption {
+            type = types.str;
+            default = name;
+            defaultText = literalExpression "<name>";
+            description = "Name of the action.";
+          };
+          options.exec = mkOption {
+            type = types.nullOr types.str;
+            description = "Program to execute, possibly with arguments.";
+          };
+          options.icon = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Icon to display in file manager, menus, etc.";
+          };
+        }));
+        default = { };
+        defaultText = literalExpression "{ }";
+        example = literalExpression ''
+          {
+            "New Window" = {
+              exec = "''${pkgs.firefox}/bin/firefox --new-window %u";
+            };
+          }
+        '';
+        description =
+          "The set of actions made available to application launchers.";
       };
 
       # Required for the assertions
@@ -145,7 +172,7 @@ let
       inherit name;
       inherit (config)
         type exec icon comment terminal genericName startupNotify noDisplay
-        prefersNonDefaultGPU;
+        prefersNonDefaultGPU actions;
       desktopName = config.name;
       mimeTypes = optionals (config.mimeType != null) config.mimeType;
       categories = optionals (config.categories != null) config.categories;
