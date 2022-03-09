@@ -42,10 +42,14 @@ let
       };
     };
 
-    config = { id = mkDefault (builtins.hashString "sha256" config.message); };
+    config = {
+      id = mkDefault (builtins.hashString "sha256" config.message);
+    };
   });
 
-in {
+in
+
+{
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -99,7 +103,7 @@ in {
       entries = mkOption {
         internal = true;
         type = types.listOf entryModule;
-        default = [ ];
+        default = [];
         description = "News entries.";
       };
     };
@@ -163,8 +167,10 @@ in {
 
       {
         time = "2017-09-12T13:11:48+00:00";
-        condition = (config.programs.zsh.enable
-          && config.programs.zsh.shellAliases != { });
+        condition = (
+          config.programs.zsh.enable &&
+          config.programs.zsh.shellAliases != {}
+        );
         message = ''
           Aliases defined in 'programs.zsh.shellAliases'
           are now have the highest priority. Such aliases will
@@ -306,7 +312,7 @@ in {
       {
         time = "2017-10-20T12:15:27+00:00";
         condition = with config.systemd.user;
-          services != { } || sockets != { } || targets != { } || timers != { };
+          services != {} || sockets != {} || targets != {} || timers != {};
         message = ''
           Home Manager's interaction with systemd is now done using
           'systemctl' from Nixpkgs, not the 'systemctl' in '$PATH'.
@@ -405,8 +411,9 @@ in {
 
       {
         time = "2017-11-14T19:56:49+00:00";
-        condition = with config.xsession.windowManager;
-          (i3.enable && i3.config != null && i3.config.startup != [ ]);
+        condition = with config.xsession.windowManager; (
+          i3.enable && i3.config != null && i3.config.startup != []
+        );
         message = ''
           A new 'notification' option was added to
           xsession.windowManager.i3.startup submodule.
@@ -552,7 +559,7 @@ in {
 
       {
         time = "2018-03-25T06:49:57+00:00";
-        condition = with config.programs.ssh; enable && matchBlocks != { };
+        condition = with config.programs.ssh; enable && matchBlocks != {};
         message = ''
           Options set through the 'programs.ssh' module are now placed
           at the end of the SSH configuration file. This was done to
@@ -862,7 +869,7 @@ in {
 
       {
         time = "2018-12-04T21:54:38+00:00";
-        condition = config.programs.beets.settings != { };
+        condition = config.programs.beets.settings != {};
         message = ''
           A new option 'programs.beets.enable' has been added.
           Starting with state version 19.03 this option defaults to
@@ -1771,7 +1778,7 @@ in {
 
       {
         time = "2021-01-01T08:51:11+00:00";
-        condition = config.pam.sessionVariables != { };
+        condition = config.pam.sessionVariables != {};
         message = ''
           The option 'pam.sessionVariables' will be deprecated in the future.
           This is due to PAM 1.5.0 deprecating reading of the user environment.
@@ -1979,7 +1986,7 @@ in {
 
       {
         time = "2021-05-18T12:22:42+00:00";
-        condition = config.services.syncthing != { };
+        condition = config.services.syncthing != {};
         message = ''
           Setting 'services.syncthing.tray' as a boolean will be deprecated in
           the future.
@@ -2182,8 +2189,7 @@ in {
 
       {
         time = "2021-09-23T17:04:48+00:00";
-        condition = hostPlatform.isLinux
-          && config.services.screen-locker.enable;
+        condition = hostPlatform.isLinux && config.services.screen-locker.enable;
         message = ''
           'xautolock' is now optional in 'services.screen-locker', and the
           'services.screen-locker' options have been reorganized for clarity.
