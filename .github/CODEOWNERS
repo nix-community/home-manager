@@ -59,7 +59,7 @@
 
 /modules/programs/autorandr.nix                       @uvNikita
 
-/modules/programs/bash.nix                            @rycee
+/modules/programs/bash.nix                            @rycee @maximsmol
 
 /modules/programs/bat.nix                             @marsam
 
