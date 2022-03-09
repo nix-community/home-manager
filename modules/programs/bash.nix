@@ -15,7 +15,7 @@ let
     };
 
 in {
-  meta.maintainers = [ maintainers.rycee maintainers.maximsmol ];
+  meta.maintainers = [ maintainers.rycee hm.maintainers.maximsmol ];
 
   imports = [
     (mkRenamedOptionModule [ "programs" "bash" "enableAutojump" ] [
