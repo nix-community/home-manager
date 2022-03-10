@@ -6,10 +6,15 @@ let
 
   cfg = config.programs.bash;
 
+  dryRunCmd =
+    if (pkgs.stdenv ? shellDryRun)
+    then ''${pkgs.stdenv.shellDryRun} "$target"''
+    else "${pkgs.stdenv.shell} -n -O extglob $out";
+
   writeBashScript = name: text: pkgs.writeTextFile {
     inherit name text;
     checkPhase = ''
-      ${pkgs.stdenv.shellDryRun} "$target"
+      ${dryRunCmd}
     '';
   };
 
