@@ -10,7 +10,19 @@ let
     builtins.replaceStrings upperChars (map (c: "_${c}") lowerChars);
 
   formatMonitor = monitor: desktops:
-    "bspc monitor ${escapeShellArg monitor} -d ${escapeShellArgs desktops}";
+    let
+      resetDesktops =
+        "bspc monitor ${escapeShellArg monitor} -d ${escapeShellArgs desktops}";
+      defaultDesktopName =
+        "Desktop"; # https://github.com/baskerville/bspwm/blob/master/src/desktop.h
+    in if cfg.alwaysResetDesktops then
+      resetDesktops
+    else ''
+      if [[ $(bspc query --desktops --names --monitor ${
+        escapeShellArg monitor
+      }) == ${defaultDesktopName} ]]; then
+        ${resetDesktops}
+      fi'';
 
   formatValue = v:
     if isList v then

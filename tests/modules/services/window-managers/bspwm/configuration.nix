@@ -8,6 +8,7 @@ with lib;
       enable = true;
       monitors.focused =
         [ "desktop 1" "d'esk top" ]; # pathological desktop names
+      alwaysResetDesktops = false;
       settings = {
         border_width = 2;
         split_ratio = 0.52;
