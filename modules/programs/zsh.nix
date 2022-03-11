@@ -333,6 +333,12 @@ in
         description = "Commands that should be added to top of <filename>.zshrc</filename>.";
       };
 
+      envExtraFirst = mkOption {
+        default = "";
+        type = types.lines;
+        description = "Commands that should be added to top of <filename>.zshenv</filename>.";
+      };
+
       envExtra = mkOption {
         default = "";
         type = types.lines;
@@ -430,6 +436,8 @@ in
 
     {
       home.file."${relToDotDir ".zshenv"}".text = ''
+        ${cfg.envExtraFirst}
+
         ${optionalString (cfg.dotDir != null) ''
           ZDOTDIR=${zdotdir}
         ''}
