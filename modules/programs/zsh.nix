@@ -405,10 +405,6 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
-    (mkIf (cfg.envExtra != "") {
-      home.file."${relToDotDir ".zshenv"}".text = cfg.envExtra;
-    })
-
     (mkIf (cfg.profileExtra != "") {
       home.file."${relToDotDir ".zprofile"}".text = cfg.profileExtra;
     })
@@ -421,18 +417,8 @@ in
       home.file."${relToDotDir ".zlogout"}".text = cfg.logoutExtra;
     })
 
-    (mkIf cfg.oh-my-zsh.enable {
-      home.file."${relToDotDir ".zshenv"}".text = ''
-        ZSH="${pkgs.oh-my-zsh}/share/oh-my-zsh";
-        ZSH_CACHE_DIR="${config.xdg.cacheHome}/oh-my-zsh";
-      '';
-    })
 
     (mkIf (cfg.dotDir != null) {
-      home.file."${relToDotDir ".zshenv"}".text = ''
-        ZDOTDIR=${zdotdir}
-      '';
-
       # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
       # This is so that if ZDOTDIR happens to be
       # already set correctly (by e.g. spawning a zsh inside a zsh), all env
@@ -444,6 +430,15 @@ in
 
     {
       home.file."${relToDotDir ".zshenv"}".text = ''
+        ${optionalString (cfg.dotDir != null) ''
+          ZDOTDIR=${zdotdir}
+        ''}
+
+        ${optionalString cfg.oh-my-zsh.enable ''
+          ZSH="${pkgs.oh-my-zsh}/share/oh-my-zsh";
+          ZSH_CACHE_DIR="${config.xdg.cacheHome}/oh-my-zsh";
+        ''}
+
         # Environment variables
         . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
@@ -452,6 +447,8 @@ in
           export __HM_ZSH_SESS_VARS_SOURCED=1
           ${envVarsStr}
         fi
+
+        ${cfg.envExtra}
       '';
     }
 
