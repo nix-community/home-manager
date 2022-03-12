@@ -44,14 +44,15 @@ let
       }
     ''));
 
-  channelString = concatStringsSep cnl (flip mapAttrsToList cfg.networks (k: v:
-    concatStringsSep cnl (flip mapAttrsToList v.channels (c: cv: ''
-      {
-        chatnet = "${k}";
-        name = "${c}";
-        autojoin = "${boolStr cv.autoJoin}";
-      }
-    ''))));
+  channelString = concatStringsSep cnl (concatLists
+    (flip mapAttrsToList cfg.networks (k: v:
+      (flip mapAttrsToList v.channels (c: cv: ''
+        {
+          chatnet = "${k}";
+          name = "${c}";
+          autojoin = "${boolStr cv.autoJoin}";
+        }
+      '')))));
 
   channelType = types.submodule {
     options = {
