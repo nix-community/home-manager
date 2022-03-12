@@ -158,7 +158,7 @@ in {
               [ "" "${cfg.package}/bin/podman $LOGGING system service" ];
           };
 
-          Install = { WantedBy = [ "multi-user.target" ]; };
+          Install = { WantedBy = [ "default.target" ]; };
         };
 
         sockets.podman = {
