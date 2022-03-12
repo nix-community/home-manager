@@ -6,7 +6,7 @@ let
 
   toml = pkgs.formats.toml { };
 in {
-  meta.maintainers = [ lib.maintainers.bad ];
+  meta.maintainers = [ lib.hm.maintainers.bad ];
   options.virtualisation.containers = {
 
     enable = lib.mkEnableOption "the common containers configuration module";
