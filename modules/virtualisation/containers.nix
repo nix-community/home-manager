@@ -9,19 +9,9 @@ in {
   meta.maintainers = [ lib.maintainers.bad ];
   options.virtualisation.containers = {
 
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        This option enables the common containers configuration module.
-      '';
-    };
+    enable = lib.mkEnableOption "the common containers configuration module";
 
-    ociSeccompBpfHook.enable = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Enable the OCI seccomp BPF hook";
-    };
+    ociSeccompBpfHook.enable = lib.mkEnableOption "the OCI seccomp BPF hook";
 
     containersConf.settings = mkOption {
       type = toml.type;
