@@ -8095,6 +8095,37 @@ for an example configuration.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/fnott.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/fnott.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.fusuma.enable"></a><a class="term" href="options.html#opt-services.fusuma.enable"><code class="option">services.fusuma.enable</code></a></span></dt><dd><p>Whether to enable the fusuma systemd service to automatically enable touchpad gesture.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/fusuma.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/fusuma.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.fusuma.package"></a><a class="term" href="options.html#opt-services.fusuma.package"><code class="option">services.fusuma.package</code></a></span></dt><dd><p>Package providing <span class="command"><strong>fusuma</strong></span>.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.fusuma</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/fusuma.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/fusuma.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.fusuma.extraPackages"></a><a class="term" href="options.html#opt-services.fusuma.extraPackages"><code class="option">services.fusuma.extraPackages</code></a></span></dt><dd><p>Extra packages needs to bring to the scope of fusuma service.
+</p><p><span class="emphasis"><em>Type:</em></span> list of packages</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.coreutils</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">with pkgs; [ coreutils xdotool ];
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/fusuma.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/fusuma.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.fusuma.settings"></a><a class="term" href="options.html#opt-services.fusuma.settings"><code class="option">services.fusuma.settings</code></a></span></dt><dd><p>YAML config that will override the default fusuma configuration.
+</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  enable = true;
+  extraPackages = with pkgs;[ xdotool ];
+  config = {
+    threshold = {
+      swipe = 0.1;
+    };
+    interval = {
+      swipe = 0.7;
+    };
+    swipe = {
+      "3" = {
+        left = {
+          # GNOME: Switch to left workspace
+          command = "xdotool key ctrl+alt+Right";
+        };
+      };
+    };
+  };
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/fusuma.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/fusuma.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.enable"></a><a class="term" href="options.html#opt-services.gammastep.enable"><code class="option">services.gammastep.enable</code></a></span></dt><dd><p>Whether to enable Gammastep.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/redshift-gammastep/gammastep.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/redshift-gammastep/gammastep.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.gammastep.package"></a><a class="term" href="options.html#opt-services.gammastep.package"><code class="option">services.gammastep.package</code></a></span></dt><dd><p>Gammastep derivation to use.
