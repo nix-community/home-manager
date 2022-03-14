@@ -98,6 +98,7 @@ let
     ./programs/less.nix
     ./programs/lesspipe.nix
     ./programs/lf.nix
+    ./programs/librewolf.nix
     ./programs/lieer.nix
     ./programs/lsd.nix
     ./programs/man.nix
