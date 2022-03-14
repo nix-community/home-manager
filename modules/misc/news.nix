@@ -597,6 +597,14 @@ in
           migrate the blur settings to use 'services.picom.settings' instead.
         '';
       }
+
+      {
+        time = "2022-07-13T13:28:54+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.librewolf'.
+        '';
+      }
     ];
   };
 }

@@ -148,6 +148,8 @@ Makefile                                              @thiagokokada
 /modules/programs/lf.nix                              @owm111
 /tests/modules/programs/lf                            @owm111
 
+/modules/programs/librewolf.nix                       @onny
+
 /modules/programs/lieer.nix                           @tadfisher
 
 /modules/programs/lsd.nix                             @marsam
