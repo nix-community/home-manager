@@ -176,6 +176,13 @@ let
           }
         '';
       };
+
+      filter = mkOption {
+        type = types.nullOr (types.enum [ "bilinear" "nearest" ]);
+        description = "Interpolation method to be used for scaling the output.";
+        default = null;
+        example = "nearest";
+      };
     };
   };
 
@@ -261,6 +268,7 @@ let
         ++ optional (config.mode != "") "mode ${config.mode}"
         ++ optional (config.rate != "") "rate ${config.rate}"
         ++ optional (config.rotate != null) "rotate ${config.rotate}"
+        ++ optional (config.filter != null) "filter ${config.filter}"
         ++ optional (config.transform != null) ("transform "
           + concatMapStringsSep "," toString (flatten config.transform))
         ++ optional (config.scale != null)
