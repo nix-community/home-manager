@@ -32,14 +32,16 @@ let
   # we cannot use `gpgconf` directly because it heavily depends on system
   # state, but we need the values at build time. original:
   # https://github.com/gpg/gnupg/blob/c6702d77d936b3e9d91b34d8fdee9599ab94ee1b/common/homedir.c#L672-L681
-  gpgconf = dir:
+  sockRelPath = dir:
     let
       hash =
         substring 0 24 (hexStringToBase32 (builtins.hashString "sha1" homedir));
     in if homedir == options.programs.gpg.homedir.default then
-      "%t/gnupg/${dir}"
+      "gnupg/${dir}"
     else
-      "%t/gnupg/d.${hash}/${dir}";
+      "gnupg/d.${hash}/${dir}";
+  gpgconf = dir: "%t/${sockRelPath dir}";
+  gpgconf' = dir: "/tmp/${sockRelPath dir}";
 
   # Act like `xxd -r -p | base32` but with z-base-32 alphabet and no trailing padding.
   # Written in Nix for purity.
@@ -287,68 +289,73 @@ in {
           RefuseManualStart = true;
         };
 
-        Service = {
-          ExecStart = "${gpgPkg}/bin/gpg-agent --supervised"
-            + optionalString cfg.verbose " --verbose";
-          ExecReload = "${gpgPkg}/bin/gpgconf --reload gpg-agent";
-          Environment = [ "GNUPGHOME=${homedir}" ];
+        systemd.user.sockets.gpg-agent = {
+          Unit = {
+            Description = "GnuPG cryptographic agent and passphrase cache";
+            Documentation = "man:gpg-agent(1)";
+          };
+
+          Socket = {
+            ListenStream = gpgconf "S.gpg-agent";
+            FileDescriptorName = "std";
+            SocketMode = "0600";
+            DirectoryMode = "0700";
+          };
+
+          Install = { WantedBy = [ "sockets.target" ]; };
         };
-      };
+      }
 
-      systemd.user.sockets.gpg-agent = {
-        Unit = {
-          Description = "GnuPG cryptographic agent and passphrase cache";
-          Documentation = "man:gpg-agent(1)";
+      (mkIf cfg.enableSshSupport {
+        systemd.user.sockets.gpg-agent-ssh = {
+          Unit = {
+            Description = "GnuPG cryptographic agent (ssh-agent emulation)";
+            Documentation =
+              "man:gpg-agent(1) man:ssh-add(1) man:ssh-agent(1) man:ssh(1)";
+          };
+
+          Socket = {
+            ListenStream = gpgconf "S.gpg-agent.ssh";
+            FileDescriptorName = "ssh";
+            Service = "gpg-agent.service";
+            SocketMode = "0600";
+            DirectoryMode = "0700";
+          };
+
+          Install = { WantedBy = [ "sockets.target" ]; };
         };
+      })
 
-        Socket = {
-          ListenStream = gpgconf "S.gpg-agent";
-          FileDescriptorName = "std";
-          SocketMode = "0600";
-          DirectoryMode = "0700";
+      (mkIf cfg.enableExtraSocket {
+        systemd.user.sockets.gpg-agent-extra = {
+          Unit = {
+            Description =
+              "GnuPG cryptographic agent and passphrase cache (restricted)";
+            Documentation = "man:gpg-agent(1) man:ssh(1)";
+          };
+
+          Socket = {
+            ListenStream = gpgconf "S.gpg-agent.extra";
+            FileDescriptorName = "extra";
+            Service = "gpg-agent.service";
+            SocketMode = "0600";
+            DirectoryMode = "0700";
+          };
+
+          Install = { WantedBy = [ "sockets.target" ]; };
         };
+      })
+    ]))
 
-        Install = { WantedBy = [ "sockets.target" ]; };
-      };
-    }
-
-    (mkIf cfg.enableSshSupport {
-      systemd.user.sockets.gpg-agent-ssh = {
-        Unit = {
-          Description = "GnuPG cryptographic agent (ssh-agent emulation)";
-          Documentation =
-            "man:gpg-agent(1) man:ssh-add(1) man:ssh-agent(1) man:ssh(1)";
+    (mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      launchd.agents.gpg-agent = {
+        enable = true;
+        config = {
+          ProgramArguments = [ "${gpgPkg}/bin/gpg-connect-agent" "/bye" ];
+          RunAtLoad = cfg.enableSshSupport;
+          EnvironmentVariables = { GNUPGHOME = homedir; };
+          KeepAlive.SuccessfulExit = false;
         };
-
-        Socket = {
-          ListenStream = gpgconf "S.gpg-agent.ssh";
-          FileDescriptorName = "ssh";
-          Service = "gpg-agent.service";
-          SocketMode = "0600";
-          DirectoryMode = "0700";
-        };
-
-        Install = { WantedBy = [ "sockets.target" ]; };
-      };
-    })
-
-    (mkIf cfg.enableExtraSocket {
-      systemd.user.sockets.gpg-agent-extra = {
-        Unit = {
-          Description =
-            "GnuPG cryptographic agent and passphrase cache (restricted)";
-          Documentation = "man:gpg-agent(1) man:ssh(1)";
-        };
-
-        Socket = {
-          ListenStream = gpgconf "S.gpg-agent.extra";
-          FileDescriptorName = "extra";
-          Service = "gpg-agent.service";
-          SocketMode = "0600";
-          DirectoryMode = "0700";
-        };
-
-        Install = { WantedBy = [ "sockets.target" ]; };
       };
     })
   ]);
