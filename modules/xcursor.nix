@@ -60,6 +60,11 @@ in {
         platforms.linux)
     ];
 
+    warnings = [''
+      GTK cursor settings will no longer be handled in the xsession.pointerCursor module in future.
+      Please use gtk.cursorTheme for GTK cursor settings instead.
+    ''];
+
     home.packages = [ cfg.package ];
 
     xsession.initExtra = ''
@@ -73,15 +78,8 @@ in {
       "Xcursor.size" = cfg.size;
     };
 
-    gtk.gtk2.extraConfig = ''
-      gtk-cursor-theme-name="${cfg.name}"
-      gtk-cursor-theme-size=${toString cfg.size}
-    '';
-
-    gtk.gtk3.extraConfig = {
-      "gtk-cursor-theme-name" = cfg.name;
-      "gtk-cursor-theme-size" = cfg.size;
-    };
+    # TODO: deprecate after next version release.
+    gtk.cursorTheme = { inherit (cfg) package name size; };
 
     # Set name in icons theme, for compatibility with AwesomeWM etc. See:
     # https://github.com/nix-community/home-manager/issues/2081
