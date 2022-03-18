@@ -11,8 +11,12 @@
       assertFileContent $envFile ${
         pkgs.writeText "expected" ''
           LOCALE_ARCHIVE_2_27=${pkgs.glibcLocales}/lib/locale/locale-archive
+          XDG_CACHE_HOME=/home/hm-user/.cache
           XDG_CONFIG_DIRS=/etc/xdg:/foo/bar''${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}
+          XDG_CONFIG_HOME=/home/hm-user/.config
           XDG_DATA_DIRS=/usr/local/share:/usr/share:/baz/quux''${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+          XDG_DATA_HOME=/home/hm-user/.local/share
+          XDG_STATE_HOME=/home/hm-user/.local/state
         ''
       }
 
