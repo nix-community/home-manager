@@ -21,6 +21,9 @@
 
 /modules/misc/news.nix                                @rycee
 
+/modules/misc/nix.nix                                 @polykernel
+/tests/modules/misc/nix                               @polykernel
+
 /modules/misc/nixpkgs-disabled.nix                    @thiagokokada
 
 /modules/misc/numlock.nix                             @evanjs
