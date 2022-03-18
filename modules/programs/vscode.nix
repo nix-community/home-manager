@@ -28,6 +28,7 @@ let
     "${config.xdg.configHome}/${configDir}/User";
 
   configFilePath = "${userDir}/settings.json";
+  tasksFilePath = "${userDir}/tasks.json";
   keybindingsFilePath = "${userDir}/keybindings.json";
 
   # TODO: On Darwin where are the extensions?
@@ -67,6 +68,27 @@ in {
         description = ''
           Configuration written to Visual Studio Code's
           <filename>settings.json</filename>.
+        '';
+      };
+
+      userTasks = mkOption {
+        type = jsonFormat.type;
+        default = { };
+        example = literalExpression ''
+          {
+            "version": "2.0.0",
+            "tasks": [
+              {
+                "type": "shell",
+                "label": "Hello task",
+                "command": "hello",
+              }
+            ]
+          }
+        '';
+        description = ''
+          Configuration written to Visual Studio Code's
+          <filename>tasks.json</filename>.
         '';
       };
 
@@ -145,6 +167,10 @@ in {
       (mkIf (cfg.userSettings != { }) {
         "${configFilePath}".source =
           jsonFormat.generate "vscode-user-settings" cfg.userSettings;
+      })
+      (mkIf (cfg.userTasks != { }) {
+        "${tasksFilePath}".source =
+          jsonFormat.generate "vscode-user-tasks" cfg.userTasks;
       })
       (mkIf (cfg.keybindings != [ ])
         (let dropNullFields = filterAttrs (_: v: v != null);
