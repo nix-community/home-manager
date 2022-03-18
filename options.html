@@ -1558,6 +1558,18 @@ The options are
     </p></dd></dl></div><p>
 </p><p><span class="emphasis"><em>Type:</em></span> one of "silent", "notify", "show"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"notify"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/news.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.package"></a><a class="term" href="options.html#opt-nix.package"><code class="option">nix.package</code></a></span></dt><dd><p>The Nix package that the configuration should be generated for.
+</p><p><span class="emphasis"><em>Type:</em></span> null or package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.nix</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/nix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.checkConfig"></a><a class="term" href="options.html#opt-nix.checkConfig"><code class="option">nix.checkConfig</code></a></span></dt><dd><p>If enabled (the default), checks for data type mismatches and that Nix
+can parse the generated nix.conf.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/nix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.extraOptions"></a><a class="term" href="options.html#opt-nix.extraOptions"><code class="option">nix.extraOptions</code></a></span></dt><dd><p>Additional text appended to <code class="filename">nix.conf</code>.</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
+keep-outputs = true
+keep-derivations = true
+''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/nix.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.registry"></a><a class="term" href="options.html#opt-nix.registry"><code class="option">nix.registry</code></a></span></dt><dd><p>User level flake registry.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of submodules</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
@@ -1584,6 +1596,24 @@ match with a reference like <code class="literal">nixpkgs/nixos-20.03</code>.
         owner = "my-org"; repo = "my-nixpkgs"; type = "github"; 
         }
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/nix.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.settings"></a><a class="term" href="options.html#opt-nix.settings"><code class="option">nix.settings</code></a></span></dt><dd><p>Configuration for Nix, see
+<a class="link" href="https://nixos.org/manual/nix/stable/#sec-conf-file" target="_top">https://nixos.org/manual/nix/stable/#sec-conf-file</a> or
+<span class="citerefentry"><span class="refentrytitle">nix.conf</span>(5)</span> for avalaible options.
+The value declared here will be translated directly to the key-value pairs Nix expects.
+</p><p>
+Configuration specified in <code class="option">nix.extraOptions</code> which will be appended
+verbatim to the resulting config file.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of Nix config atom (null, bool, int, float, str, path or package) or list of Nix config atom (null, bool, int, float, str, path or package)ss</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  use-sandbox = true;
+  show-trace = true;
+  system-features = [ "big-parallel" "kvm" "recursive-nix" ];
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/nix.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nixpkgs.config"></a><a class="term" href="options.html#opt-nixpkgs.config"><code class="option">nixpkgs.config</code></a></span></dt><dd><p>The configuration of the Nix Packages collection. (For
 details, see the Nixpkgs documentation.) It allows you to set
