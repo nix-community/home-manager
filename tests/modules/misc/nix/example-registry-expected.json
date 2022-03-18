@@ -1,0 +1,17 @@
+{
+  "flakes": [
+    {
+      "exact": true,
+      "from": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      },
+      "to": {
+        "owner": "my-org",
+        "repo": "my-nixpkgs",
+        "type": "github"
+      }
+    }
+  ],
+  "version": 2
+}
