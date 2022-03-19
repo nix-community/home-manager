@@ -49,8 +49,8 @@ let
     ${optionalString cfg.newSession "new-session"}
 
     ${optionalString cfg.reverseSplit ''
-      bind v split-window -h
-      bind s split-window -v
+      bind -N "Split the pane into two, left and right" v split-window -h
+      bind -N "Split the pane into two, top and bottom" s split-window -v
     ''}
 
     set -g status-keys ${cfg.keyMode}
@@ -58,34 +58,40 @@ let
 
     ${optionalString
     (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
-      bind h select-pane -L
-      bind j select-pane -D
-      bind k select-pane -U
-      bind l select-pane -R
+      bind h -N "Select pane to the left of the active pane" select-pane -L
+      bind j -N "Select pane below the active pane" select-pane -D
+      bind k -N "Select pane above the active pane" select-pane -U
+      bind l -N "Select pane to the right of the active pane" select-pane -R
 
-      bind -r H resize-pane -L ${toString cfg.resizeAmount}
-      bind -r J resize-pane -D ${toString cfg.resizeAmount}
-      bind -r K resize-pane -U ${toString cfg.resizeAmount}
-      bind -r L resize-pane -R ${toString cfg.resizeAmount}
+      bind -r -N "Resize the pane left by ${toString cfg.resizeAmount}" \
+        H resize-pane -L ${toString cfg.resizeAmount}
+      bind -r -N "Resize the pane down by ${toString cfg.resizeAmount}" \
+        J resize-pane -D ${toString cfg.resizeAmount}
+      bind -r -N "Resize the pane up by ${toString cfg.resizeAmount}" \
+        K resize-pane -U ${toString cfg.resizeAmount}
+      bind -r -N "Resize the pane right by ${toString cfg.resizeAmount}" \
+        L resize-pane -R ${toString cfg.resizeAmount}
     ''}
 
     ${if cfg.prefix != null then ''
       # rebind main key: ${cfg.prefix}
       unbind C-${defaultShortcut}
       set -g prefix ${cfg.prefix}
-      bind ${cfg.prefix} send-prefix
+      bind -N "Send the prefix key through to the application" \
+        ${cfg.prefix} send-prefix
     '' else
       optionalString (cfg.shortcut != defaultShortcut) ''
         # rebind main key: C-${cfg.shortcut}
         unbind C-${defaultShortcut}
         set -g prefix C-${cfg.shortcut}
-        bind ${cfg.shortcut} send-prefix
+        bind -N "Send the prefix key through to the application" \
+          ${cfg.shortcut} send-prefix
         bind C-${cfg.shortcut} last-window
       ''}
 
     ${optionalString cfg.disableConfirmationPrompt ''
-      bind-key & kill-window
-      bind-key x kill-pane
+      bind-key -N "Kill the current window" & kill-window
+      bind-key -N "Kill the current pane" x kill-pane
     ''}
 
     setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
