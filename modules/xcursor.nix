@@ -36,6 +36,10 @@ let
     };
   };
 
+  cursorPath = "${cfg.package}/share/icons/${escapeShellArg cfg.name}/cursors/${
+      escapeShellArg cfg.defaultCursor
+    }";
+
 in {
   meta.maintainers = [ maintainers.league ];
 
@@ -68,9 +72,7 @@ in {
     home.packages = [ cfg.package ];
 
     xsession.initExtra = ''
-      ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cfg.package}/share/icons/${cfg.name}/cursors/${cfg.defaultCursor} ${
-        toString cfg.size
-      }
+      ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${toString cfg.size}
     '';
 
     xresources.properties = {
