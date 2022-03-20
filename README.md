@@ -110,18 +110,18 @@ License
 
 This project is licensed under the terms of the [MIT license](LICENSE).
 
-[Nix]: https://nixos.org/nix/
+[Nix]: https://nixos.org/explore.html
 [NixOS]: https://nixos.org/
-[Nixpkgs]: https://nixos.org/nixpkgs/
-[manual]: https://nix-community.github.io/home-manager/
+[Nixpkgs]: https://github.com/NixOS/nixpkgs
+[manual]: https://nix-community.github.io/home-manager/index.html
 [contributing]: https://nix-community.github.io/home-manager/#ch-contributing
 [manual usage]: https://nix-community.github.io/home-manager/#ch-usage
 [configuration options]: https://nix-community.github.io/home-manager/options.html
 [#home-manager]: https://webchat.oftc.net/?channels=home-manager
 [OFTC]: https://oftc.net/
-[Nix Pills]: https://nixos.org/nixos/nix-pills/
+[Nix Pills]: https://nixos.org/guides/nix-pills/
 [Nix Flakes]: https://nixos.wiki/wiki/Flakes
-[nix-darwin]: https://github.com/LnL7/nix-darwin/
+[nix-darwin]: https://github.com/LnL7/nix-darwin
 [manual standalone install]: https://nix-community.github.io/home-manager/index.html#sec-install-standalone
 [manual nixos install]: https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module
 [manual nix-darwin install]: https://nix-community.github.io/home-manager/index.html#sec-install-nix-darwin-module
