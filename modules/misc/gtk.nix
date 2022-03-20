@@ -250,8 +250,8 @@ in {
     ];
 
     home.file.${cfg2.configLocation}.text =
-      concatStringsSep "\n" (mapAttrsToList formatGtk2Option gtkIni)
-      + cfg2.extraConfig;
+      concatMapStrings (l: l + "\n") (mapAttrsToList formatGtk2Option gtkIni)
+      + cfg2.extraConfig + "\n";
 
     home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
 
@@ -262,7 +262,7 @@ in {
       mkIf (cfg3.extraCss != "") { text = cfg3.extraCss; };
 
     xdg.configFile."gtk-3.0/bookmarks" = mkIf (cfg3.bookmarks != [ ]) {
-      text = concatStringsSep "\n" cfg3.bookmarks;
+      text = concatMapStrings (l: l + "\n") cfg3.bookmarks;
     };
 
     xdg.configFile."gtk-4.0/settings.ini".text =
