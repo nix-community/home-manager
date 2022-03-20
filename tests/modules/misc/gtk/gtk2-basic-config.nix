@@ -6,6 +6,7 @@ with lib;
   config = {
     gtk = {
       enable = true;
+      theme.name = "Adwaita";
       gtk2.extraConfig = "gtk-can-change-accels = 1";
     };
 
