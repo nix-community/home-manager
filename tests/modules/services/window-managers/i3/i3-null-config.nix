@@ -11,6 +11,6 @@
   nmt.script = ''
     assertFileExists home-files/.config/i3/config
     assertFileContent home-files/.config/i3/config \
-      ${pkgs.writeText "expected" "\n"}
+      ${pkgs.writeText "expected" ""}
   '';
 }

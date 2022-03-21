@@ -241,4 +241,10 @@
     github = "kmaasrud";
     githubId = 54394333;
   };
+  sebtm = {
+    name = "Sebastian Sellmeier";
+    email = "sebtm@users.noreply.github.com";
+    github = "sebtm";
+    githubId = 17243347;
+  };
 }

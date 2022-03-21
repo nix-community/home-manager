@@ -1,4 +1,4 @@
-{ cfg, lib, moduleName }:
+{ cfg, config, lib, moduleName }:
 
 with lib;
 
@@ -20,9 +20,9 @@ rec {
     cfg.config.defaultWorkspace == null || v != cfg.config.defaultWorkspace)
     cfg.config.keybindings;
 
-  keybindingsStr = { keybindings, bindsymArgs ? "" }:
+  keybindingsStr = { keybindings, bindsymArgs ? "", indent ? "" }:
     concatStringsSep "\n" (mapAttrsToList (keycomb: action:
-      optionalString (action != null) "bindsym ${
+      optionalString (action != null) "${indent}bindsym ${
         lib.optionalString (bindsymArgs != "") "${bindsymArgs} "
       }${keycomb} ${action}") keybindings);
 
@@ -46,6 +46,7 @@ rec {
     ${keybindingsStr {
       inherit keybindings;
       bindsymArgs = lib.optionalString bindkeysToCode "--to-code";
+      indent = "  ";
     }}
     }
   '';
@@ -73,89 +74,76 @@ rec {
     let colorsNotNull = lib.filterAttrs (n: v: v != null) colors != { };
     in ''
       bar {
-        ${optionalString (id != null) "id ${id}"}
-        ${fontConfigStr fonts}
-        ${optionalString (mode != null) "mode ${mode}"}
-        ${optionalString (hiddenState != null) "hidden_state ${hiddenState}"}
-        ${optionalString (position != null) "position ${position}"}
         ${
-          optionalString (statusCommand != null)
-          "status_command ${statusCommand}"
+          concatStringsSep "\n" (indent (lists.subtractLists [ "" null ]
+            (flatten [
+              (optionalString (id != null) "id ${id}")
+              (fontConfigStr fonts)
+              (optionalString (mode != null) "mode ${mode}")
+              (optionalString (hiddenState != null)
+                "hidden_state ${hiddenState}")
+              (optionalString (position != null) "position ${position}")
+              (optionalString (statusCommand != null)
+                "status_command ${statusCommand}")
+              "${moduleName}bar_command ${command}"
+              (optionalString (workspaceButtons != null)
+                "workspace_buttons ${if workspaceButtons then "yes" else "no"}")
+              (optionalString (workspaceNumbers != null)
+                "strip_workspace_numbers ${
+                  if !workspaceNumbers then "yes" else "no"
+                }")
+              (optionalString (trayOutput != null) "tray_output ${trayOutput}")
+              (optionals colorsNotNull (indent
+                (lists.subtractLists [ "" null ] [
+                  "colors {"
+                  (optionalString (colors.background != null)
+                    "background ${colors.background}")
+                  (optionalString (colors.statusline != null)
+                    "statusline ${colors.statusline}")
+                  (optionalString (colors.separator != null)
+                    "separator ${colors.separator}")
+                  (optionalString (colors.focusedBackground != null)
+                    "focused_background ${colors.focusedBackground}")
+                  (optionalString (colors.focusedStatusline != null)
+                    "focused_statusline ${colors.focusedStatusline}")
+                  (optionalString (colors.focusedSeparator != null)
+                    "focused_separator ${colors.focusedSeparator}")
+                  (optionalString (colors.focusedWorkspace != null)
+                    "focused_workspace ${
+                      barColorSetStr colors.focusedWorkspace
+                    }")
+                  (optionalString (colors.activeWorkspace != null)
+                    "active_workspace ${barColorSetStr colors.activeWorkspace}")
+                  (optionalString (colors.inactiveWorkspace != null)
+                    "inactive_workspace ${
+                      barColorSetStr colors.inactiveWorkspace
+                    }")
+                  (optionalString (colors.urgentWorkspace != null)
+                    "urgent_workspace ${barColorSetStr colors.urgentWorkspace}")
+                  (optionalString (colors.bindingMode != null)
+                    "binding_mode ${barColorSetStr colors.bindingMode}")
+                  "}"
+                ])) { })
+              extraConfig
+            ])) { })
         }
-        ${moduleName}bar_command ${command}
-        ${
-          optionalString (workspaceButtons != null)
-          "workspace_buttons ${if workspaceButtons then "yes" else "no"}"
-        }
-        ${
-          optionalString (workspaceNumbers != null)
-          "strip_workspace_numbers ${if !workspaceNumbers then "yes" else "no"}"
-        }
-        ${optionalString (trayOutput != null) "tray_output ${trayOutput}"}
-        ${optionalString colorsNotNull "colors {"}
-          ${
-            optionalString (colors.background != null)
-            "background ${colors.background}"
-          }
-          ${
-            optionalString (colors.statusline != null)
-            "statusline ${colors.statusline}"
-          }
-          ${
-            optionalString (colors.separator != null)
-            "separator ${colors.separator}"
-          }
-          ${
-            optionalString (colors.focusedBackground != null)
-            "focused_background ${colors.focusedBackground}"
-          }
-          ${
-            optionalString (colors.focusedStatusline != null)
-            "focused_statusline ${colors.focusedStatusline}"
-          }
-          ${
-            optionalString (colors.focusedSeparator != null)
-            "focused_separator ${colors.focusedSeparator}"
-          }
-          ${
-            optionalString (colors.focusedWorkspace != null)
-            "focused_workspace ${barColorSetStr colors.focusedWorkspace}"
-          }
-          ${
-            optionalString (colors.activeWorkspace != null)
-            "active_workspace ${barColorSetStr colors.activeWorkspace}"
-          }
-          ${
-            optionalString (colors.inactiveWorkspace != null)
-            "inactive_workspace ${barColorSetStr colors.inactiveWorkspace}"
-          }
-          ${
-            optionalString (colors.urgentWorkspace != null)
-            "urgent_workspace ${barColorSetStr colors.urgentWorkspace}"
-          }
-          ${
-            optionalString (colors.bindingMode != null)
-            "binding_mode ${barColorSetStr colors.bindingMode}"
-          }
-        ${optionalString colorsNotNull "}"}
-        ${extraConfig}
       }
     '';
 
-  gapsStr = with cfg.config.gaps; ''
-    ${optionalString (inner != null) "gaps inner ${toString inner}"}
-    ${optionalString (outer != null) "gaps outer ${toString outer}"}
-    ${optionalString (horizontal != null)
-    "gaps horizontal ${toString horizontal}"}
-    ${optionalString (vertical != null) "gaps vertical ${toString vertical}"}
-    ${optionalString (top != null) "gaps top ${toString top}"}
-    ${optionalString (bottom != null) "gaps bottom ${toString bottom}"}
-    ${optionalString (left != null) "gaps left ${toString left}"}
-    ${optionalString (right != null) "gaps right ${toString right}"}
-
-    ${optionalString smartGaps "smart_gaps on"}
-    ${optionalString (smartBorders != "off") "smart_borders ${smartBorders}"}
-  '';
+  gapsStr = with cfg.config.gaps;
+    concatStringsSep "\n" (lists.subtractLists [ "" null ] [
+      (optionalString (inner != null) "gaps inner ${toString inner}")
+      (optionalString (outer != null) "gaps outer ${toString outer}")
+      (optionalString (horizontal != null)
+        "gaps horizontal ${toString horizontal}")
+      (optionalString (vertical != null) "gaps vertical ${toString vertical}")
+      (optionalString (top != null) "gaps top ${toString top}")
+      (optionalString (bottom != null) "gaps bottom ${toString bottom}")
+      (optionalString (left != null) "gaps left ${toString left}")
+      (optionalString (right != null) "gaps right ${toString right}")
+      (optionalString smartGaps "smart_gaps on")
+      (optionalString (smartBorders != "off") "smart_borders ${smartBorders}")
+    ]);
 
   windowBorderString = window: floating:
     let
@@ -172,4 +160,14 @@ rec {
     "for_window ${criteriaStr criteria} ${command}";
   workspaceOutputStr = item:
     ''workspace "${item.workspace}" output ${item.output}'';
+
+  indent = list:
+    { includesWrapper ? true, level ? 1 }:
+    let prefix = concatStringsSep "" (lib.genList (x: " ") (level * 2));
+
+    in (lib.imap1 (i: v:
+      "${if includesWrapper && (i == 1 || i == (lib.length list)) then
+        v
+      else
+        "${prefix}${v}"}") list);
 }
