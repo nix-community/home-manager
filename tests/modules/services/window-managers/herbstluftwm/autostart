@@ -1,4 +1,4 @@
-#!/nix/store/00000000000000000000000000000000-bash-5.1-p12/bin/bash
+#!/nix/store/00000000000000000000000000000000-bash-5.1-p16/bin/bash
 shopt -s expand_aliases
 
 # shellcheck disable=SC2142
