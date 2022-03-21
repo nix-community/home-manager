@@ -58,10 +58,10 @@ let
 
     ${optionalString
     (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
-      bind h -N "Select pane to the left of the active pane" select-pane -L
-      bind j -N "Select pane below the active pane" select-pane -D
-      bind k -N "Select pane above the active pane" select-pane -U
-      bind l -N "Select pane to the right of the active pane" select-pane -R
+      bind -N "Select pane to the left of the active pane" h select-pane -L
+      bind -N "Select pane below the active pane" j select-pane -D
+      bind -N "Select pane above the active pane" k select-pane -U
+      bind -N "Select pane to the right of the active pane" l select-pane -R
 
       bind -r -N "Resize the pane left by ${toString cfg.resizeAmount}" \
         H resize-pane -L ${toString cfg.resizeAmount}
