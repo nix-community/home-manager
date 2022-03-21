@@ -18,9 +18,7 @@ let
     rec {
       int = toString option;
       float = int;
-
-      bool = if option then "yes" else "no";
-
+      bool = lib.hm.booleans.yesNo option;
       string = option;
     }.${typeOf option};
 

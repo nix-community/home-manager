@@ -12,10 +12,8 @@ let
   toIni = generators.toINI {
     mkKeyValue = key: value:
       let
-        value' = if isBool value then
-          (if value then "yes" else "no")
-        else
-          toString value;
+        value' =
+          (if isBool value then lib.hm.booleans.yesNo else toString) value;
       in "${key} = ${value'}";
   };
 

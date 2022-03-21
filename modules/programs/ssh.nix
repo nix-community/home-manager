@@ -13,8 +13,6 @@ let
     then " ${entry.address}"
     else " [${entry.address}]:${toString entry.port}";
 
-  yn = flag: if flag then "yes" else "no";
-
   unwords = builtins.concatStringsSep " ";
 
   bindOptions = {
@@ -284,7 +282,7 @@ let
   matchBlockStr = cf: concatStringsSep "\n" (
     ["Host ${cf.host}"]
     ++ optional (cf.port != null)            "  Port ${toString cf.port}"
-    ++ optional (cf.forwardAgent != null)    "  ForwardAgent ${yn cf.forwardAgent}"
+    ++ optional (cf.forwardAgent != null)    "  ForwardAgent ${lib.hm.booleans.yesNo cf.forwardAgent}"
     ++ optional cf.forwardX11                "  ForwardX11 yes"
     ++ optional cf.forwardX11Trusted         "  ForwardX11Trusted yes"
     ++ optional cf.identitiesOnly            "  IdentitiesOnly yes"
@@ -296,7 +294,7 @@ let
       "  ServerAliveInterval ${toString cf.serverAliveInterval}"
     ++ optional (cf.serverAliveCountMax != 3)
       "  ServerAliveCountMax ${toString cf.serverAliveCountMax}"
-    ++ optional (cf.compression != null)     "  Compression ${yn cf.compression}"
+    ++ optional (cf.compression != null)     "  Compression ${lib.hm.booleans.yesNo cf.compression}"
     ++ optional (!cf.checkHostIP)            "  CheckHostIP no"
     ++ optional (cf.proxyCommand != null)    "  ProxyCommand ${cf.proxyCommand}"
     ++ optional (cf.proxyJump != null)       "  ProxyJump ${cf.proxyJump}"
@@ -498,11 +496,11 @@ in
       )}
 
       Host *
-        ForwardAgent ${yn cfg.forwardAgent}
-        Compression ${yn cfg.compression}
+        ForwardAgent ${lib.hm.booleans.yesNo cfg.forwardAgent}
+        Compression ${lib.hm.booleans.yesNo cfg.compression}
         ServerAliveInterval ${toString cfg.serverAliveInterval}
         ServerAliveCountMax ${toString cfg.serverAliveCountMax}
-        HashKnownHosts ${yn cfg.hashKnownHosts}
+        HashKnownHosts ${lib.hm.booleans.yesNo cfg.hashKnownHosts}
         UserKnownHostsFile ${cfg.userKnownHostsFile}
         ControlMaster ${cfg.controlMaster}
         ControlPath ${cfg.controlPath}
