@@ -123,7 +123,7 @@ rec {
                   (optionalString (colors.bindingMode != null)
                     "binding_mode ${barColorSetStr colors.bindingMode}")
                   "}"
-                ])) { })
+                ]) { }))
               extraConfig
             ])) { })
         }
