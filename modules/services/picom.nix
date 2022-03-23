@@ -270,7 +270,7 @@ in {
     };
 
     extraOptions = mkOption {
-      type = types.str;
+      type = types.lines;
       default = "";
       example = ''
         unredir-if-possible = true;
