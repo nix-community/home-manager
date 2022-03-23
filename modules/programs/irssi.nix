@@ -155,7 +155,7 @@ in {
       extraConfig = mkOption {
         default = "";
         description = "These lines are appended to the Irssi configuration.";
-        type = types.str;
+        type = types.lines;
       };
 
       aliases = mkOption {
