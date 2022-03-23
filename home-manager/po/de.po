@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-01-02 11:55+0100\n"
-"PO-Revision-Date: 2022-01-15 01:53+0000\n"
-"Last-Translator: mainrs <github619064@zerotask.net>\n"
+"PO-Revision-Date: 2022-03-23 18:56+0000\n"
+"Last-Translator: Manu [tennox] <tennox@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/home-manager/cli/"
 "de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: home-manager/home-manager:43
 msgid "No configuration file found at %s"
@@ -37,7 +37,6 @@ msgid "Can't instantiate a flake configuration"
 msgstr "Kann eine Flake-Konfiguration nicht instanziieren"
 
 #: home-manager/home-manager:220
-#, fuzzy
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -82,7 +81,7 @@ msgstr "Keine ablaufenden Generationen"
 
 #: home-manager/home-manager:378
 msgid "No home-manager packages seem to be installed."
-msgstr "Es scheint, als ob keine Home Manager Pakete installiert sind"
+msgstr "Es scheint, als ob keine Home Manager Pakete installiert sind."
 
 #: home-manager/home-manager:435
 msgid "Unknown argument %s"
@@ -106,7 +105,7 @@ msgstr "Wechsle zu einer leeren Home Manager Konfiguration..."
 
 #: home-manager/home-manager:474
 msgid "Yay!"
-msgstr "Yay!"
+msgstr "Juhu!"
 
 #: home-manager/home-manager:481
 msgid "Remove all Home Manager generations?"
@@ -166,7 +165,7 @@ msgstr ""
 "    %s\n"
 "\n"
 "bearbeiten um Home Manager zu konfigurieren. Führen Sie\n"
-"'man home-configuration.nix'aus, um alle verfügbaren Optionen zu\n"
+"'man home-configuration.nix' aus, um alle verfügbaren Optionen zu\n"
 "sehen."
 
 #. translators: The "%s" specifier will be replaced by a URL.
