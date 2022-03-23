@@ -8,17 +8,27 @@ let
 
   isDagEntry = e: isAttrs e && (e ? data) && (e ? after) && (e ? before);
 
-  dagContentType = elemType:
-    types.submodule ({ name, ... }: {
-      options = {
-        data = mkOption { type = elemType; };
-        after = mkOption { type = with types; uniq (listOf str); };
-        before = mkOption { type = with types; uniq (listOf str); };
-      };
-      config = mkIf (elemType.name == "submodule") {
-        data._module.args.dagName = name;
-      };
-    });
+  dagEntryOf = elemType:
+    let
+      submoduleType = types.submodule ({ name, ... }: {
+        options = {
+          data = mkOption { type = elemType; };
+          after = mkOption { type = with types; uniq (listOf str); };
+          before = mkOption { type = with types; uniq (listOf str); };
+        };
+        config = mkIf (elemType.name == "submodule") {
+          data._module.args.dagName = name;
+        };
+      });
+      maybeConvert = v: if isDagEntry v then v else dag.entryAnywhere v;
+    in mkOptionType {
+      name = "dagEntryOf";
+      description = "DAG entry of ${elemType.description}";
+      # leave the checking to the submodule type
+      merge = loc: defs:
+        submoduleType.merge loc
+        (map (def: def // { value = maybeConvert def.value; }) defs);
+    };
 
 in rec {
   # A directed acyclic graph of some inner type.
@@ -29,21 +39,16 @@ in rec {
   # "actual" attribute name a new submodule argument is provided with
   # the name `dagName`.
   dagOf = elemType:
-    let
-      convertAllToDags = let
-        maybeConvert = n: v: if isDagEntry v then v else dag.entryAnywhere v;
-      in map (def: def // { value = mapAttrs maybeConvert def.value; });
-
-      attrEquivalent = types.attrsOf (dagContentType elemType);
+    let attrEquivalent = types.attrsOf (dagEntryOf elemType);
     in mkOptionType rec {
       name = "dagOf";
       description = "DAG of ${elemType.description}s";
-      check = isAttrs;
-      merge = loc: defs: attrEquivalent.merge loc (convertAllToDags defs);
+      inherit (attrEquivalent) check merge emptyValue;
       getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "<name>" ]);
       getSubModules = elemType.getSubModules;
       substSubModules = m: dagOf (elemType.substSubModules m);
       functor = (defaultFunctor name) // { wrapped = elemType; };
+      nestedTypes.elemType = elemType;
     };
 
   # A directed acyclic graph of some inner type OR a list of that
