@@ -230,7 +230,9 @@ in {
         };
       };
 
-      "nix/nix.conf" = mkIf (cfg.settings != { }) { source = nixConf; };
+      "nix/nix.conf" = mkIf (cfg.settings != { } || cfg.extraOptions != "") {
+        source = nixConf;
+      };
     };
   };
 
