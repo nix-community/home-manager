@@ -1,4 +1,4 @@
-#!/nix/store/00000000000000000000000000000000-bash-5.1-p16/bin/bash
+#!/nix/store/00000000000000000000000000000000-bash/bin/bash
 shopt -s expand_aliases
 
 # shellcheck disable=SC2142
@@ -19,7 +19,7 @@ herbstclient set frame_bg_active_color '#000000'
 herbstclient set frame_gap '12'
 herbstclient set frame_padding '-12'
 
-if @herbstluftwm@/bin/herbstclient object_tree tags.by-name | /nix/store/00000000000000000000000000000000-gnugrep-3.7/bin/grep default; then
+if @herbstluftwm@/bin/herbstclient object_tree tags.by-name | /nix/store/00000000000000000000000000000000-gnugrep/bin/grep default; then
   herbstclient rename default '1'
 fi
 
