@@ -6,7 +6,7 @@ with lib;
   config = {
     nix = {
       package = config.lib.test.mkStubPackage {
-        version = lib.getVersion pkgs.nixStable;
+        version = lib.getVersion pkgs.nixVersions.stable;
         buildScript = ''
           target=$out/bin/nix
           mkdir -p "$(dirname "$target")"
