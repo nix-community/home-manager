@@ -5,45 +5,27 @@ with lib;
 let
 
   cfg = config.programs.pylint;
-
-  # generators.toINI fails when it encounters a list, so we have to set up
-  # some infrastructure.
-  mkVal = generators.mkValueStringDefault { };
-  mkINIVal = v:
-    if isList v then
-      builtins.concatStringsSep ", " (builtins.map mkVal v)
-    else
-      mkVal v;
-  mkINIKeyVal = generators.mkKeyValueDefault { mkValueString = mkINIVal; } "=";
-  mkINI = attrOfAttrs:
-    generators.toINI { mkKeyValue = mkINIKeyVal; } attrOfAttrs;
+  listToValue = concatMapStringsSep ",\n    " (generators.mkValueStringDefault { });
+  iniFormat = pkgs.formats.ini { inherit listToValue; };
 in {
   meta.maintainers = [ hm.maintainers.florpe ];
   options.programs.pylint = {
-    enable = mkEnableOption "the pylint Python linter";
+    enable = mkEnableOption "The pylint Python linter.";
     package = mkOption {
       type = types.package;
       default = pkgs.python3Packages.pylint;
       defaultText = literalExpression "pkgs.python3Packages.pylint";
-      description = "pylint package to use.";
+      description = "The pylint package to use.";
     };
     settings = mkOption {
-      type = types.attrs;
+      type = iniFormat.type;
       default = { };
       defaultText = literalExpression "{}";
-      description = "The pylint [BASIC] configuration to use.";
-    };
-    advanced = mkOption {
-      type = types.attrsOf types.attrs;
-      default = { };
-      defaultText = literalExpression "{}";
-      description =
-        "The pylint configuration other than the [BASIC] section to use.";
+      description = "The pylint configuration.";
     };
   };
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    home.file.".pylintrc".text =
-      mkINI (cfg.advanced // { BASIC = cfg.settings; });
+    home.file.".pylintrc".source = iniFormat.generate "pylintrc" cfg.settings;
   };
 }
