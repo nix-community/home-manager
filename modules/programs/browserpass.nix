@@ -2,7 +2,9 @@
 
 with lib;
 
-let browsers = [ "chrome" "chromium" "firefox" "vivaldi" ];
+let
+  cfg = config.programs.browserpass;
+  browsers = [ "brave" "chrome" "chromium" "firefox" "vivaldi" ];
 in {
   options = {
     programs.browserpass = {
@@ -17,10 +19,22 @@ in {
     };
   };
 
-  config = mkIf config.programs.browserpass.enable {
+  config = mkIf cfg.enable {
     home.file = foldl' (a: b: a // b) { } (concatMap (x:
       with pkgs.stdenv;
-      if x == "chrome" then
+      if x == "brave" then
+        let
+          dir = if isDarwin then
+            "Library/Application Support/BraveSoftware/Brave-Browser/NativeMessagingHosts"
+          else
+            ".config/BraveSoftware/Brave-Browser/NativeMessagingHosts";
+        in [{
+          # Policies are read from `/etc/brave/policies` only
+          # https://github.com/brave/brave-browser/issues/19052
+          "${dir}/com.github.browserpass.native.json".source =
+            "${pkgs.browserpass}/lib/browserpass/hosts/chromium/com.github.browserpass.native.json";
+        }]
+      else if x == "chrome" then
         let
           dir = if isDarwin then
             "Library/Application Support/Google/Chrome/NativeMessagingHosts"
@@ -71,6 +85,6 @@ in {
             "${pkgs.browserpass}/lib/browserpass/policies/chromium/com.github.browserpass.native.json";
         }]
       else
-        throw "unknown browser ${x}") config.programs.browserpass.browsers);
+        throw "unknown browser ${x}") cfg.browsers);
   };
 }
