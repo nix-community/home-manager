@@ -7,6 +7,8 @@
 /modules/i18n/input-method                            @Kranzes
 /tests/modules/i18n/input-method                      @Kranzes
 
+/modules/launchd                                      @midchildan
+
 /modules/misc/dconf.nix                               @rycee
 
 /modules/misc/fontconfig.nix                          @rycee
@@ -18,6 +20,9 @@
 /tests/modules/config/i18n                            @midchildan
 
 /modules/misc/news.nix                                @rycee
+
+/modules/misc/nix.nix                                 @polykernel
+/tests/modules/misc/nix                               @polykernel
 
 /modules/misc/nixpkgs-disabled.nix                    @thiagokokada
 
@@ -85,10 +90,16 @@
 /modules/programs/foot.nix                            @plabadens
 /tests/modules/programs/foot                          @plabadens
 
+/modules/services/fusuma.nix                          @iosmanthus
+/tests/modules/services/fusuma                        @iosmanthus
+
 /modules/programs/gh.nix                              @Gerschtli @berbiche
 /tests/modules/programs/gh                            @Gerschtli @berbiche
 
 /modules/programs/git.nix                             @rycee
+
+/modules/programs/gitui/gitui.nix                     @mifom
+/modules/programs/gitui/default_key_config.ron        @mifom
 
 /modules/programs/gnome-terminal.nix                  @kamadorueda @rycee
 
@@ -113,6 +124,8 @@
 /modules/programs/i3status-rust.nix                   @workflow
 
 /modules/programs/java.nix                            @ShamrockLee
+
+/modules/programs/just.nix                            @maximsmol
 
 /modules/programs/keychain.nix                        @marsam
 
@@ -194,6 +207,9 @@
 
 /modules/programs/powerline-go.nix                    @DamienCassou
 
+/modules/programs/pubs.nix                            @loicreynier
+/tests/modules/programs/pubs                          @loicreynier
+
 /modules/programs/pylint.nix                          @florpe
 
 /modules/programs/rbw.nix                             @ambroisie
@@ -232,6 +248,8 @@
 /modules/programs/texlive.nix                         @rycee
 
 /modules/programs/timidity.nix                        @amesgen
+
+/modules/programs/tiny.nix                            @kmaasrud
 
 /modules/programs/topgrade.nix                        @msfjarvis
 /tests/modules/programs/topgrade                      @msfjarvis
@@ -391,13 +409,13 @@
 /modules/services/window-managers/herbstluftwm        @olmokramer
 /tests/modules/services/window-managers/herbstluftwm  @olmokramer
 
-/modules/services/window-managers/i3-sway/i3.nix      @sumnerevans
-/tests/modules/services/window-managers/i3            @sumnerevans
+/modules/services/window-managers/i3-sway/i3.nix      @sumnerevans @sebtm
+/tests/modules/services/window-managers/i3            @sumnerevans @sebtm
 
-/modules/services/window-managers/i3-sway/lib         @sumnerevans
+/modules/services/window-managers/i3-sway/lib         @sumnerevans @sebtm
 
-/modules/services/window-managers/i3-sway/sway.nix    @alexarice @sumnerevans
-/tests/modules/services/window-managers/sway          @sumnerevans
+/modules/services/window-managers/i3-sway/sway.nix    @alexarice @sumnerevans @sebtm
+/tests/modules/services/window-managers/sway          @sumnerevans @sebtm
 
 /modules/services/window-managers/i3-sway/swaynag.nix @polykernel
 

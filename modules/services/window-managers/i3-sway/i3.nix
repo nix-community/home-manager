@@ -134,7 +134,7 @@ let
   };
 
   commonFunctions = import ./lib/functions.nix {
-    inherit cfg lib;
+    inherit config cfg lib;
     moduleName = "i3";
   };
 
@@ -143,53 +143,49 @@ let
     floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
     fontConfigStr keybindingDefaultWorkspace keybindingsRest workspaceOutputStr;
 
-  startupEntryStr = { command, always, notification, workspace, ... }: ''
-    ${if always then "exec_always" else "exec"} ${
-      if (notification && workspace == null) then "" else "--no-startup-id"
-    } ${
-      if (workspace == null) then
+  startupEntryStr = { command, always, notification, workspace, ... }:
+    concatStringsSep " " [
+      (if always then "exec_always" else "exec")
+      (if (notification && workspace == null) then "" else "--no-startup-id")
+      (if (workspace == null) then
         command
       else
-        "i3-msg 'workspace ${workspace}; exec ${command}'"
-    }
-  '';
+        "i3-msg 'workspace ${workspace}; exec ${command}'")
+    ];
 
-  configFile = pkgs.writeText "i3.conf" ((if cfg.config != null then
-    with cfg.config; ''
-      ${fontConfigStr fonts}
-      floating_modifier ${floating.modifier}
-      ${windowBorderString window floating}
-      hide_edge_borders ${window.hideEdgeBorders}
-      force_focus_wrapping ${if focus.forceWrapping then "yes" else "no"}
-      focus_follows_mouse ${if focus.followMouse then "yes" else "no"}
-      focus_on_window_activation ${focus.newWindow}
-      mouse_warping ${if focus.mouseWarping then "output" else "none"}
-      workspace_layout ${workspaceLayout}
-      workspace_auto_back_and_forth ${
-        if workspaceAutoBackAndForth then "yes" else "no"
-      }
-
-      client.focused ${colorSetStr colors.focused}
-      client.focused_inactive ${colorSetStr colors.focusedInactive}
-      client.unfocused ${colorSetStr colors.unfocused}
-      client.urgent ${colorSetStr colors.urgent}
-      client.placeholder ${colorSetStr colors.placeholder}
-      client.background ${colors.background}
-
-      ${keybindingsStr { keybindings = keybindingDefaultWorkspace; }}
-      ${keybindingsStr { keybindings = keybindingsRest; }}
-      ${keycodebindingsStr keycodebindings}
-      ${concatStringsSep "\n" (mapAttrsToList (modeStr false) modes)}
-      ${concatStringsSep "\n" (mapAttrsToList assignStr assigns)}
-      ${concatStringsSep "\n" (map barStr bars)}
-      ${optionalString (gaps != null) gapsStr}
-      ${concatStringsSep "\n" (map floatingCriteriaStr floating.criteria)}
-      ${concatStringsSep "\n" (map windowCommandsStr window.commands)}
-      ${concatStringsSep "\n" (map startupEntryStr startup)}
-      ${concatStringsSep "\n" (map workspaceOutputStr workspaceOutputAssign)}
-    ''
-  else
-    "") + "\n" + cfg.extraConfig);
+  configFile = pkgs.writeText "i3.conf" (concatStringsSep "\n"
+    ((if cfg.config != null then
+      with cfg.config;
+      ([
+        (fontConfigStr fonts)
+        "floating_modifier ${floating.modifier}"
+        (windowBorderString window floating)
+        "hide_edge_borders ${window.hideEdgeBorders}"
+        "force_focus_wrapping ${if focus.forceWrapping then "yes" else "no"}"
+        "focus_follows_mouse ${if focus.followMouse then "yes" else "no"}"
+        "focus_on_window_activation ${focus.newWindow}"
+        "mouse_warping ${if focus.mouseWarping then "output" else "none"}"
+        "workspace_layout ${workspaceLayout}"
+        "workspace_auto_back_and_forth ${
+          if workspaceAutoBackAndForth then "yes" else "no"
+        }"
+        "client.focused ${colorSetStr colors.focused}"
+        "client.focused_inactive ${colorSetStr colors.focusedInactive}"
+        "client.unfocused ${colorSetStr colors.unfocused}"
+        "client.urgent ${colorSetStr colors.urgent}"
+        "client.placeholder ${colorSetStr colors.placeholder}"
+        "client.background ${colors.background}"
+        (keybindingsStr { keybindings = keybindingDefaultWorkspace; })
+        (keybindingsStr { keybindings = keybindingsRest; })
+        (keycodebindingsStr keycodebindings)
+      ] ++ mapAttrsToList (modeStr false) modes
+        ++ mapAttrsToList assignStr assigns ++ map barStr bars
+        ++ optional (gaps != null) gapsStr
+        ++ map floatingCriteriaStr floating.criteria
+        ++ map windowCommandsStr window.commands ++ map startupEntryStr startup
+        ++ map workspaceOutputStr workspaceOutputAssign)
+    else
+      [ ]) ++ [ cfg.extraConfig ]));
 
   # Validates the i3 configuration
   checkI3Config =
@@ -207,7 +203,7 @@ let
     '';
 
 in {
-  meta.maintainers = with maintainers; [ sumnerevans ];
+  meta.maintainers = with maintainers; [ sumnerevans sebtm ];
 
   options = {
     xsession.windowManager.i3 = {

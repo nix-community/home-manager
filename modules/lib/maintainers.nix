@@ -61,6 +61,12 @@
     github = "olmokramer";
     githubId = 3612514;
   };
+  iosmanthus = {
+    name = "iosmanthus";
+    email = "myosmanthustree@gmail.com";
+    github = "iosmanthus";
+    githubId = 16307070;
+  };
   kalhauge = {
     name = "Christian Gram Kalhauge";
     email = "kalhauge@users.noreply.github.com";
@@ -83,11 +89,23 @@
     github = "kubukoz";
     githubId = 894884;
   };
+  loicreynier = {
+    name = "Loïc Reynier";
+    email = "loic@loireynier.fr";
+    github = "loicreynier";
+    githubId = 88983487;
+  };
   matrss = {
     name = "Matthias Riße";
     email = "matrss@users.noreply.github.com";
     github = "matrss";
     githubId = 9308656;
+  };
+  mifom = {
+    name = "mifom";
+    email = "mifom@users.noreply.github.com";
+    github = "mifom";
+    githubId = 23462908;
   };
   seylerius = {
     email = "sable@seyleri.us";
@@ -110,6 +128,12 @@
     github = "florpe";
     githubId = 53856373;
     name = "Jens Krewald";
+  };
+  maximsmol = {
+    email = "maximsmol@gmail.com";
+    github = "maximsmol";
+    githubId = 1472826;
+    name = "Max Smolin";
   };
   msfjarvis = {
     email = "me@msfjarvis.dev";
@@ -216,5 +240,17 @@
     email = "5113257+mainrs@users.noreply.github.com";
     github = "mainrs";
     githubId = 5113257;
+  };
+  kmaasrud = {
+    name = "Knut Magnus Aasrud";
+    email = "km@aasrud.com";
+    github = "kmaasrud";
+    githubId = 54394333;
+  };
+  sebtm = {
+    name = "Sebastian Sellmeier";
+    email = "sebtm@users.noreply.github.com";
+    github = "sebtm";
+    githubId = 17243347;
   };
 }

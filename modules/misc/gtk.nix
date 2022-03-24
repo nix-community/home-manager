@@ -11,23 +11,19 @@ let
 
   toGtk3Ini = generators.toINI {
     mkKeyValue = key: value:
-      let
-        value' = if isBool value then
-          (if value then "true" else "false")
-        else
-          toString value;
-      in "${key}=${value'}";
+      let value' = if isBool value then boolToString value else toString value;
+      in "${escape [ "=" ] key}=${value'}";
   };
 
   formatGtk2Option = n: v:
     let
       v' = if isBool v then
-        (if v then "true" else "false")
+        boolToString value
       else if isString v then
         ''"${v}"''
       else
         toString v;
-    in "${n} = ${v'}";
+    in "${escape [ "=" ] n} = ${v'}";
 
   themeType = types.submodule {
     options = {
@@ -46,6 +42,57 @@ let
         type = types.str;
         example = "Adwaita";
         description = "The name of the theme within the package.";
+      };
+    };
+  };
+
+  iconThemeType = types.submodule {
+    options = {
+      package = mkOption {
+        type = types.nullOr types.package;
+        default = null;
+        example = literalExpression "pkgs.adwaita-icon-theme";
+        description = ''
+          Package providing the icon theme. This package will be installed
+          to your profile. If <literal>null</literal> then the theme
+          is assumed to already be available in your profile.
+        '';
+      };
+
+      name = mkOption {
+        type = types.str;
+        example = "Adwaita";
+        description = "The name of the icon theme within the package.";
+      };
+    };
+  };
+
+  cursorThemeType = types.submodule {
+    options = {
+      package = mkOption {
+        type = types.nullOr types.package;
+        default = null;
+        example = literalExpression "pkgs.vanilla-dmz";
+        description = ''
+          Package providing the cursor theme. This package will be installed
+          to your profile. If <literal>null</literal> then the theme
+          is assumed to already be available in your profile.
+        '';
+      };
+
+      name = mkOption {
+        type = types.str;
+        example = "Vanilla-DMZ";
+        description = "The name of the cursor theme within the package.";
+      };
+
+      size = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        example = 16;
+        description = ''
+          The size of the cursor.
+        '';
       };
     };
   };
@@ -71,8 +118,14 @@ in {
         '';
       };
 
+      cursorTheme = mkOption {
+        type = types.nullOr cursorThemeType;
+        default = null;
+        description = "The cursor theme to use.";
+      };
+
       iconTheme = mkOption {
-        type = types.nullOr themeType;
+        type = types.nullOr iconThemeType;
         default = null;
         description = "The icon theme to use.";
       };
@@ -116,7 +169,7 @@ in {
         };
 
         extraConfig = mkOption {
-          type = with types; attrsOf (either bool (either int str));
+          type = with types; attrsOf (oneOf [ bool int str ]);
           default = { };
           example = {
             gtk-cursor-blink = false;
@@ -156,7 +209,7 @@ in {
   };
 
   config = mkIf cfg.enable (let
-    ini = optionalAttrs (cfg.font != null) {
+    gtkIni = optionalAttrs (cfg.font != null) {
       gtk-font-name = let
         fontSize =
           optionalString (cfg.font.size != null) " ${toString cfg.font.size}";
@@ -164,6 +217,11 @@ in {
     } // optionalAttrs (cfg.theme != null) { gtk-theme-name = cfg.theme.name; }
       // optionalAttrs (cfg.iconTheme != null) {
         gtk-icon-theme-name = cfg.iconTheme.name;
+      } // optionalAttrs (cfg.cursorTheme != null) {
+        gtk-cursor-theme-name = cfg.cursorTheme.name;
+      } // optionalAttrs
+      (cfg.cursorTheme != null && cfg.cursorTheme.size != null) {
+        gtk-cursor-theme-size = cfg.cursorTheme.size;
       };
 
     dconfIni = optionalAttrs (cfg.font != null) {
@@ -174,31 +232,41 @@ in {
     } // optionalAttrs (cfg.theme != null) { gtk-theme = cfg.theme.name; }
       // optionalAttrs (cfg.iconTheme != null) {
         icon-theme = cfg.iconTheme.name;
+      } // optionalAttrs (cfg.cursorTheme != null) {
+        cursor-theme = cfg.cursorTheme.name;
+      } // optionalAttrs
+      (cfg.cursorTheme != null && cfg.cursorTheme.size != null) {
+        cursor-size = cfg.cursorTheme.size;
       };
 
     optionalPackage = opt:
       optional (opt != null && opt.package != null) opt.package;
   in {
-    home.packages = optionalPackage cfg.font ++ optionalPackage cfg.theme
-      ++ optionalPackage cfg.iconTheme;
+    home.packages = concatMap optionalPackage [
+      cfg.font
+      cfg.theme
+      cfg.iconTheme
+      cfg.cursorTheme
+    ];
 
     home.file.${cfg2.configLocation}.text =
-      concatMapStrings (l: l + "\n") (mapAttrsToList formatGtk2Option ini)
-      + cfg2.extraConfig;
+      concatMapStrings (l: l + "\n") (mapAttrsToList formatGtk2Option gtkIni)
+      + cfg2.extraConfig + "\n";
 
     home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
 
     xdg.configFile."gtk-3.0/settings.ini".text =
-      toGtk3Ini { Settings = ini // cfg3.extraConfig; };
+      toGtk3Ini { Settings = gtkIni // cfg3.extraConfig; };
 
-    xdg.configFile."gtk-3.0/gtk.css".text = cfg3.extraCss;
+    xdg.configFile."gtk-3.0/gtk.css" =
+      mkIf (cfg3.extraCss != "") { text = cfg3.extraCss; };
 
     xdg.configFile."gtk-3.0/bookmarks" = mkIf (cfg3.bookmarks != [ ]) {
       text = concatMapStrings (l: l + "\n") cfg3.bookmarks;
     };
 
     xdg.configFile."gtk-4.0/settings.ini".text =
-      toGtk3Ini { Settings = ini // cfg4.extraConfig; };
+      toGtk3Ini { Settings = gtkIni // cfg4.extraConfig; };
 
     dconf.settings."org/gnome/desktop/interface" = dconfIni;
   });

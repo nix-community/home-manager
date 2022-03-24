@@ -17,6 +17,7 @@
               primary = true;
               position = "0x0";
               mode = "1920x1080";
+              filter = "nearest";
               transform = [
                 [ 0.6 0.0 0.0 ] # a b c
                 [ 0.0 0.6 0.0 ] # d e f
@@ -50,6 +51,7 @@
               crtc 0
               primary
               mode 1920x1080
+              filter nearest
               transform 0.600000,0.000000,0.000000,0.000000,0.600000,0.000000,0.000000,0.000000,1.000000''
           }
     '';

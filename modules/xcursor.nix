@@ -36,6 +36,10 @@ let
     };
   };
 
+  cursorPath = "${cfg.package}/share/icons/${escapeShellArg cfg.name}/cursors/${
+      escapeShellArg cfg.defaultCursor
+    }";
+
 in {
   meta.maintainers = [ maintainers.league ];
 
@@ -63,9 +67,7 @@ in {
     home.packages = [ cfg.package ];
 
     xsession.initExtra = ''
-      ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cfg.package}/share/icons/${cfg.name}/cursors/${cfg.defaultCursor} ${
-        toString cfg.size
-      }
+      ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${toString cfg.size}
     '';
 
     xresources.properties = {
@@ -73,15 +75,7 @@ in {
       "Xcursor.size" = cfg.size;
     };
 
-    gtk.gtk2.extraConfig = ''
-      gtk-cursor-theme-name="${cfg.name}"
-      gtk-cursor-theme-size=${toString cfg.size}
-    '';
-
-    gtk.gtk3.extraConfig = {
-      "gtk-cursor-theme-name" = cfg.name;
-      "gtk-cursor-theme-size" = cfg.size;
-    };
+    gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
 
     # Set name in icons theme, for compatibility with AwesomeWM etc. See:
     # https://github.com/nix-community/home-manager/issues/2081

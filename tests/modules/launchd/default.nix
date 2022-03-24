@@ -1,0 +1,1 @@
+{ launchd-agents = ./agents.nix; }

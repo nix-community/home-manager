@@ -1,4 +1,6 @@
-bspc monitor 'focused' -d 'desktop 1' 'd'\''esk top'
+if [[ $(bspc query --desktops --names --monitor 'focused') == Desktop ]]; then
+  bspc monitor 'focused' -d 'desktop 1' 'd'\''esk top'
+fi
 
 bspc config 'border_width' '2'
 bspc config 'external_rules_command' '/path/to/external rules command'

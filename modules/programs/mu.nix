@@ -12,12 +12,14 @@ let
   # Takes the list of accounts with mu.enable = true, and generates a
   # command-line flag for initializing the mu database.
   myAddresses = let
-    # List of account sets where mu.enable = true.
+    # Set of email account sets where mu.enable = true.
     muAccounts =
       filter (a: a.mu.enable) (attrValues config.accounts.email.accounts);
     addrs = map (a: a.address) muAccounts;
-    # Prefix --my-address= to each account's address with mu.enable.
-    addMyAddress = map (addr: "--my-address=" + addr) addrs;
+    # Construct list of lists containing email aliases, and flatten
+    aliases = flatten (map (a: a.aliases) muAccounts);
+    # Prefix --my-address= to each account's address AND all defined aliases
+    addMyAddress = map (addr: "--my-address=" + addr) (addrs ++ aliases);
   in concatStringsSep " " addMyAddress;
 
 in {

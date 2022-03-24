@@ -31,7 +31,8 @@ let
     export XDG_STATE_HOME="/home/hm-user/.local/state"
   '';
 
-  expected = pkgs.writeText "expected" (if isDarwin then darwinExpected else linuxExpected);
+  expected = pkgs.writeText "expected"
+    (if isDarwin then darwinExpected else linuxExpected);
 
 in {
   config = {

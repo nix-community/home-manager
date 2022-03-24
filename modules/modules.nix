@@ -19,6 +19,7 @@ let
     ./files.nix
     ./home-environment.nix
     ./i18n/input-method/default.nix
+    ./launchd/default.nix
     ./manual.nix
     ./misc/dconf.nix
     ./misc/debug.nix
@@ -70,6 +71,7 @@ let
     ./programs/getmail.nix
     ./programs/gh.nix
     ./programs/git.nix
+    ./programs/gitui.nix
     ./programs/gnome-terminal.nix
     ./programs/go.nix
     ./programs/gpg.nix
@@ -85,6 +87,7 @@ let
     ./programs/irssi.nix
     ./programs/java.nix
     ./programs/jq.nix
+    ./programs/just.nix
     ./programs/kakoune.nix
     ./programs/keychain.nix
     ./programs/kitty.nix
@@ -127,6 +130,7 @@ let
     ./programs/pidgin.nix
     ./programs/piston-cli.nix
     ./programs/powerline-go.nix
+    ./programs/pubs.nix
     ./programs/pylint.nix
     ./programs/qutebrowser.nix
     ./programs/rbw.nix
@@ -149,6 +153,7 @@ let
     ./programs/texlive.nix
     ./programs/timidity.nix
     ./programs/tint2.nix
+    ./programs/tiny.nix
     ./programs/tmux.nix
     ./programs/topgrade.nix
     ./programs/urxvt.nix
@@ -183,6 +188,7 @@ let
     ./services/flameshot.nix
     ./services/fluidsynth.nix
     ./services/fnott.nix
+    ./services/fusuma.nix
     ./services/getmail.nix
     ./services/git-sync.nix
     ./services/gnome-keyring.nix

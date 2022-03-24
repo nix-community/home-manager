@@ -71,6 +71,7 @@ in {
         Service = {
           ExecStart = "${cfg.package}/bin/foot --server";
           Restart = "on-failure";
+          OOMPolicy = "continue";
         };
 
         Install = { WantedBy = [ "graphical-session.target" ]; };

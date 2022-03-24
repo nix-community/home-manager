@@ -1,14 +1,14 @@
 # Configuration for probot-stale - https://github.com/probot/stale
 daysUntilStale: 90
-daysUntilClose: 7
+daysUntilClose: false
 staleLabel: "status: stale"
-closeComment: false
 issues:
   markComment: |
     <p>
       Thank you for your contribution!
       I marked this issue as stale due to inactivity.
-      If this remains inactive for another 7 days, I will close this issue.
+      Please be considerate of people watching this issue and receiving notifications before commenting 'I have this issue too'.
+      We welcome additional information that will help resolve this issue.
       <b>Please read the relevant sections below before commenting.</b>
     </p>
 
@@ -36,10 +36,7 @@ issues:
     <details>
     <summary><b>Memorandum on closing issues</b></summary>
     <p>
-      If you have nothing of substance to add, please refrain from commenting and allow the bot to close the issue.
-      Also, don't be afraid to manually close an issue, even if it holds valuable information.
-    </p>
-    <p>
+      Don't be afraid to manually close an issue, even if it holds valuable information.
       Closed issues stay in the system for people to search, read, cross-reference, or even reopen – nothing is lost!
       Closing obsolete issues is an important way to help maintainers focus their time and effort.
     </p>
@@ -49,7 +46,6 @@ pulls:
     <p>
       Thank you for your contribution!
       I marked this pull request as stale due to inactivity.
-      If this remains inactive for another 7 days, I will close this PR.
       <b>Please read the relevant sections below before commenting.</b>
     </p>
 

@@ -3,6 +3,7 @@ WantedBy=graphical-session.target
 
 [Service]
 ExecStart=@foot@/bin/foot --server
+OOMPolicy=continue
 Restart=on-failure
 
 [Unit]

@@ -239,7 +239,7 @@ let
   };
 
   commonFunctions = import ./lib/functions.nix {
-    inherit cfg lib;
+    inherit config cfg lib;
     moduleName = "sway";
   };
 
@@ -262,42 +262,40 @@ let
   outputStr = moduleStr "output";
   seatStr = moduleStr "seat";
 
-  configFile = pkgs.writeText "sway.conf" ((if cfg.config != null then
-    with cfg.config; ''
-      ${fontConfigStr fonts}
-      floating_modifier ${floating.modifier}
-      ${windowBorderString window floating}
-      hide_edge_borders ${window.hideEdgeBorders}
-      focus_wrapping ${if focus.forceWrapping then "yes" else "no"}
-      focus_follows_mouse ${focus.followMouse}
-      focus_on_window_activation ${focus.newWindow}
-      mouse_warping ${if focus.mouseWarping then "output" else "none"}
-      workspace_layout ${workspaceLayout}
-      workspace_auto_back_and_forth ${
-        if workspaceAutoBackAndForth then "yes" else "no"
-      }
-
-      client.focused ${colorSetStr colors.focused}
-      client.focused_inactive ${colorSetStr colors.focusedInactive}
-      client.unfocused ${colorSetStr colors.unfocused}
-      client.urgent ${colorSetStr colors.urgent}
-      client.placeholder ${colorSetStr colors.placeholder}
-      client.background ${colors.background}
-
-      ${keybindingsStr {
-        keybindings = keybindingDefaultWorkspace;
-        bindsymArgs =
-          lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-      }}
-      ${keybindingsStr {
-        keybindings = keybindingsRest;
-        bindsymArgs =
-          lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-      }}
-      ${keycodebindingsStr keycodebindings}
-      ${concatStringsSep "\n" (
-        # Append all of the lists together to avoid unnecessary whitespace.
-        mapAttrsToList inputStr input # inputs
+  configFile = pkgs.writeText "sway.conf" (concatStringsSep "\n"
+    ((if cfg.config != null then
+      with cfg.config;
+      ([
+        (fontConfigStr fonts)
+        "floating_modifier ${floating.modifier}"
+        (windowBorderString window floating)
+        "hide_edge_borders ${window.hideEdgeBorders}"
+        "focus_wrapping ${if focus.forceWrapping then "yes" else "no"}"
+        "focus_follows_mouse ${focus.followMouse}"
+        "focus_on_window_activation ${focus.newWindow}"
+        "mouse_warping ${if focus.mouseWarping then "output" else "none"}"
+        "workspace_layout ${workspaceLayout}"
+        "workspace_auto_back_and_forth ${
+          if workspaceAutoBackAndForth then "yes" else "no"
+        }"
+        "client.focused ${colorSetStr colors.focused}"
+        "client.focused_inactive ${colorSetStr colors.focusedInactive}"
+        "client.unfocused ${colorSetStr colors.unfocused}"
+        "client.urgent ${colorSetStr colors.urgent}"
+        "client.placeholder ${colorSetStr colors.placeholder}"
+        "client.background ${colors.background}"
+        (keybindingsStr {
+          keybindings = keybindingDefaultWorkspace;
+          bindsymArgs =
+            lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+        })
+        (keybindingsStr {
+          keybindings = keybindingsRest;
+          bindsymArgs =
+            lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+        })
+        (keycodebindingsStr keycodebindings)
+      ] ++ mapAttrsToList inputStr input
         ++ mapAttrsToList outputStr output # outputs
         ++ mapAttrsToList seatStr seat # seats
         ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
@@ -308,13 +306,11 @@ let
         ++ map windowCommandsStr window.commands # window commands
         ++ map startupEntryStr startup # startup
         ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
-      )}
-    ''
-  else
-    "") + (concatStringsSep "\n" ((optional cfg.systemdIntegration ''
-      exec "systemctl --user import-environment; systemctl --user start sway-session.target"'')
-      ++ (optional (!cfg.xwayland) "xwayland disable")
-      ++ [ cfg.extraConfig ])));
+      )
+    else
+      [ ]) ++ (optional cfg.systemdIntegration ''
+        exec "systemctl --user import-environment; systemctl --user start sway-session.target"'')
+      ++ (optional (!cfg.xwayland) "xwayland disable") ++ [ cfg.extraConfig ]));
 
   defaultSwayPackage = pkgs.sway.override {
     extraSessionCommands = cfg.extraSessionCommands;
@@ -324,7 +320,7 @@ let
   };
 
 in {
-  meta.maintainers = with maintainers; [ alexarice sumnerevans ];
+  meta.maintainers = with maintainers; [ alexarice sumnerevans sebtm ];
 
   options.wayland.windowManager.sway = {
     enable = mkEnableOption "sway wayland compositor";

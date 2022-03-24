@@ -2425,6 +2425,45 @@ in
           A new module is available: 'services.espanso'.
         '';
       }
+
+      {
+        time = "2022-02-24T22:35:22+00:00";
+        message = ''
+          A new module is available: 'programs.gitui'.
+        '';
+      }
+
+      {
+        time = "2022-02-26T09:28:57+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          A new module is available: 'launchd.agents'
+
+          Use this to enable services based on macOS LaunchAgents.
+        '';
+      }
+
+      {
+        time = "2022-03-06T08:50:32+00:00";
+        message = ''
+          A new module is available: 'programs.just'.
+        '';
+      }
+
+      {
+        time = "2022-03-06T09:40:17+00:00";
+        message = ''
+          A new module is available: 'programs.pubs'.
+        '';
+      }
+
+      {
+        time = "2022-03-13T20:59:38+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.fusuma'.
+        '';
+      }
     ];
   };
 }

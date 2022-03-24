@@ -80,18 +80,22 @@ in {
   };
 
   config = mkMerge [
-    (mkIf cfg.enable {
-      xdg.cacheHome = mkDefault defaultCacheHome;
-      xdg.configHome = mkDefault defaultConfigHome;
-      xdg.dataHome = mkDefault defaultDataHome;
-      xdg.stateHome = mkDefault defaultStateHome;
-
-      home.sessionVariables = {
+    (let
+      variables = {
         XDG_CACHE_HOME = cfg.cacheHome;
         XDG_CONFIG_HOME = cfg.configHome;
         XDG_DATA_HOME = cfg.dataHome;
         XDG_STATE_HOME = cfg.stateHome;
       };
+    in mkIf cfg.enable {
+      xdg.cacheHome = mkDefault defaultCacheHome;
+      xdg.configHome = mkDefault defaultConfigHome;
+      xdg.dataHome = mkDefault defaultDataHome;
+      xdg.stateHome = mkDefault defaultStateHome;
+
+      home.sessionVariables = variables;
+      systemd.user.sessionVariables =
+        mkIf pkgs.stdenv.hostPlatform.isLinux variables;
     })
 
     # Legacy non-deterministic setup.

@@ -45,6 +45,7 @@ import nmt {
     ./modules/files
     ./modules/home-environment
     ./modules/misc/fontconfig
+    ./modules/misc/nix
     ./modules/programs/alacritty
     ./modules/programs/alot
     ./modules/programs/aria2
@@ -76,6 +77,7 @@ import nmt {
     ./modules/programs/man
     ./modules/programs/mbsync
     ./modules/programs/mpv
+    ./modules/programs/mu
     ./modules/programs/ncmpcpp
     ./modules/programs/ne
     ./modules/programs/neomutt
@@ -86,6 +88,7 @@ import nmt {
     ./modules/programs/pandoc
     ./modules/programs/pet
     ./modules/programs/powerline-go
+    ./modules/programs/pubs
     ./modules/programs/qutebrowser
     ./modules/programs/readline
     ./modules/programs/sagemath
@@ -104,6 +107,7 @@ import nmt {
     ./modules/programs/zsh
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
+    ./modules/launchd
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
     ./modules/config/i18n
@@ -141,12 +145,14 @@ import nmt {
     ./modules/services/flameshot
     ./modules/services/fluidsynth
     ./modules/services/fnott
+    ./modules/services/fusuma
     ./modules/services/git-sync
     ./modules/services/gpg-agent
     ./modules/services/gromit-mpx
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/kanshi
     ./modules/services/lieer
+    ./modules/services/mpd
     ./modules/services/pantalaimon
     ./modules/services/pbgopy
     ./modules/services/playerctld
