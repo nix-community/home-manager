@@ -25,10 +25,11 @@
           docs-html = docs.manual.html;
           docs-manpages = docs.manPages;
           docs-json = docs.options.json;
+          default = self.packages.${system}.home-manager;
         });
 
-      defaultPackage =
-        forAllSystems (system: self.packages.${system}.home-manager);
+      # defaultPackage is deprecated as of Nix 2.7.0
+      defaultPackage = forAllSystems (system: self.packages.${system}.default);
 
       apps = forAllSystems (system: {
         home-manager = {
