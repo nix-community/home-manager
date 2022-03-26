@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2022-01-02 11:55+0100\n"
+"POT-Creation-Date: 2022-03-26 15:08+0100\n"
 "PO-Revision-Date: 2022-02-10 04:55+0000\n"
 "Last-Translator: Heman Gandhi <hemangandhi@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
@@ -19,23 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.11-dev\n"
 
-#: home-manager/home-manager:43
+#: home-manager/home-manager:60
 msgid "No configuration file found at %s"
 msgstr "%s に設定ファイルを見つかりません"
 
-#: home-manager/home-manager:62
+#: home-manager/home-manager:79
 msgid "No configuration file found. Please create one at %s"
 msgstr "設定ファイルがありません。ファイルを %s に作ってください"
 
-#: home-manager/home-manager:105
+#: home-manager/home-manager:122
 msgid "Can't inspect options of a flake configuration"
 msgstr "flake設定のオプションを検査できません"
 
-#: home-manager/home-manager:145
+#: home-manager/home-manager:162
 msgid "Can't instantiate a flake configuration"
 msgstr "flake設定をインスタンス化できません"
 
-#: home-manager/home-manager:220
+#: home-manager/home-manager:237
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -46,92 +46,96 @@ msgstr[0] ""
 "未読の関連ニュースが%d件あります\n"
 "\"%s news\"コマンドを使って読んでください。"
 
-#: home-manager/home-manager:234
+#: home-manager/home-manager:251
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "知らない\"news.display\"設定\"%s\"."
 
-#: home-manager/home-manager:241
+#: home-manager/home-manager:258
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "$EDITOR環境変数を設定してください"
 
-#: home-manager/home-manager:256
+#: home-manager/home-manager:273
 msgid "Cannot run build in read-only directory"
 msgstr "読み込み専用ディレクトリ内ではbuild（作成）できません"
 
-#: home-manager/home-manager:338
+#: home-manager/home-manager:355
 msgid "No generation with ID %s"
 msgstr "ID %s を持つ世代はありません"
 
-#: home-manager/home-manager:340
+#: home-manager/home-manager:357
 msgid "Cannot remove the current generation %s"
 msgstr "現在使用中の世代 %s は削除できません"
 
-#: home-manager/home-manager:342
+#: home-manager/home-manager:359
 msgid "Removing generation %s"
 msgstr "世代 %s を削除中です"
 
-#: home-manager/home-manager:368
+#: home-manager/home-manager:385
 msgid "No generations to expire"
 msgstr "期限切れで削除する世代はありません"
 
-#: home-manager/home-manager:378
+#: home-manager/home-manager:396
 msgid "No home-manager packages seem to be installed."
 msgstr "home-managerパッケージはインストールされていないようです。"
 
-#: home-manager/home-manager:435
+#: home-manager/home-manager:453
 msgid "Unknown argument %s"
 msgstr "不明な引数 %s"
 
-#: home-manager/home-manager:450
+#: home-manager/home-manager:469
 msgid "This will remove Home Manager from your system."
 msgstr "これはシステムからHome Managerを削除します。"
 
-#: home-manager/home-manager:453
+#: home-manager/home-manager:472
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "これはdry run （予行練習）で、実際にはアンインストールは行われません。"
 
-#: home-manager/home-manager:457
+#: home-manager/home-manager:476
 msgid "Really uninstall Home Manager?"
 msgstr "本当にHome Managerをアンインストールしますか？"
 
-#: home-manager/home-manager:462
+#: home-manager/home-manager:481
 msgid "Switching to empty Home Manager configuration..."
 msgstr "空のHome Managerの設定に切り替え中です..."
 
-#: home-manager/home-manager:474
+#: home-manager/home-manager:493
 msgid "Yay!"
 msgstr "イェイ！"
 
-#: home-manager/home-manager:481
+#: home-manager/home-manager:500
 msgid "Remove all Home Manager generations?"
 msgstr "Home-managerの全ての世代を削除しますか？"
 
-#: home-manager/home-manager:488
+#: home-manager/home-manager:507
 msgid "All generations are now eligible for garbage collection."
 msgstr "全ての世代がガベージコレクションの対象になりました。"
 
-#: home-manager/home-manager:491
+#: home-manager/home-manager:510
 msgid "Leaving generations but they may still be garbage collected."
-msgstr "世代を残していますが、それらはガベージコレクションで回収されるかもしれません。"
+msgstr ""
+"世代を残していますが、それらはガベージコレクションで回収されるかもしれませ"
+"ん。"
 
-#: home-manager/home-manager:495
+#: home-manager/home-manager:514
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr "Home Managerはアンインストールされましたが、home.nixはそのまま残してあります。"
+msgstr ""
+"Home Managerはアンインストールされましたが、home.nixはそのまま残してありま"
+"す。"
 
-#: home-manager/home-manager:646
+#: home-manager/home-manager:673
 msgid "%s: unknown option '%s'"
 msgstr "%s: 不明なオプション '%s'"
 
-#: home-manager/home-manager:647
+#: home-manager/home-manager:674
 msgid "Run '%s --help' for usage help"
 msgstr "利用方法のヘルプは'%s --help' を実行してください"
 
-#: home-manager/home-manager:681
+#: home-manager/home-manager:708
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations は一つの引数を期待しますが、%d が与えられました。"
 
-#: home-manager/home-manager:703
+#: home-manager/home-manager:730
 msgid "Unknown command: %s"
 msgstr "不明なコマンド: %s"
 
@@ -157,7 +161,8 @@ msgstr ""
 "\n"
 "    %s\n"
 "\n"
-"でHome Managerの設定を編集することができます。利用可能なオプションを見るには\n"
+"でHome Managerの設定を編集することができます。利用可能なオプションを見るに"
+"は\n"
 "'man home-configuration.nix' を実行してください。"
 
 #. translators: The "%s" specifier will be replaced by a URL.
@@ -169,7 +174,8 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
-"うあ、インストールに失敗しました！もしこのエラーがHome Managerの欠陥のせいで生じたようなら、\n"
+"うあ、インストールに失敗しました！もしこのエラーがHome Managerの欠陥のせいで"
+"生じたようなら、\n"
 "\n"
 "    %s\n"
 "\n"
