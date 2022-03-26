@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2022-03-01 13:58+0000\n"
-"Last-Translator: Doğu Us <usdogu@gmail.com>\n"
+"PO-Revision-Date: 2022-03-26 23:57+0000\n"
+"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/home-manager/"
 "modules/tr/>\n"
 "Language: tr\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.11.1-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
-msgstr "%s konumunda ev dosya linkleri oluşturuluyor"
+msgstr "%s konumunda ev dosya bağlantıları oluşturuluyor"
 
 #: modules/files.nix:246
 msgid "Cleaning up orphan links from %s"
-msgstr "Geçersiz linkler temizleniyor %s"
+msgstr "Geçersiz bağlantılar temizleniyor %s"
 
 #: modules/files.nix:262
 msgid "Creating profile generation %s"
-msgstr ""
+msgstr "%s profil inşası oluşturuluyor"
 
 #: modules/files.nix:276
 msgid "No change so reusing latest profile generation %s"
-msgstr ""
+msgstr "Değişiklik yok, bu nedenle en son profil inşası %s yeniden kullanılıyor"
 
 #: modules/home-environment.nix:607
 msgid ""
@@ -50,6 +50,18 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"Eyvah, Nix yeni Home Manager profilinizi kuramadı!\n"
+"\n"
+"Belki de \"%s\" kullanan kurulan paketlerin biriyle bir çakışma vardır?\n"
+"\n"
+"    %s\n"
+"\n"
+"komutunu çalıştırın ve eğer çakışan bir paket varsa onu\n"
+"\n"
+"    %s\n"
+"\n"
+"ile kaldırabilirsiniz. Sonra Home Manager yapılandırmanızı yeniden\n"
+"etkinleştirmeyi deneyin."
 
 #: modules/home-environment.nix:639
 msgid "Activating %s"
@@ -57,7 +69,7 @@ msgstr "%s etkinleştiriliyor"
 
 #: modules/lib-bash/activation-init.sh:31
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr ""
+msgstr "oldGenNum ve oldGenPath denetleniyor"
 
 #: modules/lib-bash/activation-init.sh:34
 msgid ""
@@ -74,27 +86,40 @@ msgid ""
 "\n"
 "and trying home-manager switch again. Good luck!"
 msgstr ""
+"Önceki inşa numarası ve yolu çakışıyor! Bunların ikisi de boş olmalı\n"
+"veya ayarlanmalı ama şu anda\n"
+"\n"
+"    '%s' ve '%s'\n"
+"\n"
+"olarak ayarlandı. Önceki profil inşalarını kaybetmeyi önemsemiyorsanız\n"
+"en kolay çözüm muhtemelen\n"
+"\n"
+"   rm %s/home-manager*\n"
+"   rm %s/current-home\n"
+"\n"
+"komutlarını çalıştırmak ve tekrar home-manager switch denemektir. İyi "
+"şanslar!"
 
 #: modules/lib-bash/activation-init.sh:51
 msgid "Starting Home Manager activation"
-msgstr "Home Manager aktivasyonu başlatılıyor"
+msgstr "Home Manager etkinleştirmesi başlatılıyor"
 
 #: modules/lib-bash/activation-init.sh:55
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Nix denetleniyor"
 
 #: modules/lib-bash/activation-init.sh:61
 msgid "This is a dry run"
-msgstr ""
+msgstr "Bu bir deneme çalıştırmasıdır"
 
 #: modules/lib-bash/activation-init.sh:64
 msgid "This is a live run"
-msgstr ""
+msgstr "Bu bir gerçek çalıştırmadır"
 
 #: modules/lib-bash/activation-init.sh:69
 msgid "Using Nix version: %s"
-msgstr "Nix versiyon %s kullanılıyor"
+msgstr "Kullanılan Nix sürümü: %s"
 
 #: modules/lib-bash/activation-init.sh:72
 msgid "Activation variables:"
-msgstr ""
+msgstr "Etkinleştirme değişkenleri:"
