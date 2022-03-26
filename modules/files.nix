@@ -239,7 +239,7 @@ in
           }
 
           function cleanOldGen() {
-            if [[ ! -v oldGenPath ]] ; then
+            if [[ ! -v oldGenPath || ! -e "$oldGenPath/home-files" ]] ; then
               return
             fi
 
