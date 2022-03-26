@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2022-01-02 11:55+0100\n"
+"POT-Creation-Date: 2022-03-26 15:08+0100\n"
 "PO-Revision-Date: 2022-01-12 22:55+0000\n"
 "Last-Translator: 6KHCPCPO <lxh43qf2b@relay.firefox.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/home-manager/"
@@ -31,48 +31,35 @@ msgstr "Nettoyage des liens orphelins de %s"
 msgid "Creating profile generation %s"
 msgstr "Création de la génération de profil %s"
 
-#: modules/files.nix:266
+#: modules/files.nix:276
 msgid "No change so reusing latest profile generation %s"
 msgstr "Pas de changement, réutilisation du dernier profil génération %s"
 
-#: modules/home-environment.nix:589
+#: modules/home-environment.nix:607
 msgid ""
-"Oops, nix-env failed to install your new Home Manager profile!\n"
+"Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
 "Perhaps there is a conflict with a package that was installed using\n"
-"\"nix-env -i\"? Try running\n"
+"\"%s\"? Try running\n"
 "\n"
-"    nix-env -q\n"
+"    %s\n"
 "\n"
 "and if there is a conflicting package you can remove it with\n"
 "\n"
-"    nix-env -e {package name}\n"
+"    %s\n"
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
-"Oups, nix-env n'a pas réussi à installer votre nouveau profil de Home "
-"Manager\n"
-"\n"
-"Il y a peut-être un conflit avec un autre paquet qui a été installé avec\n"
-"« nix-env -i » ? Essayez d'éxecuter\n"
-"\n"
-"    nix-env -q\n"
-"\n"
-"et s'il y a un paquet en conflict, vous pourrez le supprimer avec\n"
-"\n"
-"    nix-env -e {package name}\n"
-"\n"
-"Après, essayez encore d'activer votre configuration de Home Manager."
 
-#: modules/home-environment.nix:620
+#: modules/home-environment.nix:639
 msgid "Activating %s"
 msgstr "Activation de %s"
 
-#: modules/lib-bash/activation-init.sh:30
+#: modules/lib-bash/activation-init.sh:31
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "Vérification rationnelle de oldGenNum et oldGenPath"
 
-#: modules/lib-bash/activation-init.sh:33
+#: modules/lib-bash/activation-init.sh:34
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -102,26 +89,54 @@ msgstr ""
 "\n"
 "et d'essayer encore home-manager switch. Bonne chance !"
 
-#: modules/lib-bash/activation-init.sh:50
+#: modules/lib-bash/activation-init.sh:51
 msgid "Starting Home Manager activation"
 msgstr "Démarrage de l'activation de Home Manager"
 
-#: modules/lib-bash/activation-init.sh:54
+#: modules/lib-bash/activation-init.sh:55
 msgid "Sanity checking Nix"
 msgstr "Vérification rationnelle de Nix"
 
-#: modules/lib-bash/activation-init.sh:60
+#: modules/lib-bash/activation-init.sh:61
 msgid "This is a dry run"
 msgstr "Ceci est une course à sec"
 
-#: modules/lib-bash/activation-init.sh:63
+#: modules/lib-bash/activation-init.sh:64
 msgid "This is a live run"
 msgstr "Ceci est une course réelle"
 
-#: modules/lib-bash/activation-init.sh:68
+#: modules/lib-bash/activation-init.sh:69
 msgid "Using Nix version: %s"
 msgstr "Usage de la version de Nix : %s"
 
-#: modules/lib-bash/activation-init.sh:71
+#: modules/lib-bash/activation-init.sh:72
 msgid "Activation variables:"
 msgstr "Variables d'activation :"
+
+#~ msgid ""
+#~ "Oops, nix-env failed to install your new Home Manager profile!\n"
+#~ "\n"
+#~ "Perhaps there is a conflict with a package that was installed using\n"
+#~ "\"nix-env -i\"? Try running\n"
+#~ "\n"
+#~ "    nix-env -q\n"
+#~ "\n"
+#~ "and if there is a conflicting package you can remove it with\n"
+#~ "\n"
+#~ "    nix-env -e {package name}\n"
+#~ "\n"
+#~ "Then try activating your Home Manager configuration again."
+#~ msgstr ""
+#~ "Oups, nix-env n'a pas réussi à installer votre nouveau profil de Home "
+#~ "Manager\n"
+#~ "\n"
+#~ "Il y a peut-être un conflit avec un autre paquet qui a été installé avec\n"
+#~ "« nix-env -i » ? Essayez d'éxecuter\n"
+#~ "\n"
+#~ "    nix-env -q\n"
+#~ "\n"
+#~ "et s'il y a un paquet en conflict, vous pourrez le supprimer avec\n"
+#~ "\n"
+#~ "    nix-env -e {package name}\n"
+#~ "\n"
+#~ "Après, essayez encore d'activer votre configuration de Home Manager."
