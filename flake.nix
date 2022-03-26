@@ -4,7 +4,7 @@
   outputs = { self, nixpkgs }:
     let
       # List of systems supported by home-manager binary
-      supportedSystems = nixpkgs.lib.platforms.unix;
+      supportedSystems = with nixpkgs.lib.platforms; linux ++ darwin;
 
       # Function to generate a set based on supported systems
       forAllSystems = f:
