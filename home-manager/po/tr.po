@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2022-02-12 15:54+0000\n"
-"Last-Translator: Mustafa Çalışkan <muscaln@protonmail.com>\n"
+"PO-Revision-Date: 2022-03-26 23:57+0000\n"
+"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/home-manager/cli/"
 "tr/>\n"
 "Language: tr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.11-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: home-manager/home-manager:60
 msgid "No configuration file found at %s"
@@ -30,11 +30,11 @@ msgstr ""
 
 #: home-manager/home-manager:122
 msgid "Can't inspect options of a flake configuration"
-msgstr "Flake konfigürasyonunun ayarları incelenemiyor"
+msgstr "Flake yapılandırmasının ayarları incelenemiyor"
 
 #: home-manager/home-manager:162
 msgid "Can't instantiate a flake configuration"
-msgstr "Flake konfigürasyonu örneklendirilemiyor"
+msgstr "Flake yapılandırması örneklendirilemiyor"
 
 #: home-manager/home-manager:237
 msgid ""
@@ -65,7 +65,7 @@ msgstr "İnşa, sadece okunabilir bir klasörde çalıştırılamaz"
 
 #: home-manager/home-manager:355
 msgid "No generation with ID %s"
-msgstr "%S ID'sine sahip inşa bulunamadı"
+msgstr "%s ID'sine sahip inşa bulunamadı"
 
 #: home-manager/home-manager:357
 msgid "Cannot remove the current generation %s"
@@ -77,7 +77,7 @@ msgstr "İnşa siliniyor %s"
 
 #: home-manager/home-manager:385
 msgid "No generations to expire"
-msgstr ""
+msgstr "Süresi dolacak inşa yok"
 
 #: home-manager/home-manager:396
 msgid "No home-manager packages seem to be installed."
@@ -97,11 +97,11 @@ msgstr "Bu sadece bir inşa denemesi, hiçbir şey silinmeyecek."
 
 #: home-manager/home-manager:476
 msgid "Really uninstall Home Manager?"
-msgstr "Home Manager'ı silmek istediğine emin misin?"
+msgstr "Home Manager'ı silmek istediğinize emin misiniz?"
 
 #: home-manager/home-manager:481
 msgid "Switching to empty Home Manager configuration..."
-msgstr "Boş Home Manager konfigürasyonuna geçiliyor..."
+msgstr "Boş Home Manager yapılandırmasına geçiliyor..."
 
 #: home-manager/home-manager:493
 msgid "Yay!"
@@ -117,11 +117,11 @@ msgstr "Artık tüm inşalar çöp olarak toplanabilir."
 
 #: home-manager/home-manager:510
 msgid "Leaving generations but they may still be garbage collected."
-msgstr "İnşalar gene de çöp olarak toplanabilir."
+msgstr "İnşalar yine de çöp olarak toplanabilir."
 
 #: home-manager/home-manager:514
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr "Home manager kaldırıldı ama home.nix dosyasına dokunulmadı."
+msgstr "Home Manager kaldırıldı ama home.nix dosyasına dokunulmadı."
 
 #: home-manager/home-manager:673
 msgid "%s: unknown option '%s'"
@@ -141,7 +141,7 @@ msgstr "Bilinmeyen komut: %s"
 
 #: home-manager/install.nix:22
 msgid "Creating initial Home Manager configuration..."
-msgstr "İlk Home Manager konfigürasyonu oluşturuluyor..."
+msgstr "İlk Home Manager yapılandırması oluşturuluyor..."
 
 #: home-manager/install.nix:66
 msgid "Creating initial Home Manager generation..."
@@ -157,10 +157,9 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
-"Herşey tamam! home-manager aracı yüklendi. Home Manager'ı konfigüre etmek "
-"için\n"
+"Herşey tamam! home-manager aracı kuruldu. Home Manager'ı yapılandırmak için\n"
 "\n"
-"    %S\n"
+"    %s\n"
 "\n"
 "dosyasını düzenleyin. Kullanılabilir seçenekleri görmek için:\n"
 "'man home-configuration.nix'."
@@ -175,11 +174,11 @@ msgid ""
 "if the error seems to be the fault of Home Manager."
 msgstr ""
 "Eyvah, kurulum başarısız! Eğer hatanın Home Manager'dan kaynaklandığını "
-"düşünüyorsan\n"
+"düşünüyorsanız\n"
 "\n"
 "    %s\n"
 "\n"
-"konumundan bildir."
+"adresinden bildirin."
 
 #: home-manager/install.nix:83
 msgid "This derivation is not buildable, please run it using nix-shell."
