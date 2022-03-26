@@ -91,12 +91,20 @@ while the `common.nix` file contains configuration shared across the two logins.
 
 You can get some inspiration from the {post-your-homenix}[Post your home-manager home.nix file!] Reddit thread.
 
-=== Why do I get an error message about `ca.desrt.dconf`?
+=== Why do I get an error message about `ca.desrt.dconf` or `dconf.service`?
 
-You are most likely trying to configure the GTK or Gnome Terminal but the DBus session is not aware of the dconf service. The full error you might get is
+You are most likely trying to configure something that uses dconf
+but the DBus session is not aware of the dconf service.
+The full error you might get is
 
 ----
 error: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name ca.desrt.dconf was not provided by any .service files
+----
+
+or
+
+----
+error: GDBus.Error:org.freedesktop.systemd1.NoSuchUnit: Unit dconf.service not found.
 ----
 
 The solution on NixOS is to add
