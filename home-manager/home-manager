@@ -23,7 +23,7 @@ function setNixProfileCommands() {
         LIST_OUTPATH_CMD="nix profile list"
         REMOVE_CMD="removeByName"
     else
-        LIST_OUTPATH_CMD="nix-env -q --outpath"
+        LIST_OUTPATH_CMD="nix-env -q --out-path"
         REMOVE_CMD="nix-env -q"
     fi
 }
