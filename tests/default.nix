@@ -88,6 +88,7 @@ import nmt {
     ./modules/programs/nushell
     ./modules/programs/pandoc
     ./modules/programs/pet
+    ./modules/programs/pistol
     ./modules/programs/powerline-go
     ./modules/programs/pubs
     ./modules/programs/qutebrowser

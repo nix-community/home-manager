@@ -132,6 +132,7 @@ let
     ./programs/pazi.nix
     ./programs/pet.nix
     ./programs/pidgin.nix
+    ./programs/pistol.nix
     ./programs/piston-cli.nix
     ./programs/powerline-go.nix
     ./programs/pubs.nix

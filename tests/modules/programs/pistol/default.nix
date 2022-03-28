@@ -1,0 +1,1 @@
+{ pistol-config = ./config.nix; }
