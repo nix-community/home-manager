@@ -263,7 +263,8 @@ let
   seatStr = moduleStr "seat";
 
   configFile = pkgs.writeText "sway.conf" (concatStringsSep "\n"
-    ((if cfg.config != null then
+    ((if cfg.extraConfigEarly != "" then [ cfg.extraConfigEarly ] else [ ])
+      ++ (if cfg.config != null then
       with cfg.config;
       ([
         (fontConfigStr fonts)
@@ -424,6 +425,14 @@ in {
       default = "";
       description =
         "Extra configuration lines to add to ~/.config/sway/config.";
+    };
+
+    extraConfigEarly = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Like extraConfig, except lines are added to ~/.config/sway/config
+                before all other configuration.'';
     };
   };
 
