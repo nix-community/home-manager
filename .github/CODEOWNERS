@@ -211,6 +211,9 @@
 
 /modules/programs/pidgin.nix                          @rycee
 
+/modules/programs/pistol.nix                          @mtoohey31
+/tests/modules/programs/pistol                        @mtoohey31
+
 /modules/programs/piston-cli.nix                      @ethancedwards8
 
 /modules/programs/powerline-go.nix                    @DamienCassou
