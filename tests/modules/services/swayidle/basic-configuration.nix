@@ -32,21 +32,11 @@
       ];
     };
 
-    nmt.script = let
-      escapeForRegex = builtins.replaceStrings [ "'" "*" ] [ "'\\''" "\\*" ];
-      expectedArgs = escapeForRegex (lib.concatStringsSep " " [
-        "-w"
-        "timeout 50 'notify-send -t 10000 -- \"Screen lock in 10 seconds\"'"
-        "timeout 60 'swaylock -fF'"
-        "timeout 300 'swaymsg \"output * dpms off\"' resume 'swaymsg \"output * dpms on\"'"
-        "before-sleep 'swaylock -fF'"
-        "lock 'swaylock -fF'"
-      ]);
-    in ''
+    nmt.script = ''
       serviceFile=home-files/.config/systemd/user/swayidle.service
 
       assertFileExists $serviceFile
-      assertFileRegex $serviceFile 'ExecStart=.*/bin/swayidle ${expectedArgs}'
+      assertFileRegex $serviceFile 'ExecStart=.*-swayidle'
     '';
   };
 }

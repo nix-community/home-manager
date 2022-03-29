@@ -108,8 +108,9 @@ in {
 
       Service = {
         Type = "simple";
-        ExecStart =
-          "${cfg.package}/bin/swayidle -w ${concatStringsSep " " args}";
+        ExecStart = "${pkgs.writeShellScript "swayidle" ''
+          ${cfg.package}/bin/swayidle -w ${concatStringsSep " " args}
+        ''}";
       };
 
       Install = { WantedBy = [ "sway-session.target" ]; };
