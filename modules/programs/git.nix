@@ -239,6 +239,34 @@ in {
         };
       };
 
+      difftastic = {
+        enable = mkEnableOption "" // {
+          description = ''
+            Enable the <command>difft</command> syntax highlighter.
+            See <link xlink:href="https://github.com/Wilfred/difftastic" />.
+          '';
+        };
+
+        background = mkOption {
+          type = types.enum [ "light" "dark" ];
+          default = "light";
+          example = "dark";
+          description = ''
+            Determines whether difftastic should use the lighter or darker colors
+            for syntax highlithing.
+          '';
+        };
+
+        color = mkOption {
+          type = types.enum [ "always" "auto" "never" ];
+          default = "auto";
+          example = "always";
+          description = ''
+            Determines when difftastic should color its output.
+          '';
+        };
+      };
+
       delta = {
         enable = mkEnableOption "" // {
           description = ''
@@ -274,6 +302,11 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       home.packages = [ cfg.package ];
+      assertions = [{
+        assertion = !(cfg.delta.enable && cfg.difftastic.enable);
+        message =
+          "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' can be set to true at the same time.";
+      }];
 
       programs.git.iniContent.user = {
         name = mkIf (cfg.userName != null) cfg.userName;
@@ -375,6 +408,18 @@ in {
           smudge = concatStringsSep " "
             ([ "git-lfs" "smudge" ] ++ skipArg ++ [ "--" "%f" ]);
         };
+    })
+
+    (mkIf cfg.difftastic.enable {
+      home.packages = [ pkgs.difftastic ];
+
+      programs.git.iniContent = let
+        difftCommand =
+          "${pkgs.difftastic}/bin/difft --color ${cfg.difftastic.color} --background ${cfg.difftastic.background}";
+      in {
+        diff.external = difftCommand;
+        core.pager = "${pkgs.less}/bin/less -XF";
+      };
     })
 
     (mkIf cfg.delta.enable {
