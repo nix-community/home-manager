@@ -9,7 +9,8 @@ specific (non global) packages and dotfiles.
 Before attempting to use Home Manager please read the warning below.
 
 For a more systematic overview of Home Manager and its available
-options, please see the Home Manager [manual][manual] and [options][configuration options].
+options, please see the Home Manager [manual][manual] and
+[options][configuration options].
 
 If you would like to contribute to Home Manager
 then please have a look at the [contributing][] chapter of the manual.
