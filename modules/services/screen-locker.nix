@@ -94,6 +94,16 @@ in {
           Extra command-line arguments to pass to <command>xss-lock</command>.
         '';
       };
+
+      screensaverCycle = mkOption {
+        type = types.int;
+        default = 600;
+        description = ''
+          X server's screensaver cycle value expresed as seconds.
+          This will be used with <command>xset</command> to configure
+          the cycle along with timeout.
+        '';
+      };
     };
   };
 
@@ -122,7 +132,9 @@ in {
     }
     (mkIf (!cfg.xautolock.enable) {
       systemd.user.services.xss-lock.Service.ExecStartPre =
-        "${pkgs.xorg.xset}/bin/xset s ${toString (cfg.inactiveInterval * 60)}";
+        "${pkgs.xorg.xset}/bin/xset s ${toString (cfg.inactiveInterval * 60)} ${
+          toString cfg.xss-lock.screensaverCycle
+        }";
     })
     (mkIf cfg.xautolock.enable {
       systemd.user.services.xautolock-session = {
