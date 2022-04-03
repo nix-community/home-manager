@@ -9,7 +9,10 @@
 
 { lib }:
 
-let inherit (lib) all filterAttrs head hm mapAttrs length tail toposort;
+let
+  inherit (lib)
+    all concatMapStringsSep filterAttrs head hm length mapAttrs mapAttrsToList
+    tail toposort;
 in {
   empty = { };
 
@@ -126,4 +129,52 @@ in {
   entriesAnywhere = tag: hm.dag.entriesBetween tag [ ] [ ];
   entriesAfter = tag: hm.dag.entriesBetween tag [ ];
   entriesBefore = tag: before: hm.dag.entriesBetween tag before [ ];
+
+  # Converts `value` and its descendants (if `value` is a list or set)
+  # to JSON, maintaining the order of any DAGs encountered instead of
+  # treating them as sets. `depth` controls the number of levels to
+  # convert while being mindful of DAGs before literally converting
+  # elements or values encountered. To convert `value` and all its
+  # descendants appearing to be DAGs to ordered JSON objects, specify
+  # a null `depth`. To only convert `value` to an ordered JSON object
+  # (if it is a DAG) and treat none of its descendants (if it is a
+  # list or a set) as DAGs, specify a `depth` of `1`.
+  #
+  # Example:
+  #    nix-repl> toJson 1 {
+  #                a = entryAnywhere "1";
+  #                b = entryAfter [ "a" "c" ] "2";
+  #                c = entryBefore [ "d" ] "3";
+  #                d = entryBefore [ "e" ] "4";
+  #                e = entryAnywhere {
+  #                  f = {
+  #                    after = [ "x" ];
+  #                    before = [ "y" ];
+  #                    data = "z";
+  #                  };
+  #                };
+  #              }
+  #    ''{"a":"1","c":"3","b":"2","d":"4","e":{"f":{"after":["x"],"before":["y"],"data":"z"}}}''
+  #
+  # Note: If `depth` were null or greater than `1` in the example
+  # above, the attribute `e` would have been identified as a DAG
+  # (because its attribute `f` resembles a DAG entry) and thus
+  # converted to an ordered JSON object.
+  toJson = depth: value:
+    if depth == null || depth > 0 then
+      let nextDepth = if depth == null then null else depth - 1;
+      in (if hm.dag.isDag value then
+        "{" + (concatMapStringsSep "," ({ name, data }:
+          "${builtins.toJSON name}:${hm.dag.toJson nextDepth data}")
+          (hm.dag.topoSort value).result) + "}"
+      else if builtins.isAttrs value then
+        "{" + (builtins.concatStringsSep "," (mapAttrsToList (name: value:
+          "${builtins.toJSON name}:${hm.dag.toJson nextDepth value}") value))
+        + "}"
+      else if builtins.isList value then
+        "[" + (concatMapStringsSep "," (hm.dag.toJson nextDepth) value) + "]"
+      else
+        builtins.toJSON value)
+    else
+      builtins.toJSON value;
 }
