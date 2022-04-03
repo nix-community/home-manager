@@ -1,0 +1,3 @@
+[directory.substitutions]
+"/a/b" = "b"
+"/a" = "a"

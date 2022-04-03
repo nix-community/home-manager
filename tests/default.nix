@@ -152,6 +152,7 @@ import nmt {
     ./modules/programs/zsh
     ./modules/services/syncthing/common
     ./modules/xresources
+    ./pkgs/dag
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
     ./modules/services/git-sync-darwin
