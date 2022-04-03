@@ -1,8 +1,10 @@
-{ pkgs ? import <nixpkgs> {}, enableBig ? true }:
+{ pkgs ? null, enableBig ? true }@args:
 
 let
 
-  lib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
+  pkgs = (import ../modules/pkgs).extendAttrOrDefault args;
+
+  inherit (pkgs) lib;
 
   nmt = fetchTarball {
     url =

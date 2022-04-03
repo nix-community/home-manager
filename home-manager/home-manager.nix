@@ -1,7 +1,10 @@
-{ pkgs ? import <nixpkgs> { }, confPath, confAttr ? null, check ? true
-, newsReadIdsFile ? null }:
+{ pkgs ? null, confPath, confAttr ? null, check ? true, newsReadIdsFile ? null
+}@args:
 
 let
+
+  pkgs = (import ../modules/pkgs).extendAttrOrDefault args;
+
   inherit (pkgs.lib)
     concatMapStringsSep fileContents filter length optionalString removeSuffix
     replaceStrings splitString;

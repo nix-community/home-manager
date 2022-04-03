@@ -1,5 +1,7 @@
 { configuration
+# Note, this should be Nixpkgs + HM extensions.
 , pkgs
+# Note, this should be "the standard library" + HM extensions.
 , lib ? pkgs.lib
 
   # Whether to check that each option has a matching declaration.
@@ -21,15 +23,12 @@ let
     in
       fold f res res.config.warnings;
 
-  extendedLib = import ./lib/stdlib-extended.nix lib;
-
   hmModules =
     import ./modules.nix {
       inherit check pkgs;
-      lib = extendedLib;
     };
 
-  rawModule = extendedLib.evalModules {
+  rawModule = evalModules {
     modules = [ configuration ] ++ hmModules;
     specialArgs = {
       modulesPath = builtins.toString ./.;

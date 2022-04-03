@@ -248,12 +248,19 @@ function doInspectOption() {
     HOME_MANAGER_CONFIG_ATTRIBUTE_NIX=${HOME_MANAGER_CONFIG_ATTRIBUTE//'\'/'\\'}
     HOME_MANAGER_CONFIG_ATTRIBUTE_NIX=${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX//'"'/'\"'}
     HOME_MANAGER_CONFIG_ATTRIBUTE_NIX=${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX//$'\n'/$'\\n'}
-    local modulesExpr
-    modulesExpr="let confPath = \"${HOME_MANAGER_CONFIG_NIX}\"; "
-    modulesExpr+="confAttr = \"${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX}\"; in "
-    modulesExpr+="(import <home-manager/modules> {"
-    modulesExpr+=" configuration = if confAttr == \"\" then confPath else (import confPath).\${confAttr};"
-    modulesExpr+=" pkgs = import <nixpkgs> {}; check = true; })"
+    local modulesExpr="(
+      let
+        confPath = \"${HOME_MANAGER_CONFIG_NIX}\";
+        confAttr = \"${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX}\";
+      in import <home-manager/modules> {
+        configuration =
+          if confAttr == "" then confPath else (import confPath).\${confAttr};
+        pkgs = import <nixpkgs> {
+          overlays = [ (import <home-manager/modules/pkgs>).overlay ];
+        };
+        check = true;
+      }
+    )"
 
     nixos-option \
         --options_expr "$modulesExpr.options" \
