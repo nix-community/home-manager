@@ -21,6 +21,8 @@ let
       host = cfg.mpd.host;
       port = cfg.mpd.port;
       music_dir = cfg.mpd.musicDirectory;
+    } // optionalAttrs (cfg.mpd.password != null) {
+      password = cfg.mpd.password;
     };
 
     Bling = {
@@ -68,6 +70,14 @@ in {
         defaultText = "config.services.mpd.musicDirectory";
         description = ''
           If set, mpDris2 will use this directory to access music artwork.
+        '';
+      };
+
+      password = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          The password to connect to MPD.
         '';
       };
     };
