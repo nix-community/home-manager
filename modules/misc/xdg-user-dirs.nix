@@ -33,57 +33,62 @@ in {
     # https://gitlab.freedesktop.org/xdg/xdg-user-dirs/blob/master/man/user-dirs.dirs.xml
 
     desktop = mkOption {
-      type = types.str;
+      type = with types; coercedTo path toString str;
       default = "$HOME/Desktop";
       description = "The Desktop directory.";
     };
 
     documents = mkOption {
-      type = types.str;
+      type = with types; coercedTo path toString str;
       default = "$HOME/Documents";
       description = "The Documents directory.";
     };
 
     download = mkOption {
-      type = types.str;
+      type = with types; coercedTo path toString str;
       default = "$HOME/Downloads";
       description = "The Downloads directory.";
     };
 
     music = mkOption {
-      type = types.str;
+      type = with types; coercedTo path toString str;
       default = "$HOME/Music";
       description = "The Music directory.";
     };
 
     pictures = mkOption {
-      type = types.str;
+      type = with types; coercedTo path toString str;
       default = "$HOME/Pictures";
       description = "The Pictures directory.";
     };
 
     publicShare = mkOption {
-      type = types.str;
+      type = with types; coercedTo path toString str;
       default = "$HOME/Public";
       description = "The Public share directory.";
     };
 
     templates = mkOption {
-      type = types.str;
+      type = with types; coercedTo path toString str;
       default = "$HOME/Templates";
       description = "The Templates directory.";
     };
 
     videos = mkOption {
-      type = types.str;
+      type = with types; coercedTo path toString str;
       default = "$HOME/Videos";
       description = "The Videos directory.";
     };
 
     extraConfig = mkOption {
-      type = with types; attrsOf str;
+      type = with types; attrsOf (coercedTo path toString str);
       default = { };
-      example = { XDG_MISC_DIR = "$HOME/Misc"; };
+      defaultText = literalExpression "{ }";
+      example = literalExpression ''
+        {
+          XDG_MISC_DIR = "$HOME/Misc";
+        }
+      '';
       description = "Other user directories.";
     };
 
@@ -112,6 +117,8 @@ in {
     in generators.toKeyValue { } wrapped;
 
     xdg.configFile."user-dirs.conf".text = "enabled=False";
+
+    home.sessionVariables = directories;
 
     home.activation = mkIf cfg.createDirectories {
       createXdgUserDirectories = let
