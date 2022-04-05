@@ -283,7 +283,12 @@ in {
         source = "${keyringFiles}/pubring.kbx";
       };
 
-    home.activation = mkIf (cfg.publicKeys != [ ]) {
+    home.activation = {
+      createGpgHomedir =
+        hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+          $DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG ${escapeShellArg cfg.homedir}
+        '';
+
       importGpgKeys = let
         gpg = "${cfg.package}/bin/gpg";
 
@@ -314,7 +319,8 @@ in {
           unset GNUPGHOME QUIET_ARG keyId importTrust
         '' ++ optional (!cfg.mutableTrust && anyTrust) ''
           install -m 0700 ${keyringFiles}/trustdb.gpg "${cfg.homedir}/trustdb.gpg"'');
-      in lib.hm.dag.entryAfter [ "linkGeneration" ] block;
+      in mkIf (cfg.publicKeys != [ ])
+      (lib.hm.dag.entryAfter [ "linkGeneration" ] block);
     };
   };
 }
