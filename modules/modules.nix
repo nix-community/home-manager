@@ -209,6 +209,7 @@ let
     ./services/mbsync.nix
     ./services/mpd.nix
     ./services/mpdris2.nix
+    ./services/mpd-discord-rpc.nix
     ./services/mpris-proxy.nix
     ./services/muchsync.nix
     ./services/network-manager-applet.nix
