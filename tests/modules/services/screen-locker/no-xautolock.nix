@@ -6,7 +6,10 @@
       enable = true;
       inactiveInterval = 5;
       lockCmd = "${pkgs.i3lock}/bin/i3lock -n -c AA0000";
-      xss-lock = { extraOptions = [ "-test" ]; };
+      xss-lock = {
+        extraOptions = [ "-test" ];
+        screensaverCycle = 5;
+      };
       xautolock = { enable = false; };
     };
 
@@ -18,7 +21,7 @@
 
       assertFileExists $xssService
       assertFileRegex $xssService 'ExecStart=.*/bin/xss-lock.*-test.*i3lock -n -c AA0000'
-      assertFileRegex $xssService 'ExecStartPre=.*/xset s 300'
+      assertFileRegex $xssService 'ExecStartPre=.*/xset s 300 5'
     '';
   };
 }

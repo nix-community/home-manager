@@ -247,4 +247,10 @@
     github = "sebtm";
     githubId = 17243347;
   };
+  rszamszur = {
+    name = "Radosław Szamszur";
+    email = "radoslawszamszur@gmail.com";
+    github = "rszamszur";
+    githubId = 10353018;
+  };
 }
