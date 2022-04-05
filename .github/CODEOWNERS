@@ -340,6 +340,8 @@
 
 /modules/services/mpdris2.nix                         @pjones
 
+/modules/services/mpd-discord-rpc.nix                 @Kranzes
+
 /modules/services/mpris-proxy.nix                     @ThibautMarty
 
 /modules/services/muchsync.nix                        @pacien
