@@ -42,8 +42,8 @@ distributions and NixOS versions.
 
 Also, the `home-manager` tool does not explicitly support rollbacks at
 the moment so if your home directory gets messed up you'll have to fix
-it yourself. See the [rollbacks](#rollbacks) section for instructions
-on how to manually perform a rollback.
+it yourself. See the [rollbacks][] section for instructions on how to
+manually perform a rollback.
 
 Now when your expectations have been built up and you are eager to try
 all this out you can go ahead and read the rest of this text.
@@ -126,3 +126,4 @@ This project is licensed under the terms of the [MIT license](LICENSE).
 [manual nixos install]: https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module
 [manual nix-darwin install]: https://nix-community.github.io/home-manager/index.html#sec-install-nix-darwin-module
 [manual nix flakes]: https://nix-community.github.io/home-manager/index.html#ch-nix-flakes
+[rollbacks]: https://nix-community.github.io/home-manager/index.html#sec-usage-rollbacks
