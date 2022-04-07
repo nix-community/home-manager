@@ -112,9 +112,13 @@ in {
         else
           echo "include ${homeConf}" > "${userConf}"
         fi
-      elif ! ${pkgs.gnugrep}/bin/grep -qF "include ${homeConf}" ${escapeShellArg userConf}; then
+      elif ! ${pkgs.gnugrep}/bin/grep -qF "include ${homeConf}" ${
+        escapeShellArg userConf
+      }; then
         # Add include statement for home-manager generated config
-        $DRY_RUN_CMD ${pkgs.gnused}/bin/sed -i '1i include ${homeConf}' ${escapeShellArg userConf}
+        $DRY_RUN_CMD ${pkgs.gnused}/bin/sed -i '1i include ${homeConf}' ${
+          escapeShellArg userConf
+        }
       fi
     '';
   };
