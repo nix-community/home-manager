@@ -100,7 +100,7 @@ in {
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
-        eval "$(${starshipCmd} init bash)"
+        eval "$(${starshipCmd} init bash --print-full-init)"
       fi
     '';
 
