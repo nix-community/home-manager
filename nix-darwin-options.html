@@ -1,5 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Appendix C. nix-darwin Module Options</title><link rel="stylesheet" type="text/css" href="style.css" /><link rel="stylesheet" type="text/css" href="overrides.css" /><link rel="stylesheet" type="text/css" href="mono-blue.css" /><script src="highlight.pack.js" type="text/javascript"></script><script src="highlight.load.js" type="text/javascript"></script><meta name="generator" content="DocBook XSL Stylesheets V1.79.2" /><link rel="home" href="index.html" title="Home Manager Manual" /><link rel="up" href="index.html" title="Home Manager Manual" /><link rel="prev" href="nixos-options.html" title="Appendix B. NixOS Module Options" /><link rel="next" href="tools.html" title="Appendix D. Tools" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Appendix C. nix-darwin Module Options</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="nixos-options.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="tools.html">Next</a></td></tr></table><hr /></div><div class="appendix"><div class="titlepage"><div><div><h1 class="title"><a id="ch-nix-darwin-options"></a>Appendix C. nix-darwin Module Options</h1></div></div></div><div class="variablelist"><a id="nix-darwin-options"></a><dl class="variablelist"><dt><span class="term"><a id="nix-darwin-opt-home-manager.backupFileExtension"></a><a class="term" href="nix-darwin-options.html#nix-darwin-opt-home-manager.backupFileExtension"><code class="option">home-manager.backupFileExtension</code></a></span></dt><dd><p>On activation move existing files by appending the given
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Appendix C. nix-darwin Module Options</title><link rel="stylesheet" type="text/css" href="style.css" /><link rel="stylesheet" type="text/css" href="overrides.css" /><link rel="stylesheet" type="text/css" href="mono-blue.css" /><script src="highlight.pack.js" type="text/javascript"></script><script src="highlight.load.js" type="text/javascript"></script><meta name="generator" content="DocBook XSL Stylesheets V1.79.2" /><link rel="home" href="index.html" title="Home Manager Manual" /><link rel="up" href="index.html" title="Home Manager Manual" /><link rel="prev" href="nixos-options.html" title="Appendix B. NixOS Module Options" /><link rel="next" href="tools.html" title="Appendix D. Tools" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Appendix C. nix-darwin Module Options</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="nixos-options.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="tools.html">Next</a></td></tr></table><hr /></div><div class="appendix"><div class="titlepage"><div><div><h1 class="title"><a id="ch-nix-darwin-options"></a>Appendix C. nix-darwin Module Options</h1></div></div></div><div class="variablelist"><a id="nix-darwin-options"></a><dl class="variablelist"><dt><span class="term"><a id="nix-darwin-opt-_module.args"></a><a class="term" href="nix-darwin-options.html#nix-darwin-opt-_module.args"><code class="option">_module.args</code></a></span></dt><dd><p>Additional arguments passed to each module in addition to ones
+like <code class="literal">lib</code>, <code class="literal">config</code>,
+and <code class="literal">pkgs</code>, <code class="literal">modulesPath</code>.
+</p><p>
+This option is also available to all submodules. Submodules do not
+inherit args from their parent module, nor do they provide args to
+their parent module or sibling submodules. The sole exception to
+this is the argument <code class="literal">name</code> which is provided by
+parent modules to a submodule and contains the attribute name
+the submodule is bound to, or a unique generated name if it is
+not bound to an attribute.
+</p><p>
+Some arguments are already passed by default, of which the
+following <span class="emphasis"><em>cannot</em></span> be changed with this option:
+</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+   <code class="varname">lib</code>: The nixpkgs library.
+  </p></li><li class="listitem"><p>
+   <code class="varname">config</code>: The results of all options after merging the values from all modules together.
+  </p></li><li class="listitem"><p>
+   <code class="varname">options</code>: The options declared in all modules.
+  </p></li><li class="listitem"><p>
+   <code class="varname">specialArgs</code>: The <code class="literal">specialArgs</code> argument passed to <code class="literal">evalModules</code>.
+  </p></li><li class="listitem"><p>
+   All attributes of <code class="varname">specialArgs</code>
+  </p><p>
+   Whereas option values can generally depend on other option values
+   thanks to laziness, this does not apply to <code class="literal">imports</code>, which
+   must be computed statically before anything else.
+  </p><p>
+   For this reason, callers of the module system can provide <code class="literal">specialArgs</code>
+   which are available during import resolution.
+  </p><p>
+   For NixOS, <code class="literal">specialArgs</code> includes
+   <code class="varname">modulesPath</code>, which allows you to import
+   extra modules from the nixpkgs package tree without having to
+   somehow make the module aware of the location of the
+   <code class="literal">nixpkgs</code> or NixOS directories.
+</p><pre class="programlisting">
+{ modulesPath, ... }: {
+  imports = [
+    (modulesPath + "/profiles/minimal.nix")
+  ];
+}
+</pre><p>
+  </p></li></ul></div><p>
+</p><p>
+For NixOS, the default value for this option includes at least this argument:
+</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+   <code class="varname">pkgs</code>: The nixpkgs package set according to
+   the <code class="option">nixpkgs.pkgs</code> option.
+  </p></li></ul></div><p>
+</p><p><span class="emphasis"><em>Type:</em></span> lazy attribute set of raw values</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/lib/modules.nix#blob-path" target="_top">
+                    &lt;home-manager/lib/modules.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="nix-darwin-opt-home-manager.backupFileExtension"></a><a class="term" href="nix-darwin-options.html#nix-darwin-opt-home-manager.backupFileExtension"><code class="option">home-manager.backupFileExtension</code></a></span></dt><dd><p>On activation move existing files by appending the given
 file extension rather than exiting with an error.
 </p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"backup"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/nix-darwin/default.nix#blob-path" target="_top">
                     &lt;home-manager/nix-darwin/default.nix&gt;
