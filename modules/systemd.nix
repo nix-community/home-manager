@@ -41,7 +41,7 @@ let
       source = pkgs.writeTextFile {
         name = pathSafeName;
         text = toSystemdIni serviceCfg;
-        destination = lib.escapeShellArg "/${filename}";
+        destination = "/${filename}";
       } + "/${filename}";
 
       wantedBy = target: {
