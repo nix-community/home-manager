@@ -263,7 +263,7 @@ let
   seatStr = moduleStr "seat";
 
   configFile = pkgs.writeText "sway.conf" (concatStringsSep "\n"
-    ((if cfg.extraConfigEarly != "" then [ cfg.extraConfigEarly ] else [ ])
+    ((optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
       ++ (if cfg.config != null then
       with cfg.config;
       ([

@@ -62,7 +62,7 @@ in {
     home.packages = [ cfg.package ];
 
     xdg.configFile."bspwm/bspwmrc".source = pkgs.writeShellScript "bspwmrc"
-      ((if cfg.extraConfigEarly != "" then cfg.extraConfigEarly + "\n" else "")
+      ((optionalString (cfg.extraConfigEarly != "") (cfg.extraConfigEarly + "\n"))
         + ''
           ${concatStringsSep "\n" (mapAttrsToList formatMonitor cfg.monitors)}
 
