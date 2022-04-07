@@ -24,6 +24,8 @@ let
   formatPair = key: value:
     if isAttrs value then formatSet key value else formatLine key value;
 
+  homeConf = "${config.xdg.configHome}/task/home-manager-taskrc";
+  userConf = "${config.xdg.configHome}/task/taskrc";
 in {
   options = {
     programs.taskwarrior = {
@@ -88,7 +90,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ pkgs.taskwarrior ];
 
-    xdg.configFile."task/taskrc".text = ''
+    home.file."${homeConf}".text = ''
       data.location=${cfg.dataLocation}
       ${optionalString (cfg.colorTheme != null) (if isString cfg.colorTheme then
         "include ${cfg.colorTheme}.theme"
@@ -98,6 +100,26 @@ in {
       ${concatStringsSep "\n" (mapAttrsToList formatPair cfg.config)}
 
       ${cfg.extraConfig}
+    '';
+
+    home.activation.regenDotTaskRc = hm.dag.entryAfter [ "writeBoundary" ] ''
+      $VERBOSE_ECHO "Ensuring generated taskwarrior config included in taskrc"
+
+      if [[ ! -s "${userConf}" ]]; then
+        # Ensure file's existence
+        if [[ -v DRY_RUN ]]; then
+          $DRY_RUN_CMD echo "include ${homeConf}" ">" "${userConf}"
+        else
+          echo "include ${homeConf}" > "${userConf}"
+        fi
+      elif ! ${pkgs.gnugrep}/bin/grep -qF "include ${homeConf}" ${
+        escapeShellArg userConf
+      }; then
+        # Add include statement for home-manager generated config
+        $DRY_RUN_CMD ${pkgs.gnused}/bin/sed -i '1i include ${homeConf}' ${
+          escapeShellArg userConf
+        }
+      fi
     '';
   };
 }

@@ -21,9 +21,9 @@ with lib;
     test.stubs.taskwarrior = { };
 
     nmt.script = ''
-      assertFileExists home-files/.config/task/taskrc
-      assertFileContent home-files/.config/task/taskrc ${
-        pkgs.writeText "taskwarrior.expected" ''
+      assertFileExists home-files/.config/task/home-manager-taskrc
+      assertFileContent home-files/.config/task/home-manager-taskrc ${
+        pkgs.writeText "taskwarrior.home-conf.expected" ''
           data.location=/some/data/location
           include dark-violets-256.theme
 
