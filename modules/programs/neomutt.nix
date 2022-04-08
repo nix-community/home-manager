@@ -89,7 +89,6 @@ let
     };
   };
 
-  yesno = x: if x then "yes" else "no";
   setOption = n: v: if v == null then "unset ${n}" else "set ${n}=${v}";
   escape = replaceStrings [ "%" ] [ "%25" ];
 
@@ -167,7 +166,7 @@ let
   sidebarSection = ''
     # Sidebar
     set sidebar_visible = yes
-    set sidebar_short_path = ${yesno cfg.sidebar.shortPath}
+    set sidebar_short_path = ${lib.hm.booleans.yesNo cfg.sidebar.shortPath}
     set sidebar_width = ${toString cfg.sidebar.width}
     set sidebar_format = '${cfg.sidebar.format}'
   '';
@@ -204,8 +203,10 @@ let
 
       # GPG section
       set crypt_use_gpgme = yes
-      set crypt_autosign = ${yesno (gpg.signByDefault or false)}
-      set crypt_opportunistic_encrypt = ${yesno (gpg.encryptByDefault or false)}
+      set crypt_autosign = ${lib.hm.booleans.yesNo (gpg.signByDefault or false)}
+      set crypt_opportunistic_encrypt = ${
+        lib.hm.booleans.yesNo (gpg.encryptByDefault or false)
+      }
       set pgp_use_gpg_agent = yes
       set mbox_type = ${if maildir != null then "Maildir" else "mbox"}
       set sort = "${cfg.sort}"

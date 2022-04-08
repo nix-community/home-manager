@@ -87,10 +87,10 @@ rec {
                 "status_command ${statusCommand}")
               "${moduleName}bar_command ${command}"
               (optionalString (workspaceButtons != null)
-                "workspace_buttons ${if workspaceButtons then "yes" else "no"}")
+                "workspace_buttons ${lib.hm.booleans.yesNo workspaceButtons}")
               (optionalString (workspaceNumbers != null)
                 "strip_workspace_numbers ${
-                  if !workspaceNumbers then "yes" else "no"
+                  lib.hm.booleans.yesNo (!workspaceNumbers)
                 }")
               (optionalString (trayOutput != null) "tray_output ${trayOutput}")
               (optionals colorsNotNull (indent

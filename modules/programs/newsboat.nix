@@ -24,7 +24,7 @@ let
     max-items ${toString cfg.maxItems}
     browser ${cfg.browser}
     reload-threads ${toString cfg.reloadThreads}
-    auto-reload ${if cfg.autoReload then "yes" else "no"}
+    auto-reload ${lib.hm.booleans.yesNo cfg.autoReload}
     ${optionalString (cfg.reloadTime != null)
     (toString "reload-time ${toString cfg.reloadTime}")}
     prepopulate-query-feeds yes

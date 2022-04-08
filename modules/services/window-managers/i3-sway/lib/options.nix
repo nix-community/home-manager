@@ -494,10 +494,7 @@ in {
           default = if isSway then "yes" else true;
           description = "Whether focus should follow the mouse.";
           apply = val:
-            if (isSway && isBool val) then
-              (if val then "yes" else "no")
-            else
-              val;
+            if (isSway && isBool val) then (lib.hm.booleans.yesNo val) else val;
         };
 
         forceWrapping = mkOption {

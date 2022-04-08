@@ -161,13 +161,13 @@ let
         "floating_modifier ${floating.modifier}"
         (windowBorderString window floating)
         "hide_edge_borders ${window.hideEdgeBorders}"
-        "force_focus_wrapping ${if focus.forceWrapping then "yes" else "no"}"
-        "focus_follows_mouse ${if focus.followMouse then "yes" else "no"}"
+        "force_focus_wrapping ${lib.hm.booleans.yesNo focus.forceWrapping}"
+        "focus_follows_mouse ${lib.hm.booleans.yesNo focus.followMouse}"
         "focus_on_window_activation ${focus.newWindow}"
         "mouse_warping ${if focus.mouseWarping then "output" else "none"}"
         "workspace_layout ${workspaceLayout}"
         "workspace_auto_back_and_forth ${
-          if workspaceAutoBackAndForth then "yes" else "no"
+          lib.hm.booleans.yesNo workspaceAutoBackAndForth
         }"
         "client.focused ${colorSetStr colors.focused}"
         "client.focused_inactive ${colorSetStr colors.focusedInactive}"
