@@ -190,9 +190,8 @@ in {
     extraConfigEarly = mkOption {
       type = types.lines;
       default = "";
-      description = ''
-        Like extraConfig, except commands are run at the start of the config
-                file.'';
+      description =
+        "Like extraConfig, except commands are run at the start of the config file.";
     };
 
     monitors = mkOption {
