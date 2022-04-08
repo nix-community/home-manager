@@ -223,9 +223,11 @@ let
 
       # Extra configuration
       ${account.neomutt.extraConfig}
-    '' + optionalString (account.signature.showSignature != "none") ''
+    '' + (if (account.signature.showSignature == "none") then ''
+      unset signature
+    '' else ''
       set signature = ${pkgs.writeText "signature.txt" account.signature.text}
-    '' + optionalString account.notmuch.enable (notmuchSection account);
+    '') + optionalString account.notmuch.enable (notmuchSection account);
 
 in {
   options = {
