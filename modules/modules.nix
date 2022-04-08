@@ -173,6 +173,7 @@ let
     ./programs/pywal.nix
     ./programs/watson.nix
     ./programs/waybar.nix
+    ./programs/wezterm.nix
     ./programs/xmobar.nix
     ./programs/z-lua.nix
     ./programs/zathura.nix

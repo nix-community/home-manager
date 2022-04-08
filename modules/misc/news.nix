@@ -639,6 +639,13 @@ in
           A new module is available: 'programs.hyfetch'.
         '';
       }
+
+      {
+        time = "2022-08-07T09:07:35+00:00";
+        message = ''
+          A new module is available: 'programs.wezterm'.
+        '';
+      }
     ];
   };
 }

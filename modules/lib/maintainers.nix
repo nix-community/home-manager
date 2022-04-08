@@ -19,6 +19,12 @@
     githubId = 56743515;
     name = "Morgane Austreelis";
   };
+  blmhemu = {
+    name = "blmhemu";
+    email = "19410501+blmhemu@users.noreply.github.com";
+    github = "blmhemu";
+    githubId = 19410501;
+  };
   CarlosLoboxyz = {
     name = "Carlos Lobo";
     email = "86011416+CarlosLoboxyz@users.noreply.github.com";
