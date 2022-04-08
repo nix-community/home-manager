@@ -10,7 +10,7 @@ let
 in {
   meta.maintainers = [ hm.maintainers.florpe ];
   options.programs.pylint = {
-    enable = mkEnableOption "The pylint Python linter.";
+    enable = mkEnableOption "the pylint Python linter";
     package = mkOption {
       type = types.package;
       default = pkgs.python3Packages.pylint;
