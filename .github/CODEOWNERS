@@ -289,6 +289,9 @@ Makefile                                              @thiagokokada
 /modules/programs/waybar.nix                          @berbiche
 /tests/modules/programs/waybar                        @berbiche
 
+/modules/programs/wezterm.nix                         @blmhemu
+/tests/modules/programs/wezterm                       @blmhemu
+
 /modules/programs/xmobar.nix                          @t4ccer
 /tests/modules/programs/xmobar                        @t4ccer
 
