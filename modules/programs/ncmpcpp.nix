@@ -14,7 +14,7 @@ let
   renderValue = option:
     {
       int = toString option;
-      bool = if option then "yes" else "no";
+      bool = lib.hm.booleans.yesNo option;
       string = option;
     }.${builtins.typeOf option};
 

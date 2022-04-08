@@ -63,7 +63,7 @@ let
         if isList v then
           concatMapStringsSep " " (genValue n) v
         else if isBool v then
-          (if v then "yes" else "no")
+          lib.hm.booleans.yesNo v
         else if isInt v then
           toString v
         else if isString v && hasSpace v then

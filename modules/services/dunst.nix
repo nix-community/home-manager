@@ -13,7 +13,7 @@ let
     mkKeyValue = key: value:
       let
         value' = if isBool value then
-          (if value then "yes" else "no")
+          (lib.hm.booleans.yesNo value)
         else if isString value then
           ''"${value}"''
         else
