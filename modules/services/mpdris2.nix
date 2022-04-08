@@ -87,11 +87,6 @@ in {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.mpdris2" pkgs
         lib.platforms.linux)
-
-      {
-        assertion = config.services.mpd.enable;
-        message = "The mpdris2 module requires 'services.mpd.enable = true'.";
-      }
     ];
 
     xdg.configFile."mpDris2/mpDris2.conf".text = toIni mpdris2Conf;
