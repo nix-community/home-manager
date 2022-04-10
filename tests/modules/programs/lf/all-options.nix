@@ -36,6 +36,7 @@ in {
   config = {
     programs.lf = {
       enable = true;
+      package = pkgs.writeScriptBin "dummy-lf" "";
 
       cmdKeybindings = {
         "<c-a>" = "should-be-added";
