@@ -5,7 +5,7 @@ with lib;
 let
 
   cfg = config.programs.pylint;
-  listToValue = concatMapStringsSep ",\n    " (generators.mkValueStringDefault { });
+  listToValue = concatMapStringsSep ", " (generators.mkValueStringDefault { });
   iniFormat = pkgs.formats.ini { inherit listToValue; };
 in {
   meta.maintainers = [ hm.maintainers.florpe ];
