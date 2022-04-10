@@ -58,6 +58,15 @@ in {
     programs.lf = {
       enable = mkEnableOption "lf";
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.lf;
+        defaultText = literalExpression "pkgs.lf";
+        description = ''
+          lf package to use.
+        '';
+      };
+
       settings = mkOption {
         type = lfSettingsType;
         default = { };
@@ -169,7 +178,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.lf ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."lf/lfrc".text = let
       fmtSetting = k: v:
