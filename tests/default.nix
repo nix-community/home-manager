@@ -155,6 +155,7 @@ import nmt {
     ./modules/services/mpd
     ./modules/services/pantalaimon
     ./modules/services/pbgopy
+    ./modules/services/picom
     ./modules/services/playerctld
     ./modules/services/polybar
     ./modules/services/redshift-gammastep
