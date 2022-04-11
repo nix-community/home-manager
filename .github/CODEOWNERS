@@ -210,6 +210,8 @@
 /modules/programs/pubs.nix                            @loicreynier
 /tests/modules/programs/pubs                          @loicreynier
 
+/modules/programs/pylint.nix                          @florpe
+
 /modules/programs/rbw.nix                             @ambroisie
 /tests/modules/programs/rbw                           @ambroisie
 
