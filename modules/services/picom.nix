@@ -1,13 +1,14 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-with builtins;
-
 let
+  inherit (builtins) toJSON toString;
+  inherit (lib)
+    concatStringsSep elemAt literalExpression mkEnableOption mkIf mkOption
+    mkRemovedOptionModule optional optionalAttrs optionalString types;
 
   cfg = config.services.picom;
 
-  configFile = pkgs.writeText "picom.conf" (optionalString cfg.fade ''
+  configFile = optionalString cfg.fade ''
     # fading
     fading = true;
     fade-delta    = ${toString cfg.fadeDelta};
@@ -46,8 +47,7 @@ let
     # other options
     backend = ${toJSON cfg.backend};
     vsync = ${toJSON cfg.vSync};
-    refresh-rate = ${toString cfg.refreshRate};
-  '' + cfg.extraOptions);
+  '' + cfg.extraOptions;
 
 in {
 
@@ -250,15 +250,6 @@ in {
       '';
     };
 
-    refreshRate = mkOption {
-      type = types.int;
-      default = 0;
-      example = 60;
-      description = ''
-        Screen refresh rate (0 = automatically detect).
-      '';
-    };
-
     package = mkOption {
       type = types.package;
       default = pkgs.picom;
@@ -282,6 +273,11 @@ in {
     };
   };
 
+  imports = [
+    (mkRemovedOptionModule [ "services" "picom" "refreshRate" ]
+      "The option `refresh-rate` has been deprecated by upstream.")
+  ];
+
   config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.picom" pkgs
@@ -289,6 +285,8 @@ in {
     ];
 
     home.packages = [ cfg.package ];
+
+    xdg.configFile."picom/picom.conf".text = configFile;
 
     systemd.user.services.picom = {
       Unit = {
@@ -299,17 +297,13 @@ in {
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
 
-      Service = let
-        experimentalBackendsFlag =
-          if cfg.experimentalBackends then " --experimental-backends" else "";
-      in {
-        ExecStart = "${cfg.package}/bin/picom --config ${configFile}"
-          + experimentalBackendsFlag;
+      Service = {
+        ExecStart = concatStringsSep " " ([
+          "${cfg.package}/bin/picom"
+          "--config ${config.xdg.configFile."picom/picom.conf".source}"
+        ] ++ optional cfg.experimentalBackends "--experimental-backends");
         Restart = "always";
         RestartSec = 3;
-      } // optionalAttrs (cfg.backend == "glx") {
-        # Temporarily fixes corrupt colours with Mesa 18.
-        Environment = [ "allow_rgb10_configs=false" ];
       };
     };
   };
