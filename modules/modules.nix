@@ -131,6 +131,7 @@ let
     ./programs/piston-cli.nix
     ./programs/powerline-go.nix
     ./programs/pubs.nix
+    ./programs/pylint.nix
     ./programs/qutebrowser.nix
     ./programs/rbw.nix
     ./programs/readline.nix

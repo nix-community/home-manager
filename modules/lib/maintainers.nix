@@ -123,6 +123,12 @@
     githubId = 46252070;
     name = "Sara Johnsson";
   };
+  florpe = {
+    email = "jens.krewald@gmail.com";
+    github = "florpe";
+    githubId = 53856373;
+    name = "Jens Krewald";
+  };
   maximsmol = {
     email = "maximsmol@gmail.com";
     github = "maximsmol";
