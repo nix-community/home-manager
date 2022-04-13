@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 with lib;
 
@@ -53,7 +53,42 @@ let
     }";
 
 in {
-  meta.maintainers = [ maintainers.polykernel ];
+  meta.maintainers = [ maintainers.polykernel maintainers.league ];
+
+  imports = [
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
+      "home"
+      "pointerCursor"
+      "package"
+    ])
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "name" ] [
+      "home"
+      "pointerCursor"
+      "name"
+    ])
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "size" ] [
+      "home"
+      "pointerCursor"
+      "size"
+    ])
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
+      "home"
+      "pointerCursor"
+      "x11"
+      "defaultCursor"
+    ])
+
+    ({ ... }: {
+      warnings = optional (any (x:
+        getAttrFromPath
+        ([ "xsession" "pointerCursor" ] ++ [ x ] ++ [ "isDefined" ])
+        options) [ "package" "name" "size" "defaultCursor" ]) ''
+          The option `xsession.pointerCursor` has been merged into `home.pointerCursor` and will be removed
+          in the future. Please change to set `home.pointerCursor` directly and enable `home.pointerCursor.x11.enable`
+          to generate x11 specific cursor configurations. You can refer to the documentation for more details.
+        '';
+    })
+  ];
 
   options = {
     home.pointerCursor = mkOption {
@@ -73,8 +108,8 @@ in {
     };
   };
 
-  config = mkMerge [
-    (mkIf (cfg != null) {
+  config = mkIf (cfg != null) (mkMerge [
+    {
       assertions = [
         (hm.assertions.assertPlatform "home.pointerCursor" pkgs platforms.linux)
       ];
@@ -118,5 +153,5 @@ in {
     (mkIf cfg.gtk.enable {
       gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
     })
-  ];
+  ]);
 }

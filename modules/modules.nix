@@ -271,7 +271,6 @@ let
     ./systemd.nix
     ./targets/darwin
     ./targets/generic-linux.nix
-    ./xcursor.nix
     ./xresources.nix
     ./xsession.nix
     ./misc/nix.nix

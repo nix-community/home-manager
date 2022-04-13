@@ -16,7 +16,7 @@
 
 /modules/misc/gtk.nix                                 @rycee
 
-/modules/config/home-cursor.nix                       @polykernel
+/modules/config/home-cursor.nix                       @polykernel @league
 
 /modules/config/i18n.nix                              @midchildan
 /tests/modules/config/i18n                            @midchildan
@@ -439,8 +439,6 @@
 /modules/services/xsuspender.nix                      @offlinehacker
 
 /modules/systemd.nix                                  @rycee
-
-/modules/xcursor.nix                                  @league
 
 /modules/xresources.nix                               @rycee
 
