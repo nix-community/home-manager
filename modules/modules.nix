@@ -15,6 +15,7 @@ let
 
   modules = [
     ./accounts/email.nix
+    ./config/home-cursor.nix
     ./config/i18n.nix
     ./files.nix
     ./home-environment.nix
