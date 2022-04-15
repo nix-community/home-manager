@@ -41,6 +41,7 @@ let
     ./misc/xdg-user-dirs.nix
     ./misc/xdg.nix
     ./programs/abook.nix
+    ./programs/aerc.nix
     ./programs/afew.nix
     ./programs/alacritty.nix
     ./programs/alot.nix

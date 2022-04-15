@@ -259,4 +259,10 @@
     github = "rszamszur";
     githubId = 10353018;
   };
+  ratsclub = {
+    name = "Victor Freire";
+    email = "victor@freire.dev.br";
+    github = "ratsclub";
+    githubId = 25647735;
+  };
 }
