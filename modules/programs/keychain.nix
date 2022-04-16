@@ -100,13 +100,13 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(${shellCommand})"
+      SHELL=bash eval "$(${shellCommand})"
     '';
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      eval (${shellCommand})
+      SHELL=fish eval (${shellCommand})
     '';
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      eval "$(${shellCommand})"
+      SHELL=zsh eval "$(${shellCommand})"
     '';
     xsession.initExtra = mkIf cfg.enableXsessionIntegration ''
       eval "$(${shellCommand})"
