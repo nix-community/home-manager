@@ -61,4 +61,6 @@ in
     sort (a: b: a.time > b.time) (
       filter (a: a.condition) rawModule.config.news.entries
     );
+
+  inherit (module._module.args) pkgs;
 }
