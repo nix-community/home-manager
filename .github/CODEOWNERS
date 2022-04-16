@@ -234,6 +234,8 @@
 
 /modules/programs/senpai.nix                          @malte-v
 
+/modules/programs/sioyek.nix                          @podocarp
+
 /modules/programs/sm64ex.nix                          @ivarwithoutbones
 /tests/modules/programs/sm64ex                        @ivarwithoutbones
 
