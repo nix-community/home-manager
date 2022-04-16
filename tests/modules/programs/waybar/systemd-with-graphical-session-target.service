@@ -2,7 +2,7 @@
 WantedBy=sway-session.target
 
 [Service]
-ExecReload=kill -SIGUSR2 $MAINPID
+ExecReload=/nix/store/00000000000000000000000000000000-coreutils/bin/kill -SIGUSR2 $MAINPID
 ExecStart=@waybar@/bin/waybar
 KillMode=mixed
 Restart=on-failure
