@@ -318,7 +318,7 @@ in {
 
         Service = {
           ExecStart = "${cfg.package}/bin/waybar";
-          ExecReload = "kill -SIGUSR2 $MAINPID";
+          ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
           Restart = "on-failure";
           KillMode = "mixed";
         };
