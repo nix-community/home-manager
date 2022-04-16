@@ -109,14 +109,15 @@ let
     }
 
     function importTrust() {
-      local keyId trust
-      keyId="$(gpgKeyId "$1")"
+      local keyIds trust
+      IFS='\n' read -ra keyIds <<< "$(gpgKeyId "$1")"
       trust="$2"
-      if [[ -n $keyId ]] ; then
+      for id in "''${keyIds[@]}" ; do
         { echo trust; echo "$trust"; (( trust == 5 )) && echo y; echo quit; } \
-          | ${gpg} --no-tty --command-fd 0 --edit-key "$keyId"
-      fi
+          | ${gpg} --no-tty --command-fd 0 --edit-key "$id"
+      done
     }
+
   '';
 
   keyringFiles = let
