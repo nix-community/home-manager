@@ -142,6 +142,7 @@ let
     ./programs/sbt.nix
     ./programs/scmpuff.nix
     ./programs/senpai.nix
+    ./programs/sioyek.nix
     ./programs/skim.nix
     ./programs/sm64ex.nix
     ./programs/sqls.nix

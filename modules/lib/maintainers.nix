@@ -235,6 +235,12 @@
     github = "pinage404";
     githubId = 6325757;
   };
+  podocarp = {
+    name = "Jia Xiaodong";
+    email = "xdjiaxd@gmail.com";
+    github = "podocarp";
+    githubId = 10473184;
+  };
   mainrs = {
     name = "mainrs";
     email = "5113257+mainrs@users.noreply.github.com";
