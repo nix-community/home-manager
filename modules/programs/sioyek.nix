@@ -66,5 +66,5 @@ in {
     })
   ]);
 
-  meta.maintainers = [ maintainers.podocarp ];
+  meta.maintainers = [ hm.maintainers.podocarp ];
 }
