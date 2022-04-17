@@ -13,7 +13,7 @@ let
       lib = extendedLib;
       nixosConfig = config;
       osConfig = config;
-      modulesPath = ../modules;
+      modulesPath = builtins.toString ../modules;
     } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
