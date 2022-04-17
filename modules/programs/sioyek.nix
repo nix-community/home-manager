@@ -47,8 +47,8 @@ in {
         default = { };
         example = literalExpression ''
           {
-          "background_color" = "1.0 1.0 1.0";
-          "text_highlight_color" = "1.0 0.0 0.0";
+            "background_color" = "1.0 1.0 1.0";
+            "text_highlight_color" = "1.0 0.0 0.0";
           }
         '';
       };
