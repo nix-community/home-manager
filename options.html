@@ -6307,6 +6307,38 @@ spaces or colons (:).
 reside world-readable in the Nix store.
 </p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/senpai.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/senpai.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sioyek.enable"></a><a class="term" href="options.html#opt-programs.sioyek.enable"><code class="option">programs.sioyek.enable</code></a></span></dt><dd><p>Whether to enable Sioyek is a PDF viewer designed for reading research papers and technical books..</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sioyek.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sioyek.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sioyek.package"></a><a class="term" href="options.html#opt-programs.sioyek.package"><code class="option">programs.sioyek.package</code></a></span></dt><dd><p>Package providing the sioyek binary</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.sioyek</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sioyek.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sioyek.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sioyek.bindings"></a><a class="term" href="options.html#opt-programs.sioyek.bindings"><code class="option">programs.sioyek.bindings</code></a></span></dt><dd><p>Input configuration written to
+<code class="filename">$XDG_CONFIG_HOME/sioyek/keys_user.config</code>.
+See <a class="link" href="https://github.com/ahrm/sioyek/blob/main/pdf_viewer/keys.config" target="_top">https://github.com/ahrm/sioyek/blob/main/pdf_viewer/keys.config</a>.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  "move_up" = "k";
+  "move_down" = "j";
+  "move_left" = "h";
+  "move_right" = "l";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sioyek.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sioyek.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sioyek.config"></a><a class="term" href="options.html#opt-programs.sioyek.config"><code class="option">programs.sioyek.config</code></a></span></dt><dd><p>Input configuration written to
+<code class="filename">$XDG_CONFIG_HOME/sioyek/prefs_user.config</code>.
+See <a class="link" href="https://github.com/ahrm/sioyek/blob/main/pdf_viewer/prefs.config" target="_top">https://github.com/ahrm/sioyek/blob/main/pdf_viewer/prefs.config</a>.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  "background_color" = "1.0 1.0 1.0";
+  "text_highlight_color" = "1.0 0.0 0.0";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sioyek.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sioyek.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.skim.enable"></a><a class="term" href="options.html#opt-programs.skim.enable"><code class="option">programs.skim.enable</code></a></span></dt><dd><p>Whether to enable skim - a command-line fuzzy finder.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/skim.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/skim.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.skim.enableBashIntegration"></a><a class="term" href="options.html#opt-programs.skim.enableBashIntegration"><code class="option">programs.skim.enableBashIntegration</code></a></span></dt><dd><p>Whether to enable Bash integration.
