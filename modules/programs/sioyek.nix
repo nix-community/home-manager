@@ -29,10 +29,10 @@ in {
         default = { };
         example = literalExpression ''
           {
-          "move_up" = "k";
-          "move_down" = "j";
-          "move_left" = "h";
-          "move_right" = "l";
+            "move_up" = "k";
+            "move_down" = "j";
+            "move_left" = "h";
+            "move_right" = "l";
           }
         '';
       };
