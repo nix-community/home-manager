@@ -4,6 +4,7 @@
   config = {
     programs.aerc = {
       enable = true;
+
       binds = {
         terminal = {
           "$noinherit" = true;
@@ -25,6 +26,7 @@
           bar
         '';
       };
+      queryMaps = [ "inbox=tag:inbox" "trash=tag:trash" ];
     };
 
     nmt.script = let
@@ -37,6 +39,7 @@
       assertFileExists ${configDir}/aerc/binds.conf
       assertFileExists ${configDir}/aerc/stylesets/default
       assertFileExists ${configDir}/aerc/templates/foo
+      assertFileExists ${configDir}/aerc/querymaps.conf
 
       assertFileContent ${configDir}/aerc/aerc.conf ${
         builtins.toFile "aerc.conf" ''
@@ -64,6 +67,13 @@
       assertFileContent ${configDir}/aerc/templates/foo ${
         builtins.toFile "foo" ''
           bar
+        ''
+      }
+
+      assertFileContent ${configDir}/aerc/querymaps.conf ${
+        builtins.toFile "foo" ''
+          inbox=tag:inbox
+          trash=tag:trash
         ''
       }
     '';

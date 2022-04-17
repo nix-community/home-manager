@@ -18,7 +18,7 @@ let
 in {
   options = {
     programs.aerc = {
-      enable = mkEnableOption " aerc, an email client for your terminal.";
+      enable = mkEnableOption "aerc, an email client for your terminal.";
 
       binds = mkOption {
         type = formatIni.type;
@@ -101,28 +101,51 @@ in {
           for the documentation.
         '';
       };
+
+      queryMaps = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        defaultText = literalExpression "[ ]";
+        example = literalExpression ''
+          [
+            "inbox=tag:inbox and not tag:archived"
+            "github=tag:github"
+          ];
+        '';
+        description = ''
+          Configuration written to
+          <filename>$XDG_CONFIG_HOME/aerc/querymaps.conf</filename>. See
+          <link xlink:href="https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-notmuch.5.scd"/>
+          for the documentation.
+        '';
+      };
     };
-  };
 
-  config = mkIf cfg.enable {
-    meta.maintainers = [ maintainers.ratsclub ];
+    config = mkIf cfg.enable {
+      meta.maintainers = [ maintainers.ratsclub ];
 
-    home.packages = [ cfg.package ];
+      home.packages = [ cfg.package ];
 
-    home.file = {
-      "${configDir}/aerc/aerc.conf" = mkIf (cfg.conf != { }) {
-        source = formatIni.generate "aerc.conf" cfg.conf;
-      };
+      home.file = {
+        "${configDir}/aerc/aerc.conf" = mkIf (cfg.conf != { }) {
+          source = formatIni.generate "aerc.conf" cfg.conf;
+        };
 
-      "${configDir}/aerc/binds.conf" = mkIf (cfg.binds != { }) {
-        source = formatIni.generate "binds.conf" cfg.binds;
-      };
+        "${configDir}/aerc/binds.conf" = mkIf (cfg.binds != { }) {
+          source = formatIni.generate "binds.conf" cfg.binds;
+        };
 
-      "${configDir}/aerc/stylesets/default" = mkIf (cfg.styleset != { }) {
-        source = pkgs.writeText "default" (toStylesetConfig cfg.styleset);
-      };
-    } // attrsets.mapAttrs' (name: value:
-      nameValuePair ("${configDir}/aerc/templates/${name}") ({ text = value; }))
-      cfg.templates;
+        "${configDir}/aerc/stylesets/default" = mkIf (cfg.styleset != { }) {
+          source = pkgs.writeText "default" (toStylesetConfig cfg.styleset);
+        };
+
+        "${configDir}/aerc/querymaps.conf" = mkIf (cfg.queryMaps != [ ]) {
+          source = pkgs.writeText "querymaps.conf" cfg.queryMaps;
+        };
+      } // attrsets.mapAttrs' (name: value:
+        nameValuePair ("${configDir}/aerc/templates/${name}") ({
+          text = value;
+        })) cfg.templates;
+    };
   };
 }
