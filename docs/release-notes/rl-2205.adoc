@@ -10,6 +10,9 @@ This is the current unstable branch and the information in this section is there
 
 This release has the following notable changes:
 
+* The <<opt-home.stateVersion>> option no longer has a default value of `18.09`.
+This option must now be set.
+
 * The `programs.waybar.settings.modules` option was removed.
 Waybar modules should now be declared directly under `programs.waybar.settings`.
 
