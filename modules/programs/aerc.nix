@@ -140,7 +140,8 @@ in {
         };
 
         "${configDir}/aerc/querymaps.conf" = mkIf (cfg.queryMaps != [ ]) {
-          source = pkgs.writeText "querymaps.conf" cfg.queryMaps;
+          source = pkgs.writeText "querymaps.conf"
+            (strings.concatStringsSep "\n" cfg.queryMaps);
         };
       } // attrsets.mapAttrs' (name: value:
         nameValuePair ("${configDir}/aerc/templates/${name}") ({
