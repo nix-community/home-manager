@@ -21,6 +21,9 @@ let
       xdg.enable = true;
       home.username = "hm-user";
       home.homeDirectory = "/home/hm-user";
+      # The old default value for home.stateVersion
+      # this corresponds to the release it was introduced in
+      home.stateVersion = "18.09";
 
       # Avoid including documentation since this will cause
       # unnecessary rebuilds of the tests.
