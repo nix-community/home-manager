@@ -46,6 +46,7 @@ import nmt {
     ./modules/home-environment
     ./modules/misc/fontconfig
     ./modules/misc/nix
+    ./modules/misc/specialization
     ./modules/programs/alacritty
     ./modules/programs/alot
     ./modules/programs/aria2
