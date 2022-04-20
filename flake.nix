@@ -7,8 +7,7 @@
       supportedSystems = with nixpkgs.lib.platforms; linux ++ darwin;
 
       # Function to generate a set based on supported systems
-      forAllSystems = f:
-        nixpkgs.lib.genAttrs supportedSystems (system: f system);
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
     in rec {
