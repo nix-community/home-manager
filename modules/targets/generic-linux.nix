@@ -43,6 +43,17 @@ in {
       "/var/lib/snapd/desktop"
     ];
 
+    # We need to append system-wide FHS directories due to the default prefix
+    # resolving to the Nix store.
+    # https://github.com/nix-community/home-manager/pull/2891#issuecomment-1101064521
+    home.sessionVariables = {
+      XCURSOR_PATH = "$XCURSOR_PATH\${XCURSOR_PATH:+:}" + concatStringsSep ":" [
+        "${config.home.profileDirectory}/share/icons"
+        "/usr/share/icons"
+        "/usr/share/pixmaps"
+      ];
+    };
+
     home.sessionVariablesExtra = ''
       . "${pkgs.nix}/etc/profile.d/nix.sh"
 
