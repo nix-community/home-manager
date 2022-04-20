@@ -51,7 +51,7 @@ let
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = literalExpression "pkgs.adwaita-icon-theme";
+        example = literalExpression "pkgs.gnome.adwaita-icon-theme";
         description = ''
           Package providing the icon theme. This package will be installed
           to your profile. If <literal>null</literal> then the theme
