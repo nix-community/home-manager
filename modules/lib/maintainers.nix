@@ -265,4 +265,10 @@
     github = "rszamszur";
     githubId = 10353018;
   };
+  ryantking = {
+    name = "Ryan King";
+    email = "ryantking@protonmail.com";
+    github = "ryantking";
+    githubId = 1883041;
+  };
 }

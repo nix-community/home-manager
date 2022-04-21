@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 with lib;
 
@@ -9,8 +9,9 @@ let
   mbsyncOptions = [ "--all" ] ++ optional (cfg.verbose) "--verbose"
     ++ optional (cfg.configFile != null) "--config ${cfg.configFile}";
 
+  inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
 in {
-  meta.maintainers = [ maintainers.pjones ];
+  meta.maintainers = [ maintainers.pjones maintainers.ryantking ];
 
   options.services.mbsync = {
     enable = mkEnableOption "mbsync";
@@ -54,6 +55,15 @@ in {
       '';
     };
 
+    logDirectory = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+      description = ''
+        Optional directory to output logs to.
+        Has no effect on Linux.
+      ''; # TODO(ryantking): Add to systemd units?
+    };
+
     preExec = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -75,35 +85,47 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "services.mbsync" pkgs
-        lib.platforms.linux)
-    ];
+  config = mkIf cfg.enable (mkMerge [
+    (optionalAttrs (hasAttr "sytemd" options) {
+      systemd.user.services.mbsync = {
+        Unit = { Description = "mbsync mailbox synchronization"; };
 
-    systemd.user.services.mbsync = {
-      Unit = { Description = "mbsync mailbox synchronization"; };
-
-      Service = {
-        Type = "oneshot";
-        ExecStart =
-          "${cfg.package}/bin/mbsync ${concatStringsSep " " mbsyncOptions}";
-      } // (optionalAttrs (cfg.postExec != null) {
-        ExecStartPost = cfg.postExec;
-      }) // (optionalAttrs (cfg.preExec != null) {
-        ExecStartPre = cfg.preExec;
-      });
-    };
-
-    systemd.user.timers.mbsync = {
-      Unit = { Description = "mbsync mailbox synchronization"; };
-
-      Timer = {
-        OnCalendar = cfg.frequency;
-        Unit = "mbsync.service";
+        Service = {
+          Type = "oneshot";
+          ExecStart =
+            "${cfg.package}/bin/mbsync ${concatStringsSep " " mbsyncOptions}";
+        } // (optionalAttrs (cfg.postExec != null) {
+          ExecStartPost = cfg.postExec;
+        }) // (optionalAttrs (cfg.preExec != null) {
+          ExecStartPre = cfg.preExec;
+        });
       };
 
-      Install = { WantedBy = [ "timers.target" ]; };
-    };
-  };
+      systemd.user.timers.mbsync = {
+        Unit = { Description = "mbsync mailbox synchronization"; };
+
+        Timer = {
+          OnCalendar = cfg.frequency;
+          Unit = "mbsync.service";
+        };
+
+        Install = { WantedBy = [ "timers.target" ]; };
+      };
+    })
+    (optionalAttrs (hasAttr "launchd" options) {
+      launchd.agents.mbsync = {
+        enable = true;
+        config = ({
+          ProgramArguments = [ "${cfg.package}/bin/mbsync" ] ++ mbsyncOptions;
+          ProcessType = "Adaptive";
+          RunAtLoad = true;
+          StartInterval = 60
+            * 15; # TODO(ryantking): Use frequency here... somehow
+        } // (optionalAttrs (!isNull cfg.logDirectory) {
+          StandardOutPath = "${cfg.logDirectory}/mbsync.out.log";
+          StandardErrorPath = "${cfg.logDirectory}/mbsync.err.log";
+        }));
+      };
+    })
+  ]);
 }
