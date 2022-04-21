@@ -104,6 +104,7 @@ let
     ./programs/mbsync.nix
     ./programs/mcfly.nix
     ./programs/mercurial.nix
+    ./programs/most.nix
     ./programs/mpv.nix
     ./programs/msmtp.nix
     ./programs/mu.nix
