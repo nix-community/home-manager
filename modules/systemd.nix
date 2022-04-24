@@ -10,16 +10,6 @@ let
   mkPathSafeName =
     lib.replaceStrings [ "@" ":" "\\" "[" "]" ] [ "-" "-" "-" "" "" ];
 
-  enabled = cfg.services != { } # \
-    || cfg.slices != { } # \
-    || cfg.sockets != { } # \
-    || cfg.targets != { } # \
-    || cfg.timers != { } # \
-    || cfg.paths != { } # \
-    || cfg.mounts != { } # \
-    || cfg.automounts != { } # \
-    || cfg.sessionVariables != { };
-
   toSystemdIni = lib.generators.toINI {
     listsAsDuplicateKeys = true;
     mkKeyValue = key: value:
@@ -239,92 +229,72 @@ in {
     };
   };
 
-  config = mkMerge [
-    {
-      assertions = [{
-        assertion = enabled -> pkgs.stdenv.isLinux;
-        message = let
-          names = lib.concatStringsSep ", " (lib.attrNames ( # \
-            cfg.services # \
-            // cfg.slices # \
-            // cfg.sockets # \
-            // cfg.targets # \
-            // cfg.timers # \
-            // cfg.paths # \
-            // cfg.mounts # \
-            // cfg.sessionVariables));
-        in "Must use Linux for modules that require systemd: " + names;
-      }];
-    }
+  # If we run under a Linux system we assume that systemd is
+  # available, in particular we assume that systemctl is in PATH.
+  # Do not install any user services if username is root.
+  config = mkIf (pkgs.stdenv.isLinux && config.home.username != "root") {
+    xdg.configFile = mkMerge [
+      (lib.listToAttrs ((buildServices "service" cfg.services)
+        ++ (buildServices "slice" cfg.slices)
+        ++ (buildServices "socket" cfg.sockets)
+        ++ (buildServices "target" cfg.targets)
+        ++ (buildServices "timer" cfg.timers)
+        ++ (buildServices "path" cfg.paths)
+        ++ (buildServices "mount" cfg.mounts)
+        ++ (buildServices "automount" cfg.automounts)))
 
-    # If we run under a Linux system we assume that systemd is
-    # available, in particular we assume that systemctl is in PATH.
-    # Do not install any user services if username is root.
-    (mkIf (pkgs.stdenv.isLinux && config.home.username != "root") {
-      xdg.configFile = mkMerge [
-        (lib.listToAttrs ((buildServices "service" cfg.services)
-          ++ (buildServices "slice" cfg.slices)
-          ++ (buildServices "socket" cfg.sockets)
-          ++ (buildServices "target" cfg.targets)
-          ++ (buildServices "timer" cfg.timers)
-          ++ (buildServices "path" cfg.paths)
-          ++ (buildServices "mount" cfg.mounts)
-          ++ (buildServices "automount" cfg.automounts)))
+      sessionVariables
+    ];
 
-        sessionVariables
-      ];
-
-      # Run systemd service reload if user is logged in. If we're
-      # running this from the NixOS module then XDG_RUNTIME_DIR is not
-      # set and systemd commands will fail. We'll therefore have to
-      # set it ourselves in that case.
-      home.activation.reloadSystemd = hm.dag.entryAfter [ "linkGeneration" ]
-        (let
-          cmd = {
-            suggest = ''
-              PATH=${dirOf cfg.systemctlPath}:$PATH \
-              bash ${./systemd-activate.sh} "''${oldGenPath=}" "$newGenPath"
-            '';
-            legacy = ''
-              PATH=${dirOf cfg.systemctlPath}:$PATH \
-              ${pkgs.ruby}/bin/ruby ${./systemd-activate.rb} \
-                "''${oldGenPath=}" "$newGenPath" "${servicesStartTimeoutMs}"
-            '';
-            sd-switch = let
-              timeoutArg = if cfg.servicesStartTimeoutMs != 0 then
-                "--timeout " + servicesStartTimeoutMs
-              else
-                "";
-            in ''
-              ${pkgs.sd-switch}/bin/sd-switch \
-                ''${DRY_RUN:+--dry-run} $VERBOSE_ARG ${timeoutArg} \
-                ''${oldGenPath:+--old-units $oldGenPath/home-files/.config/systemd/user} \
-                --new-units $newGenPath/home-files/.config/systemd/user
-            '';
-          };
-
-          ensureRuntimeDir =
-            "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$(id -u)}";
-
-          systemctl = "${ensureRuntimeDir} ${cfg.systemctlPath}";
-        in ''
-          systemdStatus=$(${systemctl} --user is-system-running 2>&1 || true)
-
-          if [[ $systemdStatus == 'running' || $systemdStatus == 'degraded' ]]; then
-            if [[ $systemdStatus == 'degraded' ]]; then
-              warnEcho "The user systemd session is degraded:"
-              ${systemctl} --user --no-pager --state=failed
-              warnEcho "Attempting to reload services anyway..."
-            fi
-
-            ${ensureRuntimeDir} \
-              ${getAttr cfg.startServices cmd}
+    # Run systemd service reload if user is logged in. If we're
+    # running this from the NixOS module then XDG_RUNTIME_DIR is not
+    # set and systemd commands will fail. We'll therefore have to
+    # set it ourselves in that case.
+    home.activation.reloadSystemd = hm.dag.entryAfter [ "linkGeneration" ] (let
+      cmd = {
+        suggest = ''
+          PATH=${dirOf cfg.systemctlPath}:$PATH \
+          bash ${./systemd-activate.sh} "''${oldGenPath=}" "$newGenPath"
+        '';
+        legacy = ''
+          PATH=${dirOf cfg.systemctlPath}:$PATH \
+          ${pkgs.ruby}/bin/ruby ${./systemd-activate.rb} \
+            "''${oldGenPath=}" "$newGenPath" "${servicesStartTimeoutMs}"
+        '';
+        sd-switch = let
+          timeoutArg = if cfg.servicesStartTimeoutMs != 0 then
+            "--timeout " + servicesStartTimeoutMs
           else
-            echo "User systemd daemon not running. Skipping reload."
-          fi
+            "";
+        in ''
+          ${pkgs.sd-switch}/bin/sd-switch \
+            ''${DRY_RUN:+--dry-run} $VERBOSE_ARG ${timeoutArg} \
+            ''${oldGenPath:+--old-units $oldGenPath/home-files/.config/systemd/user} \
+            --new-units $newGenPath/home-files/.config/systemd/user
+        '';
+      };
 
-          unset systemdStatus
-        '');
-    })
-  ];
+      ensureRuntimeDir =
+        "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$(id -u)}";
+
+      systemctl = "${ensureRuntimeDir} ${cfg.systemctlPath}";
+    in ''
+      systemdStatus=$(${systemctl} --user is-system-running 2>&1 || true)
+
+      if [[ $systemdStatus == 'running' || $systemdStatus == 'degraded' ]]; then
+        if [[ $systemdStatus == 'degraded' ]]; then
+          warnEcho "The user systemd session is degraded:"
+          ${systemctl} --user --no-pager --state=failed
+          warnEcho "Attempting to reload services anyway..."
+        fi
+
+        ${ensureRuntimeDir} \
+          ${getAttr cfg.startServices cmd}
+      else
+        echo "User systemd daemon not running. Skipping reload."
+      fi
+
+      unset systemdStatus
+    '');
+  };
 }
