@@ -99,9 +99,8 @@ in {
       type = types.enum [ "YES" "NO" ];
       example = "NO";
       description = ''
-        This option no longer works on macOS 11 and later. Instead, open System
-        Preferences, go to "Dock &amp; Menu Bar", select "Battery", and toggle
-        the checkbox labeled "Show Percentage."
+        This option no longer works on macOS 11 and later. Instead, use
+        <option>targets.darwin.currentHostDefaults.\"com.apple.controlcenter\".BatteryShowPercentage</option>.
 
         Whether to show battery percentage in the menu bar.
       '';
