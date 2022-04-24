@@ -24,6 +24,10 @@ in {
   };
 
   config = mkIf config.services.taffybar.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.taffybar" pkgs platforms.linux)
+    ];
+
     systemd.user.services.taffybar = {
       Unit = {
         Description = "Taffybar desktop bar";

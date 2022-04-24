@@ -68,6 +68,11 @@ in {
 
   config = mkIf cfg.enable (mkMerge ([
     {
+      assertions = [
+        (hm.assertions.assertPlatform "services.random-background" pkgs
+          platforms.linux)
+      ];
+
       systemd.user.services.random-background = {
         Unit = {
           Description = "Set random desktop background using feh";

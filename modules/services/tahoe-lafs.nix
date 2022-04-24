@@ -10,6 +10,10 @@ with lib;
   };
 
   config = mkIf config.services.tahoe-lafs.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.tahoe-lafs" pkgs platforms.linux)
+    ];
+
     systemd.user.services.tahoe-lafs = {
       Unit = { Description = "Tahoe-LAFS"; };
 
