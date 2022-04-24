@@ -8,6 +8,11 @@ with lib;
   };
 
   config = mkIf config.services.owncloud-client.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.owncloud-client" pkgs
+        platforms.linux)
+    ];
+
     systemd.user.services.owncloud-client = {
       Unit = {
         Description = "Owncloud Client";

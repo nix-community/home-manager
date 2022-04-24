@@ -51,6 +51,11 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
+      assertions = [
+        (hm.assertions.assertPlatform "services.stalonetray" pkgs
+          platforms.linux)
+      ];
+
       home.packages = [ cfg.package ];
 
       systemd.user.services.stalonetray = {

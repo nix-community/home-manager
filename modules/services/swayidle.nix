@@ -108,6 +108,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.swayidle" pkgs platforms.linux)
+    ];
+
     systemd.user.services.swayidle = {
       Unit = {
         Description = "Idle manager for Wayland";

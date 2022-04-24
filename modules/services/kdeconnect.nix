@@ -27,6 +27,11 @@ in {
     (mkIf cfg.enable {
       home.packages = [ package ];
 
+      assertions = [
+        (hm.assertions.assertPlatform "services.kdeconnect" pkgs
+          platforms.linux)
+      ];
+
       systemd.user.services.kdeconnect = {
         Unit = {
           Description =
@@ -46,6 +51,11 @@ in {
     })
 
     (mkIf cfg.indicator {
+      assertions = [
+        (hm.assertions.assertPlatform "services.kdeconnect" pkgs
+          platforms.linux)
+      ];
+
       systemd.user.services.kdeconnect-indicator = {
         Unit = {
           Description = "kdeconnect-indicator";

@@ -270,6 +270,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.picom" pkgs
+        lib.platforms.linux)
+    ];
+
     services.picom.settings = mkDefaultAttrs {
       # fading
       fading = cfg.fade;
