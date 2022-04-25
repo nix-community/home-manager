@@ -49,8 +49,7 @@ let
       inherit port;
       tls = account.imap.tls.enable;
       username = account.userName;
-      passwordCmd =
-        lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
+      passwordCmd = lib.concatStringsSep " " account.passwordCommand;
       inherit (account.imapnotify) boxes;
     } // optionalAttrs (account.imapnotify.onNotify != "") {
       onNewMail = account.imapnotify.onNotify;
