@@ -53,6 +53,7 @@ in {
 
       Service = {
         ExecStart = "${pkgs.xscreensaver}/bin/xscreensaver -no-splash";
+        Environment = "PATH=${makeBinPath [ pkgs.xscreensaver ]}";
       };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
