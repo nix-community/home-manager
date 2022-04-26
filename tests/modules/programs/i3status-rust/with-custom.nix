@@ -175,7 +175,7 @@ with lib;
 
             [[block]]
             block = "battery"
-                                  ''
+          ''
         }
     '';
   };
