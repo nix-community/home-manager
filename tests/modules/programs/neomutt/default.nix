@@ -9,4 +9,6 @@
   neomutt-with-gpg = ./neomutt-with-gpg.nix;
   neomutt-no-folder-change = ./neomutt-no-folder-change.nix;
   neomutt-with-named-mailboxes = ./neomutt-with-named-mailboxes.nix;
+  neomutt-with-signature = ./neomutt-with-signature.nix;
+  neomutt-with-signature-command = ./neomutt-with-signature-command.nix;
 }

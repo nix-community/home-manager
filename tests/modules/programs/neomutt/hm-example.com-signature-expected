@@ -11,7 +11,8 @@ set mbox_type = Maildir
 set sort = "threads"
 
 # MTA section
-set sendmail='msmtpq --read-envelope-from --read-recipients'
+set smtp_pass="`password-command`"
+set smtp_url='smtps://home.manager@smtp.example.com'
 
 
 
@@ -31,4 +32,7 @@ set trash='+Trash'
 color status cyan default
 
 
-unset signature
+set signature = /nix/store/00000000000000000000000000000000-signature.txt
+# notmuch section
+set nm_default_uri = "notmuch:///home/hm-user/Mail"
+virtual-mailboxes "My INBOX" "notmuch://?query=tag:inbox"
