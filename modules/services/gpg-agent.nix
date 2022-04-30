@@ -197,6 +197,30 @@ in {
           now.
         '';
       };
+
+      enableBashIntegration = mkOption {
+        default = true;
+        type = types.bool;
+        description = ''
+          Whether to enable Bash integration.
+        '';
+      };
+
+      enableZshIntegration = mkOption {
+        default = true;
+        type = types.bool;
+        description = ''
+          Whether to enable Zsh integration.
+        '';
+      };
+
+      enableFishIntegration = mkOption {
+        default = true;
+        type = types.bool;
+        description = ''
+          Whether to enable Fish integration.
+        '';
+      };
     };
   };
 
@@ -224,9 +248,9 @@ in {
         fi
       '';
 
-      programs.bash.initExtra = gpgInitStr;
-      programs.zsh.initExtra = gpgInitStr;
-      programs.fish.interactiveShellInit = ''
+      programs.bash.initExtra = mkIf cfg.enableBashIntegration gpgInitStr;
+      programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgInitStr;
+      programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
         set -gx GPG_TTY (tty)
       '';
     }
