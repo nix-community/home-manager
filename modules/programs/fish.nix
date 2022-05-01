@@ -332,7 +332,7 @@ in {
             mkdir -p $out
             for src in $srcs; do
               if [ -d $src/share/man ]; then
-                find $src/share/man -type f \
+                find -L $src/share/man -type f \
                   | xargs python ${cfg.package}/share/fish/tools/create_manpage_completions.py --directory $out \
                   > /dev/null
               fi
