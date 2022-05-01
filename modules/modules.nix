@@ -149,6 +149,7 @@ let
     ./programs/ssh.nix
     ./programs/starship.nix
     ./programs/taskwarrior.nix
+    ./programs/tealdeer.nix
     ./programs/terminator.nix
     ./programs/termite.nix
     ./programs/texlive.nix
