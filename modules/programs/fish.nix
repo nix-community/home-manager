@@ -322,17 +322,21 @@ in {
 
         generateCompletions = package:
           pkgs.runCommand "${package.name}-fish-completions" {
-            src = package;
+            srcs = [ package ] ++ filter (p: p != null)
+              (builtins.map (outName: package.${outName} or null)
+                config.home.extraOutputsToInstall);
             nativeBuildInputs = [ pkgs.python3 ];
             buildInputs = [ cfg.package ];
             preferLocalBuild = true;
           } ''
             mkdir -p $out
-            if [ -d $src/share/man ]; then
-              find $src/share/man -type f \
-                | xargs python ${cfg.package}/share/fish/tools/create_manpage_completions.py --directory $out \
-                > /dev/null
-            fi
+            for src in $srcs; do
+              if [ -d $src/share/man ]; then
+                find $src/share/man -type f \
+                  | xargs python ${cfg.package}/share/fish/tools/create_manpage_completions.py --directory $out \
+                  > /dev/null
+              fi
+            done
           '';
       in destructiveSymlinkJoin {
         name = "${config.home.username}-fish-completions";
