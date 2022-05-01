@@ -6777,6 +6777,25 @@ Home Manager will attempt to create this directory.
 <code class="filename">$XDG_CONFIG_HOME/task/taskrc</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/taskwarrior.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/taskwarrior.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.tealdeer.enable"></a><a class="term" href="options.html#opt-programs.tealdeer.enable"><code class="option">programs.tealdeer.enable</code></a></span></dt><dd><p>Whether to enable Tealdeer.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tealdeer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/tealdeer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.tealdeer.settings"></a><a class="term" href="options.html#opt-programs.tealdeer.settings"><code class="option">programs.tealdeer.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/tealdeer/config.toml</code> on Linux or
+<code class="filename">$HOME/Library/Application Support/tealdeer/config.toml</code>
+on Darwin. See
+<a class="link" href="https://dbrgn.github.io/tealdeer/config.html" target="_top">https://dbrgn.github.io/tealdeer/config.html</a>
+for more information.
+</p><p><span class="emphasis"><em>Type:</em></span> TOML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  display = {
+    compact = false;
+    use_pager = true;
+  };
+  updates = {
+    auto_update = false;
+  };
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tealdeer.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/tealdeer.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.terminator.enable"></a><a class="term" href="options.html#opt-programs.terminator.enable"><code class="option">programs.terminator.enable</code></a></span></dt><dd><p>Whether to enable terminator, a tiling terminal emulator.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/terminator.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/terminator.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.terminator.package"></a><a class="term" href="options.html#opt-programs.terminator.package"><code class="option">programs.terminator.package</code></a></span></dt><dd><p>terminator package to install.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"><em class="replaceable"><code>(build of terminator-2.1.1)</code></em></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.terminator</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/terminator.nix#blob-path" target="_top">
