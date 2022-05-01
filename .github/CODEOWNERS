@@ -245,6 +245,8 @@
 
 /modules/programs/starship.nix                        @marsam
 
+/modules/programs/tealdeer.nix                        @marsam
+
 /modules/programs/terminator.nix                      @chisui
 
 /modules/programs/texlive.nix                         @rycee
