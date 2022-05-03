@@ -15,6 +15,7 @@ let
 
   modules = [
     ./accounts/email.nix
+    ./config/home-cursor.nix
     ./config/i18n.nix
     ./files.nix
     ./home-environment.nix
@@ -272,7 +273,6 @@ let
     ./systemd.nix
     ./targets/darwin
     ./targets/generic-linux.nix
-    ./xcursor.nix
     ./xresources.nix
     ./xsession.nix
     ./misc/nix.nix
