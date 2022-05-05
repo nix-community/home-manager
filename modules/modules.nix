@@ -185,7 +185,6 @@ let
     ./services/caffeine.nix
     ./services/cbatticon.nix
     ./services/clipmenu.nix
-    ./services/compton.nix
     ./services/devilspie2.nix
     ./services/dropbox.nix
     ./services/dunst.nix
