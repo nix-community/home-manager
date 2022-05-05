@@ -84,6 +84,9 @@ removed since upstream changed the blur settings to be more flexible.
 You can migrate the blur settings to use
 <<opt-services.picom.settings>> instead.
 
+* The `services.compton` module has been removed. It was deprecated in
+release 20.03. Use `services.picom` instead.
+
 [[sec-release-22.11-state-version-changes]]
 === State Version Changes
 
