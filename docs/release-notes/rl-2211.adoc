@@ -75,6 +75,15 @@ Of course, you can move the assignment of <<opt-home.username>>,
 <<opt-home.homeDirectory>>, and <<opt-home.stateVersion>> to some
 other file or simply place them in your `home.nix`.
 
+* The `services.picom` module has been refactored to use structural
+settings.
++
+As a result `services.picom.extraOptions` has been removed in favor of
+<<opt-services.picom.settings>>. Also, `services.picom.blur*` were
+removed since upstream changed the blur settings to be more flexible.
+You can migrate the blur settings to use
+<<opt-services.picom.settings>> instead.
+
 [[sec-release-22.11-state-version-changes]]
 === State Version Changes
 
