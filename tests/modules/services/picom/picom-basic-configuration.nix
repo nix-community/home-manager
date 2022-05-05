@@ -5,20 +5,20 @@
     enable = true;
     fade = true;
     fadeDelta = 5;
-    fadeSteps = [ "0.04" "0.04" ];
+    fadeSteps = [ 4.0e-2 4.0e-2 ];
     fadeExclude =
       [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
     shadow = true;
     shadowOffsets = [ (-10) (-15) ];
-    shadowOpacity = "0.8";
+    shadowOpacity = 0.8;
     shadowExclude =
       [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
     backend = "xrender";
     vSync = true;
-    extraOptions = ''
-      unredir-if-possible = true;
-      dbe = true;
-    '';
+    settings = {
+      "unredir-if-possible" = true;
+      "dbe" = true;
+    };
     experimentalBackends = true;
   };
 
