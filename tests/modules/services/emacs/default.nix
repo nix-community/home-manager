@@ -4,4 +4,6 @@
   emacs-socket-27 = ./emacs-socket-27.nix;
   emacs-socket-28 = ./emacs-socket-28.nix;
   emacs-default-editor = ./emacs-default-editor.nix;
+  emacs-socket-and-startWithUserSession =
+    ./emacs-socket-and-startWithUserSession.nix;
 }

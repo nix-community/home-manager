@@ -81,6 +81,17 @@ in {
       enable = mkEnableOption "systemd socket activation for the Emacs service";
     };
 
+    startWithUserSession = lib.mkOption {
+      type = lib.types.bool;
+      default = !cfg.socketActivation.enable;
+      defaultText =
+        literalExpression "!config.services.emacs.socketActivation.enable";
+      example = true;
+      description = ''
+        Whether to launch Emacs service with the systemd user session.
+      '';
+    };
+
     defaultEditor = mkOption rec {
       type = types.bool;
       default = false;
@@ -145,7 +156,7 @@ in {
           ExecStopPost =
             "${pkgs.coreutils}/bin/chmod --changes +w ${socketDir}";
         };
-      } // optionalAttrs (!cfg.socketActivation.enable) {
+      } // optionalAttrs (cfg.startWithUserSession) {
         Install = { WantedBy = [ "default.target" ]; };
       };
 
