@@ -49,7 +49,7 @@ let
   };
 
   cursorPath = "${cfg.package}/share/icons/${escapeShellArg cfg.name}/cursors/${
-      escapeShellArg cfg.defaultCursor
+      escapeShellArg cfg.x11.defaultCursor
     }";
 
 in {
