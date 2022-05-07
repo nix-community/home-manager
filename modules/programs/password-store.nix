@@ -59,6 +59,9 @@ in {
     home.packages = [ cfg.package ];
     home.sessionVariables = cfg.settings;
 
+    services.pass-secret-service.storePath =
+      mkDefault cfg.settings.PASSWORD_STORE_DIR;
+
     xsession.importedVariables = mkIf config.xsession.enable
       (mapAttrsToList (name: value: name) cfg.settings);
   };

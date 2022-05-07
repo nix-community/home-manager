@@ -189,6 +189,7 @@ import nmt {
     ./modules/services/mpdris2
     ./modules/services/pantalaimon
     ./modules/services/parcellite
+    ./modules/services/pass-secret-service
     ./modules/services/pbgopy
     ./modules/services/picom
     ./modules/services/playerctld
