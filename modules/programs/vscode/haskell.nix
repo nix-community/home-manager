@@ -1,62 +1,46 @@
 { pkgs, config, lib, ... }:
 
-with lib;
+let cfg = config.programs.vscode.haskell;
 
-let
+in with lib; {
+  imports = [
+    (lib.mkRemovedOptionModule [ "hie" "enable" ] ''
+      Haskell support for VSCode now uses the Haskell Language Server, enabled automatically.
+    '')
+    (lib.mkRemovedOptionModule [ "hie" "path" ] ''
+      Haskell support for VSCode now uses the Haskell Language Server.
+      Use programs.vscode.haskell.hlsPackage to change the HLS executable.
+    '')
+  ];
 
-  cfg = config.programs.vscode.haskell;
-
-  defaultHieNixExe = hie-nix.hies + "/bin/hie-wrapper";
-  defaultHieNixExeText =
-    literalExpression ''"''${pkgs.hie-nix.hies}/bin/hie-wrapper"'';
-
-  hie-nix = pkgs.hie-nix or (abort ''
-    vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
-    ${exampleOverlay}
-  '');
-
-  exampleOverlay = ''
-    nixpkgs.overlays = [
-      (self: super: { hie-nix = import ~/src/hie-nix {}; })
-    ]
-  '';
-
-in {
   options.programs.vscode.haskell = {
     enable = mkEnableOption "Haskell integration for Visual Studio Code";
 
-    hie.enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Whether to enable Haskell IDE engine integration.";
+    useGhcup = mkEnableOption "using GHCup for the Haskell integration";
+
+    hlsPackage = mkPackageOption pkgs "Haskell language server" {
+      default = [ "haskell-language-server" ];
     };
 
-    hie.executablePath = mkOption {
-      type = types.path;
-      default = defaultHieNixExe;
-      defaultText = defaultHieNixExeText;
-      description = ''
-        The path to the Haskell IDE Engine executable.
-        </para><para>
-        Because hie-nix is not packaged in Nixpkgs, you need to add it as an
-        overlay or set this option. Example overlay configuration:
-        <programlisting language="nix">${exampleOverlay}</programlisting>
-      '';
-      example = literalExpression ''
-        (import ~/src/haskell-ide-engine {}).hies + "/bin/hie-wrapper";
-      '';
-    };
+    ghcupPackage =
+      mkPackageOption pkgs "GHCup" { default = [ "haskellPackages" "ghcup" ]; };
   };
 
   config = mkIf cfg.enable {
-    programs.vscode.userSettings = mkIf cfg.hie.enable {
-      "languageServerHaskell.enableHIE" = true;
-      "languageServerHaskell.hieExecutablePath" = cfg.hie.executablePath;
-    };
+    programs.vscode.userSettings = mkMerge [
+      (mkIf cfg.useGhcup {
+        "haskell.ghcupExecutablePath" = cfg.ghcupPackage;
+        "haskell.manageHLS" = "GHCup";
+      })
 
-    programs.vscode.extensions =
-      [ pkgs.vscode-extensions.justusadam.language-haskell ]
-      ++ lib.optional cfg.hie.enable
-      pkgs.vscode-extensions.alanz.vscode-hie-server;
+      (mkIf (!cfg.useGhcup) {
+        "haskell.serverExecutablePath" = cfg.hlsPackage + "/bin";
+      })
+    ];
+
+    programs.vscode.extensions = with pkgs.vscode-extensions; [
+      haskell.haskell
+      justusadam.language-haskell
+    ];
   };
 }
