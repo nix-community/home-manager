@@ -1,7 +1,8 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (lib) concatStringsSep hm mkIf mkMerge mkOption types;
+  inherit (lib)
+    concatStringsSep hm mkIf mkMerge mkBefore mkAfter mkOption types;
 
   dag = lib.hm.dag;
 
@@ -11,17 +12,22 @@ let
   in concatStringsSep "\n" data + "\n";
 
 in {
-  options.tested.dag = mkOption { type = hm.types.dagOf types.str; };
+  options.tested.dag = mkOption { type = hm.types.dagOf types.commas; };
 
   config = {
     tested.dag = mkMerge [
-      { never = mkIf false "never"; }
+      (mkIf false { never = "never"; })
+      { never2 = mkIf false "never2"; }
       { after = mkMerge [ "after" (mkIf false "neither") ]; }
       { before = dag.entryBefore [ "after" ] (mkIf true "before"); }
       {
         between =
           mkIf true (dag.entryBetween [ "after" ] [ "before" ] "between");
       }
+      { merged = dag.entryBefore [ "between" ] "middle"; }
+      { merged = mkBefore "left"; }
+      { merged = dag.entryBetween [ "after" ] [ "before" ] (mkAfter "right"); }
+      { merged = dag.entryBefore [ "between" ] "middle"; }
     ];
 
     home.file."result.txt".text = result;

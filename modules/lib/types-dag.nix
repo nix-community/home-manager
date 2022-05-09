@@ -3,8 +3,8 @@
 let
   inherit (lib)
     concatStringsSep defaultFunctor fixedWidthNumber imap1 isAttrs isList length
-    listToAttrs mapAttrs mkIf mkOption mkOptionType nameValuePair stringLength
-    types warn;
+    listToAttrs mapAttrs mkIf mkOrder mkOption mkOptionType nameValuePair
+    stringLength types warn;
 
   isDagEntry = e: isAttrs e && (e ? data) && (e ? after) && (e ? before);
 
@@ -13,21 +13,30 @@ let
       submoduleType = types.submodule ({ name, ... }: {
         options = {
           data = mkOption { type = elemType; };
-          after = mkOption { type = with types; uniq (listOf str); };
-          before = mkOption { type = with types; uniq (listOf str); };
+          after = mkOption { type = with types; listOf str; };
+          before = mkOption { type = with types; listOf str; };
         };
         config = mkIf (elemType.name == "submodule") {
           data._module.args.dagName = name;
         };
       });
-      maybeConvert = v: if isDagEntry v then v else dag.entryAnywhere v;
+      maybeConvert = def:
+        if isDagEntry def.value then
+          def.value
+        else
+          dag.entryAnywhere (if def ? priority then
+            mkOrder def.priority def.value
+          else
+            def.value);
     in mkOptionType {
       name = "dagEntryOf";
       description = "DAG entry of ${elemType.description}";
       # leave the checking to the submodule type
       merge = loc: defs:
-        submoduleType.merge loc
-        (map (def: def // { value = maybeConvert def.value; }) defs);
+        submoduleType.merge loc (map (def: {
+          inherit (def) file;
+          value = maybeConvert def;
+        }) defs);
     };
 
 in rec {
@@ -42,7 +51,7 @@ in rec {
     let attrEquivalent = types.attrsOf (dagEntryOf elemType);
     in mkOptionType rec {
       name = "dagOf";
-      description = "DAG of ${elemType.description}s";
+      description = "DAG of ${elemType.description}";
       inherit (attrEquivalent) check merge emptyValue;
       getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "<name>" ]);
       getSubModules = elemType.getSubModules;
