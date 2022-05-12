@@ -79,6 +79,7 @@ import nmt {
     ./modules/programs/mbsync
     ./modules/programs/mpv
     ./modules/programs/mu
+    ./modules/programs/mujmap
     ./modules/programs/ncmpcpp
     ./modules/programs/ne
     ./modules/programs/neomutt
