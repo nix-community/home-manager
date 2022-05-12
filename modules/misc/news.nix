@@ -554,6 +554,13 @@ in
           A new module is available: 'services.mopidy'.
         '';
       }
+
+      {
+        time = "2022-06-21T22:29:37+00:00";
+        message = ''
+          A new module is available: 'programs.mujmap'.
+        '';
+      }
     ];
   };
 }

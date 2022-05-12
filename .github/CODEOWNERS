@@ -163,6 +163,9 @@
 
 /modules/programs/mu.nix                              @KarlJoad
 
+/modules/programs/mujmap.nix                          @elizagamedev
+/tests/modules/programs/mujmap                        @elizagamedev
+
 /modules/programs/navi.nix                            @marsam
 
 /modules/programs/ncmpcpp.nix                         @olmokramer
