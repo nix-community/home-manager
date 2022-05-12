@@ -15,6 +15,13 @@ in {
         Mako, lightweight notification daemon for Wayland
       '';
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.mako;
+        defaultText = literalExpression "pkgs.mako";
+        description = "The mako package to use.";
+      };
+
       maxVisible = mkOption {
         default = 5;
         type = types.nullOr types.int;
@@ -295,11 +302,11 @@ in {
     assertions =
       [ (hm.assertions.assertPlatform "services.mako" pkgs platforms.linux) ];
 
-    home.packages = [ pkgs.mako ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."mako/config" = {
       onChange = ''
-        ${pkgs.mako}/bin/makoctl reload || true
+        ${cfg.package}/bin/makoctl reload || true
       '';
       text = ''
         ${optionalInteger "max-visible" cfg.maxVisible}
