@@ -3,6 +3,7 @@
 with lib;
 
 let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
   cfg = config.programs.htop;
 
@@ -72,6 +73,21 @@ let
     M_SWAP = 119;
     M_PSSWP = 120;
   };
+
+  defaultFields = with fields; [
+    PID
+    USER
+    PRIORITY
+    NICE
+    M_SIZE
+    M_RESIDENT
+    M_SHARE
+    STATE
+    PERCENT_CPU
+    PERCENT_MEM
+    TIME
+    COMM
+  ];
 
   modes = {
     Bar = 1;
@@ -154,20 +170,10 @@ in {
 
     xdg.configFile."htop/htoprc" = let
       defaults = {
-        fields = with fields; [
-          PID
-          USER
-          PRIORITY
-          NICE
-          M_SIZE
-          M_RESIDENT
-          M_SHARE
-          STATE
-          PERCENT_CPU
-          PERCENT_MEM
-          TIME
-          COMM
-        ];
+        fields = if isDarwin then
+          remove fields.M_SHARE defaultFields
+        else
+          defaultFields;
       };
 
       before = optionalAttrs (cfg.settings ? header_layout) {
