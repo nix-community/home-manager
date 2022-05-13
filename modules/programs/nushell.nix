@@ -8,8 +8,44 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
+  linesOrSource = name:
+    types.submodule ({ config, ... }: {
+      options = {
+        text = mkOption {
+          type = types.lines;
+          default = "";
+          description = ''
+            Text of the nushell <filename>${name}</filename> file.
+            If unset then the source option will be preferred.
+          '';
+        };
+
+        source = mkOption {
+          type = types.nullOr types.path;
+          default = pkgs.writeTextFile {
+            inherit (config) text;
+            name = hm.strings.storeFileName name;
+          };
+          defaultText = literalExpression "file containing text";
+          description = ''
+            Path of the nushell <filename>${name}</filename> file to use.
+          '';
+        };
+      };
+    });
+
 in {
   meta.maintainers = [ maintainers.Philipp-M ];
+
+  imports = [
+    (mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
+      Please use
+
+        'programs.nushell.configFile' and 'programs.nushell.envFile'
+
+      instead.
+    '')
+  ];
 
   options.programs.nushell = {
     enable = mkEnableOption "nushell";
@@ -21,31 +57,36 @@ in {
       description = "The package to use for nushell.";
     };
 
-    settings = mkOption {
-      type = with types;
-        let
-          prim = oneOf [ bool int str ];
-          primOrPrimAttrs = either prim (attrsOf prim);
-          entry = either prim (listOf primOrPrimAttrs);
-          entryOrAttrsOf = t: either entry (attrsOf t);
-          entries = entryOrAttrsOf (entryOrAttrsOf entry);
-        in attrsOf entries // { description = "Nushell configuration"; };
-      default = { };
+    configFile = mkOption {
+      type = linesOrSource "config.nu";
       example = literalExpression ''
-        {
-          edit_mode = "vi";
-          startup = [ "alias la [] { ls -a }" "alias e [msg] { echo $msg }" ];
-          key_timeout = 10;
-          completion_mode = "circular";
-          no_auto_pivot = true;
+        { text = '''
+            let $config = {
+              filesize_metric: false
+              table_mode: rounded
+              use_ls_colors: true
+            }
+          ''';
         }
       '';
       description = ''
-        Configuration written to
-        <filename>$XDG_CONFIG_HOME/nushell/config.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://www.nushell.sh/book/configuration.html" /> for the full list
-        of options.
+        The configuration file to be used for nushell.
+        </para>
+        <para>
+        See <link xlink:href="https://www.nushell.sh/book/configuration.html#configuration" /> for more information.
+      '';
+    };
+
+    envFile = mkOption {
+      type = linesOrSource "env.nu";
+      example = ''
+        let-env FOO = 'BAR'
+      '';
+      description = ''
+        The environment variables file to be used for nushell.
+        </para>
+        <para>
+        See <link xlink:href="https://www.nushell.sh/book/configuration.html#configuration" /> for more information.
       '';
     };
   };
@@ -53,8 +94,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."nu/config.toml" = mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "nushell-config" cfg.settings;
-    };
+    xdg.configFile."nushell/config.nu" = cfg.configFile;
+    xdg.configFile."nushell/env.nu" = cfg.envFile;
   };
 }

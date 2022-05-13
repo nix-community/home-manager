@@ -1,1 +1,1 @@
-{ nushell-settings = ./settings.nix; }
+{ nushell-example-settings = ./example-settings.nix; }
