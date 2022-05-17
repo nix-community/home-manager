@@ -43,10 +43,18 @@ in
       let
         dups =
           attrNames
-            (filterAttrs (n: v: v > 1)
-            (foldAttrs (acc: v: acc + v) 0
-            (mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)));
-        dupsStr = concatStringsSep ", " dups;
+            (filterAttrs
+             (n: v: (v.count > 1 && v.nonrec > 0))
+             (foldAttrs (acc: v: {
+                 count=acc.count + v.count; nonrec= acc.nonrec+v.nonrec;
+              })
+              {count=0;nonrec=0;}
+              (mapAttrsToList (n: v: {
+                  ${v.target} = {count=1;nonrec= (! v.recursive) };
+               })
+               cfg)
+            ));
+        dupsStr = concatStringsSep ", " (attrNames dups);
       in {
         assertion = dups == [];
         message = ''
@@ -57,7 +65,13 @@ in
               home.file = {
                 conflict1 = { source = ./foo.nix; target = "baz"; };
                 conflict2 = { source = ./bar.nix; target = "baz"; };
+              }
+          or
+              home.file = {
+                conflict1 = { source = ./foo.nix; target = "baz"; recursive=true; allowRecursiveMerge=true;};
+                conflict2 = { source = ./bar.nix; target = "baz"; }; # missing "recursive=true" and "allowRecursiveMerge=true"
               }'';
+           
       })
     ];
 
@@ -84,7 +98,9 @@ in
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
+          function isHomeFilePattern() {
+            return "$(realpath -m "$1") == \"$(realpath -e ${escapeShellArg builtins.storeDir})\"/*-home-manager-files/*"
+          }
 
           forcedPaths=(${forcedPaths})
 
@@ -105,7 +121,7 @@ in
             if [[ -n $forced ]]; then
               $VERBOSE_ECHO "Skipping collision check for $targetPath"
             elif [[ -e "$targetPath" \
-                && ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
+                && ! $isHomeFilePattern $targetPath ]] ; then
               # The target file already exists and it isn't a symlink owned by Home Manager.
               if cmp -s "$sourcePath" "$targetPath"; then
                 # First compare the files' content. If they're equal, we're fine.
@@ -196,7 +212,10 @@ in
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
+
+          function isHomeFilePattern() {
+            return "$(realpath -m "$1") == \"$(realpath -e ${escapeShellArg builtins.storeDir})\"/*-home-manager-files/*"
+          }
 
           newGenFiles="$1"
           shift 1
@@ -204,7 +223,7 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               $VERBOSE_ECHO "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
+            elif [[ ! $isHomeFilePattern $targetPath ]] ; then
               warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
             else
               $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
@@ -337,12 +356,16 @@ in
           local relTarget="$2"
           local executable="$3"
           local recursive="$4"
+          local allowrecursivedirmerge="$5"
 
-          # If the target already exists then we have a collision. Note, this
-          # should not happen due to the assertion found in the 'files' module.
-          # We therefore simply log the conflict and otherwise ignore it, mainly
-          # to make the `files-target-config` test work as expected.
-          if [[ -e "$realOut/$relTarget" ]]; then
+          # If the target already exists then we have a collision.
+          # If it is a "simple copy", justdrop out of it. If it's a recursive dir copy,
+          # we need to merge the source and destination, and check for collisions for each file.
+          # If this is a "simple collision", simply log the conflict and otherwise ignore it,
+          # mainly to make the `files-target-config` test work as expected.
+          if [[ -d "$realOut/$relTarget" ]] && [[ $recursive ]] && [[ $allowrecursivedirmerge ]]; then
+            # pass
+          elif [[ -e "$realOut/$relTarget" ]]; then
             echo "File conflict for file '$relTarget'" >&2
             return
           fi
@@ -361,6 +384,7 @@ in
           if [[ -d $source ]]; then
             if [[ $recursive ]]; then
               mkdir -p "$target"
+              # note: lndir does not override existing files/symlinks with newer symlinks
               lndir -silent "$source" "$target"
             else
               ln -s "$source" "$target"
@@ -398,6 +422,7 @@ in
                then "inherit"
                else toString v.executable)
               (toString v.recursive)
+              (toString v.allowrecursivemerge)
             ]}
         '') cfg
       ));
