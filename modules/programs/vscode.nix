@@ -34,6 +34,11 @@ let
   # TODO: On Darwin where are the extensions?
   extensionPath = ".${extensionDir}/extensions";
 
+  mergedUserSettings = cfg.userSettings
+    // optionalAttrs (!cfg.enableUpdateCheck) { "update.mode" = "none"; }
+    // optionalAttrs (!cfg.enableExtensionUpdateCheck) {
+      "extensions.autoCheckUpdates" = false;
+    };
 in {
   imports = [
     (mkChangedOptionModule [ "programs" "vscode" "immutableExtensionsDir" ] [
@@ -56,12 +61,28 @@ in {
         '';
       };
 
+      enableUpdateCheck = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to enable update checks/notifications.
+        '';
+      };
+
+      enableExtensionUpdateCheck = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to enable update notifications for extensions.
+        '';
+      };
+
       userSettings = mkOption {
         type = jsonFormat.type;
         default = { };
         example = literalExpression ''
           {
-            "update.channel" = "none";
+            "files.autoSave" = "off"
             "[nix]"."editor.tabSize" = 2;
           }
         '';
@@ -164,9 +185,9 @@ in {
     home.packages = [ cfg.package ];
 
     home.file = mkMerge [
-      (mkIf (cfg.userSettings != { }) {
+      (mkIf (mergedUserSettings != { }) {
         "${configFilePath}".source =
-          jsonFormat.generate "vscode-user-settings" cfg.userSettings;
+          jsonFormat.generate "vscode-user-settings" mergedUserSettings;
       })
       (mkIf (cfg.userTasks != { }) {
         "${tasksFilePath}".source =
