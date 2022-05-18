@@ -55,15 +55,6 @@ in {
       '';
     };
 
-    logDirectory = mkOption {
-      type = types.nullOr types.path;
-      default = null;
-      description = ''
-        Optional directory to output logs to.
-        Has no effect on Linux.
-      ''; # TODO(ryantking): Add to systemd units?
-    };
-
     preExec = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -71,6 +62,8 @@ in {
       description = ''
         An optional command to run before mbsync executes.  This is
         useful for creating the directories mbsync is going to use.
+
+        This does not have any affect on Darwin launchd services.
       '';
     };
 
@@ -81,6 +74,8 @@ in {
       description = ''
         An optional command to run after mbsync executes successfully.
         This is useful for running mailbox indexing tools.
+
+        This does not have any affect on Darwin launchd services.
       '';
     };
   };
@@ -115,16 +110,17 @@ in {
     (optionalAttrs (hasAttr "launchd" options) {
       launchd.agents.mbsync = {
         enable = true;
-        config = ({
-          ProgramArguments = [ "${cfg.package}/bin/mbsync" ] ++ mbsyncOptions;
+        config = {
+          ProgramArguments = let
+            startMbsync = pkgs.writeShellScript "start-mbsync" (concatStringsSep "\n" [
+              (optionalString (! isNull cfg.preExec) "${cfg.preExec}")
+              "${cfg.package}/bin/mbsync ${concatStringsSep " " mbsyncOptions}"
+              (optionalString (! isNull cfg.postExec) "${cfg.postExec}")
+            ]); in [ "${startMbsync}" ];
           ProcessType = "Adaptive";
           RunAtLoad = true;
-          StartInterval = 60
-            * 15; # TODO(ryantking): Use frequency here... somehow
-        } // (optionalAttrs (!isNull cfg.logDirectory) {
-          StandardOutPath = "${cfg.logDirectory}/mbsync.out.log";
-          StandardErrorPath = "${cfg.logDirectory}/mbsync.err.log";
-        }));
+          StartInterval = 60 * 15; # TODO(ryantking): Use frequency here... somehow
+        };
       };
     })
   ]);
