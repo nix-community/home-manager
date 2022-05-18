@@ -15,6 +15,7 @@ let
 
   modules = [
     ./accounts/email.nix
+    ./config/home-cursor.nix
     ./config/i18n.nix
     ./files.nix
     ./home-environment.nix
@@ -30,6 +31,7 @@ let
     ./misc/numlock.nix
     ./misc/pam.nix
     ./misc/qt.nix
+    ./misc/specialization.nix
     ./misc/submodule-support.nix
     ./misc/tmpfiles.nix
     ./misc/version.nix
@@ -149,6 +151,7 @@ let
     ./programs/ssh.nix
     ./programs/starship.nix
     ./programs/taskwarrior.nix
+    ./programs/tealdeer.nix
     ./programs/terminator.nix
     ./programs/termite.nix
     ./programs/texlive.nix
@@ -270,7 +273,6 @@ let
     ./systemd.nix
     ./targets/darwin
     ./targets/generic-linux.nix
-    ./xcursor.nix
     ./xresources.nix
     ./xsession.nix
     ./misc/nix.nix

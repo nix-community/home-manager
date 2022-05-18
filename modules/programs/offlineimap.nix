@@ -158,13 +158,13 @@ in {
     xdg.configFile."offlineimap/get_settings.py".text = cfg.pythonFile;
     xdg.configFile."offlineimap/get_settings.pyc".source = "${
         pkgs.runCommandLocal "get_settings-compile" {
-          nativeBuildInputs = [ pkgs.python2 ];
+          nativeBuildInputs = [ pkgs.offlineimap ];
           pythonFile = cfg.pythonFile;
           passAsFile = [ "pythonFile" ];
         } ''
           mkdir -p $out/bin
           cp $pythonFilePath $out/bin/get_settings.py
-          python2 -m py_compile $out/bin/get_settings.py
+          python -m py_compile $out/bin/get_settings.py
         ''
       }/bin/get_settings.pyc";
 

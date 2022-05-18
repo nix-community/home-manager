@@ -191,7 +191,7 @@ with lib;
             [theme.overrides]
             idle_bg = "#123456"
             idle_fg = "#abcdef"
-                                              ''
+          ''
         }
     '';
   };

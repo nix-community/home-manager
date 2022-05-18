@@ -15,8 +15,8 @@ let
 
   mkEvent = e: [ e.event (escapeShellArg e.command) ];
 
-  args = (concatMap mkTimeout cfg.timeouts) ++ (concatMap mkEvent cfg.events)
-    ++ cfg.extraArgs;
+  args = cfg.extraArgs ++ (concatMap mkTimeout cfg.timeouts)
+    ++ (concatMap mkEvent cfg.events);
 
 in {
   meta.maintainers = [ maintainers.c0deaddict ];

@@ -8,32 +8,32 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2022-04-20 18:18+0000\n"
-"Last-Translator: Frankie McEyes <mceyes@protonmail.com>\n"
-"Language-Team: Italian <https://hosted.weblate.org/projects/home-manager/cli/"
-"it/>\n"
-"Language: it\n"
+"PO-Revision-Date: 2022-04-09 18:11+0000\n"
+"Last-Translator: Artin Mobasher <mobasherartin.icm@gmail.com>\n"
+"Language-Team: Persian <https://hosted.weblate.org/projects/home-manager/cli/"
+"fa/>\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 4.12-dev\n"
 
 #: home-manager/home-manager:60
 msgid "No configuration file found at %s"
-msgstr "Nessun file di configurazione trovato in %s"
+msgstr "هیچ فایل تنظیماتی در %s پیدا نشد"
 
 #: home-manager/home-manager:79
 msgid "No configuration file found. Please create one at %s"
-msgstr "Nessun file di configurazione trovato. Per favore crearne uno in %s"
+msgstr "هیچ فایل تنظیماتی پیدا نشد. لطفا یک فایل در %s بسازید"
 
 #: home-manager/home-manager:122
 msgid "Can't inspect options of a flake configuration"
-msgstr "Impossibile ispezionare le opzioni di configurazione flake"
+msgstr ""
 
 #: home-manager/home-manager:162
 msgid "Can't instantiate a flake configuration"
-msgstr "Impossibile istanziare una configurazione flake"
+msgstr ""
 
 #: home-manager/home-manager:237
 msgid ""
@@ -43,108 +43,105 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
-"C'è %d novità di elementi non letta.\n"
-"Leggila con il comando \"%s news\"."
 msgstr[1] ""
-"Ci sono %d novità di elementi non letti\n"
-"Leggile con il comando \"%s news\"."
 
 #: home-manager/home-manager:251
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr "Opzione \"news.display\" sconosciuta \"%s\"."
+msgstr ""
 
 #: home-manager/home-manager:258
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
-msgstr "Per favore impostare la variabile d'ambient $EDITOR"
+msgstr ""
 
 #: home-manager/home-manager:273
 msgid "Cannot run build in read-only directory"
-msgstr "Impossibile eseguire la build in una cartella in sola lettura"
+msgstr ""
 
 #: home-manager/home-manager:355
 msgid "No generation with ID %s"
-msgstr "Nessuna generazione con ID %s"
+msgstr ""
 
 #: home-manager/home-manager:357
 msgid "Cannot remove the current generation %s"
-msgstr "Impossibile rimuovere la generazione corrente %s"
+msgstr ""
 
 #: home-manager/home-manager:359
 msgid "Removing generation %s"
-msgstr "Rimuovo la generazione %s"
+msgstr ""
 
 #: home-manager/home-manager:385
 msgid "No generations to expire"
-msgstr "Nessuna generazione in scadenza"
+msgstr ""
 
 #: home-manager/home-manager:396
 msgid "No home-manager packages seem to be installed."
-msgstr "Nessun pacchetto home-manager sembra essere installato."
+msgstr ""
 
 #: home-manager/home-manager:453
 msgid "Unknown argument %s"
-msgstr "Argomento sconosciuto: %s"
+msgstr ""
 
 #: home-manager/home-manager:469
 msgid "This will remove Home Manager from your system."
-msgstr "Questo rimuoverà Home Manger dal tuo sistema."
+msgstr ""
 
 #: home-manager/home-manager:472
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr "Questo è un avvio a secco, nulla verrà realmente disinstallato."
+msgstr ""
 
 #: home-manager/home-manager:476
 msgid "Really uninstall Home Manager?"
-msgstr "Vuoi davvero disinstallare Home Manager?"
+msgstr ""
 
 #: home-manager/home-manager:481
 msgid "Switching to empty Home Manager configuration..."
-msgstr "Cambio ad una configurazione Home Manager vuota..."
+msgstr ""
 
 #: home-manager/home-manager:493
+#, fuzzy
 msgid "Yay!"
-msgstr "Urrà!"
+msgstr "آره!"
 
 #: home-manager/home-manager:500
 msgid "Remove all Home Manager generations?"
-msgstr "Rimuovere tutte le generazioni Home Manager?"
+msgstr ""
 
 #: home-manager/home-manager:507
 msgid "All generations are now eligible for garbage collection."
-msgstr "Tutte le generazioni sono ora pronte per essere cestinate."
+msgstr ""
 
 #: home-manager/home-manager:510
 msgid "Leaving generations but they may still be garbage collected."
-msgstr "Abbandono le generazioni, ma possono essere ancora cestinate."
+msgstr ""
 
 #: home-manager/home-manager:514
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr "Home Manager è disinstallato ma la tua home.Nix non è stata toccata."
+msgstr ""
 
 #: home-manager/home-manager:673
 msgid "%s: unknown option '%s'"
-msgstr "%s: opzione sconosciuta '%s'"
+msgstr ""
 
 #: home-manager/home-manager:674
 msgid "Run '%s --help' for usage help"
-msgstr "Esegui '%s --help' per ottenere aiuto"
+msgstr ""
 
 #: home-manager/home-manager:708
 msgid "expire-generations expects one argument, got %d."
-msgstr "expire-generations si aspetta un solo argomento, invece di %d."
+msgstr ""
 
 #: home-manager/home-manager:730
 msgid "Unknown command: %s"
-msgstr "Comando sconosciuto: %s"
+msgstr "دستور ناشناخته: %s"
 
 #: home-manager/install.nix:22
 msgid "Creating initial Home Manager configuration..."
-msgstr "Creando la configurazione iniziale di Home Manager..."
+msgstr "ایجاد تنظیمات اولیه Home-Manager..."
 
 #: home-manager/install.nix:66
 msgid "Creating initial Home Manager generation..."
-msgstr "Creando la generazione iniziale di Home Manager..."
+msgstr ""
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/install.nix:71
@@ -156,12 +153,6 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
-"Tutto fatto! Home-manager dovrebbe essere installato e puoi modificare\n"
-"\n"
-"%s\n"
-"\n"
-"per configurare Home Manager. Esegui 'man home-configurazion.nix' per\n"
-"consultare tutte le opzioni disponibili."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/install.nix:76
@@ -172,14 +163,7 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
-"Oh no, l'installazione non è andata a buon fine! Per favore aprire un ticket "
-"issue a\n"
-"\n"
-"%s\n"
-"\n"
-"se l'errore sembra essere causato da Home Manager."
 
 #: home-manager/install.nix:83
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
-"Questa derivazione non è compilabile, prova ad eseguila usando nix-shell."

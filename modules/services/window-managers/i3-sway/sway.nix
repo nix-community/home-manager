@@ -431,12 +431,14 @@ in {
       home.packages = optional (cfg.package != null) cfg.package
         ++ optional cfg.xwayland pkgs.xwayland;
 
-      xdg.configFile."sway/config" = {
+      xdg.configFile."sway/config" = let
+        swayPackage = if cfg.package == null then pkgs.sway else cfg.package;
+      in {
         source = configFile;
         onChange = ''
-          swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep -x sway || true).sock
-          if [ -S $swaySocket ]; then
-            ${pkgs.sway}/bin/swaymsg -s $swaySocket reload
+          swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x sway || true).sock"
+          if [ -S "$swaySocket" ]; then
+            ${swayPackage}/bin/swaymsg -s $swaySocket reload
           fi
         '';
       };

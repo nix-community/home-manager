@@ -2464,6 +2464,13 @@ in
           A new module is available: 'services.fusuma'.
         '';
       }
+
+      {
+        time = "2022-05-02T20:55:46+00:00";
+        message = ''
+          A new module is available: 'programs.tealdeer'.
+        '';
+      }
     ];
   };
 }
