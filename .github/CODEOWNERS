@@ -478,3 +478,5 @@ Makefile                                              @thiagokokada
 /modules/programs/ion.nix                             @jo1gi
 
 /modules/services/plex-mpv-shim.nix                   @starcraft66
+
+/modules/services/sctd.nix                            @somasis
