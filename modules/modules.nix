@@ -246,6 +246,7 @@ let
     ./services/redshift-gammastep/redshift.nix
     ./services/rsibreak.nix
     ./services/screen-locker.nix
+    ./services/sctd.nix
     ./services/spotifyd.nix
     ./services/stalonetray.nix
     ./services/status-notifier-watcher.nix
