@@ -11,7 +11,7 @@ let
 
   extendedLib = import ./modules/lib/stdlib-extended.nix pkgs.lib;
 
-  hmModule = types.submoduleWith {
+  hmModule' = types.submoduleWith {
     specialArgs = {
       lib = extendedLib;
       osConfig = config;
@@ -38,6 +38,16 @@ let
         };
       })
     ] ++ cfg.sharedModules;
+  } // {
+    description = "Home Manager module";
+  };
+
+  # TODO: hack until https://github.com/NixOS/nixpkgs/pull/173621 lands
+  hmModule = hmModule' // {
+    substSubModules = m:
+      hmModule'.substSubModules m // {
+        inherit (hmModule') description;
+      };
   };
 
 in {
@@ -74,14 +84,7 @@ in {
     };
 
     sharedModules = mkOption {
-      type = with types;
-      # TODO: use types.raw once this PR is merged: https://github.com/NixOS/nixpkgs/pull/132448
-        listOf (mkOptionType {
-          name = "submodule";
-          inherit (submodule { }) check;
-          merge = lib.options.mergeOneOption;
-          description = "Home Manager modules";
-        });
+      type = with types; listOf raw;
       default = [ ];
       example = literalExpression "[ { home.packages = [ nixpkgs-fmt ]; } ]";
       description = ''
@@ -94,9 +97,8 @@ in {
     users = mkOption {
       type = types.attrsOf hmModule;
       default = { };
-      # Set as not visible to prevent the entire submodule being included in
-      # the documentation.
-      visible = false;
+      # Prevent the entire submodule being included in the documentation.
+      visible = "shallow";
       description = ''
         Per-user Home Manager configuration.
       '';
