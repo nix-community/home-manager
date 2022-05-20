@@ -45,6 +45,9 @@ let
 
   settingsFormat = mopidyConfFormat { };
 
+  configFilePaths = concatStringsSep ":"
+    ([ "${config.xdg.configHome}/mopidy/mopidy.conf" ] ++ cfg.extraConfigFiles);
+
 in {
   meta.maintainers = [ hm.maintainers.foo-dogsquared ];
 
@@ -97,6 +100,16 @@ in {
         more details.
       '';
     };
+
+    extraConfigFiles = mkOption {
+      default = [ ];
+      type = types.listOf types.path;
+      description = ''
+        Extra configuration files read by Mopidy when the service starts.
+        Later files in the list override earlier configuration files and
+        structured settings.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -113,7 +126,9 @@ in {
         After = [ "network.target" "sound.target" ];
       };
 
-      Service = { ExecStart = "${mopidyEnv}/bin/mopidy"; };
+      Service = {
+        ExecStart = "${mopidyEnv}/bin/mopidy --config ${configFilePaths}";
+      };
 
       Install.WantedBy = [ "default.target" ];
     };
@@ -126,7 +141,8 @@ in {
       };
 
       Service = {
-        ExecStart = "${mopidyEnv}/bin/mopidy local scan";
+        ExecStart =
+          "${mopidyEnv}/bin/mopidy --config ${configFilePaths} local scan";
         Type = "oneshot";
       };
 
