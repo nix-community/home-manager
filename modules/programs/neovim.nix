@@ -66,7 +66,7 @@ let
 
   allPlugins = cfg.plugins ++ optional cfg.coc.enable {
     type = "viml";
-    plugin = pkgs.vimPlugins.coc-nvim;
+    plugin = cfg.coc.package;
     config = cfg.coc.pluginConfig;
     optional = false;
   };
@@ -301,6 +301,13 @@ in {
 
       coc = {
         enable = mkEnableOption "Coc";
+
+        package = mkOption {
+          type = types.package;
+          default = pkgs.vimPlugins.coc-nvim;
+          defaultText = literalExpression "pkgs.vimPlugins.coc-nvim";
+          description = "The package to use for the CoC plugin.";
+        };
 
         settings = mkOption {
           type = jsonFormat.type;
