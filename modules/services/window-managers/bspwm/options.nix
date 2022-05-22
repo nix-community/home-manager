@@ -4,7 +4,11 @@ with lib;
 
 let
 
+  primitive = with types; oneOf [ bool int float str ];
+
   rule = types.submodule {
+    freeformType = with types; attrsOf primitive;
+
     options = {
       monitor = mkOption {
         type = types.nullOr types.str;
@@ -139,6 +143,14 @@ let
         description = "Whether the node should have border.";
         example = true;
       };
+
+      rectangle = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description =
+          "The node's geometry, in the format <literal>WxH+X+Y</literal>.";
+        example = "800x600+32+32";
+      };
     };
   };
 
@@ -155,9 +167,7 @@ in {
     };
 
     settings = mkOption {
-      type = with types;
-        let primitive = either bool (either int (either float str));
-        in attrsOf (either primitive (listOf primitive));
+      type = with types; attrsOf (either primitive (listOf primitive));
       default = { };
       description = "General settings given to <literal>bspc config</literal>.";
       example = {
