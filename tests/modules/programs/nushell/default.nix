@@ -1,1 +1,1 @@
-{ nushell-settings = ./settings.nix; }
+{ nushell-legacySettings = ./legacySettings.nix; }

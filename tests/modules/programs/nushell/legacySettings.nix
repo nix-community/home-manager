@@ -7,7 +7,7 @@ with lib;
     programs.nushell = {
       enable = true;
 
-      settings = mkMerge [
+      legacySettings = mkMerge [
         {
           edit_mode = "vi";
           startup = [ "alias la [] { ls -a }" ];
@@ -27,7 +27,7 @@ with lib;
     nmt.script = ''
       assertFileContent \
         home-files/.config/nu/config.toml \
-        ${./settings-expected.toml}
+        ${./legacySettings-expected.toml}
     '';
   };
 }

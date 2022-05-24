@@ -11,6 +11,14 @@ let
 in {
   meta.maintainers = [ maintainers.Philipp-M ];
 
+  imports = [
+    (mkRenamedOptionModule [ "programs" "nushell" "settings" ] [
+      "programs"
+      "nushell"
+      "legacySettings"
+    ])
+  ];
+
   options.programs.nushell = {
     enable = mkEnableOption "nushell";
 
@@ -21,7 +29,27 @@ in {
       description = "The package to use for nushell.";
     };
 
-    settings = mkOption {
+    config = mkOption {
+      type = types.lines;
+      default = "";
+      defaultText = literalExpression ''""'';
+      description = ''
+        Configuration written to
+        <filename>$XDG_CONFIG_HOME/nushell/config.nu</filename>.
+      '';
+    };
+
+    env = mkOption {
+      type = types.lines;
+      default = "";
+      defaultText = literalExpression ''""'';
+      description = ''
+        Configuration written to
+        <filename>$XDG_CONFIG_HOME/nushell/env.nu</filename>.
+      '';
+    };
+
+    legacySettings = mkOption {
       type = with types;
         let
           prim = oneOf [ bool int str ];
@@ -42,10 +70,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/nushell/config.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://www.nushell.sh/book/configuration.html" /> for the full list
-        of options.
+        <filename>$XDG_CONFIG_HOME/nu/config.toml</filename>.
       '';
     };
   };
@@ -53,8 +78,12 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."nu/config.toml" = mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "nushell-config" cfg.settings;
+    xdg.configFile = {
+      "nu/config.toml" = mkIf (cfg.legacySettings != { }) {
+        source = tomlFormat.generate "nushell-config" cfg.settings;
+      };
+      "nushell/config.nu".text = mkIf (cfg.config == "") cfg.config;
+      "nushell/env.nu".text = mkIf (cfg.env == "") cfg.env;
     };
   };
 }
