@@ -155,6 +155,7 @@ import nmt {
     ./modules/services/lieer
     ./modules/services/mopidy
     ./modules/services/mpd
+    ./modules/services/mpdris2
     ./modules/services/pantalaimon
     ./modules/services/pbgopy
     ./modules/services/picom
