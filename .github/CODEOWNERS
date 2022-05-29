@@ -158,6 +158,9 @@
 
 /modules/programs/mcfly.nix                           @marsam
 
+/modules/programs/micro.nix                           @MForster
+/tests/modules/programs/micro                         @MForster
+
 /modules/programs/mpv.nix                             @tadeokondrak @thiagokokada
 /tests/modules/programs/mpv                           @thiagokokada
 
