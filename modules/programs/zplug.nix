@@ -45,9 +45,9 @@ in {
     home.packages = [ pkgs.zplug ];
 
     programs.zsh.initExtraBeforeCompInit = ''
-      source ${pkgs.zplug}/init.zsh
-
       export ZPLUG_HOME=${cfg.zplugHome}
+
+      source ${pkgs.zplug}/init.zsh
 
       ${optionalString (cfg.plugins != [ ]) ''
         ${concatStrings (map (plugin: ''
