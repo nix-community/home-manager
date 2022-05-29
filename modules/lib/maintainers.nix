@@ -107,6 +107,12 @@
     github = "matrss";
     githubId = 9308656;
   };
+  mforster = {
+    name = "Michael Forster";
+    email = "email@michael-forster.de";
+    github = "MForster";
+    githubId = 4067975;
+  };
   mifom = {
     name = "mifom";
     email = "mifom@users.noreply.github.com";

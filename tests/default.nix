@@ -75,6 +75,7 @@ import nmt {
     ./modules/programs/lieer
     ./modules/programs/man
     ./modules/programs/mbsync
+    ./modules/programs/micro
     ./modules/programs/mpv
     ./modules/programs/mu
     ./modules/programs/mujmap
