@@ -15,6 +15,7 @@ let
 
   modules = [
     ./accounts/email.nix
+    ./config/home-cursor.nix
     ./config/i18n.nix
     ./files.nix
     ./home-environment.nix
@@ -30,6 +31,7 @@ let
     ./misc/numlock.nix
     ./misc/pam.nix
     ./misc/qt.nix
+    ./misc/specialization.nix
     ./misc/submodule-support.nix
     ./misc/tmpfiles.nix
     ./misc/version.nix
@@ -143,12 +145,14 @@ let
     ./programs/sbt.nix
     ./programs/scmpuff.nix
     ./programs/senpai.nix
+    ./programs/sioyek.nix
     ./programs/skim.nix
     ./programs/sm64ex.nix
     ./programs/sqls.nix
     ./programs/ssh.nix
     ./programs/starship.nix
     ./programs/taskwarrior.nix
+    ./programs/tealdeer.nix
     ./programs/terminator.nix
     ./programs/termite.nix
     ./programs/texlive.nix
@@ -209,6 +213,7 @@ let
     ./services/lorri.nix
     ./services/mako.nix
     ./services/mbsync.nix
+    ./services/mopidy.nix
     ./services/mpd.nix
     ./services/mpdris2.nix
     ./services/mpd-discord-rpc.nix
@@ -270,7 +275,6 @@ let
     ./systemd.nix
     ./targets/darwin
     ./targets/generic-linux.nix
-    ./xcursor.nix
     ./xresources.nix
     ./xsession.nix
     ./misc/nix.nix

@@ -72,20 +72,50 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "xdg.mimeApps" pkgs platforms.linux) ];
+  config = mkMerge [
+    {
+      # Given a package that installs .desktop files in the usual location,
+      # return a mapping from mime types to lists of desktop file names. This is
+      # suitable for use with `xdg.mimeApps.defaultApplications`.
+      lib.xdg.mimeAssociations = let
+        processLines = str:
+          zipAttrs
+          (filter (e: e != null) (map processLine (splitString "\n" str)));
 
-    # Deprecated but still used by some applications.
-    xdg.dataFile."applications/mimeapps.list".source =
-      config.xdg.configFile."mimeapps.list".source;
+        processLine = str:
+          let
+            entry = splitString ";" str;
+            k = elemAt entry 0;
+            v = elemAt entry 1;
+          in if length entry == 2 then { ${k} = v; } else null;
 
-    xdg.configFile."mimeapps.list".text =
-      let joinValues = mapAttrs (n: concatStringsSep ";");
-      in generators.toINI { } {
-        "Added Associations" = joinValues cfg.associations.added;
-        "Removed Associations" = joinValues cfg.associations.removed;
-        "Default Applications" = joinValues cfg.defaultApplications;
-      };
-  };
+        associations = ps:
+          pkgs.runCommand "mime-assoc" { inherit ps; } ''
+            for p in $ps ; do
+              for path in "$p"/share/applications/*.desktop ; do
+                name="''${path##*/}"
+                sed -n "/^MimeType=/ { s/.*=//; s/;/;$name\n/g; p; }" "$path"
+              done
+            done > "$out"
+          '';
+      in p: processLines (builtins.readFile (associations p));
+    }
+
+    (mkIf cfg.enable {
+      assertions =
+        [ (hm.assertions.assertPlatform "xdg.mimeApps" pkgs platforms.linux) ];
+
+      # Deprecated but still used by some applications.
+      xdg.dataFile."applications/mimeapps.list".source =
+        config.xdg.configFile."mimeapps.list".source;
+
+      xdg.configFile."mimeapps.list".text =
+        let joinValues = mapAttrs (n: concatStringsSep ";");
+        in generators.toINI { } {
+          "Added Associations" = joinValues cfg.associations.added;
+          "Removed Associations" = joinValues cfg.associations.removed;
+          "Default Applications" = joinValues cfg.defaultApplications;
+        };
+    })
+  ];
 }

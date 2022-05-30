@@ -10,6 +10,7 @@ let
     "google-chrome-beta"
     "google-chrome-dev"
     "brave"
+    "vivaldi"
   ];
 
   browserModule = defaultPkg: name: visible:
@@ -195,6 +196,7 @@ in {
     google-chrome-dev =
       browserModule browserPkgs.google-chrome-dev "Google Chrome Dev" false;
     brave = browserModule browserPkgs.brave "Brave Browser" false;
+    vivaldi = browserModule browserPkgs.vivaldi "Vivaldi Browser" false;
   };
 
   config = mkMerge

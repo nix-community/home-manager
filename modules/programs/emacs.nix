@@ -13,11 +13,15 @@ let
 
   emacsWithPackages = emacsPackages.emacsWithPackages;
 
-  createConfPackage = epkgs:
-    epkgs.trivialBuild {
-      pname = "default";
-      src = pkgs.writeText "default.el" cfg.extraConfig;
-    };
+  extraPackages = epkgs:
+    let
+      packages = cfg.extraPackages epkgs;
+      userConfig = epkgs.trivialBuild {
+        pname = "default";
+        src = pkgs.writeText "default.el" cfg.extraConfig;
+        packageRequires = packages;
+      };
+    in packages ++ optional (cfg.extraConfig != "") userConfig;
 
 in {
   meta.maintainers = [ maintainers.rycee ];
@@ -91,10 +95,6 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.finalPackage ];
-    programs.emacs = {
-      finalPackage = emacsWithPackages cfg.extraPackages;
-      extraPackages = epkgs:
-        optional (cfg.extraConfig != "") (createConfPackage epkgs);
-    };
+    programs.emacs.finalPackage = emacsWithPackages extraPackages;
   };
 }

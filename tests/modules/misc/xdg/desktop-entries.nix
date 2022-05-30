@@ -18,19 +18,32 @@ with lib;
         startupNotify = false;
         noDisplay = false;
         prefersNonDefaultGPU = false;
-        extraConfig = ''
-          [X-ExtraSection]
-          Exec=foo -o
-        '';
         settings = {
           Keywords = "calc;math";
           DBusActivatable = "false";
         };
-        fileValidation = true;
+        actions = {
+          "New-Window" = {
+            name = "New Window";
+            exec = "test --new-window";
+            icon = "test";
+          };
+          "Default" = { exec = "test --default"; };
+        };
       };
       min = { # minimal definition
         exec = "test --option";
         name = "Test";
+      };
+      deprecated = {
+        exec = "test --option";
+        name = "Test";
+        # Deprecated options
+        fileValidation = true;
+        extraConfig = ''
+          [X-ExtraSection]
+          Exec=foo -o
+        '';
       };
     };
 
@@ -50,10 +63,16 @@ with lib;
 
     test.asserts.assertions.expected =
       let currentFile = toString ./desktop-entries.nix;
-      in [''
-        The option definition `extraConfig' in `${currentFile}' no longer has any effect; please remove it.
-        The `extraConfig` option of `xdg.desktopEntries` has been removed following a change in Nixpkgs.
-      ''];
+      in [
+        ''
+          The option definition `fileValidation' in `${currentFile}' no longer has any effect; please remove it.
+          Validation of the desktop file is always enabled.
+        ''
+        ''
+          The option definition `extraConfig' in `${currentFile}' no longer has any effect; please remove it.
+          The `extraConfig` option of `xdg.desktopEntries` has been removed following a change in Nixpkgs.
+        ''
+      ];
 
     nmt.script = ''
       assertFileExists home-path/share/applications/full.desktop

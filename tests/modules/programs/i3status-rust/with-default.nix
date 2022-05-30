@@ -47,7 +47,7 @@ with lib;
             block = "time"
             format = "%a %d/%m %R"
             interval = 60
-                      ''
+          ''
         }
     '';
   };

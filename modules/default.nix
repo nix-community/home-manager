@@ -21,7 +21,7 @@ let
     in
       fold f res res.config.warnings;
 
-  extendedLib = import ./lib/stdlib-extended.nix pkgs.lib;
+  extendedLib = import ./lib/stdlib-extended.nix lib;
 
   hmModules =
     import ./modules.nix {
@@ -61,4 +61,6 @@ in
     sort (a: b: a.time > b.time) (
       filter (a: a.condition) rawModule.config.news.entries
     );
+
+  inherit (module._module.args) pkgs;
 }

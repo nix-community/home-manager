@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2022-01-05 00:56+0000\n"
-"Last-Translator: ethinx <eth2net@gmail.com>\n"
+"PO-Revision-Date: 2022-05-16 13:18+0000\n"
+"Last-Translator: Yubo-Cao <Cao2006721@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "home-manager/modules/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.13-dev\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
@@ -50,6 +50,18 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"糟糕，Nix 未能安装您的新 Home Manager 配置文件！\n"
+"\n"
+"也许这里和使用 \"%s\" 安装的包有冲突？\n"
+"尝试运行\n"
+"\n"
+"    %s\n"
+"\n"
+"如果有冲突的包，你可以用\n"
+"\n"
+"    %s\n"
+"\n"
+"来移除。然后尝试再次激活您的 Home Manager 配置。"
 
 #: modules/home-environment.nix:639
 msgid "Activating %s"
@@ -57,7 +69,7 @@ msgstr "正在激活 %s"
 
 #: modules/lib-bash/activation-init.sh:31
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr ""
+msgstr "正在进行 oldGenNum 和 oldGenPath 的完整性检查"
 
 #: modules/lib-bash/activation-init.sh:34
 msgid ""
@@ -81,15 +93,15 @@ msgstr "正在启动 Home Manager 初始化程序"
 
 #: modules/lib-bash/activation-init.sh:55
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "正在进行 Nix 完整性检查"
 
 #: modules/lib-bash/activation-init.sh:61
 msgid "This is a dry run"
-msgstr ""
+msgstr "这是试运行"
 
 #: modules/lib-bash/activation-init.sh:64
 msgid "This is a live run"
-msgstr ""
+msgstr "这是在实际运行"
 
 #: modules/lib-bash/activation-init.sh:69
 msgid "Using Nix version: %s"
@@ -97,4 +109,4 @@ msgstr "正在使用的 Nix 版本: %s"
 
 #: modules/lib-bash/activation-init.sh:72
 msgid "Activation variables:"
-msgstr ""
+msgstr "激活的变量："

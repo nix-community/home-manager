@@ -31,6 +31,8 @@ set trash='+Trash'
 # Extra configuration
 color status cyan default
 
+
+unset signature
 # notmuch section
 set nm_default_uri = "notmuch:///home/hm-user/Mail"
 virtual-mailboxes "My INBOX" "notmuch://?query=tag:inbox"

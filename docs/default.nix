@@ -9,8 +9,8 @@ let
     name = "nmd";
     owner = "rycee";
     repo = "nmd";
-    rev = "de522bdd533350b3afb41e1ce9b3afb72922fba2";
-    sha256 = "1ji4q7b48nnicgpnnl6yb9xb9zfkmmzkch4yifinphw3ag38qrmd";
+    rev = "9e7a20e6ee3f6751f699f79c0b299390f81f7bcd";
+    sha256 = "1s49gjn1wapcjn0q4gabi8jwp8k5f18354a9c1vji0hfqsaknxzj";
   };
 
   nmd = import nmdSrc { inherit lib pkgs; };
@@ -89,6 +89,7 @@ let
 
   docs = nmd.buildDocBookDocs {
     pathName = "home-manager";
+    projectName = "Home Manager";
     modulesDocs = [ hmModulesDocs nixDarwinModuleDocs nixosModuleDocs ];
     documentsDirectory = ./.;
     documentType = "book";

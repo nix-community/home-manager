@@ -21,6 +21,8 @@ let
       host = cfg.mpd.host;
       port = cfg.mpd.port;
       music_dir = cfg.mpd.musicDirectory;
+    } // optionalAttrs (cfg.mpd.password != null) {
+      password = cfg.mpd.password;
     };
 
     Bling = {
@@ -70,6 +72,14 @@ in {
           If set, mpDris2 will use this directory to access music artwork.
         '';
       };
+
+      password = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          The password to connect to MPD.
+        '';
+      };
     };
   };
 
@@ -77,11 +87,6 @@ in {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.mpdris2" pkgs
         lib.platforms.linux)
-
-      {
-        assertion = config.services.mpd.enable;
-        message = "The mpdris2 module requires 'services.mpd.enable = true'.";
-      }
     ];
 
     xdg.configFile."mpDris2/mpDris2.conf".text = toIni mpdris2Conf;

@@ -16,6 +16,8 @@
 
 /modules/misc/gtk.nix                                 @rycee
 
+/modules/config/home-cursor.nix                       @polykernel @league
+
 /modules/config/i18n.nix                              @midchildan
 /tests/modules/config/i18n                            @midchildan
 
@@ -234,6 +236,8 @@
 
 /modules/programs/senpai.nix                          @malte-v
 
+/modules/programs/sioyek.nix                          @podocarp
+
 /modules/programs/sm64ex.nix                          @ivarwithoutbones
 /tests/modules/programs/sm64ex                        @ivarwithoutbones
 
@@ -242,6 +246,8 @@
 /modules/programs/ssh.nix                             @rycee
 
 /modules/programs/starship.nix                        @marsam
+
+/modules/programs/tealdeer.nix                        @marsam
 
 /modules/programs/terminator.nix                      @chisui
 
@@ -340,6 +346,9 @@
 
 /modules/services/mbsync.nix                          @pjones
 
+/modules/services/mopidy.nix                          @foo-dogsquared
+/tests/modules/services/mopidy                        @foo-dogsquared
+
 /modules/services/mpdris2.nix                         @pjones
 
 /modules/services/mpd-discord-rpc.nix                 @Kranzes
@@ -435,8 +444,6 @@
 /modules/services/xsuspender.nix                      @offlinehacker
 
 /modules/systemd.nix                                  @rycee
-
-/modules/xcursor.nix                                  @league
 
 /modules/xresources.nix                               @rycee
 

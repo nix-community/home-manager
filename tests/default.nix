@@ -47,6 +47,7 @@ import nmt {
     ./modules/misc/fontconfig
     ./modules/misc/nix
     ./modules/programs/aerc
+    ./modules/misc/specialization
     ./modules/programs/alacritty
     ./modules/programs/alot
     ./modules/programs/aria2
@@ -153,9 +154,12 @@ import nmt {
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/kanshi
     ./modules/services/lieer
+    ./modules/services/mopidy
     ./modules/services/mpd
+    ./modules/services/mpdris2
     ./modules/services/pantalaimon
     ./modules/services/pbgopy
+    ./modules/services/picom
     ./modules/services/playerctld
     ./modules/services/polybar
     ./modules/services/redshift-gammastep

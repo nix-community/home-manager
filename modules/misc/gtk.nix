@@ -30,7 +30,7 @@ let
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = literalExpression "pkgs.gnome.gnome_themes_standard";
+        example = literalExpression "pkgs.gnome.gnome-themes-extra";
         description = ''
           Package providing the theme. This package will be installed
           to your profile. If <literal>null</literal> then the theme
@@ -51,7 +51,7 @@ let
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = literalExpression "pkgs.adwaita-icon-theme";
+        example = literalExpression "pkgs.gnome.adwaita-icon-theme";
         description = ''
           Package providing the icon theme. This package will be installed
           to your profile. If <literal>null</literal> then the theme

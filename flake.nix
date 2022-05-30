@@ -7,8 +7,7 @@
       supportedSystems = with nixpkgs.lib.platforms; linux ++ darwin;
 
       # Function to generate a set based on supported systems
-      forAllSystems = f:
-        nixpkgs.lib.genAttrs supportedSystems (system: f system);
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
     in rec {
@@ -45,11 +44,11 @@
         homeManagerConfiguration = { configuration, system, homeDirectory
           , username, extraModules ? [ ], extraSpecialArgs ? { }
           , pkgs ? builtins.getAttr system nixpkgs.outputs.legacyPackages
-          , check ? true, stateVersion ? "20.09" }@args:
+          , lib ? pkgs.lib, check ? true, stateVersion ? "20.09" }@args:
           assert nixpkgs.lib.versionAtLeast stateVersion "20.09";
 
           import ./modules {
-            inherit pkgs check extraSpecialArgs;
+            inherit pkgs lib check extraSpecialArgs;
             configuration = { ... }: {
               imports = [ configuration ] ++ extraModules;
               home = { inherit homeDirectory stateVersion username; };
