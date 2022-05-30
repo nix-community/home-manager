@@ -4,18 +4,20 @@ name = ""
 ["hm@example.com"]
 default = true
 default-page-size = 50
-draft-folder = "Drafts"
 email = "hm@example.com"
 imap-host = "imap.example.com"
 imap-login = "home.manager"
 imap-passwd-cmd = "'password-command'"
 imap-port = 995
 imap-starttls = false
-inbox-folder = "In"
 name = "H. M. Test"
-sent-folder = "Out"
 smtp-host = "smtp.example.com"
 smtp-login = "home.manager"
 smtp-passwd-cmd = "'password-command'"
 smtp-port = 465
 smtp-starttls = false
+
+["hm@example.com".mailboxes]
+draft = "Drafts"
+inbox = "In"
+sent = "Out"
