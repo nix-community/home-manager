@@ -248,6 +248,7 @@
 /modules/programs/starship.nix                        @marsam
 
 /modules/programs/swaylock.nix                        @rcerc
+/tests/modules/programs/swaylock                      @rcerc
 
 /modules/programs/tealdeer.nix                        @marsam
 
