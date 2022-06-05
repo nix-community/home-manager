@@ -44,7 +44,7 @@ in {
 
     systemd.user.services.getmail = {
       Unit = { Description = "getmail email fetcher"; };
-      Service = { ExecStart = "${pkgs.getmail}/bin/getmail ${configFiles}"; };
+      Service = { ExecStart = "${pkgs.getmail6}/bin/getmail ${configFiles}"; };
     };
 
     systemd.user.timers.getmail = {
