@@ -1,17 +1,9 @@
-{ pkgs
+{ pkgs, nmdSrc ? (import ./.. { }).inputs.nmd
 
-# Note, this should be "the standard library" + HM extensions.
+  # Note, this should be "the standard library" + HM extensions.
 , lib ? import ../modules/lib/stdlib-extended.nix pkgs.lib }:
 
 let
-
-  nmdSrc = pkgs.fetchFromGitLab {
-    name = "nmd";
-    owner = "rycee";
-    repo = "nmd";
-    rev = "9e7a20e6ee3f6751f699f79c0b299390f81f7bcd";
-    sha256 = "1s49gjn1wapcjn0q4gabi8jwp8k5f18354a9c1vji0hfqsaknxzj";
-  };
 
   nmd = import nmdSrc { inherit lib pkgs; };
 
