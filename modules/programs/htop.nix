@@ -42,6 +42,8 @@ let
     TIME = 49;
     NLWP = 50;
     TGID = 51;
+    PERCENT_NORM_CPU = 52;
+    ELAPSED = 53;
     CMINFLT = 10;
     CMAJFLT = 12;
     UTIME = 13;
