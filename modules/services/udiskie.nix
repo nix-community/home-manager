@@ -4,17 +4,11 @@ with lib;
 
 let
 
-  cfg = config.services.udiskie;
+  mergeSets = sets: lists.fold attrsets.recursiveUpdate { } sets;
 
-  commandArgs = concatStringsSep " " (map (opt: "-" + opt) [
-    (if cfg.automount then "a" else "A")
-    (if cfg.notify then "n" else "N")
-    ({
-      always = "t";
-      auto = "s";
-      never = "T";
-    }.${cfg.tray})
-  ] ++ optional config.xsession.preferStatusNotifierItems "--appindicator");
+  yaml = pkgs.formats.yaml { };
+
+  cfg = config.services.udiskie;
 
 in {
   meta.maintainers = [ maintainers.rycee ];
@@ -32,6 +26,27 @@ in {
   options = {
     services.udiskie = {
       enable = mkEnableOption "udiskie mount daemon";
+
+      settings = mkOption {
+        type = yaml.type;
+        default = { };
+        example = literalExpression ''
+          {
+            program_options = {
+              udisks_version = 2;
+              tray = true;
+            };
+            icon_names.media = [ "media-optical" ];
+          }
+        '';
+        description = ''
+          Configuration written to
+          <filename>$XDG_CONFIG_HOME/udiskie/config.toml</filename>.
+          </para><para>
+          See <link xlink:href="https://github.com/coldfix/udiskie/blob/master/doc/udiskie.8.txt#configuration" />
+          for the full list of options.
+        '';
+      };
 
       automount = mkOption {
         type = types.bool;
@@ -74,6 +89,23 @@ in {
   };
 
   config = mkIf config.services.udiskie.enable {
+    xdg.configFile."udiskie/config.yml".source =
+      yaml.generate "udiskie-config.yml" (mergeSets [
+        {
+          program_options = {
+            automount = cfg.automount;
+            tray = if cfg.tray == "always" then
+              true
+            else if cfg.tray == "never" then
+              false
+            else
+              "auto";
+            notify = cfg.notify;
+          };
+        }
+        cfg.settings
+      ]);
+
     systemd.user.services.udiskie = {
       Unit = {
         Description = "udiskie mount daemon";
@@ -82,9 +114,10 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Service = { ExecStart = "${pkgs.udiskie}/bin/udiskie ${commandArgs}"; };
+      Service.ExecStart = toString ([ "${pkgs.udiskie}/bin/udiskie" ]
+        ++ optional config.xsession.preferStatusNotifierItems "--appindicator");
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 }
