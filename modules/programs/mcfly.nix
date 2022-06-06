@@ -8,6 +8,17 @@ let
 in {
   meta.maintainers = [ maintainers.marsam ];
 
+  imports = [
+    (mkChangedOptionModule # \
+      [ "programs" "mcfly" "enableFuzzySearch" ] # \
+      [ "programs" "mcfly" "fuzzySearchFactor" ] # \
+      (config:
+        let
+          value =
+            getAttrFromPath [ "programs" "mcfly" "enableFuzzySearch" ] config;
+        in if value then 2 else 0))
+  ];
+
   options.programs.mcfly = {
     enable = mkEnableOption "mcfly";
 
@@ -27,11 +38,13 @@ in {
       '';
     };
 
-    enableFuzzySearch = mkOption {
-      default = false;
-      type = types.bool;
+    fuzzySearchFactor = mkOption {
+      default = 0;
+      type = types.ints.unsigned;
       description = ''
         Whether to enable fuzzy searching.
+        0 is off; higher numbers weight toward shorter matches.
+        Values in the 2-5 range get good results so far.
       '';
     };
 
@@ -81,6 +94,8 @@ in {
 
     (mkIf cfg.enableLightTheme { home.sessionVariables.MCFLY_LIGHT = "TRUE"; })
 
-    (mkIf cfg.enableFuzzySearch { home.sessionVariables.MCFLY_FUZZY = "TRUE"; })
+    (mkIf (cfg.fuzzySearchFactor > 0) {
+      home.sessionVariables.MCFLY_FUZZY = cfg.fuzzySearchFactor;
+    })
   ]);
 }
