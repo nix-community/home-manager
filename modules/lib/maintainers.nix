@@ -271,4 +271,14 @@
     github = "rszamszur";
     githubId = 10353018;
   };
+  rcerc = {
+    name = "rcerc";
+    email = "88944439+rcerc@users.noreply.github.com";
+    github = "rcerc";
+    githubId = 88944439;
+    keys = [{
+      longkeyid = "ed25519/0x3F98EC7EC2B87ED1";
+      fingerprint = "D5D6 FD1F 0D9A 3284 FB9B  C26D 3F98 EC7E C2B8 7ED1";
+    }];
+  };
 }

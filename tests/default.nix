@@ -130,6 +130,7 @@ import nmt {
     ./modules/programs/rbw
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
+    ./modules/programs/swaylock
     ./modules/programs/terminator
     ./modules/programs/waybar
     ./modules/programs/xmobar
