@@ -70,7 +70,7 @@ in {
       Service.ExecStart = with cfg.client;
         toString ([ "${pkgs.barrier}/bin/barrierc" ]
           ++ optional (name != null) "--name ${name}"
-          ++ optional enableCrypto "--enable-crypto"
+          ++ optional (!enableCrypto) "--disable-crypto"
           ++ optional enableDragDrop "--enable-drag-drop" ++ extraFlags
           ++ [ server ]);
     };
