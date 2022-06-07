@@ -18,6 +18,8 @@ let
     }];
   };
 
+  dontCheckDefinitions = { _module.check = false; };
+
   buildModulesDocs = args:
     nmd.buildModulesDocs ({
       moduleRootPaths = [ ./.. ];
@@ -35,21 +37,7 @@ let
   };
 
   nixosModuleDocs = buildModulesDocs {
-    modules = let
-      nixosModule = module: pkgs.path + "/nixos/modules" + module;
-      mockedNixos = with lib; {
-        options = {
-          environment.pathsToLink = mkSinkUndeclaredOptions { };
-          systemd.services = mkSinkUndeclaredOptions { };
-          users.users = mkSinkUndeclaredOptions { };
-        };
-      };
-    in [
-      ../nixos/default.nix
-      mockedNixos
-      (nixosModule "/misc/assertions.nix")
-      scrubbedPkgsModule
-    ];
+    modules = [ ../nixos scrubbedPkgsModule dontCheckDefinitions ];
     docBook = {
       id = "nixos-options";
       optionIdPrefix = "nixos-opt";
@@ -57,22 +45,7 @@ let
   };
 
   nixDarwinModuleDocs = buildModulesDocs {
-    modules = let
-      nixosModule = module: pkgs.path + "/nixos/modules" + module;
-      mockedNixDarwin = with lib; {
-        options = {
-          environment.pathsToLink = mkSinkUndeclaredOptions { };
-          system.activationScripts.postActivation.text =
-            mkSinkUndeclaredOptions { };
-          users.users = mkSinkUndeclaredOptions { };
-        };
-      };
-    in [
-      ../nix-darwin/default.nix
-      mockedNixDarwin
-      (nixosModule "/misc/assertions.nix")
-      scrubbedPkgsModule
-    ];
+    modules = [ ../nix-darwin scrubbedPkgsModule dontCheckDefinitions ];
     docBook = {
       id = "nix-darwin-options";
       optionIdPrefix = "nix-darwin-opt";
