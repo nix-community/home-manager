@@ -1,43 +1,31 @@
 {
   description = "Home Manager for Nix";
 
-  outputs = { self, nixpkgs }:
-    let
-      # List of systems supported by home-manager binary
-      supportedSystems = with nixpkgs.lib.platforms; linux ++ darwin;
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  inputs.nmd.url = "gitlab:rycee/nmd";
+  inputs.nmd.flake = false;
+  inputs.nmt.url = "gitlab:rycee/nmt";
+  inputs.nmt.flake = false;
 
-      # Function to generate a set based on supported systems
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+  inputs.utils.url = "github:numtide/flake-utils";
+  inputs.flake-compat.url = "github:edolstra/flake-compat";
+  inputs.flake-compat.flake = false;
 
-      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
-    in rec {
-      nixosModules.home-manager = import ./nixos;
-      nixosModule = self.nixosModules.home-manager;
+  outputs = { self, nixpkgs, nmd, utils, ... }:
+    {
+      nixosModules = rec {
+        home-manager = import ./nixos;
+        default = home-manager;
+      };
+      # deprecated in Nix 2.8
+      nixosModule = self.nixosModules.default;
 
-      darwinModules.home-manager = import ./nix-darwin;
-      darwinModule = self.darwinModules.home-manager;
-
-      packages = forAllSystems (system:
-        let docs = import ./docs { pkgs = nixpkgsFor.${system}; };
-        in {
-          home-manager = nixpkgsFor.${system}.callPackage ./home-manager { };
-          docs-html = docs.manual.html;
-          docs-manpages = docs.manPages;
-          docs-json = docs.options.json;
-          default = self.packages.${system}.home-manager;
-        });
-
-      # defaultPackage is deprecated as of Nix 2.7.0
-      defaultPackage = forAllSystems (system: self.packages.${system}.default);
-
-      apps = forAllSystems (system: {
-        home-manager = {
-          type = "app";
-          program = "${defaultPackage.${system}}/bin/home-manager";
-        };
-      });
-
-      defaultApp = forAllSystems (system: apps.${system}.home-manager);
+      darwinModules = rec {
+        home-manager = import ./nix-darwin;
+        default = home-manager;
+      };
+      # unofficial; deprecated in Nix 2.8
+      darwinModule = self.darwinModules.default;
 
       lib = {
         hm = import ./modules/lib { lib = nixpkgs.lib; };
@@ -56,5 +44,22 @@
             };
           };
       };
-    };
+    } // utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+        docs = import ./docs {
+          inherit pkgs;
+          nmdSrc = nmd;
+        };
+      in {
+        packages = rec {
+          home-manager = pkgs.callPackage ./home-manager { };
+          docs-html = docs.manual.html;
+          docs-manpages = docs.manPages;
+          docs-json = docs.options.json;
+          default = home-manager;
+        };
+        # deprecated in Nix 2.7
+        defaultPackage = self.packages.${system}.default;
+      });
 }

@@ -19,6 +19,7 @@ in runCommand "home-manager" {
   preferLocalBuild = true;
   nativeBuildInputs = [ gettext ];
   meta = with lib; {
+    mainProgram = "home-manager";
     description = "A user environment configurator";
     maintainers = [ maintainers.rycee ];
     platforms = platforms.unix;

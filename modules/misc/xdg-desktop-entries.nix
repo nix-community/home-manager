@@ -152,7 +152,7 @@ let
       };
 
       # Required for the assertions
-      # TODO: Remove me once `mkRemovedOptionModule` works correctly with submodules
+      # TODO: Remove me once https://github.com/NixOS/nixpkgs/issues/96006 is fixed
       assertions = mkOption {
         type = types.listOf types.unspecified;
         default = [ ];
