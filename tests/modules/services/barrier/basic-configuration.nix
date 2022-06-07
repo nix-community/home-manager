@@ -13,7 +13,7 @@
       clientServiceFile=home-files/.config/systemd/user/barrierc.service
 
       assertFileExists $clientServiceFile
-      assertFileRegex $clientServiceFile 'ExecStart=.*/bin/barrierc --enable-crypto -f testServer'
+      assertFileRegex $clientServiceFile 'ExecStart=.*/bin/barrierc -f testServer'
     '';
   };
 }
