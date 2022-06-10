@@ -21,7 +21,7 @@ in {
         sharedModules = [{
           # The per-user directory inside /etc/profiles is not known by
           # fontconfig by default.
-          fonts.fontconfig.enable = cfg.useUserPackages
+          fonts.fontconfig.enable = lib.mkDefault cfg.useUserPackages
             && config.fonts.fontconfig.enable;
         }];
       };
