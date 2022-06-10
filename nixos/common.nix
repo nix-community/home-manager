@@ -11,7 +11,8 @@ let
 
   extendedLib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
-  hmModule' = types.submoduleWith {
+  hmModule = types.submoduleWith {
+    description = "Home Manager module";
     specialArgs = {
       lib = extendedLib;
       osConfig = config;
@@ -38,16 +39,6 @@ let
         };
       })
     ] ++ cfg.sharedModules;
-  } // {
-    description = "Home Manager module";
-  };
-
-  # TODO: hack until https://github.com/NixOS/nixpkgs/pull/173621 lands
-  hmModule = hmModule' // {
-    substSubModules = m:
-      hmModule'.substSubModules m // {
-        inherit (hmModule') description;
-      };
   };
 
 in {
