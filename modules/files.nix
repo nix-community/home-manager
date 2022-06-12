@@ -185,8 +185,9 @@ in
               $VERBOSE_ECHO "Skipping '$targetPath' as it is identical to '$sourcePath'"
             else
               # Place that symlink, --force
+              # This can still fail if the target is a directory, in which case we bail out.
               $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
-              $DRY_RUN_CMD ln -nsf $VERBOSE_ARG "$sourcePath" "$targetPath"
+              $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$sourcePath" "$targetPath" || exit 1
             fi
           done
         '';
