@@ -120,12 +120,10 @@ in {
 
     home.sessionVariables = directories;
 
-    home.activation = mkIf cfg.createDirectories {
-      createXdgUserDirectories = let
-        directoriesList = attrValues directories;
-        mkdir = (dir: ''$DRY_RUN_CMD mkdir -p $VERBOSE_ARG "${dir}"'');
-      in lib.hm.dag.entryAfter [ "writeBoundary" ]
-      (strings.concatMapStringsSep "\n" mkdir directoriesList);
-    };
+    home.activation.createXdgUserDirectories = mkIf cfg.createDirectories (let
+      directoriesList = attrValues directories;
+      mkdir = (dir: ''$DRY_RUN_CMD mkdir -p $VERBOSE_ARG "${dir}"'');
+    in lib.hm.dag.entryAfter [ "linkGeneration" ]
+    (strings.concatMapStringsSep "\n" mkdir directoriesList));
   };
 }
