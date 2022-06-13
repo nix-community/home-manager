@@ -161,7 +161,7 @@ in {
       extraPython3Packages = mkOption {
         type = with types; either extraPython3PackageType (listOf package);
         default = (_: [ ]);
-        defaultText = "ps: []";
+        defaultText = literalExpression "ps: [ ]";
         example = literalExpression "(ps: with ps; [ python-language-server ])";
         description = ''
           A function in python.withPackages format, which returns a
@@ -172,7 +172,7 @@ in {
       extraLuaPackages = mkOption {
         type = with types; either extraLua51PackageType (listOf package);
         default = [ ];
-        defaultText = "[]";
+        defaultText = literalExpression "[ ]";
         example = literalExpression "(ps: with ps; [ luautf8 ])";
         description = ''
           A function in lua5_1.withPackages format, which returns a
@@ -273,7 +273,7 @@ in {
       extraPackages = mkOption {
         type = with types; listOf package;
         default = [ ];
-        example = "[ pkgs.shfmt ]";
+        example = literalExpression "[ pkgs.shfmt ]";
         description = "Extra packages available to nvim.";
       };
 
