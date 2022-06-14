@@ -15,6 +15,10 @@ let
     check = false;
   } ++ [
     {
+      # Bypass <nixpkgs> reference inside modules/modules.nix to make the test
+      # suite more pure.
+      _module.args.pkgsPath = pkgs.path;
+
       # Fix impurities. Without these some of the user's environment
       # will leak into the tests through `builtins.getEnv`.
       xdg.enable = true;
