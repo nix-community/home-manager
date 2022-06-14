@@ -38,7 +38,10 @@
           import ./modules {
             inherit pkgs lib check extraSpecialArgs;
             configuration = { ... }: {
-              imports = [ configuration ] ++ extraModules;
+              imports = (if builtins.isList configuration then
+                configuration
+              else
+                [ configuration ]) ++ extraModules;
               home = { inherit homeDirectory stateVersion username; };
               nixpkgs = { inherit (pkgs) config overlays; };
             };
