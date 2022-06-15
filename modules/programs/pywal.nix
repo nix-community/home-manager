@@ -25,6 +25,11 @@ in {
     programs.rofi.theme."@import" =
       "${config.xdg.cacheHome}/wal/colors-rofi-dark.rasi";
 
+    programs.neovim.plugins = [{
+      plugin = pkgs.vimPlugins.pywal-nvim;
+      type = "lua";
+    }];
+
     # wal generates and that's the one we should load from /home/teto/.cache/wal/colors.Xresources ~/.Xresources
     xsession.windowManager.i3 = {
       extraConfig = ''
