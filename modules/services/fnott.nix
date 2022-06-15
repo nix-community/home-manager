@@ -42,7 +42,7 @@ in {
           </para><para>
           Note that environment variables in the path won't be properly expanded.
           </para><para>
-          The configuration specified under 
+          The configuration specified under
           <option>services.fnott.settings</option> will be generated and
           written to <filename>$XDG_CONFIG_HOME/fnott/fnott.ini</filename>
           regardless of this option. This allows using a mutable configuration file

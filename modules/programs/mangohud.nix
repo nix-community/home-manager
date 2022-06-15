@@ -39,7 +39,7 @@ in {
         type = types.bool;
         default = false;
         description = ''
-          Sets environment variables so that 
+          Sets environment variables so that
           MangoHud is started on any application that supports it.
         '';
       };

@@ -29,9 +29,9 @@ in {
         example = literalExpression ''
           {
             servers = [
-              { 
-                addr = "irc.libera.chat"; 
-                port = 6697; 
+              {
+                addr = "irc.libera.chat";
+                port = 6697;
                 tls = true;
                 realname = "John Doe";
                 nicks = [ "tinyuser" ];
