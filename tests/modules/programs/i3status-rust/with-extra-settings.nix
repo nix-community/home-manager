@@ -105,7 +105,7 @@ with lib;
     test.stubs.i3status-rust = { };
 
     nmt.script = ''
-      assertFileExists home-files/.config/i3status-rust/config-extra-settings.toml 
+      assertFileExists home-files/.config/i3status-rust/config-extra-settings.toml
       assertFileContent home-files/.config/i3status-rust/config-extra-settings.toml \
         ${
           pkgs.writeText "i3status-rust-expected-config" ''
