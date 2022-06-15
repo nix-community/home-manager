@@ -143,8 +143,8 @@ You can add the `nixpkgs-unstable` channel by running
 
 [source,console]
 ----
-# nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
-# nix-channel --update
+$ nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
+$ nix-channel --update
 ----
 
 Note, the package will not be affected by any package overrides, overlays, etc.
