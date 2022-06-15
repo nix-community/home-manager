@@ -132,16 +132,16 @@ or an unstable channel, you can run
 
 [source,console]
 ----
-# nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-# nix-channel --update
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+$ nix-channel --update
 ----
 
 and if you follow a Nixpkgs version 22.05 channel, you can run
 
 [source,console]
 ----
-# nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
-# nix-channel --update
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
+$ nix-channel --update
 ----
 
 It is then possible to add
@@ -243,16 +243,16 @@ or an unstable channel, you can run
 
 [source,console]
 ----
-# nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-# nix-channel --update
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+$ nix-channel --update
 ----
 
 and if you follow a Nixpkgs version 22.05 channel, you can run
 
 [source,console]
 ----
-# nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
-# nix-channel --update
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
+$ nix-channel --update
 ----
 
 It is then possible to add
