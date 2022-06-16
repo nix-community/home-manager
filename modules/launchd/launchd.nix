@@ -364,7 +364,10 @@ with lib;
 
     StartCalendarInterval = mkOption {
       default = null;
-      example = { Hour = 2; Minute = 30; };
+      example = {
+        Hour = 2;
+        Minute = 30;
+      };
       description = ''
         This optional key causes the job to be started every calendar interval as specified. Missing arguments
         are considered to be wildcard. The semantics are much like <literal>crontab(5)</literal>.  Unlike cron which skips job
@@ -652,7 +655,8 @@ with lib;
     };
 
     ProcessType = mkOption {
-      type = types.nullOr (types.enum [ "Background" "Standard" "Adaptive" "Interactive" ]);
+      type = types.nullOr
+        (types.enum [ "Background" "Standard" "Adaptive" "Interactive" ]);
       default = null;
       example = "Background";
       description = ''
@@ -840,7 +844,8 @@ with lib;
           };
 
           Bonjour = mkOption {
-            type = types.nullOr (types.either types.bool (types.listOf types.str));
+            type =
+              types.nullOr (types.either types.bool (types.listOf types.str));
             default = null;
             description = ''
               This optional key can be used to request that the service be registered with the
@@ -864,6 +869,5 @@ with lib;
     };
   };
 
-  config = {
-  };
+  config = { };
 }
