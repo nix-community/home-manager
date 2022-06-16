@@ -11,7 +11,7 @@ let
   } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
 
 in {
-  imports = [ ../integration-common.nix ];
+  imports = [ ./common.nix ];
 
   config = mkMerge [
     {
