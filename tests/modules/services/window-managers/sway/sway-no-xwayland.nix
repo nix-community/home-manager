@@ -17,7 +17,7 @@
         ${
           pkgs.writeText "expected" ''
             xwayland disable
-                    ''
+          ''
         }
   '';
 }
