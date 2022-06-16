@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/5edf5b60c3d8f82b5fc5e73e822b6f7460584945.tar.gz -i bash -p findutils nixfmt
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/6616de389ed55fba6eeba60377fc04732d5a207c.tar.gz -i bash -p findutils nixfmt
 
 CHECK_ARG=
 
@@ -15,14 +15,11 @@ esac
 # The excludes are for files touched by open pull requests and we want
 # to avoid merge conflicts.
 find . -name '*.nix' \
-  ! -path ./home-manager/home-manager.nix \
   ! -path ./modules/default.nix \
   ! -path ./modules/files.nix \
   ! -path ./modules/home-environment.nix \
-  ! -path ./modules/launchd/launchd.nix \
   ! -path ./modules/lib/default.nix \
   ! -path ./modules/lib/file-type.nix \
-  ! -path ./modules/manual.nix \
   ! -path ./modules/misc/news.nix \
   ! -path ./modules/programs/bash.nix \
   ! -path ./modules/programs/ssh.nix \
