@@ -7,7 +7,7 @@ let
   cfg = config.home-manager;
 
 in {
-  imports = [ ../integration-common.nix ];
+  imports = [ ../nixos/common.nix ];
 
   config = mkMerge [
     { home-manager.extraSpecialArgs.darwinConfig = config; }

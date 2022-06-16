@@ -9,17 +9,17 @@ let
 
   cfg = config.home-manager;
 
-  extendedLib = import ./modules/lib/stdlib-extended.nix pkgs.lib;
+  extendedLib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
   hmModule' = types.submoduleWith {
     specialArgs = {
       lib = extendedLib;
       osConfig = config;
-      modulesPath = builtins.toString ./modules;
+      modulesPath = builtins.toString ../modules;
     } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
-        imports = import ./modules/modules.nix {
+        imports = import ../modules/modules.nix {
           inherit pkgs;
           lib = extendedLib;
           useNixpkgsModule = !cfg.useGlobalPkgs;
