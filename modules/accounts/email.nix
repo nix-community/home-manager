@@ -337,17 +337,21 @@ let
         name = name;
         maildir = mkOptionDefault { path = "${name}"; };
       }
+
       (mkIf (config.flavor == "fastmail.com") {
         userName = mkDefault config.address;
-        smtp = {
-          host = "smtp.fastmail.com";
-          port = if config.smtp.tls.useStartTls then 587 else 465;
-        };
+
         imap = {
           host = "imap.fastmail.com";
           port = 993;
         };
+
+        smtp = {
+          host = "smtp.fastmail.com";
+          port = if config.smtp.tls.useStartTls then 587 else 465;
+        };
       })
+
       (mkIf (config.flavor == "gmail.com") {
         userName = mkDefault config.address;
 
