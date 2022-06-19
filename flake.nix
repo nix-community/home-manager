@@ -29,19 +29,40 @@
 
       lib = {
         hm = import ./modules/lib { lib = nixpkgs.lib; };
-        homeManagerConfiguration = { configuration, system, homeDirectory
-          , username, extraModules ? [ ], extraSpecialArgs ? { }, pkgs
-          , lib ? pkgs.lib, check ? true, stateVersion ? "20.09" }@args:
-          assert nixpkgs.lib.versionAtLeast stateVersion "20.09";
+        homeManagerConfiguration = { modules ? [ ], pkgs, lib ? pkgs.lib
+          , extraSpecialArgs ? { }, check ? true
+            # Deprecated:
+          , configuration ? null, extraModules ? null, stateVersion ? null
+          , username ? null, homeDirectory ? null, system ? null }@args:
+          let
+            throwForRemovedArg = v:
+              lib.throwIf (v != null) ''
+                The 'homeManagerConfiguration' arguments
 
-          import ./modules {
+                  - 'configuration',
+                  - 'username',
+                  - 'homeDirectory'
+                  - 'stateVersion',
+                  - 'extraModules', and
+                  - 'system'
+
+                have been removed. Instead use the arguments 'pkgs' and
+                'modules'. See the 22.11 release notes for more.
+              '';
+
+            throwForRemovedArgs = throwForRemovedArg configuration # \
+              throwForRemovedArg username # \
+              throwForRemovedArg homeDirectory # \
+              throwForRemovedArg stateVersion # \
+              throwForRemovedArg extraModules # \
+              throwForRemovedArg system;
+          in throwForRemovedArgs (import ./modules {
             inherit pkgs lib check extraSpecialArgs;
             configuration = { ... }: {
-              imports = [ configuration ] ++ extraModules;
-              home = { inherit homeDirectory stateVersion username; };
+              imports = modules;
               nixpkgs = { inherit (pkgs) config overlays; };
             };
-          };
+          });
       };
     } // utils.lib.eachDefaultSystem (system:
       let

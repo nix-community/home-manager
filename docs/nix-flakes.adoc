@@ -33,13 +33,6 @@ Unlike the channel-based setup,
 so it must be present before bootstrap of Home Manager from the flake.
 See <<sec-usage-configuration>> for introduction about
 writing a Home Manager configuration.
-+
-[NOTE]
-====
-The `stateVersion` will be specified in the flake instead of in the configuration file.
-
-Remove the line containing `home.stateVersion` in the example.
-====
 
 [[sec-flakes-standalone]]
 === Standalone setup
@@ -52,27 +45,27 @@ Remove the line containing `home.stateVersion` in the example.
   description = "Home Manager configuration of Jane Doe";
 
   inputs = {
-    # Specify the source of Home Manager and Nixpkgs
-    home-manager.url = "github:nix-community/home-manager";
+    # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { home-manager, ... }:
+  outputs = { nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
-      username = "jdoe";
+      pkgs = nixpkgs.legacyPackages.${system};
     in {
-      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-        # Specify the path to your home configuration here
-        configuration = import ./home.nix;
+      homeConfigurations.jdoe = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
 
-        inherit system username;
-        homeDirectory = "/home/${username}";
-        # Update the state version as needed.
-        # See the changelog here:
-        # https://nix-community.github.io/home-manager/release-notes.html#sec-release-21.05
-        stateVersion = "22.05";
+        # Specify your home configuration modules here, for example,
+        # the path to your home.nix.
+        modules = [
+          ./home.nix;
+        ];
 
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
@@ -88,7 +81,6 @@ and nixos-unstable branch of Nixpkgs.
 If you would like to use the `release-22.05` branch,
 change the `home-manager` input url to `github:nix-community/home-manager/release-22.05`
 and `nixpkgs` url to `github:NixOS/nixpkgs/nixos-22.05`.
-Make sure to also update to the `stateVersion` option accordingly.
 
 * The Home Manager library is exported by the flake under
 `lib.hm`.

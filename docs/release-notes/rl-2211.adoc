@@ -18,6 +18,63 @@ home.stateVersion = "18.09";
 +
 to your configuration.
 
+* The Flake function `homeManagerConfiguration` has been simplified.
+Specifically, the arguments
++
+--
+  - `configuration`,
+  - `username`,
+  - `homeDirectory`,
+  - `stateVersion`,
+  - `extraModules`, and
+  - `system`
+--
++
+have been removed. Instead use the new `modules` argument, which
+accepts a list of NixOS modules.
++
+Further, the `pkgs` argument is now mandatory and should be set to
+`nixpkgs.legacyPackages.${system}` where `nixpkgs` is the Nixpkgs
+input of your choice.
++
+For example, if your Flake currently contains
++
+[source,nix]
+----
+homeManagerConfiguration {
+  configuration = import ./home.nix;
+  system = "x86_64-linux";
+  username = "jdoe";
+  homeDirectory = "/home/jdoe";
+  stateVersion = "22.05";
+  extraModules = [ ./some-extra-module.nix ];
+}
+----
++
+then you can change it to
++
+[source,nix]
+----
+homeManagerConfiguration {
+  pkgs = nixpkgs.legacyPackages.${system};
+  modules = [
+    ./home.nix
+    ./some-extra-module.nix
+    {
+      home = {
+        username = "jdoe";
+        homeDirectory = "/home/jdoe";
+        stateVersion = "22.05";
+      };
+    }
+  ];
+}
+----
++
+Of course, you can move the assignment of <<opt-home.username>>,
+<<opt-home.homeDirectory>>, and <<opt-home.stateVersion>> to some
+other file or simply place them in your `home.nix`.
+
 [[sec-release-22.11-state-version-changes]]
 === State Version Changes
 
