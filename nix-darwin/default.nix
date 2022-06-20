@@ -15,7 +15,7 @@ in {
       system.activationScripts.postActivation.text = concatStringsSep "\n"
         (mapAttrsToList (username: usercfg: ''
           echo Activating home-manager configuration for ${username}
-          SHELL=${pkgs.bash} sudo -u ${username} -s --set-home ${
+          sudo -u ${username} --set-home ${
             pkgs.writeShellScript "activation-${username}" ''
               ${lib.optionalString (cfg.backupFileExtension != null)
               "export HOME_MANAGER_BACKUP_EXT=${
