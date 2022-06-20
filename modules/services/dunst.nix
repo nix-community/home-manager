@@ -108,7 +108,10 @@ in {
         example = literalExpression ''
           {
             global = {
-              geometry = "300x5-30+50";
+              width = 300;
+              height = 300;
+              offset = "30x50";
+              origin = "top-right";
               transparency = 10;
               frame_color = "#eceff1";
               font = "Droid Sans 9";
