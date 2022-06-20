@@ -5610,23 +5610,39 @@ exclusion.
                     &lt;home-manager/modules/programs/nushell.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.package"></a><a class="term" href="options.html#opt-programs.nushell.package"><code class="option">programs.nushell.package</code></a></span></dt><dd><p>The package to use for nushell.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.nushell</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/nushell.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.settings"></a><a class="term" href="options.html#opt-programs.nushell.settings"><code class="option">programs.nushell.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">$XDG_CONFIG_HOME/nushell/config.toml</code>.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.configFile"></a><a class="term" href="options.html#opt-programs.nushell.configFile"><code class="option">programs.nushell.configFile</code></a></span></dt><dd><p>The configuration file to be used for nushell.
 </p><p>
-See <a class="link" href="https://www.nushell.sh/book/configuration.html" target="_top">https://www.nushell.sh/book/configuration.html</a> for the full list
-of options.
-</p><p><span class="emphasis"><em>Type:</em></span> Nushell configuration</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        {
-        
-        }
-    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  edit_mode = "vi";
-  startup = [ "alias la [] { ls -a }" "alias e [msg] { echo $msg }" ];
-  key_timeout = 10;
-  completion_mode = "circular";
-  no_auto_pivot = true;
+See <a class="link" href="https://www.nushell.sh/book/configuration.html#configuration" target="_top">https://www.nushell.sh/book/configuration.html#configuration</a> for more information.
+</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{ text = ''
+    let $config = {
+      filesize_metric: false
+      table_mode: rounded
+      use_ls_colors: true
+    }
+  '';
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nushell.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.configFile.source"></a><a class="term" href="options.html#opt-programs.nushell.configFile.source"><code class="option">programs.nushell.configFile.source</code></a></span></dt><dd><p>Path of the nushell <code class="filename">config.nu</code> file to use.
+</p><p><span class="emphasis"><em>Type:</em></span> null or path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">file containing text</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nushell.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.configFile.text"></a><a class="term" href="options.html#opt-programs.nushell.configFile.text"><code class="option">programs.nushell.configFile.text</code></a></span></dt><dd><p>Text of the nushell <code class="filename">config.nu</code> file.
+If unset then the source option will be preferred.
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nushell.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.envFile"></a><a class="term" href="options.html#opt-programs.nushell.envFile"><code class="option">programs.nushell.envFile</code></a></span></dt><dd><p>The environment variables file to be used for nushell.
+</p><p>
+See <a class="link" href="https://www.nushell.sh/book/configuration.html#configuration" target="_top">https://www.nushell.sh/book/configuration.html#configuration</a> for more information.
+</p><p><span class="emphasis"><em>Type:</em></span> submodule</p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
+let-env FOO = 'BAR'
+''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nushell.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.envFile.source"></a><a class="term" href="options.html#opt-programs.nushell.envFile.source"><code class="option">programs.nushell.envFile.source</code></a></span></dt><dd><p>Path of the nushell <code class="filename">env.nu</code> file to use.
+</p><p><span class="emphasis"><em>Type:</em></span> null or path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">file containing text</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nushell.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.envFile.text"></a><a class="term" href="options.html#opt-programs.nushell.envFile.text"><code class="option">programs.nushell.envFile.text</code></a></span></dt><dd><p>Text of the nushell <code class="filename">env.nu</code> file.
+If unset then the source option will be preferred.
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/nushell.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.obs-studio.enable"></a><a class="term" href="options.html#opt-programs.obs-studio.enable"><code class="option">programs.obs-studio.enable</code></a></span></dt><dd><p>Whether to enable obs-studio.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obs-studio.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/obs-studio.nix&gt;
