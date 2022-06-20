@@ -42,7 +42,7 @@ let
 
   mkUserJs = prefs: extraPrefs: bookmarks:
     let
-      prefs' = lib.optionalAttrs ({ } != bookmarks) {
+      prefs' = lib.optionalAttrs ([ ] != bookmarks) {
         "browser.bookmarks.file" = toString (firefoxBookmarksFile bookmarks);
         "browser.places.importBookmarksHTML" = true;
       } // prefs;
@@ -58,13 +58,36 @@ let
 
   firefoxBookmarksFile = bookmarks:
     let
-      mapper = _: entry: ''
-        <DT><A HREF="${escapeXML entry.url}" ADD_DATE="0" LAST_MODIFIED="0"${
-          lib.optionalString (entry.keyword != null)
-          " SHORTCUTURL=\"${escapeXML entry.keyword}\""
-        }>${escapeXML entry.name}</A>
-      '';
-      bookmarksEntries = lib.attrsets.mapAttrsToList mapper bookmarks;
+      indent = level:
+        lib.concatStringsSep "" (map (lib.const "  ") (lib.range 1 level));
+
+      bookmarkToHTML = indentLevel: bookmark:
+        ''
+          ${indent indentLevel}<DT><A HREF="${
+            escapeXML bookmark.url
+          }" ADD_DATE="0" LAST_MODIFIED="0"${
+            lib.optionalString (bookmark.keyword != null)
+            " SHORTCUTURL=\"${escapeXML bookmark.keyword}\""
+          }>${escapeXML bookmark.name}</A>'';
+
+      directoryToHTML = indentLevel: directory: ''
+        ${indent indentLevel}<DT><H3>${escapeXML directory.name}</H3>
+        ${indent indentLevel}<DL><p>
+        ${allItemsToHTML (indentLevel + 1) directory.bookmarks}
+        ${indent indentLevel}</p></DL>'';
+
+      itemToHTMLOrRecurse = indentLevel: item:
+        if item ? "url" then
+          bookmarkToHTML indentLevel item
+        else
+          directoryToHTML indentLevel item;
+
+      allItemsToHTML = indentLevel: bookmarks:
+        lib.concatStringsSep "\n"
+        (map (itemToHTMLOrRecurse indentLevel) bookmarks);
+
+      bookmarkEntries = allItemsToHTML 1
+        (if isAttrs bookmarks then lib.attrValues bookmarks else bookmarks);
     in pkgs.writeText "firefox-bookmarks.html" ''
       <!DOCTYPE NETSCAPE-Bookmark-file-1>
       <!-- This is an automatically generated file.
@@ -74,7 +97,7 @@ let
       <TITLE>Bookmarks</TITLE>
       <H1>Bookmarks Menu</H1>
       <DL><p>
-      ${concatStrings bookmarksEntries}
+      ${bookmarkEntries}
       </p></DL>
     '';
 
@@ -226,37 +249,78 @@ in {
             };
 
             bookmarks = mkOption {
-              type = types.attrsOf (types.submodule ({ config, name, ... }: {
-                options = {
-                  name = mkOption {
-                    type = types.str;
-                    default = name;
-                    description = "Bookmark name.";
-                  };
+              type = let
+                bookmarkSubmodule = types.submodule ({ config, name, ... }: {
+                  options = {
+                    name = mkOption {
+                      type = types.str;
+                      default = name;
+                      description = "Bookmark name.";
+                    };
 
-                  keyword = mkOption {
-                    type = types.nullOr types.str;
-                    default = null;
-                    description = "Bookmark search keyword.";
-                  };
+                    keyword = mkOption {
+                      type = types.nullOr types.str;
+                      default = null;
+                      description = "Bookmark search keyword.";
+                    };
 
-                  url = mkOption {
-                    type = types.str;
-                    description = "Bookmark url, use %s for search terms.";
+                    url = mkOption {
+                      type = types.str;
+                      description = "Bookmark url, use %s for search terms.";
+                    };
                   };
+                }) // {
+                  description = "bookmark submodule";
                 };
-              }));
-              default = { };
+
+                bookmarkType = types.addCheck bookmarkSubmodule (x: x ? "url");
+
+                directoryType = types.submodule ({ config, name, ... }: {
+                  options = {
+                    name = mkOption {
+                      type = types.str;
+                      default = name;
+                      description = "Directory name.";
+                    };
+
+                    bookmarks = mkOption {
+                      type = types.listOf bookmarkType;
+                      default = [ ];
+                      description = "Bookmarks within directory.";
+                    };
+                  };
+                }) // {
+                  description = "directory submodule";
+                };
+              in with types;
+              either (attrsOf bookmarkType)
+              (listOf (either bookmarkType directoryType));
+              default = [ ];
               example = literalExpression ''
-                {
-                  wikipedia = {
+                [
+                  {
+                    name = "wikipedia";
                     keyword = "wiki";
                     url = "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
-                  };
-                  "kernel.org" = {
+                  }
+                  {
+                    name = "kernel.org";
                     url = "https://www.kernel.org";
-                  };
-                }
+                  }
+                  {
+                    name = "Nix sites";
+                    bookmarks = [
+                      {
+                        name = "homepage";
+                        url = "https://nixos.org/";
+                      }
+                      {
+                        name = "wiki";
+                        url = "https://nixos.wiki/";
+                      }
+                    ];
+                  }
+                ]
               '';
               description = ''
                 Preloaded bookmarks. Note, this may silently overwrite any
