@@ -4828,7 +4828,7 @@ this option.
                     &lt;home-manager/modules/programs/man.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.enable"></a><a class="term" href="options.html#opt-programs.mangohud.enable"><code class="option">programs.mangohud.enable</code></a></span></dt><dd><p>Whether to enable Mangohud.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mangohud.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mangohud.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.enableSessionWide"></a><a class="term" href="options.html#opt-programs.mangohud.enableSessionWide"><code class="option">programs.mangohud.enableSessionWide</code></a></span></dt><dd><p>Sets environment variables so that 
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mangohud.enableSessionWide"></a><a class="term" href="options.html#opt-programs.mangohud.enableSessionWide"><code class="option">programs.mangohud.enableSessionWide</code></a></span></dt><dd><p>Sets environment variables so that
 MangoHud is started on any application that supports it.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mangohud.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mangohud.nix&gt;
@@ -7041,9 +7041,9 @@ file.
 for the default configuration.
 </p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
   servers = [
-    { 
-      addr = "irc.libera.chat"; 
-      port = 6697; 
+    {
+      addr = "irc.libera.chat";
+      port = 6697;
       tls = true;
       realname = "John Doe";
       nicks = [ "tinyuser" ];
@@ -8331,7 +8331,7 @@ for available options.
 </p><p>
 Note that environment variables in the path won't be properly expanded.
 </p><p>
-The configuration specified under 
+The configuration specified under
 <code class="option">services.fnott.settings</code> will be generated and
 written to <code class="filename">$XDG_CONFIG_HOME/fnott/fnott.ini</code>
 regardless of this option. This allows using a mutable configuration file
@@ -8974,7 +8974,7 @@ Use <code class="literal">any</code> to listen on all addresses.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.mpd-discord-rpc.package"></a><a class="term" href="options.html#opt-services.mpd-discord-rpc.package"><code class="option">services.mpd-discord-rpc.package</code></a></span></dt><dd><p>mpd-discord-rpc package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.mpd-discord-rpc</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd-discord-rpc.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/mpd-discord-rpc.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.mpd-discord-rpc.settings"></a><a class="term" href="options.html#opt-services.mpd-discord-rpc.settings"><code class="option">services.mpd-discord-rpc.settings</code></a></span></dt><dd><p>Configuration included in <code class="literal">config.toml</code>.
-For available options see <a class="link" href="https://github.com/JakeStanger/mpd-discord-rpc#configuration" target="_top">https://github.com/JakeStanger/mpd-discord-rpc#configuration</a> 
+For available options see <a class="link" href="https://github.com/JakeStanger/mpd-discord-rpc#configuration" target="_top">https://github.com/JakeStanger/mpd-discord-rpc#configuration</a>
 </p><p><span class="emphasis"><em>Type:</em></span> TOML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
