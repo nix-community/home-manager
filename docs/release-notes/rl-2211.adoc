@@ -8,7 +8,15 @@ This is the current unstable branch and the information in this section is there
 
 This release has the following notable changes:
 
-* No changes.
+* The <<opt-home.stateVersion>> option no longer has a default value.
+It used to default to ``18.09'', which was the Home Manager version
+that introduced the option. If your configuration does not explicitly
+set this option then you need to add
++
+[source,nix]
+home.stateVersion = "18.09";
++
+to your configuration.
 
 [[sec-release-22.11-state-version-changes]]
 === State Version Changes

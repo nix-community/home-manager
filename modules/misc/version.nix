@@ -17,7 +17,6 @@ with lib;
         "22.05"
         "22.11"
       ];
-      default = "18.09";
       description = ''
         It is occasionally necessary for Home Manager to change
         configuration defaults in a way that is incompatible with
