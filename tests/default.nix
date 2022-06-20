@@ -14,8 +14,11 @@ let
       # Fix impurities. Without these some of the user's environment
       # will leak into the tests through `builtins.getEnv`.
       xdg.enable = true;
-      home.username = "hm-user";
-      home.homeDirectory = "/home/hm-user";
+      home = {
+        username = "hm-user";
+        homeDirectory = "/home/hm-user";
+        stateVersion = lib.mkDefault "18.09";
+      };
 
       # Avoid including documentation since this will cause
       # unnecessary rebuilds of the tests.
