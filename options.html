@@ -64,6 +64,8 @@ For NixOS, the default value for this option includes at least this argument:
                     &lt;home-manager/modules/programs/notmuch.nix&gt;
                 </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neomutt.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/neomutt.nix&gt;
+                </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
                 </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mu.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mu.nix&gt;
                 </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/msmtp.nix#blob-path" target="_top">
@@ -140,7 +142,7 @@ special treatment. This option is therefore intended to
 indicate the nature of the provider.
 </p><p>
 When this indicates a specific provider then, for example,
-the IMAP and SMTP server configuration may be set
+the IMAP, SMTP, and JMAP server configuration may be set
 automatically.
 </p><p><span class="emphasis"><em>Type:</em></span> one of "plain", "gmail.com", "runbox.com", "fastmail.com"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"plain"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
                     &lt;home-manager/modules/accounts/email.nix&gt;
@@ -273,6 +275,23 @@ Note, if set then the system default may still be accepted.
         }
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/imapnotify.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/imapnotify.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.jmap"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.jmap"><code class="option">accounts.email.accounts.&lt;name&gt;.jmap</code></a></span></dt><dd><p>The JMAP configuration to use for this account.
+</p><p><span class="emphasis"><em>Type:</em></span> null or submodule</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/accounts/email.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.jmap.host"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.jmap.host"><code class="option">accounts.email.accounts.&lt;name&gt;.jmap.host</code></a></span></dt><dd><p>Hostname of JMAP server.
+</p><p>
+If both this option and <a class="xref" href="options.html#opt-accounts.email.accounts._name_.jmap.sessionUrl"><code class="option">accounts.email.accounts.&lt;name&gt;.jmap.sessionUrl</code></a> are specified,
+<code class="code">host</code> is preferred by applications when establishing a
+session.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"jmap.example.org"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/accounts/email.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.jmap.sessionUrl"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.jmap.sessionUrl"><code class="option">accounts.email.accounts.&lt;name&gt;.jmap.sessionUrl</code></a></span></dt><dd><p>URL for the JMAP Session resource.
+</p><p>
+If both this option and <a class="xref" href="options.html#opt-accounts.email.accounts._name_.jmap.host"><code class="option">accounts.email.accounts.&lt;name&gt;.jmap.host</code></a> are specified,
+<code class="code">host</code> is preferred by applications when establishing a
+session.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"https://jmap.example.org:443/.well-known/jmap"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/accounts/email.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.enable"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.enable"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.enable</code></a></span></dt><dd><p>Whether to enable lieer Gmail synchronization for notmuch.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lieer.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.lieer.notmuchSetupWarning"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.lieer.notmuchSetupWarning"><code class="option">accounts.email.accounts.&lt;name&gt;.lieer.notmuchSetupWarning</code></a></span></dt><dd><p>Warn if Notmuch is not also enabled for this account.
@@ -536,6 +555,126 @@ The fingerprint can be obtained by executing
                     &lt;home-manager/modules/programs/msmtp.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mu.enable"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mu.enable"><code class="option">accounts.email.accounts.&lt;name&gt;.mu.enable</code></a></span></dt><dd><p>Whether to enable mu indexing.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mu.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mu.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.enable"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.enable"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.enable</code></a></span></dt><dd><p>Whether to enable mujmap JMAP synchronization for notmuch.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.notmuchSetupWarning"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.notmuchSetupWarning"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.notmuchSetupWarning</code></a></span></dt><dd><p>Warn if Notmuch is not also enabled for this account.
+</p><p>
+This can safely be disabled if <code class="filename">mujmap.toml</code> is managed
+outside of Home Manager.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings</code></a></span></dt><dd><p>Settings which are applied to <code class="filename">mujmap.toml</code>
+for the account.
+</p><p>
+See the <a class="link" href="https://github.com/elizagamedev/mujmap" target="_top">mujmap project</a>
+for documentation of settings not explicitly covered by this module.
+</p><p><span class="emphasis"><em>Type:</em></span> TOML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.auto_create_new_mailboxes"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.auto_create_new_mailboxes"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.auto_create_new_mailboxes</code></a></span></dt><dd><p>Whether to create new mailboxes automatically on the server from notmuch
+tags.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.cache_dir"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.cache_dir"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.cache_dir</code></a></span></dt><dd><p>The cache directory in which to store mail files while they are being
+downloaded. The default is operating-system specific.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.fqdn"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.fqdn"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.fqdn</code></a></span></dt><dd><p>Fully qualified domain name of the JMAP service.
+</p><p>
+mujmap looks up the JMAP SRV record for this host to determine the JMAP session
+URL. Mutually exclusive with
+<a class="xref" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.session_url"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.session_url</code></a>.
+</p><p>
+If <code class="literal">null</code>, defaults to
+<a class="xref" href="options.html#opt-accounts.email.accounts._name_.jmap.host"><code class="option">accounts.email.accounts.&lt;name&gt;.jmap.host</code></a>.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"example.com"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.password_command"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.password_command"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.password_command</code></a></span></dt><dd><p>Shell command which will print a password to stdout for basic HTTP
+authentication.
+</p><p>
+If <code class="literal">null</code>, defaults to
+<a class="xref" href="options.html#opt-accounts.email.accounts._name_.passwordCommand"><code class="option">accounts.email.accounts.&lt;name&gt;.passwordCommand</code></a>.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string or list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"pass alice@example.com"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.session_url"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.session_url"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.session_url</code></a></span></dt><dd><p>Sesion URL to connect to.
+</p><p>
+Mutually exclusive with
+<a class="xref" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.fqdn"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.fqdn</code></a>.
+</p><p>
+If <code class="literal">null</code>, defaults to
+<a class="xref" href="options.html#opt-accounts.email.accounts._name_.jmap.sessionUrl"><code class="option">accounts.email.accounts.&lt;name&gt;.jmap.sessionUrl</code></a>.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"https://jmap.example.com/.well-known/jmap"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.tags"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.tags"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.tags</code></a></span></dt><dd><p>Tag configuration.
+</p><p>
+Beware that there are quirks that require manual consideration if changing the
+values of these files; please see
+<a class="link" href="https://github.com/elizagamedev/mujmap/blob/main/mujmap.toml.example" target="_top">https://github.com/elizagamedev/mujmap/blob/main/mujmap.toml.example</a>
+for more details.
+</p><p><span class="emphasis"><em>Type:</em></span> TOML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.tags.deleted"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.tags.deleted"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.tags.deleted</code></a></span></dt><dd><p>Tag for notmuch to use for messages stored in the mailbox labeled with the
+<code class="code">Trash</code> name attribute.
+</p><p>
+If set to an empty string, this mailbox <span class="emphasis"><em>and its child
+mailboxes</em></span> are not synchronized with a tag.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"deleted"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.tags.directory_separator"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.tags.directory_separator"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.tags.directory_separator</code></a></span></dt><dd><p>Directory separator for mapping notmuch tags to maildirs.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"/"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"."</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.tags.important"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.tags.important"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.tags.important</code></a></span></dt><dd><p>Tag for notmuch to use for messages stored in the mailbox labeled with the
+<code class="code">Important</code> name attribute and/or with the <code class="code">$Important</code>
+keyword.
+</p><p>
+If set to an empty string, this mailbox, <span class="emphasis"><em>its child
+mailboxes</em></span>, and these keywords are not synchronized with a tag.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"important"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.tags.inbox"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.tags.inbox"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.tags.inbox</code></a></span></dt><dd><p>Tag for notmuch to use for messages stored in the mailbox labeled with the
+<code class="code">Inbox</code> name attribute.
+</p><p>
+If set to an empty string, this mailbox <span class="emphasis"><em>and its child
+mailboxes</em></span> are not synchronized with a tag.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"inbox"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.tags.lowercase"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.tags.lowercase"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.tags.lowercase</code></a></span></dt><dd><p>If true, translate all mailboxes to lowercase names when mapping to notmuch
+tags.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.tags.phishing"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.tags.phishing"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.tags.phishing</code></a></span></dt><dd><p>Tag for notmuch to use for the IANA <code class="code">$Phishing</code> keyword.
+</p><p>
+If set to an empty string, this keyword is not synchronized with a tag.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"phishing"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.tags.sent"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.tags.sent"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.tags.sent</code></a></span></dt><dd><p>Tag for notmuch to use for messages stored in the mailbox labeled with the
+<code class="code">Sent</code> name attribute.
+</p><p>
+If set to an empty string, this mailbox <span class="emphasis"><em>and its child
+mailboxes</em></span> are not synchronized with a tag.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"sent"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.tags.spam"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.tags.spam"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.tags.spam</code></a></span></dt><dd><p>Tag for notmuch to use for messages stored in the mailbox labeled with the
+<code class="code">Junk</code> name attribute and/or with the <code class="code">$Junk</code> keyword,
+<span class="emphasis"><em>except</em></span> for messages with the <code class="code">$NotJunk</code> keyword.
+</p><p>
+If set to an empty string, this mailbox, <span class="emphasis"><em>its child
+mailboxes</em></span>, and these keywords are not synchronized with a tag.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"spam"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mujmap.settings.username"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mujmap.settings.username"><code class="option">accounts.email.accounts.&lt;name&gt;.mujmap.settings.username</code></a></span></dt><dd><p>Username for basic HTTP authentication.
+</p><p>
+If <code class="literal">null</code>, defaults to
+<a class="xref" href="options.html#opt-accounts.email.accounts._name_.userName"><code class="option">accounts.email.accounts.&lt;name&gt;.userName</code></a>.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"alice@example.com"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.name"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.name"><code class="option">accounts.email.accounts.&lt;name&gt;.name</code></a></span></dt><dd><p>Unique identifier of the account. This is set to the
 attribute name of the account configuration.
 </p><p><span class="emphasis"><em>Type:</em></span> string <span class="emphasis"><em>(read only)</em></span></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
@@ -660,7 +799,7 @@ Note, if set then the system default may still be accepted.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
                     &lt;home-manager/modules/accounts/email.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.userName"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.userName"><code class="option">accounts.email.accounts.&lt;name&gt;.userName</code></a></span></dt><dd><p>The server username of this account. This will be used as
-the SMTP and IMAP user name.
+the SMTP, IMAP, and JMAP user name.
 </p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
                     &lt;home-manager/modules/accounts/email.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.certificatesFile"></a><a class="term" href="options.html#opt-accounts.email.certificatesFile"><code class="option">accounts.email.certificatesFile</code></a></span></dt><dd><p>Path to default file containing certificate authorities that
@@ -5057,6 +5196,11 @@ Account commands should be placed in
                     &lt;home-manager/modules/programs/msmtp.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mu.enable"></a><a class="term" href="options.html#opt-programs.mu.enable"><code class="option">programs.mu.enable</code></a></span></dt><dd><p>Whether to enable mu, a maildir indexer and searcher.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mu.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mu.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mujmap.enable"></a><a class="term" href="options.html#opt-programs.mujmap.enable"><code class="option">programs.mujmap.enable</code></a></span></dt><dd><p>Whether to enable mujmap Gmail synchronization for notmuch.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mujmap.package"></a><a class="term" href="options.html#opt-programs.mujmap.package"><code class="option">programs.mujmap.package</code></a></span></dt><dd><p>mujmap package to use.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"pkgs.mujmap"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mujmap.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mujmap.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.navi.enable"></a><a class="term" href="options.html#opt-programs.navi.enable"><code class="option">programs.navi.enable</code></a></span></dt><dd><p>Whether to enable Navi.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/navi.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/navi.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.navi.enableBashIntegration"></a><a class="term" href="options.html#opt-programs.navi.enableBashIntegration"><code class="option">programs.navi.enableBashIntegration</code></a></span></dt><dd><p>Whether to enable Bash integration.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/navi.nix#blob-path" target="_top">
