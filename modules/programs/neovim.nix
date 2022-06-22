@@ -368,7 +368,7 @@ in {
 
     neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
       inherit (cfg) extraPython3Packages withPython3 withRuby viAlias vimAlias;
-      withNodeJs = cfg.withNodeJs or cfg.coc.enable;
+      withNodeJs = cfg.withNodeJs || cfg.coc.enable;
       configure = cfg.configure // moduleConfigure;
       plugins = map suppressNotVimlConfig pluginsNormalized;
       customRC = cfg.extraConfig;
