@@ -191,15 +191,15 @@ is similar to that of NixOS. The `flake.nix` would be:
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nix-darwin.url = "github:lnl7/nix-darwin";
+    darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, nix-darwin, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, darwin, ... }: {
     darwinConfigurations = {
-      hostname = nix-darwin.lib.darwinSystem {
+      hostname = darwin.lib.darwinSystem {
         system = "x86_64-darwin";
         modules = [
           ./configuration.nix
