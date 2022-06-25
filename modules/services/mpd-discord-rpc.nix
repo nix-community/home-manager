@@ -48,7 +48,10 @@ in {
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.desktop" ];
       };
-      Service.ExecStart = "${cfg.package}/bin/mpd-discord-rpc";
+      Service = {
+        ExecStart = "${cfg.package}/bin/mpd-discord-rpc";
+        Restart = "on-failure";
+      };
       Install.WantedBy = [ "graphical-session.target" ];
     };
   };
