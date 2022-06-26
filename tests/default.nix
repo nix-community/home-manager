@@ -4,7 +4,11 @@ let
 
   lib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
-  inherit ((import ./.. { }).inputs) nmt;
+  nmt = fetchTarball {
+    url =
+      "https://gitlab.com/api/v4/projects/rycee%2Fnmt/repository/archive.tar.gz?sha=d83601002c99b78c89ea80e5e6ba21addcfe12ae";
+    sha256 = "1xzwwxygzs1cmysg97hzd285r7n1g1lwx5y1ar68gwq07a1rczmv";
+  };
 
   modules = import ../modules/modules.nix {
     inherit lib pkgs;

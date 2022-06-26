@@ -2,16 +2,9 @@
   description = "Home Manager for Nix";
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.nmd.url = "gitlab:rycee/nmd";
-  inputs.nmd.flake = false;
-  inputs.nmt.url = "gitlab:rycee/nmt";
-  inputs.nmt.flake = false;
-
   inputs.utils.url = "github:numtide/flake-utils";
-  inputs.flake-compat.url = "github:edolstra/flake-compat";
-  inputs.flake-compat.flake = false;
 
-  outputs = { self, nixpkgs, nmd, utils, ... }:
+  outputs = { self, nixpkgs, utils, ... }:
     {
       nixosModules = rec {
         home-manager = import ./nixos;
@@ -67,10 +60,7 @@
     } // utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        docs = import ./docs {
-          inherit pkgs;
-          nmdSrc = nmd;
-        };
+        docs = import ./docs { inherit pkgs; };
       in {
         packages = rec {
           home-manager = pkgs.callPackage ./home-manager { };
