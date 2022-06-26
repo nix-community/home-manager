@@ -1,0 +1,15 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@runtimeShell@ -l -c "@emacs@/bin/emacs --fg-daemon '-f' 'exwm-enable'"
+Restart=on-failure
+SuccessExitStatus=15
+Type=notify
+
+[Unit]
+After=graphical-session.target
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+PartOf=graphical-session.target
+X-RestartIfChanged=false
