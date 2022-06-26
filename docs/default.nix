@@ -1,9 +1,15 @@
-{ pkgs, nmdSrc ? (import ./.. { }).inputs.nmd
+{ pkgs
 
-  # Note, this should be "the standard library" + HM extensions.
+# Note, this should be "the standard library" + HM extensions.
 , lib ? import ../modules/lib/stdlib-extended.nix pkgs.lib }:
 
 let
+
+  nmdSrc = fetchTarball {
+    url =
+      "https://gitlab.com/api/v4/projects/rycee%2Fnmd/repository/archive.tar.gz?sha=91dee681dd1c478d6040a00835d73c0f4a4c5c29";
+    sha256 = "07szg39wmna287hv5w9hl45wvm04zbh0k54br59nv3yzvg9ymlj4";
+  };
 
   nmd = import nmdSrc { inherit lib pkgs; };
 
