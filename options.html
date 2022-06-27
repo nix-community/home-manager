@@ -10044,6 +10044,24 @@ horizontally otherwise.
                     &lt;home-manager/modules/services/udiskie.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.udiskie.notify"></a><a class="term" href="options.html#opt-services.udiskie.notify"><code class="option">services.udiskie.notify</code></a></span></dt><dd><p>Whether to show pop-up notifications.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/udiskie.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/udiskie.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.udiskie.settings"></a><a class="term" href="options.html#opt-services.udiskie.settings"><code class="option">services.udiskie.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/udiskie/config.toml</code>.
+</p><p>
+See <a class="link" href="https://github.com/coldfix/udiskie/blob/master/doc/udiskie.8.txt#configuration" target="_top">https://github.com/coldfix/udiskie/blob/master/doc/udiskie.8.txt#configuration</a>
+for the full list of options.
+</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  program_options = {
+    udisks_version = 2;
+    tray = true;
+  };
+  icon_names.media = [ "media-optical" ];
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/udiskie.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/udiskie.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.udiskie.tray"></a><a class="term" href="options.html#opt-services.udiskie.tray"><code class="option">services.udiskie.tray</code></a></span></dt><dd><p>Whether to display tray icon.
 </p><p>
 The options are
