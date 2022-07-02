@@ -293,4 +293,10 @@
     github = "mtoohey31";
     githubId = 36740602;
   };
+  lukasngl = {
+    name = "Lukas Nagel";
+    email = "69244516+lukasngl@users.noreply.github.com";
+    github = "lukasngl";
+    githubId = 69244516;
+  };
 }

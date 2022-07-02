@@ -53,6 +53,7 @@ import nmt {
     ./modules/misc/fontconfig
     ./modules/misc/nix
     ./modules/misc/specialization
+    ./modules/programs/aerc
     ./modules/programs/alacritty
     ./modules/programs/alot
     ./modules/programs/aria2
