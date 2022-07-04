@@ -10,9 +10,7 @@ let
   settingsFormat = pkgs.formats.ini { };
 
 in {
-  meta = {
-    maintainers = with maintainers; [ rycee petabyteboy thiagokokada ];
-  };
+  meta.maintainers = with maintainers; [ rycee thiagokokada ];
 
   imports = let
     mkRenamed = old: new:
