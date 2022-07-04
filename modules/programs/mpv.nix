@@ -77,7 +77,7 @@ in {
       };
 
       scripts = mkOption {
-        type = with types; listOf (either package str);
+        type = with types; listOf package;
         default = [ ];
         example = literalExpression "[ pkgs.mpvScripts.mpris ]";
         description = ''
