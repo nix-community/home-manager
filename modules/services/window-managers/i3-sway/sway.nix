@@ -309,7 +309,7 @@ let
       )
     else
       [ ]) ++ (optional cfg.systemdIntegration ''
-        exec "systemctl --user import-environment; systemctl --user start sway-session.target"'')
+        exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP; systemctl --user start sway-session.target"'')
       ++ (optional (!cfg.xwayland) "xwayland disable") ++ [ cfg.extraConfig ]));
 
   defaultSwayPackage = pkgs.sway.override {
@@ -320,7 +320,7 @@ let
   };
 
 in {
-  meta.maintainers = with maintainers; [ alexarice sumnerevans sebtm ];
+  meta.maintainers = with maintainers; [ alexarice sumnerevans sebtm oxalica ];
 
   options.wayland.windowManager.sway = {
     enable = mkEnableOption "sway wayland compositor";
@@ -346,6 +346,14 @@ in {
         Whether to enable <filename>sway-session.target</filename> on
         sway startup. This links to
         <filename>graphical-session.target</filename>.
+        Some important environment variables will be imported to systemd
+        and dbus user environment before reaching the target, including
+        <itemizedlist>
+          <listitem><para><literal>DISPLAY</literal></para></listitem>
+          <listitem><para><literal>WAYLAND_DISPLAY</literal></para></listitem>
+          <listitem><para><literal>SWAYSOCK</literal></para></listitem>
+          <listitem><para><literal>XDG_CURRENT_DESKTOP</literal></para></listitem>
+        </itemizedlist>
       '';
     };
 
