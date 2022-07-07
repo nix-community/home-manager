@@ -8562,21 +8562,17 @@ for an example configuration.
                     &lt;home-manager/modules/services/fusuma.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.fusuma.settings"></a><a class="term" href="options.html#opt-services.fusuma.settings"><code class="option">services.fusuma.settings</code></a></span></dt><dd><p>YAML config that will override the default fusuma configuration.
 </p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  enable = true;
-  extraPackages = with pkgs;[ xdotool ];
-  config = {
-    threshold = {
-      swipe = 0.1;
-    };
-    interval = {
-      swipe = 0.7;
-    };
-    swipe = {
-      "3" = {
-        left = {
-          # GNOME: Switch to left workspace
-          command = "xdotool key ctrl+alt+Right";
-        };
+  threshold = {
+    swipe = 0.1;
+  };
+  interval = {
+    swipe = 0.7;
+  };
+  swipe = {
+    "3" = {
+      left = {
+        # GNOME: Switch to left workspace
+        command = "xdotool key ctrl+alt+Right";
       };
     };
   };
