@@ -13,7 +13,7 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/sway/config
-    assertFileContent home-files/.config/sway/config \
+    assertFileContent $(normalizeStorePaths home-files/.config/sway/config) \
       ${./sway-workspace-default-expected.conf}
   '';
 }
