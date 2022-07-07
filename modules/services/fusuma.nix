@@ -73,21 +73,17 @@ in {
       type = yamlFormat.type;
       example = literalExpression ''
         {
-          enable = true;
-          extraPackages = with pkgs;[ xdotool ];
-          config = {
-            threshold = {
-              swipe = 0.1;
-            };
-            interval = {
-              swipe = 0.7;
-            };
-            swipe = {
-              "3" = {
-                left = {
-                  # GNOME: Switch to left workspace
-                  command = "xdotool key ctrl+alt+Right";
-                };
+          threshold = {
+            swipe = 0.1;
+          };
+          interval = {
+            swipe = 0.7;
+          };
+          swipe = {
+            "3" = {
+              left = {
+                # GNOME: Switch to left workspace
+                command = "xdotool key ctrl+alt+Right";
               };
             };
           };
