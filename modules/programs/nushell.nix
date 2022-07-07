@@ -58,7 +58,8 @@ in {
     };
 
     configFile = mkOption {
-      type = linesOrSource "config.nu";
+      type = types.nullOr (linesOrSource "config.nu");
+      default = null;
       example = literalExpression ''
         { text = '''
             let $config = {
@@ -78,7 +79,8 @@ in {
     };
 
     envFile = mkOption {
-      type = linesOrSource "env.nu";
+      type = types.nullOr (linesOrSource "env.nu");
+      default = null;
       example = ''
         let-env FOO = 'BAR'
       '';
@@ -94,7 +96,9 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."nushell/config.nu" = cfg.configFile;
-    xdg.configFile."nushell/env.nu" = cfg.envFile;
+    xdg.configFile = mkMerge [
+      (mkIf (cfg.configFile != null) { "nushell/config.nu" = cfg.configFile; })
+      (mkIf (cfg.envFile != null) { "nushell/env.nu" = cfg.envFile; })
+    ];
   };
 }
