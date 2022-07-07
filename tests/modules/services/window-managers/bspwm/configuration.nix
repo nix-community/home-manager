@@ -22,6 +22,7 @@ with lib;
         desktop = "d'esk top#next";
         splitDir = "north";
         border = null;
+        unknownRule = 42;
       };
       extraConfig = ''
         extra config
