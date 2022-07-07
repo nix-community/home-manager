@@ -42,6 +42,7 @@ let
       dnd           = { shadow = ${toJSON (!cfg.noDNDShadow)}; };
       popup_menu    = { opacity = ${cfg.menuOpacity}; };
       dropdown_menu = { opacity = ${cfg.menuOpacity}; };
+      ${cfg.extraWintypes}
     };
 
     # other options
@@ -50,6 +51,7 @@ let
   '' + cfg.extraOptions;
 
 in {
+  meta.maintainers = with maintainers; [ khushraj ];
 
   options.services.picom = {
     enable = mkEnableOption "Picom X11 compositor";
@@ -260,10 +262,25 @@ in {
       '';
     };
 
+    extraWintypes = mkOption {
+      type = types.str;
+      default = "";
+      example = literalExample ''
+        tooltip = {
+          fade = true;
+          shadow = true;
+        };
+        dock = { opacity = 0.75; };
+      '';
+      description = ''
+        Additional wintypes.
+      '';
+    };
+
     extraOptions = mkOption {
       type = types.lines;
       default = "";
-      example = ''
+      example = literalExample ''
         unredir-if-possible = true;
         dbe = true;
       '';
