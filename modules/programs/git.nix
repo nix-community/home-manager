@@ -265,6 +265,16 @@ in {
             Determines when difftastic should color its output.
           '';
         };
+
+        display = mkOption {
+          type =
+            types.enum [ "side-by-side" "side-by-side-show-both" "inline" ];
+          default = "side-by-side";
+          example = "inline";
+          description = ''
+            Determines how the output displays - in one column or two columns.
+          '';
+        };
       };
 
       delta = {
@@ -476,8 +486,11 @@ in {
       home.packages = [ pkgs.difftastic ];
 
       programs.git.iniContent = let
-        difftCommand =
-          "${pkgs.difftastic}/bin/difft --color ${cfg.difftastic.color} --background ${cfg.difftastic.background}";
+        difftCommand = "${pkgs.difftastic}/bin/difft" + concatStringsSep " " [
+          "--color ${cfg.difftastic.color}"
+          "--background ${cfg.difftastic.background}"
+          "--display ${cfg.difftastic.display}"
+        ];
       in {
         diff.external = difftCommand;
         core.pager = "${pkgs.less}/bin/less -XF";
