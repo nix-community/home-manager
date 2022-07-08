@@ -500,10 +500,6 @@ in
           "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
         }
 
-        ${optionalString cfg.enableSyntaxHighlighting
-          "source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-        }
-
         ${optionalString cfg.oh-my-zsh.enable ''
             # oh-my-zsh extra settings for plugins
             ${cfg.oh-my-zsh.extraConfig}
@@ -557,6 +553,12 @@ in
 
         # Named Directory Hashes
         ${dirHashesStr}
+
+        ${optionalString cfg.enableSyntaxHighlighting
+          # Load zsh-syntax-highlighting last, after all custom widgets have been created
+          # https://github.com/zsh-users/zsh-syntax-highlighting#faq
+          "source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+        }
       '';
     }
 
