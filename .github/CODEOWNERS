@@ -464,6 +464,9 @@ Makefile                                              @thiagokokada
 
 /modules/services/window-managers/i3-sway/swaynag.nix @polykernel
 
+/modules/services/window-managers/spectrwm            @loicreynier
+/tests/modules/services/window-managers/spectrwm      @loicreynier
+
 /modules/services/wlsunset.nix                        @matrss
 /tests/modules/services/wlsunset                      @matrss
 
