@@ -109,6 +109,9 @@ Makefile                                              @thiagokokada
 /modules/services/fusuma.nix                          @iosmanthus
 /tests/modules/services/fusuma                        @iosmanthus
 
+/modules/programs/gallery-dl.nix                      @marsam
+/tests/modules/programs/gallery-dl                    @marsam
+
 /modules/programs/gh.nix                              @Gerschtli @berbiche
 /tests/modules/programs/gh                            @Gerschtli @berbiche
 

@@ -70,6 +70,7 @@ import nmt {
     ./modules/programs/emacs
     ./modules/programs/feh
     ./modules/programs/fish
+    ./modules/programs/gallery-dl
     ./modules/programs/gh
     ./modules/programs/git
     ./modules/programs/gpg
