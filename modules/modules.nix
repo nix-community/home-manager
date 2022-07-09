@@ -74,6 +74,7 @@ let
     ./programs/fish.nix
     ./programs/foot.nix
     ./programs/fzf.nix
+    ./programs/gallery-dl.nix
     ./programs/getmail.nix
     ./programs/gh.nix
     ./programs/git.nix
