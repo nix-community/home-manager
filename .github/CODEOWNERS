@@ -79,6 +79,8 @@
 
 /modules/programs/direnv.nix                          @rycee
 
+/modules/programs/discocss.nix                        @fufexan
+
 /modules/programs/eclipse.nix                         @rycee
 
 /modules/programs/emacs.nix                           @rycee

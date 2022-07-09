@@ -583,6 +583,11 @@ in
           A new module is available: 'services.sctd'.
         '';
       }
+      { time = "2022-07-09T14:49:39+00:00";
+        message = ''
+          A new module is available: 'programs.discocss'.
+        '';
+      }
     ];
   };
 }
