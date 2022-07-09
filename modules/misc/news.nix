@@ -682,6 +682,13 @@ in
           A new module is available: 'programs.nheko'.
         '';
       }
+
+      {
+        time = "2022-09-08T17:50:43+00:00";
+        message = ''
+          A new module is available: 'programs.yt-dlp'.
+        '';
+      }
     ];
   };
 }
