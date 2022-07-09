@@ -310,6 +310,8 @@ Makefile                                              @thiagokokada
 /modules/programs/xmobar.nix                          @t4ccer
 /tests/modules/programs/xmobar                        @t4ccer
 
+/modules/programs/yt-dlp.nix                          @marsam
+
 /modules/programs/z-lua.nix                           @marsam
 
 /modules/programs/zathura.nix                         @rprospero
