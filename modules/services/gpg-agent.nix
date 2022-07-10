@@ -271,7 +271,7 @@ in {
           ExecStart = "${gpgPkg}/bin/gpg-agent --supervised"
             + optionalString cfg.verbose " --verbose";
           ExecReload = "${gpgPkg}/bin/gpgconf --reload gpg-agent";
-          Environment = "GNUPGHOME=${homedir}";
+          Environment = [ "GNUPGHOME=${homedir}" ];
         };
       };
 
