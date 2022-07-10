@@ -38,7 +38,7 @@ let
 
       icon = mkOption {
         description = "Icon to display in file manager, menus, etc.";
-        type = types.nullOr types.str;
+        type = with types; nullOr (either str path);
         default = null;
       };
 
@@ -133,7 +133,7 @@ let
             description = "Program to execute, possibly with arguments.";
           };
           options.icon = mkOption {
-            type = types.nullOr types.str;
+            type = with types; nullOr (either str path);
             default = null;
             description = "Icon to display in file manager, menus, etc.";
           };
