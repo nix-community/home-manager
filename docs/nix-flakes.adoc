@@ -9,7 +9,7 @@ The support is still experimental and may change in backwards incompatible ways.
 [[sec-flakes-prerequisties]]
 === Prerequisties
 
-* Install Nix 2.4 or have it in `nix-shell`.
+* Install Nix 2.4 or later, or have it in `nix-shell`.
 
 * Enable experimental features `nix-command` and `flakes`.
 +
