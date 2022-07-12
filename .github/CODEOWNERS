@@ -386,6 +386,9 @@
 
 /modules/services/pasystray.nix                       @pltanton
 
+/modules/services/picom.nix                           @thiagokokada
+/tests/modules/services/picom                         @thiagokokada
+
 /modules/services/pbgopy.nix                          @ivarwithoutbones
 /tests/modules/services/pbgopy                        @ivarwithoutbones
 

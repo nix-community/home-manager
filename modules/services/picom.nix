@@ -1,89 +1,77 @@
-{ config, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 let
-  inherit (builtins) toJSON toString;
+  inherit (builtins) elemAt isAttrs isBool length mapAttrs toJSON;
   inherit (lib)
-    concatStringsSep elemAt literalExpression mkEnableOption mkIf mkOption
-    mkRemovedOptionModule optional optionalAttrs optionalString types;
+    boolToString concatMapStringsSep concatStringsSep escape literalExpression
+    mapAttrsToList mkEnableOption mkRemovedOptionModule mkDefault mkIf mkOption
+    optional types warn;
 
   cfg = config.services.picom;
+  opt = options.services.picom;
 
-  configFile = optionalString cfg.fade ''
-    # fading
-    fading = true;
-    fade-delta    = ${toString cfg.fadeDelta};
-    fade-in-step  = ${elemAt cfg.fadeSteps 0};
-    fade-out-step = ${elemAt cfg.fadeSteps 1};
-    fade-exclude  = ${toJSON cfg.fadeExclude};
-  '' + optionalString cfg.shadow ''
-
-    # shadows
-    shadow = true;
-    shadow-offset-x = ${toString (elemAt cfg.shadowOffsets 0)};
-    shadow-offset-y = ${toString (elemAt cfg.shadowOffsets 1)};
-    shadow-opacity  = ${cfg.shadowOpacity};
-    shadow-exclude  = ${toJSON cfg.shadowExclude};
-  '' + optionalString cfg.blur ''
-
-    # blur
-    blur-background         = true;
-    blur-background-exclude = ${toJSON cfg.blurExclude};
-  '' + ''
-
-    # opacity
-    active-opacity   = ${cfg.activeOpacity};
-    inactive-opacity = ${cfg.inactiveOpacity};
-    inactive-dim     = ${cfg.inactiveDim};
-    opacity-rule     = ${toJSON cfg.opacityRule};
-
-    wintypes:
-    {
-      dock          = { shadow = ${toJSON (!cfg.noDockShadow)}; };
-      dnd           = { shadow = ${toJSON (!cfg.noDNDShadow)}; };
-      popup_menu    = { opacity = ${cfg.menuOpacity}; };
-      dropdown_menu = { opacity = ${cfg.menuOpacity}; };
+  pairOf = x:
+    with types;
+    addCheck (listOf x) (y: length y == 2) // {
+      description = "pair of ${x.description}";
     };
 
-    # other options
-    backend = ${toJSON cfg.backend};
-    vsync = ${toJSON cfg.vSync};
-  '' + cfg.extraOptions;
+  floatBetween = a: b:
+    with types;
+    let
+      # toString prints floats with hardcoded high precision
+      floatToString = f: toJSON f;
+    in addCheck float (x: x <= b && x >= a) // {
+      description = "a floating point number in "
+        + "range [${floatToString a}, ${floatToString b}]";
+    };
+
+  mkDefaultAttrs = mapAttrs (n: v: mkDefault v);
+
+  # Basically a tinkered lib.generators.mkKeyValueDefault
+  # It either serializes a top-level definition "key: { values };"
+  # or an expression "key = { values };"
+  mkAttrsString = top:
+    mapAttrsToList (k: v:
+      let sep = if (top && isAttrs v) then ": " else " = ";
+      in "${escape [ sep ] k}${sep}${mkValueString v};");
+
+  # This serializes a Nix expression to the libconfig format.
+  mkValueString = v:
+    if types.bool.check v then
+      boolToString v
+    else if types.int.check v then
+      toString v
+    else if types.float.check v then
+      toString v
+    else if types.str.check v then
+      ''"${escape [ ''"'' ] v}"''
+    else if builtins.isList v then
+      "[ ${concatMapStringsSep " , " mkValueString v} ]"
+    else if types.attrs.check v then
+      "{ ${concatStringsSep " " (mkAttrsString false v)} }"
+    else
+      throw ''
+        invalid expression used in option services.picom.settings:
+        ${v}
+      '';
+
+  toConf = attrs: concatStringsSep "\n" (mkAttrsString true cfg.settings);
+
+  configFile = toConf cfg.settings;
 
 in {
+  imports = [
+    (mkRemovedOptionModule [ "services" "picom" "refreshRate" ]
+      "The option `refresh-rate` has been deprecated by upstream.")
+    (mkRemovedOptionModule [ "services" "picom" "extraOptions" ]
+      "This option has been replaced by `services.picom.settings`.")
+  ];
 
   options.services.picom = {
     enable = mkEnableOption "Picom X11 compositor";
 
-    blur = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Enable background blur on transparent windows.
-      '';
-    };
-
-    blurExclude = mkOption {
-      type = types.listOf types.str;
-      default = [ ];
-      example = [ "class_g = 'slop'" "class_i = 'polybar'" ];
-      description = ''
-        List of windows to exclude background blur.
-        See the
-        <citerefentry>
-          <refentrytitle>picom</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>
-        man page for more examples.
-      '';
-    };
-
-    experimentalBackends = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to use the new experimental backends.
-      '';
-    };
+    experimentalBackends = mkEnableOption "the new experimental backends";
 
     fade = mkOption {
       type = types.bool;
@@ -94,7 +82,7 @@ in {
     };
 
     fadeDelta = mkOption {
-      type = types.int;
+      type = types.ints.positive;
       default = 10;
       example = 5;
       description = ''
@@ -103,9 +91,9 @@ in {
     };
 
     fadeSteps = mkOption {
-      type = types.listOf types.str;
-      default = [ "0.028" "0.03" ];
-      example = [ "0.04" "0.04" ];
+      type = pairOf (floatBetween 1.0e-2 1);
+      default = [ 2.8e-2 3.0e-2 ];
+      example = [ 4.0e-2 4.0e-2 ];
       description = ''
         Opacity change between fade steps (in and out).
       '';
@@ -117,12 +105,7 @@ in {
       example = [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
       description = ''
         List of conditions of windows that should not be faded.
-        See the
-        <citerefentry>
-          <refentrytitle>picom</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>
-        man page for more examples.
+        See <literal>picom(1)</literal> man page for more examples.
       '';
     };
 
@@ -135,20 +118,20 @@ in {
     };
 
     shadowOffsets = mkOption {
-      type = types.listOf types.int;
+      type = pairOf types.int;
       default = [ (-15) (-15) ];
       example = [ (-10) (-15) ];
       description = ''
-        Horizontal and vertical offsets for shadows (in pixels).
+        Left and right offset for shadows (in pixels).
       '';
     };
 
     shadowOpacity = mkOption {
-      type = types.str;
-      default = "0.75";
-      example = "0.8";
+      type = floatBetween 0 1;
+      default = 0.75;
+      example = 0.8;
       description = ''
-        Window shadows opacity (number in range 0 - 1).
+        Window shadows opacity.
       '';
     };
 
@@ -158,87 +141,72 @@ in {
       example = [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
       description = ''
         List of conditions of windows that should have no shadow.
-        See the
-        <citerefentry>
-          <refentrytitle>picom</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>
-        man page for more examples.
-      '';
-    };
-
-    noDockShadow = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Avoid shadow on docks.
-      '';
-    };
-
-    noDNDShadow = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Avoid shadow on drag-and-drop windows.
+        See <literal>picom(1)</literal> man page for more examples.
       '';
     };
 
     activeOpacity = mkOption {
-      type = types.str;
-      default = "1.0";
-      example = "0.8";
+      type = floatBetween 0 1;
+      default = 1.0;
+      example = 0.8;
       description = ''
         Opacity of active windows.
       '';
     };
 
-    inactiveDim = mkOption {
-      type = types.str;
-      default = "0.0";
-      example = "0.2";
-      description = ''
-        Dim inactive windows.
-      '';
-    };
-
     inactiveOpacity = mkOption {
-      type = types.str;
-      default = "1.0";
-      example = "0.8";
+      type = floatBetween 0.1 1;
+      default = 1.0;
+      example = 0.8;
       description = ''
         Opacity of inactive windows.
       '';
     };
 
     menuOpacity = mkOption {
-      type = types.str;
-      default = "1.0";
-      example = "0.8";
+      type = floatBetween 0 1;
+      default = 1.0;
+      example = 0.8;
       description = ''
         Opacity of dropdown and popup menu.
       '';
     };
 
-    opacityRule = mkOption {
+    wintypes = mkOption {
+      type = types.attrs;
+      default = {
+        popup_menu = { opacity = cfg.menuOpacity; };
+        dropdown_menu = { opacity = cfg.menuOpacity; };
+      };
+      defaultText = literalExpression ''
+        {
+          popup_menu = { opacity = config.${opt.menuOpacity}; };
+          dropdown_menu = { opacity = config.${opt.menuOpacity}; };
+        }
+      '';
+      example = { };
+      description = ''
+        Rules for specific window types.
+      '';
+    };
+
+    opacityRules = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "87:class_i ?= 'scratchpad'" "91:class_i ?= 'xterm'" ];
+      example = [
+        "95:class_g = 'URxvt' && !_NET_WM_STATE@:32a"
+        "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
+      ];
       description = ''
-        List of opacity rules.
-        See the
-        <citerefentry>
-          <refentrytitle>picom</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>
-        man page for more examples.
+        Rules that control the opacity of windows, in format PERCENT:PATTERN.
       '';
     };
 
     backend = mkOption {
-      type = types.str;
-      default = "glx";
+      type = types.enum [ "glx" "xrender" "xr_glx_hybrid" ];
+      default = "xrender";
       description = ''
-        Backend to use: <literal>glx</literal> or <literal>xrender</literal>.
+        Backend to use: <literal>glx</literal>, <literal>xrender</literal> or <literal>xr_glx_hybrid</literal>.
       '';
     };
 
@@ -256,33 +224,75 @@ in {
       defaultText = literalExpression "pkgs.picom";
       example = literalExpression "pkgs.picom";
       description = ''
-        picom derivation to use.
+        Picom derivation to use.
       '';
     };
 
-    extraOptions = mkOption {
-      type = types.lines;
-      default = "";
-      example = ''
-        unredir-if-possible = true;
-        dbe = true;
-      '';
-      description = ''
-        Additional Picom configuration.
-      '';
-    };
+    settings = with types;
+      let
+        scalar = oneOf [ bool int float str ] // {
+          description = "scalar types";
+        };
+
+        libConfig = oneOf [ scalar (listOf libConfig) (attrsOf libConfig) ] // {
+          description = "libconfig type";
+        };
+
+        topLevel = attrsOf libConfig // {
+          description = ''
+            libconfig configuration. The format consists of an attributes
+            set (called a group) of settings. Each setting can be a scalar type
+            (boolean, integer, floating point number or string), a list of
+            scalars or a group itself
+          '';
+        };
+
+      in mkOption {
+        type = topLevel;
+        default = { };
+        example = literalExpression ''
+          blur =
+            { method = "gaussian";
+              size = 10;
+              deviation = 5.0;
+            };
+        '';
+        description = ''
+          Picom settings. Use this option to configure Picom settings not exposed
+          in a NixOS option or to bypass one. For the available options see the
+          CONFIGURATION FILES section at <literal>picom(1)</literal>.
+        '';
+      };
   };
 
-  imports = [
-    (mkRemovedOptionModule [ "services" "picom" "refreshRate" ]
-      "The option `refresh-rate` has been deprecated by upstream.")
-  ];
-
   config = mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "services.picom" pkgs
-        lib.platforms.linux)
-    ];
+    services.picom.settings = mkDefaultAttrs {
+      # fading
+      fading = cfg.fade;
+      fade-delta = cfg.fadeDelta;
+      fade-in-step = elemAt cfg.fadeSteps 0;
+      fade-out-step = elemAt cfg.fadeSteps 1;
+      fade-exclude = cfg.fadeExclude;
+
+      # shadows
+      shadow = cfg.shadow;
+      shadow-offset-x = elemAt cfg.shadowOffsets 0;
+      shadow-offset-y = elemAt cfg.shadowOffsets 1;
+      shadow-opacity = cfg.shadowOpacity;
+      shadow-exclude = cfg.shadowExclude;
+
+      # opacity
+      active-opacity = cfg.activeOpacity;
+      inactive-opacity = cfg.inactiveOpacity;
+
+      wintypes = cfg.wintypes;
+
+      opacity-rule = cfg.opacityRules;
+
+      # other options
+      backend = cfg.backend;
+      vsync = cfg.vSync;
+    };
 
     home.packages = [ cfg.package ];
 
@@ -307,4 +317,6 @@ in {
       };
     };
   };
+
+  meta.maintainers = with lib.maintainers; [ thiagokokada ];
 }

@@ -108,6 +108,8 @@ in {
 
       Service = {
         Type = "simple";
+        # swayidle executes commands using "sh -c", so the PATH needs to contain a shell.
+        Environment = [ "PATH=${makeBinPath [ pkgs.bash ]}" ];
         ExecStart =
           "${cfg.package}/bin/swayidle -w ${concatStringsSep " " args}";
       };

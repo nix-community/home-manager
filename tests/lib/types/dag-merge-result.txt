@@ -1,3 +1,4 @@
 before:before
+merged:left,middle,middle,right
 between:between
 after:after

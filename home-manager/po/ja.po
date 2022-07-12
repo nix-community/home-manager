@@ -8,8 +8,9 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2022-02-10 04:55+0000\n"
-"Last-Translator: Heman Gandhi <hemangandhi@gmail.com>\n"
+"PO-Revision-Date: 2022-07-02 02:18+0000\n"
+"Last-Translator: OKA, NETSURFER AND OBSERVER, FRONTEND, DEVELOPER "
+"(DOTFILES,OSINT,OSS), KEYBASE: (3B0E8E0895DAC8B8) <tetrapasta02@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
 "cli/ja/>\n"
 "Language: ja\n"
@@ -17,11 +18,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.11-dev\n"
+"X-Generator: Weblate 4.13.1-dev\n"
 
 #: home-manager/home-manager:60
 msgid "No configuration file found at %s"
-msgstr "%s に設定ファイルを見つかりません"
+msgstr "%s に設定ファイルが見つかりません"
 
 #: home-manager/home-manager:79
 msgid "No configuration file found. Please create one at %s"
@@ -43,8 +44,8 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
-"未読の関連ニュースが%d件あります\n"
-"\"%s news\"コマンドを使って読んでください。"
+"未読のお知らせが%d件あります。\n"
+"\"%s news\"コマンドで確認できます。"
 
 #: home-manager/home-manager:251
 msgid "Unknown \"news.display\" setting \"%s\"."
@@ -145,7 +146,7 @@ msgstr "Home Managerの初期設定を生成しています..."
 
 #: home-manager/install.nix:66
 msgid "Creating initial Home Manager generation..."
-msgstr "Home Managertの最初の世代を生成しています..."
+msgstr "Home Managerの最初の世代を生成しています..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/install.nix:71
