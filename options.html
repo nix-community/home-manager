@@ -9348,51 +9348,25 @@ password are escaped.
                     &lt;home-manager/modules/services/pbgopy.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.enable"></a><a class="term" href="options.html#opt-services.picom.enable"><code class="option">services.picom.enable</code></a></span></dt><dd><p>Whether to enable Picom X11 compositor.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.package"></a><a class="term" href="options.html#opt-services.picom.package"><code class="option">services.picom.package</code></a></span></dt><dd><p>picom derivation to use.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.package"></a><a class="term" href="options.html#opt-services.picom.package"><code class="option">services.picom.package</code></a></span></dt><dd><p>Picom derivation to use.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.picom</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.picom</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.activeOpacity"></a><a class="term" href="options.html#opt-services.picom.activeOpacity"><code class="option">services.picom.activeOpacity</code></a></span></dt><dd><p>Opacity of active windows.
-</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"1.0"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"0.8"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
+</p><p><span class="emphasis"><em>Type:</em></span> a floating point number in range [0, 1]</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal"></code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.backend"></a><a class="term" href="options.html#opt-services.picom.backend"><code class="option">services.picom.backend</code></a></span></dt><dd><p>Backend to use: <code class="literal">glx</code> or <code class="literal">xrender</code>.
-</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"glx"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.backend"></a><a class="term" href="options.html#opt-services.picom.backend"><code class="option">services.picom.backend</code></a></span></dt><dd><p>Backend to use: <code class="literal">glx</code>, <code class="literal">xrender</code> or <code class="literal">xr_glx_hybrid</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> one of "glx", "xrender", "xr_glx_hybrid"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"xrender"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.blur"></a><a class="term" href="options.html#opt-services.picom.blur"><code class="option">services.picom.blur</code></a></span></dt><dd><p>Enable background blur on transparent windows.
-</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.blurExclude"></a><a class="term" href="options.html#opt-services.picom.blurExclude"><code class="option">services.picom.blurExclude</code></a></span></dt><dd><p>List of windows to exclude background blur.
-See the
-<span class="citerefentry"><span class="refentrytitle">picom</span>(1)</span>
-man page for more examples.
-</p><p><span class="emphasis"><em>Type:</em></span> list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        [
-        
-        ]
-    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-        [
-        "class_g = 'slop'" "class_i = 'polybar'" 
-        ]
-    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.experimentalBackends"></a><a class="term" href="options.html#opt-services.picom.experimentalBackends"><code class="option">services.picom.experimentalBackends</code></a></span></dt><dd><p>Whether to use the new experimental backends.
-</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.extraOptions"></a><a class="term" href="options.html#opt-services.picom.extraOptions"><code class="option">services.picom.extraOptions</code></a></span></dt><dd><p>Additional Picom configuration.
-</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
-unredir-if-possible = true;
-dbe = true;
-''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.experimentalBackends"></a><a class="term" href="options.html#opt-services.picom.experimentalBackends"><code class="option">services.picom.experimentalBackends</code></a></span></dt><dd><p>Whether to enable the new experimental backends.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.fade"></a><a class="term" href="options.html#opt-services.picom.fade"><code class="option">services.picom.fade</code></a></span></dt><dd><p>Fade windows in and out.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.fadeDelta"></a><a class="term" href="options.html#opt-services.picom.fadeDelta"><code class="option">services.picom.fadeDelta</code></a></span></dt><dd><p>Time between fade animation step (in ms).
-</p><p><span class="emphasis"><em>Type:</em></span> signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">10</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">5</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
+</p><p><span class="emphasis"><em>Type:</em></span> positive integer, meaning &gt;0</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">10</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">5</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.fadeExclude"></a><a class="term" href="options.html#opt-services.picom.fadeExclude"><code class="option">services.picom.fadeExclude</code></a></span></dt><dd><p>List of conditions of windows that should not be faded.
-See the
-<span class="citerefentry"><span class="refentrytitle">picom</span>(1)</span>
-man page for more examples.
+See <code class="literal">picom(1)</code> man page for more examples.
 </p><p><span class="emphasis"><em>Type:</em></span> list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         
@@ -9404,52 +9378,56 @@ man page for more examples.
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.fadeSteps"></a><a class="term" href="options.html#opt-services.picom.fadeSteps"><code class="option">services.picom.fadeSteps</code></a></span></dt><dd><p>Opacity change between fade steps (in and out).
-</p><p><span class="emphasis"><em>Type:</em></span> list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> pair of a floating point number in range [0.01, 1]</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
-        "0.028" "0.03" 
+          
         ]
     </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         [
-        "0.04" "0.04" 
+          
         ]
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.inactiveDim"></a><a class="term" href="options.html#opt-services.picom.inactiveDim"><code class="option">services.picom.inactiveDim</code></a></span></dt><dd><p>Dim inactive windows.
-</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"0.0"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"0.2"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.inactiveOpacity"></a><a class="term" href="options.html#opt-services.picom.inactiveOpacity"><code class="option">services.picom.inactiveOpacity</code></a></span></dt><dd><p>Opacity of inactive windows.
-</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"1.0"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"0.8"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
+</p><p><span class="emphasis"><em>Type:</em></span> a floating point number in range [0.1, 1]</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal"></code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.menuOpacity"></a><a class="term" href="options.html#opt-services.picom.menuOpacity"><code class="option">services.picom.menuOpacity</code></a></span></dt><dd><p>Opacity of dropdown and popup menu.
-</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"1.0"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"0.8"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
+</p><p><span class="emphasis"><em>Type:</em></span> a floating point number in range [0, 1]</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal"></code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.noDNDShadow"></a><a class="term" href="options.html#opt-services.picom.noDNDShadow"><code class="option">services.picom.noDNDShadow</code></a></span></dt><dd><p>Avoid shadow on drag-and-drop windows.
-</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.noDockShadow"></a><a class="term" href="options.html#opt-services.picom.noDockShadow"><code class="option">services.picom.noDockShadow</code></a></span></dt><dd><p>Avoid shadow on docks.
-</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.opacityRule"></a><a class="term" href="options.html#opt-services.picom.opacityRule"><code class="option">services.picom.opacityRule</code></a></span></dt><dd><p>List of opacity rules.
-See the
-<span class="citerefentry"><span class="refentrytitle">picom</span>(1)</span>
-man page for more examples.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.opacityRules"></a><a class="term" href="options.html#opt-services.picom.opacityRules"><code class="option">services.picom.opacityRules</code></a></span></dt><dd><p>Rules that control the opacity of windows, in format PERCENT:PATTERN.
 </p><p><span class="emphasis"><em>Type:</em></span> list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         
         ]
     </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         [
-        "87:class_i ?= 'scratchpad'" "91:class_i ?= 'xterm'" 
+        "95:class_g = 'URxvt' &amp;&amp; !_NET_WM_STATE@:32a" "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'" 
         ]
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/picom.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.settings"></a><a class="term" href="options.html#opt-services.picom.settings"><code class="option">services.picom.settings</code></a></span></dt><dd><p>Picom settings. Use this option to configure Picom settings not exposed
+in a NixOS option or to bypass one. For the available options see the
+CONFIGURATION FILES section at <code class="literal">picom(1)</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> libconfig configuration. The format consists of an attributes
+set (called a group) of settings. Each setting can be a scalar type
+(boolean, integer, floating point number or string), a list of
+scalars or a group itself
+</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">blur =
+  { method = "gaussian";
+    size = 10;
+    deviation = 5.0;
+  };
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.shadow"></a><a class="term" href="options.html#opt-services.picom.shadow"><code class="option">services.picom.shadow</code></a></span></dt><dd><p>Draw window shadows.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.shadowExclude"></a><a class="term" href="options.html#opt-services.picom.shadowExclude"><code class="option">services.picom.shadowExclude</code></a></span></dt><dd><p>List of conditions of windows that should have no shadow.
-See the
-<span class="citerefentry"><span class="refentrytitle">picom</span>(1)</span>
-man page for more examples.
+See <code class="literal">picom(1)</code> man page for more examples.
 </p><p><span class="emphasis"><em>Type:</em></span> list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         
@@ -9460,8 +9438,8 @@ man page for more examples.
         ]
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.shadowOffsets"></a><a class="term" href="options.html#opt-services.picom.shadowOffsets"><code class="option">services.picom.shadowOffsets</code></a></span></dt><dd><p>Horizontal and vertical offsets for shadows (in pixels).
-</p><p><span class="emphasis"><em>Type:</em></span> list of signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.shadowOffsets"></a><a class="term" href="options.html#opt-services.picom.shadowOffsets"><code class="option">services.picom.shadowOffsets</code></a></span></dt><dd><p>Left and right offset for shadows (in pixels).
+</p><p><span class="emphasis"><em>Type:</em></span> pair of signed integer</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         -15 -15 
         ]
@@ -9471,11 +9449,22 @@ man page for more examples.
         ]
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.shadowOpacity"></a><a class="term" href="options.html#opt-services.picom.shadowOpacity"><code class="option">services.picom.shadowOpacity</code></a></span></dt><dd><p>Window shadows opacity (number in range 0 - 1).
-</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"0.75"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"0.8"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.shadowOpacity"></a><a class="term" href="options.html#opt-services.picom.shadowOpacity"><code class="option">services.picom.shadowOpacity</code></a></span></dt><dd><p>Window shadows opacity.
+</p><p><span class="emphasis"><em>Type:</em></span> a floating point number in range [0, 1]</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal"></code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.vSync"></a><a class="term" href="options.html#opt-services.picom.vSync"><code class="option">services.picom.vSync</code></a></span></dt><dd><p>Enable vertical synchronization.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/picom.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.picom.wintypes"></a><a class="term" href="options.html#opt-services.picom.wintypes"><code class="option">services.picom.wintypes</code></a></span></dt><dd><p>Rules for specific window types.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set</p><p><span class="emphasis"><em>Default:</em></span> </p><pre class="programlisting">{
+  popup_menu = { opacity = config.services.picom.menuOpacity; };
+  dropdown_menu = { opacity = config.services.picom.menuOpacity; };
+}
+</pre><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/picom.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/picom.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.plan9port.fontsrv.enable"></a><a class="term" href="options.html#opt-services.plan9port.fontsrv.enable"><code class="option">services.plan9port.fontsrv.enable</code></a></span></dt><dd><p>Whether to enable the Plan 9 file system access to host fonts.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/plan9port.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/plan9port.nix&gt;
