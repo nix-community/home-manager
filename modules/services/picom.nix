@@ -4,8 +4,8 @@ let
   inherit (builtins) elemAt isAttrs isBool length mapAttrs toJSON;
   inherit (lib)
     boolToString concatMapStringsSep concatStringsSep escape literalExpression
-    mapAttrsToList mkEnableOption mkRemovedOptionModule mkDefault mkIf mkOption
-    optional types warn;
+    mapAttrsToList mkEnableOption mkRenamedOptionModule mkRemovedOptionModule
+    mkDefault mkIf mkOption optional types warn;
 
   cfg = config.services.picom;
   opt = options.services.picom;
@@ -66,6 +66,11 @@ in {
       "The option `refresh-rate` has been deprecated by upstream.")
     (mkRemovedOptionModule [ "services" "picom" "extraOptions" ]
       "This option has been replaced by `services.picom.settings`.")
+    (mkRenamedOptionModule [ "services" "picom" "opacityRule" ] [
+      "services"
+      "picom"
+      "opacityRules"
+    ])
   ];
 
   options.services.picom = {
