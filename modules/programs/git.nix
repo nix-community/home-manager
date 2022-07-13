@@ -486,8 +486,7 @@ in {
       home.packages = [ pkgs.difftastic ];
 
       programs.git.iniContent = let
-        difftCommand = concatStringsSep " " [
-          "${pkgs.difftastic}/bin/difft"
+        difftCommand = "${pkgs.difftastic}/bin/difft " + concatStringsSep " " [
           "--color ${cfg.difftastic.color}"
           "--background ${cfg.difftastic.background}"
           "--display ${cfg.difftastic.display}"
