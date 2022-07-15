@@ -180,22 +180,24 @@ in {
             (map dropNullFields cfg.keybindings);
         }))
       (mkIf (cfg.extensions != [ ]) (let
-        combinedExtensionsDrv = pkgs.buildEnv {
-          name = "vscode-extensions";
-          paths = cfg.extensions;
-        };
-
-        extensionsFolder = "${combinedExtensionsDrv}/share/vscode/extensions";
+        subDir = "share/vscode/extensions";
 
         # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-        addSymlinkToExtension = k: {
-          "${extensionPath}/${k}".source = "${extensionsFolder}/${k}";
-        };
-        extensions = builtins.attrNames (builtins.readDir extensionsFolder);
+        toPaths = ext:
+          map (k: { "${extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; })
+          (if ext ? vscodeExtUniqueId then
+            [ ext.vscodeExtUniqueId ]
+          else
+            builtins.attrNames (builtins.readDir (ext + "/${subDir}")));
       in if cfg.mutableExtensionsDir then
-        mkMerge (map addSymlinkToExtension extensions)
+        mkMerge (concatMap toPaths cfg.extensions)
       else {
-        "${extensionPath}".source = extensionsFolder;
+        "${extensionPath}".source = let
+          combinedExtensionsDrv = pkgs.buildEnv {
+            name = "vscode-extensions";
+            paths = cfg.extensions;
+          };
+        in "${combinedExtensionsDrv}/${subDir}";
       }))
     ];
   };
