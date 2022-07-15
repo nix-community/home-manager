@@ -58,13 +58,6 @@ let
 
   firefoxBookmarksFile = bookmarks:
     let
-      escapeXML = replaceStrings [ ''"'' "'" "<" ">" "&" ] [
-        "&quot;"
-        "&apos;"
-        "&lt;"
-        "&gt;"
-        "&amp;"
-      ];
       mapper = _: entry: ''
         <DT><A HREF="${escapeXML entry.url}" ADD_DATE="0" LAST_MODIFIED="0"${
           lib.optionalString (entry.keyword != null)
