@@ -1,5 +1,5 @@
 { runCommand, lib, bash, callPackage, coreutils, findutils, gettext, gnused
-, less
+, less, ncurses
 # used for pkgs.path for nixos-option
 , pkgs
 
@@ -31,7 +31,15 @@ in runCommand "home-manager" {
   substituteInPlace $out/bin/home-manager \
     --subst-var-by bash "${bash}" \
     --subst-var-by DEP_PATH "${
-      lib.makeBinPath [ coreutils findutils gettext gnused less nixos-option ]
+      lib.makeBinPath [
+        coreutils
+        findutils
+        gettext
+        gnused
+        less
+        ncurses
+        nixos-option
+      ]
     }" \
     --subst-var-by HOME_MANAGER_LIB '${../lib/bash/home-manager.sh}' \
     --subst-var-by HOME_MANAGER_PATH '${pathStr}' \
