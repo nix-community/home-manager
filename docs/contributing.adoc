@@ -105,7 +105,7 @@ When you have made changes to a module, it is a good idea to check that the man 
 
 [source,console]
 $ nix-build -A docs.manPages
-$ man ./result/share/man/man5/home-configuration.nix.5
+$ man ./result/share/man/man5/home-configuration.nix.5.gz
 
 ==== Add yourself as a module maintainer
 
@@ -155,7 +155,7 @@ A potential gotcha with respect to licensing are option descriptions. Often it i
 
 The commits in your pull request should be reasonably self-contained, that is, each commit should make sense in isolation. In particular, you will be asked to amend any commit that introduces syntax errors or similar problems even if they are fixed in a later commit.
 
-The commit messages should follow the {seven-rules}[seven rules]. We also ask you to include the affected code component or module in the first line. That is, a commit message should follow the template
+The commit messages should follow the {seven-rules}[seven rules], except for "Capitalize the subject line". We also ask you to include the affected code component or module in the first line. That is, a commit message should follow the template
 
 ----
 {component}: {description}
