@@ -86,8 +86,7 @@ let
         lib.concatStringsSep "\n"
         (map (itemToHTMLOrRecurse indentLevel) bookmarks);
 
-      bookmarkEntries = allItemsToHTML 1
-        (if isAttrs bookmarks then lib.attrValues bookmarks else bookmarks);
+      bookmarkEntries = allItemsToHTML 1 bookmarks;
     in pkgs.writeText "firefox-bookmarks.html" ''
       <!DOCTYPE NETSCAPE-Bookmark-file-1>
       <!-- This is an automatically generated file.
@@ -292,9 +291,10 @@ in {
                 }) // {
                   description = "directory submodule";
                 };
+
+                nodeType = types.either bookmarkType directoryType;
               in with types;
-              either (attrsOf bookmarkType)
-              (listOf (either bookmarkType directoryType));
+              coercedTo (attrsOf nodeType) attrValues (listOf nodeType);
               default = [ ];
               example = literalExpression ''
                 [
