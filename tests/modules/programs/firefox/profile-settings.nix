@@ -17,6 +17,13 @@ lib.mkIf config.test.enableBig {
       settings = { "general.smoothScroll" = false; };
       bookmarks = [
         {
+          toolbar = true;
+          bookmarks = [{
+            name = "Home Manager";
+            url = "https://nixos.wiki/wiki/Home_Manager";
+          }];
+        }
+        {
           name = "wikipedia";
           keyword = "wiki";
           url = "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
