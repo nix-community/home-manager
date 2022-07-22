@@ -21,7 +21,7 @@
       darwinModule = self.darwinModules.default;
 
       lib = {
-        hm = import ./modules/lib { lib = nixpkgs.lib; };
+        hm = (import ./modules/lib/stdlib-extended.nix nixpkgs.lib).hm;
         homeManagerConfiguration = { modules ? [ ], pkgs, lib ? pkgs.lib
           , extraSpecialArgs ? { }, check ? true
             # Deprecated:
