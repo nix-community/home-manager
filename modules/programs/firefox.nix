@@ -71,7 +71,12 @@ let
           }>${escapeXML bookmark.name}</A>'';
 
       directoryToHTML = indentLevel: directory: ''
-        ${indent indentLevel}<DT><H3>${escapeXML directory.name}</H3>
+        ${indent indentLevel}<DT>${
+          if directory.toolbar then
+            ''<H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks Toolbar''
+          else
+            "<H3>${escapeXML directory.name}"
+        }</H3>
         ${indent indentLevel}<DL><p>
         ${allItemsToHTML (indentLevel + 1) directory.bookmarks}
         ${indent indentLevel}</p></DL>'';
@@ -286,6 +291,12 @@ in {
                       type = types.listOf bookmarkType;
                       default = [ ];
                       description = "Bookmarks within directory.";
+                    };
+
+                    toolbar = mkOption {
+                      type = types.bool;
+                      default = false;
+                      description = "If directory should be shown in toolbar.";
                     };
                   };
                 }) // {
