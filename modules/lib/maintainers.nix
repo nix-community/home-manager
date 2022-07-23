@@ -293,4 +293,10 @@
     github = "mtoohey31";
     githubId = 36740602;
   };
+  jevy = {
+    name = "Jevin Maltais";
+    email = "jevin@quickjack.ca";
+    github = "jevy";
+    githubId = 110620;
+  };
 }
