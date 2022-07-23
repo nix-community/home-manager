@@ -485,3 +485,16 @@ Makefile                                              @thiagokokada
 /modules/xresources.nix                               @rycee
 
 /modules/xsession.nix                                 @rycee
+
+Makefile                                              @thiagokokada
+
+/modules/services/swayidle.nix                        @c0deaddict
+/tests/modules/services/swayidle                      @c0deaddict
+
+/modules/programs/ion.nix                             @jo1gi
+
+/modules/services/plex-mpv-shim.nix                   @starcraft66
+
+/modules/services/sctd.nix                            @somasis
+
+/modules/programs/sunpaper.nix                        @jevy

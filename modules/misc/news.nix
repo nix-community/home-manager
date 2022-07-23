@@ -605,6 +605,13 @@ in
           A new module is available: 'programs.librewolf'.
         '';
       }
+      {
+        time = "2022-07-23T13:28:54+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.sunpaper'.
+        '';
+      }
     ];
   };
 }
