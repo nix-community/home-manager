@@ -13,9 +13,7 @@ body:
     label: Are you following the right branch?
     description: |
       You should follow the branch of Home Manager that corresponds to your
-      version of Nixpkgs; see
-      [the README](https://github.com/nix-community/home-manager#releases)
-      for details.
+      version of Nixpkgs; see [the README](https://github.com/nix-community/home-manager#releases) for details.
     options:
     - label: My Nixpkgs and Home Manager versions are in sync
       required: true
