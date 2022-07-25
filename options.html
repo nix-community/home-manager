@@ -12394,6 +12394,69 @@ start.
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.i3.extraConfig"></a><a class="term" href="options.html#opt-xsession.windowManager.i3.extraConfig"><code class="option">xsession.windowManager.i3.extraConfig</code></a></span></dt><dd><p>Extra configuration lines to add to ~/.config/i3/config.</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.spectrwm.enable"></a><a class="term" href="options.html#opt-xsession.windowManager.spectrwm.enable"><code class="option">xsession.windowManager.spectrwm.enable</code></a></span></dt><dd><p>Whether to enable Spectrwm window manager.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.spectrwm.package"></a><a class="term" href="options.html#opt-xsession.windowManager.spectrwm.package"><code class="option">xsession.windowManager.spectrwm.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>spectrwm</strong></span> command.
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.spectrwm</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.spectrwm.bindings"></a><a class="term" href="options.html#opt-xsession.windowManager.spectrwm.bindings"><code class="option">xsession.windowManager.spectrwm.bindings</code></a></span></dt><dd><p>Spectrwm keybindings.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  term = "Mod+Return";
+  restart = "Mod+Shift+r";
+  quit = "Mod+Shift+q";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.spectrwm.programs"></a><a class="term" href="options.html#opt-xsession.windowManager.spectrwm.programs"><code class="option">xsession.windowManager.spectrwm.programs</code></a></span></dt><dd><p>Spectrwm programs variables.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  term = "alacritty";
+  search = "dmenu -ip -p 'Window name/id:';
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.spectrwm.quirks"></a><a class="term" href="options.html#opt-xsession.windowManager.spectrwm.quirks"><code class="option">xsession.windowManager.spectrwm.quirks</code></a></span></dt><dd><p>Spectrwm quicks (custom window rules).</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  Matplotlib = "FLOAT";
+  Pavucontrol = "FLOAT";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.spectrwm.settings"></a><a class="term" href="options.html#opt-xsession.windowManager.spectrwm.settings"><code class="option">xsession.windowManager.spectrwm.settings</code></a></span></dt><dd><p>Spectrwm settings.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of boolean or signed integer or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  modkey = "Mod4";
+  workspace_limit = 5;
+  focus_mode = "manual";
+  focus_close = "next";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.spectrwm.unbindings"></a><a class="term" href="options.html#opt-xsession.windowManager.spectrwm.unbindings"><code class="option">xsession.windowManager.spectrwm.unbindings</code></a></span></dt><dd><p>List of keybindings to disable from default Spectrwm configuration.
+</p><p><span class="emphasis"><em>Type:</em></span> list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[
+  "MOD+e"
+  "MOD+f"
+  "MOD+m"
+  "MOD+s"
+  "MOD+u"
+  "MOD+t"
+]
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.xmonad.enable"></a><a class="term" href="options.html#opt-xsession.windowManager.xmonad.enable"><code class="option">xsession.windowManager.xmonad.enable</code></a></span></dt><dd><p>Whether to enable xmonad window manager.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/window-managers/xmonad.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xsession.windowManager.xmonad.enableContribAndExtras"></a><a class="term" href="options.html#opt-xsession.windowManager.xmonad.enableContribAndExtras"><code class="option">xsession.windowManager.xmonad.enableContribAndExtras</code></a></span></dt><dd><p>Enable xmonad-{contrib,extras} in xmonad.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix#blob-path" target="_top">
