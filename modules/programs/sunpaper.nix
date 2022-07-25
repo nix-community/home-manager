@@ -16,6 +16,7 @@ let
     ];
   }));
 in {
+  meta.maintainers = [ hm.maintainers.jevy ];
   config = mkIf cfg.enable {
 
     home.packages = [ newDerivation ];
