@@ -288,7 +288,7 @@ in {
                     };
 
                     bookmarks = mkOption {
-                      type = types.listOf bookmarkType;
+                      type = types.listOf nodeType;
                       default = [ ];
                       description = "Bookmarks within directory.";
                     };
