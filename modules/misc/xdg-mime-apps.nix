@@ -94,7 +94,7 @@ in {
             for p in $ps ; do
               for path in "$p"/share/applications/*.desktop ; do
                 name="''${path##*/}"
-                sed -n "/^MimeType=/ { s/.*=//; s/;/;$name\n/g; p; }" "$path"
+                sed -n -E "/^MimeType=/ { s/.*=//; s/;?$|;/;$name\n/g; p; }" "$path"
               done
             done > "$out"
           '';
