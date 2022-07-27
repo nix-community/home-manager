@@ -25,7 +25,7 @@ in {
       type = types.package;
       default = pkgs.librewolf;
       defaultText = literalExpression "pkgs.librewolf";
-      description = "The LibeWolf package to use.";
+      description = "The LibreWolf package to use.";
     };
 
     settings = mkOption {
