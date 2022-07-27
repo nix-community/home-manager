@@ -95,6 +95,15 @@ in {
       mkEnableOption "the gh git credential helper for github.com" // {
         default = true;
       };
+
+    extensions = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      description = ''
+        gh extensions, see <link xlink:href="https://cli.github.com/manual/gh_extension"/>.
+      '';
+      example = literalExpression "[ pkgs.gh-eco ]";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -106,5 +115,12 @@ in {
     programs.git.extraConfig.credential."https://github.com".helper =
       mkIf cfg.enableGitCredentialHelper
       "${cfg.package}/bin/gh auth git-credential";
+
+    xdg.dataFile."gh/extensions" = mkIf (cfg.extensions != [ ]) {
+      source = pkgs.linkFarm "gh-extensions" (builtins.map (p: {
+        name = p.pname;
+        path = "${p}/bin";
+      }) cfg.extensions);
+    };
   };
 }
