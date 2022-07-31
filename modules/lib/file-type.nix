@@ -75,6 +75,22 @@ in
           '';
         };
 
+        allowRecursiveMerge = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+	    By default, two or more file sources cannot be linked to
+	    the same target path, even if they are all directories and
+	    all recursively linked.
+	    </para><para>
+            This option, when set to <literal>true</literal> on all
+	    conflicting recursive file sources, allows said sources
+	    to be merged then recursively linked to their common
+	    target path (see documentation for the
+	    <literal>recursive</literal> option).
+          '';
+        };
+
         onChange = mkOption {
           type = types.lines;
           default = "";

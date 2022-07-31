@@ -42,9 +42,10 @@ in {
     assertions = [
       (let
         dups = attrNames (filterAttrs (n: v: (v.count > 1 && v.nonrec > 0))
-          (foldAttrs (acc: v: {
-            count = acc.count + v.count;
-            nonrec = acc.nonrec + v.nonrec;
+          (foldAttrs (v: acc: {
+            count = add acc.count v.count;
+            # world's dumbest "coerce bool to int then add"
+            nonrec = add acc.nonrec (stringLength (toString v.nonrec));
           }) {
             count = 0;
             nonrec = 0;
@@ -54,7 +55,7 @@ in {
               nonrec = (!v.recursive);
             };
           }) cfg)));
-        dupsStr = concatStringsSep ", " (attrNames dups);
+        dupsStr = concatStringsSep ", " dups;
       in {
         assertion = dups == [ ];
         message = ''
@@ -97,7 +98,7 @@ in {
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
           function isHomeFilePattern() {
-            return "$(realpath -m "$1") == \"$(realpath -e ${
+            return "$(realpath -m \"$1\") == \"$(realpath -e ${
               escapeShellArg builtins.storeDir
             })\"/*-home-manager-files/*"
           }
@@ -121,7 +122,7 @@ in {
             if [[ -n $forced ]]; then
               $VERBOSE_ECHO "Skipping collision check for $targetPath"
             elif [[ -e "$targetPath" \
-                && ! $isHomeFilePattern $targetPath ]] ; then
+                && ! $(isHomeFilePattern $targetPath) ]] ; then
               # The target file already exists and it isn't a symlink owned by Home Manager.
               if cmp -s "$sourcePath" "$targetPath"; then
                 # First compare the files' content. If they're equal, we're fine.
@@ -211,7 +212,7 @@ in {
         # considered part of a Home Manager generation.
 
         function isHomeFilePattern() {
-          return "$(realpath -m "$1") == \"$(realpath -e ${
+          return "$(realpath -m \"$1\") == \"$(realpath -e ${
             escapeShellArg builtins.storeDir
           })\"/*-home-manager-files/*"
         }
@@ -222,7 +223,7 @@ in {
           targetPath="$HOME/$relativePath"
           if [[ -e "$newGenFiles/$relativePath" ]] ; then
             $VERBOSE_ECHO "Checking $targetPath: exists"
-          elif [[ ! $isHomeFilePattern $targetPath ]] ; then
+          elif [[ ! $(isHomeFilePattern $targetPath) ]] ; then
             warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
           else
             $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
@@ -354,7 +355,7 @@ in {
         # If this is a "simple collision", simply log the conflict and otherwise ignore it,
         # mainly to make the `files-target-config` test work as expected.
         if [[ -d "$realOut/$relTarget" ]] && [[ $recursive ]] && [[ $allowrecursivedirmerge ]]; then
-          # pass
+          echo -n "" # pass
         elif [[ -e "$realOut/$relTarget" ]]; then
           echo "File conflict for file '$relTarget'" >&2
           return
@@ -392,8 +393,8 @@ in {
             cp "$source" "$target"
 
             if [[ $executable == inherit ]]; then
+	      echo -n ""
               # Don't change file mode if it should match the source.
-              :
             elif [[ $executable ]]; then
               chmod +x "$target"
             else
@@ -409,7 +410,7 @@ in {
           v.target
           (if v.executable == null then "inherit" else toString v.executable)
           (toString v.recursive)
-          (toString v.allowrecursivemerge)
+          (toString v.allowRecursiveMerge)
         ]
       }
     '') cfg));
