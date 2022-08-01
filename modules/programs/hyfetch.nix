@@ -37,7 +37,8 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    xdg.configFile."hyfetch.json".source =
-      jsonFormat.generate "hyfetch.json" cfg.settings;
+    xdg.configFile."hyfetch.json" = mkIf (cfg.settings != { }) {
+      source = jsonFormat.generate "hyfetch.json" cfg.settings;
+    };
   };
 }
