@@ -82,6 +82,7 @@ let
     ./programs/himalaya.nix
     ./programs/home-manager.nix
     ./programs/htop.nix
+    ./programs/hyfetch.nix
     ./programs/i3status-rust.nix
     ./programs/i3status.nix
     ./programs/info.nix

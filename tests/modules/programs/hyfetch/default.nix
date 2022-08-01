@@ -1,0 +1,1 @@
+{ hyfetch-settings = ./settings.nix; }
