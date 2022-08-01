@@ -74,6 +74,7 @@ import nmt {
     ./modules/programs/helix
     ./modules/programs/himalaya
     ./modules/programs/htop
+    ./modules/programs/hyfetch
     ./modules/programs/i3status
     ./modules/programs/irssi
     ./modules/programs/kakoune
