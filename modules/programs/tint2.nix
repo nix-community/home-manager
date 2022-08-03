@@ -31,7 +31,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.package ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile = {
       "tint2/tint2rc" =
