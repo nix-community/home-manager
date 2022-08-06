@@ -68,6 +68,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/bash.nix                            @rycee
 
+/modules/programs/bashmount.nix                       @AndersonTorres
+
 /modules/programs/bat.nix                             @marsam
 
 /modules/programs/beets.nix                           @rycee
