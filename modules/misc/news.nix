@@ -646,6 +646,13 @@ in
           A new module is available: 'programs.wezterm'.
         '';
       }
+
+      {
+        time = "2022-08-08T16:11:22+00:00";
+        message = ''
+          A new module is available: 'programs.bashmount'.
+        '';
+      }
     ];
   };
 }

@@ -52,6 +52,7 @@ let
     ./programs/autojump.nix
     ./programs/autorandr.nix
     ./programs/bash.nix
+    ./programs/bashmount.nix
     ./programs/bat.nix
     ./programs/beets.nix
     ./programs/bottom.nix
