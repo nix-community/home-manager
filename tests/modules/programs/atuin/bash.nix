@@ -3,7 +3,10 @@
 {
   programs = {
     atuin.enable = true;
-    bash.enable = true;
+    bash = {
+      enable = true;
+      enableCompletion = false;
+    };
   };
 
   test.stubs = {
