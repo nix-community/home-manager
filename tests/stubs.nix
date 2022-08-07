@@ -40,7 +40,7 @@ let
       pkg = if name == "dummy" && buildScript == defaultBuildScript then
         dummyPackage
       else
-        pkgs.runCommandLocal name { } buildScript;
+        pkgs.runCommandLocal name { pname = name; } buildScript;
     in pkg // optionalAttrs (outPath != null) { inherit outPath; }
     // optionalAttrs (version != null) { inherit version; };
 
