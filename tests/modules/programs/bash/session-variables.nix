@@ -6,6 +6,7 @@ with lib;
   config = {
     programs.bash = {
       enable = true;
+      enableCompletion = false;
 
       sessionVariables = {
         V1 = "v1";

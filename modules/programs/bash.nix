@@ -30,6 +30,27 @@ in
     programs.bash = {
       enable = mkEnableOption "GNU Bourne-Again SHell";
 
+      enableCompletion = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to enable Bash completion for all interactive Bash shells.
+
+          </para><para>
+
+          Note, if you use NixOS or nix-darwin and do not have Bash completion
+          enabled in the system configuration, then make sure to add
+
+          <programlisting language="nix">
+            environment.pathsToLink = [ "/share/bash-completion" ];
+          </programlisting>
+
+          to your system configuration to get completion for system packages.
+          Note, the legacy <filename>/etc/bash_completion.d</filename> path is
+          not supported by Home Manager.
+        '';
+      };
+
       historySize = mkOption {
         type = types.int;
         default = 10000;
@@ -192,6 +213,15 @@ in
         # include .bashrc if it exists
         [[ -f ~/.bashrc ]] && . ~/.bashrc
       '';
+
+      # If completion is enabled then make sure it is sourced very early. This
+      # is to avoid problems if any other initialization code attempts to set up
+      # completion.
+      programs.bash.initExtra = mkIf cfg.enableCompletion (mkOrder 100 ''
+        if [[ ! -v BASH_COMPLETION_VERSINFO ]]; then
+          . "${pkgs.bash-completion}/etc/profile.d/bash_completion.sh"
+        fi
+      '');
 
       home.file.".profile".source = writeBashScript "profile" ''
         . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
