@@ -2323,6 +2323,22 @@ Use <code class="code">autorandr --fingerprint</code> to get current setup value
                     &lt;home-manager/modules/programs/autorandr.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bash.enable"></a><a class="term" href="options.html#opt-programs.bash.enable"><code class="option">programs.bash.enable</code></a></span></dt><dd><p>Whether to enable GNU Bourne-Again SHell.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bash.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/bash.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bash.enableCompletion"></a><a class="term" href="options.html#opt-programs.bash.enableCompletion"><code class="option">programs.bash.enableCompletion</code></a></span></dt><dd><p>Whether to enable Bash completion for all interactive Bash shells.
+
+</p><p>
+
+Note, if you use NixOS or nix-darwin and do not have Bash completion
+enabled in the system configuration, then make sure to add
+
+</p><pre class="programlisting nix">
+  environment.pathsToLink = [ "/share/bash-completion" ];
+</pre><p>
+
+to your system configuration to get completion for system packages.
+Note, the legacy <code class="filename">/etc/bash_completion.d</code> path is
+not supported by Home Manager.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bash.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/bash.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bash.enableVteIntegration"></a><a class="term" href="options.html#opt-programs.bash.enableVteIntegration"><code class="option">programs.bash.enableVteIntegration</code></a></span></dt><dd><p>Whether to enable integration with terminals using the VTE
 library. This will let the terminal track the current working
 directory.
