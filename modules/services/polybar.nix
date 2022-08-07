@@ -199,14 +199,14 @@ in {
     ];
 
     home.packages = [ cfg.package ];
-    xdg.configFile."polybar/config".source = configFile;
+    xdg.configFile."polybar/config.ini".source = configFile;
 
     systemd.user.services.polybar = {
       Unit = {
         Description = "Polybar status bar";
         PartOf = [ "tray.target" ];
         X-Restart-Triggers =
-          [ "${config.xdg.configFile."polybar/config".source}" ];
+          [ "${config.xdg.configFile."polybar/config.ini".source}" ];
       };
 
       Service = {
