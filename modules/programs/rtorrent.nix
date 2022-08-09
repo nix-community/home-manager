@@ -9,10 +9,16 @@ let
 in {
   meta.maintainers = [ maintainers.marsam ];
 
+  imports = [
+    (mkRenamedOptionModule # \
+      [ "programs" "rtorrent" "settings" ] # \
+      [ "programs" "rtorrent" "extraConfig" ])
+  ];
+
   options.programs.rtorrent = {
     enable = mkEnableOption "rTorrent";
 
-    settings = mkOption {
+    extraConfig = mkOption {
       type = types.lines;
       default = "";
       description = ''
@@ -29,6 +35,6 @@ in {
     home.packages = [ pkgs.rtorrent ];
 
     xdg.configFile."rtorrent/rtorrent.rc" =
-      mkIf (cfg.settings != "") { text = cfg.settings; };
+      mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };
   };
 }
