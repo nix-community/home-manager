@@ -43,9 +43,19 @@ in
       let
         dups =
           attrNames
-            (filterAttrs (n: v: v > 1)
-            (foldAttrs (acc: v: acc + v) 0
-            (mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)));
+            (filterAttrs (n: v: (v.count > 1 && v.nonrec))
+            (foldAttrs (v: acc: {
+                count = add acc.count v.count;
+                nonrec = acc.nonrec || v.nonrec;
+          }) {
+            count = 0;
+            nonrec = false;
+          } (mapAttrsToList (n: v: {
+            ${v.target} = {
+              count = 1;
+              nonrec = (!v.recursive);
+            };
+          }) cfg)));
         dupsStr = concatStringsSep ", " dups;
       in {
         assertion = dups == [];
@@ -57,6 +67,11 @@ in
               home.file = {
                 conflict1 = { source = ./foo.nix; target = "baz"; };
                 conflict2 = { source = ./bar.nix; target = "baz"; };
+              }
+          or
+              home.file = {
+                conflict1 = { source = ./foo.nix; target = "baz"; recursive=true;};
+                conflict2 = { source = ./bar.nix; target = "baz"; }; # missing "recursive=true"
               }'';
       })
     ];
@@ -321,7 +336,14 @@ in
 
     # Symlink directories and files that have the right execute bit.
     # Copy files that need their execute bit changed.
-    home-files = pkgs.runCommandLocal
+    home-files = let
+        targetRefCounts = (foldAttrs
+          (v: acc: v+acc) 0
+          (mapAttrsToList
+            (n: v: {${v.target} = 1;})
+	  cfg));
+        newCfg = (mapAttrs (n: v: v//{hasTargetConflict=(targetRefCounts.${v.target}>1);} ) cfg);
+    in pkgs.runCommandLocal
       "home-manager-files"
       {
         nativeBuildInputs = [ pkgs.xorg.lndir ];
@@ -337,12 +359,16 @@ in
           local relTarget="$2"
           local executable="$3"
           local recursive="$4"
+          local hasTargetConflict="$5"
 
-          # If the target already exists then we have a collision. Note, this
-          # should not happen due to the assertion found in the 'files' module.
-          # We therefore simply log the conflict and otherwise ignore it, mainly
-          # to make the `files-target-config` test work as expected.
-          if [[ -e "$realOut/$relTarget" ]]; then
+          # If the target already exists then we have a collision.
+          # If it is a "simple copy", justdrop out of it. If it's a recursive dir copy,
+          # we need to merge the source and destination, and check for collisions for each file.
+          # If this is a "simple collision", simply log the conflict and otherwise ignore it,
+          # mainly to make the `files-target-config` test work as expected.
+          if [[ -d "$realOut/$relTarget" ]] && [[ $recursive ]] ; then
+            :
+          elif [[ -e "$realOut/$relTarget" ]]; then
             echo "File conflict for file '$relTarget'" >&2
             return
           fi
@@ -361,11 +387,16 @@ in
           if [[ -d $source ]]; then
             if [[ $recursive ]]; then
               mkdir -p "$target"
+              # note: lndir does not override existing files/symlinks with newer symlinks
               lndir -silent "$source" "$target"
             else
               ln -s "$source" "$target"
             fi
           else
+	    if [ $hasTargetConflict == "true" ]; then
+              echo "At least one *file* is attempting to be installed at '$relTarget', a location where multiple 'home.file' directives install something. This is disallowed." >&2
+              exit 1	    
+	    fi
             [[ -x $source ]] && isExecutable=1 || isExecutable=""
 
             # Link the file into the home file directory if possible,
@@ -398,8 +429,9 @@ in
                then "inherit"
                else toString v.executable)
               (toString v.recursive)
+              (if v.hasTargetConflict then "true" else "false")
             ]}
-        '') cfg
+        '') newCfg
       ));
   };
 }
