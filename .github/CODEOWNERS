@@ -56,6 +56,10 @@ Makefile                                              @thiagokokada
 /tests/modules/misc/xdg/desktop-full-expected.desktop @cwyc
 /tests/modules/misc/xdg/desktop-min-expected.desktop  @cwyc
 
+/modules/programs/aerc.nix                            @lukasngl
+/modules/programs/aerc-accounts.nix                   @lukasngl
+/tests/modules/programs/aerc                          @lukasngl
+
 /modules/programs/aria2.nix                           @JustinLovinger
 
 /modules/programs/autojump.nix                        @evanjs
