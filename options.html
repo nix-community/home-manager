@@ -82,10 +82,46 @@ For NixOS, the default value for this option includes at least this argument:
                     &lt;home-manager/modules/programs/astroid.nix&gt;
                 </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/alot.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/alot.nix&gt;
+                </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
                 </a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
                     &lt;home-manager/modules/accounts/email.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.address"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.address"><code class="option">accounts.email.accounts.&lt;name&gt;.address</code></a></span></dt><dd><p>The email address of this account.</p><p><span class="emphasis"><em>Type:</em></span> string matching the pattern .*@.*</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"jane.doe@example.org"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
                     &lt;home-manager/modules/accounts/email.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.aerc.enable"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.aerc.enable"><code class="option">accounts.email.accounts.&lt;name&gt;.aerc.enable</code></a></span></dt><dd><p>Whether to enable aerc.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.aerc.extraAccounts"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.aerc.extraAccounts"><code class="option">accounts.email.accounts.&lt;name&gt;.aerc.extraAccounts</code></a></span></dt><dd><p>Extra config added to the configuration of this account in
+<code class="filename">$HOME/.config/aerc/accounts.conf</code>.
+See aerc-config(5).
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of values (null, bool, int, string of float) or a list of values, that will be joined with a comma</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">{ source = "maildir://~/Maildir/example"; }</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.aerc.extraBinds"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.aerc.extraBinds"><code class="option">accounts.email.accounts.&lt;name&gt;.aerc.extraBinds</code></a></span></dt><dd><p>Extra bindings specific to this account, added to
+<code class="filename">$HOME/.config/aerc/accounts.conf</code>.
+See aerc-config(5).
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of values (null, bool, int, string of float) or a list of values, that will be joined with a comma</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">{ messages = { d = ":move ${folder.trash}&lt;Enter&gt;"; }; }</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.aerc.extraConfig"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.aerc.extraConfig"><code class="option">accounts.email.accounts.&lt;name&gt;.aerc.extraConfig</code></a></span></dt><dd><p>Extra config specific to this account, added to
+<code class="filename">$HOME/.config/aerc/aerc.conf</code>.
+See aerc-config(5).
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of values (null, bool, int, string of float) or a list of values, that will be joined with a comma</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">{ ui = { sidebar-width = 42; }; }</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.aerc.smtpAuth"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.aerc.smtpAuth"><code class="option">accounts.email.accounts.&lt;name&gt;.aerc.smtpAuth</code></a></span></dt><dd><p>Sets the authentication mechanism if smtp is used as the outgoing
+method.
+See aerc-smtp(5).
+</p><p><span class="emphasis"><em>Type:</em></span> null or one of "none", "plain", "login"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"plain"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"auth"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.aliases"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.aliases"><code class="option">accounts.email.accounts.&lt;name&gt;.aliases</code></a></span></dt><dd><p>Alternative email addresses of this account.</p><p><span class="emphasis"><em>Type:</em></span> list of string matching the pattern .*@.*</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         
@@ -1934,6 +1970,51 @@ view CONTACT = name, email
 set autosave=true
 ''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/abook.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/abook.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.aerc.enable"></a><a class="term" href="options.html#opt-programs.aerc.enable"><code class="option">programs.aerc.enable</code></a></span></dt><dd><p>Whether to enable aerc.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.aerc.extraAccounts"></a><a class="term" href="options.html#opt-programs.aerc.extraAccounts"><code class="option">programs.aerc.extraAccounts</code></a></span></dt><dd><p>Extra lines added to <code class="filename">$HOME/.config/aerc/accounts.conf</code>.
+See aerc-config(5).
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n" or attribute set of attribute set of values (null, bool, int, string of float) or a list of values, that will be joined with a comma</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">{ Work = { source = "maildir://~/Maildir/work"; }; }</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.aerc.extraBinds"></a><a class="term" href="options.html#opt-programs.aerc.extraBinds"><code class="option">programs.aerc.extraBinds</code></a></span></dt><dd><p>Extra lines added to <code class="filename">$HOME/.config/aerc/binds.conf</code>.
+Global keybindings can be set in the `global` section.
+See aerc-config(5).
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n" or attribute set of attribute set of values (null, bool, int, string of float) or a list of values, that will be joined with a comma</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">{ messages = { q = ":quit&lt;Enter&gt;"; }; }</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.aerc.extraConfig"></a><a class="term" href="options.html#opt-programs.aerc.extraConfig"><code class="option">programs.aerc.extraConfig</code></a></span></dt><dd><p>Extra lines added to <code class="filename">$HOME/.config/aerc/aerc.conf</code>.
+See aerc-config(5).
+</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n" or attribute set of attribute set of values (null, bool, int, string of float) or a list of values, that will be joined with a comma</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">{ ui = { sort = "-r date"; }; }</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.aerc.stylesets"></a><a class="term" href="options.html#opt-programs.aerc.stylesets"><code class="option">programs.aerc.stylesets</code></a></span></dt><dd><p>Stylesets added to <code class="filename">$HOME/.config/aerc/stylesets/</code>.
+See aerc-stylesets(7).
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of values (null, bool, int, string of float) or a list of values, that will be joined with a comma or strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{ default = { ui = { "tab.selected.reverse" = toggle; }; }; };
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.aerc.templates"></a><a class="term" href="options.html#opt-programs.aerc.templates"><code class="option">programs.aerc.templates</code></a></span></dt><dd><p>Templates added to <code class="filename">$HOME/.config/aerc/templates/</code>.
+See aerc-templates(7).
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{ new_message = "Hello!"; };
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/aerc.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.afew.enable"></a><a class="term" href="options.html#opt-programs.afew.enable"><code class="option">programs.afew.enable</code></a></span></dt><dd><p>Whether to enable the afew initial tagging script for Notmuch.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/afew.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/afew.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.afew.extraConfig"></a><a class="term" href="options.html#opt-programs.afew.extraConfig"><code class="option">programs.afew.extraConfig</code></a></span></dt><dd><p>Extra lines added to afew configuration file. Available
