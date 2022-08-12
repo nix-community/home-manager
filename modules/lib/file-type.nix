@@ -72,6 +72,11 @@ in
             <literal>true</literal> then the target will be a
             directory structure matching the source's but whose leafs
             are symbolic links to the files of the source directory.
+	    </para><para>
+	    Marking several
+	    <link linkend="opt-home.file._name_.source">home.file.&lt;name?&gt;.source</link>
+	    directives as recursive allow them to point towards the same target directory.
+	    However, in that case, none of the directives may use a file as their source.
           '';
         };
 

@@ -21,6 +21,11 @@
           home.file = {
             conflict1 = { source = ./foo.nix; target = "baz"; };
             conflict2 = { source = ./bar.nix; target = "baz"; };
+          }
+      or
+          home.file = {
+            conflict1 = { source = ./foo.nix; target = "baz"; recursive=true;};
+            conflict2 = { source = ./bar.nix; target = "baz"; }; # missing "recursive=true"
           }''];
   };
 }

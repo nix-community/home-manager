@@ -393,9 +393,9 @@ in
               ln -s "$source" "$target"
             fi
           else
-	    if [ $hasTargetConflict == "true" ]; then
+	    if [[ $recursive && ($hasTargetConflict == "true") ]]; then
               echo "At least one *file* is attempting to be installed at '$relTarget', a location where multiple 'home.file' directives install something. This is disallowed." >&2
-              exit 1	    
+              exit 1
 	    fi
             [[ -x $source ]] && isExecutable=1 || isExecutable=""
 
