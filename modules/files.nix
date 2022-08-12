@@ -43,17 +43,19 @@ in
       let
         dups =
           attrNames
-            (filterAttrs (n: v: (v.count > 1 && v.nonrec))
+            (filterAttrs (n: v: ((v.count > 1) && (v.nonrec || v.hasfile) ))
             (foldAttrs (v: acc: {
                 count = add acc.count v.count;
                 nonrec = acc.nonrec || v.nonrec;
+		hasfile = acc.hasfile || v.hasfile;
           }) {
             count = 0;
-            nonrec = false;
+            nonrec = false; hasfile = false;
           } (mapAttrsToList (n: v: {
             ${v.target} = {
               count = 1;
               nonrec = (!v.recursive);
+	      hasfile = !(pathExists "${sourceStorePath v}/..");
             };
           }) cfg)));
         dupsStr = concatStringsSep ", " dups;
@@ -65,13 +67,21 @@ in
           This may happen, for example, if you have a configuration similar to
 
               home.file = {
+	        # classic example of conflict
                 conflict1 = { source = ./foo.nix; target = "baz"; };
                 conflict2 = { source = ./bar.nix; target = "baz"; };
               }
           or
               home.file = {
-                conflict1 = { source = ./foo.nix; target = "baz"; recursive=true;};
-                conflict2 = { source = ./bar.nix; target = "baz"; }; # missing "recursive=true"
+	        # missing "recursive = true"
+                conflict1 = { source = ./some-directory; target = "baz"; recursive=true;};
+                conflict2 = { source = ./other-directory; target = "baz"; };  # error here
+              }
+	  or
+              home.file = {
+	        # conflict with at least a file among the recursively-linked directories
+                conflict1 = { source = ./some-directory; target = "baz"; recursive=true;};
+                conflict2 = { source = ./a-file.nix; target = "baz"; recursive=true;};  # error here
               }'';
       })
     ];
@@ -393,9 +403,12 @@ in
               ln -s "$source" "$target"
             fi
           else
+	    # no need to hard crash because this will be taken care of by the assertions.
+	    # however, there is a need to return early, because otherwise there is a risk of
+	    # *mutating source files*. yes, it's *that* bad.
 	    if [[ $recursive && ($hasTargetConflict == "true") ]]; then
               echo "At least one *file* is attempting to be installed at '$relTarget', a location where multiple 'home.file' directives install something. This is disallowed." >&2
-              exit 1
+              return
 	    fi
             [[ -x $source ]] && isExecutable=1 || isExecutable=""
 
