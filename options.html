@@ -3267,6 +3267,13 @@ See <span class="command"><strong>fzf-tmux --help</strong></span> for available 
                     &lt;home-manager/modules/programs/gh.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.package"></a><a class="term" href="options.html#opt-programs.gh.package"><code class="option">programs.gh.package</code></a></span></dt><dd><p>Package providing <span class="command"><strong>gh</strong></span>.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.gh</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gh.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.extensions"></a><a class="term" href="options.html#opt-programs.gh.extensions"><code class="option">programs.gh.extensions</code></a></span></dt><dd><p>gh extensions, see <a class="link" href="https://cli.github.com/manual/gh_extension" target="_top">https://cli.github.com/manual/gh_extension</a>.
+</p><p><span class="emphasis"><em>Type:</em></span> list of package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">[ pkgs.gh-eco ]</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/gh.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh.settings"></a><a class="term" href="options.html#opt-programs.gh.settings"><code class="option">programs.gh.settings</code></a></span></dt><dd><p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/gh/config.yml</code>.</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
