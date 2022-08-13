@@ -421,6 +421,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/poweralertd.nix                     @ThibautMarty
 
+/modules/services/pueue.nix                           @AndersonTorres
+
 /modules/services/pulseeffects.nix                    @jonringer
 
 /modules/services/random-background.nix               @rycee
