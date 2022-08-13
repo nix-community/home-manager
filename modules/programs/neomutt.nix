@@ -3,7 +3,6 @@
 with lib;
 
 let
-
   cfg = config.programs.neomutt;
 
   neomuttAccounts =
@@ -88,6 +87,14 @@ let
       };
     };
   };
+
+  mkNotmuchVirtualboxes = virtualMailboxes:
+    "${concatStringsSep "\n" (map ({ name, query, limit, type }:
+      ''
+        virtual-mailboxes "${name}" "notmuch://?query=${lib.escapeURL query}${
+          optionalString (limit != null) "&limit=${toString limit}"
+        }${optionalString (type != null) "&type=${type}"}"'')
+      virtualMailboxes)}";
 
   setOption = n: v: if v == null then "unset ${n}" else "set ${n}=${v}";
   escape = replaceStrings [ "%" ] [ "%25" ];
@@ -188,10 +195,13 @@ let
   '';
 
   notmuchSection = account:
-    with account; ''
+    let virtualMailboxes = account.notmuch.neomutt.virtualMailboxes;
+    in with account; ''
       # notmuch section
       set nm_default_uri = "notmuch://${config.accounts.email.maildirBasePath}"
-      virtual-mailboxes "My INBOX" "notmuch://?query=tag:inbox"
+      ${optionalString
+      (notmuch.neomutt.enable && builtins.length virtualMailboxes > 0)
+      (mkNotmuchVirtualboxes virtualMailboxes)}
     '';
 
   accountStr = account:
@@ -234,7 +244,9 @@ let
       ${account.neomutt.extraConfig}
 
       ${signature}
-    '' + optionalString account.notmuch.enable (notmuchSection account);
+    ''
+    + optionalString (account.notmuch.enable && account.notmuch.neomutt.enable)
+    (notmuchSection account);
 
 in {
   options = {

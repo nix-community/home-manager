@@ -35,4 +35,4 @@ color status cyan default
 set signature = "/nix/store/00000000000000000000000000000000-signature|"
 # notmuch section
 set nm_default_uri = "notmuch:///home/hm-user/Mail"
-virtual-mailboxes "My INBOX" "notmuch://?query=tag:inbox"
+virtual-mailboxes "My INBOX" "notmuch://?query=tag%3Ainbox"

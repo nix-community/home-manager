@@ -21,6 +21,23 @@ let
   };
 
 in {
+  options.notmuch.neomutt = {
+    enable = mkEnableOption "Notmuch support in NeoMutt" // { default = true; };
+
+    virtualMailboxes = mkOption {
+      type = types.listOf (types.submodule ./notmuch-virtual-mailbox.nix);
+      example = [{
+        name = "My INBOX";
+        query = "tag:inbox";
+      }];
+      default = [{
+        name = "My INBOX";
+        query = "tag:inbox";
+      }];
+      description = "List of virtual mailboxes using Notmuch queries";
+    };
+  };
+
   options.neomutt = {
     enable = mkEnableOption "NeoMutt";
 
