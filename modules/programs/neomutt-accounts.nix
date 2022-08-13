@@ -76,6 +76,12 @@ in {
       '';
     };
 
+    showDefaultMailbox = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Show the default mailbox (INBOX)";
+    };
+
     mailboxName = mkOption {
       type = types.nullOr types.str;
       default = null;
