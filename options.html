@@ -7612,7 +7612,7 @@ manually set any options not listed above.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.enable"></a><a class="term" href="options.html#opt-programs.vscode.enable"><code class="option">programs.vscode.enable</code></a></span></dt><dd><p>Whether to enable Visual Studio Code.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.package"></a><a class="term" href="options.html#opt-programs.vscode.package"><code class="option">programs.vscode.package</code></a></span></dt><dd><p>Version of Visual Studio Code to install.
-</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"><em class="replaceable"><code>(build of vscode-1.70.0)</code></em></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.vscodium</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"><em class="replaceable"><code>(build of vscode-1.70.1)</code></em></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.vscodium</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.extensions"></a><a class="term" href="options.html#opt-programs.vscode.extensions"><code class="option">programs.vscode.extensions</code></a></span></dt><dd><p>The extensions Visual Studio Code should be started with.
 </p><p><span class="emphasis"><em>Type:</em></span> list of package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -7810,6 +7810,34 @@ otherwise the service may never be started.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wezterm.enable"></a><a class="term" href="options.html#opt-programs.wezterm.enable"><code class="option">programs.wezterm.enable</code></a></span></dt><dd><p>Whether to enable wezterm.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wezterm.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/wezterm.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wezterm.package"></a><a class="term" href="options.html#opt-programs.wezterm.package"><code class="option">programs.wezterm.package</code></a></span></dt><dd><p>The Wezterm package to install.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.wezterm</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wezterm.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/wezterm.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wezterm.colorSchemes"></a><a class="term" href="options.html#opt-programs.wezterm.colorSchemes"><code class="option">programs.wezterm.colorSchemes</code></a></span></dt><dd><p>Attribute set of additional color schemes to be written to
+<code class="filename">$XDG_CONFIG_HOME/wezterm/colors</code>, where each key is
+taken as the name of the corresponding color scheme. See
+<a class="link" href="https://wezfurlong.org/wezterm/config/appearance.html#defining-a-color-scheme-in-a-separate-file" target="_top">https://wezfurlong.org/wezterm/config/appearance.html#defining-a-color-scheme-in-a-separate-file</a>
+for more details of the TOML color scheme format.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of TOML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">myCoolTheme = {
+  ansi = [
+    "#222222" "#D14949" "#48874F" "#AFA75A"
+    "#599797" "#8F6089" "#5C9FA8" "#8C8C8C"
+  ];
+  brights = [
+    "#444444" "#FF6D6D" "#89FF95" "#FFF484"
+    "#97DDFF" "#FDAAF2" "#85F5DA" "#E9E9E9"
+  ];
+  background = "#1B1B1B";
+  cursor_bg = "#BEAF8A";
+  cursor_border = "#BEAF8A";
+  cursor_fg = "#1B1B1B";
+  foreground = "#BEAF8A";
+  selection_bg = "#444444";
+  selection_fg = "#E9E9E9";
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wezterm.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/wezterm.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wezterm.extraConfig"></a><a class="term" href="options.html#opt-programs.wezterm.extraConfig"><code class="option">programs.wezterm.extraConfig</code></a></span></dt><dd><p>Extra configuration written to
 <code class="filename">$XDG_CONFIG_HOME/wezterm/wezterm.lua</code>. See
