@@ -11,10 +11,9 @@ let
     else if v == null then
       "--delete"
     else if t == "bool" then
-      "--type bool ${builtins.toJSON v}"
+      "--type bool ${v}"
     else
       toString v;
-
 in {
   options.qt.kde.settings = lib.mkOption {
     type = with lib.types;
@@ -50,23 +49,20 @@ in {
 
   config = lib.mkIf (cfg != { }) {
     home.activation.kconfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      . ${
+      source ${
         pkgs.runCommandLocal "kwriteconfig.sh" {
-          nativeBuildInputs = [ pkgs.jq ];
           passAsFile = [ "cfg" "jqScript" ];
           cfg = builtins.toJSON (lib.mapAttrsRecursive toKconfVal cfg);
-          jqScript = let
-            getPaths = "[paths(scalars)]";
-            w =
-              "run ${pkgs.plasma5Packages.kconfig}/bin/kwriteconfig5 --file ${config.xdg.configHome}/";
-            g = ''" --group "'';
-            groupPortion = ".[1:-2]|join(${g})";
-            getVal = "$G|getpath($P)";
-            mkExecLn = ''
-              "${w}"+.[0]+${g}+(${groupPortion})+" --key "+.[-1]+(${getVal})'';
-            toSingleStr = ''join("\n")'';
-          in ". as $G|${getPaths}|map(. as $P|${mkExecLn})|${toSingleStr}";
-        } ''jq -rf "$jqScriptPath" <"$cfgPath" >"$out"''
+          jqScript = ''
+            . as $cfg|[
+              paths(strings)|
+              (. as $p|$cfg|getpath($p)) as $el|
+              .[0] as $file|
+              .[1:]|reverse|map("'\(.)'")|join(" --group ")|
+              "run ${pkgs.plasma5Packages.kconfig}/bin/kwriteconfig5 --file '${config.xdg.configHome}/\($file)' --key \(.) \($el)"
+            ]|join("\n")
+          '';
+        } ''${pkgs.jq}/bin/jq -rf "$jqScriptPath" <"$cfgPath" >"$out"''
       }
 
       # TODO: some way to only call the dbus calls needed
