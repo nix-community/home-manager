@@ -11,7 +11,7 @@ let
     else if v == null then
       "--delete"
     else if t == "bool" then
-      "--type bool ${v}"
+      "--type bool ${builtins.toJSON v}"
     else
       toString v;
 in {
@@ -58,8 +58,9 @@ in {
               paths(strings)|
               (. as $p|$cfg|getpath($p)) as $el|
               .[0] as $file|
-              .[1:]|reverse|map("'\(.)'")|join(" --group ")|
-              "run ${pkgs.plasma5Packages.kconfig}/bin/kwriteconfig5 --file '${config.xdg.configHome}/\($file)' --key \(.) \($el)"
+              .[-1] as $key|
+              .[1:-2]|map("--group '\(.)'")|join(" ")|
+              "run ${pkgs.plasma5Packages.kconfig}/bin/kwriteconfig5 --file '${config.xdg.configHome}/\($file)' \(.) --key \($key) \($el)"
             ]|join("\n")
           '';
         } ''${pkgs.jq}/bin/jq -rf "$jqScriptPath" <"$cfgPath" >"$out"''
