@@ -55,15 +55,6 @@ let
     };
   };
 
-  # A function to get the configuration string (if any) from an element of 'plugins'
-  pluginConfig = p:
-    if p ? plugin && (p.config or "") != "" then ''
-      " ${p.plugin.pname or p.plugin.name} {{{
-      ${p.config}
-      " }}}
-    '' else
-      "";
-
   allPlugins = cfg.plugins ++ optional cfg.coc.enable {
     type = "viml";
     plugin = cfg.coc.package;
@@ -394,12 +385,10 @@ in {
     home.packages = [ cfg.finalPackage ];
 
     xdg.configFile."nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
-      text = if hasAttr "lua" config.programs.neovim.generatedConfigs then
-        neovimConfig.neovimRcContent + ''
-
-          lua require('init-home-manager')''
-      else
-        neovimConfig.neovimRcContent;
+      text = neovimConfig.neovimRcContent + (optionalString
+        (hasAttr "lua" config.programs.neovim.generatedConfigs) ''
+          lua require('init-home-manager')
+        '');
     };
     xdg.configFile."nvim/lua/init-home-manager.lua" =
       mkIf (hasAttr "lua" config.programs.neovim.generatedConfigs) {
