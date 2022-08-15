@@ -69,6 +69,11 @@ writing a Home Manager configuration.
 
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
+
+        # Optionally set
+        # disableNixpkgsModule = false;
+        # to allow using nixpkgs.config/overlays inside the home configuration
+        # instead of directly using the passed pkgs
       };
     };
 }

@@ -34,8 +34,8 @@ have been removed. Instead use the new `modules` argument, which
 accepts a list of NixOS modules.
 +
 Further, the `pkgs` argument is now mandatory and should be set to
-`nixpkgs.legacyPackages.${system}` where `nixpkgs` is the Nixpkgs
-input of your choice.
+an imported `nixpkgs`, for example `nixpkgs.legacyPackages.${system}`
+where `nixpkgs` is the Nixpkgs input of your choice.
 +
 For example, if your Flake currently contains
 +
@@ -74,6 +74,12 @@ homeManagerConfiguration {
 Of course, you can move the assignment of <<opt-home.username>>,
 <<opt-home.homeDirectory>>, and <<opt-home.stateVersion>> to some
 other file or simply place them in your `home.nix`.
+
+* The Flake function `homeManagerConfiguration` now has
+ a new argument `disableNixpkgsModule`, defaulting to true.
+ When set, the `nixpkgs.config/overlays` settings are not available,
+ and the passed `pkgs` instance is used directly, instead of being
+ imported again.
 
 * The `services.picom` module has been refactored to use structural
 settings.

@@ -23,7 +23,7 @@
       lib = {
         hm = (import ./modules/lib/stdlib-extended.nix nixpkgs.lib).hm;
         homeManagerConfiguration = { modules ? [ ], pkgs, lib ? pkgs.lib
-          , extraSpecialArgs ? { }, check ? true
+          , extraSpecialArgs ? { }, check ? true, disableNixpkgsModule ? true
             # Deprecated:
           , configuration ? null, extraModules ? null, stateVersion ? null
           , username ? null, homeDirectory ? null, system ? null }@args:
@@ -50,11 +50,15 @@
               throwForRemovedArg extraModules # \
               throwForRemovedArg system;
           in throwForRemovedArgs (import ./modules {
-            inherit pkgs lib check extraSpecialArgs;
-            configuration = { ... }: {
-              imports = modules;
-              nixpkgs = { inherit (pkgs) config overlays; };
-            };
+            inherit pkgs lib check extraSpecialArgs disableNixpkgsModule;
+            configuration = { ... }:
+              ({
+                imports = modules;
+              } // (if disableNixpkgsModule then
+                { }
+              else {
+                nixpkgs = { inherit (pkgs) config overlays; };
+              }));
           });
       };
     } // utils.lib.eachDefaultSystem (system:
