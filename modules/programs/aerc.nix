@@ -91,9 +91,7 @@ in {
   };
 
   config = let
-    joinCfg = cfgs:
-      with builtins;
-      concatStringsSep "\n" (filter (v: v != "") cfgs);
+    joinCfg = cfgs: concatStringsSep "\n" (filter (v: v != "") cfgs);
 
     toINI = conf: # quirk: global section is prepended w/o section heading
       let
@@ -101,7 +99,6 @@ in {
         local = removeAttrs conf [ "global" ];
         optNewLine = if global != { } && local != { } then "\n" else "";
         mkValueString = v:
-          with builtins;
           if isList v then # join with comma
             concatStringsSep "," (map (generators.mkValueStringDefault { }) v)
           else
@@ -113,10 +110,10 @@ in {
         (generators.toINI { inherit mkKeyValue; } local)
       ];
 
-    mkINI = conf: if builtins.isString conf then conf else toINI conf;
+    mkINI = conf: if isString conf then conf else toINI conf;
 
     mkStyleset = attrsets.mapAttrs' (k: v:
-      let value = if builtins.isString v then v else toINI { global = v; };
+      let value = if isString v then v else toINI { global = v; };
       in {
         name = "aerc/stylesets/${k}";
         value.text = joinCfg [ header value ];
@@ -127,17 +124,13 @@ in {
       value.text = v;
     });
 
-    accountsExtraAccounts = builtins.mapAttrs accounts.mkAccount aerc-accounts;
+    accountsExtraAccounts = mapAttrs accounts.mkAccount aerc-accounts;
 
-    accountsExtraConfig =
-      builtins.mapAttrs accounts.mkAccountConfig aerc-accounts;
+    accountsExtraConfig = mapAttrs accounts.mkAccountConfig aerc-accounts;
 
-    accountsExtraBinds =
-      builtins.mapAttrs accounts.mkAccountBinds aerc-accounts;
+    accountsExtraBinds = mapAttrs accounts.mkAccountBinds aerc-accounts;
 
-    joinContextual = contextual:
-      with builtins;
-      joinCfg (map mkINI (attrValues contextual));
+    joinContextual = contextual: joinCfg (map mkINI (attrValues contextual));
 
     isRecursivelyEmpty = x:
       if isAttrs x then
