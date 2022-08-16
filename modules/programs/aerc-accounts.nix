@@ -4,7 +4,6 @@ with lib;
 
 let
   mapAttrNames = f: attr:
-    with builtins;
     listToAttrs (attrValues (mapAttrs (k: v: {
       name = f k;
       value = v;
@@ -123,7 +122,7 @@ in {
         if v != null && v != [ ] && v != "" then { ${k} = v; } else { };
 
       optPwCmd = k: p:
-        optAttr "${k}-cred-cmd" (nullOrMap (builtins.concatStringsSep " ") p);
+        optAttr "${k}-cred-cmd" (nullOrMap (concatStringsSep " ") p);
 
       useOauth = auth: builtins.elem auth [ "oauthbearer" "xoauth2" ];
 
