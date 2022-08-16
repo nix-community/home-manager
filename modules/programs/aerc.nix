@@ -162,8 +162,12 @@ in {
     warnings = if genAccountsConf
     && (cfg.extraConfig.general.unsafe-accounts-conf or false) == false then [''
       aerc: An email account was configured, but `extraConfig.general.unsafe-accounts-conf` is set to false or unset.
-      This will prevent aerc from starting, see `unsafe-accounts-conf` in aerc-config(5) for details.
-      Consider setting the option `extraConfig.general.unsafe-accounts-conf` to true.
+      This will prevent aerc from starting, see `unsafe-accounts-conf` in the man page aerc-config(5), which states:
+      > By default, the file permissions of accounts.conf must be restrictive and only allow reading by the file owner (0600).
+      > Set this option to true to ignore this permission check. Use this with care as it may expose your credentials.
+      These file permissions are not possible with home-manger, since the generated file is stored in the nix-store with read-only access for all users (0444).
+      If `passwordCommand` is properly set, no credentials will be stored in the nix store.
+      Therefore, consider setting the option `extraConfig.general.unsafe-accounts-conf` to true.
     ''] else
       [ ];
 
