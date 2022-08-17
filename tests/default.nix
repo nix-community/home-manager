@@ -94,6 +94,7 @@ import nmt {
     ./modules/programs/ne
     ./modules/programs/neomutt
     ./modules/programs/newsboat
+    ./modules/programs/nheko
     ./modules/programs/nix-index
     ./modules/programs/nnn
     ./modules/programs/nushell
