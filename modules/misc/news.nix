@@ -661,6 +661,13 @@ in
           A new module is available: 'services.pueue'.
         '';
       }
+
+      {
+        time = "2022-09-05T12:33:11+00:00";
+        message = ''
+          A new module is available: 'programs.btop'.
+        '';
+      }
     ];
   };
 }

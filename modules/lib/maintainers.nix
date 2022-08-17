@@ -153,6 +153,12 @@
     githubId = 53856373;
     name = "Jens Krewald";
   };
+  GaetanLepage = {
+    email = "gaetan@glepage.com";
+    github = "GaetanLepage";
+    githubId = 33058747;
+    name = "Gaetan Lepage";
+  };
   maximsmol = {
     email = "maximsmol@gmail.com";
     github = "maximsmol";

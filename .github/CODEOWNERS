@@ -83,6 +83,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/broot.nix                           @aheaume
 
+/modules/programs/btop.nix                            @GaetanLepage
+/tests/modules/programs/btop.nix                      @GaetanLepage
+
 /modules/programs/dircolors.nix                       @JustinLovinger
 
 /modules/programs/direnv.nix                          @rycee
