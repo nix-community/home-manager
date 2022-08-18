@@ -118,8 +118,8 @@ Makefile                                              @thiagokokada
 /modules/programs/helix.nix                           @Philipp-M
 /tests/modules/programs/helix                         @Philipp-M
 
-/modules/programs/hexchat.nix                         @thiagokokada
-/tests/modules/programs/hexchat                       @thiagokokada
+/modules/programs/hexchat.nix                         @superherointj @thiagokokada
+/tests/modules/programs/hexchat                       @superherointj @thiagokokada
 
 /modules/programs/himalaya.nix                        @ambroisie
 /tests/modules/programs/himalaya                      @ambroisie
