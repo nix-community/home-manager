@@ -144,9 +144,16 @@ let
           type = nullOr str;
           default = null;
           description = ''
-            Password to use. Note this password will be readable by all user's
-            in the Nix store.
+            Clear text password, unsafe, readable by all users from nix store.
+            Prefer to use passwordFile option instead.
           '';
+        };
+
+        passwordFile = mkOption {
+          type = nullOr path;
+          default = null;
+          description = "Absolute path to password file.";
+          example = "/etc/nixos/keys/passwordFileName";
         };
 
         realName = mkOption {
@@ -222,7 +229,10 @@ let
       (transformField "i" channel.nickname2)
       (transformField "R" channel.realName)
       (transformField "U" channel.userName)
-      (transformField "P" channel.password)
+      (transformField "P" (if (channel.passwordFile != null) then
+        (config.lib.file.mkOutOfStoreSymlink channel.passwordFile)
+      else
+        channel.password))
       (listChar "S" channel.servers)
       (listChar "J" channel.autojoin)
       (listChar "C" channel.commands)
