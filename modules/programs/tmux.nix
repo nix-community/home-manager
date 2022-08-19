@@ -94,6 +94,7 @@ let
       bind-key -N "Kill the current pane" x kill-pane
     ''}
 
+    set  -g mouse             ${boolToStr cfg.mouse}
     setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
     setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
     set  -s escape-time       ${toString cfg.escapeTime}
@@ -202,6 +203,14 @@ in {
         example = "vi";
         type = types.enum [ "emacs" "vi" ];
         description = "VI or Emacs style shortcuts.";
+      };
+
+      mouse = mkOption {
+        default = false;
+        example = true;
+        description = ''
+          Mouse support.
+        '';
       };
 
       newSession = mkOption {
