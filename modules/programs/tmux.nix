@@ -205,13 +205,7 @@ in {
         description = "VI or Emacs style shortcuts.";
       };
 
-      mouse = mkOption {
-        default = false;
-        example = true;
-        description = ''
-          Mouse support.
-        '';
-      };
+      mouse = mkEnableOption "mouse support";
 
       newSession = mkOption {
         default = false;
