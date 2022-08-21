@@ -6,6 +6,11 @@ let
 
   cfg = config.programs.neovim;
 
+  fileType = (import ../lib/file-type.nix {
+    inherit (config.home) homeDirectory;
+    inherit lib pkgs;
+  }).fileType;
+
   jsonFormat = pkgs.formats.json { };
 
   extraPython3PackageType = mkOptionType {
@@ -51,6 +56,19 @@ let
       plugin = mkOption {
         type = types.package;
         description = "vim plugin";
+      };
+
+      runtime = mkOption {
+        default = { };
+        # passing actual "${xdg.configHome}/nvim" as basePath was a bit tricky
+        # due to how fileType.target is implemented
+        type = fileType "<varname>xdg.configHome/nvim</varname>" "nvim";
+        example = literalExpression ''
+          { "ftplugin/c.vim".text = "setlocal omnifunc=v:lua.vim.lsp.omnifunc"; }
+        '';
+        description = lib.mdDoc ''
+          Set of files that have to be linked in nvim config folder.
+        '';
       };
     };
   };
@@ -330,16 +348,19 @@ in {
   };
 
   config = let
-    # transform all plugins into an attrset
-    pluginsNormalized = map (x:
-      if (x ? plugin) then
-        x
-      else {
-        type = x.type or "viml";
-        plugin = x;
-        config = "";
-        optional = false;
-      }) allPlugins;
+    defaultPlugin = {
+      type = "viml";
+      plugin = null;
+      config = "";
+      optional = false;
+      runtime = { };
+    };
+
+    # transform all plugins into a standardized attrset
+    pluginsNormalized =
+      map (x: defaultPlugin // (if (x ? plugin) then x else { plugin = x; }))
+      allPlugins;
+
     suppressNotVimlConfig = p:
       if p.type != "viml" then p // { config = ""; } else p;
 
@@ -369,19 +390,22 @@ in {
 
     home.packages = [ cfg.finalPackage ];
 
-    xdg.configFile."nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
-      text = neovimConfig.neovimRcContent + (optionalString
-        (hasAttr "lua" config.programs.neovim.generatedConfigs) ''
-          lua require('init-home-manager')
-        '');
-    };
-    xdg.configFile."nvim/lua/init-home-manager.lua" =
-      mkIf (hasAttr "lua" config.programs.neovim.generatedConfigs) {
-        text = config.programs.neovim.generatedConfigs.lua;
-      };
-    xdg.configFile."nvim/coc-settings.json" = mkIf cfg.coc.enable {
-      source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
-    };
+    xdg.configFile = mkMerge (
+      # writes runtime
+      (map (x: x.runtime) pluginsNormalized) ++ [{
+        "nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
+          text = neovimConfig.neovimRcContent + lib.optionalString
+            (hasAttr "lua" config.programs.neovim.generatedConfigs)
+            "lua require('init-home-manager')";
+        };
+        "nvim/lua/init-home-manager.lua" =
+          mkIf (hasAttr "lua" config.programs.neovim.generatedConfigs) {
+            text = config.programs.neovim.generatedConfigs.lua;
+          };
+        "nvim/coc-settings.json" = mkIf cfg.coc.enable {
+          source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
+        };
+      }]);
 
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {
