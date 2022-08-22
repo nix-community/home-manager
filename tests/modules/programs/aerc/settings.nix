@@ -224,6 +224,21 @@ with lib;
         };
       };
       o_msmtp = basics // { msmtp = { enable = true; }; };
+      p_overwrite_defaults = basics // {
+        smtp.host = "should.be.overwritten.invalid";
+        imap.host = "should.be.overwritten.invalid";
+        aerc = {
+          enable = true;
+          extraAccounts = {
+            from = "test <test@email.invalid>";
+            outgoing =
+              "imap+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337";
+            source =
+              "smtp+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337";
+            postpone = "dRaFts";
+          };
+        };
+      };
     };
   };
 }
