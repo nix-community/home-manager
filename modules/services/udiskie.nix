@@ -109,8 +109,9 @@ in {
     systemd.user.services.udiskie = {
       Unit = {
         Description = "udiskie mount daemon";
-        Requires = [ "tray.target" ];
-        After = [ "graphical-session-pre.target" "tray.target" ];
+        Requires = lib.optional (cfg.tray != "never") "tray.target";
+        After = [ "graphical-session-pre.target" ]
+          ++ lib.optional (cfg.tray != "never") "tray.target";
         PartOf = [ "graphical-session.target" ];
       };
 
