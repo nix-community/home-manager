@@ -1,0 +1,20 @@
+name: Update flake inputs
+on:
+  schedule:
+    # Update every Sunday and Wednesday
+    - cron: "51 3 * * 0,3"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v17
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@v9
+        with:
+          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          pr-labels: dependencies
