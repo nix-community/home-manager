@@ -41,7 +41,7 @@ in {
         '';
         description = ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/udiskie/config.toml</filename>.
+          <filename>$XDG_CONFIG_HOME/udiskie/config.yml</filename>.
           </para><para>
           See <link xlink:href="https://github.com/coldfix/udiskie/blob/master/doc/udiskie.8.txt#configuration" />
           for the full list of options.
