@@ -182,6 +182,7 @@ import nmt {
     ./modules/services/syncthing
     ./modules/services/trayer
     ./modules/services/twmn
+    ./modules/services/udiskie
     ./modules/services/window-managers/bspwm
     ./modules/services/window-managers/herbstluftwm
     ./modules/services/window-managers/i3
