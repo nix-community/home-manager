@@ -489,7 +489,7 @@ Makefile                                              @thiagokokada
 
 /modules/services/xembed-sni-proxy.nix                @rycee
 
-/modules/services/xidlehook.nix                       @dschrempf
+/modules/services/xidlehook.nix                       @dschrempf @bertof
 
 /modules/services/xscreensaver.nix                    @rycee
 
