@@ -460,44 +460,46 @@ in
         ++ optional cfg.enableCompletion nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
 
-      home.file."${relToDotDir ".zshrc"}".text = ''
-        ${cfg.initExtraFirst}
+      # TODO use like in sway ${concatStringsSep "\n" (
+      home.file."${relToDotDir ".zshrc"}".text = concatStringsSep "\n" ([
+        cfg.initExtraFirst
+        "typeset -U path cdpath fpath manpath"
 
-        typeset -U path cdpath fpath manpath
-
-        ${optionalString (cfg.cdpath != []) ''
+        (optionalString (cfg.cdpath != []) ''
           cdpath+=(${concatStringsSep " " cfg.cdpath})
-        ''}
+        '')
 
+        ''
         for profile in ''${(z)NIX_PROFILES}; do
           fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
         done
 
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
+        ''
 
-        ${optionalString (cfg.defaultKeymap != null) ''
+        (optionalString (cfg.defaultKeymap != null) ''
           # Use ${cfg.defaultKeymap} keymap as the default.
           ${getAttr cfg.defaultKeymap bindkeyCommands}
-        ''}
+        '')
+        localVarsStr
 
-        ${localVarsStr}
+        cfg.initExtraBeforeCompInit
 
-        ${cfg.initExtraBeforeCompInit}
-
-        ${concatStrings (map (plugin: ''
+        (concatStrings (map (plugin: ''
           path+="$HOME/${pluginsDir}/${plugin.name}"
           fpath+="$HOME/${pluginsDir}/${plugin.name}"
-        '') cfg.plugins)}
+        '') cfg.plugins))
 
+        ''
         # Oh-My-Zsh/Prezto calls compinit during initialization,
         # calling it twice causes slight start up slowdown
         # as all $fpath entries will be traversed again.
         ${optionalString (cfg.enableCompletion && !cfg.oh-my-zsh.enable && !cfg.prezto.enable)
           cfg.completionInit
         }
-
-        ${optionalString cfg.enableAutosuggestions
-          "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+        ${optionalString cfg.enableAutosuggestions "
+          source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+		"
         }
 
         ${optionalString cfg.oh-my-zsh.enable ''
@@ -547,10 +549,12 @@ in
 
         # Aliases
         ${aliasesStr}
-
-        # Global Aliases
-        ${globalAliasesStr}
-
+        ''
+      ] 
+      ++ 
+      ( (mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases) 
+      )
+      ++ [''
         # Named Directory Hashes
         ${dirHashesStr}
 
@@ -559,7 +563,7 @@ in
           # https://github.com/zsh-users/zsh-syntax-highlighting#faq
           "source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
         }
-      '';
+      '']);
     }
 
     (mkIf cfg.oh-my-zsh.enable {
