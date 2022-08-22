@@ -74,3 +74,9 @@ outgoing = smtps+login://foobar@smtp.host.invalid:42
 [o_msmtp]
 from = Foo Bar <addr@mail.invalid>
 outgoing = msmtpq --read-envelope-from --read-recipients
+
+[p_overwrite_defaults]
+from = test <test@email.invalid>
+outgoing = imap+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337
+postpone = dRaFts
+source = smtp+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337

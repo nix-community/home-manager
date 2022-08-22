@@ -130,7 +130,7 @@ in {
         } // (optAttr "copy-to" account.folders.sent)
         // (optAttr "default" account.folders.inbox)
         // (optAttr "postpone" account.folders.drafts)
-        // (optAttr "aliases" account.aliases) // account.aerc.extraAccounts;
+        // (optAttr "aliases" account.aliases);
 
       sourceCfg = account:
         if account.mbsync.enable || account.offlineimap.enable then
@@ -148,7 +148,8 @@ in {
         else
           { };
 
-    in (basicCfg account) // (sourceCfg account) // (outgoingCfg account);
+    in (basicCfg account) // (sourceCfg account) // (outgoingCfg account)
+    // account.aerc.extraAccounts;
 
   mkAccountConfig = name: account:
     mapAttrNames (addAccountName name) account.aerc.extraConfig;
