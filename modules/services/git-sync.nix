@@ -13,6 +13,7 @@ let
 
     Service = {
       Environment = [
+        "PATH=${lib.makeBinPath (with pkgs; [ openssh git ])}"
         "GIT_SYNC_DIRECTORY=${repo.path}"
         "GIT_SYNC_COMMAND=${cfg.package}/bin/git-sync"
         "GIT_SYNC_REPOSITORY=${repo.uri}"
@@ -65,7 +66,7 @@ let
   });
 
 in {
-  meta.maintainers = [ maintainers.imalison ];
+  meta.maintainers = [ maintainers.imalison maintainers.cab404 ];
 
   options = {
     services.git-sync = {

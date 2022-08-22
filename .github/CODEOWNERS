@@ -345,7 +345,7 @@ Makefile                                              @thiagokokada
 /modules/services/fnott.nix                           @polykernel
 /tests/modules/services/fnott                         @polykernel
 
-/modules/services/git-sync.nix                        @IvanMalison
+/modules/services/git-sync.nix                        @IvanMalison @cab404
 
 /modules/services/gnome-keyring.nix                   @rycee
 
