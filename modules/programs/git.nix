@@ -130,10 +130,19 @@ let
           </citerefentry>.
         '';
       };
-    };
 
-    config.path = mkIf (config.contents != { })
-      (mkDefault (pkgs.writeText "contents" (gitToIni config.contents)));
+      contentSuffix = mkOption {
+        type = types.str;
+        default = "gitconfig";
+        description = ''
+          Nix store name for the git configuration text file,
+          when generating the configuration text from nix options.
+        '';
+
+      };
+    };
+    config.path = mkIf (config.contents != { }) (mkDefault
+      (pkgs.writeText config.contentSuffix (gitToIni config.contents)));
   });
 
 in {
