@@ -273,7 +273,14 @@ let
         "focus_wrapping ${lib.hm.booleans.yesNo focus.forceWrapping}"
         "focus_follows_mouse ${focus.followMouse}"
         "focus_on_window_activation ${focus.newWindow}"
-        "mouse_warping ${if focus.mouseWarping then "output" else "none"}"
+        "mouse_warping ${
+          if builtins.isString (focus.mouseWarping) then
+            focus.mouseWarping
+          else if focus.mouseWarping then
+            "output"
+          else
+            "none"
+        }"
         "workspace_layout ${workspaceLayout}"
         "workspace_auto_back_and_forth ${
           lib.hm.booleans.yesNo workspaceAutoBackAndForth
