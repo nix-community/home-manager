@@ -25,6 +25,12 @@
     github = "blmhemu";
     githubId = 19410501;
   };
+  bertof = {
+    name = "bertof";
+    email = "berto.f@protonmail.com";
+    github = "bertof";
+    githubId = 9915675;
+  };
   CarlosLoboxyz = {
     name = "Carlos Lobo";
     email = "86011416+CarlosLoboxyz@users.noreply.github.com";
