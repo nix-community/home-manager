@@ -23,13 +23,14 @@ let
     ${concatStringsSep " " (notEmpty [
       "${cfg.package}/bin/xidlehook"
       (optionalString cfg.once "--once")
+      (optionalString cfg.detect-sleep "--detect-sleep")
       (optionalString cfg.not-when-fullscreen "--not-when-fullscreen")
       (optionalString cfg.not-when-audio "--not-when-audio")
       timers
     ])}
   '';
 in {
-  meta.maintainers = [ maintainers.dschrempf ];
+  meta.maintainers = [ maintainers.dschrempf hm.maintainers.bertof ];
 
   options.services.xidlehook = {
     enable = mkEnableOption "xidlehook systemd service";
@@ -54,6 +55,9 @@ in {
         These options are passed unescaped as <code>export name=value</code>.
       '';
     };
+
+    detect-sleep = mkEnableOption
+      "detecting when the system wakes up from a suspended state and resetting the idle timer";
 
     not-when-fullscreen = mkOption {
       type = types.bool;
