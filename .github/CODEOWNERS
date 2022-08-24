@@ -458,6 +458,7 @@ Makefile                                              @thiagokokada
 /tests/modules/services/twmn                          @Austreelis
 
 /modules/services/udiskie.nix                         @rycee
+/tests/modules/services/udiskie                       @rycee
 
 /modules/services/unison.nix                          @pacien
 
