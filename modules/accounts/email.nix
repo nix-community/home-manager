@@ -229,7 +229,14 @@ let
       };
 
       flavor = mkOption {
-        type = types.enum [ "plain" "gmail.com" "runbox.com" "fastmail.com" ];
+        type = types.enum [
+          "plain"
+          "gmail.com"
+          "runbox.com"
+          "fastmail.com"
+          "yandex.com"
+          "outlook.office365.com"
+        ];
         default = "plain";
         description = ''
           Some email providers have peculiar behavior that require
@@ -377,6 +384,41 @@ let
         name = name;
         maildir = mkOptionDefault { path = "${name}"; };
       }
+
+      (mkIf (config.flavor == "yandex.com") {
+        userName = mkDefault config.address;
+
+        imap = {
+          host = "imap.yandex.com";
+          port = 993;
+          tls.enable = true;
+        };
+
+        smtp = {
+          host = "smtp.yandex.com";
+          port = 465;
+          tls.enable = true;
+        };
+      })
+
+      (mkIf (config.flavor == "outlook.office365.com") {
+        userName = mkDefault config.address;
+
+        imap = {
+          host = "outlook.office365.com";
+          port = 993;
+          tls.enable = true;
+        };
+
+        smtp = {
+          host = "smtp-mail.outlook.com";
+          port = 587;
+          tls = {
+            enable = true;
+            useStartTls = true;
+          };
+        };
+      })
 
       (mkIf (config.flavor == "fastmail.com") {
         userName = mkDefault config.address;
