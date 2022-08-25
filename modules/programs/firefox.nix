@@ -176,7 +176,7 @@ in {
 
           Extensions listed here will only be available in Firefox
           profiles managed through the
-          <link linkend="opt-programs.firefox.profiles">programs.firefox.profiles</link>
+          <xref linkend="opt-programs.firefox.profiles"/>
           option. This is due to recent changes in the way Firefox
           handles extension side-loading.
         '';
