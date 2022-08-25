@@ -47,12 +47,9 @@ in {
         type = types.listOf types.str;
         default = [ ];
         example = [ "extraGoPath1" "extraGoPath2" ];
-        description = let goPathOpt = "programs.go.goPath";
-        in ''
+        description = ''
           Extra <envar>GOPATH</envar>s relative to <envar>HOME</envar> appended
-          after
-          <varname><link linkend="opt-${goPathOpt}">${goPathOpt}</link></varname>,
-          if that option is set.
+          after <xref linkend="opt-programs.go.goPath"/>, if that option is set.
         '';
       };
 
