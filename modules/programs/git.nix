@@ -142,7 +142,8 @@ let
       };
     };
     config.path = mkIf (config.contents != { }) (mkDefault
-      (pkgs.writeText config.contentSuffix (gitToIni config.contents)));
+      (pkgs.writeText (hm.strings.storeFileName config.contentSuffix)
+        (gitToIni config.contents)));
   });
 
 in {
