@@ -5611,37 +5611,7 @@ for options.
 };
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/neovim.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.neovim.configure"></a><a class="term" href="options.html#opt-programs.neovim.configure"><code class="option">programs.neovim.configure</code></a></span></dt><dd><p>Deprecated. Please use the other options.
-
-Generate your init file from your list of plugins and custom commands,
-and loads it from the store via <span class="command"><strong>nvim -u /nix/store/hash-vimrc</strong></span>
-
-</p><p>
-
-This option is mutually exclusive with <code class="varname">extraConfig</code>
-and <code class="varname">plugins</code>.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of anything</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-        {
-        
-        }
-    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">configure = {
-    customRC = $'''
-    " here your custom configuration goes!
-    $''';
-    packages.myVimPackage = with pkgs.vimPlugins; {
-      # loaded on launch
-      start = [ fugitive ];
-      # manually loadable by calling `:packadd $plugin-name`
-      opt = [ ];
-    };
-  };
-</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
-                    &lt;home-manager/modules/programs/neovim.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.neovim.extraConfig"></a><a class="term" href="options.html#opt-programs.neovim.extraConfig"><code class="option">programs.neovim.extraConfig</code></a></span></dt><dd><p>Custom vimrc lines.
-
-</p><p>
-
-This option is mutually exclusive with <code class="varname">configure</code>.
 </p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
 set nobackup
 ''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
