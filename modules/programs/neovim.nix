@@ -99,6 +99,14 @@ in {
       "Python2 support has been removed from neovim.")
     (mkRemovedOptionModule [ "programs" "neovim" "extraPythonPackages" ]
       "Python2 support has been removed from neovim.")
+    (mkRemovedOptionModule [ "programs" "neovim" "configure" ] ''
+      programs.neovim.configure is deprecated.
+            Other programs.neovim options can override its settings or ignore them.
+            Please use the other options at your disposal:
+              configure.packages.*.opt  -> programs.neovim.plugins = [ { plugin = ...; optional = true; }]
+              configure.packages.*.start  -> programs.neovim.plugins = [ { plugin = ...; }]
+              configure.customRC -> programs.neovim.extraConfig
+    '')
   ];
 
   options = {
@@ -221,35 +229,6 @@ in {
         description = "Resulting customized neovim package.";
       };
 
-      configure = mkOption {
-        type = types.attrsOf types.anything;
-        default = { };
-        example = literalExpression ''
-          configure = {
-              customRC = $''''
-              " here your custom configuration goes!
-              $'''';
-              packages.myVimPackage = with pkgs.vimPlugins; {
-                # loaded on launch
-                start = [ fugitive ];
-                # manually loadable by calling `:packadd $plugin-name`
-                opt = [ ];
-              };
-            };
-        '';
-        description = ''
-          Deprecated. Please use the other options.
-
-          Generate your init file from your list of plugins and custom commands,
-          and loads it from the store via <command>nvim -u /nix/store/hash-vimrc</command>
-
-          </para><para>
-
-          This option is mutually exclusive with <varname>extraConfig</varname>
-          and <varname>plugins</varname>.
-        '';
-      };
-
       extraConfig = mkOption {
         type = types.lines;
         default = "";
@@ -258,10 +237,6 @@ in {
         '';
         description = ''
           Custom vimrc lines.
-
-          </para><para>
-
-          This option is mutually exclusive with <varname>configure</varname>.
         '';
       };
 
@@ -372,14 +347,6 @@ in {
     };
 
   in mkIf cfg.enable {
-    warnings = optional (cfg.configure != { }) ''
-      programs.neovim.configure is deprecated.
-      Other programs.neovim options can override its settings or ignore them.
-      Please use the other options at your disposal:
-        configure.packages.*.opt  -> programs.neovim.plugins = [ { plugin = ...; optional = true; }]
-        configure.packages.*.start  -> programs.neovim.plugins = [ { plugin = ...; }]
-        configure.customRC -> programs.neovim.extraConfig
-    '';
 
     programs.neovim.generatedConfigViml = neovimConfig.neovimRcContent;
 
