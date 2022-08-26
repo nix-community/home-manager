@@ -14,7 +14,9 @@ let
   substituteExpected = path:
     pkgs.substituteAll {
       src = path;
-      git_include_path = pkgs.writeText "contents"
+      git_include_path = pkgs.writeText "hm_gitconfig"
+        (builtins.readFile ./git-expected-include.conf);
+      git_named_include_path = pkgs.writeText "hm_gitconfigwork"
         (builtins.readFile ./git-expected-include.conf);
     };
 
@@ -45,6 +47,11 @@ in {
           {
             condition = "gitdir:~/src/dir";
             contents = gitInclude;
+          }
+          {
+            condition = "gitdir:~/src/otherproject";
+            contents = gitInclude;
+            contentSuffix = "gitconfig-work";
           }
         ];
         signing = {
