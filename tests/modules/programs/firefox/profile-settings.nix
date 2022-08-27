@@ -43,6 +43,19 @@ lib.mkIf config.test.enableBig {
               name = "wiki";
               url = "https://nixos.wiki/";
             }
+            {
+              name = "Nix sites";
+              bookmarks = [
+                {
+                  name = "homepage";
+                  url = "https://nixos.org/";
+                }
+                {
+                  name = "wiki";
+                  url = "https://nixos.wiki/";
+                }
+              ];
+            }
           ];
         }
       ];
