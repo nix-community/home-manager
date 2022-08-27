@@ -84,6 +84,10 @@ and `nixpkgs` url to `github:NixOS/nixpkgs/nixos-22.05`.
 
 * The Home Manager library is exported by the flake under
 `lib.hm`.
+
+* You can use the above `flake.nix` as a template in `~/.config/nixpkgs` by
+[source,console]
+$ nix flake new ~/.config/nixpkgs -t github:nix-community/home-manager
 ====
 
 2. Install Home Manager and apply the configuration by
@@ -170,6 +174,11 @@ The Home Manager configuration is then part of the NixOS configuration
 and is automatically rebuilt with the system when using the appropriate command
 for the system, such as `nixos-rebuild switch --flake <flake-uri>`.
 
+You can use the above `flake.nix` as a template in `/etc/nixos` by
+
+[source,console]
+$ nix flake new /etc/nixos -t github:nix-community/home-manager#nixos
+
 [[sec-flakes-nix-darwin-module]]
 === nix-darwin module
 
@@ -213,3 +222,8 @@ is similar to that of NixOS. The `flake.nix` would be:
 
 and it is also rebuilt with the nix-darwin generations.
 The rebuild command here may be `darwin-rebuild switch --flake <flake-uri>`.
+
+You can use the above `flake.nix` as a template in `~/.config/darwin` by
+
+[source,console]
+$ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin
