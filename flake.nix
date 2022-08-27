@@ -20,6 +20,23 @@
       # unofficial; deprecated in Nix 2.8
       darwinModule = self.darwinModules.default;
 
+      templates = {
+        standalone = {
+          path = ./templates/standalone;
+          description = "Standalone setup";
+        };
+        nixos = {
+          path = ./templates/nixos;
+          description = "Home Manager as a NixOS module,";
+        };
+        nix-darwin = {
+          path = ./templates/nix-darwin;
+          description = "Home Manager as a nix-darwin module,";
+        };
+      };
+
+      defaultTemplate = self.templates.standalone;
+
       lib = {
         hm = (import ./modules/lib/stdlib-extended.nix nixpkgs.lib).hm;
         homeManagerConfiguration = { modules ? [ ], pkgs, lib ? pkgs.lib
