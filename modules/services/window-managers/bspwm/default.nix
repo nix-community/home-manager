@@ -61,21 +61,23 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."bspwm/bspwmrc".source = pkgs.writeShellScript "bspwmrc" ''
-      ${concatStringsSep "\n" (mapAttrsToList formatMonitor cfg.monitors)}
+    xdg.configFile."bspwm/bspwmrc".source = pkgs.writeShellScript "bspwmrc"
+      ((optionalString (cfg.extraConfigEarly != "")
+        (cfg.extraConfigEarly + "\n")) + ''
+          ${concatStringsSep "\n" (mapAttrsToList formatMonitor cfg.monitors)}
 
-      ${concatStringsSep "\n" (mapAttrsToList formatSetting cfg.settings)}
+          ${concatStringsSep "\n" (mapAttrsToList formatSetting cfg.settings)}
 
-      bspc rule -r '*'
-      ${concatStringsSep "\n" (mapAttrsToList formatRule cfg.rules)}
+          bspc rule -r '*'
+          ${concatStringsSep "\n" (mapAttrsToList formatRule cfg.rules)}
 
-      # java gui fixes
-      export _JAVA_AWT_WM_NONREPARENTING=1
-      bspc rule -a sun-awt-X11-XDialogPeer state=floating
+          # java gui fixes
+          export _JAVA_AWT_WM_NONREPARENTING=1
+          bspc rule -a sun-awt-X11-XDialogPeer state=floating
 
-      ${cfg.extraConfig}
-      ${concatMapStringsSep "\n" formatStartupProgram cfg.startupPrograms}
-    '';
+          ${cfg.extraConfig}
+          ${concatMapStringsSep "\n" formatStartupProgram cfg.startupPrograms}
+        '');
 
     # for applications not started by bspwm, e.g. sxhkd
     xsession.profileExtra = ''

@@ -1,3 +1,5 @@
+extra config early
+
 if [[ $(bspc query --desktops --names --monitor 'focused') == Desktop ]]; then
   bspc monitor 'focused' -d 'desktop 1' 'd'\''esk top'
 fi
