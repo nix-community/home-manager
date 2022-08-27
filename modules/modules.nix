@@ -207,6 +207,7 @@ let
     ./services/cachix-agent.nix
     ./services/caffeine.nix
     ./services/cbatticon.nix
+    ./services/clipman.nix
     ./services/clipmenu.nix
     ./services/devilspie2.nix
     ./services/dropbox.nix

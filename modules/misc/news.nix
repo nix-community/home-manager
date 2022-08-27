@@ -869,6 +869,14 @@ in
           A new module is available: 'services.cachix-agent'.
         '';
       }
+
+      {
+        time = "2022-12-28T21:48:22+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.clipman'.
+        '';
+      }
     ];
   };
 }

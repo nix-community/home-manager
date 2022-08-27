@@ -369,6 +369,9 @@ Makefile                                              @thiagokokada
 
 /modules/services/cbatticon.nix                       @pmiddend
 
+/modules/services/clipman.nix                         @jwygoda
+/tests/modules/services/clipman                       @jwygoda
+
 /modules/services/clipmenu.nix                        @DamienCassou
 
 /modules/services/devilspie2.nix                      @dawidsowa
