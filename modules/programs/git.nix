@@ -73,7 +73,7 @@ let
       signByDefault = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether commits should be signed by default.";
+        description = "Whether commits and tags should be signed by default.";
       };
 
       gpgPath = mkOption {
@@ -444,6 +444,7 @@ in {
       programs.git.iniContent = {
         user.signingKey = mkIf (cfg.signing.key != null) cfg.signing.key;
         commit.gpgSign = cfg.signing.signByDefault;
+        tag.gpgSign = cfg.signing.signByDefault;
         gpg.program = cfg.signing.gpgPath;
       };
     })
