@@ -411,7 +411,7 @@ let
         };
 
         smtp = {
-          host = "smtp-mail.outlook.com";
+          host = "smtp.office365.com";
           port = 587;
           tls = {
             enable = true;
