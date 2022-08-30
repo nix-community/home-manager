@@ -216,7 +216,7 @@ in {
     {
       home.file."${homedir}/gpg-agent.conf".text = concatStringsSep "\n"
         (optional (cfg.enableSshSupport) "enable-ssh-support"
-          ++ optional (!cfg.grabKeyboardAndMouse) "no-grab"
+          ++ optional cfg.grabKeyboardAndMouse "grab"
           ++ optional (!cfg.enableScDaemon) "disable-scdaemon"
           ++ optional (cfg.defaultCacheTtl != null)
           "default-cache-ttl ${toString cfg.defaultCacheTtl}"
