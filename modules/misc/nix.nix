@@ -102,6 +102,31 @@ in {
       '';
     };
 
+    nixPath = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [
+        "$HOME/.nix-defexpr/channels"
+        "darwin-config=$HOME/.config/nixpkgs/darwin-configuration.nix"
+      ];
+      description = lib.mdDoc ''
+        Adds new directories to the Nix expression search path.
+
+        Used by Nix when looking up paths in angular brackets
+        (e.g. `<nixpkgs>`).
+      '';
+    };
+
+    keepOldNixPath = mkOption {
+      type = types.bool;
+      default = true;
+      example = false;
+      description = lib.mdDoc ''
+        Whether {option}`nix.nixPath` should keep the previously set values in
+        {env}`NIX_PATH`.
+      '';
+    };
+
     registry = mkOption {
       type = types.attrsOf (types.submodule (let
         inputAttrs = types.attrsOf
@@ -210,6 +235,14 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
+    (mkIf (cfg.nixPath != [ ] && !cfg.keepOldNixPath) {
+      home.sessionVariables.NIX_PATH = "${nixPath}";
+    })
+
+    (mkIf (cfg.nixPath != [ ] && cfg.keepOldNixPath) {
+      home.sessionVariables.NIX_PATH = "${nixPath}\${NIX_PATH:+:$NIX_PATH}";
+    })
+
     (mkIf (cfg.registry != { }) {
       xdg.configFile."nix/registry.json".source =
         jsonFormat.generate "registry.json" {
