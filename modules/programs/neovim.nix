@@ -138,11 +138,14 @@ in {
       };
 
       withNodeJs = mkOption {
-        type = types.bool;
+        type = types.nullOr types.bool;
         default = false;
         description = ''
           Enable node provider. Set to <literal>true</literal> to
           use Node plugins.
+
+          This will be automatically enabled if <varname>coc.enable</varname> is set,
+          which can be circumvented by setting this option to <literal>null</literal>.
         '';
       };
 
@@ -341,9 +344,13 @@ in {
 
     neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
       inherit (cfg) extraPython3Packages withPython3 withRuby viAlias vimAlias;
-      withNodeJs = cfg.withNodeJs || cfg.coc.enable;
       plugins = map suppressNotVimlConfig pluginsNormalized;
       customRC = cfg.extraConfig;
+      withNodeJs = if (cfg.withNodeJs == true || cfg.coc.enable
+        && cfg.withNodeJs != null) then
+        true
+      else
+        false;
     };
 
   in mkIf cfg.enable {
