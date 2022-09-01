@@ -111,6 +111,8 @@ Makefile                                              @thiagokokada
 /modules/programs/gitui/gitui.nix                     @mifom
 /modules/programs/gitui/default_key_config.ron        @mifom
 
+/modules/programs/gnome-shell.nix                     @terlar
+
 /modules/programs/gnome-terminal.nix                  @kamadorueda @rycee
 
 /modules/programs/go.nix                              @rvolosatovs

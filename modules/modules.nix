@@ -76,6 +76,7 @@ let
     ./programs/gh.nix
     ./programs/git.nix
     ./programs/gitui.nix
+    ./programs/gnome-shell.nix
     ./programs/gnome-terminal.nix
     ./programs/go.nix
     ./programs/gpg.nix
