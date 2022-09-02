@@ -200,7 +200,7 @@ is similar to that of NixOS. The `flake.nix` would be:
 [source,nix]
 ----
 {
-  description = "NixOS configuration";
+  description = "Darwin configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
