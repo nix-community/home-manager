@@ -289,6 +289,12 @@
     github = "sebtm";
     githubId = 17243347;
   };
+  rosuavio = {
+    name = "Rosario Pulella";
+    email = "RosarioPulella@gmail.com";
+    github = "Rosuavio";
+    githubId = 7164552;
+  };
   rszamszur = {
     name = "Radosław Szamszur";
     email = "radoslawszamszur@gmail.com";
