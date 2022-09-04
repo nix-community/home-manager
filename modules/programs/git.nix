@@ -201,6 +201,21 @@ in {
         '';
       };
 
+      hooks = mkOption {
+        type = types.attrsOf types.path;
+        default = { };
+        example = literalExpression ''
+          {
+            pre-commit = ./pre-commit-script;
+          }
+        '';
+        description = ''
+          Configuration helper for Git hooks.
+          See <link xlink:href="https://git-scm.com/docs/githooks" />
+          for reference.
+        '';
+      };
+
       iniContent = mkOption {
         type = gitIniType;
         internal = true;
@@ -446,6 +461,15 @@ in {
         commit.gpgSign = cfg.signing.signByDefault;
         tag.gpgSign = cfg.signing.signByDefault;
         gpg.program = cfg.signing.gpgPath;
+      };
+    })
+
+    (mkIf (cfg.hooks != { }) {
+      programs.git.iniContent = {
+        core.hooksPath = let
+          entries =
+            mapAttrsToList (name: path: { inherit name path; }) cfg.hooks;
+        in toString (pkgs.linkFarm "git-hooks" entries);
       };
     })
 
