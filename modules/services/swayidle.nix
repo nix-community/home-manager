@@ -96,6 +96,15 @@ in {
       default = [ ];
       description = "Extra arguments to pass to swayidle.";
     };
+
+    systemdTarget = mkOption {
+      type = types.str;
+      default = "sway-session.target";
+      description = ''
+        Systemd target to bind to.
+      '';
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -114,7 +123,7 @@ in {
           "${cfg.package}/bin/swayidle -w ${concatStringsSep " " args}";
       };
 
-      Install = { WantedBy = [ "sway-session.target" ]; };
+      Install = { WantedBy = [ cfg.systemdTarget ]; };
     };
   };
 }
