@@ -18,6 +18,9 @@ Makefile                                              @thiagokokada
 
 /modules/misc/dconf.nix                               @rycee
 
+/modules/misc/editorconfig.nix                        @loicreynier
+/test/modules/misc/editorconfig                       @loicreynier
+
 /modules/misc/fontconfig.nix                          @rycee
 /tests/modules/misc/fontconfig                        @rycee
 
