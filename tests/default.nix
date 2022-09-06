@@ -121,6 +121,7 @@ import nmt {
     ./modules/programs/zsh
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
+    ./modules/programs/swiftbar
     ./modules/launchd
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
