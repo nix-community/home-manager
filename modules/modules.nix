@@ -24,6 +24,7 @@ let
     ./manual.nix
     ./misc/dconf.nix
     ./misc/debug.nix
+    ./misc/editorconfig.nix
     ./misc/fontconfig.nix
     ./misc/gtk.nix
     ./misc/lib.nix

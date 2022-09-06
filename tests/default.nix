@@ -127,6 +127,7 @@ import nmt {
     ./modules/config/i18n
     ./modules/i18n/input-method
     ./modules/misc/debug
+    ./modules/misc/editorconfig
     ./modules/misc/gtk
     ./modules/misc/numlock
     ./modules/misc/pam
