@@ -864,6 +864,29 @@ directory.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/dconf.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/dconf.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-editorconfig.enable"></a><a class="term" href="options.html#opt-editorconfig.enable"><code class="option">editorconfig.enable</code></a></span></dt><dd><p>Whether to enable EditorConfig home configuration file.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/editorconfig.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/editorconfig.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-editorconfig.settings"></a><a class="term" href="options.html#opt-editorconfig.settings"><code class="option">editorconfig.settings</code></a></span></dt><dd><p>Configuration written to <code class="filename">$HOME/.editorconfig</code>.
+<code class="code">root = true</code> is automatically added to the file,
+it must not be added here.
+See <a class="link" href="https://editorconfig.org" target="_top">https://editorconfig.org</a> for documentation.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of INI atom (null, bool, int, float or string)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  "*" = {
+    charset = "utf-8";
+    end_of_line = "lf";
+    trim_trailing_whitespace = true;
+    insert_final_newline = true;
+    max_line_width = 78;
+    indent_style = "space";
+    indent_size = 4;
+  };
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/editorconfig.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/misc/editorconfig.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-fonts.fontconfig.enable"></a><a class="term" href="options.html#opt-fonts.fontconfig.enable"><code class="option">fonts.fontconfig.enable</code></a></span></dt><dd><p>Whether to enable fontconfig configuration. This will, for
 example, allow fontconfig to discover fonts and
 configurations installed through
