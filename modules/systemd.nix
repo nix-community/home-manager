@@ -44,14 +44,15 @@ let
         destination = "/${filename}";
       } + "/${filename}";
 
-      wantedBy = target: {
-        name = "systemd/user/${target}.wants/${filename}";
+      install = variant: target: {
+        name = "systemd/user/${target}.${variant}/${filename}";
         value = { inherit source; };
       };
     in lib.singleton {
       name = "systemd/user/${filename}";
       value = { inherit source; };
-    } ++ map wantedBy (serviceCfg.Install.WantedBy or [ ]);
+    } ++ map (install "wants") (serviceCfg.Install.WantedBy or [ ])
+    ++ map (install "requires") (serviceCfg.Install.RequiredBy or [ ]);
 
   buildServices = style: serviceCfgs:
     lib.concatLists (lib.mapAttrsToList (buildService style) serviceCfgs);
