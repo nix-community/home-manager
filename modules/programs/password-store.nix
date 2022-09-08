@@ -53,6 +53,18 @@ in {
         available keys.
       '';
     };
+
+    enableBashIntegration = mkEnableOption "pass bash integration" // {
+      default = true;
+    };
+
+    enableZshIntegration = mkEnableOption "pass zsh integration" // {
+      default = true;
+    };
+
+    enableFishIntegration = mkEnableOption "pass fish integration" // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -61,5 +73,17 @@ in {
 
     xsession.importedVariables = mkIf config.xsession.enable
       (mapAttrsToList (name: value: name) cfg.settings);
+
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+      source ${cfg.package}/share/bash-completion/completions/pass
+    '';
+
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      source ${cfg.package}/share/zsh/site-functions/_pass
+    '';
+
+    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
+      source ${cfg.package}/share/fish/vendor_completions.d/pass.fish
+    '';
   };
 }
