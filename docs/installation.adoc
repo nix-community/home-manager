@@ -124,21 +124,21 @@ deployed through NixOps.
 
 To make the NixOS module available for use you must `import` it into
 your system configuration. This is most conveniently done by adding a
-Home Manager channel. For example, if you are following Nixpkgs master
-or an unstable channel, you can run
+Home Manager channel to the root user. For example, if you are
+following Nixpkgs master or an unstable channel, you can run
 
 [source,console]
 ----
-# nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-# nix-channel --update
+$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+$ sudo nix-channel --update
 ----
 
 and if you follow a Nixpkgs version 22.05 channel, you can run
 
 [source,console]
 ----
-# nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
-# nix-channel --update
+$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
+$ sudo nix-channel --update
 ----
 
 It is then possible to add
@@ -161,7 +161,7 @@ home-manager.users.eve = { pkgs, ... }: {
 };
 ----
 
-and after a `nixos-rebuild switch` the user eve's environment should
+and after a `sudo nixos-rebuild switch` the user eve's environment should
 include a basic Bash configuration and the packages atool and httpie.
 
 [NOTE]
