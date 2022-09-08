@@ -3458,6 +3458,18 @@ deprecated and will be removed in the future.
         }
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/git.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.hooks"></a><a class="term" href="options.html#opt-programs.git.hooks"><code class="option">programs.git.hooks</code></a></span></dt><dd><p>Configuration helper for Git hooks.
+See <a class="link" href="https://git-scm.com/docs/githooks" target="_top">https://git-scm.com/docs/githooks</a>
+for reference.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  pre-commit = ./pre-commit-script;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/git.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.ignores"></a><a class="term" href="options.html#opt-programs.git.ignores"><code class="option">programs.git.ignores</code></a></span></dt><dd><p>List of paths that should be globally ignored.</p><p><span class="emphasis"><em>Type:</em></span> list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         
