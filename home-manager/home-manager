@@ -102,6 +102,7 @@ function setFlakeAttribute() {
     if [[ -n "$FLAKE_ARG" ]]; then
         local flake="${FLAKE_ARG%#*}"
         case $FLAKE_ARG in
+
             *#*)
                 local name="${FLAKE_ARG#*#}"
             ;;

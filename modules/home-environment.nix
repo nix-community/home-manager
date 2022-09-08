@@ -592,10 +592,21 @@ in
         ''
       else
         ''
+          function hm-internal-replace-profile {
+
+            nix profile list \
+              | { grep 'home-manager-path$' || test $? = 1; } \
+              | awk -F ' ' '{ print $4 }' \
+              | cut -d ' ' -f 4 \
+              | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+
+            $DRY_RUN_CMD nix profile install $1
+          }
+
           if [[ -e "$nixProfilePath"/manifest.json ]] ; then
-            INSTALL_CMD="nix profile install"
+            INSTALL_CMD="hm-internal-replace-profile"
             LIST_CMD="nix profile list"
-            REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
+            REMOVE_CMD_SYNTAX='nix profile remove  dd {number | store path}'
           else
             INSTALL_CMD="nix-env -i"
             LIST_CMD="nix-env -q"
