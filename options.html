@@ -5798,6 +5798,47 @@ use Python 3 plugins.
                     &lt;home-manager/modules/programs/newsboat.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.newsboat.urls._.url"></a><a class="term" href="options.html#opt-programs.newsboat.urls._.url"><code class="option">programs.newsboat.urls.*.url</code></a></span></dt><dd><p>Feed URL.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"http://example.com"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/newsboat.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/newsboat.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nheko.enable"></a><a class="term" href="options.html#opt-programs.nheko.enable"><code class="option">programs.nheko.enable</code></a></span></dt><dd><p>Whether to enable Qt desktop client for Matrix.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nheko.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nheko.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nheko.package"></a><a class="term" href="options.html#opt-programs.nheko.package"><code class="option">programs.nheko.package</code></a></span></dt><dd><p>The nheko package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.nheko</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nheko.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nheko.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nheko.settings"></a><a class="term" href="options.html#opt-programs.nheko.settings"><code class="option">programs.nheko.settings</code></a></span></dt><dd><p>Attribute set of Nheko preferences (converted to an INI file).
+
+</p><p>
+
+For now, it is recommended to run nheko and sign-in before filling in
+the configuration settings in this module, as nheko writes the access
+token to <code class="filename">$XDG_CONFIG_HOME/nheko/nheko.conf</code> the
+first time we sign in, and we need that data into these settings for the
+correct functionality of the application.
+
+</p><p>
+
+This a temporary inconvenience, however, as nheko has plans to move the
+authentication stuff into the local database they currently use. Once
+this happens, this will no longer be an issue.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of INI atom (null, bool, int, float or string)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  general.disableCertificateValidation = false;
+  auth = {
+    accessToken = "SECRET";
+    deviceId = "MY_DEVICE";
+    homeServer = "https://matrix-client.matrix.org:443";
+    userId = "@@user:matrix.org";
+  };
+  settings.scaleFactor = 1.0;
+  sidebar.width = 416;
+  user = {
+    alertOnNotification = true;
+    animateImagesOnHover = false;
+    "sidebar\\roomListWidth" = 308;
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nheko.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/nheko.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nix-index.enable"></a><a class="term" href="options.html#opt-programs.nix-index.enable"><code class="option">programs.nix-index.enable</code></a></span></dt><dd><p>Whether to enable nix-index, a file database for nixpkgs.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nix-index.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/nix-index.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nix-index.enableBashIntegration"></a><a class="term" href="options.html#opt-programs.nix-index.enableBashIntegration"><code class="option">programs.nix-index.enableBashIntegration</code></a></span></dt><dd><p>Whether to enable Bash integration.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nix-index.nix#blob-path" target="_top">
