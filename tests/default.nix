@@ -155,6 +155,7 @@ in import nmtSrc {
     ./modules/programs/tmux
     ./modules/programs/topgrade
     ./modules/programs/translate-shell
+    ./modules/programs/vifm
     ./modules/programs/vim-vint
     ./modules/programs/vscode
     ./modules/programs/watson

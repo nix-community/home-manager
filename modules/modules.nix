@@ -241,8 +241,9 @@ let
     ./programs/translate-shell.nix
     ./programs/urxvt.nix
     ./programs/vdirsyncer.nix
-    ./programs/vim.nix
+    ./programs/vifm.nix
     ./programs/vim-vint.nix
+    ./programs/vim.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
