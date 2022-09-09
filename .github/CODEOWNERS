@@ -298,7 +298,7 @@ Makefile                                              @thiagokokada
 /modules/programs/topgrade.nix                        @msfjarvis
 /tests/modules/programs/topgrade                      @msfjarvis
 
-/mdules/programs/watson.nix                           @polykernel
+/modules/programs/watson.nix                          @polykernel
 /tests/modules/programs/watson                        @polykernel
 
 /modules/programs/waybar.nix                          @berbiche
