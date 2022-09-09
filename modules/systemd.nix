@@ -38,11 +38,16 @@ let
 
       # Needed because systemd derives unit names from the ultimate
       # link target.
-      source = pkgs.writeTextFile {
-        name = pathSafeName;
+      source' = pkgs.runCommand pathSafeName {
+        preferLocalBuild = true;
+        allowSubstitutes = false;
         text = toSystemdIni serviceCfg;
-        destination = "/${filename}";
-      } + "/${filename}";
+      } ''
+        mkdir -p $out
+        echo -n "$text" > $out/${filename}
+      '';
+
+      source = "${source'}/${filename}";
 
       install = variant: target: {
         name = "systemd/user/${target}.${variant}/${filename}";
