@@ -314,6 +314,7 @@ Makefile                                              @thiagokokada
 /tests/modules/programs/xmobar                        @t4ccer
 
 /modules/programs/yt-dlp.nix                          @marsam
+/tests/modules/programs/yt-dlp                        @marsam
 
 /modules/programs/z-lua.nix                           @marsam
 

@@ -155,6 +155,7 @@ import nmt {
     ./modules/programs/terminator
     ./modules/programs/waybar
     ./modules/programs/xmobar
+    ./modules/programs/yt-dlp
     ./modules/services/barrier
     ./modules/services/devilspie2
     ./modules/services/dropbox
