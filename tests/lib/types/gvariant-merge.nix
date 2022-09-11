@@ -50,6 +50,11 @@ in {
 
         { maybe1 = mkNothing type.string; }
         { maybe2 = mkJust (mkUint32 4); }
+
+        { variant1 = mkVariant "foo"; }
+        { variant2 = mkVariant 42; }
+
+        { dictionaryEntry = mkDictionaryEntry [ 1 [ "foo" ] ]; }
       ];
 
     home.file."result.txt".text = let
@@ -65,6 +70,7 @@ in {
             array1 = @as ['one','two']
             array2 = @au [1,2]
             bool = true
+            dictionaryEntry = @{ias} {1,@as ['foo']}
             emptyArray1 = @as []
             emptyArray2 = @au []
             escapedString = '\'\\\n'
@@ -79,6 +85,8 @@ in {
             uint16 = @q 42
             uint32 = @u 42
             uint64 = @t 42
+            variant1 = @v <'foo'>
+            variant2 = @v <42>
           ''
         }
     '';
