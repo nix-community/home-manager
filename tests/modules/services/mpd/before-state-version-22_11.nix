@@ -3,12 +3,9 @@
 with lib;
 
 {
-  services.mpd = {
-    enable = true;
-    musicDirectory = "/my/music/dir";
-  };
+  services.mpd.enable = true;
 
-  home.stateVersion = "22.11";
+  home.stateVersion = "18.09";
 
   test.stubs.mpd = { };
 
@@ -19,6 +16,9 @@ with lib;
     confFile=$(grep -o \
         '/nix/store/.*-mpd.conf' \
         $TESTED/home-files/.config/systemd/user/mpd.service)
-    assertFileContent "$confFile" ${./basic-configuration.conf}
+
+    assertFileContains \
+      "$confFile" \
+      'music_directory     "/home/hm-user/music"'
   '';
 }

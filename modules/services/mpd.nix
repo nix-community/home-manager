@@ -52,11 +52,18 @@ in {
 
       musicDirectory = mkOption {
         type = with types; either path str;
-        default = "${config.home.homeDirectory}/music";
-        defaultText = "$HOME/music";
+        defaultText = literalExpression ''
+          ''${home.homeDirectory}/music    if state version < 22.11
+          ''${xdg.userDirs.music}          if xdg.userDirs.enable == true
+          undefined                      otherwise
+        '';
         apply = toString; # Prevent copies to Nix store.
         description = ''
           The directory where mpd reads music from.
+          </para><para>
+          If <xref linkend="opt-xdg.userDirs.enable"/> is
+          <literal>true</literal> then the defined XDG music directory is used.
+          Otherwise, you must explicitly specify a value.
         '';
       };
 
@@ -146,6 +153,17 @@ in {
       (lib.hm.assertions.assertPlatform "services.mpd" pkgs lib.platforms.linux)
     ];
 
+    services.mpd = mkMerge [
+      (mkIf (versionAtLeast config.home.stateVersion "22.11"
+        && config.xdg.userDirs.enable) {
+          musicDirectory = mkOptionDefault config.xdg.userDirs.music;
+        })
+
+      (mkIf (versionOlder config.home.stateVersion "22.11") {
+        musicDirectory = mkOptionDefault "${config.home.homeDirectory}/music";
+      })
+    ];
+
     systemd.user.services.mpd = {
       Unit = {
         After = [ "network.target" "sound.target" ];
@@ -164,6 +182,7 @@ in {
           ${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
       };
     };
+
     systemd.user.sockets.mpd = mkIf cfg.network.startWhenNeeded {
       Socket = {
         ListenStream = let
