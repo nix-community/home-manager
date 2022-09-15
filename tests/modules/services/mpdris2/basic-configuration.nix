@@ -7,6 +7,8 @@
     multimediaKeys = true;
   };
 
+  services.mpd.musicDirectory = "/home/hm-user/music";
+
   test.stubs.mpdris2 = { };
 
   nmt.script = ''

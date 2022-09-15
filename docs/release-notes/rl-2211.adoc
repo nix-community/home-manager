@@ -93,4 +93,7 @@ release 20.03. Use `services.picom` instead.
 The state version in this release includes the changes below.
 These changes are only active if the `home.stateVersion` option is set to "22.11" or later.
 
-* No changes.
+* The <<opt-services.mpd.musicDirectory>> option now defaults to the
+value of <<opt-xdg.userDirs.music>> if <<opt-xdg.userDirs.enable>> is
+enabled. Otherwise it is undefined and must be specified in the user
+configuration.

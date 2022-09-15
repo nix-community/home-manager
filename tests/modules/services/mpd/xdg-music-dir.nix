@@ -3,10 +3,8 @@
 with lib;
 
 {
-  services.mpd = {
-    enable = true;
-    musicDirectory = "/my/music/dir";
-  };
+  services.mpd.enable = true;
+  xdg.userDirs.enable = true;
 
   home.stateVersion = "22.11";
 
@@ -19,6 +17,6 @@ with lib;
     confFile=$(grep -o \
         '/nix/store/.*-mpd.conf' \
         $TESTED/home-files/.config/systemd/user/mpd.service)
-    assertFileContent "$confFile" ${./basic-configuration.conf}
+    assertFileContent "$confFile" ${./xdg-music-dir.conf}
   '';
 }
