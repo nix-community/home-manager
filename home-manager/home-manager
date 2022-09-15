@@ -87,7 +87,7 @@ function setHomeManagerNixPath() {
                 "${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home-manager" \
                 "$HOME/.nixpkgs/home-manager" ; do
         if [[ -e "$path" || "$path" =~ ^https?:// ]] ; then
-            export NIX_PATH="home-manager=$path${NIX_PATH:+:}$NIX_PATH"
+            EXTRA_NIX_PATH+=("home-manager=$path")
             return
         fi
     done
@@ -130,7 +130,6 @@ function doInspectOption() {
         exit 1
     fi
     setConfigFile
-    setHomeManagerNixPath
 
     local extraArgs=("$@")
 
@@ -170,7 +169,6 @@ function doInstantiate() {
         exit 1
     fi
     setConfigFile
-    setHomeManagerNixPath
 
     local extraArgs=()
 
@@ -192,7 +190,6 @@ function doInstantiate() {
 
 function doBuildAttr() {
     setConfigFile
-    setHomeManagerNixPath
 
     local extraArgs=("$@")
 
@@ -601,6 +598,8 @@ PASSTHROUGH_OPTS=()
 COMMAND=""
 COMMAND_ARGS=()
 FLAKE_ARG=""
+
+setHomeManagerNixPath
 
 while [[ $# -gt 0 ]]; do
     opt="$1"
