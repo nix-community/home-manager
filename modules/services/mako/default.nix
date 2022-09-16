@@ -18,6 +18,14 @@ in {
         Mako, lightweight notification daemon for Wayland
       '';
 
+      autoStart = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Automaticly start mako with graphical-session.target.
+        '';
+      };
+
       package = mkOption {
         type = types.package;
         default = pkgs.mako.overrideAttrs
@@ -368,6 +376,8 @@ in {
         ExecStart = getExe cfg.package;
         ExecReload = "${cfg.package}/bin/makoctl reload";
       };
+
+      Install.WantedBy = lib.optional autoStart [ "graphical-session.target" ];
     };
   };
 }
