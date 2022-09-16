@@ -305,6 +305,15 @@ in {
     assertions =
       [ (hm.assertions.assertPlatform "services.mako" pkgs platforms.linux) ];
 
+    xdg.dataFile."dbus-1/services/fr.emersion.mako.service".text =
+      generators.toINI { } {
+        "D-BUS Service" = {
+          Name = "org.freedesktop.Notifications";
+          Exec = getExe cfg.package;
+          SystemdService = "mako.service";
+        };
+      };
+
     home.packages = [ cfg.package ];
 
     xdg.configFile."mako/config" = {
@@ -341,6 +350,23 @@ in {
 
         ${cfg.extraConfig}
       '';
+    };
+
+    systemd.user.services.mako = {
+      Unit = {
+        Description = "Lightweight Wayland notifcation deamon";
+        Documentation = "man:mako(1)";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session-pre.target" ];
+      };
+
+      Service = {
+        Type = "dbus";
+        BusName = "org.freedesktop.Notifications";
+        ExecCondition = "/bin/sh -c '[ -n \"$WAYLAND_DISPLAY\" ]'";
+        ExecStart = getExe cfg.package;
+        ExecReload = "${cfg.package}/bin/makoctl reload";
+      };
     };
   };
 }
