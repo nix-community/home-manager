@@ -35,10 +35,10 @@ let
   pluginWithConfigType = types.submodule {
     options = {
       config = mkOption {
-        type = types.lines;
+        type = types.nullOr types.lines;
         description =
           "Script to configure this plugin. The scripting language should match type.";
-        default = "";
+        default = null;
       };
 
       type = mkOption {
@@ -326,7 +326,7 @@ in {
     defaultPlugin = {
       type = "viml";
       plugin = null;
-      config = "";
+      config = null;
       optional = false;
       runtime = { };
     };
@@ -337,7 +337,7 @@ in {
       allPlugins;
 
     suppressNotVimlConfig = p:
-      if p.type != "viml" then p // { config = ""; } else p;
+      if p.type != "viml" then p // { config = null; } else p;
 
     neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
       inherit (cfg) extraPython3Packages withPython3 withRuby viAlias vimAlias;
@@ -353,26 +353,32 @@ in {
     programs.neovim.generatedConfigs = let
       grouped = lib.lists.groupBy (x: x.type) pluginsNormalized;
       concatConfigs = lib.concatMapStrings (p: p.config);
-    in mapAttrs (name: vals: concatConfigs vals) grouped;
+      configsOnly = lib.foldl
+        (acc: p: if p.config != null then acc ++ [ (p.config) ] else acc) [ ];
+    in mapAttrs (name: vals: lib.concatStringsSep "\n" (configsOnly vals))
+    grouped;
 
     home.packages = [ cfg.finalPackage ];
 
-    xdg.configFile = mkMerge (
-      # writes runtime
-      (map (x: x.runtime) pluginsNormalized) ++ [{
-        "nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
-          text = neovimConfig.neovimRcContent + lib.optionalString
-            (hasAttr "lua" config.programs.neovim.generatedConfigs)
-            "lua require('init-home-manager')";
-        };
-        "nvim/lua/init-home-manager.lua" =
-          mkIf (hasAttr "lua" config.programs.neovim.generatedConfigs) {
-            text = config.programs.neovim.generatedConfigs.lua;
+    xdg.configFile =
+      let hasLuaConfig = hasAttr "lua" config.programs.neovim.generatedConfigs;
+      in mkMerge (
+        # writes runtime
+        (map (x: x.runtime) pluginsNormalized) ++ [{
+          "nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
+            text = neovimConfig.neovimRcContent;
           };
-        "nvim/coc-settings.json" = mkIf cfg.coc.enable {
-          source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
-        };
-      }]);
+          "nvim/init.lua" =
+            mkIf (hasLuaConfig || neovimConfig.neovimRcContent != "") {
+              text = lib.optionalString hasLuaConfig
+                "vim.cmd.source ${config.xdg.configFile."nvim/init.vim"}"
+                + lib.optionalString hasLuaConfig
+                config.programs.neovim.generatedConfigs.lua;
+            };
+          "nvim/coc-settings.json" = mkIf cfg.coc.enable {
+            source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
+          };
+        }]);
 
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {
