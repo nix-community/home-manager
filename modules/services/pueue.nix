@@ -39,7 +39,7 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."pueue/pueue.yml".source = configFile;
+    xdg.configFile = mkIf (cfg.settings != { }) { "pueue/pueue.yml".source = configFile; };
 
     systemd.user = {
       services.pueued = {
@@ -49,7 +49,7 @@ in {
 
         Service = {
           Restart = "on-failure";
-          ExecStart = "${cfg.package}/bin/pueued -v -c ${configFile}";
+          ExecStart = "${cfg.package}/bin/pueued -v  -c ${configFile}";
         };
 
         Install.WantedBy = [ "default.target" ];
