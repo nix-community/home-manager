@@ -372,7 +372,7 @@ the given mail store.
 </p><p><span class="emphasis"><em>Type:</em></span> one of "none", "maildir", "imap", "both"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"none"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"both"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mbsync.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mbsync.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mbsync.extraConfig.account"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mbsync.extraConfig.account"><code class="option">accounts.email.accounts.&lt;name&gt;.mbsync.extraConfig.account</code></a></span></dt><dd><p>Account section extra configuration.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean or list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
         }
@@ -383,7 +383,7 @@ the given mail store.
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mbsync.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mbsync.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mbsync.extraConfig.channel"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mbsync.extraConfig.channel"><code class="option">accounts.email.accounts.&lt;name&gt;.mbsync.extraConfig.channel</code></a></span></dt><dd><p>Per channel extra configuration.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean or list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
         }
@@ -394,14 +394,14 @@ the given mail store.
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mbsync.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mbsync.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mbsync.extraConfig.local"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mbsync.extraConfig.local"><code class="option">accounts.email.accounts.&lt;name&gt;.mbsync.extraConfig.local</code></a></span></dt><dd><p>Local store extra configuration.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean or list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
         }
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mbsync.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mbsync.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mbsync.extraConfig.remote"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mbsync.extraConfig.remote"><code class="option">accounts.email.accounts.&lt;name&gt;.mbsync.extraConfig.remote</code></a></span></dt><dd><p>Remote store extra configuration.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean or list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
         }
@@ -439,7 +439,7 @@ define the maildir hierarchy as you see fit.
                     &lt;home-manager/modules/programs/mbsync.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.mbsync.groups._name_.channels._name_.extraConfig"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.mbsync.groups._name_.channels._name_.extraConfig"><code class="option">accounts.email.accounts.&lt;name&gt;.mbsync.groups.&lt;name&gt;.channels.&lt;name&gt;.extraConfig</code></a></span></dt><dd><p>Extra configuration lines to add to <span class="emphasis"><em>THIS</em></span> channel's
 configuration.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string or signed integer or boolean or list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
         }
