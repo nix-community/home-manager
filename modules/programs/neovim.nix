@@ -368,13 +368,11 @@ in {
           "nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
             text = neovimConfig.neovimRcContent;
           };
-          "nvim/init.lua" =
-            mkIf (hasLuaConfig || neovimConfig.neovimRcContent != "") {
-              text = lib.optionalString hasLuaConfig
-                "vim.cmd.source ${config.xdg.configFile."nvim/init.vim"}"
-                + lib.optionalString hasLuaConfig
-                config.programs.neovim.generatedConfigs.lua;
-            };
+          "nvim/init.lua".text =
+            lib.optionalString (neovimConfig.neovimRcContent != "")
+            "vim.cmd.source ${config.xdg.configHome}/nvim/init.vim"
+            + lib.optionalString hasLuaConfig
+            config.programs.neovim.generatedConfigs.lua;
           "nvim/coc-settings.json" = mkIf cfg.coc.enable {
             source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
           };
