@@ -4,7 +4,8 @@ with lib;
 
 let
 
-  extraConfigType = with lib.types; attrsOf (either (either str int) bool);
+  extraConfigType = with lib.types;
+    attrsOf (oneOf [ str int bool (listOf str) ]);
 
   perAccountGroups = { name, config, ... }: {
     options = {

@@ -21,6 +21,7 @@ with lib;
     accounts.email.accounts = {
       "hm@example.com".mbsync = {
         enable = true;
+        extraConfig.account.SSLVersions = [ "TLSv1.3" "TLSv1.2" ];
         groups.inboxes = {
           channels = {
             inbox1 = {
