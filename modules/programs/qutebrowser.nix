@@ -34,6 +34,21 @@ let
 
   formatQuickmarks = n: s: "${n} ${s}";
 
+  sendQutebrowserCommand = args: ''
+    hash="$(echo -n "$USER" | md5sum | cut -d' ' -f1)"
+    socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/qutebrowser/ipc-$hash"
+    if [[ -S $socket ]]; then
+      command=${
+        escapeShellArg (builtins.toJSON {
+          inherit args;
+          target_arg = null;
+          protocol_version = 1;
+        })
+      }
+      echo "$command" | ${pkgs.socat}/bin/socat -lf /dev/null - UNIX-CONNECT:"$socket"
+    fi
+    unset hash socket command
+  '';
 in {
   options.programs.qutebrowser = {
     enable = mkEnableOption "qutebrowser";
@@ -268,6 +283,24 @@ in {
       '';
     };
 
+    userScripts = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression "[ (pkgs.fetchurl { url = ...; hash = ...; }) ]";
+        description = ''
+          List of userscripts to install.
+        '';
+      };
+
+    userScriptsRequired = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression "[ (pkgs.fetchurl { url = ...; hash = ...; }) ]";
+        description = ''
+          List of userscripts to install.
+        '';
+      };
+
     extraConfig = mkOption {
       type = types.lines;
       default = "";
@@ -308,26 +341,26 @@ in {
     xdg.configFile."qutebrowser/config.py" =
       mkIf pkgs.stdenv.hostPlatform.isLinux {
         text = qutebrowserConfig;
-        onChange = ''
-          hash="$(echo -n "$USER" | md5sum | cut -d' ' -f1)"
-          socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/qutebrowser/ipc-$hash"
-          if [[ -S $socket ]]; then
-            command=${
-              escapeShellArg (builtins.toJSON {
-                args = [ ":config-source" ];
-                target_arg = null;
-                protocol_version = 1;
-              })
-            }
-            echo "$command" | ${pkgs.socat}/bin/socat -lf /dev/null - UNIX-CONNECT:"$socket"
-          fi
-          unset hash socket command
-        '';
+        onChange = sendQutebrowserCommand [ ":config-reload" ];
       };
 
     xdg.configFile."qutebrowser/quickmarks" =
       mkIf (cfg.quickmarks != { } && pkgs.stdenv.hostPlatform.isLinux) {
         text = quickmarksFile;
+      };
+
+    xdg.dataFile."qutebrowser/greasemonkey" =
+      mkIf (cfg.userScripts != [ ]) {
+        recursive = true;
+        source = pkgs.linkFarmFromDrvs "qutebrowser-userscripts" cfg.userScripts;
+        onChange = sendQutebrowserCommand [ ":greasemonkey-reload -q" ];
+      };
+
+    xdg.dataFile."qutebrowser/greasemonkey/requires" =
+      mkIf (cfg.userScriptsRequired != [ ]) {
+        recursive = true;
+        source = pkgs.linkFarmFromDrvs "qutebrowser-userscripts-required" cfg.userScriptsRequired;
+        onChange = sendQutebrowserCommand [ ":greasemonkey-reload -q" ];
       };
   };
 }
