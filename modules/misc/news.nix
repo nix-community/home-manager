@@ -698,6 +698,13 @@ in
       }
 
       {
+        time = "2022-09-20T11:32:06+00:00";
+        message = ''
+          A new module is available: 'services.batsignal'.
+        '';
+      }
+
+      {
         time = "2022-09-21T22:42:42+00:00";
         condition = hostPlatform.isLinux;
         message = ''

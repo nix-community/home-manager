@@ -165,6 +165,7 @@ import nmt {
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
     ./modules/services/barrier
+    ./modules/services/batsignal
     ./modules/services/borgmatic
     ./modules/services/devilspie2
     ./modules/services/dropbox
