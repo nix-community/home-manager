@@ -298,6 +298,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/tiny.nix                            @kmaasrud
 
+/modules/programs/tmate.nix                           @jlesquembre
+/tests/modules/programs/tmate                         @jlesquembre
+
 /modules/programs/topgrade.nix                        @msfjarvis
 /tests/modules/programs/topgrade                      @msfjarvis
 

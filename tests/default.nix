@@ -114,6 +114,7 @@ import nmt {
     ./modules/programs/starship
     ./modules/programs/taskwarrior
     ./modules/programs/texlive
+    ./modules/programs/tmate
     ./modules/programs/tmux
     ./modules/programs/topgrade
     ./modules/programs/vscode
