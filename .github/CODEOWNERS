@@ -312,6 +312,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/texlive.nix                         @rycee
 
+/modules/programs/thunderbird.nix                     @d-dervishi
+/tests/modules/programs/thunderbird                   @d-dervishi
+
 /modules/programs/timidity.nix                        @amesgen
 
 /modules/programs/tint2.nix                           @CarlosLoboxyz
