@@ -17,8 +17,9 @@ with lib;
       plugins = with pkgs.vimPlugins; [ fugitive ({ plugin = vim-sensible; }) ];
     };
     nmt.script = ''
-      vimrc="home-files/.config/nvim/init.vim"
-      assertPathNotExists "$vimrc"
+      nvimFolder="home-files/.config/nvim"
+      assertPathNotExists "$nvimFolder/init.vim"
+      assertPathNotExists "$nvimFolder/init.lua"
     '';
   };
 }
