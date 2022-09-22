@@ -124,6 +124,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/go.nix                              @rvolosatovs
 
+/modules/programs/haskell.nix                         @schuelermine
+
 /modules/programs/helix.nix                           @Philipp-M
 /tests/modules/programs/helix                         @Philipp-M
 
