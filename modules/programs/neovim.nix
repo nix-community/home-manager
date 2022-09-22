@@ -162,7 +162,14 @@ in {
           use Python 3 plugins.
         '';
       };
-
+      luaInit = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          If true extraConfig will be written to $XDG_CONFIG_HOME/nvim/init.lua
+          instead of $XDG_CONFIG_HOME/nvim/init.vim
+        '';
+      };
       extraPython3Packages = mkOption {
         type = with types; either extraPython3PackageType (listOf package);
         default = (_: [ ]);
@@ -340,7 +347,8 @@ in {
       if p.type != "viml" then p // { config = null; } else p;
 
     neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
-      inherit (cfg) extraPython3Packages withPython3 withRuby viAlias vimAlias;
+      inherit (cfg)
+        extraPython3Packages withPython3 withRuby viAlias vimAlias luaInit;
       withNodeJs = cfg.withNodeJs || cfg.coc.enable;
       plugins = map suppressNotVimlConfig pluginsNormalized;
       customRC = cfg.extraConfig;
@@ -365,13 +373,17 @@ in {
       in mkMerge (
         # writes runtime
         (map (x: x.runtime) pluginsNormalized) ++ [{
-          "nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
-            text = neovimConfig.neovimRcContent;
-          };
+          "nvim/home-manager.vim" = mkIf ((neovimConfig.neovimRcContent != "")
+            && (neovimConfig.luaInit == false)) {
+              text = neovimConfig.neovimRcContent;
+            };
           "nvim/init.lua" = let
-            luaRcContent =
-              lib.optionalString (neovimConfig.neovimRcContent != "")
-              "vim.cmd.source ${config.xdg.configHome}/nvim/init.vim"
+            luaRcContent = lib.optionalString
+              ((neovimConfig.neovimRcContent != "")
+                && (neovimConfig.luaInit == false))
+              "vim.cmd [[source ${config.xdg.configHome}/nvim/home-manager.vim]]"
+              + lib.optionalString ((neovimConfig.neovimRcContent != "")
+                && (neovimConfig.luaInit == true)) neovimConfig.neovimRcContent
               + lib.optionalString hasLuaConfig
               config.programs.neovim.generatedConfigs.lua;
           in mkIf (luaRcContent != "") { text = luaRcContent; };
