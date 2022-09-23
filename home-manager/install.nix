@@ -36,6 +36,12 @@ in runCommand "home-manager-install" {
         xdgVars="$xdgVars  xdg.stateHome = \"$XDG_STATE_HOME\";$nl"
       fi
 
+      if [[ $OSTYPE == linux-* && ! -e /etc/NIXOS ]]; then
+        target=$'\n  targets.genericLinux.enable = true;\n'
+      else
+        target=""
+      fi
+
       mkdir -p "$(dirname "$confFile")"
       cat > $confFile <<EOF
     { config, pkgs, ... }:
@@ -58,7 +64,7 @@ in runCommand "home-manager-install" {
 
       # Let Home Manager install and manage itself.
       programs.home-manager.enable = true;
-    }
+    $target}
     EOF
     fi
 
