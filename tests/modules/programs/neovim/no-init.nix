@@ -18,7 +18,7 @@ with lib;
     };
     nmt.script = ''
       nvimFolder="home-files/.config/nvim"
-      assertPathNotExists "$nvimFolder/init.vim"
+      assertPathNotExists "$nvimFolder/vim/home-manager-viml.vim"
       assertPathNotExists "$nvimFolder/init.lua"
     '';
   };

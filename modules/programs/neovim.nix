@@ -35,15 +35,14 @@ let
   pluginWithConfigType = types.submodule {
     options = {
       config = mkOption {
-        type = types.nullOr types.lines;
+        type = with types; nullOr str;
+        default = null;
         description =
           "Script to configure this plugin. The scripting language should match type.";
-        default = null;
       };
 
       type = mkOption {
-        type =
-          types.either (types.enum [ "lua" "viml" "teal" "fennel" ]) types.str;
+        type = types.str;
         description =
           "Language used in config. Configurations are aggregated per-language.";
         default = "viml";
@@ -55,7 +54,8 @@ let
 
       plugin = mkOption {
         type = types.package;
-        description = "vim plugin";
+        description =
+          "Package providing the plugin";
       };
 
       runtime = mkOption {
@@ -66,35 +66,94 @@ let
         example = literalExpression ''
           { "ftplugin/c.vim".text = "setlocal omnifunc=v:lua.vim.lsp.omnifunc"; }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Set of files that have to be linked in nvim config folder.
         '';
       };
     };
   };
 
-  allPlugins = cfg.plugins ++ optional cfg.coc.enable {
+  languageType = types.submodule {
+    options = {
+      extension = mkOption {
+        type = types.str;
+        description = "File extension this language uses, not including dot.";
+        example = "fnl";
+      };
+      luaPackages = mkOption {
+        type = with types; either extraLua51PackageType (listOf package);
+        default = [ ];
+        example = literalExpression ''
+          with pkgs.lua51Packages [ fennel ];
+        '';
+        description = "Lua packages required to support this language.";
+      };
+      vimPlugins = mkOption {
+        type = with types; listOf (coercedTo package (v: { plugin = v; }) pluginWithConfigType);
+        default = [ ];
+        description = "Vim plugins required to support this language.";
+        example = literalExpression ''
+          with pkgs.vimPlugins; [ nvim-moonwalk ];
+        '';
+      };
+      enableScript = mkOption {
+        type = with types; nullOr str;
+        default = null;
+        description = "Lua script required to enable support for this language.";
+        example = literalExpression ''
+          require("moonwalk").add_loader("fnl", function(src, path)
+              return require("fennel").compileString(src, { filename = path })
+          end)
+        '';
+      };
+      importScript = mkOption {
+        type = with types; functionTo str;
+        default = n: ''
+          require('${n}')
+        '';
+        # Kinda ugly, but the only way I could get a require('${fileName}') literal
+        defaultText = literalExpression ''
+          fileName: "require(${"'"}''${fileName}')"
+        '';
+        description = ''
+          Function returning the statement which lua will use to import
+          this language's config.
+
+          The provided variable does not include file extension.
+        '';
+      };
+    };
+  };
+
+  langVimPlugins = flatten (mapAttrsToList (_: lang: lang.vimPlugins) cfg.configLanguages);
+  allPlugins = cfg.plugins ++ langVimPlugins ++ optional cfg.coc.enable {
     type = "viml";
     plugin = cfg.coc.package;
     config = cfg.coc.pluginConfig;
     optional = false;
+    runtime = { };
   };
 
-  extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
-    ''--suffix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
-  extraMakeWrapperLuaCArgs = lib.optionalString (cfg.extraLuaPackages != [ ]) ''
+  langLuaPackages = flatten (mapAttrsToList (_: lang: lang.luaPackages) cfg.configLanguages);
+  allLuaPackages = cfg.extraLuaPackages ++ langLuaPackages;
+
+  extraMakeWrapperArgs = optionalString (cfg.extraPackages != [ ])
+    ''--suffix PATH : "${makeBinPath cfg.extraPackages}"'';
+  extraMakeWrapperLuaCArgs = optionalString (allLuaPackages != [ ]) ''
     --suffix LUA_CPATH ";" "${
-      lib.concatMapStringsSep ";" pkgs.lua51Packages.getLuaCPath
-      cfg.extraLuaPackages
+      concatMapStringsSep ";" pkgs.lua51Packages.getLuaCPath
+      allLuaPackages
     }"'';
-  extraMakeWrapperLuaArgs = lib.optionalString (cfg.extraLuaPackages != [ ]) ''
+  extraMakeWrapperLuaArgs = optionalString (allLuaPackages != [ ]) ''
     --suffix LUA_PATH ";" "${
-      lib.concatMapStringsSep ";" pkgs.lua51Packages.getLuaPath
-      cfg.extraLuaPackages
+      concatMapStringsSep ";" pkgs.lua51Packages.getLuaPath
+      allLuaPackages
     }"'';
 
 in {
   imports = [
+    (mkRemovedOptionModule [ "programs" "neovim" "generatedConfigViml" ] 
+      "programs.neovim.generatedConfigViml has been replaced with programs.neovim.generatedConfigs.viml")
     (mkRemovedOptionModule [ "programs" "neovim" "withPython" ]
       "Python2 support has been removed from neovim.")
     (mkRemovedOptionModule [ "programs" "neovim" "extraPythonPackages" ]
@@ -147,7 +206,7 @@ in {
       };
 
       withRuby = mkOption {
-        type = types.nullOr types.bool;
+        type = types.bool;
         default = true;
         description = ''
           Enable ruby provider.
@@ -185,17 +244,8 @@ in {
         '';
       };
 
-      generatedConfigViml = mkOption {
-        type = types.lines;
-        visible = true;
-        readOnly = true;
-        description = ''
-          Generated vimscript config.
-        '';
-      };
-
       generatedConfigs = mkOption {
-        type = types.attrsOf types.lines;
+        type = types.attrsOf types.str;
         visible = true;
         readOnly = true;
         example = literalExpression ''
@@ -211,7 +261,8 @@ in {
             ''';
           }'';
         description = ''
-          Generated configurations with as key their language (set via type).
+          Generated configurations with their language as key.
+          From plugins configurations (using "type") and extraConfig.
         '';
       };
 
@@ -230,13 +281,68 @@ in {
       };
 
       extraConfig = mkOption {
-        type = types.lines;
-        default = "";
-        example = ''
-          set nobackup
+        type = with types; coercedTo lines (x: { viml = x; }) (attrsOf lines);
+        default = {};
+        example = literalExpression ''
+          {
+            viml = "set nobackup";
+            lua = "vim.keymap.set("n", "gd", vim.lsp.buf.definition)";
+          }
         '';
         description = ''
-          Custom vimrc lines.
+          Attribute set of configuration lines, for each supported language.
+          If provided as a string, viml is assumed.
+        '';
+      };
+
+      configLanguages = mkOption {
+        description = ''
+          Configuration languages supported by neovim.
+          </para><para>
+          Supports viml (vimscript) and lua by default. The example shows
+          how to enable support for fennel using moonwalk.
+          </para><para>
+          Consider using lib.mkOptionDefault to extend or override default
+          languages instead of specifying all of them from scratch.
+        '';
+        type = with types; attrsOf languageType;
+        defaultText = literalExpression ''
+          {
+            viml = {
+              extension = "vim";
+              importScript = file: '''
+                vim.cmd 'runtime vim/''${file}.vim'
+              ''';
+            };
+            lua = {
+              extension = "lua";
+            };
+          }
+        '';
+        default = {
+          viml = {
+            extension = "vim";
+            importScript = file: ''
+              vim.cmd 'runtime vim/${file}.vim'
+            '';
+          };
+          lua = {
+            extension = "lua";
+          };
+        };
+        example = literalExpression ''
+          lib.mkOptionDefault {
+            fennel = {
+              extension = "fnl";
+              luaPackages = with pkgs.lua51Packages; [ fennel ];
+              vimPlugins = with pkgs.vimPlugins; [ nvim-moonwalk ];
+              enableScript = '''
+                require("moonwalk").add_loader("fnl", function(src, path)
+                    return require("fennel").compileString(src, { filename = path })
+                end)
+              ''';
+              };
+            }
         '';
       };
 
@@ -247,25 +353,44 @@ in {
         description = "Extra packages available to nvim.";
       };
 
+      extraRuntime = mkOption {
+        default = { };
+        # passing actual "${xdg.configHome}/nvim" as basePath was a bit tricky
+        # due to how fileType.target is implemented
+        type = fileType "<varname>xdg.configHome/nvim</varname>" "nvim";
+        example = literalExpression ''
+          { "ftplugin/c.vim".text = "setlocal omnifunc=v:lua.vim.lsp.omnifunc"; }
+        '';
+        description = ''
+          Set of files that have to be linked in nvim config folder.
+        '';
+      };
+
       plugins = mkOption {
-        type = with types; listOf (either package pluginWithConfigType);
+        type = with types; listOf (coercedTo package (v: { plugin = v; }) pluginWithConfigType);
         default = [ ];
         example = literalExpression ''
           with pkgs.vimPlugins; [
             yankring
             vim-nix
-            { plugin = vim-startify;
+            {
+              plugin = vim-startify;
               config = "let g:startify_change_to_vcs_root = 0";
+            }
+            {
+              plugin = nvim-lspconfig;
+              type = "lua";
+              config = '''
+                local lspconfig = require("lspconfig")
+                lspconfig.rnix.setup{}
+                lspconfig.pylsp.setup{}
+              ''';
             }
           ]
         '';
         description = ''
-          List of vim plugins to install optionally associated with
-          configuration to be placed in init.vim.
-
-          </para><para>
-
-          This option is mutually exclusive with <varname>configure</varname>.
+          List of vim plugins to install. May be optionally associated with
+          configuration to be placed in the respective language file.
         '';
       };
 
@@ -323,60 +448,69 @@ in {
   };
 
   config = let
-    defaultPlugin = {
-      type = "viml";
-      plugin = null;
-      config = null;
-      optional = false;
-      runtime = { };
-    };
-
-    # transform all plugins into a standardized attrset
-    pluginsNormalized =
-      map (x: defaultPlugin // (if (x ? plugin) then x else { plugin = x; }))
-      allPlugins;
-
-    suppressNotVimlConfig = p:
-      if p.type != "viml" then p // { config = null; } else p;
+    suppressNotVimlConfig = plugin:
+      if plugin.type != "viml"
+      then plugin // { config = null; }
+      else plugin;
 
     neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
       inherit (cfg) extraPython3Packages withPython3 withRuby viAlias vimAlias;
       withNodeJs = cfg.withNodeJs || cfg.coc.enable;
-      plugins = map suppressNotVimlConfig pluginsNormalized;
-      customRC = cfg.extraConfig;
+      plugins = map suppressNotVimlConfig allPlugins;
+      customRC = cfg.extraConfig.viml or "";
     };
-
   in mkIf cfg.enable {
+    assertions = let
+      undefinedLangs = subtractLists (attrNames cfg.configLanguages) (attrNames cfg.generatedConfigs);
+    in [{
+      assertion = undefinedLangs == [ ];
+      message =
+        if (any (l: l == "lua" || l == "viml") undefinedLangs)
+        then ''
+          The neovim configuration is using vimscript or lua, but they are not present in `programs.neovim.configLanguages`.
+          You probably meant to use lib.mkOptionDefault when setting it.
+        ''
+        else ''
+          Languages [${concatStringsSep "," undefinedLangs}] found in neovim configuration, but not defined in `programs.neovim.configLanguages`.
+        '';
+    }];
 
-    programs.neovim.generatedConfigViml = neovimConfig.neovimRcContent;
-
+    # Generate config for each supported config language
     programs.neovim.generatedConfigs = let
-      grouped = lib.lists.groupBy (x: x.type) pluginsNormalized;
-      concatConfigs = lib.concatMapStrings (p: p.config);
-      configsOnly = lib.foldl
-        (acc: p: if p.config != null then acc ++ [ (p.config) ] else acc) [ ];
-    in mapAttrs (name: vals: lib.concatStringsSep "\n" (configsOnly vals))
-    grouped;
+      concatLines = concatStringsSep "\n";
+      getCfgs = plugins: filter (c: c != null) (map (p: p.config) plugins);
+      groupedPlugins = lists.groupBy (p: p.type) allPlugins;
+      pluginConfigs = mapAttrs (_: plugins: concatLines (getCfgs plugins)) groupedPlugins;
+    in
+      zipAttrsWith (_: concatLines) [ pluginConfigs cfg.extraConfig ];
 
     home.packages = [ cfg.finalPackage ];
 
-    xdg.configFile =
-      let hasLuaConfig = hasAttr "lua" config.programs.neovim.generatedConfigs;
-      in mkMerge (
-        # writes runtime
-        (map (x: x.runtime) pluginsNormalized) ++ [{
-          "nvim/init-home-manager.vim" =
-            mkIf (neovimConfig.neovimRcContent != "") {
-              text = neovimConfig.neovimRcContent;
-            };
-          "nvim/init.lua" = let
-            luaRcContent =
-              lib.optionalString (neovimConfig.neovimRcContent != "")
-              "vim.cmd [[source ${config.xdg.configHome}/nvim/init-home-manager.vim]]"
-              + lib.optionalString hasLuaConfig
-              config.programs.neovim.generatedConfigs.lua;
-          in mkIf (luaRcContent != "") { text = luaRcContent; };
-
+    xdg.configFile = mkMerge
+      (
+        (map (plugin: plugin.runtime) allPlugins) ++ [(cfg.extraRuntime)] ++
+        # Make a config file for each configLang (if it's not empty) and import it on init.lua
+        (mapAttrsToList
+          (langName: langConfig: let
+            langExtension = cfg.configLanguages.${langName}.extension;
+            langImportScript =  cfg.configLanguages.${langName}.importScript;
+            langFilePath = "nvim/${langExtension}/home-manager-${langName}.${langExtension}";
+          in
+          mkIf (langConfig != "") {
+            ${langFilePath}.text = langConfig;
+            "nvim/init.lua".text = ''
+              -- ${config.xdg.configFile.${langFilePath}.source}
+              ${langImportScript "home-manager-${langName}"}
+            '';
+          }) cfg.generatedConfigs
+        ) ++
+        # Add support for all configLanguages
+        (mapAttrsToList
+          (langName: langOpts: mkIf (langOpts.enableScript != null) {
+            "nvim/init.lua".text = langOpts.enableScript;
+          }) cfg.configLanguages
+        ) ++
+        [{
           "nvim/coc-settings.json" = mkIf cfg.coc.enable {
             source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
           };
@@ -384,7 +518,7 @@ in {
 
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {
-        wrapperArgs = (lib.escapeShellArgs neovimConfig.wrapperArgs) + " "
+        wrapperArgs = (escapeShellArgs neovimConfig.wrapperArgs) + " "
           + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
           + extraMakeWrapperLuaArgs;
         wrapRc = false;

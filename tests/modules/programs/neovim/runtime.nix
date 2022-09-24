@@ -6,10 +6,16 @@ with lib;
   config = {
     programs.neovim = {
       enable = true;
+      extraRuntime = {
+        "colors/cool.vim".text = ''
+          "Very cool colorscheme
+        '';
+      };
       plugins = with pkgs.vimPlugins; [
         vim-nix
         {
           plugin = vim-commentary;
+          # Adding runtimes should not add anything to the config
           runtime = {
             "after/ftplugin/c.vim".text = ''
               " plugin-specific config
@@ -23,8 +29,11 @@ with lib;
       extraPython3Packages = (ps: with ps; [ jedi pynvim ]);
     };
     nmt.script = ''
-      ftplugin="home-files/.config/nvim/after/ftplugin/c.vim"
-      assertFileExists "$ftplugin"
+      nvimFolder="home-files/.config/nvim"
+
+      assertFileExists "$nvimFolder/after/ftplugin/c.vim"
+      assertFileExists "$nvimFolder/colors/cool.vim"
+      assertPathNotExists "$nvimFolder/init.lua"
     '';
   };
 }
