@@ -448,6 +448,8 @@ Makefile                                              @thiagokokada
 /modules/services/redshift-gammastep                  @rycee @petabyteboy @thiagokokada
 /tests/modules/redshift-gammastep                     @thiagokokada
 
+/modules/services/safeeyes                            @Rosuavio
+
 /modules/services/screen-locker.nix                   @jrobsonchase @rszamszur
 /tests/modules/services/screen-locker                 @jrobsonchase @rszamszur
 
