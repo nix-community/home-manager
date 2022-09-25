@@ -82,6 +82,7 @@ let
     ./programs/gnome-terminal.nix
     ./programs/go.nix
     ./programs/gpg.nix
+    ./programs/havoc.nix
     ./programs/helix.nix
     ./programs/hexchat.nix
     ./programs/himalaya.nix

@@ -733,6 +733,14 @@ in
           A new module is available: 'programs.ledger'.
         '';
       }
+
+      {
+        time = "2022-10-06T23:19:10+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.havoc'.
+        '';
+      }
     ];
   };
 }
