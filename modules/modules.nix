@@ -57,6 +57,7 @@ let
     ./programs/bashmount.nix
     ./programs/bat.nix
     ./programs/beets.nix
+    ./programs/borgmatic.nix
     ./programs/bottom.nix
     ./programs/broot.nix
     ./programs/browserpass.nix
@@ -197,6 +198,7 @@ let
     ./services/barrier.nix
     ./services/betterlockscreen.nix
     ./services/blueman-applet.nix
+    ./services/borgmatic.nix
     ./services/caffeine.nix
     ./services/cbatticon.nix
     ./services/clipmenu.nix

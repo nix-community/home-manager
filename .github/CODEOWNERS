@@ -343,6 +343,11 @@ Makefile                                              @thiagokokada
 
 /modules/services/betterlockscreen.nix                @SebTM
 
+/modules/programs/borgmatic.nix                       @DamienCassou
+/modules/services/borgmatic.nix                       @DamienCassou
+/tests/modules/programs/borgmatic                     @DamienCassou
+/tests/modules/services/borgmatic                     @DamienCassou
+
 /modules/services/caffeine.nix                        @uvNikita
 
 /modules/services/cbatticon.nix                       @pmiddend

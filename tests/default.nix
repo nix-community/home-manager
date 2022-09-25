@@ -141,6 +141,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/programs/borgmatic
     ./modules/programs/firefox
     ./modules/programs/foot
     ./modules/programs/getmail
@@ -160,6 +161,7 @@ import nmt {
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
     ./modules/services/barrier
+    ./modules/services/borgmatic
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs
