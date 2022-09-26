@@ -225,7 +225,7 @@ let
     ./services/keynav.nix
     ./services/lieer.nix
     ./services/lorri.nix
-    ./services/mako.nix
+    ./services/mako
     ./services/mbsync.nix
     ./services/mopidy.nix
     ./services/mpd.nix
