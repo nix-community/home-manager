@@ -272,6 +272,7 @@ Makefile                                              @thiagokokada
 
 /modules/programs/senpai.nix                          @malte-v
 
+/modules/programs/ranger.nix                          @podocarp
 /modules/programs/sioyek.nix                          @podocarp
 
 /modules/programs/sm64ex.nix                          @ivarwithoutbones
