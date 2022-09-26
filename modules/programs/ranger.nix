@@ -1,12 +1,11 @@
 { config, lib, pkgs, ... }:
 with lib;
-let
-  cfg = config.programs.ranger;
+let cfg = config.programs.ranger;
 in {
   options = {
     programs.ranger = {
-      enable = mkEnableOption
-        "ranger is a console file manager with VI key bindings.";
+      enable =
+        mkEnableOption "ranger is a console file manager with VI key bindings.";
 
       package = mkOption {
         default = pkgs.ranger;
@@ -16,7 +15,7 @@ in {
       };
 
       extraPackages = mkOption {
-        default = [];
+        default = [ ];
         defaultText = literalExpression "[ ueberzug ]";
         type = types.listOf types.package;
         description = "Extra packages available to ranger.";
@@ -78,22 +77,18 @@ in {
           <filename>$XDG_CONFIG_HOME/ranger/plugins/</filename>.
           See <link xlink:href="https://github.com/ranger/ranger/wiki/Plugins"/>.
         '';
-        type =
-          let
-            pluginType = types.submodule ({ name, ... }: {
-              options = {
-                name = mkOption {
-                  type = types.str;
-                  default = name;
-                };
-                path = mkOption {
-                  type = types.path;
-                };
+        type = let
+          pluginType = types.submodule ({ name, ... }: {
+            options = {
+              name = mkOption {
+                type = types.str;
+                default = name;
               };
-            });
-          in
-          types.listOf pluginType;
-        default = [];
+              path = mkOption { type = types.path; };
+            };
+          });
+        in types.listOf pluginType;
+        default = [ ];
         example = literalExpression ''
           [
             {
@@ -106,17 +101,15 @@ in {
     };
   };
 
-  config =
-    let
-      pluginToAttrList = p: {
-        name = "ranger/plugins/${p.name}";
-        value.source = p.path;
-      };
-      rangerPackage = cfg.package.overrideAttrs (super: {
-        propagatedBuildInputs = super.propagatedBuildInputs ++ cfg.extraPackages;
-      });
-    in
-    mkIf cfg.enable (mkMerge [
+  config = let
+    pluginToAttrList = p: {
+      name = "ranger/plugins/${p.name}";
+      value.source = p.path;
+    };
+    rangerPackage = cfg.package.overrideAttrs (super: {
+      propagatedBuildInputs = super.propagatedBuildInputs ++ cfg.extraPackages;
+    });
+  in mkIf cfg.enable (mkMerge [
     {
       home.packages = [ rangerPackage ];
       home.sessionVariables."RANGER_LOAD_DEFAULT_RC" = cfg.loadDefaultRc;
@@ -124,23 +117,22 @@ in {
     (mkIf (cfg.config != null) {
       xdg.configFile."ranger/rc.conf".source = cfg.config;
     })
-    (mkIf (cfg.commands!= null) {
+    (mkIf (cfg.commands != null) {
       xdg.configFile."ranger/commands.py".source = cfg.commands;
     })
     (mkIf (cfg.rifle != null) {
       xdg.configFile."ranger/rifle.conf".source = cfg.rifle;
     })
-    (mkIf (cfg.scope!= null) {
+    (mkIf (cfg.scope != null) {
       xdg.configFile."ranger/scope.sh" = {
         source = cfg.scope;
         executable = true;
       };
     })
-    (mkIf (cfg.plugins != []) {
+    (mkIf (cfg.plugins != [ ]) {
       xdg.configFile = (listToAttrs (map pluginToAttrList cfg.plugins));
     })
-  ]
-  );
+  ]);
 
   meta.maintainers = [ hm.maintainers.podocarp ];
 }
