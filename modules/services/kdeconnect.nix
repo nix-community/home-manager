@@ -5,7 +5,7 @@ with lib;
 let
 
   cfg = config.services.kdeconnect;
-  package = pkgs.plasma5Packages.kdeconnect;
+  package = pkgs.plasma5Packages.kdeconnect-kde;
 
 in {
   meta.maintainers = [ maintainers.adisbladis ];
