@@ -84,7 +84,7 @@ Makefile                                              @thiagokokada
 /modules/programs/bottom.nix                          @polykernel
 /tests/modules/programs/bottom                        @polykernel
 
-/modules/programs/broot.nix                           @aheaume
+/modules/programs/broot.nix                           @aheaume @dermetfan
 
 /modules/programs/btop.nix                            @GaetanLepage
 /tests/modules/programs/btop.nix                      @GaetanLepage
