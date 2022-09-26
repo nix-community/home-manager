@@ -2,10 +2,6 @@
 with lib;
 let
   cfg = config.programs.ranger;
-
-  renderAttrs = attrs:
-    concatStringsSep "\n"
-    (mapAttrsToList (name: value: "${name} ${value}") attrs);
 in {
   options = {
     programs.ranger = {
@@ -19,52 +15,132 @@ in {
         description = "Package providing the ranger binary";
       };
 
-      bindings = mkOption {
-        description = ''
-          Input configuration written to
-          <filename>$XDG_CONFIG_HOME/sioyek/keys_user.config</filename>.
-          See <link xlink:href="https://github.com/ahrm/sioyek/blob/main/pdf_viewer/keys.config"/>.
-        '';
-        type = types.attrsOf types.str;
-        default = { };
-        example = literalExpression ''
-          {
-            "move_up" = "k";
-            "move_down" = "j";
-            "move_left" = "h";
-            "move_right" = "l";
-          }
-        '';
+      extraPackages = mkOption {
+        default = [];
+        defaultText = literalExpression "[ ueberzug ]";
+        type = types.listOf types.package;
+        description = "Extra packages available to ranger.";
       };
 
       config = mkOption {
         description = ''
-          Input configuration written to
-          <filename>$XDG_CONFIG_HOME/sioyek/prefs_user.config</filename>.
-          See <link xlink:href="https://github.com/ahrm/sioyek/blob/main/pdf_viewer/prefs.config"/>.
+          Startup configuration file written to
+          <filename>$XDG_CONFIG_HOME/ranger/rc.conf</filename>.
+          See <link xlink:href="https://github.com/ranger/ranger/blob/master/ranger/config/rc.conf"/>.
         '';
-        type = types.attrsOf types.str;
-        default = { };
-        example = literalExpression ''
-          {
-            "background_color" = "1.0 1.0 1.0";
-            "text_highlight_color" = "1.0 0.0 0.0";
-          }
-        '';
+        type = types.nullOr types.path;
+        default = null;
       };
 
+      commands = mkOption {
+        description = ''
+          Commands configuration file written to
+          <filename>$XDG_CONFIG_HOME/ranger/commands.py</filename>.
+          See <link xlink:href="https://github.com/ranger/ranger/blob/master/ranger/config/commands.py"/>.
+        '';
+        type = types.nullOr types.path;
+        default = null;
+      };
+
+      rifle = mkOption {
+        description = ''
+          File launcher configuration file written to
+          <filename>$XDG_CONFIG_HOME/ranger/rifle.conf</filename>.
+          See <link xlink:href="https://github.com/ranger/ranger/blob/master/ranger/config/rifle.conf"/>.
+        '';
+        type = types.nullOr types.path;
+        default = null;
+      };
+
+      scope = mkOption {
+        description = ''
+          File preview configuration file written to
+          <filename>$XDG_CONFIG_HOME/ranger/scope.sh</filename>.
+          See <link xlink:href="https://github.com/ranger/ranger/blob/master/ranger/data/scope.sh"/>.
+        '';
+        type = types.nullOr types.path;
+        default = null;
+      };
+
+      loadDefaultRc = mkOption {
+        description = ''
+          Value of the environment variable RANGER_LOAD_DEFAULT_RC.
+          Set it to false to not load the default built-in ranger configs.
+        '';
+        type = types.bool;
+        default = true;
+        example = false;
+      };
+
+      plugins = mkOption {
+        description = ''
+          List of files to be written to
+          <filename>$XDG_CONFIG_HOME/ranger/plugins/</filename>.
+          See <link xlink:href="https://github.com/ranger/ranger/wiki/Plugins"/>.
+        '';
+        type =
+          let
+            pluginType = types.submodule ({ name, ... }: {
+              options = {
+                name = mkOption {
+                  type = types.str;
+                  default = name;
+                };
+                path = mkOption {
+                  type = types.path;
+                };
+              };
+            });
+          in
+          types.listOf pluginType;
+        default = [];
+        example = literalExpression ''
+          [
+            {
+              name = "ranger_devicons";
+              path = builtins.fetchGit "https://github.com/alexanderjeurissen/ranger_devicons";
+            }
+          ]
+        '';
+      };
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    { home.packages = [ cfg.package ]; }
-    # (mkIf (cfg.config != { }) {
-    #   xdg.configFile."sioyek/prefs_user.config".text = renderAttrs cfg.config;
-    # })
-    # (mkIf (cfg.bindings != { }) {
-    #   xdg.configFile."sioyek/keys_user.config".text = renderAttrs cfg.bindings;
-    # })
-  ]);
+  config =
+    let
+      pluginToAttrList = p: {
+        name = "ranger/plugins/${p.name}";
+        value.source = p.path;
+      };
+      rangerPackage = cfg.package.overrideAttrs (super: {
+        propagatedBuildInputs = super.propagatedBuildInputs ++ cfg.extraPackages;
+      });
+    in
+    mkIf cfg.enable (mkMerge [
+    {
+      home.packages = [ rangerPackage ];
+      home.sessionVariables."RANGER_LOAD_DEFAULT_RC" = cfg.loadDefaultRc;
+    }
+    (mkIf (cfg.config != null) {
+      xdg.configFile."ranger/rc.conf".source = cfg.config;
+    })
+    (mkIf (cfg.commands!= null) {
+      xdg.configFile."ranger/commands.py".source = cfg.commands;
+    })
+    (mkIf (cfg.rifle != null) {
+      xdg.configFile."ranger/rifle.conf".source = cfg.rifle;
+    })
+    (mkIf (cfg.scope!= null) {
+      xdg.configFile."ranger/scope.sh" = {
+        source = cfg.scope;
+        executable = true;
+      };
+    })
+    (mkIf (cfg.plugins != []) {
+      xdg.configFile = (listToAttrs (map pluginToAttrList cfg.plugins));
+    })
+  ]
+  );
 
   meta.maintainers = [ hm.maintainers.podocarp ];
 }
