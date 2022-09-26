@@ -112,9 +112,9 @@ For example,
 The <a class="xref" href="options.html#opt-programs.waybar.settings"><code class="option">programs.waybar.settings</code></a> option now allows defining modules directly under <a class="xref" href="options.html#opt-programs.waybar.settings"><code class="option">programs.waybar.settings</code></a>.
 For example,
 </p><pre class="programlisting nix">programs.waybar.settings.modules."custom/my-module" = { };</pre><p class="simpara">becomes</p><pre class="programlisting nix">programs.waybar.settings."custom/my-module" = { };</pre></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="sec-release-21.05"></a>E.4. Release 21.05</h2></div></div></div><p>The 21.05 release branch became the stable branch in May, 2021.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-21.05-highlights"></a>E.4.1. Highlights</h3></div></div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p class="simpara">
-The <a class="xref" href="options.html#opt-programs.broot.verbs"><code class="option">programs.broot.verbs</code></a> option is now a list rather than an
+The ‘opt-programs.broot.verbs` option is now a list rather than an
 attribute set. To migrate, move the keys of the attrset into the list
-items' <code class="literal">invocation</code> keys. For example,
+items’ <code class="literal">invocation</code> keys. For example,
 </p><pre class="programlisting nix">programs.broot.verbs = {
   "p" = { execution = ":parent"; };
 };</pre><p class="simpara">becomes</p><pre class="programlisting nix">programs.broot.verbs = [
