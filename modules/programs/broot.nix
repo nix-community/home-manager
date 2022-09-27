@@ -206,16 +206,33 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."broot/conf.toml".source =
-      tomlFormat.generate "broot-config" cfg.settings;
+    xdg.configFile."broot" = {
+      recursive = true;
+      source = pkgs.symlinkJoin {
+        name = "xdg.configFile.broot";
+        paths = [
+          (pkgs.writeTextDir "conf.toml" (builtins.readFile
+            (tomlFormat.generate "broot-config" cfg.settings)))
 
-    # Dummy file to prevent broot from trying to reinstall itself
-    xdg.configFile."broot/launcher/installed-v1".text = "";
+          # Copy all files under /resources/default-conf
+          "${cfg.package.src}/resources/default-conf"
+
+          # Dummy file to prevent broot from trying to reinstall itself
+          (pkgs.writeTextDir "launcher/installed-v1" "")
+        ];
+
+        # Remove conf.hjson, whose content has been merged into programs.broot.settings
+        postBuild = ''
+          rm $out/conf.hjson
+        '';
+      };
+    };
 
     programs.broot.settings = builtins.fromJSON (builtins.readFile
       (pkgs.runCommand "default-conf.json" {
         nativeBuildInputs = [ pkgs.hjson ];
-      } "hjson -c ${cfg.package.src}/resources/default-conf.hjson > $out"));
+      }
+        "hjson -c ${cfg.package.src}/resources/default-conf/conf.hjson > $out"));
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (shellInit "bash");
 
