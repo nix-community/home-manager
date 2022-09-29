@@ -237,6 +237,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/octant.nix                          @06kellyjac
 
+/modules/programs/oh-my-posh.nix                      @arjan-s
+/tests/modules/programs/oh-my-posh                    @arjan-s
+
 /modules/programs/opam.nix                            @marsam
 
 /modules/programs/openssh.nix                         @rycee

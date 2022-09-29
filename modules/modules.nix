@@ -140,6 +140,7 @@ let
     ./programs/obs-studio.nix
     ./programs/octant.nix
     ./programs/offlineimap.nix
+    ./programs/oh-my-posh.nix
     ./programs/opam.nix
     ./programs/pandoc.nix
     ./programs/password-store.nix
