@@ -243,6 +243,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/piston-cli.nix                      @ethancedwards8
 
+/modules/programs/pls.nix                             @arjan-s
+/tests/modules/programs/pls                           @arjan-s
+
 /modules/programs/powerline-go.nix                    @DamienCassou
 
 /modules/programs/pubs.nix                            @loicreynier
