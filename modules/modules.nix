@@ -276,6 +276,7 @@ let
     ./services/unclutter.nix
     ./services/unison.nix
     ./services/volnoti.nix
+    ./services/waydroid.nix
     ./services/window-managers/awesome.nix
     ./services/window-managers/bspwm/default.nix
     ./services/window-managers/fluxbox.nix
