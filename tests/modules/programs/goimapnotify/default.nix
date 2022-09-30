@@ -1,0 +1,1 @@
+{ goimapnotify-launchd = ./launchd.nix; }
