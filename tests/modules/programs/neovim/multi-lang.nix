@@ -50,24 +50,21 @@ with lib;
       };
     };
 
-    nmt.script =
-      let
-        nvim = "${config.programs.neovim.finalPackage}/bin/nvim";
-        dos2unix = "${pkgs.dos2unix}/bin/dos2unix";
-      in
-      ''
-        cp $TESTED/home-files/.config . -r --no-preserve=mode
+    nmt.script = let
+      nvim = "${config.programs.neovim.finalPackage}/bin/nvim";
+      dos2unix = "${pkgs.dos2unix}/bin/dos2unix";
+    in ''
+      cp $TESTED/home-files/.config . -r --no-preserve=mode
 
-        export HOME=/build
-        ${nvim} -c ':q' --headless 2>&1 | ${dos2unix} > nvim_output
-        output="$(normalizeStorePaths /build/nvim_output)"
+      export HOME=/build
+      ${nvim} -c ':q' --headless 2>&1 | ${dos2unix} > nvim_output
+      output="$(normalizeStorePaths /build/nvim_output)"
 
-        assertFileRegex "$output" "Hello from vimscript"
-        assertFileRegex "$output" "Hello from lua"
-        assertFileRegex "$output" "Hello from fennel"
-        assertFileRegex "$output" "Hello from teal"
-      '';
+      assertFileRegex "$output" "Hello from vimscript"
+      assertFileRegex "$output" "Hello from lua"
+      assertFileRegex "$output" "Hello from fennel"
+      assertFileRegex "$output" "Hello from teal"
+    '';
   };
 }
-
 

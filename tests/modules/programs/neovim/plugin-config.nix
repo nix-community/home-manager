@@ -35,18 +35,22 @@ with lib;
       viml="$(normalizeStorePaths "$TESTED/home-files/.config/nvim/vim/home-manager-viml.vim")"
       lua="$(normalizeStorePaths "$TESTED/home-files/.config/nvim/lua/home-manager-lua.lua")"
 
-      assertFileContent "$viml" "${builtins.toFile "exepected-viml.vim" ''
-        " plugin-specific config
-        autocmd FileType c setlocal commentstring=//\ %s
-        autocmd FileType c setlocal comments=://
+      assertFileContent "$viml" "${
+        builtins.toFile "exepected-viml.vim" ''
+          " plugin-specific config
+          autocmd FileType c setlocal commentstring=//\ %s
+          autocmd FileType c setlocal comments=://
 
-        " This 'extraConfig' should be present in vimrc
-      ''}"
+          " This 'extraConfig' should be present in vimrc
+        ''
+      }"
 
-      assertFileContent "$lua" "${builtins.toFile "exepected-lua.lua" ''
-        -- lua config
-        require('range-highlight').setup{}
-      ''}"
+      assertFileContent "$lua" "${
+        builtins.toFile "exepected-lua.lua" ''
+          -- lua config
+          require('range-highlight').setup{}
+        ''
+      }"
     '';
   };
 }
