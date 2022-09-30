@@ -57,6 +57,11 @@ in {
 
   config = mkMerge [
     (mkIf cfg.enable {
+      assertions = [
+        (lib.hm.assertions.assertPlatform "services.syncthing" pkgs
+          lib.platforms.linux)
+      ];
+
       home.packages = [ (getOutput "man" pkgs.syncthing) ];
 
       systemd.user.services = {
