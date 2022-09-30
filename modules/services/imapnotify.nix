@@ -37,6 +37,30 @@ let
       };
     };
 
+  genAccountAgent = account:
+    let name = safeName account.name;
+    in {
+      name = "imapnotify-${name}";
+      value = {
+        enable = true;
+        config = {
+          ProgramArguments = [
+            "${getExe cfg.package}"
+            "-conf"
+            "${config.xdg.configHome}/imapnotify/${configName account}"
+          ];
+          KeepAlive = true;
+          ThrottleInterval = 30;
+          ExitTimeOut = 0;
+          ProcessType = "Background";
+          RunAtLoad = true;
+        } // optionalAttrs account.notmuch.enable {
+          EnvironmentVariables.NOTMUCH_CONFIG =
+            "${config.xdg.configHome}/notmuch/default/config";
+        };
+      };
+    };
+
   genAccountConfig = account:
     pkgs.writeText (configName account) (let
       port = if account.imap.port != null then
@@ -92,8 +116,6 @@ in {
             + concatMapStringsSep ", " (a: a.name) badAccounts;
         };
     in [
-      (lib.hm.assertions.assertPlatform "services.imapnotify" pkgs
-        lib.platforms.linux)
       (checkAccounts (a: a.maildir == null) "maildir configuration")
       (checkAccounts (a: a.imap == null) "IMAP configuration")
       (checkAccounts (a: a.passwordCommand == null) "password command")
@@ -101,6 +123,8 @@ in {
     ];
 
     systemd.user.services = listToAttrs (map genAccountUnit imapnotifyAccounts);
+
+    launchd.agents = listToAttrs (map genAccountAgent imapnotifyAccounts);
 
     xdg.configFile = listToAttrs (map (account: {
       name = "imapnotify/${configName account}";
