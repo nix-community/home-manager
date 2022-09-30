@@ -102,6 +102,7 @@ import nmt {
     ./modules/programs/pandoc
     ./modules/programs/pet
     ./modules/programs/pistol
+    ./modules/programs/pls
     ./modules/programs/powerline-go
     ./modules/programs/pubs
     ./modules/programs/qutebrowser

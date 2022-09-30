@@ -142,6 +142,7 @@ let
     ./programs/pidgin.nix
     ./programs/pistol.nix
     ./programs/piston-cli.nix
+    ./programs/pls.nix
     ./programs/powerline-go.nix
     ./programs/pubs.nix
     ./programs/pylint.nix
