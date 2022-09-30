@@ -13,12 +13,7 @@ in {
     xsession.windowManager.fluxbox = {
       enable = mkEnableOption "Fluxbox window manager";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.fluxbox;
-        defaultText = literalExpression "pkgs.fluxbox";
-        description = "Package to use for running Fluxbox WM.";
-      };
+      package = mkPackageOption pkgs "fluxbox" { };
 
       init = mkOption {
         type = types.lines;
