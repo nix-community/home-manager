@@ -101,6 +101,7 @@ let
     ./programs/kitty.nix
     ./programs/kodi.nix
     ./programs/lazygit.nix
+    ./programs/ledger.nix
     ./programs/less.nix
     ./programs/lesspipe.nix
     ./programs/lf.nix

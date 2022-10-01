@@ -726,6 +726,13 @@ in
           A new module is available: 'programs.pls'.
         '';
       }
+
+      {
+        time = "2022-10-06T23:06:08+00:00";
+        message = ''
+          A new module is available: 'programs.ledger'.
+        '';
+      }
     ];
   };
 }

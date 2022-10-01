@@ -158,6 +158,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/lazygit.nix                         @kalhauge
 
+/modules/programs/ledger.nix                          @marsam
+
 /modules/programs/less.nix                            @pamplemousse
 /tests/modules/programs/less                          @pamplemousse
 
