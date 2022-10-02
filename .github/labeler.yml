@@ -1,0 +1,4 @@
+"neovim":
+  - modules/programs/neovim.nix
+  - tests/modules/programs/neovim/**/*
+
