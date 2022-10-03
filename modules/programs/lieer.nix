@@ -238,8 +238,8 @@ in {
 
       package = mkOption {
         type = types.package;
-        default = pkgs.gmailieer;
-        defaultText = "pkgs.gmailieer";
+        default = pkgs.lieer;
+        defaultText = "pkgs.lieer";
         description = ''
           lieer package to use.
         '';
