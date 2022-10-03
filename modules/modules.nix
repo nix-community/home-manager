@@ -65,6 +65,7 @@ let
     ./programs/command-not-found/command-not-found.nix
     ./programs/dircolors.nix
     ./programs/direnv.nix
+    ./programs/discocss.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
     ./programs/eww.nix

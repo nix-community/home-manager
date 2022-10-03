@@ -93,6 +93,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/direnv.nix                          @rycee
 
+/modules/programs/discocss.nix                        @Kranzes
+
 /modules/programs/eclipse.nix                         @rycee
 
 /modules/programs/emacs.nix                           @rycee
