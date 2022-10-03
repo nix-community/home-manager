@@ -8,13 +8,16 @@ let
     addSbtPlugin("${plugin.org}" % "${plugin.artifact}" % "${plugin.version}")
   '';
 
-  renderCredential = cred: ''
-    credentials += Credentials("${cred.realm}", "${cred.host}", "${cred.user}", "${cred.passwordCommand}".!!.trim)
-  '';
+  renderCredential = idx: cred:
+    let symbol = "credential_${toString idx}";
+    in ''
+      lazy val ${symbol} = "${cred.passwordCommand}".!!.trim
+      credentials += Credentials("${cred.realm}", "${cred.host}", "${cred.user}", ${symbol})
+    '';
 
   renderCredentials = creds: ''
     import scala.sys.process._
-    ${concatStrings (map renderCredential creds)}'';
+    ${concatStrings (imap0 renderCredential creds)}'';
 
   renderRepository = value:
     if isString value then ''
