@@ -6,9 +6,9 @@ function setupVars() {
     local gcPath="$nixStateDir/gcroots/per-user/$USER"
 
     declare -gr nixProfilePath="$profilesPath/profile"
-    declare -gr genProfilePath="$profilesPath/home-manager"
+    declare -gr genProfilePath="$profilesPath/@GEN_LINK_PREFIX@"
     declare -gr newGenPath="@GENERATION_DIR@";
-    declare -gr newGenGcPath="$gcPath/current-home"
+    declare -gr newGenGcPath="$gcPath/@GC_LINK_NAME@"
 
     local greatestGenNum
     greatestGenNum=$( \
@@ -23,8 +23,8 @@ function setupVars() {
         declare -gr newGenNum=1
     fi
 
-    if [[ -e $profilesPath/home-manager ]] ; then
-        oldGenPath="$(readlink -e "$profilesPath/home-manager")"
+    if [[ -e $profilesPath/@GEN_LINK_PREFIX@ ]] ; then
+        oldGenPath="$(readlink -e "$profilesPath/@GEN_LINK_PREFIX@")"
         declare -gr oldGenPath
     fi
 

@@ -175,13 +175,31 @@ in
       done automatically if the shell configuration is managed by Home
       Manager. If not, then you must source the
 
-        ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+        ~/.nix-profile/etc/profile.d/${config.home.sessionVariablesFileName}
 
       file yourself.
     '')
   ];
 
   options = {
+    home.gcLinkName = mkOption {
+      type = types.str;
+      default = "current-home";
+      internal = true;
+      description = ''
+        The name of the link to create in the gcRoot.
+      '';
+    };
+
+    home.generationLinkNamePrefix = mkOption {
+      type = types.str;
+      default = "home-manager";
+      internal = true;
+      description = ''
+        The prefix of the link name of the generation.
+      '';
+    };
+
     home.username = mkOption {
       type = types.str;
       defaultText = literalExpression ''
@@ -312,6 +330,24 @@ in
       '';
     };
 
+    home.sessionVariablesFileName = mkOption {
+      type = types.str;
+      internal = true;
+      default = "hm-session-vars.sh";
+      description = ''
+        The name of the file for the session variables.
+      '';
+    };
+
+    home.sessionVariablesGuardVar = mkOption {
+      type = types.str;
+      internal = true;
+      default = "__HM_SESS_VARS_SOURCED";
+      description = ''
+        The name of the variable to use to guard the session file
+      '';
+    };
+
     home.sessionVariablesExtra = mkOption {
       type = types.lines;
       default = "";
@@ -342,6 +378,13 @@ in
     home.path = mkOption {
       internal = true;
       description = "The derivation installing the user packages.";
+    };
+
+    home.pathName = mkOption {
+      type = types.str;
+      default = "home-manager-path";
+      internal = true;
+      description = "The name of the derivation installing the user packages.";
     };
 
     home.emptyActivationPath = mkOption {
@@ -540,12 +583,12 @@ in
       # Provide a file holding all session variables.
       (
         pkgs.writeTextFile {
-          name = "hm-session-vars.sh";
-          destination = "/etc/profile.d/hm-session-vars.sh";
+          name = config.home.sessionVariablesFileName;
+          destination = "/etc/profile.d/${config.home.sessionVariablesFileName}";
           text = ''
             # Only source this once.
-            if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
-            export __HM_SESS_VARS_SOURCED=1
+            if [ -n "''$${config.home.sessionVariablesGuardVar}" ]; then return; fi
+            export ${config.home.sessionVariablesGuardVar}=1
 
             ${config.lib.shell.exportAll cfg.sessionVariables}
           '' + lib.optionalString (cfg.sessionPath != [ ]) ''
@@ -573,20 +616,20 @@ in
     #
     # In case the user has moved from a user-install of Home Manager
     # to a submodule managed one we attempt to uninstall the
-    # `home-manager-path` package if it is installed.
+    # `${config.home.pathName}` package if it is installed.
     home.activation.installPackages = hm.dag.entryAfter ["writeBoundary"] (
       if config.submoduleSupport.externalPackageInstall
       then
         ''
           if [[ -e "$nixProfilePath"/manifest.json ]] ; then
             nix profile list \
-              | { grep 'home-manager-path$' || test $? = 1; } \
+              | { grep '${config.home.pathName}$' || test $? = 1; } \
               | awk -F ' ' '{ print $4 }' \
               | cut -d ' ' -f 4 \
               | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
           else
-            if nix-env -q | grep '^home-manager-path$'; then
-              $DRY_RUN_CMD nix-env -e home-manager-path
+            if nix-env -q | grep '^${config.home.pathName}$'; then
+              $DRY_RUN_CMD nix-env -e ${config.home.pathName}
             fi
           fi
         ''
@@ -691,6 +734,8 @@ in
             ln -s $out/activate $out/bin/home-manager-generation
 
             substituteInPlace $out/activate \
+              --subst-var-by GEN_LINK_PREFIX ${config.home.generationLinkNamePrefix} \
+              --subst-var-by GC_LINK_NAME ${config.home.gcLinkName} \
               --subst-var-by GENERATION_DIR $out
 
             ln -s ${config.home-files} $out/home-files
@@ -700,7 +745,7 @@ in
           '';
 
     home.path = pkgs.buildEnv {
-      name = "home-manager-path";
+      name = config.home.pathName;
 
       paths = cfg.packages;
       inherit (cfg) extraOutputsToInstall;

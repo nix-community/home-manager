@@ -349,7 +349,7 @@ in {
         set -g __fish_home_manager_config_sourced 1
 
         set --prepend fish_function_path ${pkgs.fishPlugins.foreign-env}/share/fish/vendor_functions.d
-        fenv source ${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh > /dev/null
+        fenv source ${config.home.profileDirectory}/etc/profile.d/${config.home.sessionVariablesFileName} > /dev/null
         set -e fish_function_path[1]
 
         ${cfg.shellInit}
