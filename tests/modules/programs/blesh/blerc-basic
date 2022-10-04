@@ -1,0 +1,10 @@
+bleopt prompt_ps1_transient='trim:same-dir'
+bleopt prompt_ruler='empty-line'
+ble-face auto_complete='fg=240'
+ble-import 'contrib/bash-preexec'
+function my/complete-load-hook {
+  bleopt complete_auto_history=
+  bleopt complete_ambiguous=
+  bleopt complete_menu_maxlines=10
+};
+blehook/eval-after-load complete my/complete-load-hook

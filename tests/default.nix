@@ -61,6 +61,7 @@ import nmt {
     ./modules/programs/autojump
     ./modules/programs/bash
     ./modules/programs/bat
+    ./modules/programs/blesh
     ./modules/programs/bottom
     ./modules/programs/broot
     ./modules/programs/browserpass

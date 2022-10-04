@@ -57,6 +57,7 @@ let
     ./programs/bashmount.nix
     ./programs/bat.nix
     ./programs/beets.nix
+    ./programs/blesh.nix
     ./programs/bottom.nix
     ./programs/broot.nix
     ./programs/browserpass.nix
