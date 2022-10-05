@@ -198,6 +198,8 @@ in {
 
       Install = { WantedBy = [ "sockets.target" ]; };
     };
+
+    home.packages = [ cfg.package ];
   };
 
 }
