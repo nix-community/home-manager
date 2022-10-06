@@ -3752,6 +3752,41 @@ Note that lists are converted to duplicate keys.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gpg.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/gpg.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.havoc.enable"></a><a class="term" href="options.html#opt-programs.havoc.enable"><code class="option">programs.havoc.enable</code></a></span></dt><dd><p>Whether to enable Havoc terminal.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/havoc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/havoc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.havoc.package"></a><a class="term" href="options.html#opt-programs.havoc.package"><code class="option">programs.havoc.package</code></a></span></dt><dd><p></p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.havoc</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/havoc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/havoc.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.havoc.settings"></a><a class="term" href="options.html#opt-programs.havoc.settings"><code class="option">programs.havoc.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/havoc.cfg</code>. See <a class="link" href="https://raw.githubusercontent.com/ii8/havoc/master/havoc.cfg" target="_top">https://raw.githubusercontent.com/ii8/havoc/master/havoc.cfg</a>
+for a list of available options.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of (INI atom (null, bool, int, float or string))</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  child.program = "bash";
+  window.opacity = 240;
+  window.margin = no;
+  terminal = {
+    rows = 80;
+    columns = 24;
+    scrollback = 2000;
+  };
+  bind = {
+    "C-S-c" = "copy";
+    "C-S-v" = "paste";
+    "C-S-r" = "reset";
+    "C-S-Delete" = "hard reset";
+    "C-S-j" = "scroll down";
+    "C-S-k" = "scroll up";
+    "C-S-Page_Down" = "scroll down page";
+    "C-S-Page_Up" = "scroll up page";
+    "C-S-End" = "scroll to bottom";
+    "C-S-Home" = "scroll to top";
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/havoc.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/havoc.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.helix.enable"></a><a class="term" href="options.html#opt-programs.helix.enable"><code class="option">programs.helix.enable</code></a></span></dt><dd><p>Whether to enable helix text editor.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/helix.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/helix.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.helix.package"></a><a class="term" href="options.html#opt-programs.helix.package"><code class="option">programs.helix.package</code></a></span></dt><dd><p>The package to use for helix.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.helix</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/helix.nix#blob-path" target="_top">
