@@ -10190,7 +10190,7 @@ background "#cccccc"
         
         ]
     </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[
-  { event = "before-sleep"; command = "swaylock"; }
+  { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock"; }
   { event = "lock"; command = "lock"; }
 ]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/swayidle.nix#blob-path" target="_top">
@@ -10213,7 +10213,7 @@ background "#cccccc"
         
         ]
     </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[
-  { timeout = 60; command = "swaylock -fF"; }
+  { timeout = 60; command = "${pkgs.swaylock}/bin/swaylock -fF"; }
 ]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/swayidle.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/swayidle.nix&gt;
