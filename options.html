@@ -6655,7 +6655,9 @@ but our default is to follow XDG.
                     &lt;home-manager/modules/programs/sbt.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.package"></a><a class="term" href="options.html#opt-programs.sbt.package"><code class="option">programs.sbt.package</code></a></span></dt><dd><p>The package with sbt to be installed.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.sbt</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/sbt.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.baseConfigPath"></a><a class="term" href="options.html#opt-programs.sbt.baseConfigPath"><code class="option">programs.sbt.baseConfigPath</code></a></span></dt><dd><p>Where the plugins and credentials should be located.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">".sbt/1.0"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.baseUserConfigPath"></a><a class="term" href="options.html#opt-programs.sbt.baseUserConfigPath"><code class="option">programs.sbt.baseUserConfigPath</code></a></span></dt><dd><p>Where the sbt configuration files should be located, relative
+<code class="envar">HOME</code>.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">".sbt"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/sbt.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.credentials"></a><a class="term" href="options.html#opt-programs.sbt.credentials"><code class="option">programs.sbt.credentials</code></a></span></dt><dd><p>A list of credentials to define in the sbt configuration directory.
 </p><p><span class="emphasis"><em>Type:</em></span> list of (submodule)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -6704,6 +6706,40 @@ the repository.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.plugins._.org"></a><a class="term" href="options.html#opt-programs.sbt.plugins._.org"><code class="option">programs.sbt.plugins.*.org</code></a></span></dt><dd><p>The organization the artifact is published under.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/sbt.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.plugins._.version"></a><a class="term" href="options.html#opt-programs.sbt.plugins._.version"><code class="option">programs.sbt.plugins.*.version</code></a></span></dt><dd><p>The version of the plugin.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/sbt.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sbt.repositories"></a><a class="term" href="options.html#opt-programs.sbt.repositories"><code class="option">programs.sbt.repositories</code></a></span></dt><dd><p>A list of repositories to use when resolving dependencies. Defined as a
+list of pre-defined repository or custom repository as a set of name to
+URL. The list will be used populate the <code class="code">~/.sbt/repositories</code>
+file in the order specified.
+
+</p><p>
+
+Pre-defined repositories must be one of <code class="code">local</code>,
+<code class="code">maven-local</code>, <code class="code">maven-central</code>.
+
+</p><p>
+
+Custom repositories are defined as
+<code class="code">{ name-of-repo = "https://url.to.repo.com"}</code>.
+
+</p><p>
+
+See
+<a class="link" href="https://www.scala-sbt.org/1.x/docs/Launcher-Configuration.html#3.+Repositories+Section" target="_top">https://www.scala-sbt.org/1.x/docs/Launcher-Configuration.html#3.+Repositories+Section</a>
+about this configuration section and
+<a class="link" href="https://www.scala-sbt.org/1.x/docs/Proxy-Repositories.html" target="_top">https://www.scala-sbt.org/1.x/docs/Proxy-Repositories.html</a>
+to read about proxy repositories.
+</p><p><span class="emphasis"><em>Type:</em></span> list of (one of "local", "maven-central", "maven-local" or attribute set of string)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[
+  "local"
+  { my-ivy-proxy-releases = "http://repo.company.com/ivy-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]" }
+  { my-maven-proxy-releases = "http://repo.company.com/maven-releases/" }
+  "maven-central"
+]
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sbt.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/sbt.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.scmpuff.enable"></a><a class="term" href="options.html#opt-programs.scmpuff.enable"><code class="option">programs.scmpuff.enable</code></a></span></dt><dd><p>Whether to enable scmpuff, a command line tool that allows you to work quicker with Git by
 substituting numeric shortcuts for files.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/scmpuff.nix#blob-path" target="_top">
