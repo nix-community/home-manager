@@ -63,6 +63,7 @@ let
     ./programs/btop.nix
     ./programs/chromium.nix
     ./programs/command-not-found/command-not-found.nix
+    ./programs/contour.nix
     ./programs/dircolors.nix
     ./programs/direnv.nix
     ./programs/eclipse.nix
