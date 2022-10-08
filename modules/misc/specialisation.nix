@@ -17,25 +17,23 @@ in
       lib.types.submodule {
         options = {
           configuration = lib.mkOption {
-            type =
-              let
-                extended = extendModules {
-                  modules = [
-                    {
-                      # Prevent infinite recursion
-                      specialisation = lib.mkOverride 0 { };
+            type = let
+              extended = extendModules {
+                modules = [
+                  {
+                    # Prevent infinite recursion
+                    specialisation = lib.mkOverride 0 { };
 
-                      # If used inside the NixOS/nix-darwin module, we get conflicting definitions
-                      # of `name` inside the specialisation: one is the user name coming from the
-                      # NixOS module definition and the other is `configuration`, the name of this
-                      # option. Thus we need to explicitly wire the former into the module arguments.
-                      # See discussion at https://github.com/nix-community/home-manager/issues/3716
-                      _module.args.name = lib.mkForce name;
-                    }
-                  ];
-                };
-              in
-              extended.type;
+                    # If used inside the NixOS/nix-darwin module, we get conflicting definitions
+                    # of `name` inside the specialisation: one is the user name coming from the
+                    # NixOS module definition and the other is `configuration`, the name of this
+                    # option. Thus we need to explicitly wire the former into the module arguments.
+                    # See discussion at https://github.com/nix-community/home-manager/issues/3716
+                    _module.args.name = lib.mkForce name;
+                  }
+                ];
+              };
+            in extended.type;
             default = { };
             visible = "shallow";
             description = ''
@@ -105,28 +103,24 @@ in
         message = "<name> in specialisation.<name> cannot contain a forward slash.";
       }) (lib.attrNames config.specialisation);
 
-    home.extraBuilderCommands =
-      let
-        link =
-          n: v:
-          let
-            pkg = v.configuration.home.activationPackage;
-          in
-          "ln -s ${pkg} $out/specialisation/${lib.escapeShellArg n}";
-      in
-      ''
-        mkdir $out/specialisation
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList link cfg)}
-      '';
+    home.extraBuilderCommands = let
+      link =
+        n: v:
+        let
+          pkg = v.configuration.home.activationPackage;
+        in
+        "ln -s ${pkg} $out/specialisation/${lib.escapeShellArg n}";
+    in ''
+      mkdir $out/specialisation
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList link cfg)}
+    '';
 
-    home.activation =
-      let
-        defaultSpecialisation = findFirst (s: s.default) null (attrValues cfg);
-      in
-      mkIf (defaultSpecialisation != null) (mkForce {
-        activateSpecialisation = ''
-          ${defaultSpecialisation.configuration.home.activationPackage}/activate
-        '';
-      });
+    home.activation = let
+      defaultSpecialisation = findFirst (s: s.default) null (attrValues cfg);
+    in mkIf (defaultSpecialisation != null) (mkForce {
+      activateSpecialisation = ''
+        ${defaultSpecialisation.configuration.home.activationPackage}/activate
+      '';
+    });
   };
 }
