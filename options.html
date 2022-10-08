@@ -6834,7 +6834,10 @@ reside world-readable in the Nix store.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sioyek.bindings"></a><a class="term" href="options.html#opt-programs.sioyek.bindings"><code class="option">programs.sioyek.bindings</code></a></span></dt><dd><p>Input configuration written to
 <code class="filename">$XDG_CONFIG_HOME/sioyek/keys_user.config</code>.
 See <a class="link" href="https://github.com/ahrm/sioyek/blob/main/pdf_viewer/keys.config" target="_top">https://github.com/ahrm/sioyek/blob/main/pdf_viewer/keys.config</a>.
-</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+</p><p>
+Each attribute could also accept a list of strings to set multiple
+bindings of the same command.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of (string or list of string)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
         }
@@ -6843,6 +6846,8 @@ See <a class="link" href="https://github.com/ahrm/sioyek/blob/main/pdf_viewer/ke
   "move_down" = "j";
   "move_left" = "h";
   "move_right" = "l";
+  "screen_down" = [ "d" "&lt;C-d&gt;" ];
+  "screen_up" = [ "u" "&lt;C-u&gt;" ];
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sioyek.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/sioyek.nix&gt;
