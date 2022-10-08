@@ -2,7 +2,8 @@
 
 with lib;
 
-{
+let cfg = config.specialisation;
+in {
   imports =
     [ (mkRenamedOptionModule [ "specialization" ] [ "specialisation" ]) ];
 
@@ -10,32 +11,44 @@ with lib;
     type = types.attrsOf (types.submodule {
       options = {
         configuration = mkOption {
-          type = let
-            extended = extendModules {
-              modules = [{
-                # Prevent infinite recursion
-                specialisation = mkOverride 0 { };
+          type =
+            let
+              extended = extendModules {
+                modules = [{
+                  # Prevent infinite recursion
+                  specialisation = mkOverride 0 { };
 
-                # If used inside the NixOS/nix-darwin module, we get conflicting definitions
-                # of `name` inside the specialisation: one is the user name coming from the
-                # NixOS module definition and the other is `configuration`, the name of this
-                # option. Thus we need to explicitly wire the former into the module arguments.
-                # See discussion at https://github.com/nix-community/home-manager/issues/3716
-                _module.args.name = mkForce name;
-              }];
-            };
-          in extended.type;
+                  # If used inside the NixOS/nix-darwin module, we get conflicting definitions
+                  # of `name` inside the specialisation: one is the user name coming from the
+                  # NixOS module definition and the other is `configuration`, the name of this
+                  # option. Thus we need to explicitly wire the former into the module arguments.
+                  # See discussion at https://github.com/nix-community/home-manager/issues/3716
+                  _module.args.name = mkForce name;
+                }];
+              };
+            in
+            extended.type;
           default = { };
           visible = "shallow";
           description = ''
             Arbitrary Home Manager configuration settings.
           '';
         };
+        default = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Whether this specialisation is activated by default.
+            Note that setting this option will override the default activation
+            script, making it impossible to activate the default
+            configuration.
+          '';
+        };
       };
     });
     default = { };
     description = ''
-      A set of named specialized configurations. These can be used to extend
+      A set of named specialised configurations. These can be used to extend
       your base configuration with additional settings. For example, you can
       have specialisations named "light" and "dark"
       that apply light and dark color theme configurations.
@@ -70,14 +83,31 @@ with lib;
     '';
   };
 
-  config = mkIf (config.specialisation != { }) {
-    home.extraBuilderCommands = let
-      link = n: v:
-        let pkg = v.configuration.home.activationPackage;
-        in "ln -s ${pkg} $out/specialisation/${n}";
-    in ''
-      mkdir $out/specialisation
-      ${concatStringsSep "\n" (mapAttrsToList link config.specialisation)}
-    '';
+  config = mkIf (cfg != { }) {
+    assertions = [{
+      assertion = count (s: s.default) (attrValues cfg) <= 1;
+      message = "There can only be one default specialisation";
+    }];
+
+    home.extraBuilderCommands =
+      let
+        link = n: v:
+          let pkg = v.configuration.home.activationPackage;
+          in "ln -s ${pkg} $out/specialisation/${n}";
+      in
+      ''
+        mkdir $out/specialisation
+        ${concatStringsSep "\n" (mapAttrsToList link cfg)}
+      '';
+
+    home.activation =
+      let
+        defaultSpecialisation = findFirst (s: s.default) null (attrValues cfg);
+      in
+      mkIf (defaultSpecialisation != null) (mkForce {
+        activateSpecialisation = ''
+          ${defaultSpecialisation.configuration.home.activationPackage}/activate
+        '';
+      });
   };
 }
