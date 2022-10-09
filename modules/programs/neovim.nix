@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.neovim;
 
+  # TOTO
+
   fileType = (import ../lib/file-type.nix {
     inherit (config.home) homeDirectory;
     inherit lib pkgs;
