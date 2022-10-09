@@ -149,6 +149,7 @@ import nmt {
     ./modules/programs/hexchat
     ./modules/programs/i3status-rust
     ./modules/programs/kodi
+    ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.

@@ -176,6 +176,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/lieer.nix                           @tadfisher
 
+/modules/programs/looking-glass-client.nix            @j-brn
+/tests/modules/programs/looking-glass-client          @j-brn
+
 /modules/programs/lsd.nix                             @marsam
 
 /modules/programs/matplotlib.nix                      @rprospero
