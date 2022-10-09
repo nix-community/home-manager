@@ -1,3 +1,15 @@
+"mail":
+  - modules/programs/alot*.nix
+  - tests/modules/programs/alot/*
+  - modules/programs/mujmap.nix
+  - tests/modules/programs/mujmap/*
+  - modules/programs/notmuch.nix
+  - modules/programs/neomutt*
+  - tests/modules/programs/neomutt/*
+  - modules/programs/getmail*
+  - modules/*/mbsync*
+  - tests/modules/programs/mbsync/*
+
 "neovim":
   - modules/programs/neovim.nix
   - tests/modules/programs/neovim/**/*
