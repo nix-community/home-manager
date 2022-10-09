@@ -108,6 +108,7 @@ let
     ./programs/lf.nix
     ./programs/librewolf.nix
     ./programs/lieer.nix
+    ./programs/looking-glass-client.nix
     ./programs/lsd.nix
     ./programs/man.nix
     ./programs/mangohud.nix
