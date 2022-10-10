@@ -67,6 +67,19 @@ in {
         Extra lines added to <filename>.dir_colors</filename> file.
       '';
     };
+
+    configPath = mkOption {
+      type = types.path;
+      default = "${config.home.homeDirectory}/.dir_colors";
+      defaultText = "~/.dir_colors";
+      apply = toString;
+      description = ''
+        Path to the <filename>.dir_colors</filename> file.
+      '';
+      example = literalExpression ''
+        "''${config.home.homeDirectory}/.dir_colors"
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -203,21 +216,21 @@ in {
       ".xspf" = mkDefault "00;36";
     };
 
-    home.file.".dir_colors".text = concatStringsSep "\n" ([ ]
+    home.file."${cfg.configPath}".text = concatStringsSep "\n" ([ ]
       ++ mapAttrsToList formatLine cfg.settings ++ [ "" ]
       ++ optional (cfg.extraConfig != "") cfg.extraConfig);
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval $(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)
+      eval $(${pkgs.coreutils}/bin/dircolors -b ${cfg.configPath})
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      eval (${pkgs.coreutils}/bin/dircolors -c ~/.dir_colors)
+      eval (${pkgs.coreutils}/bin/dircolors -c ${cfg.configPath})
     '';
 
     # Set `LS_COLORS` before Oh My Zsh and `initExtra`.
     programs.zsh.initExtraBeforeCompInit = mkIf cfg.enableZshIntegration ''
-      eval $(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)
+      eval $(${pkgs.coreutils}/bin/dircolors -b ${cfg.configPath})
     '';
   };
 }
