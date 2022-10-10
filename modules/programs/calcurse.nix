@@ -29,7 +29,7 @@ let
       "${o}${n}=${formatValue v}";
 
 in {
-  meta.maintainers = [ maintainers.omernaveedxyz ];
+  meta.maintainers = [ hm.maintainers.omernaveedxyz ];
 
   options.programs.calcurse = {
     enable = mkEnableOption
