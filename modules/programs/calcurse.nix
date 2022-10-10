@@ -29,6 +29,8 @@ let
       "${o}${n}=${formatValue v}";
 
 in {
+  meta.maintainers = [ maintainers.omernaveedxyz ];
+
   options.programs.calcurse = {
     enable = mkEnableOption
       "calcurse - a text-based calendar and scheduling application";
