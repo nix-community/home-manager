@@ -2,8 +2,7 @@
 
 with lib;
 
-let
-  conf = builtins.toFile "settings-expected" "";
+let conf = builtins.toFile "settings-expected" "";
 in {
   config = {
     programs.calcurse = { enable = true; };
