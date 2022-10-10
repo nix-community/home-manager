@@ -323,4 +323,10 @@
     github = "lukasngl";
     githubId = 69244516;
   };
+  omernaveedxyz = {
+    name = "Omer Naveed";
+    email = "omer@omernaveed.dev";
+    github = "omernaveedxyz";
+    githubId = 112912585;
+  };
 }
