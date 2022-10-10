@@ -24,7 +24,7 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.blerc \
+        ${config.programs.blesh.rcfile} \
         ${./blerc-basic}
     '';
   };

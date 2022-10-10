@@ -20,6 +20,49 @@ in {
       '';
     };
 
+    rcfile = let
+      stringifyAttrs = cmd: options:
+        concatStringsSep "\n"
+        (mapAttrsToList (k: v: "${cmd} ${k}=${escapeShellArg v}") options);
+      stringifyLists = cmd: options:
+        concatStringsSep "\n" (map (v: "${cmd} ${escapeShellArg v}") options);
+      optionsStr = stringifyAttrs "bleopt" cfg.options;
+      facesStr = stringifyAttrs "ble-face" cfg.faces;
+      importsStr = stringifyLists "ble-import" cfg.imports;
+      blerc = pkgs.writeTextFile {
+        name = "blerc";
+        text = concatStringsSep "\n" [
+          optionsStr
+          facesStr
+          importsStr
+          cfg.blercExtra
+        ];
+        checkPhase = ''
+          ${pkgs.stdenv.shellDryRun} "$target"
+        '';
+      };
+    in mkOption {
+      type = types.nullOr (types.either types.path types.str);
+      default = blerc;
+      defaultText = "Path to the generated file";
+      example = "~/.blerc";
+      description = ''
+        Path of the ble init file. This value will be passed to ble.sh as a shell option <code>--rcfile</code>.
+        Set to <code>null</code> not to specify rcfile and let ble.sh load a file from the default path.
+      '';
+    };
+
+    extraArgs = mkOption {
+      type = types.nullOr (types.either types.str (types.listOf types.str));
+      default = null;
+      example = [ "--noinputrc" "--keep-rlvars" ];
+      apply = args:
+        if isList args then args else if args == null then [ ] else [ args ];
+      description = ''
+        Shell options to call ble.sh with.
+      '';
+    };
+
     options = mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -65,28 +108,13 @@ in {
   };
 
   config = let
-    stringifyAttrs = cmd: options:
-      concatStringsSep "\n"
-      (mapAttrsToList (k: v: "${cmd} ${k}=${escapeShellArg v}") options);
-    stringifyLists = cmd: options:
-      concatStringsSep "\n" (map (v: "${cmd} ${escapeShellArg v}") options);
-    optionsStr = stringifyAttrs "bleopt" cfg.options;
-    facesStr = stringifyAttrs "ble-face" cfg.faces;
-    importsStr = stringifyLists "ble-import" cfg.imports;
+    args = escapeShellArgs
+      (optional (cfg.rcfile != null) "--rcfile=${cfg.rcfile}" ++ cfg.extraArgs);
   in mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file.".blerc".source = pkgs.writeTextFile {
-      name = "blerc";
-      text =
-        concatStringsSep "\n" [ optionsStr facesStr importsStr cfg.blercExtra ];
-      checkPhase = ''
-        ${pkgs.stdenv.shellDryRun} "$target"
-      '';
-    };
-
     programs.bash.bashrcExtra = mkIf cfg.enableBashIntegration (mkBefore ''
-      [[ $- == *i* ]] && source '${config.programs.blesh.package}/share/blesh/ble.sh' --noattach
+      [[ $- == *i* ]] && source '${config.programs.blesh.package}/share/blesh/ble.sh' --attach=none ${args}
     '');
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkAfter ''

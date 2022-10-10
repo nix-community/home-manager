@@ -13,7 +13,7 @@ with lib;
     nmt.script = ''
       assertFileRegex \
       home-files/.bashrc \
-      $'^\[\[ \$- == \*i\* \]\] && source \'.*-blesh/share/ble.sh\' --noattach$'
+      $'^\[\[ \$- == \*i\* \]\] && source \'.*-blesh/share/blesh/ble.sh\' --attach=none'
 
       assertFileContains \
       home-files/.bashrc \
