@@ -8,6 +8,8 @@ let
 
   safeName = lib.replaceStrings [ "@" ":" "\\" "[" "]" ] [ "-" "-" "-" "" "" ];
 
+  configName = account: "imapnotify-${safeName account.name}-config.json";
+
   imapnotifyAccounts =
     filter (a: a.imapnotify.enable) (attrValues config.accounts.email.accounts);
 
@@ -19,7 +21,10 @@ let
         Unit = { Description = "imapnotify for ${name}"; };
 
         Service = {
-          ExecStart = "${getExe cfg.package} -conf ${genAccountConfig account}";
+          ExecStart =
+            "${getExe cfg.package} -conf '${config.xdg.configHome}/imapnotify/${
+              configName account
+            }'";
           Restart = "always";
           RestartSec = 30;
           Type = "simple";
@@ -33,7 +38,7 @@ let
     };
 
   genAccountConfig = account:
-    pkgs.writeText "imapnotify-${safeName account.name}-config.json" (let
+    pkgs.writeText (configName account) (let
       port = if account.imap.port != null then
         account.imap.port
       else if account.imap.tls.enable then
@@ -96,5 +101,10 @@ in {
     ];
 
     systemd.user.services = listToAttrs (map genAccountUnit imapnotifyAccounts);
+
+    xdg.configFile = listToAttrs (map (account: {
+      name = "imapnotify/${configName account}";
+      value.source = genAccountConfig account;
+    }) imapnotifyAccounts);
   };
 }
