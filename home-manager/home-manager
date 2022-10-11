@@ -480,7 +480,10 @@ function doUninstall() {
         y|Y)
             _i "Switching to empty Home Manager configuration..."
             HOME_MANAGER_CONFIG="$(mktemp --tmpdir home-manager.XXXXXXXXXX)"
-            echo "{ lib, ... }: { home.file = lib.mkForce {}; }" > "$HOME_MANAGER_CONFIG"
+            echo "{ lib, ... }: {"  > "$HOME_MANAGER_CONFIG"
+            echo "  home.file = lib.mkForce {};" >> "$HOME_MANAGER_CONFIG"
+            echo "  home.stateVersion = \"18.09\";" >> "$HOME_MANAGER_CONFIG"
+            echo "}" >> "$HOME_MANAGER_CONFIG"
             doSwitch
             $DRY_RUN_CMD $REMOVE_CMD home-manager-path || true
             rm "$HOME_MANAGER_CONFIG"
