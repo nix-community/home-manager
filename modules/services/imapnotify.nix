@@ -19,9 +19,7 @@ let
         Unit = { Description = "imapnotify for ${name}"; };
 
         Service = {
-          ExecStart = "${pkgs.goimapnotify}/bin/goimapnotify -conf ${
-              genAccountConfig account
-            }";
+          ExecStart = "${getExe cfg.package} -conf ${genAccountConfig account}";
           Restart = "always";
           RestartSec = 30;
           Type = "simple";
@@ -62,7 +60,17 @@ in {
   meta.maintainers = [ maintainers.nickhu ];
 
   options = {
-    services.imapnotify = { enable = mkEnableOption "imapnotify"; };
+    services.imapnotify = {
+      enable = mkEnableOption "imapnotify";
+
+      package = mkOption {
+        type = types.package;
+        default = pkgs.goimapnotify;
+        defaultText = literalExpression "pkgs.goimapnotify";
+        example = literalExpression "pkgs.imapnotify";
+        description = "The imapnotify package to use";
+      };
+    };
 
     accounts.email.accounts = mkOption {
       type = with types; attrsOf (submodule (import ./imapnotify-accounts.nix));
