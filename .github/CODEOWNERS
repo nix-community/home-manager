@@ -81,6 +81,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/beets.nix                           @rycee
 
+/modules/programs/blesh.nix                           @aiotter
+/tests/modules/programs/blesh                         @aiotter
+
 /modules/programs/bottom.nix                          @polykernel
 /tests/modules/programs/bottom                        @polykernel
 
