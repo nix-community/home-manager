@@ -32,7 +32,7 @@ in {
   config = mkIf cfg.enable {
     assertions = [{
       assertion = cfg.discordAlias
-        -> !(any (p: p.name == cfg.discord.name) config.home.packages);
+        -> !(any (p: p.name == cfg.discordPackage.name) config.home.packages);
       message =
         "To use discocss with discordAlias you have to remove discord from home.packages, or set discordAlias to false.";
     }];
