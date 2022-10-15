@@ -53,6 +53,9 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions =
+      [ (hm.assertions.assertPlatform "programs.looking-glass-client" pkgs platforms.linux) ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile."looking-glass/client.ini" =
