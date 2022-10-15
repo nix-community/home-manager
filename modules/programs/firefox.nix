@@ -363,7 +363,7 @@ in {
         description = ''
           Whether to enable the GNOME Shell native host connector. Note, you
           also need to set the NixOS option
-          <literal>services.gnome3.chrome-gnome-shell.enable</literal> to
+          <literal>services.gnome.gnome-browser-connector.enable</literal> to
           <literal>true</literal>.
         '';
       };
