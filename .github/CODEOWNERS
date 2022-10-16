@@ -136,8 +136,8 @@ Makefile                                              @thiagokokada
 /modules/programs/hexchat.nix                         @thiagokokada
 /tests/modules/programs/hexchat                       @thiagokokada
 
-/modules/programs/himalaya.nix                        @ambroisie
-/tests/modules/programs/himalaya                      @ambroisie
+/modules/programs/himalaya.nix                        @toastal
+/tests/modules/programs/himalaya                      @toastal
 
 /modules/programs/home-manager.nix                    @rycee
 
