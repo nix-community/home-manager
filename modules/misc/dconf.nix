@@ -105,9 +105,11 @@ in {
         export DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session"
       fi
 
-      ${cleanup} \
-        "$oldGenPath/${statePath}" \
-        "$newGenPath/${statePath}"
+      if [[ -v oldGenPath ]]; then
+        ${cleanup} \
+          "$oldGenPath/${statePath}" \
+          "$newGenPath/${statePath}"
+      fi
 
       $DRY_RUN_CMD $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
 
