@@ -16,7 +16,7 @@ in {
     settings = mkOption {
       type = settingsFormat.type;
       default = { };
-      description = "looking-glass-client settings";
+      description = "looking-glass-client settings.";
       example = literalExpression ''
         {
           app = {
