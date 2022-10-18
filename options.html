@@ -5119,6 +5119,38 @@ for details on supported values.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lieer.package"></a><a class="term" href="options.html#opt-programs.lieer.package"><code class="option">programs.lieer.package</code></a></span></dt><dd><p>lieer package to use.
 </p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"pkgs.lieer"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lieer.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.looking-glass-client.enable"></a><a class="term" href="options.html#opt-programs.looking-glass-client.enable"><code class="option">programs.looking-glass-client.enable</code></a></span></dt><dd><p>Whether to enable looking-glass-client.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/looking-glass-client.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/looking-glass-client.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.looking-glass-client.package"></a><a class="term" href="options.html#opt-programs.looking-glass-client.package"><code class="option">programs.looking-glass-client.package</code></a></span></dt><dd><p></p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.looking-glass-client</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/looking-glass-client.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/looking-glass-client.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.looking-glass-client.settings"></a><a class="term" href="options.html#opt-programs.looking-glass-client.settings"><code class="option">programs.looking-glass-client.settings</code></a></span></dt><dd><p>looking-glass-client settings.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of (INI atom (null, bool, int, float or string))</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  app = {
+    allowDMA = true;
+    shmFile = "/dev/kvmfr0";
+  };
+
+  win = {
+    fullScreen = true;
+    showFPS = false;
+    jitRender = true;
+  };
+
+  spice = {
+    enable = true;
+    audio = true;
+  };
+
+  input = {
+    rawMouse = true;
+    escapeKey = 62;
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/looking-glass-client.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/looking-glass-client.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lsd.enable"></a><a class="term" href="options.html#opt-programs.lsd.enable"><code class="option">programs.lsd.enable</code></a></span></dt><dd><p>Whether to enable lsd.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lsd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lsd.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lsd.enableAliases"></a><a class="term" href="options.html#opt-programs.lsd.enableAliases"><code class="option">programs.lsd.enableAliases</code></a></span></dt><dd><p>Whether to enable recommended lsd aliases.
