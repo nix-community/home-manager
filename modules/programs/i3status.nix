@@ -138,6 +138,8 @@ in {
         }
       '';
     };
+
+    package = mkPackageOption pkgs "i3status" { };
   };
 
   config = mkIf cfg.enable {
@@ -197,7 +199,7 @@ in {
       };
     };
 
-    home.packages = [ pkgs.i3status ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."i3status/config".text = concatStringsSep "\n" ([ ]
       ++ optional (cfg.general != { }) (formatModule "general" cfg.general)
