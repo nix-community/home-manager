@@ -527,6 +527,8 @@ Makefile                                              @thiagokokada
 /modules/services/window-managers/herbstluftwm        @olmokramer
 /tests/modules/services/window-managers/herbstluftwm  @olmokramer
 
+/modules/services/window-managers/hypr                @AndersonTorres
+
 /modules/services/window-managers/i3-sway/i3.nix      @sumnerevans @sebtm
 /tests/modules/services/window-managers/i3            @sumnerevans @sebtm
 
