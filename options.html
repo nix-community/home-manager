@@ -3110,6 +3110,72 @@ previously existing bookmarks!
                     &lt;home-manager/modules/programs/firefox.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.path"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.path"><code class="option">programs.firefox.profiles.&lt;name&gt;.path</code></a></span></dt><dd><p>Profile path.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"‹name›"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/firefox.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.search.default"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.search.default"><code class="option">programs.firefox.profiles.&lt;name&gt;.search.default</code></a></span></dt><dd><p>The default search engine used in the address bar and search bar.
+</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"DuckDuckGo"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/firefox.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.search.engines"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.search.engines"><code class="option">programs.firefox.profiles.&lt;name&gt;.search.engines</code></a></span></dt><dd><p>Attribute set of search engine configurations. Engines
+that only have <code class="varname">metaData</code> specified will
+be treated as builtin to Firefox.
+</p><p>
+See <a class="link" href="https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177" target="_top">SearchEngine.jsm</a>
+in Firefox's source for available options. We maintain a
+mapping to let you specify all options in the referenced
+link without underscores, but it may fall out of date with
+future options.
+</p><p>
+Note, <code class="varname">icon</code> is also a special option
+added by Home Manager to make it convenient to specify
+absolute icon paths.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of (JSON value)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  "Nix Packages" = {
+    urls = [{
+      template = "https://search.nixos.org/packages";
+      params = [
+        { name = "type"; value = "packages"; }
+        { name = "query"; value = "{searchTerms}"; }
+      ];
+    }];
+
+    icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+    definedAliases = [ "@np" ];
+  };
+
+  "NixOS Wiki" = {
+    urls = [{ template = "https://nixos.wiki/index.php?search={searchTerms}"; }];
+    iconUpdateURL = "https://nixos.wiki/favicon.png";
+    updateInterval = 24 * 60 * 60 * 1000; # every day
+    definedAliases = [ "@nw" ];
+  };
+
+  "Bing".metaData.hidden = true;
+  "Google".metaData.alias = "@g"; # builtin engines only support specifying one additional alias
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/firefox.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.search.force"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.search.force"><code class="option">programs.firefox.profiles.&lt;name&gt;.search.force</code></a></span></dt><dd><p>Whether to force replace the existing search
+configuration. This is recommended since Firefox will
+replace the symlink for the search configuration on every
+launch, but note that you'll lose any existing
+configuration by enabling this.
+</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/firefox.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.search.order"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.search.order"><code class="option">programs.firefox.profiles.&lt;name&gt;.search.order</code></a></span></dt><dd><p>The order the search engines are listed in. Any engines
+that aren't included in this list will be listed after
+these in an unspecified order.
+</p><p><span class="emphasis"><em>Type:</em></span> list of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        [
+        
+        ]
+    </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+        [
+        "DuckDuckGo" "Google" 
+        ]
+    </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/firefox.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.settings"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.settings"><code class="option">programs.firefox.profiles.&lt;name&gt;.settings</code></a></span></dt><dd><p>Attribute set of Firefox preferences.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of (boolean or signed integer or string)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
         
@@ -7884,7 +7950,7 @@ manually set any options not listed above.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.enable"></a><a class="term" href="options.html#opt-programs.vscode.enable"><code class="option">programs.vscode.enable</code></a></span></dt><dd><p>Whether to enable Visual Studio Code.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.package"></a><a class="term" href="options.html#opt-programs.vscode.package"><code class="option">programs.vscode.package</code></a></span></dt><dd><p>Version of Visual Studio Code to install.
-</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"><em class="replaceable"><code>(build of vscode-1.72.1)</code></em></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.vscodium</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
+</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal"><em class="replaceable"><code>(build of vscode-1.72.2)</code></em></code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.vscodium</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.extensions"></a><a class="term" href="options.html#opt-programs.vscode.extensions"><code class="option">programs.vscode.extensions</code></a></span></dt><dd><p>The extensions Visual Studio Code should be started with.
 </p><p><span class="emphasis"><em>Type:</em></span> list of package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
