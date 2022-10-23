@@ -9,7 +9,7 @@ ExecStart=/nix/store/00000000000000000000000000000000-systemd/bin/systemd-inhibi
     --list \
     --syslog-verbosity 1
 
-ExecStartPre=sleep 3m
+ExecStartPre=/nix/store/00000000000000000000000000000000-coreutils/bin/sleep 3m
 IOSchedulingClass=best-effort
 IOSchedulingPriority=7
 IOWeight=100

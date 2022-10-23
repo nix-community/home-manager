@@ -58,7 +58,7 @@ in {
           LogRateLimitIntervalSec = 0;
 
           # Delay start to prevent backups running during boot:
-          ExecStartPre = "sleep 3m";
+          ExecStartPre = "${pkgs.coreutils}/bin/sleep 3m";
 
           ExecStart = ''
             ${pkgs.systemd}/bin/systemd-inhibit \
