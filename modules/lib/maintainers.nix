@@ -101,6 +101,12 @@
       fingerprint = "2BE3 BAFD 793E A349 ED1F  F00F 04D0 CEAF 916A 9A40";
     }];
   };
+  katexochen = {
+    name = "Paul Meyer";
+    email = "49727155+katexochen@users.noreply.github.com";
+    github = "katexochen";
+    githubId = 49727155;
+  };
   kubukoz = {
     name = "Jakub Kozłowski";
     email = "kubukoz@users.noreply.github.com";

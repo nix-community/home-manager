@@ -99,6 +99,7 @@ let
     ./programs/java.nix
     ./programs/jq.nix
     ./programs/just.nix
+    ./programs/k9s.nix
     ./programs/kakoune.nix
     ./programs/keychain.nix
     ./programs/kitty.nix

@@ -155,6 +155,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/just.nix                            @maximsmol
 
+/modules/programs/k9s.nix                             @katexochen
+/tests/modules/programs/k9s                           @katexochen
+
 /modules/programs/keychain.nix                        @marsam
 
 /modules/programs/kodi.nix                            @dwagenk
