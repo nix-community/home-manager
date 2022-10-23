@@ -3,3 +3,4 @@ let $config = {
   table_mode: rounded
   use_ls_colors: true
 }
+
