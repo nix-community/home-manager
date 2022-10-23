@@ -345,10 +345,10 @@ in
           if [[ -e "$realOut/$relTarget" ]]; then
             if [[ -d "$realOut/$relTarget" && $(realpath "$realOut/$relTarget") == $realOut && $recursive ]]; then
                 # exception: allow a "collision" for a recureively linked home *directory*
-                :
+              :
             else
-                echo "File conflict for file '$relTarget'" >&2
-                return
+              echo "File conflict for file '$relTarget'" >&2
+              return
             fi
           fi
 
