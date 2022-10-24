@@ -157,6 +157,16 @@ in {
           or by Visual Studio Code.
         '';
       };
+
+      mutableUserSettings = mkOption {
+        type = types.bool;
+        default = false;
+        example = false;
+        description = ''
+          Whether user settings can be changed manually or by Visual
+          Studio Code.
+        '';
+      };
     };
   };
 
@@ -164,7 +174,7 @@ in {
     home.packages = [ cfg.package ];
 
     home.file = mkMerge [
-      (mkIf (cfg.userSettings != { }) {
+      (mkIf (!cfg.mutableUserSettings && cfg.userSettings != { }) {
         "${configFilePath}".source =
           jsonFormat.generate "vscode-user-settings" cfg.userSettings;
       })
@@ -200,5 +210,23 @@ in {
         in "${combinedExtensionsDrv}/${subDir}";
       }))
     ];
+
+    home.activation =
+      mkIf (cfg.mutableUserSettings && cfg.userSettings != { }) {
+        injectVscodeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          tmp="$(mktemp)"
+          if [[ -v DRY_RUN ]]; then
+            echo tmp="\$(mktemp)"
+            echo ${pkgs.jq}/bin/jq -s "'reduce .[] as \$x ({}; . * \$x)'" "${
+              jsonFormat.generate "vscode-user-settings" cfg.userSettings
+            }" "${configFilePath}" ">" "$tmp"
+          else
+            ${pkgs.jq}/bin/jq -s 'reduce .[] as $x ({}; . * $x)' "${
+              jsonFormat.generate "vscode-user-settings" cfg.userSettings
+            }" "${configFilePath}" > "$tmp"
+          fi
+          $DRY_RUN_CMD mv "$tmp" "${configFilePath}"
+        '';
+      };
   };
 }
