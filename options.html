@@ -4679,6 +4679,38 @@ variable.
                     &lt;home-manager/modules/programs/just.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.just.package"></a><a class="term" href="options.html#opt-programs.just.package"><code class="option">programs.just.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>just</strong></span> tool.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.just</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/just.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/just.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.k9s.enable"></a><a class="term" href="options.html#opt-programs.k9s.enable"><code class="option">programs.k9s.enable</code></a></span></dt><dd><p>Whether to enable k9s - Kubernetes CLI To Manage Your Clusters In Style.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/k9s.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/k9s.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.k9s.package"></a><a class="term" href="options.html#opt-programs.k9s.package"><code class="option">programs.k9s.package</code></a></span></dt><dd><p></p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.k9s</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/k9s.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/k9s.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.k9s.settings"></a><a class="term" href="options.html#opt-programs.k9s.settings"><code class="option">programs.k9s.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/k9s/config.yml</code>. See
+<a class="link" href="https://k9scli.io/topics/config/" target="_top">https://k9scli.io/topics/config/</a>
+for supported values.
+</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">k9s = {
+  refreshRate = 2;
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/k9s.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/k9s.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.k9s.skin"></a><a class="term" href="options.html#opt-programs.k9s.skin"><code class="option">programs.k9s.skin</code></a></span></dt><dd><p>Skin written to
+<code class="filename">$XDG_CONFIG_HOME/k9s/skin.yml</code>. See
+<a class="link" href="https://k9scli.io/topics/skins/" target="_top">https://k9scli.io/topics/skins/</a>
+for supported values.
+</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">k9s = {
+  body = {
+    fgColor = "dodgerblue";
+  };
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/k9s.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/k9s.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kakoune.enable"></a><a class="term" href="options.html#opt-programs.kakoune.enable"><code class="option">programs.kakoune.enable</code></a></span></dt><dd><p>Whether to enable the kakoune text editor.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kakoune.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/kakoune.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kakoune.config"></a><a class="term" href="options.html#opt-programs.kakoune.config"><code class="option">programs.kakoune.config</code></a></span></dt><dd><p>kakoune configuration options.</p><p><span class="emphasis"><em>Type:</em></span> null or (submodule)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
