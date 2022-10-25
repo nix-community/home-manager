@@ -160,6 +160,7 @@ import nmt {
     ./modules/programs/terminator
     ./modules/programs/waybar
     ./modules/programs/xmobar
+    ./modules/programs/yambar
     ./modules/programs/yt-dlp
     ./modules/services/barrier
     ./modules/services/borgmatic

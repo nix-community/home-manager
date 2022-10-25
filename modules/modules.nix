@@ -188,6 +188,7 @@ let
     ./programs/waybar.nix
     ./programs/wezterm.nix
     ./programs/xmobar.nix
+    ./programs/yambar.nix
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix
     ./programs/zathura.nix
