@@ -219,6 +219,7 @@ in import nmtSrc {
     ./modules/programs/wofi
     ./modules/programs/wpaperd
     ./modules/programs/xmobar
+    ./modules/programs/yambar
     ./modules/programs/yt-dlp
     ./modules/services/activitywatch
     ./modules/services/avizo
