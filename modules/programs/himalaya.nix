@@ -11,10 +11,10 @@ let
     toHimalayaConfig = account:
       {
         email = account.address;
-        name = account.realName;
+        display-name = account.realName;
         default = account.primary;
 
-        mailboxes = {
+        folder-aliases = {
           inbox = account.folders.inbox;
           sent = account.folders.sent;
           draft = account.folders.drafts;
@@ -23,12 +23,16 @@ let
 
         # FIXME: does not support disabling TLS altogether
         # NOTE: does not accept sequence of strings for password commands
+        # TODO: Support different backends (imap, +maildir, +notmuch)
+        backend = "imap";
         imap-login = account.userName;
         imap-passwd-cmd = lib.escapeShellArgs account.passwordCommand;
         imap-host = account.imap.host;
         imap-port = account.imap.port;
         imap-starttls = account.imap.tls.useStartTls;
 
+        # TODO: Support different senders (smtp, sendmail)
+        sender = "smtp";
         smtp-login = account.userName;
         smtp-passwd-cmd = lib.escapeShellArgs account.passwordCommand;
         smtp-host = account.smtp.host;

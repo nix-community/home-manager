@@ -1,23 +1,26 @@
 downloads-dir = "/data/download"
-name = ""
+folder-listing-page-size = 50
+email-listing-page-size = 50
 
 ["hm@example.com"]
 default = true
 default-page-size = 50
 email = "hm@example.com"
+backend = "imap"
 imap-host = "imap.example.com"
 imap-login = "home.manager"
 imap-passwd-cmd = "'password-command'"
 imap-port = 995
 imap-starttls = false
-name = "H. M. Test"
+display-name = "H. M. Test"
+sender = "smtp"
 smtp-host = "smtp.example.com"
 smtp-login = "home.manager"
 smtp-passwd-cmd = "'password-command'"
 smtp-port = 465
 smtp-starttls = false
 
-["hm@example.com".mailboxes]
+["hm@example.com".folder-aliases]
 draft = "Drafts"
 inbox = "In"
 sent = "Out"

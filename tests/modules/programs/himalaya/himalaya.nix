@@ -26,7 +26,11 @@ with lib;
 
   programs.himalaya = {
     enable = true;
-    settings = { downloads-dir = "/data/download"; };
+    settings = {
+      downloads-dir = "/data/download";
+      folder-listing-page-size = 50;
+      email-listing-page-size = 50;
+    };
   };
 
   test.stubs.himalaya = { };
