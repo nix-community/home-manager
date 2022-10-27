@@ -843,6 +843,14 @@ in
             export MOZ_ALLOW_DOWNGRADE=1
         '';
       }
+
+      {
+        time = "2022-12-28T16:20:51+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.cachix-agent'.
+        '';
+      }
     ];
   };
 }
