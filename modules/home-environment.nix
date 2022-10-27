@@ -680,7 +680,15 @@ in
         getVersion = pkgs.writeShellScript "get-hm-version" ''
           set -euo pipefail
 
-          cd "${../.}" || exit 1
+          dir="${../.}"
+
+          # Apparently, dir is not always set to the Home Manager directory.
+          if [[ ! -d $dir ]]; then
+            echo ""
+            exit 0
+          fi
+
+          cd "$dir" || exit 1
 
           # Get the base release and initialize an empty version suffix.
           release=$(< .release)
