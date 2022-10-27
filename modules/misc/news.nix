@@ -741,6 +741,65 @@ in
           A new module is available: 'programs.havoc'.
         '';
       }
+
+      {
+        time = "2022-10-12T23:10:48+00:00";
+        message = ''
+          A new module is available: 'programs.discocss'.
+        '';
+      }
+
+      {
+        time = "2022-10-16T19:49:46+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          Two new modules are available:
+
+            - 'programs.borgmatic' and
+            - 'services.borgmatic'.
+
+          use the first to configure the borgmatic tool and the second if you
+          want to automatically run scheduled backups.
+        '';
+      }
+
+      {
+        time = "2022-10-18T08:07:43+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.looking-glass-client'.
+        '';
+      }
+
+      {
+        time = "2022-10-22T17:52:30+00:00";
+        condition = config.programs.firefox.enable;
+        message = ''
+          It is now possible to configure the default search engine in Firefox
+          with
+
+            programs.firefox.profiles.<name>.search.default
+
+          and add custom engines with
+
+            programs.firefox.profiles.<name>.search.engines.
+
+          It is also recommended to set
+
+            programs.firefox.profiles.<name>.search.force = true
+
+          since Firefox will replace the symlink for the search configuration on
+          every launch, but note that you'll lose any existing configuration by
+          enabling this.
+        '';
+      }
+
+      {
+        time = "2022-10-24T22:05:27+00:00";
+        message = ''
+          A new module is available: 'programs.k9s'.
+        '';
+      }
     ];
   };
 }

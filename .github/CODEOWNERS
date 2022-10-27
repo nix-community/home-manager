@@ -93,6 +93,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/direnv.nix                          @rycee
 
+/modules/programs/discocss.nix                        @Kranzes
+
 /modules/programs/eclipse.nix                         @rycee
 
 /modules/programs/emacs.nix                           @rycee
@@ -153,6 +155,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/just.nix                            @maximsmol
 
+/modules/programs/k9s.nix                             @katexochen
+/tests/modules/programs/k9s                           @katexochen
+
 /modules/programs/keychain.nix                        @marsam
 
 /modules/programs/kodi.nix                            @dwagenk
@@ -173,6 +178,9 @@ Makefile                                              @thiagokokada
 /modules/programs/librewolf.nix                       @onny
 
 /modules/programs/lieer.nix                           @tadfisher
+
+/modules/programs/looking-glass-client.nix            @j-brn
+/tests/modules/programs/looking-glass-client          @j-brn
 
 /modules/programs/lsd.nix                             @marsam
 
@@ -340,6 +348,11 @@ Makefile                                              @thiagokokada
 /tests/modules/services/barrier                       @Kritnich
 
 /modules/services/betterlockscreen.nix                @SebTM
+
+/modules/programs/borgmatic.nix                       @DamienCassou
+/modules/services/borgmatic.nix                       @DamienCassou
+/tests/modules/programs/borgmatic                     @DamienCassou
+/tests/modules/services/borgmatic                     @DamienCassou
 
 /modules/services/caffeine.nix                        @uvNikita
 

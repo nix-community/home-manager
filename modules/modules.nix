@@ -57,6 +57,7 @@ let
     ./programs/bashmount.nix
     ./programs/bat.nix
     ./programs/beets.nix
+    ./programs/borgmatic.nix
     ./programs/bottom.nix
     ./programs/broot.nix
     ./programs/browserpass.nix
@@ -66,6 +67,7 @@ let
     ./programs/calcurse.nix
     ./programs/dircolors.nix
     ./programs/direnv.nix
+    ./programs/discocss.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
     ./programs/eww.nix
@@ -98,6 +100,7 @@ let
     ./programs/java.nix
     ./programs/jq.nix
     ./programs/just.nix
+    ./programs/k9s.nix
     ./programs/kakoune.nix
     ./programs/keychain.nix
     ./programs/kitty.nix
@@ -109,6 +112,7 @@ let
     ./programs/lf.nix
     ./programs/librewolf.nix
     ./programs/lieer.nix
+    ./programs/looking-glass-client.nix
     ./programs/lsd.nix
     ./programs/man.nix
     ./programs/mangohud.nix
@@ -197,6 +201,7 @@ let
     ./services/barrier.nix
     ./services/betterlockscreen.nix
     ./services/blueman-applet.nix
+    ./services/borgmatic.nix
     ./services/caffeine.nix
     ./services/cbatticon.nix
     ./services/clipmenu.nix

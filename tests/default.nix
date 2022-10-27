@@ -81,6 +81,7 @@ import nmt {
     ./modules/programs/hyfetch
     ./modules/programs/i3status
     ./modules/programs/irssi
+    ./modules/programs/k9s
     ./modules/programs/kakoune
     ./modules/programs/kitty
     ./modules/programs/less
@@ -142,6 +143,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/programs/borgmatic
     ./modules/programs/firefox
     ./modules/programs/foot
     ./modules/programs/getmail
@@ -149,6 +151,7 @@ import nmt {
     ./modules/programs/hexchat
     ./modules/programs/i3status-rust
     ./modules/programs/kodi
+    ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.
@@ -161,6 +164,7 @@ import nmt {
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
     ./modules/services/barrier
+    ./modules/services/borgmatic
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs

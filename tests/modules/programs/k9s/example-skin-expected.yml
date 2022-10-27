@@ -1,0 +1,8 @@
+k9s:
+  body:
+    bgColor: '#ffffff'
+    fgColor: dodgerblue
+    logoColor: '#0000ff'
+  info:
+    fgColor: lightskyblue
+    sectionColor: steelblue

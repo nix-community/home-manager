@@ -23,7 +23,7 @@ function setupColors() {
     if [[ ! -v NO_COLOR && -t 1 ]]; then
         # See if it supports colors.
         local ncolors
-        ncolors=$(tput colors)
+        ncolors=$(tput colors 2> /dev/null || echo 0)
 
         if [[ -n "$ncolors" && "$ncolors" -ge 8 ]]; then
             normalColor="$(tput sgr0)"

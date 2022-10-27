@@ -27,12 +27,17 @@ let
     }
   ];
 
-  targetPath = if pkgs.stdenv.hostPlatform.isDarwin then
+  keybindingsPath = if pkgs.stdenv.hostPlatform.isDarwin then
     "Library/Application Support/Code/User/keybindings.json"
   else
     ".config/Code/User/keybindings.json";
 
-  expectedJson = pkgs.writeText "expected.json" ''
+  settingsPath = if pkgs.stdenv.hostPlatform.isDarwin then
+    "Library/Application Support/Code/User/settings.json"
+  else
+    ".config/Code/User/settings.json";
+
+  expectedKeybindings = pkgs.writeText "expected.json" ''
     [
       {
         "command": "editor.action.clipboardCopyAction",
@@ -58,6 +63,7 @@ let
       }
     ]
   '';
+
 in {
   config = {
     programs.vscode = {
@@ -67,8 +73,10 @@ in {
     };
 
     nmt.script = ''
-      assertFileExists "home-files/${targetPath}"
-      assertFileContent "home-files/${targetPath}" "${expectedJson}"
+      assertFileExists "home-files/${keybindingsPath}"
+      assertFileContent "home-files/${keybindingsPath}" "${expectedKeybindings}"
+
+      assertPathNotExists "home-files/${settingsPath}"
     '';
   };
 }
