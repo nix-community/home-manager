@@ -166,6 +166,7 @@ import nmt {
     ./modules/programs/yt-dlp
     ./modules/services/barrier
     ./modules/services/borgmatic
+    ./modules/services/cachix-agent
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs
