@@ -676,41 +676,6 @@ in
 
           ${activationCmds}
         '';
-
-        getVersion = pkgs.writeShellScript "get-hm-version" ''
-          set -euo pipefail
-
-          dir="${../.}"
-
-          # Apparently, dir is not always set to the Home Manager directory.
-          if [[ ! -d $dir ]]; then
-            echo ""
-            exit 0
-          fi
-
-          cd "$dir" || exit 1
-
-          # Get the base release and initialize an empty version suffix.
-          release=$(< .release)
-          suffix=""
-
-          # If we are in a Git repo then update the suffix to be
-          #
-          #   .git.HASH
-          #
-          # where HASH are the first 8 characters of the commit hash.
-          if [[ -f .git/HEAD ]]; then
-            ref=$(sed '/ref:/ { s/.* //; }' .git/HEAD)
-            if [[ -f ".git/$ref" ]]; then
-              hash=$(< ".git/$ref")
-              if [[ -n "$hash" ]]; then
-                suffix=".git.''${hash:0:8}"
-              fi
-            fi
-          fi
-
-          echo "$release$suffix"
-        '';
       in
         pkgs.runCommand
           "home-manager-generation"
@@ -720,7 +685,7 @@ in
           ''
             mkdir -p $out
 
-            ${getVersion} > $out/hm-version
+            echo "${config.home.version.full}" > $out/hm-version
 
             cp ${activationScript} $out/activate
 
