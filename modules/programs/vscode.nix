@@ -82,7 +82,7 @@ in {
         default = { };
         example = literalExpression ''
           {
-            "files.autoSave" = "off"
+            "files.autoSave" = "off";
             "[nix]"."editor.tabSize" = 2;
           }
         '';
@@ -97,14 +97,14 @@ in {
         default = { };
         example = literalExpression ''
           {
-            "version": "2.0.0",
-            "tasks": [
+            version = "2.0.0";
+            tasks = [
               {
-                "type": "shell",
-                "label": "Hello task",
-                "command": "hello",
+                type = "shell";
+                label = "Hello task";
+                command = "hello";
               }
-            ]
+            ];
           }
         '';
         description = ''
