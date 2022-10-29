@@ -88,6 +88,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         docs = import ./docs { inherit pkgs; };
+        tests = import ./tests { inherit pkgs; };
       in {
         packages = rec {
           home-manager = pkgs.callPackage ./home-manager { };
@@ -96,6 +97,7 @@
           docs-json = docs.options.json;
           default = home-manager;
         };
+        legacyPackages = { inherit docs tests; };
         # deprecated in Nix 2.7
         defaultPackage = self.packages.${system}.default;
       });

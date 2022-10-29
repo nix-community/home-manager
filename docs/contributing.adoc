@@ -9,6 +9,7 @@
 :news-nix: https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix
 :nixfmt: https://github.com/serokell/nixfmt/
 :example-commit-message: https://github.com/nix-community/home-manager/commit/69f8e47e9e74c8d3d060ca22e18246b7f7d988ef
+:nixos-wiki-flakes: https://nixos.wiki/wiki/Flakes
 
 Contributions to Home Manager are very welcome. To make the process as smooth as possible for both you and the Home Manager maintainers we provide some guidelines that we ask you to follow. See <<sec-contrib-getting-started>> for information on how to set up a suitable development environment and <<sec-guidelines>> for the actual guidelines.
 
@@ -256,3 +257,15 @@ and run an individual test, for example `alacritty-empty-settings`, through
 
 [source,console]
 $ nix-shell --pure tests -A run.alacritty-empty-settings
+
+The test suite is also provided in the {nixos-wiki-flakes}[Nix Flake] outputs of Home Manager.
+
+The flake-based test attributes enables developers to specify the Nixpkgs
+to use without having to run impurely or to switch the system version.
+
+The flake analogy to the above three commands are
+
+[source,console]
+$ nix develop .#tests.run.all
+$ nix develop .#tests.list
+$ nix develop .#tests.run.alacritty-empty-settings
