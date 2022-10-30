@@ -145,6 +145,9 @@ Makefile                                              @thiagokokada
 /modules/programs/hyfetch.nix                         @lilyinstarlight
 /tests/modules/programs/hyfetch                       @lilyinstarlight
 
+/modules/programs/i3blocks.nix                        @VAWVAW
+/tests/modules/programs/i3blocks                      @VAWVAW
+
 /modules/programs/i3status.nix                        @JustinLovinger
 
 /modules/programs/i3status-rust.nix                   @workflow
