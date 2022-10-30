@@ -93,6 +93,7 @@ let
     ./programs/hyfetch.nix
     ./programs/i3status-rust.nix
     ./programs/i3status.nix
+    ./programs/i3blocks.nix
     ./programs/info.nix
     ./programs/ion.nix
     ./programs/irssi.nix
