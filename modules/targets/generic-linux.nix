@@ -55,7 +55,7 @@ in {
     };
 
     home.sessionVariablesExtra = ''
-      . "${pkgs.nix}/etc/profile.d/nix.sh"
+      . "${config.nix.package}/etc/profile.d/nix.sh"
 
       # reset TERM with new TERMINFO available (if any)
       export TERM="$TERM"
@@ -64,7 +64,7 @@ in {
     # We need to source both nix.sh and hm-session-vars.sh as noted in
     # https://github.com/nix-community/home-manager/pull/797#issuecomment-544783247
     programs.bash.initExtra = ''
-      . "${pkgs.nix}/etc/profile.d/nix.sh"
+      . "${config.nix.package}/etc/profile.d/nix.sh"
       . "${profileDirectory}/etc/profile.d/hm-session-vars.sh"
     '';
 
