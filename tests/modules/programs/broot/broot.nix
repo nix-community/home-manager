@@ -6,33 +6,17 @@ with lib;
   config = {
     programs.broot = {
       enable = true;
-      modal = true;
+      settings.modal = true;
     };
-
-    test.stubs.broot = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/broot/conf.toml
       assertFileContent home-files/.config/broot/conf.toml ${
         pkgs.writeText "broot.expected" ''
+          imports = ["verbs.hjson", {file = "dark-blue-skin.hjson", luma = ["dark", "unknown"]}, {file = "white-skin.hjson", luma = "light"}]
           modal = true
-
-          [[verbs]]
-          execution = ":parent"
-          invocation = "p"
-
-          [[verbs]]
-          execution = "$EDITOR {file}"
-          invocation = "edit"
-          shortcut = "e"
-
-          [[verbs]]
-          execution = "$EDITOR {directory}/{subpath}"
-          invocation = "create {subpath}"
-
-          [[verbs]]
-          execution = "less {file}"
-          invocation = "view"
+          show_selection_mark = true
+          verbs = []
 
           [skin]
         ''

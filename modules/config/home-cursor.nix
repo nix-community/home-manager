@@ -101,9 +101,9 @@ in {
         options. Options declared under namespaces such as <literal>x11</literal>
         are backend specific options. By default, only backend independent cursor
         configurations are generated. If you need configurations for specific
-        backends, you can toggle them via the enable option. For example, <varname>
-        <link linkend="opt-home.pointerCursor.x11.enable">home.pointerCursor.x11.enable</link>
-        </varname> will enable x11 cursor configurations.
+        backends, you can toggle them via the enable option. For example,
+        <xref linkend="opt-home.pointerCursor.x11.enable"/>
+        will enable x11 cursor configurations.
       '';
     };
   };

@@ -20,6 +20,7 @@ let
     arrayOf = t: "a${t}";
     maybeOf = t: "m${t}";
     tupleOf = ts: "(${concatStrings ts})";
+    dictionaryEntryOf = ts: "{${concatStrings ts}}";
     string = "s";
     boolean = "b";
     uchar = "y";
@@ -30,6 +31,7 @@ let
     int64 = "x";
     uint64 = "t";
     double = "d";
+    variant = "v";
   };
 
   # Returns the GVariant type of a given Nix value. If no type can be
@@ -74,13 +76,13 @@ in rec {
   isGVariant = v: v._type or "" == "gvariant";
 
   isArray = hasPrefix "a";
+  isDictionaryEntry = hasPrefix "{";
   isMaybe = hasPrefix "m";
   isTuple = hasPrefix "(";
 
   # Returns the GVariant value that most closely matches the given Nix
   # value. If no GVariant value can be found then `null` is returned.
-  #
-  # No support for dictionaries, maybe types, or variants.
+
   mkValue = v:
     if builtins.isBool v then
       mkBoolean v
@@ -104,6 +106,21 @@ in rec {
     };
 
   mkEmptyArray = elemType: mkArray elemType [ ];
+
+  mkVariant = elem:
+    let gvarElem = mkValue elem;
+    in mkPrimitive type.variant gvarElem // {
+      __toString = self: "@${self.type} <${toString self.value}>";
+    };
+
+  mkDictionaryEntry = elems:
+    let
+      gvarElems = map mkValue elems;
+      dictionaryType = type.dictionaryEntryOf (map (e: e.type) gvarElems);
+    in mkPrimitive dictionaryType gvarElems // {
+      __toString = self:
+        "@${self.type} {${concatMapStringsSep "," toString self.value}}";
+    };
 
   mkNothing = elemType: mkMaybe elemType null;
 

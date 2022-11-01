@@ -8,6 +8,7 @@ with lib;
       enable = true;
       networks.oftc = {
         nick = "nick";
+        saslExternal = true;
         server = {
           address = "irc.oftc.net";
           port = 6697;

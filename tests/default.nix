@@ -64,11 +64,13 @@ import nmt {
     ./modules/programs/bottom
     ./modules/programs/broot
     ./modules/programs/browserpass
+    ./modules/programs/btop
     ./modules/programs/dircolors
     ./modules/programs/direnv
     ./modules/programs/emacs
     ./modules/programs/feh
     ./modules/programs/fish
+    ./modules/programs/gallery-dl
     ./modules/programs/gh
     ./modules/programs/git
     ./modules/programs/gpg
@@ -78,6 +80,7 @@ import nmt {
     ./modules/programs/hyfetch
     ./modules/programs/i3status
     ./modules/programs/irssi
+    ./modules/programs/k9s
     ./modules/programs/kakoune
     ./modules/programs/kitty
     ./modules/programs/less
@@ -93,12 +96,14 @@ import nmt {
     ./modules/programs/ne
     ./modules/programs/neomutt
     ./modules/programs/newsboat
+    ./modules/programs/nheko
     ./modules/programs/nix-index
     ./modules/programs/nnn
     ./modules/programs/nushell
     ./modules/programs/pandoc
     ./modules/programs/pet
     ./modules/programs/pistol
+    ./modules/programs/pls
     ./modules/programs/powerline-go
     ./modules/programs/pubs
     ./modules/programs/qutebrowser
@@ -106,11 +111,13 @@ import nmt {
     ./modules/programs/sagemath
     ./modules/programs/sbt
     ./modules/programs/scmpuff
+    ./modules/programs/sioyek
     ./modules/programs/sm64ex
     ./modules/programs/ssh
     ./modules/programs/starship
     ./modules/programs/taskwarrior
     ./modules/programs/texlive
+    ./modules/programs/tmate
     ./modules/programs/tmux
     ./modules/programs/topgrade
     ./modules/programs/vscode
@@ -126,6 +133,7 @@ import nmt {
     ./modules/config/i18n
     ./modules/i18n/input-method
     ./modules/misc/debug
+    ./modules/misc/editorconfig
     ./modules/misc/gtk
     ./modules/misc/numlock
     ./modules/misc/pam
@@ -134,6 +142,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/programs/borgmatic
     ./modules/programs/firefox
     ./modules/programs/foot
     ./modules/programs/getmail
@@ -141,6 +150,7 @@ import nmt {
     ./modules/programs/hexchat
     ./modules/programs/i3status-rust
     ./modules/programs/kodi
+    ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.
@@ -151,7 +161,9 @@ import nmt {
     ./modules/programs/terminator
     ./modules/programs/waybar
     ./modules/programs/xmobar
+    ./modules/programs/yt-dlp
     ./modules/services/barrier
+    ./modules/services/borgmatic
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs
@@ -182,6 +194,7 @@ import nmt {
     ./modules/services/syncthing
     ./modules/services/trayer
     ./modules/services/twmn
+    ./modules/services/udiskie
     ./modules/services/window-managers/bspwm
     ./modules/services/window-managers/herbstluftwm
     ./modules/services/window-managers/i3

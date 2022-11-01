@@ -20,11 +20,14 @@ in {
   options.programs.exa = {
     enable =
       mkEnableOption "exa, a modern replacement for <command>ls</command>";
+
     enableAliases = mkEnableOption "recommended exa aliases";
+
+    package = mkPackageOption pkgs "exa" { };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.exa ];
+    home.packages = [ cfg.package ];
 
     programs.bash.shellAliases = mkIf cfg.enableAliases aliases;
 

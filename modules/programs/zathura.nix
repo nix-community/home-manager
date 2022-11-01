@@ -12,6 +12,8 @@ let
         if isBool v then (if v then "true" else "false") else toString v;
     in ''set ${n}	"${formatValue v}"'';
 
+  formatMapLine = n: v: "map ${n}   ${toString v}";
+
 in {
   meta.maintainers = [ maintainers.rprospero ];
 
@@ -45,6 +47,24 @@ in {
       };
     };
 
+    mappings = mkOption {
+      default = { };
+      type = with types; attrsOf str;
+      description = ''
+        Add <option>:map</option> mappings to zathura and make
+        them permanent. See
+        <citerefentry>
+          <refentrytitle>zathurarc</refentrytitle>
+          <manvolnum>5</manvolnum>
+        </citerefentry>
+        for the full list of possible mappings.
+      '';
+      example = {
+        D = "toggle_page_mode";
+        "<Right>" = "navigate next";
+      };
+    };
+
     extraConfig = mkOption {
       type = types.lines;
       default = "";
@@ -60,6 +80,7 @@ in {
 
     xdg.configFile."zathura/zathurarc".text = concatStringsSep "\n" ([ ]
       ++ optional (cfg.extraConfig != "") cfg.extraConfig
-      ++ mapAttrsToList formatLine cfg.options) + "\n";
+      ++ mapAttrsToList formatLine cfg.options
+      ++ mapAttrsToList formatMapLine cfg.mappings) + "\n";
   };
 }

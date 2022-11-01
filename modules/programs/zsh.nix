@@ -188,6 +188,28 @@ let
     };
   };
 
+  historySubstringSearchModule = types.submodule {
+    options = {
+      enable = mkEnableOption "history substring search";
+      searchUpKey = mkOption {
+        type = types.str;
+        default = "^[[A";
+        description = ''
+          The key code to be used when searching up.
+          The default of <literal>^[[A</literal> corresponds to the UP key.
+        '';
+      };
+      searchDownKey = mkOption {
+        type = types.str;
+        default = "^[[B";
+        description = ''
+          The key code to be used when searching down.
+          The default of <literal>^[[B</literal> corresponds to the DOWN key.
+        '';
+      };
+    };
+  };
+
 in
 
 {
@@ -246,7 +268,7 @@ in
           }
         '';
         description = ''
-          Similar to <varname><link linkend="opt-programs.zsh.shellAliases">opt-programs.zsh.shellAliases</link></varname>,
+          Similar to <xref linkend="opt-programs.zsh.shellAliases"/>,
           but are substituted anywhere on a line.
         '';
         type = types.attrsOf types.str;
@@ -293,6 +315,12 @@ in
       enableSyntaxHighlighting = mkOption {
         default = false;
         description = "Enable zsh syntax highlighting";
+      };
+
+      historySubstringSearch = mkOption {
+        type = historySubstringSearchModule;
+        default = {};
+        description = "Options related to zsh-history-substring-search.";
       };
 
       history = mkOption {
@@ -555,10 +583,18 @@ in
         ${dirHashesStr}
 
         ${optionalString cfg.enableSyntaxHighlighting
-          # Load zsh-syntax-highlighting last, after all custom widgets have been created
+          # Load zsh-syntax-highlighting after all custom widgets have been created
           # https://github.com/zsh-users/zsh-syntax-highlighting#faq
           "source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
         }
+        ${optionalString (cfg.historySubstringSearch.enable or false)
+          # Load zsh-history-substring-search after zsh-syntax-highlighting
+          # https://github.com/zsh-users/zsh-history-substring-search#usage
+        ''
+          source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+          bindkey '${cfg.historySubstringSearch.searchUpKey}' history-substring-search-up
+          bindkey '${cfg.historySubstringSearch.searchDownKey}' history-substring-search-down
+        ''}
       '';
     }
 

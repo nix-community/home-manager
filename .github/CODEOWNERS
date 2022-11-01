@@ -18,6 +18,9 @@ Makefile                                              @thiagokokada
 
 /modules/misc/dconf.nix                               @rycee
 
+/modules/misc/editorconfig.nix                        @loicreynier
+/test/modules/misc/editorconfig                       @loicreynier
+
 /modules/misc/fontconfig.nix                          @rycee
 /tests/modules/misc/fontconfig                        @rycee
 
@@ -81,11 +84,16 @@ Makefile                                              @thiagokokada
 /modules/programs/bottom.nix                          @polykernel
 /tests/modules/programs/bottom                        @polykernel
 
-/modules/programs/broot.nix                           @aheaume
+/modules/programs/broot.nix                           @aheaume @dermetfan
+
+/modules/programs/btop.nix                            @GaetanLepage
+/tests/modules/programs/btop.nix                      @GaetanLepage
 
 /modules/programs/dircolors.nix                       @JustinLovinger
 
 /modules/programs/direnv.nix                          @rycee
+
+/modules/programs/discocss.nix                        @Kranzes
 
 /modules/programs/eclipse.nix                         @rycee
 
@@ -103,6 +111,9 @@ Makefile                                              @thiagokokada
 /modules/services/fusuma.nix                          @iosmanthus
 /tests/modules/services/fusuma                        @iosmanthus
 
+/modules/programs/gallery-dl.nix                      @marsam
+/tests/modules/programs/gallery-dl                    @marsam
+
 /modules/programs/gh.nix                              @Gerschtli @berbiche
 /tests/modules/programs/gh                            @Gerschtli @berbiche
 
@@ -114,6 +125,8 @@ Makefile                                              @thiagokokada
 /modules/programs/gnome-terminal.nix                  @kamadorueda @rycee
 
 /modules/programs/go.nix                              @rvolosatovs
+
+/modules/programs/havoc.nix                           @AndersonTorres
 
 /modules/programs/helix.nix                           @Philipp-M
 /tests/modules/programs/helix                         @Philipp-M
@@ -142,12 +155,17 @@ Makefile                                              @thiagokokada
 
 /modules/programs/just.nix                            @maximsmol
 
+/modules/programs/k9s.nix                             @katexochen
+/tests/modules/programs/k9s                           @katexochen
+
 /modules/programs/keychain.nix                        @marsam
 
 /modules/programs/kodi.nix                            @dwagenk
 /tests/modules/programs/kodi                          @dwagenk
 
 /modules/programs/lazygit.nix                         @kalhauge
+
+/modules/programs/ledger.nix                          @marsam
 
 /modules/programs/less.nix                            @pamplemousse
 /tests/modules/programs/less                          @pamplemousse
@@ -160,6 +178,9 @@ Makefile                                              @thiagokokada
 /modules/programs/librewolf.nix                       @onny
 
 /modules/programs/lieer.nix                           @tadfisher
+
+/modules/programs/looking-glass-client.nix            @j-brn
+/tests/modules/programs/looking-glass-client          @j-brn
 
 /modules/programs/lsd.nix                             @marsam
 
@@ -198,6 +219,9 @@ Makefile                                              @thiagokokada
 /modules/programs/newsboat.nix                        @sumnerevans
 /tests/modules/programs/newsboat                      @sumnerevans
 
+/modules/programs/nheko.nix                           @gvolpe
+/tests/modules/programs/nheko                         @gvolpe
+
 /modules/programs/nix-index.nix                       @ambroisie
 /tests/modules/programs/nix-index                     @ambroisie
 
@@ -230,6 +254,9 @@ Makefile                                              @thiagokokada
 /tests/modules/programs/pistol                        @mtoohey31
 
 /modules/programs/piston-cli.nix                      @ethancedwards8
+
+/modules/programs/pls.nix                             @arjan-s
+/tests/modules/programs/pls                           @arjan-s
 
 /modules/programs/powerline-go.nix                    @DamienCassou
 
@@ -286,10 +313,13 @@ Makefile                                              @thiagokokada
 
 /modules/programs/tiny.nix                            @kmaasrud
 
+/modules/programs/tmate.nix                           @jlesquembre
+/tests/modules/programs/tmate                         @jlesquembre
+
 /modules/programs/topgrade.nix                        @msfjarvis
 /tests/modules/programs/topgrade                      @msfjarvis
 
-/mdules/programs/watson.nix                           @polykernel
+/modules/programs/watson.nix                          @polykernel
 /tests/modules/programs/watson                        @polykernel
 
 /modules/programs/waybar.nix                          @berbiche
@@ -300,6 +330,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/xmobar.nix                          @t4ccer
 /tests/modules/programs/xmobar                        @t4ccer
+
+/modules/programs/yt-dlp.nix                          @marsam
+/tests/modules/programs/yt-dlp                        @marsam
 
 /modules/programs/z-lua.nix                           @marsam
 
@@ -315,6 +348,11 @@ Makefile                                              @thiagokokada
 /tests/modules/services/barrier                       @Kritnich
 
 /modules/services/betterlockscreen.nix                @SebTM
+
+/modules/programs/borgmatic.nix                       @DamienCassou
+/modules/services/borgmatic.nix                       @DamienCassou
+/tests/modules/programs/borgmatic                     @DamienCassou
+/tests/modules/services/borgmatic                     @DamienCassou
 
 /modules/services/caffeine.nix                        @uvNikita
 
@@ -345,7 +383,7 @@ Makefile                                              @thiagokokada
 /modules/services/fnott.nix                           @polykernel
 /tests/modules/services/fnott                         @polykernel
 
-/modules/services/git-sync.nix                        @IvanMalison
+/modules/services/git-sync.nix                        @IvanMalison @cab404
 
 /modules/services/gnome-keyring.nix                   @rycee
 
@@ -421,6 +459,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/poweralertd.nix                     @ThibautMarty
 
+/modules/services/pueue.nix                           @AndersonTorres
+
 /modules/services/pulseeffects.nix                    @jonringer
 
 /modules/services/random-background.nix               @rycee
@@ -430,6 +470,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/redshift-gammastep                  @rycee @petabyteboy @thiagokokada
 /tests/modules/redshift-gammastep                     @thiagokokada
+
+/modules/services/safeeyes                            @Rosuavio
 
 /modules/services/screen-locker.nix                   @jrobsonchase @rszamszur
 /tests/modules/services/screen-locker                 @jrobsonchase @rszamszur
@@ -458,6 +500,7 @@ Makefile                                              @thiagokokada
 /tests/modules/services/twmn                          @Austreelis
 
 /modules/services/udiskie.nix                         @rycee
+/tests/modules/services/udiskie                       @rycee
 
 /modules/services/unison.nix                          @pacien
 
@@ -465,6 +508,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/window-managers/bspwm               @ncfavier
 /tests/modules/services/window-managers/bspwm         @ncfavier
+
+/modules/services/window-managers/fluxbox.nix         @AndersonTorres
 
 /modules/services/window-managers/herbstluftwm        @olmokramer
 /tests/modules/services/window-managers/herbstluftwm  @olmokramer
@@ -489,7 +534,7 @@ Makefile                                              @thiagokokada
 
 /modules/services/xembed-sni-proxy.nix                @rycee
 
-/modules/services/xidlehook.nix                       @dschrempf
+/modules/services/xidlehook.nix                       @dschrempf @bertof
 
 /modules/services/xscreensaver.nix                    @rycee
 

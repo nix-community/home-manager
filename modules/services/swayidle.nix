@@ -73,7 +73,7 @@ in {
       default = [ ];
       example = literalExpression ''
         [
-          { timeout = 60; command = "swaylock -fF"; }
+          { timeout = 60; command = "${pkgs.swaylock}/bin/swaylock -fF"; }
         ]
       '';
       description = "List of commands to run after idle timeout.";
@@ -84,7 +84,7 @@ in {
       default = [ ];
       example = literalExpression ''
         [
-          { event = "before-sleep"; command = "swaylock"; }
+          { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock"; }
           { event = "lock"; command = "lock"; }
         ]
       '';
@@ -96,6 +96,15 @@ in {
       default = [ ];
       description = "Extra arguments to pass to swayidle.";
     };
+
+    systemdTarget = mkOption {
+      type = types.str;
+      default = "sway-session.target";
+      description = ''
+        Systemd target to bind to.
+      '';
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -114,7 +123,7 @@ in {
           "${cfg.package}/bin/swayidle -w ${concatStringsSep " " args}";
       };
 
-      Install = { WantedBy = [ "sway-session.target" ]; };
+      Install = { WantedBy = [ cfg.systemdTarget ]; };
     };
   };
 }

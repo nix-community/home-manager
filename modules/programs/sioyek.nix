@@ -1,11 +1,16 @@
 { config, lib, pkgs, ... }:
+
 with lib;
+
 let
+
   cfg = config.programs.sioyek;
 
-  renderAttrs = attrs:
-    concatStringsSep "\n"
-    (mapAttrsToList (name: value: "${name} ${value}") attrs);
+  renderConfig = generators.toKeyValue {
+    mkKeyValue = key: value: "${key} ${value}";
+    listsAsDuplicateKeys = true;
+  };
+
 in {
   options = {
     programs.sioyek = {
@@ -24,8 +29,11 @@ in {
           Input configuration written to
           <filename>$XDG_CONFIG_HOME/sioyek/keys_user.config</filename>.
           See <link xlink:href="https://github.com/ahrm/sioyek/blob/main/pdf_viewer/keys.config"/>.
+          </para><para>
+          Each attribute could also accept a list of strings to set multiple
+          bindings of the same command.
         '';
-        type = types.attrsOf types.str;
+        type = with types; attrsOf (either str (listOf str));
         default = { };
         example = literalExpression ''
           {
@@ -33,6 +41,8 @@ in {
             "move_down" = "j";
             "move_left" = "h";
             "move_right" = "l";
+            "screen_down" = [ "d" "<C-d>" ];
+            "screen_up" = [ "u" "<C-u>" ];
           }
         '';
       };
@@ -59,10 +69,10 @@ in {
   config = mkIf cfg.enable (mkMerge [
     { home.packages = [ cfg.package ]; }
     (mkIf (cfg.config != { }) {
-      xdg.configFile."sioyek/prefs_user.config".text = renderAttrs cfg.config;
+      xdg.configFile."sioyek/prefs_user.config".text = renderConfig cfg.config;
     })
     (mkIf (cfg.bindings != { }) {
-      xdg.configFile."sioyek/keys_user.config".text = renderAttrs cfg.bindings;
+      xdg.configFile."sioyek/keys_user.config".text = renderConfig cfg.bindings;
     })
   ]);
 

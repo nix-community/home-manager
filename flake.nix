@@ -20,6 +20,23 @@
       # unofficial; deprecated in Nix 2.8
       darwinModule = self.darwinModules.default;
 
+      templates = {
+        standalone = {
+          path = ./templates/standalone;
+          description = "Standalone setup";
+        };
+        nixos = {
+          path = ./templates/nixos;
+          description = "Home Manager as a NixOS module,";
+        };
+        nix-darwin = {
+          path = ./templates/nix-darwin;
+          description = "Home Manager as a nix-darwin module,";
+        };
+      };
+
+      defaultTemplate = self.templates.standalone;
+
       lib = {
         hm = (import ./modules/lib/stdlib-extended.nix nixpkgs.lib).hm;
         homeManagerConfiguration = { modules ? [ ], pkgs, lib ? pkgs.lib
@@ -28,27 +45,37 @@
           , configuration ? null, extraModules ? null, stateVersion ? null
           , username ? null, homeDirectory ? null, system ? null }@args:
           let
-            throwForRemovedArg = v:
-              lib.throwIf (v != null) ''
-                The 'homeManagerConfiguration' arguments
+            msgForRemovedArg = ''
+              The 'homeManagerConfiguration' arguments
 
-                  - 'configuration',
-                  - 'username',
-                  - 'homeDirectory'
-                  - 'stateVersion',
-                  - 'extraModules', and
-                  - 'system'
+                - 'configuration',
+                - 'username',
+                - 'homeDirectory'
+                - 'stateVersion',
+                - 'extraModules', and
+                - 'system'
 
-                have been removed. Instead use the arguments 'pkgs' and
-                'modules'. See the 22.11 release notes for more.
-              '';
+              have been removed. Instead use the arguments 'pkgs' and
+              'modules'. See the 22.11 release notes for more.
+            '';
 
-            throwForRemovedArgs = throwForRemovedArg configuration # \
-              throwForRemovedArg username # \
-              throwForRemovedArg homeDirectory # \
-              throwForRemovedArg stateVersion # \
-              throwForRemovedArg extraModules # \
-              throwForRemovedArg system;
+            throwForRemovedArgs = v:
+              let
+                used = builtins.filter (n: (args.${n} or null) != null) [
+                  "configuration"
+                  "username"
+                  "homeDirectory"
+                  "stateVersion"
+                  "extraModules"
+                  "system"
+                ];
+                msg = msgForRemovedArg + ''
+
+
+                  Deprecated args passed: ''
+                  + builtins.concatStringsSep " " used;
+              in lib.throwIf (used != [ ]) msg v;
+
           in throwForRemovedArgs (import ./modules {
             inherit pkgs lib check extraSpecialArgs;
             configuration = { ... }: {

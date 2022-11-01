@@ -19,7 +19,7 @@ with lib;
       };
     };
 
-    test.stubs.gmailieer = { };
+    test.stubs.lieer = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/lieer-hm-example-com.service

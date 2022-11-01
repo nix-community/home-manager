@@ -73,7 +73,7 @@ let
       signByDefault = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether commits should be signed by default.";
+        description = "Whether commits and tags should be signed by default.";
       };
 
       gpgPath = mkOption {
@@ -130,10 +130,20 @@ let
           </citerefentry>.
         '';
       };
-    };
 
-    config.path = mkIf (config.contents != { })
-      (mkDefault (pkgs.writeText "contents" (gitToIni config.contents)));
+      contentSuffix = mkOption {
+        type = types.str;
+        default = "gitconfig";
+        description = ''
+          Nix store name for the git configuration text file,
+          when generating the configuration text from nix options.
+        '';
+
+      };
+    };
+    config.path = mkIf (config.contents != { }) (mkDefault
+      (pkgs.writeText (hm.strings.storeFileName config.contentSuffix)
+        (gitToIni config.contents)));
   });
 
 in {
@@ -188,6 +198,21 @@ in {
         description = ''
           Additional configuration to add. The use of string values is
           deprecated and will be removed in the future.
+        '';
+      };
+
+      hooks = mkOption {
+        type = types.attrsOf types.path;
+        default = { };
+        example = literalExpression ''
+          {
+            pre-commit = ./pre-commit-script;
+          }
+        '';
+        description = ''
+          Configuration helper for Git hooks.
+          See <link xlink:href="https://git-scm.com/docs/githooks" />
+          for reference.
         '';
       };
 
@@ -434,7 +459,17 @@ in {
       programs.git.iniContent = {
         user.signingKey = mkIf (cfg.signing.key != null) cfg.signing.key;
         commit.gpgSign = cfg.signing.signByDefault;
+        tag.gpgSign = cfg.signing.signByDefault;
         gpg.program = cfg.signing.gpgPath;
+      };
+    })
+
+    (mkIf (cfg.hooks != { }) {
+      programs.git.iniContent = {
+        core.hooksPath = let
+          entries =
+            mapAttrsToList (name: path: { inherit name path; }) cfg.hooks;
+        in toString (pkgs.linkFarm "git-hooks" entries);
       };
     })
 

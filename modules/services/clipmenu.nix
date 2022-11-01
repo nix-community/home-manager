@@ -18,6 +18,16 @@ in {
       defaultText = "pkgs.clipmenu";
       description = "clipmenu derivation to use.";
     };
+
+    launcher = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = "rofi";
+      description = ''
+        Launcher command, if not set, <command>dmenu</command>
+        will be used by default.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -27,6 +37,9 @@ in {
     ];
 
     home.packages = [ cfg.package ];
+
+    home.sessionVariables =
+      mkIf (cfg.launcher != null) { CM_LAUNCHER = cfg.launcher; };
 
     systemd.user.services.clipmenu = {
       Unit = {

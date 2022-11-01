@@ -13,12 +13,24 @@ The support is still experimental and may change in backwards incompatible ways.
 
 * Enable experimental features `nix-command` and `flakes`.
 +
-Either set in `nix.conf`
+** When using NixOS, add the following to your `configuration.nix` and rebuild your system.
++
+[source,nix]
+nix = {
+  package = pkgs.nixFlakes;
+  extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
+};
++
+** If you are not using NixOS, add the following to `nix.conf` (located at `~/.config/nix/` or `/etc/nix/nix.conf`).
 +
 [source,bash]
 experimental-features = nix-command flakes
 +
-or pass them to `nix` and `home-manager` by
+You may need to restart the Nix daemon with, for example, `sudo systemctl restart nix-daemon.service`.
++
+** Alternatively, you can enable flakes on a per-command basis with the following additional flags to `nix` and `home-manager`:
 +
 [source,console]
 ----
@@ -84,6 +96,10 @@ and `nixpkgs` url to `github:NixOS/nixpkgs/nixos-22.05`.
 
 * The Home Manager library is exported by the flake under
 `lib.hm`.
+
+* You can use the above `flake.nix` as a template in `~/.config/nixpkgs` by
+[source,console]
+$ nix flake new ~/.config/nixpkgs -t github:nix-community/home-manager
 ====
 
 2. Install Home Manager and apply the configuration by
@@ -170,6 +186,11 @@ The Home Manager configuration is then part of the NixOS configuration
 and is automatically rebuilt with the system when using the appropriate command
 for the system, such as `nixos-rebuild switch --flake <flake-uri>`.
 
+You can use the above `flake.nix` as a template in `/etc/nixos` by
+
+[source,console]
+$ nix flake new /etc/nixos -t github:nix-community/home-manager#nixos
+
 [[sec-flakes-nix-darwin-module]]
 === nix-darwin module
 
@@ -213,3 +234,8 @@ is similar to that of NixOS. The `flake.nix` would be:
 
 and it is also rebuilt with the nix-darwin generations.
 The rebuild command here may be `darwin-rebuild switch --flake <flake-uri>`.
+
+You can use the above `flake.nix` as a template in `~/.config/darwin` by
+
+[source,console]
+$ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin

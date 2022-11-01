@@ -44,14 +44,15 @@ let
         destination = "/${filename}";
       } + "/${filename}";
 
-      wantedBy = target: {
-        name = "systemd/user/${target}.wants/${filename}";
+      install = variant: target: {
+        name = "systemd/user/${target}.${variant}/${filename}";
         value = { inherit source; };
       };
     in lib.singleton {
       name = "systemd/user/${filename}";
       value = { inherit source; };
-    } ++ map wantedBy (serviceCfg.Install.WantedBy or [ ]);
+    } ++ map (install "wants") (serviceCfg.Install.WantedBy or [ ])
+    ++ map (install "requires") (serviceCfg.Install.RequiredBy or [ ]);
 
   buildServices = style: serviceCfgs:
     lib.concatLists (lib.mapAttrsToList (buildService style) serviceCfgs);
@@ -124,9 +125,9 @@ in {
 
       slices = mkOption {
         default = { };
-        type = unitType "slices";
-        description = unitDescription "slices";
-        example = unitExample "Slices";
+        type = unitType "slice";
+        description = unitDescription "slice";
+        example = unitExample "Slice";
       };
 
       sockets = mkOption {
@@ -262,7 +263,7 @@ in {
     (mkIf (pkgs.stdenv.isLinux && config.home.username != "root") {
       xdg.configFile = mkMerge [
         (lib.listToAttrs ((buildServices "service" cfg.services)
-          ++ (buildServices "slices" cfg.slices)
+          ++ (buildServices "slice" cfg.slices)
           ++ (buildServices "socket" cfg.sockets)
           ++ (buildServices "target" cfg.targets)
           ++ (buildServices "timer" cfg.timers)

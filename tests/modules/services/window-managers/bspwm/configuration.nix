@@ -24,6 +24,9 @@ with lib;
         border = null;
         unknownRule = 42;
       };
+      extraConfigEarly = ''
+        extra config early
+      '';
       extraConfig = ''
         extra config
       '';

@@ -3,7 +3,12 @@
 with lib;
 
 {
-  services.mpd.enable = true;
+  services.mpd = {
+    enable = true;
+    musicDirectory = "/my/music/dir";
+  };
+
+  home.stateVersion = "22.11";
 
   test.stubs.mpd = { };
 

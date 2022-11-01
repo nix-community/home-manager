@@ -7,14 +7,14 @@ with lib;
     programs.neovim = {
       enable = true;
       extraConfig = ''
-        " This should be present in vimrc
+        " This 'extraConfig' should be present in vimrc
       '';
       plugins = with pkgs.vimPlugins; [
         vim-nix
         {
           plugin = vim-commentary;
           config = ''
-            " This should be present too
+            " plugin-specific config
             autocmd FileType c setlocal commentstring=//\ %s
             autocmd FileType c setlocal comments=://
           '';
@@ -24,7 +24,7 @@ with lib;
     };
 
     nmt.script = ''
-      vimrc="$TESTED/home-files/.config/nvim/init.vim"
+      vimrc="$TESTED/home-files/.config/nvim/init-home-manager.vim"
       vimrcNormalized="$(normalizeStorePaths "$vimrc")"
 
       assertFileExists "$vimrc"

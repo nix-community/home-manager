@@ -25,6 +25,12 @@
     github = "blmhemu";
     githubId = 19410501;
   };
+  bertof = {
+    name = "bertof";
+    email = "berto.f@protonmail.com";
+    github = "bertof";
+    githubId = 9915675;
+  };
   CarlosLoboxyz = {
     name = "Carlos Lobo";
     email = "86011416+CarlosLoboxyz@users.noreply.github.com";
@@ -95,6 +101,12 @@
       fingerprint = "2BE3 BAFD 793E A349 ED1F  F00F 04D0 CEAF 916A 9A40";
     }];
   };
+  katexochen = {
+    name = "Paul Meyer";
+    email = "49727155+katexochen@users.noreply.github.com";
+    github = "katexochen";
+    githubId = 49727155;
+  };
   kubukoz = {
     name = "Jakub Kozłowski";
     email = "kubukoz@users.noreply.github.com";
@@ -146,6 +158,12 @@
     github = "florpe";
     githubId = 53856373;
     name = "Jens Krewald";
+  };
+  GaetanLepage = {
+    email = "gaetan@glepage.com";
+    github = "GaetanLepage";
+    githubId = 33058747;
+    name = "Gaetan Lepage";
   };
   maximsmol = {
     email = "maximsmol@gmail.com";
@@ -276,6 +294,12 @@
     email = "sebtm@users.noreply.github.com";
     github = "sebtm";
     githubId = 17243347;
+  };
+  rosuavio = {
+    name = "Rosario Pulella";
+    email = "RosarioPulella@gmail.com";
+    github = "Rosuavio";
+    githubId = 7164552;
   };
   rszamszur = {
     name = "Radosław Szamszur";

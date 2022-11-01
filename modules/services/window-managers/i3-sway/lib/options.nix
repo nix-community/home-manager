@@ -67,7 +67,7 @@ let
         default = null;
         description = ''
           Launch application on a particular workspace. DEPRECATED:
-          Use <varname><link linkend="opt-xsession.windowManager.i3.config.assigns">xsession.windowManager.i3.config.assigns</link></varname>
+          Use <xref linkend="opt-xsession.windowManager.i3.config.assigns"/>
           instead. See <link xlink:href="https://github.com/nix-community/home-manager/issues/265"/>.
         '';
       };
@@ -508,7 +508,10 @@ in {
         };
 
         mouseWarping = mkOption {
-          type = types.bool;
+          type = if isSway then
+            types.oneOf [ types.bool (types.enum [ "container" "output" ]) ]
+          else
+            types.bool;
           default = true;
           description = ''
             Whether mouse cursor should be warped to the center of the window when switching focus
