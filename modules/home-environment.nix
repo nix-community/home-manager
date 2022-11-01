@@ -581,7 +581,6 @@ in
           if [[ -e "$nixProfilePath"/manifest.json ]] ; then
             nix profile list \
               | { grep 'home-manager-path$' || test $? = 1; } \
-              | awk -F ' ' '{ print $4 }' \
               | cut -d ' ' -f 4 \
               | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
           else
@@ -593,11 +592,10 @@ in
       else
         ''
           function nixReplaceProfile() {
-            local oldNix="$(which nix)"
+            local oldNix="$(command -v nix)"
 
             nix profile list \
               | { grep 'home-manager-path$' || test $? = 1; } \
-              | awk -F ' ' '{ print $4 }' \
               | cut -d ' ' -f 4 \
               | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
 
