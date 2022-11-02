@@ -59,6 +59,8 @@ Makefile                                              @thiagokokada
 /tests/modules/misc/xdg/desktop-full-expected.desktop @cwyc
 /tests/modules/misc/xdg/desktop-min-expected.desktop  @cwyc
 
+/modules/misc/xfconf.nix                              @chuangzhu
+
 /modules/programs/aerc.nix                            @lukasngl
 /modules/programs/aerc-accounts.nix                   @lukasngl
 /tests/modules/programs/aerc                          @lukasngl

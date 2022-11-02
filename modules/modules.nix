@@ -43,6 +43,7 @@ let
     ./misc/xdg-system-dirs.nix
     ./misc/xdg-user-dirs.nix
     ./misc/xdg.nix
+    ./misc/xfconf.nix
     ./programs/abook.nix
     ./programs/aerc.nix
     ./programs/afew.nix
