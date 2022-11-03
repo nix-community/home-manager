@@ -346,12 +346,18 @@ in
 
     home.emptyActivationPath = mkOption {
       internal = true;
-      default = false;
       type = types.bool;
+      default = versionAtLeast stateVersion "22.11";
+      defaultText = literalExpression ''
+        false   for state version < 22.11,
+        true    for state version ≥ 22.11
+      '';
       description = ''
         Whether the activation script should start with an empty
-        <envar>PATH</envar> variable. When <literal>false</literal>
-        then the user's <envar>PATH</envar> will be used.
+        <envar>PATH</envar> variable. When <literal>false</literal> then the
+        user's <envar>PATH</envar> will be accessible in the script. It is
+        recommended to keep this at <literal>true</literal> to avoid
+        uncontrolled use of tools found in PATH.
       '';
     };
 
@@ -672,7 +678,17 @@ in
             gnugrep
             gnused
             ncurses             # For `tput`.
-          ] ++ config.home.extraActivationPath
+          ]
+          ++ optional (config.nix.enable && config.nix.package != null) config.nix.package
+          ++ config.home.extraActivationPath
+        )
+        + (
+          # Add path of the Nix binaries, if a Nix package is configured, then
+          # use that one, otherwise grab the path of the nix-env tool.
+          if config.nix.enable && config.nix.package != null then
+            ":${config.nix.package}/bin"
+          else
+            ":$(dirname $(readlink -m $(type -p nix-env)))"
         )
         + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
