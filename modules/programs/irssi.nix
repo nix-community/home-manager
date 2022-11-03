@@ -23,6 +23,11 @@ let
         type = "${v.type}";
         nick = "${quoteStr v.nick}";
         autosendcmd = "${concatMapStringsSep ";" quoteStr v.autoCommands}";
+        ${
+          lib.optionalString (v.saslExternal) ''
+            sasl_username = "${quoteStr v.nick}";
+              sasl_mechanism = "EXTERNAL";''
+        }
       };
     ''));
 
@@ -36,7 +41,7 @@ let
         ssl_verify = "${lib.hm.booleans.yesNo v.server.ssl.verify}";
         autoconnect = "${lib.hm.booleans.yesNo v.server.autoConnect}";
         ${
-          lib.optionalString (v.server.ssl.certificateFile != null) ''
+          optionalString (v.server.ssl.certificateFile != null) ''
             ssl_cert = "${v.server.ssl.certificateFile}";
           ''
         }
@@ -141,6 +146,15 @@ let
         description = "Channels for the given network.";
         type = types.attrsOf channelType;
         default = { };
+      };
+
+      saslExternal = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Enable SASL external authentication. This requires setting a path in
+          <xref linkend="opt-programs.irssi.networks._name_.server.ssl.certificateFile"/>.
+        '';
       };
     };
   });

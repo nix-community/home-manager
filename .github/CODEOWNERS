@@ -59,6 +59,8 @@ Makefile                                              @thiagokokada
 /tests/modules/misc/xdg/desktop-full-expected.desktop @cwyc
 /tests/modules/misc/xdg/desktop-min-expected.desktop  @cwyc
 
+/modules/misc/xfconf.nix                              @chuangzhu
+
 /modules/programs/aerc.nix                            @lukasngl
 /modules/programs/aerc-accounts.nix                   @lukasngl
 /tests/modules/programs/aerc                          @lukasngl
@@ -236,6 +238,9 @@ Makefile                                              @thiagokokada
 /modules/programs/obs-studio.nix                      @adisbladis
 
 /modules/programs/octant.nix                          @06kellyjac
+
+/modules/programs/oh-my-posh.nix                      @arjan-s
+/tests/modules/programs/oh-my-posh                    @arjan-s
 
 /modules/programs/opam.nix                            @marsam
 

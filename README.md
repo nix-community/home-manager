@@ -14,8 +14,9 @@ Before attempting to use Home Manager please read the warning below.
 For a systematic overview of Home Manager and its available options,
 please see
 
-- the [Home Manager manual][manual] and
-- the [Home Manager configuration options][configuration options].
+- the [Home Manager manual][manual],
+- the [Home Manager configuration options][configuration options], and
+- the 3rd party [Home Manager option search](https://mipmip.github.io/home-manager-option-search/).
 
 If you would like to contribute to Home Manager
 then please have a look at the [contributing][] chapter of the manual.

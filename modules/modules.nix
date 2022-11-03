@@ -43,6 +43,7 @@ let
     ./misc/xdg-system-dirs.nix
     ./misc/xdg-user-dirs.nix
     ./misc/xdg.nix
+    ./misc/xfconf.nix
     ./programs/abook.nix
     ./programs/aerc.nix
     ./programs/afew.nix
@@ -141,6 +142,7 @@ let
     ./programs/obs-studio.nix
     ./programs/octant.nix
     ./programs/offlineimap.nix
+    ./programs/oh-my-posh.nix
     ./programs/opam.nix
     ./programs/pandoc.nix
     ./programs/password-store.nix
