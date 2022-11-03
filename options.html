@@ -8084,7 +8084,7 @@ or by Visual Studio Code.
         
         }
     </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  "files.autoSave" = "off"
+  "files.autoSave" = "off";
   "[nix]"."editor.tabSize" = 2;
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
@@ -8096,14 +8096,14 @@ or by Visual Studio Code.
         
         }
     </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  "version": "2.0.0",
-  "tasks": [
+  version = "2.0.0";
+  tasks = [
     {
-      "type": "shell",
-      "label": "Hello task",
-      "command": "hello",
+      type = "shell";
+      label = "Hello task";
+      command = "hello";
     }
-  ]
+  ];
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
