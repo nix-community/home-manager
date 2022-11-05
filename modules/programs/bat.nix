@@ -30,6 +30,16 @@ in {
       '';
     };
 
+    extraPackages = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      example = literalExpression
+        "with pkgs.bat-extras; [ batdiff batman batgrep batwatch ];";
+      description = ''
+        Additional bat packages to install.
+      '';
+    };
+
     themes = mkOption {
       type = types.attrsOf types.lines;
       default = { };
@@ -51,7 +61,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.bat ];
+    home.packages = [ pkgs.bat ] ++ cfg.extraPackages;
 
     xdg.configFile = mkMerge ([{
       "bat/config" =
