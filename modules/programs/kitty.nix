@@ -119,14 +119,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [{
-      assertion = (cfg.darwinLaunchOptions != null)
-        -> pkgs.stdenv.hostPlatform.isDarwin;
-      message = ''
-        The 'programs.kitty.darwinLaunchOptions' option is only available on darwin.
-      '';
-    }];
-
     home.packages = [ cfg.package ] ++ optionalPackage cfg.font;
 
     xdg.configFile."kitty/kitty.conf" = {
@@ -158,8 +150,8 @@ in {
       '';
     };
 
-    xdg.configFile."kitty/macos-launch-services-cmdline" =
-      mkIf (cfg.darwinLaunchOptions != null) {
+    xdg.configFile."kitty/macos-launch-services-cmdline" = mkIf
+      (cfg.darwinLaunchOptions != null && pkgs.stdenv.hostPlatform.isDarwin) {
         text = concatStringsSep " " cfg.darwinLaunchOptions;
       };
   };
