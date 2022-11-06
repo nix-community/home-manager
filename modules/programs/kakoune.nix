@@ -268,30 +268,6 @@ let
               '';
             };
 
-            changeColors = mkOption {
-              type = types.bool;
-              default = true;
-              description = ''
-                Change color palette.
-              '';
-            };
-
-            wheelDownButton = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = ''
-                Button to send for wheel down events.
-              '';
-            };
-
-            wheelUpButton = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = ''
-                Button to send for wheel up events.
-              '';
-            };
-
             shiftFunctionKeys = mkOption {
               type = types.nullOr types.ints.unsigned;
               default = null;
@@ -302,18 +278,39 @@ let
               '';
             };
 
-            useBuiltinKeyParser = mkOption {
+            paddingChar = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description = ''
+                Set the character used to indicate the area out of the displayed buffer.
+                The kakoune default is <literal>"~"</literal>.
+              '';
+            };
+
+            paddingFill = mkOption {
               type = types.bool;
               default = false;
               description = ''
-                Bypass ncurses key parser and use an internal one.
+                Whether to fill the padding area with the padding 
+                character instead of displaying a single character 
+                at the beginning of the padding line.
+              '';
+            };
+
+            synchronized = mkOption {
+              type = types.bool;
+              default = false;
+              description = ''
+                Whether to emit synchronized output escape sequences 
+                and reduce terminal output with sequences that could 
+                trigger flickering if unsynchronized.
               '';
             };
           };
         });
         default = null;
         description = ''
-          Settings for the ncurses interface.
+          Settings for the terminal interface.
         '';
       };
 
@@ -536,16 +533,12 @@ let
         }"
         "terminal_assistant=${assistant}"
         "terminal_enable_mouse=${if enableMouse then "true" else "false"}"
-        "terminal_change_colors=${if changeColors then "true" else "false"}"
-        "${optionalString (wheelDownButton != null)
-        "terminal_wheel_down_button=${wheelDownButton}"}"
-        "${optionalString (wheelUpButton != null)
-        "terminal_wheel_up_button=${wheelUpButton}"}"
         "${optionalString (shiftFunctionKeys != null)
         "terminal_shift_function_key=${toString shiftFunctionKeys}"}"
-        "terminal_builtin_key_parser=${
-          if useBuiltinKeyParser then "true" else "false"
-        }"
+        "${optionalString (paddingChar != null)
+        "terminal_padding_char=${paddingChar}"}"
+        "terminal_padding_fill=${if paddingFill then "true" else "false"}"
+        "terminal_synchronized=${if synchronized then "true" else "false"}"
       ];
 
     userModeString = mode:
@@ -620,6 +613,17 @@ let
   (optionalString (cfg.config != null) cfgStr + "\n" + cfg.extraConfig);
 
 in {
+  imports = let
+    mkRemovedOptionUI = option:
+      (mkRemovedOptionModule [ "programs" "kakoune" "config" "ui" option ]
+        "Kakoune dropped ncurses so this option has been removed.");
+  in map mkRemovedOptionUI [
+    "changeColors"
+    "wheelDownButton"
+    "wheelUpButton"
+    "useBuiltinKeyParser"
+  ];
+
   options = {
     programs.kakoune = {
       enable = mkEnableOption "the kakoune text editor";
