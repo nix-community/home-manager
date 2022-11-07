@@ -60,7 +60,17 @@ The <a class="xref" href="options.html#opt-services.mpd.musicDirectory"><code cl
 value of <a class="xref" href="options.html#opt-xdg.userDirs.music"><code class="option">xdg.userDirs.music</code></a> if <a class="xref" href="options.html#opt-xdg.userDirs.enable"><code class="option">xdg.userDirs.enable</code></a> is
 enabled. Otherwise it is undefined and must be specified in the user
 configuration.
-</li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="sec-release-22.05"></a>E.2. Release 22.05</h2></div></div></div><p>The 22.05 release branch became the stable branch in May, 2022.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-22.05-highlights"></a>E.2.1. Highlights</h3></div></div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+</li><li class="listitem"><p class="simpara">
+The activation script now resets <code class="literal">PATH</code> before running. Before, the
+user’s <code class="literal">PATH</code> environment variable would be used in the script and
+this made it possible for commands in the activation script to run
+arbitrary commands accessible to the user. We now restrict the
+activation script to commands that are explicitly specified.
+</p><p class="simpara">There is no official way to restore the old behavior. We attempt to
+make the activation script as reproducible as possible and honoring
+the user’s <code class="literal">PATH</code> reduces reproducibility.</p><p class="simpara">If you need to run a command in an activation script block then refer
+to the command by its absolute command path, such as
+<code class="literal">${pkgs.hello}/bin/hello</code>.</p></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="sec-release-22.05"></a>E.2. Release 22.05</h2></div></div></div><p>The 22.05 release branch became the stable branch in May, 2022.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-22.05-highlights"></a>E.2.1. Highlights</h3></div></div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 The <code class="literal">programs.waybar.settings.modules</code> option was removed.
 Waybar modules should now be declared directly under <code class="literal">programs.waybar.settings</code>.
 </li><li class="listitem"><p class="simpara">
