@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2022-07-12 19:40+0000\n"
-"Last-Translator: Frederik Engels <frederik.engels92@gmail.com>\n"
+"PO-Revision-Date: 2022-11-07 17:06+0000\n"
+"Last-Translator: Eise Zimmerman <eiscomania@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/home-manager/cli/"
 "nl/>\n"
 "Language: nl\n"
@@ -17,23 +17,24 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.14.2\n"
 
 #: home-manager/home-manager:60
 msgid "No configuration file found at %s"
-msgstr ""
+msgstr "Geen configuratiebestand gevonden in %s"
 
 #: home-manager/home-manager:79
 msgid "No configuration file found. Please create one at %s"
-msgstr ""
+msgstr "Geen configuratiebestand gevonden. Gelieve een nieuwe te creëren op %s"
 
 #: home-manager/home-manager:122
 msgid "Can't inspect options of a flake configuration"
 msgstr ""
+"Het is niet gelukt om de options van de vlok-configuratie te inspecteren"
 
 #: home-manager/home-manager:162
 msgid "Can't instantiate a flake configuration"
-msgstr ""
+msgstr "Het is niet gelukt om de vlok-configuratie te creëren"
 
 #: home-manager/home-manager:237
 msgid ""
@@ -43,7 +44,11 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
+"Er is %d ongelezen and relevant nieuws artikel.\n"
+"Lees het door het commando \"%s news\" uit te voeren."
 msgstr[1] ""
+"Er zijn %d ongelezen and relevante nieuws artikelen.\n"
+"Lees ze door het commando \"%s news\" uit te voeren."
 
 #: home-manager/home-manager:251
 msgid "Unknown \"news.display\" setting \"%s\"."
