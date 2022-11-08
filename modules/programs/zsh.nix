@@ -83,12 +83,43 @@ let
         '';
       };
 
+      ignoreAllDups = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          If a new command line being added to the history
+          list duplicates an older one, the older command
+          is removed from the list (even if it is not the
+          previous event).
+        '';
+      };
+
       ignoreSpace = mkOption {
         type = types.bool;
         default = true;
         description = ''
           Do not enter command lines into the history list
           if the first character is a space.
+        '';
+      };
+
+      findNoDups = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          When searching for history entries in the line
+          editor, do not display duplicates of a line
+          previously found, even if the duplicates are not
+          contiguous.
+        '';
+      };
+
+      saveNoDups = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          When writing out the history file, older commands
+          that duplicate newer ones are omitted.
         '';
       };
 
@@ -108,6 +139,35 @@ let
         type = types.bool;
         default = true;
         description = "Share command history between zsh sessions.";
+      };
+
+      bang = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Perform textual history expansion, csh-style,
+          treating the character '!' specially.
+        '';
+      };
+
+      verify = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whenever the user enters a line with history
+          expansion, don't execute the line directly;
+          instead, perform history expansion and reload the
+          line into the editing buffer.
+        '';
+      };
+
+      beep = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Beep in ZLE when a widget attempts to access a
+          history entry which isn't there.
+        '';
       };
     };
   });
@@ -565,10 +625,16 @@ in
 
         setopt HIST_FCNTL_LOCK
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
+        ${if cfg.history.ignoreAllDups then "setopt" else "unsetopt"} HIST_IGNORE_ALL_DUPS
         ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
+        ${if cfg.history.findNoDups then "setopt" else "unsetopt"} HIST_FIND_NO_DUPS
+        ${if cfg.history.saveNoDups then "setopt" else "unsetopt"} HIST_SAVE_NO_DUPS
         ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
         ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
         ${if cfg.history.extended then "setopt" else "unsetopt"} EXTENDED_HISTORY
+        ${if cfg.history.bang then "setopt" else "unsetopt"} BANG_HIST
+        ${if cfg.history.verify then "setopt" else "unsetopt"} HIST_VERIFY
+        ${if cfg.history.beep then "setopt" else "unsetopt"} HIST_BEEP
         ${if cfg.autocd != null then "${if cfg.autocd then "setopt" else "unsetopt"} autocd" else ""}
 
         ${cfg.initExtra}
