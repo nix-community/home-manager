@@ -249,10 +249,13 @@ in {
       xdg.configFile."i3/config" = {
         source = checkI3Config;
         onChange = ''
-          i3Socket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*
-          if [ -S $i3Socket ]; then
-            ${cfg.package}/bin/i3-msg -s $i3Socket reload >/dev/null
-          fi
+          # There may be several sockets after log out/log in, but the old ones
+          # will fail with "Connection refused".
+          for i3Socket in ''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*; do
+            if [[ -S $i3Socket ]]; then
+              ${cfg.package}/bin/i3-msg -s $i3Socket reload >/dev/null |& grep -v "Connection refused" || true
+            fi
+          done
         '';
       };
     }

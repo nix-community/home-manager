@@ -1,1 +1,5 @@
-{ vscode-keybindings = ./keybindings.nix; }
+{
+  vscode-keybindings = ./keybindings.nix;
+  vscode-tasks = ./tasks.nix;
+  vscode-update-checks = ./update-checks.nix;
+}

@@ -4,16 +4,7 @@ variables:
   NIX_PATH: "nixpkgs=channel:nixos-unstable"
 
 stages:
-  - test
   - deploy
-
-Run tests:
-  stage: test
-  script:
-    - nix-shell --pure tests -A run.files-text
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master"
-      when: always
 
 pages:
   stage: deploy

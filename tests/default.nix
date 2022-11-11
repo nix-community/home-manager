@@ -80,6 +80,7 @@ import nmt {
     ./modules/programs/hyfetch
     ./modules/programs/i3status
     ./modules/programs/irssi
+    ./modules/programs/k9s
     ./modules/programs/kakoune
     ./modules/programs/kitty
     ./modules/programs/less
@@ -99,6 +100,7 @@ import nmt {
     ./modules/programs/nix-index
     ./modules/programs/nnn
     ./modules/programs/nushell
+    ./modules/programs/oh-my-posh
     ./modules/programs/pandoc
     ./modules/programs/pet
     ./modules/programs/pistol
@@ -110,6 +112,7 @@ import nmt {
     ./modules/programs/sagemath
     ./modules/programs/sbt
     ./modules/programs/scmpuff
+    ./modules/programs/sioyek
     ./modules/programs/sm64ex
     ./modules/programs/ssh
     ./modules/programs/starship
@@ -140,6 +143,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/programs/borgmatic
     ./modules/programs/firefox
     ./modules/programs/foot
     ./modules/programs/getmail
@@ -147,6 +151,7 @@ import nmt {
     ./modules/programs/hexchat
     ./modules/programs/i3status-rust
     ./modules/programs/kodi
+    ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.
@@ -155,10 +160,12 @@ import nmt {
     ./modules/programs/rofi-pass
     ./modules/programs/swaylock
     ./modules/programs/terminator
+    ./modules/programs/thunderbird
     ./modules/programs/waybar
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
     ./modules/services/barrier
+    ./modules/services/borgmatic
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs

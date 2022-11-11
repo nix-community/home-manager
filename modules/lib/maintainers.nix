@@ -37,11 +37,27 @@
     github = "CarlosLoboxyz";
     githubId = 86011416;
   };
+  d-dervishi = {
+    email = "david.dervishi@epfl.ch";
+    github = "d-dervishi";
+    githubId = 61125355;
+    name = "David Dervishi";
+    keys = [{
+      longKeyId = "rsa4096/0xB1C012F0E7697195";
+      fingerprint = "4C92 E3B0 21B5 5562 A1E0  CE3D B1C0 12F0 E769 7195";
+    }];
+  };
   dwagenk = {
     email = "dwagenk@mailbox.org";
     github = "dwagenk";
     githubId = 32838899;
     name = "Daniel Wagenknecht";
+  };
+  jkarlson = {
+    email = "jekarlson@gmail.com";
+    github = "jkarlson";
+    githubId = 1204734;
+    name = "Emil Karlson";
   };
   justinlovinger = {
     name = "Justin Lovinger";
@@ -100,6 +116,12 @@
       longkeyid = "rsa4096/0x04D0CEAF916A9A40";
       fingerprint = "2BE3 BAFD 793E A349 ED1F  F00F 04D0 CEAF 916A 9A40";
     }];
+  };
+  katexochen = {
+    name = "Paul Meyer";
+    email = "49727155+katexochen@users.noreply.github.com";
+    github = "katexochen";
+    githubId = 49727155;
   };
   kubukoz = {
     name = "Jakub Kozłowski";

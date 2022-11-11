@@ -107,7 +107,7 @@ in {
     systemd.user = {
       systemctlPath = mkOption {
         default = "${pkgs.systemd}/bin/systemctl";
-        defaultText = "\${pkgs.systemd}/bin/systemctl";
+        defaultText = literalExpression ''"''${pkgs.systemd}/bin/systemctl"'';
         type = types.str;
         description = ''
           Absolute path to the <command>systemctl</command> tool. This
@@ -125,9 +125,9 @@ in {
 
       slices = mkOption {
         default = { };
-        type = unitType "slices";
-        description = unitDescription "slices";
-        example = unitExample "Slices";
+        type = unitType "slice";
+        description = unitDescription "slice";
+        example = unitExample "Slice";
       };
 
       sockets = mkOption {
@@ -263,7 +263,7 @@ in {
     (mkIf (pkgs.stdenv.isLinux && config.home.username != "root") {
       xdg.configFile = mkMerge [
         (lib.listToAttrs ((buildServices "service" cfg.services)
-          ++ (buildServices "slices" cfg.slices)
+          ++ (buildServices "slice" cfg.slices)
           ++ (buildServices "socket" cfg.sockets)
           ++ (buildServices "target" cfg.targets)
           ++ (buildServices "timer" cfg.timers)

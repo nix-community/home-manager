@@ -10,6 +10,14 @@ let
 
   mkIniKeyValue = key: value: "${key}=${toString (hm.gvariant.mkValue value)}";
 
+  # The dconf keys managed by this configuration. We store this as part of the
+  # generation state to be able to reset keys that become unmanaged during
+  # switch.
+  stateDconfKeys = pkgs.writeText "dconf-keys.json" (builtins.toJSON
+    (concatLists (mapAttrsToList
+      (dir: entries: mapAttrsToList (key: _: "/${dir}/${key}") entries)
+      cfg.settings)));
+
 in {
   meta.maintainers = [ maintainers.rycee ];
 
@@ -54,22 +62,58 @@ in {
     # Make sure the dconf directory exists.
     xdg.configFile."dconf/.keep".source = builtins.toFile "keep" "";
 
-    home.activation.dconfSettings = hm.dag.entryAfter [ "installPackages" ]
-      (let iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
-      in ''
-        if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
-          DCONF_DBUS_RUN_SESSION=""
-        else
-          DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session"
+    home.extraBuilderCommands = ''
+      mkdir -p $out/state/
+      ln -s ${stateDconfKeys} $out/state/${stateDconfKeys.name}
+    '';
+
+    home.activation.dconfSettings = hm.dag.entryAfter [ "installPackages" ] (let
+      iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
+
+      statePath = "state/${stateDconfKeys.name}";
+
+      cleanup = pkgs.writeShellScript "dconf-cleanup" ''
+        set -euo pipefail
+
+        ${config.lib.bash.initHomeManagerLib}
+
+        PATH=${makeBinPath [ pkgs.dconf pkgs.jq ]}''${PATH:+:}$PATH
+
+        oldState="$1"
+        newState="$2"
+
+        # Can't do cleanup if we don't know the old state.
+        if [[ ! -f $oldState ]]; then
+          exit 0
         fi
 
-        if [[ -v DRY_RUN ]]; then
-          echo $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / "<" ${iniFile}
-        else
-          $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
-        fi
+        # Reset all keys that are present in the old generation but not the new
+        # one.
+        jq -r -n \
+            --slurpfile old "$oldState" \
+            --slurpfile new "$newState" \
+            '($old[] - $new[])[]' \
+          | while read -r key; do
+              $VERBOSE_ECHO "Resetting dconf key \"$key\""
+              $DRY_RUN_CMD $DCONF_DBUS_RUN_SESSION dconf reset "$key"
+            done
+      '';
+    in ''
+      if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
+        export DCONF_DBUS_RUN_SESSION=""
+      else
+        export DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session"
+      fi
 
-        unset DCONF_DBUS_RUN_SESSION
-      '');
+      if [[ -v oldGenPath ]]; then
+        ${cleanup} \
+          "$oldGenPath/${statePath}" \
+          "$newGenPath/${statePath}"
+      fi
+
+      $DRY_RUN_CMD $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
+
+      unset DCONF_DBUS_RUN_SESSION
+    '');
   };
 }
