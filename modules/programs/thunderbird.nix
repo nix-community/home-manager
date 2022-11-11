@@ -3,6 +3,8 @@
 with lib;
 
 let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+
   cfg = config.programs.thunderbird;
 
   enabledAccounts = attrValues
@@ -11,7 +13,13 @@ let
   enabledAccountsWithId =
     map (a: a // { id = builtins.hashString "sha256" a.name; }) enabledAccounts;
 
-  thunderbirdConfigPath = ".thunderbird";
+  thunderbirdConfigPath =
+    if isDarwin then "Library/Thunderbird" else ".thunderbird";
+
+  thunderbirdProfilesPath = if isDarwin then
+    "${thunderbirdConfigPath}/Profiles"
+  else
+    thunderbirdConfigPath;
 
   profilesWithId =
     imap0 (i: v: v // { id = toString i; }) (attrValues cfg.profiles);
@@ -24,7 +32,7 @@ let
   } (flip map profilesWithId (profile: {
     "Profile${profile.id}" = {
       Name = profile.name;
-      Path = profile.name;
+      Path = if isDarwin then "Profiles/${profile.name}" else profile.name;
       IsRelative = 1;
       Default = if profile.isDefault then 1 else 0;
     };
@@ -54,7 +62,7 @@ let
       "mail.identity.id_${id}.sign_mail" = account.gpg.signByDefault;
     } // optionalAttrs (account.imap != null) {
       "mail.server.server_${id}.directory" =
-        "${thunderbirdConfigPath}/${profile.name}/ImapMail/${account.imap.host}";
+        "${thunderbirdProfilesPath}/${profile.name}/ImapMail/${account.imap.host}";
       "mail.server.server_${id}.directory-rel" =
         "[ProfD]ImapMail/${account.imap.host}";
       "mail.server.server_${id}.hostname" = account.imap.host;
@@ -168,6 +176,18 @@ in {
           all profiles.
         '';
       };
+
+      darwinSetupWarning = mkOption {
+        type = types.bool;
+        default = true;
+        example = false;
+        visible = isDarwin;
+        readOnly = !isDarwin;
+        description = ''
+          Warn to set environment variables before using this module. Only
+          relevant on Darwin.
+        '';
+      };
     };
 
     accounts.email.accounts = mkOption {
@@ -213,14 +233,12 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "programs.thunderbird" pkgs platforms.linux)
-
       (let defaults = catAttrs "name" (filter (a: a.isDefault) profilesWithId);
       in {
         assertion = cfg.profiles == { } || length defaults == 1;
         message = "Must have exactly one default Thunderbird profile but found "
           + toString (length defaults) + optionalString (length defaults > 1)
-          (", namely " concatStringsSep "," defaults);
+          (", namely " + concatStringsSep "," defaults);
       })
 
       (let
@@ -237,6 +255,20 @@ in {
       })
     ];
 
+    warnings = optional (isDarwin && cfg.darwinSetupWarning) ''
+      Thunderbird packages are not yet supported on Darwin. You can still use
+      this module to manage your accounts and profiles by setting
+      'programs.thunderbird.package' to a dummy value, for example using
+      'pkgs.runCommand'.
+
+      Note that this module requires you to set the following environment
+      variables when using an installation of Thunderbird that is not provided
+      by Nix:
+
+          export MOZ_LEGACY_PROFILES=1
+          export MOZ_ALLOW_DOWNGRADE=1
+    '';
+
     home.packages = [ cfg.package ]
       ++ optional (any (p: p.withExternalGnupg) (attrValues cfg.profiles))
       pkgs.gpgme;
@@ -245,7 +277,7 @@ in {
       "${thunderbirdConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = generators.toINI { } profilesIni; };
     }] ++ flip mapAttrsToList cfg.profiles (name: profile: {
-      "${thunderbirdConfigPath}/${name}/user.js" = let
+      "${thunderbirdProfilesPath}/${name}/user.js" = let
         accounts = filter (a:
           a.thunderbird.profiles == [ ]
           || any (p: p == name) a.thunderbird.profiles) enabledAccountsWithId;
