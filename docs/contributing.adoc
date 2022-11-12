@@ -256,3 +256,8 @@ and run an individual test, for example `alacritty-empty-settings`, through
 
 [source,console]
 $ nix-shell --pure tests -A run.alacritty-empty-settings
+
+However, those invocations will impurely source the system’s nixpkgs, and may cause failures. To run against the nixpkgs from the flake.lock, use instead e.g.
+
+[source,console]
+$ nix develop --ignore-environment .#tests.all
