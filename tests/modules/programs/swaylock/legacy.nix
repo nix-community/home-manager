@@ -1,6 +1,6 @@
 {
+  home.stateVersion = "20.09";
   programs.swaylock = {
-    enable = true;
     settings = {
       color = "808080";
       font-size = 24;
