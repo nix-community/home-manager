@@ -211,7 +211,6 @@ in {
 
       Service = {
         Type = "forking";
-        Environment = "";
         ExecStart =
           let scriptPkg = pkgs.writeShellScriptBin "polybar-start" cfg.script;
           in "${scriptPkg}/bin/polybar-start";
