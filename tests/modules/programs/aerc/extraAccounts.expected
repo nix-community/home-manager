@@ -8,6 +8,10 @@ source = maildir:///dev/null
 [Test2]
 pgp-key-id = 42
 
+[primary]
+from = Foo Bar <addr@mail.invalid>
+source = imap://foobar@imap.host.invalid:1337
+
 [a_imap-nopasscmd-tls-starttls-folders]
 copy-to = aercSent
 default = aercInbox
