@@ -102,8 +102,16 @@ with lib;
         };
       };
     in {
-      a_imap-nopasscmd-tls-starttls-folders = basics // {
+      primary = basics // {
         primary = true;
+        imap = {
+          host = "imap.host.invalid";
+          port = 1337;
+          tls.enable = true;
+          tls.useStartTls = true;
+        };
+      };
+      a_imap-nopasscmd-tls-starttls-folders = basics // {
         imap = {
           host = "imap.host.invalid";
           port = 1337;

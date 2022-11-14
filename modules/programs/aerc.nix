@@ -124,7 +124,12 @@ in {
       value.text = v;
     });
 
-    accountsExtraAccounts = mapAttrs accounts.mkAccount aerc-accounts;
+    primaryAccount = attrsets.filterAttrs (_: v: v.primary) aerc-accounts;
+    otherAccounts = attrsets.filterAttrs (_: v: !v.primary) aerc-accounts;
+
+    primaryAccountAccounts = mapAttrs accounts.mkAccount primaryAccount;
+
+    accountsExtraAccounts = mapAttrs accounts.mkAccount otherAccounts;
 
     accountsExtraConfig = mapAttrs accounts.mkAccountConfig aerc-accounts;
 
@@ -139,7 +144,8 @@ in {
         false;
 
     genAccountsConf = ((cfg.extraAccounts != "" && cfg.extraAccounts != { })
-      || !(isRecursivelyEmpty accountsExtraAccounts));
+      || !(isRecursivelyEmpty accountsExtraAccounts)
+      || !(isRecursivelyEmpty primaryAccountAccounts));
 
     genAercConf = ((cfg.extraConfig != "" && cfg.extraConfig != { })
       || !(isRecursivelyEmpty accountsExtraConfig));
@@ -171,6 +177,7 @@ in {
         text = joinCfg [
           header
           (mkINI cfg.extraAccounts)
+          (mkINI primaryAccountAccounts)
           (mkINI accountsExtraAccounts)
         ];
       };
