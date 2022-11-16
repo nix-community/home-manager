@@ -54,6 +54,8 @@ in {
   imports = [
     (mkRemovedOptionModule [ "services" "picom" "refreshRate" ]
       "The option `refresh-rate` has been deprecated by upstream.")
+    (mkRemovedOptionModule [ "services" "picom" "experimentalBackends" ]
+      "The option `--experimental-backends` has been removed by upstream.")
     (mkRemovedOptionModule [ "services" "picom" "extraOptions" ]
       "This option has been replaced by `services.picom.settings`.")
     (mkRenamedOptionModule [ "services" "picom" "opacityRule" ] [
@@ -65,8 +67,6 @@ in {
 
   options.services.picom = {
     enable = mkEnableOption "Picom X11 compositor";
-
-    experimentalBackends = mkEnableOption "the new experimental backends";
 
     fade = mkOption {
       type = types.bool;
@@ -213,6 +213,15 @@ in {
       '';
     };
 
+    extraArgs = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      example = literalExpression ''[ "--legacy-backends" ]'';
+      description = ''
+        Extra arguments to be passed to the picom executable.
+      '';
+    };
+
     package = mkOption {
       type = types.package;
       default = pkgs.picom;
@@ -306,7 +315,7 @@ in {
         ExecStart = concatStringsSep " " ([
           "${cfg.package}/bin/picom"
           "--config ${config.xdg.configFile."picom/picom.conf".source}"
-        ] ++ optional cfg.experimentalBackends "--experimental-backends");
+        ] ++ cfg.extraArgs);
         Restart = "always";
         RestartSec = 3;
       };
