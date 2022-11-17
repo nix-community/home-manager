@@ -291,13 +291,18 @@ in
 
       enableCompletion = mkOption {
         default = true;
-        description = ''
-          Enable zsh completion. Don't forget to add
-          <programlisting language="nix">
-            environment.pathsToLink = [ "/share/zsh" ];
-          </programlisting>
-          to your system configuration to get completion for system packages (e.g. systemd).
-        '';
+        description =
+          "Enable zsh completion." +
+          # calling compinit multiple times causes slight startup slowdown, as $fpath entries are unnecessarily
+          # traversed again
+          " If enabling completion through a framework, disable this for a slight speedup in start up." +
+          ''
+             Don't forget to add
+            <programlisting language="nix">
+              environment.pathsToLink = [ "/share/zsh" ];
+            </programlisting>
+            to your system configuration to get completion for system packages (e.g. systemd).
+          '';
         type = types.bool;
       };
 
@@ -517,10 +522,7 @@ in
           fpath+="$HOME/${pluginsDir}/${plugin.name}"
         '') cfg.plugins)}
 
-        # Oh-My-Zsh/Prezto calls compinit during initialization,
-        # calling it twice causes slight start up slowdown
-        # as all $fpath entries will be traversed again.
-        ${optionalString (cfg.enableCompletion && !cfg.oh-my-zsh.enable && !cfg.prezto.enable)
+        ${optionalString cfg.enableCompletion
           cfg.completionInit
         }
 
