@@ -33,7 +33,7 @@ in {
       example = literalExpression ''
         {
           theme = "custom";
-          themes.custom.fg = 5;
+          themes.custom.fg = "#ffffff";
         }
       '';
       description = ''
@@ -49,8 +49,16 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file."${configDir}/config.yaml" = mkIf (cfg.settings != { }) {
-      source = yamlFormat.generate "zellij.yaml" cfg.settings;
-    };
+    # Zellij switched from yaml to KDL in version 0.32.0:
+    # https://github.com/zellij-org/zellij/releases/tag/v0.32.0
+    home.file."${configDir}/config.yaml" = mkIf
+      (cfg.settings != { } && (versionOlder cfg.package.version "0.32.0")) {
+        source = yamlFormat.generate "zellij.yaml" cfg.settings;
+      };
+
+    home.file."${configDir}/config.kdl" = mkIf
+      (cfg.settings != { } && (versionAtleast cfg.package.version "0.32.0")) {
+        text = lib.hm.generators.toKDL { } cfg.settings;
+      };
   };
 }
