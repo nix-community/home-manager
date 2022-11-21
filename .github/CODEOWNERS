@@ -16,6 +16,9 @@ Makefile                                              @thiagokokada
 
 /modules/launchd                                      @midchildan
 
+/modules/lib/generators.nix                           @h7x4
+/test/lib/generators                                  @h7x4
+
 /modules/misc/dconf.nix                               @rycee
 
 /modules/misc/editorconfig.nix                        @loicreynier
