@@ -47,6 +47,7 @@ import nmt {
   inherit lib pkgs modules;
   testedAttrPath = [ "home" "activationPackage" ];
   tests = builtins.foldl' (a: b: a // (import b)) { } ([
+    ./lib/generators
     ./lib/types
     ./modules/files
     ./modules/home-environment
