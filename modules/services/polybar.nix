@@ -1,10 +1,11 @@
-{ config, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 with lib;
 
 let
 
   cfg = config.services.polybar;
+  opt = options.services.polybar;
 
   eitherStrBoolIntList = with types;
     either str (either bool (either int (listOf str)));
@@ -199,14 +200,16 @@ in {
     ];
 
     home.packages = [ cfg.package ];
-    xdg.configFile."polybar/config.ini".source = configFile;
+    xdg.configFile."polybar/config.ini" = let
+      isDeclarativeConfig = cfg.settings != opt.settings.default || cfg.config
+        != opt.config.default || cfg.extraConfig != opt.extraConfig.default;
+    in mkIf isDeclarativeConfig { source = configFile; };
 
     systemd.user.services.polybar = {
       Unit = {
         Description = "Polybar status bar";
         PartOf = [ "tray.target" ];
-        X-Restart-Triggers =
-          [ "${config.xdg.configFile."polybar/config.ini".source}" ];
+        X-Restart-Triggers = [ "${config.xdg.configHome}/polybar/config.ini" ];
       };
 
       Service = {
