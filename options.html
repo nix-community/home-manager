@@ -3387,6 +3387,21 @@ ALT-C keybinding.
         ]
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fzf.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/fzf.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.fzf.colors"></a><a class="term" href="options.html#opt-programs.fzf.colors"><code class="option">programs.fzf.colors</code></a></span></dt><dd><p>Color scheme options added to <code class="code">FZF_DEFAULT_OPTS</code>. See
+<a class="link" href="https://github.com/junegunn/fzf/wiki/Color-schemes" target="_top">https://github.com/junegunn/fzf/wiki/Color-schemes</a>
+for documentation.
+</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+        {
+        
+        }
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  bg = "#1e1e1e";
+  "bg+" = "#1e1e1e";
+  fg = "#d4d4d4";
+  "fg+" = "#d4d4d4";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fzf.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/fzf.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.fzf.defaultCommand"></a><a class="term" href="options.html#opt-programs.fzf.defaultCommand"><code class="option">programs.fzf.defaultCommand</code></a></span></dt><dd><p>The command that gets executed as the default source for fzf
 when running.
 </p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"fd --type f"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fzf.nix#blob-path" target="_top">
