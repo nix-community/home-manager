@@ -263,6 +263,9 @@ Makefile                                              @thiagokokada
 /modules/programs/pls.nix                             @arjan-s
 /tests/modules/programs/pls                           @arjan-s
 
+/modules/programs/polybar.nix                         @h7x4
+/tests/modules/programs/polybar                       @h7x4
+
 /modules/programs/powerline-go.nix                    @DamienCassou
 
 /modules/programs/pubs.nix                            @loicreynier

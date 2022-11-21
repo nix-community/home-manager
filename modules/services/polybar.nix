@@ -199,6 +199,8 @@ in {
         lib.platforms.linux)
     ];
 
+    meta.maintainers = with maintainers; [ h7x4 ];
+
     home.packages = [ cfg.package ];
     xdg.configFile."polybar/config.ini" = let
       isDeclarativeConfig = cfg.settings != opt.settings.default || cfg.config
