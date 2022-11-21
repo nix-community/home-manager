@@ -5,6 +5,7 @@ on:
     - cron: "30 2 * * *"
 jobs:
   tests:
+    if: github.repository_owner == 'nix-community'
     strategy:
       fail-fast: false
       matrix:

@@ -7,6 +7,7 @@ on:
 
 jobs:
   update:
+    if: github.repository_owner == 'nix-community'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
