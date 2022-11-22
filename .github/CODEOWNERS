@@ -199,6 +199,10 @@ Makefile                                              @thiagokokada
 /modules/programs/micro.nix                           @MForster
 /tests/modules/programs/micro                         @MForster
 
+/modules/programs/miniplayer.nix                      @h7x4
+/tests/modules/programs/miniplayer                    @h7x4
+/tests/modules/programs/miniplayer-linux              @h7x4
+
 /modules/programs/mpv.nix                             @tadeokondrak @thiagokokada
 /tests/modules/programs/mpv                           @thiagokokada
 

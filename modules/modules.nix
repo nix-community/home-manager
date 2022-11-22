@@ -121,6 +121,7 @@ let
     ./programs/mcfly.nix
     ./programs/mercurial.nix
     ./programs/micro.nix
+    ./programs/miniplayer.nix
     ./programs/mpv.nix
     ./programs/msmtp.nix
     ./programs/mu.nix
