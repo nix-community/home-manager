@@ -199,7 +199,7 @@ in {
 
     systemd.target = mkOption {
       type = str;
-      default = "graphical-session.target";
+      default = "tray.target";
       example = "sway-session.target";
       description = ''
         The systemd target that will automatically start the Waybar service.
@@ -312,8 +312,7 @@ in {
           Description =
             "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
           Documentation = "https://github.com/Alexays/Waybar/wiki";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
+          PartOf = [ "tray.target" ];
         };
 
         Service = {
