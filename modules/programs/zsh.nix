@@ -481,7 +481,12 @@ in
 
     {
       home.packages = with pkgs; [ zsh ]
-        ++ optional cfg.enableCompletion nix-zsh-completions
+        ++ optional cfg.enableCompletion (nix-zsh-completions.overrideAttrs (old: {
+          # _nix completion is broken
+          # (https://github.com/spwhitt/nix-zsh-completions/issues/42).
+          # Remove it; _nix provided by the nix package will be used instead.
+          postPatch = "rm _nix";
+        }))
         ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
 
       home.file."${relToDotDir ".zshrc"}".text = concatStringsSep "\n" ([
