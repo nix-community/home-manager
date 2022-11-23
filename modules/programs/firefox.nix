@@ -113,7 +113,7 @@ let
     '';
 
 in {
-  meta.maintainers = [ maintainers.rycee maintainers.kira-bruneau ];
+  meta.maintainers = with maintainers; [ rycee kira-bruneau h7x4 ];
 
   imports = [
     (mkRemovedOptionModule [ "programs" "firefox" "enableAdobeFlash" ]
