@@ -10,6 +10,11 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
+  fileType = (import ../lib/file-type.nix {
+    inherit (config.home) homeDirectory;
+    inherit lib pkgs;
+  }).fileType;
+
   mozillaConfigPath =
     if isDarwin then "Library/Application Support/Mozilla" else ".mozilla";
 
@@ -222,6 +227,29 @@ in {
               default = "";
               description = ''
                 Extra preferences to add to <filename>user.js</filename>.
+              '';
+            };
+
+            extraFiles = mkOption {
+              type = fileType
+                ''<xref linkend="opt-programs.firefox.profiles._name_.path"/>''
+                config.path;
+              default = { };
+              example = literalExpression ''
+                {
+                  "myfile.txt" = {
+                    source = ./myfile.txt;
+                  };
+                  "features/myFeatureDir" = {
+                    source = ./firefoxFeatures;
+                    recursive = true;
+                  };
+                }
+              '';
+              description = ''
+                Extra files to add to the profile directory.
+                Warning, this will overwrite important files like
+                <filename>user.js</filename> if you let it.
               '';
             };
 
@@ -512,140 +540,146 @@ in {
 
       "${firefoxConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
-    }] ++ flip mapAttrsToList cfg.profiles (_: profile: {
-      "${profilesPath}/${profile.path}/.keep".text = "";
+    }] ++ flip mapAttrsToList cfg.profiles (_: profile:
+      {
+        "${profilesPath}/${profile.path}/.keep".text = "";
 
-      "${profilesPath}/${profile.path}/chrome/userChrome.css" =
-        mkIf (profile.userChrome != "") { text = profile.userChrome; };
+        "${profilesPath}/${profile.path}/chrome/userChrome.css" =
+          mkIf (profile.userChrome != "") { text = profile.userChrome; };
 
-      "${profilesPath}/${profile.path}/chrome/userContent.css" =
-        mkIf (profile.userContent != "") { text = profile.userContent; };
+        "${profilesPath}/${profile.path}/chrome/userContent.css" =
+          mkIf (profile.userContent != "") { text = profile.userContent; };
 
-      "${profilesPath}/${profile.path}/user.js" = mkIf (profile.settings != { }
-        || profile.extraConfig != "" || profile.bookmarks != [ ]) {
-          text =
-            mkUserJs profile.settings profile.extraConfig profile.bookmarks;
-        };
-
-      "${profilesPath}/${profile.path}/search.json.mozlz4" = mkIf
-        (profile.search.default != null || profile.search.order != [ ]
-          || profile.search.engines != { }) {
-            force = profile.search.force;
-            source = let
-              settings = {
-                version = 6;
-
-                engines = let
-                  allEngines = (profile.search.engines //
-                    # If search.default isn't in search.engines, assume it's app
-                    # provided and include it in the set of all engines
-                    optionalAttrs (profile.search.default != null
-                      && !(hasAttr profile.search.default
-                        profile.search.engines)) {
-                          ${profile.search.default} = { };
-                        });
-
-                  # Map allEngines to a list and order by search.order
-                  orderedEngineList = (imap (order: name:
-                    let engine = allEngines.${name} or { };
-                    in engine // {
-                      inherit name;
-                      metaData = (engine.metaData or { }) // { inherit order; };
-                    }) profile.search.order) ++ (mapAttrsToList
-                      (name: config: config // { inherit name; })
-                      (removeAttrs allEngines profile.search.order));
-
-                  engines = map (config:
-                    let
-                      name = config.name;
-                      isAppProvided = removeAttrs config [ "name" "metaData" ]
-                        == { };
-                      metaData = config.metaData or { };
-                    in mapAttrs' (name: value: {
-                      # Map nice field names to internal field names. This is
-                      # intended to be exhaustive, but any future fields will
-                      # either have to be specified with an underscore, or added
-                      # to this map.
-                      name = ((genAttrs [
-                        "name"
-                        "isAppProvided"
-                        "loadPath"
-                        "hasPreferredIcon"
-                        "updateInterval"
-                        "updateURL"
-                        "iconUpdateURL"
-                        "iconURL"
-                        "iconMapObj"
-                        "metaData"
-                        "orderHint"
-                        "definedAliases"
-                        "urls"
-                      ] (name: "_${name}")) // {
-                        "searchForm" = "__searchForm";
-                      }).${name} or name;
-
-                      inherit value;
-                    }) ((removeAttrs config [ "icon" ])
-                      // (optionalAttrs (!isAppProvided)
-                        (optionalAttrs (config ? iconUpdateURL) {
-                          # Convenience to default iconURL to iconUpdateURL so
-                          # the icon is immediately downloaded from the URL
-                          iconURL = config.iconURL or config.iconUpdateURL;
-                        } // optionalAttrs (config ? icon) {
-                          # Convenience to specify absolute path to icon
-                          iconURL = "file://${config.icon}";
-                        } // {
-                          # Required for custom engine configurations, loadPaths
-                          # are unique identifiers that are generally formatted
-                          # like: [source]/path/to/engine.xml
-                          loadPath = ''
-                            [home-manager]/programs.firefox.profiles.${profile.name}.search.engines."${
-                              replaceChars [ "\\" ] [ "\\\\" ] name
-                            }"'';
-                        })) // {
-                          # Required fields for all engine configurations
-                          inherit name isAppProvided metaData;
-                        })) orderedEngineList;
-                in engines;
-
-                metaData = optionalAttrs (profile.search.default != null) {
-                  current = profile.search.default;
-                  hash = "@hash@";
-                } // {
-                  useSavedOrder = profile.search.order != [ ];
-                };
-              };
-
-              # Home Manager doesn't circumvent user consent and isn't acting
-              # maliciously. We're modifying the search outside of Firefox, but
-              # a claim by Mozilla to remove this would be very anti-user, and
-              # is unlikely to be an issue for our use case.
-              disclaimer = appName:
-                "By modifying this file, I agree that I am doing so "
-                + "only within ${appName} itself, using official, user-driven search "
-                + "engine selection processes, and in a way which does not circumvent "
-                + "user consent. I acknowledge that any attempt to change this file "
-                + "from outside of ${appName} is a malicious act, and will be responded "
-                + "to accordingly.";
-
-              salt = profile.path + profile.search.default
-                + disclaimer "Firefox";
-            in pkgs.runCommand "search.json.mozlz4" {
-              nativeBuildInputs = with pkgs; [ mozlz4a openssl ];
-              json = builtins.toJSON settings;
-              inherit salt;
-            } ''
-              export hash=$(echo -n "$salt" | openssl dgst -sha256 -binary | base64)
-              mozlz4a <(substituteStream json search.json.in --subst-var hash) "$out"
-            '';
+        "${profilesPath}/${profile.path}/user.js" = mkIf (profile.settings
+          != { } || profile.extraConfig != "" || profile.bookmarks != [ ]) {
+            text =
+              mkUserJs profile.settings profile.extraConfig profile.bookmarks;
           };
 
-      "${profilesPath}/${profile.path}/extensions" =
-        mkIf (cfg.extensions != [ ]) {
-          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
-          recursive = true;
-          force = true;
-        };
-    }));
+        "${profilesPath}/${profile.path}/search.json.mozlz4" = mkIf
+          (profile.search.default != null || profile.search.order != [ ]
+            || profile.search.engines != { }) {
+              force = profile.search.force;
+              source = let
+                settings = {
+                  version = 6;
+
+                  engines = let
+                    allEngines = (profile.search.engines //
+                      # If search.default isn't in search.engines, assume it's app
+                      # provided and include it in the set of all engines
+                      optionalAttrs (profile.search.default != null
+                        && !(hasAttr profile.search.default
+                          profile.search.engines)) {
+                            ${profile.search.default} = { };
+                          });
+
+                    # Map allEngines to a list and order by search.order
+                    orderedEngineList = (imap (order: name:
+                      let engine = allEngines.${name} or { };
+                      in engine // {
+                        inherit name;
+                        metaData = (engine.metaData or { }) // {
+                          inherit order;
+                        };
+                      }) profile.search.order) ++ (mapAttrsToList
+                        (name: config: config // { inherit name; })
+                        (removeAttrs allEngines profile.search.order));
+
+                    engines = map (config:
+                      let
+                        name = config.name;
+                        isAppProvided = removeAttrs config [ "name" "metaData" ]
+                          == { };
+                        metaData = config.metaData or { };
+                      in mapAttrs' (name: value: {
+                        # Map nice field names to internal field names. This is
+                        # intended to be exhaustive, but any future fields will
+                        # either have to be specified with an underscore, or added
+                        # to this map.
+                        name = ((genAttrs [
+                          "name"
+                          "isAppProvided"
+                          "loadPath"
+                          "hasPreferredIcon"
+                          "updateInterval"
+                          "updateURL"
+                          "iconUpdateURL"
+                          "iconURL"
+                          "iconMapObj"
+                          "metaData"
+                          "orderHint"
+                          "definedAliases"
+                          "urls"
+                        ] (name: "_${name}")) // {
+                          "searchForm" = "__searchForm";
+                        }).${name} or name;
+
+                        inherit value;
+                      }) ((removeAttrs config [ "icon" ])
+                        // (optionalAttrs (!isAppProvided)
+                          (optionalAttrs (config ? iconUpdateURL) {
+                            # Convenience to default iconURL to iconUpdateURL so
+                            # the icon is immediately downloaded from the URL
+                            iconURL = config.iconURL or config.iconUpdateURL;
+                          } // optionalAttrs (config ? icon) {
+                            # Convenience to specify absolute path to icon
+                            iconURL = "file://${config.icon}";
+                          } // {
+                            # Required for custom engine configurations, loadPaths
+                            # are unique identifiers that are generally formatted
+                            # like: [source]/path/to/engine.xml
+                            loadPath = ''
+                              [home-manager]/programs.firefox.profiles.${profile.name}.search.engines."${
+                                replaceChars [ "\\" ] [ "\\\\" ] name
+                              }"'';
+                          })) // {
+                            # Required fields for all engine configurations
+                            inherit name isAppProvided metaData;
+                          })) orderedEngineList;
+                  in engines;
+
+                  metaData = optionalAttrs (profile.search.default != null) {
+                    current = profile.search.default;
+                    hash = "@hash@";
+                  } // {
+                    useSavedOrder = profile.search.order != [ ];
+                  };
+                };
+
+                # Home Manager doesn't circumvent user consent and isn't acting
+                # maliciously. We're modifying the search outside of Firefox, but
+                # a claim by Mozilla to remove this would be very anti-user, and
+                # is unlikely to be an issue for our use case.
+                disclaimer = appName:
+                  "By modifying this file, I agree that I am doing so "
+                  + "only within ${appName} itself, using official, user-driven search "
+                  + "engine selection processes, and in a way which does not circumvent "
+                  + "user consent. I acknowledge that any attempt to change this file "
+                  + "from outside of ${appName} is a malicious act, and will be responded "
+                  + "to accordingly.";
+
+                salt = profile.path + profile.search.default
+                  + disclaimer "Firefox";
+              in pkgs.runCommand "search.json.mozlz4" {
+                nativeBuildInputs = with pkgs; [ mozlz4a openssl ];
+                json = builtins.toJSON settings;
+                inherit salt;
+              } ''
+                export hash=$(echo -n "$salt" | openssl dgst -sha256 -binary | base64)
+                mozlz4a <(substituteStream json search.json.in --subst-var hash) "$out"
+              '';
+            };
+
+        "${profilesPath}/${profile.path}/extensions" =
+          mkIf (cfg.extensions != [ ]) {
+            source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+            recursive = true;
+            force = true;
+          };
+      } // (mapAttrs' (name: file:
+        let target = "${profilesPath}/${profile.path}/${name}";
+        in nameValuePair target (file // { inherit target; }))
+        profile.extraFiles)));
   };
 }

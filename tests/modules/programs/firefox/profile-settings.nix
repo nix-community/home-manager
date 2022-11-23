@@ -103,6 +103,13 @@ lib.mkIf config.test.enableBig {
         };
       };
     };
+
+    profiles.extraFiles = {
+      id = 4;
+      settings = { "general.smoothScroll" = false; };
+      extraFiles."myfile.txt".source = ./myfile.txt;
+      extraFiles."user.js".source = ./myfile.txt;
+    };
   };
 
   nixpkgs.overlays = [
@@ -127,8 +134,12 @@ lib.mkIf config.test.enableBig {
     assertDirectoryExists home-files/.mozilla/firefox/basic
 
     assertFileContent \
-      home-files/.mozilla/firefox/test/user.js \
-      ${./profile-settings-expected-user.js}
+      home-files/.mozilla/firefox/extraFiles/myfile.txt \
+      ${./myfile.txt}
+
+    assertFileContent \
+      home-files/.mozilla/firefox/extraFiles/user.js \
+      ${./myfile.txt}
 
     bookmarksUserJs=$(normalizeStorePaths \
       home-files/.mozilla/firefox/bookmarks/user.js)
