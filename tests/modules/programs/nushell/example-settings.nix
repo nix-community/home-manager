@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   programs.nushell = {
@@ -19,12 +19,17 @@
 
   test.stubs.nushell = { };
 
-  nmt.script = ''
+  nmt.script = let
+    configDir = if pkgs.stdenv.isDarwin then
+      "home-files/Library/Application Support/nushell"
+    else
+      "home-files/.config/nushell";
+  in ''
     assertFileContent \
-      home-files/.config/nushell/config.nu \
+      "${configDir}/config.nu" \
       ${./config-expected.nu}
     assertFileContent \
-      home-files/.config/nushell/env.nu \
+      "${configDir}/env.nu" \
       ${./env-expected.nu}
   '';
 }

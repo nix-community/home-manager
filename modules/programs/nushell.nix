@@ -6,6 +6,11 @@ let
 
   cfg = config.programs.nushell;
 
+  configDir = if pkgs.stdenv.isDarwin then
+    "Library/Application Support/nushell"
+  else
+    "${config.xdg.configHome}/nushell";
+
   linesOrSource = name:
     types.submodule ({ config, ... }: {
       options = {
@@ -110,16 +115,15 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-
-    xdg.configFile = mkMerge [
+    home.file = mkMerge [
       (mkIf (cfg.configFile != null || cfg.extraConfig != "") {
-        "nushell/config.nu".text = mkMerge [
+        "${configDir}/config.nu".text = mkMerge [
           (mkIf (cfg.configFile != null) cfg.configFile.text)
           cfg.extraConfig
         ];
       })
       (mkIf (cfg.envFile != null || cfg.extraEnv != "") {
-        "nushell/env.nu".text = mkMerge [
+        "${configDir}/env.nu".text = mkMerge [
           (mkIf (cfg.envFile != null) cfg.envFile.text)
           cfg.extraEnv
         ];
