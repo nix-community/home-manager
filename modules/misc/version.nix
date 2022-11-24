@@ -41,7 +41,7 @@ with lib;
           suffix =
             optionalString (revision != null) "+${substring 0 8 revision}";
         in "${release}${suffix}";
-        example = "22.05+213a0629";
+        example = "22.11+f7641a3f";
         description = "The full Home Manager version.";
       };
 
@@ -50,7 +50,7 @@ with lib;
         readOnly = true;
         type = types.str;
         default = fileContents ../../.release;
-        example = "22.05";
+        example = "22.11";
         description = "The Home Manager release.";
       };
 
