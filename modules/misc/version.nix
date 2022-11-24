@@ -16,6 +16,7 @@ with lib;
         "21.11"
         "22.05"
         "22.11"
+        "23.05"
       ];
       description = ''
         It is occasionally necessary for Home Manager to change

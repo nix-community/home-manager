@@ -6,6 +6,8 @@ This section lists the release notes for stable versions of Home Manager and the
 
 :leveloffset: 1
 
+include::rl-2305.adoc[]
+
 include::rl-2211.adoc[]
 
 include::rl-2205.adoc[]
