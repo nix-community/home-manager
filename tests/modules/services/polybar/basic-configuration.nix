@@ -47,7 +47,7 @@
       serviceFile=home-files/.config/systemd/user/polybar.service
 
       assertFileExists $serviceFile
-      assertFileRegex $serviceFile 'X-Restart-Triggers=.*polybar\.conf'
+      assertFileRegex $serviceFile 'X-Restart-Triggers=.*/.config/polybar/config.ini'
       assertFileRegex $serviceFile 'ExecStart=.*/bin/polybar-start'
 
       assertFileExists home-files/.config/polybar/config.ini
