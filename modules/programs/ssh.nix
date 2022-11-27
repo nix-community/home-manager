@@ -60,10 +60,37 @@ let
   matchBlockModule = types.submodule ({ dagName, ... }: {
     options = {
       host = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
+        default = null;
         example = "*.example.org";
         description = ''
-          The host pattern used by this conditional block.
+          <literal>Host</literal> pattern used by this conditional block.
+          See
+          <citerefentry>
+          <refentrytitle>ssh_config</refentrytitle>
+          <manvolnum>5</manvolnum>
+          </citerefentry>
+          for <literal>Host</literal> block details.
+          This option is ignored if
+          <option>ssh.matchBlocks.*.matcht</option>
+          if defined.
+        '';
+      };
+
+      match = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "host <hostname> canonical\nhost <hostname> exec \"ping -c1 -q 192.168.17.1\"";
+        description = ''
+          <literal>Match</literal> block conditions used by this block. See
+          <citerefentry>
+          <refentrytitle>ssh_config</refentrytitle>
+          <manvolnum>5</manvolnum>
+          </citerefentry>
+          for <literal>Match</literal> block details.
+          This option takes precedence over
+          <option>ssh.matchBlocks.*.host</option>
+          if defined.
         '';
       };
 
@@ -276,11 +303,16 @@ let
       };
     };
 
-    config.host = mkDefault dagName;
+#    config.host = mkDefault dagName;
   });
 
-  matchBlockStr = cf: concatStringsSep "\n" (
-    ["Host ${cf.host}"]
+  matchBlockStr = key: cf: concatStringsSep "\n" (
+    let
+      hostOrDagName = if cf.host != null then cf.host else key;
+      matchHead = if cf.match != null
+        then "Match ${cf.match}"
+        else "Host ${hostOrDagName}";
+    in [ "${matchHead}" ]
     ++ optional (cf.port != null)            "  Port ${toString cf.port}"
     ++ optional (cf.forwardAgent != null)    "  ForwardAgent ${lib.hm.booleans.yesNo cf.forwardAgent}"
     ++ optional cf.forwardX11                "  ForwardX11 yes"
@@ -492,7 +524,7 @@ in
         ++ (optional (cfg.includes != [ ]) ''
           Include ${concatStringsSep " " cfg.includes}
         '')
-        ++ (map (block: matchBlockStr block.data) matchBlocks)
+        ++ (map (block: matchBlockStr block.name block.data) matchBlocks)
       )}
 
       Host *
@@ -508,5 +540,9 @@ in
 
         ${replaceStrings ["\n"] ["\n  "] cfg.extraConfig}
     '';
+
+    warnings = mapAttrsToList
+      (n: v: "The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.\nThe match option takes precedence.")
+      (filterAttrs (n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks);
   };
 }

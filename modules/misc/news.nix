@@ -843,6 +843,15 @@ in
             export MOZ_ALLOW_DOWNGRADE=1
         '';
       }
+
+      {
+        time = "2022-11-27T13:14:01+00:00";
+        message = ''
+          'programs.ssh.matchBlocks.*' now supports literal 'Match' blocks via
+          'programs.ssh.matchBlocks.*.match' option as an alternative to plain
+          'Host' blocks
+        '';
+      }
     ];
   };
 }
