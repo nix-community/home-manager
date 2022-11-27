@@ -8,7 +8,7 @@ with lib;
       enable = true;
       zplug = {
         enable = true;
-        zplugHome = ~/.customZplugHome;
+        zplugHome = pkgs.emptyDirectory;
         plugins = [
           {
             name = "plugins/git";
