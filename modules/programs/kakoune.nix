@@ -489,9 +489,8 @@ let
     };
   };
 
-  kakouneWithPlugins = pkgs.wrapKakoune pkgs.kakoune-unwrapped {
-    configure = { plugins = cfg.plugins; };
-  };
+  kakouneWithPlugins =
+    pkgs.wrapKakoune cfg.package { configure = { plugins = cfg.plugins; }; };
 
   configFile = let
     wrapOptions = with cfg.config.wrapLines;
@@ -623,6 +622,8 @@ in {
   options = {
     programs.kakoune = {
       enable = mkEnableOption "the kakoune text editor";
+
+      package = mkPackageOption pkgs "kakoune-unwrapped" { };
 
       config = mkOption {
         type = types.nullOr configModule;
