@@ -6,6 +6,10 @@ let
 
   cfg = config.programs.fzf;
 
+  renderedColors = colors:
+    concatStringsSep ","
+    (mapAttrsToList (name: value: "${name}:${value}") colors);
+
 in {
   imports = [
     (mkRemovedOptionModule [ "programs" "fzf" "historyWidgetCommand" ]
@@ -88,6 +92,24 @@ in {
       '';
     };
 
+    colors = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      example = literalExpression ''
+        {
+          bg = "#1e1e1e";
+          "bg+" = "#1e1e1e";
+          fg = "#d4d4d4";
+          "fg+" = "#d4d4d4";
+        }
+      '';
+      description = ''
+        Color scheme options added to <code>FZF_DEFAULT_OPTS</code>. See
+        <link xlink:href="https://github.com/junegunn/fzf/wiki/Color-schemes"/>
+        for documentation.
+      '';
+    };
+
     tmux = {
       enableShellIntegration = mkEnableOption ''
         setting <literal>FZF_TMUX=1</literal> which causes shell integration to use fzf-tmux
@@ -141,7 +163,9 @@ in {
         FZF_CTRL_T_COMMAND = cfg.fileWidgetCommand;
         FZF_CTRL_T_OPTS = cfg.fileWidgetOptions;
         FZF_DEFAULT_COMMAND = cfg.defaultCommand;
-        FZF_DEFAULT_OPTS = cfg.defaultOptions;
+        FZF_DEFAULT_OPTS = cfg.defaultOptions
+          ++ lib.optionals (cfg.colors != { })
+          [ "--color ${renderedColors cfg.colors}" ];
         FZF_TMUX = if cfg.tmux.enableShellIntegration then "1" else null;
         FZF_TMUX_OPTS = cfg.tmux.shellIntegrationOptions;
       });

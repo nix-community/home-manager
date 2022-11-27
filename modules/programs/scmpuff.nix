@@ -31,6 +31,14 @@ in {
         Whether to enable Zsh integration.
       '';
     };
+
+    enableFishIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable fish integration.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -43,5 +51,10 @@ in {
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/scmpuff init -s)"
     '';
+
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration
+      (mkAfter ''
+        ${cfg.package}/bin/scmpuff init -s --shell=fish | source
+      '');
   };
 }
