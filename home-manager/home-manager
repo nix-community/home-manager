@@ -106,10 +106,17 @@ function setFlakeAttribute() {
                 local name="${FLAKE_ARG#*#}"
             ;;
             *)
-                local name="$USER@$(hostname)"
-                if [ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$name\"")" = "false" ]; then
-                    name="$USER"
-                fi
+                local name="$USER"
+                # Check both long and short hostnames; long first to preserve
+                # pre-existing behaviour in case both happen to be defined.
+                for n in "$USER@$(hostname)" "$USER@$(hostname -s)"; do
+                    if [[ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$n\"")" == "true" ]]; then
+                        name="$n"
+                        if [[ -v VERBOSE ]]; then
+                            echo "Using flake homeConfiguration for $name"
+                        fi
+                    fi
+                done
             ;;
         esac
         export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$name\""
