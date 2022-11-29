@@ -145,6 +145,16 @@ let
   aliasesStr = concatStringsSep "\n"
     (mapAttrsToList (k: v: "alias ${k} ${escapeShellArg v}") cfg.shellAliases);
 
+  fishIndent = name: text:
+    if cfg.formatFishScripts then
+      pkgs.runCommand name {
+        nativeBuildInputs = [ cfg.package ];
+        inherit text;
+        passAsFile = [ "text" ];
+      } "fish_indent < $textPath > $out"
+    else
+      pkgs.writeText name text;
+
 in {
   imports = [
     (mkRemovedOptionModule [ "programs" "fish" "promptInit" ] ''
@@ -279,6 +289,15 @@ in {
       '';
     };
 
+    programs.fish.formatFishScripts = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to process fish configuration and scripts with
+        <literal>fish_indent</literal>.
+      '';
+    };
+
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -340,7 +359,7 @@ in {
         end
       '';
 
-      xdg.configFile."fish/config.fish".text = ''
+      xdg.configFile."fish/config.fish".source = fishIndent "config.fish" ''
         # ~/.config/fish/config.fish: DO NOT EDIT -- this file has been generated
         # automatically by home-manager.
 
@@ -379,7 +398,7 @@ in {
       xdg.configFile = mapAttrs' (name: def: {
         name = "fish/functions/${name}.fish";
         value = {
-          text = let
+          source = let
             modifierStr = n: v: optional (v != null) ''--${n}="${toString v}"'';
             modifierStrs = n: v: optional (v != null) "--${n}=${toString v}";
             modifierBool = n: v: optional (v != null && v) "--${n}";
@@ -397,9 +416,9 @@ in {
 
             modifiers = if isAttrs def then " ${toString mods}" else "";
             body = if isAttrs def then def.body else def;
-          in ''
+          in fishIndent "${name}.fish" ''
             function ${name}${modifiers}
-              ${body}
+              ${lib.strings.removeSuffix "\n" body}
             end
           '';
         };
@@ -410,34 +429,35 @@ in {
     # in the paths and any initialization scripts.
     (mkIf (length cfg.plugins > 0) {
       xdg.configFile = mkMerge ((map (plugin: {
-        "fish/conf.d/plugin-${plugin.name}.fish".text = ''
-          # Plugin ${plugin.name}
-          set -l plugin_dir ${plugin.src}
+        "fish/conf.d/plugin-${plugin.name}.fish".source =
+          fishIndent "${plugin.name}.fish" ''
+            # Plugin ${plugin.name}
+            set -l plugin_dir ${plugin.src}
 
-          # Set paths to import plugin components
-          if test -d $plugin_dir/functions
-            set fish_function_path $fish_function_path[1] $plugin_dir/functions $fish_function_path[2..-1]
-          end
-
-          if test -d $plugin_dir/completions
-            set fish_complete_path $fish_complete_path[1] $plugin_dir/completions $fish_complete_path[2..-1]
-          end
-
-          # Source initialization code if it exists.
-          if test -d $plugin_dir/conf.d
-            for f in $plugin_dir/conf.d/*.fish
-              source $f
+            # Set paths to import plugin components
+            if test -d $plugin_dir/functions
+              set fish_function_path $fish_function_path[1] $plugin_dir/functions $fish_function_path[2..-1]
             end
-          end
 
-          if test -f $plugin_dir/key_bindings.fish
-            source $plugin_dir/key_bindings.fish
-          end
+            if test -d $plugin_dir/completions
+              set fish_complete_path $fish_complete_path[1] $plugin_dir/completions $fish_complete_path[2..-1]
+            end
 
-          if test -f $plugin_dir/init.fish
-            source $plugin_dir/init.fish
-          end
-        '';
+            # Source initialization code if it exists.
+            if test -d $plugin_dir/conf.d
+              for f in $plugin_dir/conf.d/*.fish
+                source $f
+              end
+            end
+
+            if test -f $plugin_dir/key_bindings.fish
+              source $plugin_dir/key_bindings.fish
+            end
+
+            if test -f $plugin_dir/init.fish
+              source $plugin_dir/init.fish
+            end
+          '';
       }) cfg.plugins));
     })
   ]);
