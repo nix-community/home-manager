@@ -55,7 +55,7 @@ in rec {
       };
 
       size = mkOption {
-        type = types.nullOr types.int;
+        type = types.nullOr types.number;
         default = null;
         example = "8";
         description = ''
