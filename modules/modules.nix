@@ -159,7 +159,6 @@ let
     ./programs/pls.nix
     ./programs/powerline-go.nix
     ./programs/pubs.nix
-    ./programs/pylint.nix
     ./programs/python.nix
     ./programs/python/mypy.nix
     ./programs/python/pip.nix

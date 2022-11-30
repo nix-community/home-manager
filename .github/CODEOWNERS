@@ -274,8 +274,6 @@ Makefile                                              @thiagokokada
 /modules/programs/pubs.nix                            @loicreynier
 /tests/modules/programs/pubs                          @loicreynier
 
-/modules/programs/pylint.nix                          @florpe
-
 /modules/programs/python.nix                          @anselmschueler
 /modules/programs/python                              @anselmschueler
 
