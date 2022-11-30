@@ -345,4 +345,10 @@
     github = "lukasngl";
     githubId = 69244516;
   };
+  ivan770 = {
+    name = "ivan770";
+    email = "14003886+ivan770@users.noreply.github.com";
+    github = "ivan770";
+    githubId = 14003886;
+  };
 }
