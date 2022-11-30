@@ -11,8 +11,8 @@ user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da5039
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.useremail", "hm@example.org");
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.valid", true);
 user_pref("mail.openpgp.allow_external_gnupg", false);
-user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.directory", ".thunderbird/second/ImapMail/imap.example.org");
-user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.directory-rel", "[ProfD]ImapMail/imap.example.org");
+user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.directory", ".thunderbird/second/ImapMail/bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
+user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.directory-rel", "[ProfD]ImapMail/bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.hostname", "imap.example.org");
 user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.login_at_startup", true);
 user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.name", "hm-account");

@@ -62,9 +62,8 @@ let
       "mail.identity.id_${id}.sign_mail" = account.gpg.signByDefault;
     } // optionalAttrs (account.imap != null) {
       "mail.server.server_${id}.directory" =
-        "${thunderbirdProfilesPath}/${profile.name}/ImapMail/${account.imap.host}";
-      "mail.server.server_${id}.directory-rel" =
-        "[ProfD]ImapMail/${account.imap.host}";
+        "${thunderbirdProfilesPath}/${profile.name}/ImapMail/${id}";
+      "mail.server.server_${id}.directory-rel" = "[ProfD]ImapMail/${id}";
       "mail.server.server_${id}.hostname" = account.imap.host;
       "mail.server.server_${id}.login_at_startup" = true;
       "mail.server.server_${id}.name" = account.name;
