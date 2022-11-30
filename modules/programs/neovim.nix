@@ -365,15 +365,13 @@ in {
       in mkMerge (
         # writes runtime
         (map (x: x.runtime) pluginsNormalized) ++ [{
-          "nvim/init-home-manager.vim" =
-            mkIf (neovimConfig.neovimRcContent != "") {
-              text = neovimConfig.neovimRcContent;
-            };
           "nvim/init.lua" = let
             luaRcContent =
               lib.optionalString (neovimConfig.neovimRcContent != "")
-              "vim.cmd [[source ${config.xdg.configHome}/nvim/init-home-manager.vim]]"
-              + lib.optionalString hasLuaConfig
+              "vim.cmd [[source ${
+                pkgs.writeText "nvim-init-home-manager.vim"
+                neovimConfig.neovimRcContent
+              }]]" + lib.optionalString hasLuaConfig
               config.programs.neovim.generatedConfigs.lua;
           in mkIf (luaRcContent != "") { text = luaRcContent; };
 
