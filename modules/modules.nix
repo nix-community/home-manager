@@ -85,6 +85,12 @@ let
     ./programs/gnome-terminal.nix
     ./programs/go.nix
     ./programs/gpg.nix
+    ./programs/haskell.nix
+    ./programs/haskell/cabal.nix
+    ./programs/haskell/ghc.nix
+    ./programs/haskell/ghcup.nix
+    ./programs/haskell/hls.nix
+    ./programs/haskell/stack.nix
     ./programs/havoc.nix
     ./programs/helix.nix
     ./programs/hexchat.nix
@@ -154,12 +160,25 @@ let
     ./programs/powerline-go.nix
     ./programs/pubs.nix
     ./programs/pylint.nix
+    ./programs/python.nix
+    ./programs/python/mypy.nix
+    ./programs/python/pip.nix
+    ./programs/python/pytest.nix
     ./programs/qutebrowser.nix
     ./programs/rbw.nix
     ./programs/readline.nix
     ./programs/rofi-pass.nix
     ./programs/rofi.nix
     ./programs/rtorrent.nix
+    ./programs/rust.nix
+    ./programs/rust/cargo.nix
+    ./programs/rust/clippy.nix
+    ./programs/rust/expose-src-location.nix
+    ./programs/rust/rls.nix
+    ./programs/rust/rust-analyzer.nix
+    ./programs/rust/rustc.nix
+    ./programs/rust/rustfmt.nix
+    ./programs/rust/rustup.nix
     ./programs/sagemath.nix
     ./programs/sbt.nix
     ./programs/scmpuff.nix
