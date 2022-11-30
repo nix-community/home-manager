@@ -128,6 +128,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/go.nix                              @rvolosatovs
 
+/modules/programs/haskell.nix                         @schuelermine
+/modules/programs/haskell                             @schuelermine
+
 /modules/programs/havoc.nix                           @AndersonTorres
 
 /modules/programs/helix.nix                           @Philipp-M
@@ -273,6 +276,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/pylint.nix                          @florpe
 
+/modules/programs/python.nix                          @anselmschueler
+/modules/programs/python                              @anselmschueler
+
 /modules/programs/rbw.nix                             @ambroisie
 /tests/modules/programs/rbw                           @ambroisie
 
@@ -283,6 +289,9 @@ Makefile                                              @thiagokokada
 /tests/modules/programs/rofi-pass                     @seylerius
 
 /modules/programs/rtorrent.nix                        @marsam
+
+/modules/programs/rust.nix                            @schuelermine
+/modules/programs/rust                                @schuelermine
 
 /modules/programs/sagemath.nix                        @kirelagin
 /tests/modules/programs/sagemath                      @kirelagin

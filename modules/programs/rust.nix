@@ -9,4 +9,5 @@ in {
     defaultText = literalExpression "pkgs.rust.packages.stable";
     example = literalExpression "pkgs.rust.packages.prebuilt";
   };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

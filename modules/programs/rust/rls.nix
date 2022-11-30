@@ -7,4 +7,5 @@ in {
     package = mkPackageOption config.programs.rust.toolchainPackages "rls" { };
   };
   config.home.packages = mkIf cfg.enable [ cfg.package ];
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

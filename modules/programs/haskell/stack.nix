@@ -28,4 +28,5 @@ in {
       source = yamlFormat.generate "stack-config" cfg.settings;
     };
   };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

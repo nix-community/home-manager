@@ -39,4 +39,5 @@ in {
     };
   };
   config.home.packages = mkIf cfg.enable [ cfg.package ];
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

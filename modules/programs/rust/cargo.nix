@@ -29,4 +29,5 @@ in {
       source = tomlFormat.generate "cargo-config" cfg.settings;
     };
   };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

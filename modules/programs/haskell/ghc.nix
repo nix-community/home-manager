@@ -47,4 +47,5 @@ in {
     packages = [ cfg.package ];
     file.".ghci" = mkIf (cfg.ghciConfig != null) { text = cfg.ghciConfig; };
   };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

@@ -28,4 +28,5 @@ in {
       source = iniFormat.generate "pip-config" cfg.settings;
     };
   };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

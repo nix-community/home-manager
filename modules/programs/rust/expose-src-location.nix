@@ -25,4 +25,5 @@ in {
   config.home.sessionVariables = mkIf (cfg.exposeRustSrcLocation != null) {
     "RUST_SRC_PATH" = cfg.exposeRustSrcLocation;
   };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

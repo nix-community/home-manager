@@ -30,4 +30,5 @@ in {
       source = tomlFormat.generate "rustfmt-config" cfg.settings;
     };
   };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

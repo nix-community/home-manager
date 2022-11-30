@@ -27,4 +27,5 @@ in {
       example = literalExpression "pkgs.haskell.packages.ghc923";
     };
   };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

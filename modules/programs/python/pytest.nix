@@ -8,4 +8,5 @@ in {
       mkPackageOption config.programs.python.pythonPackages "pytest" { };
   };
   config = { programs.python.packages = mkIf cfg.enable (_: [ cfg.package ]); };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

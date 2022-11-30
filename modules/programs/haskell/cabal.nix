@@ -24,4 +24,5 @@ in {
     packages = [ cfg.package ];
     file.".cabal/config" = mkIf (cfg.config != null) { text = cfg.config; };
   };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

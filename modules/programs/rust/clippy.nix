@@ -8,4 +8,5 @@ in {
       mkPackageOption config.programs.rust.toolchainPackages "clippy" { };
   };
   config.home.packages = mkIf cfg.enable [ cfg.package ];
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

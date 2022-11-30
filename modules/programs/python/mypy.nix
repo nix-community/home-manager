@@ -28,4 +28,5 @@ in {
       source = iniFormat.generate "mypy-config" cfg.settings;
     };
   };
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }

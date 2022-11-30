@@ -7,4 +7,5 @@ in {
     package = mkPackageOption pkgs "rust-analyzer" { };
   };
   config.home.packages = mkIf cfg.enable [ cfg.package ];
+  meta.maintainers = with maintainers; [ anselmschueler ];
 }
