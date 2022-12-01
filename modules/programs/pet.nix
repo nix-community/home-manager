@@ -99,8 +99,9 @@ in {
         else {
           General = cfg.settings;
         });
-      "pet/snippet.toml".source =
-        format.generate "snippet.toml" { snippets = cfg.snippets; };
+      "pet/snippet.toml" = mkIf (cfg.snippets != [ ]) {
+        source = format.generate "snippet.toml" { snippets = cfg.snippets; };
+      };
     };
   };
 }
