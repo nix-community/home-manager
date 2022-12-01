@@ -28,6 +28,16 @@ let
     set -gx GPG_TTY (tty)
   '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
 
+  sshAuthSockStr =
+    let sockPathCmd = "$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)";
+    in (if pkgs.stdenv.hostPlatform.isLinux then ''
+      if [[ -z "$SSH_AUTH_SOCK" ]]; then
+        export SSH_AUTH_SOCK="${sockPathCmd}"
+      fi
+    '' else ''
+      export SSH_AUTH_SOCK="${sockPathCmd}"
+    '');
+
   # mimic `gpgconf` output for use in `systemd` unit definitions.
   # we cannot use `gpgconf` directly because it heavily depends on system
   # state, but we need the values at build time. original:
@@ -249,11 +259,8 @@ in {
           ++ optional (cfg.pinentryFlavor != null)
           "pinentry-program ${pinentryBinPath}" ++ [ cfg.extraConfig ]);
 
-      home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''
-        if [[ -z "$SSH_AUTH_SOCK" ]]; then
-          export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
-        fi
-      '';
+      home.sessionVariablesExtra =
+        optionalString cfg.enableSshSupport sshAuthSockStr;
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration gpgInitStr;
       programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgInitStr;
