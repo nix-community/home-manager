@@ -46,7 +46,7 @@ in {
         Description = "Discord Rich Presence for MPD";
         Documentation = "https://github.com/JakeStanger/mpd-discord-rpc";
         After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.desktop" ];
+        PartOf = [ "graphical-session.target" ];
       };
       Service = {
         ExecStart = "${cfg.package}/bin/mpd-discord-rpc";
