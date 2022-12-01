@@ -194,7 +194,7 @@ in {
       pinentryFlavor = mkOption {
         type = types.nullOr (types.enum (pkgs.pinentry.flavors ++ [ "mac" ]));
         example = "gnome3";
-        default = "gtk2";
+        default = if pkgs.stdenv.hostPlatform.isMacOS then "mac" else "gtk2";
         description = ''
           Which pinentry interface to use. If not
           <literal>null</literal>, it sets
@@ -206,8 +206,13 @@ in {
           <programlisting language="nix">
           services.dbus.packages = [ pkgs.gcr ];
           </programlisting>
-          For this reason, the default is <literal>gtk2</literal> for
-          now.
+          For this reason, on Linux systems, the default is
+          <literal>gtk2</literal> for now.
+          On macOS, while <literal>gtk2</literal> will work, the dialog
+          will not receive proper focus.<literal>pinentry-mac</literal>
+          integrates with macOS smoothly, so it will be used as the default
+          on macOS. On Darwin (as opposed to macOS specifically),
+          <literal>gtk2</literal> may still be a preferable default.
         '';
       };
 
