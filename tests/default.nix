@@ -161,6 +161,7 @@ import nmt {
     ./modules/programs/rofi-pass
     ./modules/programs/swaylock
     ./modules/programs/terminator
+    ./modules/programs/thunderbird
     ./modules/programs/waybar
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp

@@ -88,7 +88,9 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         docs = import ./docs { inherit pkgs; };
+        tests = import ./tests { inherit pkgs; };
       in {
+        devShells.tests = tests.run;
         packages = rec {
           home-manager = pkgs.callPackage ./home-manager { };
           docs-html = docs.manual.html;

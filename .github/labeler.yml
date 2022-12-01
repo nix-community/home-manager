@@ -9,8 +9,11 @@
   - modules/programs/getmail*
   - modules/*/mbsync*
   - tests/modules/programs/mbsync/*
+  - modules/programs/himalaya.nix
+  - tests/modules/programs/himalaya/*
+  - modules/programs/thunderbird.nix
+  - tests/modules/programs/thunderbird/*
 
 "neovim":
   - modules/programs/neovim.nix
   - tests/modules/programs/neovim/**/*
-

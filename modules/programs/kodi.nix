@@ -131,9 +131,8 @@ in {
       type = types.package;
       default = pkgs.kodi;
       defaultText = literalExpression "pkgs.kodi";
-      example = literalExpression ''
-        { pkgs.kodi.withPackages (exts: [ exts.pvr-iptvsimple ]) }
-      '';
+      example = literalExpression
+        "pkgs.kodi.withPackages (exts: [ exts.pvr-iptvsimple ])";
       description = ''
         The <literal>kodi</literal> package to use.
         Can be used to specify extensions.

@@ -6,14 +6,17 @@ let
 
   cfg = config.programs.nushell;
 
-  tomlFormat = pkgs.formats.toml { };
-
   linesOrSource = name:
     types.submodule ({ config, ... }: {
       options = {
         text = mkOption {
           type = types.lines;
-          default = "";
+          default = if config.source != null then
+            builtins.readFile config.source
+          else
+            "";
+          defaultText = literalExpression
+            "if source is defined, the content of source, otherwise empty";
           description = ''
             Text of the nushell <filename>${name}</filename> file.
             If unset then the source option will be preferred.
@@ -22,18 +25,14 @@ let
 
         source = mkOption {
           type = types.nullOr types.path;
-          default = pkgs.writeTextFile {
-            inherit (config) text;
-            name = hm.strings.storeFileName name;
-          };
-          defaultText = literalExpression "file containing text";
+          default = null;
           description = ''
             Path of the nushell <filename>${name}</filename> file to use.
+            If the text option is set, it will be preferred.
           '';
         };
       };
     });
-
 in {
   meta.maintainers = [ maintainers.Philipp-M ];
 
@@ -91,14 +90,40 @@ in {
         See <link xlink:href="https://www.nushell.sh/book/configuration.html#configuration" /> for more information.
       '';
     };
+
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Additional configuration to add to the nushell configuration file.
+      '';
+    };
+
+    extraEnv = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Additional configuration to add to the nushell environment variables file.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     xdg.configFile = mkMerge [
-      (mkIf (cfg.configFile != null) { "nushell/config.nu" = cfg.configFile; })
-      (mkIf (cfg.envFile != null) { "nushell/env.nu" = cfg.envFile; })
+      (mkIf (cfg.configFile != null || cfg.extraConfig != "") {
+        "nushell/config.nu".text = mkMerge [
+          (mkIf (cfg.configFile != null) cfg.configFile.text)
+          cfg.extraConfig
+        ];
+      })
+      (mkIf (cfg.envFile != null || cfg.extraEnv != "") {
+        "nushell/env.nu".text = mkMerge [
+          (mkIf (cfg.envFile != null) cfg.envFile.text)
+          cfg.extraEnv
+        ];
+      })
     ];
   };
 }

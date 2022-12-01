@@ -99,7 +99,7 @@ in {
         type = types.int;
         default = 600;
         description = ''
-          X server's screensaver cycle value expresed as seconds.
+          The X server's screensaver cycle value expressed as seconds.
           This will be used with <command>xset</command> to configure
           the cycle along with timeout.
         '';

@@ -97,3 +97,17 @@ These changes are only active if the `home.stateVersion` option is set to "22.11
 value of <<opt-xdg.userDirs.music>> if <<opt-xdg.userDirs.enable>> is
 enabled. Otherwise it is undefined and must be specified in the user
 configuration.
+
+* The activation script now resets `PATH` before running. Before, the
+user's `PATH` environment variable would be used in the script and
+this made it possible for commands in the activation script to run
+arbitrary commands accessible to the user. We now restrict the
+activation script to commands that are explicitly specified.
++
+There is no official way to restore the old behavior. We attempt to
+make the activation script as reproducible as possible and honoring
+the user's `PATH` reduces reproducibility.
++
+If you need to run a command in an activation script block then refer
+to the command by its absolute command path, such as
+`${pkgs.hello}/bin/hello`.

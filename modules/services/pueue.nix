@@ -39,7 +39,8 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."pueue/pueue.yml".source = configFile;
+    xdg.configFile =
+      mkIf (cfg.settings != { }) { "pueue/pueue.yml".source = configFile; };
 
     systemd.user = {
       services.pueued = {

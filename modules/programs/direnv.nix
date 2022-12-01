@@ -29,7 +29,7 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/direnv/config.toml</filename>.
+        <filename>$XDG_CONFIG_HOME/direnv/direnv.toml</filename>.
         </para><para>
         See
         <citerefentry>
@@ -92,7 +92,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ pkgs.direnv ];
 
-    xdg.configFile."direnv/config.toml" = mkIf (cfg.config != { }) {
+    xdg.configFile."direnv/direnv.toml" = mkIf (cfg.config != { }) {
       source = tomlFormat.generate "direnv-config" cfg.config;
     };
 

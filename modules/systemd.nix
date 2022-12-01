@@ -107,7 +107,7 @@ in {
     systemd.user = {
       systemctlPath = mkOption {
         default = "${pkgs.systemd}/bin/systemctl";
-        defaultText = "\${pkgs.systemd}/bin/systemctl";
+        defaultText = literalExpression ''"''${pkgs.systemd}/bin/systemctl"'';
         type = types.str;
         description = ''
           Absolute path to the <command>systemctl</command> tool. This

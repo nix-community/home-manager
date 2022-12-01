@@ -2,6 +2,7 @@
   ssh-defaults = ./default-config.nix;
   ssh-includes = ./includes.nix;
   ssh-match-blocks = ./match-blocks-attrs.nix;
+  ssh-match-blocks-match-and-hosts = ./match-blocks-match-and-hosts.nix;
 
   ssh-forwards-dynamic-valid-bind-no-asserts =
     ./forwards-dynamic-valid-bind-no-asserts.nix;
