@@ -89,7 +89,7 @@ let
   in hexString: (foldl' go initState (splitChars hexString)).ret;
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with maintainers; [ rycee montchr ];
 
   options = {
     services.gpg-agent = {
