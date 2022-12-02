@@ -51,11 +51,11 @@ $ nix-channel --add https://github.com/nix-community/home-manager/archive/master
 $ nix-channel --update
 ----
 +
-and if you follow a Nixpkgs version 22.05 channel you can run
+and if you follow a Nixpkgs version 22.11 channel you can run
 +
 [source,console]
 ----
-$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager
 $ nix-channel --update
 ----
 +
@@ -133,11 +133,11 @@ $ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/m
 $ sudo nix-channel --update
 ----
 
-and if you follow a Nixpkgs version 22.05 channel, you can run
+and if you follow a Nixpkgs version 22.11 channel, you can run
 
 [source,console]
 ----
-$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
+$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager
 $ sudo nix-channel --update
 ----
 
@@ -244,11 +244,11 @@ $ nix-channel --add https://github.com/nix-community/home-manager/archive/master
 $ nix-channel --update
 ----
 
-and if you follow a Nixpkgs version 22.05 channel, you can run
+and if you follow a Nixpkgs version 22.11 channel, you can run
 
 [source,console]
 ----
-$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager
 $ nix-channel --update
 ----
 
