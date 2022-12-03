@@ -185,10 +185,10 @@ in {
         default = { };
         example = literalExpression ''
           {
-            freenode = {
+            liberachat = {
               nick = "hmuser";
               server = {
-                address = "chat.freenode.net";
+                address = "irc.libera.chat";
                 port = 6697;
                 autoConnect = true;
               };
