@@ -129,8 +129,8 @@ in {
         type = types.nullOr types.str;
         description = ''
           Set margin of each edge specified in pixels. Specify single value to
-          apply margin on all sides. Two comma-seperated values will set
-          vertical and horizontal edges seperately. Four comma-seperated will
+          apply margin on all sides. Two comma-separated values will set
+          vertical and horizontal edges separately. Four comma-seperated will
           give each edge a seperate value.
           For example: 10,20,5 will set top margin to 10, left and right to 20
           and bottom to five.
@@ -142,8 +142,8 @@ in {
         type = types.nullOr types.str;
         description = ''
           Set padding of each edge specified in pixels. Specify single value to
-          apply margin on all sides. Two comma-seperated values will set
-          vertical and horizontal edges seperately. Four comma-seperated will
+          apply margin on all sides. Two comma-separated values will set
+          vertical and horizontal edges separately. Four comma-seperated will
           give each edge a seperate value.
           For example: 10,20,5 will set top margin to 10, left and right to 20
           and bottom to five.

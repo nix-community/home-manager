@@ -50,7 +50,7 @@ in {
       AppleMetricUnits = mkNullableEnableOption "the metric system";
 
       NSAutomaticCapitalizationEnabled =
-        mkNullableEnableOption "automatic captilization";
+        mkNullableEnableOption "automatic capitalization";
 
       NSAutomaticDashSubstitutionEnabled =
         mkNullableEnableOption "smart dashes";
