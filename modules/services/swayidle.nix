@@ -88,7 +88,7 @@ in {
           { event = "lock"; command = "lock"; }
         ]
       '';
-      description = "Run command on occurence of a event.";
+      description = "Run command on occurrence of a event.";
     };
 
     extraArgs = mkOption {

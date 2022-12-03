@@ -193,7 +193,7 @@ let
       # We have to make sure the wrapper does not start a dbus session
       export DBUS_SESSION_BUS_ADDRESS=1
 
-      # A zero exit code means i3 succesfully validated the configuration
+      # A zero exit code means i3 successfully validated the configuration
       i3 -c ${configFile} -C -d all || {
         echo "i3 configuration validation failed"
         echo "For a verbose log of the failure, run 'i3 -c ${configFile} -C -d all'"

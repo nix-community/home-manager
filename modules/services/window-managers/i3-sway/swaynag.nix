@@ -33,7 +33,7 @@ in {
             <refentrytitle>swaynag</refentrytitle>
             <manvolnum>5</manvolnum>
           </citerefentry>
-          for a list of avaliable options and an example configuration.
+          for a list of available options and an example configuration.
           Note, configurations declared under <literal>&lt;config&gt;</literal>
           will override the default type values of swaynag.
         '';

@@ -109,7 +109,7 @@ let
         example =
           "[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]";
         description = ''
-          Commands executed after the profile is succesfully applied.
+          Commands executed after the profile is successfully applied.
           Note that if you provide multiple commands, they will be
           executed asynchronously with no guaranteed ordering.
         '';

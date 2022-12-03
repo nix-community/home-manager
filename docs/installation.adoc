@@ -303,7 +303,7 @@ can be sourced directly by POSIX.2-like shells such as {bash}[Bash] or
 [NOTE]
 ====
 By default user packages will not be ignored in favor of
-`environment.systemPackages`, but they will be intalled to
+`environment.systemPackages`, but they will be installed to
 `/etc/profiles/per-user/$USERNAME` if
 
 [source,nix]
