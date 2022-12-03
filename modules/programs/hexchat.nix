@@ -170,7 +170,7 @@ let
         servers = mkOption {
           type = listOf str;
           default = [ ];
-          example = [ "chat.freenode.net" "irc.freenode.net" ];
+          example = [ "irc.oftc.net" ];
           description = "IRC Server Address List.";
         };
       };
@@ -239,11 +239,10 @@ in {
       default = { };
       example = literalExpression ''
         {
-          freenode = {
+          oftc = {
             autojoin = [
               "#home-manager"
               "#linux"
-              "#nixos"
             ];
             charset = "UTF-8 (Unicode)";
             commands = [
@@ -263,8 +262,7 @@ in {
             password = "my_password";
             realName = "my_realname";
             servers = [
-              "chat.freenode.net"
-              "irc.freenode.net"
+              "irc.oftc.net"
             ];
             userName = "my_username";
           };

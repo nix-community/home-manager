@@ -6,7 +6,7 @@
       enable = true;
       overwriteConfigFiles = true;
       channels = {
-        freenode = {
+        oftc = {
           charset = "UTF-8 (Unicode)";
           userName = "user";
           password = "password";
@@ -18,8 +18,8 @@
             autoconnect = true;
             forceSSL = true;
           };
-          servers = [ "chat.freenode.net" "irc.freenode.net" ];
-          autojoin = [ "#home-manager" "#nixos" ];
+          servers = [ "irc.oftc.net" ];
+          autojoin = [ "#home-manager" ];
         };
         efnet = {
           options = { forceSSL = true; };
