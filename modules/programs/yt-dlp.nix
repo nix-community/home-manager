@@ -29,11 +29,13 @@ in {
       type = with types; attrsOf (oneOf [ bool int str ]);
       default = { };
       example = literalExpression ''
-        embed-thumbnail = true;
-        embed-subs = true;
-        sub-langs = "all";
-        downloader = "aria2c";
-        downloader-args = "aria2c:'-c -x8 -s8 -k1M'";
+        {
+          embed-thumbnail = true;
+          embed-subs = true;
+          sub-langs = "all";
+          downloader = "aria2c";
+          downloader-args = "aria2c:'-c -x8 -s8 -k1M'";
+        }
       '';
       description = ''
         Configuration written to
