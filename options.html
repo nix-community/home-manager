@@ -192,6 +192,13 @@ disable <code class="literal">readAll</code>.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.himalaya.enable"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.himalaya.enable"><code class="option">accounts.email.accounts.&lt;name&gt;.himalaya.enable</code></a></span></dt><dd><p>Whether to enable the himalaya mail client for this account
 .</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/himalaya.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.himalaya.backend"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.himalaya.backend"><code class="option">accounts.email.accounts.&lt;name&gt;.himalaya.backend</code></a></span></dt><dd><p>The method for which <span class="command"><strong>himalaya</strong></span> will fetch, store,
+etc. mail.
+</p><p><span class="emphasis"><em>Type:</em></span> null or one of "imap", "maildir"</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/himalaya.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.himalaya.sender"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.himalaya.sender"><code class="option">accounts.email.accounts.&lt;name&gt;.himalaya.sender</code></a></span></dt><dd><p>The method for which <span class="command"><strong>himalaya</strong></span> will send mail.
+</p><p><span class="emphasis"><em>Type:</em></span> null or one of "smtp", "sendmail"</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/himalaya.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.himalaya.settings"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.himalaya.settings"><code class="option">accounts.email.accounts.&lt;name&gt;.himalaya.settings</code></a></span></dt><dd><p>Extra settings to add to this <span class="command"><strong>himalaya</strong></span>
 account configuration.
 </p><p><span class="emphasis"><em>Type:</em></span> TOML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -745,6 +752,12 @@ set as primary.
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
                     &lt;home-manager/modules/accounts/email.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.signature.command"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.signature.command"><code class="option">accounts.email.accounts.&lt;name&gt;.signature.command</code></a></span></dt><dd><p>A command that generates a signature.</p><p><span class="emphasis"><em>Type:</em></span> null or path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.writeScript "signature" "echo This is my signature"
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/accounts/email.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.signature.delimiter"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.signature.delimiter"><code class="option">accounts.email.accounts.&lt;name&gt;.signature.delimiter</code></a></span></dt><dd><p>The delimiter used between the document and the signature.
+</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> </p><pre class="programlisting">''
+--
+''</pre><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">~*~*~*~*~*~*~*~*~*~*~*~
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
                     &lt;home-manager/modules/accounts/email.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.email.accounts._name_.signature.showSignature"></a><a class="term" href="options.html#opt-accounts.email.accounts._name_.signature.showSignature"><code class="option">accounts.email.accounts.&lt;name&gt;.signature.showSignature</code></a></span></dt><dd><p>Method to communicate the signature.</p><p><span class="emphasis"><em>Type:</em></span> one of "append", "attach", "none"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"none"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
@@ -4276,7 +4289,8 @@ as seen in example.
         
         }
     </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  default-page-size = 50;
+  email-listing-page-size = 50;
+  watch-cmds = [ "mbsync -a" ]
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/himalaya.nix&gt;
