@@ -271,7 +271,7 @@ let
           "floating_modifier ${floating.modifier}"
           (windowBorderString window floating)
           "hide_edge_borders ${window.hideEdgeBorders}"
-          "focus_wrapping ${lib.hm.booleans.yesNo focus.forceWrapping}"
+          "focus_wrapping ${focus.wrapping}"
           "focus_follows_mouse ${focus.followMouse}"
           "focus_on_window_activation ${focus.newWindow}"
           "mouse_warping ${
@@ -442,7 +442,10 @@ in {
         ++ flatten (map (b:
           optional (isList b.fonts)
           "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
-          cfg.config.bars);
+          cfg.config.bars) ++ [
+            (mkIf cfg.config.focus.forceWrapping
+              "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
+          ];
     })
 
     {
