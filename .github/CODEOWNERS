@@ -559,3 +559,6 @@ Makefile                                              @thiagokokada
 /modules/xresources.nix                               @rycee
 
 /modules/xsession.nix                                 @rycee
+
+/modules/programs/calcurse.nix                        @omernaveedxyz
+/tests/modules/programs/calcurse                      @omernaveedxyz

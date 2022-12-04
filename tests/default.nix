@@ -65,6 +65,7 @@ import nmt {
     ./modules/programs/broot
     ./modules/programs/browserpass
     ./modules/programs/btop
+    ./modules/programs/calcurse
     ./modules/programs/dircolors
     ./modules/programs/direnv
     ./modules/programs/emacs

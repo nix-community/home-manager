@@ -65,6 +65,7 @@ let
     ./programs/btop.nix
     ./programs/chromium.nix
     ./programs/command-not-found/command-not-found.nix
+    ./programs/calcurse.nix
     ./programs/dircolors.nix
     ./programs/direnv.nix
     ./programs/discocss.nix
