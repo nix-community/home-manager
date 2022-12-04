@@ -14,7 +14,10 @@ with lib;
       extraPython3Packages = (ps: with ps; [ jedi pynvim ]);
 
       # plugins without associated config should not trigger the creation of init.vim
-      plugins = with pkgs.vimPlugins; [ fugitive ({ plugin = vim-sensible; }) ];
+      plugins = with pkgs.vimPlugins; [
+        vim-fugitive
+        ({ plugin = vim-sensible; })
+      ];
     };
     nmt.script = ''
       nvimFolder="home-files/.config/nvim"
