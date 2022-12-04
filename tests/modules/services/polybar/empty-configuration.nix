@@ -12,7 +12,7 @@
       serviceFile=home-files/.config/systemd/user/polybar.service
 
       assertFileExists $serviceFile
-      assertFileRegex $serviceFile 'X-Restart-Triggers=.*/.config/polybar/config.ini'
+      assertFileNotRegex $serviceFile 'X-Restart-Triggers=/nix/store/.*-polybar.conf$'
       assertFileRegex $serviceFile 'ExecStart=.*/bin/polybar-start'
 
       assertPathNotExists home-files/.config/polybar/config.ini
