@@ -4139,11 +4139,10 @@ for the full list of options.
         
         }
     </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  freenode = {
+  oftc = {
     autojoin = [
       "#home-manager"
       "#linux"
-      "#nixos"
     ];
     charset = "UTF-8 (Unicode)";
     commands = [
@@ -4163,8 +4162,7 @@ for the full list of options.
     password = "my_password";
     realName = "my_realname";
     servers = [
-      "chat.freenode.net"
-      "irc.freenode.net"
+      "irc.oftc.net"
     ];
     userName = "my_username";
   };
@@ -4232,7 +4230,7 @@ someone uses the <code class="literal">WHOIS</code> command on your nick.
         ]
     </code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
         [
-        "chat.freenode.net" "irc.freenode.net" 
+        "irc.oftc.net" 
         ]
     </code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hexchat.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/hexchat.nix&gt;
@@ -4658,10 +4656,10 @@ in this option) to command strings or directly to build outputs.
         
         }
     </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  freenode = {
+  liberachat = {
     nick = "hmuser";
     server = {
-      address = "chat.freenode.net";
+      address = "irc.libera.chat";
       port = 6697;
       autoConnect = true;
     };
