@@ -1389,8 +1389,8 @@ of launchd's LaunchAgents.
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix#blob-path" target="_top">
                     &lt;home-manager/modules/launchd/default.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.AbandonProcessGroup"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.AbandonProcessGroup"><code class="option">launchd.agents.&lt;name&gt;.config.AbandonProcessGroup</code></a></span></dt><dd><p>When a job dies, launchd kills any remaining processes with the same process group ID as the job.  Set-ting Setting
-ting this key to true disables that behavior.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.AbandonProcessGroup"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.AbandonProcessGroup"><code class="option">launchd.agents.&lt;name&gt;.config.AbandonProcessGroup</code></a></span></dt><dd><p>When a job dies, launchd kills any remaining processes with the same process group ID as the job.  Setting
+this key to true disables that behavior.
 </p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix#blob-path" target="_top">
                     &lt;home-manager/modules/launchd/default.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.Debug"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.Debug"><code class="option">launchd.agents.&lt;name&gt;.config.Debug</code></a></span></dt><dd><p>This optional key specifies that launchd should adjust its log mask temporarily to LOG_DEBUG while
@@ -1398,25 +1398,24 @@ dealing with this job.
 </p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix#blob-path" target="_top">
                     &lt;home-manager/modules/launchd/default.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.Disabled"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.Disabled"><code class="option">launchd.agents.&lt;name&gt;.config.Disabled</code></a></span></dt><dd><p>This optional key is used as a hint to <code class="literal">launchctl(1)</code> that it should not submit this job to launchd when
-loading a job or jobs. The value of this key does NOT reflect the current state of the job on the run-ning running
-ning system. If you wish to know whether a job is loaded in launchd, reading this key from a configura-tion configuration
-tion file yourself is not a sufficient test. You should query launchd for the presence of the job using
+loading a job or jobs. The value of this key does NOT reflect the current state of the job on the running
+system. If you wish to know whether a job is loaded in launchd, reading this key from a configuration
+file yourself is not a sufficient test. You should query launchd for the presence of the job using
 the <code class="literal">launchctl(1)</code> list subcommand or use the ServiceManagement framework's
 <code class="literal">SMJobCopyDictionary()</code> method.
 
 Note that as of Mac OS X v10.6, this key's value in a configuration file conveys a default value, which
 is changed with the [-w] option of the <code class="literal">launchctl(1)</code> load and unload subcommands. These subcommands no
-longer modify the configuration file, so the value displayed in the configuration file is not necessar-ily necessarily
-ily the value that <code class="literal">launchctl(1)</code> will apply. See <code class="literal">launchctl(1)</code> for more information.
+longer modify the configuration file, so the value displayed in the configuration file is not necessarily
+the value that <code class="literal">launchctl(1)</code> will apply. See <code class="literal">launchctl(1)</code> for more information.
 
-Please also be mindful that you should only use this key if the provided on-demand and KeepAlive crite-ria criteria
-ria are insufficient to describe the conditions under which your job needs to run. The cost to have a
+Please also be mindful that you should only use this key if the provided on-demand and KeepAlive criteria
+are insufficient to describe the conditions under which your job needs to run. The cost to have a
 job loaded in launchd is negligible, so there is no harm in loading a job which only runs once or very
 rarely.
 </p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix#blob-path" target="_top">
                     &lt;home-manager/modules/launchd/default.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.EnableGlobbing"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.EnableGlobbing"><code class="option">launchd.agents.&lt;name&gt;.config.EnableGlobbing</code></a></span></dt><dd><p>This flag causes launchd to use the <code class="literal">glob(3)</code> mechanism to update the program arguments before invoca-tion. invocation.
-tion.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.EnableGlobbing"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.EnableGlobbing"><code class="option">launchd.agents.&lt;name&gt;.config.EnableGlobbing</code></a></span></dt><dd><p>This flag causes launchd to use the <code class="literal">glob(3)</code> mechanism to update the program arguments before invocation.
 </p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix#blob-path" target="_top">
                     &lt;home-manager/modules/launchd/default.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.EnableTransactions"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.EnableTransactions"><code class="option">launchd.agents.&lt;name&gt;.config.EnableTransactions</code></a></span></dt><dd><p>This flag instructs launchd that the job promises to use <code class="literal">vproc_transaction_begin(3)</code> and
@@ -1487,12 +1486,12 @@ is true in 10.5 and false in 10.4. This key will be ignored if the UserName key 
                     &lt;home-manager/modules/launchd/default.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.KeepAlive"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.KeepAlive"><code class="option">launchd.agents.&lt;name&gt;.config.KeepAlive</code></a></span></dt><dd><p>This optional key is used to control whether your job is to be kept continuously running or to let
 demand and conditions control the invocation. The default is false and therefore only demand will start
-the job. The value may be set to true to unconditionally keep the job alive. Alternatively, a dictio-nary dictionary
-nary of conditions may be specified to selectively control whether launchd keeps a job alive or not. If
+the job. The value may be set to true to unconditionally keep the job alive. Alternatively, a dictionary
+of conditions may be specified to selectively control whether launchd keeps a job alive or not. If
 multiple keys are provided, launchd ORs them, thus providing maximum flexibility to the job to refine
 the logic and stall if necessary. If launchd finds no reason to restart the job, it falls back on
 demand based invocation.  Jobs that exit quickly and frequently when configured to be kept alive will
-be throttled to converve system resources.
+be throttled to conserve system resources.
 </p><p><span class="emphasis"><em>Type:</em></span> null or boolean or (submodule)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix#blob-path" target="_top">
                     &lt;home-manager/modules/launchd/default.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.Label"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.Label"><code class="option">launchd.agents.&lt;name&gt;.config.Label</code></a></span></dt><dd><p>This required key uniquely identifies the job to launchd.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix#blob-path" target="_top">
@@ -1566,8 +1565,8 @@ resource limits to the job, throttling its CPU usage and I/O bandwidth. The foll
    XPC connections. See <code class="literal">xpc_transaction_begin(3)</code> for details.
 
    Interactive
-   Interactive jobs run with the same resource limitations as apps, that is to say, none. Interac-tive Interactive
-   tive jobs are critical to maintaining a responsive user experience, and this key should only be
+   Interactive jobs run with the same resource limitations as apps, that is to say, none. Interactive
+   jobs are critical to maintaining a responsive user experience, and this key should only be
    used if an app's ability to be responsive depends on it, and cannot be made Adaptive.
 </p><p><span class="emphasis"><em>Type:</em></span> null or one of "Background", "Standard", "Adaptive", "Interactive"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"Background"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix#blob-path" target="_top">
                     &lt;home-manager/modules/launchd/default.nix&gt;
@@ -1593,9 +1592,9 @@ The default is false.
                     &lt;home-manager/modules/launchd/default.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.Sockets"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.Sockets"><code class="option">launchd.agents.&lt;name&gt;.config.Sockets</code></a></span></dt><dd><p>This optional key is used to specify launch on demand sockets that can be used to let launchd know when
 to run the job. The job must check-in to get a copy of the file descriptors using APIs outlined in
-launch(3).  The keys of the top level Sockets dictionary can be anything. They are meant for the appli-cation application
-cation developer to use to differentiate which descriptors correspond to which application level proto-cols protocols
-cols (e.g. http vs. ftp vs. DNS...).  At check-in time, the value of each Sockets dictionary key will
+launch(3).  The keys of the top level Sockets dictionary can be anything. They are meant for the application
+developer to use to differentiate which descriptors correspond to which application level protocols
+(e.g. http vs. ftp vs. DNS...).  At check-in time, the value of each Sockets dictionary key will
 be an array of descriptors. Daemon/Agent writers should consider all descriptors of a given key to be
 to be effectively equivalent, even though each file descriptor likely represents a different networking
 protocol which conforms to the criteria specified in the job configuration file.
@@ -1615,8 +1614,8 @@ Family family also be set, otherwise the results are undefined.
 </p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix#blob-path" target="_top">
                     &lt;home-manager/modules/launchd/default.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.Sockets._name_.SecureSocketWithKey"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.Sockets._name_.SecureSocketWithKey"><code class="option">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SecureSocketWithKey</code></a></span></dt><dd><p>This optional key is a variant of SockPathName. Instead of binding to a known path, a securely
-generated socket is created and the path is assigned to the environment variable that is inher-ited inherited
-ited by all jobs spawned by launchd.
+generated socket is created and the path is assigned to the environment variable that is inherited
+by all jobs spawned by launchd.
 </p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix#blob-path" target="_top">
                     &lt;home-manager/modules/launchd/default.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-launchd.agents._name_.config.Sockets._name_.SockFamily"></a><a class="term" href="options.html#opt-launchd.agents._name_.config.Sockets._name_.SockFamily"><code class="option">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SockFamily</code></a></span></dt><dd><p>This optional key can be used to specifically request that "IPv4" or "IPv6" socket(s) be created.
@@ -1863,7 +1862,7 @@ match with a reference like <code class="literal">nixpkgs/nixos-20.03</code>.
                     &lt;home-manager/modules/misc/nix.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-nix.settings"></a><a class="term" href="options.html#opt-nix.settings"><code class="option">nix.settings</code></a></span></dt><dd><p>Configuration for Nix, see
 <a class="link" href="https://nixos.org/manual/nix/stable/#sec-conf-file" target="_top">https://nixos.org/manual/nix/stable/#sec-conf-file</a> or
-<span class="citerefentry"><span class="refentrytitle">nix.conf</span>(5)</span> for avalaible options.
+<span class="citerefentry"><span class="refentrytitle">nix.conf</span>(5)</span> for available options.
 The value declared here will be translated directly to the key-value pairs Nix expects.
 </p><p>
 Configuration specified in <code class="option">nix.extraOptions</code> which will be appended
@@ -2272,7 +2271,7 @@ of options.
           DPI=144
           ;;
         *)
-          echo "Unknown profle: $AUTORANDR_CURRENT_PROFILE"
+          echo "Unknown profile: $AUTORANDR_CURRENT_PROFILE"
           exit 1
       esac
 
@@ -2857,7 +2856,7 @@ documentation</a>.
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.chromium.extensions._.crxPath"></a><a class="term" href="options.html#opt-programs.chromium.extensions._.crxPath"><code class="option">programs.chromium.extensions.*.crxPath</code></a></span></dt><dd><p>Path to the extension's crx file. Linux only.
 </p><p><span class="emphasis"><em>Type:</em></span> null or path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/chromium.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/chromium.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.chromium.extensions._.id"></a><a class="term" href="options.html#opt-programs.chromium.extensions._.id"><code class="option">programs.chromium.extensions.*.id</code></a></span></dt><dd><p>The extension's ID from the Chome Web Store url or the unpacked crx.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.chromium.extensions._.id"></a><a class="term" href="options.html#opt-programs.chromium.extensions._.id"><code class="option">programs.chromium.extensions.*.id</code></a></span></dt><dd><p>The extension's ID from the Chrome Web Store url or the unpacked crx.
 </p><p><span class="emphasis"><em>Type:</em></span> string matching the pattern [a-zA-Z]{32}</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/chromium.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/chromium.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.chromium.extensions._.updateUrl"></a><a class="term" href="options.html#opt-programs.chromium.extensions._.updateUrl"><code class="option">programs.chromium.extensions.*.updateUrl</code></a></span></dt><dd><p>URL of the extension's update manifest XML file. Linux only.
@@ -3614,12 +3613,12 @@ line-drawing characters. If this is causing output errors on
 your terminal, set this to false to use ASCII characters instead.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/git.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.difftastic.enable"></a><a class="term" href="options.html#opt-programs.git.difftastic.enable"><code class="option">programs.git.difftastic.enable</code></a></span></dt><dd><p>Enable the <span class="command"><strong>difft</strong></span> syntax highlighter.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.difftastic.enable"></a><a class="term" href="options.html#opt-programs.git.difftastic.enable"><code class="option">programs.git.difftastic.enable</code></a></span></dt><dd><p>Enable the <span class="command"><strong>difftastic</strong></span> syntax highlighter.
 See <a class="link" href="https://github.com/Wilfred/difftastic" target="_top">https://github.com/Wilfred/difftastic</a>.
 </p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/git.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.difftastic.background"></a><a class="term" href="options.html#opt-programs.git.difftastic.background"><code class="option">programs.git.difftastic.background</code></a></span></dt><dd><p>Determines whether difftastic should use the lighter or darker colors
-for syntax highlithing.
+for syntax highlighting.
 </p><p><span class="emphasis"><em>Type:</em></span> one of "light", "dark"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"light"</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"dark"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/git.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.difftastic.color"></a><a class="term" href="options.html#opt-programs.git.difftastic.color"><code class="option">programs.git.difftastic.color</code></a></span></dt><dd><p>Determines when difftastic should color its output.
@@ -5414,8 +5413,8 @@ compositor.
 </p><p><span class="emphasis"><em>Type:</em></span> null or one of "background", "bottom", "top", "overlay"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"top"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/mako.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mako.margin"></a><a class="term" href="options.html#opt-programs.mako.margin"><code class="option">programs.mako.margin</code></a></span></dt><dd><p>Set margin of each edge specified in pixels. Specify single value to
-apply margin on all sides. Two comma-seperated values will set
-vertical and horizontal edges seperately. Four comma-seperated will
+apply margin on all sides. Two comma-separated values will set
+vertical and horizontal edges separately. Four comma-seperated will
 give each edge a seperate value.
 For example: 10,20,5 will set top margin to 10, left and right to 20
 and bottom to five.
@@ -5438,8 +5437,8 @@ the Wayland protocol xdg-output-unstable-v1 version 2.
 </p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/mako.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mako.padding"></a><a class="term" href="options.html#opt-programs.mako.padding"><code class="option">programs.mako.padding</code></a></span></dt><dd><p>Set padding of each edge specified in pixels. Specify single value to
-apply margin on all sides. Two comma-seperated values will set
-vertical and horizontal edges seperately. Four comma-seperated will
+apply margin on all sides. Two comma-separated values will set
+vertical and horizontal edges separately. Four comma-seperated will
 give each edge a seperate value.
 For example: 10,20,5 will set top margin to 10, left and right to 20
 and bottom to five.
@@ -9358,7 +9357,7 @@ generated from the immutable one, useful in scenarios where live reloading is de
 <code class="filename">$XDG_CONFIG_HOME/fnott/fnott.ini</code>.
 </p><p>
 See
-<span class="citerefentry"><span class="refentrytitle">fnott.ini</span>(5)</span> for a list of avaliable options and <a class="link" href="https://codeberg.org/dnkl/fnott/src/branch/master/fnott.ini" target="_top">https://codeberg.org/dnkl/fnott/src/branch/master/fnott.ini</a>
+<span class="citerefentry"><span class="refentrytitle">fnott.ini</span>(5)</span> for a list of available options and <a class="link" href="https://codeberg.org/dnkl/fnott/src/branch/master/fnott.ini" target="_top">https://codeberg.org/dnkl/fnott/src/branch/master/fnott.ini</a>
 for an example configuration.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of (INI atom (null, bool, int, float or string))</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         {
@@ -9783,7 +9782,7 @@ docked = {
 };
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/kanshi.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.kanshi.profiles._name_.exec"></a><a class="term" href="options.html#opt-services.kanshi.profiles._name_.exec"><code class="option">services.kanshi.profiles.&lt;name&gt;.exec</code></a></span></dt><dd><p>Commands executed after the profile is succesfully applied.
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.kanshi.profiles._name_.exec"></a><a class="term" href="options.html#opt-services.kanshi.profiles._name_.exec"><code class="option">services.kanshi.profiles.&lt;name&gt;.exec</code></a></span></dt><dd><p>Commands executed after the profile is successfully applied.
 Note that if you provide multiple commands, they will be
 executed asynchronously with no guaranteed ordering.
 </p><p><span class="emphasis"><em>Type:</em></span> (list of string) or string convertible to it</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
@@ -10437,7 +10436,7 @@ click-right=pavucontrol &amp;
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/polybar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/polybar.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.poweralertd.enable"></a><a class="term" href="options.html#opt-services.poweralertd.enable"><code class="option">services.poweralertd.enable</code></a></span></dt><dd><p>Whether to enable the Upower-powered power alerterd.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/poweralertd.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.poweralertd.enable"></a><a class="term" href="options.html#opt-services.poweralertd.enable"><code class="option">services.poweralertd.enable</code></a></span></dt><dd><p>Whether to enable the Upower-powered power alertd.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/poweralertd.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/poweralertd.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.pueue.enable"></a><a class="term" href="options.html#opt-services.pueue.enable"><code class="option">services.pueue.enable</code></a></span></dt><dd><p>Whether to enable Pueue, CLI process scheduler and manager.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/pueue.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/pueue.nix&gt;
@@ -10700,7 +10699,7 @@ background "#cccccc"
                     &lt;home-manager/modules/services/swayidle.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.swayidle.package"></a><a class="term" href="options.html#opt-services.swayidle.package"><code class="option">services.swayidle.package</code></a></span></dt><dd><p>Swayidle package to install.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.swayidle</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/swayidle.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/swayidle.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.swayidle.events"></a><a class="term" href="options.html#opt-services.swayidle.events"><code class="option">services.swayidle.events</code></a></span></dt><dd><p>Run command on occurence of a event.</p><p><span class="emphasis"><em>Type:</em></span> list of (submodule)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.swayidle.events"></a><a class="term" href="options.html#opt-services.swayidle.events"><code class="option">services.swayidle.events</code></a></span></dt><dd><p>Run command on occurrence of a event.</p><p><span class="emphasis"><em>Type:</em></span> list of (submodule)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
         [
         
         ]
@@ -11645,7 +11644,7 @@ ignored.
                     &lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-targets.darwin.defaults.NSGlobalDomain.AppleTemperatureUnit"></a><a class="term" href="options.html#opt-targets.darwin.defaults.NSGlobalDomain.AppleTemperatureUnit"><code class="option">targets.darwin.defaults.NSGlobalDomain.AppleTemperatureUnit</code></a></span></dt><dd><p>Sets the temperature unit.</p><p><span class="emphasis"><em>Type:</em></span> null or one of "Celsius", "Fahrenheit"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"Celsius"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix#blob-path" target="_top">
                     &lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-targets.darwin.defaults.NSGlobalDomain.NSAutomaticCapitalizationEnabled"></a><a class="term" href="options.html#opt-targets.darwin.defaults.NSGlobalDomain.NSAutomaticCapitalizationEnabled"><code class="option">targets.darwin.defaults.NSGlobalDomain.NSAutomaticCapitalizationEnabled</code></a></span></dt><dd><p>Whether to enable automatic captilization.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix#blob-path" target="_top">
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-targets.darwin.defaults.NSGlobalDomain.NSAutomaticCapitalizationEnabled"></a><a class="term" href="options.html#opt-targets.darwin.defaults.NSGlobalDomain.NSAutomaticCapitalizationEnabled"><code class="option">targets.darwin.defaults.NSGlobalDomain.NSAutomaticCapitalizationEnabled</code></a></span></dt><dd><p>Whether to enable automatic capitalization.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix#blob-path" target="_top">
                     &lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-targets.darwin.defaults.NSGlobalDomain.NSAutomaticDashSubstitutionEnabled"></a><a class="term" href="options.html#opt-targets.darwin.defaults.NSGlobalDomain.NSAutomaticDashSubstitutionEnabled"><code class="option">targets.darwin.defaults.NSGlobalDomain.NSAutomaticDashSubstitutionEnabled</code></a></span></dt><dd><p>Whether to enable smart dashes.</p><p><span class="emphasis"><em>Type:</em></span> null or boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix#blob-path" target="_top">
                     &lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;
@@ -12259,7 +12258,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 </p><p>
 See
 <span class="citerefentry"><span class="refentrytitle">swaynag</span>(5)</span>
-for a list of avaliable options and an example configuration.
+for a list of available options and an example configuration.
 Note, configurations declared under <code class="literal">&lt;config&gt;</code>
 will override the default type values of swaynag.
 </p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of (Swaynag config atom (null, bool, int, float, str))</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
