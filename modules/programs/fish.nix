@@ -146,14 +146,11 @@ let
     (mapAttrsToList (k: v: "alias ${k} ${escapeShellArg v}") cfg.shellAliases);
 
   fishIndent = name: text:
-    if cfg.formatFishScripts then
-      pkgs.runCommand name {
-        nativeBuildInputs = [ cfg.package ];
-        inherit text;
-        passAsFile = [ "text" ];
-      } "fish_indent < $textPath > $out"
-    else
-      pkgs.writeText name text;
+    pkgs.runCommand name {
+      nativeBuildInputs = [ cfg.package ];
+      inherit text;
+      passAsFile = [ "text" ];
+    } "fish_indent < $textPath > $out";
 
 in {
   imports = [
@@ -288,16 +285,6 @@ in {
         <link xlink:href="https://fishshell.com/docs/current/cmds/function.html"/>.
       '';
     };
-
-    programs.fish.formatFishScripts = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to process fish configuration and scripts with
-        <literal>fish_indent</literal>.
-      '';
-    };
-
   };
 
   config = mkIf cfg.enable (mkMerge [

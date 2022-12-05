@@ -8,7 +8,6 @@
   xdg.dataFile."fish/home-manager_generated_completions".source =
     lib.mkForce (builtins.toFile "empty" "");
 
-  test.stubs.fish = { };
   test.stubs.scmpuff = { };
 
   nmt.script = ''

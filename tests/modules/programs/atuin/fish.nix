@@ -13,7 +13,6 @@
   test.stubs = {
     atuin = { };
     bash-preexec = { };
-    fish = { };
   };
 
   nmt.script = ''

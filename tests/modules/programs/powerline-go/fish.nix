@@ -22,10 +22,7 @@ with lib;
     xdg.dataFile."fish/home-manager_generated_completions".source =
       mkForce (builtins.toFile "empty" "");
 
-    test.stubs = {
-      powerline-go = { };
-      fish = { };
-    };
+    test.stubs.powerline-go = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/fish/config.fish
