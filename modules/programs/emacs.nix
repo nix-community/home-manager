@@ -52,6 +52,10 @@ in {
           Configuration to include in the Emacs default init file. See
           <link xlink:href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Init-File.html"/>
           for more.
+          </para><para>
+          Note, the <literal>inhibit-startup-message</literal> Emacs option
+          cannot be set here since Emacs disallows setting it from the default
+          initialization file.
         '';
       };
 
