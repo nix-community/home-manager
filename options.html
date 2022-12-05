@@ -8450,11 +8450,13 @@ for explanation about possible values.
         {
         
         }
-    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">embed-thumbnail = true;
-embed-subs = true;
-sub-langs = "all";
-downloader = "aria2c";
-downloader-args = "aria2c:'-c -x8 -s8 -k1M'";
+    </code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  embed-thumbnail = true;
+  embed-subs = true;
+  sub-langs = "all";
+  downloader = "aria2c";
+  downloader-args = "aria2c:'-c -x8 -s8 -k1M'";
+}
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yt-dlp.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/yt-dlp.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.z-lua.enable"></a><a class="term" href="options.html#opt-programs.z-lua.enable"><code class="option">programs.z-lua.enable</code></a></span></dt><dd><p>Whether to enable z.lua.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/z-lua.nix#blob-path" target="_top">
