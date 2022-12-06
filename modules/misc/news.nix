@@ -853,6 +853,14 @@ in
           'Host' blocks
         '';
       }
+
+      {
+        time = "2022-12-16T15:01:20+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.megasync'.
+        '';
+      }
     ];
   };
 }

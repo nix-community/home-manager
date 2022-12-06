@@ -427,6 +427,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/mbsync.nix                          @pjones
 
+/modules/services/megasync.nix                        @GaetanLepage
+
 /modules/services/mopidy.nix                          @foo-dogsquared
 /tests/modules/services/mopidy                        @foo-dogsquared
 

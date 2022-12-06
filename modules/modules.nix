@@ -238,6 +238,7 @@ let
     ./services/lorri.nix
     ./services/mako.nix
     ./services/mbsync.nix
+    ./services/megasync.nix
     ./services/mopidy.nix
     ./services/mpd.nix
     ./services/mpdris2.nix
