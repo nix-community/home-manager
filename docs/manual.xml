@@ -35,6 +35,7 @@
  <xi:include href="nix-flakes.xml" />
  <xi:include href="writing-modules.xml" />
  <xi:include href="contributing.xml" />
+ <xi:include href="3rd-party.xml" />
  <xi:include href="faq.xml" />
  <appendix xml:id="ch-options">
   <title>Configuration Options</title>
