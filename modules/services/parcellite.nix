@@ -12,6 +12,15 @@ in {
   options.services.parcellite = {
     enable = mkEnableOption "Parcellite";
 
+    extraOptions = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "--no-icon" ];
+      description = ''
+        Command line arguments passed to Parcellite.
+      '';
+    };
+
     package = mkOption {
       type = types.package;
       default = pkgs.parcellite;
@@ -40,7 +49,9 @@ in {
       Install = { WantedBy = [ "graphical-session.target" ]; };
 
       Service = {
-        ExecStart = "${cfg.package}/bin/${cfg.package.pname}";
+        ExecStart = "${cfg.package}/bin/${cfg.package.pname} ${
+            lib.concatStringsSep " " cfg.extraOptions
+          }";
         Restart = "on-abort";
       };
     };
