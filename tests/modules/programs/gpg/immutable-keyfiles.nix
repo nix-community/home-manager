@@ -12,7 +12,7 @@
         source = pkgs.fetchurl {
           url =
             "https://keybase.io/rycee/pgp_keys.asc?fingerprint=36cacf52d098cc0e78fb0cb13573356c25c424d4";
-          sha256 = "082mjy6llvrdry6i9r5gx97nw9d89blnam7bghza4ynsjk1mmx6c";
+          hash = "sha256-5z2kTUXQp0f7kyP0Id6NS3rCdzGGrrkIYzGK42Qy9Sw=";
         };
         trust = 1; # "unknown"
       }
