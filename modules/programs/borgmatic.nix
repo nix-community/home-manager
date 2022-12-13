@@ -20,7 +20,7 @@ let
     };
 
   extraConfigOption = mkOption {
-    type = with types; attrsOf (oneOf [ str bool path int ]);
+    type = with types; attrsOf (oneOf [ str bool path int (listOf str) ]);
     default = { };
     description = "Extra settings.";
   };
