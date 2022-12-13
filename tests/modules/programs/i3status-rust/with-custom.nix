@@ -102,14 +102,14 @@ with lib;
             icons = "awesome5"
             theme = "gruvbox-dark"
             [[block]]
-            alert = 10
+            alert = 10.0
             alias = "/"
             block = "disk_space"
             info_type = "available"
             interval = 60
             path = "/"
             unit = "GB"
-            warning = 20
+            warning = 20.0
 
             [[block]]
             block = "memory"
