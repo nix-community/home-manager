@@ -229,6 +229,15 @@ in {
         description = "Resulting customized neovim package.";
       };
 
+      defaultEditor = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to configure <command>nvim</command> as the default
+          editor using the <envar>EDITOR</envar> environment variable.
+        '';
+      };
+
       extraConfig = mkOption {
         type = types.lines;
         default = "";
@@ -359,6 +368,8 @@ in {
     grouped;
 
     home.packages = [ cfg.finalPackage ];
+
+    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "nvim"; };
 
     xdg.configFile =
       let hasLuaConfig = hasAttr "lua" config.programs.neovim.generatedConfigs;
