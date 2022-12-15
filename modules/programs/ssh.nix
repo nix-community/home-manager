@@ -361,6 +361,17 @@ in
       '';
     };
 
+    addKeysToAgent = mkOption {
+      type = types.str;
+      default = "no";
+      description = ''
+        When enabled, a private key that is used during authentication will be
+        added to ssh-agent if it is running (with confirmation enabled if
+        set to 'confirm'). The argument must be 'no' (the default), 'yes', 'confirm'
+        (optionally followed by a time interval), 'ask' or a time interval (e.g. '1h').
+      '';
+    };
+
     compression = mkOption {
       default = false;
       type = types.bool;
@@ -528,6 +539,7 @@ in
 
       Host *
         ForwardAgent ${lib.hm.booleans.yesNo cfg.forwardAgent}
+        AddKeysToAgent ${cfg.addKeysToAgent}
         Compression ${lib.hm.booleans.yesNo cfg.compression}
         ServerAliveInterval ${toString cfg.serverAliveInterval}
         ServerAliveCountMax ${toString cfg.serverAliveCountMax}
