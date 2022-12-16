@@ -36,11 +36,6 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = {
-      JAVA_HOME = fileContents (pkgs.runCommandLocal "java-home" { } ''
-        source "${cfg.package}/nix-support/setup-hook"
-        echo "$JAVA_HOME" > $out
-      '');
-    };
+    home.sessionVariables.JAVA_HOME = cfg.package.home;
   };
 }
