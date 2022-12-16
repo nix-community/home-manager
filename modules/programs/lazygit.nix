@@ -16,6 +16,8 @@ in {
   options.programs.lazygit = {
     enable = mkEnableOption "lazygit, a simple terminal UI for git commands";
 
+    package = mkPackageOption pkgs "lazygit" { };
+
     settings = mkOption {
       type = yamlFormat.type;
       default = { };
@@ -41,7 +43,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.lazygit ];
+    home.packages = [ cfg.package ];
 
     home.file."Library/Application Support/lazygit/config.yml" =
       mkIf (cfg.settings != { } && isDarwin) {
