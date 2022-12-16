@@ -8,7 +8,7 @@ let
 
   # From <nixpkgs/nixos/modules/system/boot/systemd-lib.nix>
   mkPathSafeName =
-    lib.replaceChars [ "@" ":" "\\" "[" "]" ] [ "-" "-" "-" "" "" ];
+    lib.replaceStrings [ "@" ":" "\\" "[" "]" ] [ "-" "-" "-" "" "" ];
 
   enabled = cfg.services != { } # \
     || cfg.slices != { } # \

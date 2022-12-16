@@ -600,7 +600,7 @@ in {
                           # like: [source]/path/to/engine.xml
                           loadPath = ''
                             [home-manager]/programs.firefox.profiles.${profile.name}.search.engines."${
-                              replaceChars [ "\\" ] [ "\\\\" ] name
+                              replaceStrings [ "\\" ] [ "\\\\" ] name
                             }"'';
                         })) // {
                           # Required fields for all engine configurations
