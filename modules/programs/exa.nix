@@ -2,19 +2,7 @@
 
 with lib;
 
-let
-
-  cfg = config.programs.exa;
-
-  aliases = {
-    ls = "${pkgs.exa}/bin/exa";
-    ll = "${pkgs.exa}/bin/exa -l";
-    la = "${pkgs.exa}/bin/exa -a";
-    lt = "${pkgs.exa}/bin/exa --tree";
-    lla = "${pkgs.exa}/bin/exa -la";
-  };
-
-in {
+{
   meta.maintainers = [ hm.maintainers.kalhauge ];
 
   options.programs.exa = {
@@ -23,10 +11,50 @@ in {
 
     enableAliases = mkEnableOption "recommended exa aliases";
 
+    extraOptions = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "--group-directories-first" "--header" ];
+      description = ''
+        Extra command line options passed to exa.
+      '';
+    };
+
+    icons = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Display icons next to file names (<option>--icons</option> argument).
+      '';
+    };
+
+    git = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        List each file's Git status if tracked or ignored (<option>--git</option> argument).
+      '';
+    };
+
     package = mkPackageOption pkgs "exa" { };
   };
 
-  config = mkIf cfg.enable {
+  config = let
+    cfg = config.programs.exa;
+
+    cmd = concatStringsSep " " ([ "${cfg.package}/bin/exa" ]
+      ++ optional cfg.icons "--icons" ++ optional cfg.git "--git"
+      ++ cfg.extraOptions);
+
+    aliases = {
+      exa = cmd;
+      ls = cmd;
+      ll = "${cmd} -l";
+      la = "${cmd} -a";
+      lt = "${cmd} --tree";
+      lla = "${cmd} -la";
+    };
+  in mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     programs.bash.shellAliases = mkIf cfg.enableAliases aliases;
