@@ -520,23 +520,21 @@ let
     ++ lib.optional useNixpkgsModule ./misc/nixpkgs.nix
     ++ lib.optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
 
-  pkgsModule =
-    { config, ... }:
-    {
-      config =
-        {
-          _module.args.baseModules = modules;
-          _module.args.pkgsPath = lib.mkDefault (
-            if lib.versionAtLeast config.home.stateVersion "20.09" then pkgs.path else <nixpkgs>
-          );
-          _module.args.pkgs = lib.mkDefault pkgs;
-          _module.check = check;
-          lib = lib.hm;
-        }
-        // lib.optionalAttrs useNixpkgsModule {
-          nixpkgs.system = lib.mkDefault pkgs.stdenv.hostPlatform.system;
-        };
+  pkgsModule = { config, ... }: {
+    config = {
+      _module.args.baseModules = modules;
+      _module.args.pkgsPath = lib.mkDefault
+        (if lib.versionAtLeast config.home.stateVersion "20.09" then
+          pkgs.path
+        else
+          <nixpkgs>);
+      _module.args.superPkgs = pkgs;
+      _module.check = check;
+      lib = lib.hm;
+    } // lib.optionalAttrs useNixpkgsModule {
+      nixpkgs.system = lib.mkDefault pkgs.stdenv.hostPlatform.system;
     };
+  };
 
 in
 modules ++ [ pkgsModule ]
