@@ -39,6 +39,8 @@
     assertFileIsExecutable "$autostart"
 
     normalizedAutostart=$(normalizeStorePaths "$autostart")
-    assertFileContent "$normalizedAutostart" ${./autostart}
+    assertFileContent "$normalizedAutostart" ${
+      ./herbstluftwm-simple-config-autostart
+    }
   '';
 }

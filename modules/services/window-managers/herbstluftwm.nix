@@ -145,15 +145,17 @@ in {
 
         ${renderSettings cfg.settings}
 
-        if ${cfg.package}/bin/herbstclient object_tree tags.by-name | ${pkgs.gnugrep}/bin/grep default; then
-          herbstclient rename default ${
-            lib.escapeShellArg (builtins.head cfg.tags)
-          }
-        fi
+        ${lib.optionalString (cfg.tags != [ ]) ''
+          if ${cfg.package}/bin/herbstclient object_tree tags.default &>/dev/null; then
+            herbstclient rename default ${
+              lib.escapeShellArg (builtins.head cfg.tags)
+            }
+          fi
 
-        for tag in ${lib.escapeShellArgs cfg.tags}; do
-          herbstclient add "$tag"
-        done
+          for tag in ${lib.escapeShellArgs cfg.tags}; do
+            herbstclient add "$tag"
+          done
+        ''}
 
         ${renderKeybinds cfg.keybinds}
 
