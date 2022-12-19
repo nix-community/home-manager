@@ -141,6 +141,7 @@ in {
         herbstclient attr theme.tiling.reset 1
         herbstclient attr theme.floating.reset 1
         herbstclient keyunbind --all
+        herbstclient mouseunbind --all
         herbstclient unrule --all
 
         ${renderSettings cfg.settings}
