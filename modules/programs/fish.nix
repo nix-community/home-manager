@@ -150,7 +150,7 @@ let
       nativeBuildInputs = [ cfg.package ];
       inherit text;
       passAsFile = [ "text" ];
-    } "fish_indent < $textPath > $out";
+    } "env HOME=$(mktemp -d) fish_indent < $textPath > $out";
 
 in {
   imports = [
