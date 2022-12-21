@@ -11,12 +11,7 @@ in {
     programs.yambar = {
       enable = mkEnableOption "Yambar";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.yambar;
-        defaultText = literalExpression "pkgs.yambar";
-        description = "The Yambar package to install";
-      };
+      package = mkPackageOption pkgs "yambar" { };
 
       settings = mkOption {
         type = yamlFormat.type;
