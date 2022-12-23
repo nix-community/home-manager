@@ -886,6 +886,14 @@ in
           'wayland.windowManager.sway.config.[window|floating].titlebar' now default to 'true'.
         '';
       }
+
+      {
+        time = "2023-01-22T11:08:15+00:00";
+        message = ''
+          A new module is available: 'programs.mr'.
+        '';
+      }
+
     ];
   };
 }

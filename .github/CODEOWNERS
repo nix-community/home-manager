@@ -199,6 +199,8 @@ Makefile                                              @thiagokokada
 /modules/programs/micro.nix                           @MForster
 /tests/modules/programs/micro                         @MForster
 
+/modules/programs/mr.nix                              @nilp0inter
+
 /modules/programs/mpv.nix                             @tadeokondrak @thiagokokada
 /tests/modules/programs/mpv                           @thiagokokada
 

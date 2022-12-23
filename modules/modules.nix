@@ -122,6 +122,7 @@ let
     ./programs/mercurial.nix
     ./programs/micro.nix
     ./programs/mpv.nix
+    ./programs/mr.nix
     ./programs/msmtp.nix
     ./programs/mu.nix
     ./programs/mujmap.nix
