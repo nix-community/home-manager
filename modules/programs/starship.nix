@@ -134,7 +134,7 @@ in {
         if not ($starship_cache | path exists) {
           mkdir $starship_cache
         }
-        ${starshipCmd} init nu | save ${config.xdg.cacheHome}/starship/init.nu
+        ${starshipCmd} init nu | save --force ${config.xdg.cacheHome}/starship/init.nu
       '';
       extraConfig = ''
         source ${config.xdg.cacheHome}/starship/init.nu
