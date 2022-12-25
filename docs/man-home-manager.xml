@@ -156,6 +156,18 @@
    </arg>
 
    <arg>
+    <group choice="req">
+     <arg choice="plain">
+      -L
+     </arg>
+
+     <arg choice="plain">
+      --print-build-logs
+     </arg>
+    </group>
+   </arg>
+
+   <arg>
     --show-trace
    </arg>
 
@@ -543,6 +555,22 @@
       Passed on to <citerefentry>
       <refentrytitle>nix-build</refentrytitle>
       <manvolnum>1</manvolnum> </citerefentry>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>-L</option>
+    </term>
+    <term>
+     <option>--print-build-logs</option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix build</refentrytitle>
+      </citerefentry>
+      when building from a flake.
      </para>
     </listitem>
    </varlistentry>

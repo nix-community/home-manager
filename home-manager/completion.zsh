@@ -19,6 +19,7 @@ _arguments \
   '(-j --max-jobs)'{--max-jobs,-j}'[max jobs]:NUM:()' \
   '--option[option]:NAME VALUE:()' \
   '--builders[builders]:SPEC:()' \
+  '(-L --print-build-logs)'{--print-build-logs,-L}'[print build logs]' \
   '--show-trace[show trace]' \
   '--override-input[override flake input]:NAME VALUE:()' \
   '--update-input[update flake input]:NAME:()' \

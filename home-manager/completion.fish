@@ -60,6 +60,7 @@ complete -c home-manager -f -l "keep-going" -d "Keep going in case of failed bui
 complete -c home-manager -x -s j -l "max-jobs" -d "Max number of build jobs in parallel"
 complete -c home-manager -x -l "option" -d "Set Nix configuration option"
 complete -c home-manager -x -l "builders" -d "Remote builders"
+complete -c home-manager -f -s L -l "print-build-logs" -d "Print full build logs on standard error"
 complete -c home-manager -f -l "show-trace" -d "Print stack trace of evaluation errors"
 complete -c home-manager -f -l "substitute"
 complete -c home-manager -f -l "no-substitute"

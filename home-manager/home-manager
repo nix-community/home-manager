@@ -289,6 +289,7 @@ function doBuild() {
             "$FLAKE_CONFIG_URI.activationPackage" \
             ${DRY_RUN+--dry-run} \
             ${NO_OUT_LINK+--no-link} \
+            ${PRINT_BUILD_LOGS+--print-build-logs} \
             || return
     else
         doBuildAttr \
@@ -319,6 +320,7 @@ function doSwitch() {
         doBuildFlake \
             "$FLAKE_CONFIG_URI.activationPackage" \
             --out-link "$generation" \
+            ${PRINT_BUILD_LOGS+--print-build-logs} \
             && "$generation/activate" || return
     else
         doBuildAttr \
@@ -551,6 +553,7 @@ function doHelp() {
     echo "  --keep-going"
     echo "  -j, --max-jobs NUM"
     echo "  --option NAME VALUE"
+    echo "  -L, --print-build-logs"
     echo "  --show-trace"
     echo "  --(no-)substitute"
     echo "  --no-out-link            Do not create a symlink to the output path"
@@ -647,6 +650,9 @@ while [[ $# -gt 0 ]]; do
             ;;
         --no-out-link)
             NO_OUT_LINK=1
+            ;;
+        -L|--print-build-logs)
+            PRINT_BUILD_LOGS=1
             ;;
         -h|--help)
             doHelp
