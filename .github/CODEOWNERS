@@ -447,6 +447,9 @@ Makefile                                              @thiagokokada
 
 /modules/services/mpdris2.nix                         @pjones
 
+/modules/services/mpd-mpris.nix                       @olmokramer
+/tests/modules/services/mpd-mpris                     @olmokramer
+
 /modules/services/mpd-discord-rpc.nix                 @Kranzes
 
 /modules/services/mpris-proxy.nix                     @ThibautMarty
