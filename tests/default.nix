@@ -188,6 +188,7 @@ import nmt {
     ./modules/services/mopidy
     ./modules/services/mpd
     ./modules/services/mpdris2
+    ./modules/services/mpd-mpris
     ./modules/services/pantalaimon
     ./modules/services/parcellite
     ./modules/services/pass-secret-service

@@ -915,6 +915,14 @@ in
           A new module is available: 'services.autorandr'.
         '';
       }
+
+      {
+        time = "2023-02-20T22:31:23+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.mpd-mpris'.
+        '';
+      }
     ];
   };
 }
