@@ -124,6 +124,12 @@ in {
       end
     '';
 
+    programs.ion.initExtra = mkIf cfg.enableIonIntegration ''
+      if test $TERM != "dumb" && not exists -s INSIDE_EMACS || test $INSIDE_EMACS = "vterm"
+        eval $(${starshipCmd} init ion)
+      end
+    '';
+
     programs.nushell = mkIf cfg.enableNushellIntegration {
       # Unfortunately nushell doesn't allow conditionally sourcing nor
       # conditionally setting (global) environment variables, which is why the
