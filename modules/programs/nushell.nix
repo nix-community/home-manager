@@ -111,17 +111,36 @@ in {
         Additional configuration to add to the nushell environment variables file.
       '';
     };
+
+    shellAliases = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      example = { ll = "ls -l"; };
+      description = ''
+        An attribute set that maps aliases (the top level attribute names in
+        this option) to command strings or directly to build outputs.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
+
     home.file = mkMerge [
-      (mkIf (cfg.configFile != null || cfg.extraConfig != "") {
+      (let
+        writeConfig = cfg.configFile != null || cfg.extraConfig != ""
+          || aliasesStr != "";
+
+        aliasesStr = concatStringsSep "\n"
+          (mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases);
+      in mkIf writeConfig {
         "${configDir}/config.nu".text = mkMerge [
           (mkIf (cfg.configFile != null) cfg.configFile.text)
           cfg.extraConfig
+          aliasesStr
         ];
       })
+
       (mkIf (cfg.envFile != null || cfg.extraEnv != "") {
         "${configDir}/env.nu".text = mkMerge [
           (mkIf (cfg.envFile != null) cfg.envFile.text)

@@ -15,6 +15,11 @@
     envFile.text = ''
       let-env FOO = 'BAR'
     '';
+
+    shellAliases = {
+      "lsname" = "(ls | get name)";
+      "ll" = "ls -a";
+    };
   };
 
   test.stubs.nushell = { };
