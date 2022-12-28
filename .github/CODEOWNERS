@@ -561,3 +561,6 @@ Makefile                                              @thiagokokada
 /modules/xresources.nix                               @rycee
 
 /modules/xsession.nix                                 @rycee
+
+/modules/zimfw.nix                                    @joedevivo
+/tests/modules/zimfw                                  @joedevivo

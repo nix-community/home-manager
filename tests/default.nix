@@ -124,6 +124,7 @@ import nmt {
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
+    ./modules/programs/zimfw
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/xresources
