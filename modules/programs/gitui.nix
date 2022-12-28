@@ -41,6 +41,8 @@ in {
           selected_tab: Reset,
           command_fg: White,
           selection_bg: Blue,
+          selection_fg: White,
+          cmdbar_bg: Blue,
           cmdbar_extra_lines_bg: Blue,
           disabled_fg: DarkGray,
           diff_line_add: Green,
@@ -55,6 +57,8 @@ in {
           danger_fg: Red,
           push_gauge_bg: Blue,
           push_gauge_fg: Reset,
+          tag_fg: LightMagenta,
+          branch_fg: LightYellow,
         )
       '';
       description = ''
