@@ -50,7 +50,7 @@ in {
 
       Service = {
         ExecStart = "${cfg.package}/bin/${cfg.package.pname} ${
-            lib.concatStringsSep " " cfg.extraOptions
+            escapeShellArgs cfg.extraOptions
           }";
         Restart = "on-abort";
       };

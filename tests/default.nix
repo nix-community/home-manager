@@ -185,6 +185,7 @@ import nmt {
     ./modules/services/mpd
     ./modules/services/mpdris2
     ./modules/services/pantalaimon
+    ./modules/services/parcellite
     ./modules/services/pbgopy
     ./modules/services/picom
     ./modules/services/playerctld

@@ -1,0 +1,1 @@
+{ parcellite = ./parcellite.nix; }
