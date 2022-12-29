@@ -354,9 +354,11 @@ in {
         set -q __fish_home_manager_config_sourced; and exit
         set -g __fish_home_manager_config_sourced 1
 
-        set --prepend fish_function_path ${pkgs.fishPlugins.foreign-env}/share/fish/vendor_functions.d
-        fenv source ${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh > /dev/null
-        set -e fish_function_path[1]
+        if status is-interactive
+          set --prepend fish_function_path ${pkgs.fishPlugins.foreign-env}/share/fish/vendor_functions.d
+          fenv source ${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh > /dev/null
+          set -e fish_function_path[1]
+        end
 
         ${cfg.shellInit}
 
