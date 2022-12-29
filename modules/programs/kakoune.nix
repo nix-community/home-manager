@@ -9,49 +9,8 @@ let
   hook = types.submodule {
     options = {
       name = mkOption {
-        type = types.enum [
-          "NormalBegin"
-          "NormalIdle"
-          "NormalEnd"
-          "NormalKey"
-          "InsertBegin"
-          "InsertIdle"
-          "InsertEnd"
-          "InsertKey"
-          "InsertChar"
-          "InsertDelete"
-          "InsertMove"
-          "WinCreate"
-          "WinClose"
-          "WinResize"
-          "WinDisplay"
-          "WinSetOption"
-          "BufSetOption"
-          "BufNewFile"
-          "BufOpenFile"
-          "BufCreate"
-          "BufWritePre"
-          "BufWritePost"
-          "BufReload"
-          "BufClose"
-          "BufOpenFifo"
-          "BufReadFifo"
-          "BufCloseFifo"
-          "RuntimeError"
-          "ModeChange"
-          "PromptIdle"
-          "GlobalSetOption"
-          "KakBegin"
-          "KakEnd"
-          "FocusIn"
-          "FocusOut"
-          "RawKey"
-          "InsertCompletionShow"
-          "InsertCompletionHide"
-          "InsertCompletionSelect"
-          "ModuleLoaded"
-        ];
-        example = "SetOption";
+        type = types.str;
+        example = "NormalIdle";
         description = ''
           The name of the hook. For a description, see
           <link xlink:href="https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc#default-hooks"/>.
@@ -615,8 +574,21 @@ let
         ++ map keyMappingString keyMappings
 
         ++ [ "# Hooks" ] ++ map hookString hooks);
-  in pkgs.writeText "kakrc"
-  (optionalString (cfg.config != null) cfgStr + "\n" + cfg.extraConfig);
+  in pkgs.writeTextFile {
+    name = "kakrc";
+    checkPhase = ''
+      # copy the generated configuration to the current dir
+      cp $target kakrc
+
+      # make the current directory as the kakoune user configuration directory
+      export KAKOUNE_CONFIG_DIR=$(pwd)
+
+      # try to check the configuration is valid
+      ${pkgs.kakoune-unwrapped}/bin/kak -n -e 'try %{ source ${pkgs.kakoune-unwrapped}/share/kak/kakrc; quit 0 } catch %{ quit 1 }'"
+    '';
+    text =
+      (optionalString (cfg.config != null) cfgStr + "\n" + cfg.extraConfig);
+  };
 
 in {
   options = {
