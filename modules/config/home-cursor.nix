@@ -30,7 +30,10 @@ let
       x11 = {
         enable = mkEnableOption ''
           x11 config generation for <option>home.pointerCursor</option>
-        '';
+        '' // {
+          default = config.xsession.enable;
+          defaultText = literalExpression "config.xsession.enable";
+        };
 
         defaultCursor = mkOption {
           type = types.str;
@@ -43,7 +46,10 @@ let
       gtk = {
         enable = mkEnableOption ''
           gtk config generation for <option>home.pointerCursor</option>
-        '';
+        '' // {
+          default = config.gtk.enable;
+          defaultText = literalExpression "config.gtk.enable";
+        };
       };
     };
   };
@@ -56,38 +62,27 @@ in {
   meta.maintainers = [ maintainers.polykernel maintainers.league ];
 
   imports = [
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
+    (mkRenamedOptionModule [ "xsession" "pointerCursor" "package" ] [
       "home"
       "pointerCursor"
       "package"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "name" ] [
+    (mkRenamedOptionModule [ "xsession" "pointerCursor" "name" ] [
       "home"
       "pointerCursor"
       "name"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "size" ] [
+    (mkRenamedOptionModule [ "xsession" "pointerCursor" "size" ] [
       "home"
       "pointerCursor"
       "size"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
+    (mkRenamedOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
       "home"
       "pointerCursor"
       "x11"
       "defaultCursor"
     ])
-
-    ({ ... }: {
-      warnings = optional (any (x:
-        getAttrFromPath
-        ([ "xsession" "pointerCursor" ] ++ [ x ] ++ [ "isDefined" ])
-        options) [ "package" "name" "size" "defaultCursor" ]) ''
-          The option `xsession.pointerCursor` has been merged into `home.pointerCursor` and will be removed
-          in the future. Please change to set `home.pointerCursor` directly and enable `home.pointerCursor.x11.enable`
-          to generate x11 specific cursor configurations. You can refer to the documentation for more details.
-        '';
-    })
   ];
 
   options = {
