@@ -11,16 +11,20 @@ export TEXTDOMAINDIR=@OUT@/share/locale
 # shellcheck disable=1091
 source @HOME_MANAGER_LIB@
 
+# Use this instead of `nix` directly to ensure we have the nix-command feature
+# set regardless of local config.
+NIX_COMMAND="nix --extra-experimental-features nix-command"
+
 function removeByName() {
-  nix profile list \
+  $NIX_COMMAND profile list \
       | { grep "$1" || test $? = 1; } \
       | cut -d ' ' -f 4 \
-      | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+      | xargs -t $DRY_RUN_CMD $NIX_COMMAND profile remove $VERBOSE_ARG
 }
 
 function setNixProfileCommands() {
     if [[ -e ~/.nix-profile/manifest.json ]] ; then
-        LIST_OUTPATH_CMD="nix profile list"
+        LIST_OUTPATH_CMD="$NIX_COMMAND profile list"
         REMOVE_CMD="removeByName"
     else
         LIST_OUTPATH_CMD="nix-env -q --out-path"
@@ -110,7 +114,10 @@ function setFlakeAttribute() {
                 # Check both long and short hostnames; long first to preserve
                 # pre-existing behaviour in case both happen to be defined.
                 for n in "$USER@$(hostname)" "$USER@$(hostname -s)"; do
-                    if [[ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$n\"")" == "true" ]]; then
+                    if [[ "$($NIX_COMMAND --extra-experimental-features 'flakes' \
+                        --no-warn-dirty \
+                        eval "$flake#homeConfigurations" --apply "x: x ? \"$n\"")" == "true" \
+                    ]]; then
                         name="$n"
                         if [[ -v VERBOSE ]]; then
                             echo "Using flake homeConfiguration for $name"
@@ -219,7 +226,7 @@ function doBuildFlake() {
         extraArgs=("${extraArgs[@]}" "--verbose")
     fi
 
-    nix build \
+    $NIX_COMMAND --extra-experimental-features 'flakes' build \
         "${extraArgs[@]}" \
         "${PASSTHROUGH_OPTS[@]}"
 }
