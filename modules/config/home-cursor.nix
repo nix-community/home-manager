@@ -131,8 +131,8 @@ in {
       # https://github.com/nix-community/home-manager/issues/2812
       # https://wiki.archlinux.org/title/Cursor_themes#Environment_variable
       home.sessionVariables = {
-        XCURSOR_PATH = "$XCURSOR_PATH\${XCURSOR_PATH:+:}"
-          + "${config.home.profileDirectory}/share/icons";
+        XCURSOR_PATH = mkDefault ("$XCURSOR_PATH\${XCURSOR_PATH:+:}"
+          + "${config.home.profileDirectory}/share/icons");
       };
     }
 
