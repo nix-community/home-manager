@@ -13,8 +13,7 @@ let
       enabled = filterAttrs (n: v: v != null) bindings;
       disabled = filterAttrs (n: v: v == null) bindings;
       render = mapAttrsToList renderBinding;
-    in
-    concatStringsSep "\n" (render disabled ++ render enabled);
+    in concatStringsSep "\n" (render disabled ++ render enabled);
 
   renderBinding = func: key:
     if key == null then
@@ -24,8 +23,7 @@ let
     else
       "${func} ${toString key}";
 
-in
-{
+in {
   options.programs.feh = {
     enable = mkEnableOption "feh - a fast and light image viewer";
 
