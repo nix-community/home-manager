@@ -27,12 +27,7 @@ in {
   options.programs.feh = {
     enable = mkEnableOption "feh - a fast and light image viewer";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.feh;
-      defaultText = literalExpression "pkgs.feh";
-      description = "The feh package to use";
-    };
+    package = mkPackageOption pkgs "feh";
 
     buttons = mkOption {
       default = { };
