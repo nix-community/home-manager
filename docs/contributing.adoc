@@ -28,6 +28,11 @@ Assuming your clone is at `$HOME/devel/home-manager` then you can make the `home
 [source,console]
 $ home-manager -I home-manager=$HOME/devel/home-manager
 +
+or, if using <<sec-flakes-standalone,flakes>>:
++
+[source,console]
+$ home-manager --override-input home-manager ~/devel/home-manager
++
 or
 
 2. changing the default path by ensuring your configuration includes
