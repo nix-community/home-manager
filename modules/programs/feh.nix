@@ -13,7 +13,8 @@ let
       enabled = filterAttrs (n: v: v != null) bindings;
       disabled = filterAttrs (n: v: v == null) bindings;
       render = mapAttrsToList renderBinding;
-    in concatStringsSep "\n" (render disabled ++ render enabled);
+    in
+    concatStringsSep "\n" (render disabled ++ render enabled);
 
   renderBinding = func: key:
     if key == null then
@@ -23,9 +24,17 @@ let
     else
       "${func} ${toString key}";
 
-in {
+in
+{
   options.programs.feh = {
     enable = mkEnableOption "feh - a fast and light image viewer";
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.feh;
+      defaultText = literalExpression "pkgs.feh";
+      description = "The feh package to use";
+    };
 
     buttons = mkOption {
       default = { };
@@ -69,7 +78,7 @@ in {
         "To disable a keybinding, use `null` instead of an empty string.";
     }];
 
-    home.packages = [ pkgs.feh ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."feh/buttons" =
       mkIf (cfg.buttons != { }) { text = renderBindings cfg.buttons + "\n"; };
