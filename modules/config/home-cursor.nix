@@ -28,22 +28,12 @@ let
       };
 
       x11 = {
-        enable = mkEnableOption ''
-          x11 config generation for <option>home.pointerCursor</option>
-        '';
-
         defaultCursor = mkOption {
           type = types.str;
           default = "left_ptr";
           example = "X_cursor";
           description = "The default cursor file to use within the package.";
         };
-      };
-
-      gtk = {
-        enable = mkEnableOption ''
-          gtk config generation for <option>home.pointerCursor</option>
-        '';
       };
     };
   };
@@ -77,17 +67,6 @@ in {
       "x11"
       "defaultCursor"
     ])
-
-    ({ ... }: {
-      warnings = optional (any (x:
-        getAttrFromPath
-        ([ "xsession" "pointerCursor" ] ++ [ x ] ++ [ "isDefined" ])
-        options) [ "package" "name" "size" "defaultCursor" ]) ''
-          The option `xsession.pointerCursor` has been merged into `home.pointerCursor` and will be removed
-          in the future. Please change to set `home.pointerCursor` directly and enable `home.pointerCursor.x11.enable`
-          to generate x11 specific cursor configurations. You can refer to the documentation for more details.
-        '';
-    })
   ];
 
   options = {
@@ -100,10 +79,12 @@ in {
         Top-level options declared under this submodule are backend indepedent
         options. Options declared under namespaces such as <literal>x11</literal>
         are backend specific options. By default, only backend independent cursor
-        configurations are generated. If you need configurations for specific
-        backends, you can toggle them via the enable option. For example,
-        <xref linkend="opt-home.pointerCursor.x11.enable"/>
-        will enable x11 cursor configurations.
+        configurations are generated.
+        </para><para>
+        X11 specific cursor configurations are enabled when the X session is enabled via
+        <xref linkend="opt-xsession.enable"/>.
+        GTK specific cursor configurations are enabled when GTK configurations are enabled via
+        <xref linkend="opt-gtk.enable"/>.
       '';
     };
   };
@@ -136,7 +117,7 @@ in {
       };
     }
 
-    (mkIf cfg.x11.enable {
+    (mkIf config.xsession.enable {
       xsession.initExtra = ''
         ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${
           toString cfg.size
@@ -149,7 +130,7 @@ in {
       };
     })
 
-    (mkIf cfg.gtk.enable {
+    (mkIf config.gtk.enable {
       gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
     })
   ]);
