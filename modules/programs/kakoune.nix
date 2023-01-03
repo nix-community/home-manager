@@ -10,13 +10,9 @@ let
     options = {
       name = mkOption {
         type = types.enum [
-          "NormalBegin"
           "NormalIdle"
-          "NormalEnd"
           "NormalKey"
-          "InsertBegin"
           "InsertIdle"
-          "InsertEnd"
           "InsertKey"
           "InsertChar"
           "InsertDelete"
@@ -48,8 +44,11 @@ let
           "RawKey"
           "InsertCompletionShow"
           "InsertCompletionHide"
-          "InsertCompletionSelect"
           "ModuleLoaded"
+          "ClientCreate"
+          "ClientClose"
+          "RegisterModified"
+          "User"
         ];
         example = "SetOption";
         description = ''

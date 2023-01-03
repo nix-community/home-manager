@@ -124,6 +124,12 @@ in {
       end
     '';
 
+    programs.ion.initExtra = mkIf cfg.enableIonIntegration ''
+      if test $TERM != "dumb" && not exists -s INSIDE_EMACS || test $INSIDE_EMACS = "vterm"
+        eval $(${starshipCmd} init ion)
+      end
+    '';
+
     programs.nushell = mkIf cfg.enableNushellIntegration {
       # Unfortunately nushell doesn't allow conditionally sourcing nor
       # conditionally setting (global) environment variables, which is why the
@@ -134,7 +140,7 @@ in {
         if not ($starship_cache | path exists) {
           mkdir $starship_cache
         }
-        ${starshipCmd} init nu | save ${config.xdg.cacheHome}/starship/init.nu
+        ${starshipCmd} init nu | save --force ${config.xdg.cacheHome}/starship/init.nu
       '';
       extraConfig = ''
         source ${config.xdg.cacheHome}/starship/init.nu

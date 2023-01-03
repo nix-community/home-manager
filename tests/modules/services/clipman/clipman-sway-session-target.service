@@ -1,0 +1,13 @@
+[Install]
+WantedBy=sway-session.target
+
+[Service]
+ExecReload=/nix/store/00000000000000000000000000000000-coreutils/bin/kill -SIGUSR2 $MAINPID
+ExecStart=@wl-clipboard@/bin/wl-paste -t text --watch @clipman@/bin/clipman store
+KillMode=mixed
+Restart=on-failure
+
+[Unit]
+After=graphical-session.target
+Description=Clipboard management daemon
+PartOf=graphical-session.target

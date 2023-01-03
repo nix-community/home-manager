@@ -80,6 +80,15 @@ in {
       '';
     };
 
+    enableNushellIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      readOnly = true;
+      description = ''
+        Whether to enable Nushell integration.
+      '';
+    };
+
     nix-direnv = {
       enable = mkEnableOption ''
         <link
@@ -118,6 +127,22 @@ in {
       # manipulations of the prompt.
       mkAfter ''
         ${pkgs.direnv}/bin/direnv hook fish | source
+      '');
+
+    programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration (
+      # Using mkAfter to make it more likely to appear after other
+      # manipulations of the prompt.
+      mkAfter ''
+        let-env config = ($env | default {} config).config
+        let-env config = ($env.config | default {} hooks)
+        let-env config = ($env.config | update hooks ($env.config.hooks | default [] pre_prompt))
+        let-env config = ($env.config | update hooks.pre_prompt ($env.config.hooks.pre_prompt | append {
+          code: "
+            let direnv = (${pkgs.direnv}/bin/direnv export json | from json)
+            let direnv = if ($direnv | length) == 1 { $direnv } else { {} }
+            $direnv | load-env
+            "
+        }))
       '');
   };
 }

@@ -168,6 +168,7 @@ import nmt {
     ./modules/services/barrier
     ./modules/services/borgmatic
     ./modules/services/cachix-agent
+    ./modules/services/clipman
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs
@@ -186,6 +187,7 @@ import nmt {
     ./modules/services/mpd
     ./modules/services/mpdris2
     ./modules/services/pantalaimon
+    ./modules/services/parcellite
     ./modules/services/pbgopy
     ./modules/services/picom
     ./modules/services/playerctld

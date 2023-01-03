@@ -233,6 +233,12 @@
     githubId = 1553581;
     name = "Josh Robson Chase";
   };
+  jwygoda = {
+    name = "Jarosław Wygoda";
+    email = "jaroslaw@wygoda.me";
+    github = "jwygoda";
+    githubId = 20658981;
+  };
   hawkw = {
     name = "Eliza Weisman";
     email = "eliza@elizas.website";

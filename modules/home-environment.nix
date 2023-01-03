@@ -256,7 +256,7 @@ in
 
     home.sessionVariables = mkOption {
       default = {};
-      type = types.attrs;
+      type = with types; lazyAttrsOf (oneOf [ str path int float ]);
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
       description = ''
         Environment variables to always set at login.
