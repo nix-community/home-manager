@@ -9,7 +9,6 @@ let
   commonOptions = import ./lib/options.nix {
     inherit config lib cfg pkgs;
     moduleName = "i3";
-    isGaps = cfg.package == pkgs.i3-gaps;
   };
 
   configModule = types.submodule {
@@ -209,16 +208,7 @@ in {
     xsession.windowManager.i3 = {
       enable = mkEnableOption "i3 window manager";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.i3;
-        defaultText = literalExpression "pkgs.i3";
-        example = literalExpression "pkgs.i3-gaps";
-        description = ''
-          i3 package to use.
-          If 'i3.config.gaps' settings are specified, 'pkgs.i3-gaps' will be set as a default package.
-        '';
-      };
+      package = mkPackageOption pkgs "i3" { };
 
       config = mkOption {
         type = types.nullOr configModule;
@@ -260,10 +250,7 @@ in {
       };
     }
 
-    (mkIf (cfg.config != null) {
-      xsession.windowManager.i3.package =
-        mkDefault (if (cfg.config.gaps != null) then pkgs.i3-gaps else pkgs.i3);
-    })
+    (mkIf (cfg.config != null) { xsession.windowManager.i3.package = pkgs.i3; })
 
     (mkIf (cfg.config != null) {
       warnings = (optional (isList cfg.config.fonts)

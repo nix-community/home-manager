@@ -16,4 +16,8 @@ This release has the following notable changes:
 The state version in this release includes the changes below.
 These changes are only active if the `home.stateVersion` option is set to "23.05" or later.
 
-* No changes.
+* The <<opt-xsession.windowManager.i3.config.window.titlebar>>,
+<<opt-xsession.windowManager.i3.config.floating.titlebar>>,
+<<opt-wayland.windowManager.sway.config.window.titlebar>>,
+<<opt-wayland.windowManager.sway.config.floating.titlebar>>, options now default to `true` which
+is consistent with the default values for those options used by `i3` and `sway`.
