@@ -20,6 +20,13 @@ in {
       </programlisting>
       to your system configuration for the daemon to work correctly'';
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.easyeffects;
+      defaultText = literalExpression "pkgs.easyeffects";
+      description = "The <literal>easyeffects</literal> package to use.";
+    };
+
     preset = mkOption {
       type = types.str;
       default = "";
@@ -38,7 +45,7 @@ in {
     # running easyeffects will just attach itself to gapplication service
     # at-spi2-core is to minimize journalctl noise of:
     # "AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files"
-    home.packages = with pkgs; [ easyeffects at-spi2-core ];
+    home.packages = with pkgs; [ cfg.package at-spi2-core ];
 
     systemd.user.services.easyeffects = {
       Unit = {
@@ -52,8 +59,8 @@ in {
 
       Service = {
         ExecStart =
-          "${pkgs.easyeffects}/bin/easyeffects --gapplication-service ${presetOpts}";
-        ExecStop = "${pkgs.easyeffects}/bin/easyeffects --quit";
+          "${cfg.package}/bin/easyeffects --gapplication-service ${presetOpts}";
+        ExecStop = "${cfg.package}/bin/easyeffects --quit";
         Restart = "on-failure";
         RestartSec = 5;
       };
