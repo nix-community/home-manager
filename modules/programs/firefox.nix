@@ -533,79 +533,94 @@ in {
             source = let
               settings = {
                 version = 6;
-
                 engines = let
-                  allEngines = (profile.search.engines //
-                    # If search.default isn't in search.engines, assume it's app
-                    # provided and include it in the set of all engines
-                    optionalAttrs (profile.search.default != null
-                      && !(hasAttr profile.search.default
-                        profile.search.engines)) {
-                          ${profile.search.default} = { };
-                        });
+                  # Map of nice field names to internal field names.
+                  # This is intended to be exhaustive and should be
+                  # updated at every version bump.
+                  internalFieldNames = (genAttrs [
+                    "name"
+                    "isAppProvided"
+                    "loadPath"
+                    "hasPreferredIcon"
+                    "updateInterval"
+                    "updateURL"
+                    "iconUpdateURL"
+                    "iconURL"
+                    "iconMapObj"
+                    "metaData"
+                    "orderHint"
+                    "definedAliases"
+                    "urls"
+                  ] (name: "_${name}")) // {
+                    searchForm = "__searchForm";
+                  };
 
-                  # Map allEngines to a list and order by search.order
-                  orderedEngineList = (imap (order: name:
-                    let engine = allEngines.${name} or { };
-                    in engine // {
-                      inherit name;
-                      metaData = (engine.metaData or { }) // { inherit order; };
-                    }) profile.search.order) ++ (mapAttrsToList
-                      (name: config: config // { inherit name; })
-                      (removeAttrs allEngines profile.search.order));
+                  processCustomEngineInput = input:
+                    (removeAttrs input [ "icon" ])
+                    // optionalAttrs (input ? icon) {
+                      # Convenience to specify absolute path to icon
+                      iconURL = "file://${input.icon}";
+                    } // (optionalAttrs (input ? iconUpdateURL) {
+                      # Convenience to default iconURL to iconUpdateURL so
+                      # the icon is immediately downloaded from the URL
+                      iconURL = input.iconURL or input.iconUpdateURL;
+                    } // {
+                      # Required for custom engine configurations, loadPaths
+                      # are unique identifiers that are generally formatted
+                      # like: [source]/path/to/engine.xml
+                      loadPath = ''
+                        [home-manager]/programs.firefox.profiles.${profile.name}.search.engines."${
+                          replaceStrings [ "\\" ] [ "\\\\" ] input.name
+                        }"'';
+                    });
 
-                  engines = map (config:
+                  processEngineInput = name: input:
                     let
-                      name = config.name;
-                      isAppProvided = removeAttrs config [ "name" "metaData" ]
-                        == { };
-                      metaData = config.metaData or { };
-                    in mapAttrs' (name: value: {
-                      # Map nice field names to internal field names. This is
-                      # intended to be exhaustive, but any future fields will
-                      # either have to be specified with an underscore, or added
-                      # to this map.
-                      name = ((genAttrs [
-                        "name"
-                        "isAppProvided"
-                        "loadPath"
-                        "hasPreferredIcon"
-                        "updateInterval"
-                        "updateURL"
-                        "iconUpdateURL"
-                        "iconURL"
-                        "iconMapObj"
-                        "metaData"
-                        "orderHint"
-                        "definedAliases"
-                        "urls"
-                      ] (name: "_${name}")) // {
-                        "searchForm" = "__searchForm";
-                      }).${name} or name;
+                      requiredInput = {
+                        inherit name;
+                        isAppProvided = input.isAppProvided or removeAttrs input
+                          [ "metaData" ] == { };
+                        metaData = input.metaData or { };
+                      };
+                    in if requiredInput.isAppProvided then
+                      requiredInput
+                    else
+                      processCustomEngineInput (input // requiredInput);
 
+                  buildEngineConfig = name: input:
+                    mapAttrs' (name: value: {
+                      name = internalFieldNames.${name} or name;
                       inherit value;
-                    }) ((removeAttrs config [ "icon" ])
-                      // (optionalAttrs (!isAppProvided)
-                        (optionalAttrs (config ? iconUpdateURL) {
-                          # Convenience to default iconURL to iconUpdateURL so
-                          # the icon is immediately downloaded from the URL
-                          iconURL = config.iconURL or config.iconUpdateURL;
-                        } // optionalAttrs (config ? icon) {
-                          # Convenience to specify absolute path to icon
-                          iconURL = "file://${config.icon}";
-                        } // {
-                          # Required for custom engine configurations, loadPaths
-                          # are unique identifiers that are generally formatted
-                          # like: [source]/path/to/engine.xml
-                          loadPath = ''
-                            [home-manager]/programs.firefox.profiles.${profile.name}.search.engines."${
-                              replaceStrings [ "\\" ] [ "\\\\" ] name
-                            }"'';
-                        })) // {
-                          # Required fields for all engine configurations
-                          inherit name isAppProvided metaData;
-                        })) orderedEngineList;
-                in engines;
+                    }) (processEngineInput name input);
+
+                  sortEngineConfigs = configs:
+                    let
+                      buildEngineConfigWithOrder = order: name:
+                        let
+                          config = configs.${name} or {
+                            _name = name;
+                            _isAppProvided = true;
+                            _metaData = { };
+                          };
+                        in config // {
+                          _metaData = config._metaData // { inherit order; };
+                        };
+
+                      engineConfigsWithoutOrder =
+                        attrValues (removeAttrs configs profile.search.order);
+
+                      sortedEngineConfigs =
+                        (imap buildEngineConfigWithOrder profile.search.order)
+                        ++ engineConfigsWithoutOrder;
+                    in sortedEngineConfigs;
+
+                  engineInput = profile.search.engines // {
+                    # Infer profile.search.default as an app provided
+                    # engine if it's not in profile.search.engines
+                    ${profile.search.default} =
+                      profile.search.engines.${profile.search.default} or { };
+                  };
+                in sortEngineConfigs (mapAttrs buildEngineConfig engineInput);
 
                 metaData = optionalAttrs (profile.search.default != null) {
                   current = profile.search.default;
