@@ -7,8 +7,8 @@ let
 
   nmdSrc = fetchTarball {
     url =
-      "https://gitlab.com/api/v4/projects/rycee%2Fnmd/repository/archive.tar.gz?sha=fb9cf8e991487c6923f3c654b8ae51b6f0f205ce";
-    sha256 = "05233fy7mnn1l7ylwdmmig4ny1kwk3a2cs740gnbs0d5p28kas2r";
+      "https://gitlab.com/api/v4/projects/rycee%2Fnmd/repository/archive.tar.gz?sha=0a41b6979f6ce238c5e3795d63fdaa15f650d839";
+    sha256 = "0f4jxnnc77z9fksfa6kx0qysbwiahbd26dm2xkdhdgaxxb1pgj0g";
   };
 
   nmd = import nmdSrc { inherit lib pkgs; };
