@@ -1,0 +1,41 @@
+{
+  "engines": [
+    {
+      "_isAppProvided": true,
+      "_metaData": {
+        "order": 1
+      },
+      "_name": "Google"
+    },
+    {
+      "_definedAliases": [
+        "@np"
+      ],
+      "_isAppProvided": false,
+      "_loadPath": "[home-manager]/programs.firefox.profiles.searchWithoutDefault.search.engines.\"Nix Packages\"",
+      "_metaData": {
+        "order": 2
+      },
+      "_name": "Nix Packages",
+      "_urls": [
+        {
+          "params": [
+            {
+              "name": "type",
+              "value": "packages"
+            },
+            {
+              "name": "query",
+              "value": "{searchTerms}"
+            }
+          ],
+          "template": "https://search.nixos.org/packages"
+        }
+      ]
+    }
+  ],
+  "metaData": {
+    "useSavedOrder": true
+  },
+  "version": 6
+}

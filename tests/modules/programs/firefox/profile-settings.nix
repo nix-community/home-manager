@@ -109,6 +109,33 @@ lib.mkIf config.test.enableBig {
         };
       };
     };
+
+    profiles.searchWithoutDefault = {
+      id = 4;
+      search = {
+        force = true;
+        order = [ "Google" "Nix Packages" ];
+        engines = {
+          "Nix Packages" = {
+            urls = [{
+              template = "https://search.nixos.org/packages";
+              params = [
+                {
+                  name = "type";
+                  value = "packages";
+                }
+                {
+                  name = "query";
+                  value = "{searchTerms}";
+                }
+              ];
+            }];
+
+            definedAliases = [ "@np" ];
+          };
+        };
+      };
+    };
   };
 
   nixpkgs.overlays = [
@@ -151,14 +178,23 @@ lib.mkIf config.test.enableBig {
       $bookmarksFile \
       ${./profile-settings-expected-bookmarks.html}
 
-    compressedSearch=$(normalizeStorePaths \
-      home-files/.mozilla/firefox/search/search.json.mozlz4)
+    function assertFirefoxSearchContent() {
+      compressedSearch=$(normalizeStorePaths "$1")
 
-    decompressedSearch=$(dirname $compressedSearch)/search.json
-    ${pkgs.mozlz4a}/bin/mozlz4a -d "$compressedSearch" >(${pkgs.jq}/bin/jq . > "$decompressedSearch")
+      decompressedSearch=$(dirname $compressedSearch)/search.json
+      ${pkgs.mozlz4a}/bin/mozlz4a -d "$compressedSearch" >(${pkgs.jq}/bin/jq . > "$decompressedSearch")
 
-    assertFileContent \
-      $decompressedSearch \
+      assertFileContent \
+        $decompressedSearch \
+        "$2"
+    }
+
+    assertFirefoxSearchContent \
+      home-files/.mozilla/firefox/search/search.json.mozlz4 \
       ${./profile-settings-expected-search.json}
+
+    assertFirefoxSearchContent \
+      home-files/.mozilla/firefox/searchWithoutDefault/search.json.mozlz4 \
+      ${./profile-settings-expected-search-without-default.json}
   '';
 }
