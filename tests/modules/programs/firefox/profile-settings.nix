@@ -9,7 +9,13 @@ lib.mkIf config.test.enableBig {
 
     profiles.test = {
       id = 1;
-      settings = { "general.smoothScroll" = false; };
+      settings = {
+        "general.smoothScroll" = false;
+        "browser.newtabpage.pinned" = [{
+          title = "NixOS";
+          url = "https://nixos.org";
+        }];
+      };
     };
 
     profiles.bookmarks = {
