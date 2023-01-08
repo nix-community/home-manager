@@ -4,12 +4,14 @@
   config = {
     home.file = {
       conflict1 = {
-        text = "";
+        source = ./.;
         target = "baz";
+        recursive = true;
       };
       conflict2 = {
         source = ./target-conflict.nix;
         target = "baz";
+        recursive = true;
       };
     };
 
