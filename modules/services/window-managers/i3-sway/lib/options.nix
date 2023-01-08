@@ -835,10 +835,7 @@ in {
 
   terminal = mkOption {
     type = types.str;
-    default = if isI3 then
-      "i3-sensible-terminal"
-    else
-      "${pkgs.rxvt-unicode-unwrapped}/bin/urxvt";
+    default = if isI3 then "i3-sensible-terminal" else "${pkgs.foot}/bin/foot";
     description = "Default terminal to run.";
     example = "alacritty";
   };
