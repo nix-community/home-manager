@@ -153,7 +153,6 @@ in {
         default = [ ];
         example = literalExpression ''
           with pkgs.nur.repos.rycee.firefox-addons; [
-            https-everywhere
             privacy-badger
           ]
         '';
