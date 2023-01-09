@@ -879,7 +879,16 @@ in
       }
 
       {
-        time = "2023-01-03T14:24:28+00:00";
+        time = "2023-01-07T10:47:03+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          'xsession.windowManager.i3.config.[window|floating].titlebar' and
+          'wayland.windowManager.sway.config.[window|floating].titlebar' now default to 'true'.
+        '';
+      }
+
+      {
+        time = "2023-01-09T14:24:28+00:00";
         condition = config.programs.zsh.enable;
         message = ''
           A new module is available: 'programs.zsh.zimfw'.

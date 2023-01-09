@@ -1,11 +1,12 @@
-{ config, lib, moduleName, cfg, pkgs, capitalModuleName ? moduleName
-, isGaps ? true }:
+{ config, lib, moduleName, cfg, pkgs, capitalModuleName ? moduleName }:
 
 with lib;
 
 let
   isI3 = moduleName == "i3";
   isSway = !isI3;
+
+  inherit (config.home) stateVersion;
 
   fontOptions = types.submodule {
     options = {
@@ -77,7 +78,7 @@ let
 
   barModule = types.submodule {
     options = let
-      versionAtLeast2009 = versionAtLeast config.home.stateVersion "20.09";
+      versionAtLeast2009 = versionAtLeast stateVersion "20.09";
       mkNullableOption = { type, default, ... }@args:
         mkOption (args // {
           type = types.nullOr type;
@@ -158,7 +159,7 @@ let
         defaultText = "i3bar";
         description = "Command that will be used to start a bar.";
         example = if isI3 then
-          "\${pkgs.i3-gaps}/bin/i3bar -t"
+          "\${pkgs.i3}/bin/i3bar -t"
         else
           "\${pkgs.waybar}/bin/waybar";
       };
@@ -389,11 +390,17 @@ in {
       options = {
         titlebar = mkOption {
           type = types.bool;
-          default = !isGaps;
-          defaultText = if isI3 then
-            "xsession.windowManager.i3.package != nixpkgs.i3-gaps (titlebar should be disabled for i3-gaps)"
+          default = if versionOlder stateVersion "23.05" then
+            (isI3 && (cfg.config.gaps == null))
           else
-            "false";
+            true;
+          defaultText = if isI3 then ''
+            true for state version ≥ 23.05
+            config.gaps == null for state version < 23.05
+          '' else ''
+            true for state version ≥ 23.05
+            false for state version < 23.05
+          '';
           description = "Whether to show window titlebars.";
         };
 
@@ -432,11 +439,17 @@ in {
       options = {
         titlebar = mkOption {
           type = types.bool;
-          default = !isGaps;
-          defaultText = if isI3 then
-            "xsession.windowManager.i3.package != nixpkgs.i3-gaps (titlebar should be disabled for i3-gaps)"
+          default = if versionOlder stateVersion "23.05" then
+            (isI3 && (cfg.config.gaps == null))
           else
-            "false";
+            true;
+          defaultText = if isI3 then ''
+            true for state version ≥ 23.05
+            config.gaps == null for state version < 23.05
+          '' else ''
+            true for state version ≥ 23.05
+            false for state version < 23.05
+          '';
           description = "Whether to show floating window titlebars.";
         };
 
@@ -670,7 +683,7 @@ in {
 
   bars = mkOption {
     type = types.listOf barModule;
-    default = if versionAtLeast config.home.stateVersion "20.09" then [{
+    default = if versionAtLeast stateVersion "20.09" then [{
       mode = "dock";
       hiddenState = "hide";
       position = "bottom";
@@ -826,10 +839,8 @@ in {
       };
     });
     default = null;
-    description = if isSway then ''
+    description = ''
       Gaps related settings.
-    '' else ''
-      i3Gaps related settings. The i3-gaps package must be used for these features to work.
     '';
   };
 
