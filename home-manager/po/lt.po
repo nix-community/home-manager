@@ -8,9 +8,10 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-01-09 11:33+0000\n"
+"Last-Translator: Kornelijus Tvarijanavičius <kornelijus@tvaria.com>\n"
+"Language-Team: Lithuanian <https://hosted.weblate.org/projects/home-manager/"
+"cli/lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,22 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > "
 "19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? "
 "1 : 2);\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 
 #: home-manager/home-manager:60
 msgid "No configuration file found at %s"
-msgstr ""
+msgstr "Nerastas konfigūracijos failas %s"
 
 #: home-manager/home-manager:79
 msgid "No configuration file found. Please create one at %s"
-msgstr ""
+msgstr "Nerastas konfigūracijos failas. Sukurkite jį adresu %s"
 
 #: home-manager/home-manager:122
 msgid "Can't inspect options of a flake configuration"
-msgstr ""
+msgstr "Negalima patikrinti flake konfigūracijos pasirinkimų"
 
 #: home-manager/home-manager:162
 msgid "Can't instantiate a flake configuration"
-msgstr ""
+msgstr "Negalima sukurti pradinės flake konfigūracijos"
 
 #: home-manager/home-manager:237
 msgid ""
@@ -43,16 +45,23 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
+"Yra %d neperskaityta ir aktuali naujiena.\n"
+"Perskaitykite ją paleidus komandą \"%s news\"."
 msgstr[1] ""
+"Yra %d neperskaitytos ir aktualios naujienos.\n"
+"Perskaitykite jas paleidus komandą \"%s news\"."
+msgstr[2] ""
+"Yra %d neperskaitytų ir aktualių naujienų.\n"
+"Perskaitykite jas paleidus komandą \"%s news\"."
 
 #: home-manager/home-manager:251
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr ""
+msgstr "Nežinomas \"news.display\" nustatymas \"%s\"."
 
 #: home-manager/home-manager:258
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
-msgstr ""
+msgstr "Prašome nustatyti $EDITOR aplinkos kintamąjį"
 
 #: home-manager/home-manager:273
 msgid "Cannot run build in read-only directory"
@@ -60,15 +69,15 @@ msgstr ""
 
 #: home-manager/home-manager:355
 msgid "No generation with ID %s"
-msgstr ""
+msgstr "Nėra generacijos su ID %s"
 
 #: home-manager/home-manager:357
 msgid "Cannot remove the current generation %s"
-msgstr ""
+msgstr "Negalima pašalinti esamos generacijos %s"
 
 #: home-manager/home-manager:359
 msgid "Removing generation %s"
-msgstr ""
+msgstr "Pašalinama generacija %s"
 
 #: home-manager/home-manager:385
 msgid "No generations to expire"
@@ -76,39 +85,40 @@ msgstr ""
 
 #: home-manager/home-manager:396
 msgid "No home-manager packages seem to be installed."
-msgstr ""
+msgstr "Nėra instaliuotų home-manager paketų."
 
 #: home-manager/home-manager:453
 msgid "Unknown argument %s"
-msgstr ""
+msgstr "Nežinomas argumentas %s"
 
 #: home-manager/home-manager:469
 msgid "This will remove Home Manager from your system."
-msgstr ""
+msgstr "Tai pašalins Home Manager iš jūsų sistemos."
 
 #: home-manager/home-manager:472
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr ""
+msgstr "Tai bandomasis paleidimas, niekas nebus ištrinta."
 
 #: home-manager/home-manager:476
 msgid "Really uninstall Home Manager?"
-msgstr ""
+msgstr "Tikrai išdiegti Home Manager?"
 
 #: home-manager/home-manager:481
 msgid "Switching to empty Home Manager configuration..."
-msgstr ""
+msgstr "Perjungiama į tuščią Home Manager konfigūraciją..."
 
 #: home-manager/home-manager:493
 msgid "Yay!"
-msgstr ""
+msgstr "Valio!"
 
 #: home-manager/home-manager:500
 msgid "Remove all Home Manager generations?"
-msgstr ""
+msgstr "Pašalinti visas Home Manager generacijas?"
 
 #: home-manager/home-manager:507
 msgid "All generations are now eligible for garbage collection."
 msgstr ""
+"Visos generacijos jau tinkamos šiukšlių surinkimui (garbage collection)."
 
 #: home-manager/home-manager:510
 msgid "Leaving generations but they may still be garbage collected."
@@ -116,31 +126,31 @@ msgstr ""
 
 #: home-manager/home-manager:514
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr ""
+msgstr "Home Manager yra išdiegtas, bet jūsų home.nix liko nepaliestas."
 
 #: home-manager/home-manager:673
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: nežinomas pasirinkimas „%s“"
 
 #: home-manager/home-manager:674
 msgid "Run '%s --help' for usage help"
-msgstr ""
+msgstr "Paleiskite „%s --help“, kad gautumėte naudojimosi instrukcijas"
 
 #: home-manager/home-manager:708
 msgid "expire-generations expects one argument, got %d."
-msgstr ""
+msgstr "expire-generations tikisi vieno argumento, gauta %d."
 
 #: home-manager/home-manager:730
 msgid "Unknown command: %s"
-msgstr ""
+msgstr "Nežinoma komanda: %s"
 
 #: home-manager/install.nix:22
 msgid "Creating initial Home Manager configuration..."
-msgstr ""
+msgstr "Kuriama pradinė Home Manager konfigūracija..."
 
 #: home-manager/install.nix:66
 msgid "Creating initial Home Manager generation..."
-msgstr ""
+msgstr "Kuriama pradinė Home Manager generacija..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/install.nix:71
@@ -152,6 +162,14 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
+"Viskas baigta! Įrankis home-manager turėtų būti įdiegtas ir dabar galite "
+"redaguoti\n"
+"\n"
+". . . .%s\n"
+"\n"
+", kad konfigūruotumėte Home Manager. Paleiskite „man home-configuration.nix“,"
+"\n"
+"jei norite pamatyti visus pasirinkimus."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/install.nix:76
