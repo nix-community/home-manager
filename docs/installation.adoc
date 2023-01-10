@@ -58,16 +58,6 @@ and if you follow a Nixpkgs version 22.11 channel you can run
 $ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager
 $ nix-channel --update
 ----
-+
-On non-NixOS, you may have to add
-+
-[source,bash]
-export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
-+
-to your shell (see https://github.com/NixOS/nix/issues/2033[nix#2033]
-and
-https://discourse.nixos.org/t/where-is-nix-path-supposed-to-be-set/16434/8[this
-reply on the Nix Discourse]).
 
 3. Run the Home Manager installation command and create the first Home
 Manager generation:
