@@ -47,10 +47,7 @@ Add the appropriate Home Manager channel. If you are following
 Nixpkgs master or an unstable channel you can run
 </p><pre class="programlisting console">$ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 $ nix-channel --update</pre><p class="simpara">and if you follow a Nixpkgs version 22.11 channel you can run</p><pre class="programlisting console">$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager
-$ nix-channel --update</pre><p class="simpara">On non-NixOS, you may have to add</p><pre class="programlisting bash">export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}</pre><p class="simpara">to your shell (see <a class="link" href="https://github.com/NixOS/nix/issues/2033" target="_top">nix#2033</a>
-and
-<a class="link" href="https://discourse.nixos.org/t/where-is-nix-path-supposed-to-be-set/16434/8" target="_top">this
-reply on the Nix Discourse</a>).</p></li><li class="listitem"><p class="simpara">
+$ nix-channel --update</pre></li><li class="listitem"><p class="simpara">
 Run the Home Manager installation command and create the first Home
 Manager generation:
 </p><pre class="programlisting console">$ nix-shell '&lt;home-manager&gt;' -A install</pre><p class="simpara">Once finished, Home Manager should be active and available in your
