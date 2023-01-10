@@ -250,8 +250,6 @@ in {
       };
     }
 
-    (mkIf (cfg.config != null) { xsession.windowManager.i3.package = pkgs.i3; })
-
     (mkIf (cfg.config != null) {
       warnings = (optional (isList cfg.config.fonts)
         "Specifying i3.config.fonts as a list is deprecated. Use the attrset version instead.")
