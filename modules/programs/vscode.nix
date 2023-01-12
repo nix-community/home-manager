@@ -253,7 +253,7 @@ in {
         "${extensionPath}".source = let
           combinedExtensionsDrv = pkgs.buildEnv {
             name = "vscode-extensions";
-            paths = builtins.trace extensionJsonFile cfg.extensions
+            paths = cfg.extensions
               ++ [ extensionJsonFile ];
           };
         in "${combinedExtensionsDrv}/${subDir}";
