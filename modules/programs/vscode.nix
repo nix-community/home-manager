@@ -247,8 +247,8 @@ in {
           else
             builtins.attrNames (builtins.readDir (ext + "/${subDir}")));
       in if cfg.mutableExtensionsDir then
-        mkMerge (concatMap toPaths cfg.extensions)
-        ++ [{ ".vscode/extensions/extensions.json".text = extensionsJson; }]
+        mkMerge (concatMap toPaths cfg.extensions
+        ++ [{ "${extensionPath}/extensions.json".text = extensionJson; }])
       else {
         "${extensionPath}".source = let
           combinedExtensionsDrv = pkgs.buildEnv {
