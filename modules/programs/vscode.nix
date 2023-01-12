@@ -34,6 +34,42 @@ let
   # TODO: On Darwin where are the extensions?
   extensionPath = ".${extensionDir}/extensions";
 
+  toExtensionJsonEntry = drv: rec {
+    identifier = {
+      id = "${drv.vscodeExtPublisher}.${drv.vscodeExtName}";
+      uuid = "";
+    };
+
+    version = drv.version;
+
+    location = {
+      "$mid" = 1;
+      fsPath = drv.outPath
+        + "/share/vscode/extensions/${drv.vscodeExtUniqueId}";
+      path = location.fsPath;
+      scheme = "file";
+    };
+
+    metadata = {
+      id = identifier.uuid;
+      publisherId = "";
+      publisherDisplayName = drv.vscodeExtPublisher;
+      targetPlatform = "undefined";
+      isApplicationScoped = false;
+      updated = false;
+      isPreReleaseVersion = false;
+      installedTimestamp = 0;
+      preRelease = false;
+    };
+  };
+
+  extensionJson = builtins.toJSON (map toExtensionJsonEntry cfg.extensions);
+  extensionJsonFile = pkgs.writeTextFile {
+    name = "extensions-json";
+    text = extensionJson;
+    destination = "/share/vscode/extensions/extensions.json";
+  };
+
   mergedUserSettings = cfg.userSettings
     // optionalAttrs (!cfg.enableUpdateCheck) { "update.mode" = "none"; }
     // optionalAttrs (!cfg.enableExtensionUpdateCheck) {
@@ -212,11 +248,13 @@ in {
             builtins.attrNames (builtins.readDir (ext + "/${subDir}")));
       in if cfg.mutableExtensionsDir then
         mkMerge (concatMap toPaths cfg.extensions)
+        ++ [{ ".vscode/extensions/extensions.json".text = extensionsJson; }]
       else {
         "${extensionPath}".source = let
           combinedExtensionsDrv = pkgs.buildEnv {
             name = "vscode-extensions";
-            paths = cfg.extensions;
+            paths = builtins.trace extensionJsonFile cfg.extensions
+              ++ [ extensionJsonFile ];
           };
         in "${combinedExtensionsDrv}/${subDir}";
       }))
