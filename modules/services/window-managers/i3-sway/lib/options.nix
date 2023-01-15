@@ -510,13 +510,28 @@ in {
             if (isSway && isBool val) then (lib.hm.booleans.yesNo val) else val;
         };
 
+        wrapping = mkOption {
+          type = types.enum [ "yes" "no" "force" "workspace" ];
+          default = {
+            i3 = if cfg.config.focus.forceWrapping then "force" else "yes";
+            # the sway module's logic was inverted and incorrect,
+            # so preserve it for backwards compatibility purposes
+            sway = if cfg.config.focus.forceWrapping then "yes" else "no";
+          }.${moduleName};
+          description = ''
+            Whether the window focus commands automatically wrap around the edge of containers.
+
+            See <link xlink:href="https://i3wm.org/docs/userguide.html#_focus_wrapping"/>
+          '';
+        };
+
         forceWrapping = mkOption {
           type = types.bool;
           default = false;
           description = ''
-            Whether to force focus wrapping in tabbed or stacked container.
+            Whether to force focus wrapping in tabbed or stacked containers.
 
-            See <link xlink:href="https://i3wm.org/docs/userguide.html#_focus_wrapping"/>
+            This option is deprecated, use <option>focus.wrapping</option> instead.
           '';
         };
 
