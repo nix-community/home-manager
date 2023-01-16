@@ -972,6 +972,13 @@ in
           A new module is available: 'services.syncthing'.
         '';
       }
+
+      {
+        time = "2023-03-25T14:53:57+00:00";
+        message = ''
+          A new module is available: 'programs.hstr'.
+        '';
+      }
     ];
   };
 }

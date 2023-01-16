@@ -90,6 +90,7 @@ let
     ./programs/hexchat.nix
     ./programs/himalaya.nix
     ./programs/home-manager.nix
+    ./programs/hstr.nix
     ./programs/htop.nix
     ./programs/hyfetch.nix
     ./programs/i3status-rust.nix

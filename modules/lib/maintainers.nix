@@ -47,6 +47,12 @@
       fingerprint = "4C92 E3B0 21B5 5562 A1E0  CE3D B1C0 12F0 E769 7195";
     }];
   };
+  Dines97 = {
+    name = "Denis Kaynar";
+    email = "19364873+Dines97@users.noreply.github.com";
+    github = "Dines97";
+    githubId = 19364873;
+  };
   dwagenk = {
     email = "dwagenk@mailbox.org";
     github = "dwagenk";

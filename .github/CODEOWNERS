@@ -587,3 +587,5 @@ Makefile                                              @thiagokokada
 /modules/xresources.nix                               @rycee
 
 /modules/xsession.nix                                 @rycee
+
+/modules/programs/hstr.nix                            @Dines97
