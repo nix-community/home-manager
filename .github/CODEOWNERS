@@ -276,6 +276,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/pylint.nix                          @florpe
 
+/modules/programs/rbenv.nix                           @marsam
+
 /modules/programs/rbw.nix                             @ambroisie
 /tests/modules/programs/rbw                           @ambroisie
 
