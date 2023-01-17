@@ -190,6 +190,7 @@ let
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
+    ./programs/rbenv.nix
     ./programs/watson.nix
     ./programs/waybar.nix
     ./programs/wezterm.nix
