@@ -886,6 +886,14 @@ in
           'wayland.windowManager.sway.config.[window|floating].titlebar' now default to 'true'.
         '';
       }
+
+      {
+        time = "2023-01-18T11:19:41+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.avizo'.
+        '';
+      }
     ];
   };
 }

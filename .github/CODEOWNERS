@@ -355,6 +355,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/zsh/prezto.nix                      @NickHu
 
+/modules/services/avizo.nix                           @pltanton
+
 /modules/services/barrier.nix                         @Kritnich
 /tests/modules/services/barrier                       @Kritnich
 
