@@ -888,7 +888,7 @@ in
       }
 
       {
-        time = "2023-01-09T14:24:28+00:00";
+        time = "2023-01-18T14:24:28+00:00";
         condition = config.programs.zsh.enable;
         message = ''
           A new module is available: 'programs.zsh.zimfw'.
