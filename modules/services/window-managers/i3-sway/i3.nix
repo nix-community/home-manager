@@ -160,7 +160,7 @@ let
         "floating_modifier ${floating.modifier}"
         (windowBorderString window floating)
         "hide_edge_borders ${window.hideEdgeBorders}"
-        "force_focus_wrapping ${lib.hm.booleans.yesNo focus.forceWrapping}"
+        "focus_wrapping ${focus.wrapping}"
         "focus_follows_mouse ${lib.hm.booleans.yesNo focus.followMouse}"
         "focus_on_window_activation ${focus.newWindow}"
         "mouse_warping ${if focus.mouseWarping then "output" else "none"}"
@@ -256,16 +256,15 @@ in {
         ++ flatten (map (b:
           optional (isList b.fonts)
           "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
-          cfg.config.bars);
+          cfg.config.bars) ++ [
+            (mkIf (any (s: s.workspace != null) cfg.config.startup)
+              ("'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
+                + "use 'xsession.windowManager.i3.config.assigns' instead."
+                + "See https://github.com/nix-community/home-manager/issues/265."))
+            (mkIf cfg.config.focus.forceWrapping
+              ("'xsession.windowManager.i3.config.focus.forceWrapping' is deprecated, "
+                + "use 'xsession.windowManager.i3.config.focus.wrapping' instead."))
+          ];
     })
-
-    (mkIf (cfg.config != null
-      && (any (s: s.workspace != null) cfg.config.startup)) {
-        warnings = [
-          ("'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
-            + "use 'xsession.windowManager.i3.config.assigns' instead."
-            + "See https://github.com/nix-community/home-manager/issues/265.")
-        ];
-      })
   ]);
 }

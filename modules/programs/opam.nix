@@ -56,7 +56,7 @@ in {
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      eval "$(${cfg.package}/bin/opam env --shell=fish)"
+      eval (${cfg.package}/bin/opam env --shell=fish)
     '';
   };
 }
