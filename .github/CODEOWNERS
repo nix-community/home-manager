@@ -365,6 +365,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/autorandr.nix                       @GaetanLepage
 
+/modules/services/avizo.nix                           @pltanton
+
 /modules/services/barrier.nix                         @Kritnich
 /tests/modules/services/barrier                       @Kritnich
 

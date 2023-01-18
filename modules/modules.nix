@@ -205,6 +205,7 @@ let
     ./programs/zsh.nix
     ./programs/zsh/prezto.nix
     ./services/autorandr.nix
+    ./services/avizo.nix
     ./services/barrier.nix
     ./services/betterlockscreen.nix
     ./services/blueman-applet.nix
