@@ -20,13 +20,14 @@ herbstclient set frame_bg_active_color '#000000'
 herbstclient set frame_gap '12'
 herbstclient set frame_padding '-12'
 
-if @herbstluftwm@/bin/herbstclient object_tree tags.default &>/dev/null; then
-  herbstclient rename default '1'
-fi
-
 for tag in '1' 'with space' 'wə1rd#ch@rs'\'''; do
   herbstclient add "$tag"
 done
+
+if @herbstluftwm@/bin/herbstclient object_tree tags.by-name.default &>/dev/null; then
+  herbstclient use '1'
+  herbstclient merge_tag default '1'
+fi
 
 
 herbstclient keybind Mod4-1 use 1

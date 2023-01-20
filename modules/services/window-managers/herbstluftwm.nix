@@ -29,6 +29,8 @@ let
 
   settingType = lib.types.oneOf [ lib.types.bool lib.types.int lib.types.str ];
 
+  escapedTags = map lib.escapeShellArg cfg.tags;
+
 in {
   meta.maintainers = [ lib.hm.maintainers.olmokramer ];
 
@@ -147,15 +149,14 @@ in {
         ${renderSettings cfg.settings}
 
         ${lib.optionalString (cfg.tags != [ ]) ''
-          if ${cfg.package}/bin/herbstclient object_tree tags.default &>/dev/null; then
-            herbstclient rename default ${
-              lib.escapeShellArg (builtins.head cfg.tags)
-            }
-          fi
-
-          for tag in ${lib.escapeShellArgs cfg.tags}; do
+          for tag in ${lib.concatStringsSep " " escapedTags}; do
             herbstclient add "$tag"
           done
+
+          if ${cfg.package}/bin/herbstclient object_tree tags.by-name.default &>/dev/null; then
+            herbstclient use ${lib.head escapedTags}
+            herbstclient merge_tag default ${lib.head escapedTags}
+          fi
         ''}
 
         ${renderKeybinds cfg.keybinds}
