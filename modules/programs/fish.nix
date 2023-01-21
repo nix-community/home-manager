@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }@moduleArgs:
 
 with lib;
 
@@ -289,6 +289,9 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
+      warnings = optional (!(moduleArgs.osConfig.programs.fish.enable or true))
+        "Enable os-level programs.fish.enable for proper shell initialization.";
+
       home.packages = [ cfg.package ];
 
       # Support completion for `man` by building a cache for `apropos`.
