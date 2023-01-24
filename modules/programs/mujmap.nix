@@ -186,7 +186,7 @@ let
       default = null;
       example = "https://jmap.example.com/.well-known/jmap";
       description = ''
-        Sesion URL to connect to.
+        Session URL to connect to.
         </para><para>
         Mutually exclusive with
         <xref linkend="opt-accounts.email.accounts._name_.mujmap.settings.fqdn"/>.

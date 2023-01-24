@@ -375,7 +375,7 @@ in {
           # Aliases
           ${aliasesStr}
 
-          # Interactive shell intialisation
+          # Interactive shell initialisation
           ${cfg.interactiveShellInit}
 
         end

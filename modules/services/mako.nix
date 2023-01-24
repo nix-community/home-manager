@@ -130,8 +130,8 @@ in {
         description = ''
           Set margin of each edge specified in pixels. Specify single value to
           apply margin on all sides. Two comma-separated values will set
-          vertical and horizontal edges separately. Four comma-seperated will
-          give each edge a seperate value.
+          vertical and horizontal edges separately. Four comma-separated will
+          give each edge a separate value.
           For example: 10,20,5 will set top margin to 10, left and right to 20
           and bottom to five.
         '';
@@ -143,8 +143,8 @@ in {
         description = ''
           Set padding of each edge specified in pixels. Specify single value to
           apply margin on all sides. Two comma-separated values will set
-          vertical and horizontal edges separately. Four comma-seperated will
-          give each edge a seperate value.
+          vertical and horizontal edges separately. Four comma-separated will
+          give each edge a separate value.
           For example: 10,20,5 will set top margin to 10, left and right to 20
           and bottom to five.
         '';
