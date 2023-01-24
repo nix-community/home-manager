@@ -6,7 +6,7 @@
 Home Manager includes a `flake.nix` file for compatibility with {nixos-wiki-flakes}[Nix Flakes].
 The support is still experimental and may change in backwards incompatible ways.
 
-[[sec-flakes-prerequisties]]
+[[sec-flakes-prerequisites]]
 === Prerequisites
 
 * Install Nix 2.4 or later, or have it in `nix-shell`.

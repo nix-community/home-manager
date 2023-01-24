@@ -59,15 +59,15 @@ source = maildir:///home/hm-user/Maildir/i_maildir-mbsync
 from = Foo Bar <addr@mail.invalid>
 source = maildir:///home/hm-user/Maildir/j_maildir-offlineimap
 
-[l_smpt-auth-none]
+[l_smtp-auth-none]
 from = Foo Bar <addr@mail.invalid>
 outgoing = smtps+none://foobar@smtp.host.invalid:42
 
-[m_smpt-auth-plain]
+[m_smtp-auth-plain]
 from = Foo Bar <addr@mail.invalid>
 outgoing = smtps+plain://foobar@smtp.host.invalid:42
 
-[n_smpt-auth-login]
+[n_smtp-auth-login]
 from = Foo Bar <addr@mail.invalid>
 outgoing = smtps+login://foobar@smtp.host.invalid:42
 

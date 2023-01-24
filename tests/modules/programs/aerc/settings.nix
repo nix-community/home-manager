@@ -193,7 +193,7 @@ with lib;
       i_maildir-mbsync = basics // { mbsync.enable = true; };
       j_maildir-offlineimap = basics // { offlineimap.enable = true; };
       k_notEnabled = basics // { aerc.enable = false; };
-      l_smpt-auth-none = basics // {
+      l_smtp-auth-none = basics // {
         smtp = {
           host = "smtp.host.invalid";
           port = 42;
@@ -203,7 +203,7 @@ with lib;
           smtpAuth = "none";
         };
       };
-      m_smpt-auth-plain = basics // {
+      m_smtp-auth-plain = basics // {
         smtp = {
           host = "smtp.host.invalid";
           port = 42;
@@ -213,7 +213,7 @@ with lib;
           smtpAuth = "plain";
         };
       };
-      n_smpt-auth-login = basics // {
+      n_smtp-auth-login = basics // {
         smtp = {
           host = "smtp.host.invalid";
           port = 42;
