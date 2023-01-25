@@ -6,4 +6,5 @@
   files-target-conflict = ./target-conflict.nix;
   files-target-with-shellvar = ./target-with-shellvar.nix;
   files-text = ./text.nix;
+  files-disabled = ./disabled.nix;
 }
