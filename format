@@ -1,16 +1,30 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/6616de389ed55fba6eeba60377fc04732d5a207c.tar.gz -i bash -p findutils nixfmt
 
-CHECK_ARG=
+nixfmt_args=()
 
-case $1 in
-    -h)
-        echo "$0 [-c]"
-        ;;
-    -c)
-        CHECK_ARG=-c
-        ;;
-esac
+for arg do
+    case $arg in
+        -h)
+            echo "$0 [-c]"
+            exit
+            ;;
+        -c)
+            nixfmt_args+=("$arg")
+            ;;
+        .)
+            ;;
+        *)
+            echo "unrecognised argument: $arg" >&2
+            exit 1
+            ;;
+    esac
+done
+
+if [[ ! -e flake.nix ]]; then
+    echo "must be run from the root directory" >&2
+    exit 1
+fi
 
 # The excludes are for files touched by open pull requests and we want
 # to avoid merge conflicts.
@@ -24,4 +38,4 @@ find . -name '*.nix' \
   ! -path ./modules/programs/ssh.nix \
   ! -path ./modules/programs/zsh.nix \
   ! -path ./tests/default.nix \
-  -exec nixfmt $CHECK_ARG {} +
+  -exec nixfmt "${nixfmt_args[@]}" {} +
