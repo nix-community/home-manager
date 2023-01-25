@@ -9,11 +9,18 @@ let
 
   homedir = config.programs.gpg.homedir;
 
+  gpgSshSupportStr = ''
+    ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
+  '';
+
   gpgInitStr = ''
     GPG_TTY="$(tty)"
     export GPG_TTY
-  '' + optionalString cfg.enableSshSupport
-    "${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null";
+  '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
+
+  gpgFishInitStr = ''
+    set -gx GPG_TTY (tty)
+  '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
 
   # mimic `gpgconf` output for use in `systemd` unit definitions.
   # we cannot use `gpgconf` directly because it heavily depends on system
@@ -238,9 +245,8 @@ in {
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration gpgInitStr;
       programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgInitStr;
-      programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-        set -gx GPG_TTY (tty)
-      '';
+      programs.fish.interactiveShellInit =
+        mkIf cfg.enableFishIntegration gpgFishInitStr;
     }
 
     (mkIf (cfg.sshKeys != null) {

@@ -97,7 +97,7 @@ in {
       description = ''
         Cursor configuration. Set to <literal>null</literal> to disable.
         </para><para>
-        Top-level options declared under this submodule are backend indepedent
+        Top-level options declared under this submodule are backend independent
         options. Options declared under namespaces such as <literal>x11</literal>
         are backend specific options. By default, only backend independent cursor
         configurations are generated. If you need configurations for specific

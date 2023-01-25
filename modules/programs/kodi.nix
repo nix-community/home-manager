@@ -82,7 +82,7 @@ let
   attrsetToXml = attrs: name: stylesheet:
     pkgs.runCommand name {
       # Package splicing for libxslt does not work correctly leading to errors
-      # when cross-compiling. Use the version from buildPackages explicitely to
+      # when cross-compiling. Use the version from buildPackages explicitly to
       # fix this.
       nativeBuildInputs = [ pkgs.buildPackages.libxslt.bin ];
       xml = builtins.toXML attrs;
