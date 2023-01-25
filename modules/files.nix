@@ -4,7 +4,7 @@ with lib;
 
 let
 
-  cfg = config.home.file;
+  cfg = filterAttrs (n: f: f.enable) config.home.file;
 
   homeDirectory = config.home.homeDirectory;
 
