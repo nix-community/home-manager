@@ -360,6 +360,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/zsh/prezto.nix                      @NickHu
 
+/modules/services/autorandr.nix                       @GaetanLepage
+
 /modules/services/barrier.nix                         @Kritnich
 /tests/modules/services/barrier                       @Kritnich
 
