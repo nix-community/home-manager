@@ -249,6 +249,9 @@ Makefile                                              @thiagokokada
 /modules/programs/pandoc.nix                          @kirelagin
 /tests/modules/programs/pandoc                        @kirelagin
 
+/modules/programs/papis.nix                           @marsam
+/tests/modules/programs/papis                         @marsam
+
 /modules/programs/password-store.nix                  @pacien
 
 /modules/programs/pazi.nix                            @marsam
