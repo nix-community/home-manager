@@ -19,6 +19,8 @@ let
     } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
     serviceConfig = baseService username;
   };
+  # we use a service separated from nixos-activation
+  # to keep the logs separate
   hmDropIn = "/share/systemd/user/home-manager.service.d";
 
 in {
@@ -110,8 +112,6 @@ in {
     })
     (mkIf (cfg.users != { } && cfg.useUserService) {
       systemd.user.services.home-manager = (baseUnit "%u") // {
-        wantedBy = [ "default.target" ];
-
         # user units cannot depend on system units
         # TODO: Insert in the script logic for waiting on the nix socket via dbus
         # like https://github.com/mogorman/systemd-lock-handler
@@ -138,6 +138,14 @@ in {
           ];
         }) cfg.users;
       environment.pathsToLink = [ hmDropIn ];
+
+      # Without this will not reload home conf
+      # of logged user on system activation
+      # it will also start the unit on startup
+      system.userActivationScripts.home-manager = {
+        text = "${pkgs.systemd}/bin/systemctl --user restart home-manager";
+        deps = [ ];
+      };
     })
   ];
 }
