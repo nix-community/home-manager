@@ -81,6 +81,7 @@ import nmt {
     ./modules/programs/hyfetch
     ./modules/programs/i3status
     ./modules/programs/irssi
+    ./modules/programs/jujutsu
     ./modules/programs/k9s
     ./modules/programs/kakoune
     ./modules/programs/kitty

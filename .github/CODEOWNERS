@@ -163,6 +163,9 @@ Makefile                                              @thiagokokada
 
 /modules/programs/just.nix                            @maximsmol
 
+/modules/programs/jujutsu.nix                         @shikanime
+/tests/modules/programs/jujutsu                       @shikanime
+
 /modules/programs/k9s.nix                             @katexochen
 /tests/modules/programs/k9s                           @katexochen
 

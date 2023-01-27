@@ -100,6 +100,7 @@ let
     ./programs/irssi.nix
     ./programs/java.nix
     ./programs/jq.nix
+    ./programs/jujutsu.nix
     ./programs/just.nix
     ./programs/k9s.nix
     ./programs/kakoune.nix
