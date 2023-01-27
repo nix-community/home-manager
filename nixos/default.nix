@@ -19,6 +19,8 @@ let
     } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
     serviceConfig = baseService username;
   };
+  # we use a service separated from nixos-activation
+  # to keep the logs separate
   hmDropIn = "/share/systemd/user/home-manager.service.d";
 
 in {
@@ -42,29 +44,30 @@ in {
             i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
 
             # .ssh/config needs to exists before login to let ssh login as that user
-            programs.ssh.internallyManaged = lib.mkDefault (!cfg.useUserService);
-        };
-      }];
-
-      systemd.services = mapAttrs' (_:
-        { home, programs, ... }:
-        let inherit (home) username homeDirectory;
-        in nameValuePair "ssh_config-${utils.escapeSystemdPath username}" {
-          enable = with programs.ssh; enable && !internallyManaged;
-          description = "Linking ${username}' ssh config";
-          wantedBy = [ "multi-user.target" ];
-          before = [ "systemd-user-sessions.service" ];
-
-          unitConfig.RequiresMountsFor = homeDirectory;
-          stopIfChanged = false;
-          serviceConfig = (baseService username) // {
-            User = username;
-            ExecStart = [
-              "${pkgs.coreutils}/bin/mkdir -p ${homeDirectory}/.ssh"
-              "${pkgs.coreutils}/bin/ln -s ${programs.ssh.configPath} ${homeDirectory}/.ssh/config"
-            ];
+            programs.ssh.internallyManaged =
+              lib.mkDefault (!cfg.useUserService);
           };
-        }) cfg.users;
+        }];
+
+        systemd.services = mapAttrs' (_:
+          { home, programs, ... }:
+          let inherit (home) username homeDirectory;
+          in nameValuePair "ssh_config-${utils.escapeSystemdPath username}" {
+            enable = with programs.ssh; enable && !internallyManaged;
+            description = "Linking ${username}' ssh config";
+            wantedBy = [ "multi-user.target" ];
+            before = [ "systemd-user-sessions.service" ];
+
+            unitConfig.RequiresMountsFor = homeDirectory;
+            stopIfChanged = false;
+            serviceConfig = (baseService username) // {
+              User = username;
+              ExecStart = [
+                "${pkgs.coreutils}/bin/mkdir -p ${homeDirectory}/.ssh"
+                "${pkgs.coreutils}/bin/ln -s ${programs.ssh.configPath} ${homeDirectory}/.ssh/config"
+              ];
+            };
+          }) cfg.users;
       };
     }
     (mkIf (cfg.users != { } && !cfg.useUserService) {
@@ -111,8 +114,6 @@ in {
     })
     (mkIf (cfg.users != { } && cfg.useUserService) {
       systemd.user.services.home-manager = (baseUnit "%u") // {
-        wantedBy = [ "default.target" ];
-
         # user units cannot depend on system units
         # TODO: Insert in the script logic for waiting on the nix socket via dbus
         # like https://github.com/mogorman/systemd-lock-handler
@@ -139,6 +140,14 @@ in {
           ];
         }) cfg.users;
       environment.pathsToLink = [ hmDropIn ];
+
+      # Without this will not reload home conf
+      # of logged user on system activation
+      # it will also start the unit on startup
+      system.userActivationScripts.home-manager = {
+        text = "${pkgs.systemd}/bin/systemctl --user restart home-manager";
+        deps = [ ];
+      };
     })
   ];
 }
