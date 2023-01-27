@@ -6,16 +6,15 @@ let
 
   cfg = config.programs.bash;
 
-  writeBashScript = name: text: pkgs.writeTextFile {
-    inherit name text;
-    checkPhase = ''
-      ${pkgs.stdenv.shellDryRun} "$target"
-    '';
-  };
+  writeBashScript = name: text:
+    pkgs.writeTextFile {
+      inherit name text;
+      checkPhase = ''
+        ${pkgs.stdenv.shellDryRun} "$target"
+      '';
+    };
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   imports = [
@@ -70,20 +69,18 @@ in
       };
 
       historyControl = mkOption {
-        type = types.listOf (types.enum [
-          "erasedups"
-          "ignoredups"
-          "ignorespace"
-        ]);
-        default = [];
+        type =
+          types.listOf (types.enum [ "erasedups" "ignoredups" "ignorespace" ]);
+        default = [ ];
         description = "Controlling how commands are saved on the history list.";
       };
 
       historyIgnore = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         example = [ "ls" "cd" "exit" ];
-        description = "List of commands that should not be saved to the history list.";
+        description =
+          "List of commands that should not be saved to the history list.";
       };
 
       shellOptions = mkOption {
@@ -103,10 +100,7 @@ in
           # Warn if closing shell with running jobs.
           "checkjobs"
         ];
-        example = [
-          "extglob"
-          "-cdspell"
-        ];
+        example = [ "extglob" "-cdspell" ];
         description = ''
           Shell options to set. Prefix an option with
           <quote><literal>-</literal></quote> to unset.
@@ -114,7 +108,7 @@ in
       };
 
       sessionVariables = mkOption {
-        default = {};
+        default = { };
         type = types.attrs;
         example = { MAILCHECK = 30; };
         description = ''
@@ -123,7 +117,7 @@ in
       };
 
       shellAliases = mkOption {
-        default = {};
+        default = { };
         type = types.attrsOf types.str;
         example = literalExpression ''
           {
@@ -175,80 +169,71 @@ in
     };
   };
 
-  config = (
-    let
-      aliasesStr = concatStringsSep "\n" (
-        mapAttrsToList (k: v: "alias ${k}=${escapeShellArg v}") cfg.shellAliases
-      );
+  config = let
+    aliasesStr = concatStringsSep "\n"
+      (mapAttrsToList (k: v: "alias ${k}=${escapeShellArg v}")
+        cfg.shellAliases);
 
-      shoptsStr = let
-        switch = v: if hasPrefix "-" v then "-u" else "-s";
-      in concatStringsSep "\n" (
-          map (v: "shopt ${switch v} ${removePrefix "-" v}") cfg.shellOptions
-      );
+    shoptsStr = let switch = v: if hasPrefix "-" v then "-u" else "-s";
+    in concatStringsSep "\n"
+    (map (v: "shopt ${switch v} ${removePrefix "-" v}") cfg.shellOptions);
 
-      sessionVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
+    sessionVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
 
-      historyControlStr =
-        concatStringsSep "\n" (mapAttrsToList (n: v: "${n}=${v}") (
-          {
-            HISTFILESIZE = toString cfg.historyFileSize;
-            HISTSIZE = toString cfg.historySize;
-          }
-          // optionalAttrs (cfg.historyFile != null) {
-            HISTFILE = "\"${cfg.historyFile}\"";
-          }
-          // optionalAttrs (cfg.historyControl != []) {
-            HISTCONTROL = concatStringsSep ":" cfg.historyControl;
-          }
-          // optionalAttrs (cfg.historyIgnore != []) {
-            HISTIGNORE = escapeShellArg (concatStringsSep ":" cfg.historyIgnore);
-          }
-        ));
-    in mkIf cfg.enable {
-      home.file.".bash_profile".source = writeBashScript "bash_profile" ''
-        # include .profile if it exists
-        [[ -f ~/.profile ]] && . ~/.profile
+    historyControlStr = concatStringsSep "\n"
+      (mapAttrsToList (n: v: "${n}=${v}") ({
+        HISTFILESIZE = toString cfg.historyFileSize;
+        HISTSIZE = toString cfg.historySize;
+      } // optionalAttrs (cfg.historyFile != null) {
+        HISTFILE = ''"${cfg.historyFile}"'';
+      } // optionalAttrs (cfg.historyControl != [ ]) {
+        HISTCONTROL = concatStringsSep ":" cfg.historyControl;
+      } // optionalAttrs (cfg.historyIgnore != [ ]) {
+        HISTIGNORE = escapeShellArg (concatStringsSep ":" cfg.historyIgnore);
+      }));
+  in mkIf cfg.enable {
+    home.file.".bash_profile".source = writeBashScript "bash_profile" ''
+      # include .profile if it exists
+      [[ -f ~/.profile ]] && . ~/.profile
 
-        # include .bashrc if it exists
-        [[ -f ~/.bashrc ]] && . ~/.bashrc
-      '';
+      # include .bashrc if it exists
+      [[ -f ~/.bashrc ]] && . ~/.bashrc
+    '';
 
-      # If completion is enabled then make sure it is sourced very early. This
-      # is to avoid problems if any other initialization code attempts to set up
-      # completion.
-      programs.bash.initExtra = mkIf cfg.enableCompletion (mkOrder 100 ''
-        if [[ ! -v BASH_COMPLETION_VERSINFO ]]; then
-          . "${pkgs.bash-completion}/etc/profile.d/bash_completion.sh"
-        fi
-      '');
+    # If completion is enabled then make sure it is sourced very early. This
+    # is to avoid problems if any other initialization code attempts to set up
+    # completion.
+    programs.bash.initExtra = mkIf cfg.enableCompletion (mkOrder 100 ''
+      if [[ ! -v BASH_COMPLETION_VERSINFO ]]; then
+        . "${pkgs.bash-completion}/etc/profile.d/bash_completion.sh"
+      fi
+    '');
 
-      home.file.".profile".source = writeBashScript "profile" ''
-        . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+    home.file.".profile".source = writeBashScript "profile" ''
+      . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
-        ${sessionVarsStr}
+      ${sessionVarsStr}
 
-        ${cfg.profileExtra}
-      '';
+      ${cfg.profileExtra}
+    '';
 
-      home.file.".bashrc".source = writeBashScript "bashrc" ''
-        ${cfg.bashrcExtra}
+    home.file.".bashrc".source = writeBashScript "bashrc" ''
+      ${cfg.bashrcExtra}
 
-        # Commands that should be applied only for interactive shells.
-        [[ $- == *i* ]] || return
+      # Commands that should be applied only for interactive shells.
+      [[ $- == *i* ]] || return
 
-        ${historyControlStr}
+      ${historyControlStr}
 
-        ${shoptsStr}
+      ${shoptsStr}
 
-        ${aliasesStr}
+      ${aliasesStr}
 
-        ${cfg.initExtra}
-      '';
+      ${cfg.initExtra}
+    '';
 
-      home.file.".bash_logout" = mkIf (cfg.logoutExtra != "") {
-        source = writeBashScript "bash_logout" cfg.logoutExtra;
-      };
-    }
-  );
+    home.file.".bash_logout" = mkIf (cfg.logoutExtra != "") {
+      source = writeBashScript "bash_logout" cfg.logoutExtra;
+    };
+  };
 }

@@ -15,6 +15,14 @@ in
   fileType = basePathDesc: basePath: types.attrsOf (types.submodule (
     { name, config, ... }: {
       options = {
+        enable = mkOption {
+          type = types.bool;
+          default = true;
+          description = ''
+            Whether this file should be generated. This option allows specific
+            files to be disabled.
+          '';
+        };
         target = mkOption {
           type = types.str;
           apply = p:
