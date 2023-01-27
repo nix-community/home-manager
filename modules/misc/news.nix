@@ -888,12 +888,11 @@ in
       }
 
       {
-        time = "2023-01-22T11:08:15+00:00";
+        time = "2023-01-28T17:35:49+00:00";
         message = ''
-          A new module is available: 'programs.mr'.
+          A new module is available: 'programs.papis'.
         '';
       }
-
     ];
   };
 }
