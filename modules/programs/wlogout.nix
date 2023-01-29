@@ -129,6 +129,11 @@ in {
     layoutContent = concatStringsSep "\n" layoutJsons;
 
   in mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.wlogout" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile."wlogout/layout" = mkIf (cfg.layout != [ ]) {
