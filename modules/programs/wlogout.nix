@@ -23,7 +23,7 @@ let
         };
 
         action = mkOption {
-          type = str;
+          type = either path str;
           default = "";
           example = "systemctl poweroff";
           description = "Command to execute when clicked.";
