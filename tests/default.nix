@@ -102,6 +102,7 @@ import nmt {
     ./modules/programs/nushell
     ./modules/programs/oh-my-posh
     ./modules/programs/pandoc
+    ./modules/programs/papis
     ./modules/programs/pet
     ./modules/programs/pistol
     ./modules/programs/pls

@@ -144,6 +144,7 @@ let
     ./programs/oh-my-posh.nix
     ./programs/opam.nix
     ./programs/pandoc.nix
+    ./programs/papis.nix
     ./programs/password-store.nix
     ./programs/pazi.nix
     ./programs/pet.nix

@@ -888,7 +888,14 @@ in
       }
 
       {
-        time = "2023-01-18T14:24:28+00:00";
+        time = "2023-01-28T17:35:49+00:00";
+        message = ''
+          A new module is available: 'programs.papis'.
+        '';
+      }
+
+      {
+        time = "2023-01-29T14:24:28+00:00";
         condition = config.programs.zsh.enable;
         message = ''
           A new module is available: 'programs.zsh.zimfw'.
