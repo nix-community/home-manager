@@ -893,6 +893,14 @@ in
           A new module is available: 'programs.papis'.
         '';
       }
+
+      {
+        time = "2023-01-30T14:24:28+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          A new module is available: 'programs.zsh.zimfw'.
+        '';
+      }
     ];
   };
 }
