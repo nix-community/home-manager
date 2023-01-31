@@ -4,7 +4,8 @@ let
   inherit (lib) all filterAttrs isStorePath literalExpression types;
   inherit (lib.options) mkEnableOption mkPackageOption mkOption;
   inherit (lib.modules) mkIf;
-  inherit (builtins) toJSON concatStringsSep;
+  inherit (lib.strings) concatMapStrings;
+  inherit (builtins) toJSON;
 
   cfg = config.programs.wlogout;
 
@@ -126,7 +127,7 @@ in {
 
     # wlogout doesn't want a JSON array, it just wants a list of JSON objects
     layoutJsons = map cleanJSON cfg.layout;
-    layoutContent = concatStringsSep "\n" layoutJsons;
+    layoutContent = concatMapStrings (l: l + "\n") layoutJsons;
 
   in mkIf cfg.enable {
     assertions = [
