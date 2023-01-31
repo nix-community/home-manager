@@ -163,6 +163,7 @@ import nmt {
     ./modules/programs/terminator
     ./modules/programs/thunderbird
     ./modules/programs/waybar
+    ./modules/programs/wlogout
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
     ./modules/services/barrier
