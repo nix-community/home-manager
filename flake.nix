@@ -46,19 +46,17 @@
           , username ? null, homeDirectory ? null, system ? null }@args:
           let
             msgForRemovedArg = ''
-                            The 'homeManagerConfiguration' arguments
+              The 'homeManagerConfiguration' arguments
 
-                              - 'configuration',
-                              - 'username',
-                              - 'homeDirectory'
-                              - 'stateVersion',
-                              - 'extraModules', and
-                              - 'system'
+                - 'configuration',
+                - 'username',
+                - 'homeDirectory'
+                - 'stateVersion',
+                - 'extraModules', and
+                - 'system'
 
-                            have been removed. Instead use the arguments 'pkgs' and
-                            'modules'. See the 22.11 release notes for more.
-
-              	      https://nix-community.github.io/home-manager/release-notes.html#sec-release-22.11-highlights 
+              have been removed. Instead use the arguments 'pkgs' and
+              'modules'. See the 22.11 release notes for more: https://nix-community.github.io/home-manager/release-notes.html#sec-release-22.11-highlights 
             '';
 
             throwForRemovedArgs = v:
