@@ -527,10 +527,7 @@ in {
           "--background ${cfg.difftastic.background}"
           "--display ${cfg.difftastic.display}"
         ];
-      in {
-        diff.external = difftCommand;
-        core.pager = "${pkgs.less}/bin/less -XF";
-      };
+      in { diff.external = difftCommand; };
     })
 
     (mkIf cfg.delta.enable {
