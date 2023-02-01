@@ -78,6 +78,7 @@ in {
 
       importedVariables = mkOption {
         type = types.listOf (types.strMatching "[a-zA-Z_][a-zA-Z0-9_]*");
+        apply = unique;
         example = [ "GDK_PIXBUF_ICON_LOADER" ];
         visible = false;
         description = ''
@@ -184,7 +185,7 @@ in {
 
       ${optionalString (cfg.importedVariables != [ ])
       ("systemctl --user import-environment "
-        + toString (unique cfg.importedVariables))}
+        + escapeShellArgs cfg.importedVariables)}
 
       ${cfg.profileExtra}
 
@@ -212,6 +213,10 @@ in {
         while [ -n "$(systemctl --user --no-legend --state=deactivating list-units)" ]; do
           sleep 0.5
         done
+
+        ${optionalString (cfg.importedVariables != [ ])
+        ("systemctl --user unset-environment "
+          + escapeShellArgs cfg.importedVariables)}
       '';
     };
   };

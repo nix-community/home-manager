@@ -9,7 +9,7 @@ fi
 # script starts up graphical-session.target.
 systemctl --user stop graphical-session.target graphical-session-pre.target
 
-systemctl --user import-environment DBUS_SESSION_BUS_ADDRESS DISPLAY SSH_AUTH_SOCK XAUTHORITY XDG_DATA_DIRS XDG_RUNTIME_DIR XDG_SESSION_ID EXTRA_IMPORTED_VARIABLE
+systemctl --user import-environment 'DBUS_SESSION_BUS_ADDRESS' 'DISPLAY' 'SSH_AUTH_SOCK' 'XAUTHORITY' 'XDG_DATA_DIRS' 'XDG_RUNTIME_DIR' 'XDG_SESSION_ID' 'EXTRA_IMPORTED_VARIABLE'
 
 profile extra commands
 
