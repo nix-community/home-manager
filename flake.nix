@@ -56,7 +56,7 @@
                 - 'system'
 
               have been removed. Instead use the arguments 'pkgs' and
-              'modules'. See the 22.11 release notes for more.
+              'modules'. See the 22.11 release notes for more: https://nix-community.github.io/home-manager/release-notes.html#sec-release-22.11-highlights 
             '';
 
             throwForRemovedArgs = v:
