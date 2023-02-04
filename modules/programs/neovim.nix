@@ -406,8 +406,8 @@ in {
                 pkgs.writeText "nvim-init-home-manager.vim"
                 neovimConfig.neovimRcContent
               }]]" + config.programs.neovim.extraLuaConfig
-              + (lib.optionalString hasLuaConfig
-                config.programs.neovim.generatedConfigs.lua);
+              + lib.optionalString hasLuaConfig
+              config.programs.neovim.generatedConfigs.lua;
           in mkIf (luaRcContent != "") { text = luaRcContent; };
 
           "nvim/coc-settings.json" = mkIf cfg.coc.enable {

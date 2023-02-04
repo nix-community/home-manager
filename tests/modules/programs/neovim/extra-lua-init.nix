@@ -13,11 +13,9 @@ with lib;
     };
     nmt.script = ''
       nvimFolder="home-files/.config/nvim"
-        assertFileContent "$nvimFolder/init.lua" ${
-          pkgs.writeText "init.lua-expected" ''
-            -- extraLuaConfig
-          ''
-        }
+      assertFileContent "$nvimFolder/init.lua" ${
+        pkgs.writeText "init.lua-expected" "-- extraLuaConfig "
+      }
     '';
   };
 }
