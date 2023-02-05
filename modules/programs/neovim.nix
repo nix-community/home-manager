@@ -13,32 +13,13 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  extraPython3PackageType = mkOptionType {
-    name = "extra-python3-packages";
-    description = "python3 packages in python.withPackages format";
-    check = with types;
-      (x: if isFunction x then isList (x pkgs.python3Packages) else false);
-    merge = mergeOneOption;
-  };
-
-  # Currently, upstream Neovim is pinned on Lua 5.1 for LuaJIT support.
-  # This will need to be updated if Neovim ever migrates to a newer
-  # version of Lua.
-  extraLua51PackageType = mkOptionType {
-    name = "extra-lua51-packages";
-    description = "lua5.1 packages in lua5_1.withPackages format";
-    check = with types;
-      (x: if isFunction x then isList (x pkgs.lua51Packages) else false);
-    merge = mergeOneOption;
-  };
-
   pluginWithConfigType = types.submodule {
     options = {
       config = mkOption {
-        type = types.lines;
+        type = types.nullOr types.lines;
         description =
           "Script to configure this plugin. The scripting language should match type.";
-        default = "";
+        default = null;
       };
 
       type = mkOption {
@@ -80,19 +61,23 @@ let
     optional = false;
   };
 
+  luaPackages = cfg.finalPackage.unwrapped.lua.pkgs;
+  resolvedExtraLuaPackages = cfg.extraLuaPackages luaPackages;
+
   extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
     ''--suffix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
-  extraMakeWrapperLuaCArgs = lib.optionalString (cfg.extraLuaPackages != [ ]) ''
-    --suffix LUA_CPATH ";" "${
-      lib.concatMapStringsSep ";" pkgs.lua51Packages.getLuaCPath
-      cfg.extraLuaPackages
-    }"'';
-  extraMakeWrapperLuaArgs = lib.optionalString (cfg.extraLuaPackages != [ ]) ''
-    --suffix LUA_PATH ";" "${
-      lib.concatMapStringsSep ";" pkgs.lua51Packages.getLuaPath
-      cfg.extraLuaPackages
-    }"'';
-
+  extraMakeWrapperLuaCArgs =
+    lib.optionalString (resolvedExtraLuaPackages != [ ]) ''
+      --suffix LUA_CPATH ";" "${
+        lib.concatMapStringsSep ";" luaPackages.getLuaCPath
+        resolvedExtraLuaPackages
+      }"'';
+  extraMakeWrapperLuaArgs = lib.optionalString (resolvedExtraLuaPackages != [ ])
+    ''
+      --suffix LUA_PATH ";" "${
+        lib.concatMapStringsSep ";" luaPackages.getLuaPath
+        resolvedExtraLuaPackages
+      }"'';
 in {
   imports = [
     (mkRemovedOptionModule [ "programs" "neovim" "withPython" ]
@@ -164,24 +149,51 @@ in {
       };
 
       extraPython3Packages = mkOption {
-        type = with types; either extraPython3PackageType (listOf package);
-        default = (_: [ ]);
+        # In case we get a plain list, we need to turn it into a function,
+        # as expected by the function in nixpkgs.
+        # The only way to do so is to call `const`, which will ignore its input.
+        type = with types;
+          let fromType = listOf package;
+          in coercedTo fromType (flip warn const ''
+            Assigning a plain list to extraPython3Packages is deprecated.
+                   Please assign a function taking a package set as argument, so
+                     extraPython3Packages = [ pkgs.python3Packages.xxx ];
+                   should become
+                     extraPython3Packages = ps: [ ps.xxx ];
+          '') (functionTo fromType);
+        default = _: [ ];
         defaultText = literalExpression "ps: [ ]";
-        example = literalExpression "(ps: with ps; [ python-language-server ])";
+        example =
+          literalExpression "pyPkgs: with pyPkgs; [ python-language-server ]";
         description = ''
-          A function in python.withPackages format, which returns a
-          list of Python 3 packages required for your plugins to work.
+          The extra Python 3 packages required for your plugins to work.
+          This option accepts a function that takes a Python 3 package set as an argument,
+          and selects the required Python 3 packages from this package set.
+          See the example for more info.
         '';
       };
 
+      # We get the Lua package from the final package and use its
+      # Lua packageset to evaluate the function that this option was set to.
+      # This ensures that we always use the same Lua version as the Neovim package.
       extraLuaPackages = mkOption {
-        type = with types; either extraLua51PackageType (listOf package);
-        default = [ ];
-        defaultText = literalExpression "[ ]";
-        example = literalExpression "(ps: with ps; [ luautf8 ])";
+        type = with types;
+          let fromType = listOf package;
+          in coercedTo fromType (flip warn const ''
+            Assigning a plain list to extraLuaPackages is deprecated.
+                   Please assign a function taking a package set as argument, so
+                     extraLuaPackages = [ pkgs.lua51Packages.xxx ];
+                   should become
+                     extraLuaPackages = ps: [ ps.xxx ];
+          '') (functionTo fromType);
+        default = _: [ ];
+        defaultText = literalExpression "ps: [ ]";
+        example = literalExpression "luaPkgs: with luaPkgs; [ luautf8 ]";
         description = ''
-          A function in lua5_1.withPackages format, which returns a
-          list of Lua packages required for your plugins to work.
+          The extra Lua packages required for your plugins to work.
+          This option accepts a function that takes a Lua package set as an argument,
+          and selects the required Lua packages from this package set.
+          See the example for more info.
         '';
       };
 
@@ -229,6 +241,15 @@ in {
         description = "Resulting customized neovim package.";
       };
 
+      defaultEditor = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to configure <command>nvim</command> as the default
+          editor using the <envar>EDITOR</envar> environment variable.
+        '';
+      };
+
       extraConfig = mkOption {
         type = types.lines;
         default = "";
@@ -237,6 +258,17 @@ in {
         '';
         description = ''
           Custom vimrc lines.
+        '';
+      };
+
+      extraLuaConfig = mkOption {
+        type = types.lines;
+        default = "";
+        example = ''
+          vim.opt.nobackup = true
+        '';
+        description = ''
+          Custom lua lines.
         '';
       };
 
@@ -280,7 +312,7 @@ in {
         };
 
         settings = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           example = literalExpression ''
             {
@@ -326,7 +358,7 @@ in {
     defaultPlugin = {
       type = "viml";
       plugin = null;
-      config = "";
+      config = null;
       optional = false;
       runtime = { };
     };
@@ -337,7 +369,7 @@ in {
       allPlugins;
 
     suppressNotVimlConfig = p:
-      if p.type != "viml" then p // { config = ""; } else p;
+      if p.type != "viml" then p // { config = null; } else p;
 
     neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
       inherit (cfg) extraPython3Packages withPython3 withRuby viAlias vimAlias;
@@ -353,26 +385,35 @@ in {
     programs.neovim.generatedConfigs = let
       grouped = lib.lists.groupBy (x: x.type) pluginsNormalized;
       concatConfigs = lib.concatMapStrings (p: p.config);
-    in mapAttrs (name: vals: concatConfigs vals) grouped;
+      configsOnly = lib.foldl
+        (acc: p: if p.config != null then acc ++ [ p.config ] else acc) [ ];
+    in mapAttrs (name: vals: lib.concatStringsSep "\n" (configsOnly vals))
+    grouped;
 
     home.packages = [ cfg.finalPackage ];
 
-    xdg.configFile = mkMerge (
-      # writes runtime
-      (map (x: x.runtime) pluginsNormalized) ++ [{
-        "nvim/init.vim" = mkIf (neovimConfig.neovimRcContent != "") {
-          text = neovimConfig.neovimRcContent + lib.optionalString
-            (hasAttr "lua" config.programs.neovim.generatedConfigs)
-            "lua require('init-home-manager')";
-        };
-        "nvim/lua/init-home-manager.lua" =
-          mkIf (hasAttr "lua" config.programs.neovim.generatedConfigs) {
-            text = config.programs.neovim.generatedConfigs.lua;
+    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "nvim"; };
+
+    xdg.configFile =
+      let hasLuaConfig = hasAttr "lua" config.programs.neovim.generatedConfigs;
+      in mkMerge (
+        # writes runtime
+        (map (x: x.runtime) pluginsNormalized) ++ [{
+          "nvim/init.lua" = let
+            luaRcContent =
+              lib.optionalString (neovimConfig.neovimRcContent != "")
+              "vim.cmd [[source ${
+                pkgs.writeText "nvim-init-home-manager.vim"
+                neovimConfig.neovimRcContent
+              }]]" + config.programs.neovim.extraLuaConfig
+              + lib.optionalString hasLuaConfig
+              config.programs.neovim.generatedConfigs.lua;
+          in mkIf (luaRcContent != "") { text = luaRcContent; };
+
+          "nvim/coc-settings.json" = mkIf cfg.coc.enable {
+            source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
           };
-        "nvim/coc-settings.json" = mkIf cfg.coc.enable {
-          source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
-        };
-      }]);
+        }]);
 
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {

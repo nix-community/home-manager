@@ -202,7 +202,7 @@ in {
         <citerefentry>
           <refentrytitle>nix.conf</refentrytitle>
           <manvolnum>5</manvolnum>
-        </citerefentry> for avalaible options.
+        </citerefentry> for available options.
         The value declared here will be translated directly to the key-value pairs Nix expects.
         </para>
         <para>

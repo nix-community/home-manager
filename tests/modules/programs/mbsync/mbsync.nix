@@ -11,7 +11,7 @@ with lib;
       # programs.mbsync.groups and
       # accounts.email.accounts.<name>.mbsync.groups should NOT be used at the
       # same time.
-      # If they are, then the new version will take precendence.
+      # If they are, then the new version will take precedence.
       groups.inboxes = {
         "hm@example.com" = [ "Inbox1" "Inbox2" ];
         hm-account = [ "Inbox" ];
@@ -21,6 +21,7 @@ with lib;
     accounts.email.accounts = {
       "hm@example.com".mbsync = {
         enable = true;
+        extraConfig.account.SSLVersions = [ "TLSv1.3" "TLSv1.2" ];
         groups.inboxes = {
           channels = {
             inbox1 = {

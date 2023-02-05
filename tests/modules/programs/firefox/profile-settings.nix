@@ -9,7 +9,13 @@ lib.mkIf config.test.enableBig {
 
     profiles.test = {
       id = 1;
-      settings = { "general.smoothScroll" = false; };
+      settings = {
+        "general.smoothScroll" = false;
+        "browser.newtabpage.pinned" = [{
+          title = "NixOS";
+          url = "https://nixos.org";
+        }];
+      };
     };
 
     profiles.bookmarks = {
@@ -60,6 +66,49 @@ lib.mkIf config.test.enableBig {
         }
       ];
     };
+
+    profiles.search = {
+      id = 3;
+      search = {
+        force = true;
+        default = "DuckDuckGo";
+        order = [ "Nix Packages" "NixOS Wiki" ];
+        engines = {
+          "Nix Packages" = {
+            urls = [{
+              template = "https://search.nixos.org/packages";
+              params = [
+                {
+                  name = "type";
+                  value = "packages";
+                }
+                {
+                  name = "query";
+                  value = "{searchTerms}";
+                }
+              ];
+            }];
+
+            icon =
+              "/run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+
+            definedAliases = [ "@np" ];
+          };
+
+          "NixOS Wiki" = {
+            urls = [{
+              template = "https://nixos.wiki/index.php?search={searchTerms}";
+            }];
+            iconUpdateURL = "https://nixos.wiki/favicon.png";
+            updateInterval = 24 * 60 * 60 * 1000;
+            definedAliases = [ "@nw" ];
+          };
+
+          "Bing".metaData.hidden = true;
+          "Google".metaData.alias = "@g";
+        };
+      };
+    };
   };
 
   nixpkgs.overlays = [
@@ -101,5 +150,15 @@ lib.mkIf config.test.enableBig {
     assertFileContent \
       $bookmarksFile \
       ${./profile-settings-expected-bookmarks.html}
+
+    compressedSearch=$(normalizeStorePaths \
+      home-files/.mozilla/firefox/search/search.json.mozlz4)
+
+    decompressedSearch=$(dirname $compressedSearch)/search.json
+    ${pkgs.mozlz4a}/bin/mozlz4a -d "$compressedSearch" >(${pkgs.jq}/bin/jq . > "$decompressedSearch")
+
+    assertFileContent \
+      $decompressedSearch \
+      ${./profile-settings-expected-search.json}
   '';
 }

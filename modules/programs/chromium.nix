@@ -64,7 +64,7 @@ let
                 id = mkOption {
                   type = strMatching "[a-zA-Z]{32}";
                   description = ''
-                    The extension's ID from the Chome Web Store url or the unpacked crx.
+                    The extension's ID from the Chrome Web Store url or the unpacked crx.
                   '';
                   default = "";
                 };

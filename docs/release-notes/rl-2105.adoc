@@ -8,7 +8,7 @@ The 21.05 release branch became the stable branch in May, 2021.
 
 This release has the following notable changes:
 
-* The <<opt-programs.broot.verbs>> option is now a list rather than an
+* The `opt-programs.broot.verbs` option is now a list rather than an
 attribute set. To migrate, move the keys of the attrset into the list
 items' `invocation` keys. For example,
 +

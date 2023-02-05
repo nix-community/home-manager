@@ -256,7 +256,7 @@ in
 
     home.sessionVariables = mkOption {
       default = {};
-      type = types.attrs;
+      type = with types; lazyAttrsOf (oneOf [ str path int float ]);
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
       description = ''
         Environment variables to always set at login.
@@ -346,12 +346,18 @@ in
 
     home.emptyActivationPath = mkOption {
       internal = true;
-      default = false;
       type = types.bool;
+      default = versionAtLeast stateVersion "22.11";
+      defaultText = literalExpression ''
+        false   for state version < 22.11,
+        true    for state version ≥ 22.11
+      '';
       description = ''
         Whether the activation script should start with an empty
-        <envar>PATH</envar> variable. When <literal>false</literal>
-        then the user's <envar>PATH</envar> will be used.
+        <envar>PATH</envar> variable. When <literal>false</literal> then the
+        user's <envar>PATH</envar> will be accessible in the script. It is
+        recommended to keep this at <literal>true</literal> to avoid
+        uncontrolled use of tools found in PATH.
       '';
     };
 
@@ -581,7 +587,6 @@ in
           if [[ -e "$nixProfilePath"/manifest.json ]] ; then
             nix profile list \
               | { grep 'home-manager-path$' || test $? = 1; } \
-              | awk -F ' ' '{ print $4 }' \
               | cut -d ' ' -f 4 \
               | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
           else
@@ -592,22 +597,36 @@ in
         ''
       else
         ''
+          function nixReplaceProfile() {
+            local oldNix="$(command -v nix)"
+
+            nix profile list \
+              | { grep 'home-manager-path$' || test $? = 1; } \
+              | cut -d ' ' -f 4 \
+              | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+
+            $DRY_RUN_CMD $oldNix profile install $1
+          }
+
           if [[ -e "$nixProfilePath"/manifest.json ]] ; then
             INSTALL_CMD="nix profile install"
+            INSTALL_CMD_ACTUAL="nixReplaceProfile"
             LIST_CMD="nix profile list"
             REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
           else
             INSTALL_CMD="nix-env -i"
+            INSTALL_CMD_ACTUAL="$DRY_RUN_CMD nix-env -i"
             LIST_CMD="nix-env -q"
             REMOVE_CMD_SYNTAX='nix-env -e {package name}'
           fi
 
-          if ! $DRY_RUN_CMD $INSTALL_CMD ${cfg.path} ; then
+          if ! $INSTALL_CMD_ACTUAL ${cfg.path} ; then
             echo
             _iError $'Oops, Nix failed to install your new Home Manager profile!\n\nPerhaps there is a conflict with a package that was installed using\n"%s"? Try running\n\n    %s\n\nand if there is a conflicting package you can remove it with\n\n    %s\n\nThen try activating your Home Manager configuration again.' "$INSTALL_CMD" "$LIST_CMD" "$REMOVE_CMD_SYNTAX"
             exit 1
           fi
-          unset INSTALL_CMD LIST_CMD REMOVE_CMD_SYNTAX
+          unset -f nixReplaceProfile
+          unset INSTALL_CMD INSTALL_CMD_ACTUAL LIST_CMD REMOVE_CMD_SYNTAX
         ''
     );
 
@@ -659,7 +678,16 @@ in
             gnugrep
             gnused
             ncurses             # For `tput`.
-          ] ++ config.home.extraActivationPath
+          ]
+          ++ config.home.extraActivationPath
+        )
+        + (
+          # Add path of the Nix binaries, if a Nix package is configured, then
+          # use that one, otherwise grab the path of the nix-env tool.
+          if config.nix.enable && config.nix.package != null then
+            ":${config.nix.package}/bin"
+          else
+            ":$(${pkgs.coreutils}/bin/dirname $(${pkgs.coreutils}/bin/readlink -m $(type -p nix-env)))"
         )
         + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
@@ -684,6 +712,8 @@ in
           }
           ''
             mkdir -p $out
+
+            echo "${config.home.version.full}" > $out/hm-version
 
             cp ${activationScript} $out/activate
 

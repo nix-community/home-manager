@@ -162,12 +162,12 @@ in {
               fi
               if [[ -f "$dstPath" ]]; then
                 for (( i = 0; i < bootout_retries; i++ )); do
-                  $DRY_RUN_CMD launchctl bootout "$domain/$agentName" || err=$?
+                  $DRY_RUN_CMD /bin/launchctl bootout "$domain/$agentName" || err=$?
                   if [[ -v DRY_RUN ]]; then
                     break
                   fi
                   if (( err != 9216 )) &&
-                    ! launchctl print "$domain/$agentName" &> /dev/null; then
+                    ! /bin/launchctl print "$domain/$agentName" &> /dev/null; then
                     break
                   fi
                   sleep 1
@@ -178,7 +178,7 @@ in {
                 fi
               fi
               $DRY_RUN_CMD install -Dm444 -T "$srcPath" "$dstPath"
-              $DRY_RUN_CMD launchctl bootstrap "$domain" "$dstPath"
+              $DRY_RUN_CMD /bin/launchctl bootstrap "$domain" "$dstPath"
             done
 
             if [[ ! -e "$oldDir" ]]; then
@@ -194,7 +194,7 @@ in {
                 continue
               fi
 
-              $DRY_RUN_CMD launchctl bootout "$domain/$agentName" || :
+              $DRY_RUN_CMD /bin/launchctl bootout "$domain/$agentName" || :
               if [[ ! -e "$dstPath" ]]; then
                 continue
               fi

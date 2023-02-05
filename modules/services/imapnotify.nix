@@ -6,7 +6,7 @@ let
 
   cfg = config.services.imapnotify;
 
-  safeName = lib.replaceChars [ "@" ":" "\\" "[" "]" ] [ "-" "-" "-" "" "" ];
+  safeName = lib.replaceStrings [ "@" ":" "\\" "[" "]" ] [ "-" "-" "-" "" "" ];
 
   imapnotifyAccounts =
     filter (a: a.imapnotify.enable) (attrValues config.accounts.email.accounts);

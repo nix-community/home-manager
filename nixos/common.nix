@@ -35,7 +35,7 @@ let
 
           # Make activation script use same version of Nix as system as a whole.
           # This avoids problems with Nix not being in PATH.
-          home.extraActivationPath = [ config.nix.package ];
+          nix.package = config.nix.package;
         };
       })
     ] ++ cfg.sharedModules;

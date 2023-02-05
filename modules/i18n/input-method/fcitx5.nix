@@ -24,6 +24,7 @@ in {
     i18n.inputMethod.package = fcitx5Package;
 
     home.sessionVariables = {
+      GLFW_IM_MODULE = "ibus"; # IME support in kitty
       GTK_IM_MODULE = "fcitx";
       QT_IM_MODULE = "fcitx";
       XMODIFIERS = "@im=fcitx";

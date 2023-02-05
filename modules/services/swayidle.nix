@@ -73,7 +73,7 @@ in {
       default = [ ];
       example = literalExpression ''
         [
-          { timeout = 60; command = "swaylock -fF"; }
+          { timeout = 60; command = "${pkgs.swaylock}/bin/swaylock -fF"; }
         ]
       '';
       description = "List of commands to run after idle timeout.";
@@ -84,11 +84,11 @@ in {
       default = [ ];
       example = literalExpression ''
         [
-          { event = "before-sleep"; command = "swaylock"; }
+          { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock"; }
           { event = "lock"; command = "lock"; }
         ]
       '';
-      description = "Run command on occurence of a event.";
+      description = "Run command on occurrence of a event.";
     };
 
     extraArgs = mkOption {

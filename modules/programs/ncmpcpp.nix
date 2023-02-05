@@ -62,7 +62,7 @@ in {
     };
 
     mpdMusicDir = mkOption {
-      type = types.nullOr types.path;
+      type = with types; nullOr (coercedTo path toString str);
       default = let mpdCfg = config.services.mpd;
       in if pkgs.stdenv.hostPlatform.isLinux && mpdCfg.enable then
         mpdCfg.musicDirectory
@@ -123,7 +123,7 @@ in {
     xdg.configFile = {
       "ncmpcpp/config" = let
         settings = cfg.settings // optionalAttrs (cfg.mpdMusicDir != null) {
-          mpd_music_dir = toString cfg.mpdMusicDir;
+          mpd_music_dir = cfg.mpdMusicDir;
         };
       in mkIf (settings != { }) { text = renderSettings settings + "\n"; };
 

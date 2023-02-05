@@ -55,7 +55,7 @@ in rec {
       };
 
       size = mkOption {
-        type = types.nullOr types.int;
+        type = types.nullOr types.number;
         default = null;
         example = "8";
         description = ''
@@ -94,6 +94,10 @@ in rec {
       else if gvar.isTuple sharedDefType && allChecked then
         mergeOneOption loc defs
       else if gvar.isMaybe sharedDefType && allChecked then
+        mergeOneOption loc defs
+      else if gvar.isDictionaryEntry sharedDefType && allChecked then
+        mergeOneOption loc defs
+      else if gvar.type.variant == sharedDefType && allChecked then
         mergeOneOption loc defs
       else if gvar.type.string == sharedDefType && allChecked then
         types.str.merge loc defs

@@ -110,6 +110,8 @@ in {
       '';
     };
 
+    enableVerboseLogging = mkEnableOption "verbose service logging";
+
     tray = mkOption {
       type = types.bool;
       default = false;
@@ -199,7 +201,10 @@ in {
         ExecStart = let
           command = if cfg.tray then appletExecutable else mainExecutable;
           configFullPath = config.xdg.configHome + "/${xdgConfigFilePath}";
-        in "${cfg.package}/bin/${command} -v -c ${configFullPath}";
+        in "${cfg.package}/bin/${command} " + cli.toGNUCommandLineShell { } {
+          v = cfg.enableVerboseLogging;
+          c = configFullPath;
+        };
         RestartSec = 3;
         Restart = "on-failure";
       };

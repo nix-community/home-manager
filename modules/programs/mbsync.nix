@@ -84,7 +84,7 @@ let
     genSection "IMAPAccount ${name}" ({
       Host = imap.host;
       User = userName;
-      PassCmd = toString passwordCommand;
+      PassCmd = lib.escapeShellArgs passwordCommand;
     } // genTlsConfig imap.tls
       // optionalAttrs (imap.port != null) { Port = toString imap.port; }
       // mbsync.extraConfig.account) + "\n"
@@ -174,7 +174,7 @@ let
         flatten (optionals (group.channels != { }) ([ "Group ${group.name}" ]
           ++ (genChannelStrings group.name group.channels)));
       # Given set of groups, generates list of strings, where each string is one
-      # of the groups and its consituent channels.
+      # of the groups and its constituent channels.
       genGroupsStrings = mapAttrsToList (name: info:
         concatStringsSep "\n" (genGroupChannelString groups.${name})) groups;
       # Join all non-empty groups.

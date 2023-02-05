@@ -267,7 +267,7 @@ in {
       difftastic = {
         enable = mkEnableOption "" // {
           description = ''
-            Enable the <command>difft</command> syntax highlighter.
+            Enable the <command>difftastic</command> syntax highlighter.
             See <link xlink:href="https://github.com/Wilfred/difftastic" />.
           '';
         };
@@ -278,7 +278,7 @@ in {
           example = "dark";
           description = ''
             Determines whether difftastic should use the lighter or darker colors
-            for syntax highlithing.
+            for syntax highlighting.
           '';
         };
 
@@ -527,10 +527,7 @@ in {
           "--background ${cfg.difftastic.background}"
           "--display ${cfg.difftastic.display}"
         ];
-      in {
-        diff.external = difftCommand;
-        core.pager = "${pkgs.less}/bin/less -XF";
-      };
+      in { diff.external = difftCommand; };
     })
 
     (mkIf cfg.delta.enable {

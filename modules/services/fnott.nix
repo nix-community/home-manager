@@ -61,7 +61,7 @@ in {
           <citerefentry>
             <refentrytitle>fnott.ini</refentrytitle>
             <manvolnum>5</manvolnum>
-          </citerefentry> for a list of avaliable options and <link
+          </citerefentry> for a list of available options and <link
           xlink:href="https://codeberg.org/dnkl/fnott/src/branch/master/fnott.ini"/>
           for an example configuration.
         '';

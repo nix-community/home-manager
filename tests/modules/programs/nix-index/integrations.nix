@@ -16,10 +16,7 @@ in {
     xdg.dataFile."fish/home-manager_generated_completions".source =
       lib.mkForce (builtins.toFile "empty" "");
 
-    test.stubs = {
-      zsh = { };
-      fish = { };
-    };
+    test.stubs.zsh = { };
 
     programs.nix-index.enable = true;
 

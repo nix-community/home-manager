@@ -11,7 +11,7 @@ let
     toHimalayaConfig = account:
       {
         email = account.address;
-        name = account.realName;
+        display-name = account.realName;
         default = account.primary;
 
         mailboxes = {
@@ -20,30 +20,46 @@ let
           draft = account.folders.drafts;
           # NOTE: himalaya does not support configuring the name of the trash folder
         };
-
+      } // (lib.optionalAttrs (account.signature.showSignature == "append") {
+        # FIXME: signature cannot be attached
+        signature = account.signature.text;
+        signature-delim = account.signature.delimiter;
+      }) // (if account.himalaya.backend == null then {
+        backend = "none";
+      } else if account.himalaya.backend == "imap" then {
         # FIXME: does not support disabling TLS altogether
         # NOTE: does not accept sequence of strings for password commands
+        backend = account.himalaya.backend;
         imap-login = account.userName;
         imap-passwd-cmd = lib.escapeShellArgs account.passwordCommand;
         imap-host = account.imap.host;
         imap-port = account.imap.port;
         imap-starttls = account.imap.tls.useStartTls;
-
+      } else if account.himalaya.backend == "maildir" then {
+        backend = account.himalaya.backend;
+        maildir-root-dir = account.maildirBasePath;
+      } else
+        throw "Unsupported backend: ${account.himalaya.backend}")
+      // (if account.himalaya.sender == null then {
+        sender = "none";
+      } else if account.himalaya.sender == "smtp" then {
+        sender = account.himalaya.sender;
         smtp-login = account.userName;
         smtp-passwd-cmd = lib.escapeShellArgs account.passwordCommand;
         smtp-host = account.smtp.host;
         smtp-port = account.smtp.port;
         smtp-starttls = account.smtp.tls.useStartTls;
-      } // (lib.optionalAttrs (account.signature.showSignature == "append") {
-        # FIXME: signature cannot be attached
-        signature = account.signature.text;
-      }) // account.himalaya.settings;
+      } else if account.himalaya.sender == "sendmail" then {
+        sender = account.himalaya.sender;
+      } else
+        throw "Unsupported sender: ${account.himalaya.sender}")
+      // account.himalaya.settings;
   in {
     # NOTE: will not start without this configured, but each account overrides it
-    name = "";
+    display-name = "";
   } // cfg.settings // (lib.mapAttrs (_: toHimalayaConfig) enabledAccounts);
 in {
-  meta.maintainers = with lib.hm.maintainers; [ ambroisie ];
+  meta.maintainers = with lib.hm.maintainers; [ toastal ];
 
   options = with lib; {
     programs.himalaya = {
@@ -63,7 +79,8 @@ in {
         default = { };
         example = lib.literalExpression ''
           {
-            default-page-size = 50;
+            email-listing-page-size = 50;
+            watch-cmds = [ "mbsync -a" ]
           }
         '';
         description = ''
@@ -79,6 +96,22 @@ in {
             enable = mkEnableOption ''
               the himalaya mail client for this account
             '';
+
+            backend = mkOption {
+              # TODO: “notmuch” (requires compile flag for himalaya, libnotmuch)
+              type = types.nullOr (types.enum [ "imap" "maildir" ]);
+              description = ''
+                The method for which <command>himalaya</command> will fetch, store,
+                etc. mail.
+              '';
+            };
+
+            sender = mkOption {
+              type = types.nullOr (types.enum [ "smtp" "sendmail" ]);
+              description = ''
+                The method for which <command>himalaya</command> will send mail.
+              '';
+            };
 
             settings = mkOption {
               type = tomlFormat.type;

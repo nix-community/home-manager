@@ -6,19 +6,31 @@
 Home Manager includes a `flake.nix` file for compatibility with {nixos-wiki-flakes}[Nix Flakes].
 The support is still experimental and may change in backwards incompatible ways.
 
-[[sec-flakes-prerequisties]]
-=== Prerequisties
+[[sec-flakes-prerequisites]]
+=== Prerequisites
 
 * Install Nix 2.4 or later, or have it in `nix-shell`.
 
 * Enable experimental features `nix-command` and `flakes`.
 +
-Either set in `nix.conf`
+** When using NixOS, add the following to your `configuration.nix` and rebuild your system.
++
+[source,nix]
+nix = {
+  package = pkgs.nixFlakes;
+  extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
+};
++
+** If you are not using NixOS, add the following to `nix.conf` (located at `~/.config/nix/` or `/etc/nix/nix.conf`).
 +
 [source,bash]
 experimental-features = nix-command flakes
 +
-or pass them to `nix` and `home-manager` by
+You may need to restart the Nix daemon with, for example, `sudo systemctl restart nix-daemon.service`.
++
+** Alternatively, you can enable flakes on a per-command basis with the following additional flags to `nix` and `home-manager`:
 +
 [source,console]
 ----
@@ -78,9 +90,9 @@ writing a Home Manager configuration.
 ====
 * The above example tracks the master branch of Home Manager
 and nixos-unstable branch of Nixpkgs.
-If you would like to use the `release-22.05` branch,
-change the `home-manager` input url to `github:nix-community/home-manager/release-22.05`
-and `nixpkgs` url to `github:NixOS/nixpkgs/nixos-22.05`.
+If you would like to use the `release-22.11` branch,
+change the `home-manager` input url to `github:nix-community/home-manager/release-22.11`
+and `nixpkgs` url to `github:NixOS/nixpkgs/nixos-22.11`.
 
 * The Home Manager library is exported by the flake under
 `lib.hm`.
@@ -188,7 +200,7 @@ is similar to that of NixOS. The `flake.nix` would be:
 [source,nix]
 ----
 {
-  description = "NixOS configuration";
+  description = "Darwin configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";

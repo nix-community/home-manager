@@ -1,16 +1,18 @@
+display-name = ""
 downloads-dir = "/data/download"
-name = ""
 
 ["hm@example.com"]
+backend = "imap"
 default = true
-default-page-size = 50
+display-name = "H. M. Test"
 email = "hm@example.com"
+email-listing-page-size = 50
 imap-host = "imap.example.com"
 imap-login = "home.manager"
 imap-passwd-cmd = "'password-command'"
 imap-port = 995
 imap-starttls = false
-name = "H. M. Test"
+sender = "smtp"
 smtp-host = "smtp.example.com"
 smtp-login = "home.manager"
 smtp-passwd-cmd = "'password-command'"

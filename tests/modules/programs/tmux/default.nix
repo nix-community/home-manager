@@ -7,4 +7,5 @@
   tmux-default-shell = ./default-shell.nix;
   tmux-shortcut-without-prefix = ./shortcut-without-prefix.nix;
   tmux-prefix = ./prefix.nix;
+  tmux-mouse-enabled = ./mouse-enabled.nix;
 }

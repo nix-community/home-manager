@@ -89,6 +89,14 @@ in {
         Whether to enable Ion integration.
       '';
     };
+
+    enableNushellIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Nushell integration.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -121,5 +129,22 @@ in {
         eval $(${starshipCmd} init ion)
       end
     '';
+
+    programs.nushell = mkIf cfg.enableNushellIntegration {
+      # Unfortunately nushell doesn't allow conditionally sourcing nor
+      # conditionally setting (global) environment variables, which is why the
+      # check for terminal compatibility (as seen above for the other shells) is
+      # not done here.
+      extraEnv = ''
+        let starship_cache = "${config.xdg.cacheHome}/starship"
+        if not ($starship_cache | path exists) {
+          mkdir $starship_cache
+        }
+        ${starshipCmd} init nu | save --force ${config.xdg.cacheHome}/starship/init.nu
+      '';
+      extraConfig = ''
+        source ${config.xdg.cacheHome}/starship/init.nu
+      '';
+    };
   };
 }

@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2022-03-01 13:58+0000\n"
-"Last-Translator: Anon Ymous <mivon27841@shackvine.com>\n"
+"PO-Revision-Date: 2022-11-16 13:47+0000\n"
+"Last-Translator: Jakub Janczak <kubek2k@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/home-manager/"
 "modules/pl/>\n"
 "Language: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.11.1-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
@@ -51,6 +51,18 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"Oops, Nix nie zdołał zainstalować twojego profilu Home Manager'a!\n"
+"\n"
+"Być może zaistniał konflikt z  pakietem zainstalowanym przez\n"
+"\"%s\"? Spróbuj uruchomić\n"
+"\n"
+"    %s\n"
+"\n"
+"i jeśli istnieje konflikt możesz spróbować go rozwiązać uruchamiając\n"
+"\n"
+"    %s\n"
+"\n"
+"Następnie spróbuj aktywować konfigurację Home Manager'a ponownie."
 
 #: modules/home-environment.nix:639
 msgid "Activating %s"
@@ -75,6 +87,18 @@ msgid ""
 "\n"
 "and trying home-manager switch again. Good luck!"
 msgstr ""
+"Istnieje konflikt pomiędzy poprzednią generacją i ścieżką! Powinny\n"
+"być obie puste lub ustawione, a efektywnie są ustawione na:\n"
+"\n"
+"    '%s' i '%s'\n"
+"\n"
+"Jeśli możesz sobie pozwolić na utratę poprzednich generacji,\n"
+"możesz uruchomić\n"
+"\n"
+"   rm %s/home-manager*\n"
+"   rm %s/current-home\n"
+"\n"
+"i spróbować uruchomić home-manager switch raz jeszcze. Powodzenia!"
 
 #: modules/lib-bash/activation-init.sh:51
 msgid "Starting Home Manager activation"
@@ -85,19 +109,17 @@ msgid "Sanity checking Nix"
 msgstr "Sprawdzanie poprawności Nix"
 
 #: modules/lib-bash/activation-init.sh:61
-#, fuzzy
 msgid "This is a dry run"
-msgstr "To jest próbne wykonanie"
+msgstr "To jest wykonanie testowe"
 
 #: modules/lib-bash/activation-init.sh:64
 msgid "This is a live run"
-msgstr ""
+msgstr "To jest wykonanie właściwe"
 
 #: modules/lib-bash/activation-init.sh:69
 msgid "Using Nix version: %s"
 msgstr "Używając wersji Nix: %s"
 
 #: modules/lib-bash/activation-init.sh:72
-#, fuzzy
 msgid "Activation variables:"
 msgstr "Zmienne aktywacyjne:"

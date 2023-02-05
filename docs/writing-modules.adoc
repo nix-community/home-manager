@@ -167,9 +167,11 @@ Builds a GVariant array containing the given list of elements, where each elemen
 - `hm.gvariant.type.int64`
 - `hm.gvariant.type.uint64`
 - `hm.gvariant.type.double`
+- `hm.gvariant.type.variant`
 - `hm.gvariant.type.arrayOf type`
 - `hm.gvariant.type.maybeOf type`
 - `hm.gvariant.type.tupleOf types`
+- `hm.gvariant.type.dictionaryEntryOf types`
 --
 +
 where `type` and `types` are themselves a type and list of types, respectively.
@@ -185,3 +187,9 @@ Builds a GVariant maybe value containing the given GVariant element.
 +
 `hm.gvariant.mkTuple elements`:::
 Builds a GVariant tuple containing the given list of elements, where each element is a GVariant value.
++
+`hm.gvariant.mkVariant element`:::
+Builds a GVariant variant which contains the value of a GVariant element.
++
+`hm.gvariant.mkDictionaryEntry elements`:::
+Builds a GVariant dictionary entry containing the given list of elements, where each element is a GVariant value.

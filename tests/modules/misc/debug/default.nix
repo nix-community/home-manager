@@ -15,7 +15,7 @@
         assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
             'NIX_DEBUG_INFO_DIRS=.*/lib/debug'
 
-        # We need to override NIX_DEBUG_INFO_DIRS here as $HOME evalutes to the home
+        # We need to override NIX_DEBUG_INFO_DIRS here as $HOME evaluates to the home
         # of the user who executes this testcase :/
         { echo quit | PATH="$TESTED/home-path/bin''${PATH:+:}$PATH" NIX_DEBUG_INFO_DIRS=$TESTED/home-path/lib/debug \
           gdb curl 2>&1 | \

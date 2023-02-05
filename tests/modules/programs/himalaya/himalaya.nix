@@ -10,7 +10,9 @@ with lib;
       himalaya = {
         enable = true;
 
-        settings = { default-page-size = 50; };
+        backend = "imap";
+        sender = "smtp";
+        settings = { email-listing-page-size = 50; };
       };
 
       folders = {
@@ -38,4 +40,3 @@ with lib;
     }
   '';
 }
-

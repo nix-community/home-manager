@@ -696,6 +696,225 @@ in
           A new module is available: 'programs.gallery-dl'.
         '';
       }
+
+      {
+        time = "2022-09-21T22:42:42+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xsession.windowManager.fluxbox'.
+        '';
+      }
+
+      {
+        time = "2022-09-25T21:00:05+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.safeeyes'.
+        '';
+      }
+
+      {
+        time = "2022-09-25T22:22:17+00:00";
+        message = ''
+          A new module is available: 'programs.tmate'.
+        '';
+      }
+
+      {
+        time = "2022-09-29T13:43:02+00:00";
+        message = ''
+          A new module is available: 'programs.pls'.
+        '';
+      }
+
+      {
+        time = "2022-10-06T23:06:08+00:00";
+        message = ''
+          A new module is available: 'programs.ledger'.
+        '';
+      }
+
+      {
+        time = "2022-10-06T23:19:10+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.havoc'.
+        '';
+      }
+
+      {
+        time = "2022-10-12T23:10:48+00:00";
+        message = ''
+          A new module is available: 'programs.discocss'.
+        '';
+      }
+
+      {
+        time = "2022-10-16T19:49:46+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          Two new modules are available:
+
+            - 'programs.borgmatic' and
+            - 'services.borgmatic'.
+
+          use the first to configure the borgmatic tool and the second if you
+          want to automatically run scheduled backups.
+        '';
+      }
+
+      {
+        time = "2022-10-18T08:07:43+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.looking-glass-client'.
+        '';
+      }
+
+      {
+        time = "2022-10-22T17:52:30+00:00";
+        condition = config.programs.firefox.enable;
+        message = ''
+          It is now possible to configure the default search engine in Firefox
+          with
+
+            programs.firefox.profiles.<name>.search.default
+
+          and add custom engines with
+
+            programs.firefox.profiles.<name>.search.engines.
+
+          It is also recommended to set
+
+            programs.firefox.profiles.<name>.search.force = true
+
+          since Firefox will replace the symlink for the search configuration on
+          every launch, but note that you'll lose any existing configuration by
+          enabling this.
+        '';
+      }
+
+      {
+        time = "2022-10-24T22:05:27+00:00";
+        message = ''
+          A new module is available: 'programs.k9s'.
+        '';
+      }
+
+      {
+        time = "2022-11-01T23:57:50+00:00";
+        message = ''
+          A new module is available: 'programs.oh-my-posh'.
+        '';
+      }
+
+      {
+        time = "2022-11-02T10:56:14+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xfconf'.
+        '';
+      }
+
+      {
+        time = "2022-11-04T14:56:46+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.thunderbird'.
+        '';
+      }
+
+      {
+        time = "2022-11-13T09:05:51+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          A new module is available: 'programs.thunderbird'.
+
+          Please note that the Thunderbird packages provided by Nix are
+          currently not working on macOS. The module can still be used to manage
+          configuration files by installing Thunderbird manually and setting the
+          'programs.thunderbird.package' option to a dummy package, for example
+          using 'pkgs.runCommand'.
+
+          This module requires you to set the following environment variables
+          when using an installation of Thunderbird that is not provided by Nix:
+
+            export MOZ_LEGACY_PROFILES=1
+            export MOZ_ALLOW_DOWNGRADE=1
+        '';
+      }
+
+      {
+        time = "2022-11-27T13:14:01+00:00";
+        condition = config.programs.ssh.enable;
+        message = ''
+          'programs.ssh.matchBlocks.*' now supports literal 'Match' blocks via
+          'programs.ssh.matchBlocks.*.match' option as an alternative to plain
+          'Host' blocks
+        '';
+      }
+
+      {
+        time = "2022-12-16T15:01:20+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.megasync'.
+        '';
+      }
+
+      {
+        time = "2022-12-25T08:41:32+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.cachix-agent'.
+        '';
+      }
+
+      {
+        time = "2022-12-28T21:48:22+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.clipman'.
+        '';
+      }
+
+      {
+        time = "2023-01-07T10:47:03+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          'xsession.windowManager.i3.config.[window|floating].titlebar' and
+          'wayland.windowManager.sway.config.[window|floating].titlebar' now default to 'true'.
+        '';
+      }
+
+      {
+        time = "2023-01-28T17:35:49+00:00";
+        message = ''
+          A new module is available: 'programs.papis'.
+        '';
+      }
+
+      {
+        time = "2023-01-30T10:39:11+00:00";
+        message = ''
+          A new module is available: 'programs.wlogout'.
+        '';
+      }
+
+      {
+        time = "2023-01-31T22:08:41+00:00";
+        message = ''
+          A new module is available: 'programs.rbenv'.
+        '';
+      }
+
+      {
+        time = "2023-02-02T20:49:05+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.autorandr'.
+        '';
+      }
     ];
   };
 }

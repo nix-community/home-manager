@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2021-12-13 20:50+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/home-"
-"manager/cli/nb_NO/>\n"
+"PO-Revision-Date: 2023-01-08 11:50+0000\n"
+"Last-Translator: Petter K <petterkarlsrud@me.com>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"home-manager/cli/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 
 #: home-manager/home-manager:60
 msgid "No configuration file found at %s"
@@ -139,12 +139,13 @@ msgid "Unknown command: %s"
 msgstr "Ukjent kommando: %s"
 
 #: home-manager/install.nix:22
+#, fuzzy
 msgid "Creating initial Home Manager configuration..."
-msgstr ""
+msgstr "Oppretter ny Home Manager-konfigurasjon..."
 
 #: home-manager/install.nix:66
 msgid "Creating initial Home Manager generation..."
-msgstr ""
+msgstr "Oppretter ny Home Manager-generasjon..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/install.nix:71

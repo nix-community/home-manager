@@ -44,6 +44,19 @@ let
         '';
       };
 
+      delimiter = mkOption {
+        type = types.str;
+        default = ''
+          --
+        '';
+        example = literalExpression ''
+          ~*~*~*~*~*~*~*~*~*~*~*~
+        '';
+        description = ''
+          The delimiter used between the document and the signature.
+        '';
+      };
+
       command = mkOption {
         type = with types; nullOr path;
         default = null;

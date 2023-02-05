@@ -16,6 +16,8 @@ with lib;
         interval = 1;
       };
 
+      package = config.lib.test.mkStubPackage { };
+
       modules = {
         "volume master" = {
           position = 1;

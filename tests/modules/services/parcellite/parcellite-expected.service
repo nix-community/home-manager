@@ -1,0 +1,13 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@parcellite@/bin/parcellite '--no-icon'
+Restart=on-abort
+
+[Unit]
+After=graphical-session-pre.target
+After=tray.target
+Description=Lightweight GTK+ clipboard manager
+PartOf=graphical-session.target
+Requires=tray.target

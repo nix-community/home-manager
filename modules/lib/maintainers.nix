@@ -37,11 +37,27 @@
     github = "CarlosLoboxyz";
     githubId = 86011416;
   };
+  d-dervishi = {
+    email = "david.dervishi@epfl.ch";
+    github = "d-dervishi";
+    githubId = 61125355;
+    name = "David Dervishi";
+    keys = [{
+      longKeyId = "rsa4096/0xB1C012F0E7697195";
+      fingerprint = "4C92 E3B0 21B5 5562 A1E0  CE3D B1C0 12F0 E769 7195";
+    }];
+  };
   dwagenk = {
     email = "dwagenk@mailbox.org";
     github = "dwagenk";
     githubId = 32838899;
     name = "Daniel Wagenknecht";
+  };
+  jkarlson = {
+    email = "jekarlson@gmail.com";
+    github = "jkarlson";
+    githubId = 1204734;
+    name = "Emil Karlson";
   };
   justinlovinger = {
     name = "Justin Lovinger";
@@ -100,6 +116,12 @@
       longkeyid = "rsa4096/0x04D0CEAF916A9A40";
       fingerprint = "2BE3 BAFD 793E A349 ED1F  F00F 04D0 CEAF 916A 9A40";
     }];
+  };
+  katexochen = {
+    name = "Paul Meyer";
+    email = "49727155+katexochen@users.noreply.github.com";
+    github = "katexochen";
+    githubId = 49727155;
   };
   kubukoz = {
     name = "Jakub Kozłowski";
@@ -211,6 +233,12 @@
     githubId = 1553581;
     name = "Josh Robson Chase";
   };
+  jwygoda = {
+    name = "Jarosław Wygoda";
+    email = "jaroslaw@wygoda.me";
+    github = "jwygoda";
+    githubId = 20658981;
+  };
   hawkw = {
     name = "Eliza Weisman";
     email = "eliza@elizas.website";
@@ -289,6 +317,12 @@
     github = "sebtm";
     githubId = 17243347;
   };
+  rosuavio = {
+    name = "Rosario Pulella";
+    email = "RosarioPulella@gmail.com";
+    github = "Rosuavio";
+    githubId = 7164552;
+  };
   rszamszur = {
     name = "Radosław Szamszur";
     email = "radoslawszamszur@gmail.com";
@@ -316,5 +350,21 @@
     email = "69244516+lukasngl@users.noreply.github.com";
     github = "lukasngl";
     githubId = 69244516;
+  };
+  toastal = {
+    email = "toastal+nix@posteo.net";
+    matrix = "@toastal:matrix.org";
+    github = "toastal";
+    githubId = 561087;
+    name = "toastal";
+    keys =
+      [{ fingerprint = "7944 74B7 D236 DAB9 C9EF  E7F9 5CCE 6F14 66D4 7C9E"; }];
+  };
+  tomodachi94 = {
+    email = "tomodachi94+nixpkgs@protonmail.com";
+    matrix = "@tomodachi94:matrix.org";
+    github = "tomodachi94";
+    githubId = 68489118;
+    name = "tomodachi94";
   };
 }

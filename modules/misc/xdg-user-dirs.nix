@@ -33,50 +33,66 @@ in {
     # https://gitlab.freedesktop.org/xdg/xdg-user-dirs/blob/master/man/user-dirs.dirs.xml
 
     desktop = mkOption {
-      type = with types; coercedTo path toString str;
-      default = "$HOME/Desktop";
+      type = with types; nullOr (coercedTo path toString str);
+      default = "${config.home.homeDirectory}/Desktop";
+      defaultText =
+        literalExpression ''"''${config.home.homeDirectory}/Desktop"'';
       description = "The Desktop directory.";
     };
 
     documents = mkOption {
-      type = with types; coercedTo path toString str;
-      default = "$HOME/Documents";
+      type = with types; nullOr (coercedTo path toString str);
+      default = "${config.home.homeDirectory}/Documents";
+      defaultText =
+        literalExpression ''"''${config.home.homeDirectory}/Documents"'';
       description = "The Documents directory.";
     };
 
     download = mkOption {
-      type = with types; coercedTo path toString str;
-      default = "$HOME/Downloads";
+      type = with types; nullOr (coercedTo path toString str);
+      default = "${config.home.homeDirectory}/Downloads";
+      defaultText =
+        literalExpression ''"''${config.home.homeDirectory}/Downloads"'';
       description = "The Downloads directory.";
     };
 
     music = mkOption {
-      type = with types; coercedTo path toString str;
-      default = "$HOME/Music";
+      type = with types; nullOr (coercedTo path toString str);
+      default = "${config.home.homeDirectory}/Music";
+      defaultText =
+        literalExpression ''"''${config.home.homeDirectory}/Music"'';
       description = "The Music directory.";
     };
 
     pictures = mkOption {
-      type = with types; coercedTo path toString str;
-      default = "$HOME/Pictures";
+      type = with types; nullOr (coercedTo path toString str);
+      default = "${config.home.homeDirectory}/Pictures";
+      defaultText =
+        literalExpression ''"''${config.home.homeDirectory}/Pictures"'';
       description = "The Pictures directory.";
     };
 
     publicShare = mkOption {
-      type = with types; coercedTo path toString str;
-      default = "$HOME/Public";
+      type = with types; nullOr (coercedTo path toString str);
+      default = "${config.home.homeDirectory}/Public";
+      defaultText =
+        literalExpression ''"''${config.home.homeDirectory}/Public"'';
       description = "The Public share directory.";
     };
 
     templates = mkOption {
-      type = with types; coercedTo path toString str;
-      default = "$HOME/Templates";
+      type = with types; nullOr (coercedTo path toString str);
+      default = "${config.home.homeDirectory}/Templates";
+      defaultText =
+        literalExpression ''"''${config.home.homeDirectory}/Templates"'';
       description = "The Templates directory.";
     };
 
     videos = mkOption {
-      type = with types; coercedTo path toString str;
-      default = "$HOME/Videos";
+      type = with types; nullOr (coercedTo path toString str);
+      default = "${config.home.homeDirectory}/Videos";
+      defaultText =
+        literalExpression ''"''${config.home.homeDirectory}/Videos"'';
       description = "The Videos directory.";
     };
 
@@ -86,7 +102,7 @@ in {
       defaultText = literalExpression "{ }";
       example = literalExpression ''
         {
-          XDG_MISC_DIR = "$HOME/Misc";
+          XDG_MISC_DIR = "''${config.home.homeDirectory}/Misc";
         }
       '';
       description = "Other user directories.";
@@ -97,7 +113,7 @@ in {
   };
 
   config = let
-    directories = {
+    directories = (filterAttrs (n: v: !isNull v) {
       XDG_DESKTOP_DIR = cfg.desktop;
       XDG_DOCUMENTS_DIR = cfg.documents;
       XDG_DOWNLOAD_DIR = cfg.download;
@@ -106,7 +122,7 @@ in {
       XDG_PUBLICSHARE_DIR = cfg.publicShare;
       XDG_TEMPLATES_DIR = cfg.templates;
       XDG_VIDEOS_DIR = cfg.videos;
-    } // cfg.extraConfig;
+    }) // cfg.extraConfig;
   in mkIf cfg.enable {
     assertions =
       [ (hm.assertions.assertPlatform "xdg.userDirs" pkgs platforms.linux) ];

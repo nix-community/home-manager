@@ -43,6 +43,7 @@ let
     ./misc/xdg-system-dirs.nix
     ./misc/xdg-user-dirs.nix
     ./misc/xdg.nix
+    ./misc/xfconf.nix
     ./programs/abook.nix
     ./programs/aerc.nix
     ./programs/afew.nix
@@ -57,6 +58,7 @@ let
     ./programs/bashmount.nix
     ./programs/bat.nix
     ./programs/beets.nix
+    ./programs/borgmatic.nix
     ./programs/bottom.nix
     ./programs/broot.nix
     ./programs/browserpass.nix
@@ -65,6 +67,7 @@ let
     ./programs/command-not-found/command-not-found.nix
     ./programs/dircolors.nix
     ./programs/direnv.nix
+    ./programs/discocss.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
     ./programs/eww.nix
@@ -82,6 +85,7 @@ let
     ./programs/gnome-terminal.nix
     ./programs/go.nix
     ./programs/gpg.nix
+    ./programs/havoc.nix
     ./programs/helix.nix
     ./programs/hexchat.nix
     ./programs/himalaya.nix
@@ -96,16 +100,19 @@ let
     ./programs/java.nix
     ./programs/jq.nix
     ./programs/just.nix
+    ./programs/k9s.nix
     ./programs/kakoune.nix
     ./programs/keychain.nix
     ./programs/kitty.nix
     ./programs/kodi.nix
     ./programs/lazygit.nix
+    ./programs/ledger.nix
     ./programs/less.nix
     ./programs/lesspipe.nix
     ./programs/lf.nix
     ./programs/librewolf.nix
     ./programs/lieer.nix
+    ./programs/looking-glass-client.nix
     ./programs/lsd.nix
     ./programs/man.nix
     ./programs/mangohud.nix
@@ -134,14 +141,17 @@ let
     ./programs/obs-studio.nix
     ./programs/octant.nix
     ./programs/offlineimap.nix
+    ./programs/oh-my-posh.nix
     ./programs/opam.nix
     ./programs/pandoc.nix
+    ./programs/papis.nix
     ./programs/password-store.nix
     ./programs/pazi.nix
     ./programs/pet.nix
     ./programs/pidgin.nix
     ./programs/pistol.nix
     ./programs/piston-cli.nix
+    ./programs/pls.nix
     ./programs/powerline-go.nix
     ./programs/pubs.nix
     ./programs/pylint.nix
@@ -167,19 +177,24 @@ let
     ./programs/terminator.nix
     ./programs/termite.nix
     ./programs/texlive.nix
+    ./programs/thunderbird.nix
     ./programs/timidity.nix
     ./programs/tint2.nix
     ./programs/tiny.nix
+    ./programs/tmate.nix
     ./programs/tmux.nix
     ./programs/topgrade.nix
     ./programs/urxvt.nix
     ./programs/vim.nix
+    ./programs/vim-vint.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
+    ./programs/rbenv.nix
     ./programs/watson.nix
     ./programs/waybar.nix
     ./programs/wezterm.nix
+    ./programs/wlogout.nix
     ./programs/xmobar.nix
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix
@@ -189,11 +204,15 @@ let
     ./programs/zplug.nix
     ./programs/zsh.nix
     ./programs/zsh/prezto.nix
+    ./services/autorandr.nix
     ./services/barrier.nix
     ./services/betterlockscreen.nix
     ./services/blueman-applet.nix
+    ./services/borgmatic.nix
+    ./services/cachix-agent.nix
     ./services/caffeine.nix
     ./services/cbatticon.nix
+    ./services/clipman.nix
     ./services/clipmenu.nix
     ./services/devilspie2.nix
     ./services/dropbox.nix
@@ -226,6 +245,7 @@ let
     ./services/lorri.nix
     ./services/mako.nix
     ./services/mbsync.nix
+    ./services/megasync.nix
     ./services/mopidy.nix
     ./services/mpd.nix
     ./services/mpdris2.nix
@@ -256,6 +276,7 @@ let
     ./services/redshift-gammastep/gammastep.nix
     ./services/redshift-gammastep/redshift.nix
     ./services/rsibreak.nix
+    ./services/safeeyes.nix
     ./services/screen-locker.nix
     ./services/sctd.nix
     ./services/spotifyd.nix
@@ -276,6 +297,7 @@ let
     ./services/volnoti.nix
     ./services/window-managers/awesome.nix
     ./services/window-managers/bspwm/default.nix
+    ./services/window-managers/fluxbox.nix
     ./services/window-managers/herbstluftwm.nix
     ./services/window-managers/i3-sway/i3.nix
     ./services/window-managers/i3-sway/sway.nix

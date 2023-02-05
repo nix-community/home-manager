@@ -59,6 +59,8 @@ Makefile                                              @thiagokokada
 /tests/modules/misc/xdg/desktop-full-expected.desktop @cwyc
 /tests/modules/misc/xdg/desktop-min-expected.desktop  @cwyc
 
+/modules/misc/xfconf.nix                              @chuangzhu
+
 /modules/programs/aerc.nix                            @lukasngl
 /modules/programs/aerc-accounts.nix                   @lukasngl
 /tests/modules/programs/aerc                          @lukasngl
@@ -84,7 +86,7 @@ Makefile                                              @thiagokokada
 /modules/programs/bottom.nix                          @polykernel
 /tests/modules/programs/bottom                        @polykernel
 
-/modules/programs/broot.nix                           @aheaume
+/modules/programs/broot.nix                           @aheaume @dermetfan
 
 /modules/programs/btop.nix                            @GaetanLepage
 /tests/modules/programs/btop.nix                      @GaetanLepage
@@ -92,6 +94,8 @@ Makefile                                              @thiagokokada
 /modules/programs/dircolors.nix                       @JustinLovinger
 
 /modules/programs/direnv.nix                          @rycee
+
+/modules/programs/discocss.nix                        @Kranzes
 
 /modules/programs/eclipse.nix                         @rycee
 
@@ -124,14 +128,16 @@ Makefile                                              @thiagokokada
 
 /modules/programs/go.nix                              @rvolosatovs
 
+/modules/programs/havoc.nix                           @AndersonTorres
+
 /modules/programs/helix.nix                           @Philipp-M
 /tests/modules/programs/helix                         @Philipp-M
 
 /modules/programs/hexchat.nix                         @thiagokokada
 /tests/modules/programs/hexchat                       @thiagokokada
 
-/modules/programs/himalaya.nix                        @ambroisie
-/tests/modules/programs/himalaya                      @ambroisie
+/modules/programs/himalaya.nix                        @toastal
+/tests/modules/programs/himalaya                      @toastal
 
 /modules/programs/home-manager.nix                    @rycee
 
@@ -151,12 +157,17 @@ Makefile                                              @thiagokokada
 
 /modules/programs/just.nix                            @maximsmol
 
+/modules/programs/k9s.nix                             @katexochen
+/tests/modules/programs/k9s                           @katexochen
+
 /modules/programs/keychain.nix                        @marsam
 
 /modules/programs/kodi.nix                            @dwagenk
 /tests/modules/programs/kodi                          @dwagenk
 
 /modules/programs/lazygit.nix                         @kalhauge
+
+/modules/programs/ledger.nix                          @marsam
 
 /modules/programs/less.nix                            @pamplemousse
 /tests/modules/programs/less                          @pamplemousse
@@ -169,6 +180,9 @@ Makefile                                              @thiagokokada
 /modules/programs/librewolf.nix                       @onny
 
 /modules/programs/lieer.nix                           @tadfisher
+
+/modules/programs/looking-glass-client.nix            @j-brn
+/tests/modules/programs/looking-glass-client          @j-brn
 
 /modules/programs/lsd.nix                             @marsam
 
@@ -225,12 +239,18 @@ Makefile                                              @thiagokokada
 
 /modules/programs/octant.nix                          @06kellyjac
 
+/modules/programs/oh-my-posh.nix                      @arjan-s
+/tests/modules/programs/oh-my-posh                    @arjan-s
+
 /modules/programs/opam.nix                            @marsam
 
 /modules/programs/openssh.nix                         @rycee
 
 /modules/programs/pandoc.nix                          @kirelagin
 /tests/modules/programs/pandoc                        @kirelagin
+
+/modules/programs/papis.nix                           @marsam
+/tests/modules/programs/papis                         @marsam
 
 /modules/programs/password-store.nix                  @pacien
 
@@ -243,12 +263,20 @@ Makefile                                              @thiagokokada
 
 /modules/programs/piston-cli.nix                      @ethancedwards8
 
+/modules/programs/pls.nix                             @arjan-s
+/tests/modules/programs/pls                           @arjan-s
+
+/modules/programs/polybar.nix                         @h7x4
+/tests/modules/programs/polybar                       @h7x4
+
 /modules/programs/powerline-go.nix                    @DamienCassou
 
 /modules/programs/pubs.nix                            @loicreynier
 /tests/modules/programs/pubs                          @loicreynier
 
 /modules/programs/pylint.nix                          @florpe
+
+/modules/programs/rbenv.nix                           @marsam
 
 /modules/programs/rbw.nix                             @ambroisie
 /tests/modules/programs/rbw                           @ambroisie
@@ -292,14 +320,23 @@ Makefile                                              @thiagokokada
 
 /modules/programs/texlive.nix                         @rycee
 
+/modules/programs/thunderbird.nix                     @d-dervishi
+/tests/modules/programs/thunderbird                   @d-dervishi
+
 /modules/programs/timidity.nix                        @amesgen
 
 /modules/programs/tint2.nix                           @CarlosLoboxyz
 
 /modules/programs/tiny.nix                            @kmaasrud
 
+/modules/programs/tmate.nix                           @jlesquembre
+/tests/modules/programs/tmate                         @jlesquembre
+
 /modules/programs/topgrade.nix                        @msfjarvis
 /tests/modules/programs/topgrade                      @msfjarvis
+
+/modules/programs/vim-vint.nix                        @tomodachi94
+/tests/modules/programs/vim-vint                      @tomodachi94
 
 /modules/programs/watson.nix                          @polykernel
 /tests/modules/programs/watson                        @polykernel
@@ -314,6 +351,7 @@ Makefile                                              @thiagokokada
 /tests/modules/programs/xmobar                        @t4ccer
 
 /modules/programs/yt-dlp.nix                          @marsam
+/tests/modules/programs/yt-dlp                        @marsam
 
 /modules/programs/z-lua.nix                           @marsam
 
@@ -325,14 +363,24 @@ Makefile                                              @thiagokokada
 
 /modules/programs/zsh/prezto.nix                      @NickHu
 
+/modules/services/autorandr.nix                       @GaetanLepage
+
 /modules/services/barrier.nix                         @Kritnich
 /tests/modules/services/barrier                       @Kritnich
 
 /modules/services/betterlockscreen.nix                @SebTM
 
+/modules/programs/borgmatic.nix                       @DamienCassou
+/modules/services/borgmatic.nix                       @DamienCassou
+/tests/modules/programs/borgmatic                     @DamienCassou
+/tests/modules/services/borgmatic                     @DamienCassou
+
 /modules/services/caffeine.nix                        @uvNikita
 
 /modules/services/cbatticon.nix                       @pmiddend
+
+/modules/services/clipman.nix                         @jwygoda
+/tests/modules/services/clipman                       @jwygoda
 
 /modules/services/clipmenu.nix                        @DamienCassou
 
@@ -392,6 +440,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/mbsync.nix                          @pjones
 
+/modules/services/megasync.nix                        @GaetanLepage
+
 /modules/services/mopidy.nix                          @foo-dogsquared
 /tests/modules/services/mopidy                        @foo-dogsquared
 
@@ -447,6 +497,8 @@ Makefile                                              @thiagokokada
 /modules/services/redshift-gammastep                  @rycee @petabyteboy @thiagokokada
 /tests/modules/redshift-gammastep                     @thiagokokada
 
+/modules/services/safeeyes                            @Rosuavio
+
 /modules/services/screen-locker.nix                   @jrobsonchase @rszamszur
 /tests/modules/services/screen-locker                 @jrobsonchase @rszamszur
 
@@ -482,6 +534,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/window-managers/bspwm               @ncfavier
 /tests/modules/services/window-managers/bspwm         @ncfavier
+
+/modules/services/window-managers/fluxbox.nix         @AndersonTorres
 
 /modules/services/window-managers/herbstluftwm        @olmokramer
 /tests/modules/services/window-managers/herbstluftwm  @olmokramer

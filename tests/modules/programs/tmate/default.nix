@@ -1,0 +1,1 @@
+{ tmate = ./tmate.nix; }
