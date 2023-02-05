@@ -1,7 +1,7 @@
 { config, pkgs, lib, xdg, ... }:
 
 {
-  config.programs.vim-vint = {
+  programs.vim-vint = {
     enable = true;
     settings = {
       cmdargs = {
@@ -17,9 +17,11 @@
         ProhibitSetNoCompatible.enabled = false;
       };
     };
-    config.nmt.script = let configFile = xdg.configFile.".vintrc.yaml";
-    in "	  assertFileContent \\\n	  \"${configFile}\" \\\n	  ${
-         ./basic-configuration.yaml
-       }\n  ";
   };
+
+  nmt.script = ''
+    assertFileContent home-files/.config/.vintrc.yaml ${
+      ./basic-configuration.yaml
+    }
+  '';
 }
