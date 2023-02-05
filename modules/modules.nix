@@ -187,6 +187,7 @@ let
     ./programs/topgrade.nix
     ./programs/urxvt.nix
     ./programs/vim.nix
+    ./programs/vim-vint.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
