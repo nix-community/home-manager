@@ -336,7 +336,7 @@ in {
 
     (mkIf cfg.secureSocket {
       home.sessionVariables = {
-        TMUX_TMPDIR = ''''${XDG_RUNTIME_DIR:-"/run/user/\$(id -u)"}'';
+        TMUX_TMPDIR = ''''${XDG_RUNTIME_DIR:-"/run/user/$(id -u)"}'';
       };
     })
 
