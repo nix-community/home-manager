@@ -2374,13 +2374,21 @@ these in an unspecified order.</p><p><span class="emphasis"><em>Type:</em></span
   "Google"
 ]</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/firefox.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.settings"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.settings"><code class="option">programs.firefox.profiles.&lt;name&gt;.settings</code></a></span></dt><dd><p>Attribute set of Firefox preferences.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of (boolean or signed integer or string)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.settings"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.settings"><code class="option">programs.firefox.profiles.&lt;name&gt;.settings</code></a></span></dt><dd><p>Attribute set of Firefox preferences.
+
+Firefox only supports int, bool, and string types for
+preferences, but home-manager will automatically
+convert all other JSON-compatible values into strings.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of (Firefox preference (int, bool, string, and also attrs, list, float as a JSON string))</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
   "browser.startup.homepage" = "https://nixos.org";
   "browser.search.region" = "GB";
   "browser.search.isUS" = false;
   "distribution.searchplugins.defaultLocale" = "en-GB";
   "general.useragent.locale" = "en-GB";
   "browser.bookmarks.showMobileBookmarks" = true;
+  "browser.newtabpage.pinned" = [{
+    title = "NixOS";
+    url = "https://nixos.org";
+  }];
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/firefox.nix&gt;
