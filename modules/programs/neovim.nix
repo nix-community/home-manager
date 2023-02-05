@@ -240,6 +240,17 @@ in {
         '';
       };
 
+      extraLuaConfig = mkOption {
+        type = types.lines;
+        default = "";
+        example = ''
+          vim.opt.nobackup = true
+        '';
+        description = ''
+          Custom lua lines.
+        '';
+      };
+
       extraPackages = mkOption {
         type = with types; listOf package;
         default = [ ];
@@ -373,6 +384,7 @@ in {
             luaRcContent =
               lib.optionalString (neovimConfig.neovimRcContent != "")
               "vim.cmd [[source ${config.xdg.configHome}/nvim/init-home-manager.vim]]"
+              + config.programs.neovim.extraLuaConfig
               + lib.optionalString hasLuaConfig
               config.programs.neovim.generatedConfigs.lua;
           in mkIf (luaRcContent != "") { text = luaRcContent; };
