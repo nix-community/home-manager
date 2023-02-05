@@ -180,6 +180,10 @@
    </arg>
 
    <arg>
+    --refresh
+   </arg>
+
+   <arg>
     <group choice="req">
     <arg choice="plain">
      -v
@@ -608,6 +612,18 @@
       <refentrytitle>nix-build</refentrytitle>
       <manvolnum>1</manvolnum> </citerefentry>
       when running <command>home-manager build</command>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--refresh</option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>
      </para>
     </listitem>
    </varlistentry>
