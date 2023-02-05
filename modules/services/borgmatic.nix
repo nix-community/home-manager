@@ -63,6 +63,7 @@ in {
           ExecStart = ''
             ${pkgs.systemd}/bin/systemd-inhibit \
               --who="borgmatic" \
+              --what="sleep:shutdown" \
               --why="Prevent interrupting scheduled backup" \
               ${programConfig.package}/bin/borgmatic \
                 --stats \
