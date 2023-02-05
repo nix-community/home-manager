@@ -4501,6 +4501,10 @@ editor using the <code class="envar">EDITOR</code> environment variable.</p><p><
   set nobackup
 ''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/neovim.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.neovim.extraLuaConfig"></a><a class="term" href="options.html#opt-programs.neovim.extraLuaConfig"><code class="option">programs.neovim.extraLuaConfig</code></a></span></dt><dd><p>Custom lua lines.</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
+  vim.opt.nobackup = true
+''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/neovim.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.neovim.extraLuaPackages"></a><a class="term" href="options.html#opt-programs.neovim.extraLuaPackages"><code class="option">programs.neovim.extraLuaPackages</code></a></span></dt><dd><p>The extra Lua packages required for your plugins to work.
 This option accepts a function that takes a Lua package set as an argument,
 and selects the required Lua packages from this package set.
