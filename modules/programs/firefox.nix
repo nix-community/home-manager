@@ -25,11 +25,6 @@ let
   # by future Firefox versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
 
-  extensionsEnvPkg = pkgs.buildEnv {
-    name = "hm-firefox-extensions";
-    paths = cfg.extensions;
-  };
-
   profiles = flip mapAttrs' cfg.profiles (_: profile:
     nameValuePair "Profile${toString profile.id}" {
       Name = profile.name;
@@ -117,6 +112,15 @@ in {
   meta.maintainers = [ maintainers.rycee maintainers.kira-bruneau ];
 
   imports = [
+    (mkRemovedOptionModule [ "programs" "firefox" "extensions" ] ''
+
+      Extensions are now managed per-profile. That is, change from
+
+        programs.firefox.extensions = [ foo bar ];
+
+      to
+
+        programs.firefox.profiles.myprofile.extensions = [ foo bar ];'')
     (mkRemovedOptionModule [ "programs" "firefox" "enableAdobeFlash" ]
       "Support for this option has been removed.")
     (mkRemovedOptionModule [ "programs" "firefox" "enableGoogleTalk" ]
@@ -151,41 +155,6 @@ in {
           The Firefox package to use. If state version ≥ 19.09 then
           this should be a wrapped Firefox package. For earlier state
           versions it should be an unwrapped Firefox package.
-        '';
-      };
-
-      extensions = mkOption {
-        type = types.listOf types.package;
-        default = [ ];
-        example = literalExpression ''
-          with pkgs.nur.repos.rycee.firefox-addons; [
-            privacy-badger
-          ]
-        '';
-        description = ''
-          List of Firefox add-on packages to install. Some
-          pre-packaged add-ons are accessible from NUR,
-          <link xlink:href="https://github.com/nix-community/NUR"/>.
-          Once you have NUR installed run
-
-          <screen language="console">
-            <prompt>$</prompt> <userinput>nix-env -f '&lt;nixpkgs&gt;' -qaP -A nur.repos.rycee.firefox-addons</userinput>
-          </screen>
-
-          to list the available Firefox add-ons.
-
-          </para><para>
-
-          Note that it is necessary to manually enable these
-          extensions inside Firefox after the first installation.
-
-          </para><para>
-
-          Extensions listed here will only be available in Firefox
-          profiles managed through the
-          <xref linkend="opt-programs.firefox.profiles"/>
-          option. This is due to recent changes in the way Firefox
-          handles extension side-loading.
         '';
       };
 
@@ -452,6 +421,34 @@ in {
                 '';
               };
             };
+
+            extensions = mkOption {
+              type = types.listOf types.package;
+              default = [ ];
+              example = literalExpression ''
+                with pkgs.nur.repos.rycee.firefox-addons; [
+                  privacy-badger
+                ]
+              '';
+              description = ''
+                List of Firefox add-on packages to install for this profile.
+                Some pre-packaged add-ons are accessible from NUR,
+                <link xlink:href="https://github.com/nix-community/NUR"/>.
+                Once you have NUR installed run
+
+                <screen language="console">
+                  <prompt>$</prompt> <userinput>nix-env -f '&lt;nixpkgs&gt;' -qaP -A nur.repos.rycee.firefox-addons</userinput>
+                </screen>
+
+                to list the available Firefox add-ons.
+
+                </para><para>
+
+                Note that it is necessary to manually enable these extensions
+                inside Firefox after the first installation.
+              '';
+            };
+
           };
         }));
         default = { };
@@ -523,11 +520,6 @@ in {
     in [ package ];
 
     home.file = mkMerge ([{
-      "${mozillaConfigPath}/${extensionPath}" = mkIf (cfg.extensions != [ ]) {
-        source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
-        recursive = true;
-      };
-
       "${firefoxConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
     }] ++ flip mapAttrsToList cfg.profiles (_: profile: {
@@ -674,8 +666,13 @@ in {
           };
 
       "${profilesPath}/${profile.path}/extensions" =
-        mkIf (cfg.extensions != [ ]) {
-          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+        mkIf (profile.extensions != [ ]) {
+          source = let
+            extensionsEnvPkg = pkgs.buildEnv {
+              name = "hm-firefox-extensions";
+              paths = profile.extensions;
+            };
+          in "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
           recursive = true;
           force = true;
         };
