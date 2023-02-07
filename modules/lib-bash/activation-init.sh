@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 function setupVars() {
     local nixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
     local profilesPath="$nixStateDir/profiles/per-user/$USER"
