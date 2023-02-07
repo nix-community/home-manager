@@ -191,7 +191,7 @@ in {
 
       Service = {
         ExecStart = "${pkgs.xsuspender}/bin/xsuspender";
-        Environment = mkIf cfg.debug [ "G_MESSAGE_DEBUG=all" ];
+        Environment = mkIf cfg.debug [ "G_MESSAGES_DEBUG=all" ];
       };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
