@@ -78,11 +78,15 @@ in {
       home.packages = [ pkgs.mcfly ];
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        eval "$(${pkgs.mcfly}/bin/mcfly init bash)"
+        if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+          eval "$(${pkgs.mcfly}/bin/mcfly init bash)"
+        fi
       '';
 
       programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-        eval "$(${pkgs.mcfly}/bin/mcfly init zsh)"
+        if [[ $options[zle] = on ]]; then
+          eval "$(${pkgs.mcfly}/bin/mcfly init zsh)"
+        fi
       '';
 
       programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
