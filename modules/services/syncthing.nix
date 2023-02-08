@@ -6,6 +6,15 @@ let
 
   cfg = config.services.syncthing;
 
+  defaultSyncthingArgs = [
+    "${pkgs.syncthing}/bin/syncthing"
+    "-no-browser"
+    "-no-restart"
+    "-logflags=0"
+  ];
+
+  syncthingArgs = defaultSyncthingArgs ++ cfg.extraOptions;
+
 in {
   meta.maintainers = [ maintainers.rycee ];
 
@@ -57,11 +66,6 @@ in {
 
   config = mkMerge [
     (mkIf cfg.enable {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "services.syncthing" pkgs
-          lib.platforms.linux)
-      ];
-
       home.packages = [ (getOutput "man" pkgs.syncthing) ];
 
       systemd.user.services = {
@@ -74,10 +78,7 @@ in {
           };
 
           Service = {
-            ExecStart =
-              "${pkgs.syncthing}/bin/syncthing -no-browser -no-restart -logflags=0"
-              + optionalString (cfg.extraOptions != [ ])
-              (" " + escapeShellArgs cfg.extraOptions);
+            ExecStart = escapeShellArgs syncthingArgs;
             Restart = "on-failure";
             SuccessExitStatus = [ 3 4 ];
             RestartForceExitStatus = [ 3 4 ];
@@ -93,6 +94,18 @@ in {
           };
 
           Install = { WantedBy = [ "default.target" ]; };
+        };
+      };
+
+      launchd.agents.syncthing = {
+        enable = true;
+        config = {
+          ProgramArguments = syncthingArgs;
+          KeepAlive = {
+            Crashed = true;
+            SuccessfulExit = false;
+          };
+          ProcessType = "Background";
         };
       };
     })

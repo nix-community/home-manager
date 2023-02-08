@@ -118,6 +118,7 @@ import nmt {
     ./modules/programs/sm64ex
     ./modules/programs/ssh
     ./modules/programs/starship
+    ./modules/services/syncthing/common
     ./modules/programs/taskwarrior
     ./modules/programs/texlive
     ./modules/programs/tmate
@@ -202,7 +203,7 @@ import nmt {
     ./modules/services/screen-locker
     ./modules/services/swayidle
     ./modules/services/sxhkd
-    ./modules/services/syncthing
+    ./modules/services/syncthing/linux
     ./modules/services/trayer
     ./modules/services/twmn
     ./modules/services/udiskie
