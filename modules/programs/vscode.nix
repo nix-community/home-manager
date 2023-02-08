@@ -7,6 +7,7 @@ let
   cfg = config.programs.vscode;
 
   vscodePname = cfg.package.pname;
+  vscodeVersion = cfg.package.version;
 
   jsonFormat = pkgs.formats.json { };
 
@@ -34,40 +35,11 @@ let
   # TODO: On Darwin where are the extensions?
   extensionPath = ".${extensionDir}/extensions";
 
-  toExtensionJsonEntry = drv: rec {
-    identifier = {
-      id = "${drv.vscodeExtPublisher}.${drv.vscodeExtName}";
-      uuid = "";
-    };
-
-    version = drv.version;
-
-    location = {
-      "$mid" = 1;
-      fsPath = drv.outPath
-        + "/share/vscode/extensions/${drv.vscodeExtUniqueId}";
-      path = location.fsPath;
-      scheme = "file";
-    };
-
-    metadata = {
-      id = identifier.uuid;
-      publisherId = "";
-      publisherDisplayName = drv.vscodeExtPublisher;
-      targetPlatform = "undefined";
-      isApplicationScoped = false;
-      updated = false;
-      isPreReleaseVersion = false;
-      installedTimestamp = 0;
-      preRelease = false;
-    };
-  };
-
-  extensionJson = builtins.toJSON (map toExtensionJsonEntry cfg.extensions);
+  extensionJson = pkgs.vscode-utils.toExtensionJson cfg.extensions;
   extensionJsonFile = pkgs.writeTextFile {
     name = "extensions-json";
-    text = extensionJson;
     destination = "/share/vscode/extensions/extensions.json";
+    text = extensionJson;
   };
 
   mergedUserSettings = cfg.userSettings
@@ -248,7 +220,7 @@ in {
           else
             builtins.attrNames (builtins.readDir (ext + "/${subDir}")));
       in if cfg.mutableExtensionsDir then
-        mkMerge (concatMap toPaths cfg.extensions ++ [{
+        mkMerge (concatMap toPaths cfg.extensions ++ lib.optional (lib.version >= "1.74.0") [{
           # Whenever our immutable extensions.json changes, force VSCode to regenerate
           # extensions.json with both mutable and immutable extensions.
           "${extensionPath}/.extensions-immutable.json" = {
@@ -264,7 +236,7 @@ in {
         "${extensionPath}".source = let
           combinedExtensionsDrv = pkgs.buildEnv {
             name = "vscode-extensions";
-            paths = cfg.extensions ++ [ extensionJsonFile ];
+            paths = cfg.extensions ++ lib.optional (vscodeVersion >= "1.74.0") [ extensionJsonFile ];
           };
         in "${combinedExtensionsDrv}/${subDir}";
       }))
