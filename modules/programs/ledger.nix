@@ -6,6 +6,15 @@ let
 
   cfg = config.programs.ledger;
 
+  cfgText = generators.toKeyValue {
+    mkKeyValue = key: value:
+      if isBool value then
+        optionalString value "--${key}"
+      else
+        "--${key} ${toString value}";
+    listsAsDuplicateKeys = true;
+  } cfg.settings;
+
 in {
   meta.maintainers = [ maintainers.marsam ];
 
@@ -13,6 +22,26 @@ in {
     enable = mkEnableOption "ledger, a double-entry accounting system";
 
     package = mkPackageOption pkgs "ledger" { };
+
+    settings = mkOption {
+      type = with types; attrsOf (oneOf [ bool int str (listOf str) ]);
+      default = { };
+      example = {
+        sort = "date";
+        date-format = "%Y-%m-%d";
+        strict = true;
+        file = [
+          "~/finances/journal.ledger"
+          "~/finances/assets.ledger"
+          "~/finances/income.ledger"
+        ];
+      };
+      description = ''
+        Configuration written to <filename>$XDG_CONFIG_HOME/ledger/ledgerrc</filename>.
+        See <link xlink:href="https://www.ledger-cli.org/3.0/doc/ledger3.html#Detailed-Option-Description"/>
+        for explanation about possible values.
+      '';
+    };
 
     extraConfig = mkOption {
       type = types.lines;
@@ -23,9 +52,8 @@ in {
         --date-format %Y-%m-%d
       '';
       description = ''
-        Configuration written to <filename>$XDG_CONFIG_HOME/ledger/ledgerrc</filename>.
-        See <link xlink:href="https://www.ledger-cli.org/3.0/doc/ledger3.html#Detailed-Option-Description"/>
-        for explanation about possible values.
+        Extra configuration to add to
+        <filename>$XDG_CONFIG_HOME/ledger/ledgerrc</filename>.
       '';
     };
   };
@@ -34,6 +62,8 @@ in {
     home.packages = [ cfg.package ];
 
     xdg.configFile."ledger/ledgerrc" =
-      mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };
+      mkIf (cfg.settings != { } || cfg.extraConfig != "") {
+        text = cfgText + cfg.extraConfig;
+      };
   };
 }
