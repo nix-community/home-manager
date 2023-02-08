@@ -220,23 +220,26 @@ in {
           else
             builtins.attrNames (builtins.readDir (ext + "/${subDir}")));
       in if cfg.mutableExtensionsDir then
-        mkMerge (concatMap toPaths cfg.extensions ++ lib.optional (lib.versionAtLeast vscodeVersion "1.74.0") [{
-          # Whenever our immutable extensions.json changes, force VSCode to regenerate
-          # extensions.json with both mutable and immutable extensions.
-          "${extensionPath}/.extensions-immutable.json" = {
-            text = extensionJson;
-            onChange = ''
-              $DRY_RUN_CMD rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
-              $VERBOSE_ECHO "Regenerating VSCode extensions.json"
-              $DRY_RUN_CMD ${getExe cfg.package} --list-extensions > /dev/null
-            '';
-          };
-        }])
+        mkMerge (concatMap toPaths cfg.extensions
+          ++ lib.optional (lib.versionAtLeast vscodeVersion "1.74.0") [{
+            # Whenever our immutable extensions.json changes, force VSCode to regenerate
+            # extensions.json with both mutable and immutable extensions.
+            "${extensionPath}/.extensions-immutable.json" = {
+              text = extensionJson;
+              onChange = ''
+                $DRY_RUN_CMD rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
+                $VERBOSE_ECHO "Regenerating VSCode extensions.json"
+                $DRY_RUN_CMD ${getExe cfg.package} --list-extensions > /dev/null
+              '';
+            };
+          }])
       else {
         "${extensionPath}".source = let
           combinedExtensionsDrv = pkgs.buildEnv {
             name = "vscode-extensions";
-            paths = cfg.extensions ++ lib.optional (lib.versionAtLeast vscodeVersion "1.74.0") [ extensionJsonFile ];
+            paths = cfg.extensions
+              ++ lib.optional (lib.versionAtLeast vscodeVersion "1.74.0")
+              [ extensionJsonFile ];
           };
         in "${combinedExtensionsDrv}/${subDir}";
       }))
