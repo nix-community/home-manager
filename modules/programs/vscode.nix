@@ -220,7 +220,7 @@ in {
           else
             builtins.attrNames (builtins.readDir (ext + "/${subDir}")));
       in if cfg.mutableExtensionsDir then
-        mkMerge (concatMap toPaths cfg.extensions ++ lib.optional (lib.version >= "1.74.0") [{
+        mkMerge (concatMap toPaths cfg.extensions ++ lib.optional (lib.versionAtLeast vscodeVersion "1.74.0") [{
           # Whenever our immutable extensions.json changes, force VSCode to regenerate
           # extensions.json with both mutable and immutable extensions.
           "${extensionPath}/.extensions-immutable.json" = {
@@ -236,7 +236,7 @@ in {
         "${extensionPath}".source = let
           combinedExtensionsDrv = pkgs.buildEnv {
             name = "vscode-extensions";
-            paths = cfg.extensions ++ lib.optional (vscodeVersion >= "1.74.0") [ extensionJsonFile ];
+            paths = cfg.extensions ++ lib.optional (lib.versionAtLeast vscodeVersion "1.74.0") [ extensionJsonFile ];
           };
         in "${combinedExtensionsDrv}/${subDir}";
       }))
