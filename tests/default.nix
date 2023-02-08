@@ -122,6 +122,7 @@ import nmt {
     ./modules/programs/tmate
     ./modules/programs/tmux
     ./modules/programs/topgrade
+    ./modules/programs/translate-shell
     ./modules/programs/vim-vint
     ./modules/programs/vscode
     ./modules/programs/watson

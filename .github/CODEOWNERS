@@ -335,6 +335,9 @@ Makefile                                              @thiagokokada
 /modules/programs/topgrade.nix                        @msfjarvis
 /tests/modules/programs/topgrade                      @msfjarvis
 
+/modules/programs/translate-shell.nix                 @marsam
+/tests/modules/programs/translate-shell               @marsam
+
 /modules/programs/vim-vint.nix                        @tomodachi94
 /tests/modules/programs/vim-vint                      @tomodachi94
 

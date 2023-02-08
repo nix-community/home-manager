@@ -184,6 +184,7 @@ let
     ./programs/tmate.nix
     ./programs/tmux.nix
     ./programs/topgrade.nix
+    ./programs/translate-shell.nix
     ./programs/urxvt.nix
     ./programs/vim.nix
     ./programs/vim-vint.nix
