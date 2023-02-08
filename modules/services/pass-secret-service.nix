@@ -2,31 +2,46 @@
 
 with lib;
 
-let serviceCfg = config.services.pass-secret-service;
+let
+  cfg = config.services.pass-secret-service;
+
+  serviceArgs =
+    optionalString (cfg.storePath != null) "--path ${cfg.storePath}";
 in {
-  meta.maintainers = [ maintainers.cab404 ];
+  meta.maintainers = with maintainers; [ cab404 houstdav000 ];
+
   options.services.pass-secret-service = {
     enable = mkEnableOption "Pass libsecret service";
+
+    package = mkPackageOption pkgs "pass-secret-service" { };
+
+    storePath = mkOption {
+      type = with types; nullOr str;
+      default = null;
+      defaultText = "~/.password-store";
+      example = "/home/user/.local/share/password-store";
+      description = "Absolute path to password store.";
+    };
   };
-  config = mkIf serviceCfg.enable {
+
+  config = mkIf cfg.enable {
     assertions = [
       (hm.assertions.assertPlatform "services.pass-secret-service" pkgs
         platforms.linux)
-
-      {
-        assertion = config.programs.password-store.enable;
-        message = "The 'services.pass-secret-service' module requires"
-          + " 'programs.password-store.enable = true'.";
-      }
     ];
 
     systemd.user.services.pass-secret-service = {
-      Unit = { Description = "Pass libsecret service"; };
-      Service = {
-        # pass-secret-service doesn't use environment variables for some reason.
-        ExecStart =
-          "${pkgs.pass-secret-service}/bin/pass_secret_service --path ${config.programs.password-store.settings.PASSWORD_STORE_DIR}";
+      Unit = {
+        AssertFileIsExecutable = "${cfg.package}/bin/pass_secret_service";
+        Description = "Pass libsecret service";
+        Documentation = "https://github.com/mdellweg/pass_secret_service";
+        PartOf = [ "default.target" ];
       };
+
+      Service = {
+        ExecStart = "${cfg.package}/bin/pass_secret_service ${serviceArgs}";
+      };
+
       Install = { WantedBy = [ "default.target" ]; };
     };
   };

@@ -98,6 +98,10 @@ in {
   };
 
   config = mkIf config.services.udiskie.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.udiskie" pkgs platforms.linux)
+    ];
+
     xdg.configFile."udiskie/config.yml".source =
       yaml.generate "udiskie-config.yml" (mergeSets [
         {

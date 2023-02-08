@@ -8,7 +8,16 @@ This is the current unstable branch and the information in this section is there
 
 This release has the following notable changes:
 
-* No highlights.
+* Firefox add-ons are now managed per-profile.
+That is, if you are currently having
++
+[source,nix]
+programs.firefox.extensions = [ foo bar ];
++
+in your configuration then you must change it to
++
+[source,nix]
+programs.firefox.profiles.myprofile.extensions = [ foo bar ];
 
 [[sec-release-23.05-state-version-changes]]
 === State Version Changes

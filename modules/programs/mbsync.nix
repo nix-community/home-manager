@@ -84,7 +84,7 @@ let
     genSection "IMAPAccount ${name}" ({
       Host = imap.host;
       User = userName;
-      PassCmd = toString passwordCommand;
+      PassCmd = lib.escapeShellArgs passwordCommand;
     } // genTlsConfig imap.tls
       // optionalAttrs (imap.port != null) { Port = toString imap.port; }
       // mbsync.extraConfig.account) + "\n"

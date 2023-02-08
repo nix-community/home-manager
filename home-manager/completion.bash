@@ -296,7 +296,7 @@ _home-manager_completions ()
               "-L" "--print-build-logs" \
               "--show-trace" "--substitute" "--builders" "--version" \
               "--update-input" "--override-input" "--experimental-features" \
-              "--extra-experimental-features" )
+              "--extra-experimental-features" "--refresh")
 
     # ^ « home-manager »'s options.
 

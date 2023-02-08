@@ -63,6 +63,7 @@ case "$state" in
           '--show-trace[show trace]' \
           '--substitute[substitute]' \
           '--builders[builders]:SPEC:()' \
+          '--refresh[refresh]' \
           '--override-input[override flake input]:NAME VALUE:()' \
           '--update-input[update flake input]:NAME:()' \
           '--experimental-features[set experimental Nix features]:VALUE:()' \

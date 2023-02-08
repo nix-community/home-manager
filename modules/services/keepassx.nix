@@ -12,6 +12,10 @@ with lib;
   };
 
   config = mkIf config.services.keepassx.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.keepassx" pkgs platforms.linux)
+    ];
+
     systemd.user.services.keepassx = {
       Unit = {
         Description = "KeePassX password manager";

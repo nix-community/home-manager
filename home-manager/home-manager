@@ -556,6 +556,7 @@ function doHelp() {
     echo "  --no-out-link            Do not create a symlink to the output path"
     echo "  --no-write-lock-file"
     echo "  --builders VALUE"
+    echo "  --refresh                Consider all previously downloaded files out-of-date"
     echo
     echo "Commands"
     echo
@@ -628,7 +629,7 @@ while [[ $# -gt 0 ]]; do
             FLAKE_ARG="$1"
             shift
             ;;
-        --recreate-lock-file|--no-update-lock-file|--no-write-lock-file|--no-registries|--commit-lock-file)
+        --recreate-lock-file|--no-update-lock-file|--no-write-lock-file|--no-registries|--commit-lock-file|--refresh)
             PASSTHROUGH_OPTS+=("$opt")
             ;;
         --update-input)

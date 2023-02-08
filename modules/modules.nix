@@ -186,12 +186,15 @@ let
     ./programs/topgrade.nix
     ./programs/urxvt.nix
     ./programs/vim.nix
+    ./programs/vim-vint.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
+    ./programs/rbenv.nix
     ./programs/watson.nix
     ./programs/waybar.nix
     ./programs/wezterm.nix
+    ./programs/wlogout.nix
     ./programs/xmobar.nix
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix
@@ -202,6 +205,7 @@ let
     ./programs/zplug.nix
     ./programs/zsh.nix
     ./programs/zsh/prezto.nix
+    ./services/autorandr.nix
     ./services/barrier.nix
     ./services/betterlockscreen.nix
     ./services/blueman-applet.nix

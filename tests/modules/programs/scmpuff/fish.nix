@@ -1,4 +1,6 @@
-{ pkgs, lib, ... }: {
+{ lib, ... }:
+
+{
   programs = {
     scmpuff.enable = true;
     fish.enable = true;

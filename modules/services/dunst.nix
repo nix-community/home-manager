@@ -130,6 +130,10 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
+      assertions = [
+        (hm.assertions.assertPlatform "services.dunst" pkgs platforms.linux)
+      ];
+
       home.packages = [ cfg.package ];
 
       xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =

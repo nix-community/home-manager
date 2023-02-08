@@ -39,6 +39,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.mpd-discord-rpc" pkgs
+        platforms.linux)
+    ];
+
     xdg.configFile."discord-rpc/config.toml".source = configFile;
 
     systemd.user.services.mpd-discord-rpc = {

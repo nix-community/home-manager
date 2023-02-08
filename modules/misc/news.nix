@@ -895,6 +895,28 @@ in
       }
 
       {
+        time = "2023-01-30T10:39:11+00:00";
+        message = ''
+          A new module is available: 'programs.wlogout'.
+        '';
+      }
+
+      {
+        time = "2023-01-31T22:08:41+00:00";
+        message = ''
+          A new module is available: 'programs.rbenv'.
+        '';
+      }
+
+      {
+        time = "2023-02-02T20:49:05+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.autorandr'.
+        '';
+      }
+
+      {
         time = "2023-01-30T14:24:28+00:00";
         condition = config.programs.zsh.enable;
         message = ''

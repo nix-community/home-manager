@@ -122,6 +122,7 @@ import nmt {
     ./modules/programs/tmate
     ./modules/programs/tmux
     ./modules/programs/topgrade
+	./modules/programs/vim-vint
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
@@ -164,6 +165,7 @@ import nmt {
     ./modules/programs/terminator
     ./modules/programs/thunderbird
     ./modules/programs/waybar
+    ./modules/programs/wlogout
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
     ./modules/services/barrier
@@ -189,6 +191,7 @@ import nmt {
     ./modules/services/mpdris2
     ./modules/services/pantalaimon
     ./modules/services/parcellite
+    ./modules/services/pass-secret-service
     ./modules/services/pbgopy
     ./modules/services/picom
     ./modules/services/playerctld

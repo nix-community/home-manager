@@ -10,6 +10,10 @@ with lib;
   };
 
   config = mkIf config.services.pasystray.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.pasystray" pkgs platforms.linux)
+    ];
+
     systemd.user.services.pasystray = {
       Unit = {
         Description = "PulseAudio system tray";
