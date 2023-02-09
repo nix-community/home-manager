@@ -1,0 +1,15 @@
+[Install]
+WantedBy=pipewire.service
+
+[Service]
+Environment=PATH=/nix/store/00000000000000000000000000000000-calf/bin:/nix/store/00000000000000000000000000000000-pipewire/bin
+Environment=LD_LIBRARY_PATH=/nix/store/00000000000000000000000000000000-calf/lib:/nix/store/00000000000000000000000000000000-pipewire/lib
+Environment=LADSPA_PATH=/nix/store/00000000000000000000000000000000-calf/lib/ladspa:/nix/store/00000000000000000000000000000000-pipewire/lib/ladspa
+Environment=LV2_PATH=/nix/store/00000000000000000000000000000000-calf/lib/lv2:/nix/store/00000000000000000000000000000000-pipewire/lib/lv2
+ExecStart=/nix/store/00000000000000000000000000000000-pipewire/bin/pipewire -c /nix/store/00000000000000000000000000000000-pipewire-instance-baz.conf
+
+
+[Unit]
+After=pipewire.service
+BindsTo=pipewire.service
+Description=PipeWire instance baz

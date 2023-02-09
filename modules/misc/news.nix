@@ -915,6 +915,14 @@ in
           A new module is available: 'services.autorandr'.
         '';
       }
+
+      {
+        time = "2023-02-09T22:11:02+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.pipewire'.
+        '';
+      }
     ];
   };
 }

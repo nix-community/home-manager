@@ -264,6 +264,7 @@ let
     ./services/pasystray.nix
     ./services/pbgopy.nix
     ./services/picom.nix
+    ./services/pipewire.nix
     ./services/plan9port.nix
     ./services/playerctld.nix
     ./services/plex-mpv-shim.nix

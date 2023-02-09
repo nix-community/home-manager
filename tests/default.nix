@@ -193,6 +193,7 @@ import nmt {
     ./modules/services/pass-secret-service
     ./modules/services/pbgopy
     ./modules/services/picom
+    ./modules/services/pipewire
     ./modules/services/playerctld
     ./modules/services/polybar
     ./modules/services/recoll
