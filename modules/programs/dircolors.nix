@@ -43,6 +43,42 @@ in {
       '';
     };
 
+    terminalTypes = mkOption {
+      type = with types; listOf str;
+      # Default terminal types from `dircolors --print-database`.
+      default = [
+        "Eterm"
+        "ansi"
+        "*color*"
+        "con[0-9]*x[0-9]*"
+        "cons25"
+        "console"
+        "cygwin"
+        "dtterm"
+        "gnome"
+        "hurd"
+        "jfbterm"
+        "konsole"
+        "kterm"
+        "linux"
+        "linux-c"
+        "mlterm"
+        "putty"
+        "rxvt*"
+        "screen*"
+        "st"
+        "terminator"
+        "tmux*"
+        "vt100"
+        "xterm*"
+      ];
+      description = ''
+        List of terminal types for which
+        <xref linkend="opt-programs.dircolors.settings"/> should be applied.
+        If empty, settings are applied regardless of terminal type.
+      '';
+    };
+
     settings = mkOption {
       type = with types; attrsOf str;
       default = { };
@@ -204,6 +240,7 @@ in {
     };
 
     home.file.".dir_colors".text = concatStringsSep "\n" ([ ]
+      ++ map (t: "TERM ${t}") cfg.terminalTypes
       ++ mapAttrsToList formatLine cfg.settings ++ [ "" ]
       ++ optional (cfg.extraConfig != "") cfg.extraConfig);
 

@@ -6,6 +6,7 @@ with lib;
   config = {
     programs.dircolors = {
       enable = true;
+      terminalTypes = [ "xterm*" "ansi" ];
 
       settings = {
         OTHER_WRITABLE = "30;46";
