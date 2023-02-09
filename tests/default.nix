@@ -122,7 +122,7 @@ import nmt {
     ./modules/programs/tmate
     ./modules/programs/tmux
     ./modules/programs/topgrade
-	./modules/programs/vim-vint
+    ./modules/programs/vim-vint
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
