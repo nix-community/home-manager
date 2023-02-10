@@ -217,7 +217,7 @@ let
       example = "~/.Mail";
       description = ''
         Customize the Maildir folder used by the synchronization.
-        Default to <literal>$XDG_DATA_HOME/himalaya/<account-name></literal>.
+        Default to <literal>$XDG_DATA_HOME/himalaya/&lt;account-name&gt;</literal>.
       '';
     };
 
@@ -599,10 +599,11 @@ in {
         };
         Install = { WantedBy = [ "default.target" ]; };
         Service = {
-          ExecStart = "${himalaya.package}/bin/himalaya"
-            + (lib.optionalString himalaya-notify.account
-              " --account ${himalaya-notify.account}") + " notify"
-            + (lib.optionalString himalaya-notify.keepalive
+          ExecStart = "${himalaya.package}/bin/himalaya" + (lib.optionalString
+            ("account" ? himalaya-notify && !isNull himalaya-notify.account)
+            " --account ${himalaya-notify.account}") + " notify"
+            + (lib.optionalString ("keepalive" ? himalaya-notify
+              && !isNull himalaya-notify.keepalive)
               " --keepalive ${himalaya-notify.keepalive}");
           ExecSearchPath = "/bin";
           Environment = mapAttrsToList (key: val: "${key}=${val}")
@@ -619,10 +620,11 @@ in {
         };
         Install = { WantedBy = [ "default.target" ]; };
         Service = {
-          ExecStart = "${himalaya.package}/bin/himalaya"
-            + (lib.optionalString himalaya-watch.account
-              " --account ${himalaya-watch.account}") + " watch"
-            + (lib.optionalString himalaya-watch.keepalive
+          ExecStart = "${himalaya.package}/bin/himalaya" + (lib.optionalString
+            ("account" ? himalaya-watch && !isNull himalaya-watch.account)
+            " --account ${himalaya-watch.account}") + " watch"
+            + (lib.optionalString
+              ("keepalive" ? himalaya-watch && !isNull himalaya-watch.keepalive)
               " --keepalive ${himalaya-watch.keepalive}");
           ExecSearchPath = "/bin";
           Environment = mapAttrsToList (key: val: "${key}=${val}")
