@@ -361,6 +361,8 @@ in
   options.programs.ssh = {
     enable = mkEnableOption "SSH client configuration";
 
+    package = mkPackageOption pkgs "openssh" { };
+
     forwardAgent = mkOption {
       default = false;
       type = types.bool;
@@ -524,6 +526,8 @@ in
         message = "Forwarded paths cannot have ports.";
       }
     ];
+
+    home.packages = [ cfg.package ];
 
     home.file.".ssh/config".text =
       let

@@ -103,7 +103,7 @@ in
       entries = mkOption {
         internal = true;
         type = types.listOf entryModule;
-        default = [];
+        default = [ ];
         description = "News entries.";
       };
     };
@@ -1021,6 +1021,16 @@ in
         condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'programs.fuzzel'.
+        '';
+      }
+
+      {
+        time = "2023-05-13T14:34:21+00:00";
+        condition = config.programs.ssh.enable;
+        message = ''
+          The module 'programs.ssh' now installs an SSH client. The installed
+          client is controlled by the 'programs.ssh.package` option, which
+          defaults to 'pkgs.openssh'.
         '';
       }
     ];

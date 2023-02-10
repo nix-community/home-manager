@@ -7,6 +7,8 @@
       includes = [ "config.d/*" "other/dir" ];
     };
 
+    test.stubs.openssh = { };
+
     nmt.script = ''
       assertFileExists home-files/.ssh/config
       assertFileContains home-files/.ssh/config "Include config.d/* other/dir"
