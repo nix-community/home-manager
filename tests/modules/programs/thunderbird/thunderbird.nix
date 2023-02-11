@@ -8,6 +8,8 @@
         profiles = [ "first" ];
       };
 
+      aliases = [ "home-manager@example.com" ];
+
       gpg.key = "ABC";
 
       imap = {
