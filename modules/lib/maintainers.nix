@@ -351,6 +351,12 @@
     github = "lukasngl";
     githubId = 69244516;
   };
+  vawvaw = {
+    name = "VAWVAW";
+    email = "94846592+VAWVAW@users.noreply.github.com";
+    github = "VAWVAW";
+    githubId = 94846592;
+  };
   toastal = {
     email = "toastal+nix@posteo.net";
     matrix = "@toastal:matrix.org";

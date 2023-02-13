@@ -107,6 +107,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/firefox.nix                         @rycee
 
+/modules/programs/firejail.nix                        @VAWVAW
+
 /modules/programs/foot.nix                            @plabadens
 /tests/modules/programs/foot                          @plabadens
 
