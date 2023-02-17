@@ -34,7 +34,7 @@ in {
 
       goPath = mkOption {
         type = with types; nullOr str;
-        default = null;
+        default = "go";
         example = "go";
         description = ''
           Primary <envar>GOPATH</envar> relative to
