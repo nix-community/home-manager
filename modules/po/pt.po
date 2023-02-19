@@ -1,0 +1,97 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager Modules package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager Modules\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2022-03-26 15:08+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: modules/files.nix:233
+msgid "Creating home file links in %s"
+msgstr ""
+
+#: modules/files.nix:246
+msgid "Cleaning up orphan links from %s"
+msgstr ""
+
+#: modules/files.nix:262
+msgid "Creating profile generation %s"
+msgstr ""
+
+#: modules/files.nix:276
+msgid "No change so reusing latest profile generation %s"
+msgstr ""
+
+#: modules/home-environment.nix:607
+msgid ""
+"Oops, Nix failed to install your new Home Manager profile!\n"
+"\n"
+"Perhaps there is a conflict with a package that was installed using\n"
+"\"%s\"? Try running\n"
+"\n"
+"    %s\n"
+"\n"
+"and if there is a conflicting package you can remove it with\n"
+"\n"
+"    %s\n"
+"\n"
+"Then try activating your Home Manager configuration again."
+msgstr ""
+
+#: modules/home-environment.nix:639
+msgid "Activating %s"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:31
+msgid "Sanity checking oldGenNum and oldGenPath"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:34
+msgid ""
+"The previous generation number and path are in conflict! These\n"
+"must be either both empty or both set but are now set to\n"
+"\n"
+"    '%s' and '%s'\n"
+"\n"
+"If you don't mind losing previous profile generations then\n"
+"the easiest solution is probably to run\n"
+"\n"
+"   rm %s/home-manager*\n"
+"   rm %s/current-home\n"
+"\n"
+"and trying home-manager switch again. Good luck!"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:51
+msgid "Starting Home Manager activation"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:55
+msgid "Sanity checking Nix"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:61
+msgid "This is a dry run"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:64
+msgid "This is a live run"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:69
+msgid "Using Nix version: %s"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:72
+msgid "Activation variables:"
+msgstr ""
