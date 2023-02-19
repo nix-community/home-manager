@@ -384,7 +384,6 @@ in {
 
     programs.neovim.generatedConfigs = let
       grouped = lib.lists.groupBy (x: x.type) pluginsNormalized;
-      concatConfigs = lib.concatMapStrings (p: p.config);
       configsOnly = lib.foldl
         (acc: p: if p.config != null then acc ++ [ p.config ] else acc) [ ];
     in mapAttrs (name: vals: lib.concatStringsSep "\n" (configsOnly vals))
@@ -394,26 +393,32 @@ in {
 
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "nvim"; };
 
-    xdg.configFile =
-      let hasLuaConfig = hasAttr "lua" config.programs.neovim.generatedConfigs;
-      in mkMerge (
-        # writes runtime
-        (map (x: x.runtime) pluginsNormalized) ++ [{
-          "nvim/init.lua" = let
-            luaRcContent =
-              lib.optionalString (neovimConfig.neovimRcContent != "")
-              "vim.cmd [[source ${
+    xdg.configFile = mkMerge (
+      # writes runtime
+      (map (x: x.runtime) pluginsNormalized) ++ [{
+        "nvim/init.lua" = let
+          vimlConfig =
+            lib.optionalString (neovimConfig.neovimRcContent != "") ''
+              vim.cmd [[source ${
                 pkgs.writeText "nvim-init-home-manager.vim"
                 neovimConfig.neovimRcContent
-              }]]" + config.programs.neovim.extraLuaConfig
-              + lib.optionalString hasLuaConfig
-              config.programs.neovim.generatedConfigs.lua;
-          in mkIf (luaRcContent != "") { text = luaRcContent; };
+              }]]
+            '';
+          luaPluginsConfig =
+            lib.optionalString (hasAttr "lua" cfg.generatedConfigs)
+            cfg.generatedConfigs.lua;
+          luaRcContent = builtins.concatStringsSep "\n"
+            (builtins.filter (str: str != "") [
+              vimlConfig
+              cfg.extraLuaConfig
+              luaPluginsConfig
+            ]);
+        in mkIf (luaRcContent != "") { text = luaRcContent; };
 
-          "nvim/coc-settings.json" = mkIf cfg.coc.enable {
-            source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
-          };
-        }]);
+        "nvim/coc-settings.json" = mkIf cfg.coc.enable {
+          source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
+        };
+      }]);
 
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {
