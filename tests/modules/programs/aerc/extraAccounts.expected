@@ -84,3 +84,9 @@ from = test <test@email.invalid>
 outgoing = imap+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337
 postpone = dRaFts
 source = smtp+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337
+
+[q_gpg_enabled]
+from = Foo Bar <addr@mail.invalid>
+pgp-auto-sign = false
+pgp-key-id = ABCDEF
+pgp-opportunistic-encrypt = true

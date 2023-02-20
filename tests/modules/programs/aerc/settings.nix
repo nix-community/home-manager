@@ -247,6 +247,13 @@ with lib;
           };
         };
       };
+      q_gpg_enabled = basics // {
+        gpg = {
+          key = "ABCDEF";
+          encryptByDefault = true;
+          signByDefault = false;
+        };
+      };
     };
   };
 }
