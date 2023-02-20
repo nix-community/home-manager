@@ -83,7 +83,6 @@ in {
     enableNushellIntegration = mkOption {
       default = true;
       type = types.bool;
-      readOnly = true;
       description = ''
         Whether to enable Nushell integration.
       '';
