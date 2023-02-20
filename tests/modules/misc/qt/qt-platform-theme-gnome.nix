@@ -5,10 +5,7 @@
     qt = {
       enable = true;
       platformTheme = "gnome";
-      style = {
-        name = "adwaita";
-        package = config.lib.test.mkStubPackage { };
-      };
+      style.name = "adwaita";
     };
 
     test.stubs.qgnomeplatform = { };
