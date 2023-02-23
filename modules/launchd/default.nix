@@ -19,10 +19,12 @@ let
         example = literalExpression ''
           {
             ProgramArguments = [ "/usr/bin/say" "Good afternoon" ];
-            StartCalendarInterval = {
-              Hour = 12;
-              Minute = 0;
-            };
+            StartCalendarInterval = [
+              {
+                Hour = 12;
+                Minute = 0;
+              }
+            ];
           }
         '';
         description = ''

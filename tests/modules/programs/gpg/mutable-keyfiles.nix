@@ -14,6 +14,7 @@
   };
 
   test.stubs.gnupg = { };
+  test.stubs.systemd = { }; # depends on gnupg.override
 
   nmt.script = ''
     assertFileContains activate "export GNUPGHOME='/home/hm-user/.gnupg'"

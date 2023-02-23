@@ -653,15 +653,21 @@ in {
                 + "from outside of ${appName} is a malicious act, and will be responded "
                 + "to accordingly.";
 
-              salt = profile.path + profile.search.default
-                + disclaimer "Firefox";
+              salt = if profile.search.default != null then
+                profile.path + profile.search.default + disclaimer "Firefox"
+              else
+                null;
             in pkgs.runCommand "search.json.mozlz4" {
               nativeBuildInputs = with pkgs; [ mozlz4a openssl ];
               json = builtins.toJSON settings;
               inherit salt;
             } ''
-              export hash=$(echo -n "$salt" | openssl dgst -sha256 -binary | base64)
-              mozlz4a <(substituteStream json search.json.in --subst-var hash) "$out"
+              if [[ -n $salt ]]; then
+                export hash=$(echo -n "$salt" | openssl dgst -sha256 -binary | base64)
+                mozlz4a <(substituteStream json search.json.in --subst-var hash) "$out"
+              else
+                mozlz4a <(echo "$json") "$out"
+              fi
             '';
           };
 

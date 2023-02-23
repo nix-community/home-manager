@@ -917,7 +917,23 @@ in
       }
 
       {
-        time = "2023-01-30T14:24:28+00:00";
+        time = "2023-02-20T22:31:23+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.mpd-mpris'.
+        '';
+      }
+
+      {
+        time = "2023-02-22T22:16:37+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.avizo'.
+        '';
+      }
+
+      {
+        time = "2023-02-23T07:24:28+00:00";
         condition = config.programs.zsh.enable;
         message = ''
           A new module is available: 'programs.zsh.zimfw'.

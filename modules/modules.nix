@@ -206,6 +206,7 @@ let
     ./programs/zsh.nix
     ./programs/zsh/prezto.nix
     ./services/autorandr.nix
+    ./services/avizo.nix
     ./services/barrier.nix
     ./services/betterlockscreen.nix
     ./services/blueman-applet.nix
@@ -251,6 +252,7 @@ let
     ./services/mpd.nix
     ./services/mpdris2.nix
     ./services/mpd-discord-rpc.nix
+    ./services/mpd-mpris.nix
     ./services/mpris-proxy.nix
     ./services/muchsync.nix
     ./services/network-manager-applet.nix

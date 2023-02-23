@@ -443,7 +443,9 @@ in {
         zstyle ':prezto:module:prompt' pwd-length '${cfg.prompt.pwdLength}'
       ''}
       ${optionalString (cfg.prompt.showReturnVal != null) ''
-        zstyle ':prezto:module:prompt' show-return-val '${cfg.prompt.showReturnVal}'
+        zstyle ':prezto:module:prompt' show-return-val '${
+          lib.hm.booleans.yesNo cfg.prompt.showReturnVal
+        }'
       ''}
       ${optionalString (cfg.python.virtualenvAutoSwitch != null) ''
         zstyle ':prezto:module:python:virtualenv' auto-switch '${

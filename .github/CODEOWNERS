@@ -365,6 +365,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/autorandr.nix                       @GaetanLepage
 
+/modules/services/avizo.nix                           @pltanton
+
 /modules/services/barrier.nix                         @Kritnich
 /tests/modules/services/barrier                       @Kritnich
 
@@ -446,6 +448,9 @@ Makefile                                              @thiagokokada
 /tests/modules/services/mopidy                        @foo-dogsquared
 
 /modules/services/mpdris2.nix                         @pjones
+
+/modules/services/mpd-mpris.nix                       @olmokramer
+/tests/modules/services/mpd-mpris                     @olmokramer
 
 /modules/services/mpd-discord-rpc.nix                 @Kranzes
 
