@@ -124,7 +124,7 @@ in {
         # swayidle executes commands using "sh -c", so the PATH needs to contain a shell.
         Environment = [ "PATH=${makeBinPath [ pkgs.bash ]}" ];
         ExecStart =
-          "${cfg.package}/bin/swayidle -w ${concatStringsSep " " args}";
+          "${cfg.package}/bin/swayidle ${concatStringsSep " " args}";
       };
 
       Install = { WantedBy = [ cfg.systemdTarget ]; };
