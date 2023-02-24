@@ -131,6 +131,7 @@ import nmt {
     ./modules/programs/topgrade
     ./modules/programs/translate-shell
     ./modules/programs/vim-vint
+    ./modules/programs/vivid
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm

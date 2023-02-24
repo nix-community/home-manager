@@ -1,0 +1,1 @@
+{ vivid = ./vivid.nix; }

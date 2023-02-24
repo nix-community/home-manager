@@ -195,6 +195,7 @@ let
     ./programs/urxvt.nix
     ./programs/vim.nix
     ./programs/vim-vint.nix
+    ./programs/vivid.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
