@@ -58,44 +58,24 @@ in {
       '';
     };
 
-    enableBashIntegration = mkOption {
+    enableBashIntegration = mkEnableOption "Bash integration" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
     };
 
-    enableZshIntegration = mkOption {
+    enableZshIntegration = mkEnableOption "Zsh integration" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
     };
 
-    enableFishIntegration = mkOption {
+    enableFishIntegration = mkEnableOption "Fish integration" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
     };
 
-    enableIonIntegration = mkOption {
+    enableIonIntegration = mkEnableOption "Ion integration" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Ion integration.
-      '';
     };
 
-    enableNushellIntegration = mkOption {
+    enableNushellIntegration = mkEnableOption "Nushell integration" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Nushell integration.
-      '';
     };
   };
 
