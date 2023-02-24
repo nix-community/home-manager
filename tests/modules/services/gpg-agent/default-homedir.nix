@@ -9,6 +9,7 @@ with lib;
     programs.gpg.enable = true;
 
     test.stubs.gnupg = { };
+    test.stubs.systemd = { }; # depends on gnupg.override
 
     nmt.script = ''
       in="${config.systemd.user.sockets.gpg-agent.Socket.ListenStream}"
