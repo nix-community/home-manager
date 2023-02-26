@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecStart=@picom@/bin/picom --config /nix/store/00000000000000000000000000000000-hm_picompicom.conf --experimental-backends
+ExecStart=@picom@/bin/picom --config /nix/store/00000000000000000000000000000000-hm_picompicom.conf --legacy-backends
 Restart=always
 RestartSec=3
 

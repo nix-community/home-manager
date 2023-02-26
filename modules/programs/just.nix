@@ -9,44 +9,14 @@ let
 in {
   meta.maintainers = [ hm.maintainers.maximsmol ];
 
-  options.programs.just = {
-    enable = mkEnableOption
-      "just, a handy way to save and run project-specific commands";
-
-    package = mkOption {
-      type = types.package;
-      default = pkgs.just;
-      defaultText = literalExpression "pkgs.just";
-      description = "Package providing the <command>just</command> tool.";
-    };
-
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
-
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
-
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
-  };
-
-  config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
-
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      source ${cfg.package}/share/bash-completion/completions/just.bash
-    '';
-
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      source ${cfg.package}/share/zsh/site-functions/_just
-    '';
-
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      source ${cfg.package}/share/fish/vendor_completions.d/just.fish
-    '';
-
-  };
+  imports = let
+    msg = ''
+      'program.just' is deprecated, simply add 'pkgs.just' to 'home.packages' instead.
+      See https://github.com/nix-community/home-manager/issues/3449#issuecomment-1329823502'';
+  in [
+    (mkRemovedOptionModule [ "programs" "just" "enable" ] msg)
+    (mkRemovedOptionModule [ "programs" "just" "enableBashIntegration" ] msg)
+    (mkRemovedOptionModule [ "programs" "just" "enableZshIntegration" ] msg)
+    (mkRemovedOptionModule [ "programs" "just" "enableFishIntegration" ] msg)
+  ];
 }

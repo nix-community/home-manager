@@ -25,7 +25,16 @@ in {
 
   options = {
     services.udiskie = {
-      enable = mkEnableOption "udiskie mount daemon";
+      enable = mkEnableOption "udiskie mount daemon" // {
+        description = ''
+          Whether to enable the udiskie mount daemon.
+          </para><para>
+          Note, if you use NixOS then you must add
+          <code>services.udisks2.enable = true</code>
+          to your system configuration. Otherwise mounting will fail because
+          the Udisk2 DBus service is not found.
+        '';
+      };
 
       settings = mkOption {
         type = yaml.type;
@@ -89,6 +98,10 @@ in {
   };
 
   config = mkIf config.services.udiskie.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.udiskie" pkgs platforms.linux)
+    ];
+
     xdg.configFile."udiskie/config.yml".source =
       yaml.generate "udiskie-config.yml" (mergeSets [
         {

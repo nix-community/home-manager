@@ -10,13 +10,9 @@ let
     options = {
       name = mkOption {
         type = types.enum [
-          "NormalBegin"
           "NormalIdle"
-          "NormalEnd"
           "NormalKey"
-          "InsertBegin"
           "InsertIdle"
-          "InsertEnd"
           "InsertKey"
           "InsertChar"
           "InsertDelete"
@@ -48,8 +44,11 @@ let
           "RawKey"
           "InsertCompletionShow"
           "InsertCompletionHide"
-          "InsertCompletionSelect"
           "ModuleLoaded"
+          "ClientCreate"
+          "ClientClose"
+          "RegisterModified"
+          "User"
         ];
         example = "SetOption";
         description = ''
@@ -489,9 +488,8 @@ let
     };
   };
 
-  kakouneWithPlugins = pkgs.wrapKakoune pkgs.kakoune-unwrapped {
-    configure = { plugins = cfg.plugins; };
-  };
+  kakouneWithPlugins =
+    pkgs.wrapKakoune cfg.package { configure = { plugins = cfg.plugins; }; };
 
   configFile = let
     wrapOptions = with cfg.config.wrapLines;
@@ -623,6 +621,8 @@ in {
   options = {
     programs.kakoune = {
       enable = mkEnableOption "the kakoune text editor";
+
+      package = mkPackageOption pkgs "kakoune-unwrapped" { };
 
       config = mkOption {
         type = types.nullOr configModule;

@@ -800,6 +800,137 @@ in
           A new module is available: 'programs.k9s'.
         '';
       }
+
+      {
+        time = "2022-11-01T23:57:50+00:00";
+        message = ''
+          A new module is available: 'programs.oh-my-posh'.
+        '';
+      }
+
+      {
+        time = "2022-11-02T10:56:14+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xfconf'.
+        '';
+      }
+
+      {
+        time = "2022-11-04T14:56:46+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.thunderbird'.
+        '';
+      }
+
+      {
+        time = "2022-11-13T09:05:51+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          A new module is available: 'programs.thunderbird'.
+
+          Please note that the Thunderbird packages provided by Nix are
+          currently not working on macOS. The module can still be used to manage
+          configuration files by installing Thunderbird manually and setting the
+          'programs.thunderbird.package' option to a dummy package, for example
+          using 'pkgs.runCommand'.
+
+          This module requires you to set the following environment variables
+          when using an installation of Thunderbird that is not provided by Nix:
+
+            export MOZ_LEGACY_PROFILES=1
+            export MOZ_ALLOW_DOWNGRADE=1
+        '';
+      }
+
+      {
+        time = "2022-11-27T13:14:01+00:00";
+        condition = config.programs.ssh.enable;
+        message = ''
+          'programs.ssh.matchBlocks.*' now supports literal 'Match' blocks via
+          'programs.ssh.matchBlocks.*.match' option as an alternative to plain
+          'Host' blocks
+        '';
+      }
+
+      {
+        time = "2022-12-16T15:01:20+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.megasync'.
+        '';
+      }
+
+      {
+        time = "2022-12-25T08:41:32+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.cachix-agent'.
+        '';
+      }
+
+      {
+        time = "2022-12-28T21:48:22+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.clipman'.
+        '';
+      }
+
+      {
+        time = "2023-01-07T10:47:03+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          'xsession.windowManager.i3.config.[window|floating].titlebar' and
+          'wayland.windowManager.sway.config.[window|floating].titlebar' now default to 'true'.
+        '';
+      }
+
+      {
+        time = "2023-01-28T17:35:49+00:00";
+        message = ''
+          A new module is available: 'programs.papis'.
+        '';
+      }
+
+      {
+        time = "2023-01-30T10:39:11+00:00";
+        message = ''
+          A new module is available: 'programs.wlogout'.
+        '';
+      }
+
+      {
+        time = "2023-01-31T22:08:41+00:00";
+        message = ''
+          A new module is available: 'programs.rbenv'.
+        '';
+      }
+
+      {
+        time = "2023-02-02T20:49:05+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.autorandr'.
+        '';
+      }
+
+      {
+        time = "2023-02-20T22:31:23+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.mpd-mpris'.
+        '';
+      }
+
+      {
+        time = "2023-02-22T22:16:37+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.avizo'.
+        '';
+      }
     ];
   };
 }

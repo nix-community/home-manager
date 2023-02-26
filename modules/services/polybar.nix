@@ -1,10 +1,11 @@
-{ config, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 with lib;
 
 let
 
   cfg = config.services.polybar;
+  opt = options.services.polybar;
 
   eitherStrBoolIntList = with types;
     either str (either bool (either int (listOf str)));
@@ -54,11 +55,17 @@ let
       in "${key}=${value'}";
   };
 
-  configFile = pkgs.writeText "polybar.conf" ''
-    ${toPolybarIni cfg.config}
-    ${toPolybarIni (mapAttrs convertPolybarSection cfg.settings)}
-    ${cfg.extraConfig}
-  '';
+  configFile = let
+    isDeclarativeConfig = cfg.settings != opt.settings.default || cfg.config
+      != opt.config.default || cfg.extraConfig != opt.extraConfig.default;
+  in if isDeclarativeConfig then
+    pkgs.writeText "polybar.conf" ''
+      ${toPolybarIni cfg.config}
+      ${toPolybarIni (mapAttrs convertPolybarSection cfg.settings)}
+      ${cfg.extraConfig}
+    ''
+  else
+    null;
 
 in {
   options = {
@@ -198,15 +205,17 @@ in {
         lib.platforms.linux)
     ];
 
+    meta.maintainers = with maintainers; [ h7x4 ];
+
     home.packages = [ cfg.package ];
-    xdg.configFile."polybar/config.ini".source = configFile;
+    xdg.configFile."polybar/config.ini" =
+      mkIf (configFile != null) { source = configFile; };
 
     systemd.user.services.polybar = {
       Unit = {
         Description = "Polybar status bar";
         PartOf = [ "tray.target" ];
-        X-Restart-Triggers =
-          [ "${config.xdg.configFile."polybar/config.ini".source}" ];
+        X-Restart-Triggers = mkIf (configFile != null) "${configFile}";
       };
 
       Service = {

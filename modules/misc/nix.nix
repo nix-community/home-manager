@@ -202,7 +202,7 @@ in {
         <citerefentry>
           <refentrytitle>nix.conf</refentrytitle>
           <manvolnum>5</manvolnum>
-        </citerefentry> for avalaible options.
+        </citerefentry> for available options.
         The value declared here will be translated directly to the key-value pairs Nix expects.
         </para>
         <para>
@@ -212,29 +212,28 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = [{
-      assertion = cfg.settings == { } || cfg.package != null;
-      message = ''
-        A corresponding Nix package must be specified via `nix.package` for generating
-        nix.conf.
-      '';
-    }];
-
-    xdg.configFile = {
-      "nix/registry.json" = mkIf (cfg.registry != { }) {
-        source = jsonFormat.generate "registry.json" {
+  config = mkIf cfg.enable (mkMerge [
+    (mkIf (cfg.registry != { }) {
+      xdg.configFile."nix/registry.json".source =
+        jsonFormat.generate "registry.json" {
           version = cfg.registryVersion;
           flakes =
             mapAttrsToList (n: v: { inherit (v) from to exact; }) cfg.registry;
         };
-      };
+    })
 
-      "nix/nix.conf" = mkIf (cfg.settings != { } || cfg.extraOptions != "") {
-        source = nixConf;
-      };
-    };
-  };
+    (mkIf (cfg.settings != { } || cfg.extraOptions != "") {
+      assertions = [{
+        assertion = cfg.package != null;
+        message = ''
+          A corresponding Nix package must be specified via `nix.package` for generating
+          nix.conf.
+        '';
+      }];
+
+      xdg.configFile."nix/nix.conf".source = nixConf;
+    })
+  ]);
 
   meta.maintainers = [ maintainers.polykernel ];
 }

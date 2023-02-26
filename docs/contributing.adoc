@@ -28,6 +28,11 @@ Assuming your clone is at `$HOME/devel/home-manager` then you can make the `home
 [source,console]
 $ home-manager -I home-manager=$HOME/devel/home-manager
 +
+or, if using <<sec-flakes-standalone,flakes>>:
++
+[source,console]
+$ home-manager --override-input home-manager ~/devel/home-manager
++
 or
 
 2. changing the default path by ensuring your configuration includes
@@ -256,3 +261,8 @@ and run an individual test, for example `alacritty-empty-settings`, through
 
 [source,console]
 $ nix-shell --pure tests -A run.alacritty-empty-settings
+
+However, those invocations will impurely source the system’s nixpkgs, and may cause failures. To run against the nixpkgs from the flake.lock, use instead e.g.
+
+[source,console]
+$ nix develop --ignore-environment .#tests.all

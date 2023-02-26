@@ -21,6 +21,11 @@ with lib;
   };
 
   config = mkIf config.services.blueman-applet.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.blueman-applet" pkgs
+        platforms.linux)
+    ];
+
     systemd.user.services.blueman-applet = {
       Unit = {
         Description = "Blueman applet";

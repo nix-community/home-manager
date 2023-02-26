@@ -112,7 +112,7 @@ in {
       ".fluxbox/menu" = mkIf (cfg.menu != "") { text = cfg.menu; };
       ".fluxbox/slitlist" = mkIf (cfg.slitlist != "") { text = cfg.slitlist; };
       ".fluxbox/windowmenu" =
-        mkIf (cfg.windowMenu != "") { text = cfg.windowmenu; };
+        mkIf (cfg.windowmenu != "") { text = cfg.windowmenu; };
     };
 
     xsession.windowManager.command = concatStringsSep " "

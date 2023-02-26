@@ -51,23 +51,13 @@ $ nix-channel --add https://github.com/nix-community/home-manager/archive/master
 $ nix-channel --update
 ----
 +
-and if you follow a Nixpkgs version 22.05 channel you can run
+and if you follow a Nixpkgs version 22.11 channel you can run
 +
 [source,console]
 ----
-$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager
 $ nix-channel --update
 ----
-+
-On non-NixOS, you may have to add
-+
-[source,bash]
-export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
-+
-to your shell (see https://github.com/NixOS/nix/issues/2033[nix#2033]
-and
-https://discourse.nixos.org/t/where-is-nix-path-supposed-to-be-set/16434/8[this
-reply on the Nix Discourse]).
 
 3. Run the Home Manager installation command and create the first Home
 Manager generation:
@@ -133,11 +123,11 @@ $ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/m
 $ sudo nix-channel --update
 ----
 
-and if you follow a Nixpkgs version 22.05 channel, you can run
+and if you follow a Nixpkgs version 22.11 channel, you can run
 
 [source,console]
 ----
-$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
+$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager
 $ sudo nix-channel --update
 ----
 
@@ -244,11 +234,11 @@ $ nix-channel --add https://github.com/nix-community/home-manager/archive/master
 $ nix-channel --update
 ----
 
-and if you follow a Nixpkgs version 22.05 channel, you can run
+and if you follow a Nixpkgs version 22.11 channel, you can run
 
 [source,console]
 ----
-$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz home-manager
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager
 $ nix-channel --update
 ----
 
@@ -303,7 +293,7 @@ can be sourced directly by POSIX.2-like shells such as {bash}[Bash] or
 [NOTE]
 ====
 By default user packages will not be ignored in favor of
-`environment.systemPackages`, but they will be intalled to
+`environment.systemPackages`, but they will be installed to
 `/etc/profiles/per-user/$USERNAME` if
 
 [source,nix]

@@ -127,9 +127,19 @@ in {
 
       packageConfigurable = mkOption {
         type = types.package;
-        description = "Configurable vim package";
-        default = pkgs.vim_configurable;
-        defaultText = "pkgs.vim_configurable";
+        description = "Vim package to customize";
+        default = pkgs.vim-full or pkgs.vim_configurable;
+        defaultText = literalExpression "pkgs.vim-full";
+        example = literalExpression "pkgs.vim";
+      };
+
+      defaultEditor = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to configure <command>vim</command> as the default
+          editor using the <envar>EDITOR</envar> environment variable.
+        '';
       };
     };
   };
@@ -169,6 +179,8 @@ in {
     '';
 
     home.packages = [ cfg.package ];
+
+    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "vim"; };
 
     programs.vim = {
       package = vim;

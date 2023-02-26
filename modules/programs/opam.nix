@@ -34,6 +34,14 @@ in {
         Whether to enable Zsh integration.
       '';
     };
+
+    enableFishIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Fish integration.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -45,6 +53,10 @@ in {
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/opam env --shell=zsh)"
+    '';
+
+    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
+      eval (${cfg.package}/bin/opam env --shell=fish)
     '';
   };
 }

@@ -36,11 +36,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = {
-      JAVA_HOME = fileContents (pkgs.runCommandLocal "java-home" { } ''
-        source "${cfg.package}/nix-support/setup-hook"
-        echo "$JAVA_HOME" > $out
-      '');
-    };
+    # some instances of `jdk-linux-base.nix` pass through `result` without turning it onto a path-string.
+    # while I suspect this is incorrect, the documentation is unclear.
+    home.sessionVariables.JAVA_HOME = "${cfg.package.home}";
   };
 }

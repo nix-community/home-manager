@@ -14,8 +14,6 @@ with lib;
     xdg.dataFile."fish/home-manager_generated_completions".source =
       lib.mkForce (builtins.toFile "empty" "");
 
-    test.stubs.fish = { };
-
     nmt = {
       description =
         "if fish.functions is blank, the functions folder should not exist.";

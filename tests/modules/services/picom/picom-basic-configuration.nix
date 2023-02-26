@@ -19,7 +19,7 @@
       "unredir-if-possible" = true;
       "dbe" = true;
     };
-    experimentalBackends = true;
+    extraArgs = [ "--legacy-backends" ];
   };
 
   test.stubs.picom = { };

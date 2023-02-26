@@ -12,7 +12,10 @@ in {
           location = {
             sourceDirectories = [ "/my-stuff-to-backup" ];
             repositories = [ "/mnt/disk1" "/mnt/disk2" ];
-            extraConfig = { one_file_system = true; };
+            extraConfig = {
+              one_file_system = true;
+              exclude_patterns = [ "*.swp" ];
+            };
           };
 
           storage = {
@@ -63,6 +66,9 @@ in {
       }"
       expectations[location.one_file_system]="${
         boolToString backups.main.location.extraConfig.one_file_system
+      }"
+      expectations[location.exclude_patterns[0]]="${
+        builtins.elemAt backups.main.location.extraConfig.exclude_patterns 0
       }"
 
       expectations[storage.encryption_passcommand]="${backups.main.storage.encryptionPasscommand}"

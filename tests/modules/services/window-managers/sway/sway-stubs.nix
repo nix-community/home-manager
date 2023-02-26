@@ -3,7 +3,7 @@
   # not containing hashes, version numbers etc.
   test.stubs = {
     dmenu = { };
-    rxvt-unicode-unwrapped = { };
+    foot = { };
     i3status = { };
     sway = { };
     sway-unwrapped = { version = "1"; };

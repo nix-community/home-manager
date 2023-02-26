@@ -69,7 +69,7 @@ in {
           echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
 
           # Run mandb to generate cache files:
-          ${pkgs.man-db}/bin/mandb -C man.conf --no-straycats --create \
+          ${cfg.package}/bin/mandb -C man.conf --no-straycats --create \
             ${manualPages}/share/man
         '';
       in ''

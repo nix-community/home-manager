@@ -2,12 +2,25 @@
 
 with lib;
 
-{
+let
+
+  cfg = config.services.owncloud-client;
+
+in {
   options = {
-    services.owncloud-client = { enable = mkEnableOption "Owncloud Client"; };
+    services.owncloud-client = {
+      enable = mkEnableOption "Owncloud Client";
+
+      package = mkPackageOption pkgs "owncloud-client" { };
+    };
   };
 
-  config = mkIf config.services.owncloud-client.enable {
+  config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.owncloud-client" pkgs
+        platforms.linux)
+    ];
+
     systemd.user.services.owncloud-client = {
       Unit = {
         Description = "Owncloud Client";
@@ -17,7 +30,7 @@ with lib;
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";
-        ExecStart = "${pkgs.owncloud-client}/bin/owncloud";
+        ExecStart = "${cfg.package}/bin/owncloud";
       };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };

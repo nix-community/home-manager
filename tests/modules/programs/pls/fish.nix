@@ -18,10 +18,7 @@ with lib;
     xdg.dataFile."fish/home-manager_generated_completions".source =
       mkForce (builtins.toFile "empty" "");
 
-    test.stubs = {
-      pls = { };
-      fish = { };
-    };
+    test.stubs.pls = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/fish/config.fish

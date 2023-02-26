@@ -156,6 +156,18 @@
    </arg>
 
    <arg>
+    <group choice="req">
+     <arg choice="plain">
+      -L
+     </arg>
+
+     <arg choice="plain">
+      --print-build-logs
+     </arg>
+    </group>
+   </arg>
+
+   <arg>
     --show-trace
    </arg>
 
@@ -165,6 +177,10 @@
 
    <arg>
     --no-out-link
+   </arg>
+
+   <arg>
+    --refresh
    </arg>
 
    <arg>
@@ -548,6 +564,22 @@
    </varlistentry>
    <varlistentry>
     <term>
+     <option>-L</option>
+    </term>
+    <term>
+     <option>--print-build-logs</option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix build</refentrytitle>
+      </citerefentry>
+      when building from a flake.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
      <option>--show-trace</option>
     </term>
     <listitem>
@@ -580,6 +612,18 @@
       <refentrytitle>nix-build</refentrytitle>
       <manvolnum>1</manvolnum> </citerefentry>
       when running <command>home-manager build</command>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     <option>--refresh</option>
+    </term>
+    <listitem>
+     <para>
+      Passed on to <citerefentry>
+      <refentrytitle>nix-build</refentrytitle>
+      <manvolnum>1</manvolnum> </citerefentry>
      </para>
     </listitem>
    </varlistentry>

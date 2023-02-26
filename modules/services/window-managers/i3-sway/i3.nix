@@ -9,7 +9,6 @@ let
   commonOptions = import ./lib/options.nix {
     inherit config lib cfg pkgs;
     moduleName = "i3";
-    isGaps = cfg.package == pkgs.i3-gaps;
   };
 
   configModule = types.submodule {
@@ -105,7 +104,7 @@ let
           in lib.mkOptionDefault {
             "''${modifier}+Return" = "exec i3-sensible-terminal";
             "''${modifier}+Shift+q" = "kill";
-            "''${modifier}+d" = "exec \${pkgs.dmenu}/bin/dmenu_run";
+            "''${modifier}+d" = "exec ''${pkgs.dmenu}/bin/dmenu_run";
           }
         '';
       };
@@ -161,7 +160,7 @@ let
         "floating_modifier ${floating.modifier}"
         (windowBorderString window floating)
         "hide_edge_borders ${window.hideEdgeBorders}"
-        "force_focus_wrapping ${lib.hm.booleans.yesNo focus.forceWrapping}"
+        "focus_wrapping ${focus.wrapping}"
         "focus_follows_mouse ${lib.hm.booleans.yesNo focus.followMouse}"
         "focus_on_window_activation ${focus.newWindow}"
         "mouse_warping ${if focus.mouseWarping then "output" else "none"}"
@@ -193,7 +192,7 @@ let
       # We have to make sure the wrapper does not start a dbus session
       export DBUS_SESSION_BUS_ADDRESS=1
 
-      # A zero exit code means i3 succesfully validated the configuration
+      # A zero exit code means i3 successfully validated the configuration
       i3 -c ${configFile} -C -d all || {
         echo "i3 configuration validation failed"
         echo "For a verbose log of the failure, run 'i3 -c ${configFile} -C -d all'"
@@ -209,16 +208,7 @@ in {
     xsession.windowManager.i3 = {
       enable = mkEnableOption "i3 window manager";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.i3;
-        defaultText = literalExpression "pkgs.i3";
-        example = literalExpression "pkgs.i3-gaps";
-        description = ''
-          i3 package to use.
-          If 'i3.config.gaps' settings are specified, 'pkgs.i3-gaps' will be set as a default package.
-        '';
-      };
+      package = mkPackageOption pkgs "i3" { };
 
       config = mkOption {
         type = types.nullOr configModule;
@@ -249,18 +239,16 @@ in {
       xdg.configFile."i3/config" = {
         source = checkI3Config;
         onChange = ''
-          i3Socket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*
-          if [ -S $i3Socket ]; then
-            ${cfg.package}/bin/i3-msg -s $i3Socket reload >/dev/null
-          fi
+          # There may be several sockets after log out/log in, but the old ones
+          # will fail with "Connection refused".
+          for i3Socket in ''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*; do
+            if [[ -S $i3Socket ]]; then
+              ${cfg.package}/bin/i3-msg -s $i3Socket reload >/dev/null |& grep -v "Connection refused" || true
+            fi
+          done
         '';
       };
     }
-
-    (mkIf (cfg.config != null) {
-      xsession.windowManager.i3.package =
-        mkDefault (if (cfg.config.gaps != null) then pkgs.i3-gaps else pkgs.i3);
-    })
 
     (mkIf (cfg.config != null) {
       warnings = (optional (isList cfg.config.fonts)
@@ -268,16 +256,15 @@ in {
         ++ flatten (map (b:
           optional (isList b.fonts)
           "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
-          cfg.config.bars);
+          cfg.config.bars) ++ [
+            (mkIf (any (s: s.workspace != null) cfg.config.startup)
+              ("'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
+                + "use 'xsession.windowManager.i3.config.assigns' instead."
+                + "See https://github.com/nix-community/home-manager/issues/265."))
+            (mkIf cfg.config.focus.forceWrapping
+              ("'xsession.windowManager.i3.config.focus.forceWrapping' is deprecated, "
+                + "use 'xsession.windowManager.i3.config.focus.wrapping' instead."))
+          ];
     })
-
-    (mkIf (cfg.config != null
-      && (any (s: s.workspace != null) cfg.config.startup)) {
-        warnings = [
-          ("'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
-            + "use 'xsession.windowManager.i3.config.assigns' instead."
-            + "See https://github.com/nix-community/home-manager/issues/265.")
-        ];
-      })
   ]);
 }

@@ -11,6 +11,7 @@ herbstclient emit_hook reload
 herbstclient attr theme.tiling.reset 1
 herbstclient attr theme.floating.reset 1
 herbstclient keyunbind --all
+herbstclient mouseunbind --all
 herbstclient unrule --all
 
 herbstclient set always_show_frame true
@@ -19,13 +20,14 @@ herbstclient set frame_bg_active_color '#000000'
 herbstclient set frame_gap '12'
 herbstclient set frame_padding '-12'
 
-if @herbstluftwm@/bin/herbstclient object_tree tags.by-name | /nix/store/00000000000000000000000000000000-gnugrep/bin/grep default; then
+if @herbstluftwm@/bin/herbstclient object_tree tags.default &>/dev/null; then
   herbstclient rename default '1'
 fi
 
 for tag in '1' 'with space' 'wə1rd#ch@rs'\'''; do
   herbstclient add "$tag"
 done
+
 
 herbstclient keybind Mod4-1 use 1
 herbstclient keybind Mod4-2 use 2

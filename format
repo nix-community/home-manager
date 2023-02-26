@@ -21,7 +21,6 @@ find . -name '*.nix' \
   ! -path ./modules/lib/default.nix \
   ! -path ./modules/lib/file-type.nix \
   ! -path ./modules/misc/news.nix \
-  ! -path ./modules/programs/bash.nix \
   ! -path ./modules/programs/ssh.nix \
   ! -path ./modules/programs/zsh.nix \
   ! -path ./tests/default.nix \

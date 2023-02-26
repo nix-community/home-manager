@@ -16,6 +16,7 @@ with lib;
         "21.11"
         "22.05"
         "22.11"
+        "23.05"
       ];
       description = ''
         It is occasionally necessary for Home Manager to change
@@ -41,7 +42,7 @@ with lib;
           suffix =
             optionalString (revision != null) "+${substring 0 8 revision}";
         in "${release}${suffix}";
-        example = "22.05+213a0629";
+        example = "22.11+213a0629";
         description = "The full Home Manager version.";
       };
 
@@ -50,7 +51,7 @@ with lib;
         readOnly = true;
         type = types.str;
         default = fileContents ../../.release;
-        example = "22.05";
+        example = "22.11";
         description = "The Home Manager release.";
       };
 

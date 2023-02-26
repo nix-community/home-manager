@@ -102,7 +102,7 @@ in {
       if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
         export DCONF_DBUS_RUN_SESSION=""
       else
-        export DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session"
+        export DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session --dbus-daemon=${pkgs.dbus}/bin/dbus-daemon"
       fi
 
       if [[ -v oldGenPath ]]; then

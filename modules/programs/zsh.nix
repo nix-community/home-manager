@@ -18,10 +18,6 @@ let
     mapAttrsToList (k: v: "alias ${k}=${lib.escapeShellArg v}") cfg.shellAliases
   );
 
-  globalAliasesStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases
-  );
-
   dirHashesStr = concatStringsSep "\n" (
     mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
   );
@@ -488,35 +484,36 @@ in
         ++ optional cfg.enableCompletion nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
 
-      home.file."${relToDotDir ".zshrc"}".text = ''
-        ${cfg.initExtraFirst}
+      home.file."${relToDotDir ".zshrc"}".text = concatStringsSep "\n" ([
+        cfg.initExtraFirst
+        "typeset -U path cdpath fpath manpath"
 
-        typeset -U path cdpath fpath manpath
-
-        ${optionalString (cfg.cdpath != []) ''
+        (optionalString (cfg.cdpath != []) ''
           cdpath+=(${concatStringsSep " " cfg.cdpath})
-        ''}
+        '')
 
+        ''
         for profile in ''${(z)NIX_PROFILES}; do
           fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
         done
 
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
+        ''
 
-        ${optionalString (cfg.defaultKeymap != null) ''
+        (optionalString (cfg.defaultKeymap != null) ''
           # Use ${cfg.defaultKeymap} keymap as the default.
           ${getAttr cfg.defaultKeymap bindkeyCommands}
-        ''}
+        '')
+        localVarsStr
 
-        ${localVarsStr}
+        cfg.initExtraBeforeCompInit
 
-        ${cfg.initExtraBeforeCompInit}
-
-        ${concatStrings (map (plugin: ''
+        (concatStrings (map (plugin: ''
           path+="$HOME/${pluginsDir}/${plugin.name}"
           fpath+="$HOME/${pluginsDir}/${plugin.name}"
-        '') cfg.plugins)}
+        '') cfg.plugins))
 
+        ''
         # Oh-My-Zsh/Prezto calls compinit during initialization,
         # calling it twice causes slight start up slowdown
         # as all $fpath entries will be traversed again.
@@ -575,27 +572,29 @@ in
 
         # Aliases
         ${aliasesStr}
-
-        # Global Aliases
-        ${globalAliasesStr}
-
+        ''
+      ] 
+      ++ (mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases) 
+      ++ [ (''
         # Named Directory Hashes
         ${dirHashesStr}
+        '')
 
-        ${optionalString cfg.enableSyntaxHighlighting
+        (optionalString cfg.enableSyntaxHighlighting
           # Load zsh-syntax-highlighting after all custom widgets have been created
           # https://github.com/zsh-users/zsh-syntax-highlighting#faq
           "source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-        }
-        ${optionalString (cfg.historySubstringSearch.enable or false)
+        )
+
+        (optionalString (cfg.historySubstringSearch.enable or false)
           # Load zsh-history-substring-search after zsh-syntax-highlighting
           # https://github.com/zsh-users/zsh-history-substring-search#usage
         ''
           source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
           bindkey '${cfg.historySubstringSearch.searchUpKey}' history-substring-search-up
           bindkey '${cfg.historySubstringSearch.searchDownKey}' history-substring-search-down
-        ''}
-      '';
+        '')
+      ]);
     }
 
     (mkIf cfg.oh-my-zsh.enable {

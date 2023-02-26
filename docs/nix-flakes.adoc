@@ -6,8 +6,8 @@
 Home Manager includes a `flake.nix` file for compatibility with {nixos-wiki-flakes}[Nix Flakes].
 The support is still experimental and may change in backwards incompatible ways.
 
-[[sec-flakes-prerequisties]]
-=== Prerequisties
+[[sec-flakes-prerequisites]]
+=== Prerequisites
 
 * Install Nix 2.4 or later, or have it in `nix-shell`.
 
@@ -90,9 +90,9 @@ writing a Home Manager configuration.
 ====
 * The above example tracks the master branch of Home Manager
 and nixos-unstable branch of Nixpkgs.
-If you would like to use the `release-22.05` branch,
-change the `home-manager` input url to `github:nix-community/home-manager/release-22.05`
-and `nixpkgs` url to `github:NixOS/nixpkgs/nixos-22.05`.
+If you would like to use the `release-22.11` branch,
+change the `home-manager` input url to `github:nix-community/home-manager/release-22.11`
+and `nixpkgs` url to `github:NixOS/nixpkgs/nixos-22.11`.
 
 * The Home Manager library is exported by the flake under
 `lib.hm`.
@@ -200,7 +200,7 @@ is similar to that of NixOS. The `flake.nix` would be:
 [source,nix]
 ----
 {
-  description = "NixOS configuration";
+  description = "Darwin configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";

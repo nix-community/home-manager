@@ -39,6 +39,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (hm.assertions.assertPlatform "services.mpd-discord-rpc" pkgs
+        platforms.linux)
+    ];
+
     xdg.configFile."discord-rpc/config.toml".source = configFile;
 
     systemd.user.services.mpd-discord-rpc = {
@@ -46,7 +51,7 @@ in {
         Description = "Discord Rich Presence for MPD";
         Documentation = "https://github.com/JakeStanger/mpd-discord-rpc";
         After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.desktop" ];
+        PartOf = [ "graphical-session.target" ];
       };
       Service = {
         ExecStart = "${cfg.package}/bin/mpd-discord-rpc";

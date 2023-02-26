@@ -98,6 +98,11 @@ in {
     })
 
     (mkIf (isAttrs cfg.tray && cfg.tray.enable) {
+      assertions = [
+        (hm.assertions.assertPlatform "services.syncthing.tray" pkgs
+          platforms.linux)
+      ];
+
       systemd.user.services = {
         ${cfg.tray.package.pname} = {
           Unit = {
@@ -118,6 +123,11 @@ in {
 
     # deprecated
     (mkIf (isBool cfg.tray && cfg.tray) {
+      assertions = [
+        (hm.assertions.assertPlatform "services.syncthing.tray" pkgs
+          platforms.linux)
+      ];
+
       systemd.user.services = {
         "syncthingtray" = {
           Unit = {
