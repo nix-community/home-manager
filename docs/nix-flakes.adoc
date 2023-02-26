@@ -70,6 +70,71 @@ writing a Home Manager configuration.
 [[sec-flakes-standalone]]
 === Standalone setup
 
+The installation procedure for the standalone version of Home Manager
+is currently different for the unstable and stable branch.
+Therefore, if you are tracking the Nixpkgs or NixOS unstable please go to
+<<sec-flakes-standalone-unstable>>,
+and if you track Nixpkgs or NixOS version 22.11 please go to
+<<sec-flakes-standalone-stable>>.
+
+[[sec-flakes-standalone-unstable]]
+==== Unstable Version
+
+To prepare an initial Home Manager configuration for your logged in user,
+you can run the Home Manager `init` command directly from its flake.
+
+For example, to generate and activate a basic configuration run the command
+
+[source,console]
+$ nix run home-manager/master -- init --switch
+
+This will generate a `flake.nix` and a `home.nix` file in
+`~/.config/home-manager`, creating the directory if it does not exist.
+
+If you omit the `--switch` option then the activation will not happen.
+This is useful if you want to inspect and edit the configuration before activating it.
+
+[source,console]
+----
+$ nix run home-manager/master -- init
+$ # Edit files in ~/.config/home-manager
+$ nix run home-manager/master -- init --switch
+----
+
+After the initial activation has completed successfully then building
+and activating your flake-based configuration is as simple as
+
+[source,console]
+$ home-manager switch
+
+It is possible to override the default configuration directory, if you want.
+For example,
+
+[source,console]
+----
+$ nix run home-manager/master -- init --switch ~/hmconf
+$ # And after the initial activation.
+$ home-manager switch --flake ~/hmconf
+----
+
+[NOTE]
+====
+The flake inputs are not automatically updated by Home Manager.
+You need to use the standard `nix flake update` command for that.
+
+If you only want to update a single flake input,
+then the command `nix flake lock --update-input <input>` can be used.
+
+You can also pass flake-related options
+such as `--recreate-lock-file` or `--update-input <input>`
+to `home-manager` when building or switching,
+and these options will be forwarded to `nix build`.
+See the {nixos-wiki-flakes}[NixOS Wiki page] for details.
+====
+
+[[sec-flakes-standalone-stable]]
+==== Version 22.11
+
 1. Set up a flake with a `flake.nix` as follows:
 +
 [source,nix]
@@ -79,9 +144,9 @@ writing a Home Manager configuration.
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-22.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -109,16 +174,10 @@ writing a Home Manager configuration.
 +
 [NOTE]
 ====
-* The above example tracks the master branch of Home Manager
-and nixos-unstable branch of Nixpkgs.
-If you would like to use the `release-22.11` branch,
-change the `home-manager` input url to `github:nix-community/home-manager/release-22.11`
-and `nixpkgs` url to `github:NixOS/nixpkgs/nixos-22.11`.
-
-* The Home Manager library is exported by the flake under
-`lib.hm`.
+* The Home Manager library is exported by the flake under `lib.hm`.
 
 * You can use the above `flake.nix` as a template in `~/.config/home-manager` by
++
 [source,console]
 $ nix flake new ~/.config/home-manager -t github:nix-community/home-manager
 ====

@@ -30,6 +30,14 @@ The old location will continue to work but using it will trigger a warning messa
 We changed the default configuration location to avoid confusion about
 which files belong to Home Manager and which belong to Nixpkgs.
 
+* The `home-manager` tool now offers an `init` command.
+This command can be used to generate an initial Home Manager configuration,
+and optionally also activate it.
+The recommended installation method for a standalone Home Manager setup
+with Nix flakes uses this new command.
+The standard installation method remains the same but uses the new command internally.
+See <<sec-flakes-standalone-unstable>> for more.
+
 [[sec-release-23.05-state-version-changes]]
 === State Version Changes
 
@@ -45,5 +53,5 @@ These changes are only active if the `home.stateVersion` option is set to "23.05
 - <<opt-wayland.windowManager.sway.config.floating.titlebar>>
 --
 +
-now default to `true` which is consistent with the default values
-for those options used by `i3` and `sway`.
+now default to `true` which is consistent with the default values for
+those options used by `i3` and `sway`.

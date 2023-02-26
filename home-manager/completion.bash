@@ -276,19 +276,26 @@ _home-manager_xdg-get-cache-home () {
 
 ##################################################
 
+_hm_subcommands=( "help" "edit" "option" "build" "init" "instantiate" "switch" "generations" "remove-generations" "expire-generations" "packages" "news" "uninstall" )
+declare -ra _hm_subcommands
+
+# Finds the active sub-command, if any.
+_home-manager_subcommand() {
+    local subcommand='' i=
+    for ((i = 1; i < ${#COMP_WORDS[@]}; i++)); do
+        local word="${COMP_WORDS[i]}"
+        if [[ " ${_hm_subcommands[*]} " == *" ${word} "* ]]; then
+            subcommand="$word"
+            break
+        fi
+    done
+
+    echo "$subcommand"
+}
+
 # shellcheck disable=SC2207
 _home-manager_completions ()
 {
-
-    #--------------------------#
-
-    local Subcommands
-    Subcommands=( "help" "edit" "option" "build" "instantiate" "switch" "generations" "remove-generations" "expire-generations" "packages" "news" "uninstall" )
-
-    # ^ « home-manager »'s subcommands.
-
-    #--------------------------#
-
     local Options
     Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" \
               "--verbose" "--cores" "--debug" "--impure" "--keep-failed" \
@@ -322,26 +329,18 @@ _home-manager_completions ()
     #       PreviousWord="-f"
     #       CurrentWord="./"
 
+    local CurrentCommand
+    CurrentCommand="$(_home-manager_subcommand)"
+
     #--------------------------#
 
     COMPREPLY=()
 
-    case "$PreviousWord" in
+    case "$CurrentCommand" in
+        "init")
 
-        "-f"|"--file")
-
-            COMPREPLY+=( $( compgen -A file -- "$CurrentWord") )
-            ;;
-
-        "-I")
-
+            COMPREPLY+=( $( compgen -W "--switch" -- "$CurrentWord" ) )
             COMPREPLY+=( $( compgen -A directory -- "$CurrentWord") )
-            ;;
-
-        "-A")
-
-            # shellcheck disable=SC2119
-            COMPREPLY+=( $( compgen -W "$(_home-manager_list-nix-attributes)" -- "$CurrentWord") )
             ;;
 
         "remove-generations")
@@ -350,11 +349,33 @@ _home-manager_completions ()
             ;;
 
         *)
+            case "$PreviousWord" in
 
-            COMPREPLY+=( $( compgen -W "${Subcommands[*]}" -- "$CurrentWord" ) )
-            COMPREPLY+=( $( compgen -W "${Options[*]}" -- "$CurrentWord" ) )
+                "-f"|"--file")
+
+                    COMPREPLY+=( $( compgen -A file -- "$CurrentWord") )
+                    ;;
+
+                "-I")
+
+                    COMPREPLY+=( $( compgen -A directory -- "$CurrentWord") )
+                    ;;
+
+                "-A")
+
+                    # shellcheck disable=SC2119
+                    COMPREPLY+=( $( compgen -W "$(_home-manager_list-nix-attributes)" -- "$CurrentWord") )
+                    ;;
+                *)
+
+                    if [[ ! $CurrentCommand ]]; then
+                        COMPREPLY+=( $( compgen -W "${_hm_subcommands[*]}" -- "$CurrentWord" ) )
+                    fi
+                    COMPREPLY+=( $( compgen -W "${Options[*]}" -- "$CurrentWord" ) )
+                    ;;
+
+            esac
             ;;
-
     esac
 
     #--------------------------#

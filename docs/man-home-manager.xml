@@ -18,6 +18,10 @@
    </arg>
 
    <arg choice="plain">
+    init <arg>--switch</arg> <arg><replaceable>dir</replaceable></arg>
+   </arg>
+
+   <arg choice="plain">
     instantiate
    </arg>
 
@@ -217,6 +221,35 @@
        Build configuration into a <filename>result</filename> directory.
       </para>
      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>
+        <option>init</option> [<option>--switch</option>] [<replaceable>dir</replaceable>]
+      </term>
+      <listitem>
+        <simpara>
+          Generates an initial <filename>home.nix</filename> file for the
+          current user. If Nix flakes are enabled, then this command also
+          generates a <filename>flake.nix</filename> file.
+        </simpara>
+        <simpara>
+          If a path <replaceable>dir</replaceable> is given then the
+          configuration will be generated in that directory. Otherwise, the
+          configuration will be generated in
+          <filename>~/.config/home-manager</filename>. The output directory will
+          be created if it does not exist.
+        </simpara>
+        <simpara>
+          If the <option>--switch</option> option is given, then the generated
+          configuration is activated.
+        </simpara>
+        <simpara>
+          Note, this command will not overwrite any existing files. It is
+          therefore safe to initialize a configuration, edit it, and then re-run
+          the <option>init</option> command with <option>--switch</option>
+          enabled to activate the configuration.
+        </simpara>
+      </listitem>
     </varlistentry>
     <varlistentry>
      <term>

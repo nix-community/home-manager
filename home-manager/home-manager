@@ -50,6 +50,15 @@ function setWorkDir() {
     fi
 }
 
+# Checks whether the 'flakes' and 'nix-command' Nix options are enabled.
+function hasFlakeSupport() {
+    type -p nix > /dev/null \
+        && nix show-config \
+            | grep experimental-features \
+            | grep flakes \
+            | grep -q nix-command
+}
+
 # Attempts to set the HOME_MANAGER_CONFIG global variable.
 #
 # If no configuration file can be found then this function will print
@@ -205,6 +214,174 @@ function doInspectOption() {
         --config_expr "$modulesExpr.config" \
         "${extraArgs[@]}" \
         "${PASSTHROUGH_OPTS[@]}"
+}
+
+function doInit() {
+    # The directory where we should place the initial configuration.
+    local confDir
+
+    # Whether we should immediate activate the configuration.
+    local switch
+
+    # Whether we should create a flake file.
+    local withFlake
+
+    if hasFlakeSupport; then
+        withFlake=1
+    fi
+
+    while (( $# > 0 )); do
+        local opt="$1"
+        shift
+
+        case $opt in
+            --no-flake)
+                unset withFlake
+                ;;
+            --switch)
+                switch=1
+                ;;
+            -*)
+                _iError "%s: unknown option '%s'" "$0" "$opt" >&2
+                exit 1
+                ;;
+            *)
+                if [[ -v confDir ]]; then
+                    _i "Run '%s --help' for usage help" "$0" >&2
+                    exit 1
+                else
+                    confDir="$opt"
+                fi
+                ;;
+        esac
+    done
+
+    if [[ ! -v confDir ]]; then
+        confDir="${XDG_CONFIG_HOME:-$HOME/.config}/home-manager"
+    fi
+
+    if [[ ! -e $confDir ]]; then
+        mkdir -p "$confDir"
+    fi
+
+    if [[ ! -d $confDir ]]; then
+        _iError "%s: unknown option '%s'" "$0" "$opt" >&2
+        exit 1
+    fi
+
+    local confFile="$confDir/home.nix"
+    local flakeFile="$confDir/flake.nix"
+
+    if [[ -e $confFile ]]; then
+        _i 'The file %s already exists, leaving it unchanged...' "$confFile"
+    else
+        _i 'Creating %s...' "$confFile"
+        local nl=$'\n'
+        local xdgVars=""
+        if [[ -v XDG_CACHE_HOME && $XDG_CACHE_HOME != "$HOME/.cache" ]]; then
+            xdgVars="$xdgVars  xdg.cacheHome = \"$XDG_CACHE_HOME\";$nl"
+        fi
+        if [[ -v XDG_CONFIG_HOME && $XDG_CONFIG_HOME != "$HOME/.config" ]]; then
+            xdgVars="$xdgVars  xdg.configHome = \"$XDG_CONFIG_HOME\";$nl"
+        fi
+        if [[ -v XDG_DATA_HOME && $XDG_DATA_HOME != "$HOME/.local/share" ]]; then
+            xdgVars="$xdgVars  xdg.dataHome = \"$XDG_DATA_HOME\";$nl"
+        fi
+        if [[ -v XDG_STATE_HOME && $XDG_STATE_HOME != "$HOME/.local/state" ]]; then
+            xdgVars="$xdgVars  xdg.stateHome = \"$XDG_STATE_HOME\";$nl"
+        fi
+
+        mkdir -p "$confDir"
+        cat > "$confFile" <<EOF
+{ config, pkgs, ... }:
+
+{
+  # Home Manager needs a bit of information about you and the
+  # paths it should manage.
+  home.username = "$USER";
+  home.homeDirectory = "$HOME";
+$xdgVars
+  # This value determines the Home Manager release that your
+  # configuration is compatible with. This helps avoid breakage
+  # when a new Home Manager release introduces backwards
+  # incompatible changes.
+  #
+  # You can update Home Manager without changing this value. See
+  # the Home Manager release notes for a list of state version
+  # changes in each release.
+  home.stateVersion = "22.11";
+
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
+}
+EOF
+    fi
+
+    if [[ ! -v withFlake ]]; then
+        HOME_MANAGER_CONFIG="$confFile"
+    else
+        FLAKE_ARG="$confDir"
+
+        if [[ -e $flakeFile ]]; then
+            _i 'The file %s already exists, leaving it unchanged...' "$flakeFile"
+        else
+            _i 'Creating %s...' "$flakeFile"
+
+            local nixSystem
+            nixSystem=$(nix eval --expr builtins.currentSystem --raw --impure)
+
+            mkdir -p "$confDir"
+            cat > "$flakeFile" <<EOF
+{
+  description = "Home Manager configuration of $USER";
+
+  inputs = {
+    # Specify the source of Home Manager and Nixpkgs.
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { nixpkgs, home-manager, ... }:
+    let
+      system = "$nixSystem";
+      pkgs = nixpkgs.legacyPackages.\${system};
+    in {
+      homeConfigurations.$USER = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+
+        # Specify your home configuration modules here, for example,
+        # the path to your home.nix.
+        modules = [ ./home.nix ];
+
+        # Optionally use extraSpecialArgs
+        # to pass through arguments to home.nix
+      };
+    };
+}
+EOF
+        fi
+    fi
+
+    if [[ -v switch ]]; then
+        echo
+        _i "Creating initial Home Manager generation..."
+        echo
+
+        if doSwitch; then
+            # translators: The "%s" specifier will be replaced by a file path.
+            _i $'All done! The home-manager tool should now be installed and you can edit\n\n    %s\n\nto configure Home Manager. Run \'man home-configuration.nix\' to\nsee all available options.' \
+                "$confFile"
+            exit 0
+        else
+            # translators: The "%s" specifier will be replaced by a URL.
+            _i $'Uh oh, the installation failed! Please create an issue at\n\n    %s\n\nif the error seems to be the fault of Home Manager.' \
+                "https://github.com/nix-community/home-manager/issues"
+            exit 1
+        fi
+    fi
 }
 
 function doInstantiate() {
@@ -569,6 +746,7 @@ function doHelp() {
     echo "                    expression in the configuration file."
     echo "  -I PATH           Add a path to the Nix expression search path."
     echo "  --flake flake-uri Use Home Manager configuration at flake-uri"
+    echo "                    Default is '~/.config/home-manager'."
     echo "  -b EXT            Move existing files to new path rather than fail."
     echo "  -v                Verbose output"
     echo "  -n                Do a dry run, only prints what actions would be taken"
@@ -603,6 +781,13 @@ function doHelp() {
     echo "               Inspect configuration option named OPTION.NAME."
     echo
     echo "  build        Build configuration into result directory"
+    echo
+    echo "  init [--switch] [DIR]"
+    echo "      Initializes a configuration in the given directory. If the directory"
+    echo "      does not exist, then it will be created. The default directory is"
+    echo "      '~/.config/home-manager'."
+    echo
+    echo "      --switch      Immediately activate the generated configuration."
     echo
     echo "  instantiate  Instantiate the configuration and print the resulting derivation"
     echo
@@ -640,7 +825,7 @@ while [[ $# -gt 0 ]]; do
     opt="$1"
     shift
     case $opt in
-        build|instantiate|option|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
+        build|init|instantiate|option|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
             COMMAND="$opt"
             ;;
         -A)
@@ -716,7 +901,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             case $COMMAND in
-                expire-generations|remove-generations|option)
+                init|expire-generations|remove-generations|option)
                     COMMAND_ARGS+=("$opt")
                     ;;
                 *)
@@ -740,6 +925,9 @@ case $COMMAND in
         ;;
     build)
         doBuild
+        ;;
+    init)
+        doInit "${COMMAND_ARGS[@]}"
         ;;
     instantiate)
         doInstantiate

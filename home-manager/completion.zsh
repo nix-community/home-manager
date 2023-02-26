@@ -35,6 +35,7 @@ case "$state" in
       'edit[edit]' \
       'option[inspect option]' \
       'build[build]' \
+      'init[init]' \
       'switch[switch]' \
       'generations[list generations]' \
       'remove-generations[remove generations]' \
@@ -68,6 +69,11 @@ case "$state" in
           '--update-input[update flake input]:NAME:()' \
           '--experimental-features[set experimental Nix features]:VALUE:()' \
           '--extra-experimental-features:[append to experimental Nix features]:VALUE:()'
+        ;;
+      init)
+        _arguments \
+          '--switch[switch]' \
+          ':PATH:_files -/'
         ;;
     esac
 esac
