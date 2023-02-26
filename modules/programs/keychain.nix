@@ -120,7 +120,7 @@ in {
       ${shellCommand} | parse -r '(\w+)=(.*); export \1' | transpose -ird | load-env
     '';
     xsession.initExtra = mkIf cfg.enableXsessionIntegration ''
-      eval "$(${shellCommand})"
+      eval "$(SHELL=bash ${shellCommand})"
     '';
   };
 }
