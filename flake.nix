@@ -89,14 +89,16 @@
         pkgs = nixpkgs.legacyPackages.${system};
         docs = import ./docs { inherit pkgs; };
         tests = import ./tests { inherit pkgs; };
+        hmPkg = pkgs.callPackage ./home-manager { };
       in {
         devShells.tests = tests.run;
-        packages = rec {
-          home-manager = pkgs.callPackage ./home-manager { };
+        packages = {
+          default = hmPkg;
+          home-manager = hmPkg;
+
           docs-html = docs.manual.html;
-          docs-manpages = docs.manPages;
           docs-json = docs.options.json;
-          default = home-manager;
+          docs-manpages = docs.manPages;
         };
         # deprecated in Nix 2.7
         defaultPackage = self.packages.${system}.default;
