@@ -2,6 +2,7 @@
 == Installing Home Manager
 
 :nix-darwin: https://github.com/LnL7/nix-darwin/
+:nixos-wiki-flakes: https://nixos.wiki/wiki/Flakes
 
 Home Manager can be used in three primary ways:
 
@@ -21,6 +22,12 @@ this setup.
 This allows the user profiles to be built together with the system
 when running `darwin-rebuild`. See <<sec-install-nix-darwin-module>>
 for a description of this setup.
+
+[NOTE]
+In this chapter we describe how to install Home Manager in the
+standard way using channels. If you prefer to use
+{nixos-wiki-flakes}[Nix Flakes] then please see the instructions in
+<<ch-nix-flakes>>.
 
 [[sec-install-standalone]]
 === Standalone installation
