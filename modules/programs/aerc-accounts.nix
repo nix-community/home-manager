@@ -48,7 +48,8 @@ in {
           '';
         };
         smtpAuth = mkOption {
-          type = with types; nullOr (enum [ "none" "plain" "login" ]);
+          type = with types;
+            nullOr (enum [ "none" "plain" "login" "oauthbearer" "xoauth2" ]);
           default = "plain";
           example = "auth";
           description = ''
