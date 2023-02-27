@@ -390,6 +390,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/clipmenu.nix                        @DamienCassou
 
+/modules/services/copyq.nix                           @DamienCassou
+
 /modules/services/devilspie2.nix                      @dawidsowa
 /tests/modules/services/devilspie2                    @dawidsowa
 
