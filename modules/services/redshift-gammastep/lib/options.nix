@@ -183,6 +183,8 @@ in {
     xdg.configFile.${xdgConfigFilePath}.source =
       settingsFormat.generate xdgConfigFilePath cfg.settings;
 
+    home.packages = [ cfg.package ];
+
     systemd.user.services.${moduleName} = {
       Unit = let
         geoclueAgentService =
