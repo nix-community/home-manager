@@ -3,8 +3,29 @@
 
 :nixos-wiki-flakes: https://nixos.wiki/wiki/Flakes
 
-Home Manager includes a `flake.nix` file for compatibility with {nixos-wiki-flakes}[Nix Flakes].
-The support is still experimental and may change in backwards incompatible ways.
+Home Manager is compatible with {nixos-wiki-flakes}[Nix Flakes]. But
+please be aware that the support it is still experimental and may
+change in backwards incompatible ways.
+
+Just like in the standard installation you can use the Home Manager
+flake in three ways:
+
+1. Using the standalone `home-manager` tool. For platforms other than
+NixOS and Darwin, this is the only available choice. It is also
+recommended for people on NixOS or Darwin that want to manage their
+home directory independently of the system as a whole. See
+<<sec-flakes-standalone>> for instructions on how to perform this
+installation.
+
+2. As a module within a NixOS system configuration. This allows the
+user profiles to be built together with the system when running
+`nixos-rebuild`. See <<sec-flakes-nixos-module>> for a description of
+this setup.
+
+3. As a module within a {nix-darwin}[nix-darwin] system configuration.
+This allows the user profiles to be built together with the system
+when running `darwin-rebuild`. See <<sec-flakes-nix-darwin-module>>
+for a description of this setup.
 
 [[sec-flakes-prerequisites]]
 === Prerequisites

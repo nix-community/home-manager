@@ -677,7 +677,7 @@ while [[ $# -gt 0 ]]; do
             export VERBOSE=1
             ;;
         --version)
-            echo 22.11
+            echo 23.05-pre
             exit 0
             ;;
         *)

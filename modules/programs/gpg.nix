@@ -168,8 +168,13 @@ in {
       '';
       description = ''
         GnuPG configuration options. Available options are described
-        in the gpg manpage:
-        <link xlink:href="https://gnupg.org/documentation/manpage.html"/>.
+        in
+        <link xlink:href="https://gnupg.org/documentation/manpage.html">
+          <citerefentry>
+              <refentrytitle>gpg</refentrytitle>
+              <manvolnum>1</manvolnum>
+          </citerefentry>
+        </link>.
         </para>
         <para>
         Note that lists are converted to duplicate keys.
@@ -186,8 +191,13 @@ in {
       '';
       description = ''
         SCdaemon configuration options. Available options are described
-        in the gpg scdaemon manpage:
-        <link xlink:href="https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html"/>.
+        in
+        <link xlink:href="https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html">
+          <citerefentry>
+              <refentrytitle>scdaemon</refentrytitle>
+              <manvolnum>1</manvolnum>
+          </citerefentry>
+        </link>.
       '';
     };
 
