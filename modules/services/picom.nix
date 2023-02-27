@@ -198,10 +198,10 @@ in {
     };
 
     backend = mkOption {
-      type = types.enum [ "glx" "xrender" "xr_glx_hybrid" ];
+      type = types.enum [ "egl" "glx" "xrender" "xr_glx_hybrid" ];
       default = "xrender";
       description = ''
-        Backend to use: <literal>glx</literal>, <literal>xrender</literal> or <literal>xr_glx_hybrid</literal>.
+        Backend to use: <literal>egl</literal>, <literal>glx</literal>, <literal>xrender</literal> or <literal>xr_glx_hybrid</literal>.
       '';
     };
 
