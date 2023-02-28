@@ -46,6 +46,8 @@ with lib;
       ++ optional cfg.git "--git" ++ cfg.extraOptions);
 
     aliases = {
+      # Use `command` instead of hardcoding the path to exa so that aliases don't
+      # go stale after a system update.
       exa = "command ${cmd}";
       ls = "exa";
       ll = "exa -l";
@@ -61,5 +63,9 @@ with lib;
     programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
 
     programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
+
+    # ion doesn't support the standard `command` built-in. Or recursive alias expansion.
+    programs.ion.shellAliases =
+      mkIf cfg.enableAliases (aliases // { exa = cmd; });
   };
 }
