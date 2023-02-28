@@ -9,7 +9,7 @@ with lib;
     enable =
       mkEnableOption "exa, a modern replacement for <command>ls</command>";
 
-    enableAliases = mkEnableOption "recommended exa aliases";
+    enableAliases = mkEnableOption "recommended exa aliases (ls, ll…)";
 
     extraOptions = mkOption {
       type = types.listOf types.str;
@@ -49,6 +49,7 @@ with lib;
       # Use `command` instead of hardcoding the path to exa so that aliases don't
       # go stale after a system update.
       exa = "exa ${args}";
+    } // optionalAttrs cfg.enableAliases {
       ls = "exa";
       ll = "exa -l";
       la = "exa -a";
@@ -58,12 +59,12 @@ with lib;
   in mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.shellAliases = mkIf cfg.enableAliases aliases;
+    programs.bash.shellAliases = aliases;
 
-    programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
+    programs.zsh.shellAliases = aliases;
 
-    programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
+    programs.fish.shellAliases = aliases;
 
-    programs.ion.shellAliases = mkIf cfg.enableAliases aliases;
+    programs.ion.shellAliases = aliases;
   };
 }
