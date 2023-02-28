@@ -42,7 +42,7 @@ with lib;
   config = let
     cfg = config.programs.exa;
 
-    cmd = concatStringsSep " " ([ "${cfg.package}/bin/exa" ]
+    cmd = escapeShellArgs ([ "${cfg.package}/bin/exa" ]
       ++ optional cfg.icons "--icons" ++ optional cfg.git "--git"
       ++ cfg.extraOptions);
 
