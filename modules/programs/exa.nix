@@ -46,12 +46,12 @@ with lib;
       ++ optional cfg.git "--git" ++ cfg.extraOptions);
 
     aliases = {
-      exa = cmd;
-      ls = cmd;
-      ll = "${cmd} -l";
-      la = "${cmd} -a";
-      lt = "${cmd} --tree";
-      lla = "${cmd} -la";
+      exa = "command ${cmd}";
+      ls = "exa";
+      ll = "exa -l";
+      la = "exa -a";
+      lt = "exa --tree";
+      lla = "exa -la";
     };
   in mkIf cfg.enable {
     home.packages = [ cfg.package ];
@@ -61,7 +61,5 @@ with lib;
     programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
 
     programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
-
-    programs.ion.shellAliases = mkIf cfg.enableAliases aliases;
   };
 }
