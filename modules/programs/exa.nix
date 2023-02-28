@@ -42,13 +42,13 @@ with lib;
   config = let
     cfg = config.programs.exa;
 
-    cmd = escapeShellArgs ([ "exa" ] ++ optional cfg.icons "--icons"
+    args = escapeShellArgs (optional cfg.icons "--icons"
       ++ optional cfg.git "--git" ++ cfg.extraOptions);
 
     aliases = {
       # Use `command` instead of hardcoding the path to exa so that aliases don't
       # go stale after a system update.
-      exa = "command ${cmd}";
+      exa = "exa ${args}";
       ls = "exa";
       ll = "exa -l";
       la = "exa -a";
@@ -64,8 +64,6 @@ with lib;
 
     programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
 
-    # ion doesn't support the standard `command` built-in. Or recursive alias expansion.
-    programs.ion.shellAliases =
-      mkIf cfg.enableAliases (aliases // { exa = cmd; });
+    programs.ion.shellAliases = mkIf cfg.enableAliases aliases;
   };
 }
