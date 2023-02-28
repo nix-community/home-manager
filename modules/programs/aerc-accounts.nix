@@ -9,7 +9,40 @@ let
       name = f k;
       value = v;
     }) attr));
+
   addAccountName = name: k: "${k}:account=${name}";
+
+  oauth2Params = mkOption {
+    type = with types;
+      nullOr (submodule {
+        options = {
+          token_endpoint = mkOption {
+            type = nullOr str;
+            default = null;
+          };
+          client_id = mkOption {
+            type = nullOr str;
+            default = null;
+          };
+          client_secret = mkOption {
+            type = nullOr str;
+            default = null;
+          };
+          scope = mkOption {
+            type = nullOr str;
+            default = null;
+          };
+        };
+      });
+    default = null;
+    example = { token_endpoint = "<token_endpoint>"; };
+    description = ''
+      Sets the oauth2 params if authentication mechanism oauthbearer or
+      xoauth2 is used.
+      See <citerefentry><refentrytitle>aerc-imap</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+    '';
+  };
+
 in {
   type = mkOption {
     type = types.attrsOf (types.submodule {
@@ -34,7 +67,7 @@ in {
           description = ''
             Extra bindings specific to this account, added to
             <filename>$HOME/.config/aerc/accounts.conf</filename>.
-            See aerc-config(5).
+            See <citerefentry><refentrytitle>aerc-config</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
           '';
         };
         extraConfig = mkOption {
@@ -44,9 +77,23 @@ in {
           description = ''
             Extra config specific to this account, added to
             <filename>$HOME/.config/aerc/aerc.conf</filename>.
-            See aerc-config(5).
+            See <citerefentry><refentrytitle>aerc-config</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
           '';
         };
+
+        imapAuth = mkOption {
+          type = with types; nullOr (enum [ "oauthbearer" "xoauth2" ]);
+          default = null;
+          example = "auth";
+          description = ''
+            Sets the authentication mechanism if imap is used as the incoming
+            method.
+            See <citerefentry><refentrytitle>aerc-imap</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+          '';
+        };
+
+        imapOauth2Params = oauth2Params;
+
         smtpAuth = mkOption {
           type = with types;
             nullOr (enum [ "none" "plain" "login" "oauthbearer" "xoauth2" ]);
@@ -55,9 +102,11 @@ in {
           description = ''
             Sets the authentication mechanism if smtp is used as the outgoing
             method.
-            See aerc-smtp(5).
+            See <citerefentry><refentrytitle>aerc-smtp</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
           '';
         };
+
+        smtpOauth2Params = oauth2Params;
       };
     });
   };
@@ -69,6 +118,16 @@ in {
         if v != null && v != [ ] && v != "" then { ${k} = v; } else { };
       optPwCmd = k: p:
         optAttr "${k}-cred-cmd" (nullOrMap (builtins.concatStringsSep " ") p);
+
+      useOauth = auth: builtins.elem auth [ "oauthbearer" "xoauth2" ];
+
+      oauthParams = { auth, params }:
+        if useOauth auth && params != null && params != { } then
+          "?" + builtins.concatStringsSep "&" lib.attrsets.mapAttrsToList
+          (k: v: k + "=" + lib.strings.escapeURL v) params
+        else
+          "";
+
       mkConfig = {
         maildir = cfg: {
           source =
@@ -76,18 +135,33 @@ in {
         };
         imap = { userName, imap, passwordCommand, aerc, ... }@cfg:
           let
+            loginMethod' =
+              if cfg.aerc.imapAuth != null then "+${cfg.aerc.imapAuth}" else "";
+
+            oauthParams' = oauthParams {
+              auth = cfg.aerc.imapAuth;
+              params = cfg.aerc.imapOauth2Params;
+            };
+
             protocol = if imap.tls.enable then
-              if imap.tls.useStartTls then "imap" else "imaps"
+              if imap.tls.useStartTls then "imap" else "imaps${loginMethod'}"
             else
               "imap+insecure";
             port' = optPort imap.port;
           in {
-            source = "${protocol}://${userName}@${imap.host}${port'}";
+            source =
+              "${protocol}://${userName}@${imap.host}${port'}${oauthParams'}";
           } // optPwCmd "source" passwordCommand;
         smtp = { userName, smtp, passwordCommand, ... }@cfg:
           let
             loginMethod' =
               if cfg.aerc.smtpAuth != null then "+${cfg.aerc.smtpAuth}" else "";
+
+            oauthParams' = oauthParams {
+              auth = cfg.aerc.smtpAuth;
+              params = cfg.aerc.smtpOauth2Params;
+            };
+
             protocol = if smtp.tls.enable && !smtp.tls.useStartTls then
               "smtps${loginMethod'}"
             else
@@ -96,7 +170,8 @@ in {
             smtp-starttls =
               if smtp.tls.enable && smtp.tls.useStartTls then "yes" else null;
           in {
-            outgoing = "${protocol}://${userName}@${smtp.host}${port'}";
+            outgoing =
+              "${protocol}://${userName}@${smtp.host}${port'}${oauthParams'}";
           } // optPwCmd "outgoing" passwordCommand
           // optAttr "smtp-starttls" smtp-starttls;
         msmtp = cfg: {
