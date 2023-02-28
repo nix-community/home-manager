@@ -42,9 +42,8 @@ with lib;
   config = let
     cfg = config.programs.exa;
 
-    cmd = escapeShellArgs ([ "${cfg.package}/bin/exa" ]
-      ++ optional cfg.icons "--icons" ++ optional cfg.git "--git"
-      ++ cfg.extraOptions);
+    cmd = escapeShellArgs ([ "exa" ] ++ optional cfg.icons "--icons"
+      ++ optional cfg.git "--git" ++ cfg.extraOptions);
 
     aliases = {
       exa = cmd;
