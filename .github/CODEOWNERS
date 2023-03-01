@@ -117,6 +117,9 @@ Makefile                                              @thiagokokada
 /modules/services/fusuma.nix                          @iosmanthus
 /tests/modules/services/fusuma                        @iosmanthus
 
+/modules/programs/fuzzel.nix                          @Scrumplex
+/tests/modules/programs/fuzzel                        @Scrumplex
+
 /modules/programs/gallery-dl.nix                      @marsam
 /tests/modules/programs/gallery-dl                    @marsam
 

@@ -157,6 +157,7 @@ import nmt {
     ./modules/programs/borgmatic
     ./modules/programs/firefox
     ./modules/programs/foot
+    ./modules/programs/fuzzel
     ./modules/programs/getmail
     ./modules/programs/gnome-terminal
     ./modules/programs/hexchat
