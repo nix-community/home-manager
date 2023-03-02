@@ -4,13 +4,16 @@ with lib;
 
 let
 
-  cfg = config.programs.mako;
+  cfg = config.services.mako;
 
 in {
   meta.maintainers = [ maintainers.onny ];
 
+  imports =
+    [ (mkRenamedOptionModule [ "programs" "mako" ] [ "services" "mako" ]) ];
+
   options = {
-    programs.mako = {
+    services.mako = {
       enable = mkEnableOption ''
         Mako, lightweight notification daemon for Wayland
       '';
