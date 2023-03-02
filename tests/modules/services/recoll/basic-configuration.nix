@@ -6,7 +6,8 @@
     package = config.lib.test.mkStubPackage { };
     configDir = "${config.xdg.configHome}/recoll";
     settings = {
-      topdirs = [ "~/Downloads" "~/Documents" "~/library" ];
+      dbdir = "~/.cache/recoll/xapiandb";
+      topdirs = [ "~/Downloads" "~/Documents" "~/library" ''~/"cool" files'' ];
       "skippedNames+" = [ "node_modules" ];
       underscoresasletter = true;
       nocjk = false;
