@@ -1,4 +1,4 @@
-{ config, extendModules, lib, ... }:
+{ config, name, extendModules, lib, ... }:
 
 with lib;
 
@@ -8,8 +8,19 @@ with lib;
       options = {
         configuration = mkOption {
           type = let
-            stopRecursion = { specialization = mkOverride 0 { }; };
-            extended = extendModules { modules = [ stopRecursion ]; };
+            extended = extendModules {
+              modules = [{
+                # Prevent infinite recursion
+                specialization = mkOverride 0 { };
+
+                # If used inside the NixOS/nix-darwin module, we get conflicting definitions
+                # of `name` inside the specialization: one is the user name coming from the
+                # NixOS module definition and the other is `configuration`, the name of this
+                # option. Thus we need to explicitly wire the former into the module arguments.
+                # See discussion at https://github.com/nix-community/home-manager/issues/3716
+                _module.args.name = mkForce name;
+              }];
+            };
           in extended.type;
           default = { };
           visible = "shallow";
