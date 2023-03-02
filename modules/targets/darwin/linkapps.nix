@@ -19,11 +19,12 @@ in {
   config = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin && cfg.linkApps.enable) {
     # Install MacOS applications to the user environment.
     home.file.${cfg.linkApps.directory}.source = let
-      apps = pkgs.buildEnv {
+      apps = (pkgs.buildEnv {
         name = "home-manager-applications";
         paths = config.home.packages;
         pathsToLink = "/Applications";
-      };
+      }).overrideAttrs
+        (old: { __noChroot = config.home.buildEnvWithNoChroot; });
     in "${apps}/Applications";
   };
 }
