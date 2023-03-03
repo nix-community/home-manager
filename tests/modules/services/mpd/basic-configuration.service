@@ -3,7 +3,7 @@ WantedBy=default.target
 
 [Service]
 Environment=PATH=/home/hm-user/.nix-profile/bin
-ExecStart=@mpd@/bin/mpd --no-daemon /nix/store/00000000000000000000000000000000-mpd.conf
+ExecStart=@mpd@/bin/mpd --no-daemon /nix/store/00000000000000000000000000000000-mpd.conf '--verbose'
 ExecStartPre=/nix/store/00000000000000000000000000000000-bash/bin/bash -c "/nix/store/00000000000000000000000000000000-coreutils/bin/mkdir -p '/home/hm-user/.local/share/mpd' '/home/hm-user/.local/share/mpd/playlists'"
 Type=notify
 
