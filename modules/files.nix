@@ -272,7 +272,10 @@ in
               $DRY_RUN_CMD nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
             fi
 
-            $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$newGenPath" "$newGenGcPath"
+            $DRY_RUN_CMD nix-store --realise "$newGenPath" --add-root "$newGenGcPath" > "$DRY_RUN_NULL"
+            if [[ -e "$legacyGenGcPath" ]]; then
+              $DRY_RUN_CMD rm $VERBOSE_ARG "$legacyGenGcPath"
+            fi
           else
             _i "No change so reusing latest profile generation %s" "$oldGenNum"
           fi

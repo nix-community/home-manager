@@ -19,7 +19,7 @@ function removeByName() {
 }
 
 function setNixProfileCommands() {
-    if [[ -e ~/.nix-profile/manifest.json ]] ; then
+    if [[ -e $HOME/.nix-profile/manifest.json ]] ; then
         LIST_OUTPATH_CMD="nix profile list"
         REMOVE_CMD="removeByName"
     else
@@ -91,6 +91,23 @@ function setHomeManagerNixPath() {
             return
         fi
     done
+}
+
+# Sets some useful Home Manager related paths as global read-only variables.
+function setHomeManagerPathVariables() {
+    declare -r nixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
+    declare -r globalProfilesDir="$nixStateDir/profiles/per-user/$USER"
+    declare -r globalGcrootsDir="$nixStateDir/gcroots/per-user/$USER"
+
+    declare -gr HM_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
+    declare -gr HM_STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/home-manager"
+    declare -gr HM_GCROOT_LEGACY_PATH="$globalGcrootsDir/current-home"
+
+    if [[ -d "$globalProfilesDir" ]]; then
+        declare -gr HM_PROFILE_DIR="$globalProfilesDir"
+    else
+        declare -gr HM_PROFILE_DIR="$HM_STATE_DIR/profiles"
+    fi
 }
 
 function setFlakeAttribute() {
@@ -339,7 +356,7 @@ function doListGens() {
         color="always"
     fi
 
-    pushd "$NIX_STATE_DIR/profiles/per-user/$USER" > /dev/null
+    pushd "$HM_PROFILE_DIR" > /dev/null
     # shellcheck disable=2012
     ls --color=$color -gG --time-style=long-iso --sort time home-manager-*-link \
         | cut -d' ' -f 4- \
@@ -352,7 +369,7 @@ function doListGens() {
 function doRmGenerations() {
     setVerboseAndDryRun
 
-    pushd "$NIX_STATE_DIR/profiles/per-user/$USER" > /dev/null
+    pushd "$HM_PROFILE_DIR" > /dev/null
 
     for generationId in "$@"; do
         local linkName="home-manager-$generationId-link"
@@ -370,17 +387,10 @@ function doRmGenerations() {
     popd > /dev/null
 }
 
-function doRmAllGenerations() {
-    $DRY_RUN_CMD rm $VERBOSE_ARG \
-        "$NIX_STATE_DIR/profiles/per-user/$USER/home-manager"*
-}
-
 function doExpireGenerations() {
-    local profileDir="$NIX_STATE_DIR/profiles/per-user/$USER"
-
     local generations
     generations="$( \
-        find "$profileDir" -name 'home-manager-*-link' -not -newermt "$1" \
+        find "$HM_PROFILE_DIR" -name 'home-manager-*-link' -not -newermt "$1" \
         | sed 's/^.*-\([0-9]*\)-link$/\1/' \
     )"
 
@@ -482,6 +492,7 @@ function doUninstall() {
     read -r -n 1 -p "$(_i 'Really uninstall Home Manager?') [y/n] " confirmation
     echo
 
+    # shellcheck disable=2086
     case $confirmation in
         y|Y)
             _i "Switching to empty Home Manager configuration..."
@@ -493,30 +504,26 @@ function doUninstall() {
             doSwitch
             $DRY_RUN_CMD $REMOVE_CMD home-manager-path || true
             rm "$HOME_MANAGER_CONFIG"
-            $DRY_RUN_CMD rm $VERBOSE_ARG -r \
-                "${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
-            $DRY_RUN_CMD rm $VERBOSE_ARG \
-                "$NIX_STATE_DIR/gcroots/per-user/$USER/current-home"
+
+            if [[ -e $HM_DATA_HOME ]]; then
+                $DRY_RUN_CMD rm $VERBOSE_ARG -r "$HM_DATA_HOME"
+            fi
+
+            if [[ -e $HM_PROFILE_DIR ]]; then
+                $DRY_RUN_CMD rm $VERBOSE_ARG "$HM_PROFILE_DIR/home-manager"*
+            fi
+
+            if [[ -e $HM_GCROOT_LEGACY_PATH ]]; then
+                $DRY_RUN_CMD rm $VERBOSE_ARG "$HM_GCROOT_LEGACY_PATH"
+            fi
+
+            if [[ -e $HM_STATE_DIR ]]; then
+                $DRY_RUN_CMD rm $VERBOSE_ARG -r "$HM_STATE_DIR"
+            fi
             ;;
         *)
             _i "Yay!"
             exit 0
-            ;;
-    esac
-
-    local deleteProfiles
-    read -r -n 1 \
-         -p "$(_i 'Remove all Home Manager generations?') [y/n] " \
-         deleteProfiles
-    echo
-
-    case $deleteProfiles in
-        y|Y)
-            doRmAllGenerations
-            _i 'All generations are now eligible for garbage collection.'
-            ;;
-        *)
-            _i 'Leaving generations but they may still be garbage collected.'
             ;;
     esac
 
@@ -591,8 +598,6 @@ function doHelp() {
     echo "  uninstall    Remove Home Manager"
 }
 
-readonly NIX_STATE_DIR="${NIX_STATE_DIR:-/nix/var/nix}"
-
 EXTRA_NIX_PATH=()
 HOME_MANAGER_CONFIG_ATTRIBUTE=""
 PASSTHROUGH_OPTS=()
@@ -601,6 +606,7 @@ COMMAND_ARGS=()
 FLAKE_ARG=""
 
 setHomeManagerNixPath
+setHomeManagerPathVariables
 
 while [[ $# -gt 0 ]]; do
     opt="$1"
