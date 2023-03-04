@@ -584,7 +584,7 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-          if [[ -e "$nixProfilePath"/manifest.json ]] ; then
+          if [[ -e $HOME/.nix-profile/manifest.json ]] ; then
             nix profile list \
               | { grep 'home-manager-path$' || test $? = 1; } \
               | cut -d ' ' -f 4 \
@@ -608,7 +608,7 @@ in
             $DRY_RUN_CMD $oldNix profile install $1
           }
 
-          if [[ -e "$nixProfilePath"/manifest.json ]] ; then
+          if [[ -e $HOME/.nix-profile/manifest.json ]] ; then
             INSTALL_CMD="nix profile install"
             INSTALL_CMD_ACTUAL="nixReplaceProfile"
             LIST_CMD="nix profile list"

@@ -1,14 +1,60 @@
+# Moves the existing profile from /nix to ~ to match changed behavior in Nix
+# 2.14. See https://github.com/NixOS/nix/pull/5226.
+#
+# Note, this function is intentionally unused for now. There remains a few open
+# questions about backwards compatibility and support from
+# `nix-collect-garbage`.
+function migrateProfile() {
+    declare -r stateHome="${XDG_STATE_HOME:-$HOME/.local/state}"
+    declare -r hmStateDir="$stateHome/home-manager"
+    declare -r nixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
+
+    declare -r newProfilesDir="$hmStateDir/profiles"
+    declare -r oldProfilesDir="$nixStateDir/profiles/per-user/$USER"
+
+    if [[ ! -d $newProfilesDir ]]; then
+        _i 'Migrating profiles from %s to %s' "$oldProfilesDir" "$newProfilesDir"
+        mkdir -p "$newProfilesDir"
+        for p in "$oldProfilesDir"/home-manager-*; do
+            declare -r name="${p##*/}"
+            nix-store --realise "$p" --add-root "$newProfilesDir/$name" > /dev/null
+        done
+        cp -P "$oldProfilesDir/home-manager" "$newProfilesDir"
+    fi
+
+    rm "$oldProfilesDir"/home-manager-*
+}
+
 function setupVars() {
-    local nixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
-    local profilesPath="$nixStateDir/profiles/per-user/$USER"
-    local gcPath="$nixStateDir/gcroots/per-user/$USER"
+    declare -r nixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
+    declare -r globalProfilesDir="$nixStateDir/profiles/per-user/$USER"
+    declare -r globalGcrootsDir="$nixStateDir/gcroots/per-user/$USER"
 
-    declare -gr nixProfilePath="$profilesPath/profile"
-    declare -gr genProfilePath="$profilesPath/home-manager"
+    declare -r stateHome="${XDG_STATE_HOME:-$HOME/.local/state}"
+    declare -r hmStateDir="$stateHome/home-manager"
+    declare -r hmGcrootsDir="$hmStateDir/gcroots"
+
+    # If the global profiles path exists or we can create it, then place the HM
+    # profile there. Otherwise place it in the HM data directory. We prefer to
+    # use the global location since it makes it visible to
+    # `nix-collect-garbage`.
+    #
+    # In the future we may perform a one-shot migration to the new location.
+    #
+    # shellcheck disable=2174
+    if [[ -d "$globalProfilesDir" ]] || mkdir -m 0755 -p "$globalProfilesDir"; then
+        declare -r hmProfilesDir="$globalProfilesDir"
+    else
+        declare -r hmProfilesDir="$hmStateDir/profiles"
+        mkdir -m 0755 -p "$hmProfilesDir"
+    fi
+
+    declare -gr genProfilePath="$hmProfilesDir/home-manager"
     declare -gr newGenPath="@GENERATION_DIR@";
-    declare -gr newGenGcPath="$gcPath/current-home"
+    declare -gr newGenGcPath="$hmGcrootsDir/current-home"
+    declare -gr legacyGenGcPath="$globalGcrootsDir/current-home"
 
-    local greatestGenNum
+    declare greatestGenNum
     greatestGenNum=$( \
         nix-env --list-generations --profile "$genProfilePath" \
             | tail -1 \
@@ -21,9 +67,9 @@ function setupVars() {
         declare -gr newGenNum=1
     fi
 
-    if [[ -e $profilesPath/home-manager ]] ; then
-        oldGenPath="$(readlink -e "$profilesPath/home-manager")"
-        declare -gr oldGenPath
+    if [[ -e $genProfilePath ]] ; then
+        declare -g oldGenPath
+        oldGenPath="$(readlink -e "$genProfilePath")"
     fi
 
     $VERBOSE_RUN _i "Sanity checking oldGenNum and oldGenPath"
@@ -31,7 +77,7 @@ function setupVars() {
             || ! -v oldGenNum && -v oldGenPath ]]; then
         _i $'The previous generation number and path are in conflict! These\nmust be either both empty or both set but are now set to\n\n    \'%s\' and \'%s\'\n\nIf you don\'t mind losing previous profile generations then\nthe easiest solution is probably to run\n\n   rm %s/home-manager*\n   rm %s/current-home\n\nand trying home-manager switch again. Good luck!' \
            "${oldGenNum:-}" "${oldGenPath:-}" \
-           "$profilesPath" "$gcPath"
+           "$hmProfilesDir" "$hmGcrootsDir"
         exit 1
     fi
 }
@@ -58,9 +104,12 @@ setupVars
 if [[ -v DRY_RUN ]] ; then
     _i "This is a dry run"
     export DRY_RUN_CMD=echo
+    export DRY_RUN_NULL=/dev/stdout
 else
     $VERBOSE_RUN _i "This is a live run"
     export DRY_RUN_CMD=""
+    export DRY_RUN_NULL=/dev/null
+
 fi
 
 if [[ -v VERBOSE ]]; then
@@ -77,5 +126,6 @@ else
 fi
 $VERBOSE_ECHO "  newGenPath=$newGenPath"
 $VERBOSE_ECHO "  newGenNum=$newGenNum"
-$VERBOSE_ECHO "  newGenGcPath=$newGenGcPath"
 $VERBOSE_ECHO "  genProfilePath=$genProfilePath"
+$VERBOSE_ECHO "  newGenGcPath=$newGenGcPath"
+$VERBOSE_ECHO "  legacyGenGcPath=$legacyGenGcPath"
