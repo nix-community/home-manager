@@ -3,7 +3,11 @@
 with lib;
 
 {
-  services.mpd.enable = true;
+  services.mpd = {
+    enable = true;
+    extraArgs = [ "--verbose" ];
+  };
+
   xdg.userDirs.enable = true;
 
   home.stateVersion = "22.11";

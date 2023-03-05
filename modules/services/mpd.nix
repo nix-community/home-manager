@@ -92,6 +92,15 @@ in {
         '';
       };
 
+      extraArgs = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = [ "--verbose" ];
+        description = ''
+          Extra command-line arguments to pass to MPD.
+        '';
+      };
+
       dataDir = mkOption {
         type = types.path;
         default = "${config.xdg.dataHome}/${name}";
@@ -176,7 +185,9 @@ in {
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";
-        ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf}";
+        ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf} ${
+            escapeShellArgs cfg.extraArgs
+          }";
         Type = "notify";
         ExecStartPre = ''
           ${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
