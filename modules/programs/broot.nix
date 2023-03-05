@@ -211,9 +211,6 @@ in {
       source = pkgs.symlinkJoin {
         name = "xdg.configFile.broot";
         paths = [
-          (pkgs.writeTextDir "conf.toml" (builtins.readFile
-            (tomlFormat.generate "broot-config" cfg.settings)))
-
           # Copy all files under /resources/default-conf
           "${cfg.package.src}/resources/default-conf"
 
@@ -221,8 +218,12 @@ in {
           (pkgs.writeTextDir "launcher/installed-v1" "")
         ];
 
-        # Remove conf.hjson, whose content has been merged into programs.broot.settings
         postBuild = ''
+          ln -s ${
+            tomlFormat.generate "broot-config" cfg.settings
+          } $out/conf.toml
+
+          # Remove conf.hjson, whose content has been merged into programs.broot.settings
           rm $out/conf.hjson
         '';
       };
