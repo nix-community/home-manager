@@ -97,6 +97,19 @@ in {
         commands = mapAttrsToList
           (channel: properties: mapAttrsToList (mkCommand channel) properties)
           cfg.settings;
-      in concatMapStrings concatStrings commands);
+
+        load = pkgs.writeShellScript "load-xfconf"
+          (concatMapStrings concatStrings commands);
+      in ''
+        if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
+          export DBUS_RUN_SESSION_CMD=""
+        else
+          export DBUS_RUN_SESSION_CMD="${pkgs.dbus}/bin/dbus-run-session --dbus-daemon=${pkgs.dbus}/bin/dbus-daemon"
+        fi
+
+        $DRY_RUN_CMD $DBUS_RUN_SESSION_CMD ${load}
+
+        unset DBUS_RUN_SESSION_CMD
+      '');
   };
 }
