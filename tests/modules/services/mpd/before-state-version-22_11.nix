@@ -3,7 +3,10 @@
 with lib;
 
 {
-  services.mpd.enable = true;
+  services.mpd = {
+    enable = true;
+    extraArgs = [ "--verbose" ];
+  };
 
   home.stateVersion = "18.09";
 

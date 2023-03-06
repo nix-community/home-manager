@@ -10,15 +10,16 @@ let
   # see the example configuration from the package (i.e.,
   # `$out/share/recoll/examples/recoll.conf`).
   mkRecollConfKeyValue = generators.mkKeyValueDefault {
-    mkValueString = v:
-      if v == true then
-        "1"
-      else if v == false then
-        "0"
-      else if isList v then
-        concatStringsSep " " v
-      else
-        generators.mkValueStringDefault { } v;
+    mkValueString = let mkQuoted = v: ''"${escape [ ''"'' ] v}"'';
+    in v:
+    if v == true then
+      "1"
+    else if v == false then
+      "0"
+    else if isList v then
+      concatMapStringsSep " " mkQuoted v
+    else
+      generators.mkValueStringDefault { } v;
   } " = ";
 
   # A modified version of 'lib.generators.toINI' that also accepts top-level

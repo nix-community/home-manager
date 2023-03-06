@@ -6,6 +6,7 @@ with lib;
   services.mpd = {
     enable = true;
     musicDirectory = "/my/music/dir";
+    extraArgs = [ "--verbose" ];
   };
 
   home.stateVersion = "22.11";
