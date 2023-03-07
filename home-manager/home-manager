@@ -24,7 +24,7 @@ function setNixProfileCommands() {
         REMOVE_CMD="removeByName"
     else
         LIST_OUTPATH_CMD="nix-env -q --out-path"
-        REMOVE_CMD="nix-env -q"
+        REMOVE_CMD="nix-env --uninstall"
     fi
 }
 
