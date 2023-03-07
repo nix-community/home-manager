@@ -8,9 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2022-07-02 02:18+0000\n"
-"Last-Translator: OKA, NETSURFER AND OBSERVER, FRONTEND, DEVELOPER "
-"(DOTFILES,OSINT,OSS), KEYBASE: (3B0E8E0895DAC8B8) <tetrapasta02@gmail.com>\n"
+"PO-Revision-Date: 2023-03-07 10:38+0000\n"
+"Last-Translator: Turmoil Nailsis <indianrunner@duck.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
 "cli/ja/>\n"
 "Language: ja\n"
@@ -18,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.13.1-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: home-manager/home-manager:60
 msgid "No configuration file found at %s"
@@ -34,7 +33,7 @@ msgstr "flake設定のオプションを検査できません"
 
 #: home-manager/home-manager:162
 msgid "Can't instantiate a flake configuration"
-msgstr "flake設定をインスタンス化できません"
+msgstr "flake設定を初期化できません"
 
 #: home-manager/home-manager:237
 msgid ""
@@ -49,7 +48,7 @@ msgstr[0] ""
 
 #: home-manager/home-manager:251
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr "知らない\"news.display\"設定\"%s\"."
+msgstr "\"news.display\"に\"%s\"という設定は存在しません。"
 
 #: home-manager/home-manager:258
 #, sh-format
@@ -74,11 +73,11 @@ msgstr "世代 %s を削除中です"
 
 #: home-manager/home-manager:385
 msgid "No generations to expire"
-msgstr "期限切れで削除する世代はありません"
+msgstr "期限切れで削除される世代はありません"
 
 #: home-manager/home-manager:396
 msgid "No home-manager packages seem to be installed."
-msgstr "home-managerパッケージはインストールされていないようです。"
+msgstr "home-managerパッケージがインストールされていないようです。"
 
 #: home-manager/home-manager:453
 msgid "Unknown argument %s"
@@ -86,7 +85,7 @@ msgstr "不明な引数 %s"
 
 #: home-manager/home-manager:469
 msgid "This will remove Home Manager from your system."
-msgstr "これはシステムからHome Managerを削除します。"
+msgstr "この操作によってHome Managerはシステムから削除されます。"
 
 #: home-manager/home-manager:472
 msgid "This is a dry run, nothing will actually be uninstalled."
@@ -98,7 +97,7 @@ msgstr "本当にHome Managerをアンインストールしますか？"
 
 #: home-manager/home-manager:481
 msgid "Switching to empty Home Manager configuration..."
-msgstr "空のHome Managerの設定に切り替え中です..."
+msgstr "空のHome Managerの設定に切り替えています..."
 
 #: home-manager/home-manager:493
 msgid "Yay!"
@@ -114,8 +113,7 @@ msgstr "全ての世代がガベージコレクションの対象になりまし
 
 #: home-manager/home-manager:510
 msgid "Leaving generations but they may still be garbage collected."
-msgstr ""
-"世代を残していますが、それらはガベージコレクションで回収されるかもしれませ"
+msgstr "世代を残すようにしますが、やはりガベージコレクションで回収されるかもしれませ"
 "ん。"
 
 #: home-manager/home-manager:514
@@ -130,11 +128,11 @@ msgstr "%s: 不明なオプション '%s'"
 
 #: home-manager/home-manager:674
 msgid "Run '%s --help' for usage help"
-msgstr "利用方法のヘルプは'%s --help' を実行してください"
+msgstr "'%s --help' でヘルプを参照することができます"
 
 #: home-manager/home-manager:708
 msgid "expire-generations expects one argument, got %d."
-msgstr "expire-generations は一つの引数を期待しますが、%d が与えられました。"
+msgstr "expire-generations は一つしか引数を取らないところ、%d 個が与えられました。"
 
 #: home-manager/home-manager:730
 msgid "Unknown command: %s"
@@ -142,11 +140,11 @@ msgstr "不明なコマンド: %s"
 
 #: home-manager/install.nix:22
 msgid "Creating initial Home Manager configuration..."
-msgstr "Home Managerの初期設定を生成しています..."
+msgstr "Home Managerの設定を初期化しています..."
 
 #: home-manager/install.nix:66
 msgid "Creating initial Home Manager generation..."
-msgstr "Home Managerの最初の世代を生成しています..."
+msgstr "Home Managerの世代を初期化しています..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/install.nix:71
@@ -158,12 +156,12 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
-"全て実行しました！ 現在Home-managerツールはインストールされているはずで、\n"
+"全てが完了しました！ Home-managerはインストール済みで、\n"
 "\n"
 "    %s\n"
 "\n"
-"でHome Managerの設定を編集することができます。利用可能なオプションを見るに"
-"は\n"
+"でHome Managerの設定を編集することができるはずです。"
+"利用可能なオプションを参照するには\n"
 "'man home-configuration.nix' を実行してください。"
 
 #. translators: The "%s" specifier will be replaced by a URL.
@@ -175,8 +173,8 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
-"うあ、インストールに失敗しました！もしこのエラーがHome Managerの欠陥のせいで"
-"生じたようなら、\n"
+"おっと、インストールに失敗しました！このエラーがHome "
+"Managerの欠陥によって生じたと考えられる場合は、\n"
 "\n"
 "    %s\n"
 "\n"
@@ -184,4 +182,4 @@ msgstr ""
 
 #: home-manager/install.nix:83
 msgid "This derivation is not buildable, please run it using nix-shell."
-msgstr "この派生はビルドできませんので、nix-shellを使って実行してください。"
+msgstr "この派生はビルドできません。nix-shellを使って実行してください。"
