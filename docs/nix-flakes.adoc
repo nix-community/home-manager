@@ -126,10 +126,7 @@ $ nix flake new ~/.config/nixpkgs -t github:nix-community/home-manager
 2. Install Home Manager and apply the configuration by
 +
 [source,console]
-----
-$ nix build --no-link <flake-uri>#homeConfigurations.jdoe.activationPackage
-$ "$(nix path-info <flake-uri>#homeConfigurations.jdoe.activationPackage)"/activate
-----
+$ nix run <flake-uri>#homeConfigurations.jdoe.activationPackage
 +
 Substitute `<flake-uri>` with the flake URI of the configuration flake.
 If `flake.nix` resides in `~/.config/nixpkgs`,
