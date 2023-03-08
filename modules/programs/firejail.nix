@@ -12,11 +12,12 @@ let
     }
     ''
       mkdir -p $out/bin
+      mkdir -p $out/share/applications
       ${concatStringsSep "\n" (mapAttrsToList (command: value:
       let
         opts = if isAttrs value
         then value
-        else { executable = value; profile = null; extraArgs = []; };
+        else { executable = value; desktop = null; profile = null; extraArgs = []; };
         args = escapeShellArgs (
           opts.extraArgs
           ++ (optional (opts.profile != null) "--profile=${toString opts.profile}")
@@ -28,6 +29,11 @@ let
         exec ${cfg.firejailBinary} ${args} ${toString opts.executable} "\$@"
         _EOF
         chmod 0755 $out/bin/${command}
+
+        ${optionalString (opts.desktop != null) ''
+          substitute ${opts.desktop} $out/share/applications/$(basename ${opts.desktop}) \
+            --replace ${opts.executable} $out/bin/${command}
+        ''}
       '') cfg.wrappedBinaries)}
     '';
 
@@ -55,6 +61,12 @@ in
             description = mdDoc "Profile to use";
             example = literalExpression ''"''${pkgs.firejail}/etc/firejail/firefox.profile"'';
           };
+          desktop = mkOption {
+            type = types.nullOr types.path;
+            default = null;
+            description = mdDoc "Desktop file of the application to replace the executable in";
+            example = literalExpression ''"''${pkgs.firefox}/share/applications/firefox.profile"'';
+          };
           extraArgs = mkOption {
             type = types.listOf types.str;
             default = [ ];
@@ -69,11 +81,10 @@ in
           firefox = {
             executable = "''${getBin pkgs.firefox}/bin/firefox";
             profile = "''${pkgs.firejail}/etc/firejail/firefox.profile";
+            desktop = "''${pkgs.firefox}/share/applications/firefox.desktop";
+            extraArgs = [ "--private" ];
           };
-          mpv = {
-            executable = "''${getBin pkgs.mpv}/bin/mpv";
-            profile = "''${pkgs.firejail}/etc/firejail/mpv.profile";
-          };
+          mpv = "''${getBin pkgs.mpv}/bin/mpv";
         }
       '';
       description = mdDoc ''
