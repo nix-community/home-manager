@@ -330,8 +330,7 @@ The Home Manager library is exported by the flake under
 You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">~/.config/nixpkgs</code> by
 </li></ul></div><pre class="programlisting console">$ nix flake new ~/.config/nixpkgs -t github:nix-community/home-manager</pre></div></li><li class="listitem"><p class="simpara">
 Install Home Manager and apply the configuration by
-</p><pre class="programlisting console">$ nix build --no-link &lt;flake-uri&gt;#homeConfigurations.jdoe.activationPackage
-$ "$(nix path-info &lt;flake-uri&gt;#homeConfigurations.jdoe.activationPackage)"/activate</pre><p class="simpara">Substitute <code class="literal">&lt;flake-uri&gt;</code> with the flake URI of the configuration flake.
+</p><pre class="programlisting console">$ nix run &lt;flake-uri&gt;#homeConfigurations.jdoe.activationPackage</pre><p class="simpara">Substitute <code class="literal">&lt;flake-uri&gt;</code> with the flake URI of the configuration flake.
 If <code class="literal">flake.nix</code> resides in <code class="literal">~/.config/nixpkgs</code>,
 <code class="literal">&lt;flake-uri&gt;</code> may be <code class="literal">~/.config/nixpkgs</code>
 as a Git tree or <code class="literal">path:~/.config/nixpkgs</code> if not.</p></li><li class="listitem"><p class="simpara">
