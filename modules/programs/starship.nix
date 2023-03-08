@@ -58,36 +58,24 @@ in {
       '';
     };
 
-    enableBashIntegration = mkOption {
+    enableBashIntegration = mkEnableOption "Bash integration" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
     };
 
-    enableZshIntegration = mkOption {
+    enableZshIntegration = mkEnableOption "Zsh integration" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
     };
 
-    enableFishIntegration = mkOption {
+    enableFishIntegration = mkEnableOption "Fish integration" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
     };
 
-    enableIonIntegration = mkOption {
+    enableIonIntegration = mkEnableOption "Ion integration" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Ion integration.
-      '';
+    };
+
+    enableNushellIntegration = mkEnableOption "Nushell integration" // {
+      default = true;
     };
   };
 
@@ -121,5 +109,22 @@ in {
         eval $(${starshipCmd} init ion)
       end
     '';
+
+    programs.nushell = mkIf cfg.enableNushellIntegration {
+      # Unfortunately nushell doesn't allow conditionally sourcing nor
+      # conditionally setting (global) environment variables, which is why the
+      # check for terminal compatibility (as seen above for the other shells) is
+      # not done here.
+      extraEnv = ''
+        let starship_cache = "${config.xdg.cacheHome}/starship"
+        if not ($starship_cache | path exists) {
+          mkdir $starship_cache
+        }
+        ${starshipCmd} init nu | save --force ${config.xdg.cacheHome}/starship/init.nu
+      '';
+      extraConfig = ''
+        source ${config.xdg.cacheHome}/starship/init.nu
+      '';
+    };
   };
 }
