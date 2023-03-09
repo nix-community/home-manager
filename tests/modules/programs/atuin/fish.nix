@@ -19,6 +19,6 @@
     assertFileExists home-files/.config/fish/config.fish
     assertFileContains \
       home-files/.config/fish/config.fish \
-      'atuin init fish | source'
+      '@atuin@/bin/atuin init fish | source'
   '';
 }

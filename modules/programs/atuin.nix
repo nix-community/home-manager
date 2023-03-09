@@ -50,6 +50,15 @@ in {
       '';
     };
 
+    flags = mkOption {
+      default = [ ];
+      type = types.listOf types.str;
+      example = [ "--disable-up-arrow" "--disable-ctrl-r" ];
+      description = ''
+        Flags to append to the shell hook.
+      '';
+    };
+
     settings = mkOption {
       type = with types;
         let
@@ -78,7 +87,8 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = let flagsStr = escapeShellArgs cfg.flags;
+  in mkIf cfg.enable {
 
     # Always add the configured `atuin` package.
     home.packages = [ cfg.package ];
@@ -91,18 +101,18 @@ in {
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
         source "${pkgs.bash-preexec}/share/bash/bash-preexec.sh"
-        eval "$(${cfg.package}/bin/atuin init bash)"
+        eval "$(${cfg.package}/bin/atuin init bash ${flagsStr})"
       fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       if [[ $options[zle] = on ]]; then
-        eval "$(${cfg.package}/bin/atuin init zsh)"
+        eval "$(${cfg.package}/bin/atuin init zsh ${flagsStr})"
       fi
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      ${cfg.package}/bin/atuin init fish | source
+      ${cfg.package}/bin/atuin init fish ${flagsStr} | source
     '';
   };
 }
