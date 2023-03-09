@@ -145,6 +145,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/programs/beets  # One test relies on services.mpd
     ./modules/programs/borgmatic
     ./modules/programs/firefox
     ./modules/programs/foot

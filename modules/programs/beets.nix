@@ -9,7 +9,7 @@ let
   yamlFormat = pkgs.formats.yaml { };
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with maintainers; [ rycee Scrumplex ];
 
   options = {
     programs.beets = {
@@ -48,13 +48,56 @@ in {
           <filename>$XDG_CONFIG_HOME/beets/config.yaml</filename>
         '';
       };
+
+      mpdIntegration = {
+        enableStats = mkEnableOption "mpdstats plugin and service";
+        enableUpdate = mkEnableOption "mpdupdate plugin";
+        host = mkOption {
+          type = types.str;
+          default = "localhost";
+          description = "Host mpdstats will connect to";
+          example = "10.0.0.42";
+        };
+        port = mkOption {
+          type = types.port;
+          default = config.services.mpd.network.port;
+          defaultText = literalExpression "config.services.mpd.network.port";
+          description = "Port mpdstats will connect to";
+          example = 6601;
+        };
+      };
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+  config = mkMerge [
+    (mkIf cfg.enable {
+      home.packages = [ cfg.package ];
 
-    xdg.configFile."beets/config.yaml".source =
-      yamlFormat.generate "beets-config" cfg.settings;
-  };
+      xdg.configFile."beets/config.yaml".source =
+        yamlFormat.generate "beets-config" cfg.settings;
+    })
+    (mkIf (cfg.mpdIntegration.enableStats || cfg.mpdIntegration.enableUpdate) {
+      programs.beets.settings.mpd = {
+        host = cfg.mpdIntegration.host;
+        port = cfg.mpdIntegration.port;
+      };
+    })
+    (mkIf cfg.mpdIntegration.enableStats {
+      programs.beets.settings.plugins = [ "mpdstats" ];
+    })
+    (mkIf cfg.mpdIntegration.enableUpdate {
+      programs.beets.settings.plugins = [ "mpdupdate" ];
+    })
+    (mkIf (cfg.enable && cfg.mpdIntegration.enableStats) {
+      systemd.user.services."beets-mpdstats" = {
+        Unit = {
+          Description = "Beets MPDStats daemon";
+          After = optional config.services.mpd.enable "mpd.service";
+          Requires = optional config.services.mpd.enable "mpd.service";
+        };
+        Service.ExecStart = "${cfg.package}/bin/beet mpdstats";
+        Install.WantedBy = [ "default.target" ];
+      };
+    })
+  ];
 }
