@@ -142,6 +142,8 @@ let
     options = {
       enable = mkEnableOption "oh-my-zsh";
 
+      package = mkPackageOption pkgs "oh-my-zsh" { };
+
       plugins = mkOption {
         default = [];
         example = [ "git" "sudo" ];
@@ -447,7 +449,7 @@ in
 
     (mkIf cfg.oh-my-zsh.enable {
       home.file."${relToDotDir ".zshenv"}".text = ''
-        ZSH="${pkgs.oh-my-zsh}/share/oh-my-zsh";
+        ZSH="${cfg.oh-my-zsh.package}/share/oh-my-zsh";
         ZSH_CACHE_DIR="${config.xdg.cacheHome}/oh-my-zsh";
       '';
     })
@@ -482,7 +484,7 @@ in
     {
       home.packages = with pkgs; [ zsh ]
         ++ optional cfg.enableCompletion nix-zsh-completions
-        ++ optional cfg.oh-my-zsh.enable oh-my-zsh;
+        ++ optional cfg.oh-my-zsh.enable cfg.oh-my-zsh.package;
 
       home.file."${relToDotDir ".zshrc"}".text = concatStringsSep "\n" ([
         cfg.initExtraFirst
