@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2022-03-26 15:08+0100\n"
+"POT-Creation-Date: 2023-03-07 23:36+0100\n"
 "PO-Revision-Date: 2022-03-26 23:56+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/"
@@ -19,23 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.12-dev\n"
 
-#: modules/files.nix:233
+#: modules/files.nix:234
 msgid "Creating home file links in %s"
 msgstr "Skapar hemfil-länkar i %s"
 
-#: modules/files.nix:246
+#: modules/files.nix:247
 msgid "Cleaning up orphan links from %s"
 msgstr "Rensar bort överflödiga länkar från %s"
 
-#: modules/files.nix:262
+#: modules/files.nix:263
 msgid "Creating profile generation %s"
 msgstr "Skapar profil för generation %s"
 
-#: modules/files.nix:276
+#: modules/files.nix:280
 msgid "No change so reusing latest profile generation %s"
 msgstr "Ingen förändring, återanvänder därför profil-generation %s"
 
-#: modules/home-environment.nix:607
+#: modules/home-environment.nix:625
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,15 +63,19 @@ msgstr ""
 "\n"
 "Prova sedan att aktivera din Home Manager-konfiguration igen."
 
-#: modules/home-environment.nix:639
+#: modules/home-environment.nix:658
 msgid "Activating %s"
 msgstr "Aktiverar %s"
 
-#: modules/lib-bash/activation-init.sh:31
+#: modules/lib-bash/activation-init.sh:18
+msgid "Migrating profiles from %s to %s"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:77
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "Kontrollerar värdena på oldGenNum och oldGenPath"
 
-#: modules/lib-bash/activation-init.sh:34
+#: modules/lib-bash/activation-init.sh:80
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -99,27 +103,27 @@ msgstr ""
 "\n"
 "och prova 'home-manager switch' igen. Lycka till!"
 
-#: modules/lib-bash/activation-init.sh:51
+#: modules/lib-bash/activation-init.sh:97
 msgid "Starting Home Manager activation"
 msgstr "Startar Home Manager-aktivering"
 
-#: modules/lib-bash/activation-init.sh:55
+#: modules/lib-bash/activation-init.sh:101
 msgid "Sanity checking Nix"
 msgstr "Kontrollerar att Nix funkar"
 
-#: modules/lib-bash/activation-init.sh:61
+#: modules/lib-bash/activation-init.sh:107
 msgid "This is a dry run"
 msgstr "Detta är en simulerad körning"
 
-#: modules/lib-bash/activation-init.sh:64
+#: modules/lib-bash/activation-init.sh:111
 msgid "This is a live run"
 msgstr "Detta är en verklig körning"
 
-#: modules/lib-bash/activation-init.sh:69
+#: modules/lib-bash/activation-init.sh:118
 msgid "Using Nix version: %s"
 msgstr "Använder Nix-version: %s"
 
-#: modules/lib-bash/activation-init.sh:72
+#: modules/lib-bash/activation-init.sh:121
 msgid "Activation variables:"
 msgstr "Aktiveringsvariabler:"
 

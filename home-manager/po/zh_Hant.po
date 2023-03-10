@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2022-03-26 15:08+0100\n"
+"POT-Creation-Date: 2023-03-07 23:36+0100\n"
 "PO-Revision-Date: 2021-12-29 08:48+0000\n"
 "Last-Translator: WhiredPlanck <fungdaat31@outlook.com>\n"
 "Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
@@ -27,15 +27,15 @@ msgstr "未在 %s 處找到配置檔案"
 msgid "No configuration file found. Please create one at %s"
 msgstr "未找到配置檔案。請在 %s 處建立一份"
 
-#: home-manager/home-manager:122
+#: home-manager/home-manager:146
 msgid "Can't inspect options of a flake configuration"
 msgstr "無法檢查 flake 配置中的選項"
 
-#: home-manager/home-manager:162
+#: home-manager/home-manager:185
 msgid "Can't instantiate a flake configuration"
 msgstr "無法建立 flake 配置例項"
 
-#: home-manager/home-manager:237
+#: home-manager/home-manager:258
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -46,92 +46,80 @@ msgstr[0] ""
 "有 %d 條未讀的相關新聞或訊息。\n"
 "可執行 “%s news” 命令進行閱讀。"
 
-#: home-manager/home-manager:251
+#: home-manager/home-manager:272
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "未知的 “news.display” 設定項 “%s”。"
 
-#: home-manager/home-manager:258
+#: home-manager/home-manager:279
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "請設定 $EDITOR 環境變數"
 
-#: home-manager/home-manager:273
+#: home-manager/home-manager:294
 msgid "Cannot run build in read-only directory"
 msgstr "無法在只讀目錄中執行構建"
 
-#: home-manager/home-manager:355
+#: home-manager/home-manager:378
 msgid "No generation with ID %s"
 msgstr "沒有 ID 為 %s 的世代"
 
-#: home-manager/home-manager:357
+#: home-manager/home-manager:380
 msgid "Cannot remove the current generation %s"
 msgstr "無法移除當前世代 %s"
 
-#: home-manager/home-manager:359
+#: home-manager/home-manager:382
 msgid "Removing generation %s"
 msgstr "正在移除世代 %s"
 
-#: home-manager/home-manager:385
+#: home-manager/home-manager:401
 msgid "No generations to expire"
 msgstr "沒有即將過期的世代"
 
-#: home-manager/home-manager:396
+#: home-manager/home-manager:412
 msgid "No home-manager packages seem to be installed."
 msgstr "似乎沒有安裝 home-manager 軟體包。"
 
-#: home-manager/home-manager:453
+#: home-manager/home-manager:469
 msgid "Unknown argument %s"
 msgstr "未知引數 %s"
 
-#: home-manager/home-manager:469
+#: home-manager/home-manager:485
 msgid "This will remove Home Manager from your system."
 msgstr "這將會從系統中移除 Home Manager。"
 
-#: home-manager/home-manager:472
+#: home-manager/home-manager:488
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "這是試執行結果，沒有實際解除安裝任何軟體包。"
 
-#: home-manager/home-manager:476
+#: home-manager/home-manager:492
 msgid "Really uninstall Home Manager?"
 msgstr "確定要解除安裝 Home Manager 嗎？"
 
-#: home-manager/home-manager:481
+#: home-manager/home-manager:498
 msgid "Switching to empty Home Manager configuration..."
 msgstr "正在切換至空的 Home Manager 配置 ..."
 
-#: home-manager/home-manager:493
+#: home-manager/home-manager:525
 msgid "Yay!"
 msgstr "好耶！"
 
-#: home-manager/home-manager:500
-msgid "Remove all Home Manager generations?"
-msgstr "要移除所有 Home Manager 配置世代嗎？"
-
-#: home-manager/home-manager:507
-msgid "All generations are now eligible for garbage collection."
-msgstr "所有世代現在均符合垃圾回收的條件。"
-
-#: home-manager/home-manager:510
-msgid "Leaving generations but they may still be garbage collected."
-msgstr "保留世代，但它們仍然可能被垃圾回收。"
-
-#: home-manager/home-manager:514
+#: home-manager/home-manager:530
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager 已解除安裝，但未改動您的 home.nix 配置檔案。"
 
-#: home-manager/home-manager:673
+#: home-manager/home-manager:695
 msgid "%s: unknown option '%s'"
 msgstr "%s：未知選項 ‘%s’"
 
-#: home-manager/home-manager:674
+#: home-manager/home-manager:696
 msgid "Run '%s --help' for usage help"
 msgstr "執行 ‘%s --help’ 獲取用法幫助"
 
-#: home-manager/home-manager:708
+#: home-manager/home-manager:730
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations 須要一個引數，但獲取到了 %d 個。"
 
-#: home-manager/home-manager:730
+#: home-manager/home-manager:752
 msgid "Unknown command: %s"
 msgstr "未知命令：%s"
 
@@ -178,3 +166,12 @@ msgstr ""
 #: home-manager/install.nix:83
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr "此配置檔案/變體不可構建，請在 nix-shell 中執行它。"
+
+#~ msgid "Remove all Home Manager generations?"
+#~ msgstr "要移除所有 Home Manager 配置世代嗎？"
+
+#~ msgid "All generations are now eligible for garbage collection."
+#~ msgstr "所有世代現在均符合垃圾回收的條件。"
+
+#~ msgid "Leaving generations but they may still be garbage collected."
+#~ msgstr "保留世代，但它們仍然可能被垃圾回收。"
