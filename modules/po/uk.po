@@ -8,29 +8,33 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-03-07 23:36+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-03-09 17:38+0000\n"
+"Last-Translator: Dan <denqwerta@gmail.com>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/home-manager/"
+"modules/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
-msgstr ""
+msgstr "Створення посилань на домашні файли в %s"
 
 #: modules/files.nix:247
 msgid "Cleaning up orphan links from %s"
-msgstr ""
+msgstr "Очищення невідомих посилань із %s"
 
 #: modules/files.nix:263
 msgid "Creating profile generation %s"
-msgstr ""
+msgstr "Створення генерації профілю %s"
 
 #: modules/files.nix:280
 msgid "No change so reusing latest profile generation %s"
-msgstr ""
+msgstr "Без змін, тому повторне використання останньої генерації профілю %s"
 
 #: modules/home-environment.nix:625
 msgid ""
@@ -47,18 +51,30 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"На жаль, Nix не вдалося встановити ваш новий профіль Home Manager!\n"
+"\n"
+"Можливо, виник конфлікт із пакунком, встановленим за допомогою\n"
+"\"%s\"? Спробуйте запустити\n"
+"\n"
+"    %s\n"
+"\n"
+"і якщо є конфліктуючий пакунок, ви можете його видалити\n"
+"\n"
+"    %s\n"
+"\n"
+"Потім спробуйте знову активувати конфігурацію Home Manager."
 
 #: modules/home-environment.nix:658
 msgid "Activating %s"
-msgstr ""
+msgstr "Активація %s"
 
 #: modules/lib-bash/activation-init.sh:18
 msgid "Migrating profiles from %s to %s"
-msgstr ""
+msgstr "Перенесення профілів з %s на %s"
 
 #: modules/lib-bash/activation-init.sh:77
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr ""
+msgstr "Перевірка цілісності oldGenNum та oldGenPath"
 
 #: modules/lib-bash/activation-init.sh:80
 msgid ""
@@ -75,27 +91,40 @@ msgid ""
 "\n"
 "and trying home-manager switch again. Good luck!"
 msgstr ""
+"Номер і шлях попередньої генерації конфліктують! Ці\n"
+"мають бути або порожніми, або обидва встановлені, але тепер встановлено "
+"значення\n"
+"\n"
+"    \"%s\" і \"%s\"\n"
+"\n"
+"Якщо ви не проти втратити попередні генерації профілів, тоді\n"
+"найпростішим рішенням є, мабуть, запуск\n"
+"\n"
+"   rm %shome-manager*\n"
+"   rm %current-home\n"
+"\n"
+"і знову намагатися переключитися на home-manager switch. Удачі!"
 
 #: modules/lib-bash/activation-init.sh:97
 msgid "Starting Home Manager activation"
-msgstr ""
+msgstr "Початок активації Home Manager"
 
 #: modules/lib-bash/activation-init.sh:101
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Перевірка адекватності Nix"
 
 #: modules/lib-bash/activation-init.sh:107
 msgid "This is a dry run"
-msgstr ""
+msgstr "Це пробний запуск"
 
 #: modules/lib-bash/activation-init.sh:111
 msgid "This is a live run"
-msgstr ""
+msgstr "Це справжній запуск"
 
 #: modules/lib-bash/activation-init.sh:118
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Використання версії Nix: %s"
 
 #: modules/lib-bash/activation-init.sh:121
 msgid "Activation variables:"
-msgstr ""
+msgstr "Активація змінних:"
