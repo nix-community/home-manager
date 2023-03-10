@@ -208,6 +208,8 @@ Makefile                                              @thiagokokada
 /modules/programs/mpv.nix                             @tadeokondrak @thiagokokada @chuangzhu
 /tests/modules/programs/mpv                           @thiagokokada @chuangzhu
 
+/modules/programs/mr.nix                              @nilp0inter
+
 /modules/programs/mu.nix                              @KarlJoad
 
 /modules/programs/mujmap.nix                          @elizagamedev

@@ -159,6 +159,12 @@
     github = "mifom";
     githubId = 23462908;
   };
+  nilp0inter = {
+    name = "Roberto Abdelkader Martínez Pérez";
+    email = "robertomartinezp@gmail.com";
+    github = "nilp0inter";
+    githubId = 1224006;
+  };
   seylerius = {
     email = "sable@seyleri.us";
     name = "Sable Seyler";
