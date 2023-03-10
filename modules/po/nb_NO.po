@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2022-03-26 23:57+0000\n"
-"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
+"PO-Revision-Date: 2023-03-08 07:22+0000\n"
+"Last-Translator: \"Kim A. Ødegaard\" <kim@dyktig.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "home-manager/modules/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -17,24 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: modules/files.nix:233
 msgid "Creating home file links in %s"
-msgstr "Lager hjemmefillenker i %s …"
+msgstr "Lager hjemmefillenker i %s"
 
 #: modules/files.nix:246
 msgid "Cleaning up orphan links from %s"
-msgstr "Tømmer overflødige lenker fra %s …"
+msgstr "Fjerner frakoblede lenker fra %s"
 
 #: modules/files.nix:262
-#, fuzzy
 msgid "Creating profile generation %s"
-msgstr "Oppretter profil for generering %s …"
+msgstr "Oppretter profil for generering %s"
 
 #: modules/files.nix:276
 msgid "No change so reusing latest profile generation %s"
-msgstr "Ingen endring. Gjenbruker siste profilgenerering %s …"
+msgstr "Ingen endring, gjenbruker derfor siste profilgenerering %s"
 
 #: modules/home-environment.nix:607
 msgid ""
@@ -66,14 +65,13 @@ msgstr ""
 
 #: modules/home-environment.nix:639
 msgid "Activating %s"
-msgstr "Aktiverer %s …"
+msgstr "Aktiverer %s"
 
 #: modules/lib-bash/activation-init.sh:31
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "Kontrollerer verdiene av oldGenNum og oldGenPath"
 
 #: modules/lib-bash/activation-init.sh:34
-#, fuzzy
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -88,22 +86,22 @@ msgid ""
 "\n"
 "and trying home-manager switch again. Good luck!"
 msgstr ""
-"Forrige generasjonstall og sti er i konflikt. Disse\n"
-"må enten begge være tomme, eller så må begge settes, men er nå\n"
+"Det er en konflikt mellom forrige generasjonstall og stien. Begge\n"
+"må enten være tomme eller satt, men er nå satt til\n"
 "\n"
 "    «%s« og «%s«\n"
 "\n"
 "Hvis du ikke bryr deg om å miste tidligere profilgenereringer\n"
-"er det enkleste å kjøre\n"
+"er den enkleste løsningen antageligvis å kjøre\n"
 "\n"
 "   rm %s/home-manager*\n"
 "   rm %s/current-home\n"
 "\n"
-"for så å prøve «home-manager»-bryteren igjen. Lykke til!"
+"for så å forsøke `home-manager switch` igjen. Lykke til!"
 
 #: modules/lib-bash/activation-init.sh:51
 msgid "Starting Home Manager activation"
-msgstr "Starter aktivering av hjemmebehandler …"
+msgstr "Starter aktivering av Home Manager"
 
 #: modules/lib-bash/activation-init.sh:55
 msgid "Sanity checking Nix"

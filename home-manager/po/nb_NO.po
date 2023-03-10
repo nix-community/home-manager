@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2022-03-26 15:08+0100\n"
-"PO-Revision-Date: 2023-01-08 11:50+0000\n"
-"Last-Translator: Petter K <petterkarlsrud@me.com>\n"
+"PO-Revision-Date: 2023-03-08 07:22+0000\n"
+"Last-Translator: \"Kim A. Ødegaard\" <kim@dyktig.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "home-manager/cli/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: home-manager/home-manager:60
 msgid "No configuration file found at %s"
@@ -25,7 +25,7 @@ msgstr "Fant ingen oppsettsfil i %s"
 
 #: home-manager/home-manager:79
 msgid "No configuration file found. Please create one at %s"
-msgstr "Fant ikke noenoppsettsfil. Opprett en i %s"
+msgstr "Fant ikke noen oppsettsfil. Opprett en i %s"
 
 #: home-manager/home-manager:122
 msgid "Can't inspect options of a flake configuration"
@@ -43,11 +43,11 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
-"Det er %d ulest og relevant nyhetselement.\n"
-"Les det ved å kjøre kommandoen «%s news»."
+"Det er %d ulest og relevant nyhetssak.\n"
+"Les den ved å kjøre kommandoen «%s news»."
 msgstr[1] ""
-"Det er %d uleste og relevant nyhetselementer.\n"
-"Les det ved å kjøre kommandoen «%s news»."
+"Det er %d uleste og relevante nyhetssaker.\n"
+"Les dem ved å kjøre kommandoen «%s news»."
 
 #: home-manager/home-manager:251
 msgid "Unknown \"news.display\" setting \"%s\"."
@@ -84,7 +84,7 @@ msgstr "Ingen «home-manager»-pakker ser ut til å være installert."
 
 #: home-manager/home-manager:453
 msgid "Unknown argument %s"
-msgstr "Ukjent argument %s"
+msgstr "Ukjent parameter %s"
 
 #: home-manager/home-manager:469
 msgid "This will remove Home Manager from your system."
@@ -104,7 +104,7 @@ msgstr "Bytter til tomt Home Manager-oppsett …"
 
 #: home-manager/home-manager:493
 msgid "Yay!"
-msgstr "Hurra."
+msgstr "Hurra!"
 
 #: home-manager/home-manager:500
 msgid "Remove all Home Manager generations?"
@@ -112,11 +112,12 @@ msgstr "Fjern alle Home Manager-genereringer?"
 
 #: home-manager/home-manager:507
 msgid "All generations are now eligible for garbage collection."
-msgstr "Alle genereringer kan nå hentes av søppelinnsamling."
+msgstr "Alle genereringer er nå satt ut til søppelhenting."
 
 #: home-manager/home-manager:510
 msgid "Leaving generations but they may still be garbage collected."
-msgstr "Levner genereringer, men de kan fremdeles hentes av søppelinnsamling."
+msgstr ""
+"Levner genereringer, men de kan fremdeles ryddes opp av søppelinnsamleren."
 
 #: home-manager/home-manager:514
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
@@ -139,7 +140,6 @@ msgid "Unknown command: %s"
 msgstr "Ukjent kommando: %s"
 
 #: home-manager/install.nix:22
-#, fuzzy
 msgid "Creating initial Home Manager configuration..."
 msgstr "Oppretter ny Home Manager-konfigurasjon..."
 
@@ -157,6 +157,12 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
+"Ferdig! `home-manager`-verktøyet skal nå være installert og du kan redigere\n"
+"\n"
+"    %s\n"
+"\n"
+"for å konfigurere Home Manager. Kjør 'man home-configuration.nix' for å\n"
+"se alle tilgjengelige innstillinger."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/install.nix:76
@@ -167,7 +173,12 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
+"Oops, installasjonen feilet! Vennligst opprett en sak på\n"
+"\n"
+"    %s\n"
+"\n"
+"hvis du tror feilen er forårsaket av Home Manager."
 
 #: home-manager/install.nix:83
 msgid "This derivation is not buildable, please run it using nix-shell."
-msgstr ""
+msgstr "Denne avledningen kan ikke bygges, vennligst kjør den i nix-shell."
