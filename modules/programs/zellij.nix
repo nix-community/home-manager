@@ -57,7 +57,7 @@ in {
       };
 
     home.file."${configDir}/config.kdl" = mkIf
-      (cfg.settings != { } && (versionAtleast cfg.package.version "0.32.0")) {
+      (cfg.settings != { } && (versionAtLeast cfg.package.version "0.32.0")) {
         text = lib.hm.generators.toKDL { } cfg.settings;
       };
   };
