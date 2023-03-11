@@ -931,6 +931,14 @@ in
           A new module is available: 'services.avizo'.
         '';
       }
+
+      {
+        time = "2023-02-23T07:24:28+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          A new module is available: 'programs.zsh.zimfw'.
+        '';
+      }
     ];
   };
 }

@@ -367,4 +367,10 @@
     githubId = 68489118;
     name = "tomodachi94";
   };
+  joedevivo = {
+    name = "Joe DeVivo";
+    email = "55951+joedevivo@users.noreply.github.com";
+    github = "joedevivo";
+    githubId = 55951;
+  };
 }
