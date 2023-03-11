@@ -18,11 +18,10 @@ in {
         default = null;
         example = "$HOME/devel/home-manager";
         description = ''
-          The default path to use for Home Manager. If this path does
-          not exist then
-          <filename>$HOME/.config/nixpkgs/home-manager</filename> and
-          <filename>$HOME/.nixpkgs/home-manager</filename> will be
-          attempted.
+          The default path to use for Home Manager. When
+          <literal>null</literal>, then the <filename>home-manager</filename>
+          channel, <filename>$HOME/.config/nixpkgs/home-manager</filename>, and
+          <filename>$HOME/.nixpkgs/home-manager</filename> will be attempted.
         '';
       };
     };
