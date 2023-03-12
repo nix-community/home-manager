@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2022-03-26 15:08+0100\n"
+"POT-Creation-Date: 2023-03-07 23:36+0100\n"
 "PO-Revision-Date: 2021-12-17 20:50+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/cli/"
@@ -27,15 +27,15 @@ msgstr "Det finns ingen konfigurationsfil i %s"
 msgid "No configuration file found. Please create one at %s"
 msgstr "Hittade ingen konfigurationsfil. Skapa en i %s"
 
-#: home-manager/home-manager:122
+#: home-manager/home-manager:146
 msgid "Can't inspect options of a flake configuration"
 msgstr "Kan inte granska alternativ i en flake-konfiguration"
 
-#: home-manager/home-manager:162
+#: home-manager/home-manager:185
 msgid "Can't instantiate a flake configuration"
 msgstr "Kan inte instansera en flake-konfiguration"
 
-#: home-manager/home-manager:237
+#: home-manager/home-manager:258
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -49,92 +49,80 @@ msgstr[1] ""
 "Det finns %d olästa och relevanta nyheter.\n"
 "Läs dem genom att köra kommandot \"%s news\"."
 
-#: home-manager/home-manager:251
+#: home-manager/home-manager:272
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Okänt \"news.display\"-värde \"%s\"."
 
-#: home-manager/home-manager:258
+#: home-manager/home-manager:279
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "Vänligen tilldela miljövariablen $EDITOR"
 
-#: home-manager/home-manager:273
+#: home-manager/home-manager:294
 msgid "Cannot run build in read-only directory"
 msgstr "Kan inte bygga i katalog med bara läsrättigheter"
 
-#: home-manager/home-manager:355
+#: home-manager/home-manager:378
 msgid "No generation with ID %s"
 msgstr "Ingen generation med ID %s"
 
-#: home-manager/home-manager:357
+#: home-manager/home-manager:380
 msgid "Cannot remove the current generation %s"
 msgstr "Kan inte ta bort nuvarande generation %s"
 
-#: home-manager/home-manager:359
+#: home-manager/home-manager:382
 msgid "Removing generation %s"
 msgstr "Tar bort generation %s"
 
-#: home-manager/home-manager:385
+#: home-manager/home-manager:401
 msgid "No generations to expire"
 msgstr "Ingen generation att förfalla"
 
-#: home-manager/home-manager:396
+#: home-manager/home-manager:412
 msgid "No home-manager packages seem to be installed."
 msgstr "Paketet home-manager verkar inte vara installerat."
 
-#: home-manager/home-manager:453
+#: home-manager/home-manager:469
 msgid "Unknown argument %s"
 msgstr "Okänt argument %s"
 
-#: home-manager/home-manager:469
+#: home-manager/home-manager:485
 msgid "This will remove Home Manager from your system."
 msgstr "Detta kommer att ta bort Home Manager från ditt system."
 
-#: home-manager/home-manager:472
+#: home-manager/home-manager:488
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Detta är en testkörning, inget kommer att bli avinstallerat."
 
-#: home-manager/home-manager:476
+#: home-manager/home-manager:492
 msgid "Really uninstall Home Manager?"
 msgstr "Verkligen avinstallera Home Manager?"
 
-#: home-manager/home-manager:481
+#: home-manager/home-manager:498
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Byter till tom Home Manager-konfiguration..."
 
-#: home-manager/home-manager:493
+#: home-manager/home-manager:525
 msgid "Yay!"
 msgstr "Hurra!"
 
-#: home-manager/home-manager:500
-msgid "Remove all Home Manager generations?"
-msgstr "Ta bort alla Home Manager-generationer?"
-
-#: home-manager/home-manager:507
-msgid "All generations are now eligible for garbage collection."
-msgstr "Alla generationer kan nu skräpsamlas."
-
-#: home-manager/home-manager:510
-msgid "Leaving generations but they may still be garbage collected."
-msgstr "Låter generationer vara kvar men de kan fortfarande skräpsamlas."
-
-#: home-manager/home-manager:514
+#: home-manager/home-manager:530
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager är avinstallerad men din home.nix är orörd."
 
-#: home-manager/home-manager:673
+#: home-manager/home-manager:695
 msgid "%s: unknown option '%s'"
 msgstr "%s: okänt val '%s'"
 
-#: home-manager/home-manager:674
+#: home-manager/home-manager:696
 msgid "Run '%s --help' for usage help"
 msgstr "Kör '%s --help' för användarhjälp"
 
-#: home-manager/home-manager:708
+#: home-manager/home-manager:730
 msgid "expire-generations expects one argument, got %d."
 msgstr "expect-generations förväntar sig ett argument, fick %d."
 
-#: home-manager/home-manager:730
+#: home-manager/home-manager:752
 msgid "Unknown command: %s"
 msgstr "Okänt kommando: %s"
 
@@ -181,3 +169,12 @@ msgstr ""
 #: home-manager/install.nix:83
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr "Denna derivation är inte byggbar, kör den med nix-shell istället."
+
+#~ msgid "Remove all Home Manager generations?"
+#~ msgstr "Ta bort alla Home Manager-generationer?"
+
+#~ msgid "All generations are now eligible for garbage collection."
+#~ msgstr "Alla generationer kan nu skräpsamlas."
+
+#~ msgid "Leaving generations but they may still be garbage collected."
+#~ msgstr "Låter generationer vara kvar men de kan fortfarande skräpsamlas."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2022-03-26 15:08+0100\n"
+"POT-Creation-Date: 2023-03-07 23:36+0100\n"
 "PO-Revision-Date: 2023-02-19 10:19+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/home-manager/"
@@ -27,15 +27,15 @@ msgstr "Nenhum ficheiro de configuração encontrado no %s"
 msgid "No configuration file found. Please create one at %s"
 msgstr "Ficheiro de configuração não encontrado. Por favor crie um em %s"
 
-#: home-manager/home-manager:122
+#: home-manager/home-manager:146
 msgid "Can't inspect options of a flake configuration"
 msgstr "Não é possivel inspecionar a opção de configuração do flake"
 
-#: home-manager/home-manager:162
+#: home-manager/home-manager:185
 msgid "Can't instantiate a flake configuration"
 msgstr "Não foi possível instanciar a configuração de flake"
 
-#: home-manager/home-manager:237
+#: home-manager/home-manager:258
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -49,94 +49,80 @@ msgstr[1] ""
 "Há %d novos itens relevants não lidos\n"
 "Leia executando o comando \"%s news\"."
 
-#: home-manager/home-manager:251
+#: home-manager/home-manager:272
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Valor \"%s\" para configuração \"news.display\" não reconhecido."
 
-#: home-manager/home-manager:258
+#: home-manager/home-manager:279
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "Por favor defina a variável de ambiente $EDITOR"
 
-#: home-manager/home-manager:273
+#: home-manager/home-manager:294
 msgid "Cannot run build in read-only directory"
 msgstr "Não é possível fazer o build num diretório somente leitura"
 
-#: home-manager/home-manager:355
+#: home-manager/home-manager:378
 msgid "No generation with ID %s"
 msgstr "Nenhuma geração com ID %s"
 
-#: home-manager/home-manager:357
+#: home-manager/home-manager:380
 msgid "Cannot remove the current generation %s"
 msgstr "Não foi possível remover a geração atual %s"
 
-#: home-manager/home-manager:359
+#: home-manager/home-manager:382
 msgid "Removing generation %s"
 msgstr "A remover a geração %s"
 
-#: home-manager/home-manager:385
+#: home-manager/home-manager:401
 msgid "No generations to expire"
 msgstr "Nenhuma geração a expirar"
 
-#: home-manager/home-manager:396
+#: home-manager/home-manager:412
 msgid "No home-manager packages seem to be installed."
 msgstr "Nenhum pacote parece instalado com home-manager."
 
-#: home-manager/home-manager:453
+#: home-manager/home-manager:469
 msgid "Unknown argument %s"
 msgstr "Argumento desconhecido %s"
 
-#: home-manager/home-manager:469
+#: home-manager/home-manager:485
 msgid "This will remove Home Manager from your system."
 msgstr "Isto irá remover o Home Manager do seu sistema."
 
-#: home-manager/home-manager:472
+#: home-manager/home-manager:488
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Essa é uma execução de teste, nada de fato será desinstalado."
 
-#: home-manager/home-manager:476
+#: home-manager/home-manager:492
 msgid "Really uninstall Home Manager?"
 msgstr "Confirma a desinstalação do Home Manager?"
 
-#: home-manager/home-manager:481
+#: home-manager/home-manager:498
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Trocando para configuração vazia do Home Manager..."
 
-#: home-manager/home-manager:493
+#: home-manager/home-manager:525
 msgid "Yay!"
 msgstr "Boa!"
 
-#: home-manager/home-manager:500
-msgid "Remove all Home Manager generations?"
-msgstr "Remover todas as gerações do Home Manager?"
-
-#: home-manager/home-manager:507
-msgid "All generations are now eligible for garbage collection."
-msgstr "Todas gerações agora são elegíveis para coleta do garbage collector."
-
-#: home-manager/home-manager:510
-msgid "Leaving generations but they may still be garbage collected."
-msgstr ""
-"Deixando gerações, entretanto elas ainda poderão ser limpas pelo garbage "
-"collector."
-
-#: home-manager/home-manager:514
+#: home-manager/home-manager:530
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager foi desinstalado, mas o seu home.nix foi deixado intacto."
 
-#: home-manager/home-manager:673
+#: home-manager/home-manager:695
 msgid "%s: unknown option '%s'"
 msgstr "%s: opção não reconhecida '%s'"
 
-#: home-manager/home-manager:674
+#: home-manager/home-manager:696
 msgid "Run '%s --help' for usage help"
 msgstr "Execute '%s --help' para instruções de uso"
 
-#: home-manager/home-manager:708
+#: home-manager/home-manager:730
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations espera um argumento, recebeu %d."
 
-#: home-manager/home-manager:730
+#: home-manager/home-manager:752
 msgid "Unknown command: %s"
 msgstr "Comando não reconhecido: %s"
 
@@ -185,3 +171,15 @@ msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
 "O build dessa derivation não pode ser feito, por favor rode usando o nix-"
 "shell."
+
+#~ msgid "Remove all Home Manager generations?"
+#~ msgstr "Remover todas as gerações do Home Manager?"
+
+#~ msgid "All generations are now eligible for garbage collection."
+#~ msgstr ""
+#~ "Todas gerações agora são elegíveis para coleta do garbage collector."
+
+#~ msgid "Leaving generations but they may still be garbage collected."
+#~ msgstr ""
+#~ "Deixando gerações, entretanto elas ainda poderão ser limpas pelo garbage "
+#~ "collector."
