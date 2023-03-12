@@ -346,8 +346,8 @@
         </listitem>
         <listitem>
          <para>
-          optionally remove all Home Manager generations and make them
-          available for immediate garbage collection.
+          remove all Home Manager generations and make them available
+          for immediate garbage collection.
          </para>
         </listitem>
        </itemizedlist>
