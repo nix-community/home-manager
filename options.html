@@ -6154,6 +6154,18 @@ manually set any options not listed above.</p><p><span class="emphasis"><em>Type
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.extensions"></a><a class="term" href="options.html#opt-programs.vscode.extensions"><code class="option">programs.vscode.extensions</code></a></span></dt><dd><p>The extensions Visual Studio Code should be started with.</p><p><span class="emphasis"><em>Type:</em></span> list of package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">[ ]</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">[ pkgs.vscode-extensions.bbenoist.nix ]</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.globalSnippets"></a><a class="term" href="options.html#opt-programs.vscode.globalSnippets"><code class="option">programs.vscode.globalSnippets</code></a></span></dt><dd><p>Defines global user snippets.</p><p><span class="emphasis"><em>Type:</em></span> JSON value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  fixme = {
+    body = [
+      "$LINE_COMMENT FIXME: $0"
+    ];
+    description = "Insert a FIXME remark";
+    prefix = [
+      "fixme"
+    ];
+  };
+}</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.haskell.enable"></a><a class="term" href="options.html#opt-programs.vscode.haskell.enable"><code class="option">programs.vscode.haskell.enable</code></a></span></dt><dd><p>Whether to enable Haskell integration for Visual Studio Code.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode/haskell.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode/haskell.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.haskell.hie.enable"></a><a class="term" href="options.html#opt-programs.vscode.haskell.hie.enable"><code class="option">programs.vscode.haskell.hie.enable</code></a></span></dt><dd><p>Whether to enable Haskell IDE engine integration.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode/haskell.nix#blob-path" target="_top">
@@ -6187,6 +6199,20 @@ overlay or set this option. Example overlay configuration:
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.keybindings._.key"></a><a class="term" href="options.html#opt-programs.vscode.keybindings._.key"><code class="option">programs.vscode.keybindings.*.key</code></a></span></dt><dd><p>The key or key-combination to bind.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"ctrl+c"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.keybindings._.when"></a><a class="term" href="options.html#opt-programs.vscode.keybindings._.when"><code class="option">programs.vscode.keybindings.*.when</code></a></span></dt><dd><p>Optional context filter.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"textInputFocus"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/vscode.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.languageSnippets"></a><a class="term" href="options.html#opt-programs.vscode.languageSnippets"><code class="option">programs.vscode.languageSnippets</code></a></span></dt><dd><p>Defines user snippets for different languages.</p><p><span class="emphasis"><em>Type:</em></span> JSON value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  haskell = {
+    fixme = {
+      body = [
+        "$LINE_COMMENT FIXME: $0"
+      ];
+      description = "Insert a FIXME remark";
+      prefix = [
+        "fixme"
+      ];
+    };
+  };
+}</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/vscode.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.vscode.mutableExtensionsDir"></a><a class="term" href="options.html#opt-programs.vscode.mutableExtensionsDir"><code class="option">programs.vscode.mutableExtensionsDir</code></a></span></dt><dd><p>Whether extensions can be installed or updated manually
 or by Visual Studio Code.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix#blob-path" target="_top">
