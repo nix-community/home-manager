@@ -134,9 +134,10 @@ in {
         '')
 
         (optionalString (cfg.theme != null) ''
-          include ${pkgs.kitty-themes}/${
+          include ${pkgs.kitty-themes}/share/kitty-themes/${
             (head (filter (x: x.name == cfg.theme) (builtins.fromJSON
-              (builtins.readFile "${pkgs.kitty-themes}/themes.json")))).file
+              (builtins.readFile
+                "${pkgs.kitty-themes}/share/kitty-themes/themes.json")))).file
           }
         '')
         (toKittyConfig cfg.settings)
