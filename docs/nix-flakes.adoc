@@ -118,9 +118,9 @@ and `nixpkgs` url to `github:NixOS/nixpkgs/nixos-22.11`.
 * The Home Manager library is exported by the flake under
 `lib.hm`.
 
-* You can use the above `flake.nix` as a template in `~/.config/nixpkgs` by
+* You can use the above `flake.nix` as a template in `~/.config/home-manager` by
 [source,console]
-$ nix flake new ~/.config/nixpkgs -t github:nix-community/home-manager
+$ nix flake new ~/.config/home-manager -t github:nix-community/home-manager
 ====
 
 2. Install Home Manager and apply the configuration by
@@ -129,9 +129,9 @@ $ nix flake new ~/.config/nixpkgs -t github:nix-community/home-manager
 $ nix run <flake-uri>#homeConfigurations.jdoe.activationPackage
 +
 Substitute `<flake-uri>` with the flake URI of the configuration flake.
-If `flake.nix` resides in `~/.config/nixpkgs`,
-`<flake-uri>` may be `~/.config/nixpkgs`
-as a Git tree or `path:~/.config/nixpkgs` if not.
+If `flake.nix` resides in `~/.config/home-manager`,
+`<flake-uri>` may be `~/.config/home-manager`
+as a Git tree or `path:~/.config/home-manager` if not.
 
 3. Since the release `21.05`,
 building a flake-based configuration is as simple as

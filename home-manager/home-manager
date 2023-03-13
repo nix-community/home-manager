@@ -56,29 +56,42 @@ function setWorkDir() {
 # an error message and exit with an error code.
 function setConfigFile() {
     if [[ -v HOME_MANAGER_CONFIG ]] ; then
-        if [[ ! -e "$HOME_MANAGER_CONFIG" ]] ; then
-            _i "No configuration file found at %s" \
+        if [[ -e "$HOME_MANAGER_CONFIG" ]] ; then
+            HOME_MANAGER_CONFIG="$(realpath "$HOME_MANAGER_CONFIG")"
+        else
+            _i 'No configuration file found at %s' \
                "$HOME_MANAGER_CONFIG" >&2
             exit 1
         fi
+    elif [[ ! -v HOME_MANAGER_CONFIG ]]; then
+        local configHome="${XDG_CONFIG_HOME:-$HOME/.config}"
+        local hmConfigHome="$configHome/home-manager"
+        local nixpkgsConfigHome="$configHome/nixpkgs"
+        local defaultConfFile="$hmConfigHome/home.nix"
+        local configFlake
 
-        HOME_MANAGER_CONFIG="$(realpath "$HOME_MANAGER_CONFIG")"
-        return
-    fi
-
-    local defaultConfFile="${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home.nix"
-    local confFile
-    for confFile in "$defaultConfFile" \
-                    "$HOME/.nixpkgs/home.nix" ; do
-        if [[ -e "$confFile" ]] ; then
-            HOME_MANAGER_CONFIG="$(realpath "$confFile")"
-            return
+        if [[ -e "$defaultConfFile" ]]; then
+            configFile="$defaultConfFile"
+        elif [[ -e "$nixpkgsConfigHome/home.nix" ]]; then
+            configFile="$nixpkgsConfigHome/home.nix"
+            # translators: The first '%s' specifier will be replaced by either
+            # 'home.nix' or 'flake.nix'.
+            _iWarn $'Keeping your Home Manager %s in %s is deprecated,\nplease move it to %s' \
+                   'home.nix' "$nixpkgsConfigHome" "$hmConfigHome" >&2
+        elif [[ -e "$HOME/.nixpkgs/home.nix" ]]; then
+            configFile="$HOME/.nixpkgs/home.nix"
+            _iWarn $'Keeping your Home Manager %s in %s is deprecated,\nplease move it to %s' \
+                   'home.nix' "$HOME/.nixpkgs" "$hmConfigHome" >&2
         fi
-    done
 
-    _i "No configuration file found. Please create one at %s" \
-       "$defaultConfFile" >&2
-    exit 1
+        if [[ $configFile ]]; then
+            HOME_MANAGER_CONFIG="$(realpath "$configFile")"
+        else
+            _i 'No configuration file found. Please create one at %s' \
+               "$defaultConfFile" >&2
+            exit 1
+        fi
+    fi
 }
 
 function setHomeManagerNixPath() {
@@ -111,9 +124,24 @@ function setHomeManagerPathVariables() {
 }
 
 function setFlakeAttribute() {
-    local configFlake="${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/flake.nix"
-    if [[ -z $FLAKE_ARG && ! -v HOME_MANAGER_CONFIG && -e "$configFlake" ]]; then
-        FLAKE_ARG="$(dirname "$(readlink -f "$configFlake")")"
+    if [[ -z $FLAKE_ARG && ! -v HOME_MANAGER_CONFIG ]]; then
+        local configHome="${XDG_CONFIG_HOME:-$HOME/.config}"
+        local hmConfigHome="$configHome/home-manager"
+        local nixpkgsConfigHome="$configHome/nixpkgs"
+
+        local configFlake
+
+        if [[ -e "$hmConfigHome/flake.nix" ]]; then
+            configFlake="$hmConfigHome/flake.nix"
+        elif [[ -e "$nixpkgsConfigHome/flake.nix" ]]; then
+            configFlake="$nixpkgsConfigHome/flake.nix"
+            _iWarn $'Keeping your Home Manager %s in %s is deprecated,\nplease move it to %s' \
+                   'flake.nix' "$nixpkgsConfigHome" "$hmConfigHome" >&2
+        fi
+
+        if [[ -v configFlake ]]; then
+            FLAKE_ARG="$(dirname "$(readlink -f "$configFlake")")"
+        fi
     fi
 
     if [[ -n "$FLAKE_ARG" ]]; then
@@ -121,7 +149,7 @@ function setFlakeAttribute() {
         case $FLAKE_ARG in
             *#*)
                 local name="${FLAKE_ARG#*#}"
-            ;;
+                ;;
             *)
                 local name="$USER"
                 # Check both long and short hostnames; long first to preserve
@@ -134,7 +162,7 @@ function setFlakeAttribute() {
                         fi
                     fi
                 done
-            ;;
+                ;;
         esac
         export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$name\""
     fi

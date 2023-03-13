@@ -15,7 +15,7 @@ in runCommand "home-manager-install" {
   shellHook = ''
     ${hmBashLibInit}
 
-    confFile="''${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home.nix"
+    confFile="''${XDG_CONFIG_HOME:-$HOME/.config}/home-manager/home.nix"
 
     if [[ ! -e $confFile ]]; then
       echo

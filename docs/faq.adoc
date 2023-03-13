@@ -72,7 +72,10 @@ For example, if you have two machines, called "kronos" and "rhea" on which you w
 - `rhea-jane.nix`, and
 - `common.nix`
 
-in your repository. On the kronos and rhea machines you can then make `~jane/.config/nixpkgs/home.nix` be a symbolic link to the corresponding file in your configuration repository.
+in your repository.
+On the kronos and rhea machines you can then make
+`~jane/.config/home-manager/home.nix`
+be a symbolic link to the corresponding file in your configuration repository.
 
 The `kronos-jane.nix` and `rhea-jane.nix` files follow the format
 

@@ -19,6 +19,17 @@ in your configuration then you must change it to
 [source,nix]
 programs.firefox.profiles.myprofile.extensions = [ foo bar ];
 
+* The default configuration location has been changed from
+`~/.config/nixpkgs/home.nix` to `~/.config/home-manager/home.nix`.
++
+Similarly, if you are using a Nix flake based setup
+then the default flake file location has changed from
+`~/.config/nixpkgs/flake.nix` to `~/.config/home-manager/flake.nix`.
++
+The old location will continue to work but using it will trigger a warning message.
+We changed the default configuration location to avoid confusion about
+which files belong to Home Manager and which belong to Nixpkgs.
+
 [[sec-release-23.05-state-version-changes]]
 === State Version Changes
 

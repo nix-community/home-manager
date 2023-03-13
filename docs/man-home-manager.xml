@@ -200,7 +200,9 @@
   <title>Description</title>
   <para>
    This command updates the user environment so that it corresponds to the
-      configuration specified in <filename>~/.config/nixpkgs/home.nix</filename> or <filename>~/.config/nixpkgs/flake.nix</filename>.
+   configuration specified in
+   <filename>$XDG_CONFIG_HOME/home-manager/home.nix</filename> or
+   <filename>$XDG_CONFIG_HOME/home-manager/flake.nix</filename>.
   </para>
   <para>
    All operations using this tool expects a sub-command that indicates the
@@ -434,7 +436,7 @@
     <listitem>
      <para>
       Indicates the path to the Home Manager configuration file. If not given,
-      <filename>$XDG_CONFIG_HOME/nixpkgs/home.nix</filename> is used.
+      <filename>$XDG_CONFIG_HOME/home-manager/home.nix</filename> is used.
      </para>
     </listitem>
    </varlistentry>

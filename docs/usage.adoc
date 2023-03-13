@@ -1,7 +1,14 @@
 [[ch-usage]]
 == Using Home Manager
 
-Your use of Home Manager is centered around the configuration file, which is typically found at `~/.config/nixpkgs/home.nix`.
+Your use of Home Manager is centered around the configuration file,
+which is typically found at `~/.config/home-manager/home.nix` in the standard installation
+or `~/.config/home-manager/flake.nix` in a Nix flake based installation.
+
+[NOTE]
+The default configuration used to be placed in `~/.config/nixpkgs`¸
+so you may see references to that elsewhere.
+The old directory still works but Home Manager will print a warning message when used.
 
 This configuration file can be _built_ and _activated_.
 
@@ -18,7 +25,7 @@ then building it, for example using `home-manager build`, will result in an erro
 ----
 $ home-manager build
 error: A definition for option `programs.emacs.enable' is not of type `boolean'. Definition values:
-- In `/home/jdoe/.config/nixpkgs/home.nix': "yes"
+- In `/home/jdoe/.config/home-manager/home.nix': "yes"
 (use '--show-trace' to show detailed location information)
 ----
 
@@ -32,7 +39,7 @@ Once a configuration is successfully built, it can be activated. The activation 
 [[sec-usage-configuration]]
 === Configuration Example
 
-A fresh install of Home Manager will generate a minimal `~/.config/nixpkgs/home.nix` file containing something like
+A fresh install of Home Manager will generate a minimal `~/.config/home-manager/home.nix` file containing something like
 
 [source,nix]
 ----

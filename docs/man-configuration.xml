@@ -13,12 +13,12 @@
  </refnamediv>
  <refsection>
   <title>Description</title>
-  <para>
-   The file <filename>~/.config/nixpkgs/home.nix</filename> contains the
+  <simpara>
+   The file <filename>~/.config/home-manager/home.nix</filename> contains the
    declarative specification of your Home Manager configuration. The command
    <command>home-manager</command> takes this file and realises the user
    environment configuration specified therein.
-  </para>
+  </simpara>
  </refsection>
  <refsection>
   <title>Options</title>
