@@ -32,6 +32,8 @@ let
   tasksFilePath = "${userDir}/tasks.json";
   keybindingsFilePath = "${userDir}/keybindings.json";
 
+  snippetDir = "${userDir}/snippets";
+
   # TODO: On Darwin where are the extensions?
   extensionPath = ".${extensionDir}/extensions";
 
@@ -187,6 +189,34 @@ in {
           or by Visual Studio Code.
         '';
       };
+
+      languageSnippets = mkOption {
+        type = jsonFormat.type;
+        default = { };
+        example = {
+          haskell = {
+            fixme = {
+              prefix = [ "fixme" ];
+              body = [ "$LINE_COMMENT FIXME: $0" ];
+              description = "Insert a FIXME remark";
+            };
+          };
+        };
+        description = "Defines user snippets for different languages.";
+      };
+
+      globalSnippets = mkOption {
+        type = jsonFormat.type;
+        default = { };
+        example = {
+          fixme = {
+            prefix = [ "fixme" ];
+            body = [ "$LINE_COMMENT FIXME: $0" ];
+            description = "Insert a FIXME remark";
+          };
+        };
+        description = "Defines global user snippets.";
+      };
     };
   };
 
@@ -243,6 +273,19 @@ in {
           };
         in "${combinedExtensionsDrv}/${subDir}";
       }))
+
+      (mkIf (cfg.globalSnippets != { })
+        (let globalSnippets = "${snippetDir}/global.code-snippets";
+        in {
+          "${globalSnippets}".source =
+            jsonFormat.generate "user-snippet-global.code-snippets"
+            cfg.globalSnippets;
+        }))
+
+      (lib.mapAttrs' (language: snippet:
+        lib.nameValuePair "${snippetDir}/${language}.json" {
+          source = jsonFormat.generate "user-snippet-${language}.json" snippet;
+        }) cfg.languageSnippets)
     ];
   };
 }
