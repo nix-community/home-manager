@@ -440,6 +440,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/lieer.nix                           @tadfisher
 
+/modules/services/listenbrainz-mpd.nix                @Scrumplex
+
 /modules/services/lorri.nix                           @Gerschtli
 
 /modules/services/mako.nix                            @onny
