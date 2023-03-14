@@ -84,11 +84,13 @@ in {
           <filename>$XDG_CONFIG_HOME/task/taskrc</filename>.
         '';
       };
+
+      package = mkPackageOption pkgs "taskwarrior" { };
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.taskwarrior ];
+    home.packages = [ cfg.package ];
 
     home.file."${homeConf}".text = ''
       data.location=${cfg.dataLocation}
