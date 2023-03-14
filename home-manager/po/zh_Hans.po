@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-07 23:36+0100\n"
+"POT-Creation-Date: 2023-03-14 23:10+0100\n"
 "PO-Revision-Date: 2021-12-28 12:41+0000\n"
 "Last-Translator: WhiredPlanck <fungdaat31@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -19,23 +19,32 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.10.1\n"
 
-#: home-manager/home-manager:60
+#: home-manager/home-manager:62
 msgid "No configuration file found at %s"
 msgstr "未在 %s 找到配置文件"
 
-#: home-manager/home-manager:79
+#. translators: The first '%s' specifier will be replaced by either
+#. 'home.nix' or 'flake.nix'.
+#: home-manager/home-manager:79 home-manager/home-manager:83
+#: home-manager/home-manager:138
+msgid ""
+"Keeping your Home Manager %s in %s is deprecated,\n"
+"please move it to %s"
+msgstr ""
+
+#: home-manager/home-manager:90
 msgid "No configuration file found. Please create one at %s"
 msgstr "未找到配置文件。请在 %s 处创建一份"
 
-#: home-manager/home-manager:146
+#: home-manager/home-manager:174
 msgid "Can't inspect options of a flake configuration"
 msgstr "无法检查 flake 配置中的选项"
 
-#: home-manager/home-manager:185
+#: home-manager/home-manager:213
 msgid "Can't instantiate a flake configuration"
 msgstr "无法创建 flake 配置实例"
 
-#: home-manager/home-manager:258
+#: home-manager/home-manager:286
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -46,80 +55,80 @@ msgstr[0] ""
 "有 %d 条未读的相关新闻或消息。\n"
 "可运行 “%s news” 命令进行阅读。"
 
-#: home-manager/home-manager:272
+#: home-manager/home-manager:300
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "未知的 “news.display” 设置项 “%s”。"
 
-#: home-manager/home-manager:279
+#: home-manager/home-manager:307
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "请设定 $EDITOR 环境变量"
 
-#: home-manager/home-manager:294
+#: home-manager/home-manager:322
 msgid "Cannot run build in read-only directory"
 msgstr "无法在只读目录中运行构建"
 
-#: home-manager/home-manager:378
+#: home-manager/home-manager:406
 msgid "No generation with ID %s"
 msgstr "没有 ID 为 %s 的世代"
 
-#: home-manager/home-manager:380
+#: home-manager/home-manager:408
 msgid "Cannot remove the current generation %s"
 msgstr "无法移除当前世代 %s"
 
-#: home-manager/home-manager:382
+#: home-manager/home-manager:410
 msgid "Removing generation %s"
 msgstr "正在移除世代 %s"
 
-#: home-manager/home-manager:401
+#: home-manager/home-manager:429
 msgid "No generations to expire"
 msgstr "没有即将过期的世代"
 
-#: home-manager/home-manager:412
+#: home-manager/home-manager:440
 msgid "No home-manager packages seem to be installed."
 msgstr "似乎没有安装 home-manager 软件包。"
 
-#: home-manager/home-manager:469
+#: home-manager/home-manager:497
 msgid "Unknown argument %s"
 msgstr "未知参数 %s"
 
-#: home-manager/home-manager:485
+#: home-manager/home-manager:513
 msgid "This will remove Home Manager from your system."
 msgstr "这将会从系统中移除 Home Manager。"
 
-#: home-manager/home-manager:488
+#: home-manager/home-manager:516
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "这是试运行结果，没有实际卸载任何软件包。"
 
-#: home-manager/home-manager:492
+#: home-manager/home-manager:520
 msgid "Really uninstall Home Manager?"
 msgstr "确定要卸载 Home Manager 吗？"
 
-#: home-manager/home-manager:498
+#: home-manager/home-manager:526
 msgid "Switching to empty Home Manager configuration..."
 msgstr "正在切换至空的 Home Manager 配置 ..."
 
-#: home-manager/home-manager:525
+#: home-manager/home-manager:553
 msgid "Yay!"
 msgstr "好耶！"
 
-#: home-manager/home-manager:530
+#: home-manager/home-manager:558
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager 已卸载，但未改动您的 home.nix 配置文件。"
 
-#: home-manager/home-manager:695
+#: home-manager/home-manager:723
 msgid "%s: unknown option '%s'"
 msgstr "%s：未知选项 ‘%s’"
 
-#: home-manager/home-manager:696
+#: home-manager/home-manager:724
 msgid "Run '%s --help' for usage help"
 msgstr "运行 ‘%s --help’ 获取用法帮助"
 
-#: home-manager/home-manager:730
+#: home-manager/home-manager:758
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations 须要一个参数，但获取到了 %d 个。"
 
-#: home-manager/home-manager:752
+#: home-manager/home-manager:780
 msgid "Unknown command: %s"
 msgstr "未知命令：%s"
 

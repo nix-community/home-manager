@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-07 23:36+0100\n"
+"POT-Creation-Date: 2023-03-14 23:10+0100\n"
 "PO-Revision-Date: 2023-03-10 16:11+0000\n"
 "Last-Translator: Turmoil Nailsis <indianrunner@duck.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
@@ -67,15 +67,15 @@ msgstr ""
 msgid "Activating %s"
 msgstr "%s を有効化しています"
 
-#: modules/lib-bash/activation-init.sh:18
+#: modules/lib-bash/activation-init.sh:16
 msgid "Migrating profiles from %s to %s"
 msgstr "%s から %s にプロファイルを移行しています"
 
-#: modules/lib-bash/activation-init.sh:77
+#: modules/lib-bash/activation-init.sh:75
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "oldGenNum と oldGenPath の健全性検査をしています"
 
-#: modules/lib-bash/activation-init.sh:80
+#: modules/lib-bash/activation-init.sh:78
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -103,27 +103,27 @@ msgstr ""
 "\n"
 "を実行して、home-manager switch を再び実行してみることでしょう。幸運を！"
 
-#: modules/lib-bash/activation-init.sh:97
+#: modules/lib-bash/activation-init.sh:95
 msgid "Starting Home Manager activation"
 msgstr "Home Managerの有効化を開始しました"
 
-#: modules/lib-bash/activation-init.sh:101
+#: modules/lib-bash/activation-init.sh:99
 msgid "Sanity checking Nix"
 msgstr "Nixの健全性検査中です"
 
-#: modules/lib-bash/activation-init.sh:107
+#: modules/lib-bash/activation-init.sh:105
 msgid "This is a dry run"
 msgstr "これは予行練習(dry run)です"
 
-#: modules/lib-bash/activation-init.sh:111
+#: modules/lib-bash/activation-init.sh:109
 msgid "This is a live run"
 msgstr "これは実際に実行します"
 
-#: modules/lib-bash/activation-init.sh:118
+#: modules/lib-bash/activation-init.sh:116
 msgid "Using Nix version: %s"
 msgstr "Nix バージョン %s を使用しています"
 
-#: modules/lib-bash/activation-init.sh:121
+#: modules/lib-bash/activation-init.sh:119
 msgid "Activation variables:"
 msgstr "有効化変数:"
 

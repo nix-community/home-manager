@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-07 23:36+0100\n"
+"POT-Creation-Date: 2023-03-14 23:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -52,15 +52,15 @@ msgstr ""
 msgid "Activating %s"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:18
+#: modules/lib-bash/activation-init.sh:16
 msgid "Migrating profiles from %s to %s"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:77
+#: modules/lib-bash/activation-init.sh:75
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:80
+#: modules/lib-bash/activation-init.sh:78
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -76,26 +76,26 @@ msgid ""
 "and trying home-manager switch again. Good luck!"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:97
+#: modules/lib-bash/activation-init.sh:95
 msgid "Starting Home Manager activation"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:101
+#: modules/lib-bash/activation-init.sh:99
 msgid "Sanity checking Nix"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:107
+#: modules/lib-bash/activation-init.sh:105
 msgid "This is a dry run"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:111
+#: modules/lib-bash/activation-init.sh:109
 msgid "This is a live run"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:118
+#: modules/lib-bash/activation-init.sh:116
 msgid "Using Nix version: %s"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:121
+#: modules/lib-bash/activation-init.sh:119
 msgid "Activation variables:"
 msgstr ""

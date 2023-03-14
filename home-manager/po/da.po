@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-07 23:36+0100\n"
+"POT-Creation-Date: 2023-03-14 23:10+0100\n"
 "PO-Revision-Date: 2022-09-19 18:22+0000\n"
 "Last-Translator: cafkafk <christina@cafkafk.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/home-manager/cli/"
@@ -19,23 +19,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.14.1\n"
 
-#: home-manager/home-manager:60
+#: home-manager/home-manager:62
 msgid "No configuration file found at %s"
 msgstr "Ingen konfigurationsfiler fundet ved %s"
 
-#: home-manager/home-manager:79
+#. translators: The first '%s' specifier will be replaced by either
+#. 'home.nix' or 'flake.nix'.
+#: home-manager/home-manager:79 home-manager/home-manager:83
+#: home-manager/home-manager:138
+msgid ""
+"Keeping your Home Manager %s in %s is deprecated,\n"
+"please move it to %s"
+msgstr ""
+
+#: home-manager/home-manager:90
 msgid "No configuration file found. Please create one at %s"
 msgstr "Ingen konfigurationsfiler fundet. Venligst lav en ved %s"
 
-#: home-manager/home-manager:146
+#: home-manager/home-manager:174
 msgid "Can't inspect options of a flake configuration"
 msgstr "Kan ikke inspicere indstillinger af en flake konfiguration"
 
-#: home-manager/home-manager:185
+#: home-manager/home-manager:213
 msgid "Can't instantiate a flake configuration"
 msgstr "Kan ikke instantiere en flake konfiguration"
 
-#: home-manager/home-manager:258
+#: home-manager/home-manager:286
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -49,82 +58,82 @@ msgstr[1] ""
 "Der er %d ulæste og relavante nyheder.\n"
 "Læs dem ved at køre \"%s news\"."
 
-#: home-manager/home-manager:272
+#: home-manager/home-manager:300
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Ubekændt \"news.display\" indstilling \"%s\"."
 
-#: home-manager/home-manager:279
+#: home-manager/home-manager:307
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "Venligst sæt $EDITOR miljøvariablen"
 
-#: home-manager/home-manager:294
+#: home-manager/home-manager:322
 msgid "Cannot run build in read-only directory"
 msgstr "Kan ikke bygge i en læs-kun folder"
 
-#: home-manager/home-manager:378
+#: home-manager/home-manager:406
 msgid "No generation with ID %s"
 msgstr "Ingen generation med ID %s"
 
-#: home-manager/home-manager:380
+#: home-manager/home-manager:408
 msgid "Cannot remove the current generation %s"
 msgstr "Kan ikke fjerne den nuværende generation %s"
 
-#: home-manager/home-manager:382
+#: home-manager/home-manager:410
 msgid "Removing generation %s"
 msgstr "Fjern generation %s"
 
-#: home-manager/home-manager:401
+#: home-manager/home-manager:429
 msgid "No generations to expire"
 msgstr "Ingen generationer som skal udløbes"
 
-#: home-manager/home-manager:412
+#: home-manager/home-manager:440
 msgid "No home-manager packages seem to be installed."
 msgstr ""
 "Det virker ikke som om der er nogle home-manager pakker der er installeret."
 
-#: home-manager/home-manager:469
+#: home-manager/home-manager:497
 msgid "Unknown argument %s"
 msgstr "Ubekendt argument %s"
 
-#: home-manager/home-manager:485
+#: home-manager/home-manager:513
 msgid "This will remove Home Manager from your system."
 msgstr "Dette vil fjerne Home Manager fra dit system."
 
-#: home-manager/home-manager:488
+#: home-manager/home-manager:516
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Dette er en tør kørsel, intet vil rent faktisk blive uinstalleret."
 
-#: home-manager/home-manager:492
+#: home-manager/home-manager:520
 msgid "Really uninstall Home Manager?"
 msgstr "Virkelig uinstaller Home Manager?"
 
-#: home-manager/home-manager:498
+#: home-manager/home-manager:526
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Skifter til tom Home Manager konfiguration..."
 
-#: home-manager/home-manager:525
+#: home-manager/home-manager:553
 msgid "Yay!"
 msgstr "Juhuu!"
 
-#: home-manager/home-manager:530
+#: home-manager/home-manager:558
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr ""
 "Home Manager bliver uinstalleret, men din home.nix bliver forladt uberørt."
 
-#: home-manager/home-manager:695
+#: home-manager/home-manager:723
 msgid "%s: unknown option '%s'"
 msgstr "%s: ukendt indstilling '%s'"
 
-#: home-manager/home-manager:696
+#: home-manager/home-manager:724
 msgid "Run '%s --help' for usage help"
 msgstr "Kør '%s --help' for brugsvejledning"
 
-#: home-manager/home-manager:730
+#: home-manager/home-manager:758
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations forventer et argument, fik %d."
 
-#: home-manager/home-manager:752
+#: home-manager/home-manager:780
 msgid "Unknown command: %s"
 msgstr "Ubekendt kommando: %s"
 
