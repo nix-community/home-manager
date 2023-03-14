@@ -94,7 +94,9 @@
      }
    ]</p></div></div><div class="refsection"><a id="id-1.13.2.4"></a><h2>Description</h2><p>
    This command updates the user environment so that it corresponds to the
-      configuration specified in <code class="filename">~/.config/nixpkgs/home.nix</code> or <code class="filename">~/.config/nixpkgs/flake.nix</code>.
+   configuration specified in
+   <code class="filename">$XDG_CONFIG_HOME/home-manager/home.nix</code> or
+   <code class="filename">$XDG_CONFIG_HOME/home-manager/flake.nix</code>.
   </p><p>
    All operations using this tool expects a sub-command that indicates the
    operation to perform. It must be one of
@@ -157,8 +159,8 @@
           remove packages installed through Home Manager from the user profile,
           and
          </p></li><li class="listitem"><p>
-          optionally remove all Home Manager generations and make them
-          available for immediate garbage collection.
+          remove all Home Manager generations and make them available
+          for immediate garbage collection.
          </p></li></ul></div><p>
       </p></dd></dl></div><p>
   </p></div><div class="refsection"><a id="id-1.13.2.5"></a><h2>Options</h2><p>
@@ -206,7 +208,7 @@
      <code class="option">--file <em class="replaceable"><code>path</code></em></code>
     </span></dt><dd><p>
       Indicates the path to the Home Manager configuration file. If not given,
-      <code class="filename">$XDG_CONFIG_HOME/nixpkgs/home.nix</code> is used.
+      <code class="filename">$XDG_CONFIG_HOME/home-manager/home.nix</code> is used.
      </p></dd><dt><span class="term">
      <code class="option">-h</code>
     , </span><span class="term">
