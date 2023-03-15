@@ -131,7 +131,7 @@ in {
     };
 
     keyBindings = mkOption {
-      type = types.attrsOf (types.attrsOf types.str);
+      type = with types; attrsOf (attrsOf (separatedString " ;; "));
       default = { };
       description = ''
         Key bindings mapping keys to commands in different modes. This setting
@@ -245,6 +245,11 @@ in {
             "<Ctrl-v>" = "spawn mpv {url}";
             ",p" = "spawn --userscript qute-pass";
             ",l" = '''config-cycle spellcheck.languages ["en-GB"] ["en-US"]''';
+            "<F1>" = mkMerge [
+              "config-cycle tabs.show never always"
+              "config-cycle statusbar.show in-mode always"
+              "config-cycle scrolling.bar never always"
+            ];
           };
           prompt = {
             "<Ctrl-y>" = "prompt-yes";

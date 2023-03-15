@@ -13,6 +13,11 @@ with lib;
         normal = {
           "<Ctrl-v>" = "spawn mpv {url}";
           ",l" = ''config-cycle spellcheck.languages ["en-GB"] ["en-US"]'';
+          "<F1>" = mkMerge [
+            "config-cycle tabs.show never always"
+            "config-cycle statusbar.show in-mode always"
+            "config-cycle scrolling.bar never always"
+          ];
         };
         prompt = { "<Ctrl-y>" = "prompt-yes"; };
       };
@@ -34,6 +39,7 @@ with lib;
             c.bindings.default = {}
             config.bind(",l", "config-cycle spellcheck.languages [\"en-GB\"] [\"en-US\"]", mode="normal")
             config.bind("<Ctrl-v>", "spawn mpv {url}", mode="normal")
+            config.bind("<F1>", "config-cycle tabs.show never always ;; config-cycle statusbar.show in-mode always ;; config-cycle scrolling.bar never always", mode="normal")
             config.bind("<Ctrl-y>", "prompt-yes", mode="prompt")''
         }
     '';
