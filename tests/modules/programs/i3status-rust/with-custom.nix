@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 {
   config = {
     programs.i3status-rust = {
@@ -99,7 +97,7 @@ with lib;
       };
     };
 
-    test.stubs.i3status-rust = { };
+    test.stubs.i3status-rust = { version = "0.30.0"; };
 
     nmt.script = ''
       assertFileExists home-files/.config/i3status-rust/config-custom.toml

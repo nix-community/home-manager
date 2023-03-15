@@ -4,13 +4,15 @@
   config = {
     programs.i3status-rust = { enable = true; };
 
-    test.stubs.i3status-rust = { version = "0.30.0"; };
+    test.stubs.i3status-rust = { version = "0.29.9"; };
 
     nmt.script = ''
       assertFileExists home-files/.config/i3status-rust/config-default.toml
       assertFileContent home-files/.config/i3status-rust/config-default.toml \
         ${
           pkgs.writeText "i3status-rust-expected-config" ''
+            icons = "none"
+            theme = "plain"
             [[block]]
             alert = 10.0
             block = "disk_space"
@@ -40,12 +42,6 @@
             block = "time"
             format = " $timestamp.datetime(f:'%a %d/%m %R') "
             interval = 60
-
-            [icons]
-            icons = "none"
-
-            [theme]
-            theme = "plain"
           ''
         }
     '';

@@ -241,7 +241,7 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile = mapAttrs' (cfgFileSuffix: cfg:
+    xdg.configFile = mapAttrs' (cfgFileSuffix: cfgBar:
       nameValuePair ("i3status-rust/config-${cfgFileSuffix}.toml") ({
         onChange = mkIf config.xsession.windowManager.i3.enable ''
           i3Socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*"
@@ -251,10 +251,16 @@ in {
         '';
 
         source = settingsFormat.generate ("config-${cfgFileSuffix}.toml") ({
-          theme = { theme = cfg.theme; };
-          icons = { icons = cfg.icons; };
-          block = cfg.blocks;
-        } // cfg.settings);
+          theme = if lib.versionAtLeast cfg.package.version "0.30.0" then {
+            theme = cfgBar.theme;
+          } else
+            cfgBar.theme;
+          icons = if lib.versionAtLeast cfg.package.version "0.30.0" then {
+            icons = cfgBar.icons;
+          } else
+            cfgBar.icons;
+          block = cfgBar.blocks;
+        } // cfgBar.settings);
       })) cfg.bars;
   };
 }
