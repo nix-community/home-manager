@@ -18,6 +18,6 @@
     assertFileExists home-files/.bashrc
     assertFileContains \
       home-files/.bashrc \
-      'eval "$(@atuin@/bin/atuin init bash)"'
+      'eval "$(@atuin@/bin/atuin init bash )"'
   '';
 }
