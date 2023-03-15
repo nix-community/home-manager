@@ -13,19 +13,15 @@ with lib;
           blocks = [
             {
               block = "disk_space";
-              path = "/";
-              alias = "/";
               info_type = "available";
-              unit = "GB";
               interval = 60;
               warning = 20.0;
               alert = 10.0;
             }
             {
               block = "memory";
-              display_type = "memory";
-              format_mem = "{Mug}GB ({Mup}%)";
-              format_swap = "{SUp}%";
+              format_mem = " $icon $Mug ($Mup) ";
+              format_swap = " $icon $SUp ";
             }
           ];
         };
@@ -35,12 +31,12 @@ with lib;
             {
               block = "cpu";
               interval = 1;
-              format = "{barchart}";
+              format = " $icon $barchart ";
             }
             {
               block = "load";
               interval = 1;
-              format = "{1m} {5m}";
+              format = " $icon $1m $5m ";
             }
           ];
           icons = "awesome5";
@@ -59,23 +55,23 @@ with lib;
       assertFileContent home-files/.config/i3status-rust/config-top.toml \
         ${
           pkgs.writeText "i3status-rust-expected-config" ''
-            icons = "none"
-            theme = "plain"
             [[block]]
             alert = 10.0
-            alias = "/"
             block = "disk_space"
             info_type = "available"
             interval = 60
-            path = "/"
-            unit = "GB"
             warning = 20.0
 
             [[block]]
             block = "memory"
-            display_type = "memory"
-            format_mem = "{Mug}GB ({Mup}%)"
-            format_swap = "{SUp}%"
+            format_mem = " $icon $Mug ($Mup) "
+            format_swap = " $icon $SUp "
+
+            [icons]
+            icons = "none"
+
+            [theme]
+            theme = "plain"
           ''
         }
 
@@ -84,17 +80,21 @@ with lib;
         home-files/.config/i3status-rust/config-bottom.toml \
         ${
           pkgs.writeText "i3status-rust-expected-config" ''
-            icons = "awesome5"
-            theme = "gruvbox-dark"
             [[block]]
             block = "cpu"
-            format = "{barchart}"
+            format = " $icon $barchart "
             interval = 1
 
             [[block]]
             block = "load"
-            format = "{1m} {5m}"
+            format = " $icon $1m $5m "
             interval = 1
+
+            [icons]
+            icons = "awesome5"
+
+            [theme]
+            theme = "gruvbox-dark"
           ''
         }
     '';
