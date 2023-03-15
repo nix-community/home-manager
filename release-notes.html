@@ -9,7 +9,15 @@ The default configuration location has been changed from
 then the default flake file location has changed from
 <code class="literal">~/.config/nixpkgs/flake.nix</code> to <code class="literal">~/.config/home-manager/flake.nix</code>.</p><p class="simpara">The old location will continue to work but using it will trigger a warning message.
 We changed the default configuration location to avoid confusion about
-which files belong to Home Manager and which belong to Nixpkgs.</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-23.05-state-version-changes"></a>E.1.2. State Version Changes</h3></div></div></div><p>The state version in this release includes the changes below.
+which files belong to Home Manager and which belong to Nixpkgs.</p></li><li class="listitem">
+The <code class="literal">home-manager</code> tool now offers an <code class="literal">init</code> command.
+This command can be used to generate an initial Home Manager configuration,
+and optionally also activate it.
+The recommended installation method for a standalone Home Manager setup
+with Nix flakes uses this new command.
+The standard installation method remains the same but uses the new command internally.
+See <a class="xref" href="index.html#sec-flakes-standalone-unstable" title="3.2.1. Unstable Version">Section 3.2.1, “Unstable Version”</a> for more.
+</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-23.05-state-version-changes"></a>E.1.2. State Version Changes</h3></div></div></div><p>The state version in this release includes the changes below.
 These changes are only active if the <code class="literal">home.stateVersion</code> option is set to "23.05" or later.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p class="simpara">
 The options
 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
@@ -20,8 +28,8 @@ The options
 <a class="xref" href="options.html#opt-wayland.windowManager.sway.config.window.titlebar"><code class="option">wayland.windowManager.sway.config.window.titlebar</code></a>
 </li><li class="listitem">
 <a class="xref" href="options.html#opt-wayland.windowManager.sway.config.floating.titlebar"><code class="option">wayland.windowManager.sway.config.floating.titlebar</code></a>
-</li></ul></div><p class="simpara">now default to <code class="literal">true</code> which is consistent with the default values
-for those options used by <code class="literal">i3</code> and <code class="literal">sway</code>.</p></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="sec-release-22.11"></a>E.2. Release 22.11</h2></div></div></div><p>This is the current unstable branch and the information in this section is therefore not final.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-22.11-highlights"></a>E.2.1. Highlights</h3></div></div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p class="simpara">
+</li></ul></div><p class="simpara">now default to <code class="literal">true</code> which is consistent with the default values for
+those options used by <code class="literal">i3</code> and <code class="literal">sway</code>.</p></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="sec-release-22.11"></a>E.2. Release 22.11</h2></div></div></div><p>This is the current unstable branch and the information in this section is therefore not final.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-22.11-highlights"></a>E.2.1. Highlights</h3></div></div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p class="simpara">
 The <a class="xref" href="options.html#opt-home.stateVersion"><code class="option">home.stateVersion</code></a> option no longer has a default value.
 It used to default to “18.09”, which was the Home Manager version
 that introduced the option. If your configuration does not explicitly

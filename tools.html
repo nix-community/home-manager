@@ -4,6 +4,8 @@
    — reconfigure a user environment</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">home-manager</code>  { 
     build
      |   
+    init [--switch]  [<em class="replaceable"><code>dir</code></em>]
+     |   
     instantiate
      |   
     edit
@@ -105,6 +107,26 @@
      </span></dt><dd><p>
        Build configuration into a <code class="filename">result</code> directory.
       </p></dd><dt><span class="term">
+        <code class="option">init</code> [<code class="option">--switch</code>] [<em class="replaceable"><code>dir</code></em>]
+      </span></dt><dd><p class="simpara">
+          Generates an initial <code class="filename">home.nix</code> file for the
+          current user. If Nix flakes are enabled, then this command also
+          generates a <code class="filename">flake.nix</code> file.
+        </p><p class="simpara">
+          If a path <em class="replaceable"><code>dir</code></em> is given then the
+          configuration will be generated in that directory. Otherwise, the
+          configuration will be generated in
+          <code class="filename">~/.config/home-manager</code>. The output directory will
+          be created if it does not exist.
+        </p><p class="simpara">
+          If the <code class="option">--switch</code> option is given, then the generated
+          configuration is activated.
+        </p><p class="simpara">
+          Note, this command will not overwrite any existing files. It is
+          therefore safe to initialize a configuration, edit it, and then re-run
+          the <code class="option">init</code> command with <code class="option">--switch</code>
+          enabled to activate the configuration.
+        </p></dd><dt><span class="term">
       <code class="option">instantiate</code>
      </span></dt><dd><p>
        Instantiate the configuration and print the resulting derivation.
