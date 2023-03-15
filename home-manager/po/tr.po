@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-07 23:36+0100\n"
+"POT-Creation-Date: 2023-03-14 23:10+0100\n"
 "PO-Revision-Date: 2022-03-26 23:57+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/home-manager/cli/"
@@ -19,24 +19,33 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.12-dev\n"
 
-#: home-manager/home-manager:60
+#: home-manager/home-manager:62
 msgid "No configuration file found at %s"
 msgstr "%s konumunda yapılandırma dosyası bulunamadı"
 
-#: home-manager/home-manager:79
+#. translators: The first '%s' specifier will be replaced by either
+#. 'home.nix' or 'flake.nix'.
+#: home-manager/home-manager:79 home-manager/home-manager:83
+#: home-manager/home-manager:138
+msgid ""
+"Keeping your Home Manager %s in %s is deprecated,\n"
+"please move it to %s"
+msgstr ""
+
+#: home-manager/home-manager:90
 msgid "No configuration file found. Please create one at %s"
 msgstr ""
 "Yapılandırma dosyası bulunamadı. Lütfen %s konumunda bir tane oluşturun"
 
-#: home-manager/home-manager:146
+#: home-manager/home-manager:174
 msgid "Can't inspect options of a flake configuration"
 msgstr "Flake yapılandırmasının ayarları incelenemiyor"
 
-#: home-manager/home-manager:185
+#: home-manager/home-manager:213
 msgid "Can't instantiate a flake configuration"
 msgstr "Flake yapılandırması örneklendirilemiyor"
 
-#: home-manager/home-manager:258
+#: home-manager/home-manager:286
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -50,80 +59,80 @@ msgstr[1] ""
 "%d tane okunmamış ilgili haberler bulunmakta.\n"
 "Okumak için \"%s news\"."
 
-#: home-manager/home-manager:272
+#: home-manager/home-manager:300
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Bilinmeyen \"news.display\" seçeneği \"%s\"."
 
-#: home-manager/home-manager:279
+#: home-manager/home-manager:307
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "Lütfen $EDITOR ortam değişkenini tanımlayın"
 
-#: home-manager/home-manager:294
+#: home-manager/home-manager:322
 msgid "Cannot run build in read-only directory"
 msgstr "İnşa, sadece okunabilir bir klasörde çalıştırılamaz"
 
-#: home-manager/home-manager:378
+#: home-manager/home-manager:406
 msgid "No generation with ID %s"
 msgstr "%s ID'sine sahip inşa bulunamadı"
 
-#: home-manager/home-manager:380
+#: home-manager/home-manager:408
 msgid "Cannot remove the current generation %s"
 msgstr "Kullanımda olan %s inşası silinemez"
 
-#: home-manager/home-manager:382
+#: home-manager/home-manager:410
 msgid "Removing generation %s"
 msgstr "İnşa siliniyor %s"
 
-#: home-manager/home-manager:401
+#: home-manager/home-manager:429
 msgid "No generations to expire"
 msgstr "Süresi dolacak inşa yok"
 
-#: home-manager/home-manager:412
+#: home-manager/home-manager:440
 msgid "No home-manager packages seem to be installed."
 msgstr "Galiba home-manager paketi kurulu değil."
 
-#: home-manager/home-manager:469
+#: home-manager/home-manager:497
 msgid "Unknown argument %s"
 msgstr "Bilinmeyen argüman %s"
 
-#: home-manager/home-manager:485
+#: home-manager/home-manager:513
 msgid "This will remove Home Manager from your system."
 msgstr "Bu, sisteminizden Home Manager'ı kaldıracak."
 
-#: home-manager/home-manager:488
+#: home-manager/home-manager:516
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Bu sadece bir inşa denemesi, hiçbir şey silinmeyecek."
 
-#: home-manager/home-manager:492
+#: home-manager/home-manager:520
 msgid "Really uninstall Home Manager?"
 msgstr "Home Manager'ı silmek istediğinize emin misiniz?"
 
-#: home-manager/home-manager:498
+#: home-manager/home-manager:526
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Boş Home Manager yapılandırmasına geçiliyor..."
 
-#: home-manager/home-manager:525
+#: home-manager/home-manager:553
 msgid "Yay!"
 msgstr "Güzel!"
 
-#: home-manager/home-manager:530
+#: home-manager/home-manager:558
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager kaldırıldı ama home.nix dosyasına dokunulmadı."
 
-#: home-manager/home-manager:695
+#: home-manager/home-manager:723
 msgid "%s: unknown option '%s'"
 msgstr "%s: Bilinmeyen komut '%s'"
 
-#: home-manager/home-manager:696
+#: home-manager/home-manager:724
 msgid "Run '%s --help' for usage help"
 msgstr "Yardım için '%s --help'"
 
-#: home-manager/home-manager:730
+#: home-manager/home-manager:758
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations bir argüman istiyor, %d tane girildi."
 
-#: home-manager/home-manager:752
+#: home-manager/home-manager:780
 msgid "Unknown command: %s"
 msgstr "Bilinmeyen komut: %s"
 

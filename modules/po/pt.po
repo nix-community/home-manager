@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-07 23:36+0100\n"
+"POT-Creation-Date: 2023-03-14 23:10+0100\n"
 "PO-Revision-Date: 2023-02-19 10:19+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/home-manager/"
@@ -67,15 +67,15 @@ msgstr ""
 msgid "Activating %s"
 msgstr "Ativando %s"
 
-#: modules/lib-bash/activation-init.sh:18
+#: modules/lib-bash/activation-init.sh:16
 msgid "Migrating profiles from %s to %s"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:77
+#: modules/lib-bash/activation-init.sh:75
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "Revalidando oldGenNum e oldGenPath"
 
-#: modules/lib-bash/activation-init.sh:80
+#: modules/lib-bash/activation-init.sh:78
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -103,26 +103,26 @@ msgstr ""
 "\n"
 "e tentar executar \"home-manager switch\" de novo. Boa sorte!"
 
-#: modules/lib-bash/activation-init.sh:97
+#: modules/lib-bash/activation-init.sh:95
 msgid "Starting Home Manager activation"
 msgstr "Iniciando ativação do Home Manager"
 
-#: modules/lib-bash/activation-init.sh:101
+#: modules/lib-bash/activation-init.sh:99
 msgid "Sanity checking Nix"
 msgstr "Revalidando Nix"
 
-#: modules/lib-bash/activation-init.sh:107
+#: modules/lib-bash/activation-init.sh:105
 msgid "This is a dry run"
 msgstr "Essa é uma execução de teste"
 
-#: modules/lib-bash/activation-init.sh:111
+#: modules/lib-bash/activation-init.sh:109
 msgid "This is a live run"
 msgstr "Essa é uma execução de fato"
 
-#: modules/lib-bash/activation-init.sh:118
+#: modules/lib-bash/activation-init.sh:116
 msgid "Using Nix version: %s"
 msgstr "Usando versão do Nix: %s"
 
-#: modules/lib-bash/activation-init.sh:121
+#: modules/lib-bash/activation-init.sh:119
 msgid "Activation variables:"
 msgstr "Variáveis durante ativação:"
