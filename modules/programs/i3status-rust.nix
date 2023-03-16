@@ -9,7 +9,7 @@ let
   settingsFormat = pkgs.formats.toml { };
 
 in {
-  meta.maintainers = [ maintainers.farlion ];
+  meta.maintainers = with lib.maintainers; [ farlion thiagokokada ];
 
   options.programs.i3status-rust = {
     enable = mkEnableOption "a replacement for i3-status written in Rust";
@@ -21,36 +21,32 @@ in {
           blocks = mkOption {
             type = settingsFormat.type;
             default = [
+              { block = "cpu"; }
               {
                 block = "disk_space";
                 path = "/";
-                alias = "/";
                 info_type = "available";
-                unit = "GB";
-                interval = 60;
+                interval = 20;
                 warning = 20.0;
                 alert = 10.0;
+                format = " $icon root: $available.eng(w:2) ";
               }
               {
                 block = "memory";
-                display_type = "memory";
-                format_mem = "{mem_used_percents}";
-                format_swap = "{swap_used_percents}";
+                format = " $icon $mem_total_used_percents.eng(w:2) ";
+                format_alt = " $icon_swap $swap_used_percents.eng(w:2) ";
               }
               {
-                block = "cpu";
-                interval = 1;
+                block = "sound";
+                click = [{
+                  button = "left";
+                  cmd = "pavucontrol";
+                }];
               }
-              {
-                block = "load";
-                interval = 1;
-                format = "{1m}";
-              }
-              { block = "sound"; }
               {
                 block = "time";
-                interval = 60;
-                format = "%a %d/%m %R";
+                interval = 5;
+                format = " $timestamp.datetime(f:'%a %d/%m %R') ";
               }
             ];
             description = ''
@@ -64,20 +60,23 @@ in {
                 {
                   block = "disk_space";
                   path = "/";
-                  alias = "/";
                   info_type = "available";
-                  unit = "GB";
                   interval = 60;
                   warning = 20.0;
                   alert = 10.0;
                 }
                 {
                   block = "sound";
-                  format = "{output_name} {volume}%";
-                  on_click = "pavucontrol --tab=3";
+                  format = " $icon $output_name {$volume.eng(w:2) |}";
+                  click = [
+                    {
+                      button = "left";
+                      cmd = "pavucontrol --tab=3";
+                    }
+                  ];
                   mappings = {
-                   "alsa_output.pci-0000_00_1f.3.analog-stereo" = "";
-                   "bluez_sink.70_26_05_DA_27_A4.a2dp_sink" = "";
+                    "alsa_output.pci-0000_00_1f.3.analog-stereo" = "";
+                    "bluez_sink.70_26_05_DA_27_A4.a2dp_sink" = "";
                   };
                 }
               ];
@@ -94,7 +93,7 @@ in {
             example = literalExpression ''
               {
                 theme =  {
-                  name = "solarized-dark";
+                  theme = "solarized-dark";
                   overrides = {
                     idle_bg = "#123456";
                     idle_fg = "#abcdef";
@@ -109,10 +108,10 @@ in {
             default = "none";
             description = ''
               The icons set to use. See
-              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/themes.md"/>
+              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/doc/themes.md"/>
               for a list of available icon sets.
             '';
-            example = "awesome5";
+            example = "awesome6";
           };
 
           theme = mkOption {
@@ -120,7 +119,7 @@ in {
             default = "plain";
             description = ''
               The theme to use. See
-              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/themes.md"/>
+              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/doc/themes.md"/>
               for a list of available themes.
             '';
             example = "gruvbox-dark";
@@ -134,18 +133,15 @@ in {
             {
               block = "disk_space";
               path = "/";
-              alias = "/";
               info_type = "available";
-              unit = "GB";
               interval = 60;
               warning = 20.0;
               alert = 10.0;
             }
             {
               block = "memory";
-              display_type = "memory";
-              format_mem = "{mem_used_percents}";
-              format_swap = "{swap_used_percents}";
+              format = " $icon mem_used_percents ";
+              format_alt = " $icon $swap_used_percents ";
             }
             {
               block = "cpu";
@@ -154,13 +150,13 @@ in {
             {
               block = "load";
               interval = 1;
-              format = "{1m}";
+              format = " $icon $1m ";
             }
             { block = "sound"; }
             {
               block = "time";
               interval = 60;
-              format = "%a %d/%m %R";
+              format = " $timestamp.datetime(f:'%a %d/%m %R') ";
             }
           ];
         };
@@ -187,18 +183,15 @@ in {
             {
                block = "disk_space";
                path = "/";
-               alias = "/";
                info_type = "available";
-               unit = "GB";
                interval = 60;
                warning = 20.0;
                alert = 10.0;
              }
              {
                block = "memory";
-               display_type = "memory";
-               format_mem = "{mem_used_percents}";
-               format_swap = "{swap_used_percents}";
+               format_mem = " $icon $mem_used_percents ";
+               format_swap = " $icon $swap_used_percents ";
              }
              {
                block = "cpu";
@@ -207,18 +200,18 @@ in {
              {
                block = "load";
                interval = 1;
-               format = "{1m}";
+               format = " $icon $1m ";
              }
              { block = "sound"; }
              {
                block = "time";
                interval = 60;
-               format = "%a %d/%m %R";
+               format = " $timestamp.datetime(f:'%a %d/%m %R') ";
              }
           ];
           settings = {
             theme =  {
-              name = "solarized-dark";
+              theme = "solarized-dark";
               overrides = {
                 idle_bg = "#123456";
                 idle_fg = "#abcdef";
@@ -248,7 +241,7 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile = mapAttrs' (cfgFileSuffix: cfg:
+    xdg.configFile = mapAttrs' (cfgFileSuffix: cfgBar:
       nameValuePair ("i3status-rust/config-${cfgFileSuffix}.toml") ({
         onChange = mkIf config.xsession.windowManager.i3.enable ''
           i3Socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*"
@@ -258,10 +251,16 @@ in {
         '';
 
         source = settingsFormat.generate ("config-${cfgFileSuffix}.toml") ({
-          theme = cfg.theme;
-          icons = cfg.icons;
-          block = cfg.blocks;
-        } // cfg.settings);
+          theme = if lib.versionAtLeast cfg.package.version "0.30.0" then {
+            theme = cfgBar.theme;
+          } else
+            cfgBar.theme;
+          icons = if lib.versionAtLeast cfg.package.version "0.30.0" then {
+            icons = cfgBar.icons;
+          } else
+            cfgBar.icons;
+          block = cfgBar.blocks;
+        } // cfgBar.settings);
       })) cfg.bars;
   };
 }

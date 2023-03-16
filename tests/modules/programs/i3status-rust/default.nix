@@ -3,4 +3,5 @@
   i3status-rust-with-custom = ./with-custom.nix;
   i3status-rust-with-extra-settings = ./with-extra-settings.nix;
   i3status-rust-with-multiple-bars = ./with-multiple-bars.nix;
+  i3status-rust-with-version-02xx = ./with-version-02xx.nix;
 }
