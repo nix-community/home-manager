@@ -9,7 +9,7 @@ let
   settingsFormat = pkgs.formats.toml { };
 
 in {
-  meta.maintainers = [ maintainers.farlion ];
+  meta.maintainers = with lib.maintainers; [ farlion thiagokokada ];
 
   options.programs.i3status-rust = {
     enable = mkEnableOption "a replacement for i3-status written in Rust";

@@ -152,7 +152,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/i3status.nix                        @JustinLovinger
 
-/modules/programs/i3status-rust.nix                   @workflow
+/modules/programs/i3status-rust.nix                   @workflow @thiagokokada
+/tests/modules/programs/i3status-rust                 @thiagokokada
 
 /modules/programs/ion.nix                             @jo1gi
 
