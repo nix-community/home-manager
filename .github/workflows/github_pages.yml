@@ -11,9 +11,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v19
+    - uses: cachix/install-nix-action@v20
       with:
-        install_url: https://releases.nixos.org/nix/nix-2.13.3/install
         nix_path: nixpkgs=channel:nixos-unstable
     - uses: cachix/cachix-action@v12
       with:

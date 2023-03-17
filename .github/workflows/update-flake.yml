@@ -12,9 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Install Nix
-        uses: cachix/install-nix-action@v19
-        with:
-          install_url: https://releases.nixos.org/nix/nix-2.13.3/install
+        uses: cachix/install-nix-action@v20
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v17
         with:
