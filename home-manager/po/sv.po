@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-03-15 20:11+0100\n"
-"PO-Revision-Date: 2023-03-15 10:52+0000\n"
-"Last-Translator: Luna Jernberg <droidbittin@gmail.com>\n"
+"PO-Revision-Date: 2023-03-16 09:05+0000\n"
+"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/cli/"
 "sv/>\n"
 "Language: sv\n"
@@ -53,11 +53,11 @@ msgstr "Kör '%s --help' för användarhjälp"
 
 #: home-manager/home-manager:276 home-manager/home-manager:326
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "Filen %s finns redan, lämnar den orörd..."
 
 #: home-manager/home-manager:278 home-manager/home-manager:328
 msgid "Creating %s..."
-msgstr ""
+msgstr "Skapar %s..."
 
 #: home-manager/home-manager:370
 msgid "Creating initial Home Manager generation..."
