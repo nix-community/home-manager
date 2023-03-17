@@ -80,14 +80,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [{
-      assertion = cfg.enableNushellIntegration
-        -> versionAtLeast config.programs.nushell.package.version "0.73";
-      message = ''
-        Nushell integration for starship requires nushell 0.73 or later.
-      '';
-    }];
-
     home.packages = [ cfg.package ];
 
     xdg.configFile."starship.toml" = mkIf (cfg.settings != { }) {
