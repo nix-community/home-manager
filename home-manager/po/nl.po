@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-14 23:10+0100\n"
+"POT-Creation-Date: 2023-03-15 20:11+0100\n"
 "PO-Revision-Date: 2022-11-16 13:47+0000\n"
 "Last-Translator: Pablo Bollansee <pablo.bollansee@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/home-manager/cli/"
@@ -19,132 +19,50 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.15-dev\n"
 
-#: home-manager/home-manager:62
+#: home-manager/home-manager:71
 msgid "No configuration file found at %s"
 msgstr "Geen configuratiebestand gevonden op %s"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
-#: home-manager/home-manager:79 home-manager/home-manager:83
-#: home-manager/home-manager:138
+#: home-manager/home-manager:88 home-manager/home-manager:92
+#: home-manager/home-manager:147
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
 
-#: home-manager/home-manager:90
+#: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
 msgstr "Geen configuratiebestand gevonden, maak er alstublieft een aan op %s"
 
-#: home-manager/home-manager:174
+#: home-manager/home-manager:183
 msgid "Can't inspect options of a flake configuration"
 msgstr "Kan de opties van een flake configuratie niet inspecteren"
 
-#: home-manager/home-manager:213
-msgid "Can't instantiate a flake configuration"
-msgstr "Het is niet gelukt om de vlok-configuratie te creëren"
-
-#: home-manager/home-manager:286
-msgid ""
-"There is %d unread and relevant news item.\n"
-"Read it by running the command \"%s news\"."
-msgid_plural ""
-"There are %d unread and relevant news items.\n"
-"Read them by running the command \"%s news\"."
-msgstr[0] ""
-"Er is %d ongelezen and relevant nieuws artikel.\n"
-"Lees het door het commando \"%s news\" uit te voeren."
-msgstr[1] ""
-"Er zijn %d ongelezen and relevante nieuws artikelen.\n"
-"Lees ze door het commando \"%s news\" uit te voeren."
-
-#: home-manager/home-manager:300
-msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr "Onbekende \"new.display\" instelling \"%s\"."
-
-#: home-manager/home-manager:307
-#, sh-format
-msgid "Please set the $EDITOR environment variable"
-msgstr "Gelieve de $EDITOR omgevingsvariabele in te stellen"
-
-#: home-manager/home-manager:322
-msgid "Cannot run build in read-only directory"
-msgstr "Het is niet mogelijk om te bouwen in een read-only map"
-
-#: home-manager/home-manager:406
-msgid "No generation with ID %s"
-msgstr "Geen generatie met de ID %s"
-
-#: home-manager/home-manager:408
-msgid "Cannot remove the current generation %s"
-msgstr "Het is niet mogelijk om de huidige generatie %s te verwijderen"
-
-#: home-manager/home-manager:410
-msgid "Removing generation %s"
-msgstr "Generatie %s aan het verwijderen"
-
-#: home-manager/home-manager:429
-msgid "No generations to expire"
-msgstr "Geen generatie om te beëindigen"
-
-#: home-manager/home-manager:440
-msgid "No home-manager packages seem to be installed."
-msgstr "Er lijkt geen home-manager pakket geïnstalleerd te zijn."
-
-#: home-manager/home-manager:497
-msgid "Unknown argument %s"
-msgstr "Onbekend argument %s"
-
-#: home-manager/home-manager:513
-msgid "This will remove Home Manager from your system."
-msgstr "Dit zal Home Manager van jouw systeem verwijderen."
-
-#: home-manager/home-manager:516
-msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr "Dit is een oefening, niets wordt werkelijk geïnstalleerd."
-
-#: home-manager/home-manager:520
-msgid "Really uninstall Home Manager?"
-msgstr "Wilt u zeker Home Manager verwijderen?"
-
-#: home-manager/home-manager:526
-msgid "Switching to empty Home Manager configuration..."
-msgstr "Naar een lege Home Manager configuratie aan het veranderen..."
-
-#: home-manager/home-manager:553
-msgid "Yay!"
-msgstr "Joepie!"
-
-#: home-manager/home-manager:558
-msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr "Home Manager is verwijdert maar jouw home.nix is onaangeraakt."
-
-#: home-manager/home-manager:723
+#: home-manager/home-manager:245 home-manager/home-manager:268
+#: home-manager/home-manager:907
 msgid "%s: unknown option '%s'"
 msgstr "%s: onbekende keuze '%s'"
 
-#: home-manager/home-manager:724
+#: home-manager/home-manager:250 home-manager/home-manager:908
 msgid "Run '%s --help' for usage help"
 msgstr "Voer '%s --help' in om gebruiksinfo te zien"
 
-#: home-manager/home-manager:758
-msgid "expire-generations expects one argument, got %d."
-msgstr "expire-generations verwacht één argument, maar kreeg er %d."
+#: home-manager/home-manager:276 home-manager/home-manager:326
+msgid "The file %s already exists, leaving it unchanged..."
+msgstr ""
 
-#: home-manager/home-manager:780
-msgid "Unknown command: %s"
-msgstr "Onbekende opdracht: %s"
+#: home-manager/home-manager:278 home-manager/home-manager:328
+msgid "Creating %s..."
+msgstr ""
 
-#: home-manager/install.nix:22
-msgid "Creating initial Home Manager configuration..."
-msgstr "Initiële Home Manager configuratie aan het maken..."
-
-#: home-manager/install.nix:66
+#: home-manager/home-manager:370
 msgid "Creating initial Home Manager generation..."
 msgstr "Initiële Home Manager generatie aan het maken..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
-#: home-manager/install.nix:71
+#: home-manager/home-manager:375
 msgid ""
 "All done! The home-manager tool should now be installed and you can edit\n"
 "\n"
@@ -163,7 +81,7 @@ msgstr ""
 "alle opties te zien."
 
 #. translators: The "%s" specifier will be replaced by a URL.
-#: home-manager/install.nix:76
+#: home-manager/home-manager:380
 msgid ""
 "Uh oh, the installation failed! Please create an issue at\n"
 "\n"
@@ -177,11 +95,101 @@ msgstr ""
 "\n"
 "als de error de schuld van Home Manager lijkt te zijn."
 
-#: home-manager/install.nix:83
+#: home-manager/home-manager:390
+msgid "Can't instantiate a flake configuration"
+msgstr "Het is niet gelukt om de vlok-configuratie te creëren"
+
+#: home-manager/home-manager:463
+msgid ""
+"There is %d unread and relevant news item.\n"
+"Read it by running the command \"%s news\"."
+msgid_plural ""
+"There are %d unread and relevant news items.\n"
+"Read them by running the command \"%s news\"."
+msgstr[0] ""
+"Er is %d ongelezen and relevant nieuws artikel.\n"
+"Lees het door het commando \"%s news\" uit te voeren."
+msgstr[1] ""
+"Er zijn %d ongelezen and relevante nieuws artikelen.\n"
+"Lees ze door het commando \"%s news\" uit te voeren."
+
+#: home-manager/home-manager:477
+msgid "Unknown \"news.display\" setting \"%s\"."
+msgstr "Onbekende \"new.display\" instelling \"%s\"."
+
+#: home-manager/home-manager:484
+#, sh-format
+msgid "Please set the $EDITOR environment variable"
+msgstr "Gelieve de $EDITOR omgevingsvariabele in te stellen"
+
+#: home-manager/home-manager:499
+msgid "Cannot run build in read-only directory"
+msgstr "Het is niet mogelijk om te bouwen in een read-only map"
+
+#: home-manager/home-manager:583
+msgid "No generation with ID %s"
+msgstr "Geen generatie met de ID %s"
+
+#: home-manager/home-manager:585
+msgid "Cannot remove the current generation %s"
+msgstr "Het is niet mogelijk om de huidige generatie %s te verwijderen"
+
+#: home-manager/home-manager:587
+msgid "Removing generation %s"
+msgstr "Generatie %s aan het verwijderen"
+
+#: home-manager/home-manager:606
+msgid "No generations to expire"
+msgstr "Geen generatie om te beëindigen"
+
+#: home-manager/home-manager:617
+msgid "No home-manager packages seem to be installed."
+msgstr "Er lijkt geen home-manager pakket geïnstalleerd te zijn."
+
+#: home-manager/home-manager:674
+msgid "Unknown argument %s"
+msgstr "Onbekend argument %s"
+
+#: home-manager/home-manager:690
+msgid "This will remove Home Manager from your system."
+msgstr "Dit zal Home Manager van jouw systeem verwijderen."
+
+#: home-manager/home-manager:693
+msgid "This is a dry run, nothing will actually be uninstalled."
+msgstr "Dit is een oefening, niets wordt werkelijk geïnstalleerd."
+
+#: home-manager/home-manager:697
+msgid "Really uninstall Home Manager?"
+msgstr "Wilt u zeker Home Manager verwijderen?"
+
+#: home-manager/home-manager:703
+msgid "Switching to empty Home Manager configuration..."
+msgstr "Naar een lege Home Manager configuratie aan het veranderen..."
+
+#: home-manager/home-manager:730
+msgid "Yay!"
+msgstr "Joepie!"
+
+#: home-manager/home-manager:735
+msgid "Home Manager is uninstalled but your home.nix is left untouched."
+msgstr "Home Manager is verwijdert maar jouw home.nix is onaangeraakt."
+
+#: home-manager/home-manager:945
+msgid "expire-generations expects one argument, got %d."
+msgstr "expire-generations verwacht één argument, maar kreeg er %d."
+
+#: home-manager/home-manager:967
+msgid "Unknown command: %s"
+msgstr "Onbekende opdracht: %s"
+
+#: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
 "Deze afleiding kan niet gebouwd worden, voer het alstublieft uit met nix-"
 "shell."
+
+#~ msgid "Creating initial Home Manager configuration..."
+#~ msgstr "Initiële Home Manager configuratie aan het maken..."
 
 #~ msgid "Remove all Home Manager generations?"
 #~ msgstr "Alle Home Manager generaties verwijderen?"

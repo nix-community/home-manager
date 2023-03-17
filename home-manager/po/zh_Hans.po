@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-14 23:10+0100\n"
+"POT-Creation-Date: 2023-03-15 20:11+0100\n"
 "PO-Revision-Date: 2021-12-28 12:41+0000\n"
 "Last-Translator: WhiredPlanck <fungdaat31@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -19,129 +19,50 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.10.1\n"
 
-#: home-manager/home-manager:62
+#: home-manager/home-manager:71
 msgid "No configuration file found at %s"
 msgstr "未在 %s 找到配置文件"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
-#: home-manager/home-manager:79 home-manager/home-manager:83
-#: home-manager/home-manager:138
+#: home-manager/home-manager:88 home-manager/home-manager:92
+#: home-manager/home-manager:147
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
 
-#: home-manager/home-manager:90
+#: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
 msgstr "未找到配置文件。请在 %s 处创建一份"
 
-#: home-manager/home-manager:174
+#: home-manager/home-manager:183
 msgid "Can't inspect options of a flake configuration"
 msgstr "无法检查 flake 配置中的选项"
 
-#: home-manager/home-manager:213
-msgid "Can't instantiate a flake configuration"
-msgstr "无法创建 flake 配置实例"
-
-#: home-manager/home-manager:286
-msgid ""
-"There is %d unread and relevant news item.\n"
-"Read it by running the command \"%s news\"."
-msgid_plural ""
-"There are %d unread and relevant news items.\n"
-"Read them by running the command \"%s news\"."
-msgstr[0] ""
-"有 %d 条未读的相关新闻或消息。\n"
-"可运行 “%s news” 命令进行阅读。"
-
-#: home-manager/home-manager:300
-msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr "未知的 “news.display” 设置项 “%s”。"
-
-#: home-manager/home-manager:307
-#, sh-format
-msgid "Please set the $EDITOR environment variable"
-msgstr "请设定 $EDITOR 环境变量"
-
-#: home-manager/home-manager:322
-msgid "Cannot run build in read-only directory"
-msgstr "无法在只读目录中运行构建"
-
-#: home-manager/home-manager:406
-msgid "No generation with ID %s"
-msgstr "没有 ID 为 %s 的世代"
-
-#: home-manager/home-manager:408
-msgid "Cannot remove the current generation %s"
-msgstr "无法移除当前世代 %s"
-
-#: home-manager/home-manager:410
-msgid "Removing generation %s"
-msgstr "正在移除世代 %s"
-
-#: home-manager/home-manager:429
-msgid "No generations to expire"
-msgstr "没有即将过期的世代"
-
-#: home-manager/home-manager:440
-msgid "No home-manager packages seem to be installed."
-msgstr "似乎没有安装 home-manager 软件包。"
-
-#: home-manager/home-manager:497
-msgid "Unknown argument %s"
-msgstr "未知参数 %s"
-
-#: home-manager/home-manager:513
-msgid "This will remove Home Manager from your system."
-msgstr "这将会从系统中移除 Home Manager。"
-
-#: home-manager/home-manager:516
-msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr "这是试运行结果，没有实际卸载任何软件包。"
-
-#: home-manager/home-manager:520
-msgid "Really uninstall Home Manager?"
-msgstr "确定要卸载 Home Manager 吗？"
-
-#: home-manager/home-manager:526
-msgid "Switching to empty Home Manager configuration..."
-msgstr "正在切换至空的 Home Manager 配置 ..."
-
-#: home-manager/home-manager:553
-msgid "Yay!"
-msgstr "好耶！"
-
-#: home-manager/home-manager:558
-msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr "Home Manager 已卸载，但未改动您的 home.nix 配置文件。"
-
-#: home-manager/home-manager:723
+#: home-manager/home-manager:245 home-manager/home-manager:268
+#: home-manager/home-manager:907
 msgid "%s: unknown option '%s'"
 msgstr "%s：未知选项 ‘%s’"
 
-#: home-manager/home-manager:724
+#: home-manager/home-manager:250 home-manager/home-manager:908
 msgid "Run '%s --help' for usage help"
 msgstr "运行 ‘%s --help’ 获取用法帮助"
 
-#: home-manager/home-manager:758
-msgid "expire-generations expects one argument, got %d."
-msgstr "expire-generations 须要一个参数，但获取到了 %d 个。"
+#: home-manager/home-manager:276 home-manager/home-manager:326
+msgid "The file %s already exists, leaving it unchanged..."
+msgstr ""
 
-#: home-manager/home-manager:780
-msgid "Unknown command: %s"
-msgstr "未知命令：%s"
+#: home-manager/home-manager:278 home-manager/home-manager:328
+msgid "Creating %s..."
+msgstr ""
 
-#: home-manager/install.nix:22
-msgid "Creating initial Home Manager configuration..."
-msgstr "正在创建初始 Home Manager 配置 ..."
-
-#: home-manager/install.nix:66
+#: home-manager/home-manager:370
 msgid "Creating initial Home Manager generation..."
 msgstr "正在创建初始 Home Manager 世代 ..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
-#: home-manager/install.nix:71
+#: home-manager/home-manager:375
 msgid ""
 "All done! The home-manager tool should now be installed and you can edit\n"
 "\n"
@@ -158,7 +79,7 @@ msgstr ""
 "来查看所有可用选项。"
 
 #. translators: The "%s" specifier will be replaced by a URL.
-#: home-manager/install.nix:76
+#: home-manager/home-manager:380
 msgid ""
 "Uh oh, the installation failed! Please create an issue at\n"
 "\n"
@@ -172,9 +93,96 @@ msgstr ""
 "\n"
 "处创建 Issue 告知我们。"
 
-#: home-manager/install.nix:83
+#: home-manager/home-manager:390
+msgid "Can't instantiate a flake configuration"
+msgstr "无法创建 flake 配置实例"
+
+#: home-manager/home-manager:463
+msgid ""
+"There is %d unread and relevant news item.\n"
+"Read it by running the command \"%s news\"."
+msgid_plural ""
+"There are %d unread and relevant news items.\n"
+"Read them by running the command \"%s news\"."
+msgstr[0] ""
+"有 %d 条未读的相关新闻或消息。\n"
+"可运行 “%s news” 命令进行阅读。"
+
+#: home-manager/home-manager:477
+msgid "Unknown \"news.display\" setting \"%s\"."
+msgstr "未知的 “news.display” 设置项 “%s”。"
+
+#: home-manager/home-manager:484
+#, sh-format
+msgid "Please set the $EDITOR environment variable"
+msgstr "请设定 $EDITOR 环境变量"
+
+#: home-manager/home-manager:499
+msgid "Cannot run build in read-only directory"
+msgstr "无法在只读目录中运行构建"
+
+#: home-manager/home-manager:583
+msgid "No generation with ID %s"
+msgstr "没有 ID 为 %s 的世代"
+
+#: home-manager/home-manager:585
+msgid "Cannot remove the current generation %s"
+msgstr "无法移除当前世代 %s"
+
+#: home-manager/home-manager:587
+msgid "Removing generation %s"
+msgstr "正在移除世代 %s"
+
+#: home-manager/home-manager:606
+msgid "No generations to expire"
+msgstr "没有即将过期的世代"
+
+#: home-manager/home-manager:617
+msgid "No home-manager packages seem to be installed."
+msgstr "似乎没有安装 home-manager 软件包。"
+
+#: home-manager/home-manager:674
+msgid "Unknown argument %s"
+msgstr "未知参数 %s"
+
+#: home-manager/home-manager:690
+msgid "This will remove Home Manager from your system."
+msgstr "这将会从系统中移除 Home Manager。"
+
+#: home-manager/home-manager:693
+msgid "This is a dry run, nothing will actually be uninstalled."
+msgstr "这是试运行结果，没有实际卸载任何软件包。"
+
+#: home-manager/home-manager:697
+msgid "Really uninstall Home Manager?"
+msgstr "确定要卸载 Home Manager 吗？"
+
+#: home-manager/home-manager:703
+msgid "Switching to empty Home Manager configuration..."
+msgstr "正在切换至空的 Home Manager 配置 ..."
+
+#: home-manager/home-manager:730
+msgid "Yay!"
+msgstr "好耶！"
+
+#: home-manager/home-manager:735
+msgid "Home Manager is uninstalled but your home.nix is left untouched."
+msgstr "Home Manager 已卸载，但未改动您的 home.nix 配置文件。"
+
+#: home-manager/home-manager:945
+msgid "expire-generations expects one argument, got %d."
+msgstr "expire-generations 须要一个参数，但获取到了 %d 个。"
+
+#: home-manager/home-manager:967
+msgid "Unknown command: %s"
+msgstr "未知命令：%s"
+
+#: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr "此配置文件/变体不可构建，请在 nix-shell 中运行它。"
+
+#~ msgid "Creating initial Home Manager configuration..."
+#~ msgstr "正在创建初始 Home Manager 配置 ..."
 
 #~ msgid "Remove all Home Manager generations?"
 #~ msgstr "要移除所有 Home Manager 配置世代吗？"
