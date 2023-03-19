@@ -376,6 +376,8 @@ Makefile                                              @thiagokokada
 /modules/services/barrier.nix                         @Kritnich
 /tests/modules/services/barrier                       @Kritnich
 
+/modules/services/batsignal.nix                       @Kranzes
+
 /modules/services/betterlockscreen.nix                @SebTM
 
 /modules/programs/borgmatic.nix                       @DamienCassou

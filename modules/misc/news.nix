@@ -979,6 +979,14 @@ in
           A new module is available: 'programs.hstr'.
         '';
       }
+
+      {
+        time = "2023-04-18T06:28:31+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.batsignal'.
+        '';
+      }
     ];
   };
 }

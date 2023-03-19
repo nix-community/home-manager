@@ -208,6 +208,7 @@ let
     ./services/autorandr.nix
     ./services/avizo.nix
     ./services/barrier.nix
+    ./services/batsignal.nix
     ./services/betterlockscreen.nix
     ./services/blueman-applet.nix
     ./services/borgmatic.nix
