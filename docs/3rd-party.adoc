@@ -16,3 +16,7 @@ you are encouraged to create a PR that expands this chapter.
 - https://github.com/schuelermine/xhmm[xhmm — extra Home Manager modules]
 +
 A collection of modules maintained by Anselm Schüler.
+
+- https://github.com/danth/stylix/[Stylix — System-wide colorscheming and typography]
++
+Configure your applications to get coherent color scheme and font.
