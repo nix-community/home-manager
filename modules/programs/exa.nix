@@ -46,8 +46,6 @@ with lib;
       ++ optional cfg.git "--git" ++ cfg.extraOptions);
 
     aliases = {
-      # Use `command` instead of hardcoding the path to exa so that aliases don't
-      # go stale after a system update.
       exa = "exa ${args}";
     } // optionalAttrs cfg.enableAliases {
       ls = "exa";
