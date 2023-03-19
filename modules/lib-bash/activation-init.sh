@@ -42,7 +42,7 @@ function setupVars() {
     # In the future we may perform a one-shot migration to the new location.
     #
     # shellcheck disable=2174
-    if [[ -d "$globalProfilesDir" ]] || mkdir -m 0755 -p "$globalProfilesDir"; then
+    if [[ -d "$globalProfilesDir" ]] || mkdir -m 0755 -p "$globalProfilesDir" 2>/dev/null; then
         declare -r hmProfilesDir="$globalProfilesDir"
     else
         declare -r hmProfilesDir="$hmStateDir/profiles"
