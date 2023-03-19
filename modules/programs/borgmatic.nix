@@ -43,7 +43,10 @@ let
     };
   };
 
-  configModule = types.submodule {
+  configModule = types.submodule ({ config, ... }: {
+    config.location.extraConfig.exclude_from =
+      mkIf config.location.excludeHomeManagerSymlinks
+      (mkAfter [ (toString hmExcludeFile) ]);
     options = {
       location = {
         sourceDirectories = mkOption {
@@ -57,6 +60,18 @@ let
           description = "Paths to repositories.";
           example =
             literalExpression ''["ssh://myuser@myrepo.myserver.com/./repo"]'';
+        };
+
+        excludeHomeManagerSymlinks = mkOption {
+          type = types.bool;
+          description = ''
+            Whether to exclude Home Manager generated symbolic links from
+            the backups. This facilitates restoring the whole home
+            directory when the Nix store doesn't contain the latest
+            Home Manager generation.
+          '';
+          default = false;
+          example = true;
         };
 
         extraConfig = extraConfigOption;
@@ -120,9 +135,17 @@ let
         extraConfig = extraConfigOption;
       };
     };
-  };
+  });
 
   removeNullValues = attrSet: filterAttrs (key: value: value != null) attrSet;
+
+  hmFiles = builtins.attrValues config.home.file;
+  hmSymlinks = (lib.filter (file: !file.recursive) hmFiles);
+  hmExcludePattern = file: ''
+    ${config.home.homeDirectory}/${file.target}
+  '';
+  hmExcludePatterns = lib.concatMapStrings hmExcludePattern hmSymlinks;
+  hmExcludeFile = pkgs.writeText "hm-symlinks.txt" hmExcludePatterns;
 
   writeConfig = config:
     generators.toYAML { } {
