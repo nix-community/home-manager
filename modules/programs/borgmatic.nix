@@ -5,6 +5,8 @@ with lib;
 let
   cfg = config.programs.borgmatic;
 
+  yamlFormat = pkgs.formats.yaml { };
+
   mkNullableOption = args:
     lib.mkOption (args // {
       type = lib.types.nullOr args.type;
@@ -20,7 +22,7 @@ let
     };
 
   extraConfigOption = mkOption {
-    type = with types; attrsOf (oneOf [ str bool path int (listOf str) ]);
+    type = yamlFormat.type;
     default = { };
     description = "Extra settings.";
   };
