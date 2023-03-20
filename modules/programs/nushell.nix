@@ -96,6 +96,23 @@ in {
       '';
     };
 
+    loginFile = mkOption {
+      type = types.nullOr (linesOrSource "login.nu");
+      default = null;
+      example = ''
+        # Prints "Hello, World" upon logging into tty1
+        if (tty) == "/dev/tty1" {
+          echo "Hello, World"
+        }
+      '';
+      description = ''
+        The login file to be used for nushell upon logging in.
+        </para>
+        <para>
+        See <link xlink:href="https://www.nushell.sh/book/configuration.html#configuring-nu-as-a-login-shell" /> for more information.
+      '';
+    };
+
     extraConfig = mkOption {
       type = types.lines;
       default = "";
@@ -109,6 +126,14 @@ in {
       default = "";
       description = ''
         Additional configuration to add to the nushell environment variables file.
+      '';
+    };
+
+    extraLogin = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Additional configuration to add to the nushell login file.
       '';
     };
 
@@ -159,6 +184,12 @@ in {
           (mkIf (cfg.envFile != null) cfg.envFile.text)
           cfg.extraEnv
           envVarsStr
+        ];
+      })
+      (mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
+        "${configDir}/login.nu".text = mkMerge [
+          (mkIf (cfg.loginFile != null) cfg.loginFile.text)
+          cfg.extraLogin
         ];
       })
     ];
