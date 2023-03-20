@@ -43,6 +43,10 @@ in {
 
             extraConfig = { prefix = "hostname"; };
           };
+
+          extraConfig = {
+            hooks = { before_actions = [ "echo Starting actions." ]; };
+          };
         };
       };
     };
@@ -95,6 +99,8 @@ in {
         (builtins.elemAt backups.main.consistency.checks 1).frequency
       }"
       expectations[consistency.prefix]="${backups.main.consistency.extraConfig.prefix}"
+
+      expectations[hooks.before_actions[0]]="echo Starting actions."
 
       yq=${pkgs.yq-go}/bin/yq
 

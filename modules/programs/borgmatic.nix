@@ -134,6 +134,8 @@ let
 
         extraConfig = extraConfigOption;
       };
+
+      extraConfig = extraConfigOption;
     };
   });
 
@@ -148,7 +150,7 @@ let
   hmExcludeFile = pkgs.writeText "hm-symlinks.txt" hmExcludePatterns;
 
   writeConfig = config:
-    generators.toYAML { } {
+    generators.toYAML { } ({
       location = removeNullValues {
         source_directories = config.location.sourceDirectories;
         repositories = config.location.repositories;
@@ -168,7 +170,7 @@ let
       } // config.retention.extraConfig;
       consistency = removeNullValues { checks = config.consistency.checks; }
         // config.consistency.extraConfig;
-    };
+    } // config.extraConfig);
 in {
   meta.maintainers = [ maintainers.DamienCassou ];
 
