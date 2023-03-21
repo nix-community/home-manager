@@ -58,10 +58,14 @@ in {
           <manvolnum>5</manvolnum>
         </citerefentry>
         for the full list of possible mappings.
+
+        You can create a mode-specific mapping by specifying the mode before the key:
+        <literal>"[normal] &lt;C-b&gt;" = "scroll left";</literal>
       '';
       example = {
         D = "toggle_page_mode";
         "<Right>" = "navigate next";
+        "[fullscreen] <C-i>" = "zoom in";
       };
     };
 
