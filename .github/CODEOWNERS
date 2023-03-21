@@ -203,8 +203,8 @@ Makefile                                              @thiagokokada
 /modules/programs/micro.nix                           @MForster
 /tests/modules/programs/micro                         @MForster
 
-/modules/programs/mpv.nix                             @tadeokondrak @thiagokokada
-/tests/modules/programs/mpv                           @thiagokokada
+/modules/programs/mpv.nix                             @tadeokondrak @thiagokokada @chuangzhu
+/tests/modules/programs/mpv                           @thiagokokada @chuangzhu
 
 /modules/programs/mu.nix                              @KarlJoad
 
