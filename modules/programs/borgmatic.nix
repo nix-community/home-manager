@@ -44,7 +44,7 @@ let
   };
 
   configModule = types.submodule ({ config, ... }: {
-    config.location.extraConfig.exclude_from =
+    config.extraConfig.location.exclude_from =
       mkIf config.location.excludeHomeManagerSymlinks
       (mkAfter [ (toString hmExcludeFile) ]);
     options = {
@@ -73,8 +73,6 @@ let
           default = false;
           example = true;
         };
-
-        extraConfig = extraConfigOption;
       };
 
       storage = {
@@ -84,7 +82,6 @@ let
           example =
             literalExpression ''"''${pkgs.password-store}/bin/pass borg-repo"'';
         };
-        extraConfig = extraConfigOption;
       };
 
       retention = {
@@ -101,8 +98,6 @@ let
         keepWeekly = mkRetentionOption "weekly";
         keepMonthly = mkRetentionOption "monthly";
         keepYearly = mkRetentionOption "yearly";
-
-        extraConfig = extraConfigOption;
       };
 
       consistency = {
@@ -131,11 +126,31 @@ let
             ];
           '';
         };
-
-        extraConfig = extraConfigOption;
       };
 
       extraConfig = extraConfigOption;
+
+      imports = [
+        (mkRenamedOptionModule [ "location" "extraConfig" ] [
+          "extraConfig"
+          "location"
+        ])
+
+        (mkRenamedOptionModule [ "storage" "extraConfig" ] [
+          "extraConfig"
+          "storage"
+        ])
+
+        (mkRenamedOptionModule [ "retention" "extraConfig" ] [
+          "extraConfig"
+          "retention"
+        ])
+
+        (mkRenamedOptionModule [ "consistency" "extraConfig" ] [
+          "extraConfig"
+          "consistency"
+        ])
+      ];
     };
   });
 
@@ -154,10 +169,10 @@ let
       location = removeNullValues {
         source_directories = config.location.sourceDirectories;
         repositories = config.location.repositories;
-      } // config.location.extraConfig;
+      };
       storage = removeNullValues {
         encryption_passcommand = config.storage.encryptionPasscommand;
-      } // config.storage.extraConfig;
+      };
       retention = removeNullValues {
         keep_within = config.retention.keepWithin;
         keep_secondly = config.retention.keepSecondly;
@@ -167,9 +182,8 @@ let
         keep_weekly = config.retention.keepWeekly;
         keep_monthly = config.retention.keepMonthly;
         keep_yearly = config.retention.keepYearly;
-      } // config.retention.extraConfig;
-      consistency = removeNullValues { checks = config.consistency.checks; }
-        // config.consistency.extraConfig;
+      };
+      consistency = removeNullValues { checks = config.consistency.checks; };
     } // config.extraConfig);
 in {
   meta.maintainers = [ maintainers.DamienCassou ];

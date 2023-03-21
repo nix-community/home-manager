@@ -12,21 +12,13 @@ in {
           location = {
             sourceDirectories = [ "/my-stuff-to-backup" ];
             repositories = [ "/mnt/disk1" "/mnt/disk2" ];
-            extraConfig = {
-              one_file_system = true;
-              exclude_patterns = [ "*.swp" ];
-            };
           };
 
-          storage = {
-            encryptionPasscommand = "fetch-the-password.sh";
-            extraConfig = { checkpoint_interval = 200; };
-          };
+          storage = { encryptionPasscommand = "fetch-the-password.sh"; };
 
           retention = {
             keepWithin = "14d";
             keepSecondly = 12;
-            extraConfig = { prefix = "hostname"; };
           };
 
           consistency = {
@@ -40,11 +32,16 @@ in {
                 frequency = "4 weeks";
               }
             ];
-
-            extraConfig = { prefix = "hostname"; };
           };
 
           extraConfig = {
+            location = {
+              one_file_system = true;
+              exclude_patterns = [ "*.swp" ];
+            };
+            storage = { checkpoint_interval = 200; };
+            retention = { prefix = "hostname"; };
+            consistency = { prefix = "hostname"; };
             hooks = { before_actions = [ "echo Starting actions." ]; };
           };
         };
@@ -69,22 +66,22 @@ in {
         builtins.elemAt backups.main.location.repositories 1
       }"
       expectations[location.one_file_system]="${
-        boolToString backups.main.location.extraConfig.one_file_system
+        boolToString backups.main.extraConfig.location.one_file_system
       }"
       expectations[location.exclude_patterns[0]]="${
-        builtins.elemAt backups.main.location.extraConfig.exclude_patterns 0
+        builtins.elemAt backups.main.extraConfig.location.exclude_patterns 0
       }"
 
       expectations[storage.encryption_passcommand]="${backups.main.storage.encryptionPasscommand}"
       expectations[storage.checkpoint_interval]="${
-        toString backups.main.storage.extraConfig.checkpoint_interval
+        toString backups.main.extraConfig.storage.checkpoint_interval
       }"
 
       expectations[retention.keep_within]="${backups.main.retention.keepWithin}"
       expectations[retention.keep_secondly]="${
         toString backups.main.retention.keepSecondly
       }"
-      expectations[retention.prefix]="${backups.main.retention.extraConfig.prefix}"
+      expectations[retention.prefix]="${backups.main.extraConfig.retention.prefix}"
 
       expectations[consistency.checks[0].name]="${
         (builtins.elemAt backups.main.consistency.checks 0).name
@@ -98,7 +95,7 @@ in {
       expectations[consistency.checks[1].frequency]="${
         (builtins.elemAt backups.main.consistency.checks 1).frequency
       }"
-      expectations[consistency.prefix]="${backups.main.consistency.extraConfig.prefix}"
+      expectations[consistency.prefix]="${backups.main.extraConfig.consistency.prefix}"
 
       expectations[hooks.before_actions[0]]="echo Starting actions."
 
