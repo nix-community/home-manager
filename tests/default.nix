@@ -90,6 +90,7 @@ import nmt {
     ./modules/programs/man
     ./modules/programs/mbsync
     ./modules/programs/micro
+    ./modules/programs/miniplayer
     ./modules/programs/mpv
     ./modules/programs/mu
     ./modules/programs/mujmap
@@ -156,6 +157,7 @@ import nmt {
     ./modules/programs/kodi
     ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
+    ./modules/programs/miniplayer-linux
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/neovim   # Broken package dependency on Darwin.
     ./modules/programs/rbw
