@@ -4207,6 +4207,17 @@ by options set in <a class="xref" href="options.html#opt-programs.mpv.config"><c
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mpv.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mpv.scriptOpts"></a><a class="term" href="options.html#opt-programs.mpv.scriptOpts"><code class="option">programs.mpv.scriptOpts</code></a></span></dt><dd><p>Script options added to
+<code class="filename">$XDG_CONFIG_HOME/mpv/script-opts/</code>. See
+<span class="citerefentry"><span class="refentrytitle">mpv</span>(1)</span>
+for the full list of options of builtin scripts.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of (string or signed integer or boolean or floating point number or list of (string or signed integer or boolean or floating point number))</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  osc = {
+    scalewindowed = 2.0;
+    vidscale = false;
+    visibility = "always";
+  };
+}</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/mpv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.mpv.scripts"></a><a class="term" href="options.html#opt-programs.mpv.scripts"><code class="option">programs.mpv.scripts</code></a></span></dt><dd><p>List of scripts to use with mpv.</p><p><span class="emphasis"><em>Type:</em></span> list of package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">[ ]</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">[ pkgs.mpvScripts.mpris ]</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/mpv.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.msmtp.enable"></a><a class="term" href="options.html#opt-programs.msmtp.enable"><code class="option">programs.msmtp.enable</code></a></span></dt><dd><p>Whether to enable msmtp.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/msmtp.nix#blob-path" target="_top">
