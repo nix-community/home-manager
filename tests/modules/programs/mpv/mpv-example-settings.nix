@@ -18,6 +18,14 @@
         cache-default = 4000000;
       };
 
+      scriptOpts = {
+        osc = {
+          scalewindowed = 2.0;
+          vidscale = false;
+          visibility = "always";
+        };
+      };
+
       profiles = {
         fast = { vo = "vdpau"; };
         "protocol.dvd" = {
@@ -38,6 +46,9 @@
       assertFileContent \
          home-files/.config/mpv/input.conf \
          ${./mpv-example-settings-expected-bindings}
+      assertFileContent \
+         home-files/.config/mpv/script-opts/osc.conf \
+         ${./mpv-example-settings-expected-osc-opts}
     '';
   };
 

@@ -34,6 +34,12 @@ let
     listsAsDuplicateKeys = true;
   };
 
+  renderScriptOptions = generators.toKeyValue {
+    mkKeyValue =
+      generators.mkKeyValueDefault { mkValueString = renderOption; } "=";
+    listsAsDuplicateKeys = true;
+  };
+
   renderProfiles = generators.toINI {
     mkKeyValue =
       generators.mkKeyValueDefault { mkValueString = renderOptionValue; } "=";
@@ -83,6 +89,27 @@ in {
         description = ''
           List of scripts to use with mpv.
         '';
+      };
+
+      scriptOpts = mkOption {
+        description = ''
+          Script options added to
+          <filename>$XDG_CONFIG_HOME/mpv/script-opts/</filename>. See
+          <citerefentry>
+            <refentrytitle>mpv</refentrytitle>
+            <manvolnum>1</manvolnum>
+          </citerefentry>
+          for the full list of options of builtin scripts.
+        '';
+        type = types.attrsOf mpvOptions;
+        default = { };
+        example = {
+          osc = {
+            scalewindowed = 2.0;
+            vidscale = false;
+            visibility = "always";
+          };
+        };
       };
 
       config = mkOption {
@@ -184,7 +211,13 @@ in {
     (mkIf (cfg.bindings != { }) {
       xdg.configFile."mpv/input.conf".text = renderBindings cfg.bindings;
     })
+    {
+      xdg.configFile = mapAttrs' (name: value:
+        nameValuePair "mpv/script-opts/${name}.conf" {
+          text = renderScriptOptions value;
+        }) cfg.scriptOpts;
+    }
   ]);
 
-  meta.maintainers = with maintainers; [ tadeokondrak thiagokokada ];
+  meta.maintainers = with maintainers; [ tadeokondrak thiagokokada chuangzhu ];
 }
