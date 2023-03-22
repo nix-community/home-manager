@@ -13,6 +13,7 @@ with lib;
           SuccessfulExit = false;
         };
         ProcessType = "Background";
+        UnrecognizedByHomeManager = "should make it to the resulting plist";
       };
     };
 

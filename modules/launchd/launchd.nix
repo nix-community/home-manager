@@ -28,6 +28,8 @@
 with lib;
 
 {
+  freeformType = with types; attrsOf anything; # added by Home Manager
+
   options = {
     Label = mkOption {
       type = types.str;
