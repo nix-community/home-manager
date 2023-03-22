@@ -89,7 +89,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
         docs = import ./docs { inherit pkgs; };
         tests = import ./tests { inherit pkgs; };
-        hmPkg = pkgs.callPackage ./home-manager { };
+        hmPkg = pkgs.callPackage ./home-manager { path = ./.; };
       in {
         devShells.tests = tests.run;
         packages = {
