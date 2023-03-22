@@ -321,7 +321,7 @@ let
             };
 
             drafts = mkOption {
-              type = types.str;
+              type = types.nullOr types.str;
               default = "Drafts";
               description = ''
                 Relative path of the drafts mail folder.
