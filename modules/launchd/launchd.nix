@@ -1,7 +1,7 @@
 # launchd option type from nix-darwin
 #
 # Original Source:
-# https://github.com/LnL7/nix-darwin/blob/a34dea2/modules/launchd/launchd.nix
+# https://github.com/LnL7/nix-darwin/blob/14a12e9/modules/launchd/launchd.nix
 
 # Copyright 2017 Daiderd Jordan
 #
@@ -103,8 +103,8 @@ with lib;
       type = types.nullOr (types.listOf types.str);
       default = null;
       description = ''
-        This configuration file only applies to the hosts listed with this key. Note: One should set kern.host-name kern.hostname
-        name in <literal>sysctl.conf(5)</literal> for this feature to work reliably.
+        This configuration file only applies to the hosts listed with this key. Note: One should set kern.hostname
+        in <literal>sysctl.conf(5)</literal> for this feature to work reliably.
       '';
     };
 
@@ -112,8 +112,8 @@ with lib;
       type = types.nullOr (types.listOf types.str);
       default = null;
       description = ''
-        This configuration file only applies to hosts NOT listed with this key. Note: One should set kern.host-name kern.hostname
-        name in <literal>sysctl.conf(5)</literal> for this feature to work reliably.
+        This configuration file only applies to hosts NOT listed with this key. Note: One should set kern.hostname
+        in <literal>sysctl.conf(5)</literal> for this feature to work reliably.
       '';
     };
 
@@ -220,15 +220,19 @@ with lib;
             '';
           };
 
-          # NOTE: this was missing in the original source at the time of writing
           Crashed = mkOption {
             type = types.nullOr types.bool;
             default = null;
             description = ''
               If true, the the job will be restarted as long as it exited due to a signal which is typically
-              associated with a crash (SIGILL, SIGSEGV, etc.). If false, the job will be restarted in the inverse
-              condition.
+              associated with a crash (SIGILL, SIGSEGV, etc.). If false, the job will be restarted in the
+              inverse condition.
             '';
+          };
+
+          AfterInitialDemand = mkOption {
+            type = types.nullOr types.bool;
+            default = null;
           };
 
         };
@@ -242,7 +246,7 @@ with lib;
         multiple keys are provided, launchd ORs them, thus providing maximum flexibility to the job to refine
         the logic and stall if necessary. If launchd finds no reason to restart the job, it falls back on
         demand based invocation.  Jobs that exit quickly and frequently when configured to be kept alive will
-        be throttled to conserve system resources.
+        be throttled to converve system resources.
       '';
     };
 
@@ -518,8 +522,8 @@ with lib;
             default = null;
             description = ''
               The maximum number of open files for this process.  Setting this value in a system wide daemon
-              will set the <literal>sysctl(3)</literal> kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResource-Limits) (HardResourceLimits)
-              Limits) value in addition to the <literal>setrlimit(2)</literal> values.
+              will set the <literal>sysctl(3)</literal> kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
+              value in addition to the <literal>setrlimit(2)</literal> values.
             '';
           };
 
@@ -610,8 +614,8 @@ with lib;
             default = null;
             description = ''
               The maximum number of open files for this process.  Setting this value in a system wide daemon
-              will set the <literal>sysctl(3)</literal> kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResource-Limits) (HardResourceLimits)
-              Limits) value in addition to the <literal>setrlimit(2)</literal> values.
+              will set the <literal>sysctl(3)</literal> kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
+              value in addition to the <literal>setrlimit(2)</literal> values.
             '';
           };
 
@@ -688,7 +692,7 @@ with lib;
       type = types.nullOr types.bool;
       default = null;
       description = ''
-        When a job dies, launchd kills any remaining processes with the same process group ID as the job.  Setting
+        When a job dies, launchd kills any remaining processes with the same process group ID as the job. Setting
         this key to true disables that behavior.
       '';
     };
@@ -730,8 +734,8 @@ with lib;
             description = ''
               If this boolean is false, the port is recycled, thus leaving clients to remain oblivious to the
               demand nature of job. If the value is set to true, clients receive port death notifications when
-              the job lets go of the receive right. The port will be recreated atomically with respect to boot-strap_look_up() bootstrap_look_up()
-              strap_look_up() calls, so that clients can trust that after receiving a port death notification,
+              the job lets go of the receive right. The port will be recreated atomically with respect to bootstrap_look_up()
+              calls, so that clients can trust that after receiving a port death notification,
               the new port will have already been recreated. Setting the value to true should be done with
               care. Not all clients may be able to handle this behavior. The default value is false.
             '';
@@ -747,6 +751,31 @@ with lib;
           };
         };
       });
+    };
+
+    LaunchEvents = mkOption {
+      type = types.nullOr (types.attrs);
+      default = null;
+      description = ''
+        Specifies higher-level event types to be used as launch-on-demand event
+        sources.  Each sub-dictionary defines events for a particular event
+        subsystem, such as "com.apple.iokit.matching", which can be used to
+        launch jobs based on the appearance of nodes in the IORegistry. Each
+        dictionary within the sub-dictionary specifies an event descriptor that
+        is specified to each event subsystem. With this key, the job promises to
+        use the xpc_set_event_stream_handler(3) API to consume events. See
+        xpc_events(3) for more details on event sources.
+      '';
+      example = {
+        "com.apple.iokit.matching" = {
+          "com.apple.usb.device" = {
+            IOMatchLaunchStream = true;
+            IOProviderClass = "IOUSBDevice";
+            idProduct = "*";
+            idVendor = "*";
+          };
+        };
+      };
     };
 
     Sockets = mkOption {
@@ -850,8 +879,7 @@ with lib;
             default = null;
             description = ''
               This optional key can be used to request that the service be registered with the
-              <literal>mDNSResponder(8)</literal>.  If the value is boolean, the service name is inferred from the SockService-Name. SockServiceName.
-              Name.
+              <literal>mDNSResponder(8)</literal>.  If the value is boolean, the service name is inferred from the SockServiceName.
             '';
           };
 
@@ -861,8 +889,8 @@ with lib;
             description = ''
               This optional key can be used to request that the datagram socket join a multicast group.  If the
               value is a hostname, then <literal>getaddrinfo(3)</literal> will be used to join the correct multicast address for a
-              given socket family.  If an explicit IPv4 or IPv6 address is given, it is required that the Sock-Family SockFamily
-              Family family also be set, otherwise the results are undefined.
+              given socket family.  If an explicit IPv4 or IPv6 address is given, it is required that the SockFamily
+              family also be set, otherwise the results are undefined.
             '';
           };
         };
