@@ -6528,9 +6528,13 @@ focused on keyboard interaction.</p><p><span class="emphasis"><em>Type:</em></sp
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zathura.mappings"></a><a class="term" href="options.html#opt-programs.zathura.mappings"><code class="option">programs.zathura.mappings</code></a></span></dt><dd><p>Add <code class="option">:map</code> mappings to zathura and make
 them permanent. See
 <span class="citerefentry"><span class="refentrytitle">zathurarc</span>(5)</span>
-for the full list of possible mappings.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+for the full list of possible mappings.
+
+You can create a mode-specific mapping by specifying the mode before the key:
+<code class="literal">"[normal] &lt;C-b&gt;" = "scroll left";</code></p><p><span class="emphasis"><em>Type:</em></span> attribute set of string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
   "&lt;Right&gt;" = "navigate next";
   D = "toggle_page_mode";
+  "[fullscreen] &lt;C-i&gt;" = "zoom in";
 }</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zathura.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/zathura.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zathura.options"></a><a class="term" href="options.html#opt-programs.zathura.options"><code class="option">programs.zathura.options</code></a></span></dt><dd><p>Add <code class="option">:set</code> command options to zathura and make
