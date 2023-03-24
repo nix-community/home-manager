@@ -99,6 +99,11 @@ let
     setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
     set  -s escape-time       ${toString cfg.escapeTime}
     set  -g history-limit     ${toString cfg.historyLimit}
+
+    # ============================================= #
+    # Extra configs before plugins                  #
+    # --------------------------------------------- #
+    ${cfg.configBeforePlugin}
   '';
 
   configPlugins = {
@@ -145,6 +150,16 @@ in {
         example = 1;
         type = types.ints.unsigned;
         description = "Base index for windows and panes.";
+      };
+
+      configBeforePlugin = mkOption { 
+        type = types.lines; 
+        default = "";
+        description = ''
+          Additional configuration in <filename>tmux.conf</filename>
+          before plugins run-shell session. This is useful to configure
+          status-right or status-left that uses variables exposed by plugins.
+        ''
       };
 
       clock24 = mkOption {
