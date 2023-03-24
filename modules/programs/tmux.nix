@@ -159,7 +159,7 @@ in {
           Additional configuration in <filename>tmux.conf</filename>
           before plugins run-shell session. This is useful to configure
           status-right or status-left that uses variables exposed by plugins.
-        ''
+        '';
       };
 
       clock24 = mkOption {
