@@ -100,10 +100,12 @@ let
     set  -s escape-time       ${toString cfg.escapeTime}
     set  -g history-limit     ${toString cfg.historyLimit}
 
+    ${optionalString ((builtins.stringLength cfg.configBeforePlugin) > 0) ''
     # ============================================= #
     # Extra configs before plugins                  #
     # --------------------------------------------- #
     ${cfg.configBeforePlugin}
+    ''}
   '';
 
   configPlugins = {
