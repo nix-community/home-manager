@@ -157,6 +157,28 @@ in {
                 example = true;
                 description = "Allow using external GPG keys with GPGME.";
               };
+
+              userChrome = mkOption {
+                type = types.lines;
+                default = "";
+                description = "Custom Thunderbird user chrome CSS.";
+                example = ''
+                  /* Hide tab bar in Thunderbird */
+                  #tabs-toolbar {
+                    visibility: collapse !important;
+                  }
+                '';
+              };
+
+              userContent = mkOption {
+                type = types.lines;
+                default = "";
+                description = "Custom Thunderbird user content CSS.";
+                example = ''
+                  /* Hide scrollbar on Thunderbird pages */
+                  *{scrollbar-width:none !important}
+                '';
+              };
             };
           }));
       };
@@ -276,6 +298,12 @@ in {
       "${thunderbirdConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = generators.toINI { } profilesIni; };
     }] ++ flip mapAttrsToList cfg.profiles (name: profile: {
+      "${thunderbirdProfilesPath}/${name}/chrome/userChrome.css" =
+        mkIf (profile.userChrome != "") { text = profile.userChrome; };
+
+      "${thunderbirdProfilesPath}/${name}/chrome/userContent.css" =
+        mkIf (profile.userContent != "") { text = profile.userContent; };
+
       "${thunderbirdProfilesPath}/${name}/user.js" = let
         accounts = filter (a:
           a.thunderbird.profiles == [ ]
