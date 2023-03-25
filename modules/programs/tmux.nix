@@ -101,10 +101,10 @@ let
     set  -g history-limit     ${toString cfg.historyLimit}
 
     ${optionalString (cfg.extraConfigBeforePlugin != "") ''
-    # ============================================= #
-    # Extra configs before plugins                  #
-    # --------------------------------------------- #
-    ${cfg.extraConfigBeforePlugin}
+      # ============================================= #
+      # Extra configs before plugins                  #
+      # --------------------------------------------- #
+      ${cfg.extraConfigBeforePlugin}
     ''}
   '';
 
@@ -154,8 +154,8 @@ in {
         description = "Base index for windows and panes.";
       };
 
-      extraConfigBeforePlugin = mkOption { 
-        type = types.lines; 
+      extraConfigBeforePlugin = mkOption {
+        type = types.lines;
         default = "";
         description = ''
           Additional configuration in <filename>tmux.conf</filename>
