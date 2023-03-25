@@ -11,8 +11,8 @@
       {
         source = pkgs.fetchurl {
           url =
-            "https://keybase.io/rycee/pgp_keys.asc?fingerprint=36cacf52d098cc0e78fb0cb13573356c25c424d4";
-          hash = "sha256-5z2kTUXQp0f7kyP0Id6NS3rCdzGGrrkIYzGK42Qy9Sw=";
+            "https://keys.openpgp.org/pks/lookup?op=get&options=mr&search=0x36cacf52d098cc0e78fb0cb13573356c25c424d4";
+          hash = "sha256-9Zjsb/TtOyiPzMO/Jg3CtJwSxuw7QmX0pcfZT2/1w5E=";
         };
         trust = 1; # "unknown"
       }
