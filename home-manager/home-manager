@@ -687,6 +687,12 @@ function newsReadIdsFile() {
 # put the output in the work directory to avoid the risk of an
 # unfortunately timed GC removing it.
 function buildNews() {
+    setFlakeAttribute
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        _iError "Sorry, this command is not yet supported in flake setup" >&2
+        exit 1
+    fi
+
     local output
     output="$WORK_DIR/news-info.sh"
 
