@@ -19,5 +19,7 @@
 		<string>--with-arguments</string>
 		<string>foo</string>
 	</array>
+	<key>UnrecognizedByHomeManager</key>
+	<string>should make it to the resulting plist</string>
 </dict>
 </plist>
