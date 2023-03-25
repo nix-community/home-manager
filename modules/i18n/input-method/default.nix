@@ -22,8 +22,7 @@ let
   '';
 
 in {
-  imports =
-    [ ./fcitx.nix ./fcitx5.nix ./hime.nix ./kime.nix ./nabi.nix ./uim.nix ];
+  imports = [ ./fcitx5.nix ./hime.nix ./kime.nix ./nabi.nix ./uim.nix ];
 
   options.i18n = {
     inputMethod = {
@@ -31,7 +30,7 @@ in {
         type = types.nullOr
           (types.enum [ "fcitx" "fcitx5" "nabi" "uim" "hime" "kime" ]);
         default = null;
-        example = "fcitx";
+        example = "fcitx5";
         description = ''
           Select the enabled input method. Input methods is a software to input
           symbols that are not available on standard input devices.
@@ -43,16 +42,9 @@ in {
 
           <variablelist>
           <varlistentry>
-            <term><literal>fcitx</literal></term>
-            <listitem><para>
-              A customizable lightweight input method
-              extra input engines can be added using
-              <literal>i18n.inputMethod.fcitx.engines</literal>.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
             <term><literal>fcitx5</literal></term>
             <listitem><para>
+              A customizable lightweight input method.
               The next generation of fcitx,
               addons (including engines, dictionaries, skins) can be added using
               <literal>i18n.inputMethod.fcitx5.addons</literal>.
@@ -97,6 +89,10 @@ in {
   config = mkIf (cfg.enabled != null) {
     assertions = [
       (hm.assertions.assertPlatform "i18n.inputMethod" pkgs platforms.linux)
+      {
+        assertion = cfg.enabled != "fcitx";
+        message = "fcitx has been removed, please use fcitx5 instead";
+      }
     ];
 
     home.packages = [ cfg.package gtk2Cache gtk3Cache ];
