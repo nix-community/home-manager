@@ -100,11 +100,11 @@ let
     set  -s escape-time       ${toString cfg.escapeTime}
     set  -g history-limit     ${toString cfg.historyLimit}
 
-    ${optionalString (cfg.configBeforePlugin != "") ''
+    ${optionalString (cfg.extraConfigBeforePlugin != "") ''
     # ============================================= #
     # Extra configs before plugins                  #
     # --------------------------------------------- #
-    ${cfg.configBeforePlugin}
+    ${cfg.extraConfigBeforePlugin}
     ''}
   '';
 
@@ -154,7 +154,7 @@ in {
         description = "Base index for windows and panes.";
       };
 
-      configBeforePlugin = mkOption { 
+      extraConfigBeforePlugin = mkOption { 
         type = types.lines; 
         default = "";
         description = ''
