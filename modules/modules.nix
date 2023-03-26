@@ -94,6 +94,7 @@ let
     ./programs/gh-dash.nix
     ./programs/git-cliff.nix
     ./programs/git-credential-oauth.nix
+    ./programs/git-workspace.nix
     ./programs/git.nix
     ./programs/gitui.nix
     ./programs/gnome-terminal.nix
@@ -274,6 +275,7 @@ let
     ./services/fusuma.nix
     ./services/getmail.nix
     ./services/git-sync.nix
+    ./services/git-workspace.nix
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix
     ./services/grobi.nix
