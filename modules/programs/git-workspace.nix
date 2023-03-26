@@ -1,10 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
-  cfg = config.programs.git-workspace;
+{ config, lib, pkgs, ... }:
+let cfg = config.programs.git-workspace;
 in {
   meta.maintainers = [ lib.maintainers.aciceri ];
   options.programs.git-workspace = {
@@ -15,7 +10,5 @@ in {
       description = "The git-workspace to use";
     };
   };
-  config = lib.mkIf cfg.enable {
-    home.packages = [pkgs.git-workspace];
-  };
+  config = lib.mkIf cfg.enable { home.packages = [ pkgs.git-workspace ]; };
 }
