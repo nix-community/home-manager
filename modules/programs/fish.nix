@@ -416,8 +416,17 @@ in {
     # in the paths and any initialization scripts.
     (mkIf (length cfg.plugins > 0) {
       xdg.configFile = mkMerge ((map (plugin: {
-        "fish/conf.d/plugin-${plugin.name}.fish".source =
-          fishIndent "${plugin.name}.fish" ''
+        "fish/conf.d/plugin-${plugin.name}.fish" = {
+          onChange = fishIndent ''
+            if test -d $plugin_dir/themes
+              # https://github.com/fish-shell/fish-shell/issues/9456
+              mkdir -p $__fish_config_dir/themes
+              for f in $plugin_dir/themes/*.theme
+                ln -sf $f $__fish_config_dir/themes/(basename $f)
+              end
+            end
+          '';
+          source = fishIndent "${plugin.name}.fish" ''
             # Plugin ${plugin.name}
             set -l plugin_dir ${plugin.src}
 
@@ -445,6 +454,7 @@ in {
               source $plugin_dir/init.fish
             end
           '';
+        };
       }) cfg.plugins));
     })
   ]);
