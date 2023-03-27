@@ -68,6 +68,7 @@ import nmt {
     ./modules/programs/browserpass
     ./modules/programs/btop
     ./modules/programs/comodoro
+    ./modules/programs/darcs
     ./modules/programs/dircolors
     ./modules/programs/direnv
     ./modules/programs/emacs
