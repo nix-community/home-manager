@@ -1428,14 +1428,15 @@ the fallback location, for example,
 Like <code class="varname">nixpkgs.config</code> this option only
 applies within the Home Manager configuration. See
 <code class="varname">nixpkgs.config</code> for a suggested setup that
-works both internally and externally.</p><p><span class="emphasis"><em>Type:</em></span> null or (list of (nixpkgs overlay))</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[ (self: super: {
-    openssh = super.openssh.override {
+works both internally and externally.</p><p><span class="emphasis"><em>Type:</em></span> null or (list of (nixpkgs overlay))</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">[
+  (final: prev: {
+    openssh = prev.openssh.override {
       hpnSupport = true;
       withKerberos = true;
-      kerberos = self.libkrb5;
+      kerberos = final.libkrb5;
     };
-  };
-) ]
+  })
+]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nixpkgs.nix#blob-path" target="_top">
                     &lt;home-manager/modules/misc/nixpkgs.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-pam.sessionVariables"></a><a class="term" href="options.html#opt-pam.sessionVariables"><code class="option">pam.sessionVariables</code></a></span></dt><dd><p>Environment variables that will be set for the PAM session.
