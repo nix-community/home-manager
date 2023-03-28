@@ -79,14 +79,15 @@ in {
     overlays = mkOption {
       default = null;
       example = literalExpression ''
-        [ (self: super: {
-            openssh = super.openssh.override {
+        [
+          (final: prev: {
+            openssh = prev.openssh.override {
               hpnSupport = true;
               withKerberos = true;
-              kerberos = self.libkrb5;
+              kerberos = final.libkrb5;
             };
-          };
-        ) ]
+          })
+        ]
       '';
       type = types.nullOr (types.listOf overlayType);
       description = ''
