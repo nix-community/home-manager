@@ -25,7 +25,13 @@ in {
     dconf = {
       enable = mkOption {
         type = types.bool;
-        default = true;
+        # While technically dconf on darwin could work, our activation step
+        # requires dbus, which only *lightly* supports Darwin in general, and
+        # not at all in the way it's packaged in nixpkgs. Because of this, we
+        # just disable dconf for darwin hosts by default.
+        # In the future, if someone gets dbus working, this _could_ be
+        # re-enabled, unclear whether there's actual value in it though.
+        default = !pkgs.stdenv.hostPlatform.isDarwin;
         visible = false;
         description = ''
           Whether to enable dconf settings.
