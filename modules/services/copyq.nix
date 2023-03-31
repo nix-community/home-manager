@@ -46,6 +46,7 @@ in {
       Service = {
         ExecStart = "${cfg.package}/bin/copyq";
         Restart = "on-failure";
+        Environment = [ "QT_QPA_PLATFORM=xcb" ];
       };
 
       Install = { WantedBy = [ cfg.systemdTarget ]; };
