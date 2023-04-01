@@ -293,6 +293,15 @@ let
         default = "primary";
         description = "Where to output tray.";
       };
+
+      trayPadding = mkNullableOption {
+        type = types.int;
+        default = null;
+        description = ''
+          Sets the pixel padding of the system tray.
+          This padding will surround the tray on all sides and between each item.
+        '';
+      };
     };
   };
 
