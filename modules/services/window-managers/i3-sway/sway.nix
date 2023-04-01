@@ -342,7 +342,9 @@ in {
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
         Set to <code>null</code> to not add any Sway package to your
         path. This should be done if you want to use the NixOS Sway
-        module to install Sway.
+        module to install Sway otherwise it is now possible to set 
+        `package` to <code>null</code> in the nixos-module as well
+        but still has to be enabled.
       '';
     };
 
