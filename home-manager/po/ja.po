@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-03-15 20:11+0100\n"
-"PO-Revision-Date: 2023-03-07 10:38+0000\n"
+"PO-Revision-Date: 2023-04-01 00:48+0000\n"
 "Last-Translator: Turmoil Nailsis <indianrunner@duck.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
 "cli/ja/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -31,6 +31,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Home Managerの %s の %s への保管は非推奨となりました\n"
+"%s へ移動させてください"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
@@ -51,11 +53,11 @@ msgstr "'%s --help' でヘルプを参照することができます"
 
 #: home-manager/home-manager:276 home-manager/home-manager:326
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "%s は既に存在します。変更せずに続行しています..."
 
 #: home-manager/home-manager:278 home-manager/home-manager:328
 msgid "Creating %s..."
-msgstr ""
+msgstr "%s を作成中です..."
 
 #: home-manager/home-manager:370
 msgid "Creating initial Home Manager generation..."
