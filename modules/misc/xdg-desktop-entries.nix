@@ -34,6 +34,7 @@ let
       exec = mkOption {
         description = "Program to execute, possibly with arguments.";
         type = types.nullOr types.str;
+        default = null;
       };
 
       icon = mkOption {
@@ -131,6 +132,7 @@ let
           options.exec = mkOption {
             type = types.nullOr types.str;
             description = "Program to execute, possibly with arguments.";
+            default = null;
           };
           options.icon = mkOption {
             type = with types; nullOr (either str path);
@@ -161,10 +163,6 @@ let
       };
     };
   };
-
-  #formatting helpers
-  semicolonList = list:
-    (concatStringsSep ";" list) + ";"; # requires trailing semicolon
 
   #passes config options to makeDesktopItem in expected format
   makeFile = name: config:
