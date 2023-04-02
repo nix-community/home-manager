@@ -15,6 +15,10 @@
     envFile.text = ''
       let-env FOO = 'BAR'
     '';
+
+    shellAliases = {
+      g = "git";
+    };
   };
 
   test.stubs.nushell = { };

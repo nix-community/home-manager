@@ -4,3 +4,4 @@ let $config = {
   use_ls_colors: true
 }
 
+alias g = git

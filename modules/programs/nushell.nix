@@ -111,6 +111,20 @@ in {
         Additional configuration to add to the nushell environment variables file.
       '';
     };
+
+    shellAliases = mkOption {
+      type = with types; attrsOf str;
+      default = { };
+      example = literalExpression ''
+        {
+          g = "git";
+        }
+      '';
+      description = ''
+        An attribute set that maps aliases (the top level attribute names
+        in this option) to command strings or directly to build outputs.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -119,6 +133,7 @@ in {
       (mkIf (cfg.configFile != null || cfg.extraConfig != "") {
         "${configDir}/config.nu".text = mkMerge [
           (mkIf (cfg.configFile != null) cfg.configFile.text)
+          (concatStringsSep "\n" (mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases))
           cfg.extraConfig
         ];
       })
