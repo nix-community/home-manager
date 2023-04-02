@@ -38,18 +38,49 @@ let
         };
       };
     });
+
+  formatNuValue = let
+    indentation = "  ";
+    indent = str:
+      let
+        lines = splitString "\n" str;
+        indentedLines = map (line: "${indentation}${line}") lines;
+      in lib.concatStringsSep "\n" indentedLines;
+  in value:
+  {
+    bool = v: if v then "true" else "false";
+    int = toString;
+    float = toString;
+    string = builtins.toJSON;
+    null = v: "null";
+    path = v: formatNuValue (toString v);
+    list = v: ''
+      [${
+        lib.concatStrings (map (v: ''
+
+          ${indent (formatNuValue v)}'') v)
+      }
+      ]'';
+    set = v:
+      if nuExpressionType.check v then
+        v.__nu
+      else ''
+        {${
+          lib.concatStrings (mapAttrsToList (k: v: ''
+
+            ${indent "${k}: ${formatNuValue v}"}'') v)
+        }
+        }'';
+  }.${builtins.typeOf value} value;
+
+  nuExpressionType = mkOptionType {
+    name = "nu";
+    description = "Nu expression";
+    check = x: isAttrs x && x ? __nu && isString x.__nu;
+    merge = mergeEqualOption;
+  };
 in {
   meta.maintainers = [ maintainers.Philipp-M ];
-
-  imports = [
-    (mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
-      Please use
-
-        'programs.nushell.configFile' and 'programs.nushell.envFile'
-
-      instead.
-    '')
-  ];
 
   options.programs.nushell = {
     enable = mkEnableOption "nushell";
@@ -111,6 +142,40 @@ in {
         Additional configuration to add to the nushell environment variables file.
       '';
     };
+
+    settings = mkOption {
+      type = with lib.types;
+        let
+          valueType = nullOr (oneOf [
+            nuExpressionType
+            bool
+            int
+            float
+            str
+            path
+            (attrsOf valueType)
+            (listOf valueType)
+          ]) // {
+            description = "Nu value type";
+          };
+        in valueType;
+      default = { };
+      example = literalExpression ''
+        {
+          show_banner = false;
+          table.mode = "rounded";
+          color_config.filesize.__nu = "$my_custom_color";
+          completions.external.completer.__nu = '''
+            {|spans|
+              carapace $spans.0 nushell $spans | from json
+            }
+          ''';
+        }
+      '';
+      description = ''
+        Configuration options that are written to `let-env config = { ... }`.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -118,6 +183,9 @@ in {
     home.file = mkMerge [
       (mkIf (cfg.configFile != null || cfg.extraConfig != "") {
         "${configDir}/config.nu".text = mkMerge [
+          (mkIf (cfg.settings != { }) ''
+            let-env config = ${formatNuValue cfg.settings}
+          '')
           (mkIf (cfg.configFile != null) cfg.configFile.text)
           cfg.extraConfig
         ];

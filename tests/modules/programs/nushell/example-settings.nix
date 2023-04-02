@@ -1,15 +1,30 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs.nushell = {
     enable = true;
 
+    settings = {
+      filesize.metric = false;
+      table.mode = "rounded";
+      ls.colors = true;
+      completions.external = {
+        enable = true;
+        max_results = 100;
+        completer.__nu = ''
+          {|spans|
+            carapace $spans.0 nushell $spans | from json
+          }
+        '';
+      };
+    };
+
     configFile.text = ''
-      let $config = {
-        filesize_metric: false
-        table_mode: rounded
-        use_ls_colors: true
-      }
+      source $HOME/file_a.nu
+    '';
+
+    extraConfig = ''
+      source $HOME/file_b.nu
     '';
 
     envFile.text = ''
