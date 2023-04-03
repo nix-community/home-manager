@@ -1144,6 +1144,14 @@ in
           A new module is available: 'services.swayosd'
         '';
       }
+
+      {
+        time = "2023-07-20T21:56:49+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'wayland.windowManager.hyprland'
+        '';
+      }
     ];
   };
 }
