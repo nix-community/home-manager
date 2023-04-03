@@ -706,6 +706,15 @@ with lib;
       '';
     };
 
+    LowPriorityBackgroundIO = mkOption {
+      type = types.nullOr types.bool;
+      default = null;
+      description = ''
+        This optional key specifies whether the kernel should consider this daemon to be low priority when
+        doing file system I/O when the process is throttled with the Darwin-background classification.
+      '';
+    };
+
     LaunchOnlyOnce = mkOption {
       type = types.nullOr types.bool;
       default = null;
