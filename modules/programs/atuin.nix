@@ -85,6 +85,14 @@ in {
         of options.
       '';
     };
+
+    enableNushellIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Nushell integration.
+      '';
+    };
   };
 
   config = let flagsStr = escapeShellArgs cfg.flags;
@@ -114,5 +122,18 @@ in {
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
       ${cfg.package}/bin/atuin init fish ${flagsStr} | source
     '';
+
+    programs.nushell = mkIf cfg.enableNushellIntegration {
+      extraEnv = ''
+        let atuin_cache = "${config.xdg.cacheHome}/atuin"
+        if not ($atuin_cache | path exists) {
+          mkdir $atuin_cache
+        }
+        ${cfg.package}/bin/atuin init nu | save --force ${config.xdg.cacheHome}/atuin/init.nu
+      '';
+      extraConfig = ''
+        source ${config.xdg.cacheHome}/atuin/init.nu
+      '';
+    };
   };
 }
