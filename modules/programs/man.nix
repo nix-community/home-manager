@@ -46,12 +46,12 @@ in {
     };
   };
 
-  config = mkIf config.programs.man.enable {
+  config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
     home.extraOutputsToInstall = [ "man" ];
 
     # This is mostly copy/pasted/adapted from NixOS' documentation.nix.
-    home.file = mkIf config.programs.man.generateCaches {
+    home.file = mkIf cfg.generateCaches {
       ".manpath".text = let
         # Generate a directory containing installed packages' manpages.
         manualPages = pkgs.buildEnv {
