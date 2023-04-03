@@ -8,7 +8,7 @@ let
   serviceArgs =
     optionalString (cfg.storePath != null) "--path ${cfg.storePath}";
 in {
-  meta.maintainers = with maintainers; [ cab404 houstdav000 ];
+  meta.maintainers = with maintainers; [ cab404 cyntheticfox ];
 
   options.services.pass-secret-service = {
     enable = mkEnableOption "Pass libsecret service";
