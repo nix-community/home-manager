@@ -32,7 +32,6 @@ with lib;
         };
       };
       min = { # minimal definition
-        exec = "test --option";
         name = "Test";
       };
       deprecated = {
