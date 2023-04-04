@@ -41,6 +41,9 @@
         userContent = ''
           * { color: red !important; }
         '';
+        extraConfig = ''
+          user_pref("mail.html_compose", false);
+        '';
       };
 
       second.settings = { "second.setting" = "some-test-setting"; };

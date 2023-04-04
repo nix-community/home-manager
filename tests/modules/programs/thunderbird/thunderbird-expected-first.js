@@ -59,3 +59,5 @@ user_pref("mail.smtpserver.smtp_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfa
 user_pref("mail.smtpservers", "smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc,smtp_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f");
 user_pref("privacy.donottrackheader.enabled", true);
 
+user_pref("mail.html_compose", false);
+
