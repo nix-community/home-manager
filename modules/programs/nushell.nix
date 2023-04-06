@@ -179,6 +179,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [{
+      assertion = (cfg.settings != { }) -> (builtins.compareVersions cfg.package.version "0.72" >= 0);
+      message = "programs.nushell.settings requires nushell >= 0.72, but was ${cfg.package.version}";
+    }];
     home.packages = [ cfg.package ];
     home.file = mkMerge [
       (mkIf (cfg.configFile != null || cfg.extraConfig != "") {

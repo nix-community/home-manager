@@ -32,7 +32,9 @@
     '';
   };
 
-  test.stubs.nushell = { };
+  test.stubs.nushell = {
+    version = "0.73.0";
+  };
 
   nmt.script = let
     configDir = if pkgs.stdenv.isDarwin then
