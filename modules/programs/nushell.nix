@@ -80,7 +80,7 @@ let
     merge = mergeEqualOption;
   };
 in {
-  meta.maintainers = [ maintainers.Philipp-M ];
+  meta.maintainers = with maintainers; [ Philipp-M bobvanderlinden ];
 
   options.programs.nushell = {
     enable = mkEnableOption "nushell";
