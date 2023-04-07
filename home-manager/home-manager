@@ -117,18 +117,25 @@ function setHomeManagerNixPath() {
 
 # Sets some useful Home Manager related paths as global read-only variables.
 function setHomeManagerPathVariables() {
-    declare -r nixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
-    declare -r globalProfilesDir="$nixStateDir/profiles/per-user/$USER"
-    declare -r globalGcrootsDir="$nixStateDir/gcroots/per-user/$USER"
+    declare -r globalNixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
+    declare -r globalProfilesDir="$globalNixStateDir/profiles/per-user/$USER"
+    declare -r globalGcrootsDir="$globalNixStateDir/gcroots/per-user/$USER"
+
+    declare -r stateHome="${XDG_STATE_HOME:-$HOME/.local/state}"
+    declare -r userNixStateDir="$stateHome/nix"
 
     declare -gr HM_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
-    declare -gr HM_STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/home-manager"
+    declare -gr HM_STATE_DIR="$stateHome/home-manager"
     declare -gr HM_GCROOT_LEGACY_PATH="$globalGcrootsDir/current-home"
 
-    if [[ -d "$globalProfilesDir" ]]; then
+    if [[ -d $userNixStateDir/profiles ]]; then
+        declare -gr HM_PROFILE_DIR="$userNixStateDir/profiles"
+    elif [[ -d $globalProfilesDir ]]; then
         declare -gr HM_PROFILE_DIR="$globalProfilesDir"
     else
-        declare -gr HM_PROFILE_DIR="$HM_STATE_DIR/profiles"
+        _iError 'Could not find suitable profile directory, tried %s and %s' \
+                "$HM_STATE_DIR/profiles" "$globalProfilesDir" >&2
+        exit 1
     fi
 }
 
@@ -769,16 +776,16 @@ function doUninstall() {
                 $DRY_RUN_CMD rm $VERBOSE_ARG -r "$HM_DATA_HOME"
             fi
 
+            if [[ -e $HM_STATE_DIR ]]; then
+                $DRY_RUN_CMD rm $VERBOSE_ARG -r "$HM_STATE_DIR"
+            fi
+
             if [[ -e $HM_PROFILE_DIR ]]; then
                 $DRY_RUN_CMD rm $VERBOSE_ARG "$HM_PROFILE_DIR/home-manager"*
             fi
 
             if [[ -e $HM_GCROOT_LEGACY_PATH ]]; then
                 $DRY_RUN_CMD rm $VERBOSE_ARG "$HM_GCROOT_LEGACY_PATH"
-            fi
-
-            if [[ -e $HM_STATE_DIR ]]; then
-                $DRY_RUN_CMD rm $VERBOSE_ARG -r "$HM_STATE_DIR"
             fi
             ;;
         *)
