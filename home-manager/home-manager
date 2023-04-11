@@ -187,6 +187,7 @@ function setFlakeAttribute() {
 function doInspectOption() {
     setFlakeAttribute
     if [[ -v FLAKE_CONFIG_URI ]]; then
+        # translators: Here "flake" is a noun that refers to the Nix Flakes feature.
         _iError "Can't inspect options of a flake configuration"
         exit 1
     fi
@@ -443,6 +444,7 @@ EOF
 function doInstantiate() {
     setFlakeAttribute
     if [[ -v FLAKE_CONFIG_URI ]]; then
+        # translators: Here "flake" is a noun that refers to the Nix Flakes feature.
         _i "Can't instantiate a flake configuration" >&2
         exit 1
     fi
@@ -696,6 +698,7 @@ function newsReadIdsFile() {
 function buildNews() {
     setFlakeAttribute
     if [[ -v FLAKE_CONFIG_URI ]]; then
+        # translators: Here "flake" is a noun that refers to the Nix Flakes feature.
         _iError "Sorry, this command is not yet supported in flake setup" >&2
         exit 1
     fi
