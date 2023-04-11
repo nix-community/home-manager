@@ -3,15 +3,10 @@
 with lib;
 
 let
-
   cfg = config.services.gpg-agent;
   gpgPkg = config.programs.gpg.package;
 
   homedir = config.programs.gpg.homedir;
-
-  gpgSshSupportStr = ''
-    ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
-  '';
 
   pinentryBinPath = optionalString (cfg.pinentryFlavor != null)
     (if cfg.pinentryFlavor == "mac" then
@@ -19,15 +14,17 @@ let
     else
       "${pkgs.pinentry.${cfg.pinentryFlavor}}/bin/pinentry");
 
+  gpgSshSupportStr = ''
+    ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
+  '';
+
   gpgInitStr = ''
     GPG_TTY="$(tty)"
     export GPG_TTY
   '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
 
-  gpgFishInitStr = ''
-    set -gx GPG_TTY (tty)
-  '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
-
+  # for darwin systems, we explicitly override this as, by default, the system ssh-agent
+  # runs as a daemon, so this is already set.
   sshAuthSockStr =
     let sockPathCmd = "$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)";
     in (if pkgs.stdenv.hostPlatform.isLinux then ''
@@ -38,20 +35,22 @@ let
       export SSH_AUTH_SOCK="${sockPathCmd}"
     '');
 
+  gpgFishInitStr = ''
+    set -gx GPG_TTY (tty)
+  '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
+
   # mimic `gpgconf` output for use in `systemd` unit definitions.
   # we cannot use `gpgconf` directly because it heavily depends on system
   # state, but we need the values at build time. original:
   # https://github.com/gpg/gnupg/blob/c6702d77d936b3e9d91b34d8fdee9599ab94ee1b/common/homedir.c#L672-L681
-  sockRelPath = dir:
+  gpgconf = dir:
     let
       hash =
         substring 0 24 (hexStringToBase32 (builtins.hashString "sha1" homedir));
     in if homedir == options.programs.gpg.homedir.default then
-      "gnupg/${dir}"
+      "%t/gnupg/${dir}"
     else
-      "gnupg/d.${hash}/${dir}";
-  gpgconf = dir: "%t/${sockRelPath dir}";
-  gpgconf' = dir: "/tmp/${sockRelPath dir}";
+      "%t/gnupg/d.${hash}/${dir}";
 
   # Act like `xxd -r -p | base32` but with z-base-32 alphabet and no trailing padding.
   # Written in Nix for purity.
@@ -89,7 +88,7 @@ let
   in hexString: (foldl' go initState (splitChars hexString)).ret;
 
 in {
-  meta.maintainers = with maintainers; [ rycee montchr ];
+  meta.maintainers = with maintainers; [ rycee montchr cmacrae ];
 
   options = {
     services.gpg-agent = {
@@ -222,8 +221,8 @@ in {
           <literal>gtk2</literal> for now.
           On macOS, while <literal>gtk2</literal> will work, the dialog
           will not receive proper focus.<literal>pinentry-mac</literal>
-          integrates with macOS smoothly, so it will be used as the default
-          on macOS. On Darwin (as opposed to macOS specifically),
+          integrates with macOS smoothly, so it will be used as the default.
+          On Darwin (as opposed to macOS specifically),
           <literal>gtk2</literal> may still be a preferable default.
         '';
       };
@@ -244,20 +243,24 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.file."${homedir}/gpg-agent.conf".text = concatStringsSep "\n"
-        (optional (cfg.enableSshSupport) "enable-ssh-support"
-          ++ optional cfg.grabKeyboardAndMouse "grab"
-          ++ optional (!cfg.enableScDaemon) "disable-scdaemon"
-          ++ optional (cfg.defaultCacheTtl != null)
-          "default-cache-ttl ${toString cfg.defaultCacheTtl}"
-          ++ optional (cfg.defaultCacheTtlSsh != null)
-          "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
-          ++ optional (cfg.maxCacheTtl != null)
-          "max-cache-ttl ${toString cfg.maxCacheTtl}"
-          ++ optional (cfg.maxCacheTtlSsh != null)
-          "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
-          ++ optional (cfg.pinentryFlavor != null)
-          "pinentry-program ${pinentryBinPath}" ++ [ cfg.extraConfig ]);
+      home.file."${homedir}/gpg-agent.conf" = {
+        text = concatStringsSep "\n"
+          (optional (cfg.enableSshSupport) "enable-ssh-support"
+            ++ optional cfg.grabKeyboardAndMouse "grab"
+            ++ optional (!cfg.enableScDaemon) "disable-scdaemon"
+            ++ optional (cfg.defaultCacheTtl != null)
+            "default-cache-ttl ${toString cfg.defaultCacheTtl}"
+            ++ optional (cfg.defaultCacheTtlSsh != null)
+            "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
+            ++ optional (cfg.maxCacheTtl != null)
+            "max-cache-ttl ${toString cfg.maxCacheTtl}"
+            ++ optional (cfg.maxCacheTtlSsh != null)
+            "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
+            ++ optional (cfg.pinentryFlavor != null)
+            "pinentry-program ${pinentryBinPath}" ++ [ cfg.extraConfig ]);
+        onChange =
+          optionalString pkgs.stdenv.hostPlatform.isDarwin gpgSshSupportStr;
+      };
 
       home.sessionVariablesExtra =
         optionalString cfg.enableSshSupport sshAuthSockStr;
@@ -275,6 +278,19 @@ in {
       '') cfg.sshKeys;
     })
 
+    {
+      launchd.agents.gpg-agent = {
+        enable = true;
+        config = {
+          ProgramArguments = [ "${gpgPkg}/bin/gpgconf" "--launch" "gpg-agent" ]
+            ++ optionals cfg.verbose [ "--verbose" ];
+          RunAtLoad = true;
+          KeepAlive.SuccessfulExit = false;
+          EnvironmentVariables.GNUPGHOME = homedir;
+        };
+      };
+    }
+
     # The systemd units below are direct translations of the
     # descriptions in the
     #
@@ -282,10 +298,6 @@ in {
     #
     # directory.
     {
-      assertions = [
-        (hm.assertions.assertPlatform "services.gpg-agent" pkgs platforms.linux)
-      ];
-
       systemd.user.services.gpg-agent = {
         Unit = {
           Description = "GnuPG cryptographic agent and passphrase cache";
@@ -296,73 +308,68 @@ in {
           RefuseManualStart = true;
         };
 
-        systemd.user.sockets.gpg-agent = {
-          Unit = {
-            Description = "GnuPG cryptographic agent and passphrase cache";
-            Documentation = "man:gpg-agent(1)";
-          };
-
-          Socket = {
-            ListenStream = gpgconf "S.gpg-agent";
-            FileDescriptorName = "std";
-            SocketMode = "0600";
-            DirectoryMode = "0700";
-          };
-
-          Install = { WantedBy = [ "sockets.target" ]; };
+        Service = {
+          ExecStart = "${gpgPkg}/bin/gpg-agent --supervised"
+            + optionalString cfg.verbose " --verbose";
+          ExecReload = "${gpgPkg}/bin/gpgconf --reload gpg-agent";
+          Environment = [ "GNUPGHOME=${homedir}" ];
         };
-      }
+      };
 
-      (mkIf cfg.enableSshSupport {
-        systemd.user.sockets.gpg-agent-ssh = {
-          Unit = {
-            Description = "GnuPG cryptographic agent (ssh-agent emulation)";
-            Documentation =
-              "man:gpg-agent(1) man:ssh-add(1) man:ssh-agent(1) man:ssh(1)";
-          };
-
-          Socket = {
-            ListenStream = gpgconf "S.gpg-agent.ssh";
-            FileDescriptorName = "ssh";
-            Service = "gpg-agent.service";
-            SocketMode = "0600";
-            DirectoryMode = "0700";
-          };
-
-          Install = { WantedBy = [ "sockets.target" ]; };
+      systemd.user.sockets.gpg-agent = {
+        Unit = {
+          Description = "GnuPG cryptographic agent and passphrase cache";
+          Documentation = "man:gpg-agent(1)";
         };
-      })
 
-      (mkIf cfg.enableExtraSocket {
-        systemd.user.sockets.gpg-agent-extra = {
-          Unit = {
-            Description =
-              "GnuPG cryptographic agent and passphrase cache (restricted)";
-            Documentation = "man:gpg-agent(1) man:ssh(1)";
-          };
-
-          Socket = {
-            ListenStream = gpgconf "S.gpg-agent.extra";
-            FileDescriptorName = "extra";
-            Service = "gpg-agent.service";
-            SocketMode = "0600";
-            DirectoryMode = "0700";
-          };
-
-          Install = { WantedBy = [ "sockets.target" ]; };
+        Socket = {
+          ListenStream = gpgconf "S.gpg-agent";
+          FileDescriptorName = "std";
+          SocketMode = "0600";
+          DirectoryMode = "0700";
         };
-      })
-    ]))
 
-    (mkIf pkgs.stdenv.hostPlatform.isDarwin {
-      launchd.agents.gpg-agent = {
-        enable = true;
-        config = {
-          ProgramArguments = [ "${gpgPkg}/bin/gpg-connect-agent" "/bye" ];
-          RunAtLoad = cfg.enableSshSupport;
-          EnvironmentVariables = { GNUPGHOME = homedir; };
-          KeepAlive.SuccessfulExit = false;
+        Install = { WantedBy = [ "sockets.target" ]; };
+      };
+    }
+
+    (mkIf cfg.enableSshSupport {
+      systemd.user.sockets.gpg-agent-ssh = {
+        Unit = {
+          Description = "GnuPG cryptographic agent (ssh-agent emulation)";
+          Documentation =
+            "man:gpg-agent(1) man:ssh-add(1) man:ssh-agent(1) man:ssh(1)";
         };
+
+        Socket = {
+          ListenStream = gpgconf "S.gpg-agent.ssh";
+          FileDescriptorName = "ssh";
+          Service = "gpg-agent.service";
+          SocketMode = "0600";
+          DirectoryMode = "0700";
+        };
+
+        Install = { WantedBy = [ "sockets.target" ]; };
+      };
+    })
+
+    (mkIf cfg.enableExtraSocket {
+      systemd.user.sockets.gpg-agent-extra = {
+        Unit = {
+          Description =
+            "GnuPG cryptographic agent and passphrase cache (restricted)";
+          Documentation = "man:gpg-agent(1) man:ssh(1)";
+        };
+
+        Socket = {
+          ListenStream = gpgconf "S.gpg-agent.extra";
+          FileDescriptorName = "extra";
+          Service = "gpg-agent.service";
+          SocketMode = "0600";
+          DirectoryMode = "0700";
+        };
+
+        Install = { WantedBy = [ "sockets.target" ]; };
       };
     })
   ]);
