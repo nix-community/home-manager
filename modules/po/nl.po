@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-03-15 20:11+0100\n"
-"PO-Revision-Date: 2022-11-16 13:47+0000\n"
+"PO-Revision-Date: 2023-04-10 11:48+0000\n"
 "Last-Translator: Pablo Bollansee <pablo.bollansee@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/home-manager/"
 "modules/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
@@ -71,7 +71,7 @@ msgstr "%s aan het activeren"
 
 #: modules/lib-bash/activation-init.sh:16
 msgid "Migrating profiles from %s to %s"
-msgstr ""
+msgstr "Profielen van %s naar %s aan het migreren"
 
 #: modules/lib-bash/activation-init.sh:75
 msgid "Sanity checking oldGenNum and oldGenPath"

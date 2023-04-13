@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-03-15 20:11+0100\n"
-"PO-Revision-Date: 2022-11-16 13:47+0000\n"
+"PO-Revision-Date: 2023-04-10 11:48+0000\n"
 "Last-Translator: Pablo Bollansee <pablo.bollansee@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/home-manager/cli/"
 "nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -31,6 +31,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Je Home Manager %s bestand opslaan in %s is niet langer ondersteund,\n"
+"gelieve het te verplaatsen naar %s"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
@@ -51,11 +53,11 @@ msgstr "Voer '%s --help' in om gebruiksinfo te zien"
 
 #: home-manager/home-manager:276 home-manager/home-manager:326
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "Het bestand %s bestaat al, het zal niet aangepast worden..."
 
 #: home-manager/home-manager:278 home-manager/home-manager:328
 msgid "Creating %s..."
-msgstr ""
+msgstr "%s aan het aanmaken..."
 
 #: home-manager/home-manager:370
 msgid "Creating initial Home Manager generation..."
@@ -97,7 +99,7 @@ msgstr ""
 
 #: home-manager/home-manager:390
 msgid "Can't instantiate a flake configuration"
-msgstr "Het is niet gelukt om de vlok-configuratie te creëren"
+msgstr "Het is niet gelukt om de flake-configuratie te creëren"
 
 #: home-manager/home-manager:463
 msgid ""
