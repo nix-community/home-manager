@@ -43,33 +43,38 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "services.avizo" pkgs platforms.linux) ];
+  config = mkIf cfg.enable mkMerge [
+    (mkIf (cfg.settings != { }) {
+      xdg.configFile."avizo/config.ini".source =
+        settingsFormat.generate "avizo-config.ini" cfg.settings;
+    })
+    {
+      assertions = [
+        (hm.assertions.assertPlatform "services.avizo" pkgs platforms.linux)
+      ];
 
-    home.packages = [ cfg.package ];
+      home.packages = [ cfg.package ];
 
-    xdg.configFile."avizo/config.ini".source =
-      settingsFormat.generate "avizo-config.ini" cfg.settings;
+      systemd.user = {
+        services.avizo = {
+          Unit = {
+            Description = "Volume/backlight OSD indicator";
+            PartOf = [ "graphical-session.target" ];
+            After = [ "graphical-session.target" ];
+            ConditionEnvironment = "WAYLAND_DISPLAY";
+            Documentation = "man:avizo(1)";
+          };
 
-    systemd.user = {
-      services.avizo = {
-        Unit = {
-          Description = "Volume/backlight OSD indicator";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
-          ConditionEnvironment = "WAYLAND_DISPLAY";
-          Documentation = "man:avizo(1)";
+          Service = {
+            Type = "simple";
+            ExecStart = "${cfg.package}/bin/avizo-service";
+            Restart = "always";
+          };
+
+          Install = { WantedBy = [ "graphical-session.target" ]; };
         };
-
-        Service = {
-          Type = "simple";
-          ExecStart = "${cfg.package}/bin/avizo-service";
-          Restart = "always";
-        };
-
-        Install = { WantedBy = [ "graphical-session.target" ]; };
       };
-    };
-  };
+    }
+  ];
+
 }
