@@ -47,10 +47,11 @@ in {
     assertions =
       [ (hm.assertions.assertPlatform "services.avizo" pkgs platforms.linux) ];
 
-    home.packages = [ cfg.package ];
+    xdg.configFile."avizo/config.ini" = mkIf (cfg.settings != { }) {
+      source = settingsFormat.generate "avizo-config.ini" cfg.settings;
+    };
 
-    xdg.configFile."avizo/config.ini".source =
-      settingsFormat.generate "avizo-config.ini" cfg.settings;
+    home.packages = [ cfg.package ];
 
     systemd.user = {
       services.avizo = {

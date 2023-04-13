@@ -169,6 +169,7 @@ import nmt {
     ./modules/programs/wlogout
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
+    ./modules/services/avizo
     ./modules/services/barrier
     ./modules/services/borgmatic
     ./modules/services/cachix-agent
