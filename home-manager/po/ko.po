@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-15 20:11+0100\n"
+"POT-Creation-Date: 2023-04-10 13:49+0200\n"
 "PO-Revision-Date: 2022-01-30 21:50+0000\n"
 "Last-Translator: 박수원 <bboxone@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/home-manager/cli/"
@@ -26,7 +26,7 @@ msgstr "%s에서 설정 파일을 찾을 수 없음"
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
 #: home-manager/home-manager:88 home-manager/home-manager:92
-#: home-manager/home-manager:147
+#: home-manager/home-manager:154
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
@@ -36,33 +36,37 @@ msgstr ""
 msgid "No configuration file found. Please create one at %s"
 msgstr "설정 파일을 찾을 수 없음. %s에 설정 파일을 생성하십시오"
 
-#: home-manager/home-manager:183
+#: home-manager/home-manager:136
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr ""
+
+#: home-manager/home-manager:190
 msgid "Can't inspect options of a flake configuration"
 msgstr "flake 설정의 옵션들을 검사할 수 없음"
 
-#: home-manager/home-manager:245 home-manager/home-manager:268
-#: home-manager/home-manager:907
+#: home-manager/home-manager:252 home-manager/home-manager:275
+#: home-manager/home-manager:970
 msgid "%s: unknown option '%s'"
 msgstr "%s: 알 수 없는 옵션 '%s'"
 
-#: home-manager/home-manager:250 home-manager/home-manager:908
+#: home-manager/home-manager:257 home-manager/home-manager:971
 msgid "Run '%s --help' for usage help"
 msgstr "도움말을 보려면 '%s --help'를 실행하십시오"
 
-#: home-manager/home-manager:276 home-manager/home-manager:326
+#: home-manager/home-manager:283 home-manager/home-manager:382
 msgid "The file %s already exists, leaving it unchanged..."
 msgstr ""
 
-#: home-manager/home-manager:278 home-manager/home-manager:328
+#: home-manager/home-manager:285 home-manager/home-manager:384
 msgid "Creating %s..."
 msgstr ""
 
-#: home-manager/home-manager:370
+#: home-manager/home-manager:426
 msgid "Creating initial Home Manager generation..."
 msgstr "최초의 홈 매니저 세대를 생성하는 중..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
-#: home-manager/home-manager:375
+#: home-manager/home-manager:431
 msgid ""
 "All done! The home-manager tool should now be installed and you can edit\n"
 "\n"
@@ -80,7 +84,7 @@ msgstr ""
 "실행해서 가능한 모든 옵션을 살펴보십시오."
 
 #. translators: The "%s" specifier will be replaced by a URL.
-#: home-manager/home-manager:380
+#: home-manager/home-manager:436
 msgid ""
 "Uh oh, the installation failed! Please create an issue at\n"
 "\n"
@@ -94,11 +98,11 @@ msgstr ""
 "\n"
 "위 사이트에서 이슈를 생성하십시오."
 
-#: home-manager/home-manager:390
+#: home-manager/home-manager:446
 msgid "Can't instantiate a flake configuration"
 msgstr "flake 설정을 인스턴스화 할 수 없음"
 
-#: home-manager/home-manager:463
+#: home-manager/home-manager:519
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -109,74 +113,78 @@ msgstr[0] ""
 "읽지 않은 관련된 뉴스 항목들이 %d 개 있습니다.\n"
 "\"%s news\" 명령어를 실행해 읽어보십시오."
 
-#: home-manager/home-manager:477
+#: home-manager/home-manager:533
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "알 수 없는 \"news.display\"의 설정 \"%s\"."
 
-#: home-manager/home-manager:484
+#: home-manager/home-manager:540
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "환경변수 $EDITOR를 설정하십시오"
 
-#: home-manager/home-manager:499
+#: home-manager/home-manager:555
 msgid "Cannot run build in read-only directory"
 msgstr "읽기전용 폴더에서 빌드를 실행할 수 없습니다"
 
-#: home-manager/home-manager:583
+#: home-manager/home-manager:639
 msgid "No generation with ID %s"
 msgstr "ID %s를 갖는 세대가 존재하지 않음"
 
-#: home-manager/home-manager:585
+#: home-manager/home-manager:641
 msgid "Cannot remove the current generation %s"
 msgstr "현재 세대인 %s를 삭제할 수 없음"
 
-#: home-manager/home-manager:587
+#: home-manager/home-manager:643
 msgid "Removing generation %s"
 msgstr "%s 세대를 삭제하는 중"
 
-#: home-manager/home-manager:606
+#: home-manager/home-manager:662
 msgid "No generations to expire"
 msgstr "유효 기간이 지난 세대가 없음"
 
-#: home-manager/home-manager:617
+#: home-manager/home-manager:673
 msgid "No home-manager packages seem to be installed."
 msgstr "홈 매니저 패키지들이 설치되지 않은 것으로 보입니다."
 
-#: home-manager/home-manager:674
+#: home-manager/home-manager:699
+msgid "Sorry, this command is not yet supported in flake setup"
+msgstr ""
+
+#: home-manager/home-manager:736
 msgid "Unknown argument %s"
 msgstr "알 수 없는 매개변수 %s"
 
-#: home-manager/home-manager:690
+#: home-manager/home-manager:752
 msgid "This will remove Home Manager from your system."
 msgstr "시스템에서 홈 매니저를 삭제할 것입니다."
 
-#: home-manager/home-manager:693
+#: home-manager/home-manager:755
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "모의 실행 중으로, 아무것도 실제로 설치되지 않습니다."
 
-#: home-manager/home-manager:697
+#: home-manager/home-manager:759
 msgid "Really uninstall Home Manager?"
 msgstr "정말로 홈 매니저를 삭제할까요?"
 
-#: home-manager/home-manager:703
+#: home-manager/home-manager:765
 msgid "Switching to empty Home Manager configuration..."
 msgstr "빈 홈 매니저 설정으로 바꾸는 중..."
 
-#: home-manager/home-manager:730
+#: home-manager/home-manager:792
 msgid "Yay!"
 msgstr "야호!"
 
-#: home-manager/home-manager:735
+#: home-manager/home-manager:797
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "홈 매니저는 삭제되지만 home.nix 파일은 남겨집니다."
 
-#: home-manager/home-manager:945
+#: home-manager/home-manager:1008
 msgid "expire-generations expects one argument, got %d."
 msgstr ""
 "expire-generations 명령어는 매개변수가 한 개 필요한데, %d 개가 입력되었습니"
 "다."
 
-#: home-manager/home-manager:967
+#: home-manager/home-manager:1030
 msgid "Unknown command: %s"
 msgstr "알 수 없는 명령어: %s"
 

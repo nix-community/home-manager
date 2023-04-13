@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-15 20:11+0100\n"
+"POT-Creation-Date: 2023-04-10 13:49+0200\n"
 "PO-Revision-Date: 2022-03-26 23:57+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/home-manager/"
@@ -68,15 +68,19 @@ msgstr ""
 msgid "Activating %s"
 msgstr "Aktiviere %s"
 
-#: modules/lib-bash/activation-init.sh:16
-msgid "Migrating profiles from %s to %s"
+#: modules/lib-bash/activation-init.sh:22
+msgid "Migrating profile from %s to %s"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:75
+#: modules/lib-bash/activation-init.sh:53
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:81
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "Überprüfe zur Sicherheit oldGenNum und oldGenPath"
 
-#: modules/lib-bash/activation-init.sh:78
+#: modules/lib-bash/activation-init.sh:84
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -104,27 +108,27 @@ msgstr ""
 "\n"
 "Führen Sie danach 'home-manager switch' aus. Viel Glück!"
 
-#: modules/lib-bash/activation-init.sh:95
+#: modules/lib-bash/activation-init.sh:101
 msgid "Starting Home Manager activation"
 msgstr "Starte Home Manager Aktivierung"
 
-#: modules/lib-bash/activation-init.sh:99
+#: modules/lib-bash/activation-init.sh:105
 msgid "Sanity checking Nix"
 msgstr "Überprüfe zur Sicherheit Nix"
 
-#: modules/lib-bash/activation-init.sh:105
+#: modules/lib-bash/activation-init.sh:112
 msgid "This is a dry run"
 msgstr "Dies ist ein Probelauf"
 
-#: modules/lib-bash/activation-init.sh:109
+#: modules/lib-bash/activation-init.sh:116
 msgid "This is a live run"
 msgstr "Dies ist eine Live-Ausführung"
 
-#: modules/lib-bash/activation-init.sh:116
+#: modules/lib-bash/activation-init.sh:122
 msgid "Using Nix version: %s"
 msgstr "Nutze Nix Version: %s"
 
-#: modules/lib-bash/activation-init.sh:119
+#: modules/lib-bash/activation-init.sh:125
 msgid "Activation variables:"
 msgstr "Aktivierungsvariablen:"
 

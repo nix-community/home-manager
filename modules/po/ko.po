@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-03-15 20:11+0100\n"
+"POT-Creation-Date: 2023-04-10 13:49+0200\n"
 "PO-Revision-Date: 2023-03-13 01:44+0000\n"
 "Last-Translator: Suwon Park <sepiabrown@naver.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/home-manager/"
@@ -69,15 +69,19 @@ msgstr ""
 msgid "Activating %s"
 msgstr "%s를 활성화 하는 중"
 
-#: modules/lib-bash/activation-init.sh:16
-msgid "Migrating profiles from %s to %s"
-msgstr "%s에서 %s으로 profile들을 옮기는 중"
+#: modules/lib-bash/activation-init.sh:22
+msgid "Migrating profile from %s to %s"
+msgstr ""
 
-#: modules/lib-bash/activation-init.sh:75
+#: modules/lib-bash/activation-init.sh:53
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:81
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "oldGenNum과 oldGenPath가 정상인지 확인 중"
 
-#: modules/lib-bash/activation-init.sh:78
+#: modules/lib-bash/activation-init.sh:84
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -105,29 +109,32 @@ msgstr ""
 "\n"
 "그런 후 'home-manager switch'를 다시 시도해 보십시오. 행운을 빕니다!"
 
-#: modules/lib-bash/activation-init.sh:95
+#: modules/lib-bash/activation-init.sh:101
 msgid "Starting Home Manager activation"
 msgstr "홈 매니저 활성화를 시작하는 중"
 
-#: modules/lib-bash/activation-init.sh:99
+#: modules/lib-bash/activation-init.sh:105
 msgid "Sanity checking Nix"
 msgstr "Nix가 정상인지 확인 중"
 
-#: modules/lib-bash/activation-init.sh:105
+#: modules/lib-bash/activation-init.sh:112
 msgid "This is a dry run"
 msgstr "모의 실행 중 입니다"
 
-#: modules/lib-bash/activation-init.sh:109
+#: modules/lib-bash/activation-init.sh:116
 msgid "This is a live run"
 msgstr "모의 실행이 아닌 실제 실행 중 입니다"
 
-#: modules/lib-bash/activation-init.sh:116
+#: modules/lib-bash/activation-init.sh:122
 msgid "Using Nix version: %s"
 msgstr "사용 중인 Nix 버전: %s"
 
-#: modules/lib-bash/activation-init.sh:119
+#: modules/lib-bash/activation-init.sh:125
 msgid "Activation variables:"
 msgstr "활성화 변수들:"
+
+#~ msgid "Migrating profiles from %s to %s"
+#~ msgstr "%s에서 %s으로 profile들을 옮기는 중"
 
 #~ msgid ""
 #~ "Oops, nix-env failed to install your new Home Manager profile!\n"
