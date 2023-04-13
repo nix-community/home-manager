@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-04-10 13:49+0200\n"
-"PO-Revision-Date: 2022-04-20 18:18+0000\n"
-"Last-Translator: Frankie McEyes <mceyes@protonmail.com>\n"
+"PO-Revision-Date: 2023-04-11 20:41+0000\n"
+"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/home-manager/cli/"
 "it/>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -55,7 +55,7 @@ msgstr "Esegui '%s --help' per ottenere aiuto"
 
 #: home-manager/home-manager:283 home-manager/home-manager:382
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "Il file %s è già esistente, non verrà modificato..."
 
 #: home-manager/home-manager:285 home-manager/home-manager:384
 msgid "Creating %s..."

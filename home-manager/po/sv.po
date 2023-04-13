@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-04-10 13:49+0200\n"
-"PO-Revision-Date: 2023-03-16 09:05+0000\n"
+"PO-Revision-Date: 2023-04-11 20:41+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/cli/"
 "sv/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -40,7 +40,7 @@ msgstr "Hittade ingen konfigurationsfil. Skapa en i %s"
 
 #: home-manager/home-manager:136
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Kunde inte hitta lämplig profil-katalog, försökte med %s och %s"
 
 #: home-manager/home-manager:190
 msgid "Can't inspect options of a flake configuration"
@@ -153,6 +153,7 @@ msgstr "Paketet home-manager verkar inte vara installerat."
 #: home-manager/home-manager:699
 msgid "Sorry, this command is not yet supported in flake setup"
 msgstr ""
+"Ursäkta, för tillfället stödjs detta kommando inte när Nix flakes används"
 
 #: home-manager/home-manager:736
 msgid "Unknown argument %s"
