@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-04-11 22:44+0200\n"
-"PO-Revision-Date: 2023-03-17 13:11+0000\n"
+"PO-Revision-Date: 2023-04-13 13:47+0000\n"
 "Last-Translator: Dan <denqwerta@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/home-manager/"
 "cli/uk/>\n"
@@ -16,9 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -41,7 +41,7 @@ msgstr "Файл конфігурації не знайдено. Будь лас
 
 #: home-manager/home-manager:136
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Не вдалося знайти відповідний каталог профілю, спробував %s і %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:191
@@ -160,7 +160,7 @@ msgstr "Здається, не встановлено жодних пакунк�
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:702
 msgid "Sorry, this command is not yet supported in flake setup"
-msgstr ""
+msgstr "На жаль, ця команда ще не підтримується в налаштуваннях flake"
 
 #: home-manager/home-manager:739
 msgid "Unknown argument %s"
