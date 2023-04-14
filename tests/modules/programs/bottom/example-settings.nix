@@ -18,14 +18,9 @@ with lib;
       };
     };
 
-    nmt.script = let
-      configDir = if pkgs.stdenv.isDarwin then
-        "home-files/Library/Application Support"
-      else
-        "home-files/.config";
-    in ''
+    nmt.script = ''
       assertFileContent \
-        "${configDir}/bottom/bottom.toml" \
+        "home-files/.config/bottom/bottom.toml" \
         ${./example-settings-expected.toml}
     '';
   };
