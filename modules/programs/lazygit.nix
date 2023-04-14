@@ -34,8 +34,10 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/lazygit/config.yml</filename> on Linux
-        or <filename>~/Library/Application Support/lazygit/config.yml</filename> on Darwin. See
+        <filename>$XDG_CONFIG_HOME/lazygit/config.yml</filename>
+        on Linux or on Darwin if <xref linkend="opt-xdg.enable"/> is set, otherwise
+        <filename>~/Library/Application Support/lazygit/config.yml</filename>.
+        See
         <link xlink:href="https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md"/>
         for supported values.
       '';
@@ -46,12 +48,12 @@ in {
     home.packages = [ cfg.package ];
 
     home.file."Library/Application Support/lazygit/config.yml" =
-      mkIf (cfg.settings != { } && isDarwin) {
+      mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable)) {
         source = yamlFormat.generate "lazygit-config" cfg.settings;
       };
 
     xdg.configFile."lazygit/config.yml" =
-      mkIf (cfg.settings != { } && !isDarwin) {
+      mkIf (cfg.settings != { } && !(isDarwin && !config.xdg.enable)) {
         source = yamlFormat.generate "lazygit-config" cfg.settings;
       };
   };
