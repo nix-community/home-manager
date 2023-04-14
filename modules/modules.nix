@@ -68,6 +68,7 @@ let
     ./programs/btop.nix
     ./programs/chromium.nix
     ./programs/command-not-found/command-not-found.nix
+    ./programs/comodoro.nix
     ./programs/dircolors.nix
     ./programs/direnv.nix
     ./programs/discocss.nix
@@ -234,6 +235,7 @@ let
     ./services/cbatticon.nix
     ./services/clipman.nix
     ./services/clipmenu.nix
+    ./services/comodoro.nix
     ./services/copyq.nix
     ./services/devilspie2.nix
     ./services/dropbox.nix

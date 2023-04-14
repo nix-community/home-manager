@@ -66,6 +66,7 @@ import nmt {
     ./modules/programs/broot
     ./modules/programs/browserpass
     ./modules/programs/btop
+    ./modules/programs/comodoro
     ./modules/programs/dircolors
     ./modules/programs/direnv
     ./modules/programs/emacs
@@ -186,6 +187,7 @@ import nmt {
     ./modules/services/borgmatic
     ./modules/services/cachix-agent
     ./modules/services/clipman
+    ./modules/services/comodoro
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs

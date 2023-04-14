@@ -1,0 +1,13 @@
+[test-preset]
+on-server-start = "echo server started"
+on-timer-stop = "echo timer stopped"
+on-work-begin = "echo work cycle began"
+tcp-host = "localhost"
+tcp-port = 8080
+[[test-preset.cycles]]
+duration = 1500
+name = "Work"
+
+[[test-preset.cycles]]
+duration = 500
+name = "Rest"

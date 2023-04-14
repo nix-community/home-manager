@@ -1,0 +1,1 @@
+{ comodoro-program = ./comodoro.nix; }
