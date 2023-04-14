@@ -106,7 +106,7 @@ $VERBOSE_RUN _i "Sanity checking Nix"
 nix-build --expr '{}' --no-out-link
 
 # Also make sure that the Nix profiles path is created.
-nix-env -q > /dev/null 2>&1
+nix-env -q > /dev/null 2>&1 || true
 
 migrateProfile
 setupVars
