@@ -8,32 +8,29 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-04-11 22:44+0200\n"
-"PO-Revision-Date: 2023-01-08 11:50+0000\n"
-"Last-Translator: Eric Ho <eric913@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
-"home-manager/modules/zh_Hant/>\n"
-"Language: zh_Hant\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
-msgstr "正在 %s 中建立家目錄檔案連結"
+msgstr ""
 
 #: modules/files.nix:247
 msgid "Cleaning up orphan links from %s"
-msgstr "正在從 %s 清理孤立連結"
+msgstr ""
 
 #: modules/files.nix:263
 msgid "Creating profile generation %s"
-msgstr "正在建立配置檔案世代 %s"
+msgstr ""
 
 #: modules/files.nix:280
 msgid "No change so reusing latest profile generation %s"
-msgstr "未發生變化，正在重新使用最近一次的配置檔案世代 %s"
+msgstr ""
 
 #: modules/home-environment.nix:625
 msgid ""
@@ -50,22 +47,10 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
-"糟糕，Nix 未能安裝您的新 Home Manager 配置文件！\n"
-"\n"
-"也許這裏和使用 \"%s\" 安裝的包有衝突？\n"
-"嘗試運行\n"
-"\n"
-"    %s\n"
-"\n"
-"如果有衝突的包，你可以用\n"
-"\n"
-"    %s\n"
-"\n"
-"來移除。然後嘗試再次啟用您的 Home Manager 配置。"
 
 #: modules/home-environment.nix:658
 msgid "Activating %s"
-msgstr "正在啟用 %s"
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
@@ -77,7 +62,7 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:81
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr "正在進行 oldGenNum 和 oldGenPath 的完整性檢查"
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:84
 msgid ""
@@ -97,24 +82,24 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:101
 msgid "Starting Home Manager activation"
-msgstr "正在啟動 Home Manager 初始化程式"
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:105
 msgid "Sanity checking Nix"
-msgstr "正在進行 Nix 完整性檢查"
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:112
 msgid "This is a dry run"
-msgstr "這是試運行"
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:116
 msgid "This is a live run"
-msgstr "這是在實際運行"
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:122
 msgid "Using Nix version: %s"
-msgstr "正在使用的 Nix 版本: %s"
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:125
 msgid "Activation variables:"
-msgstr "啟用的變數:"
+msgstr ""
