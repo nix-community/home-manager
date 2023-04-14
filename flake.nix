@@ -2,9 +2,8 @@
   description = "Home Manager for Nix";
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.utils.url = "github:numtide/flake-utils";
 
-  outputs = { self, nixpkgs, utils, ... }:
+  outputs = { self, nixpkgs, ... }:
     {
       nixosModules = rec {
         home-manager = import ./nixos;
@@ -84,23 +83,29 @@
             };
           });
       };
-    } // utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-        docs = import ./docs { inherit pkgs; };
-        tests = import ./tests { inherit pkgs; };
-        hmPkg = pkgs.callPackage ./home-manager { };
-      in {
-        devShells.tests = tests.run;
-        packages = {
+    } // (let
+      forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+    in {
+      devShells = forAllSystems (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          tests = import ./tests { inherit pkgs; };
+        in tests.run);
+
+      packages = forAllSystems (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          docs = import ./docs { inherit pkgs; };
+          hmPkg = pkgs.callPackage ./home-manager { };
+        in {
           default = hmPkg;
           home-manager = hmPkg;
 
           docs-html = docs.manual.html;
           docs-json = docs.options.json;
           docs-manpages = docs.manPages;
-        };
-        # deprecated in Nix 2.7
-        defaultPackage = self.packages.${system}.default;
-      });
+        });
+
+      defaultPackage = forAllSystems (system: self.packages.${system}.default);
+    });
 }
