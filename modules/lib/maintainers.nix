@@ -357,6 +357,12 @@
     github = "lukasngl";
     githubId = 69244516;
   };
+  SpringerJack = {
+    name = "SpringerJack";
+    email = "46654987+SpringerJack@users.noreply.github.com";
+    github = "SpringerJack";
+    githubId = "46654987";
+  };
   toastal = {
     email = "toastal+nix@posteo.net";
     matrix = "@toastal:matrix.org";
