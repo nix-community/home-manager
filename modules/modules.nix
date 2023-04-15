@@ -158,6 +158,7 @@ let
     ./programs/pylint.nix
     ./programs/qutebrowser.nix
     ./programs/rbw.nix
+    ./programs/rcm.nix
     ./programs/readline.nix
     ./programs/rofi-pass.nix
     ./programs/rofi.nix
