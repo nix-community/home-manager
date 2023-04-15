@@ -10,10 +10,7 @@
     };
   };
 
-  test.stubs = {
-    git = { name = "git"; };
-    openssh = { name = "openssh"; };
-  };
+  test.stubs.openssh = { name = "openssh"; };
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/git-sync-test.service
