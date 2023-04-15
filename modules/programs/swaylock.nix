@@ -40,6 +40,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.swaylock" pkgs
+        lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile."swaylock/config" = mkIf (cfg.settings != { }) {
