@@ -69,8 +69,8 @@ rec {
     };
 
   barStr = { id, fonts, mode, hiddenState, position, workspaceButtons
-    , workspaceNumbers, command, statusCommand, colors, trayOutput, extraConfig
-    , ... }:
+    , workspaceNumbers, command, statusCommand, colors, trayOutput, trayPadding
+    , extraConfig, ... }:
     let colorsNotNull = lib.filterAttrs (n: v: v != null) colors != { };
     in ''
       bar {
@@ -93,6 +93,8 @@ rec {
                   lib.hm.booleans.yesNo (!workspaceNumbers)
                 }")
               (optionalString (trayOutput != null) "tray_output ${trayOutput}")
+              (optionalString (trayPadding != null)
+                "tray_padding ${toString trayPadding}")
               (optionals colorsNotNull (indent
                 (lists.subtractLists [ "" null ] [
                   "colors {"
