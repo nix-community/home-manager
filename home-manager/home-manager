@@ -527,7 +527,7 @@ function presentNews() {
         echo $'\n'"$msg"$'\n' >&2
 
         if [[ -v DISPLAY ]] && type -P notify-send > /dev/null; then
-            notify-send "Home Manager" "$msg"
+            notify-send "Home Manager" "$msg" > /dev/null 2>&1 || true
         fi
     elif [[ "$newsDisplay" == "show" ]]; then
         doShowNews --unread
