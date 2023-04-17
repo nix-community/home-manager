@@ -3913,8 +3913,10 @@ The innermost attributes must be of type str.</p><p><span class="emphasis"><em>T
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lazygit.package"></a><a class="term" href="options.html#opt-programs.lazygit.package"><code class="option">programs.lazygit.package</code></a></span></dt><dd><p>The lazygit package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.lazygit</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lazygit.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/lazygit.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.lazygit.settings"></a><a class="term" href="options.html#opt-programs.lazygit.settings"><code class="option">programs.lazygit.settings</code></a></span></dt><dd><p>Configuration written to
-<code class="filename">$XDG_CONFIG_HOME/lazygit/config.yml</code> on Linux
-or <code class="filename">~/Library/Application Support/lazygit/config.yml</code> on Darwin. See
+<code class="filename">$XDG_CONFIG_HOME/lazygit/config.yml</code>
+on Linux or on Darwin if <a class="xref" href="options.html#opt-xdg.enable"><code class="option">xdg.enable</code></a> is set, otherwise
+<code class="filename">~/Library/Application Support/lazygit/config.yml</code>.
+See
 <a class="link" href="https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md" target="_top">https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md</a>
 for supported values.</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
   gui.theme = {
