@@ -50,8 +50,8 @@ The first option is good if you only temporarily want to use your clone.
 [[sec-guidelines]]
 === Guidelines
 :irc-home-manager: https://webchat.oftc.net/?channels=home-manager
-:valuable-options: https://github.com/Infinisil/rfcs/blob/config-option/rfcs/0042-config-option.md#valuable-options
-:rfc-42: https://github.com/Infinisil/rfcs/blob/config-option/rfcs/0042-config-option.md
+:valuable-options: https://github.com/NixOS/rfcs/blob/master/rfcs/0042-config-option.md#valuable-options
+:rfc-42: https://github.com/NixOS/rfcs/blob/master/rfcs/0042-config-option.md
 :assertions: https://nixos.org/manual/nixos/stable/index.html#sec-assertions
 
 If your contribution satisfy the following rules then there is a good chance it will be merged without too much trouble. The rules are enforced by the Home Manager maintainers and to a lesser extent the Home Manager CI system.
