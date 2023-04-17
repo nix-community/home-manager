@@ -8,11 +8,10 @@ let
 
   homedir = config.programs.gpg.homedir;
 
-  pinentryBinPath = optionalString (cfg.pinentryFlavor != null)
-    (if cfg.pinentryFlavor == "mac" then
-      "${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac"
-    else
-      "${pkgs.pinentry.${cfg.pinentryFlavor}}/bin/pinentry");
+  pinentryBinPath = (if cfg.pinentryFlavor == "mac" then
+    "${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac"
+  else
+    "${pkgs.pinentry.${cfg.pinentryFlavor}}/bin/pinentry");
 
   gpgSshSupportStr = ''
     ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
@@ -27,13 +26,13 @@ let
   # runs as a daemon, so this is already set.
   sshAuthSockStr =
     let sockPathCmd = "$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)";
-    in (if pkgs.stdenv.hostPlatform.isLinux then ''
+    in if pkgs.stdenv.hostPlatform.isLinux then ''
       if [[ -z "$SSH_AUTH_SOCK" ]]; then
         export SSH_AUTH_SOCK="${sockPathCmd}"
       fi
     '' else ''
       export SSH_AUTH_SOCK="${sockPathCmd}"
-    '');
+    '';
 
   gpgFishInitStr = ''
     set -gx GPG_TTY (tty)
@@ -206,6 +205,8 @@ in {
         type = types.nullOr (types.enum (pkgs.pinentry.flavors ++ [ "mac" ]));
         example = "gnome3";
         default = if pkgs.stdenv.hostPlatform.isMacOS then "mac" else "gtk2";
+        defaultText = literalExpression
+          ''if pkgs.stdenv.hostPlatform.isMacOS then "mac" else "gtk2"'';
         description = ''
           Which pinentry interface to use. If not
           <literal>null</literal>, it sets
@@ -278,19 +279,6 @@ in {
       '') cfg.sshKeys;
     })
 
-    {
-      launchd.agents.gpg-agent = {
-        enable = true;
-        config = {
-          ProgramArguments = [ "${gpgPkg}/bin/gpgconf" "--launch" "gpg-agent" ]
-            ++ optionals cfg.verbose [ "--verbose" ];
-          RunAtLoad = true;
-          KeepAlive.SuccessfulExit = false;
-          EnvironmentVariables.GNUPGHOME = homedir;
-        };
-      };
-    }
-
     # The systemd units below are direct translations of the
     # descriptions in the
     #
@@ -330,6 +318,17 @@ in {
         };
 
         Install = { WantedBy = [ "sockets.target" ]; };
+      };
+
+      launchd.agents.gpg-agent = {
+        enable = true;
+        config = {
+          ProgramArguments = [ "${gpgPkg}/bin/gpgconf" "--launch" "gpg-agent" ]
+            ++ optionals cfg.verbose [ "--verbose" ];
+          RunAtLoad = true;
+          KeepAlive.SuccessfulExit = false;
+          EnvironmentVariables.GNUPGHOME = homedir;
+        };
       };
     }
 

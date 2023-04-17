@@ -5,9 +5,7 @@ with lib;
 let
   inherit (pkgs.stdenv.hostPlatform) isLinux;
 
-  socketPath =
-    mkIf isLinux config.systemd.user.sockets.gpg-agent.Socket.ListenStream;
-
+  socketPath = config.systemd.user.sockets.gpg-agent.Socket.ListenStream;
 in {
   config = {
     services.gpg-agent.enable = true;
