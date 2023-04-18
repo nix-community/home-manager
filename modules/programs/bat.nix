@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.bat;
 
+  package = pkgs.bat;
+
   toConfigFile = generators.toKeyValue {
     mkKeyValue = k: v: "--${k}=${lib.escapeShellArg v}";
     listsAsDuplicateKeys = true;
@@ -61,12 +63,17 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.bat ] ++ cfg.extraPackages;
+    home.packages = [ package ] ++ cfg.extraPackages;
 
     xdg.configFile = mkMerge ([{
       "bat/config" =
         mkIf (cfg.config != { }) { text = toConfigFile cfg.config; };
     }] ++ flip mapAttrsToList cfg.themes
       (name: body: { "bat/themes/${name}.tmTheme" = { text = body; }; }));
+
+    home.activation.batCache = hm.dag.entryAfter [ "linkGeneration" ] ''
+      $VERBOSE_ECHO "Rebuilding bat theme cache"
+      $DRY_RUN_CMD ${lib.getExe package} cache --build
+    '';
   };
 }
