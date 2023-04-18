@@ -264,8 +264,8 @@ in {
 
     programs.rofi.finalPackage = let
       rofiWithPlugins = cfg.package.override
-        (old: rec { plugins = (old.plugins or [ ]) ++ cfg.plugins; });
-    in if builtins.hasAttr "override" cfg.package then
+        (old: { plugins = (old.plugins or [ ]) ++ cfg.plugins; });
+    in if builtins.hasAttr "override" cfg.package && cfg.plugins != [ ] then
       rofiWithPlugins
     else
       cfg.package;
