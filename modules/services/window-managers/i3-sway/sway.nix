@@ -317,7 +317,7 @@ let
         )
       else
         [ ]) ++ (optional cfg.systemdIntegration ''
-          exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE; systemctl --user start sway-session.target"'')
+          exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL; systemctl --user start sway-session.target"'')
       ++ (optional (!cfg.xwayland) "xwayland disable") ++ [ cfg.extraConfig ]));
 
   defaultSwayPackage = pkgs.sway.override {
