@@ -25,6 +25,20 @@ in {
         description = "The mako package to use.";
       };
 
+      systemd.target = mkOption {
+        type = types.str;
+        default = "graphical-session.target";
+        example = "sway-session.target";
+        description = ''
+          The systemd target that will automatically start the Mako service.
+          </para>
+          <para>
+          When setting this value to <literal>"sway-session.target"</literal>,
+          make sure to also enable <option>wayland.windowManager.sway.systemdIntegration</option>,
+          otherwise the service may never be started.
+        '';
+      };
+
       maxVisible = mkOption {
         default = 5;
         type = types.nullOr types.int;
@@ -308,9 +322,6 @@ in {
     home.packages = [ cfg.package ];
 
     xdg.configFile."mako/config" = {
-      onChange = ''
-        ${cfg.package}/bin/makoctl reload || true
-      '';
       text = ''
         ${optionalInteger "max-visible" cfg.maxVisible}
         ${optionalString "sort" cfg.sort}
@@ -341,6 +352,15 @@ in {
 
         ${cfg.extraConfig}
       '';
+    };
+
+    systemd.user.services.mako = {
+      Unit = {
+        Description = "Lightweight notification daemon for Wayland";
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = { ExecStart = "${cfg.package}/bin/mako"; };
+      Install = { WantedBy = [ cfg.systemdTarget ]; };
     };
   };
 }
