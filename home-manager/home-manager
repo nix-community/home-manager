@@ -406,7 +406,7 @@ EOF
       system = "$nixSystem";
       pkgs = nixpkgs.legacyPackages.\${system};
     in {
-      homeConfigurations.$USER = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."$USER" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         # Specify your home configuration modules here, for example,
