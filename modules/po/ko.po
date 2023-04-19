@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-04-11 22:44+0200\n"
-"PO-Revision-Date: 2023-03-13 01:44+0000\n"
+"PO-Revision-Date: 2023-04-19 15:50+0000\n"
 "Last-Translator: Suwon Park <sepiabrown@naver.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/home-manager/"
 "modules/ko/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
@@ -71,11 +71,11 @@ msgstr "%s를 활성화 하는 중"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "%s에서 %s로 프로파일을 옮기는 중"
 
 #: modules/lib-bash/activation-init.sh:53
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "%s와 %s를 시도했지만, 적합한 프로파일 디렉토리를 찾을 수 없습니다"
 
 #: modules/lib-bash/activation-init.sh:81
 msgid "Sanity checking oldGenNum and oldGenPath"
