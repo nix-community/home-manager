@@ -309,6 +309,7 @@ in {
                   }
                   {
                     name = "Nix sites";
+                    toolbar = true;
                     bookmarks = [
                       {
                         name = "homepage";
