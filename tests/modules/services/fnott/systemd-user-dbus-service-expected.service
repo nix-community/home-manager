@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.Notifications
+Exec=@fnott@/bin/fnott
+SystemdService=fnott.service

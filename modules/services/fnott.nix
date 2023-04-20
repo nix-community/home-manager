@@ -107,6 +107,13 @@ in {
       };
     };
 
+    xdg.dataFile."dbus-1/services/fnott.service".text = ''
+      [D-BUS Service]
+      Name=org.freedesktop.Notifications
+      Exec=${cfg.package}/bin/fnott
+      SystemdService=fnott.service
+    '';
+
     xdg.configFile."fnott/fnott.ini".source =
       iniFormat.generate "fnott.ini" cfg.settings;
   };
