@@ -167,6 +167,7 @@ import nmt {
     ./modules/programs/thunderbird
     ./modules/programs/waybar
     ./modules/programs/wlogout
+    ./modules/programs/wofi
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
     ./modules/services/avizo

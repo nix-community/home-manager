@@ -197,6 +197,7 @@ let
     ./programs/waybar.nix
     ./programs/wezterm.nix
     ./programs/wlogout.nix
+    ./programs/wofi.nix
     ./programs/xmobar.nix
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix

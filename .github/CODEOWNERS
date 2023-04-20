@@ -355,6 +355,9 @@ Makefile                                              @thiagokokada
 /modules/programs/wezterm.nix                         @blmhemu
 /tests/modules/programs/wezterm                       @blmhemu
 
+/modules/programs/wofi.nix                            @christoph-heiss
+/tests/modules/programs/wofi                          @christoph-heiss
+
 /modules/programs/xmobar.nix                          @t4ccer
 /tests/modules/programs/xmobar                        @t4ccer
 
