@@ -310,12 +310,7 @@ in {
           '';
         };
 
-        package = mkOption {
-          type = types.package;
-          default = pkgs.delta;
-          defaultText = literalExpression "pkgs.delta";
-          description = "Package providing <command>delta</command>.";
-        };
+        package = mkPackageOption pkgs "delta" { };
 
         options = mkOption {
           type = with types;
