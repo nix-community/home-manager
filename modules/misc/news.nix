@@ -994,13 +994,6 @@ in
           A new module is available: 'programs.mr'.
         '';
       }
-
-      {
-        time = "2023-04-20T04:55:07+00:00";
-        message = ''
-          Add `delta.package` option to `programs.git`.
-        '';
-      }
     ];
   };
 }
