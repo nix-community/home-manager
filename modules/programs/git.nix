@@ -310,6 +310,8 @@ in {
           '';
         };
 
+        package = mkPackageOption pkgs "delta" { };
+
         options = mkOption {
           type = with types;
             let
@@ -538,11 +540,13 @@ in {
       in { diff.external = difftCommand; };
     })
 
-    (mkIf cfg.delta.enable {
-      home.packages = [ pkgs.delta ];
+    (let
+      deltaPackage = cfg.delta.package;
+      deltaCommand = "${deltaPackage}/bin/delta";
+    in mkIf cfg.delta.enable {
+      home.packages = [ deltaPackage ];
 
-      programs.git.iniContent = let deltaCommand = "${pkgs.delta}/bin/delta";
-      in {
+      programs.git.iniContent = {
         core.pager = deltaCommand;
         interactive.diffFilter = "${deltaCommand} --color-only";
         delta = cfg.delta.options;
