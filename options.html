@@ -6514,6 +6514,29 @@ If the value is set to a path literal, then the path will be used as the css fil
   }
 ''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wlogout.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/wlogout.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wofi.enable"></a><a class="term" href="options.html#opt-programs.wofi.enable"><code class="option">programs.wofi.enable</code></a></span></dt><dd><p>Whether to enable wofi: a launcher/menu program for wlroots based wayland compositors such as sway.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wofi.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/wofi.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wofi.package"></a><a class="term" href="options.html#opt-programs.wofi.package"><code class="option">programs.wofi.package</code></a></span></dt><dd><p>The wofi package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.wofi</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wofi.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/wofi.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wofi.settings"></a><a class="term" href="options.html#opt-programs.wofi.settings"><code class="option">programs.wofi.settings</code></a></span></dt><dd><p>Configuration options for wofi. See
+<span class="citerefentry"><span class="refentrytitle">wofi</span>(5)</span>.</p><p><span class="emphasis"><em>Type:</em></span> attribute set</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  location = "bottom-right";
+  allow_markup = true;
+  width = 250;
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wofi.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/wofi.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wofi.style"></a><a class="term" href="options.html#opt-programs.wofi.style"><code class="option">programs.wofi.style</code></a></span></dt><dd><p>CSS style for wofi to use as a stylesheet. See
+<span class="citerefentry"><span class="refentrytitle">wofi</span>(7)</span>.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">''
+  * {
+      font-family: monospace;
+  }
+  
+  window {
+      background-color: #7c818c;
+  }
+''</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wofi.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/wofi.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.xmobar.enable"></a><a class="term" href="options.html#opt-programs.xmobar.enable"><code class="option">programs.xmobar.enable</code></a></span></dt><dd><p>Whether to enable Xmobar, a minimalistic status bar.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/xmobar.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/xmobar.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.xmobar.package"></a><a class="term" href="options.html#opt-programs.xmobar.package"><code class="option">programs.xmobar.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>xmobar</strong></span> binary.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.haskellPackages.xmobar</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/xmobar.nix#blob-path" target="_top">
