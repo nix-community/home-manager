@@ -77,7 +77,7 @@ function setConfigFile() {
         local hmConfigHome="$configHome/home-manager"
         local nixpkgsConfigHome="$configHome/nixpkgs"
         local defaultConfFile="$hmConfigHome/home.nix"
-        local configFlake
+        local configFile
 
         if [[ -e "$defaultConfFile" ]]; then
             configFile="$defaultConfFile"
