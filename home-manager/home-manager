@@ -93,7 +93,7 @@ function setConfigFile() {
                    'home.nix' "$HOME/.nixpkgs" "$hmConfigHome" >&2
         fi
 
-        if [[ $configFile ]]; then
+        if [[ -v configFile ]]; then
             HOME_MANAGER_CONFIG="$(realpath "$configFile")"
         else
             _i 'No configuration file found. Please create one at %s' \
