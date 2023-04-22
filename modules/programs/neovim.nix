@@ -59,6 +59,27 @@ let
     plugin = cfg.coc.package;
     config = cfg.coc.pluginConfig;
     optional = false;
+  } ++ optional cfg.treesitter.enable {
+    plugin = cfg.treesitter.package.withPlugins
+      config.programs.neovim.treesitter.grammars;
+    type = "lua";
+    config = ''
+      require('nvim-treesitter.configs').setup {
+        -- auto_install is not reproducible
+        auto_install = false,
+        highlight = {
+          enable = ${
+            if cfg.treesitter.highlight.enable then "true" else "false"
+          },
+          disable = { ${
+            concatStringsSep ", "
+            (map (s: ''"${s}"'') cfg.treesitter.highlight.disableForGrammars)
+          } },
+          -- docs claim that this slows down the editor and mostly not needed
+          additional_vim_regex_highlighting = false,
+        };
+      }
+    '';
   };
 
   luaPackages = cfg.finalPackage.unwrapped.lua.pkgs;
@@ -349,6 +370,47 @@ in {
           type = types.lines;
           default = "";
           description = "Script to configure CoC. Must be viml.";
+        };
+      };
+
+      treesitter = {
+        enable = mkEnableOption "nvim-treesitter plugin";
+
+        package = mkOption {
+          type = types.package;
+          default = pkgs.vimPlugins.nvim-treesitter;
+          defaultText = literalExpression "pkgs.vimPlugins.nvim-treesitter";
+          description = "The package to use for the nvim-treesitter plugin.";
+        };
+
+        grammars = lib.mkOption {
+          type = lib.mkOptionType {
+            name = "tree-sitter-plugins";
+            description = "function suitable for nvim-treesitter.withPlugins";
+            check = with lib.types;
+              let
+                grammars = pkgs.tree-sitter.builtGrammars
+                  // cfg.neovim.treesitter.package.builtGrammars;
+              in (x:
+                if builtins.isFunction x then
+                  builtins.isList (x grammars)
+                else
+                  false);
+            merge = loc: defs: p: lib.concatMap (f: f p) (lib.getValues defs);
+          };
+          default = _: [ ];
+          defaultText = lib.literalExpression "(p: [ ])";
+          example = lib.literalExpression "(p: with p; [ c java ])";
+        };
+
+        highlight = {
+          enable = mkEnableOption "syntax highlighting" // { default = true; };
+
+          disableForGrammars = mkOption {
+            type = types.listOf types.string;
+            default = [ ];
+            example = lib.literalExpression ''[ "c" "java" ]'';
+          };
         };
       };
     };
