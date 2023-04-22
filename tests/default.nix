@@ -96,6 +96,7 @@ import nmt {
     ./modules/programs/ncmpcpp
     ./modules/programs/ne
     ./modules/programs/neomutt
+    ./modules/programs/neovim
     ./modules/programs/newsboat
     ./modules/programs/nheko
     ./modules/programs/nix-index
@@ -158,7 +159,6 @@ import nmt {
     ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux
-    ./modules/programs/neovim   # Broken package dependency on Darwin.
     ./modules/programs/rbw
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
