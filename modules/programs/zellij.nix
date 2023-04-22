@@ -7,11 +7,6 @@ let
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
 
-  configDir = if pkgs.stdenv.isDarwin then
-    "Library/Application Support/org.Zellij-Contributors.Zellij"
-  else
-    "${config.xdg.configHome}/zellij";
-
 in {
   meta.maintainers = [ hm.maintainers.mainrs ];
 
@@ -51,12 +46,12 @@ in {
 
     # Zellij switched from yaml to KDL in version 0.32.0:
     # https://github.com/zellij-org/zellij/releases/tag/v0.32.0
-    home.file."${configDir}/config.yaml" = mkIf
+    xdg.configFile."zellij/config.yaml" = mkIf
       (cfg.settings != { } && (versionOlder cfg.package.version "0.32.0")) {
         source = yamlFormat.generate "zellij.yaml" cfg.settings;
       };
 
-    home.file."${configDir}/config.kdl" = mkIf
+    xdg.configFile."zellij/config.kdl" = mkIf
       (cfg.settings != { } && (versionAtLeast cfg.package.version "0.32.0")) {
         text = lib.hm.generators.toKDL { } cfg.settings;
       };
