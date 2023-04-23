@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-04-11 22:44+0200\n"
-"PO-Revision-Date: 2022-06-09 11:16+0000\n"
+"PO-Revision-Date: 2023-04-23 12:49+0000\n"
 "Last-Translator: Leix b <abone9999@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/home-manager/cli/"
 "ca/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -31,6 +31,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Mantenir el teu Home Manager %s a %s està obsolet,\n"
+"si us plau mou-lo a %s"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
@@ -39,6 +41,7 @@ msgstr "No s'ha trobat cap fitxer de configuració. Si us plau, creeu un a %s"
 #: home-manager/home-manager:136
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
+"No s'ha pogut trobar un directori de perfils adequat, s'ha provat %s i %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:191
@@ -56,11 +59,11 @@ msgstr "Executa '%s --help' per veure l'ajuda d'ús"
 
 #: home-manager/home-manager:284 home-manager/home-manager:383
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "El fitxer %s ja existeix, deixant sense modificar..."
 
 #: home-manager/home-manager:286 home-manager/home-manager:385
 msgid "Creating %s..."
-msgstr ""
+msgstr "Creant %s..."
 
 #: home-manager/home-manager:427
 msgid "Creating initial Home Manager generation..."
@@ -154,6 +157,8 @@ msgstr "Cap paquet home-manager sembla estar instal·lat."
 #: home-manager/home-manager:702
 msgid "Sorry, this command is not yet supported in flake setup"
 msgstr ""
+"Ho sentim, aquesta comanda encara no està suportada en la configuració de "
+"flake"
 
 #: home-manager/home-manager:739
 msgid "Unknown argument %s"

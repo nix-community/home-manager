@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-04-11 22:44+0200\n"
-"PO-Revision-Date: 2022-06-08 10:18+0000\n"
+"PO-Revision-Date: 2023-04-23 12:49+0000\n"
 "Last-Translator: Leix b <abone9999@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/home-manager/"
 "modules/ca/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
@@ -69,11 +69,12 @@ msgstr "Activant %s"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "Migrant el perfil de %s a %s"
 
 #: modules/lib-bash/activation-init.sh:53
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
+"No s'ha pogut trobar un directori de perfils adequat, s'ha provat %s i %s"
 
 #: modules/lib-bash/activation-init.sh:81
 msgid "Sanity checking oldGenNum and oldGenPath"
