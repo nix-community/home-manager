@@ -44,9 +44,7 @@ with lib;
 
   programs.himalaya = {
     enable = true;
-    settings = {
-      email-listing-page-size = 40;
-    };
+    settings = { email-listing-page-size = 40; };
   };
 
   test.stubs.himalaya = { };
