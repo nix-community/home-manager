@@ -1,4 +1,4 @@
-#! @perl@/bin/perl -w
+#!/usr/bin/env -S @perl@/bin/perl -w
 
 use strict;
 use DBI;
