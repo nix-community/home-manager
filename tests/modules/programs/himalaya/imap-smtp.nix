@@ -3,8 +3,6 @@
 with lib;
 
 {
-  # imports = [ ../../accounts/email-test-accounts.nix ];
-
   accounts.email.accounts = {
     "hm@example.com" = {
       primary = true;
@@ -32,12 +30,24 @@ with lib;
       };
       himalaya = {
         enable = true;
-        settings = { email-listing-page-size = 50; };
+        settings = {
+          folder-listing-page-size = 50;
+          email-listing-page-size = 50;
+          folder-aliases = {
+            inbox = "In2";
+            custom = "Custom";
+          };
+        };
       };
     };
   };
 
-  programs.himalaya = { enable = true; };
+  programs.himalaya = {
+    enable = true;
+    settings = {
+      email-listing-page-size = 40;
+    };
+  };
 
   test.stubs.himalaya = { };
 

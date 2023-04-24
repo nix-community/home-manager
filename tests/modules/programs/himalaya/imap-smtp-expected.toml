@@ -1,9 +1,12 @@
+email-listing-page-size = 40
+
 ["hm@example.com"]
 backend = "imap"
 default = true
 display-name = "H. M. Test"
 email = "hm@example.com"
 email-listing-page-size = 50
+folder-listing-page-size = 50
 imap-host = "imap.example.com"
 imap-login = "home.manager"
 imap-passwd-cmd = "password-command"
@@ -19,7 +22,8 @@ smtp-ssl = true
 smtp-starttls = true
 
 ["hm@example.com".folder-aliases]
+custom = "Custom"
 drafts = "D"
-inbox = "In"
+inbox = "In2"
 sent = "Out"
 trash = "Trash"
