@@ -99,7 +99,8 @@ in {
 
     systemdTarget = mkOption {
       type = types.str;
-      default = "sway-session.target";
+      default = "graphical-session.target";
+      example = "sway-session.target";
       description = ''
         Systemd target to bind to.
       '';
