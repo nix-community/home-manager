@@ -22,6 +22,14 @@ with lib;
         auto-format = false;
       }];
 
+      grammars = [{
+        name = "lalrpop";
+        source = {
+          git = "https://github.com/traxys/tree-sitter-lalrpop";
+          rev = "7744b56f03ac1e5643fad23c9dd90837fe97291e";
+        };
+      }];
+
       themes = {
         base16 = let
           transparent = "none";

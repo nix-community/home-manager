@@ -57,6 +57,43 @@ in {
       '';
     };
 
+    grammars = mkOption {
+      type = types.listOf tomlFormat.type;
+      default = [ ];
+      example = [{
+        name = "lalrpop";
+        source = {
+          git = "https://github.com/traxys/tree-sitter-lalrpop";
+          rev = "7744b56f03ac1e5643fad23c9dd90837fe97291e";
+        };
+      }];
+      description = ''
+        Language specific tree-sitter grammars at
+        <filename>$XDG_CONFIG_HOME/helix/languages.toml</filename>.
+        </para><para>
+        See <link xlink:href="https://docs.helix-editor.com/languages.html#tree-sitter-grammar-configuration" />
+        for more information.
+      '';
+    };
+
+    use-grammars = mkOption {
+      type = tomlFormat.type;
+      default = { };
+      example = literalExpression ''
+        {
+          only = [ "rust" "c" "cpp" ];
+        }
+      '';
+      description = ''
+        Controls which grammars are fetched and built when using
+        <literal>hx --grammar fetch</literal> and
+        <literal>hx --grammar build</literal>.
+        </para><para>
+        See <link xlink:href="https://docs.helix-editor.com/languages.html#choosing-grammars" />
+        for more information.
+      '';
+    };
+
     themes = mkOption {
       type = types.attrsOf tomlFormat.type;
       default = { };
@@ -136,10 +173,29 @@ in {
         "helix/config.toml" = mkIf (cfg.settings != { }) {
           source = tomlFormat.generate "helix-config" cfg.settings;
         };
-        "helix/languages.toml" = mkIf (cfg.languages != [ ]) {
-          source =
-            tomlFormat.generate "helix-config" { language = cfg.languages; };
-        };
+        "helix/languages.toml" = mkIf (cfg.languages != [ ] || cfg.grammars
+          != [ ] || cfg.use-grammars != { }) {
+            source =
+              # NB: helix requires that `use-grammars` be the first key in languages.toml if present
+              # pkgs.formats.toml relies on piping generated json through
+              # [remarshal](https://github.com/remarshal-project/remarshal),
+              # so we have to concatenate in order to preserve this ordering
+              let
+                preface = tomlFormat.generate "helix-config" {
+                  inherit (cfg) use-grammars;
+                };
+                body = tomlFormat.generate "helix-config" {
+                  language = cfg.languages;
+                  grammar = cfg.grammars;
+                };
+              in if cfg.use-grammars == { } then
+                body
+              else
+                pkgs.concatTextFile {
+                  name = "helix-config";
+                  files = [ preface body ];
+                };
+          };
       };
 
       themes = (mapAttrs' (n: v:

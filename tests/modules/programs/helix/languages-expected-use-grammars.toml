@@ -1,3 +1,5 @@
+[use-grammars]
+except = ["yaml", "json"]
 [[grammar]]
 name = "lalrpop"
 
