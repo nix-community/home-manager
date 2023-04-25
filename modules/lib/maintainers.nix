@@ -418,4 +418,10 @@
     github = "liyangau";
     githubId = 71299093;
   };
+  shikanime = {
+    name = "William Phetsinorath";
+    email = "william.phetsinorath@gmail.com";
+    github = "shikanime";
+    githubId = 22115108;
+  };
 }

@@ -9,7 +9,8 @@ let
   };
 
 in {
-  meta.maintainers = [ lib.hm.maintainers.pinage404 ];
+  meta.maintainers =
+    [ lib.hm.maintainers.pinage404 lib.hm.maintainers.shikanime ];
 
   options = {
     services.home-manager.autoUpgrade = {
@@ -28,6 +29,30 @@ in {
           {manpage}`systemd.time(7)`.
         '';
       };
+
+      flake = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        example = "github:alice/dotfiles";
+        description = lib.mdDoc ''
+          The Flake URI of the home-manager configuration to build.
+        '';
+      };
+
+      flags = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        example = [
+          "-I"
+          "stuff=/home/alice/home-manager-stuff"
+          "--option"
+          "extra-binary-caches"
+          "http://my-cache.example.org/"
+        ];
+        description = lib.mdDoc ''
+          Any additional flags passed to {command}`home-manager`.
+        '';
+      };
     };
   };
 
@@ -36,6 +61,9 @@ in {
       (lib.hm.assertions.assertPlatform "services.home-manager.autoUpgrade" pkgs
         lib.platforms.linux)
     ];
+
+    services.home-manager.autoUpgrade.flags =
+      if cfg.flake != null then [ "--flake" cfg.flake ] else [ ];
 
     systemd.user = {
       timers.home-manager-auto-upgrade = {
@@ -58,7 +86,9 @@ in {
             echo "Update Nix's channels"
             ${pkgs.nix}/bin/nix-channel --update
             echo "Upgrade Home Manager"
-            ${homeManagerPackage}/bin/home-manager switch
+            ${homeManagerPackage}/bin/home-manager switch ${
+              lib.escapeShellArgs cfg.flags
+            }
           '');
       };
     };
