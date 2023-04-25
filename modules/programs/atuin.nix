@@ -129,7 +129,9 @@ in {
         if not ($atuin_cache | path exists) {
           mkdir $atuin_cache
         }
-        ${cfg.package}/bin/atuin init nu ${flagsStr} | save --force ${config.xdg.cacheHome}/atuin/init.nu
+        ${cfg.package}/bin/atuin init nu ${
+          builtins.concatStringsSep " " cfg.flags
+        } | save --force ${config.xdg.cacheHome}/atuin/init.nu
       '';
       extraConfig = ''
         source ${config.xdg.cacheHome}/atuin/init.nu
