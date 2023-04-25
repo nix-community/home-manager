@@ -101,17 +101,7 @@ in {
   options = {
     programs.himalaya = {
       enable = lib.mkEnableOption "Enable the Himalaya email client.";
-
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.himalaya;
-        defaultText = lib.literalExpression "pkgs.himalaya";
-        description = ''
-          Package providing the <command>himalaya</command> CLI email
-          client.
-        '';
-      };
-
+      package = lib.mkPackageOption pkgs "himalaya" { };
       settings = lib.mkOption {
         type = lib.types.submodule { freeformType = tomlFormat.type; };
         default = { };
