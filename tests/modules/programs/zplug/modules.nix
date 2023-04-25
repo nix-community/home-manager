@@ -8,6 +8,8 @@ with lib;
       enable = true;
       zplug = {
         enable = true;
+        package = config.lib.test.mkStubPackage { outPath = "@test-zplug@"; };
+        zplugPackageRootDir = "${config.programs.zsh.zplug.package}/share";
         zplugHome = pkgs.emptyDirectory;
         plugins = [
           {
@@ -29,7 +31,7 @@ with lib;
 
     nmt.script = ''
       assertFileContains home-files/.zshrc \
-        'source @zplug@/init.zsh'
+        'source @test-zplug@/share/init.zsh'
 
       assertFileContains home-files/.zshrc \
         'zplug "plugins/git", from:oh-my-zsh'

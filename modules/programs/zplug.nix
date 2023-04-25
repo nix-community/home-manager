@@ -26,6 +26,21 @@ in {
   options.programs.zsh.zplug = {
     enable = mkEnableOption "zplug - a zsh plugin manager";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.zplug;
+      defaultText = literalExpression "pkgs.zplug";
+      description = "The zplug package to install.";
+    };
+
+    zplugPackageRootDir = mkOption {
+      type = with types; either str path;
+      default = "${cfg.package}";
+      defaultText = literalExpression "cfg.package";
+      description =
+        "Path to the dir that contains the outputs (e.g. init.zsh) of the zplug package.";
+    };
+
     plugins = mkOption {
       default = [ ];
       type = types.listOf pluginModule;
@@ -47,7 +62,7 @@ in {
     programs.zsh.initExtraBeforeCompInit = ''
       export ZPLUG_HOME=${cfg.zplugHome}
 
-      source ${pkgs.zplug}/init.zsh
+      source ${cfg.zplugPackageRootDir}/init.zsh
 
       ${optionalString (cfg.plugins != [ ]) ''
         ${concatStrings (map (plugin: ''
