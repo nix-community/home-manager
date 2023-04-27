@@ -90,7 +90,7 @@
         let
           pkgs = nixpkgs.legacyPackages.${system};
           tests = import ./tests { inherit pkgs; };
-        in { tests = tests.run; });
+        in tests.run);
 
       packages = forAllSystems (system:
         let
