@@ -21,6 +21,17 @@ please see
 If you would like to contribute to Home Manager
 then please have a look at the [contributing][] chapter of the manual.
 
+Releases
+--------
+
+Home Manager is developed against `nixpkgs-unstable` branch, which
+often causes it to contain tweaks for changes/packages not yet
+released in stable NixOS. To avoid breaking users' configurations,
+Home Manager is released in branches corresponding to NixOS releases
+(e.g. `release-22.11`). These branches get fixes, but usually not new
+modules. If you need a module to be backported, then feel free to open
+an issue.
+
 Words of warning
 ----------------
 
@@ -99,17 +110,6 @@ contribute to the translation effort then start by going to the
 <a href="https://hosted.weblate.org/engage/home-manager/">
 <img src="https://hosted.weblate.org/widgets/home-manager/-/multi-auto.svg" alt="Translation status" />
 </a>
-
-Releases
---------
-
-Home Manager is developed against `nixpkgs-unstable` branch, which
-often causes it to contain tweaks for changes/packages not yet
-released in stable NixOS. To avoid breaking users' configurations,
-Home Manager is released in branches corresponding to NixOS releases
-(e.g. `release-22.11`). These branches get fixes, but usually not new
-modules. If you need a module to be backported, then feel free to open
-an issue.
 
 License
 -------
