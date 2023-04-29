@@ -190,18 +190,18 @@ let
     options = {
       enable = mkEnableOption "history substring search";
       searchUpKey = mkOption {
-        type = types.str;
-        default = "^[[A";
+        type = with types; either (listOf str) str ;
+        default = [ "^[[A" ];
         description = ''
-          The key code to be used when searching up.
+          The key codes to be used when searching up.
           The default of <literal>^[[A</literal> corresponds to the UP key.
         '';
       };
       searchDownKey = mkOption {
-        type = types.str;
-        default = "^[[B";
+        type = with types; either (listOf str) str ;
+        default = [ "^[[B" ];
         description = ''
-          The key code to be used when searching down.
+          The key codes to be used when searching down.
           The default of <literal>^[[B</literal> corresponds to the DOWN key.
         '';
       };
@@ -593,8 +593,14 @@ in
           # https://github.com/zsh-users/zsh-history-substring-search#usage
         ''
           source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-          bindkey '${cfg.historySubstringSearch.searchUpKey}' history-substring-search-up
-          bindkey '${cfg.historySubstringSearch.searchDownKey}' history-substring-search-down
+          ${lib.concatMapStringsSep "\n"
+            (upKey: "bindkey '${upKey}' history-substring-search-up")
+            (lib.toList cfg.historySubstringSearch.searchUpKey)
+          }
+          ${lib.concatMapStringsSep "\n"
+            (downKey: "bindkey '${downKey}' history-substring-search-down")
+            (lib.toList cfg.historySubstringSearch.searchDownKey)
+          }
         '')
       ]);
     }
