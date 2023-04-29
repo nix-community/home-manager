@@ -1,9 +1,15 @@
 theme = "base16"
 
+[editor]
+line-number = "relative"
+
+[editor.lsp]
+display-messages = true
+
+[keys.normal]
+esc = ["collapse_selection", "keep_primary_selection"]
+
 [keys.normal.space]
 q = ":q"
 space = "file_picker"
 w = ":w"
-
-[lsp]
-display-messages = true

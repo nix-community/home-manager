@@ -9,11 +9,15 @@ with lib;
 
       settings = {
         theme = "base16";
-        lsp.display-messages = true;
+        editor = {
+          line-number = "relative";
+          lsp.display-messages = true;
+        };
         keys.normal = {
           space.space = "file_picker";
           space.w = ":w";
           space.q = ":q";
+          esc = [ "collapse_selection" "keep_primary_selection" ];
         };
       };
 
