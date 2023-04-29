@@ -29,7 +29,7 @@ with lib;
 
     nmt.script = ''
       assertFileContains home-files/.zshrc \
-        'source @zplug@/init.zsh'
+        'source @zplug@/share/zplug/init.zsh'
 
       assertFileContains home-files/.zshrc \
         'zplug "plugins/git", from:oh-my-zsh'
