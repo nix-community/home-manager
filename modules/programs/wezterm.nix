@@ -79,6 +79,9 @@ in {
       '';
     };
 
+    enableBashIntegration = mkEnableOption "WezTerm's Bash integration." // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -99,5 +102,9 @@ in {
       nameValuePair "wezterm/colors/${name}.toml" {
         source = tomlFormat.generate "${name}.toml" { colors = value; };
       }) cfg.colorSchemes;
+
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+      source "${cfg.package}/etc/profile.d/wezterm.sh"
+    '';
   };
 }
