@@ -7,6 +7,21 @@ let
   cfg = config.programs.vim;
   defaultPlugins = [ pkgs.vimPlugins.vim-sensible ];
 
+  pluginWithConfigType = types.submodule {
+    options = {
+      config = mkOption {
+        type = types.nullOr types.lines;
+        description = "Script to configure this plugin.";
+        default = null;
+      };
+
+      plugin = mkOption {
+        type = types.package;
+        description = "vim plugin";
+      };
+    };
+  };
+
   knownSettings = {
     background = types.enum [ "dark" "light" ];
     backupdir = types.listOf types.str;
@@ -54,28 +69,41 @@ let
   plugins = let
     vpkgs = pkgs.vimPlugins;
     getPkg = p:
-      if isDerivation p then
+      if isDerivation p || p ? plugin then
         [ p ]
       else
         optional (isString p && hasAttr p vpkgs) vpkgs.${p};
   in concatMap getPkg cfg.plugins;
-
 in {
   options = {
     programs.vim = {
       enable = mkEnableOption "Vim";
 
       plugins = mkOption {
-        type = with types; listOf (either str package);
-        default = defaultPlugins;
-        example = literalExpression "[ pkgs.vimPlugins.YankRing ]";
+        type = with types;
+          listOf (oneOf [
+            package
+            pluginWithConfigType
+            str
+            (listOf (oneOf [ package pluginWithConfigType str ]))
+          ]);
+        default = [ ];
+        example = literalExpression ''
+          with pkgs.vimPlugins; [
+            yankring
+            vim-nix
+            { plugin = vim-startify;
+              config = "let g:startify_change_to_vcs_root = 0";
+            }
+          ]
+        '';
         description = ''
-          List of vim plugins to install. To get a list of supported plugins run:
-          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A vimPlugins</command>.
+          List of vim plugins to install optionally associated with
+          configuration to be placed in init.vim.
 
           </para><para>
 
-          Note: String values are deprecated, please use actual packages.
+          This option is mutually exclusive with <varname>configure</varname>.
         '';
       };
 
@@ -144,12 +172,26 @@ in {
     };
   };
 
-  config = (let
+  config = let
+    defaultPlugin = {
+      plugin = null;
+      config = null;
+    };
+
+    pluginsNormalized =
+      map (x: defaultPlugin // (if (x ? plugin) then x else { plugin = x; }))
+      cfg.plugins;
+
+    pluginList = catAttrs "plugin" pluginsNormalized;
+    pluginConfigs = catAttrs "config" pluginsNormalized;
+
     customRC = ''
       ${concatStringsSep "\n" (remove "" (mapAttrsToList setExpr
         (builtins.intersectAttrs knownSettings cfg.settings)))}
 
       ${cfg.extraConfig}
+
+      ${concatStringsSep "\n" (remove null pluginConfigs)}
     '';
 
     vim = cfg.packageConfigurable.customize {
@@ -157,7 +199,7 @@ in {
       vimrcConfig = {
         inherit customRC;
 
-        packages.home-manager.start = plugins;
+        packages.home-manager.start = pluginList;
       };
     };
   in mkIf cfg.enable {
@@ -186,5 +228,5 @@ in {
       package = vim;
       plugins = defaultPlugins;
     };
-  });
+  };
 }
