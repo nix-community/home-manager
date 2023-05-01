@@ -35,6 +35,10 @@ with lib;
             }
           ];
           dynamicForwards = [{ port = 2839; }];
+          setEnv = {
+            FOO = "foo12";
+            BAR = "_bar_ 42";
+          };
         };
 
         "* !github.com" = {

@@ -15,6 +15,12 @@ let
 
   unwords = builtins.concatStringsSep " ";
 
+  mkSetEnvStr = envStr: unwords
+    (mapAttrsToList
+      (name: value: ''${name}="${escape [ "\"" "\\" ] (toString value)}"'')
+      envStr
+    );
+
   bindOptions = {
     address = mkOption {
       type = types.str;
@@ -189,6 +195,14 @@ let
         '';
       };
 
+      setEnv = mkOption {
+        type = with types; attrsOf (oneOf [ str path int float ]);
+        default = {};
+        description = ''
+          Environment variables and their value to send to the server.
+        '';
+      };
+
       compression = mkOption {
         type = types.nullOr types.bool;
         default = null;
@@ -322,6 +336,7 @@ let
     ++ optional (cf.hostname != null)        "  HostName ${cf.hostname}"
     ++ optional (cf.addressFamily != null)   "  AddressFamily ${cf.addressFamily}"
     ++ optional (cf.sendEnv != [])           "  SendEnv ${unwords cf.sendEnv}"
+    ++ optional (cf.setEnv != {})            "  SetEnv ${mkSetEnvStr cf.setEnv}"
     ++ optional (cf.serverAliveInterval != 0)
       "  ServerAliveInterval ${toString cf.serverAliveInterval}"
     ++ optional (cf.serverAliveCountMax != 3)
