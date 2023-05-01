@@ -20,6 +20,8 @@
       "lsname" = "(ls | get name)";
       "ll" = "ls -a";
     };
+
+    environmentVariables = { BAR = "$'(echo BAZ)'"; };
   };
 
   test.stubs.nushell = { };
