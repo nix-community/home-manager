@@ -85,7 +85,6 @@ in {
             package
             pluginWithConfigType
             str
-            (listOf (oneOf [ package pluginWithConfigType str ]))
           ]);
         default = [ ];
         example = literalExpression ''
