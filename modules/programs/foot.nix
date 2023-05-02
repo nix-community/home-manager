@@ -69,6 +69,7 @@ in {
         };
 
         Service = {
+          Environment = with pkgs; "PATH=${lib.makeBinPath [ coreutils ]}";
           ExecStart = "${cfg.package}/bin/foot --server";
           Restart = "on-failure";
           OOMPolicy = "continue";
