@@ -79,6 +79,7 @@ import nmt {
     ./modules/programs/himalaya
     ./modules/programs/htop
     ./modules/programs/hyfetch
+    ./modules/programs/i3blocks
     ./modules/programs/i3status
     ./modules/programs/irssi
     ./modules/programs/jujutsu
