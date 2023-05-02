@@ -112,6 +112,7 @@ import nmt {
     ./modules/programs/powerline-go
     ./modules/programs/pubs
     ./modules/programs/qutebrowser
+    ./modules/programs/rcm
     ./modules/programs/readline
     ./modules/programs/sagemath
     ./modules/programs/sbt

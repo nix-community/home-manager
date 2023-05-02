@@ -599,3 +599,6 @@ Makefile                                              @thiagokokada
 /modules/xresources.nix                               @rycee
 
 /modules/xsession.nix                                 @rycee
+
+/modules/programs/rcm.nix                             @SpringerJack
+/tests/modules/programs/rcm                           @SpringerJack
