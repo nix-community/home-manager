@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-04-11 22:44+0200\n"
-"PO-Revision-Date: 2021-12-29 08:48+0000\n"
-"Last-Translator: Tomasz Czyż <tomasz.czyz@eskapizm.pl>\n"
+"PO-Revision-Date: 2023-05-03 19:48+0000\n"
+"Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/home-manager/cli/"
 "pl/>\n"
 "Language: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -32,6 +32,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Przechowywanie Home Manager %s w %s jest przestarzałe,\n"
+"proszę przenieść go do %s"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
@@ -39,7 +41,7 @@ msgstr "Nie znaleziono pliku konfiguracyjnego. Proszę utworzyć plik %s"
 
 #: home-manager/home-manager:136
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Nie można znaleźć odpowiedniego katalogu profilu, próbowano %s i %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:191
@@ -57,11 +59,11 @@ msgstr "Uruchom „%s --help” by otrzymać pomoc"
 
 #: home-manager/home-manager:284 home-manager/home-manager:383
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "Plik %s już istnieje, pozostawianie go bez zmian..."
 
 #: home-manager/home-manager:286 home-manager/home-manager:385
 msgid "Creating %s..."
-msgstr ""
+msgstr "Tworzenie %s..."
 
 #: home-manager/home-manager:427
 msgid "Creating initial Home Manager generation..."
@@ -158,6 +160,7 @@ msgstr "Pakiety home-manager nie wydają się być zainstalowane."
 #: home-manager/home-manager:702
 msgid "Sorry, this command is not yet supported in flake setup"
 msgstr ""
+"Przepraszamy, ta komenda nie jest jeszcze obsługiwana w konfiguracji flake"
 
 #: home-manager/home-manager:739
 msgid "Unknown argument %s"
