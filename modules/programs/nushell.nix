@@ -121,6 +121,15 @@ in {
         this option) to command strings or directly to build outputs.
       '';
     };
+
+    environmentVariables = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      example = { FOO = "BAR"; };
+      description = ''
+        An attribute set that maps an environment variable to a shell interpreted string.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -141,10 +150,15 @@ in {
         ];
       })
 
-      (mkIf (cfg.envFile != null || cfg.extraEnv != "") {
+      (let
+        envVarsStr = concatStringsSep "\n"
+          (mapAttrsToList (k: v: "let-env ${k} = ${v}")
+            cfg.environmentVariables);
+      in mkIf (cfg.envFile != null || cfg.extraEnv != "" || envVarsStr != "") {
         "${configDir}/env.nu".text = mkMerge [
           (mkIf (cfg.envFile != null) cfg.envFile.text)
           cfg.extraEnv
+          envVarsStr
         ];
       })
     ];
