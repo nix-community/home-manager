@@ -3090,11 +3090,15 @@ for more information.</p><p><span class="emphasis"><em>Type:</em></span> list of
 See <a class="link" href="https://docs.helix-editor.com/configuration.html" target="_top">https://docs.helix-editor.com/configuration.html</a>
 for the full list of options.</p><p><span class="emphasis"><em>Type:</em></span> TOML value</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
   theme = "base16";
-  lsp.display-messages = true;
+  editor = {
+    line-number = "relative";
+    lsp.display-messages = true;
+  };
   keys.normal = {
     space.space = "file_picker";
     space.w = ":w";
     space.q = ":q";
+    esc = [ "collapse_selection" "keep_primary_selection" ];
   };
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/helix.nix#blob-path" target="_top">
