@@ -31,6 +31,7 @@ lib.mkIf config.test.enableBig {
         }
         {
           name = "wikipedia";
+          tags = [ "wiki" ];
           keyword = "wiki";
           url = "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
         }
@@ -47,6 +48,7 @@ lib.mkIf config.test.enableBig {
             }
             {
               name = "wiki";
+              tags = [ "wiki" "nix" ];
               url = "https://nixos.wiki/";
             }
             {

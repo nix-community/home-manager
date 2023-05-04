@@ -71,6 +71,9 @@ let
           }" ADD_DATE="0" LAST_MODIFIED="0"${
             lib.optionalString (bookmark.keyword != null)
             " SHORTCUTURL=\"${escapeXML bookmark.keyword}\""
+          }${
+            lib.optionalString (bookmark.tags != [ ])
+            " TAGS=\"${escapeXML (concatStringsSep "," bookmark.tags)}\""
           }>${escapeXML bookmark.name}</A>'';
 
       directoryToHTML = indentLevel: directory: ''
@@ -251,6 +254,12 @@ in {
                       description = "Bookmark name.";
                     };
 
+                    tags = mkOption {
+                      type = types.listOf types.str;
+                      default = [ ];
+                      description = "Bookmark tags.";
+                    };
+
                     keyword = mkOption {
                       type = types.nullOr types.str;
                       default = null;
@@ -300,6 +309,7 @@ in {
                 [
                   {
                     name = "wikipedia";
+                    tags = [ "wiki" ];
                     keyword = "wiki";
                     url = "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
                   }
@@ -317,6 +327,7 @@ in {
                       }
                       {
                         name = "wiki";
+                        tags = [ "wiki" "nix" ];
                         url = "https://nixos.wiki/";
                       }
                     ];
