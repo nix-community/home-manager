@@ -1,140 +1,253 @@
 { config, lib, pkgs, ... }:
+
 let
-  cfg = config.programs.himalaya;
-
-  enabledAccounts =
-    lib.filterAttrs (_: a: a.himalaya.enable) (config.accounts.email.accounts);
-
+  # aliases
+  inherit (config.programs) himalaya;
   tomlFormat = pkgs.formats.toml { };
 
-  himalayaConfig = let
-    toHimalayaConfig = account:
-      {
+  # attrs util that removes entries containing a null value
+  compactAttrs = lib.filterAttrs (_: val: !isNull val);
+
+  # make a himalaya config from a home-manager email account config
+  mkAccountConfig = _: account:
+    let
+      globalConfig = {
         email = account.address;
         display-name = account.realName;
         default = account.primary;
-
-        mailboxes = {
+        folder-aliases = {
           inbox = account.folders.inbox;
           sent = account.folders.sent;
-          draft = account.folders.drafts;
-          # NOTE: himalaya does not support configuring the name of the trash folder
+          drafts = account.folders.drafts;
+          trash = account.folders.trash;
         };
-      } // (lib.optionalAttrs (account.signature.showSignature == "append") {
-        # FIXME: signature cannot be attached
-        signature = account.signature.text;
-        signature-delim = account.signature.delimiter;
-      }) // (if account.himalaya.backend == null then {
-        backend = "none";
-      } else if account.himalaya.backend == "imap" then {
-        # FIXME: does not support disabling TLS altogether
-        # NOTE: does not accept sequence of strings for password commands
-        backend = account.himalaya.backend;
-        imap-login = account.userName;
-        imap-passwd-cmd = lib.escapeShellArgs account.passwordCommand;
-        imap-host = account.imap.host;
-        imap-port = account.imap.port;
-        imap-starttls = account.imap.tls.useStartTls;
-      } else if account.himalaya.backend == "maildir" then {
-        backend = account.himalaya.backend;
-        maildir-root-dir = account.maildirBasePath;
-      } else
-        throw "Unsupported backend: ${account.himalaya.backend}")
-      // (if account.himalaya.sender == null then {
-        sender = "none";
-      } else if account.himalaya.sender == "smtp" then {
-        sender = account.himalaya.sender;
-        smtp-login = account.userName;
-        smtp-passwd-cmd = lib.escapeShellArgs account.passwordCommand;
-        smtp-host = account.smtp.host;
-        smtp-port = account.smtp.port;
-        smtp-starttls = account.smtp.tls.useStartTls;
-      } else if account.himalaya.sender == "sendmail" then {
-        sender = account.himalaya.sender;
-      } else
-        throw "Unsupported sender: ${account.himalaya.sender}")
-      // account.himalaya.settings;
-  in {
-    # NOTE: will not start without this configured, but each account overrides it
-    display-name = "";
-  } // cfg.settings // (lib.mapAttrs (_: toHimalayaConfig) enabledAccounts);
-in {
-  meta.maintainers = with lib.hm.maintainers; [ toastal ];
-
-  options = with lib; {
-    programs.himalaya = {
-      enable = mkEnableOption "himalaya mail client";
-
-      package = mkOption {
-        type = types.package;
-        default = pkgs.himalaya;
-        defaultText = literalExpression "pkgs.himalaya";
-        description = ''
-          Package providing the <command>himalaya</command> mail client.
-        '';
       };
 
-      settings = mkOption {
-        type = tomlFormat.type;
+      signatureConfig =
+        lib.optionalAttrs (account.signature.showSignature == "append") {
+          # TODO: signature cannot be attached yet
+          # https://todo.sr.ht/~soywod/himalaya/27
+          signature = account.signature.text;
+          signature-delim = account.signature.delimiter;
+        };
+
+      imapConfig = lib.optionalAttrs (!isNull account.imap) (compactAttrs {
+        backend = "imap";
+        imap-host = account.imap.host;
+        imap-port = account.imap.port;
+        imap-ssl = account.imap.tls.enable;
+        imap-starttls = account.imap.tls.useStartTls;
+        imap-login = account.userName;
+        imap-passwd-cmd = builtins.concatStringsSep " " account.passwordCommand;
+      });
+
+      maildirConfig =
+        lib.optionalAttrs (isNull account.imap && !isNull account.maildir)
+        (compactAttrs {
+          backend = "maildir";
+          maildir-root-dir = account.maildir.absPath;
+        });
+
+      smtpConfig = lib.optionalAttrs (!isNull account.smtp) (compactAttrs {
+        sender = "smtp";
+        smtp-host = account.smtp.host;
+        smtp-port = account.smtp.port;
+        smtp-ssl = account.smtp.tls.enable;
+        smtp-starttls = account.smtp.tls.useStartTls;
+        smtp-login = account.userName;
+        smtp-passwd-cmd = builtins.concatStringsSep " " account.passwordCommand;
+      });
+
+      sendmailConfig =
+        lib.optionalAttrs (isNull account.smtp) { sender = "sendmail"; };
+
+      config = globalConfig // signatureConfig // imapConfig // maildirConfig
+        // smtpConfig // sendmailConfig;
+
+    in lib.recursiveUpdate config account.himalaya.settings;
+
+  # make a systemd service config from a name and a description
+  mkServiceConfig = name: desc:
+    let
+      inherit (config.services."himalaya-${name}") enable environment settings;
+      optionalArg = key:
+        if (key ? settings && !isNull settings."${key}") then
+          [ "--${key} ${settings."${key}"}" ]
+        else
+          [ ];
+    in {
+      "himalaya-${name}" = lib.mkIf enable {
+        Unit = {
+          Description = desc;
+          After = [ "network.target" ];
+        };
+        Install = { WantedBy = [ "default.target" ]; };
+        Service = {
+          ExecStart = lib.concatStringsSep " "
+            ([ "${himalaya.package}/bin/himalaya" ] ++ optionalArg "account"
+              ++ [ name ] ++ optionalArg "keepalive");
+          ExecSearchPath = "/bin";
+          Environment =
+            lib.mapAttrsToList (key: val: "${key}=${val}") environment;
+          Restart = "always";
+          RestartSec = 10;
+        };
+      };
+    };
+
+in {
+  meta.maintainers = with lib.hm.maintainers; [ soywod toastal ];
+
+  options = {
+    programs.himalaya = {
+      enable = lib.mkEnableOption "Enable the Himalaya email client.";
+      package = lib.mkPackageOption pkgs "himalaya" { };
+      settings = lib.mkOption {
+        type = lib.types.submodule { freeformType = tomlFormat.type; };
         default = { };
-        example = lib.literalExpression ''
-          {
-            email-listing-page-size = 50;
-            watch-cmds = [ "mbsync -a" ]
-          }
-        '';
         description = ''
-          Global <command>himalaya</command> configuration values.
+          Himalaya global configuration.
+          See <link xlink:href="https://pimalaya.org/himalaya/cli/configuration/global.html"/> for supported values.
         '';
       };
     };
 
-    accounts.email.accounts = mkOption {
-      type = with types;
-        attrsOf (submodule {
-          options.himalaya = {
-            enable = mkEnableOption ''
-              the himalaya mail client for this account
+    services = {
+      himalaya-notify = {
+        enable =
+          lib.mkEnableOption "Enable the Himalaya new emails notifier service.";
+
+        environment = lib.mkOption {
+          type = with lib.types; attrsOf str;
+          default = { };
+          example = lib.literalExpression ''
+            {
+              "PASSWORD_STORE_DIR" = "~/.password-store";
+            }
+          '';
+          description = ''
+            Extra environment variables to be exported in the service.
+          '';
+        };
+
+        settings = {
+          account = lib.mkOption {
+            type = with lib.types; nullOr str;
+            default = null;
+            example = "gmail";
+            description = ''
+              Name of the account the notifier should be started for. If
+              no account is given, the default one is used.
             '';
-
-            backend = mkOption {
-              # TODO: “notmuch” (requires compile flag for himalaya, libnotmuch)
-              type = types.nullOr (types.enum [ "imap" "maildir" ]);
-              description = ''
-                The method for which <command>himalaya</command> will fetch, store,
-                etc. mail.
-              '';
-            };
-
-            sender = mkOption {
-              type = types.nullOr (types.enum [ "smtp" "sendmail" ]);
-              description = ''
-                The method for which <command>himalaya</command> will send mail.
-              '';
-            };
-
-            settings = mkOption {
-              type = tomlFormat.type;
-              default = { };
-              example = lib.literalExpression ''
-                {
-                  default-page-size = 50;
-                }
-              '';
-              description = ''
-                Extra settings to add to this <command>himalaya</command>
-                account configuration.
-              '';
-            };
           };
-        });
+
+          keepalive = lib.mkOption {
+            type = with lib.types; nullOr int;
+            default = null;
+            example = "500";
+            description = ''
+              Notifier lifetime of the IDLE session (in seconds). 
+            '';
+          };
+        };
+      };
+
+      himalaya-watch = {
+        enable = lib.mkEnableOption
+          "Enable the Himalaya folder changes watcher service.";
+
+        environment = lib.mkOption {
+          type = with lib.types; attrsOf str;
+          default = { };
+          example = lib.literalExpression ''
+            {
+              "PASSWORD_STORE_DIR" = "~/.password-store";
+            }
+          '';
+          description = ''
+            Extra environment variables to be exported in the service.
+          '';
+        };
+
+        settings = {
+          account = lib.mkOption {
+            type = with lib.types; nullOr str;
+            default = null;
+            example = "gmail";
+            description = ''
+              Name of the account the watcher should be started for. If
+              no account is given, the default one is used.
+            '';
+          };
+
+          keepalive = lib.mkOption {
+            type = with lib.types; nullOr int;
+            default = null;
+            example = "500";
+            description = ''
+              Watcher lifetime of the IDLE session (in seconds). 
+            '';
+          };
+        };
+      };
+    };
+
+    accounts.email.accounts = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.submodule {
+        options.himalaya = {
+          enable = lib.mkEnableOption "Enable Himalaya for this email account.";
+
+          # TODO: remove me for the next release
+          backend = lib.mkOption {
+            type = with lib.types; nullOr str;
+            default = null;
+            description = ''
+              Specifying 'accounts.email.accounts.*.himalaya.backend' is deprecated,
+              set 'accounts.email.accounts.*.himalaya.settings.backend' instead.
+            '';
+          };
+
+          # TODO: remove me for the next release
+          sender = lib.mkOption {
+            type = with lib.types; nullOr str;
+            description = ''
+              Specifying 'accounts.email.accounts.*.himalaya.sender' is deprecated,
+              set 'accounts.email.accounts.*.himalaya.settings.sender' instead.
+            '';
+          };
+
+          settings = lib.mkOption {
+            type = lib.types.submodule { freeformType = tomlFormat.type; };
+            default = { };
+            description = ''
+              Himalaya configuration for this email account.
+              See <link xlink:href="https://pimalaya.org/himalaya/cli/configuration/account.html"/> for supported values.
+            '';
+          };
+        };
+      });
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+  config = lib.mkIf himalaya.enable {
+    home.packages = [ himalaya.package ];
 
-    xdg.configFile."himalaya/config.toml".source =
-      tomlFormat.generate "himalaya-config.toml" himalayaConfig;
+    xdg.configFile."himalaya/config.toml".source = let
+      enabledAccounts = lib.filterAttrs (_: account: account.himalaya.enable)
+        config.accounts.email.accounts;
+      accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
+      globalConfig = compactAttrs himalaya.settings;
+      allConfig = globalConfig // accountsConfig;
+    in tomlFormat.generate "himalaya-config.toml" allConfig;
+
+    systemd.user.services = { }
+      // mkServiceConfig "notify" "Himalaya new emails notifier service"
+      // mkServiceConfig "watch" "Himalaya folder changes watcher service";
+
+    # TODO: remove me for the next release
+    warnings = (lib.optional ("backend" ? himalaya && !isNull himalaya.backend)
+      "Specifying 'accounts.email.accounts.*.himalaya.backend' is deprecated, set 'accounts.email.accounts.*.himalaya.settings.backend' instead")
+      ++ (lib.optional ("sender" ? himalaya && !isNull himalaya.sender)
+        "Specifying 'accounts.email.accounts.*.himalaya.sender' is deprecated, set 'accounts.email.accounts.*.himalaya.settings.sender' instead.");
   };
 }

@@ -3,32 +3,27 @@
 with lib;
 
 {
-  imports = [ ../../accounts/email-test-accounts.nix ];
-
   accounts.email.accounts = {
     "hm@example.com" = {
+      primary = true;
+      address = "hm@example.com";
+      userName = "home.manager";
+      realName = "H. M. Test";
+      passwordCommand = "password-command";
+      folders = { trash = "Deleted"; };
       himalaya = {
         enable = true;
-
-        backend = "imap";
-        sender = "smtp";
-        settings = { email-listing-page-size = 50; };
+        settings = {
+          sender = "sendmail";
+          sendmail-cmd = "msmtp";
+        };
       };
-
-      folders = {
-        inbox = "In";
-        sent = "Out";
-        drafts = "Drafts";
-      };
-
-      imap.port = 995;
-      smtp.port = 465;
     };
   };
 
   programs.himalaya = {
     enable = true;
-    settings = { downloads-dir = "/data/download"; };
+    settings = { email-listing-page-size = 50; };
   };
 
   test.stubs.himalaya = { };
@@ -36,7 +31,7 @@ with lib;
   nmt.script = ''
     assertFileExists home-files/.config/himalaya/config.toml
     assertFileContent home-files/.config/himalaya/config.toml ${
-      ./himalaya-expected.toml
+      ./maildir-sendmail-expected.toml
     }
   '';
 }

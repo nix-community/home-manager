@@ -1,25 +1,24 @@
-display-name = ""
-downloads-dir = "/data/download"
-
 ["hm@example.com"]
 backend = "imap"
 default = true
 display-name = "H. M. Test"
 email = "hm@example.com"
-email-listing-page-size = 50
 imap-host = "imap.example.com"
 imap-login = "home.manager"
-imap-passwd-cmd = "'password-command'"
-imap-port = 995
+imap-passwd-cmd = "password-command"
+imap-port = 993
+imap-ssl = true
 imap-starttls = false
 sender = "smtp"
 smtp-host = "smtp.example.com"
 smtp-login = "home.manager"
-smtp-passwd-cmd = "'password-command'"
+smtp-passwd-cmd = "password-command"
 smtp-port = 465
+smtp-ssl = true
 smtp-starttls = false
 
-["hm@example.com".mailboxes]
-draft = "Drafts"
-inbox = "In"
-sent = "Out"
+["hm@example.com".folder-aliases]
+drafts = "Drafts"
+inbox = "Inbox"
+sent = "Sent"
+trash = "Trash"
