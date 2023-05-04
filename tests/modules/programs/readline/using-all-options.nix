@@ -7,7 +7,10 @@ with lib;
     programs.readline = {
       enable = true;
 
-      bindings = { "\\C-h" = "backward-kill-word"; };
+      bindings = {
+        "\\C-h" = "backward-kill-word";
+        "Control-p" = ''"whups"'';
+      };
 
       variables = {
         bell-style = "audible";
