@@ -6,8 +6,31 @@ let
 
   cfg = config.xfconf;
 
+  xfIntVariant = types.submodule {
+    options = {
+      type = mkOption {
+        type = types.enum [ "int" "uint" "uint64" ];
+        description = ''
+          To distinguish between int, uint and uint64 in xfconf,
+          you can specify the type in xfconf with this submodule.
+          For other types, you don't need to use this submodule,
+          just specify the value is enough.
+        '';
+      };
+      value = mkOption {
+        type = types.int;
+        description = "The value in xfconf.";
+      };
+    };
+  };
+
   withType = v:
-    if builtins.isBool v then [
+    if builtins.isAttrs v then [
+      "-t"
+      v.type
+      "-s"
+      (toString v.value)
+    ] else if builtins.isBool v then [
       "-t"
       "bool"
       "-s"
@@ -55,9 +78,10 @@ in {
         attrsOf (attrsOf (oneOf [
           bool
           int
+          xfIntVariant
           float
           str
-          (listOf (oneOf [ bool int float str ]))
+          (listOf (oneOf [ bool int xfIntVariant float str ]))
         ])) // {
           description = "xfconf settings";
         };
