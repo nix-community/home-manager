@@ -21,7 +21,14 @@ let
           abort ("values ${toPretty v} is of unsupported type");
     in "set ${n} ${mkValueStr v}";
 
-  mkBindingStr = k: v: ''"${k}": ${v}'';
+  mkBindingStr = k: v:
+    let
+      isKeynameNotKeyseq = k:
+        builtins.elem (builtins.head (lib.splitString "-" (toLower k))) [
+          "control"
+          "meta"
+        ];
+    in if isKeynameNotKeyseq k then "${k}: ${v}" else ''"${k}": ${v}'';
 
 in {
   options.programs.readline = {
