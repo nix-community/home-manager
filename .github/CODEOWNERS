@@ -122,6 +122,9 @@ Makefile                                              @thiagokokada
 /modules/programs/gh.nix                              @Gerschtli @berbiche
 /tests/modules/programs/gh                            @Gerschtli @berbiche
 
+/modules/programs/git-cliff.nix                       @NateCox
+/tests/modules/programs/git-cliff                     @NateCox
+
 /modules/programs/git.nix                             @rycee
 
 /modules/programs/gitui/gitui.nix                     @mifom

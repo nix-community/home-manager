@@ -388,4 +388,10 @@
     githubId = 68489118;
     name = "tomodachi94";
   };
+  NateCox = {
+    name = "Nate Cox";
+    email = "nate@natecox.dev";
+    github = "natecox";
+    githubId = 2782695;
+  };
 }
