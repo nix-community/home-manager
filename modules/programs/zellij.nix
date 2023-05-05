@@ -88,10 +88,8 @@ in {
       eval "$(zellij setup --generate-auto-start zsh)"
     '');
 
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration (mkOrder 200 ''
-      if status is-interactive
-          eval (zellij setup --generate-auto-start fish | string collect)
-      end
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (mkOrder 200 ''
+      eval (zellij setup --generate-auto-start fish | string collect)
     '');
   };
 }
