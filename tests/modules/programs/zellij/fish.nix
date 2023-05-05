@@ -19,6 +19,6 @@
     assertFileExists home-files/.config/fish/config.fish
     assertFileContains \
       home-files/.config/fish/config.fish \
-      'if set -q ZELLIJ'
+      'eval (zellij setup --generate-auto-start fish | string collect)'
   '';
 }

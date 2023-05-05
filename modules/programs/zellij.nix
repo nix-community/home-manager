@@ -89,9 +89,8 @@ in {
     '');
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration (mkOrder 200 ''
-      if set -q ZELLIJ
-      else
-        zellij
+      if status is-interactive
+          eval (zellij setup --generate-auto-start fish | string collect)
       end
     '');
   };
