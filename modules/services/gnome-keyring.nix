@@ -28,6 +28,10 @@ in {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.gnome-keyring" pkgs
         lib.platforms.linux)
+      {
+        assertion = !config.services.pass-secret-store.enable;
+        message = "Only one libsecret service can be enabled at a time.";
+      }
     ];
 
     systemd.user.services.gnome-keyring = {
