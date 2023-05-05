@@ -301,7 +301,7 @@ function doInit() {
 
         mkdir -p "$confDir"
         cat > "$confFile" <<EOF
-{ config, pkgs, ... }:
+{ config, pkgs, home-manager, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -369,7 +369,11 @@ $xdgVars
   };
 
   # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
+  programs.home-manager = {
+    enable = true;
+    path = "\${home-manager}";
+  };
+
 }
 EOF
     fi
@@ -415,6 +419,7 @@ EOF
 
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
+	extraSpecialArgs = { inherit home-manager; };
       };
     };
 }
