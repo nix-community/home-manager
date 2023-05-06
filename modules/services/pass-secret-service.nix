@@ -31,7 +31,11 @@ in {
         platforms.linux)
       {
         assertion = !config.services.gnome-keyring.enable;
-        message = "Only one secrets service per user can be enabled at a time";
+        message = ''
+          Only one secrets service per user can be enabled at a time.
+          Other services enabled:
+          - gnome-keyring
+        '';
       }
     ];
 
