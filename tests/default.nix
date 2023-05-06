@@ -209,6 +209,7 @@ import nmt {
     ./modules/services/polybar
     ./modules/services/recoll
     ./modules/services/redshift-gammastep
+    ./modules/services/remmina
     ./modules/services/screen-locker
     ./modules/services/swayidle
     ./modules/services/sxhkd
