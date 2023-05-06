@@ -6,18 +6,7 @@ let
 
   cfg = config.programs.i3status-rust;
 
-  settingsFormat = pkgs.formats.toml { } // {
-    # Since 0.31, the "block" key has to be first in the TOML output.
-    generate = name: value:
-      pkgs.runCommand name {
-        nativeBuildInputs = [ pkgs.jq pkgs.remarshal ];
-        value = builtins.toJSON value;
-        passAsFile = [ "value" ];
-      } ''
-        jq '.block |= map({block: .block} + del(.block))' "$valuePath" \
-          | json2toml --preserve-key-order > "$out"
-      '';
-  };
+  settingsFormat = pkgs.formats.toml { };
 
 in {
   meta.maintainers = with lib.maintainers; [ farlion thiagokokada ];

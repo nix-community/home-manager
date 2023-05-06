@@ -54,11 +54,11 @@
         ${
           pkgs.writeText "i3status-rust-expected-config" ''
             [[block]]
+            alert = 10.0
             block = "disk_space"
-            alert = 10
             info_type = "available"
             interval = 60
-            warning = 20
+            warning = 20.0
 
             [[block]]
             block = "memory"
