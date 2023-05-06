@@ -7,7 +7,7 @@ The module system in Home Manager is based entirely on the NixOS module system s
 [[sec-option-types]]
 === Option Types
 :wikipedia-dag: https://en.wikipedia.org/w/index.php?title=Directed_acyclic_graph&oldid=939656095
-:gvariant-description: https://developer.gnome.org/glib/stable/glib-GVariant.html#glib-GVariant.description
+:gvariant-description: https://docs.gtk.org/glib/struct.Variant.html#description
 
 Overall the basic option types are the same in Home Manager as NixOS. A few Home Manager options, however, make use of custom types that are worth describing in more detail. These are the option types `dagOf` and `gvariant` that are used, for example, by <<opt-programs.ssh.matchBlocks>> and <<opt-dconf.settings>>.
 
