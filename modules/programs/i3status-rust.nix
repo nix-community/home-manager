@@ -237,6 +237,12 @@ in {
     assertions = [
       (hm.assertions.assertPlatform "programs.i3status-rust" pkgs
         platforms.linux)
+      {
+        assertion = lib.versionOlder cfg.package.version "0.31.0"
+          || lib.versionAtLeast cfg.package.version "0.31.2";
+        message =
+          "Only i3status-rust <0.31.0 or ≥0.31.2 is supported due to a config format incompatibility.";
+      }
     ];
 
     home.packages = [ cfg.package ];

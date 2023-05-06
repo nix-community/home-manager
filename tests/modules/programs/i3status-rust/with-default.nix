@@ -4,7 +4,7 @@
   config = {
     programs.i3status-rust = { enable = true; };
 
-    test.stubs.i3status-rust = { version = "0.30.0"; };
+    test.stubs.i3status-rust = { version = "0.31.2"; };
 
     nmt.script = ''
       assertFileExists home-files/.config/i3status-rust/config-default.toml
