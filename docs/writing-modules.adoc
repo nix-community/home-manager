@@ -177,10 +177,10 @@ Builds a GVariant array containing the given list of elements, where each elemen
 where `type` and `types` are themselves a type and list of types, respectively.
 +
 [[sec-option-types-gvariant-mkEmptyArray]]`hm.gvariant.mkEmptyArray type`:::
-An alias of `hm.gvariant.mkArray type []`.
+An alias of <<sec-option-types-gvariant-mkArray,`hm.gvariant.mkArray type []`>>.
 +
 [[sec-option-types-gvariant-mkNothing]]`hm.gvariant.mkNothing type`:::
-Builds a GVariant maybe value (GVariant format string `m${type}`) whose (non-existent) element is of the given type. The `type` value is constructed as described for the `mkArray` function above.
+Builds a GVariant maybe value (GVariant format string `m${type}`) whose (non-existent) element is of the given type. The `type` value is constructed as described for the <<sec-option-types-gvariant-mkArray,`mkArray`>> function above.
 +
 [[sec-option-types-gvariant-mkJust]]`hm.gvariant.mkJust element`:::
 Builds a GVariant maybe value (GVariant format string `m${element.type}`) containing the given GVariant element.
