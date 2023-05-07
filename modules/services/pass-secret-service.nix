@@ -23,7 +23,7 @@ in {
       Absolute path to password store. Defaults to
       <filename>$HOME/.password-store</filename> if the
       <option>programs.password-store</option> module is not enabled, and
-      <option>programs.password-store.PASSWORD_STORE_DIR</option> if it is.
+      <option>programs.password-store.settings.PASSWORD_STORE_DIR</option> if it is.
       '';
     };
   };
