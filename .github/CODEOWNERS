@@ -489,7 +489,8 @@ Makefile                                              @thiagokokada
 
 /modules/services/parcellite.nix                      @gleber
 
-/modules/services/pass-secret-service.nix             @cab404
+/modules/services/pass-secret-service.nix             @cab404 @cyntheticfox
+/tests/modules/services/pass-secret-service.nix       @cyntheticfox
 
 /modules/services/password-store-sync.nix             @pacien
 

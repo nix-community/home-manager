@@ -5,8 +5,7 @@ with lib;
 let
   cfg = config.services.pass-secret-service;
 
-  serviceArgs =
-    optionalString (cfg.storePath != null) "--path ${cfg.storePath}";
+  busName = "org.freedesktop.secrets";
 in {
   meta.maintainers = with maintainers; [ cab404 cyntheticfox ];
 
@@ -18,9 +17,14 @@ in {
     storePath = mkOption {
       type = with types; nullOr str;
       default = null;
-      defaultText = "~/.password-store";
+      defaultText = "$HOME/.password-store";
       example = "/home/user/.local/share/password-store";
-      description = "Absolute path to password store.";
+      description = ''
+        Absolute path to password store. Defaults to
+        <filename>$HOME/.password-store</filename> if the
+        <option>programs.password-store</option> module is not enabled, and
+        <option>programs.password-store.settings.PASSWORD_STORE_DIR</option> if it is.
+      '';
     };
   };
 
@@ -28,21 +32,38 @@ in {
     assertions = [
       (hm.assertions.assertPlatform "services.pass-secret-service" pkgs
         platforms.linux)
+      {
+        assertion = !config.services.gnome-keyring.enable;
+        message = ''
+          Only one secrets service per user can be enabled at a time.
+          Other services enabled:
+          - gnome-keyring
+        '';
+      }
     ];
 
-    systemd.user.services.pass-secret-service = {
-      Unit = {
-        AssertFileIsExecutable = "${cfg.package}/bin/pass_secret_service";
-        Description = "Pass libsecret service";
-        Documentation = "https://github.com/mdellweg/pass_secret_service";
-        PartOf = [ "default.target" ];
+    systemd.user.services.pass-secret-service =
+      let binPath = "${cfg.package}/bin/pass_secret_service";
+      in {
+        Unit = {
+          AssertFileIsExecutable = "${binPath}";
+          Description = "Pass libsecret service";
+          Documentation = "https://github.com/mdellweg/pass_secret_service";
+          PartOf = [ "default.target" ];
+        };
+
+        Service = {
+          Type = "dbus";
+          ExecStart = "${binPath} ${
+              optionalString (cfg.storePath != null) "--path ${cfg.storePath}"
+            }";
+          BusName = busName;
+        };
+
+        Install.WantedBy = [ "default.target" ];
       };
 
-      Service = {
-        ExecStart = "${cfg.package}/bin/pass_secret_service ${serviceArgs}";
-      };
-
-      Install = { WantedBy = [ "default.target" ]; };
-    };
+    xdg.dataFile."dbus-1/services/${busName}.service".source =
+      "${cfg.package}/share/dbus-1/services/${busName}.service";
   };
 }
