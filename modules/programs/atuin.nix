@@ -81,7 +81,7 @@ in {
         Configuration written to
         <filename>$XDG_CONFIG_HOME/atuin/config.toml</filename>.
         </para><para>
-        See <link xlink:href="https://github.com/ellie/atuin/blob/main/docs/config.md" /> for the full list
+        See <link xlink:href="https://atuin.sh/docs/config/" /> for the full list
         of options.
       '';
     };
