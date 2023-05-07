@@ -15,8 +15,8 @@ in {
     package = mkPackageOption pkgs "pass-secret-service" { };
 
     storePath = mkOption {
-      type = types.str;
-      default = "";
+      type = with types; nullOr str;
+      default = null;
       defaultText = "$HOME/.password-store";
       example = "/home/user/.local/share/password-store";
       description = ''
@@ -52,7 +52,7 @@ in {
         Service = {
           Type = "dbus";
           ExecStart = "${binPath} ${
-              optionalString (cfg.storePath != "") "--path ${cfg.storePath}"
+              optionalString (cfg.storePath != null) "--path ${cfg.storePath}"
             }";
           BusName = busName;
         };
