@@ -75,14 +75,9 @@ in {
 
     settings = mkOption {
       type = with types;
-        attrsOf (attrsOf (oneOf [
-          bool
-          int
-          xfIntVariant
-          float
-          str
-          (listOf (oneOf [ bool int xfIntVariant float str ]))
-        ])) // {
+      # xfIntVariant must come AFTER str; otherwise strings are treated as submodule imports...
+        let value = oneOf [ bool int float str xfIntVariant ];
+        in attrsOf (attrsOf (either value (listOf value))) // {
           description = "xfconf settings";
         };
       default = { };
