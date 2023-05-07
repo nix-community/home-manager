@@ -5,6 +5,12 @@ with lib;
 let
   cfg = config.services.pass-secret-service;
 
+  conflictingModules = [ "services.gnome-keyring" ];
+
+  moduleIsEnabled = v: config.${v}.enable or false;
+  hasConflicts = modulePathName: !(any moduleIsEnabled modulePathName);
+  getConflicts = filter moduleIsEnabled;
+
   busName = "org.freedesktop.secrets";
 in {
   meta.maintainers = with maintainers; [ cab404 cyntheticfox ];
@@ -20,10 +26,10 @@ in {
       defaultText = "$HOME/.password-store";
       example = "/home/user/.local/share/password-store";
       description = ''
-      Absolute path to password store. Defaults to
-      <filename>$HOME/.password-store</filename> if the
-      <option>programs.password-store</option> module is not enabled, and
-      <option>programs.password-store.PASSWORD_STORE_DIR</option> if it is.
+        Absolute path to password store. Defaults to
+        <filename>$HOME/.password-store</filename> if the
+        <option>programs.password-store</option> module is not enabled, and
+        <option>programs.password-store.settings.PASSWORD_STORE_DIR</option> else.
       '';
     };
   };
@@ -33,11 +39,15 @@ in {
       (hm.assertions.assertPlatform "services.pass-secret-service" pkgs
         platforms.linux)
       {
-        assertion = !config.services.gnome-keyring.enable;
+        assertion = hasConflicts conflictingModules;
         message = ''
           Only one secrets service per user can be enabled at a time.
           Other services enabled:
-          - gnome-keyring
+          <ul>
+          ${map (v: ''
+            <li><option>${v}</option></li>
+          '') (getConflicts conflictingModules)}
+          </ul>
         '';
       }
     ];
