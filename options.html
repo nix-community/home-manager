@@ -624,7 +624,18 @@ path may be overridden on a per-account basis.</p><p><span class="emphasis"><em>
 relative path, in which case it is relative the home
 directory.</p><p><span class="emphasis"><em>Type:</em></span> string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">"$HOME/Maildir"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix#blob-path" target="_top">
                     &lt;home-manager/modules/accounts/email.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-dconf.settings"></a><a class="term" href="options.html#opt-dconf.settings"><code class="option">dconf.settings</code></a></span></dt><dd><p>Settings to write to the dconf configuration system.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of (GVariant value)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-dconf.settings"></a><a class="term" href="options.html#opt-dconf.settings"><code class="option">dconf.settings</code></a></span></dt><dd><p>Settings to write to the dconf configuration system.
+</p><p>
+Note that the database is strongly-typed so you need to use the same types
+as described in the GSettings schema. For example, if an option is of type
+<code class="literal">uint32</code> (<code class="literal">u</code>), you need to wrap the number
+using the <code class="literal">lib.hm.gvariant.mkUint32</code> constructor.
+Otherwise, since Nix integers are implicitly coerced to <code class="literal">int32</code>
+(<code class="literal">i</code>), it would get stored in the database as such, and GSettings
+might be confused when loading the setting.
+</p><p>
+You might want to use <a class="link" href="https://github.com/gvolpe/dconf2nix" target="_top">dconf2nix</a>
+to convert dconf database dumps into compatible Nix expression.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of attribute set of (GVariant value)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
   "org/gnome/calculator" = {
     button-mode = "programming";
     show-thousands = true;

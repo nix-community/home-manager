@@ -460,111 +460,111 @@ Indicates that <code class="literal">value</code> must be placed <span class="em
   c = hm.dag.entryBetween [ "b" ] [ "a" ] 2;
   b = 1;
 }</pre><p class="simpara">would place <code class="literal">c</code> before <code class="literal">b</code> and after <code class="literal">a</code> in the graph.</p></dd></dl></div></dd><dt><span class="term">
-<code class="literal">hm.types.gvariant</code>
+<a id="sec-option-types-gvariant"></a><code class="literal">hm.types.gvariant</code>
 </span></dt><dd><p class="simpara">
-This type is useful for options representing <a class="link" href="https://developer.gnome.org/glib/stable/glib-GVariant.html#glib-GVariant.description" target="_top">GVariant</a> values. The type accepts all primitive GVariant types as well as arrays and tuples. Dictionaries are not currently supported.
-</p><p class="simpara">To create a GVariant value you can use a number of provided functions. Examples assume an option <code class="literal">foo.bar</code>  of type <code class="literal">hm.types.gvariant</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<code class="literal">hm.gvariant.mkBoolean (v: bool)</code>
+This type is useful for options representing <a class="link" href="https://docs.gtk.org/glib/struct.Variant.html#description" target="_top">GVariant</a> values. The type accepts all primitive GVariant types as well as arrays, tuples, “maybe” types, and dictionaries.
+</p><p class="simpara">Some Nix values are automatically coerced to matching GVariant value but the GVariant model is richer so you may need to use one of the provided constructor functions. Examples assume an option <code class="literal">foo.bar</code>  of type <code class="literal">hm.types.gvariant</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+<a id="sec-option-types-gvariant-mkBoolean"></a><code class="literal">hm.gvariant.mkBoolean (v: bool)</code>
 </span></dt><dd><p class="simpara">
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">boolean</code> value. Note, Nix booleans are automatically coerced using this function. That is,
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">boolean</code> value (GVariant format string <code class="literal">b</code>). Note, Nix booleans are automatically coerced using this function. That is,
 </p><pre class="programlisting nix">foo.bar = hm.gvariant.mkBoolean true;</pre><p class="simpara">is equivalent to</p><pre class="programlisting nix">foo.bar = true;</pre></dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkString (v: string)</code>
+<a id="sec-option-types-gvariant-mkString"></a><code class="literal">hm.gvariant.mkString (v: string)</code>
 </span></dt><dd><p class="simpara">
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">string</code> value. Note, Nix strings are automatically coerced using this function. That is,
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">string</code> value (GVariant format string <code class="literal">s</code>). Note, Nix strings are automatically coerced using this function. That is,
 </p><pre class="programlisting nix">foo.bar = hm.gvariant.mkString "a string";</pre><p class="simpara">is equivalent to</p><pre class="programlisting nix">foo.bar = "a string";</pre></dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkObjectpath (v: string)</code>
+<a id="sec-option-types-gvariant-mkObjectpath"></a><code class="literal">hm.gvariant.mkObjectpath (v: string)</code>
 </span></dt><dd>
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">objectpath</code> value.
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">objectpath</code> value (GVariant format string <code class="literal">o</code>).
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkUchar (v: string)</code>
+<a id="sec-option-types-gvariant-mkUchar"></a><code class="literal">hm.gvariant.mkUchar (v: string)</code>
 </span></dt><dd>
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uchar</code> value.
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uchar</code> value (GVariant format string <code class="literal">y</code>).
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkInt16 (v: int)</code>
+<a id="sec-option-types-gvariant-mkInt16"></a><code class="literal">hm.gvariant.mkInt16 (v: int)</code>
 </span></dt><dd>
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int16</code> value.
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int16</code> value (GVariant format string <code class="literal">n</code>).
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkUint16 (v: int)</code>
+<a id="sec-option-types-gvariant-mkUint16"></a><code class="literal">hm.gvariant.mkUint16 (v: int)</code>
 </span></dt><dd>
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint16</code> value.
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint16</code> value (GVariant format string <code class="literal">q</code>).
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkInt32 (v: int)</code>
+<a id="sec-option-types-gvariant-mkInt32"></a><code class="literal">hm.gvariant.mkInt32 (v: int)</code>
 </span></dt><dd><p class="simpara">
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int32</code> value. Note, Nix integers are automatically coerced using this function. That is,
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int32</code> value (GVariant format string <code class="literal">i</code>). Note, Nix integers are automatically coerced using this function. That is,
 </p><pre class="programlisting nix">foo.bar = hm.gvariant.mkInt32 7;</pre><p class="simpara">is equivalent to</p><pre class="programlisting nix">foo.bar = 7;</pre></dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkUint32 (v: int)</code>
+<a id="sec-option-types-gvariant-mkUint32"></a><code class="literal">hm.gvariant.mkUint32 (v: int)</code>
 </span></dt><dd>
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint32</code> value.
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint32</code> value (GVariant format string <code class="literal">u</code>).
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkInt64 (v: int)</code>
+<a id="sec-option-types-gvariant-mkInt64"></a><code class="literal">hm.gvariant.mkInt64 (v: int)</code>
 </span></dt><dd>
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int64</code> value.
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int64</code> value (GVariant format string <code class="literal">x</code>).
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkUint64 (v: int)</code>
+<a id="sec-option-types-gvariant-mkUint64"></a><code class="literal">hm.gvariant.mkUint64 (v: int)</code>
 </span></dt><dd>
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint64</code> value.
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint64</code> value (GVariant format string <code class="literal">t</code>).
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkDouble (v: double)</code>
+<a id="sec-option-types-gvariant-mkDouble"></a><code class="literal">hm.gvariant.mkDouble (v: double)</code>
 </span></dt><dd><p class="simpara">
-Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">double</code> value. Note, Nix floats are automatically coerced using this function. That is,
+Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">double</code> value (GVariant format string <code class="literal">d</code>). Note, Nix floats are automatically coerced using this function. That is,
 </p><pre class="programlisting nix">foo.bar = hm.gvariant.mkDouble 3.14;</pre><p class="simpara">is equivalent to</p><pre class="programlisting nix">foo.bar = 3.14;</pre></dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkArray type elements</code>
+<a id="sec-option-types-gvariant-mkArray"></a><code class="literal">hm.gvariant.mkArray type elements</code>
 </span></dt><dd><p class="simpara">
-Builds a GVariant array containing the given list of elements, where each element is a GVariant value of the given type. The <code class="literal">type</code> value can be constructed using
+Builds a GVariant array containing the given list of elements, where each element is a GVariant value of the given type (GVariant format string <code class="literal">a${type}</code>). The <code class="literal">type</code> value can be constructed using
 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-<code class="literal">hm.gvariant.type.string</code>
+<code class="literal">hm.gvariant.type.string</code> (GVariant format string <code class="literal">s</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.boolean</code>
+<code class="literal">hm.gvariant.type.boolean</code> (GVariant format string <code class="literal">b</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.uchar</code>
+<code class="literal">hm.gvariant.type.uchar</code> (GVariant format string <code class="literal">y</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.int16</code>
+<code class="literal">hm.gvariant.type.int16</code> (GVariant format string <code class="literal">n</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.uint16</code>
+<code class="literal">hm.gvariant.type.uint16</code> (GVariant format string <code class="literal">q</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.int32</code>
+<code class="literal">hm.gvariant.type.int32</code> (GVariant format string <code class="literal">i</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.uint32</code>
+<code class="literal">hm.gvariant.type.uint32</code> (GVariant format string <code class="literal">u</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.int64</code>
+<code class="literal">hm.gvariant.type.int64</code> (GVariant format string <code class="literal">x</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.uint64</code>
+<code class="literal">hm.gvariant.type.uint64</code> (GVariant format string <code class="literal">t</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.double</code>
+<code class="literal">hm.gvariant.type.double</code> (GVariant format string <code class="literal">d</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.variant</code>
+<code class="literal">hm.gvariant.type.variant</code> (GVariant format string <code class="literal">v</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.arrayOf type</code>
+<code class="literal">hm.gvariant.type.arrayOf type</code> (GVariant format string <code class="literal">a${type}</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.maybeOf type</code>
+<code class="literal">hm.gvariant.type.maybeOf type</code> (GVariant format string <code class="literal">m${type}</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.tupleOf types</code>
+<code class="literal">hm.gvariant.type.tupleOf types</code> (GVariant format string <code class="literal">(${lib.concatStrings types})</code>)
 </li><li class="listitem">
-<code class="literal">hm.gvariant.type.dictionaryEntryOf types</code>
+<code class="literal">hm.gvariant.type.dictionaryEntryOf [keyType valueType]</code> (GVariant format string <code class="literal">{${keyType}${valueType}}</code>)
 </li></ul></div><p class="simpara">where <code class="literal">type</code> and <code class="literal">types</code> are themselves a type and list of types, respectively.</p></dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkEmptyArray type</code>
+<a id="sec-option-types-gvariant-mkEmptyArray"></a><code class="literal">hm.gvariant.mkEmptyArray type</code>
 </span></dt><dd>
-An alias of <code class="literal">hm.gvariant.mkArray type []</code>.
+An alias of <a class="link" href="index.html#sec-option-types-gvariant-mkArray"><code class="literal">hm.gvariant.mkArray type []</code></a>.
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkNothing type</code>
+<a id="sec-option-types-gvariant-mkNothing"></a><code class="literal">hm.gvariant.mkNothing type</code>
 </span></dt><dd>
-Builds a GVariant maybe value whose (non-existent) element is of the given type. The <code class="literal">type</code> value is constructed as described for the <code class="literal">mkArray</code> function above.
+Builds a GVariant maybe value (GVariant format string <code class="literal">m${type}</code>) whose (non-existent) element is of the given type. The <code class="literal">type</code> value is constructed as described for the <a class="link" href="index.html#sec-option-types-gvariant-mkArray"><code class="literal">mkArray</code></a> function above.
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkJust element</code>
+<a id="sec-option-types-gvariant-mkJust"></a><code class="literal">hm.gvariant.mkJust element</code>
 </span></dt><dd>
-Builds a GVariant maybe value containing the given GVariant element.
+Builds a GVariant maybe value (GVariant format string <code class="literal">m${element.type}</code>) containing the given GVariant element.
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkTuple elements</code>
+<a id="sec-option-types-gvariant-mkTuple"></a><code class="literal">hm.gvariant.mkTuple elements</code>
 </span></dt><dd>
 Builds a GVariant tuple containing the given list of elements, where each element is a GVariant value.
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkVariant element</code>
+<a id="sec-option-types-gvariant-mkVariant"></a><code class="literal">hm.gvariant.mkVariant element</code>
 </span></dt><dd>
-Builds a GVariant variant which contains the value of a GVariant element.
+Builds a GVariant variant (GVariant format string <code class="literal">v</code>) which contains the value of a GVariant element.
 </dd><dt><span class="term">
-<code class="literal">hm.gvariant.mkDictionaryEntry elements</code>
+<a id="sec-option-types-gvariant-mkDictionaryEntry"></a><code class="literal">hm.gvariant.mkDictionaryEntry [key value]</code>
 </span></dt><dd>
-Builds a GVariant dictionary entry containing the given list of elements, where each element is a GVariant value.
+Builds a GVariant dictionary entry containing the given list of elements (GVariant format string <code class="literal">{${key.type}${value.type}}</code>), where each element is a GVariant value.
 </dd></dl></div></dd></dl></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="ch-contributing"></a>Chapter 5. Contributing</h1></div></div></div><p>Contributions to Home Manager are very welcome. To make the process as smooth as possible for both you and the Home Manager maintainers we provide some guidelines that we ask you to follow. See <a class="xref" href="index.html#sec-contrib-getting-started" title="5.1. Getting started">Section 5.1, “Getting started”</a> for information on how to set up a suitable development environment and <a class="xref" href="index.html#sec-guidelines" title="5.2. Guidelines">Section 5.2, “Guidelines”</a> for the actual guidelines.</p><p>This text is mainly directed at those who would like to make code contributions to Home Manager. If you just want to report a bug then first look among the already <a class="link" href="https://github.com/nix-community/home-manager/issues" target="_top">open issues</a>, if you find one matching yours then feel free to comment on it to add any additional information you may have. If no matching issue exists then go to the <a class="link" href="https://github.com/nix-community/home-manager/issues/new" target="_top">new issue</a> page and write a description of your problem. Include as much information as you can, ideally also include relevant excerpts from your Home Manager configuration.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="sec-contrib-getting-started"></a>5.1. Getting started</h2></div></div></div><p>If you have not previously forked Home Manager then you need to do that first. Have a look at GitHub’s <a class="link" href="https://help.github.com/articles/fork-a-repo/" target="_top">Fork a repo</a> for instructions on how to do this.</p><p>Once you have a fork of Home Manager you should create a branch starting at the most recent <code class="literal">master</code> branch. Give your branch a reasonably descriptive name. Commit your changes to this branch and when you are happy with the result and it fulfills <a class="xref" href="index.html#sec-guidelines" title="5.2. Guidelines">Section 5.2, “Guidelines”</a> then push the branch to GitHub and <a class="link" href="https://help.github.com/articles/creating-a-pull-request/" target="_top">create a pull request</a>.</p><p>Assuming your clone is at <code class="literal">$HOME/devel/home-manager</code> then you can make the <code class="literal">home-manager</code> command use it by either</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p class="simpara">
 overriding the default path by using the <code class="literal">-I</code> command line option:
 </p><pre class="programlisting console">$ home-manager -I home-manager=$HOME/devel/home-manager</pre><p class="simpara">or, if using <a class="link" href="index.html#sec-flakes-standalone" title="3.2. Standalone setup">flakes</a>:</p><pre class="programlisting console">$ home-manager --override-input home-manager ~/devel/home-manager</pre><p class="simpara">or</p></li><li class="listitem"><p class="simpara">
