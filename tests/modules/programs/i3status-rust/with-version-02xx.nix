@@ -14,12 +14,12 @@
             icons = "none"
             theme = "plain"
             [[block]]
+            alert = 10.0
             block = "disk_space"
-            alert = 10
             info_type = "available"
             interval = 60
             path = "/"
-            warning = 20
+            warning = 20.0
 
             [[block]]
             block = "memory"

@@ -4,7 +4,7 @@
   config = {
     programs.i3status-rust = { enable = true; };
 
-    test.stubs.i3status-rust = { version = "0.30.0"; };
+    test.stubs.i3status-rust = { version = "0.31.2"; };
 
     nmt.script = ''
       assertFileExists home-files/.config/i3status-rust/config-default.toml
@@ -12,12 +12,12 @@
         ${
           pkgs.writeText "i3status-rust-expected-config" ''
             [[block]]
+            alert = 10.0
             block = "disk_space"
-            alert = 10
             info_type = "available"
             interval = 60
             path = "/"
-            warning = 20
+            warning = 20.0
 
             [[block]]
             block = "memory"
