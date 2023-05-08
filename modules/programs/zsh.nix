@@ -215,6 +215,8 @@ in
     programs.zsh = {
       enable = mkEnableOption "Z shell (Zsh)";
 
+      package = mkPackageOption pkgs "zsh" { };
+
       autocd = mkOption {
         default = null;
         description = ''
@@ -482,8 +484,8 @@ in
     }
 
     {
-      home.packages = with pkgs; [ zsh ]
-        ++ optional cfg.enableCompletion nix-zsh-completions
+      home.packages = [ cfg.package ]
+        ++ optional cfg.enableCompletion pkgs.nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable cfg.oh-my-zsh.package;
 
       home.file."${relToDotDir ".zshrc"}".text = concatStringsSep "\n" ([
@@ -499,7 +501,7 @@ in
           fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
         done
 
-        HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
+        HELPDIR="${cfg.package}/share/zsh/$ZSH_VERSION/help"
         ''
 
         (optionalString (cfg.defaultKeymap != null) ''
