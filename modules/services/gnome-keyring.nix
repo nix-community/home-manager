@@ -29,11 +29,11 @@ in {
       (lib.hm.assertions.assertPlatform "services.gnome-keyring" pkgs
         lib.platforms.linux)
       {
-        assertion = !config.services.pass-secret-store.enable;
+        assertion = !config.services.pass-secret-service.enable;
         message = ''
           Only one secrets service per user can be enabled at a time.
           Other services enabled:
-          - pass-secret-store
+          - pass-secret-service
         '';
       }
     ];
