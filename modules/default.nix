@@ -1,6 +1,6 @@
 { configuration
 , pkgs
-, lib ? pkgs.lib
+, lib ? extraSpecialArgs.lib or pkgs.lib
 
   # Whether to check that each option has a matching declaration.
 , check ? true
@@ -21,7 +21,7 @@ let
     in
       fold f res res.config.warnings;
 
-  extendedLib = import ./lib/stdlib-extended.nix lib;
+  extendedLib = import ./lib/stdlib-extended.nix extraSpecialArgs.lib or lib;
 
   hmModules =
     import ./modules.nix {
@@ -33,7 +33,9 @@ let
     modules = [ configuration ] ++ hmModules;
     specialArgs = {
       modulesPath = builtins.toString ./.;
-    } // extraSpecialArgs;
+    } // extraSpecialArgs // optionalAttrs (extraSpecialArgs ? lib) {
+      lib = extendedLib;
+    };
   };
 
   module = showWarnings (
