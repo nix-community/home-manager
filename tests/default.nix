@@ -135,6 +135,7 @@ import nmt {
     ./modules/programs/rtx
     ./modules/programs/ruff
     ./modules/programs/sagemath
+    ./modules/programs/sapling
     ./modules/programs/sbt
     ./modules/programs/scmpuff
     ./modules/programs/sioyek

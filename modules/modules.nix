@@ -192,6 +192,7 @@ let
     ./programs/rtx.nix
     ./programs/ruff.nix
     ./programs/sagemath.nix
+    ./programs/sapling.nix
     ./programs/sbt.nix
     ./programs/scmpuff.nix
     ./programs/script-directory.nix
