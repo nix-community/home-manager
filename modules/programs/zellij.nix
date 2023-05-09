@@ -40,28 +40,16 @@ in {
       '';
     };
 
-    enableBashIntegration = mkOption {
-      default = false;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
+    enableBashIntegration = mkEnableOption "Enable Bash integration." // {
+      default = true;
     };
 
-    enableZshIntegration = mkOption {
-      default = false;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
+    enableZshIntegration = mkEnableOption "Enable Zsh integration." // {
+      default = true;
     };
 
-    enableFishIntegration = mkOption {
-      default = false;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
+    enableFishIntegration = mkEnableOption "Enable Fish integration." // {
+      default = true;
     };
   };
 
