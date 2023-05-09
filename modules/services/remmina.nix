@@ -47,7 +47,6 @@ in {
 
         Install.WantedBy = [ "graphical-session.target" ];
       };
-
     })
 
     (lib.mkIf (config.xdg.mimeApps.enable && cfg.addRdpMimeTypeAssoc) {
