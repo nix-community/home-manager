@@ -6,9 +6,7 @@
     bash.enable = true;
   };
 
-  test.stubs = {
-    zellij = { };
-  };
+  test.stubs = { zellij = { }; };
 
   nmt.script = ''
     assertFileNotRegex home-files/.bashrc \

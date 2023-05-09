@@ -9,9 +9,7 @@
     bash.enable = true;
   };
 
-  test.stubs = {
-    zellij = { };
-  };
+  test.stubs = { zellij = { }; };
 
   nmt.script = ''
     assertFileExists home-files/.bashrc
