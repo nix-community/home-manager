@@ -51,7 +51,7 @@ let
 
   unitType = unitKind:
     with types;
-    let primitive = either bool (either int str);
+    let primitive = oneOf [ bool int str path ];
     in attrsOf (attrsOf (attrsOf (either primitive (listOf primitive)))) // {
       description = "systemd ${unitKind} unit configuration";
     };
