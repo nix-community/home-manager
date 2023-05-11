@@ -1,14 +1,17 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
-with lib;
-
-{
+let
+  drvScript = pkgs.writeShellScript "drv-script.sh" ''
+    echo "Just a test"
+  '';
+in {
   config = {
     systemd.user.services."test-service@" = {
       Unit = { Description = "A basic test service"; };
 
       Service = {
         Environment = [ "VAR1=1" "VAR2=2" ];
+        ExecStartPre = drvScript;
         ExecStart = ''/some/exec/start/command --with-arguments "%i"'';
       };
     };
@@ -18,11 +21,12 @@ with lib;
       assertFileExists $serviceFile
       assertFileContent $serviceFile \
         ${
-          builtins.toFile "services-expected.conf" ''
+          pkgs.writeText "services-expected.conf" ''
             [Service]
             Environment=VAR1=1
             Environment=VAR2=2
             ExecStart=/some/exec/start/command --with-arguments "%i"
+            ExecStartPre=${drvScript}
 
             [Unit]
             Description=A basic test service
