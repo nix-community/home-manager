@@ -180,6 +180,7 @@ Makefile                                              @thiagokokada
 /modules/programs/lazygit.nix                         @kalhauge
 
 /modules/programs/ledger.nix                          @marsam
+/tests/modules/programs/ledger                        @marsam
 
 /modules/programs/less.nix                            @pamplemousse
 /tests/modules/programs/less                          @pamplemousse
