@@ -72,65 +72,54 @@ rec {
     , workspaceNumbers, command, statusCommand, colors, trayOutput, trayPadding
     , extraConfig, ... }:
     let colorsNotNull = lib.filterAttrs (n: v: v != null) colors != { };
-    in ''
-      bar {
-        ${
-          concatStringsSep "\n" (indent (lists.subtractLists [ "" null ]
-            (flatten [
-              (optionalString (id != null) "id ${id}")
-              (fontConfigStr fonts)
-              (optionalString (mode != null) "mode ${mode}")
-              (optionalString (hiddenState != null)
-                "hidden_state ${hiddenState}")
-              (optionalString (position != null) "position ${position}")
-              (optionalString (statusCommand != null)
-                "status_command ${statusCommand}")
-              "${moduleName}bar_command ${command}"
-              (optionalString (workspaceButtons != null)
-                "workspace_buttons ${lib.hm.booleans.yesNo workspaceButtons}")
-              (optionalString (workspaceNumbers != null)
-                "strip_workspace_numbers ${
-                  lib.hm.booleans.yesNo (!workspaceNumbers)
-                }")
-              (optionalString (trayOutput != null) "tray_output ${trayOutput}")
-              (optionalString (trayPadding != null)
-                "tray_padding ${toString trayPadding}")
-              (optionals colorsNotNull (indent
-                (lists.subtractLists [ "" null ] [
-                  "colors {"
-                  (optionalString (colors.background != null)
-                    "background ${colors.background}")
-                  (optionalString (colors.statusline != null)
-                    "statusline ${colors.statusline}")
-                  (optionalString (colors.separator != null)
-                    "separator ${colors.separator}")
-                  (optionalString (colors.focusedBackground != null)
-                    "focused_background ${colors.focusedBackground}")
-                  (optionalString (colors.focusedStatusline != null)
-                    "focused_statusline ${colors.focusedStatusline}")
-                  (optionalString (colors.focusedSeparator != null)
-                    "focused_separator ${colors.focusedSeparator}")
-                  (optionalString (colors.focusedWorkspace != null)
-                    "focused_workspace ${
-                      barColorSetStr colors.focusedWorkspace
-                    }")
-                  (optionalString (colors.activeWorkspace != null)
-                    "active_workspace ${barColorSetStr colors.activeWorkspace}")
-                  (optionalString (colors.inactiveWorkspace != null)
-                    "inactive_workspace ${
-                      barColorSetStr colors.inactiveWorkspace
-                    }")
-                  (optionalString (colors.urgentWorkspace != null)
-                    "urgent_workspace ${barColorSetStr colors.urgentWorkspace}")
-                  (optionalString (colors.bindingMode != null)
-                    "binding_mode ${barColorSetStr colors.bindingMode}")
-                  "}"
-                ]) { }))
-              extraConfig
-            ])) { })
-        }
-      }
-    '';
+    in concatMapStrings (x: x + "\n") (indent (lists.subtractLists [ "" null ]
+      (flatten [
+        "bar {"
+        (optionalString (id != null) "id ${id}")
+        (fontConfigStr fonts)
+        (optionalString (mode != null) "mode ${mode}")
+        (optionalString (hiddenState != null) "hidden_state ${hiddenState}")
+        (optionalString (position != null) "position ${position}")
+        (optionalString (statusCommand != null)
+          "status_command ${statusCommand}")
+        "${moduleName}bar_command ${command}"
+        (optionalString (workspaceButtons != null)
+          "workspace_buttons ${lib.hm.booleans.yesNo workspaceButtons}")
+        (optionalString (workspaceNumbers != null) "strip_workspace_numbers ${
+            lib.hm.booleans.yesNo (!workspaceNumbers)
+          }")
+        (optionalString (trayOutput != null) "tray_output ${trayOutput}")
+        (optionalString (trayPadding != null)
+          "tray_padding ${toString trayPadding}")
+        (optionals colorsNotNull (indent (lists.subtractLists [ "" null ] [
+          "colors {"
+          (optionalString (colors.background != null)
+            "background ${colors.background}")
+          (optionalString (colors.statusline != null)
+            "statusline ${colors.statusline}")
+          (optionalString (colors.separator != null)
+            "separator ${colors.separator}")
+          (optionalString (colors.focusedBackground != null)
+            "focused_background ${colors.focusedBackground}")
+          (optionalString (colors.focusedStatusline != null)
+            "focused_statusline ${colors.focusedStatusline}")
+          (optionalString (colors.focusedSeparator != null)
+            "focused_separator ${colors.focusedSeparator}")
+          (optionalString (colors.focusedWorkspace != null)
+            "focused_workspace ${barColorSetStr colors.focusedWorkspace}")
+          (optionalString (colors.activeWorkspace != null)
+            "active_workspace ${barColorSetStr colors.activeWorkspace}")
+          (optionalString (colors.inactiveWorkspace != null)
+            "inactive_workspace ${barColorSetStr colors.inactiveWorkspace}")
+          (optionalString (colors.urgentWorkspace != null)
+            "urgent_workspace ${barColorSetStr colors.urgentWorkspace}")
+          (optionalString (colors.bindingMode != null)
+            "binding_mode ${barColorSetStr colors.bindingMode}")
+          "}"
+        ]) { }))
+        extraConfig
+        "}"
+      ])) { });
 
   gapsStr = with cfg.config.gaps;
     concatStringsSep "\n" (lists.subtractLists [ "" null ] [
