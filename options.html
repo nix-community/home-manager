@@ -4034,12 +4034,24 @@ for supported values.</p><p><span class="emphasis"><em>Type:</em></span> YAML va
                     &lt;home-manager/modules/programs/ledger.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ledger.package"></a><a class="term" href="options.html#opt-programs.ledger.package"><code class="option">programs.ledger.package</code></a></span></dt><dd><p>The ledger package to use.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.ledger</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ledger.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/ledger.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ledger.extraConfig"></a><a class="term" href="options.html#opt-programs.ledger.extraConfig"><code class="option">programs.ledger.extraConfig</code></a></span></dt><dd><p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/ledger/ledgerrc</code>.
-See <a class="link" href="https://www.ledger-cli.org/3.0/doc/ledger3.html#Detailed-Option-Description" target="_top">https://www.ledger-cli.org/3.0/doc/ledger3.html#Detailed-Option-Description</a>
-for explanation about possible values.</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">--sort date
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ledger.extraConfig"></a><a class="term" href="options.html#opt-programs.ledger.extraConfig"><code class="option">programs.ledger.extraConfig</code></a></span></dt><dd><p>Extra configuration to add to
+<code class="filename">$XDG_CONFIG_HOME/ledger/ledgerrc</code>.</p><p><span class="emphasis"><em>Type:</em></span> strings concatenated with "\n"</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">""</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">--sort date
 --effective
 --date-format %Y-%m-%d
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ledger.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/programs/ledger.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ledger.settings"></a><a class="term" href="options.html#opt-programs.ledger.settings"><code class="option">programs.ledger.settings</code></a></span></dt><dd><p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/ledger/ledgerrc</code>.
+See <a class="link" href="https://www.ledger-cli.org/3.0/doc/ledger3.html#Detailed-Option-Description" target="_top">https://www.ledger-cli.org/3.0/doc/ledger3.html#Detailed-Option-Description</a>
+for explanation about possible values.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of (boolean or signed integer or string or list of string)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  date-format = "%Y-%m-%d";
+  file = [
+    "~/finances/journal.ledger"
+    "~/finances/assets.ledger"
+    "~/finances/income.ledger"
+  ];
+  sort = "date";
+  strict = true;
+}</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ledger.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/ledger.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.less.enable"></a><a class="term" href="options.html#opt-programs.less.enable"><code class="option">programs.less.enable</code></a></span></dt><dd><p>Whether to enable less, opposite of more.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/less.nix#blob-path" target="_top">
                     &lt;home-manager/modules/programs/less.nix&gt;
