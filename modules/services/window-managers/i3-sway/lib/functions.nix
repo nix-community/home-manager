@@ -85,7 +85,7 @@ rec {
               (optionalString (position != null) "position ${position}")
               (optionalString (statusCommand != null)
                 "status_command ${statusCommand}")
-              "${moduleName}bar_command ${command}"
+              "  ${moduleName}bar_command ${command}"
               (optionalString (workspaceButtons != null)
                 "workspace_buttons ${lib.hm.booleans.yesNo workspaceButtons}")
               (optionalString (workspaceNumbers != null)
