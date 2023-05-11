@@ -189,6 +189,7 @@ let
     ./programs/tmux.nix
     ./programs/topgrade.nix
     ./programs/urxvt.nix
+    ./programs/vifm.nix
     ./programs/vim.nix
     ./programs/vim-vint.nix
     ./programs/vscode.nix
