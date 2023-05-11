@@ -133,6 +133,7 @@ import nmt {
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
+    ./modules/programs/zellij
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/xresources

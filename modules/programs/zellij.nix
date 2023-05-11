@@ -39,6 +39,18 @@ in {
         list of options.
       '';
     };
+
+    enableBashIntegration = mkEnableOption "Enable Bash integration." // {
+      default = true;
+    };
+
+    enableZshIntegration = mkEnableOption "Enable Zsh integration." // {
+      default = true;
+    };
+
+    enableFishIntegration = mkEnableOption "Enable Fish integration." // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -55,5 +67,18 @@ in {
       (cfg.settings != { } && (versionAtLeast cfg.package.version "0.32.0")) {
         text = lib.hm.generators.toKDL { } cfg.settings;
       };
+
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
+      eval "$(zellij setup --generate-auto-start bash)"
+    '');
+
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200 ''
+      eval "$(zellij setup --generate-auto-start zsh)"
+    '');
+
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration
+      (mkOrder 200 ''
+        eval (zellij setup --generate-auto-start fish | string collect)
+      '');
   };
 }
