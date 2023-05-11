@@ -84,7 +84,8 @@ Makefile                                              @thiagokokada
 
 /modules/programs/bat.nix                             @marsam
 
-/modules/programs/beets.nix                           @rycee
+/modules/programs/beets.nix                           @rycee @Scrumplex
+/tests/modules/programs/beets                         @Scrumplex
 
 /modules/programs/bottom.nix                          @polykernel
 /tests/modules/programs/bottom                        @polykernel

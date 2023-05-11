@@ -1,0 +1,5 @@
+mpd:
+  host: localhost
+  port: 6600
+plugins:
+- mpdupdate
