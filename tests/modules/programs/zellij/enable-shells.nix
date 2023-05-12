@@ -2,7 +2,6 @@
 
 {
   programs = {
-    # All shell integratons are enabled by default.
     zellij = {
       enable = true;
       enableBashIntegration = true;
