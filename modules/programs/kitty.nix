@@ -26,6 +26,33 @@ let
   toKittyEnv =
     generators.toKeyValue { mkKeyValue = name: value: "env ${name}=${value}"; };
 
+  shellIntegrationInit = {
+    bash = ''
+      if test -n "$KITTY_INSTALLATION_DIR"; then
+        source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"
+      fi
+    '';
+    fish = ''
+      if set -q KITTY_INSTALLATION_DIR
+        source "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_conf.d/kitty-shell-integration.fish"
+        set --prepend fish_complete_path "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_completions.d"
+      end
+    '';
+    zsh = ''
+      if test -n "$KITTY_INSTALLATION_DIR"; then
+        autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
+        kitty-integration
+        unfunction kitty-integration
+      fi
+    '';
+  };
+
+  shellIntegrationDefaultOpt = {
+    default = cfg.shellIntegration.mode != "disabled";
+    defaultText = literalExpression ''
+      config.programs.kitty.shellIntegration.mode != "disabled"
+    '';
+  };
 in {
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
@@ -111,6 +138,27 @@ in {
       '';
     };
 
+    shellIntegration = {
+      mode = mkOption {
+        type = types.str;
+        default = "enabled";
+        description = ''
+          Set the mode of the shell integration. This accepts the same options
+          as the shell_integration option of Kitty. Note that no-rc is always
+          implied. See
+          <link xlink:href="https://sw.kovidgoyal.net/kitty/shell-integration"/>
+          for more details.
+        '';
+        example = "no-cursor";
+      };
+      enableBashIntegration = mkEnableOption "Kitty bash integration"
+        // shellIntegrationDefaultOpt;
+      enableFishIntegration = mkEnableOption "Kitty fish integration"
+        // shellIntegrationDefaultOpt;
+      enableZshIntegration = mkEnableOption "Kitty zsh integration"
+        // shellIntegrationDefaultOpt;
+    };
+
     extraConfig = mkOption {
       default = "";
       type = types.lines;
@@ -140,6 +188,10 @@ in {
                 "${pkgs.kitty-themes}/share/kitty-themes/themes.json")))).file
           }
         '')
+        ''
+          # Shell integration is sourced and configured manually
+          shell_integration no-rc ${cfg.shellIntegration.mode}
+        ''
         (toKittyConfig cfg.settings)
         (toKittyKeybindings cfg.keybindings)
         (toKittyEnv cfg.environment)
@@ -155,5 +207,11 @@ in {
       (cfg.darwinLaunchOptions != null && pkgs.stdenv.hostPlatform.isDarwin) {
         text = concatStringsSep " " cfg.darwinLaunchOptions;
       };
+    programs.bash.initExtra =
+      mkIf cfg.shellIntegration.enableBashIntegration shellIntegrationInit.bash;
+    programs.fish.interactiveShellInit =
+      mkIf cfg.shellIntegration.enableFishIntegration shellIntegrationInit.fish;
+    programs.zsh.initExtra =
+      mkIf cfg.shellIntegration.enableZshIntegration shellIntegrationInit.zsh;
   };
 }
