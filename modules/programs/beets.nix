@@ -51,19 +51,22 @@ in {
 
       mpdIntegration = {
         enableStats = mkEnableOption "mpdstats plugin and service";
+
         enableUpdate = mkEnableOption "mpdupdate plugin";
+
         host = mkOption {
           type = types.str;
           default = "localhost";
-          description = "Host mpdstats will connect to";
           example = "10.0.0.42";
+          description = "The host that mpdstats will connect to.";
         };
+
         port = mkOption {
           type = types.port;
           default = config.services.mpd.network.port;
           defaultText = literalExpression "config.services.mpd.network.port";
-          description = "Port mpdstats will connect to";
           example = 6601;
+          description = "The port that mpdstats will connect to.";
         };
       };
     };
@@ -76,18 +79,22 @@ in {
       xdg.configFile."beets/config.yaml".source =
         yamlFormat.generate "beets-config" cfg.settings;
     })
+
     (mkIf (cfg.mpdIntegration.enableStats || cfg.mpdIntegration.enableUpdate) {
       programs.beets.settings.mpd = {
         host = cfg.mpdIntegration.host;
         port = cfg.mpdIntegration.port;
       };
     })
+
     (mkIf cfg.mpdIntegration.enableStats {
       programs.beets.settings.plugins = [ "mpdstats" ];
     })
+
     (mkIf cfg.mpdIntegration.enableUpdate {
       programs.beets.settings.plugins = [ "mpdupdate" ];
     })
+
     (mkIf (cfg.enable && cfg.mpdIntegration.enableStats) {
       systemd.user.services."beets-mpdstats" = {
         Unit = {
