@@ -88,7 +88,11 @@ in {
         literalExpression "!config.services.emacs.socketActivation.enable";
       example = "graphical";
       description = ''
-        Whether to launch Emacs service with the systemd user session.  If it is <literal>true</literal>, Emacs service is started by default.target.  If it is <literal>"graphical"</literal>, Emacs service is started by graphical-session.target.
+        Whether to launch Emacs service with the systemd user session. If it is
+        <literal>true</literal>, Emacs service is started by
+        <literal>default.target</literal>. If it is
+        <literal>"graphical"</literal>, Emacs service is started by
+        <literal>graphical-session.target</literal>.
       '';
     };
 
