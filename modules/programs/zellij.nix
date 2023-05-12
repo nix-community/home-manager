@@ -41,15 +41,15 @@ in {
     };
 
     enableBashIntegration = mkEnableOption "Enable Bash integration." // {
-      default = true;
+      default = false;
     };
 
     enableZshIntegration = mkEnableOption "Enable Zsh integration." // {
-      default = true;
+      default = false;
     };
 
     enableFishIntegration = mkEnableOption "Enable Fish integration." // {
-      default = true;
+      default = false;
     };
   };
 

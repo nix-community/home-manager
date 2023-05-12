@@ -2,8 +2,12 @@
 
 {
   programs = {
-    # All shell integratons are enabled by default.
-    zellij.enable = true;
+    zellij = {
+      enable = true;
+      enableBashIntegration = true;
+      enableZshIntegration = true;
+      enableFishIntegration = true;
+    };
     bash.enable = true;
     zsh.enable = true;
     fish.enable = true;
