@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ ... }:
 
 {
   imports = [ ./i3-stubs.nix ];

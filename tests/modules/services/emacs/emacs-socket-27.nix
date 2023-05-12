@@ -1,10 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 
-with lib;
-
-let
-
-in {
+{
   config = {
     nixpkgs.overlays = [
       (self: super: rec {
@@ -12,7 +8,7 @@ in {
           outPath = "@emacs@";
         };
         emacsPackagesFor = _:
-          makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
+          lib.makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
       })
     ];
 
@@ -27,17 +23,22 @@ in {
       assertFileExists home-files/.config/systemd/user/emacs.service
       assertFileExists home-path/share/applications/emacsclient.desktop
 
-      assertFileContent home-files/.config/systemd/user/emacs.socket \
-                        ${./emacs-socket-emacs.socket}
-      assertFileContent home-files/.config/systemd/user/emacs.service \
-                        ${
-                          pkgs.substituteAll {
-                            inherit (pkgs) runtimeShell coreutils;
-                            src = ./emacs-socket-emacs.service;
-                          }
-                        }
-      assertFileContent home-path/share/applications/emacsclient.desktop \
-                        ${./emacs-27-emacsclient.desktop}
+      assertFileContent \
+        home-files/.config/systemd/user/emacs.socket \
+        ${./emacs-socket-emacs.socket}
+
+      assertFileContent \
+        home-files/.config/systemd/user/emacs.service \
+        ${
+          pkgs.substituteAll {
+            inherit (pkgs) runtimeShell coreutils;
+            src = ./emacs-socket-emacs.service;
+          }
+        }
+
+      assertFileContent \
+        home-path/share/applications/emacsclient.desktop \
+        ${./emacs-27-emacsclient.desktop}
     '';
   };
 }

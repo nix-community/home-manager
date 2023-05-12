@@ -1,7 +1,5 @@
 { lib, pkgs, ... }:
 
-with lib;
-
 {
   services.emacs = {
     enable = true;
@@ -15,7 +13,7 @@ with lib;
         outPath = "@emacs@";
       };
       emacsPackagesFor = _:
-        makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
+        lib.makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
     })
   ];
 

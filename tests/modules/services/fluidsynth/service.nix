@@ -1,25 +1,25 @@
-{ config, pkgs, ... }: {
-  config = {
-    services.fluidsynth.enable = true;
-    services.fluidsynth.soundService = "pipewire-pulse";
-    services.fluidsynth.soundFont = "/path/to/soundFont";
-    services.fluidsynth.extraOptions = [ "--sample-rate 96000" ];
+{ ... }:
 
-    test.stubs.fluidsynth = { };
+{
+  services.fluidsynth.enable = true;
+  services.fluidsynth.soundService = "pipewire-pulse";
+  services.fluidsynth.soundFont = "/path/to/soundFont";
+  services.fluidsynth.extraOptions = [ "--sample-rate 96000" ];
 
-    nmt.script = ''
-      serviceFile=home-files/.config/systemd/user/fluidsynth.service
+  test.stubs.fluidsynth = { };
 
-      assertFileExists $serviceFile
+  nmt.script = ''
+    serviceFile=home-files/.config/systemd/user/fluidsynth.service
 
-      assertFileContains $serviceFile \
-        'ExecStart=@fluidsynth@/bin/fluidsynth -a pulseaudio -si --sample-rate 96000 /path/to/soundFont'
+    assertFileExists $serviceFile
 
-      assertFileContains $serviceFile \
-        'After=pipewire-pulse.service'
+    assertFileContains $serviceFile \
+      'ExecStart=@fluidsynth@/bin/fluidsynth -a pulseaudio -si --sample-rate 96000 /path/to/soundFont'
 
-      assertFileContains $serviceFile \
-        'BindsTo=pipewire-pulse.service'
-    '';
-  };
+    assertFileContains $serviceFile \
+      'After=pipewire-pulse.service'
+
+    assertFileContains $serviceFile \
+      'BindsTo=pipewire-pulse.service'
+  '';
 }

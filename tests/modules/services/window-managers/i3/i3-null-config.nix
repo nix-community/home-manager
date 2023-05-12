@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ ... }:
 
 {
   imports = [ ./i3-stubs.nix ];
@@ -11,6 +11,6 @@
   nmt.script = ''
     assertFileExists home-files/.config/i3/config
     assertFileContent home-files/.config/i3/config \
-      ${pkgs.writeText "expected" ""}
+      ${builtins.toFile "expected" ""}
   '';
 }

@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, pkgs, ... }:
 
 {
   imports = [ ./sway-stubs.nix ];

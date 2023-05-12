@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ lib, pkgs, ... }:
 
 {
   config = {
@@ -10,7 +8,7 @@ with lib;
           outPath = "@emacs@";
         };
         emacsPackagesFor = _:
-          makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
+          lib.makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
       })
     ];
 
@@ -24,15 +22,18 @@ with lib;
       assertFileExists home-files/.config/systemd/user/emacs.service
       assertFileExists home-path/share/applications/emacsclient.desktop
 
-      assertFileContent home-files/.config/systemd/user/emacs.service \
-                        ${
-                          pkgs.substituteAll {
-                            inherit (pkgs) runtimeShell;
-                            src = ./emacs-service-emacs.service;
-                          }
-                        }
-      assertFileContent home-path/share/applications/emacsclient.desktop \
-                        ${./emacs-28-emacsclient.desktop}
+      assertFileContent \
+        home-files/.config/systemd/user/emacs.service \
+        ${
+          pkgs.substituteAll {
+            inherit (pkgs) runtimeShell;
+            src = ./emacs-service-emacs.service;
+          }
+        }
+
+      assertFileContent \
+        home-path/share/applications/emacsclient.desktop \
+        ${./emacs-28-emacsclient.desktop}
     '';
   };
 }
