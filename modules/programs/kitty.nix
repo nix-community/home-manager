@@ -142,20 +142,23 @@ in {
       mode = mkOption {
         type = types.str;
         default = "enabled";
+        example = "no-cursor";
         description = ''
           Set the mode of the shell integration. This accepts the same options
-          as the shell_integration option of Kitty. Note that no-rc is always
-          implied. See
+          as the <literal>shell_integration</literal> option of Kitty. Note that
+          <literal>no-rc</literal> is always implied. See
           <link xlink:href="https://sw.kovidgoyal.net/kitty/shell-integration"/>
           for more details.
         '';
-        example = "no-cursor";
       };
-      enableBashIntegration = mkEnableOption "Kitty bash integration"
+
+      enableBashIntegration = mkEnableOption "Kitty Bash integration"
         // shellIntegrationDefaultOpt;
+
       enableFishIntegration = mkEnableOption "Kitty fish integration"
         // shellIntegrationDefaultOpt;
-      enableZshIntegration = mkEnableOption "Kitty zsh integration"
+
+      enableZshIntegration = mkEnableOption "Kitty Z Shell integration"
         // shellIntegrationDefaultOpt;
     };
 
@@ -207,10 +210,13 @@ in {
       (cfg.darwinLaunchOptions != null && pkgs.stdenv.hostPlatform.isDarwin) {
         text = concatStringsSep " " cfg.darwinLaunchOptions;
       };
+
     programs.bash.initExtra =
       mkIf cfg.shellIntegration.enableBashIntegration shellIntegrationInit.bash;
+
     programs.fish.interactiveShellInit =
       mkIf cfg.shellIntegration.enableFishIntegration shellIntegrationInit.fish;
+
     programs.zsh.initExtra =
       mkIf cfg.shellIntegration.enableZshIntegration shellIntegrationInit.zsh;
   };
