@@ -328,7 +328,13 @@ let
   };
 
 in {
-  meta.maintainers = with maintainers; [ alexarice sumnerevans sebtm oxalica ];
+  meta.maintainers = with maintainers; [
+    Scrumplex
+    alexarice
+    sumnerevans
+    sebtm
+    oxalica
+  ];
 
   imports = let modulePath = [ "wayland" "windowManager" "sway" ];
   in [
