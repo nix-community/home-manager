@@ -330,6 +330,9 @@ Makefile                                              @thiagokokada
 /modules/programs/swaylock.nix                        @rcerc
 /tests/modules/programs/swaylock                      @rcerc
 
+/modules/programs/swiftbar.nix                        @ivarwithoutbones
+/tests/modules/programs/swiftbar                      @ivarwithoutbones
+
 /modules/programs/tealdeer.nix                        @marsam
 
 /modules/programs/terminator.nix                      @chisui

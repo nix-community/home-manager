@@ -173,6 +173,7 @@ let
     ./programs/skim.nix
     ./programs/sm64ex.nix
     ./programs/sqls.nix
+    ./programs/swiftbar.nix
     ./programs/ssh.nix
     ./programs/starship.nix
     ./programs/swaylock.nix
