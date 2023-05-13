@@ -372,6 +372,9 @@ Makefile                                              @thiagokokada
 /modules/programs/xmobar.nix                          @t4ccer
 /tests/modules/programs/xmobar                        @t4ccer
 
+/modules/programs/yambar.nix                          @carpinchomug
+/tests/modules/programs/yambar                        @carpinchomug
+
 /modules/programs/yt-dlp.nix                          @marsam
 /tests/modules/programs/yt-dlp                        @marsam
 

@@ -202,6 +202,7 @@ let
     ./programs/wlogout.nix
     ./programs/wofi.nix
     ./programs/xmobar.nix
+    ./programs/yambar.nix
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix
     ./programs/zathura.nix
