@@ -210,7 +210,7 @@ Makefile                                              @thiagokokada
 
 /modules/programs/mcfly.nix                           @marsam
 
-/modules/programs/micro.nix                           @MForster
+/modules/programs/micro.nix                           @MForster @pbsds
 /tests/modules/programs/micro                         @MForster
 
 /modules/programs/mpv.nix                             @tadeokondrak @thiagokokada @chuangzhu
