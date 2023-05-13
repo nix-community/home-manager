@@ -133,6 +133,16 @@ in {
           source =
             "maildir://${config.accounts.email.maildirBasePath}/${cfg.maildir.path}";
         };
+        notmuch = cfg:
+          let
+            maildir-store =
+              if account.mbsync.enable || account.offlineimap.enable then
+                "${config.accounts.email.maildirBasePath}"
+              else
+                null;
+          in {
+            source = "notmuch://${config.accounts.email.maildirBasePath}";
+          } // optAttr "maildir-store" maildir-store;
         imap = { userName, imap, passwordCommand, aerc, ... }@cfg:
           let
             loginMethod' =
@@ -186,7 +196,9 @@ in {
         // (optAttr "postpone" account.folders.drafts)
         // (optAttr "aliases" account.aliases) // account.aerc.extraAccounts;
       sourceCfg = account:
-        if account.mbsync.enable || account.offlineimap.enable then
+        if account.notmuch.enable then
+          mkConfig.notmuch account
+        else if account.mbsync.enable || account.offlineimap.enable then
           mkConfig.maildir account
         else if account.imap != null then
           mkConfig.imap account

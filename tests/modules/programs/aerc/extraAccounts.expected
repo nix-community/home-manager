@@ -55,9 +55,23 @@ outgoing-cred-cmd = echo PaSsWorD!
 from = Foo Bar <addr@mail.invalid>
 source = maildir:///home/hm-user/Maildir/i_maildir-mbsync
 
+[i_maildir-mbsync-notmuch]
+from = Foo Bar <addr@mail.invalid>
+maildir-store = /home/hm-user/Maildir
+source = notmuch:///home/hm-user/Maildir
+
+[j_maildir-notmuch]
+from = Foo Bar <addr@mail.invalid>
+source = notmuch:///home/hm-user/Maildir
+
 [j_maildir-offlineimap]
 from = Foo Bar <addr@mail.invalid>
 source = maildir:///home/hm-user/Maildir/j_maildir-offlineimap
+
+[j_maildir-offlineimap-notmuch]
+from = Foo Bar <addr@mail.invalid>
+maildir-store = /home/hm-user/Maildir
+source = notmuch:///home/hm-user/Maildir
 
 [l_smtp-auth-none]
 from = Foo Bar <addr@mail.invalid>

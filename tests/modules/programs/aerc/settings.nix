@@ -191,7 +191,16 @@ with lib;
         };
       };
       i_maildir-mbsync = basics // { mbsync.enable = true; };
+      i_maildir-mbsync-notmuch = basics // {
+        mbsync.enable = true;
+        notmuch.enable = true;
+      };
+      j_maildir-notmuch = basics // { notmuch.enable = true; };
       j_maildir-offlineimap = basics // { offlineimap.enable = true; };
+      j_maildir-offlineimap-notmuch = basics // {
+        offlineimap.enable = true;
+        notmuch.enable = true;
+      };
       k_notEnabled = basics // { aerc.enable = false; };
       l_smtp-auth-none = basics // {
         smtp = {
