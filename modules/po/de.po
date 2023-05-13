@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-04-11 22:44+0200\n"
-"PO-Revision-Date: 2022-03-26 23:57+0000\n"
-"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
+"PO-Revision-Date: 2023-05-13 06:48+0000\n"
+"Last-Translator: Reiner Gerecke <me@reinergerecke.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/home-manager/"
 "modules/de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
@@ -57,7 +57,7 @@ msgstr ""
 "\n"
 "    %s\n"
 "\n"
-"auszuführen und wenn es ein problematisches Paket gibt, entfernen Sie es\n"
+"auszuführen und wenn es ein problematisches Paket gibt, entfernen Sie es "
 "mit\n"
 "\n"
 "    %s\n"
@@ -70,11 +70,11 @@ msgstr "Aktiviere %s"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "Migriere Profil von %s zu %s"
 
 #: modules/lib-bash/activation-init.sh:53
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Kein passendes Profil-Verzeichnis gefunden. Versuchte %s und %s"
 
 #: modules/lib-bash/activation-init.sh:81
 msgid "Sanity checking oldGenNum and oldGenPath"
