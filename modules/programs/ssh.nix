@@ -407,6 +407,21 @@ in
       '';
     };
 
+    userConfigFile = mkOption {
+      type = types.str;
+      default = ".ssh/config";
+      description = ''
+      tells Home-Manager where in your home you want your ssh config to be.
+      Example: <filename>.ssh/config<filename> will put it into 
+      <filename>~/.ssh/config<filename>
+      while <filename>.config/ssh/config<filename> will put it into 
+      <filename>~/.config/ssh/config<filename>
+      file is put into <filename>~/.ssh/config</filename> by default.
+      can be paired with a alias 'ssh = "ssh -F"' to declutter your 
+      home folder.
+      '';
+    };
+
     userKnownHostsFile = mkOption {
       type = types.str;
       default = "~/.ssh/known_hosts";
@@ -525,7 +540,7 @@ in
       }
     ];
 
-    home.file.".ssh/config".text =
+    home.file.${cfg.userConfigFile}.text =
       let
         sortedMatchBlocks = hm.dag.topoSort cfg.matchBlocks;
         sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
