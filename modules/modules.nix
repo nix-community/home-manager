@@ -161,6 +161,7 @@ let
     ./programs/pylint.nix
     ./programs/qutebrowser.nix
     ./programs/rbw.nix
+    ./programs/ranger.nix
     ./programs/readline.nix
     ./programs/rofi-pass.nix
     ./programs/rofi.nix
