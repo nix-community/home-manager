@@ -254,6 +254,8 @@ Makefile                                              @thiagokokada
 /modules/programs/nushell.nix                         @Philipp-M
 /tests/modules/programs/nushell                       @Philipp-M
 
+/modules/programs/nyxt.nix                            @theesm
+
 /modules/programs/obs-studio.nix                      @adisbladis
 
 /modules/programs/octant.nix                          @06kellyjac

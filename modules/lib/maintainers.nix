@@ -394,4 +394,10 @@
     github = "natecox";
     githubId = 2782695;
   };
+  theesm = {
+    name = "Wilko Meyer";
+    email = "w-devel@wmeyer.eu";
+    github = "theesm";
+    githubId = 93821794;
+  };
 }
