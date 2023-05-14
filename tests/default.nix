@@ -105,6 +105,7 @@ import nmt {
     ./modules/programs/nix-index
     ./modules/programs/nnn
     ./modules/programs/nushell
+    ./modules/programs/nyxt
     ./modules/programs/oh-my-posh
     ./modules/programs/pandoc
     ./modules/programs/papis
