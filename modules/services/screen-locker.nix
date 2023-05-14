@@ -7,7 +7,7 @@ let
   cfg = config.services.screen-locker;
 
 in {
-  meta.maintainers = [ lib.hm.maintainers.jrobsonchase ];
+  meta.maintainers = [ hm.maintainers.jrobsonchase hm.maintainers.rszamszur ];
 
   imports = let
     origOpt = name: [ "services" "screen-locker" name ];

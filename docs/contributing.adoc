@@ -116,11 +116,9 @@ $ man ./result/share/man/man5/home-configuration.nix.5.gz
 
 Every new module _must_ include a named maintainer using the `meta.maintainers` attribute. If you are a user of a module that currently lacks a maintainer then please consider adopting it.
 
-If you are present in the NixOS maintainer list then you can use that entry. If you are not then you can add yourself to `modules/lib/maintainers.nix` in the Home Manager project.
+If you are present in the nixpkgs maintainer list then you can use that entry. If you are not then you can add yourself to `modules/lib/maintainers.nix` in the Home Manager project.
 
-Also add yourself to `.github/CODEOWNERS` as owner of the associated module files, including the test files. You will then be automatically added as a reviewer on any new pull request that touches your files.
-
-Maintainers are encouraged to join the IRC channel and participate when they have opportunity.
+Maintainers are encouraged to join the IRC or Matrix channel and participate when they have opportunity.
 
 [[sec-guidelines-code-style]]
 ==== Format your code
