@@ -8,6 +8,8 @@ let
   tomlFormat = pkgs.formats.toml { };
 
 in {
+  meta.maintainers = [ hm.maintainers.blmhemu ];
+
   options.programs.wezterm = {
     enable = mkEnableOption "wezterm";
 

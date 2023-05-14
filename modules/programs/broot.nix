@@ -139,7 +139,7 @@ let
       }
     '';
 in {
-  meta.maintainers = [ hm.maintainers.aheaume ];
+  meta.maintainers = [ hm.maintainers.aheaume maintainers.dermetfan ];
 
   imports = [
     (mkRenamedOptionModule [ "programs" "broot" "modal" ] [

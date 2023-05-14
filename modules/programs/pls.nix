@@ -13,7 +13,7 @@ let
   };
 
 in {
-  meta.maintainers = [ hm.maintainers.kalhauge ];
+  meta.maintainers = [ maintainers.arjan-s ];
 
   options.programs.pls = {
     enable =

@@ -341,6 +341,7 @@ let
   };
 
 in {
+  meta.maintainers = [ maintainers.nickhu ];
   options = {
     programs.zsh = {
       prezto = mkOption {
