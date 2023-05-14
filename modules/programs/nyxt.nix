@@ -9,12 +9,7 @@ in {
   options.programs.nyxt = {
     enable = mkEnableOption "Nyxt";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.nyxt;
-      defaultText = literalExpression "pkgs.nyxt";
-      description = "The Nyxt package to install";
-    };
+    package = mkPackageOption pkgs "nyxt" { };
 
     extraConfig = mkOption {
       type = types.lines;
