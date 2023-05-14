@@ -4,7 +4,7 @@ with lib;
 
 let cfg = config.programs.nyxt;
 in {
-  meta.maintainers = with lib.maintainers; [ theesm ];
+  meta.maintainers = [ hm.maintainers.theesm ];
 
   options.programs.nyxt = {
     enable = mkEnableOption "Nyxt";
