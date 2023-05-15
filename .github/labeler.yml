@@ -1,5 +1,7 @@
 "mail":
+  - modules/programs/aerc*.nix
   - modules/programs/alot*.nix
+  - tests/modules/programs/aerc/*
   - tests/modules/programs/alot/*
   - modules/programs/mujmap.nix
   - tests/modules/programs/mujmap/*
@@ -13,7 +15,15 @@
   - tests/modules/programs/himalaya/*
   - modules/programs/thunderbird.nix
   - tests/modules/programs/thunderbird/*
+  - modules/services/imapnotify.nix
 
 "neovim":
   - modules/programs/neovim.nix
   - tests/modules/programs/neovim/**/*
+
+"shell":
+  - modules/lib/zsh.nix
+  - modules/programs/zsh*
+  - modules/programs/bash*
+  - tests/modules/programs/zsh/**/*
+
