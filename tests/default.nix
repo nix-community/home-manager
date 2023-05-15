@@ -6,8 +6,8 @@ let
 
   nmt = fetchTarball {
     url =
-      "https://gitlab.com/api/v4/projects/rycee%2Fnmt/repository/archive.tar.gz?sha=d83601002c99b78c89ea80e5e6ba21addcfe12ae";
-    sha256 = "1xzwwxygzs1cmysg97hzd285r7n1g1lwx5y1ar68gwq07a1rczmv";
+      "https://gitlab.com/api/v4/projects/rycee%2Fnmt/repository/archive.tar.gz?sha=4df00c569b1badfedffecd7ccd60f794550486db";
+    sha256 = "1cyly1zazgj8z6bazml4js7lqaqvpp8lw045aqchlpvp42bl1lp4";
   };
 
   modules = import ../modules/modules.nix {
