@@ -20,3 +20,10 @@
 "neovim":
   - modules/programs/neovim.nix
   - tests/modules/programs/neovim/**/*
+
+"shell":
+  - modules/lib/zsh.nix
+  - modules/programs/zsh*
+  - modules/programs/bash*
+  - tests/modules/programs/zsh/**/*
+
