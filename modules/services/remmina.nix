@@ -40,7 +40,7 @@ in {
         Service = {
           Type = "simple";
           ExecStart = "${lib.getExe cfg.package} ${
-              lib.concatStringsSep " " cfg.systemdService.startupFlags
+              lib.escapeShellArgs cfg.systemdService.startupFlags
             }";
           Restart = "on-failure";
         };
