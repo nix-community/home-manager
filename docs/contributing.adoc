@@ -263,4 +263,4 @@ $ nix-shell --pure tests -A run.alacritty-empty-settings
 However, those invocations will impurely source the system’s nixpkgs, and may cause failures. To run against the nixpkgs from the flake.lock, use instead e.g.
 
 [source,console]
-$ nix develop --ignore-environment .#tests.all
+$ nix develop --ignore-environment .#all
