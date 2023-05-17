@@ -13,13 +13,13 @@
   };
 
   nmt.script = ''
-    serviceFile=home-files/.config/systemd/user/remmina.service
+    serviceFile='./home-files/.config/systemd/user/remmina.service'
 
     assertFileExists $serviceFile
     assertFileRegex $serviceFile 'ExecStart=.*/bin/dummy'
-    assertFileRegex $serviceFile 'dummy --icon --enable-extra-hardening'
+    assertFileRegex $serviceFile "dummy '--icon' '--enable-extra-hardening'"
 
-    mimetypeFile=home-files/.local/share/mime/packages/application-x-rdp.xml
+    mimetypeFile='./home-files/.local/share/mime/packages/application-x-rdp.xml'
 
     assertPathNotExists $mimetypeFile
   '';
