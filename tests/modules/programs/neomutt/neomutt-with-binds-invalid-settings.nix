@@ -20,6 +20,8 @@ with lib;
       }];
     };
 
+    test.stubs.neomutt = { };
+
     test.asserts.assertions.expected = [
       "The 'programs.neomutt.(binds|macros).map' list must contain at least one element."
     ];
