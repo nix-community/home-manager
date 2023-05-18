@@ -78,7 +78,7 @@ let
           </citerefentry>
           for <literal>Host</literal> block details.
           This option is ignored if
-          <option>ssh.matchBlocks.*.matcht</option>
+          <option>ssh.matchBlocks.*.match</option>
           if defined.
         '';
       };
