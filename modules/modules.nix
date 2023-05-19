@@ -169,6 +169,7 @@ let
     ./programs/sagemath.nix
     ./programs/sbt.nix
     ./programs/scmpuff.nix
+    ./programs/script-directory.nix
     ./programs/senpai.nix
     ./programs/sioyek.nix
     ./programs/skim.nix
