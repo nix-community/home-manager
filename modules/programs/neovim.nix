@@ -43,7 +43,8 @@ let
         default = { };
         # passing actual "${xdg.configHome}/nvim" as basePath was a bit tricky
         # due to how fileType.target is implemented
-        type = fileType "<varname>xdg.configHome/nvim</varname>" "nvim";
+        type = fileType "programs.neovim.plugins._.runtime"
+          "<varname>xdg.configHome/nvim</varname>" "nvim";
         example = literalExpression ''
           { "ftplugin/c.vim".text = "setlocal omnifunc=v:lua.vim.lsp.omnifunc"; }
         '';

@@ -34,7 +34,8 @@ in {
     };
 
     configFile = mkOption {
-      type = fileType "<varname>xdg.configHome</varname>" cfg.configHome;
+      type = fileType "xdg.configFile" "<varname>xdg.configHome</varname>"
+        cfg.configHome;
       default = { };
       description = ''
         Attribute set of files to link into the user's XDG
@@ -52,7 +53,8 @@ in {
     };
 
     dataFile = mkOption {
-      type = fileType "<varname>xdg.dataHome</varname>" cfg.dataHome;
+      type =
+        fileType "xdg.dataFile" "<varname>xdg.dataHome</varname>" cfg.dataHome;
       default = { };
       description = ''
         Attribute set of files to link into the user's XDG
