@@ -46,12 +46,31 @@ in {
     };
 
     languages = mkOption {
-      type = types.listOf tomlFormat.type;
-      default = [ ];
-      example = [{
-        name = "rust";
-        auto-format = false;
-      }];
+      type = with types;
+        coercedTo (listOf tomlFormat.type) (language:
+          lib.warn ''
+            The syntax of programs.helix.languages has changed.
+            It now generates the whole languages.toml file instead of just the language array in that file.
+
+            Use
+            { language = <languages list>; }
+            instead.
+          '' { inherit language; }) (addCheck tomlFormat.type builtins.isAttrs);
+      default = { };
+      example = literalExpression ''
+        {
+          # the language-server option currently requires helix from the master branch at https://github.com/helix-editor/helix/
+          language-server.typescript-language-server = with pkgs.nodePackages; {
+            command = "''${typescript-language-server}/bin/typescript-language-server";
+            args = [ "--stdio" "--tsserver-path=''${typescript}/lib/node_modules/typescript/lib" ];
+          };
+
+          language = [{
+            name = "rust";
+            auto-format = false;
+          }];
+        }
+      '';
       description = ''
         Language specific configuration at
         <filename>$XDG_CONFIG_HOME/helix/languages.toml</filename>.
@@ -140,9 +159,8 @@ in {
         "helix/config.toml" = mkIf (cfg.settings != { }) {
           source = tomlFormat.generate "helix-config" cfg.settings;
         };
-        "helix/languages.toml" = mkIf (cfg.languages != [ ]) {
-          source =
-            tomlFormat.generate "helix-config" { language = cfg.languages; };
+        "helix/languages.toml" = mkIf (cfg.languages != { }) {
+          source = tomlFormat.generate "helix-languages-config" cfg.languages;
         };
       };
 

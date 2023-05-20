@@ -21,10 +21,27 @@ with lib;
         };
       };
 
-      languages = [{
-        name = "rust";
-        auto-format = false;
-      }];
+      languages = {
+        language-server.typescript-language-server = let
+          typescript-language-server = config.lib.test.mkStubPackage {
+            outPath = "@typescript-language-server@";
+          };
+          typescript =
+            config.lib.test.mkStubPackage { outPath = "@typescript@"; };
+        in {
+          command =
+            "${typescript-language-server}/bin/typescript-language-server";
+          args = [
+            "--stdio"
+            "--tsserver-path=${typescript}/lib/node_modules/typescript/lib"
+          ];
+        };
+
+        language = [{
+          name = "rust";
+          auto-format = false;
+        }];
+      };
 
       themes = {
         base16 = let
