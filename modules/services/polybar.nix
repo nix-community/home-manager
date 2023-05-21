@@ -196,6 +196,14 @@ in {
         '';
         example = "polybar bar &";
       };
+
+      systemdTarget = mkOption {
+        type = types.str;
+        default = "tray.target";
+        description = ''
+          Systemd target to bind to.
+        '';
+      };
     };
   };
 
@@ -214,7 +222,7 @@ in {
     systemd.user.services.polybar = {
       Unit = {
         Description = "Polybar status bar";
-        PartOf = [ "tray.target" ];
+        PartOf = [ cfg.systemdTarget ];
         X-Restart-Triggers = mkIf (configFile != null) "${configFile}";
       };
 
@@ -227,7 +235,7 @@ in {
         Restart = "on-failure";
       };
 
-      Install = { WantedBy = [ "tray.target" ]; };
+      Install = { WantedBy = [ cfg.systemdTarget ]; };
     };
   };
 
