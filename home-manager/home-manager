@@ -53,7 +53,7 @@ function setWorkDir() {
 # Checks whether the 'flakes' and 'nix-command' Nix options are enabled.
 function hasFlakeSupport() {
     type -p nix > /dev/null \
-        && nix show-config \
+        && nix show-config 2> /dev/null \
             | grep experimental-features \
             | grep flakes \
             | grep -q nix-command
