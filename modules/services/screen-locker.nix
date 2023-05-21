@@ -44,6 +44,14 @@ in {
       '';
     };
 
+    systemdTarget = mkOption {
+      type = types.str;
+      default = "graphical-session.target";
+      description = ''
+        Systemd target to bind to.
+      '';
+    };
+
     xautolock = {
       enable = mkOption {
         type = types.bool;
@@ -118,10 +126,10 @@ in {
         Unit = {
           Description = "xss-lock, session locker service";
           After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
+          PartOf = [ cfg.systemdTarget ];
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = { WantedBy = [ cfg.systemdTarget ]; };
 
         Service = {
           ExecStart = concatStringsSep " "
@@ -141,10 +149,10 @@ in {
         Unit = {
           Description = "xautolock, session locker service";
           After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
+          PartOf = [ cfg.systemdTarget ];
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = { WantedBy = [ cfg.systemdTarget ]; };
 
         Service = {
           ExecStart = concatStringsSep " " ([
