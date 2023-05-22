@@ -10,9 +10,10 @@ in
   # absolute path).
   #
   # Arguments:
+  #   - opt            the name of the option, for self-references
   #   - basePathDesc   docbook compatible description of the base path
   #   - basePath       the file base path
-  fileType = basePathDesc: basePath: types.attrsOf (types.submodule (
+  fileType = opt: basePathDesc: basePath: types.attrsOf (types.submodule (
     { name, config, ... }: {
       options = {
         enable = mkOption {
@@ -30,7 +31,7 @@ in
               absPath = if hasPrefix "/" p then p else "${basePath}/${p}";
             in
               removePrefix (homeDirectory + "/") absPath;
-          defaultText = literalExpression "<name>";
+          defaultText = literalExpression "name";
           description = ''
             Path to target file relative to ${basePathDesc}.
           '';
@@ -41,7 +42,7 @@ in
           type = types.nullOr types.lines;
           description = ''
             Text of the file. If this option is null then
-            <xref linkend="opt-home.file._name_.source"/>
+            <xref linkend="opt-${opt}._name_.source"/>
             must be set.
           '';
         };
@@ -50,7 +51,7 @@ in
           type = types.path;
           description = ''
             Path of the source file or directory. If
-            <xref linkend="opt-home.file._name_.text"/>
+            <xref linkend="opt-${opt}._name_.text"/>
             is non-null then this option will automatically point to a file
             containing that text.
           '';
