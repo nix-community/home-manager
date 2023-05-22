@@ -47,7 +47,7 @@ in {
 
     languages = mkOption {
       type = with types;
-        coercedTo (listOf tomlFormat.type) (language:
+        coercedTo tomlFormat.type (language:
           lib.warn ''
             The syntax of programs.helix.languages has changed.
             It now generates the whole languages.toml file instead of just the language array in that file.
