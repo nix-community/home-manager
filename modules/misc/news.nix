@@ -1036,7 +1036,7 @@ in
       {
         time = "2023-05-18T21:03:30+00:00";
         message = ''
-          A new module is available: 'programs.shell-directory'.
+          A new module is available: 'programs.script-directory'.
         '';
       }
     ];
