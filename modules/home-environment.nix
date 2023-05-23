@@ -291,6 +291,15 @@ in
       '';
     };
 
+    home.sessionVariablesPackage = mkOption {
+      type = types.package;
+      internal = true;
+      description = ''
+        The package containing the
+        <filename>hm-session-vars.sh</filename> file.
+      '';
+    };
+
     home.sessionPath = mkOption {
       type = with types; listOf str;
       default = [ ];
@@ -544,24 +553,22 @@ in
         //
         (maybeSet "LC_MEASUREMENT" cfg.language.measurement);
 
-    home.packages = [
-      # Provide a file holding all session variables.
-      (
-        pkgs.writeTextFile {
-          name = "hm-session-vars.sh";
-          destination = "/etc/profile.d/hm-session-vars.sh";
-          text = ''
-            # Only source this once.
-            if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
-            export __HM_SESS_VARS_SOURCED=1
+    # Provide a file holding all session variables.
+    home.sessionVariablesPackage = pkgs.writeTextFile {
+      name = "hm-session-vars.sh";
+      destination = "/etc/profile.d/hm-session-vars.sh";
+      text = ''
+        # Only source this once.
+        if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+        export __HM_SESS_VARS_SOURCED=1
 
-            ${config.lib.shell.exportAll cfg.sessionVariables}
-          '' + lib.optionalString (cfg.sessionPath != [ ]) ''
-            export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
-          '' + cfg.sessionVariablesExtra;
-        }
-      )
-    ];
+        ${config.lib.shell.exportAll cfg.sessionVariables}
+      '' + lib.optionalString (cfg.sessionPath != [ ]) ''
+        export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
+      '' + cfg.sessionVariablesExtra;
+    };
+
+    home.packages = [ config.home.sessionVariablesPackage ];
 
     # A dummy entry acting as a boundary between the activation
     # script's "check" and the "write" phases.
