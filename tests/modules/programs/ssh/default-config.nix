@@ -6,8 +6,6 @@ with lib;
   config = {
     programs.ssh = { enable = true; };
 
-    test.stubs.openssh = { };
-
     home.file.assertions.text = builtins.toJSON
       (map (a: a.message) (filter (a: !a.assertion) config.assertions));
 

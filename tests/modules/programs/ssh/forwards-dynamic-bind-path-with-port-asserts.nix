@@ -17,8 +17,6 @@ with lib;
       };
     };
 
-    test.stubs.openssh = { };
-
     test.asserts.assertions.expected = [ "Forwarded paths cannot have ports." ];
   };
 }
