@@ -163,6 +163,7 @@ let
     ./programs/qutebrowser.nix
     ./programs/rbw.nix
     ./programs/readline.nix
+    ./programs/ripgrep.nix
     ./programs/rofi-pass.nix
     ./programs/rofi.nix
     ./programs/rtorrent.nix
