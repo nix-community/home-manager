@@ -66,9 +66,11 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."yt-dlp/config" = mkIf (cfg.settings != { }) {
-      text = concatStringsSep "\n"
-        (remove "" (renderSettings cfg.settings ++ [ cfg.extraConfig ])) + "\n";
-    };
+    xdg.configFile."yt-dlp/config" =
+      mkIf (cfg.settings != { } || cfg.extraConfig != "") {
+        text = concatStringsSep "\n"
+          (remove "" (renderSettings cfg.settings ++ [ cfg.extraConfig ]))
+          + "\n";
+      };
   };
 }
