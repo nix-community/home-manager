@@ -704,6 +704,9 @@ in
 
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
+          checkUsername ${escapeShellArg config.home.username}
+          checkHomeDirectory ${escapeShellArg config.home.homeDirectory}
+
           ${activationCmds}
         '';
       in

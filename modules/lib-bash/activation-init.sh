@@ -88,6 +88,24 @@ function setupVars() {
     fi
 }
 
+function checkUsername() {
+  local expectedUser="$1"
+
+  if [[ "$USER" != "$expectedUser" ]]; then
+    _iError 'Error: USER is set to "%s" but we expect "%s"' "$USER" "$expectedUser"
+    exit 1
+  fi
+}
+
+function checkHomeDirectory() {
+  local expectedHome="$1"
+
+  if ! [[ $HOME -ef $expectedHome ]]; then
+    _iError 'Error: HOME is set to "%s" but we expect "%s"' "$HOME" "$expectedHome"
+    exit 1
+  fi
+}
+
 if [[ -v VERBOSE ]]; then
     export VERBOSE_ECHO=echo
     export VERBOSE_ARG="--verbose"
