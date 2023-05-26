@@ -53,7 +53,7 @@ in {
             It now generates the whole languages.toml file instead of just the language array in that file.
 
             Use
-            { language = <languages list>; }
+            programs.helix.languages = { language = <languages list>; }
             instead.
           '' { inherit language; }) (addCheck tomlFormat.type builtins.isAttrs);
       default = { };
