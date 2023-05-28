@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-04-11 22:44+0200\n"
+"POT-Creation-Date: 2023-05-27 09:08+0200\n"
 "PO-Revision-Date: 2023-05-13 06:48+0000\n"
 "Last-Translator: Markus Amano <markus.a.amano@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
@@ -40,7 +40,8 @@ msgstr "設定ファイルがありません。ファイルを %s に作って�
 
 #: home-manager/home-manager:136
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr "適切なプロファイル ディレクトリが見つかりませんでした。%s と %s を試しました"
+msgstr ""
+"適切なプロファイル ディレクトリが見つかりませんでした。%s と %s を試しました"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:191

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-04-11 22:44+0200\n"
+"POT-Creation-Date: 2023-05-27 09:08+0200\n"
 "PO-Revision-Date: 2023-01-08 11:50+0000\n"
 "Last-Translator: Eric Ho <eric913@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
@@ -35,7 +35,7 @@ msgstr "正在建立配置檔案世代 %s"
 msgid "No change so reusing latest profile generation %s"
 msgstr "未發生變化，正在重新使用最近一次的配置檔案世代 %s"
 
-#: modules/home-environment.nix:625
+#: modules/home-environment.nix:627
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "來移除。然後嘗試再次啟用您的 Home Manager 配置。"
 
-#: modules/home-environment.nix:658
+#: modules/home-environment.nix:660
 msgid "Activating %s"
 msgstr "正在啟用 %s"
 
@@ -95,26 +95,34 @@ msgid ""
 "and trying home-manager switch again. Good luck!"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:101
+#: modules/lib-bash/activation-init.sh:95
+msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:104
+msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:119
 msgid "Starting Home Manager activation"
 msgstr "正在啟動 Home Manager 初始化程式"
 
-#: modules/lib-bash/activation-init.sh:105
+#: modules/lib-bash/activation-init.sh:123
 msgid "Sanity checking Nix"
 msgstr "正在進行 Nix 完整性檢查"
 
-#: modules/lib-bash/activation-init.sh:112
+#: modules/lib-bash/activation-init.sh:133
 msgid "This is a dry run"
 msgstr "這是試運行"
 
-#: modules/lib-bash/activation-init.sh:116
+#: modules/lib-bash/activation-init.sh:137
 msgid "This is a live run"
 msgstr "這是在實際運行"
 
-#: modules/lib-bash/activation-init.sh:122
+#: modules/lib-bash/activation-init.sh:143
 msgid "Using Nix version: %s"
 msgstr "正在使用的 Nix 版本: %s"
 
-#: modules/lib-bash/activation-init.sh:125
+#: modules/lib-bash/activation-init.sh:146
 msgid "Activation variables:"
 msgstr "啟用的變數:"
