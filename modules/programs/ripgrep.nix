@@ -4,7 +4,7 @@ with lib;
 
 let cfg = config.programs.ripgrep;
 in {
-  meta.maintainers = [ maintainers.pedorich-n ];
+  meta.maintainers = [ hm.maintainers.pedorich-n ];
 
   options = {
     programs.ripgrep = {
@@ -15,7 +15,8 @@ in {
       configDir = mkOption {
         type = types.str;
         default = "${config.xdg.configHome}/ripgrep";
-        defaultText = literalExpression "\"\${config.xdg.configHome}/ripgrep\"";
+        defaultText =
+          literalExpression ''"''${config.xdg.configHome}/ripgrep"'';
         description = ''
           Directory where the <filename>ripgreprc</filename> file will be stored.
         '';
@@ -39,9 +40,8 @@ in {
     home = {
       packages = [ cfg.package ];
 
-      file."${cfg.configDir}/ripgreprc" = mkIf (cfg.config != [ ]) {
-        text = lib.concatLines cfg.config;
-      };
+      file."${cfg.configDir}/ripgreprc" =
+        mkIf (cfg.config != [ ]) { text = lib.concatLines cfg.config; };
 
       sessionVariables = {
         "RIPGREP_CONFIG_PATH" = "${cfg.configDir}/ripgreprc";
