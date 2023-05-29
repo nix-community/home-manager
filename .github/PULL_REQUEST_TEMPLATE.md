@@ -40,5 +40,3 @@ Also make sure to read the guidelines found at
 - If this PR adds a new module
 
   - [ ] Added myself as module maintainer. See [example](https://github.com/nix-community/home-manager/blob/068ff76a10e95820f886ac46957edcff4e44621d/modules/programs/lesspipe.nix#L6).
-
-  - [ ] Added myself and the module files to `.github/CODEOWNERS`.
