@@ -12,10 +12,17 @@ let
 
   nixPath = lib.concatStringsSep ":" cfg.nixPath;
 
+  useXdg = config.nix.enable
+    && (config.nix.settings.use-xdg-base-directories or false);
+  defexprDir = if useXdg then
+    "${config.xdg.stateHome}/nix/defexpr"
+  else
+    "${config.home.homeDirectory}/.nix-defexpr";
+
   # The deploy path for declarative channels. The directory name is prefixed
-  # with a number to make it easier for files in ~/.nix-defexpr to control the
-  # order they'll be read relative to each other.
-  channelPath = ".nix-defexpr/50-home-manager";
+  # with a number to make it easier for files in defexprDir to control the order
+  # they'll be read relative to each other.
+  channelPath = "${defexprDir}/50-home-manager";
 
   channelsDrv = let
     mkEntry = name: drv: {
@@ -274,7 +281,7 @@ in {
     })
 
     (lib.mkIf (cfg.channels != { }) {
-      nix.nixPath = [ "${config.home.homeDirectory}/${channelPath}" ];
+      nix.nixPath = [ channelPath ];
       home.file."${channelPath}".source = channelsDrv;
     })
 
