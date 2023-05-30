@@ -115,7 +115,8 @@ in
         target = mkDefault name;
         source = mkIf (config.text != null) (
           mkDefault (pkgs.writeTextFile {
-            inherit (config) executable text;
+            inherit (config) text;
+            executable = config.executable == true; # can be null
             name = hm.strings.storeFileName name;
           })
         );
