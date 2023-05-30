@@ -212,7 +212,7 @@ in {
     };
 
     style = mkOption {
-      type = nullOr (either path str);
+      type = nullOr (either path lines);
       default = null;
       description = ''
         CSS style of the bar.
