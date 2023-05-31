@@ -3,16 +3,16 @@ backend = "imap"
 default = true
 display-name = "H. M. Test"
 email = "hm@example.com"
+imap-auth = "passwd"
 imap-host = "imap.example.com"
 imap-login = "home.manager"
-imap-passwd-cmd = "password-command"
 imap-port = 993
 imap-ssl = true
 imap-starttls = false
 sender = "smtp"
+smtp-auth = "passwd"
 smtp-host = "smtp.example.com"
 smtp-login = "home.manager"
-smtp-passwd-cmd = "password-command"
 smtp-port = 465
 smtp-ssl = true
 smtp-starttls = false
@@ -22,3 +22,9 @@ drafts = "Drafts"
 inbox = "Inbox"
 sent = "Sent"
 trash = "Trash"
+
+["hm@example.com".imap-passwd]
+cmd = "password-command"
+
+["hm@example.com".smtp-passwd]
+cmd = "password-command"
