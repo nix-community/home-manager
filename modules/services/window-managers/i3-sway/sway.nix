@@ -320,13 +320,6 @@ let
           exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL; systemctl --user start sway-session.target"'')
       ++ (optional (!cfg.xwayland) "xwayland disable") ++ [ cfg.extraConfig ]));
 
-  defaultSwayPackage = pkgs.sway.override {
-    extraSessionCommands = cfg.extraSessionCommands;
-    extraOptions = cfg.extraOptions;
-    withBaseWrapper = cfg.wrapperFeatures.base;
-    withGtkWrapper = cfg.wrapperFeatures.gtk;
-  };
-
 in {
   meta.maintainers = with maintainers; [
     Scrumplex
@@ -347,8 +340,9 @@ in {
 
     package = mkOption {
       type = with types; nullOr package;
-      default = defaultSwayPackage;
-      defaultText = literalExpression "${pkgs.sway}";
+      default = pkgs.sway-unwrapped;
+      defaultText = literalExpression "pkgs.sway-unwrapped";
+      example = literalExpression "pkgs.swayfx";
       description = ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
@@ -356,6 +350,13 @@ in {
         path. This should be done if you want to use the NixOS Sway
         module to install Sway.
       '';
+    };
+
+    finalPackage = mkOption {
+      type = types.package;
+      visible = false;
+      readOnly = true;
+      description = "Resulting customized sway package.";
     };
 
     systemd = {
@@ -476,17 +477,26 @@ in {
           platforms.linux)
       ];
 
-      home.packages = optional (cfg.package != null) cfg.package
+      wayland.windowManager.sway.finalPackage = let
+        swayUnwrapped =
+          if cfg.package == null then pkgs.sway-unwrapped else cfg.package;
+      in pkgs.sway.override {
+        extraSessionCommands = cfg.extraSessionCommands;
+        extraOptions = cfg.extraOptions;
+        withBaseWrapper = cfg.wrapperFeatures.base;
+        withGtkWrapper = cfg.wrapperFeatures.gtk;
+        sway-unwrapped = swayUnwrapped;
+      };
+
+      home.packages = optional (cfg.package != null) cfg.finalPackage
         ++ optional cfg.xwayland pkgs.xwayland;
 
-      xdg.configFile."sway/config" = let
-        swayPackage = if cfg.package == null then pkgs.sway else cfg.package;
-      in {
+      xdg.configFile."sway/config" = {
         source = configFile;
         onChange = ''
           swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x sway || true).sock"
           if [ -S "$swaySocket" ]; then
-            ${swayPackage}/bin/swaymsg -s $swaySocket reload
+            ${cfg.finalPackage}/bin/swaymsg -s $swaySocket reload
           fi
         '';
       };
