@@ -22,6 +22,14 @@ The recommended installation method for a standalone Home Manager setup
 with Nix flakes uses this new command.
 The standard installation method remains the same but uses the new command internally.
 See <a class="xref" href="index.html#sec-flakes-standalone" title="3.2. Standalone setup">Section 3.2, “Standalone setup”</a> for more.
+</li><li class="listitem">
+When using <a class="xref" href="options.html#opt-programs.fish.enable"><code class="option">programs.fish.enable</code></a>, the setup code
+for <a class="xref" href="options.html#opt-home.sessionVariables"><code class="option">home.sessionVariables</code></a> is now translated
+with <a class="link" href="https://github.com/bouk/babelfish" target="_top">babelfish</a>.
+This should result in significantly faster shell startup times
+but could theoretically break
+if you have very complex bash expressions in a session variable.
+Please report any issues you experience.
 </li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="sec-release-23.05-state-version-changes"></a>E.2.2. State Version Changes</h3></div></div></div><p>The state version in this release includes the changes below.
 These changes are only active if the <code class="literal">home.stateVersion</code> option is set to "23.05" or later.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p class="simpara">
 The options
