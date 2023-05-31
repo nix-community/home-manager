@@ -8,7 +8,13 @@ This is the current unstable branch and the information in this section is there
 
 This release has the following notable changes:
 
-* Nothing, yet.
+* When using <<opt-programs.fish.enable>>, the setup code
+for <<opt-home.sessionVariables>> is now translated
+with https://github.com/bouk/babelfish[babelfish].
+This should result in significantly faster shell startup times
+but could theoretically break
+if you have very complex bash expressions in a session variable.
+Please report any issues you experience.
 
 [[sec-release-23.11-state-version-changes]]
 === State Version Changes
