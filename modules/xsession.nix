@@ -70,6 +70,13 @@ in {
         description = "Extra shell commands to run before session start.";
       };
 
+      initBeforeSystemd = mkOption {
+        type = types.lines;
+        default = "";
+        description =
+          "Shell commands to run before starting hm-graphical-session.target. For example, configuring x11 cursor and dpi.";
+      };
+
       initExtra = mkOption {
         type = types.lines;
         default = "";
@@ -199,6 +206,8 @@ in {
           . "${config.home.homeDirectory}/${cfg.profilePath}"
         fi
         unset HM_XPROFILE_SOURCED
+
+        ${cfg.initBeforeSystemd}
 
         systemctl --user start hm-graphical-session.target
 
