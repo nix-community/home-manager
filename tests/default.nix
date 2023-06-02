@@ -115,6 +115,7 @@ import nmt {
     ./modules/programs/pubs
     ./modules/programs/qutebrowser
     ./modules/programs/readline
+    ./modules/programs/ripgrep
     ./modules/programs/sagemath
     ./modules/programs/sbt
     ./modules/programs/scmpuff
