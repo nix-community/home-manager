@@ -42,8 +42,18 @@ let
         dummyPackage
       else
         pkgs.runCommandLocal name { pname = name; } buildScript;
-    in pkg // optionalAttrs (outPath != null) { inherit outPath; }
-    // optionalAttrs (version != null) { inherit version; };
+    in pkg // optionalAttrs (outPath != null) {
+      inherit outPath;
+
+      # Prevent getOutput from descending into outputs
+      outputSpecified = true;
+
+      # Allow the original package to be used in derivation inputs
+      __spliced = {
+        buildHost = pkg;
+        hostTarget = pkg;
+      };
+    } // optionalAttrs (version != null) { inherit version; };
 
 in {
   options.test.stubs = mkOption {

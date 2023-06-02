@@ -8,6 +8,7 @@ with lib;
 
     test.stubs.autojump = {
       buildScript = "mkdir -p $out/bin; touch $out/bin/autojump";
+      outPath = null;
     };
 
     nmt.script = ''
