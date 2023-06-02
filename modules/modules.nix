@@ -143,6 +143,7 @@ let
     ./programs/noti.nix
     ./programs/notmuch.nix
     ./programs/nushell.nix
+    ./programs/nyxt.nix
     ./programs/obs-studio.nix
     ./programs/octant.nix
     ./programs/offlineimap.nix
