@@ -22,7 +22,7 @@ in {
         '';
       };
 
-      config = mkOption {
+      arguments = mkOption {
         type = with types; listOf str;
         default = [ ];
         example = [ "--max-columns-preview" "--colors=line:style:bold" ];
@@ -41,7 +41,7 @@ in {
       packages = [ cfg.package ];
 
       file."${cfg.configDir}/ripgreprc" =
-        mkIf (cfg.config != [ ]) { text = lib.concatLines cfg.config; };
+        mkIf (cfg.arguments != [ ]) { text = lib.concatLines cfg.arguments; };
 
       sessionVariables = {
         "RIPGREP_CONFIG_PATH" = "${cfg.configDir}/ripgreprc";

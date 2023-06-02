@@ -3,7 +3,7 @@
     programs.ripgrep = {
       enable = true;
       package = config.lib.test.mkStubPackage { name = "ripgrep"; };
-      config = [
+      arguments = [
         "--max-columns-preview"
         "--colors=line:style:bold"
         "--no-require-git"

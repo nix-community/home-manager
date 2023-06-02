@@ -1,4 +1,4 @@
 {
-  ripgrep-default-config = ./default-config.nix;
-  ripgrep-custom-config = ./custom-config.nix;
+  ripgrep-default-arguments = ./default-arguments.nix;
+  ripgrep-custom-arguments = ./custom-arguments.nix;
 }
