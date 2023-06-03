@@ -5,9 +5,6 @@
     dmenu = { };
     foot = { };
     i3status = { };
-    sway = { };
-    sway-unwrapped = { version = "1"; };
     swaybg = { };
-    xwayland = { };
   };
 }

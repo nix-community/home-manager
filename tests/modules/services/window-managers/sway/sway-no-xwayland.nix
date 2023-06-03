@@ -5,7 +5,7 @@
 
   wayland.windowManager.sway = {
     enable = true;
-    package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
+
     config = null;
     systemd.enable = false;
     xwayland = false;
