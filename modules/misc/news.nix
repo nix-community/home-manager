@@ -1033,10 +1033,18 @@ in
           defaults to 'null'.
         '';
       }
+
       {
         time = "2023-05-18T21:03:30+00:00";
         message = ''
           A new module is available: 'programs.script-directory'.
+        '';
+      }
+
+      {
+        time = "2023-06-03T22:19:32+00:00";
+        message = ''
+          A new module is available: 'programs.ripgrep'.
         '';
       }
     ];
