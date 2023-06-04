@@ -2,3 +2,11 @@ before:before
 merged:left,middle,middle,right
 between:between
 after:after
+list-anywhere-0:list-anywhere-0
+list-before-0:list-before-0,sneaky-merge
+list-before-1:list-before-1
+list-anywhere-1:list-anywhere-1
+inside-list:inside-list
+list-after-0:list-after-0
+list-after-1:list-after-1
+list-anywhere-2:list-anywhere-2

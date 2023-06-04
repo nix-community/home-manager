@@ -9,7 +9,7 @@
 
 { lib }:
 
-let inherit (lib) all filterAttrs hm mapAttrs toposort;
+let inherit (lib) all filterAttrs head hm mapAttrs length tail toposort;
 in {
   empty = { };
 
@@ -100,4 +100,30 @@ in {
 
   entryAfter = hm.dag.entryBetween [ ];
   entryBefore = before: hm.dag.entryBetween before [ ];
+
+  # Given a list of entries, this function places them in order within the DAG.
+  # Each entry is labeled "${tag}-${entry index}" and other DAG entries can be
+  # added with 'before' or 'after' referring these indexed entries.
+  #
+  # The entries as a whole can be given a relation to other DAG nodes. All
+  # generated nodes are then placed before or after those dependencies.
+  entriesBetween = tag:
+    let
+      go = i: before: after: entries:
+        let
+          name = "${tag}-${toString i}";
+          i' = i + 1;
+        in if entries == [ ] then
+          hm.dag.empty
+        else if length entries == 1 then {
+          "${name}" = hm.dag.entryBetween before after (head entries);
+        } else
+          {
+            "${name}" = hm.dag.entryAfter after (head entries);
+          } // go (i + 1) before [ name ] (tail entries);
+    in go 0;
+
+  entriesAnywhere = tag: hm.dag.entriesBetween tag [ ] [ ];
+  entriesAfter = tag: hm.dag.entriesBetween tag [ ];
+  entriesBefore = tag: before: hm.dag.entriesBetween tag before [ ];
 }
