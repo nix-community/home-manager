@@ -150,7 +150,7 @@ rec {
   windowCommandsStr = { command, criteria, ... }:
     "for_window ${criteriaStr criteria} ${command}";
   workspaceOutputStr = item:
-    ''workspace "${item.workspace}" output ${item.output}'';
+    ''workspace "${item.workspace}" output "${item.output}"'';
 
   indent = list:
     { includesWrapper ? true, level ? 1 }:
