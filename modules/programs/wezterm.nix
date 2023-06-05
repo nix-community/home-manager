@@ -7,6 +7,10 @@ let
   cfg = config.programs.wezterm;
   tomlFormat = pkgs.formats.toml { };
 
+  shellIntegrationStr = ''
+    source "${cfg.package}/etc/profile.d/wezterm.sh"
+  '';
+
 in {
   meta.maintainers = [ hm.maintainers.blmhemu ];
 
@@ -79,6 +83,13 @@ in {
       '';
     };
 
+    enableBashIntegration = mkEnableOption "WezTerm's Bash integration." // {
+      default = true;
+    };
+
+    enableZshIntegration = mkEnableOption "WezTerm's Zsh integration." // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -99,5 +110,9 @@ in {
       nameValuePair "wezterm/colors/${name}.toml" {
         source = tomlFormat.generate "${name}.toml" { colors = value; };
       }) cfg.colorSchemes;
+
+    programs.bash.initExtra =
+      mkIf cfg.enableBashIntegration shellIntegrationStr;
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration shellIntegrationStr;
   };
 }
