@@ -369,11 +369,11 @@ is similar to that of NixOS. The <code class="literal">flake.nix</code> would be
   };
 }</pre><p>and it is also rebuilt with the nix-darwin generations.
 The rebuild command here may be <code class="literal">darwin-rebuild switch --flake &lt;flake-uri&gt;</code>.</p><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">~/.config/darwin</code> by</p><pre class="programlisting console">$ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin</pre></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="ch-writing-modules"></a>Chapter 4. Writing Home Manager Modules</h1></div></div></div><p>The module system in Home Manager is based entirely on the NixOS module system so we will here only highlight aspects that are specific for Home Manager. For information about the module system as such please refer to the <a class="link" href="https://nixos.org/nixos/manual/index.html#sec-writing-modules" target="_top">Writing NixOS Modules</a> chapter of the NixOS manual.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="sec-option-types"></a>4.1. Option Types</h2></div></div></div><p>Overall the basic option types are the same in Home Manager as NixOS. A few Home Manager options, however, make use of custom types that are worth describing in more detail. These are the option types <code class="literal">dagOf</code> and <code class="literal">gvariant</code> that are used, for example, by <a class="xref" href="options.html#opt-programs.ssh.matchBlocks"><code class="option">programs.ssh.matchBlocks</code></a> and <a class="xref" href="options.html#opt-dconf.settings"><code class="option">dconf.settings</code></a>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<code class="literal">hm.types.dagOf</code>
+<a id="sec-option-types-dag"></a><code class="literal">hm.types.dagOf</code>
 </span></dt><dd><p class="simpara">
 Options of this type have attribute sets as values where each member is a node in a <a class="link" href="https://en.wikipedia.org/w/index.php?title=Directed_acyclic_graph&amp;oldid=939656095" target="_top">directed acyclic graph</a> (DAG). This allows the attribute set entries to express dependency relations among themselves. This can, for example, be used to control the order of match blocks in a OpenSSH client configuration or the order of activation script blocks in <a class="xref" href="options.html#opt-home.activation"><code class="option">home.activation</code></a>.
 </p><p class="simpara">A number of functions are provided to create DAG nodes. The functions are shown below with examples using an option <code class="literal">foo.bar</code>  of type <code class="literal">hm.types.dagOf types.int</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<code class="literal">hm.dag.entryAnywhere (value: T)</code>
+<a id="sec-option-types-dag-entryAnywhere"></a><code class="literal">hm.dag.entryAnywhere (value: T) : DagEntry&lt;T&gt;</code>
 </span></dt><dd><p class="simpara">
 Indicates that <code class="literal">value</code> can be placed anywhere within the DAG. This is also the default for plain attribute set entries, that is
 </p><pre class="programlisting nix">foo.bar = {
@@ -381,28 +381,76 @@ Indicates that <code class="literal">value</code> can be placed anywhere within 
 }</pre><p class="simpara">and</p><pre class="programlisting nix">foo.bar = {
   a = 0;
 }</pre><p class="simpara">are equivalent.</p></dd><dt><span class="term">
-<code class="literal">hm.dag.entryAfter (afters: list string) (value: T)</code>
+<a id="sec-option-types-dag-entryAfter"></a><code class="literal">hm.dag.entryAfter (afters: list string) (value: T) : DagEntry&lt;T&gt;</code> 
 </span></dt><dd><p class="simpara">
 Indicates that <code class="literal">value</code> must be placed <span class="emphasis"><em>after</em></span> each of the attribute names in the given list. For example
 </p><pre class="programlisting nix">foo.bar = {
   a = 0;
   b = hm.dag.entryAfter [ "a" ] 1;
 }</pre><p class="simpara">would place <code class="literal">b</code> after <code class="literal">a</code> in the graph.</p></dd><dt><span class="term">
-<code class="literal">hm.dag.entryBefore (befores: list string) (value: T)</code>
+<a id="sec-option-types-dag-entryBefore"></a><code class="literal">hm.dag.entryBefore (befores: list string) (value: T) : DagEntry&lt;T&gt;</code> 
 </span></dt><dd><p class="simpara">
 Indicates that <code class="literal">value</code> must be placed <span class="emphasis"><em>before</em></span> each of the attribute names in the given list. For example
 </p><pre class="programlisting nix">foo.bar = {
   b = hm.dag.entryBefore [ "a" ] 1;
   a = 0;
 }</pre><p class="simpara">would place <code class="literal">b</code> before <code class="literal">a</code> in the graph.</p></dd><dt><span class="term">
-<code class="literal">hm.dag.entryBetween (befores: list string) (afters: list string) (value: T)</code>
+<a id="sec-option-types-dag-entryBetween"></a><code class="literal">hm.dag.entryBetween (befores: list string) (afters: list string) (value: T) : DagEntry&lt;T&gt;</code> 
 </span></dt><dd><p class="simpara">
 Indicates that <code class="literal">value</code> must be placed <span class="emphasis"><em>before</em></span> the attribute names in the first list and <span class="emphasis"><em>after</em></span> the attribute names in the second list. For example
 </p><pre class="programlisting nix">foo.bar = {
   a = 0;
   c = hm.dag.entryBetween [ "b" ] [ "a" ] 2;
   b = 1;
-}</pre><p class="simpara">would place <code class="literal">c</code> before <code class="literal">b</code> and after <code class="literal">a</code> in the graph.</p></dd></dl></div></dd><dt><span class="term">
+}</pre><p class="simpara">would place <code class="literal">c</code> before <code class="literal">b</code> and after <code class="literal">a</code> in the graph.</p></dd></dl></div><p class="simpara">There are also a set of functions that generate a DAG from a list.
+These are convenient when you just want to have a linear list of DAG entries,
+without having to manually enter the relationship between each entry.
+Each of these functions take a <code class="literal">tag</code> as argument and the DAG entries will be named <code class="literal">${tag}-${index}</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+<a id="sec-option-types-dag-entriesAnywhere"></a><code class="literal">hm.dag.entriesAnywhere (tag: string) (values: [T]) : Dag&lt;T&gt;</code>
+</span></dt><dd><p class="simpara">
+Creates a DAG with the given values with each entry labeled using the given tag. For example
+</p><pre class="programlisting nix">foo.bar = hm.dag.entriesAnywhere "a" [ 0 1 ];</pre><p class="simpara">is equivalent to</p><pre class="programlisting nix">foo.bar = {
+  a-0 = 0;
+  a-1 = hm.dag.entryAfter [ "a-0" ] 1;
+}</pre></dd><dt><span class="term">
+<a id="sec-option-types-dag-entriesAfter"></a><code class="literal">hm.dag.entriesAfter (tag: string) (afters: list string) (values: [T]) : Dag&lt;T&gt;</code>
+</span></dt><dd><p class="simpara">
+Creates a DAG with the given values with each entry labeled using the given tag.
+The list of values are placed are placed <span class="emphasis"><em>after</em></span> each of the attribute names in <code class="literal">afters</code>.
+For example
+</p><pre class="programlisting nix">foo.bar =
+  { b = 0; }
+  // hm.dag.entriesAfter "a" [ "b" ] [ 1 2 ];</pre><p class="simpara">is equivalent to</p><pre class="programlisting nix">foo.bar = {
+  b = 0;
+  a-0 = hm.dag.entryAfter [ "b" ] 1;
+  a-1 = hm.dag.entryAfter [ "a-0" ] 2;
+}</pre></dd><dt><span class="term">
+<a id="sec-option-types-dag-entriesBefore"></a><code class="literal">hm.dag.entriesBefore (tag: string) (befores: list string) (values: [T]) : Dag&lt;T&gt;</code>
+</span></dt><dd><p class="simpara">
+Creates a DAG with the given values with each entry labeled using the given tag.
+The list of values are placed <span class="emphasis"><em>before</em></span> each of the attribute names in <code class="literal">befores</code>.
+For example
+</p><pre class="programlisting nix">foo.bar =
+  { b = 0; }
+  // hm.dag.entriesBefore "a" [ "b" ] [ 1 2 ];</pre><p class="simpara">is equivalent to</p><pre class="programlisting nix">foo.bar = {
+  b = 0;
+  a-0 = 1;
+  a-1 = hm.dag.entryBetween [ "b" ] [ "a-0" ] 2;
+}</pre></dd><dt><span class="term">
+<a id="sec-option-types-dag-entriesBetween"></a><code class="literal">hm.dag.entriesBetween (tag: string) (befores: list string) (afters: list string) (values: [T]) : Dag&lt;T&gt;</code>
+</span></dt><dd><p class="simpara">
+Creates a DAG with the given values with each entry labeled using the given tag.
+The list of values are placed <span class="emphasis"><em>before</em></span> each of the attribute names in <code class="literal">befores</code>
+and <span class="emphasis"><em>after</em></span> each of the attribute names in <code class="literal">afters</code>.
+For example
+</p><pre class="programlisting nix">foo.bar =
+  { b = 0; c = 3; }
+  // hm.dag.entriesBetween "a" [ "b" ] [ "c" ] [ 1 2 ];</pre><p class="simpara">is equivalent to</p><pre class="programlisting nix">foo.bar = {
+  b = 0;
+  c = 3;
+  a-0 = hm.dag.entryAfter [ "c" ] 1;
+  a-1 = hm.dag.entryBetween [ "b" ] [ "a-0" ] 2;
+}</pre></dd></dl></div></dd><dt><span class="term">
 <a id="sec-option-types-gvariant"></a><code class="literal">hm.types.gvariant</code>
 </span></dt><dd><p class="simpara">
 This type is useful for options representing <a class="link" href="https://docs.gtk.org/glib/struct.Variant.html#description" target="_top">GVariant</a> values. The type accepts all primitive GVariant types as well as arrays, tuples, “maybe” types, and dictionaries.
