@@ -11,6 +11,23 @@ let
 in {
   meta.maintainers = with lib.maintainers; [ farlion thiagokokada ];
 
+  imports = [
+    (mkRenamedOptionModule [
+      "programs"
+      "i3status-rust"
+      "bars"
+      "<name>"
+      "icons"
+    ] [ "programs" "i3status-rust" "bars" "<name>" "settings" "icons" "icons" ])
+    (mkRenamedOptionModule [
+      "programs"
+      "i3status-rust"
+      "bars"
+      "<name>"
+      "theme"
+    ] [ "programs" "i3status-rust" "bars" "<name>" "settings" "theme" "theme" ])
+  ];
+
   options.programs.i3status-rust = {
     enable = mkEnableOption "a replacement for i3-status written in Rust";
 
@@ -101,28 +118,6 @@ in {
                 };
               }
             '';
-          };
-
-          icons = mkOption {
-            type = types.str;
-            default = "none";
-            description = ''
-              The icons set to use. See
-              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/doc/themes.md"/>
-              for a list of available icon sets.
-            '';
-            example = "awesome6";
-          };
-
-          theme = mkOption {
-            type = types.str;
-            default = "plain";
-            description = ''
-              The theme to use. See
-              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/doc/themes.md"/>
-              for a list of available themes.
-            '';
-            example = "gruvbox-dark";
           };
         };
       });
@@ -218,8 +213,6 @@ in {
               };
             };
           };
-          icons = "awesome5";
-          theme = "gruvbox-dark";
         };
       '';
     };
@@ -248,7 +241,7 @@ in {
     home.packages = [ cfg.package ];
 
     xdg.configFile = mapAttrs' (cfgFileSuffix: cfgBar:
-      nameValuePair ("i3status-rust/config-${cfgFileSuffix}.toml") ({
+      nameValuePair "i3status-rust/config-${cfgFileSuffix}.toml" ({
         onChange = mkIf config.xsession.windowManager.i3.enable ''
           i3Socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*"
           if [[ -S $i3Socket ]]; then
@@ -256,17 +249,8 @@ in {
           fi
         '';
 
-        source = settingsFormat.generate ("config-${cfgFileSuffix}.toml") ({
-          theme = if lib.versionAtLeast cfg.package.version "0.30.0" then {
-            theme = cfgBar.theme;
-          } else
-            cfgBar.theme;
-          icons = if lib.versionAtLeast cfg.package.version "0.30.0" then {
-            icons = cfgBar.icons;
-          } else
-            cfgBar.icons;
-          block = cfgBar.blocks;
-        } // cfgBar.settings);
+        source = settingsFormat.generate "config-${cfgFileSuffix}.toml"
+          ({ block = cfgBar.blocks; } // cfgBar.settings);
       })) cfg.bars;
   };
 }
