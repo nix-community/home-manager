@@ -394,4 +394,10 @@
     github = "natecox";
     githubId = 2782695;
   };
+  pedorich-n = {
+    name = "Mykyta Pedorich";
+    email = "pedorich.n@gmail.com";
+    github = "pedorich-n";
+    githubId = 15573098;
+  };
 }

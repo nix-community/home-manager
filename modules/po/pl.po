@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-04-11 22:44+0200\n"
+"POT-Creation-Date: 2023-05-27 09:08+0200\n"
 "PO-Revision-Date: 2023-05-03 19:48+0000\n"
 "Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/home-manager/"
@@ -36,7 +36,7 @@ msgstr "Tworzenie profilu generacji %s"
 msgid "No change so reusing latest profile generation %s"
 msgstr "Brak zmian więc używam ostatniej generacji profilu %s"
 
-#: modules/home-environment.nix:625
+#: modules/home-environment.nix:627
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -65,7 +65,7 @@ msgstr ""
 "\n"
 "Po czym spróbuj aktywować swoją konfigurację Home Manager jeszcze raz."
 
-#: modules/home-environment.nix:658
+#: modules/home-environment.nix:660
 msgid "Activating %s"
 msgstr "Aktywowanie %s"
 
@@ -109,26 +109,34 @@ msgstr ""
 "\n"
 "i spróbować uruchomić home-manager switch raz jeszcze. Powodzenia!"
 
-#: modules/lib-bash/activation-init.sh:101
+#: modules/lib-bash/activation-init.sh:95
+msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:104
+msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:119
 msgid "Starting Home Manager activation"
 msgstr "Rozpoczynam aktywację Home Managera"
 
-#: modules/lib-bash/activation-init.sh:105
+#: modules/lib-bash/activation-init.sh:123
 msgid "Sanity checking Nix"
 msgstr "Sprawdzanie poprawności Nix"
 
-#: modules/lib-bash/activation-init.sh:112
+#: modules/lib-bash/activation-init.sh:133
 msgid "This is a dry run"
 msgstr "To jest wykonanie testowe"
 
-#: modules/lib-bash/activation-init.sh:116
+#: modules/lib-bash/activation-init.sh:137
 msgid "This is a live run"
 msgstr "To jest wykonanie właściwe"
 
-#: modules/lib-bash/activation-init.sh:122
+#: modules/lib-bash/activation-init.sh:143
 msgid "Using Nix version: %s"
 msgstr "Używając wersji Nix: %s"
 
-#: modules/lib-bash/activation-init.sh:125
+#: modules/lib-bash/activation-init.sh:146
 msgid "Activation variables:"
 msgstr "Zmienne aktywacyjne:"

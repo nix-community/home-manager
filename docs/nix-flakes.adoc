@@ -70,23 +70,19 @@ writing a Home Manager configuration.
 [[sec-flakes-standalone]]
 === Standalone setup
 
-The installation procedure for the standalone version of Home Manager
-is currently different for the unstable and stable branch.
-Therefore, if you are tracking the Nixpkgs or NixOS unstable please go to
-<<sec-flakes-standalone-unstable>>,
-and if you track Nixpkgs or NixOS version 22.11 please go to
-<<sec-flakes-standalone-stable>>.
-
-[[sec-flakes-standalone-unstable]]
-==== Unstable Version
-
 To prepare an initial Home Manager configuration for your logged in user,
 you can run the Home Manager `init` command directly from its flake.
 
-For example, to generate and activate a basic configuration run the command
+For example, if you are using the unstable version of Nixpkgs or NixOS,
+then to generate and activate a basic configuration run the command
 
 [source,console]
 $ nix run home-manager/master -- init --switch
+
+For Nixpkgs or NixOS version 23.05 run
+
+[source,console]
+$ nix run home-manager/release-23.05 -- init --switch
 
 This will generate a `flake.nix` and a `home.nix` file in
 `~/.config/home-manager`, creating the directory if it does not exist.
@@ -96,10 +92,12 @@ This is useful if you want to inspect and edit the configuration before activati
 
 [source,console]
 ----
-$ nix run home-manager/master -- init
+$ nix run home-manager/$branch -- init
 $ # Edit files in ~/.config/home-manager
-$ nix run home-manager/master -- init --switch
+$ nix run home-manager/$branch -- init --switch
 ----
+
+Where `$branch` is one of `master` or `release-23.05`.
 
 After the initial activation has completed successfully then building
 and activating your flake-based configuration is as simple as
@@ -112,7 +110,7 @@ For example,
 
 [source,console]
 ----
-$ nix run home-manager/master -- init --switch ~/hmconf
+$ nix run home-manager/$branch -- init --switch ~/hmconf
 $ # And after the initial activation.
 $ home-manager switch --flake ~/hmconf
 ----
@@ -130,94 +128,6 @@ such as `--recreate-lock-file` or `--update-input <input>`
 to `home-manager` when building or switching,
 and these options will be forwarded to `nix build`.
 See the {nixos-wiki-flakes}[NixOS Wiki page] for details.
-====
-
-[[sec-flakes-standalone-stable]]
-==== Version 22.11
-
-1. Set up a flake with a `flake.nix` as follows:
-+
-[source,nix]
-----
-{
-  description = "Home Manager configuration of Jane Doe";
-
-  inputs = {
-    # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
-    home-manager = {
-      url = "github:nix-community/home-manager/release-22.11";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-  };
-
-  outputs = { nixpkgs, home-manager, ... }:
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in {
-      homeConfigurations.jdoe = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-
-        # Specify your home configuration modules here, for example,
-        # the path to your home.nix.
-        modules = [
-          ./home.nix
-        ];
-
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
-      };
-    };
-}
-----
-+
-[NOTE]
-====
-* The Home Manager library is exported by the flake under `lib.hm`.
-
-* You can use the above `flake.nix` as a template in `~/.config/home-manager` by
-+
-[source,console]
-$ nix flake new ~/.config/home-manager -t github:nix-community/home-manager
-====
-
-2. Install Home Manager and apply the configuration by
-+
-[source,console]
-$ nix run <flake-uri>#homeConfigurations.jdoe.activationPackage
-+
-Substitute `<flake-uri>` with the flake URI of the configuration flake.
-If `flake.nix` resides in `~/.config/home-manager`,
-`<flake-uri>` may be `~/.config/home-manager`
-as a Git tree or `path:~/.config/home-manager` if not.
-
-3. Since the release `21.05`,
-building a flake-based configuration is as simple as
-+
-[source,console]
-$ home-manager switch --flake '<flake-uri>#jdoe'
-+
-once home-manager is installed.
-+
-Here, `jdoe` is a configuration specified in the flake file,
-and `<flake-uri>#jdoe` will be expanded to
-`<flake-uri>#homeConfigurations.jdoe.activationPackage`
-and be built by Nix.
-
-[NOTE]
-====
-The flake inputs are not upgraded automatically when switching.
-The analogy to the command `home-manager --update ...` is `nix flake update`.
-
-If updating more than one input is undesirable,
-the command `nix flake lock --update-input <input-name>` can be used.
-
-You can also pass flake-related options
-such as `--recreate-lock-file` or `--update-input [input]`
-to `home-manager` when building/switching,
-and these options will be forwarded to `nix build`.
-See the {nixos-wiki-flakes}[NixOS Wiki page] for detail.
 ====
 
 [[sec-flakes-nixos-module]]

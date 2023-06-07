@@ -27,7 +27,27 @@ in {
       { merged = dag.entryBefore [ "between" ] "middle"; }
       { merged = mkBefore "left"; }
       { merged = dag.entryBetween [ "after" ] [ "before" ] (mkAfter "right"); }
-      { merged = dag.entryBefore [ "between" ] "middle"; }
+      {
+        merged = dag.entryBefore [ "between" ] "middle";
+      }
+
+      # Some tests of list entries.
+      (dag.entriesAnywhere "list-anywhere" [
+        "list-anywhere-0"
+        "list-anywhere-1"
+        "list-anywhere-2"
+      ])
+      { inside-list = dag.entryAfter [ "list-anywhere-1" ] "inside-list"; }
+      (dag.entriesBefore "list-before" [ "list-anywhere-1" ] [
+        "list-before-0"
+        "list-before-1"
+      ])
+      (dag.entriesAfter "list-after" [ "list-before-0" ] [
+        "list-after-0"
+        "list-after-1"
+      ])
+      (dag.entriesAnywhere "list-empty" [ ])
+      { "list-before-0" = mkAfter "sneaky-merge"; }
     ];
 
     home.file."result.txt".text = result;

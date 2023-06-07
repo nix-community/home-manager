@@ -1033,6 +1033,7 @@ in
           defaults to 'null'.
         '';
       }
+
       {
         time = "2023-05-18T21:03:30+00:00";
         message = ''
@@ -1041,7 +1042,21 @@ in
       }
 
       {
-        time = "2023-05-30T17:59:39+00:00";
+        time = "2023-06-03T22:19:32+00:00";
+        message = ''
+          A new module is available: 'programs.ripgrep'.
+        '';
+      }
+
+      {
+        time = "2023-06-07T06:01:16+00:00";
+        message = ''
+          A new module is available: 'programs.rtx'.
+        '';
+      }
+
+      {
+        time = "2023-06-07T12:16:55+00:00";
         condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'programs.imv'.

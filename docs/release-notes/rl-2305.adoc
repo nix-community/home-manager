@@ -1,7 +1,7 @@
 [[sec-release-23.05]]
 == Release 23.05
 
-This is the current unstable branch and the information in this section is therefore not final.
+The 23.05 release branch became the stable branch in May, 2023.
 
 [[sec-release-23.05-highlights]]
 === Highlights
@@ -36,7 +36,7 @@ and optionally also activate it.
 The recommended installation method for a standalone Home Manager setup
 with Nix flakes uses this new command.
 The standard installation method remains the same but uses the new command internally.
-See <<sec-flakes-standalone-unstable>> for more.
+See <<sec-flakes-standalone>> for more.
 
 [[sec-release-23.05-state-version-changes]]
 === State Version Changes

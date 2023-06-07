@@ -11,12 +11,13 @@ The module system in Home Manager is based entirely on the NixOS module system s
 
 Overall the basic option types are the same in Home Manager as NixOS. A few Home Manager options, however, make use of custom types that are worth describing in more detail. These are the option types `dagOf` and `gvariant` that are used, for example, by <<opt-programs.ssh.matchBlocks>> and <<opt-dconf.settings>>.
 
-`hm.types.dagOf`::
+[[sec-option-types-dag]]`hm.types.dagOf`::
 Options of this type have attribute sets as values where each member is a node in a {wikipedia-dag}[directed acyclic graph] (DAG). This allows the attribute set entries to express dependency relations among themselves. This can, for example, be used to control the order of match blocks in a OpenSSH client configuration or the order of activation script blocks in <<opt-home.activation>>.
 +
 A number of functions are provided to create DAG nodes. The functions are shown below with examples using an option `foo.bar`  of type `hm.types.dagOf types.int`.
 +
-`hm.dag.entryAnywhere (value: T)`:::
+--
+[[sec-option-types-dag-entryAnywhere]]`hm.dag.entryAnywhere (value: T) : DagEntry<T>`:::
 Indicates that `value` can be placed anywhere within the DAG. This is also the default for plain attribute set entries, that is
 +
 [source,nix]
@@ -37,7 +38,7 @@ foo.bar = {
 +
 are equivalent.
 +
-`hm.dag.entryAfter (afters: list string) (value: T)`:::
+[[sec-option-types-dag-entryAfter]]`hm.dag.entryAfter (afters: list string) (value: T) : DagEntry<T>` :::
 Indicates that `value` must be placed _after_ each of the attribute names in the given list. For example
 +
 [source,nix]
@@ -50,7 +51,7 @@ foo.bar = {
 +
 would place `b` after `a` in the graph.
 +
-`hm.dag.entryBefore (befores: list string) (value: T)`:::
+[[sec-option-types-dag-entryBefore]]`hm.dag.entryBefore (befores: list string) (value: T) : DagEntry<T>` :::
 Indicates that `value` must be placed _before_ each of the attribute names in the given list. For example
 +
 [source,nix]
@@ -63,7 +64,7 @@ foo.bar = {
 +
 would place `b` before `a` in the graph.
 +
-`hm.dag.entryBetween (befores: list string) (afters: list string) (value: T)`:::
+[[sec-option-types-dag-entryBetween]]`hm.dag.entryBetween (befores: list string) (afters: list string) (value: T) : DagEntry<T>` :::
 Indicates that `value` must be placed _before_ the attribute names in the first list and _after_ the attribute names in the second list. For example
 +
 [source,nix]
@@ -76,6 +77,93 @@ foo.bar = {
 ----
 +
 would place `c` before `b` and after `a` in the graph.
+--
++
+There are also a set of functions that generate a DAG from a list.
+These are convenient when you just want to have a linear list of DAG entries,
+without having to manually enter the relationship between each entry.
+Each of these functions take a `tag` as argument and the DAG entries will be named `${tag}-${index}`.
+
+[[sec-option-types-dag-entriesAnywhere]]`hm.dag.entriesAnywhere (tag: string) (values: [T]) : Dag<T>`:::
+Creates a DAG with the given values with each entry labeled using the given tag. For example
++
+[source,nix]
+foo.bar = hm.dag.entriesAnywhere "a" [ 0 1 ];
++
+is equivalent to
++
+[source,nix]
+----
+foo.bar = {
+  a-0 = 0;
+  a-1 = hm.dag.entryAfter [ "a-0" ] 1;
+}
+----
++
+[[sec-option-types-dag-entriesAfter]]`hm.dag.entriesAfter (tag: string) (afters: list string) (values: [T]) : Dag<T>`:::
+Creates a DAG with the given values with each entry labeled using the given tag.
+The list of values are placed are placed _after_ each of the attribute names in `afters`.
+For example
++
+[source,nix]
+foo.bar =
+  { b = 0; }
+  // hm.dag.entriesAfter "a" [ "b" ] [ 1 2 ];
++
+is equivalent to
++
+[source,nix]
+----
+foo.bar = {
+  b = 0;
+  a-0 = hm.dag.entryAfter [ "b" ] 1;
+  a-1 = hm.dag.entryAfter [ "a-0" ] 2;
+}
+----
++
+[[sec-option-types-dag-entriesBefore]]`hm.dag.entriesBefore (tag: string) (befores: list string) (values: [T]) : Dag<T>`:::
+Creates a DAG with the given values with each entry labeled using the given tag.
+The list of values are placed _before_ each of the attribute names in `befores`.
+For example
++
+[source,nix]
+foo.bar =
+  { b = 0; }
+  // hm.dag.entriesBefore "a" [ "b" ] [ 1 2 ];
++
+is equivalent to
++
+[source,nix]
+----
+foo.bar = {
+  b = 0;
+  a-0 = 1;
+  a-1 = hm.dag.entryBetween [ "b" ] [ "a-0" ] 2;
+}
+----
++
+[[sec-option-types-dag-entriesBetween]]`hm.dag.entriesBetween (tag: string) (befores: list string) (afters: list string) (values: [T]) : Dag<T>`:::
+Creates a DAG with the given values with each entry labeled using the given tag.
+The list of values are placed _before_ each of the attribute names in `befores`
+and _after_ each of the attribute names in `afters`.
+For example
++
+[source,nix]
+foo.bar =
+  { b = 0; c = 3; }
+  // hm.dag.entriesBetween "a" [ "b" ] [ "c" ] [ 1 2 ];
++
+is equivalent to
++
+[source,nix]
+----
+foo.bar = {
+  b = 0;
+  c = 3;
+  a-0 = hm.dag.entryAfter [ "c" ] 1;
+  a-1 = hm.dag.entryBetween [ "b" ] [ "a-0" ] 2;
+}
+----
 
 [[sec-option-types-gvariant]]`hm.types.gvariant`::
 This type is useful for options representing {gvariant-description}[GVariant] values. The type accepts all primitive GVariant types as well as arrays, tuples, ``maybe'' types, and dictionaries.

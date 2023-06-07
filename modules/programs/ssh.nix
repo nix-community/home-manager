@@ -482,7 +482,7 @@ in
     };
 
     matchBlocks = mkOption {
-      type = hm.types.listOrDagOf matchBlockModule;
+      type = hm.types.dagOf matchBlockModule;
       default = {};
       example = literalExpression ''
         {

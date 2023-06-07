@@ -14,7 +14,7 @@ let
 
 in rec {
 
-  inherit (typesDag) dagOf listOrDagOf;
+  inherit (typesDag) dagOf;
 
   selectorFunction = mkOptionType {
     name = "selectorFunction";
