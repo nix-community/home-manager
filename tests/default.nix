@@ -164,6 +164,7 @@ import nmt {
     ./modules/programs/gnome-terminal
     ./modules/programs/hexchat
     ./modules/programs/i3status-rust
+    ./modules/programs/imv
     ./modules/programs/kodi
     ./modules/programs/looking-glass-client
     ./modules/programs/mangohud

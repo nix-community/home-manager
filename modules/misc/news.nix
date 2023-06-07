@@ -1055,6 +1055,13 @@ in
         '';
       }
 
+      {
+        time = "2023-06-07T12:16:55+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.imv'.
+        '';
+      }
     ];
   };
 }
