@@ -1,7 +1,5 @@
 { pkgs, config, lib, ... }:
-
 let
-
   inherit (lib)
     mkOption mkEnableOption mkIf maintainers literalExpression types platforms;
 
@@ -10,10 +8,8 @@ let
   cfg = config.services.espanso;
 
   yaml = pkgs.formats.yaml { };
-
 in {
   meta.maintainers = with maintainers; [ lucasew ];
-
   options = {
     services.espanso = {
       enable = mkEnableOption "Espanso: cross platform text expander in Rust";
@@ -25,41 +21,58 @@ in {
         defaultText = literalExpression "pkgs.espanso";
       };
 
-      settings = mkOption {
+      configs = mkOption {
         type = yaml.type;
-        default = { matches = [ ]; };
+        default = { default = { }; };
         example = literalExpression ''
-          {
-            matches = [
-              { # Simple text replacement
-                trigger = ":espanso";
-                replace = "Hi there!";
-              }
-              { # Dates
-                trigger = ":date";
-                replace = "{{mydate}}";
-                vars = [{
-                  name = "mydate";
-                  type = "date";
-                  params = { format = "%m/%d/%Y"; };
-                }];
-              }
-              { # Shell commands
-                trigger = ":shell";
-                replace = "{{output}}";
-                vars = [{
-                  name = "output";
-                  type = "shell";
-                  params = { cmd = "echo Hello from your shell"; };
-                }];
-              }
-            ];
-          }
+          configs = {
+            default = {
+              show_notifications = false;
+            };
+            vscode = {
+              filter_title = "Visual Studio Code$";
+              backend = "Clipboard";
+            };
+          };
         '';
-        description = ''
-          The Espanso configuration to use. See
-          <link xlink:href="https://espanso.org/docs/configuration/"/>
-          for a description of available options.
+      };
+
+      matches = mkOption {
+        type = yaml.type;
+        default = { default.matches = [ ]; };
+        example = literalExpression ''
+          matches = {
+            base = {
+              matches = [
+                {
+                  trigger = ":now";
+                  replace = "It's {{currentdate}} {{currenttime}}";
+                }
+                {
+                  trigger = ":hello";
+                  replace = "line1\nline2";
+                }
+                {
+                  regex = ":hi(?P<person>.*)\\.";
+                  replace = "Hi {{person}}!";
+                }
+              ];
+            };
+            global_vars = {
+              global_vars = [
+                {
+                  name = "currentdate";
+                  type = "date";
+                  params = {format = "%d/%m/%Y";};
+                }
+                {
+                  name = "currenttime";
+                  type = "date";
+                  params = {format = "%R";};
+                }
+              ];
+            };
+          };
         '';
       };
     };
@@ -70,8 +83,16 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."espanso/default.yml".source =
-      yaml.generate "espanso-default.yml" cfg.settings;
+    xdg.configFile = let
+      configFiles = lib.mapAttrs' (name: value: {
+        name = "espanso/config/${name}.yml";
+        value = { source = yaml.generate "${name}.yml" value; };
+      }) config.services.espanso.configs;
+      matchesFiles = lib.mapAttrs' (name: value: {
+        name = "espanso/match/${name}.yml";
+        value = { source = yaml.generate "${name}.yml" value; };
+      }) config.services.espanso.matches;
+    in configFiles // matchesFiles;
 
     systemd.user.services.espanso = {
       Unit = { Description = "Espanso: cross platform text expander in Rust"; };
