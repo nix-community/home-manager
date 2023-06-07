@@ -337,6 +337,8 @@ $xdgVars
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, \${config.home.username}!"
     # '')
+    # # or you can load it from a local file: 
+    # (pkgs.writeShellScriptBin "my-hello" (builtins.readFile ./my-hello.sh))
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
