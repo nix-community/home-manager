@@ -32,7 +32,7 @@ in {
         type = yaml.type;
         default = { default = { }; };
         example = literalExpression ''
-          configs = {
+          {
             default = {
               show_notifications = false;
             };
@@ -53,7 +53,7 @@ in {
         type = yaml.type;
         default = { default.matches = [ ]; };
         example = literalExpression ''
-          matches = {
+          {
             base = {
               matches = [
                 {
