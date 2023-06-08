@@ -129,7 +129,9 @@ in {
 
   config = {
     _module.args = {
-      pkgs = mkOverride modules.defaultPriority _pkgs;
+      # We use a no-op override to make sure that the option can be merged without evaluating
+      # `_pkgs`, see https://github.com/nix-community/home-manager/pull/993
+      pkgs = mkOverride modules.defaultOverridePriority _pkgs;
       pkgs_i686 =
         if _pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86 then
           _pkgs.pkgsi686Linux
