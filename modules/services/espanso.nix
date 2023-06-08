@@ -1,14 +1,20 @@
 { pkgs, config, lib, ... }:
 let
   inherit (lib)
-    mkOption mkEnableOption mkIf maintainers literalExpression types platforms;
+    mkOption mkEnableOption mkIf maintainers literalExpression types platforms
+    mkRemovedOptionModule versionAtLeast;
 
   inherit (lib.hm.assertions) assertPlatform;
 
   cfg = config.services.espanso;
+  espansoVersion = cfg.package.version;
 
   yaml = pkgs.formats.yaml { };
 in {
+  imports = [
+    (mkRemovedOptionModule [ "services" "espanso" "settings" ]
+      "Use services.espanso.configs and services.espanso.matches instead.")
+  ];
   meta.maintainers = with maintainers; [ lucasew ];
   options = {
     services.espanso = {
@@ -89,7 +95,15 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [ (assertPlatform "services.espanso" pkgs platforms.linux) ];
+    assertions = [
+      (assertPlatform "services.espanso" pkgs platforms.linux)
+      {
+        assertion = versionAtLeast espansoVersion "2";
+        message = ''
+          Only support version Espanso version 2
+        '';
+      }
+    ];
 
     home.packages = [ cfg.package ];
 
@@ -97,11 +111,11 @@ in {
       configFiles = lib.mapAttrs' (name: value: {
         name = "espanso/config/${name}.yml";
         value = { source = yaml.generate "${name}.yml" value; };
-      }) config.services.espanso.configs;
+      }) cfg.configs;
       matchesFiles = lib.mapAttrs' (name: value: {
         name = "espanso/match/${name}.yml";
         value = { source = yaml.generate "${name}.yml" value; };
-      }) config.services.espanso.matches;
+      }) cfg.matches;
     in configFiles // matchesFiles;
 
     systemd.user.services.espanso = {
