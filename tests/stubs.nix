@@ -15,12 +15,13 @@ let
       outPath = mkOption {
         type = types.nullOr types.str;
         default = "@${name}@";
-        defaultText = "@\${name}@";
+        defaultText = literalExpression ''"@''${name}@"'';
       };
 
       version = mkOption {
         type = types.nullOr types.str;
         default = null;
+        defaultText = literalExpression "pkgs.\${name}.version or null";
       };
 
       buildScript = mkOption {
@@ -55,7 +56,12 @@ in {
   config = {
     lib.test.mkStubPackage = mkStubPackage;
 
-    nixpkgs.overlays = mkIf (config.test.stubs != { })
-      [ (self: super: mapAttrs (n: mkStubPackage) config.test.stubs) ];
+    nixpkgs.overlays = mkIf (config.test.stubs != { }) [
+      (self: super:
+        mapAttrs (n: v:
+          mkStubPackage (v // optionalAttrs (v.version == null) {
+            version = super.${n}.version or null;
+          })) config.test.stubs)
+    ];
   };
 }
