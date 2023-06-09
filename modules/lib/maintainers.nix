@@ -159,6 +159,12 @@
     github = "mifom";
     githubId = 23462908;
   };
+  nikp123 = {
+    name = "nikp123";
+    email = "nikp123@users.noreply.github.com";
+    github = "nikp123";
+    githubId = 4696350;
+  };
   nilp0inter = {
     name = "Roberto Abdelkader Martínez Pérez";
     email = "robertomartinezp@gmail.com";

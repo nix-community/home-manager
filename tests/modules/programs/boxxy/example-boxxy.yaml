@@ -1,0 +1,16 @@
+{
+  "rules": [
+    {
+      "context": [],
+      "env": {},
+      "mode": "directory",
+      "name": "example rule",
+      "only": [
+        "arduino",
+        "Arduino"
+      ],
+      "rewrite": "~/.local/share/boxxy",
+      "target": "~/Arduino"
+    }
+  ]
+}

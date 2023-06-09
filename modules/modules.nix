@@ -60,6 +60,7 @@ let
     ./programs/beets.nix
     ./programs/borgmatic.nix
     ./programs/bottom.nix
+    ./programs/boxxy.nix
     ./programs/broot.nix
     ./programs/browserpass.nix
     ./programs/btop.nix
