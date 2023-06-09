@@ -4,7 +4,7 @@ let
   cfg = config.programs.boxxy;
 
   configPath = "${config.xdg.configHome}/boxxy/boxxy.yaml";
-  settingsFormat = pkgs.formats.json { };
+  settingsFormat = pkgs.formats.yaml { };
 
   boxxyRulesOpts = types.submodule {
     freeformType = settingsFormat.type;
