@@ -1,0 +1,12 @@
+rules:
+- context:
+  - /home/test_user/your_project_repo
+  env:
+    ENVIRONMENT_THING: some value
+  mode: directory
+  name: example rule
+  only:
+  - arduino
+  - Arduino
+  rewrite: ~/.local/share/boxxy
+  target: ~/Arduino

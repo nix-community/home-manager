@@ -1062,6 +1062,14 @@ in
           A new module is available: 'programs.imv'.
         '';
       }
+
+      {
+        time = "2023-06-09T19:13:39+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.boxxy'.
+        '';
+      }
     ];
   };
 }
