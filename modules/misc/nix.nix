@@ -30,7 +30,7 @@ let
           toString v
         else if isString v then
           v
-        else if isCoercibleToString v then
+        else if isConvertibleWithToString v then
           toString v
         else
           abort "The nix conf value: ${toPretty { } v} can not be encoded";
