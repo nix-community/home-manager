@@ -394,4 +394,10 @@
     github = "natecox";
     githubId = 2782695;
   };
+  liyangau = {
+    name = "Li Yang";
+    email = "d@aufomm.com";
+    github = "liyangau";
+    githubId = 71299093;
+  };
 }
