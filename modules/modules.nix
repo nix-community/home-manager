@@ -105,7 +105,6 @@ let
     ./programs/java.nix
     ./programs/jq.nix
     ./programs/jujutsu.nix
-    ./programs/joshuto.nix
     ./programs/just.nix
     ./programs/k9s.nix
     ./programs/kakoune.nix
