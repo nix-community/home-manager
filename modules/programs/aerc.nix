@@ -25,6 +25,8 @@ in {
 
     enable = mkEnableOption "aerc";
 
+    package = mkPackageOption pkgs "aerc" { };
+
     extraAccounts = mkOption {
       type = sectionsOrLines;
       default = { };
@@ -133,7 +135,7 @@ in {
       Consider setting the option `extraConfig.general.unsafe-accounts-conf` to true.
     ''] else
       [ ];
-    home.packages = [ pkgs.aerc ];
+    home.packages = [ cfg.package ];
     xdg.configFile = {
       "aerc/accounts.conf" = mkIf
         ((cfg.extraAccounts != "" && cfg.extraAccounts != { })
