@@ -67,7 +67,7 @@ let
       };
 
       env = mkOption {
-        type = attrsOf str;
+        type = types.attrsOf types.str;
         default = { };
         example = literalExpression ''
           {
