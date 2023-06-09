@@ -20,7 +20,7 @@ let
       target = mkOption {
         type = types.str;
         default = "";
-        defaultText = "~/.ssh";
+        example = "~/.ssh";
         description = ''
           What directory/file to redirect.
         '';
@@ -29,7 +29,7 @@ let
       rewrite = mkOption {
         type = types.str;
         default = "";
-        defaultText = "$XDG_CONFIG_HOME/ssh";
+        example = "$XDG_CONFIG_HOME/ssh";
         description = ''
           Where that file/directory should be rewritten to.
         '';
@@ -44,7 +44,7 @@ let
       };
 
       only = mkOption {
-        type = types.listOf (types.str);
+        type = types.listOf types.str;
         default = [ ];
         example = literalExpression ''
           [
@@ -53,12 +53,12 @@ let
           ]
         '';
         description = ''
-          Apply redirection ONLY to specified executable name.
+          Apply redirection ONLY to specified executable names.
         '';
       };
 
       context = mkOption {
-        type = types.listOf (types.str);
+        type = types.listOf types.str;
         default = [ ];
         example = [ "/home/example/Projects/my-project" ];
         description = ''
@@ -67,7 +67,7 @@ let
       };
 
       env = mkOption {
-        type = types.attrs;
+        type = attrsOf str;
         default = { };
         example = literalExpression ''
           {
