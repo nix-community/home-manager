@@ -15,8 +15,11 @@ in {
     (mkRemovedOptionModule [ "services" "espanso" "settings" ]
       "Use services.espanso.configs and services.espanso.matches instead.")
   ];
-  meta.maintainers =
-    [ lib.hm.maintainers.liyangau maintainers.bobvanderlinden ];
+  meta.maintainers = [
+    maintainers.lucasew
+    maintainers.bobvanderlinden
+    lib.hm.maintainers.liyangau
+  ];
   options = {
     services.espanso = {
       enable = mkEnableOption "Espanso: cross platform text expander in Rust";
