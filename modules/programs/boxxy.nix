@@ -29,7 +29,7 @@ let
       rewrite = mkOption {
         type = types.str;
         default = "";
-        example = "${xdg.configHome}/ssh";
+        example = literalExpression ''"''${config.xdg.configHome}/ssh"'';
         description = ''
           Where that file/directory should be rewritten to.
         '';
