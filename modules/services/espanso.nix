@@ -101,7 +101,7 @@ in {
       {
         assertion = versionAtLeast espansoVersion "2";
         message = ''
-          Only support version Espanso version 2
+          The services.espanso module only supports Espanso version 2 or later.
         '';
       }
     ];
