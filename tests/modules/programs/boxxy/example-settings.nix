@@ -11,9 +11,7 @@ with lib;
       rewrite = "~/.local/share/boxxy";
       mode = "directory";
       only = [ "arduino" "Arduino" ];
-      env = {
-        "ENVIRONMENT_THING" = "some value";
-      };
+      env = { "ENVIRONMENT_THING" = "some value"; };
       context = [ "/home/test_user/your_project_repo" ];
     }];
 
