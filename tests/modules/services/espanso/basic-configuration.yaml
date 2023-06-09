@@ -1,17 +1,1 @@
-matches:
-- replace: Hi there!
-  trigger: :espanso
-- replace: '{{mydate}}'
-  trigger: :date
-  vars:
-  - name: mydate
-    params:
-      format: '%m/%d/%Y'
-    type: date
-- replace: '{{output}}'
-  trigger: :shell
-  vars:
-  - name: output
-    params:
-      cmd: echo Hello from your shell
-    type: shell
+show_notifications: false

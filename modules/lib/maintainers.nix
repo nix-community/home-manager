@@ -400,4 +400,10 @@
     github = "pedorich-n";
     githubId = 15573098;
   };
+  liyangau = {
+    name = "Li Yang";
+    email = "d@aufomm.com";
+    github = "liyangau";
+    githubId = 71299093;
+  };
 }
