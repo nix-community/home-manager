@@ -1070,6 +1070,13 @@ in
           A new module is available: 'programs.boxxy'.
         '';
       }
+
+      {
+        time = "2023-06-09T19:18:42+00:00";
+        message = ''
+          A new module is available: 'programs.joshuto'.
+        '';
+      }
     ];
   };
 }
