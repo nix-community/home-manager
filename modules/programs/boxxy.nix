@@ -84,14 +84,7 @@ in {
   options.programs.boxxy = {
     enable = mkEnableOption "boxxy: Boxes in badly behaving applications";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.boxxy;
-      defaultText = literalExpression "pkgs.boxxy";
-      description = ''
-        Package containing the <command>boxxy</command> program.
-      '';
-    };
+    package = mkPackageOption pkgs "boxxy" { };
 
     rules = mkOption {
       type = types.listOf boxxyRulesOpts;
