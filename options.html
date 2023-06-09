@@ -7518,36 +7518,59 @@ editor using the <code class="envar">EDITOR</code> environment variable.</p><p><
                     &lt;home-manager/modules/services/espanso.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.espanso.package"></a><a class="term" href="options.html#opt-services.espanso.package"><code class="option">services.espanso.package</code></a></span></dt><dd><p>Which espanso package to use</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.espanso</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/espanso.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/espanso.nix&gt;
-                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.espanso.settings"></a><a class="term" href="options.html#opt-services.espanso.settings"><code class="option">services.espanso.settings</code></a></span></dt><dd><p>The Espanso configuration to use. See
-<a class="link" href="https://espanso.org/docs/configuration/" target="_top">https://espanso.org/docs/configuration/</a>
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.espanso.configs"></a><a class="term" href="options.html#opt-services.espanso.configs"><code class="option">services.espanso.configs</code></a></span></dt><dd><p>The Espanso configuration to use. See
+<a class="link" href="https://espanso.org/docs/configuration/basics/" target="_top">https://espanso.org/docs/configuration/basics/</a>
 for a description of available options.</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> </p><pre class="programlisting">{
-  matches = [ ];
+  default = { };
 }</pre><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
-  matches = [
-    { # Simple text replacement
-      trigger = ":espanso";
-      replace = "Hi there!";
-    }
-    { # Dates
-      trigger = ":date";
-      replace = "{{mydate}}";
-      vars = [{
-        name = "mydate";
+  default = {
+    show_notifications = false;
+  };
+  vscode = {
+    filter_title = "Visual Studio Code$";
+    backend = "Clipboard";
+  };
+};
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/espanso.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/services/espanso.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.espanso.matches"></a><a class="term" href="options.html#opt-services.espanso.matches"><code class="option">services.espanso.matches</code></a></span></dt><dd><p>The Espanso matches to use. See
+<a class="link" href="https://espanso.org/docs/matches/basics/" target="_top">https://espanso.org/docs/matches/basics/</a>
+for a description of available options.</p><p><span class="emphasis"><em>Type:</em></span> YAML value</p><p><span class="emphasis"><em>Default:</em></span> </p><pre class="programlisting">{
+  default = {
+    matches = [ ];
+  };
+}</pre><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">{
+  base = {
+    matches = [
+      {
+        trigger = ":now";
+        replace = "It's {{currentdate}} {{currenttime}}";
+      }
+      {
+        trigger = ":hello";
+        replace = "line1\nline2";
+      }
+      {
+        regex = ":hi(?P&lt;person&gt;.*)\\.";
+        replace = "Hi {{person}}!";
+      }
+    ];
+  };
+  global_vars = {
+    global_vars = [
+      {
+        name = "currentdate";
         type = "date";
-        params = { format = "%m/%d/%Y"; };
-      }];
-    }
-    { # Shell commands
-      trigger = ":shell";
-      replace = "{{output}}";
-      vars = [{
-        name = "output";
-        type = "shell";
-        params = { cmd = "echo Hello from your shell"; };
-      }];
-    }
-  ];
-}
+        params = {format = "%d/%m/%Y";};
+      }
+      {
+        name = "currenttime";
+        type = "date";
+        params = {format = "%R";};
+      }
+    ];
+  };
+};
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/espanso.nix#blob-path" target="_top">
                     &lt;home-manager/modules/services/espanso.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.etesync-dav.enable"></a><a class="term" href="options.html#opt-services.etesync-dav.enable"><code class="option">services.etesync-dav.enable</code></a></span></dt><dd><p>Whether to enable etesync-dav.</p><p><span class="emphasis"><em>Type:</em></span> boolean</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/etesync-dav.nix#blob-path" target="_top">
