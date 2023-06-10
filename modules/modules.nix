@@ -311,6 +311,7 @@ let
     ./services/udiskie.nix
     ./services/unclutter.nix
     ./services/unison.nix
+    ./services/vdirsyncer.nix
     ./services/volnoti.nix
     ./services/window-managers/awesome.nix
     ./services/window-managers/bspwm/default.nix
