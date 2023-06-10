@@ -316,7 +316,7 @@ let
           ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
         )
       else
-        [ ]) ++ (optional cfg.systemdIntegration ''
+        [ ]) ++ (optional cfg.systemd.enable ''
           exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL; systemctl --user start sway-session.target"'')
       ++ (optional (!cfg.xwayland) "xwayland disable") ++ [ cfg.extraConfig ]));
 
@@ -328,7 +328,19 @@ let
   };
 
 in {
-  meta.maintainers = with maintainers; [ alexarice sumnerevans sebtm oxalica ];
+  meta.maintainers = with maintainers; [
+    Scrumplex
+    alexarice
+    sumnerevans
+    sebtm
+    oxalica
+  ];
+
+  imports = let modulePath = [ "wayland" "windowManager" "sway" ];
+  in [
+    (mkRenamedOptionModule (modulePath ++ [ "systemdIntegration" ])
+      (modulePath ++ [ "systemd" "enable" ]))
+  ];
 
   options.wayland.windowManager.sway = {
     enable = mkEnableOption "sway wayland compositor";
@@ -346,22 +358,32 @@ in {
       '';
     };
 
-    systemdIntegration = mkOption {
-      type = types.bool;
-      default = pkgs.stdenv.isLinux;
-      example = false;
-      description = ''
-        Whether to enable <filename>sway-session.target</filename> on
-        sway startup. This links to
-        <filename>graphical-session.target</filename>.
-        Some important environment variables will be imported to systemd
-        and dbus user environment before reaching the target, including
-        <itemizedlist>
-          <listitem><para><literal>DISPLAY</literal></para></listitem>
-          <listitem><para><literal>WAYLAND_DISPLAY</literal></para></listitem>
-          <listitem><para><literal>SWAYSOCK</literal></para></listitem>
-          <listitem><para><literal>XDG_CURRENT_DESKTOP</literal></para></listitem>
-        </itemizedlist>
+    systemd = {
+      enable = mkOption {
+        type = types.bool;
+        default = pkgs.stdenv.isLinux;
+        example = false;
+        description = ''
+          Whether to enable <filename>sway-session.target</filename> on
+          sway startup. This links to
+          <filename>graphical-session.target</filename>.
+          Some important environment variables will be imported to systemd
+          and dbus user environment before reaching the target, including
+          <itemizedlist>
+            <listitem><para><literal>DISPLAY</literal></para></listitem>
+            <listitem><para><literal>WAYLAND_DISPLAY</literal></para></listitem>
+            <listitem><para><literal>SWAYSOCK</literal></para></listitem>
+            <listitem><para><literal>XDG_CURRENT_DESKTOP</literal></para></listitem>
+          </itemizedlist>
+        '';
+      };
+
+      xdgAutostart = mkEnableOption ''
+        autostart of applications using
+        <citerefentry>
+          <refentrytitle>systemd-xdg-autostart-generator</refentrytitle>
+          <manvolnum>8</manvolnum>
+        </citerefentry>
       '';
     };
 
@@ -469,13 +491,16 @@ in {
         '';
       };
 
-      systemd.user.targets.sway-session = mkIf cfg.systemdIntegration {
+      systemd.user.targets.sway-session = mkIf cfg.systemd.enable {
         Unit = {
           Description = "sway compositor session";
           Documentation = [ "man:systemd.special(7)" ];
           BindsTo = [ "graphical-session.target" ];
-          Wants = [ "graphical-session-pre.target" ];
+          Wants = [ "graphical-session-pre.target" ]
+            ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
           After = [ "graphical-session-pre.target" ];
+          Before =
+            optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
         };
       };
 

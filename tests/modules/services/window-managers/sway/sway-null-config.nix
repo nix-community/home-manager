@@ -7,7 +7,7 @@
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
     config = null;
-    systemdIntegration = false;
+    systemd.enable = false;
   };
 
   nmt.script = ''
