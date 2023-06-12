@@ -64,7 +64,6 @@ import nmt {
     ./modules/programs/bat
     ./modules/programs/bottom
     ./modules/programs/broot
-    ./modules/programs/browserpass
     ./modules/programs/btop
     ./modules/programs/dircolors
     ./modules/programs/direnv
@@ -155,6 +154,7 @@ import nmt {
     ./modules/programs/autorandr
     ./modules/programs/beets  # One test relies on services.mpd
     ./modules/programs/borgmatic
+    ./modules/programs/browserpass # TODO re-enable on Darwin when https://github.com/NixOS/nixpkgs/pull/236258#issuecomment-1583450593 is fixed
     ./modules/programs/firefox
     ./modules/programs/foot
     ./modules/programs/fuzzel

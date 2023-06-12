@@ -1,19 +1,25 @@
 { pkgs, config, lib, ... }:
-
 let
-
   inherit (lib)
-    mkOption mkEnableOption mkIf maintainers literalExpression types platforms;
+    mkOption mkEnableOption mkIf maintainers literalExpression types platforms
+    mkRemovedOptionModule versionAtLeast;
 
   inherit (lib.hm.assertions) assertPlatform;
 
   cfg = config.services.espanso;
+  espansoVersion = cfg.package.version;
 
   yaml = pkgs.formats.yaml { };
-
 in {
-  meta.maintainers = with maintainers; [ lucasew ];
-
+  imports = [
+    (mkRemovedOptionModule [ "services" "espanso" "settings" ]
+      "Use services.espanso.configs and services.espanso.matches instead.")
+  ];
+  meta.maintainers = [
+    maintainers.lucasew
+    maintainers.bobvanderlinden
+    lib.hm.maintainers.liyangau
+  ];
   options = {
     services.espanso = {
       enable = mkEnableOption "Espanso: cross platform text expander in Rust";
@@ -25,40 +31,67 @@ in {
         defaultText = literalExpression "pkgs.espanso";
       };
 
-      settings = mkOption {
+      configs = mkOption {
         type = yaml.type;
-        default = { matches = [ ]; };
+        default = { default = { }; };
         example = literalExpression ''
           {
-            matches = [
-              { # Simple text replacement
-                trigger = ":espanso";
-                replace = "Hi there!";
-              }
-              { # Dates
-                trigger = ":date";
-                replace = "{{mydate}}";
-                vars = [{
-                  name = "mydate";
-                  type = "date";
-                  params = { format = "%m/%d/%Y"; };
-                }];
-              }
-              { # Shell commands
-                trigger = ":shell";
-                replace = "{{output}}";
-                vars = [{
-                  name = "output";
-                  type = "shell";
-                  params = { cmd = "echo Hello from your shell"; };
-                }];
-              }
-            ];
-          }
+            default = {
+              show_notifications = false;
+            };
+            vscode = {
+              filter_title = "Visual Studio Code$";
+              backend = "Clipboard";
+            };
+          };
         '';
         description = ''
           The Espanso configuration to use. See
-          <link xlink:href="https://espanso.org/docs/configuration/"/>
+          <link xlink:href="https://espanso.org/docs/configuration/basics/"/>
+          for a description of available options.
+        '';
+      };
+
+      matches = mkOption {
+        type = yaml.type;
+        default = { default.matches = [ ]; };
+        example = literalExpression ''
+          {
+            base = {
+              matches = [
+                {
+                  trigger = ":now";
+                  replace = "It's {{currentdate}} {{currenttime}}";
+                }
+                {
+                  trigger = ":hello";
+                  replace = "line1\nline2";
+                }
+                {
+                  regex = ":hi(?P<person>.*)\\.";
+                  replace = "Hi {{person}}!";
+                }
+              ];
+            };
+            global_vars = {
+              global_vars = [
+                {
+                  name = "currentdate";
+                  type = "date";
+                  params = {format = "%d/%m/%Y";};
+                }
+                {
+                  name = "currenttime";
+                  type = "date";
+                  params = {format = "%R";};
+                }
+              ];
+            };
+          };
+        '';
+        description = ''
+          The Espanso matches to use. See
+          <link xlink:href="https://espanso.org/docs/matches/basics/"/>
           for a description of available options.
         '';
       };
@@ -66,12 +99,28 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [ (assertPlatform "services.espanso" pkgs platforms.linux) ];
+    assertions = [
+      (assertPlatform "services.espanso" pkgs platforms.linux)
+      {
+        assertion = versionAtLeast espansoVersion "2";
+        message = ''
+          The services.espanso module only supports Espanso version 2 or later.
+        '';
+      }
+    ];
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."espanso/default.yml".source =
-      yaml.generate "espanso-default.yml" cfg.settings;
+    xdg.configFile = let
+      configFiles = lib.mapAttrs' (name: value: {
+        name = "espanso/config/${name}.yml";
+        value = { source = yaml.generate "${name}.yml" value; };
+      }) cfg.configs;
+      matchesFiles = lib.mapAttrs' (name: value: {
+        name = "espanso/match/${name}.yml";
+        value = { source = yaml.generate "${name}.yml" value; };
+      }) cfg.matches;
+    in configFiles // matchesFiles;
 
     systemd.user.services.espanso = {
       Unit = { Description = "Espanso: cross platform text expander in Rust"; };
