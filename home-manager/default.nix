@@ -6,11 +6,11 @@
 # Extra path to Home Manager. If set then this path will be tried
 # before `$HOME/.config/nixpkgs/home-manager` and
 # `$HOME/.nixpkgs/home-manager`.
-, path ? null }:
+, paths ? [ ] }:
 
 let
 
-  pathStr = if path == null then "" else path;
+  pathsStr = lib.concatMapStringsSep " " (x: ''"'' + x + ''"'') paths;
 
   nixos-option = pkgs.nixos-option or (callPackage
     (pkgs.path + "/nixos/modules/installer/tools/nixos-option") { });
@@ -43,7 +43,7 @@ in runCommand "home-manager" {
       ]
     }" \
     --subst-var-by HOME_MANAGER_LIB '${../lib/bash/home-manager.sh}' \
-    --subst-var-by HOME_MANAGER_PATH '${pathStr}' \
+    --subst-var-by HOME_MANAGER_PATHS '${pathsStr}' \
     --subst-var-by OUT "$out"
 
   install -D -m755 ${./completion.bash} \

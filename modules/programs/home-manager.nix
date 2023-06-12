@@ -13,10 +13,13 @@ in {
     programs.home-manager = {
       enable = mkEnableOption "Home Manager";
 
-      path = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        example = "$HOME/devel/home-manager";
+      paths = mkOption {
+        type = types.listOf types.str;
+        default = [
+          "\${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home-manager"
+          "$HOME/.nixpkgs/home-manager"
+        ];
+        example = [ "$HOME/devel/home-manager" ];
         description = ''
           The default path to use for Home Manager. When
           <literal>null</literal>, then the <filename>home-manager</filename>
@@ -29,6 +32,6 @@ in {
 
   config = mkIf (cfg.enable && !config.submoduleSupport.enable) {
     home.packages =
-      [ (pkgs.callPackage ../../home-manager { inherit (cfg) path; }) ];
+      [ (pkgs.callPackage ../../home-manager { inherit (cfg) paths; }) ];
   };
 }

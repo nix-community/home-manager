@@ -105,9 +105,7 @@ function setConfigFile() {
 
 function setHomeManagerNixPath() {
     local path
-    for path in "@HOME_MANAGER_PATH@" \
-                "${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home-manager" \
-                "$HOME/.nixpkgs/home-manager" ; do
+    for path in @HOME_MANAGER_PATHS@; do
         if [[ -e "$path" || "$path" =~ ^https?:// ]] ; then
             EXTRA_NIX_PATH+=("home-manager=$path")
             return

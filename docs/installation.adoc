@@ -103,7 +103,7 @@ to your `~/.profile` file.
 
 If instead of using channels you want to run Home Manager from a Git
 checkout of the repository then you can use the
-<<opt-programs.home-manager.path>> option to specify the absolute path
+<<opt-programs.home-manager.paths>> option to specify the absolute path
 to the repository.
 
 Once installed you can see <<ch-usage>> for a more detailed

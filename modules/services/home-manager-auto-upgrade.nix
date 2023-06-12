@@ -5,7 +5,7 @@ let
   cfg = config.services.home-manager.autoUpgrade;
 
   homeManagerPackage = pkgs.callPackage ../../home-manager {
-    path = config.programs.home-manager.path;
+    paths = [ (toString config.programs.home-manager.paths) ];
   };
 
 in {

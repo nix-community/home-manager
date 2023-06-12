@@ -8,7 +8,8 @@ rec {
     jsonModuleMaintainers = jsonModuleMaintainers; # Unstable, mainly for CI.
   };
 
-  home-manager = pkgs.callPackage ./home-manager { path = toString ./.; };
+  home-manager =
+    pkgs.callPackage ./home-manager { paths = [ (toString ./.) ]; };
 
   install =
     pkgs.callPackage ./home-manager/install.nix { inherit home-manager; };
