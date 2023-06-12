@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-05-27 09:08+0200\n"
-"PO-Revision-Date: 2023-06-07 07:51+0000\n"
-"Last-Translator: Sam Chu <samchu-primary@outlook.com>\n"
+"PO-Revision-Date: 2023-06-12 10:49+0000\n"
+"Last-Translator: Hongtyu Bhe <mfthits@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "home-manager/cli/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -31,6 +31,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"需要确保 Home Manager 在 %s 中，%s 已废弃。\n"
+"请手动移动到 %s"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
@@ -38,7 +40,7 @@ msgstr "未找到配置文件。请在 %s 处创建一份"
 
 #: home-manager/home-manager:136
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "在 %s 以及 %s 中未能找到合适的档案目录"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:191
@@ -63,9 +65,8 @@ msgid "Creating %s..."
 msgstr "正在创建 %s ..."
 
 #: home-manager/home-manager:427
-#, fuzzy
 msgid "Creating initial Home Manager generation..."
-msgstr "正在创建初始 Home Manager 生成 ..."
+msgstr "正在创建 Home Manager 初始化配置生成 ..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/home-manager:432
@@ -151,7 +152,7 @@ msgstr "似乎没有安装 home-manager 软件包。"
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:702
 msgid "Sorry, this command is not yet supported in flake setup"
-msgstr ""
+msgstr "抱歉，当前命令暂不支持在 flake 配置中使用"
 
 #: home-manager/home-manager:739
 msgid "Unknown argument %s"
