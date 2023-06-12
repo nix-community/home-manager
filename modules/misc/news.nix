@@ -1094,6 +1094,13 @@ in
           may be necessary as new modules are added.
         '';
       }
+
+      {
+        time = "2023-06-14T21:25:34+00:00";
+        message = ''
+          A new module is available: 'programs.git-credential-oauth'.
+        '';
+      }
     ];
   };
 }

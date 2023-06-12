@@ -85,6 +85,7 @@ let
     ./programs/getmail.nix
     ./programs/gh.nix
     ./programs/git-cliff.nix
+    ./programs/git-credential-oauth.nix
     ./programs/git.nix
     ./programs/gitui.nix
     ./programs/gnome-terminal.nix
