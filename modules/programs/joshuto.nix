@@ -6,7 +6,7 @@ let
   cfg = config.programs.joshuto;
   tomlFormat = pkgs.formats.toml { };
 in {
-  meta.maintainers = [ maintainers.rasmus-kirk ];
+  meta.maintainers = [ hm.maintainers.rasmus-kirk ];
 
   options.programs.joshuto = {
     enable = mkEnableOption "joshuto file manager";
