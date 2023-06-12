@@ -335,6 +335,12 @@
     github = "sebtm";
     githubId = 17243347;
   };
+  rasmus-kirk = {
+    name = "Rasmus Kirk";
+    email = "mail@rasmuskirk.com";
+    github = "rasmus-kirk";
+    githubId = 57323869;
+  };
   rosuavio = {
     name = "Rosario Pulella";
     email = "RosarioPulella@gmail.com";
