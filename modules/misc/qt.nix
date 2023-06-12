@@ -38,7 +38,7 @@ in {
       enable = mkEnableOption "Qt 4 and 5 configuration";
 
       platformTheme = mkOption {
-        type = types.nullOr (types.enum [ "gtk" "gnome" ]);
+        type = types.nullOr (types.enum [ "gtk" "gnome" "kde" ]);
         default = null;
         example = "gnome";
         relatedPackages =
@@ -58,6 +58,10 @@ in {
               <listitem><para>Use GNOME theme with
                 <link xlink:href="https://github.com/FedoraQt/QGnomePlatform">qgnomeplatform</link>
               </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>kde</literal></term>
+              <listitem><para>Use Qt settings from Plasma</para></listitem>
             </varlistentry>
           </variablelist>
         '';
@@ -134,14 +138,17 @@ in {
     # Necessary because home.sessionVariables doesn't support mkIf
     home.sessionVariables = filterAttrs (n: v: v != null) {
       QT_QPA_PLATFORMTHEME =
-        if cfg.platformTheme == "gnome" then "gnome" else "gtk2";
+        if cfg.platformTheme == "gtk" then "gtk2" else cfg.platformTheme;
       QT_STYLE_OVERRIDE = cfg.style.name;
     };
 
     home.packages = if cfg.platformTheme == "gnome" then
       [ pkgs.qgnomeplatform ]
       ++ lib.optionals (cfg.style.package != null) [ cfg.style.package ]
-    else
+    else if cfg.platformTheme == "kde" then [
+      pkgs.libsForQt5.plasma-integration
+      pkgs.libsForQt5.systemsettings
+    ] else
       [ pkgs.libsForQt5.qtstyleplugins ];
 
     xsession.importedVariables = [ "QT_QPA_PLATFORMTHEME" ]
