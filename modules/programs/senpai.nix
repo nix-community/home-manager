@@ -109,5 +109,5 @@ in {
     in toSCFG (cfg.config // cfg.extraConfig);
   };
 
-  meta.maintainers = [ hm.maintainers.malvo ];
+  meta.maintainers = [ maintainers.jleightcap ];
 }
