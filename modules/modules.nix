@@ -32,7 +32,7 @@ let
     ./misc/numlock.nix
     ./misc/pam.nix
     ./misc/qt.nix
-    ./misc/specialization.nix
+    ./misc/specialisation.nix
     ./misc/submodule-support.nix
     ./misc/tmpfiles.nix
     ./misc/version.nix

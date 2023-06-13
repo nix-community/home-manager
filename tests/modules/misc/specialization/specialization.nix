@@ -4,7 +4,7 @@ with lib;
 
 {
   home.file.testfile.text = "not special";
-  specialization.test.configuration = {
+  specialisation.test.configuration = {
     home.file.testfile.text = "very special";
   };
 
@@ -12,7 +12,7 @@ with lib;
     assertFileExists home-files/testfile
     assertFileContains home-files/testfile "not special"
 
-    assertFileExists specialization/test/home-files/testfile
-    assertFileContains specialization/test/home-files/testfile "not special"
+    assertFileExists specialisation/test/home-files/testfile
+    assertFileContains specialisation/test/home-files/testfile "not special"
   '';
 }
