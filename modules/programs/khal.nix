@@ -29,7 +29,6 @@ let
       "path = ${
         value.local.path + "/"
         + (optionalString (value.khal.type == "discover") value.khal.glob)
-        + "/*"
       }"
     ] ++ optional (value.khal.readOnly) "readonly = True" ++ [
       (toKeyValueIfDefined (getAttrs [ "type" "color" "priority" ] value.khal))

@@ -8,7 +8,7 @@ with lib;
       type = types.nullOr (types.enum [ "calendar" "discover" ]);
       default = null;
       description = ''
-        There is no description of this option.
+        Either a single calendar (calendar which is the default) or a directory with multiple calendars (discover).
       '';
     };
 
