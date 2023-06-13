@@ -2,9 +2,7 @@
 
 with lib;
 
-let
-  cfg = config.programs.senpai;
-  cfgFmt = pkgs.formats.yaml { };
+let cfg = config.programs.senpai;
 in {
   options.programs.senpai = {
     enable = mkEnableOption "senpai";
@@ -16,17 +14,21 @@ in {
     };
     config = mkOption {
       type = types.submodule {
-        freeformType = cfgFmt.type;
         options = {
-          addr = mkOption {
+          address = mkOption {
             type = types.str;
             description = ''
-              The address (host[:port]) of the IRC server. senpai uses TLS
-              connections by default unless you specify no-tls option. TLS
-              connections default to port 6697, plain-text use port 6667.
+              The address (_host[:port]_) of the IRC server. senpai uses TLS
+              connections by default unless you specify tls option to be false.
+              TLS connections default to port 6697, plain-text use port 6667.
+
+              ircs:// & irc:// & irc+insecure:// URLs are supported, in which
+              case only the hostname and port parts will be used. If the scheme
+              is ircs/irc+insecure, tls will be overriden and set to true/false
+              accordingly.
             '';
           };
-          nick = mkOption {
+          nickname = mkOption {
             type = types.str;
             description = ''
               Your nickname, sent with a NICK IRC message. It mustn't contain
@@ -41,32 +43,70 @@ in {
               reside world-readable in the Nix store.
             '';
           };
-          no-tls = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Disables TLS encryption.";
+          password-cmd = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = ''
+              Alternatively to providing your SASL authentication password
+              directly in plaintext, you can specify a command to be run to
+              fetch the password at runtime. This is useful if you store your
+              passwords in a separate (probably encrypted) file using `gpg` or
+              a command line password manager such as _pass_ or _gopass_. If a
+              password-cmd is provided, the value of password will be ignored
+              and the first line of the output of *password-cmd* will be used
+              for login.
+            '';
           };
         };
       };
-      example = literalExpression ''
-        {
-          addr = "libera.chat:6697";
-          nick = "nicholas";
-          password = "verysecurepassword";
-        }
-      '';
+    };
+    extraConfig = mkOption {
+      type = types.attrs;
+      default = { };
       description = ''
-        Configuration for senpai. For a complete list of options, see
-        <citerefentry><refentrytitle>senpai</refentrytitle>
-        <manvolnum>5</manvolnum></citerefentry>.
+        Options that should be appended to the senpai configuration file.
       '';
     };
+    example = literalExpression ''
+      {
+        address = "libera.chat:6697";
+        nickname = "nicholas";
+        password = "verysecurepassword";
+      }
+    '';
+    description = ''
+      Configuration for senpai. For a complete list of options, see
+      <citerefentry><refentrytitle>senpai</refentrytitle>
+      <manvolnum>5</manvolnum></citerefentry>.
+    '';
   };
 
   config = mkIf cfg.enable {
+    warnings = with cfg.config;
+      if (password-cmd != null && password != null) then
+        [ "senpai: password-command overrides password!" ]
+      else
+        [ ];
     home.packages = [ cfg.package ];
-    xdg.configFile."senpai/senpai.yaml".source =
-      cfgFmt.generate "senpai.yaml" cfg.config;
+    xdg.configFile."senpai/senpai.scfg".text = let
+      toSCFG' = v:
+        if isAttrs v then ''
+          {
+            ${toSCFG v}
+          }
+        '' else if isList v then
+          concatStringsSep " " v
+        else if isString v then
+          v
+        else if isInt v || isFloat v || isBool v then
+          builtins.toJSON v
+        else
+          abort "toSCFG: type ${builtins.typeOf v} is unsupported";
+      toSCFG = v:
+        concatStringsSep "\n"
+        (mapAttrsToList (key: val: "${key} ${toSCFG' val}")
+          (filterAttrs (_: val: val != null && val != { }) v));
+    in toSCFG (cfg.config // cfg.extraConfig);
   };
 
   meta.maintainers = [ hm.maintainers.malvo ];

@@ -120,6 +120,7 @@ import nmt {
     ./modules/programs/sagemath
     ./modules/programs/sbt
     ./modules/programs/scmpuff
+    ./modules/programs/senpai
     ./modules/programs/sioyek
     ./modules/programs/sm64ex
     ./modules/programs/ssh
