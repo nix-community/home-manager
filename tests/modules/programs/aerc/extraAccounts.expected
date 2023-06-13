@@ -8,6 +8,10 @@ source = maildir:///dev/null
 [Test2]
 pgp-key-id = 42
 
+[primary]
+from = Foo Bar <addr@mail.invalid>
+source = imap://foobar@imap.host.invalid:1337
+
 [a_imap-nopasscmd-tls-starttls-folders]
 copy-to = aercSent
 default = aercInbox
@@ -74,3 +78,9 @@ outgoing = smtps+login://foobar@smtp.host.invalid:42
 [o_msmtp]
 from = Foo Bar <addr@mail.invalid>
 outgoing = msmtpq --read-envelope-from --read-recipients
+
+[p_overwrite_defaults]
+from = test <test@email.invalid>
+outgoing = imap+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337
+postpone = dRaFts
+source = smtp+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337

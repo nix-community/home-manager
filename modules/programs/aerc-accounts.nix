@@ -4,7 +4,6 @@ with lib;
 
 let
   mapAttrNames = f: attr:
-    with builtins;
     listToAttrs (attrValues (mapAttrs (k: v: {
       name = f k;
       value = v;
@@ -59,6 +58,7 @@ in {
             See aerc-config(5).
           '';
         };
+
         extraBinds = mkOption {
           type = confSections;
           default = { };
@@ -70,6 +70,7 @@ in {
             See <citerefentry><refentrytitle>aerc-config</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
           '';
         };
+
         extraConfig = mkOption {
           type = confSections;
           default = { };
@@ -110,14 +111,18 @@ in {
       };
     });
   };
+
   mkAccount = name: account:
     let
       nullOrMap = f: v: if v == null then v else f v;
+
       optPort = port: if port != null then ":${toString port}" else "";
+
       optAttr = k: v:
         if v != null && v != [ ] && v != "" then { ${k} = v; } else { };
+
       optPwCmd = k: p:
-        optAttr "${k}-cred-cmd" (nullOrMap (builtins.concatStringsSep " ") p);
+        optAttr "${k}-cred-cmd" (nullOrMap (concatStringsSep " ") p);
 
       useOauth = auth: builtins.elem auth [ "oauthbearer" "xoauth2" ];
 
@@ -133,6 +138,7 @@ in {
           source =
             "maildir://${config.accounts.email.maildirBasePath}/${cfg.maildir.path}";
         };
+
         imap = { userName, imap, passwordCommand, aerc, ... }@cfg:
           let
             loginMethod' =
@@ -147,11 +153,14 @@ in {
               if imap.tls.useStartTls then "imap" else "imaps${loginMethod'}"
             else
               "imap+insecure";
+
             port' = optPort imap.port;
+
           in {
             source =
               "${protocol}://${userName}@${imap.host}${port'}${oauthParams'}";
           } // optPwCmd "source" passwordCommand;
+
         smtp = { userName, smtp, passwordCommand, ... }@cfg:
           let
             loginMethod' =
@@ -166,25 +175,32 @@ in {
               "smtps${loginMethod'}"
             else
               "smtp${loginMethod'}";
+
             port' = optPort smtp.port;
+
             smtp-starttls =
               if smtp.tls.enable && smtp.tls.useStartTls then "yes" else null;
+
           in {
             outgoing =
               "${protocol}://${userName}@${smtp.host}${port'}${oauthParams'}";
           } // optPwCmd "outgoing" passwordCommand
           // optAttr "smtp-starttls" smtp-starttls;
+
         msmtp = cfg: {
           outgoing = "msmtpq --read-envelope-from --read-recipients";
         };
+
       };
+
       basicCfg = account:
         {
           from = "${account.realName} <${account.address}>";
         } // (optAttr "copy-to" account.folders.sent)
         // (optAttr "default" account.folders.inbox)
         // (optAttr "postpone" account.folders.drafts)
-        // (optAttr "aliases" account.aliases) // account.aerc.extraAccounts;
+        // (optAttr "aliases" account.aliases);
+
       sourceCfg = account:
         if account.mbsync.enable || account.offlineimap.enable then
           mkConfig.maildir account
@@ -192,6 +208,7 @@ in {
           mkConfig.imap account
         else
           { };
+
       outgoingCfg = account:
         if account.msmtp.enable then
           mkConfig.msmtp account
@@ -199,9 +216,13 @@ in {
           mkConfig.smtp account
         else
           { };
-    in (basicCfg account) // (sourceCfg account) // (outgoingCfg account);
+
+    in (basicCfg account) // (sourceCfg account) // (outgoingCfg account)
+    // account.aerc.extraAccounts;
+
   mkAccountConfig = name: account:
     mapAttrNames (addAccountName name) account.aerc.extraConfig;
+
   mkAccountBinds = name: account:
     mapAttrNames (addAccountName name) account.aerc.extraBinds;
 }
