@@ -77,12 +77,8 @@ let
           }>${escapeXML bookmark.name}</A>'';
 
       directoryToHTML = indentLevel: directory: ''
-        ${indent indentLevel}<DT>${
-          if directory.toolbar then
-            ''<H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks Toolbar''
-          else
-            "<H3>${escapeXML directory.name}"
-        }</H3>
+        ${indent indentLevel}<DT>
+          <H3>${escapeXML directory.name}</H3>
         ${indent indentLevel}<DL><p>
         ${allItemsToHTML (indentLevel + 1) directory.bookmarks}
         ${indent indentLevel}</p></DL>'';
@@ -97,8 +93,9 @@ let
         lib.concatStringsSep "\n"
         (map (itemToHTMLOrRecurse indentLevel) bookmarks);
 
-      bookmarkEntries = allItemsToHTML 1 bookmarks;
-    in pkgs.writeText "firefox-bookmarks.html" ''
+      splitEntries = partition (b: b.toolbar) bookmarks;
+
+    in pkgs.writeText "firefox-bookmarks.html" (''
       <!DOCTYPE NETSCAPE-Bookmark-file-1>
       <!-- This is an automatically generated file.
         It will be read and overwritten.
@@ -106,10 +103,17 @@ let
       <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
       <TITLE>Bookmarks</TITLE>
       <H1>Bookmarks Menu</H1>
+
       <DL><p>
-      ${bookmarkEntries}
+        ${allItemsToHTML 1 splitEntries.wrong}
+    '' + (lib.optionalString (length splitEntries.right > 0) ''
+      <DT><H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks Toolbar</H3>
+      <DL><p>
+        ${allItemsToHTML 1 splitEntries.right}
       </p></DL>
-    '';
+    '') + ''
+      </p></DL>
+    '');
 
 in {
   meta.maintainers = [ maintainers.rycee maintainers.kira-bruneau ];
@@ -270,6 +274,13 @@ in {
                       type = types.str;
                       description = "Bookmark url, use %s for search terms.";
                     };
+
+                    toolbar = mkOption {
+                      type = types.bool;
+                      default = false;
+                      description = "If bookmark should be shown in toolbar.";
+                    };
+
                   };
                 }) // {
                   description = "bookmark submodule";
