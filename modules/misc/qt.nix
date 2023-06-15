@@ -38,11 +38,15 @@ in {
       enable = mkEnableOption "Qt 4 and 5 configuration";
 
       platformTheme = mkOption {
-        type = types.nullOr (types.enum [ "gtk" "gnome" "kde" ]);
+        type = types.nullOr (types.enum [ "gtk" "gnome" "qtct" "kde" ]);
         default = null;
         example = "gnome";
-        relatedPackages =
-          [ "qgnomeplatform" [ "libsForQt5" "qtstyleplugins" ] ];
+        relatedPackages = [
+          "qgnomeplatform"
+          [ "libsForQt5" "qtstyleplugins" ]
+          [ "libsForQt5" "qt5ct" ]
+          [ "qt6Packages" "qt6ct" ]
+        ];
         description = ''
           Platform theme to use for Qt applications.</para>
           <para>The options are
@@ -58,6 +62,14 @@ in {
               <listitem><para>Use GNOME theme with
                 <link xlink:href="https://github.com/FedoraQt/QGnomePlatform">qgnomeplatform</link>
               </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>qtct</literal></term>
+              <listitem><para>Use Qt style set using
+                <link xlink:href="https://github.com/desktop-app/qt5ct">qt5ct</link>
+                and
+                <link xlink:href="https://github.com/trialuser02/qt6ct">qt6ct</link>
+              applications</para></listitem>
             </varlistentry>
             <varlistentry>
               <term><literal>kde</literal></term>
@@ -137,15 +149,22 @@ in {
 
     # Necessary because home.sessionVariables doesn't support mkIf
     home.sessionVariables = filterAttrs (n: v: v != null) {
-      QT_QPA_PLATFORMTHEME =
-        if cfg.platformTheme == "gtk" then "gtk2" else cfg.platformTheme;
+      QT_QPA_PLATFORMTHEME = if cfg.platformTheme == "gtk" then
+        "gtk2"
+      else if cfg.platformTheme == "qtct" then
+        "qt5ct"
+      else
+        cfg.platformTheme;
       QT_STYLE_OVERRIDE = cfg.style.name;
     };
 
     home.packages = if cfg.platformTheme == "gnome" then
       [ pkgs.qgnomeplatform ]
       ++ lib.optionals (cfg.style.package != null) [ cfg.style.package ]
-    else if cfg.platformTheme == "kde" then [
+    else if cfg.platformTheme == "qtct" then [
+      pkgs.libsForQt5.qt5ct
+      pkgs.qt6Packages.qt6ct
+    ] else if cfg.platformTheme == "kde" then [
       pkgs.libsForQt5.plasma-integration
       pkgs.libsForQt5.systemsettings
     ] else
