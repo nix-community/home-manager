@@ -22,6 +22,8 @@ let
     adwaita-highcontrastinverse = adwaita-qt;
 
     breeze = libsForQt5.breeze-qt5;
+
+    kvantum = libsForQt5.qtstyleplugin-kvantum;
   };
 
 in {
@@ -38,11 +40,17 @@ in {
       enable = mkEnableOption "Qt 4 and 5 configuration";
 
       platformTheme = mkOption {
-        type = types.nullOr (types.enum [ "gtk" "gnome" "kde" ]);
+        type = types.nullOr (types.enum [ "gtk" "gnome" "qtct" "kde" ]);
         default = null;
         example = "gnome";
-        relatedPackages =
-          [ "qgnomeplatform" [ "libsForQt5" "qtstyleplugins" ] ];
+        relatedPackages = [
+          "qgnomeplatform"
+          [ "libsForQt5" "qtstyleplugins" ]
+          [ "libsForQt5" "qt5ct" ]
+          [ "qt6Packages" "qt6ct" ]
+          [ "libsForQt5" "plasma-integration" ]
+          [ "libsForQt5" "systemsettings" ]
+        ];
         description = ''
           Platform theme to use for Qt applications.</para>
           <para>The options are
@@ -60,6 +68,14 @@ in {
               </para></listitem>
             </varlistentry>
             <varlistentry>
+              <term><literal>qtct</literal></term>
+              <listitem><para>Use Qt style set using
+                <link xlink:href="https://github.com/desktop-app/qt5ct">qt5ct</link>
+                and
+                <link xlink:href="https://github.com/trialuser02/qt6ct">qt6ct</link>
+              applications</para></listitem>
+            </varlistentry>
+            <varlistentry>
               <term><literal>kde</literal></term>
               <listitem><para>Use Qt settings from Plasma</para></listitem>
             </varlistentry>
@@ -72,7 +88,12 @@ in {
           type = types.nullOr types.str;
           default = null;
           example = "adwaita-dark";
-          relatedPackages = [ "adwaita-qt" [ "libsForQt5" "qtstyleplugins" ] ];
+          relatedPackages = [
+            "adwaita-qt"
+            "breeze-qt5"
+            [ "libsForQt5" "qtstyleplugins" ]
+            [ "libsForQt5" "qtstyleplugin-kvantum" ]
+          ];
           description = ''
             Style to use for Qt5 applications. Case-insensitive.
             </para>
@@ -103,6 +124,12 @@ in {
                 <term><literal>plastique</literal></term>
                 <listitem><para>Use styles from
                   <link xlink:href="https://github.com/qt/qtstyleplugins">qtstyleplugins</link>
+                </para></listitem>
+              </varlistentry>
+              <varlistentry>
+                <term><literal>kvantum</literal></term>
+                <listitem><para>Use styles from
+                  <link xlink:href="https://github.com/tsujan/Kvantum">kvantum</link>
                 </para></listitem>
               </varlistentry>
             </variablelist>
@@ -137,15 +164,22 @@ in {
 
     # Necessary because home.sessionVariables doesn't support mkIf
     home.sessionVariables = filterAttrs (n: v: v != null) {
-      QT_QPA_PLATFORMTHEME =
-        if cfg.platformTheme == "gtk" then "gtk2" else cfg.platformTheme;
+      QT_QPA_PLATFORMTHEME = if cfg.platformTheme == "gtk" then
+        "gtk2"
+      else if cfg.platformTheme == "qtct" then
+        "qt5ct"
+      else
+        cfg.platformTheme;
       QT_STYLE_OVERRIDE = cfg.style.name;
     };
 
     home.packages = if cfg.platformTheme == "gnome" then
       [ pkgs.qgnomeplatform ]
       ++ lib.optionals (cfg.style.package != null) [ cfg.style.package ]
-    else if cfg.platformTheme == "kde" then [
+    else if cfg.platformTheme == "qtct" then [
+      pkgs.libsForQt5.qt5ct
+      pkgs.qt6Packages.qt6ct
+    ] else if cfg.platformTheme == "kde" then [
       pkgs.libsForQt5.plasma-integration
       pkgs.libsForQt5.systemsettings
     ] else
