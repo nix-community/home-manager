@@ -23,7 +23,11 @@ let
 
     breeze = libsForQt5.breeze-qt5;
 
-    kvantum = libsForQt5.qtstyleplugin-kvantum;
+    kvantum = [
+      qtstyleplugin-kvantum-qt4
+      libsForQt5.qtstyleplugin-kvantum
+      qt6Packages.qtstyleplugin-kvantum
+    ];
   };
 
 in {
@@ -37,7 +41,7 @@ in {
 
   options = {
     qt = {
-      enable = mkEnableOption "Qt 4 and 5 configuration";
+      enable = mkEnableOption "Qt 4, 5 and 6 configuration";
 
       platformTheme = mkOption {
         type = types.nullOr (types.enum [ "gtk" "gnome" "qtct" "kde" ]);
@@ -92,10 +96,12 @@ in {
             "adwaita-qt"
             "breeze-qt5"
             [ "libsForQt5" "qtstyleplugins" ]
+            "qtstyleplugin-kvantum-qt4"
             [ "libsForQt5" "qtstyleplugin-kvantum" ]
+            [ "qt6Packages" "qtstyleplugin-kvantum" ]
           ];
           description = ''
-            Style to use for Qt5 applications. Case-insensitive.
+            Style to use for Qt5/Qt6 applications. Case-insensitive.
             </para>
             <para>Some examples are
             <variablelist>
@@ -137,11 +143,11 @@ in {
         };
 
         package = mkOption {
-          type = types.nullOr types.package;
+          type = with types; nullOr (either package (listOf package));
           default = null;
           example = literalExpression "pkgs.adwaita-qt";
           description = ''
-            Theme package to be used in Qt5 applications.
+            Theme package to be used in Qt5/Qt6 applications.
             Auto-detected from <option>qt.style.name</option> if possible.
           '';
         };
@@ -183,7 +189,8 @@ in {
       pkgs.libsForQt5.systemsettings
     ] else
       [ pkgs.libsForQt5.qtstyleplugins ])
-      ++ lib.optionals (cfg.style.package != null) [ cfg.style.package ];
+      ++ lib.optionals (cfg.style.package != null)
+      (lib.toList cfg.style.package);
 
     xsession.importedVariables = [ "QT_QPA_PLATFORMTHEME" ]
       ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
