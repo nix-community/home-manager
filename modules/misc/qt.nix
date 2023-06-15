@@ -22,6 +22,8 @@ let
     adwaita-highcontrastinverse = adwaita-qt;
 
     breeze = libsForQt5.breeze-qt5;
+
+    kvantum = libsForQt5.qtstyleplugin-kvantum;
   };
 
 in {
@@ -86,7 +88,12 @@ in {
           type = types.nullOr types.str;
           default = null;
           example = "adwaita-dark";
-          relatedPackages = [ "adwaita-qt" [ "libsForQt5" "qtstyleplugins" ] ];
+          relatedPackages = [
+            "adwaita-qt"
+            "breeze-qt5"
+            [ "libsForQt5" "qtstyleplugins" ]
+            [ "libsForQt5" "qtstyleplugin-kvantum" ]
+          ];
           description = ''
             Style to use for Qt5 applications. Case-insensitive.
             </para>
@@ -117,6 +124,12 @@ in {
                 <term><literal>plastique</literal></term>
                 <listitem><para>Use styles from
                   <link xlink:href="https://github.com/qt/qtstyleplugins">qtstyleplugins</link>
+                </para></listitem>
+              </varlistentry>
+              <varlistentry>
+                <term><literal>kvantum</literal></term>
+                <listitem><para>Use styles from
+                  <link xlink:href="https://github.com/tsujan/Kvantum">kvantum</link>
                 </para></listitem>
               </varlistentry>
             </variablelist>
