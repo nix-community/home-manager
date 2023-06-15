@@ -173,9 +173,8 @@ in {
       QT_STYLE_OVERRIDE = cfg.style.name;
     };
 
-    home.packages = if cfg.platformTheme == "gnome" then
+    home.packages = (if cfg.platformTheme == "gnome" then
       [ pkgs.qgnomeplatform ]
-      ++ lib.optionals (cfg.style.package != null) [ cfg.style.package ]
     else if cfg.platformTheme == "qtct" then [
       pkgs.libsForQt5.qt5ct
       pkgs.qt6Packages.qt6ct
@@ -183,7 +182,8 @@ in {
       pkgs.libsForQt5.plasma-integration
       pkgs.libsForQt5.systemsettings
     ] else
-      [ pkgs.libsForQt5.qtstyleplugins ];
+      [ pkgs.libsForQt5.qtstyleplugins ])
+      ++ lib.optionals (cfg.style.package != null) [ cfg.style.package ];
 
     xsession.importedVariables = [ "QT_QPA_PLATFORMTHEME" ]
       ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
