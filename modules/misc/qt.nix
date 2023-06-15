@@ -46,6 +46,8 @@ in {
           [ "libsForQt5" "qtstyleplugins" ]
           [ "libsForQt5" "qt5ct" ]
           [ "qt6Packages" "qt6ct" ]
+          [ "libsForQt5" "plasma-integration" ]
+          [ "libsForQt5" "systemsettings" ]
         ];
         description = ''
           Platform theme to use for Qt applications.</para>
