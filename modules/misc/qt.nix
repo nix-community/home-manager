@@ -31,7 +31,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with maintainers; [ rycee thiagokokada ];
 
   imports = [
     (mkChangedOptionModule [ "qt" "useGtkTheme" ] [ "qt" "platformTheme" ]
