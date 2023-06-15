@@ -1125,6 +1125,14 @@ in
           can control it by using the `qt5ct` and `qt6ct` applications;
           - `qt.style.name = "kvantum"`: override the style by using themes
           written in SVG. Supports many popular themes.
+          '';
+      }
+
+      {
+        time = "2023-06-17T22:18:22+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          A new modules is available: 'programs.zsh.antidote'
         '';
       }
     ];

@@ -51,6 +51,7 @@ let
     ./programs/afew.nix
     ./programs/alacritty.nix
     ./programs/alot.nix
+    ./programs/antidote.nix
     ./programs/aria2.nix
     ./programs/astroid.nix
     ./programs/atuin.nix

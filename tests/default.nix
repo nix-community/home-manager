@@ -57,6 +57,7 @@ import nmt {
     ./modules/programs/aerc
     ./modules/programs/alacritty
     ./modules/programs/alot
+    ./modules/programs/antidote
     ./modules/programs/aria2
     ./modules/programs/atuin
     ./modules/programs/autojump
