@@ -23,11 +23,15 @@ let
 
     breeze = libsForQt5.breeze-qt5;
 
-    kvantum = libsForQt5.qtstyleplugin-kvantum;
+    kvantum = [
+      qtstyleplugin-kvantum-qt4
+      libsForQt5.qtstyleplugin-kvantum
+      qt6Packages.qtstyleplugin-kvantum
+    ];
   };
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with maintainers; [ rycee thiagokokada ];
 
   imports = [
     (mkChangedOptionModule [ "qt" "useGtkTheme" ] [ "qt" "platformTheme" ]
@@ -37,7 +41,7 @@ in {
 
   options = {
     qt = {
-      enable = mkEnableOption "Qt 4 and 5 configuration";
+      enable = mkEnableOption "Qt 4, 5 and 6 configuration";
 
       platformTheme = mkOption {
         type = types.nullOr (types.enum [ "gtk" "gnome" "qtct" "kde" ]);
@@ -92,10 +96,12 @@ in {
             "adwaita-qt"
             "breeze-qt5"
             [ "libsForQt5" "qtstyleplugins" ]
+            "qtstyleplugin-kvantum-qt4"
             [ "libsForQt5" "qtstyleplugin-kvantum" ]
+            [ "qt6Packages" "qtstyleplugin-kvantum" ]
           ];
           description = ''
-            Style to use for Qt5 applications. Case-insensitive.
+            Style to use for Qt5/Qt6 applications. Case-insensitive.
             </para>
             <para>Some examples are
             <variablelist>
@@ -137,11 +143,11 @@ in {
         };
 
         package = mkOption {
-          type = types.nullOr types.package;
+          type = with types; nullOr (either package (listOf package));
           default = null;
           example = literalExpression "pkgs.adwaita-qt";
           description = ''
-            Theme package to be used in Qt5 applications.
+            Theme package to be used in Qt5/Qt6 applications.
             Auto-detected from <option>qt.style.name</option> if possible.
           '';
         };
@@ -173,9 +179,8 @@ in {
       QT_STYLE_OVERRIDE = cfg.style.name;
     };
 
-    home.packages = if cfg.platformTheme == "gnome" then
+    home.packages = (if cfg.platformTheme == "gnome" then
       [ pkgs.qgnomeplatform ]
-      ++ lib.optionals (cfg.style.package != null) [ cfg.style.package ]
     else if cfg.platformTheme == "qtct" then [
       pkgs.libsForQt5.qt5ct
       pkgs.qt6Packages.qt6ct
@@ -183,16 +188,20 @@ in {
       pkgs.libsForQt5.plasma-integration
       pkgs.libsForQt5.systemsettings
     ] else
-      [ pkgs.libsForQt5.qtstyleplugins ];
+      [ pkgs.libsForQt5.qtstyleplugins ])
+      ++ lib.optionals (cfg.style.package != null)
+      (lib.toList cfg.style.package);
 
     xsession.importedVariables = [ "QT_QPA_PLATFORMTHEME" ]
       ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
 
-    # Enable GTK+ style for Qt4 in either case.
+    # Enable GTK+ style for Qt4 in Gtk/GNOME.
     # It doesn’t support the platform theme packages.
-    home.activation.useGtkThemeInQt4 = hm.dag.entryAfter [ "writeBoundary" ] ''
-      $DRY_RUN_CMD ${pkgs.crudini}/bin/crudini $VERBOSE_ARG \
-        --set "${config.xdg.configHome}/Trolltech.conf" Qt style GTK+
-    '';
+    home.activation.useGtkThemeInQt4 =
+      mkIf (cfg.platformTheme == "gtk" || cfg.platformTheme == "gnome")
+      (hm.dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD ${pkgs.crudini}/bin/crudini $VERBOSE_ARG \
+          --set "${config.xdg.configHome}/Trolltech.conf" Qt style GTK+
+      '');
   };
 }
