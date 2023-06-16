@@ -883,7 +883,6 @@ COMMAND=""
 COMMAND_ARGS=()
 FLAKE_ARG=""
 
-setHomeManagerNixPath
 setHomeManagerPathVariables
 
 while [[ $# -gt 0 ]]; do
@@ -978,6 +977,8 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+setHomeManagerNixPath
 
 if [[ -z $COMMAND ]]; then
     doHelp >&2
