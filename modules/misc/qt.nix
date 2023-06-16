@@ -94,7 +94,7 @@ in {
           example = "adwaita-dark";
           relatedPackages = [
             "adwaita-qt"
-            "breeze-qt5"
+            [ "libsForQt5" "breeze-qt5" ]
             [ "libsForQt5" "qtstyleplugins" ]
             "qtstyleplugin-kvantum-qt4"
             [ "libsForQt5" "qtstyleplugin-kvantum" ]
