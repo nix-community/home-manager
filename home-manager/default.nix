@@ -3,9 +3,7 @@
 # used for pkgs.path for nixos-option
 , pkgs
 
-# Extra path to Home Manager. If set then this path will be tried
-# before `$HOME/.config/nixpkgs/home-manager` and
-# `$HOME/.nixpkgs/home-manager`.
+# Path to use as the Home Manager channel.
 , path ? null }:
 
 let
