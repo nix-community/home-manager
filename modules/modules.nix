@@ -70,6 +70,7 @@ let
     ./programs/browserpass.nix
     ./programs/btop.nix
     ./programs/carapace.nix
+    ./programs/cava.nix
     ./programs/chromium.nix
     ./programs/command-not-found/command-not-found.nix
     ./programs/comodoro.nix

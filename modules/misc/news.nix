@@ -1281,6 +1281,13 @@ in
           A new module is available: 'services.darkman'.
         '';
       }
+
+      {
+        time = "2023-10-24T06:14:53+00:00";
+        message = ''
+          A new module is available: 'programs.cava'.
+        '';
+      }
     ];
   };
 }
