@@ -70,6 +70,7 @@ import nmt {
     ./modules/programs/browserpass
     ./modules/programs/btop
     ./modules/programs/carapace
+    ./modules/programs/cava
     ./modules/programs/comodoro
     ./modules/programs/darcs
     ./modules/programs/dircolors
