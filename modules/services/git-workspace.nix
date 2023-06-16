@@ -14,11 +14,12 @@ let
           };
           name = lib.mkOption {
             type = lib.types.str;
-            example = "aciceri";
+            example = "torvalds";
           };
           path = lib.mkOption {
             type = lib.types.path;
-            example = ''"${config.home.homeDirectory}/projects"'';
+            example = lib.literalExpression
+              ''"''${config.home.homeDirectory}/projects"'';
           };
         };
       });
@@ -34,7 +35,13 @@ in {
         config.programs.git-workspace.package
       else
         pkgs.git-workspace;
-      description = "The git-workspace to use";
+      defaultText = lib.literalExpression ''
+        if config.programs.git-workspace.enable then
+          config.programs.git-workspace.package
+        else
+          pkgs.git-workspace;
+      '';
+      description = "The git-workspace package to use";
     };
     frequency = lib.mkOption {
       type = lib.types.str;
@@ -51,28 +58,31 @@ in {
         Path to the systemd <literal>EnvironmentFile</literal> to keep tokens,
         do not put a derivation output here since it would expose secrets in
         the world readable Nix store.
-        File content example:
+
+        It contains lines like
         <literal>
         GITHUB_TOKEN=ghp_...
         </literal>
+
         If you want to use Nix to manage these tokens use a tool like sops-nix
-        or agenix. This file must be readable by the
-        <literal>home-manager</literal> user.
+        or agenix. This file must be readable by the home-manager user.
       '';
-      example = "/run/git-workspace-tokens";
+      example = "/var/lib/git-workspace-tokens";
     };
     workspaces = lib.mkOption {
       type = lib.types.attrsOf workspaceType;
       default = { };
-      description =
-        "1:1 representation of a single `workspace.toml` consumed by `git-workspace`";
+      description = ''
+        1:1 representation of a single <literal>workspace.toml</literal> consumed
+        by git-workspace.
+      '';
       example = lib.literalExpression ''
         {
           personal.provider = [
             {
               provider = "github"
               name = "github_username"
-              path = "${config.home.homeDirectory}/personal_projects"
+              path = "''${config.home.homeDirectory}/personal_projects"
               skip_forks = false;
             }
             {
@@ -80,14 +90,14 @@ in {
               name = "gitlab_username"
               # it's possible to use the same path as previous provider
               # if there are not name clashes
-              path = "${config.home.homeDirectory}/personal_projects"
+              path = "''${config.home.homeDirectory}/personal_projects"
             }
           ];
           work.provider = [
             {
               provider = "github"
               name = "github_org"
-              path = "${config.home.homeDirectory}/work"
+              path = "''${config.home.homeDirectory}/work"
             }
           ];
         };

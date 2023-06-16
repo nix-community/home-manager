@@ -7,6 +7,7 @@ in {
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.git-workspace;
+      defaultText = "pkgs.git-workspace";
       description = "The git-workspace to use";
     };
   };
