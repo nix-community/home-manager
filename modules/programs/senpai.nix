@@ -82,8 +82,8 @@ in {
   };
 
   config = mkIf cfg.enable {
-    warnings = with cfg.config;
-      if (password-cmd != null && password != null) then
+    assertions = with cfg.config;
+      if (password-cmd != null -> password != null) then
         [ "senpai: password-command overrides password!" ]
       else
         [ ];
