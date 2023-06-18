@@ -2,7 +2,20 @@
 
 with lib;
 
-let cfg = config.programs.senpai;
+let
+  cfg = config.programs.senpai;
+  imports = [
+    (mkRenamedOptionModule [ "programs" "senpai" "addr" ] [
+      "programs"
+      "senpai"
+      "address"
+    ])
+    (mkRenamedOptionModule [ "programs" "senpai" "nick" ] [
+      "programs"
+      "senpai"
+      "nickname"
+    ])
+  ];
 in {
   options.programs.senpai = {
     enable = mkEnableOption "senpai";

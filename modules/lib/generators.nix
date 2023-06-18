@@ -120,7 +120,7 @@
       else
         abort "toSCFG: type ${typeOf v} is unsupported";
 
-    filterSCFG = filterAttrs (_: val: val != null && val != { });
+    filterSCFG = filterAttrs (_: val: !isNull val && val != { });
 
     sectionSCFG = mapAttrsToList (key: val: "${key} ${toSCFG' val}");
 
