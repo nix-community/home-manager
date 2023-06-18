@@ -455,12 +455,12 @@ in
 
     home.enableNixpkgsReleaseCheck = mkOption {
       type = types.bool;
-      default = false;          # Temporarily disabled until release stabilizes.
+      default = true;
       description = ''
         Determines whether to check for release version mismatch between Home
         Manager and Nixpkgs. Using mismatched versions is likely to cause errors
         and unexpected behavior. It is therefore highly recommended to use a
-        release of Home Manager than corresponds with your chosen release of
+        release of Home Manager that corresponds with your chosen release of
         Nixpkgs.
         </para><para>
         When this option is enabled and a mismatch is detected then a warning
@@ -497,7 +497,7 @@ in
 
           Using mismatched versions is likely to cause errors and unexpected
           behavior. It is therefore highly recommended to use a release of Home
-          Manager than corresponds with your chosen release of Nixpkgs.
+          Manager that corresponds with your chosen release of Nixpkgs.
 
           If you insist then you can disable this warning by adding
 
