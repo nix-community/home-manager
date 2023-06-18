@@ -67,9 +67,9 @@ in {
       Service = {
         Type = "oneshot";
         # TODO `vdirsyncer discover`
-        ExecStart = "${cfg.package}/bin/vdirsyncer sync ${
+        ExecStart = "${cfg.package}/bin/vdirsyncer ${
             concatStringsSep " " vdirsyncerOptions
-          }";
+          } sync";
       };
     };
 
