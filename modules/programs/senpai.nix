@@ -88,25 +88,8 @@ in {
       else
         [ ];
     home.packages = [ cfg.package ];
-    xdg.configFile."senpai/senpai.scfg".text = let
-      toSCFG' = v:
-        if isAttrs v then ''
-          {
-            ${toSCFG v}
-          }
-        '' else if isList v then
-          concatStringsSep " " v
-        else if isString v then
-          v
-        else if isInt v || isFloat v || isBool v then
-          builtins.toJSON v
-        else
-          abort "toSCFG: type ${builtins.typeOf v} is unsupported";
-      toSCFG = v:
-        concatStringsSep "\n"
-        (mapAttrsToList (key: val: "${key} ${toSCFG' val}")
-          (filterAttrs (_: val: val != null && val != { }) v));
-    in toSCFG (cfg.config // cfg.extraConfig);
+    xdg.configFile."senpai/senpai.scfg".text =
+      lib.hm.generators.toSCFG (cfg.config // cfg.extraConfig);
   };
 
   meta.maintainers = [ maintainers.jleightcap ];
