@@ -134,6 +134,10 @@ let
 
         extraConfig = extraConfigOption;
       };
+
+      output = { extraConfig = extraConfigOption; };
+
+      hooks = { extraConfig = extraConfigOption; };
     };
   });
 
@@ -168,6 +172,8 @@ let
       } // config.retention.extraConfig;
       consistency = removeNullValues { checks = config.consistency.checks; }
         // config.consistency.extraConfig;
+      output = config.output.extraConfig;
+      hooks = config.hooks.extraConfig;
     };
 in {
   meta.maintainers = [ maintainers.DamienCassou ];
