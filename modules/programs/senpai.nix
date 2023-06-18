@@ -56,6 +56,15 @@ in {
               reside world-readable in the Nix store.
             '';
           };
+          # TODO: remove me for the next release
+          no-tls = mkOption {
+            type = types.nullOr types.bool;
+            default = null;
+            description = ''
+              Specifying 'senpai.no-tls' is deprecated,
+              set 'senpai.extraConfig = { tls = false; }' instead.
+            '';
+          };
           password-cmd = mkOption {
             type = types.nullOr types.str;
             default = null;
@@ -95,11 +104,20 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = with cfg.config;
-      if (password-cmd != null -> password != null) then
-        [ "senpai: password-command overrides password!" ]
-      else
-        [ ];
+    assertions = with cfg.config; [
+      {
+        assertion = !isNull password-cmd -> isNull password;
+        message = "senpai: password-command overrides password!";
+      }
+      {
+        # TODO: remove me for the next release
+        assertion = isNull no-tls;
+        message = ''
+          Specifying 'senpai.no-tls' is deprecated,
+          set 'senpai.extraConfig = { tls = false; }' instead.
+        '';
+      }
+    ];
     home.packages = [ cfg.package ];
     xdg.configFile."senpai/senpai.scfg".text =
       lib.hm.generators.toSCFG (cfg.config // cfg.extraConfig);
