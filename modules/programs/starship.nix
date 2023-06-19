@@ -77,6 +77,19 @@ in {
     enableNushellIntegration = mkEnableOption "Nushell integration" // {
       default = true;
     };
+
+    enableTransience = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        The TransientPrompt feature of Starship replaces previous prompts with a
+        custom string. This is only a valid option for the Fish shell.
+
+        For documentation on how to change the default replacement string and
+        for more information visit
+        https://starship.rs/advanced-config/#transientprompt-and-transientrightprompt-in-cmd
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -101,6 +114,7 @@ in {
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
       if test "$TERM" != "dumb"  -a \( -z "$INSIDE_EMACS"  -o "$INSIDE_EMACS" = "vterm" \)
         eval (${starshipCmd} init fish)
+        ${lib.optionalString cfg.enableTransience "enable_transience"}
       end
     '';
 
