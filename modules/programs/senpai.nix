@@ -31,7 +31,7 @@ in {
           address = mkOption {
             type = types.str;
             description = ''
-              The address (_host[:port]_) of the IRC server. senpai uses TLS
+              The address (<literal>host[:port]</literal>) of the IRC server. senpai uses TLS
               connections by default unless you specify tls option to be false.
               TLS connections default to port 6697, plain-text use port 6667.
 
@@ -66,16 +66,17 @@ in {
             '';
           };
           password-cmd = mkOption {
-            type = types.nullOr types.str;
+            type = types.nullOr (types.listOf types.str);
             default = null;
             description = ''
               Alternatively to providing your SASL authentication password
               directly in plaintext, you can specify a command to be run to
               fetch the password at runtime. This is useful if you store your
               passwords in a separate (probably encrypted) file using `gpg` or
-              a command line password manager such as _pass_ or _gopass_. If a
-              password-cmd is provided, the value of password will be ignored
-              and the first line of the output of *password-cmd* will be used
+              a command line password manager such as <literal>pass</literal>
+              or <literal>gopass</literal>. If a password-cmd is provided, the
+              value of password will be ignored and the first line of the output
+              of <literal>password-cmd</literal> will be used
               for login.
             '';
           };
