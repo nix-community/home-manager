@@ -8,7 +8,7 @@
       config = {
         address = "irc.libera.chat";
         nickname = "Guest123456";
-        password-cmd = "gopass show irc/guest";
+        password-cmd = [ "gopass" "show" "irc/guest" ];
       };
       extraConfig = {
         username = "senpai";
