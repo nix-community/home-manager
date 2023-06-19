@@ -5,6 +5,9 @@ super + a
   run command a
 
 
+super + s
+  @script@
+
 super + c
   call command c
 

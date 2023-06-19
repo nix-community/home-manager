@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
-{
+let
+  script = pkgs.writeShellScript "script.sh" ''
+    echo "test"
+  '';
+in {
   services.sxhkd = {
     enable = true;
 
@@ -10,6 +14,7 @@
       "super + a" = "run command a";
       "super + b" = null;
       "super + Shift + b" = "run command b";
+      "super + s" = script;
     };
 
     extraConfig = ''
@@ -27,6 +32,11 @@
 
     assertFileExists $sxhkdrc
 
-    assertFileContent $sxhkdrc ${./sxhkdrc}
+    assertFileContent $sxhkdrc ${
+      pkgs.substituteAll {
+        src = ./sxhkdrc;
+        inherit script;
+      }
+    }
   '';
 }
