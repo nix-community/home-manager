@@ -617,6 +617,7 @@ import nmtSrc {
       ./modules/services/remmina
       ./modules/services/restic
       ./modules/services/screen-locker
+      ./modules/services/shikane
       ./modules/services/signaturepdf
       ./modules/services/snixembed
       ./modules/services/swayidle
