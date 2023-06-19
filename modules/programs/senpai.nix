@@ -35,7 +35,8 @@ in {
               connections by default unless you specify tls option to be false.
               TLS connections default to port 6697, plain-text use port 6667.
 
-              ircs:// & irc:// & irc+insecure:// URLs are supported, in which
+              <literal>ircs://</literal>, <literal>irc://</literal>, and
+              <literal>irc+insecure://</literal> URLs are supported, in which
               case only the hostname and port parts will be used. If the scheme
               is ircs/irc+insecure, tls will be overriden and set to true/false
               accordingly.
@@ -61,8 +62,9 @@ in {
             type = types.nullOr types.bool;
             default = null;
             description = ''
-              Specifying 'senpai.no-tls' is deprecated,
-              set 'senpai.extraConfig = { tls = false; }' instead.
+              Specifying 'senpai.no-tls' is deprecated, Set
+              <literal>senpai.extraConfig = { tls = false; }</literal>
+              instead.
             '';
           };
           password-cmd = mkOption {
@@ -82,6 +84,18 @@ in {
           };
         };
       };
+      example = literalExpression ''
+        {
+          address = "libera.chat:6697";
+          nickname = "nicholas";
+          password = "verysecurepassword";
+        }
+      '';
+      description = ''
+        Configuration for senpai. For a complete list of options, see
+        <citerefentry><refentrytitle>senpai</refentrytitle>
+        <manvolnum>5</manvolnum></citerefentry>.
+      '';
     };
     extraConfig = mkOption {
       type = types.attrs;
@@ -90,18 +104,6 @@ in {
         Options that should be appended to the senpai configuration file.
       '';
     };
-    example = literalExpression ''
-      {
-        address = "libera.chat:6697";
-        nickname = "nicholas";
-        password = "verysecurepassword";
-      }
-    '';
-    description = ''
-      Configuration for senpai. For a complete list of options, see
-      <citerefentry><refentrytitle>senpai</refentrytitle>
-      <manvolnum>5</manvolnum></citerefentry>.
-    '';
   };
 
   config = mkIf cfg.enable {
