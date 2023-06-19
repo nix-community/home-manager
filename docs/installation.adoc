@@ -219,6 +219,15 @@ the dependency on `NIX_PATH`, which is otherwise used for importing
 Nixpkgs.
 ====
 
+[NOTE]
+====
+Home Manager will pass `osConfig` as a module argument to any modules
+you create. This contains the system's NixOS configuration.
+
+[source,nix]
+{ lib, pkgs, osConfig, ... }:
+====
+
 Once installed you can see <<ch-usage>> for a more detailed
 description of Home Manager and how to use it.
 
@@ -323,6 +332,15 @@ home-manager.useGlobalPkgs = true;
 This saves an extra Nixpkgs evaluation, adds consistency, and removes
 the dependency on `NIX_PATH`, which is otherwise used for importing
 Nixpkgs.
+====
+
+[NOTE]
+====
+Home Manager will pass `osConfig` as a module argument to any modules
+you create. This contains the system's nix-darwin configuration.
+
+[source,nix]
+{ lib, pkgs, osConfig, ... }:
 ====
 
 Once installed you can see <<ch-usage>> for a more detailed
