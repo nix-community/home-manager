@@ -1,4 +1,1 @@
-{
-  generators-tokdl = ./tokdl.nix;
-  generators-toscfg = ./toscfg.nix;
-}
+{ generators-tokdl = ./tokdl.nix; }
