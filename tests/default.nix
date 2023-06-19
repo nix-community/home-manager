@@ -124,6 +124,7 @@ import nmt {
     ./modules/programs/qcal
     ./modules/programs/qutebrowser
     ./modules/programs/readline
+    ./modules/programs/rio
     ./modules/programs/ripgrep
     ./modules/programs/rtx
     ./modules/programs/sagemath
