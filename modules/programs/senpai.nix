@@ -15,6 +15,11 @@ let
       "senpai"
       "nickname"
     ])
+    (mkChangedOptionModule [ "programs" "senpai" "no-tls" ] [
+      "programs"
+      "senpai"
+      "tls"
+    ] (config: !config.programs.senpai.no-tls))
   ];
 in {
   options.programs.senpai = {
@@ -27,6 +32,7 @@ in {
     };
     config = mkOption {
       type = types.submodule {
+        freeformType = types.attrsOf types.anything;
         options = {
           address = mkOption {
             type = types.str;
@@ -57,19 +63,10 @@ in {
               reside world-readable in the Nix store.
             '';
           };
-          # TODO: remove me for the next release
-          no-tls = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-            description = ''
-              Specifying 'senpai.no-tls' is deprecated, Set
-              <literal>senpai.extraConfig = { tls = false; }</literal>
-              instead.
-            '';
-          };
           password-cmd = mkOption {
             type = types.nullOr (types.listOf types.str);
             default = null;
+            example = [ "gopass" "show" "irc/guest" ];
             description = ''
               Alternatively to providing your SASL authentication password
               directly in plaintext, you can specify a command to be run to
@@ -97,33 +94,16 @@ in {
         <manvolnum>5</manvolnum></citerefentry>.
       '';
     };
-    extraConfig = mkOption {
-      type = types.attrs;
-      default = { };
-      description = ''
-        Options that should be appended to the senpai configuration file.
-      '';
-    };
   };
 
   config = mkIf cfg.enable {
-    assertions = with cfg.config; [
-      {
-        assertion = !isNull password-cmd -> isNull password;
-        message = "senpai: password-command overrides password!";
-      }
-      {
-        # TODO: remove me for the next release
-        assertion = isNull no-tls;
-        message = ''
-          Specifying 'senpai.no-tls' is deprecated,
-          set 'senpai.extraConfig = { tls = false; }' instead.
-        '';
-      }
-    ];
+    assertions = with cfg.config; [{
+      assertion = !isNull password-cmd -> isNull password;
+      message = "senpai: password-command overrides password!";
+    }];
     home.packages = [ cfg.package ];
     xdg.configFile."senpai/senpai.scfg".text =
-      lib.hm.generators.toSCFG (cfg.config // cfg.extraConfig);
+      lib.hm.generators.toSCFG cfg.config;
   };
 
   meta.maintainers = [ maintainers.jleightcap ];

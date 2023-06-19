@@ -102,8 +102,8 @@
 
   toSCFG = let
     inherit (lib)
-      concatStringsSep filterAttrs isAttrs isBool isFloat isInt isList isString
-      mapAttrsToList;
+      concatLines concatStringsSep filterAttrs isAttrs isBool isFloat isInt
+      isList isString mapAttrsToList;
     inherit (builtins) typeOf toJSON;
 
     toSCFG' = v:
@@ -124,6 +124,6 @@
 
     sectionSCFG = mapAttrsToList (key: val: "${key} ${toSCFG' val}");
 
-    toSCFG = v: concatStringsSep "\n" (sectionSCFG (filterSCFG v));
+    toSCFG = v: concatLines (sectionSCFG (filterSCFG v));
   in toSCFG;
 }
