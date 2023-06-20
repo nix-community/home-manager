@@ -18,6 +18,15 @@ in {
       description = "The package to use for helix.";
     };
 
+    defaultEditor = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to configure <command>hx</command> as the default
+        editor using the <envar>EDITOR</envar> environment variable.
+      '';
+    };
+
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
@@ -153,6 +162,8 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
+
+    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "hx"; };
 
     xdg.configFile = let
       settings = {
