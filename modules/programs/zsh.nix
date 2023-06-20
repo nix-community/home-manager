@@ -212,6 +212,8 @@ let
     options = {
       enable = mkEnableOption "zsh syntax highlighting";
 
+      package = mkPackageOption pkgs "zsh-syntax-highlighting" { };
+
       styles = mkOption {
         type = types.attrsOf types.str;
         default = {};
@@ -608,7 +610,7 @@ in
           # Load zsh-syntax-highlighting after all custom widgets have been created
           # https://github.com/zsh-users/zsh-syntax-highlighting#faq
         ''
-          source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+          source ${cfg.syntaxHighlighting.package}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
           ${lib.concatStringsSep "\n" (
               lib.mapAttrsToList
                 (name: value: "ZSH_HIGHLIGHT_STYLES[${lib.escapeShellArg name}]=${lib.escapeShellArg value}")
