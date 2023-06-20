@@ -18,7 +18,7 @@ in {
         </para>
         <para>
         When setting this value to <literal>"sway-session.target"</literal>,
-        make sure to also enable <option>wayland.windowManager.sway.systemdIntegration</option>,
+        make sure to also enable <option>wayland.windowManager.sway.systemd.enable</option>,
         otherwise the service may never be started.
       '';
     };
