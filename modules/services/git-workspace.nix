@@ -58,12 +58,12 @@ in {
         Path to the systemd <literal>EnvironmentFile</literal> to keep tokens,
         do not put a derivation output here since it would expose secrets in
         the world readable Nix store.
-
+            </para><para>
         It contains lines like
         <literal>
         GITHUB_TOKEN=ghp_...
         </literal>
-
+            </para><para>
         If you want to use Nix to manage these tokens use a tool like sops-nix
         or agenix. This file must be readable by the home-manager user.
       '';
