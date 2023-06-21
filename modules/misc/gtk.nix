@@ -204,6 +204,15 @@ in {
             <filename>$XDG_CONFIG_HOME/gtk-4.0/settings.ini</filename>.
           '';
         };
+
+        extraCss = mkOption {
+          type = types.lines;
+          default = "";
+          description = ''
+            Extra configuration lines to add verbatim to
+            <filename>$XDG_CONFIG_HOME/gtk-4.0/gtk.css</filename>.
+          '';
+        };
       };
     };
   };
@@ -267,6 +276,9 @@ in {
 
     xdg.configFile."gtk-4.0/settings.ini".text =
       toGtk3Ini { Settings = gtkIni // cfg4.extraConfig; };
+
+    xdg.configFile."gtk-4.0/gtk.css" =
+      mkIf (cfg4.extraCss != "") { text = cfg4.extraCss; };
 
     dconf.settings."org/gnome/desktop/interface" = dconfIni;
   });
