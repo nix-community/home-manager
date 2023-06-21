@@ -11,6 +11,7 @@ with lib;
       realName = "H. M. Test";
       passwordCommand = "password-command";
       folders = { trash = "Deleted"; };
+      notmuch.enable = true;
       msmtp.enable = true;
       himalaya = {
         enable = true;
@@ -29,7 +30,7 @@ with lib;
   nmt.script = ''
     assertFileExists home-files/.config/himalaya/config.toml
     assertFileContent home-files/.config/himalaya/config.toml ${
-      ./maildir-sendmail-expected.toml
+      ./notmuch-sendmail-expected.toml
     }
   '';
 }

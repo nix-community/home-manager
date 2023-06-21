@@ -10,8 +10,8 @@ with lib;
       imap.port = 993;
       smtp.port = 465;
       himalaya.enable = true;
-      himalaya.backend = "deprecated";
-      himalaya.sender = "deprecated";
+      himalaya.backend = test.asserts.warnings.expected;
+      himalaya.sender = test.asserts.warnings.expected;
     };
   };
 
