@@ -22,7 +22,7 @@ let
   toKeyValue = generators.toKeyValue { inherit mkKeyValue; };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.translate-shell = {
     enable = mkEnableOption "translate-shell";

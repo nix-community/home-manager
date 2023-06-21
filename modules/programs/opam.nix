@@ -7,7 +7,7 @@ let
   cfg = config.programs.opam;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.opam = {
     enable = mkEnableOption "Opam";

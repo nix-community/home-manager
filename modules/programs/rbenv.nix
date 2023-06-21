@@ -24,7 +24,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.rbenv = {
     enable = mkEnableOption "rbenv";

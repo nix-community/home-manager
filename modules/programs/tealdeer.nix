@@ -12,7 +12,7 @@ let
     config.xdg.configHome;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.tealdeer = {
     enable = mkEnableOption "Tealdeer";

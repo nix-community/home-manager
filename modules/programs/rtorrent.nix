@@ -7,7 +7,7 @@ let
   cfg = config.programs.rtorrent;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   imports = [
     (mkRenamedOptionModule # \

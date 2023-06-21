@@ -7,7 +7,7 @@ let
   cfg = config.programs.noti;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.noti = {
     enable = mkEnableOption "Noti";

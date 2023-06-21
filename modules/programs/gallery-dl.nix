@@ -9,7 +9,7 @@ let
   jsonFormat = pkgs.formats.json { };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.gallery-dl = {
     enable = mkEnableOption "gallery-dl";

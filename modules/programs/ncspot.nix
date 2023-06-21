@@ -9,7 +9,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.ncspot = {
     enable = mkEnableOption "ncspot";
