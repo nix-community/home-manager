@@ -10,4 +10,5 @@ in nixpkgsLib.extend (self: super: {
   # For forward compatibility.
   literalExpression = super.literalExpression or super.literalExample;
   literalDocBook = super.literalDocBook or super.literalExample;
+  mdDoc = text: { _type = "mdDoc"; inherit text; };
 })
