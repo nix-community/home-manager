@@ -25,7 +25,6 @@ let
   genCalendarStr = name: value:
     concatStringsSep "\n" ([
       "[[${name}]]"
-      "highlight_event_days = True"
       "path = ${
         value.local.path + "/"
         + (optionalString (value.khal.type == "discover") value.khal.glob)
@@ -158,6 +157,7 @@ in {
           # locale = definedAttrs (cfg.locale // { _module = null; });
 
           default = optionalAttrs (!isNull primaryAccount) {
+            highlight_event_days = true;
             default_calendar = if isNull primaryAccount.primaryCollection then
               primaryAccount.name
             else
