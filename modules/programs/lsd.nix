@@ -17,7 +17,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.lsd = {
     enable = mkEnableOption "lsd";

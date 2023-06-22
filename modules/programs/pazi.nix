@@ -7,7 +7,7 @@ let
   cfg = config.programs.pazi;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.pazi = {
     enable = mkEnableOption "pazi";

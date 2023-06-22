@@ -9,7 +9,7 @@ let
   yamlFormat = pkgs.formats.yaml { };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.sqls = {
     enable = mkEnableOption "sqls, a SQL language server written in Go";

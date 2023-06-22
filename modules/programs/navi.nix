@@ -13,7 +13,7 @@ let
     config.xdg.configHome;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.navi = {
     enable = mkEnableOption "Navi";

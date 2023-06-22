@@ -16,7 +16,7 @@ let
     }";
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.keychain = {
     enable = mkEnableOption "keychain";

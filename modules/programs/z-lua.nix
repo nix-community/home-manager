@@ -15,7 +15,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.z-lua = {
     enable = mkEnableOption "z.lua";

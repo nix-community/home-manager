@@ -11,7 +11,7 @@ let
   starshipCmd = "${config.home.profileDirectory}/bin/starship";
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.starship = {
     enable = mkEnableOption "starship";

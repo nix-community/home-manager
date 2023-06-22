@@ -14,7 +14,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.bat = {
     enable = mkEnableOption "bat, a cat clone with wings";

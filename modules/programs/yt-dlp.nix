@@ -13,7 +13,7 @@ let
       "--${name} ${toString value}");
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.yt-dlp = {
     enable = mkEnableOption "yt-dlp";

@@ -16,7 +16,7 @@ let
   } cfg.settings;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.ledger = {
     enable = mkEnableOption "ledger, a double-entry accounting system";
