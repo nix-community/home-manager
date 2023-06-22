@@ -15,26 +15,26 @@ function nixProfileList() {
     # We attempt to use `--json` first (added in Nix 2.17). Otherwise attempt to
     # parse the legacy output format.
     {
-        nix profile list --json 2>/dev/null \
+        nix profile "${PASSTHROUGH_OPTS[@]}" list --json 2>/dev/null \
             | jq -r --arg name "$1" '.elements[].storePaths[] | select(endswith($name))'
     } || {
-        nix profile list \
+        nix profile "${PASSTHROUGH_OPTS[@]}" list \
             | { grep "$1\$" || test $? = 1; } \
             | cut -d ' ' -f 4
     }
 }
 
 function removeByName() {
-    nixProfileList "$1" | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+    nixProfileList "$1" | xargs -t $DRY_RUN_CMD nix profile "${PASSTHROUGH_OPTS[@]}" remove $VERBOSE_ARG
 }
 
 function setNixProfileCommands() {
     if [[ -e $HOME/.nix-profile/manifest.json ]] ; then
-        LIST_OUTPATH_CMD="nix profile list"
+        LIST_OUTPATH_CMD="nix profile "${PASSTHROUGH_OPTS[@]}" list"
         REMOVE_CMD="removeByName"
     else
-        LIST_OUTPATH_CMD="nix-env -q --out-path"
-        REMOVE_CMD="nix-env --uninstall"
+        LIST_OUTPATH_CMD="nix-env --query "${PASSTHROUGH_OPTS[@]}" --out-path"
+        REMOVE_CMD="nix-env --uninstall "${PASSTHROUGH_OPTS[@]}""
     fi
 }
 
@@ -63,7 +63,7 @@ function setWorkDir() {
 # Checks whether the 'flakes' and 'nix-command' Nix options are enabled.
 function hasFlakeSupport() {
     type -p nix > /dev/null \
-        && nix show-config 2> /dev/null \
+        && nix show-config "${PASSTHROUGH_OPTS[@]}" 2> /dev/null \
             | grep experimental-features \
             | grep flakes \
             | grep -q nix-command
@@ -209,7 +209,7 @@ function setFlakeAttribute() {
                 # Check both long and short hostnames; long first to preserve
                 # pre-existing behaviour in case both happen to be defined.
                 for n in "$USER@$(hostname)" "$USER@$(hostname -s)"; do
-                    if [[ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$n\"")" == "true" ]]; then
+                    if [[ "$(nix eval "${PASSTHROUGH_OPTS[@]}" --apply "x: x ? \"$n\"" "$flake#homeConfigurations")" == "true" ]]; then
                         name="$n"
                         if [[ -v VERBOSE ]]; then
                             echo "Using flake homeConfiguration for $name"
@@ -423,7 +423,7 @@ EOF
             _i 'Creating %s...' "$flakeFile"
 
             local nixSystem
-            nixSystem=$(nix eval --expr builtins.currentSystem --raw --impure)
+            nixSystem=$(nix eval "${PASSTHROUGH_OPTS[@]}" --expr builtins.currentSystem --raw --impure)
 
             mkdir -p "$confDir"
             cat > "$flakeFile" <<EOF
@@ -705,7 +705,7 @@ function doListPackages() {
     local outPath
     outPath="$($LIST_OUTPATH_CMD | grep -o '/.*home-manager-path$')"
     if [[ -n "$outPath" ]] ; then
-        nix-store -q --references "$outPath" | sed 's/[^-]*-//'
+        nix-store --query "${PASSTHROUGH_OPTS[@]}" --references "$outPath" | sed 's/[^-]*-//'
     else
         _i 'No home-manager packages seem to be installed.' >&2
     fi
