@@ -152,6 +152,7 @@ in {
     })
 
     (mkIf cfg.gtk.enable {
+      gtk.enable = true;
       gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
     })
   ]);
