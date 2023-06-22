@@ -243,7 +243,7 @@ should be added. If you contribute a module then you don't need to add this entr
 
 Home Manager includes a basic test suite and it is highly recommended to include at least one test when adding a module. Tests are typically in the form of "golden tests" where, for example, a generated configuration file is compared to a known correct file.
 
-It is relatively easy to create tests by modeling the existing tests, found in the `tests` project directory.
+It is relatively easy to create tests by modeling the existing tests, found in the `tests` project directory. For a full reference to the functions available in test scripts, you can look at NMT's https://git.sr.ht/~rycee/nmt/tree/master/item/bash-lib[bash-lib].
 
 The full Home Manager test suite can be run by executing
 
