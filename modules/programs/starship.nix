@@ -100,26 +100,26 @@ in {
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
+      if [[ $TERM != "dumb" ]]; then
         eval "$(${starshipCmd} init bash --print-full-init)"
       fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
+      if [[ $TERM != "dumb" ]]; then
         eval "$(${starshipCmd} init zsh)"
       fi
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      if test "$TERM" != "dumb"  -a \( -z "$INSIDE_EMACS"  -o "$INSIDE_EMACS" = "vterm" \)
+      if test "$TERM" != "dumb"
         eval (${starshipCmd} init fish)
         ${lib.optionalString cfg.enableTransience "enable_transience"}
       end
     '';
 
     programs.ion.initExtra = mkIf cfg.enableIonIntegration ''
-      if test $TERM != "dumb" && not exists -s INSIDE_EMACS || test $INSIDE_EMACS = "vterm"
+      if test $TERM != "dumb"
         eval $(${starshipCmd} init ion)
       end
     '';
