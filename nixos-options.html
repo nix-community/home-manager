@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Appendix B. NixOS Module Options</title><link rel="stylesheet" type="text/css" href="style.css" /><script src="highlight.min.js" type="text/javascript"></script><script src="highlight.load.js" type="text/javascript"></script><meta name="generator" content="DocBook XSL Stylesheets V1.79.2" /><link rel="home" href="index.html" title="Home Manager Manual" /><link rel="up" href="index.html" title="Home Manager Manual" /><link rel="prev" href="options.html" title="Appendix A. Configuration Options" /><link rel="next" href="nix-darwin-options.html" title="Appendix C. nix-darwin Module Options" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Appendix B. NixOS Module Options</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="options.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="nix-darwin-options.html">Next</a></td></tr></table><hr /></div><div class="appendix"><div class="titlepage"><div><div><h1 class="title"><a id="ch-nixos-options"></a>Appendix B. NixOS Module Options</h1></div></div></div><div class="variablelist"><a id="nixos-options"></a><dl class="variablelist"><dt><span class="term"><a id="nixos-opt-home-manager.backupFileExtension"></a><a class="term" href="nixos-options.html#nixos-opt-home-manager.backupFileExtension"><code class="option">home-manager.backupFileExtension</code></a></span></dt><dd><p>On activation move existing files by appending the given
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Appendix B. NixOS Module Options</title><link rel="stylesheet" type="text/css" href="style.css" /><script src="highlight.min.js" type="text/javascript"></script><script src="highlight.load.js" type="text/javascript"></script><meta name="generator" content="DocBook XSL Stylesheets V1.79.2" /><link rel="home" href="index.html" title="Home Manager Manual" /><link rel="up" href="index.html" title="Home Manager Manual" /><link rel="prev" href="options.html" title="Appendix A. Configuration Options" /><link rel="next" href="nix-darwin-options.html" title="Appendix C. nix-darwin Module Options" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Appendix B. NixOS Module Options</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="options.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="nix-darwin-options.html">Next</a></td></tr></table><hr /></div><div class="appendix"><div class="titlepage"><div><div><h1 class="title"><a id="ch-nixos-options"></a>Appendix B. NixOS Module Options</h1></div></div></div><div class="variablelist"><a id="nixos-options"></a><dl class="variablelist"><dt><span class="term"><a id="nixos-opt-_module.args"></a><a class="term" href="nixos-options.html#nixos-opt-_module.args"><code class="option">_module.args</code></a></span></dt><dd><p>Additional arguments passed to each module in addition to ones
+like `lib`, `config`,
+and `pkgs`, `modulesPath`.
+
+This option is also available to all submodules. Submodules do not
+inherit args from their parent module, nor do they provide args to
+their parent module or sibling submodules. The sole exception to
+this is the argument `name` which is provided by
+parent modules to a submodule and contains the attribute name
+the submodule is bound to, or a unique generated name if it is
+not bound to an attribute.
+
+Some arguments are already passed by default, of which the
+following *cannot* be changed with this option:
+- {var}`lib`: The nixpkgs library.
+- {var}`config`: The results of all options after merging the values from all modules together.
+- {var}`options`: The options declared in all modules.
+- {var}`specialArgs`: The `specialArgs` argument passed to `evalModules`.
+- All attributes of {var}`specialArgs`
+
+  Whereas option values can generally depend on other option values
+  thanks to laziness, this does not apply to `imports`, which
+  must be computed statically before anything else.
+
+  For this reason, callers of the module system can provide `specialArgs`
+  which are available during import resolution.
+
+  For NixOS, `specialArgs` includes
+  {var}`modulesPath`, which allows you to import
+  extra modules from the nixpkgs package tree without having to
+  somehow make the module aware of the location of the
+  `nixpkgs` or NixOS directories.
+  ```
+  { modulesPath, ... }: {
+    imports = [
+      (modulesPath + "/profiles/minimal.nix")
+    ];
+  }
+  ```
+
+For NixOS, the default value for this option includes at least this argument:
+- {var}`pkgs`: The nixpkgs package set according to
+  the {option}`nixpkgs.pkgs` option.</p><p><span class="emphasis"><em>Type:</em></span> lazy attribute set of raw value</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/lib/modules.nix#blob-path" target="_top">
+                    &lt;home-manager/lib/modules.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="nixos-opt-home-manager.backupFileExtension"></a><a class="term" href="nixos-options.html#nixos-opt-home-manager.backupFileExtension"><code class="option">home-manager.backupFileExtension</code></a></span></dt><dd><p>On activation move existing files by appending the given
 file extension rather than exiting with an error.</p><p><span class="emphasis"><em>Type:</em></span> null or string</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"backup"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/nixos/common.nix#blob-path" target="_top">
                     &lt;home-manager/nixos/common.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="nixos-opt-home-manager.extraSpecialArgs"></a><a class="term" href="nixos-options.html#nixos-opt-home-manager.extraSpecialArgs"><code class="option">home-manager.extraSpecialArgs</code></a></span></dt><dd><p>Extra <code class="literal">specialArgs</code> passed to Home Manager. This
