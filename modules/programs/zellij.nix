@@ -40,15 +40,15 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Enable Bash integration." // {
+    enableBashIntegration = mkEnableOption "Bash integration" // {
       default = false;
     };
 
-    enableZshIntegration = mkEnableOption "Enable Zsh integration." // {
+    enableZshIntegration = mkEnableOption "Zsh integration" // {
       default = false;
     };
 
-    enableFishIntegration = mkEnableOption "Enable Fish integration." // {
+    enableFishIntegration = mkEnableOption "Fish integration" // {
       default = false;
     };
   };
