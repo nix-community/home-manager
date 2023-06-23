@@ -1,7 +1,6 @@
-{ ... }:
+{ pkgs, ... }:
 
 let relToDotDirCustom = ".zshplugins";
-
 in {
   programs.zsh = {
     enable = true;
@@ -20,7 +19,7 @@ in {
 
   nmt.script = ''
     assertFileContains home-files/${relToDotDirCustom}/.zshrc \
-      'source @antidote@/antidote.zsh'
+      'source @antidote@/share/antidote/antidote.zsh'
     assertFileContains home-files/${relToDotDirCustom}/.zshrc \
       'antidote load'
     assertFileContains home-files/${relToDotDirCustom}/.zshrc \

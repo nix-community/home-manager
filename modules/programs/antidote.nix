@@ -39,7 +39,7 @@ in {
     ### move zsh_plugins.txt
     programs.zsh.initExtraBeforeCompInit = ''
       ## home-manager/antidote begin :
-      source ${cfg.package}/antidote.zsh
+      source ${cfg.package}/share/antidote/antidote.zsh
       ${optionalString cfg.useFriendlyNames
       "zstyle ':antidote:bundle' use-friendly-names 'yes'"}
       bundlefile=${relToDotDir ".zsh_plugins.txt"}
