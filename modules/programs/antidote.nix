@@ -42,9 +42,9 @@ in {
       source ${cfg.package}/share/antidote/antidote.zsh
       ${optionalString cfg.useFriendlyNames
       "zstyle ':antidote:bundle' use-friendly-names 'yes'"}
-      bundlefile=${relToDotDir ".zsh_plugins.txt"}
+      bundlefile=$HOME/${relToDotDir ".zsh_plugins.txt"}
       zstyle ':antidote:bundle' file $bundlefile
-      staticfile=${relToDotDir ".zsh_plugins.zsh"}
+      staticfile=$HOME/${relToDotDir ".zsh_plugins.zsh"}
       zstyle ':antidote:static' file $staticfile
       antidote load $bundlefile $staticfile
       ## home-manager/antidote end
