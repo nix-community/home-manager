@@ -1,0 +1,34 @@
+image: nixos/unstable
+sources:
+  - https://git.sr.ht/~rycee/home-manager
+secrets:
+  - 01ad357c-3214-4f73-bb7e-2441e440cc51
+  - 7d16ccc0-1c4f-4fd6-91c1-c54fc0f5807f
+  - bd5f26ee-78b8-4a6f-9d68-8d8f53a068f1
+environment:
+  NIX_CONFIG: "experimental-features = nix-command flakes"
+packages:
+  - nixos.cachix
+tasks:
+  - setup: |
+      cachix use rycee
+  - build: |
+      cd ./home-manager
+      gitBranch="$(git show -s --pretty=%D HEAD | sed '{ s/.*, //; s!origin/!!; }')"
+      [[ $gitBranch == master || $gitBranch == release-??.?? ]] || exit 0
+      nix build -L .#docs-html
+      cachix push rycee ./result
+  - deploy: |
+      cd ./home-manager
+      gitBranch="$(git show -s --pretty=%D HEAD | sed '{ s/.*, //; s!origin/!!; }')"
+      [[ $gitBranch == master || $gitBranch == release-??.?? ]] || exit 0
+
+      if [[ $gitBranch == master ]]; then
+        dirName="unstable"
+      else
+        dirName="$(cat .release)"
+      fi
+
+      rsync --delete -r --info=stats \
+        "result/share/doc/home-manager/" \
+        "hm-web:/srv/www/home-manager.dev/manual/$dirName"
