@@ -38,4 +38,11 @@ nested {
 	- 
 	- null
 }
+repeatedKey {
+		thisShouldBeRepeated {
+			someKey "someValue"
+		}
+		thisShouldBeRepeated "rawString"
+		thisShouldBeRepeated "list" "elements"
+}
 unsafeString " \" \n 	 "

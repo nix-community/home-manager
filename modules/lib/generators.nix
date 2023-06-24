@@ -56,7 +56,10 @@
 
           children =
             lib.filterAttrs (name: _: !(elem name [ "_args" "_props" ])) attrs;
-        in ''
+
+        in if attrs ? "_repeatKeyFor" then
+          indentStrings (map (convertAttributeToKDL name) attrs._repeatKeyFor)
+        else ''
           ${name} ${optArgsString}${optPropsString}{
           ${indentStrings (mapAttrsToList convertAttributeToKDL children)}
           }'';

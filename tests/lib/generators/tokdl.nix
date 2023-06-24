@@ -21,6 +21,12 @@
       null
     ];
     nested = [ [ 1 2 ] [ true false ] [ ] [ null ] ];
+    repeatedKey = {
+      thisShouldBeRepeated = {
+        _repeatKeyFor =
+          [ { someKey = "someValue"; } "rawString" [ "list" "elements" ] ];
+      };
+    };
     extraAttrs = {
       _args = [ 2 true ];
       _props = {

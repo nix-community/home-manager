@@ -30,6 +30,24 @@ in {
           theme = "custom";
           themes.custom.fg = "#ffffff";
         }
+
+        keybinds = {
+          unbind = {
+            _repeatKeyFor = ["Alt h" "Alt l"];
+          };
+
+          normal = {
+            bind = {
+              _repeatKeyFor = [{
+                _args = ["Ctrl h"];
+                MoveOrFocusTab = "Left";
+            } {
+                _args = ["Ctrl l"];
+                MoveOrFocusTab = "Left";
+            }];
+            };
+          };
+        }; 
       '';
       description = ''
         Configuration written to
