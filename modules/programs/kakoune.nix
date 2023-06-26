@@ -630,6 +630,15 @@ in {
         description = "kakoune configuration options.";
       };
 
+      defaultEditor = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to configure <command>kak</command> as the default
+          editor using the <envar>EDITOR</envar> environment variable.
+        '';
+      };
+
       extraConfig = mkOption {
         type = types.lines;
         default = "";
@@ -654,6 +663,7 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ kakouneWithPlugins ];
+    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "kak"; };
     xdg.configFile."kak/kakrc".source = configFile;
   };
 }
