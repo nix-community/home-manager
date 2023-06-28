@@ -1135,6 +1135,14 @@ in
           A new modules is available: 'programs.zsh.antidote'
         '';
       }
+
+      {
+        time = "2023-06-30T14:46:22+00:00";
+        condition = config.services.ssh-agent.enable;
+        message = ''
+          A new module is available: 'services.ssh-agent'
+        '';
+      }
     ];
   };
 }

@@ -306,6 +306,7 @@ let
     ./services/screen-locker.nix
     ./services/sctd.nix
     ./services/spotifyd.nix
+    ./services/ssh-agent.nix
     ./services/stalonetray.nix
     ./services/status-notifier-watcher.nix
     ./services/swayidle.nix
