@@ -42,9 +42,6 @@ let
         description = ''
           List of command-line arguments to be passed to ${name}.
           </para><para>
-          Note this option does not have any effect when using a
-          custom package for <option>programs.${browser}.package</option>.
-          </para><para>
           For a list of common switches, see
           <link xlink:href="https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.cc">Chrome switches</link>.
           </para><para>
@@ -162,20 +159,18 @@ let
           });
         };
 
+      package = if cfg.commandLineArgs != [ ] then
+        cfg.package.override {
+          commandLineArgs = concatStringsSep " " cfg.commandLineArgs;
+        }
+      else
+        cfg.package;
+
     in mkIf cfg.enable {
-      home.packages = [ cfg.package ];
+      home.packages = [ package ];
       home.file = optionalAttrs (!isProprietaryChrome)
         (listToAttrs (map extensionJson cfg.extensions));
     };
-
-  browserPkgs = genAttrs supportedBrowsers (browser:
-    let cfg = config.programs.${browser};
-    in if cfg.commandLineArgs != [ ] then
-      pkgs.${browser}.override {
-        commandLineArgs = concatStringsSep " " cfg.commandLineArgs;
-      }
-    else
-      pkgs.${browser});
 
 in {
   # Extensions do not work with the proprietary Google Chrome version
@@ -188,15 +183,14 @@ in {
     ];
 
   options.programs = {
-    chromium = browserModule browserPkgs.chromium "Chromium" true;
-    google-chrome =
-      browserModule browserPkgs.google-chrome "Google Chrome" false;
+    chromium = browserModule pkgs.chromium "Chromium" true;
+    google-chrome = browserModule pkgs.google-chrome "Google Chrome" false;
     google-chrome-beta =
-      browserModule browserPkgs.google-chrome-beta "Google Chrome Beta" false;
+      browserModule pkgs.google-chrome-beta "Google Chrome Beta" false;
     google-chrome-dev =
-      browserModule browserPkgs.google-chrome-dev "Google Chrome Dev" false;
-    brave = browserModule browserPkgs.brave "Brave Browser" false;
-    vivaldi = browserModule browserPkgs.vivaldi "Vivaldi Browser" false;
+      browserModule pkgs.google-chrome-dev "Google Chrome Dev" false;
+    brave = browserModule pkgs.brave "Brave Browser" false;
+    vivaldi = browserModule pkgs.vivaldi "Vivaldi Browser" false;
   };
 
   config = mkMerge
