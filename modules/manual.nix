@@ -6,7 +6,10 @@ let
 
   cfg = config.manual;
 
-  docs = import ../docs { inherit lib pkgs; };
+  docs = import ../docs {
+    inherit pkgs lib;
+    inherit (config.home.version) release isReleaseBranch;
+  };
 
 in {
   options = {

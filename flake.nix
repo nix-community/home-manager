@@ -105,7 +105,11 @@
       packages = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          docs = import ./docs { inherit pkgs; };
+          releaseInfo = nixpkgs.lib.importJSON ./release.json;
+          docs = import ./docs {
+            inherit pkgs;
+            inherit (releaseInfo) release isReleaseBranch;
+          };
           hmPkg = pkgs.callPackage ./home-manager { path = toString ./.; };
         in {
           default = hmPkg;
