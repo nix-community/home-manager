@@ -1,7 +1,9 @@
 {
   description = "Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  # Temporary pin for Markdown documentation transition.
+  inputs.nixpkgs.url =
+    "github:NixOS/nixpkgs/e7e69199f0372364a6106a1e735f68604f4c5a25";
 
   outputs = { self, nixpkgs, ... }:
     {
