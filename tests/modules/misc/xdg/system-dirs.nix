@@ -10,7 +10,7 @@
       assertFileExists $envFile
       assertFileContent $envFile ${
         pkgs.writeText "expected" ''
-          LOCALE_ARCHIVE_2_27=${pkgs.glibcLocales}/lib/locale/locale-archive
+          LOCALE_ARCHIVE_2_27=${config.i18n.glibcLocales}/lib/locale/locale-archive
           XDG_CACHE_HOME=/home/hm-user/.cache
           XDG_CONFIG_DIRS=/etc/xdg:/foo/bar''${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}
           XDG_CONFIG_HOME=/home/hm-user/.config
