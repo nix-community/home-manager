@@ -7,4 +7,5 @@
   zsh-history-ignore-pattern = ./history-ignore-pattern.nix;
   zsh-history-substring-search = ./history-substring-search.nix;
   zsh-prezto = ./prezto.nix;
+  zsh-syntax-highlighting = ./syntax-highlighting.nix;
 }

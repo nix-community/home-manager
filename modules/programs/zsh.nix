@@ -208,9 +208,30 @@ let
     };
   };
 
+  syntaxHighlightingModule = types.submodule {
+    options = {
+      enable = mkEnableOption "zsh syntax highlighting";
+
+      package = mkPackageOption pkgs "zsh-syntax-highlighting" { };
+
+      styles = mkOption {
+        type = types.attrsOf types.str;
+        default = {};
+        description = ''
+          Custom styles for syntax highlighting.
+          See each highlighter's options: <link xlink:href="https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md"/>
+        '';
+      };
+    };
+  };
+
 in
 
 {
+  imports = [
+    (mkRenamedOptionModule [ "programs" "zsh" "enableSyntaxHighlighting" ] [ "programs" "zsh" "syntaxHighlighting" "enable" ])
+  ];
+
   options = {
     programs.zsh = {
       enable = mkEnableOption "Z shell (Zsh)";
@@ -312,9 +333,10 @@ in
         description = "Enable zsh autosuggestions";
       };
 
-      enableSyntaxHighlighting = mkOption {
-        default = false;
-        description = "Enable zsh syntax highlighting";
+      syntaxHighlighting = mkOption {
+        type = syntaxHighlightingModule;
+        default = {};
+        description = "Options related to zsh-syntax-highlighting.";
       };
 
       historySubstringSearch = mkOption {
@@ -584,11 +606,17 @@ in
         ${dirHashesStr}
         '')
 
-        (optionalString cfg.enableSyntaxHighlighting
+        (optionalString cfg.syntaxHighlighting.enable
           # Load zsh-syntax-highlighting after all custom widgets have been created
           # https://github.com/zsh-users/zsh-syntax-highlighting#faq
-          "source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-        )
+        ''
+          source ${cfg.syntaxHighlighting.package}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+          ${lib.concatStringsSep "\n" (
+              lib.mapAttrsToList
+                (name: value: "ZSH_HIGHLIGHT_STYLES[${lib.escapeShellArg name}]=${lib.escapeShellArg value}")
+                cfg.syntaxHighlighting.styles
+          )}
+        '')
 
         (optionalString (cfg.historySubstringSearch.enable or false)
           # Load zsh-history-substring-search after zsh-syntax-highlighting
