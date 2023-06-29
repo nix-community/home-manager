@@ -30,7 +30,7 @@ let
 
       # Avoid including documentation since this will cause
       # unnecessary rebuilds of the tests.
-      manual.manpages.enable = false;
+      manual.manpages.enable = lib.mkDefault false;
 
       imports = [ ./asserts.nix ./big-test.nix ./stubs.nix ];
 
@@ -52,6 +52,7 @@ import nmt {
     ./modules/files
     ./modules/home-environment
     ./modules/misc/fontconfig
+    ./modules/misc/manual
     ./modules/misc/nix
     ./modules/misc/specialisation
     ./modules/programs/aerc
