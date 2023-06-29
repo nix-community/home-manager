@@ -49,7 +49,7 @@ in {
             User = usercfg.home.username;
             Type = "oneshot";
             RemainAfterExit = "yes";
-            TimeoutStartSec = 90;
+            TimeoutStartSec = "5m";
             SyslogIdentifier = "hm-activate-${username}";
 
             ExecStart = let
