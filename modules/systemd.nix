@@ -59,13 +59,10 @@ let
   unitDescription = type: ''
     Definition of systemd per-user ${type} units. Attributes are
     merged recursively.
-    </para><para>
+
     Note that the attributes follow the capitalization and naming used
     by systemd. More details can be found in
-    <citerefentry>
-      <refentrytitle>systemd.${type}</refentrytitle>
-      <manvolnum>5</manvolnum>
-    </citerefentry>.
+    {manpage}`systemd.${type}(5)`.
   '';
 
   unitExample = type:
@@ -109,56 +106,56 @@ in {
       services = mkOption {
         default = { };
         type = unitType "service";
-        description = unitDescription "service";
+        description = lib.mdDoc (unitDescription "service");
         example = unitExample "Service";
       };
 
       slices = mkOption {
         default = { };
         type = unitType "slice";
-        description = unitDescription "slice";
+        description = lib.mdDoc (unitDescription "slice");
         example = unitExample "Slice";
       };
 
       sockets = mkOption {
         default = { };
         type = unitType "socket";
-        description = unitDescription "socket";
+        description = lib.mdDoc (unitDescription "socket");
         example = unitExample "Socket";
       };
 
       targets = mkOption {
         default = { };
         type = unitType "target";
-        description = unitDescription "target";
+        description = lib.mdDoc (unitDescription "target");
         example = unitExample "Target";
       };
 
       timers = mkOption {
         default = { };
         type = unitType "timer";
-        description = unitDescription "timer";
+        description = lib.mdDoc (unitDescription "timer");
         example = unitExample "Timer";
       };
 
       paths = mkOption {
         default = { };
         type = unitType "path";
-        description = unitDescription "path";
+        description = lib.mdDoc (unitDescription "path");
         example = unitExample "Path";
       };
 
       mounts = mkOption {
         default = { };
         type = unitType "mount";
-        description = unitDescription "mount";
+        description = lib.mdDoc (unitDescription "mount");
         example = unitExample "Mount";
       };
 
       automounts = mkOption {
         default = { };
         type = unitType "automount";
-        description = unitDescription "automount";
+        description = lib.mdDoc (unitDescription "automount");
         example = unitExample "Automount";
       };
 

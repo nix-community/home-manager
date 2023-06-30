@@ -32,7 +32,7 @@ in
             in
               removePrefix (homeDirectory + "/") absPath;
           defaultText = literalExpression "name";
-          description = ''
+          description = lib.mdDoc ''
             Path to target file relative to ${basePathDesc}.
           '';
         };
