@@ -48,11 +48,14 @@ in {
       apply = toString;
       default = "${config.xdg.dataHome}/pyenv";
       defaultText = "\${config.xdg.dataHome}/pyenv";
-      description = ''
-        The pyenv root directory (PYENV_ROOT).
-        </para><para>
-        Note: Deviating from upstream which uses `$HOME/.pyenv`,
-        the default path is set according to the XDG base directory specification.
+      description = lib.mdDoc ''
+        The pyenv root directory ({env}`PYENV_ROOT`).
+
+        ::: {.note}
+        This deviates from upstream, which uses {file}`$HOME/.pyenv`.
+        The default path in Home Manager is set according to the XDG
+        base directory specification.
+        :::
       '';
     };
   };

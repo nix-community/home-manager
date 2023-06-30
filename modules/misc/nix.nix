@@ -196,17 +196,11 @@ in {
           system-features = [ "big-parallel" "kvm" "recursive-nix" ];
         }
       '';
-      description = ''
-        Configuration for Nix, see
-        <link xlink:href="https://nixos.org/manual/nix/stable/#sec-conf-file"/> or
-        <citerefentry>
-          <refentrytitle>nix.conf</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry> for available options.
+      description = lib.mdDoc ''
+        Configuration for Nix; see {manpage}`nix.conf(5)` for available options.
         The value declared here will be translated directly to the key-value pairs Nix expects.
-        </para>
-        <para>
-        Configuration specified in <option>nix.extraOptions</option> which will be appended
+
+        Configuration specified in [](#opt-nix.extraOptions) will be appended
         verbatim to the resulting config file.
       '';
     };

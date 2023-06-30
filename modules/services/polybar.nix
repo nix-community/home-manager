@@ -122,38 +122,38 @@ in {
         type = with types;
           let ty = oneOf [ bool int float str (listOf ty) (attrsOf ty) ];
           in attrsOf (attrsOf ty // { description = "attribute sets"; });
-        description = ''
+        description = lib.mdDoc ''
           Polybar configuration. This takes a nix attrset and converts it to the
           strange data format that polybar uses.
           Each entry will be converted to a section in the output file.
           Several things are treated specially: nested keys are converted
-          to dash-separated keys; the special <literal>text</literal> key is ignored as a nested key,
+          to dash-separated keys; the special `text` key is ignored as a nested key,
           to allow mixing different levels of nesting; and lists are converted to
-          polybar's <literal>foo-0, foo-1, ...</literal> format.
-          </para><para>
+          polybar's `foo-0, foo-1, ...` format.
+
           For example:
-          <programlisting language="nix">
+          ```nix
           "module/volume" = {
             type = "internal/pulseaudio";
-            format.volume = "&lt;ramp-volume&gt; &lt;label-volume&gt;";
+            format.volume = "<ramp-volume> <label-volume>";
             label.muted.text = "🔇";
             label.muted.foreground = "#666";
             ramp.volume = ["🔈" "🔉" "🔊"];
-            click.right = "pavucontrol &amp;";
+            click.right = "pavucontrol &";
           }
-          </programlisting>
+          ```
           becomes:
-          <programlisting language="ini">
+          ```ini
           [module/volume]
           type=internal/pulseaudio
-          format-volume=&lt;ramp-volume&gt; &lt;label-volume&gt;
+          format-volume=<ramp-volume> <label-volume>
           label-muted=🔇
           label-muted-foreground=#666
           ramp-volume-0=🔈
           ramp-volume-1=🔉
           ramp-volume-2=🔊
-          click-right=pavucontrol &amp;
-          </programlisting>
+          click-right=pavucontrol &
+          ```
         '';
         default = { };
         example = literalExpression ''

@@ -35,12 +35,15 @@ in {
       type = types.path;
       default = defaultHieNixExe;
       defaultText = defaultHieNixExeText;
-      description = ''
+      description = lib.mdDoc ''
         The path to the Haskell IDE Engine executable.
-        </para><para>
+
         Because hie-nix is not packaged in Nixpkgs, you need to add it as an
         overlay or set this option. Example overlay configuration:
-        <programlisting language="nix">${exampleOverlay}</programlisting>
+
+        ```nix
+        ${exampleOverlay}
+        ```
       '';
       example = literalExpression ''
         (import ~/src/haskell-ide-engine {}).hies + "/bin/hie-wrapper";

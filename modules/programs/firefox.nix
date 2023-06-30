@@ -442,19 +442,17 @@ in {
                   privacy-badger
                 ]
               '';
-              description = ''
+              description = lib.mdDoc ''
                 List of Firefox add-on packages to install for this profile.
-                Some pre-packaged add-ons are accessible from NUR,
-                <link xlink:href="https://github.com/nix-community/NUR"/>.
+                Some pre-packaged add-ons are accessible from the
+                [Nix User Repository](https://github.com/nix-community/NUR).
                 Once you have NUR installed run
 
-                <screen language="console">
-                  <prompt>$</prompt> <userinput>nix-env -f '&lt;nixpkgs&gt;' -qaP -A nur.repos.rycee.firefox-addons</userinput>
-                </screen>
+                ```console
+                $ nix-env -f '<nixpkgs>' -qaP -A nur.repos.rycee.firefox-addons
+                ```
 
                 to list the available Firefox add-ons.
-
-                </para><para>
 
                 Note that it is necessary to manually enable these extensions
                 inside Firefox after the first installation.

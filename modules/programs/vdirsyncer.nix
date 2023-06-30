@@ -182,12 +182,11 @@ in {
         type = types.str;
         default = "${config.xdg.dataHome}/vdirsyncer/status";
         defaultText = "$XDG_DATA_HOME/vdirsyncer/status";
-        description = ''
+        description = lib.mdDoc ''
           A directory where vdirsyncer will store some additional data for the next sync.
-          </para>
 
-          <para>For more information, see
-          <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#general-section"/>
+          For more information, see the
+          [vdirsyncer manual](https://vdirsyncer.pimutils.org/en/stable/config.html#general-section).
         '';
       };
     };

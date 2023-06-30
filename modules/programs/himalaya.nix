@@ -218,18 +218,18 @@ in {
           backend = lib.mkOption {
             type = with lib.types; nullOr str;
             default = null;
-            description = ''
-              Specifying 'accounts.email.accounts.*.himalaya.backend' is deprecated,
-              set 'accounts.email.accounts.*.himalaya.settings.backend' instead.
+            description = lib.mdDoc ''
+              Specifying {option}`accounts.email.accounts.*.himalaya.backend` is deprecated,
+              set {option}`accounts.email.accounts.*.himalaya.settings.backend` instead.
             '';
           };
 
           # TODO: remove me for the next release
           sender = lib.mkOption {
             type = with lib.types; nullOr str;
-            description = ''
-              Specifying 'accounts.email.accounts.*.himalaya.sender' is deprecated,
-              set 'accounts.email.accounts.*.himalaya.settings.sender' instead.
+            description = lib.mdDoc ''
+              Specifying {option}`accounts.email.accounts.*.himalaya.sender` is deprecated,
+              set {option}'accounts.email.accounts.*.himalaya.settings.sender' instead.
             '';
           };
 

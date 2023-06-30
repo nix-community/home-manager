@@ -89,10 +89,9 @@ in {
     };
 
     nix-direnv = {
-      enable = mkEnableOption ''
-        <link
-            xlink:href="https://github.com/nix-community/nix-direnv">nix-direnv</link>,
-            a fast, persistent use_nix implementation for direnv'';
+      enable = mkEnableOption (lib.mdDoc ''
+        [nix-direnv](https://github.com/nix-community/nix-direnv),
+        a fast, persistent use_nix implementation for direnv'');
     };
 
   };

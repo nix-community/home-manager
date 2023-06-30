@@ -248,8 +248,8 @@ in
 
       cdpath = mkOption {
         default = [];
-        description = ''
-          List of paths to autocomplete calls to `cd`.
+        description = lib.mdDoc ''
+          List of paths to autocomplete calls to {command}`cd`.
         '';
         type = types.listOf types.str;
       };

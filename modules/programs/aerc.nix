@@ -40,9 +40,10 @@ in {
       default = { };
       example = literalExpression
         ''{ Work = { source = "maildir://~/Maildir/work"; }; }'';
-      description = ''
-        Extra lines added to <filename>$HOME/.config/aerc/accounts.conf</filename>.
-        See aerc-config(5).
+      description = lib.mdDoc ''
+        Extra lines added to {file}`$HOME/.config/aerc/accounts.conf`.
+
+        See {manpage}`aerc-config(5)`.
       '';
     };
 
@@ -50,10 +51,11 @@ in {
       type = sectionsOrLines;
       default = { };
       example = literalExpression ''{ messages = { q = ":quit<Enter>"; }; }'';
-      description = ''
-        Extra lines added to <filename>$HOME/.config/aerc/binds.conf</filename>.
+      description = lib.mdDoc ''
+        Extra lines added to {file}`$HOME/.config/aerc/binds.conf`.
         Global keybindings can be set in the `global` section.
-        See aerc-config(5).
+
+        See {manpage}`aerc-config(5)`.
       '';
     };
 
@@ -61,9 +63,10 @@ in {
       type = sectionsOrLines;
       default = { };
       example = literalExpression ''{ ui = { sort = "-r date"; }; }'';
-      description = ''
-        Extra lines added to <filename>$HOME/.config/aerc/aerc.conf</filename>.
-        See aerc-config(5).
+      description = lib.mdDoc ''
+        Extra lines added to {file}`$HOME/.config/aerc/aerc.conf`.
+
+        See {manpage}`aerc-config(5)`.
       '';
     };
 
@@ -73,9 +76,10 @@ in {
       example = literalExpression ''
         { default = { ui = { "tab.selected.reverse" = toggle; }; }; };
       '';
-      description = ''
-        Stylesets added to <filename>$HOME/.config/aerc/stylesets/</filename>.
-        See aerc-stylesets(7).
+      description = lib.mdDoc ''
+        Stylesets added to {file}`$HOME/.config/aerc/stylesets/`.
+
+        See {manpage}`aerc-stylesets(7)`.
       '';
     };
 
@@ -85,9 +89,10 @@ in {
       example = literalExpression ''
         { new_message = "Hello!"; };
       '';
-      description = ''
-        Templates added to <filename>$HOME/.config/aerc/templates/</filename>.
-        See aerc-templates(7).
+      description = lib.mdDoc ''
+        Templates added to {file}`$HOME/.config/aerc/templates/`.
+
+        See {manpage}`aerc-templates(7)`.
       '';
     };
   };

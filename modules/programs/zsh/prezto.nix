@@ -26,14 +26,16 @@ let
         type = types.nullOr types.bool;
         default = true;
         example = false;
-        description = "Color output (auto set to 'no' on dumb terminals)";
+        description = lib.mdDoc ''
+          Color output (automatically set to `false` on dumb terminals).
+        '';
       };
 
       pmoduleDirs = mkOption {
         type = types.listOf types.path;
         default = [ ];
         example = [ "$HOME/.zprezto-contrib" ];
-        description = "Add additional directories to load prezto modules from";
+        description = "Add additional directories to load prezto modules from.";
       };
 
       extraConfig = mkOption {
@@ -48,14 +50,18 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = [ "attr" "stat" ];
-        description = "Set the Zsh modules to load (man zshmodules).";
+        description = lib.mdDoc ''
+          Set the Zsh modules to load ({manpage}`zshmodules(1)`).
+        '';
       };
 
       extraFunctions = mkOption {
         type = types.listOf types.str;
         default = [ ];
         example = [ "zargs" "zmv" ];
-        description = "Set the Zsh functions to load (man zshcontrib).";
+        description = lib.mdDoc ''
+          Set the Zsh functions to load ({manpage}`zshcontrib(1)`).
+        '';
       };
 
       pmodules = mkOption {
@@ -86,8 +92,10 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = [ "0.0.0.0" "127.0.0.1" ];
-        description =
-          "Set the entries to ignore in static */etc/hosts* for host completion.";
+        description = lib.mdDoc ''
+          Set the entries to ignore in static {file}`/etc/hosts` for
+          host completion.
+        '';
       };
 
       editor = {
@@ -95,21 +103,25 @@ let
           type = types.nullOr (types.enum [ "emacs" "vi" ]);
           default = "emacs";
           example = "vi";
-          description = "Set the key mapping style to 'emacs' or 'vi'.";
+          description = lib.mdDoc ''
+            Set the key mapping style to `emacs` or `vi`.
+          '';
         };
 
         dotExpansion = mkOption {
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = "Auto convert .... to ../..";
+          description = lib.mdDoc ''
+            Automatically convert `....` to `../..`
+          '';
         };
 
         promptContext = mkOption {
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = "Allow the zsh prompt context to be shown.";
+          description = "Allow the Zsh prompt context to be shown.";
         };
       };
 
@@ -117,8 +129,10 @@ let
         type = types.nullOr (types.enum [ "dirty" "untracked" "all" "none" ]);
         default = null;
         example = "all";
-        description =
-          "Ignore submodules when they are 'dirty', 'untracked', 'all', or 'none'.";
+        description = lib.mdDoc ''
+          Ignore submodules when they are `dirty`, `untracked`, `all`,
+          or `none`.
+        '';
       };
 
       gnuUtility.prefix = mkOption {
@@ -154,8 +168,10 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "manpages";
-        description =
-          "Set the keyword used by `mand` to open man pages in Dash.app";
+        description = lib.mdDoc ''
+          Set the keyword used by {command}`mand` to open man pages
+          in Dash.app.
+        '';
       };
 
       prompt = {
@@ -163,19 +179,23 @@ let
           type = types.nullOr types.str;
           default = "sorin";
           example = "pure";
-          description = ''
-            Set the prompt theme to load. Setting it to 'random'
-                      loads a random theme. Auto set to 'off' on dumb terminals.'';
+          description = lib.mdDoc ''
+            Set the prompt theme to load. Setting it to `random`
+            loads a random theme. Automatically set to `off` on dumb
+            terminals.
+          '';
         };
 
         pwdLength = mkOption {
           type = types.nullOr (types.enum [ "short" "long" "full" ]);
           default = null;
           example = "short";
-          description = ''
+          description = lib.mdDoc ''
             Set the working directory prompt display length. By
-                      default, it is set to 'short'. Set it to 'long' (without '~' expansion) for
-                      longer or 'full' (with '~' expansion) for even longer prompt display.'';
+            default, it is set to `short`. Set it to `long` (without `~`
+            expansion) for longer or `full` (with `~` expansion) for
+            even longer prompt display.
+          '';
         };
 
         showReturnVal = mkOption {
@@ -184,7 +204,8 @@ let
           example = true;
           description = ''
             Set the prompt to display the return code along with an
-                      indicator for non-zero return codes. This is not supported by all prompts.'';
+            indicator for non-zero return codes. This is not supported by all prompts.
+          '';
         };
       };
 
@@ -244,7 +265,8 @@ let
           example = [ "main" "brackets" "pattern" "line" "cursor" "root" ];
           description = ''
             Set syntax highlighters. By default, only the main
-                      highlighter is enabled.'';
+            highlighter is enabled.
+          '';
         };
 
         styles = mkOption {
@@ -332,10 +354,12 @@ let
         type = types.nullOr types.bool;
         default = null;
         example = true;
-        description = ''
-          Enabled safe options. This aliases cp, ln, mv and rm so
-                  that they prompt before deleting or overwriting files. Set to 'no' to disable
-                  this safer behavior.'';
+        description = lib.mdDoc ''
+          Enabled safe options. This aliases {command}`cp`,
+          {command}`ln`, {command}`mv` and {command}`rm` so that they
+          prompt before deleting or overwriting files. Set to `no` to
+          disable this safer behavior.
+        '';
       };
     };
   };
