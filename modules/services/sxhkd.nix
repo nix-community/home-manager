@@ -38,13 +38,15 @@ in {
     };
 
     keybindings = mkOption {
-      type = types.attrsOf (types.nullOr types.str);
+      type =
+        types.attrsOf (types.nullOr (types.oneOf [ types.str types.path ]));
       default = { };
       description = "An attribute set that assigns hotkeys to commands.";
       example = literalExpression ''
         {
           "super + shift + {r,c}" = "i3-msg {restart,reload}";
           "super + {s,w}"         = "i3-msg {stacking,tabbed}";
+          "super + F1"            = pkgs.writeShellScript "script" "echo $USER";
         }
       '';
     };
