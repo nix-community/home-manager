@@ -36,11 +36,9 @@ Words of warning
 ----------------
 
 Unfortunately, it is quite possible to get difficult to understand
-errors when working with Home Manager, such as infinite loops with no
-clear source reference. You should therefore be comfortable using the
-Nix language and the various tools in the Nix ecosystem. Reading
-through the [Nix Pills][] document is a good way to familiarize
-yourself with them.
+errors when working with Home Manager. You should therefore be
+comfortable using the Nix language and the various tools in the Nix
+ecosystem.
 
 If you are not very familiar with Nix but still want to use Home
 Manager then you are strongly encouraged to start with a small and
@@ -125,7 +123,6 @@ This project is licensed under the terms of the [MIT license](LICENSE).
 [configuration options]: https://nix-community.github.io/home-manager/options.html
 [#home-manager]: https://webchat.oftc.net/?channels=home-manager
 [OFTC]: https://oftc.net/
-[Nix Pills]: https://nixos.org/guides/nix-pills/
 [Nix Flakes]: https://nixos.wiki/wiki/Flakes
 [nix-darwin]: https://github.com/LnL7/nix-darwin
 [manual standalone install]: https://nix-community.github.io/home-manager/index.html#sec-install-standalone
