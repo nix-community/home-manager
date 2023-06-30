@@ -10,7 +10,9 @@ in {
   meta.maintainers = [ maintainers.uvnikita ];
 
   options = {
-    services.caffeine = { enable = mkEnableOption "Caffeine service"; };
+    services.caffeine = {
+      enable = mkEnableOption (lib.mdDoc "Caffeine service");
+    };
   };
 
   config = mkIf cfg.enable {

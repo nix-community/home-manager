@@ -87,14 +87,14 @@ in {
 
   options = {
     services.imapnotify = {
-      enable = mkEnableOption "imapnotify";
+      enable = mkEnableOption (lib.mdDoc "imapnotify");
 
       package = mkOption {
         type = types.package;
         default = pkgs.goimapnotify;
         defaultText = literalExpression "pkgs.goimapnotify";
         example = literalExpression "pkgs.imapnotify";
-        description = "The imapnotify package to use";
+        description = lib.mdDoc "The imapnotify package to use";
       };
     };
 

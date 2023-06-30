@@ -11,74 +11,67 @@ in {
 
   options = {
     xsession.windowManager.fluxbox = {
-      enable = mkEnableOption "Fluxbox window manager";
+      enable = mkEnableOption (lib.mdDoc "Fluxbox window manager");
 
       package = mkPackageOptionMD pkgs "fluxbox" { };
 
       init = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Init configuration for Fluxbox, written to
-          <filename>~/.fluxbox/init</filename>. Look at the
-          <citerefentry>
-          <refentrytitle>fluxbox</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {file}`~/.fluxbox/init`. Look at the
+          {manpage}`fluxbox(1)` manpage for details.
         '';
       };
 
       apps = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Apps configuration for Fluxbox, written to
-          <filename>~/.fluxbox/apps</filename>. Look at the
-          <citerefentry><refentrytitle>fluxbox</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {file}`~/.fluxbox/apps`. Look at the
+          {manpage}`fluxbox(1)` manpage for details.
         '';
       };
 
       keys = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Keyboard shortcuts configuration for Fluxbox, written to
-          <filename>~/.fluxbox/keys</filename>. Look at the
-          <citerefentry><refentrytitle>fluxbox-keys</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {file}`~/.fluxbox/keys`. Look at the
+          {manpage}`fluxbox-keys(1)` manpage for details.
         '';
       };
 
       menu = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Menu configuration for Fluxbox, written to
-          <filename>~/.fluxbox/menu</filename>. Look at the
-          <citerefentry><refentrytitle>fluxbox-menu</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {file}`~/.fluxbox/menu`. Look at the
+          {manpage}`fluxbox-menu(1)` manpage for details.
         '';
       };
 
       slitlist = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Slitlist configuration for Fluxbox, written to
-          <filename>~/.fluxbox/slitlist</filename>. Look at the
-          <citerefentry><refentrytitle>fluxbox</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {file}`~/.fluxbox/slitlist`. Look at the
+          {manpage}`fluxbox(1)` manpage for details.
         '';
       };
 
       windowmenu = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Window menu configuration for Fluxbox, written to
-          <filename>~/.fluxbox/windowmenu</filename>. Look at the
-          <citerefentry><refentrytitle>fluxbox-menu</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry>
+          {file}`~/.fluxbox/windowmenu`. Look at the
+          {manpage}`fluxbox-menu(1)`
           manpage for details.
         '';
       };
@@ -87,11 +80,10 @@ in {
         type = with types; listOf str;
         default = [ ];
         example = [ "-log" "/tmp/fluxbox.log" ];
-        description = ''
-          Extra command line arguments to pass to <command>fluxbox</command>.
+        description = lib.mdDoc ''
+          Extra command line arguments to pass to {command}`fluxbox`.
           Look at the
-          <citerefentry><refentrytitle>fluxbox</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {manpage}`fluxbox(1)` manpage for details.
         '';
       };
     };

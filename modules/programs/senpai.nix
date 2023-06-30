@@ -7,12 +7,12 @@ let
   cfgFmt = pkgs.formats.yaml { };
 in {
   options.programs.senpai = {
-    enable = mkEnableOption "senpai";
+    enable = mkEnableOption (lib.mdDoc "senpai");
     package = mkOption {
       type = types.package;
       default = pkgs.senpai;
       defaultText = literalExpression "pkgs.senpai";
-      description = "The <literal>senpai</literal> package to use.";
+      description = lib.mdDoc "The `senpai` package to use.";
     };
     config = mkOption {
       type = types.submodule {
@@ -20,7 +20,7 @@ in {
         options = {
           addr = mkOption {
             type = types.str;
-            description = ''
+            description = lib.mdDoc ''
               The address (host[:port]) of the IRC server. senpai uses TLS
               connections by default unless you specify no-tls option. TLS
               connections default to port 6697, plain-text use port 6667.
@@ -28,7 +28,7 @@ in {
           };
           nick = mkOption {
             type = types.str;
-            description = ''
+            description = lib.mdDoc ''
               Your nickname, sent with a NICK IRC message. It mustn't contain
               spaces or colons (:).
             '';
@@ -36,7 +36,7 @@ in {
           password = mkOption {
             type = types.nullOr types.str;
             default = null;
-            description = ''
+            description = lib.mdDoc ''
               Your password, used for SASL authentication. Note that it will
               reside world-readable in the Nix store.
             '';
@@ -44,7 +44,7 @@ in {
           no-tls = mkOption {
             type = types.bool;
             default = false;
-            description = "Disables TLS encryption.";
+            description = lib.mdDoc "Disables TLS encryption.";
           };
         };
       };
@@ -55,10 +55,9 @@ in {
           password = "verysecurepassword";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration for senpai. For a complete list of options, see
-        <citerefentry><refentrytitle>senpai</refentrytitle>
-        <manvolnum>5</manvolnum></citerefentry>.
+        {manpage}`senpai(5)`.
       '';
     };
   };

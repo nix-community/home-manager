@@ -12,7 +12,8 @@ in {
   meta.maintainers = [ maintainers.AndersonTorres ];
 
   options.services.pueue = {
-    enable = mkEnableOption "Pueue, CLI process scheduler and manager";
+    enable =
+      mkEnableOption (lib.mdDoc "Pueue, CLI process scheduler and manager");
 
     package = mkPackageOptionMD pkgs "pueue" { };
 
@@ -26,9 +27,9 @@ in {
           };
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/pueue/pueue.yml</filename>.
+        {file}`$XDG_CONFIG_HOME/pueue/pueue.yml`.
       '';
     };
   };

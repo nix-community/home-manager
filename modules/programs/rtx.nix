@@ -10,19 +10,20 @@ in {
 
   options = {
     programs.rtx = {
-      enable = mkEnableOption "RTX. Runtime Executor (asdf Rust clone)";
+      enable =
+        mkEnableOption (lib.mdDoc "RTX. Runtime Executor (asdf Rust clone)");
 
       package = mkPackageOptionMD pkgs "rtx" { };
 
-      enableBashIntegration = mkEnableOption "Bash Integration" // {
+      enableBashIntegration = mkEnableOption (lib.mdDoc "Bash Integration") // {
         default = true;
       };
 
-      enableZshIntegration = mkEnableOption "Zsh Integration" // {
+      enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh Integration") // {
         default = true;
       };
 
-      enableFishIntegration = mkEnableOption "Fish Integration" // {
+      enableFishIntegration = mkEnableOption (lib.mdDoc "Fish Integration") // {
         default = true;
       };
 
@@ -40,16 +41,16 @@ in {
             experimental = false;
           };
         '';
-        description = ''
-          Settings written to <filename>$XDG_CONFIG_HOME/rtx/config.toml</filename>.
+        description = lib.mdDoc ''
+          Settings written to {file}`$XDG_CONFIG_HOME/rtx/config.toml`.
 
-          See <link xlink:href="https://github.com/jdxcode/rtx#global-config-configrtxconfigtoml"/>
+          See <https://github.com/jdxcode/rtx#global-config-configrtxconfigtoml>
           for details on supported values.
 
-          <warning>
-          <para>Modifying the <literal>tools</literal> section doesn't make RTX install them.
-          You have to manually run <literal>rtx install</literal> to install the tools.</para>
-          </warning>
+          ::: {.warning}
+          Modifying the `tools` section doesn't make RTX install them.
+          You have to manually run `rtx install` to install the tools.
+          :::
         '';
       };
     };

@@ -12,14 +12,11 @@ let
       frequency = mkOption {
         type = types.str;
         default = "*:0/5";
-        description = ''
-          How often to run <command>muchsync</command>. This
+        description = lib.mdDoc ''
+          How often to run {command}`muchsync`. This
           value is passed to the systemd timer configuration as the
-          <literal>OnCalendar</literal> option. See
-          <citerefentry>
-            <refentrytitle>systemd.time</refentrytitle>
-            <manvolnum>7</manvolnum>
-          </citerefentry>
+          `OnCalendar` option. See
+          {manpage}`systemd.time(7)`
           for more information about the format.
         '';
       };
@@ -28,10 +25,10 @@ let
         type = types.str;
         default = "${pkgs.openssh}/bin/ssh -CTaxq";
         defaultText = "ssh -CTaxq";
-        description = ''
-          Specifies a command line to pass to <command>/bin/sh</command>
+        description = lib.mdDoc ''
+          Specifies a command line to pass to {command}`/bin/sh`
           to execute a command on another machine.
-          </para><para>
+
           Note that because this string is passed to the shell,
           special characters including spaces may need to be escaped.
         '';
@@ -40,7 +37,7 @@ let
       upload = mkOption {
         type = types.bool;
         default = true;
-        description = ''
+        description = lib.mdDoc ''
           Whether to propagate local changes to the remote.
         '';
       };
@@ -49,16 +46,16 @@ let
         checkForModifiedFiles = mkOption {
           type = types.bool;
           default = false;
-          description = ''
+          description = lib.mdDoc ''
             Check for locally modified files.
             Without this option, muchsync assumes that files in a maildir are
             never edited.
-            </para><para>
-            <option>checkForModifiedFiles</option> disables certain
+
+            {option}`checkForModifiedFiles` disables certain
             optimizations so as to make muchsync at least check the timestamp on
             every file, which will detect modified files at the cost of a longer
             startup time.
-            </para><para>
+
             This option is useful if your software regularly modifies the
             contents of mail files (e.g., because you are running offlineimap
             with "synclabels = yes").
@@ -68,9 +65,9 @@ let
         importNew = mkOption {
           type = types.bool;
           default = true;
-          description = ''
+          description = lib.mdDoc ''
             Whether to begin the synchronisation by running
-            <command>notmuch new</command> locally.
+            {command}`notmuch new` locally.
           '';
         };
       };
@@ -78,7 +75,7 @@ let
       remote = {
         host = mkOption {
           type = types.str;
-          description = ''
+          description = lib.mdDoc ''
             Remote SSH host to synchronize with.
           '';
         };
@@ -87,7 +84,7 @@ let
           type = types.str;
           default = "";
           defaultText = "$PATH/muchsync";
-          description = ''
+          description = lib.mdDoc ''
             Specifies the path to muchsync on the server.
             Ordinarily, muchsync should be in the default PATH on the server
             so this option is not required.
@@ -100,16 +97,16 @@ let
         checkForModifiedFiles = mkOption {
           type = types.bool;
           default = false;
-          description = ''
+          description = lib.mdDoc ''
             Check for modified files on the remote side.
             Without this option, muchsync assumes that files in a maildir are
             never edited.
-            </para><para>
-            <option>checkForModifiedFiles</option> disables certain
+
+            {option}`checkForModifiedFiles` disables certain
             optimizations so as to make muchsync at least check the timestamp on
             every file, which will detect modified files at the cost of a longer
             startup time.
-            </para><para>
+
             This option is useful if your software regularly modifies the
             contents of mail files (e.g., because you are running offlineimap
             with "synclabels = yes").
@@ -119,9 +116,9 @@ let
         importNew = mkOption {
           type = types.bool;
           default = true;
-          description = ''
+          description = lib.mdDoc ''
             Whether to begin the synchronisation by running
-            <command>notmuch new</command> on the remote side.
+            {command}`notmuch new` on the remote side.
           '';
         };
       };
@@ -143,7 +140,7 @@ in {
           };
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Muchsync remotes to synchronise with.
       '';
     };

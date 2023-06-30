@@ -22,7 +22,7 @@ in {
         default = false;
         type = types.bool;
         description =
-          "Treat outputs as connected even if their lids are closed.";
+          lib.mdDoc "Treat outputs as connected even if their lids are closed.";
       };
     };
   };

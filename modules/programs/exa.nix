@@ -7,15 +7,16 @@ with lib;
 
   options.programs.exa = {
     enable =
-      mkEnableOption "exa, a modern replacement for <command>ls</command>";
+      mkEnableOption (lib.mdDoc "exa, a modern replacement for {command}`ls`");
 
-    enableAliases = mkEnableOption "recommended exa aliases (ls, ll…)";
+    enableAliases =
+      mkEnableOption (lib.mdDoc "recommended exa aliases (ls, ll…)");
 
     extraOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--group-directories-first" "--header" ];
-      description = ''
+      description = lib.mdDoc ''
         Extra command line options passed to exa.
       '';
     };
@@ -23,16 +24,16 @@ with lib;
     icons = mkOption {
       type = types.bool;
       default = false;
-      description = ''
-        Display icons next to file names (<option>--icons</option> argument).
+      description = lib.mdDoc ''
+        Display icons next to file names ({option}`--icons` argument).
       '';
     };
 
     git = mkOption {
       type = types.bool;
       default = false;
-      description = ''
-        List each file's Git status if tracked or ignored (<option>--git</option> argument).
+      description = lib.mdDoc ''
+        List each file's Git status if tracked or ignored ({option}`--git` argument).
       '';
     };
 

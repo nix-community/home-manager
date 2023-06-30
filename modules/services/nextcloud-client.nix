@@ -9,20 +9,21 @@ let
 in {
   options = {
     services.nextcloud-client = {
-      enable = mkEnableOption "Nextcloud Client";
+      enable = mkEnableOption (lib.mdDoc "Nextcloud Client");
 
       package = mkOption {
         type = types.package;
         default = pkgs.nextcloud-client;
         defaultText = literalExpression "pkgs.nextcloud-client";
-        description = "The package to use for the nextcloud client binary.";
+        description =
+          lib.mdDoc "The package to use for the nextcloud client binary.";
       };
 
       startInBackground = mkOption {
         type = types.bool;
         default = false;
         description =
-          "Whether to start the Nextcloud client in the background.";
+          lib.mdDoc "Whether to start the Nextcloud client in the background.";
       };
     };
   };

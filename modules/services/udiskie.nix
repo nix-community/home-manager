@@ -48,11 +48,11 @@ in {
             icon_names.media = [ "media-optical" ];
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/udiskie/config.yml</filename>.
-          </para><para>
-          See <link xlink:href="https://github.com/coldfix/udiskie/blob/master/doc/udiskie.8.txt#configuration" />
+          {file}`$XDG_CONFIG_HOME/udiskie/config.yml`.
+
+          See <https://github.com/coldfix/udiskie/blob/master/doc/udiskie.8.txt#configuration>
           for the full list of options.
         '';
       };
@@ -60,13 +60,13 @@ in {
       automount = mkOption {
         type = types.bool;
         default = true;
-        description = "Whether to automatically mount new devices.";
+        description = lib.mdDoc "Whether to automatically mount new devices.";
       };
 
       notify = mkOption {
         type = types.bool;
         default = true;
-        description = "Whether to show pop-up notifications.";
+        description = lib.mdDoc "Whether to show pop-up notifications.";
       };
 
       tray = mkOption {

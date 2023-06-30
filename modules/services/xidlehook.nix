@@ -33,13 +33,13 @@ in {
   meta.maintainers = [ maintainers.dschrempf hm.maintainers.bertof ];
 
   options.services.xidlehook = {
-    enable = mkEnableOption "xidlehook systemd service";
+    enable = mkEnableOption (lib.mdDoc "xidlehook systemd service");
 
     package = mkOption {
       type = types.package;
       default = pkgs.xidlehook;
       defaultText = "pkgs.xidlehook";
-      description = "The package to use for xidlehook.";
+      description = lib.mdDoc "The package to use for xidlehook.";
     };
 
     environment = mkOption {
@@ -50,30 +50,31 @@ in {
           "primary-display" = "$(xrandr | awk '/ primary/{print $1}')";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Extra environment variables to be exported in the script.
-        These options are passed unescaped as <literal>export name=value</literal>.
+        These options are passed unescaped as `export name=value`.
       '';
     };
 
-    detect-sleep = mkEnableOption
-      "detecting when the system wakes up from a suspended state and resetting the idle timer";
+    detect-sleep = mkEnableOption (lib.mdDoc
+      "detecting when the system wakes up from a suspended state and resetting the idle timer");
 
     not-when-fullscreen = mkOption {
       type = types.bool;
       default = false;
       example = true;
-      description = "Disable locking when a fullscreen application is in use.";
+      description =
+        lib.mdDoc "Disable locking when a fullscreen application is in use.";
     };
 
     not-when-audio = mkOption {
       type = types.bool;
       default = false;
       example = true;
-      description = "Disable locking when audio is playing.";
+      description = lib.mdDoc "Disable locking when audio is playing.";
     };
 
-    once = mkEnableOption "running the program once and exiting";
+    once = mkEnableOption (lib.mdDoc "running the program once and exiting");
 
     timers = mkOption {
       type = types.listOf (types.submodule {
@@ -81,14 +82,14 @@ in {
           delay = mkOption {
             type = types.ints.unsigned;
             example = 60;
-            description = "Time before executing the command.";
+            description = lib.mdDoc "Time before executing the command.";
           };
           command = mkOption {
             type = types.nullOr types.str;
             example = literalExpression ''
               ''${pkgs.libnotify}/bin/notify-send "Idle" "Sleeping in 1 minute"
             '';
-            description = ''
+            description = lib.mdDoc ''
               Command executed after the idle timeout is reached.
               Path to executables are accepted.
               The command is automatically escaped.
@@ -100,7 +101,7 @@ in {
             example = literalExpression ''
               ''${pkgs.libnotify}/bin/notify-send "Idle" "Resuming activity"
             '';
-            description = ''
+            description = lib.mdDoc ''
               Command executed when the user becomes active again.
               This is only executed if the next timer has not been reached.
               Path to executables are accepted.
@@ -125,12 +126,12 @@ in {
           }
         ]
       '';
-      description = ''
+      description = lib.mdDoc ''
         A set of commands to be executed after a specific idle timeout.
-        The commands specified in <literal>command</literal> and <literal>canceller</literal>
+        The commands specified in `command` and `canceller`
         are passed escaped to the script.
         To use or re-use environment variables that are script-dependent, specify them
-        in the <literal>environment</literal> section.
+        in the `environment` section.
       '';
     };
   };

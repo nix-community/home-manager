@@ -101,14 +101,14 @@ let
 
 in {
   options.programs.rofi = {
-    enable = mkEnableOption
-      "Rofi: A window switcher, application launcher and dmenu replacement";
+    enable = mkEnableOption (lib.mdDoc
+      "Rofi: A window switcher, application launcher and dmenu replacement");
 
     package = mkOption {
       default = pkgs.rofi;
       type = types.package;
-      description = ''
-        Package providing the <command>rofi</command> binary.
+      description = lib.mdDoc ''
+        Package providing the {command}`rofi` binary.
       '';
       example = literalExpression ''
         pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
@@ -118,7 +118,7 @@ in {
     finalPackage = mkOption {
       type = types.package;
       readOnly = true;
-      description = ''
+      description = lib.mdDoc ''
         Resulting customized rofi package.
       '';
     };
@@ -126,7 +126,7 @@ in {
     plugins = mkOption {
       default = [ ];
       type = types.listOf types.package;
-      description = ''
+      description = lib.mdDoc ''
         List of rofi plugins to be installed.
       '';
       example = literalExpression "[ pkgs.rofi-calc ]";
@@ -136,13 +136,13 @@ in {
       default = null;
       type = types.nullOr types.str;
       example = "Droid Sans Mono 14";
-      description = "Font to use.";
+      description = lib.mdDoc "Font to use.";
     };
 
     terminal = mkOption {
       default = null;
       type = types.nullOr types.str;
-      description = ''
+      description = lib.mdDoc ''
         Path to the terminal which will be used to run console applications
       '';
       example = "\${pkgs.gnome.gnome_terminal}/bin/gnome-terminal";
@@ -151,19 +151,19 @@ in {
     cycle = mkOption {
       default = null;
       type = types.nullOr types.bool;
-      description = "Whether to cycle through the results list.";
+      description = lib.mdDoc "Whether to cycle through the results list.";
     };
 
     location = mkOption {
       default = "center";
       type = types.enum (attrNames locationsMap);
-      description = "The location rofi appears on the screen.";
+      description = lib.mdDoc "The location rofi appears on the screen.";
     };
 
     xoffset = mkOption {
       default = 0;
       type = types.int;
-      description = ''
+      description = lib.mdDoc ''
         Offset in the x-axis in pixels relative to the chosen location.
       '';
     };
@@ -171,7 +171,7 @@ in {
     yoffset = mkOption {
       default = 0;
       type = types.int;
-      description = ''
+      description = lib.mdDoc ''
         Offset in the y-axis in pixels relative to the chosen location.
       '';
     };
@@ -208,10 +208,10 @@ in {
           };
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Name of theme or path to theme file in rasi format or attribute set with
         theme configuration. Available named themes can be viewed using the
-        <command>rofi-theme-selector</command> tool.
+        {command}`rofi-theme-selector` tool.
       '';
     };
 
@@ -219,7 +219,7 @@ in {
       default = "${config.xdg.configHome}/rofi/config.rasi";
       defaultText = "$XDG_CONFIG_HOME/rofi/config.rasi";
       type = types.str;
-      description = "Path where to put generated configuration file.";
+      description = lib.mdDoc "Path where to put generated configuration file.";
     };
 
     extraConfig = mkOption {
@@ -232,7 +232,7 @@ in {
         }
       '';
       type = configType;
-      description = "Additional configuration to add.";
+      description = lib.mdDoc "Additional configuration to add.";
     };
 
   };

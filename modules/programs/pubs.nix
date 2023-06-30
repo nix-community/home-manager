@@ -10,13 +10,13 @@ in {
   meta.maintainers = [ hm.maintainers.loicreynier ];
 
   options.programs.pubs = {
-    enable = mkEnableOption "pubs";
+    enable = mkEnableOption (lib.mdDoc "pubs");
 
     package = mkOption {
       type = types.package;
       default = pkgs.pubs;
       defaultText = literalExpression "pkgs.pubs";
-      description = "The package to use for the pubs script.";
+      description = lib.mdDoc "The package to use for the pubs script.";
     };
 
     extraConfig = mkOption {
@@ -44,9 +44,9 @@ in {
         manual = False
         force_color = False
         ''''';
-      description = ''
+      description = lib.mdDoc ''
         Configuration using syntax written to
-        <filename>$HOME/.pubsrc</filename>.
+        {file}`$HOME/.pubsrc`.
       '';
     };
   };

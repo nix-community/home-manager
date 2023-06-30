@@ -11,24 +11,21 @@ let
 
       criteria = mkOption {
         type = types.str;
-        description = ''
+        description = lib.mdDoc ''
           The criteria can either be an output name, an output description or "*".
           The latter can be used to match any output.
 
           On
-          <citerefentry>
-            <refentrytitle>sway</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>,
+          {manpage}`sway(1)`,
           output names and descriptions can be obtained via
-          <literal>swaymsg -t get_outputs</literal>.
+          `swaymsg -t get_outputs`.
         '';
       };
 
       status = mkOption {
         type = types.nullOr (types.enum [ "enable" "disable" ]);
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Enables or disables the specified output.
         '';
       };
@@ -37,9 +34,9 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "1920x1080@60Hz";
-        description = ''
+        description = lib.mdDoc ''
           &lt;width&gt;x&lt;height&gt;[@&lt;rate&gt;[Hz]]
-          </para><para>
+
           Configures the specified output to use the specified mode.
           Modes are a combination of width and height (in pixels) and
           a refresh rate (in Hz) that your display can be configured to use.
@@ -50,9 +47,9 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "1600,0";
-        description = ''
+        description = lib.mdDoc ''
           &lt;x&gt;,&lt;y&gt;
-          </para><para>
+
           Places the output at the specified position in the global coordinates
           space.
         '';
@@ -62,7 +59,7 @@ let
         type = types.nullOr types.float;
         default = null;
         example = 2;
-        description = ''
+        description = lib.mdDoc ''
           Scales the output by the specified scale factor.
         '';
       };
@@ -79,7 +76,7 @@ let
           "flipped-270"
         ]);
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Sets the output transform.
         '';
       };
@@ -98,7 +95,7 @@ let
       outputs = mkOption {
         type = types.listOf outputModule;
         default = [ ];
-        description = ''
+        description = lib.mdDoc ''
           Outputs configuration.
         '';
       };
@@ -108,7 +105,7 @@ let
         default = [ ];
         example =
           "[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]";
-        description = ''
+        description = lib.mdDoc ''
           Commands executed after the profile is successfully applied.
           Note that if you provide multiple commands, they will be
           executed asynchronously with no guaranteed ordering.
@@ -131,14 +128,14 @@ in {
   meta.maintainers = [ hm.maintainers.nurelin ];
 
   options.services.kanshi = {
-    enable = mkEnableOption
-      "kanshi, a Wayland daemon that automatically configures outputs";
+    enable = mkEnableOption (lib.mdDoc
+      "kanshi, a Wayland daemon that automatically configures outputs");
 
     package = mkOption {
       type = types.package;
       default = pkgs.kanshi;
       defaultText = literalExpression "pkgs.kanshi";
-      description = ''
+      description = lib.mdDoc ''
         kanshi derivation to use.
       '';
     };
@@ -146,7 +143,7 @@ in {
     profiles = mkOption {
       type = types.attrsOf profileModule;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         List of profiles.
       '';
       example = literalExpression ''
@@ -174,7 +171,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Extra configuration lines to append to the kanshi
         configuration file.
       '';
@@ -183,7 +180,7 @@ in {
     systemdTarget = mkOption {
       type = types.str;
       default = "sway-session.target";
-      description = ''
+      description = lib.mdDoc ''
         Systemd target to bind to.
       '';
     };

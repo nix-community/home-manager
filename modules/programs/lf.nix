@@ -56,13 +56,13 @@ in {
 
   options = {
     programs.lf = {
-      enable = mkEnableOption "lf";
+      enable = mkEnableOption (lib.mdDoc "lf");
 
       package = mkOption {
         type = types.package;
         default = pkgs.lf;
         defaultText = literalExpression "pkgs.lf";
-        description = ''
+        description = lib.mdDoc ''
           lf package to use.
         '';
       };
@@ -99,7 +99,7 @@ in {
           get-mime-type = ''%xdg-mime query filetype "$f"'';
           open = "$$OPENER $f";
         };
-        description = ''
+        description = lib.mdDoc ''
           Commands to declare. Commands set to null or an empty string are
           deleted.
         '';
@@ -115,7 +115,7 @@ in {
           U = "!du -sh";
           gg = null;
         };
-        description =
+        description = lib.mdDoc
           "Keys to bind. Keys set to null or an empty string are deleted.";
       };
 
@@ -123,7 +123,7 @@ in {
         type = with types; attrsOf (nullOr str);
         default = { };
         example = literalExpression ''{ "<c-g>" = "cmd-escape"; }'';
-        description = ''
+        description = lib.mdDoc ''
           Keys to bind to command line commands which can only be one of the
           builtin commands. Keys set to null or an empty string are deleted.
         '';
@@ -146,9 +146,9 @@ in {
             esac
           '''
         '';
-        description = ''
+        description = lib.mdDoc ''
           Script or executable to use to preview files. Sets lf's
-          <varname>previewer</varname> option.
+          {var}`previewer` option.
         '';
       };
 
@@ -156,8 +156,8 @@ in {
         type = with types; nullOr str;
         default = null;
         example = "i";
-        description = ''
-          Key to bind to the script at <varname>previewer.source</varname> and
+        description = lib.mdDoc ''
+          Key to bind to the script at {var}`previewer.source` and
           pipe through less. Setting to null will not bind any key.
         '';
       };
@@ -168,7 +168,7 @@ in {
         example = ''
           $mkdir -p ~/.trash
         '';
-        description = "Custom lfrc lines.";
+        description = lib.mdDoc "Custom lfrc lines.";
       };
     };
   };

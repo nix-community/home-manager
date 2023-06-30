@@ -12,13 +12,13 @@ in {
 
   options = {
     services.plex-mpv-shim = {
-      enable = mkEnableOption "Plex mpv shim";
+      enable = mkEnableOption (lib.mdDoc "Plex mpv shim");
 
       package = mkOption {
         type = types.package;
         default = pkgs.plex-mpv-shim;
         defaultText = literalExpression "pkgs.plex-mpv-shim";
-        description = "The package to use for the Plex mpv shim.";
+        description = lib.mdDoc "The package to use for the Plex mpv shim.";
       };
 
       settings = mkOption {
@@ -35,10 +35,10 @@ in {
             auto_transcode = true;
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/plex-mpv-shim/config.json</filename>. See
-          <link xlink:href="https://github.com/iwalton3/plex-mpv-shim/blob/master/README.md"/>
+          {file}`$XDG_CONFIG_HOME/plex-mpv-shim/config.json`. See
+          <https://github.com/iwalton3/plex-mpv-shim/blob/master/README.md>
           for the configuration documentation.
         '';
       };

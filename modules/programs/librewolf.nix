@@ -18,14 +18,14 @@ in {
   meta.maintainers = [ maintainers.onny ];
 
   options.programs.librewolf = {
-    enable =
-      mkEnableOption "Librewolf browser, a privacy enhanced Firefox fork";
+    enable = mkEnableOption
+      (lib.mdDoc "Librewolf browser, a privacy enhanced Firefox fork");
 
     package = mkOption {
       type = types.package;
       default = pkgs.librewolf;
       defaultText = literalExpression "pkgs.librewolf";
-      description = "The LibreWolf package to use.";
+      description = lib.mdDoc "The LibreWolf package to use.";
     };
 
     settings = mkOption {
@@ -37,9 +37,9 @@ in {
           "privacy.resistFingerprinting" = false;
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Attribute set of LibreWolf settings and overrides. Refer to
-        <link xlink:href="https://librewolf.net/docs/settings/"/>
+        <https://librewolf.net/docs/settings/>
         for details on supported values.
       '';
     };

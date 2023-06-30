@@ -62,10 +62,10 @@ let
     options = {
       key = mkOption {
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The default GPG signing key fingerprint.
-          </para><para>
-          Set to <literal>null</literal> to let GnuPG decide what signing key
+
+          Set to `null` to let GnuPG decide what signing key
           to use depending on commit’s author.
         '';
       };
@@ -73,14 +73,15 @@ let
       signByDefault = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether commits and tags should be signed by default.";
+        description =
+          lib.mdDoc "Whether commits and tags should be signed by default.";
       };
 
       gpgPath = mkOption {
         type = types.str;
         default = "${pkgs.gnupg}/bin/gpg2";
         defaultText = "\${pkgs.gnupg}/bin/gpg2";
-        description = "Path to GnuPG binary to use.";
+        description = lib.mdDoc "Path to GnuPG binary to use.";
       };
     };
   };
@@ -90,19 +91,16 @@ let
       condition = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = ''
-          Include this configuration only when <varname>condition</varname>
+        description = lib.mdDoc ''
+          Include this configuration only when {var}`condition`
           matches. Allowed conditions are described in
-          <citerefentry>
-            <refentrytitle>git-config</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>.
+          {manpage}`git-config(1)`.
         '';
       };
 
       path = mkOption {
         type = with types; either str path;
-        description = "Path of the configuration file to include.";
+        description = lib.mdDoc "Path of the configuration file to include.";
       };
 
       contents = mkOption {
@@ -120,21 +118,18 @@ let
             };
           };
         '';
-        description = ''
+        description = lib.mdDoc ''
           Configuration to include. If empty then a path must be given.
 
           This follows the configuration structure as described in
-          <citerefentry>
-            <refentrytitle>git-config</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>.
+          {manpage}`git-config(1)`.
         '';
       };
 
       contentSuffix = mkOption {
         type = types.str;
         default = "gitconfig";
-        description = ''
+        description = lib.mdDoc ''
           Nix store name for the git configuration text file,
           when generating the configuration text from nix options.
         '';
@@ -151,41 +146,42 @@ in {
 
   options = {
     programs.git = {
-      enable = mkEnableOption "Git";
+      enable = mkEnableOption (lib.mdDoc "Git");
 
       package = mkOption {
         type = types.package;
         default = pkgs.git;
         defaultText = literalExpression "pkgs.git";
-        description = ''
-          Git package to install. Use <varname>pkgs.gitAndTools.gitFull</varname>
-          to gain access to <command>git send-email</command> for instance.
+        description = lib.mdDoc ''
+          Git package to install. Use {var}`pkgs.gitAndTools.gitFull`
+          to gain access to {command}`git send-email` for instance.
         '';
       };
 
       userName = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = "Default user name to use.";
+        description = lib.mdDoc "Default user name to use.";
       };
 
       userEmail = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = "Default user email to use.";
+        description = lib.mdDoc "Default user email to use.";
       };
 
       aliases = mkOption {
         type = types.attrsOf types.str;
         default = { };
         example = { co = "checkout"; };
-        description = "Git aliases to define.";
+        description = lib.mdDoc "Git aliases to define.";
       };
 
       signing = mkOption {
         type = types.nullOr signModule;
         default = null;
-        description = "Options related to signing commits using GnuPG.";
+        description =
+          lib.mdDoc "Options related to signing commits using GnuPG.";
       };
 
       extraConfig = mkOption {
@@ -195,7 +191,7 @@ in {
           core = { whitespace = "trailing-space,space-before-tab"; };
           url."ssh://git@host".insteadOf = "otherhost";
         };
-        description = ''
+        description = lib.mdDoc ''
           Additional configuration to add. The use of string values is
           deprecated and will be removed in the future.
         '';
@@ -209,9 +205,9 @@ in {
             pre-commit = ./pre-commit-script;
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Configuration helper for Git hooks.
-          See <link xlink:href="https://git-scm.com/docs/githooks" />
+          See <https://git-scm.com/docs/githooks>
           for reference.
         '';
       };
@@ -225,14 +221,15 @@ in {
         type = types.listOf types.str;
         default = [ ];
         example = [ "*~" "*.swp" ];
-        description = "List of paths that should be globally ignored.";
+        description =
+          lib.mdDoc "List of paths that should be globally ignored.";
       };
 
       attributes = mkOption {
         type = types.listOf types.str;
         default = [ ];
         example = [ "*.pdf diff=pdf" ];
-        description = "List of defining attributes set globally.";
+        description = lib.mdDoc "List of defining attributes set globally.";
       };
 
       includes = mkOption {
@@ -247,18 +244,18 @@ in {
             }
           ]
         '';
-        description = "List of configuration files to include.";
+        description = lib.mdDoc "List of configuration files to include.";
       };
 
       lfs = {
-        enable = mkEnableOption "Git Large File Storage";
+        enable = mkEnableOption (lib.mdDoc "Git Large File Storage");
 
         skipSmudge = mkOption {
           type = types.bool;
           default = false;
-          description = ''
+          description = lib.mdDoc ''
             Skip automatic downloading of objects on clone or pull.
-            This requires a manual <command>git lfs pull</command>
+            This requires a manual {command}`git lfs pull`
             every time a new commit is checked out on your repository.
           '';
         };
@@ -276,7 +273,7 @@ in {
           type = types.enum [ "light" "dark" ];
           default = "light";
           example = "dark";
-          description = ''
+          description = lib.mdDoc ''
             Determines whether difftastic should use the lighter or darker colors
             for syntax highlighting.
           '';
@@ -286,7 +283,7 @@ in {
           type = types.enum [ "always" "auto" "never" ];
           default = "auto";
           example = "always";
-          description = ''
+          description = lib.mdDoc ''
             Determines when difftastic should color its output.
           '';
         };
@@ -296,7 +293,7 @@ in {
             types.enum [ "side-by-side" "side-by-side-show-both" "inline" ];
           default = "side-by-side";
           example = "inline";
-          description = ''
+          description = lib.mdDoc ''
             Determines how the output displays - in one column or two columns.
           '';
         };
@@ -328,7 +325,7 @@ in {
               file-decoration-style = "none";
             };
           };
-          description = ''
+          description = lib.mdDoc ''
             Options to configure delta.
           '';
         };
@@ -345,8 +342,8 @@ in {
         pagerOpts = mkOption {
           type = types.listOf types.str;
           default = [ "--tabs=4" "-RFX" ];
-          description = ''
-            Arguments to be passed to <command>less</command>.
+          description = lib.mdDoc ''
+            Arguments to be passed to {command}`less`.
           '';
         };
 
@@ -354,7 +351,7 @@ in {
           type = types.bool;
           default = true;
           example = false;
-          description = ''
+          description = lib.mdDoc ''
             Whether the first block of an empty line should be colored.
           '';
         };
@@ -363,7 +360,7 @@ in {
           type = types.bool;
           default = true;
           example = false;
-          description = ''
+          description = lib.mdDoc ''
             Simplify git header chunks to a more human readable format.
           '';
         };
@@ -372,8 +369,8 @@ in {
           type = types.bool;
           default = true;
           example = false;
-          description = ''
-            Whether the <literal>+</literal> or <literal>-</literal> at
+          description = lib.mdDoc ''
+            Whether the `+` or `-` at
             line-start should be removed.
           '';
         };
@@ -382,7 +379,7 @@ in {
           type = types.bool;
           default = true;
           example = false;
-          description = ''
+          description = lib.mdDoc ''
             By default, the separator for the file header uses Unicode
             line-drawing characters. If this is causing output errors on
             your terminal, set this to false to use ASCII characters instead.
@@ -393,7 +390,7 @@ in {
           type = types.nullOr types.int;
           default = null;
           example = false;
-          description = ''
+          description = lib.mdDoc ''
             By default, the separator for the file header spans the full
             width of the terminal. Use this setting to set the width of
             the file header manually.

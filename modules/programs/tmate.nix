@@ -11,28 +11,28 @@ in {
 
   options = {
     programs.tmate = {
-      enable = mkEnableOption "tmate";
+      enable = mkEnableOption (lib.mdDoc "tmate");
 
       package = mkOption {
         type = types.package;
         default = pkgs.tmate;
         defaultText = literalExpression "pkgs.tmate";
         example = literalExpression "pkgs.tmate";
-        description = "The tmate package to install.";
+        description = lib.mdDoc "The tmate package to install.";
       };
 
       host = mkOption {
         type = with types; nullOr str;
         default = null;
         example = literalExpression "tmate.io";
-        description = "Tmate server address.";
+        description = lib.mdDoc "Tmate server address.";
       };
 
       port = mkOption {
         type = with types; nullOr port;
         default = null;
         example = 2222;
-        description = "Tmate server port.";
+        description = lib.mdDoc "Tmate server port.";
       };
 
       dsaFingerprint = mkOption {
@@ -40,7 +40,7 @@ in {
         default = null;
         example = literalExpression
           "SHA256:1111111111111111111111111111111111111111111";
-        description = "Tmate server EdDSA key fingerprint.";
+        description = lib.mdDoc "Tmate server EdDSA key fingerprint.";
       };
 
       rsaFingerprint = mkOption {
@@ -48,15 +48,15 @@ in {
         default = null;
         example = literalExpression
           "SHA256:1111111111111111111111111111111111111111111";
-        description = "Tmate server RSA key fingerprint.";
+        description = lib.mdDoc "Tmate server RSA key fingerprint.";
       };
 
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Additional content written at the end of
-          <filename>~/.tmate.conf</filename>.
+          {file}`~/.tmate.conf`.
         '';
       };
     };

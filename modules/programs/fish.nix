@@ -10,19 +10,19 @@ let
     options = {
       src = mkOption {
         type = types.path;
-        description = ''
+        description = lib.mdDoc ''
           Path to the plugin folder.
-          </para><para>
+
           Relevant pieces will be added to the fish function path and
-          the completion path. The <filename>init.fish</filename> and
-          <filename>key_binding.fish</filename> files are sourced if
+          the completion path. The {file}`init.fish` and
+          {file}`key_binding.fish` files are sourced if
           they exist.
         '';
       };
 
       name = mkOption {
         type = types.str;
-        description = ''
+        description = lib.mdDoc ''
           The name of the plugin.
         '';
       };
@@ -33,7 +33,7 @@ let
     options = {
       body = mkOption {
         type = types.lines;
-        description = ''
+        description = lib.mdDoc ''
           The function body.
         '';
       };
@@ -41,7 +41,7 @@ let
       argumentNames = mkOption {
         type = with types; nullOr (either str (listOf str));
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Assigns the value of successive command line arguments to the names
           given.
         '';
@@ -50,7 +50,7 @@ let
       description = mkOption {
         type = with types; nullOr str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           A description of what the function does, suitable as a completion
           description.
         '';
@@ -59,7 +59,7 @@ let
       wraps = mkOption {
         type = with types; nullOr str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Causes the function to inherit completions from the given wrapped
           command.
         '';
@@ -68,7 +68,7 @@ let
       onEvent = mkOption {
         type = with types; nullOr str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Tells fish to run this function when the specified named event is
           emitted. Fish internally generates named events e.g. when showing the
           prompt.
@@ -78,7 +78,7 @@ let
       onVariable = mkOption {
         type = with types; nullOr str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Tells fish to run this function when the specified variable changes
           value.
         '';
@@ -87,9 +87,9 @@ let
       onJobExit = mkOption {
         type = with types; nullOr (either str int);
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Tells fish to run this function when the job with the specified group
-          ID exits. Instead of a PID, the stringer <literal>caller</literal> can
+          ID exits. Instead of a PID, the stringer `caller` can
           be specified. This is only legal when in a command substitution, and
           will result in the handler being triggered by the exit of the job
           which created this command substitution.
@@ -100,11 +100,11 @@ let
         type = with types; nullOr (either str int);
         default = null;
         example = "$fish_pid";
-        description = ''
+        description = lib.mdDoc ''
           Tells fish to run this function when the fish child process with the
           specified process ID exits. Instead of a PID, for backwards
-          compatibility, <literal>%self</literal> can be specified as an alias
-          for <literal>$fish_pid</literal>, and the function will be run when
+          compatibility, `%self` can be specified as an alias
+          for `$fish_pid`, and the function will be run when
           the current fish instance exits.
         '';
       };
@@ -113,7 +113,7 @@ let
         type = with types; nullOr (either str int);
         default = null;
         example = [ "SIGHUP" "HUP" 1 ];
-        description = ''
+        description = lib.mdDoc ''
           Tells fish to run this function when the specified signal is
           delievered. The signal can be a signal number or signal name.
         '';
@@ -122,7 +122,7 @@ let
       noScopeShadowing = mkOption {
         type = types.bool;
         default = false;
-        description = ''
+        description = lib.mdDoc ''
           Allows the function to access the variables of calling functions.
         '';
       };
@@ -130,7 +130,7 @@ let
       inheritVariable = mkOption {
         type = with types; nullOr str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Snapshots the value of the specified variable and defines a local
           variable with that same name and value when the function is defined.
         '';
@@ -172,13 +172,14 @@ in {
 
   options = {
     programs.fish = {
-      enable = mkEnableOption "fish, the friendly interactive shell";
+      enable =
+        mkEnableOption (lib.mdDoc "fish, the friendly interactive shell");
 
       package = mkOption {
         type = types.package;
         default = pkgs.fish;
         defaultText = literalExpression "pkgs.fish";
-        description = ''
+        description = lib.mdDoc ''
           The fish package to install. May be used to change the version.
         '';
       };
@@ -192,7 +193,7 @@ in {
             "..." = "cd ../..";
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           An attribute set that maps aliases (the top level attribute names
           in this option) to command strings or directly to build outputs.
         '';
@@ -205,7 +206,7 @@ in {
           l = "less";
           gco = "git checkout";
         };
-        description = ''
+        description = lib.mdDoc ''
           An attribute set that maps aliases (the top level attribute names
           in this option) to abbreviations. Abbreviations are expanded with
           the longer phrase after they are entered.
@@ -215,7 +216,7 @@ in {
       shellInit = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Shell script code called during fish shell
           initialisation.
         '';
@@ -224,7 +225,7 @@ in {
       loginShellInit = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Shell script code called during fish login shell
           initialisation.
         '';
@@ -233,7 +234,7 @@ in {
       interactiveShellInit = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Shell script code called during interactive fish shell
           initialisation.
         '';
@@ -268,9 +269,9 @@ in {
           }
         ]
       '';
-      description = ''
+      description = lib.mdDoc ''
         The plugins to source in
-        <filename>conf.d/99plugins.fish</filename>.
+        {file}`conf.d/99plugins.fish`.
       '';
     };
 
@@ -287,9 +288,9 @@ in {
           gitignore = "curl -sL https://www.gitignore.io/api/$argv";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Basic functions to add to fish. For more information see
-        <link xlink:href="https://fishshell.com/docs/current/cmds/function.html"/>.
+        <https://fishshell.com/docs/current/cmds/function.html>.
       '';
     };
   };

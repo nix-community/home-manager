@@ -13,7 +13,7 @@ in {
   meta.maintainers = [ lib.maintainers.Scrumplex ];
 
   options.programs.fuzzel = {
-    enable = mkEnableOption "fuzzel";
+    enable = mkEnableOption (lib.mdDoc "fuzzel");
 
     package = mkPackageOptionMD pkgs "fuzzel" { };
 
@@ -29,11 +29,10 @@ in {
           colors.background = "ffffffff";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration for fuzzel written to
-        <filename>$XDG_CONFIG_HOME/fuzzel/fuzzel.ini</filename>. See
-        <citerefentry><refentrytitle>fuzzel.ini</refentrytitle>
-        <manvolnum>5</manvolnum></citerefentry> for a list of available options.
+        {file}`$XDG_CONFIG_HOME/fuzzel/fuzzel.ini`. See
+        {manpage}`fuzzel.ini(5)` for a list of available options.
       '';
     };
   };

@@ -10,21 +10,21 @@ let
     options = {
       key = mkOption {
         type = types.str;
-        description = ''
-          The key to use as listed in <command>gpg --list-keys</command>.
+        description = lib.mdDoc ''
+          The key to use as listed in {command}`gpg --list-keys`.
         '';
       };
 
       signByDefault = mkOption {
         type = types.bool;
         default = false;
-        description = "Sign messages by default.";
+        description = lib.mdDoc "Sign messages by default.";
       };
 
       encryptByDefault = mkOption {
         type = types.bool;
         default = false;
-        description = "Encrypt outgoing messages by default.";
+        description = lib.mdDoc "Encrypt outgoing messages by default.";
       };
     };
   };
@@ -39,7 +39,7 @@ let
           Luke Skywalker
           May the force be with you.
         '';
-        description = ''
+        description = lib.mdDoc ''
           Signature content.
         '';
       };
@@ -52,7 +52,7 @@ let
         example = literalExpression ''
           ~*~*~*~*~*~*~*~*~*~*~*~
         '';
-        description = ''
+        description = lib.mdDoc ''
           The delimiter used between the document and the signature.
         '';
       };
@@ -63,13 +63,13 @@ let
         example = literalExpression ''
           pkgs.writeScript "signature" "echo This is my signature"
         '';
-        description = "A command that generates a signature.";
+        description = lib.mdDoc "A command that generates a signature.";
       };
 
       showSignature = mkOption {
         type = types.enum [ "append" "attach" "none" ];
         default = "none";
-        description = "Method to communicate the signature.";
+        description = lib.mdDoc "Method to communicate the signature.";
       };
     };
   };
@@ -79,7 +79,7 @@ let
       enable = mkOption {
         type = types.bool;
         default = true;
-        description = ''
+        description = lib.mdDoc ''
           Whether to enable TLS/SSL.
         '';
       };
@@ -87,7 +87,7 @@ let
       useStartTls = mkOption {
         type = types.bool;
         default = false;
-        description = ''
+        description = lib.mdDoc ''
           Whether to use STARTTLS.
         '';
       };
@@ -96,10 +96,10 @@ let
         type = types.nullOr types.path;
         default = config.accounts.email.certificatesFile;
         defaultText = "config.accounts.email.certificatesFile";
-        description = ''
+        description = lib.mdDoc ''
           Path to file containing certificate authorities that should
           be used to validate the connection authenticity. If
-          <literal>null</literal> then the system default is used.
+          `null` then the system default is used.
           Note, if set then the system default may still be accepted.
         '';
       };
@@ -111,7 +111,7 @@ let
       host = mkOption {
         type = types.str;
         example = "imap.example.org";
-        description = ''
+        description = lib.mdDoc ''
           Hostname of IMAP server.
         '';
       };
@@ -120,16 +120,16 @@ let
         type = types.nullOr types.port;
         default = null;
         example = 993;
-        description = ''
+        description = lib.mdDoc ''
           The port on which the IMAP server listens. If
-          <literal>null</literal> then the default port is used.
+          `null` then the default port is used.
         '';
       };
 
       tls = mkOption {
         type = tlsModule;
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Configuration for secure connections.
         '';
       };
@@ -142,12 +142,11 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "jmap.example.org";
-        description = ''
+        description = lib.mdDoc ''
           Hostname of JMAP server.
-          </para><para>
-          If both this option and <xref
-          linkend="opt-accounts.email.accounts._name_.jmap.sessionUrl"/> are specified,
-          <literal>host</literal> is preferred by applications when establishing a
+
+          If both this option and [](#opt-accounts.email.accounts._name_.jmap.sessionUrl) are specified,
+          `host` is preferred by applications when establishing a
           session.
         '';
       };
@@ -156,12 +155,11 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "https://jmap.example.org:443/.well-known/jmap";
-        description = ''
+        description = lib.mdDoc ''
           URL for the JMAP Session resource.
-          </para><para>
-          If both this option and <xref
-          linkend="opt-accounts.email.accounts._name_.jmap.host"/> are specified,
-          <literal>host</literal> is preferred by applications when establishing a
+
+          If both this option and [](#opt-accounts.email.accounts._name_.jmap.host) are specified,
+          `host` is preferred by applications when establishing a
           session.
         '';
       };
@@ -173,7 +171,7 @@ let
       host = mkOption {
         type = types.str;
         example = "smtp.example.org";
-        description = ''
+        description = lib.mdDoc ''
           Hostname of SMTP server.
         '';
       };
@@ -182,16 +180,16 @@ let
         type = types.nullOr types.port;
         default = null;
         example = 465;
-        description = ''
+        description = lib.mdDoc ''
           The port on which the SMTP server listens. If
-          <literal>null</literal> then the default port is used.
+          `null` then the default port is used.
         '';
       };
 
       tls = mkOption {
         type = tlsModule;
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Configuration for secure connections.
         '';
       };
@@ -202,7 +200,7 @@ let
     options = {
       path = mkOption {
         type = types.str;
-        description = ''
+        description = lib.mdDoc ''
           Path to maildir directory where mail for this account is
           stored. This is relative to the base maildir path.
         '';
@@ -213,7 +211,7 @@ let
         readOnly = true;
         internal = true;
         default = "${cfg.maildirBasePath}/${config.path}";
-        description = ''
+        description = lib.mdDoc ''
           A convenience option whose value is the absolute path of
           this maildir.
         '';
@@ -226,7 +224,7 @@ let
       name = mkOption {
         type = types.str;
         readOnly = true;
-        description = ''
+        description = lib.mdDoc ''
           Unique identifier of the account. This is set to the
           attribute name of the account configuration.
         '';
@@ -235,7 +233,7 @@ let
       primary = mkOption {
         type = types.bool;
         default = false;
-        description = ''
+        description = lib.mdDoc ''
           Whether this is the primary account. Only one account may be
           set as primary.
         '';
@@ -251,11 +249,11 @@ let
           "outlook.office365.com"
         ];
         default = "plain";
-        description = ''
+        description = lib.mdDoc ''
           Some email providers have peculiar behavior that require
           special treatment. This option is therefore intended to
           indicate the nature of the provider.
-          </para><para>
+
           When this indicates a specific provider then, for example,
           the IMAP, SMTP, and JMAP server configuration may be set
           automatically.
@@ -265,26 +263,26 @@ let
       address = mkOption {
         type = types.strMatching ".*@.*";
         example = "jane.doe@example.org";
-        description = "The email address of this account.";
+        description = lib.mdDoc "The email address of this account.";
       };
 
       aliases = mkOption {
         type = types.listOf (types.strMatching ".*@.*");
         default = [ ];
         example = [ "webmaster@example.org" "admin@example.org" ];
-        description = "Alternative email addresses of this account.";
+        description = lib.mdDoc "Alternative email addresses of this account.";
       };
 
       realName = mkOption {
         type = types.str;
         example = "Jane Doe";
-        description = "Name displayed when sending mails.";
+        description = lib.mdDoc "Name displayed when sending mails.";
       };
 
       userName = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           The server username of this account. This will be used as
           the SMTP, IMAP, and JMAP user name.
         '';
@@ -295,7 +293,7 @@ let
         default = null;
         apply = p: if isString p then splitString " " p else p;
         example = "secret-tool lookup email me@example.org";
-        description = ''
+        description = lib.mdDoc ''
           A command, which when run writes the account password on
           standard output.
         '';
@@ -307,7 +305,7 @@ let
             inbox = mkOption {
               type = types.str;
               default = "Inbox";
-              description = ''
+              description = lib.mdDoc ''
                 Relative path of the inbox mail.
               '';
             };
@@ -315,7 +313,7 @@ let
             sent = mkOption {
               type = types.nullOr types.str;
               default = "Sent";
-              description = ''
+              description = lib.mdDoc ''
                 Relative path of the sent mail folder.
               '';
             };
@@ -323,7 +321,7 @@ let
             drafts = mkOption {
               type = types.nullOr types.str;
               default = "Drafts";
-              description = ''
+              description = lib.mdDoc ''
                 Relative path of the drafts mail folder.
               '';
             };
@@ -331,14 +329,14 @@ let
             trash = mkOption {
               type = types.str;
               default = "Trash";
-              description = ''
+              description = lib.mdDoc ''
                 Relative path of the deleted mail folder.
               '';
             };
           };
         };
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Standard email folders.
         '';
       };
@@ -346,7 +344,7 @@ let
       imap = mkOption {
         type = types.nullOr imapModule;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           The IMAP configuration to use for this account.
         '';
       };
@@ -354,7 +352,7 @@ let
       jmap = mkOption {
         type = types.nullOr jmapModule;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           The JMAP configuration to use for this account.
         '';
       };
@@ -362,7 +360,7 @@ let
       signature = mkOption {
         type = signatureModule;
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Signature configuration.
         '';
       };
@@ -370,7 +368,7 @@ let
       gpg = mkOption {
         type = types.nullOr gpgModule;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           GPG configuration.
         '';
       };
@@ -378,7 +376,7 @@ let
       smtp = mkOption {
         type = types.nullOr smtpModule;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           The SMTP configuration to use for this account.
         '';
       };
@@ -386,7 +384,7 @@ let
       maildir = mkOption {
         type = types.nullOr maildirModule;
         defaultText = { path = "\${name}"; };
-        description = ''
+        description = lib.mdDoc ''
           Maildir configuration for this account.
         '';
       };
@@ -479,7 +477,7 @@ in {
     certificatesFile = mkOption {
       type = types.nullOr types.path;
       default = "/etc/ssl/certs/ca-certificates.crt";
-      description = ''
+      description = lib.mdDoc ''
         Path to default file containing certificate authorities that
         should be used to validate the connection authenticity. This
         path may be overridden on a per-account basis.
@@ -492,7 +490,7 @@ in {
       defaultText = "$HOME/Maildir";
       apply = p:
         if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
-      description = ''
+      description = lib.mdDoc ''
         The base directory for account maildir directories. May be a
         relative path, in which case it is relative the home
         directory.
@@ -502,7 +500,7 @@ in {
     accounts = mkOption {
       type = types.attrsOf (types.submodule mailAccountOpts);
       default = { };
-      description = "List of email accounts.";
+      description = lib.mdDoc "List of email accounts.";
     };
   };
 

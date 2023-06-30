@@ -12,7 +12,8 @@ in {
   meta.maintainers = with lib.maintainers; [ farlion thiagokokada ];
 
   options.programs.i3status-rust = {
-    enable = mkEnableOption "a replacement for i3-status written in Rust";
+    enable =
+      mkEnableOption (lib.mdDoc "a replacement for i3-status written in Rust");
 
     bars = mkOption {
       type = types.attrsOf (types.submodule {
@@ -49,10 +50,10 @@ in {
                 format = " $timestamp.datetime(f:'%a %d/%m %R') ";
               }
             ];
-            description = ''
+            description = lib.mdDoc ''
               Configuration blocks to add to i3status-rust
-              <filename>config</filename>. See
-              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/blocks.md"/>
+              {file}`config`. See
+              <https://github.com/greshake/i3status-rust/blob/master/blocks.md>
               for block options.
             '';
             example = literalExpression ''
@@ -86,9 +87,9 @@ in {
           settings = mkOption {
             type = settingsFormat.type;
             default = { };
-            description = ''
+            description = lib.mdDoc ''
               Any extra options to add to i3status-rust
-              <filename>config</filename>.
+              {file}`config`.
             '';
             example = literalExpression ''
               {
@@ -106,9 +107,9 @@ in {
           icons = mkOption {
             type = types.str;
             default = "none";
-            description = ''
+            description = lib.mdDoc ''
               The icons set to use. See
-              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/doc/themes.md"/>
+              <https://github.com/greshake/i3status-rust/blob/master/doc/themes.md>
               for a list of available icon sets.
             '';
             example = "awesome6";
@@ -117,9 +118,9 @@ in {
           theme = mkOption {
             type = types.str;
             default = "plain";
-            description = ''
+            description = lib.mdDoc ''
               The theme to use. See
-              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/doc/themes.md"/>
+              <https://github.com/greshake/i3status-rust/blob/master/doc/themes.md>
               for a list of available themes.
             '';
             example = "gruvbox-dark";
@@ -161,20 +162,17 @@ in {
           ];
         };
       };
-      description = ''
+      description = lib.mdDoc ''
         Attribute set of i3status-rust bars, each with their own configuration.
-        Each bar <varname>name</varname> generates a config file suffixed with
-        the bar's <varname>name</varname> from the attribute set, like so:
-        <filename>config-''${name}.toml</filename>.
-        </para><para>
+        Each bar {var}`name` generates a config file suffixed with
+        the bar's {var}`name` from the attribute set, like so:
+        {file}`config-''${name}.toml`.
+
         This way, multiple config files can be generated, such as for having a
         top and a bottom bar.
-        </para><para>
+
         See
-        <citerefentry>
-         <refentrytitle>i3status-rust</refentrytitle>
-         <manvolnum>1</manvolnum>
-        </citerefentry>
+        {manpage}`i3status-rust(1)`
         for options.
       '';
       example = literalExpression ''
@@ -228,7 +226,7 @@ in {
       type = types.package;
       default = pkgs.i3status-rust;
       defaultText = literalExpression "pkgs.i3status-rust";
-      description = "Package providing i3status-rust";
+      description = lib.mdDoc "Package providing i3status-rust";
     };
 
   };

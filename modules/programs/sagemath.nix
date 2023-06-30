@@ -10,22 +10,23 @@ in {
   meta.maintainers = [ lib.maintainers.kirelagin ];
 
   options.programs.sagemath = {
-    enable = mkEnableOption "SageMath, a mathematics software system";
+    enable =
+      mkEnableOption (lib.mdDoc "SageMath, a mathematics software system");
 
     package = mkOption {
       type = types.package;
       default = pkgs.sage;
       defaultText = literalExpression "pkgs.sage";
-      description = "The SageMath package to use.";
+      description = lib.mdDoc "The SageMath package to use.";
     };
 
     configDir = mkOption {
       type = types.str;
       default = "${config.xdg.configHome}/sage";
       defaultText = literalExpression "\${config.xdg.configHome}/sage";
-      description = ''
-        Directory where the <filename>sage.init</filename> file will be stored.
-        Note that the upstream default is <filename>~/.sage</filename>,
+      description = lib.mdDoc ''
+        Directory where the {file}`sage.init` file will be stored.
+        Note that the upstream default is {file}`~/.sage`,
         but our default is to follow XDG.
       '';
     };
@@ -34,9 +35,9 @@ in {
       type = types.str;
       default = "${config.xdg.dataHome}/sage";
       defaultText = literalExpression "\${config.xdg.dataHome}/sage";
-      description = ''
-        Location for <envar>DOT_SAGE</envar>.
-        Note that the upstream default is <filename>~/.sage</filename>,
+      description = lib.mdDoc ''
+        Location for {env}`DOT_SAGE`.
+        Note that the upstream default is {file}`~/.sage`,
         but our default is to follow XDG.
       '';
     };
@@ -45,8 +46,8 @@ in {
       type = types.lines;
       default = "";
       example = "%colors linux";
-      description = ''
-        Contents of the <filename>init.sage</filename> file that is loaded on startup.
+      description = lib.mdDoc ''
+        Contents of the {file}`init.sage` file that is loaded on startup.
       '';
     };
   };

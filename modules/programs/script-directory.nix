@@ -4,7 +4,7 @@ in {
   meta.maintainers = [ lib.maintainers.janik ];
 
   options.programs.script-directory = {
-    enable = lib.mkEnableOption "script-directory";
+    enable = lib.mkEnableOption (lib.mdDoc "script-directory");
 
     package = lib.mkPackageOptionMD pkgs "script-directory" { };
 

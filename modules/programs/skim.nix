@@ -8,20 +8,20 @@ let
 
 in {
   options.programs.skim = {
-    enable = mkEnableOption "skim - a command-line fuzzy finder";
+    enable = mkEnableOption (lib.mdDoc "skim - a command-line fuzzy finder");
 
     package = mkOption {
       type = types.package;
       default = pkgs.skim;
       defaultText = literalExpression "pkgs.skim";
-      description = "Package providing the <command>skim</command> tool.";
+      description = lib.mdDoc "Package providing the {command}`skim` tool.";
     };
 
     defaultCommand = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "fd --type f";
-      description = ''
+      description = lib.mdDoc ''
         The command that gets executed as the default source for skim
         when running.
       '';
@@ -31,7 +31,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--height 40%" "--prompt ⟫" ];
-      description = ''
+      description = lib.mdDoc ''
         Extra command line options given to skim by default.
       '';
     };
@@ -40,7 +40,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "fd --type f";
-      description = ''
+      description = lib.mdDoc ''
         The command that gets executed as the source for skim for the
         CTRL-T keybinding.
       '';
@@ -50,7 +50,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--preview 'head {}'" ];
-      description = ''
+      description = lib.mdDoc ''
         Command line options for the CTRL-T keybinding.
       '';
     };
@@ -59,7 +59,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "fd --type d";
-      description = ''
+      description = lib.mdDoc ''
         The command that gets executed as the source for skim for the
         ALT-C keybinding.
       '';
@@ -69,7 +69,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--preview 'tree -C {} | head -200'" ];
-      description = ''
+      description = lib.mdDoc ''
         Command line options for the ALT-C keybinding.
       '';
     };
@@ -78,7 +78,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--tac" "--exact" ];
-      description = ''
+      description = lib.mdDoc ''
         Command line options for the CTRL-R keybinding.
       '';
     };
@@ -86,7 +86,7 @@ in {
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Bash integration.
       '';
     };
@@ -94,7 +94,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Zsh integration.
       '';
     };
@@ -102,7 +102,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Fish integration.
       '';
     };

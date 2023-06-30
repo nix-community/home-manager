@@ -16,19 +16,19 @@ let
 in {
   options = {
     services.dwm-status = {
-      enable = mkEnableOption "dwm-status user service";
+      enable = mkEnableOption (lib.mdDoc "dwm-status user service");
 
       package = mkOption {
         type = types.package;
         default = pkgs.dwm-status;
         defaultText = literalExpression "pkgs.dwm-status";
         example = "pkgs.dwm-status.override { enableAlsaUtils = false; }";
-        description = "Which dwm-status package to use.";
+        description = lib.mdDoc "Which dwm-status package to use.";
       };
 
       order = mkOption {
         type = types.listOf (types.enum features);
-        description = "List of enabled features in order.";
+        description = lib.mdDoc "List of enabled features in order.";
       };
 
       extraConfig = mkOption {
@@ -47,7 +47,7 @@ in {
             };
           }
         '';
-        description = "Extra config of dwm-status.";
+        description = lib.mdDoc "Extra config of dwm-status.";
       };
     };
   };

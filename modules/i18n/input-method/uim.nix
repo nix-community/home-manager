@@ -11,7 +11,7 @@ in {
         type = types.enum [ "gtk" "gtk3" "gtk-systray" "gtk3-systray" "qt4" ];
         default = "gtk";
         example = "gtk-systray";
-        description = ''
+        description = lib.mdDoc ''
           Selected UIM toolbar.
         '';
       };

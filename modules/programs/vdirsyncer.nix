@@ -167,13 +167,13 @@ let
 in {
   options = {
     programs.vdirsyncer = {
-      enable = mkEnableOption "vdirsyncer";
+      enable = mkEnableOption (lib.mdDoc "vdirsyncer");
 
       package = mkOption {
         type = types.package;
         default = pkgs.vdirsyncer;
         defaultText = "pkgs.vdirsyncer";
-        description = ''
+        description = lib.mdDoc ''
           vdirsyncer package to use.
         '';
       };

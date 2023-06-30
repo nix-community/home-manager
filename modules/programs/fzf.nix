@@ -17,20 +17,20 @@ in {
   ];
 
   options.programs.fzf = {
-    enable = mkEnableOption "fzf - a command-line fuzzy finder";
+    enable = mkEnableOption (lib.mdDoc "fzf - a command-line fuzzy finder");
 
     package = mkOption {
       type = types.package;
       default = pkgs.fzf;
       defaultText = literalExpression "pkgs.fzf";
-      description = "Package providing the <command>fzf</command> tool.";
+      description = lib.mdDoc "Package providing the {command}`fzf` tool.";
     };
 
     defaultCommand = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "fd --type f";
-      description = ''
+      description = lib.mdDoc ''
         The command that gets executed as the default source for fzf
         when running.
       '';
@@ -40,7 +40,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--height 40%" "--border" ];
-      description = ''
+      description = lib.mdDoc ''
         Extra command line options given to fzf by default.
       '';
     };
@@ -49,7 +49,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "fd --type f";
-      description = ''
+      description = lib.mdDoc ''
         The command that gets executed as the source for fzf for the
         CTRL-T keybinding.
       '';
@@ -59,7 +59,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--preview 'head {}'" ];
-      description = ''
+      description = lib.mdDoc ''
         Command line options for the CTRL-T keybinding.
       '';
     };
@@ -68,7 +68,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "fd --type d";
-      description = ''
+      description = lib.mdDoc ''
         The command that gets executed as the source for fzf for the
         ALT-C keybinding.
       '';
@@ -78,7 +78,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--preview 'tree -C {} | head -200'" ];
-      description = ''
+      description = lib.mdDoc ''
         Command line options for the ALT-C keybinding.
       '';
     };
@@ -87,7 +87,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--sort" "--exact" ];
-      description = ''
+      description = lib.mdDoc ''
         Command line options for the CTRL-R keybinding.
       '';
     };
@@ -103,26 +103,26 @@ in {
           "fg+" = "#d4d4d4";
         }
       '';
-      description = ''
-        Color scheme options added to <literal>FZF_DEFAULT_OPTS</literal>. See
-        <link xlink:href="https://github.com/junegunn/fzf/wiki/Color-schemes"/>
+      description = lib.mdDoc ''
+        Color scheme options added to `FZF_DEFAULT_OPTS`. See
+        <https://github.com/junegunn/fzf/wiki/Color-schemes>
         for documentation.
       '';
     };
 
     tmux = {
-      enableShellIntegration = mkEnableOption ''
-        setting <literal>FZF_TMUX=1</literal> which causes shell integration to use fzf-tmux
-      '';
+      enableShellIntegration = mkEnableOption (lib.mdDoc ''
+        setting `FZF_TMUX=1` which causes shell integration to use fzf-tmux
+      '');
 
       shellIntegrationOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
         example = literalExpression ''[ "-d 40%" ]'';
-        description = ''
-          If <option>programs.fzf.tmux.enableShellIntegration</option> is set to <literal>true</literal>,
+        description = lib.mdDoc ''
+          If {option}`programs.fzf.tmux.enableShellIntegration` is set to `true`,
           shell integration will use these options for fzf-tmux.
-          See <command>fzf-tmux --help</command> for available options.
+          See {command}`fzf-tmux --help` for available options.
         '';
       };
     };
@@ -130,7 +130,7 @@ in {
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Bash integration.
       '';
     };
@@ -138,7 +138,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Zsh integration.
       '';
     };
@@ -146,7 +146,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Fish integration.
       '';
     };

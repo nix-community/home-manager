@@ -19,21 +19,21 @@ in {
   ];
 
   options.services.sxhkd = {
-    enable = mkEnableOption "simple X hotkey daemon";
+    enable = mkEnableOption (lib.mdDoc "simple X hotkey daemon");
 
     package = mkOption {
       type = types.package;
       default = pkgs.sxhkd;
       defaultText = "pkgs.sxhkd";
       description =
-        "Package containing the <command>sxhkd</command> executable.";
+        lib.mdDoc "Package containing the {command}`sxhkd` executable.";
     };
 
     extraOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
       description =
-        "Command line arguments to invoke <command>sxhkd</command> with.";
+        lib.mdDoc "Command line arguments to invoke {command}`sxhkd` with.";
       example = literalExpression ''[ "-m 1" ]'';
     };
 
@@ -41,7 +41,8 @@ in {
       type =
         types.attrsOf (types.nullOr (types.oneOf [ types.str types.path ]));
       default = { };
-      description = "An attribute set that assigns hotkeys to commands.";
+      description =
+        lib.mdDoc "An attribute set that assigns hotkeys to commands.";
       example = literalExpression ''
         {
           "super + shift + {r,c}" = "i3-msg {restart,reload}";
@@ -54,7 +55,7 @@ in {
     extraConfig = mkOption {
       default = "";
       type = types.lines;
-      description = "Additional configuration to add.";
+      description = lib.mdDoc "Additional configuration to add.";
       example = literalExpression ''
         super + {_,shift +} {1-9,0}
           i3-msg {workspace,move container to workspace} {1-10}

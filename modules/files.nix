@@ -26,7 +26,7 @@ in
 {
   options = {
     home.file = mkOption {
-      description = "Attribute set of files to link into the user home.";
+      description = lib.mdDoc "Attribute set of files to link into the user home.";
       default = {};
       type = fileType "home.file" "{env}`HOME`" homeDirectory;
     };
@@ -34,7 +34,7 @@ in
     home-files = mkOption {
       type = types.package;
       internal = true;
-      description = "Package to contain all home files";
+      description = lib.mdDoc "Package to contain all home files";
     };
   };
 

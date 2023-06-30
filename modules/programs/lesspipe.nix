@@ -7,7 +7,7 @@ with lib;
 
   options = {
     programs.lesspipe = {
-      enable = mkEnableOption "lesspipe preprocessor for less";
+      enable = mkEnableOption (lib.mdDoc "lesspipe preprocessor for less");
     };
   };
 

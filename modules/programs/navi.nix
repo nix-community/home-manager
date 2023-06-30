@@ -16,13 +16,13 @@ in {
   meta.maintainers = [ ];
 
   options.programs.navi = {
-    enable = mkEnableOption "Navi";
+    enable = mkEnableOption (lib.mdDoc "Navi");
 
     package = mkOption {
       type = types.package;
       default = pkgs.navi;
       defaultText = literalExpression "pkgs.navi";
-      description = "The package to use for the navi binary.";
+      description = lib.mdDoc "The package to use for the navi binary.";
     };
 
     settings = mkOption {
@@ -37,25 +37,25 @@ in {
           };
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/navi/config.yaml</filename> on Linux or
-        <filename>$HOME/Library/Application Support/navi/config.yaml</filename>
+        {file}`$XDG_CONFIG_HOME/navi/config.yaml` on Linux or
+        {file}`$HOME/Library/Application Support/navi/config.yaml`
         on Darwin. See
-        <link xlink:href="https://github.com/denisidoro/navi/blob/master/docs/config_file.md"/>
+        <https://github.com/denisidoro/navi/blob/master/docs/config_file.md>
         for more information.
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
+    enableBashIntegration = mkEnableOption (lib.mdDoc "Bash integration") // {
       default = true;
     };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
+    enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh integration") // {
       default = true;
     };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
+    enableFishIntegration = mkEnableOption (lib.mdDoc "Fish integration") // {
       default = true;
     };
   };

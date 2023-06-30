@@ -11,7 +11,7 @@ in {
   meta.maintainers = [ hm.maintainers.NateCox ];
 
   options.programs.git-cliff = {
-    enable = mkEnableOption "git-cliff changelog generator";
+    enable = mkEnableOption (lib.mdDoc "git-cliff changelog generator");
 
     package = mkPackageOptionMD pkgs "git-cliff" { };
 
@@ -24,10 +24,10 @@ in {
           trim = true;
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/git-cliff/cliff.toml</filename>. See
-        <link xlink:href="https://git-cliff.org/docs/configuration" />
+        {file}`$XDG_CONFIG_HOME/git-cliff/cliff.toml`. See
+        <https://git-cliff.org/docs/configuration>
         for the documentation.
       '';
     };

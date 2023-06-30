@@ -12,25 +12,25 @@ in {
   meta.maintainers = [ maintainers.jonringer ];
 
   options.services.pulseeffects = {
-    enable = mkEnableOption ''
+    enable = mkEnableOption (lib.mdDoc ''
       Pulseeffects daemon
       Note, it is necessary to add
-      <programlisting language="nix">
+      ```nix
       programs.dconf.enable = true;
-      </programlisting>
-      to your system configuration for the daemon to work correctly'';
+      ```
+      to your system configuration for the daemon to work correctly'');
 
     package = mkOption {
       type = types.package;
       default = pkgs.pulseeffects-legacy;
       defaultText = literalExpression "pkgs.pulseeffects-legacy";
-      description = "Pulseeffects package to use.";
+      description = lib.mdDoc "Pulseeffects package to use.";
     };
 
     preset = mkOption {
       type = types.str;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Which preset to use when starting pulseeffects.
         Will likely need to launch pulseeffects to initially create preset.
       '';

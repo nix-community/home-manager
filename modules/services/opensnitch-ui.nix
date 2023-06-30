@@ -11,7 +11,9 @@ in {
   meta.maintainers = [ maintainers.onny ];
 
   options = {
-    services.opensnitch-ui = { enable = mkEnableOption "Opensnitch client"; };
+    services.opensnitch-ui = {
+      enable = mkEnableOption (lib.mdDoc "Opensnitch client");
+    };
   };
 
   config = mkIf cfg.enable {

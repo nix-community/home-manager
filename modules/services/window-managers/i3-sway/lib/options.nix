@@ -14,7 +14,7 @@ let
         type = types.listOf types.str;
         default = [ "monospace" ];
         defaultText = literalExpression ''[ "monospace" ]'';
-        description = ''
+        description = lib.mdDoc ''
           List of font names list used for window titles. Only FreeType fonts are supported.
           The order here is important (e.g. icons font should go before the one used for text).
         '';
@@ -24,7 +24,7 @@ let
       style = mkOption {
         type = types.str;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           The font style to use for window titles.
         '';
         example = "Bold Semi-Condensed";
@@ -33,7 +33,7 @@ let
       size = mkOption {
         type = types.float;
         default = 8.0;
-        description = ''
+        description = lib.mdDoc ''
           The font size to use for window titles.
         '';
         example = 11.5;
@@ -45,31 +45,32 @@ let
     options = {
       command = mkOption {
         type = types.str;
-        description = "Command that will be executed on startup.";
+        description = lib.mdDoc "Command that will be executed on startup.";
       };
 
       always = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether to run command on each ${moduleName} restart.";
+        description =
+          lib.mdDoc "Whether to run command on each ${moduleName} restart.";
       };
     } // optionalAttrs isI3 {
       notification = mkOption {
         type = types.bool;
         default = true;
-        description = ''
+        description = lib.mdDoc ''
           Whether to enable startup-notification support for the command.
-          See <option>--no-startup-id</option> option description in the i3 user guide.
+          See {option}`--no-startup-id` option description in the i3 user guide.
         '';
       };
 
       workspace = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Launch application on a particular workspace. DEPRECATED:
-          Use <xref linkend="opt-xsession.windowManager.i3.config.assigns"/>
-          instead. See <link xlink:href="https://github.com/nix-community/home-manager/issues/265"/>.
+          Use [](#opt-xsession.windowManager.i3.config.assigns)
+          instead. See <https://github.com/nix-community/home-manager/issues/265>.
         '';
       };
     };
@@ -99,19 +100,19 @@ let
             size = 11.0;
           }
         '';
-        description = "Font configuration for this bar.";
+        description = lib.mdDoc "Font configuration for this bar.";
       };
 
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = "Extra configuration lines for this bar.";
+        description = lib.mdDoc "Extra configuration lines for this bar.";
       };
 
       id = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Specifies the bar ID for the configured bar instance.
           If this option is missing, the ID is set to bar-x, where x corresponds
           to the position of the embedding bar block in the config file.
@@ -121,31 +122,34 @@ let
       mode = mkNullableOption {
         type = types.enum [ "dock" "hide" "invisible" ];
         default = "dock";
-        description = "Bar visibility mode.";
+        description = lib.mdDoc "Bar visibility mode.";
       };
 
       hiddenState = mkNullableOption {
         type = types.enum [ "hide" "show" ];
         default = "hide";
-        description = "The default bar mode when 'bar.mode' == 'hide'.";
+        description =
+          lib.mdDoc "The default bar mode when 'bar.mode' == 'hide'.";
       };
 
       position = mkNullableOption {
         type = types.enum [ "top" "bottom" ];
         default = "bottom";
-        description = "The edge of the screen ${moduleName}bar should show up.";
+        description =
+          lib.mdDoc "The edge of the screen ${moduleName}bar should show up.";
       };
 
       workspaceButtons = mkNullableOption {
         type = types.bool;
         default = true;
-        description = "Whether workspace buttons should be shown or not.";
+        description =
+          lib.mdDoc "Whether workspace buttons should be shown or not.";
       };
 
       workspaceNumbers = mkNullableOption {
         type = types.bool;
         default = true;
-        description =
+        description = lib.mdDoc
           "Whether workspace numbers should be displayed within the workspace buttons.";
       };
 
@@ -157,7 +161,7 @@ let
           pkg = if isSway && isNull cfg.package then pkgs.sway else cfg.package;
         in "${pkg}/bin/${moduleName}bar";
         defaultText = "i3bar";
-        description = "Command that will be used to start a bar.";
+        description = lib.mdDoc "Command that will be used to start a bar.";
         example = if isI3 then
           "\${pkgs.i3}/bin/i3bar -t"
         else
@@ -167,7 +171,8 @@ let
       statusCommand = mkNullableOption {
         type = types.str;
         default = "${pkgs.i3status}/bin/i3status";
-        description = "Command that will be used to get status lines.";
+        description =
+          lib.mdDoc "Command that will be used to get status lines.";
       };
 
       colors = mkOption {
@@ -176,25 +181,27 @@ let
             background = mkNullableOption {
               type = types.str;
               default = "#000000";
-              description = "Background color of the bar.";
+              description = lib.mdDoc "Background color of the bar.";
             };
 
             statusline = mkNullableOption {
               type = types.str;
               default = "#ffffff";
-              description = "Text color to be used for the statusline.";
+              description =
+                lib.mdDoc "Text color to be used for the statusline.";
             };
 
             separator = mkNullableOption {
               type = types.str;
               default = "#666666";
-              description = "Text color to be used for the separator.";
+              description =
+                lib.mdDoc "Text color to be used for the separator.";
             };
 
             focusedBackground = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description =
+              description = lib.mdDoc
                 "Background color of the bar on the currently focused monitor output.";
               example = "#000000";
             };
@@ -202,7 +209,7 @@ let
             focusedStatusline = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description =
+              description = lib.mdDoc
                 "Text color to be used for the statusline on the currently focused monitor output.";
               example = "#ffffff";
             };
@@ -210,7 +217,7 @@ let
             focusedSeparator = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description =
+              description = lib.mdDoc
                 "Text color to be used for the separator on the currently focused monitor output.";
               example = "#666666";
             };
@@ -222,7 +229,7 @@ let
                 background = "#285577";
                 text = "#ffffff";
               };
-              description = ''
+              description = lib.mdDoc ''
                 Border, background and text color for a workspace button when the workspace has focus.
               '';
             };
@@ -234,7 +241,7 @@ let
                 background = "#5f676a";
                 text = "#ffffff";
               };
-              description = ''
+              description = lib.mdDoc ''
                 Border, background and text color for a workspace button when the workspace is active.
               '';
             };
@@ -246,7 +253,7 @@ let
                 background = "#222222";
                 text = "#888888";
               };
-              description = ''
+              description = lib.mdDoc ''
                 Border, background and text color for a workspace button when the workspace does not
                 have focus and is not active.
               '';
@@ -259,7 +266,7 @@ let
                 background = "#900000";
                 text = "#ffffff";
               };
-              description = ''
+              description = lib.mdDoc ''
                 Border, background and text color for a workspace button when the workspace contains
                 a window with the urgency hint set.
               '';
@@ -272,32 +279,32 @@ let
                 background = "#900000";
                 text = "#ffffff";
               };
-              description =
+              description = lib.mdDoc
                 "Border, background and text color for the binding mode indicator";
             };
           };
         };
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Bar color settings. All color classes can be specified using submodules
           with 'border', 'background', 'text', fields and RGB color hex-codes as values.
           See default values for the reference.
           Note that 'background', 'status', and 'separator' parameters take a single RGB value.
 
-          See <link xlink:href="https://i3wm.org/docs/userguide.html#_colors"/>.
+          See <https://i3wm.org/docs/userguide.html#_colors>.
         '';
       };
 
       trayOutput = mkNullableOption {
         type = types.str;
         default = "primary";
-        description = "Where to output tray.";
+        description = lib.mdDoc "Where to output tray.";
       };
 
       trayPadding = mkNullableOption {
         type = types.int;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Sets the pixel padding of the system tray.
           This padding will surround the tray on all sides and between each item.
         '';
@@ -357,16 +364,16 @@ let
     options = {
       command = mkOption {
         type = types.str;
-        description = "${capitalModuleName}wm command to execute.";
+        description = lib.mdDoc "${capitalModuleName}wm command to execute.";
         example = "border pixel 1";
       };
 
       criteria = mkOption {
         type = criteriaModule;
-        description = ''
+        description = lib.mdDoc ''
           Criteria of the windows on which command should be executed.
-          </para><para>
-          A value of <literal>true</literal> is equivalent to using an empty
+
+          A value of `true` is equivalent to using an empty
           criteria (which is different from an empty string criteria).
         '';
         example = literalExpression ''
@@ -391,7 +398,7 @@ in {
         size = 11.0;
       }
     '';
-    description = "Font configuration for window titles, nagbar...";
+    description = lib.mdDoc "Font configuration for window titles, nagbar...";
   };
 
   window = mkOption {
@@ -410,27 +417,28 @@ in {
             true for state version ≥ 23.05
             false for state version < 23.05
           '';
-          description = "Whether to show window titlebars.";
+          description = lib.mdDoc "Whether to show window titlebars.";
         };
 
         border = mkOption {
           type = types.int;
           default = 2;
-          description = "Window border width.";
+          description = lib.mdDoc "Window border width.";
         };
 
         hideEdgeBorders = mkOption {
           type = types.enum [ "none" "vertical" "horizontal" "both" "smart" ];
           default = "none";
-          description = "Hide window borders adjacent to the screen edges.";
+          description =
+            lib.mdDoc "Hide window borders adjacent to the screen edges.";
         };
 
         commands = mkOption {
           type = types.listOf windowCommandModule;
           default = [ ];
-          description = ''
+          description = lib.mdDoc ''
             List of commands that should be executed on specific windows.
-            See <option>for_window</option> ${moduleName}wm option documentation.
+            See {option}`for_window` ${moduleName}wm option documentation.
           '';
           example = [{
             command = "border pixel 1";
@@ -440,7 +448,7 @@ in {
       };
     };
     default = { };
-    description = "Window titlebar and border settings.";
+    description = lib.mdDoc "Window titlebar and border settings.";
   };
 
   floating = mkOption {
@@ -459,20 +467,20 @@ in {
             true for state version ≥ 23.05
             false for state version < 23.05
           '';
-          description = "Whether to show floating window titlebars.";
+          description = lib.mdDoc "Whether to show floating window titlebars.";
         };
 
         border = mkOption {
           type = types.int;
           default = 2;
-          description = "Floating windows border width.";
+          description = lib.mdDoc "Floating windows border width.";
         };
 
         modifier = mkOption {
           type = types.str;
           default = cfg.config.modifier;
           defaultText = "${moduleName}.config.modifier";
-          description =
+          description = lib.mdDoc
             "Modifier key or keys that can be used to drag floating windows.";
           example = "Mod4";
         };
@@ -480,7 +488,7 @@ in {
         criteria = mkOption {
           type = types.listOf criteriaModule;
           default = [ ];
-          description =
+          description = lib.mdDoc
             "List of criteria for windows that should be opened in a floating mode.";
           example = [
             { "title" = "Steam - Update News"; }
@@ -490,7 +498,7 @@ in {
       };
     };
     default = { };
-    description = "Floating window settings.";
+    description = lib.mdDoc "Floating window settings.";
   };
 
   focus = mkOption {
@@ -499,10 +507,10 @@ in {
         newWindow = mkOption {
           type = types.enum [ "smart" "urgent" "focus" "none" ];
           default = "smart";
-          description = ''
+          description = lib.mdDoc ''
             This option modifies focus behavior on new window activation.
 
-            See <link xlink:href="https://i3wm.org/docs/userguide.html#focus_on_window_activation"/>
+            See <https://i3wm.org/docs/userguide.html#focus_on_window_activation>
           '';
           example = "none";
         };
@@ -513,7 +521,7 @@ in {
           else
             types.bool;
           default = if isSway then "yes" else true;
-          description = "Whether focus should follow the mouse.";
+          description = lib.mdDoc "Whether focus should follow the mouse.";
           apply = val:
             if (isSway && isBool val) then (lib.hm.booleans.yesNo val) else val;
         };
@@ -526,20 +534,20 @@ in {
             # so preserve it for backwards compatibility purposes
             sway = if cfg.config.focus.forceWrapping then "yes" else "no";
           }.${moduleName};
-          description = ''
+          description = lib.mdDoc ''
             Whether the window focus commands automatically wrap around the edge of containers.
 
-            See <link xlink:href="https://i3wm.org/docs/userguide.html#_focus_wrapping"/>
+            See <https://i3wm.org/docs/userguide.html#_focus_wrapping>
           '';
         };
 
         forceWrapping = mkOption {
           type = types.bool;
           default = false;
-          description = ''
+          description = lib.mdDoc ''
             Whether to force focus wrapping in tabbed or stacked containers.
 
-            This option is deprecated, use <option>focus.wrapping</option> instead.
+            This option is deprecated, use {option}`focus.wrapping` instead.
           '';
         };
 
@@ -549,7 +557,7 @@ in {
           else
             types.bool;
           default = true;
-          description = ''
+          description = lib.mdDoc ''
             Whether mouse cursor should be warped to the center of the window when switching focus
             to a window on a different output.
           '';
@@ -557,13 +565,13 @@ in {
       };
     };
     default = { };
-    description = "Focus related settings.";
+    description = lib.mdDoc "Focus related settings.";
   };
 
   assigns = mkOption {
     type = types.attrsOf (types.listOf criteriaModule);
     default = { };
-    description = ''
+    description = lib.mdDoc ''
       An attribute set that assigns applications to workspaces based
       on criteria.
     '';
@@ -578,7 +586,8 @@ in {
   modifier = mkOption {
     type = types.enum [ "Shift" "Control" "Mod1" "Mod2" "Mod3" "Mod4" "Mod5" ];
     default = "Mod1";
-    description = "Modifier key that is used for all default keybindings.";
+    description =
+      lib.mdDoc "Modifier key that is used for all default keybindings.";
     example = "Mod4";
   };
 
@@ -586,7 +595,7 @@ in {
     type = types.enum [ "default" "stacking" "tabbed" ];
     default = "default";
     example = "tabbed";
-    description = ''
+    description = lib.mdDoc ''
       The mode in which new containers on workspace level will
       start.
     '';
@@ -596,7 +605,7 @@ in {
     type = types.bool;
     default = false;
     example = true;
-    description = ''
+    description = lib.mdDoc ''
       Assume you are on workspace "1: www" and switch to "2: IM" using
       mod+2 because somebody sent you a message. You don’t need to remember
       where you came from now, you can just press $mod+2 again to switch
@@ -607,9 +616,9 @@ in {
   keycodebindings = mkOption {
     type = types.attrsOf (types.nullOr types.str);
     default = { };
-    description = ''
+    description = lib.mdDoc ''
       An attribute set that assigns keypress to an action using key code.
-      See <link xlink:href="https://i3wm.org/docs/userguide.html#keybindings"/>.
+      See <https://i3wm.org/docs/userguide.html#keybindings>.
     '';
     example = { "214" = "exec /bin/script.sh"; };
   };
@@ -620,7 +629,7 @@ in {
         background = mkOption {
           type = types.str;
           default = "#ffffff";
-          description = ''
+          description = lib.mdDoc ''
             Background color of the window. Only applications which do not cover
             the whole area expose the color.
           '';
@@ -635,7 +644,7 @@ in {
             indicator = "#2e9ef4";
             childBorder = "#285577";
           };
-          description = "A window which currently has the focus.";
+          description = lib.mdDoc "A window which currently has the focus.";
         };
 
         focusedInactive = mkOption {
@@ -647,7 +656,7 @@ in {
             indicator = "#484e50";
             childBorder = "#5f676a";
           };
-          description = ''
+          description = lib.mdDoc ''
             A window which is the focused one of its container,
             but it does not have the focus at the moment.
           '';
@@ -662,7 +671,7 @@ in {
             indicator = "#292d2e";
             childBorder = "#222222";
           };
-          description = "A window which is not focused.";
+          description = lib.mdDoc "A window which is not focused.";
         };
 
         urgent = mkOption {
@@ -674,7 +683,8 @@ in {
             indicator = "#900000";
             childBorder = "#900000";
           };
-          description = "A window which has its urgency hint activated.";
+          description =
+            lib.mdDoc "A window which has its urgency hint activated.";
         };
 
         placeholder = mkOption {
@@ -686,7 +696,7 @@ in {
             indicator = "#000000";
             childBorder = "#0c0c0c";
           };
-          description = ''
+          description = lib.mdDoc ''
             Background and text color are used to draw placeholder window
             contents (when restoring layouts). Border and indicator are ignored.
           '';
@@ -694,13 +704,13 @@ in {
       };
     };
     default = { };
-    description = ''
+    description = lib.mdDoc ''
       Color settings. All color classes can be specified using submodules
       with 'border', 'background', 'text', 'indicator' and 'childBorder' fields
       and RGB color hex-codes as values. See default values for the reference.
       Note that '${moduleName}.config.colors.background' parameter takes a single RGB value.
 
-      See <link xlink:href="https://i3wm.org/docs/userguide.html#_changing_colors"/>.
+      See <https://i3wm.org/docs/userguide.html#_changing_colors>.
     '';
   };
 
@@ -751,7 +761,7 @@ in {
     }] else
       [ { } ];
     defaultText = literalExpression "see code";
-    description = ''
+    description = lib.mdDoc ''
       ${capitalModuleName} bars settings blocks. Set to empty list to remove bars completely.
     '';
   };
@@ -759,10 +769,10 @@ in {
   startup = mkOption {
     type = types.listOf startupModule;
     default = [ ];
-    description = ''
+    description = lib.mdDoc ''
       Commands that should be executed at startup.
 
-      See <link xlink:href="https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup"/>.
+      See <https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup>.
     '';
     example = if isI3 then
       literalExpression ''
@@ -788,63 +798,63 @@ in {
         inner = mkOption {
           type = types.nullOr types.int;
           default = null;
-          description = "Inner gaps value.";
+          description = lib.mdDoc "Inner gaps value.";
           example = 12;
         };
 
         outer = mkOption {
           type = types.nullOr types.int;
           default = null;
-          description = "Outer gaps value.";
+          description = lib.mdDoc "Outer gaps value.";
           example = 5;
         };
 
         horizontal = mkOption {
           type = types.nullOr types.int;
           default = null;
-          description = "Horizontal gaps value.";
+          description = lib.mdDoc "Horizontal gaps value.";
           example = 5;
         };
 
         vertical = mkOption {
           type = types.nullOr types.int;
           default = null;
-          description = "Vertical gaps value.";
+          description = lib.mdDoc "Vertical gaps value.";
           example = 5;
         };
 
         top = mkOption {
           type = types.nullOr types.int;
           default = null;
-          description = "Top gaps value.";
+          description = lib.mdDoc "Top gaps value.";
           example = 5;
         };
 
         left = mkOption {
           type = types.nullOr types.int;
           default = null;
-          description = "Left gaps value.";
+          description = lib.mdDoc "Left gaps value.";
           example = 5;
         };
 
         bottom = mkOption {
           type = types.nullOr types.int;
           default = null;
-          description = "Bottom gaps value.";
+          description = lib.mdDoc "Bottom gaps value.";
           example = 5;
         };
 
         right = mkOption {
           type = types.nullOr types.int;
           default = null;
-          description = "Right gaps value.";
+          description = lib.mdDoc "Right gaps value.";
           example = 5;
         };
 
         smartGaps = mkOption {
           type = types.bool;
           default = false;
-          description = ''
+          description = lib.mdDoc ''
             This option controls whether to disable all gaps (outer and inner)
             on workspace with a single container.
           '';
@@ -854,7 +864,7 @@ in {
         smartBorders = mkOption {
           type = types.enum [ "on" "off" "no_gaps" ];
           default = "off";
-          description = ''
+          description = lib.mdDoc ''
             This option controls whether to disable container borders on
             workspace with a single container.
           '';
@@ -862,7 +872,7 @@ in {
       };
     });
     default = null;
-    description = ''
+    description = lib.mdDoc ''
       Gaps related settings.
     '';
   };
@@ -870,7 +880,7 @@ in {
   terminal = mkOption {
     type = types.str;
     default = if isI3 then "i3-sensible-terminal" else "${pkgs.foot}/bin/foot";
-    description = "Default terminal to run.";
+    description = lib.mdDoc "Default terminal to run.";
     example = "alacritty";
   };
 
@@ -880,14 +890,14 @@ in {
       "${pkgs.dmenu}/bin/dmenu_path | ${pkgs.dmenu}/bin/dmenu | ${pkgs.findutils}/bin/xargs swaymsg exec --"
     else
       "${pkgs.dmenu}/bin/dmenu_run";
-    description = "Default launcher to use.";
+    description = lib.mdDoc "Default launcher to use.";
     example = "bemenu-run";
   };
 
   defaultWorkspace = mkOption {
     type = types.nullOr types.str;
     default = null;
-    description = ''
+    description = lib.mdDoc ''
       The default workspace to show when ${
         if isSway then "sway" else "i3"
       } is launched.
@@ -905,7 +915,7 @@ in {
               type = str;
               default = "";
               example = "Web";
-              description = ''
+              description = lib.mdDoc ''
                 Name of the workspace to assign.
               '';
             };
@@ -915,16 +925,16 @@ in {
               default = "";
               apply = lists.toList;
               example = "eDP";
-              description = ''
-                Name(s) of the output(s) from <command>
+              description = lib.mdDoc ''
+                Name(s) of the output(s) from {command}`
                   ${if isSway then "swaymsg" else "i3-msg"} -t get_outputs
-                </command>.
+                `.
               '';
             };
           };
         };
       in listOf workspaceOutputOpts;
     default = [ ];
-    description = "Assign workspaces to outputs.";
+    description = lib.mdDoc "Assign workspaces to outputs.";
   };
 }

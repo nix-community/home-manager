@@ -22,8 +22,8 @@ let
             "";
           defaultText = literalExpression
             "if source is defined, the content of source, otherwise empty";
-          description = ''
-            Text of the nushell <filename>${name}</filename> file.
+          description = lib.mdDoc ''
+            Text of the nushell {file}`${name}` file.
             If unset then the source option will be preferred.
           '';
         };
@@ -31,8 +31,8 @@ let
         source = mkOption {
           type = types.nullOr types.path;
           default = null;
-          description = ''
-            Path of the nushell <filename>${name}</filename> file to use.
+          description = lib.mdDoc ''
+            Path of the nushell {file}`${name}` file to use.
             If the text option is set, it will be preferred.
           '';
         };
@@ -52,13 +52,13 @@ in {
   ];
 
   options.programs.nushell = {
-    enable = mkEnableOption "nushell";
+    enable = mkEnableOption (lib.mdDoc "nushell");
 
     package = mkOption {
       type = types.package;
       default = pkgs.nushell;
       defaultText = literalExpression "pkgs.nushell";
-      description = "The package to use for nushell.";
+      description = lib.mdDoc "The package to use for nushell.";
     };
 
     configFile = mkOption {
@@ -74,11 +74,10 @@ in {
           ''';
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         The configuration file to be used for nushell.
-        </para>
-        <para>
-        See <link xlink:href="https://www.nushell.sh/book/configuration.html#configuration" /> for more information.
+
+        See <https://www.nushell.sh/book/configuration.html#configuration> for more information.
       '';
     };
 
@@ -88,11 +87,10 @@ in {
       example = ''
         let-env FOO = 'BAR'
       '';
-      description = ''
+      description = lib.mdDoc ''
         The environment variables file to be used for nushell.
-        </para>
-        <para>
-        See <link xlink:href="https://www.nushell.sh/book/configuration.html#configuration" /> for more information.
+
+        See <https://www.nushell.sh/book/configuration.html#configuration> for more information.
       '';
     };
 
@@ -105,18 +103,17 @@ in {
           echo "Hello, World"
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         The login file to be used for nushell upon logging in.
-        </para>
-        <para>
-        See <link xlink:href="https://www.nushell.sh/book/configuration.html#configuring-nu-as-a-login-shell" /> for more information.
+
+        See <https://www.nushell.sh/book/configuration.html#configuring-nu-as-a-login-shell> for more information.
       '';
     };
 
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Additional configuration to add to the nushell configuration file.
       '';
     };
@@ -124,7 +121,7 @@ in {
     extraEnv = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Additional configuration to add to the nushell environment variables file.
       '';
     };
@@ -132,7 +129,7 @@ in {
     extraLogin = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Additional configuration to add to the nushell login file.
       '';
     };
@@ -141,7 +138,7 @@ in {
       type = types.attrsOf types.str;
       default = { };
       example = { ll = "ls -l"; };
-      description = ''
+      description = lib.mdDoc ''
         An attribute set that maps aliases (the top level attribute names in
         this option) to command strings or directly to build outputs.
       '';
@@ -151,7 +148,7 @@ in {
       type = types.attrsOf types.str;
       default = { };
       example = { FOO = "BAR"; };
-      description = ''
+      description = lib.mdDoc ''
         An attribute set that maps an environment variable to a shell interpreted string.
       '';
     };

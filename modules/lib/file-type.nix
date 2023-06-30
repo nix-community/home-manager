@@ -19,7 +19,7 @@ in
         enable = mkOption {
           type = types.bool;
           default = true;
-          description = ''
+          description = lib.mdDoc ''
             Whether this file should be generated. This option allows specific
             files to be disabled.
           '';
@@ -40,18 +40,18 @@ in
         text = mkOption {
           default = null;
           type = types.nullOr types.lines;
-          description = ''
+          description = lib.mdDoc ''
             Text of the file. If this option is null then
-            <xref linkend="opt-${opt}._name_.source"/>
+            [](#opt-${opt}._name_.source)
             must be set.
           '';
         };
 
         source = mkOption {
           type = types.path;
-          description = ''
+          description = lib.mdDoc ''
             Path of the source file or directory. If
-            <xref linkend="opt-${opt}._name_.text"/>
+            [](#opt-${opt}._name_.text)
             is non-null then this option will automatically point to a file
             containing that text.
           '';
@@ -60,25 +60,25 @@ in
         executable = mkOption {
           type = types.nullOr types.bool;
           default = null;
-          description = ''
-            Set the execute bit. If <literal>null</literal>, defaults to the mode
-            of the <varname>source</varname> file or to <literal>false</literal>
-            for files created through the <varname>text</varname> option.
+          description = lib.mdDoc ''
+            Set the execute bit. If `null`, defaults to the mode
+            of the {var}`source` file or to `false`
+            for files created through the {var}`text` option.
           '';
         };
 
         recursive = mkOption {
           type = types.bool;
           default = false;
-          description = ''
+          description = lib.mdDoc ''
             If the file source is a directory, then this option
             determines whether the directory should be recursively
             linked to the target location. This option has no effect
             if the source is a file.
-            </para><para>
-            If <literal>false</literal> (the default) then the target
+
+            If `false` (the default) then the target
             will be a symbolic link to the source directory. If
-            <literal>true</literal> then the target will be a
+            `true` then the target will be a
             directory structure matching the source's but whose leafs
             are symbolic links to the files of the source directory.
           '';
@@ -87,13 +87,13 @@ in
         onChange = mkOption {
           type = types.lines;
           default = "";
-          description = ''
+          description = lib.mdDoc ''
             Shell commands to run when file has changed between
             generations. The script will be run
-            <emphasis>after</emphasis> the new files have been linked
+            *after* the new files have been linked
             into place.
-            </para><para>
-            Note, this code is always run when <literal>recursive</literal> is
+
+            Note, this code is always run when `recursive` is
             enabled.
           '';
         };
@@ -102,7 +102,7 @@ in
           type = types.bool;
           default = false;
           visible = false;
-          description = ''
+          description = lib.mdDoc ''
             Whether the target path should be unconditionally replaced
             by the managed file source. Warning, this will silently
             delete the target regardless of whether it is a file or

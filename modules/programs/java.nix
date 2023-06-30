@@ -25,9 +25,9 @@ in {
         type = types.package;
         default = pkgs.jdk;
         defaultText = "pkgs.jdk";
-        description = ''
+        description = lib.mdDoc ''
           Java package to install. Typical values are
-          <literal>pkgs.jdk</literal> or <literal>pkgs.jre</literal>.
+          `pkgs.jdk` or `pkgs.jre`.
         '';
       };
     };

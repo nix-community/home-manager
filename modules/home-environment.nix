@@ -13,7 +13,7 @@ let
       base = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use unless overridden by a more specific option.
         '';
       };
@@ -21,7 +21,7 @@ let
       ctype = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Character classification category.
         '';
       };
@@ -29,7 +29,7 @@ let
       numeric = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use for numerical values.
         '';
       };
@@ -37,7 +37,7 @@ let
       time = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use for formatting times.
         '';
       };
@@ -45,7 +45,7 @@ let
       collate = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use for collation (alphabetical ordering).
         '';
       };
@@ -53,7 +53,7 @@ let
       monetary = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use for formatting currencies and money amounts.
         '';
       };
@@ -61,7 +61,7 @@ let
       messages = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use for messages, application UI languages, etc.
         '';
       };
@@ -69,7 +69,7 @@ let
       paper = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use for paper sizes.
         '';
       };
@@ -77,7 +77,7 @@ let
       name = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use for personal names.
         '';
       };
@@ -85,7 +85,7 @@ let
       address = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use for addresses.
         '';
       };
@@ -93,7 +93,7 @@ let
       telephone = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use for telephone numbers.
         '';
       };
@@ -101,7 +101,7 @@ let
       measurement = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           The language to use for measurement values.
         '';
       };
@@ -118,12 +118,12 @@ let
           then null
           else "us";
         defaultText = literalExpression "null";
-        description = ''
-          Keyboard layout. If <literal>null</literal>, then the system
+        description = lib.mdDoc ''
+          Keyboard layout. If `null`, then the system
           configuration will be used.
-          </para><para>
-          This defaults to <literal>null</literal> for state
-          version ≥ 19.09 and <literal>"us"</literal> otherwise.
+
+          This defaults to `null` for state
+          version ≥ 19.09 and `"us"` otherwise.
         '';
       };
 
@@ -131,7 +131,7 @@ let
         type = with types; nullOr str;
         default = null;
         example = "presario";
-        description = ''
+        description = lib.mdDoc ''
           Keyboard model.
         '';
       };
@@ -140,7 +140,7 @@ let
         type = types.listOf types.str;
         default = [];
         example = ["grp:caps_toggle" "grp_led:scroll"];
-        description = ''
+        description = lib.mdDoc ''
           X keyboard options; layout switching goes here.
         '';
       };
@@ -153,12 +153,12 @@ let
           else "";
         defaultText = literalExpression "null";
         example = "colemak";
-        description = ''
-          X keyboard variant. If <literal>null</literal>, then the
+        description = lib.mdDoc ''
+          X keyboard variant. If `null`, then the
           system configuration will be used.
-          </para><para>
-          This defaults to <literal>null</literal> for state
-          version ≥ 19.09 and <literal>""</literal> otherwise.
+
+          This defaults to `null` for state
+          version ≥ 19.09 and `""` otherwise.
         '';
       };
     };
@@ -189,7 +189,7 @@ in
         undefined for state version ≥ 20.09
       '';
       example = "jane.doe";
-      description = "The user's username.";
+      description = lib.mdDoc "The user's username.";
     };
 
     home.homeDirectory = mkOption {
@@ -200,7 +200,7 @@ in
       '';
       apply = toString;
       example = "/home/jane.doe";
-      description = "The user's home directory. Must be an absolute path.";
+      description = lib.mdDoc "The user's home directory. Must be an absolute path.";
     };
 
     home.profileDirectory = mkOption {
@@ -210,7 +210,7 @@ in
         "/etc/profiles/per-user/''${home.username}"
       '';
       readOnly = true;
-      description = ''
+      description = lib.mdDoc ''
         The profile directory where Home Manager generations are installed.
       '';
     };
@@ -218,7 +218,7 @@ in
     home.language = mkOption {
       type = languageSubModule;
       default = {};
-      description = "Language configuration.";
+      description = lib.mdDoc "Language configuration.";
     };
 
     home.keyboard = mkOption {
@@ -228,8 +228,8 @@ in
         "{ }"  for state version < 21.11,
         "null" for state version ≥ 21.11
       '';
-      description = ''
-        Keyboard configuration. Set to <literal>null</literal> to
+      description = lib.mdDoc ''
+        Keyboard configuration. Set to `null` to
         disable Home Manager keyboard management.
       '';
     };
@@ -243,14 +243,14 @@ in
           "..." = "cd ../..";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         An attribute set that maps aliases (the top level attribute names
         in this option) to command strings or directly to build outputs.
-        </para><para>
+
         This option should only be used to manage simple aliases that are
         compatible across all shells. If you need to use a shell specific
         feature then make sure to use a shell specific option, for example
-        <xref linkend="opt-programs.bash.shellAliases"/> for Bash.
+        [](#opt-programs.bash.shellAliases) for Bash.
       '';
     };
 
@@ -258,45 +258,45 @@ in
       default = {};
       type = with types; lazyAttrsOf (oneOf [ str path int float ]);
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
-      description = ''
+      description = lib.mdDoc ''
         Environment variables to always set at login.
-        </para><para>
+
         The values may refer to other environment variables using
         POSIX.2 style variable references. For example, a variable
-        <varname>parameter</varname> may be referenced as
-        <literal>$parameter</literal> or <literal>''${parameter}</literal>. A
-        default value <literal>foo</literal> may be given as per
-        <literal>''${parameter:-foo}</literal> and, similarly, an alternate
-        value <literal>bar</literal> can be given as per
-        <literal>''${parameter:+bar}</literal>.
-        </para><para>
+        {var}`parameter` may be referenced as
+        `$parameter` or `''${parameter}`. A
+        default value `foo` may be given as per
+        `''${parameter:-foo}` and, similarly, an alternate
+        value `bar` can be given as per
+        `''${parameter:+bar}`.
+
         Note, these variables may be set in any order so no session
         variable may have a runtime dependency on another session
         variable. In particular code like
-        <programlisting language="nix">
+        ```nix
         home.sessionVariables = {
           FOO = "Hello";
           BAR = "$FOO World!";
         };
-        </programlisting>
+        ```
         may not work as expected. If you need to reference another
         session variable, then do so inside Nix instead. The above
         example then becomes
-        <programlisting language="nix">
+        ```nix
         home.sessionVariables = {
           FOO = "Hello";
           BAR = "''${config.home.sessionVariables.FOO} World!";
         };
-        </programlisting>
+        ```
       '';
     };
 
     home.sessionVariablesPackage = mkOption {
       type = types.package;
       internal = true;
-      description = ''
+      description = lib.mdDoc ''
         The package containing the
-        <filename>hm-session-vars.sh</filename> file.
+        {file}`hm-session-vars.sh` file.
       '';
     };
 
@@ -308,15 +308,13 @@ in
         "\${xdg.configHome}/emacs/bin"
         ".git/safe/../../bin"
       ];
-      description = ''
-        Extra directories to add to <envar>PATH</envar>.
+      description = lib.mdDoc ''
+        Extra directories to add to {env}`PATH`.
 
-        </para><para>
-
-        These directories are added to the <envar>PATH</envar> variable in a
-        double-quoted context, so expressions like <literal>$HOME</literal> are
-        expanded by the shell. However, since expressions like <literal>~</literal> or
-        <literal>*</literal> are escaped, they will end up in the <envar>PATH</envar>
+        These directories are added to the {env}`PATH` variable in a
+        double-quoted context, so expressions like `$HOME` are
+        expanded by the shell. However, since expressions like `~` or
+        `*` are escaped, they will end up in the {env}`PATH`
         verbatim.
       '';
     };
@@ -325,32 +323,32 @@ in
       type = types.lines;
       default = "";
       internal = true;
-      description = ''
+      description = lib.mdDoc ''
         Extra configuration to add to the
-        <filename>hm-session-vars.sh</filename> file.
+        {file}`hm-session-vars.sh` file.
       '';
     };
 
     home.packages = mkOption {
       type = types.listOf types.package;
       default = [];
-      description = "The set of packages to appear in the user environment.";
+      description = lib.mdDoc "The set of packages to appear in the user environment.";
     };
 
     home.extraOutputsToInstall = mkOption {
       type = types.listOf types.str;
       default = [];
       example = [ "doc" "info" "devdoc" ];
-      description = ''
+      description = lib.mdDoc ''
         List of additional package outputs of the packages
-        <varname>home.packages</varname> that should be installed into
+        {var}`home.packages` that should be installed into
         the user environment.
       '';
     };
 
     home.path = mkOption {
       internal = true;
-      description = "The derivation installing the user packages.";
+      description = lib.mdDoc "The derivation installing the user packages.";
     };
 
     home.emptyActivationPath = mkOption {
@@ -361,11 +359,11 @@ in
         false   for state version < 22.11,
         true    for state version ≥ 22.11
       '';
-      description = ''
+      description = lib.mdDoc ''
         Whether the activation script should start with an empty
-        <envar>PATH</envar> variable. When <literal>false</literal> then the
-        user's <envar>PATH</envar> will be accessible in the script. It is
-        recommended to keep this at <literal>true</literal> to avoid
+        {env}`PATH` variable. When `false` then the
+        user's {env}`PATH` will be accessible in the script. It is
+        recommended to keep this at `true` to avoid
         uncontrolled use of tools found in PATH.
       '';
     };
@@ -381,56 +379,50 @@ in
           ''';
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         The activation scripts blocks to run when activating a Home
         Manager generation. Any entry here should be idempotent,
         meaning running twice or more times produces the same result
         as running it once.
 
-        </para><para>
-
         If the script block produces any observable side effect, such
         as writing or deleting files, then it
-        <emphasis>must</emphasis> be placed after the special
-        <literal>writeBoundary</literal> script block. Prior to the
+        *must* be placed after the special
+        `writeBoundary` script block. Prior to the
         write boundary one can place script blocks that verifies, but
         does not modify, the state of the system and exits if an
         unexpected state is found. For example, the
-        <literal>checkLinkTargets</literal> script block checks for
+        `checkLinkTargets` script block checks for
         collisions between non-managed files and files defined in
-        <xref linkend="opt-home.file"/>.
+        [](#opt-home.file).
 
-        </para><para>
-
-        A script block should respect the <varname>DRY_RUN</varname>
+        A script block should respect the {var}`DRY_RUN`
         variable, if it is set then the actions taken by the script
         should be logged to standard out and not actually performed.
-        The variable <varname>DRY_RUN_CMD</varname> is set to
-        <command>echo</command> if dry run is enabled.
-
-        </para><para>
+        The variable {var}`DRY_RUN_CMD` is set to
+        {command}`echo` if dry run is enabled.
 
         A script block should also respect the
-        <varname>VERBOSE</varname> variable, and if set print
+        {var}`VERBOSE` variable, and if set print
         information on standard out that may be useful for debugging
         any issue that may arise. The variable
-        <varname>VERBOSE_ARG</varname> is set to
-        <option>--verbose</option> if verbose output is enabled.
+        {var}`VERBOSE_ARG` is set to
+        {option}`--verbose` if verbose output is enabled.
       '';
     };
 
     home.activationPackage = mkOption {
       internal = true;
       type = types.package;
-      description = "The package containing the complete activation script.";
+      description = lib.mdDoc "The package containing the complete activation script.";
     };
 
     home.extraActivationPath = mkOption {
       internal = true;
       type = types.listOf types.package;
       default = [ ];
-      description = ''
-        Extra packages to add to <envar>PATH</envar> within the activation
+      description = lib.mdDoc ''
+        Extra packages to add to {env}`PATH` within the activation
         script.
       '';
     };
@@ -439,7 +431,7 @@ in
       type = types.lines;
       default = "";
       internal = true;
-      description = ''
+      description = lib.mdDoc ''
         Extra commands to run in the Home Manager generation builder.
       '';
     };
@@ -448,7 +440,7 @@ in
       type = types.lines;
       default = "";
       internal = true;
-      description = ''
+      description = lib.mdDoc ''
         Extra commands to run in the Home Manager profile builder.
       '';
     };
@@ -456,13 +448,13 @@ in
     home.enableNixpkgsReleaseCheck = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Determines whether to check for release version mismatch between Home
         Manager and Nixpkgs. Using mismatched versions is likely to cause errors
         and unexpected behavior. It is therefore highly recommended to use a
         release of Home Manager that corresponds with your chosen release of
         Nixpkgs.
-        </para><para>
+
         When this option is enabled and a mismatch is detected then a warning
         will be printed when the user configuration is being built.
       '';

@@ -8,7 +8,7 @@ in {
 
   options = {
     programs.less = {
-      enable = mkEnableOption "less, opposite of more";
+      enable = mkEnableOption (lib.mdDoc "less, opposite of more");
 
       keys = mkOption {
         type = types.lines;
@@ -17,9 +17,9 @@ in {
           s        back-line
           t        forw-line
         '';
-        description = ''
-          Extra configuration for <command>less</command> written to
-          <filename>$XDG_CONFIG_HOME/lesskey</filename>.
+        description = lib.mdDoc ''
+          Extra configuration for {command}`less` written to
+          {file}`$XDG_CONFIG_HOME/lesskey`.
         '';
       };
     };

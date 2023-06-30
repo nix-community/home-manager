@@ -118,21 +118,22 @@ in {
 
   options = {
     programs.himalaya = {
-      enable = lib.mkEnableOption "the Himalaya email client";
+      enable = lib.mkEnableOption (lib.mdDoc "the Himalaya email client");
       package = lib.mkPackageOptionMD pkgs "himalaya" { };
       settings = lib.mkOption {
         type = lib.types.submodule { freeformType = tomlFormat.type; };
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Himalaya global configuration.
-          See <link xlink:href="https://pimalaya.org/himalaya/cli/configuration/global.html"/> for supported values.
+          See <https://pimalaya.org/himalaya/cli/configuration/global.html> for supported values.
         '';
       };
     };
 
     services = {
       himalaya-notify = {
-        enable = lib.mkEnableOption "the Himalaya new emails notifier service";
+        enable = lib.mkEnableOption
+          (lib.mdDoc "the Himalaya new emails notifier service");
 
         environment = lib.mkOption {
           type = with lib.types; attrsOf str;
@@ -142,7 +143,7 @@ in {
               "PASSWORD_STORE_DIR" = "~/.password-store";
             }
           '';
-          description = ''
+          description = lib.mdDoc ''
             Extra environment variables to be exported in the service.
           '';
         };
@@ -152,7 +153,7 @@ in {
             type = with lib.types; nullOr str;
             default = null;
             example = "gmail";
-            description = ''
+            description = lib.mdDoc ''
               Name of the account the notifier should be started for. If
               no account is given, the default one is used.
             '';
@@ -162,7 +163,7 @@ in {
             type = with lib.types; nullOr int;
             default = null;
             example = "500";
-            description = ''
+            description = lib.mdDoc ''
               Notifier lifetime of the IDLE session (in seconds). 
             '';
           };
@@ -170,8 +171,8 @@ in {
       };
 
       himalaya-watch = {
-        enable =
-          lib.mkEnableOption "the Himalaya folder changes watcher service";
+        enable = lib.mkEnableOption
+          (lib.mdDoc "the Himalaya folder changes watcher service");
 
         environment = lib.mkOption {
           type = with lib.types; attrsOf str;
@@ -181,7 +182,7 @@ in {
               "PASSWORD_STORE_DIR" = "~/.password-store";
             }
           '';
-          description = ''
+          description = lib.mdDoc ''
             Extra environment variables to be exported in the service.
           '';
         };
@@ -191,7 +192,7 @@ in {
             type = with lib.types; nullOr str;
             default = null;
             example = "gmail";
-            description = ''
+            description = lib.mdDoc ''
               Name of the account the watcher should be started for. If
               no account is given, the default one is used.
             '';
@@ -201,7 +202,7 @@ in {
             type = with lib.types; nullOr int;
             default = null;
             example = "500";
-            description = ''
+            description = lib.mdDoc ''
               Watcher lifetime of the IDLE session (in seconds). 
             '';
           };
@@ -212,7 +213,8 @@ in {
     accounts.email.accounts = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule {
         options.himalaya = {
-          enable = lib.mkEnableOption "Himalaya for this email account";
+          enable =
+            lib.mkEnableOption (lib.mdDoc "Himalaya for this email account");
 
           # TODO: remove me for the next release
           backend = lib.mkOption {
@@ -236,9 +238,9 @@ in {
           settings = lib.mkOption {
             type = lib.types.submodule { freeformType = tomlFormat.type; };
             default = { };
-            description = ''
+            description = lib.mdDoc ''
               Himalaya configuration for this email account.
-              See <link xlink:href="https://pimalaya.org/himalaya/cli/configuration/account.html"/> for supported values.
+              See <https://pimalaya.org/himalaya/cli/configuration/account.html> for supported values.
             '';
           };
         };

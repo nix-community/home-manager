@@ -52,14 +52,14 @@ in {
   meta.maintainers = [ hm.maintainers.foo-dogsquared ];
 
   options.services.mopidy = {
-    enable = mkEnableOption "Mopidy music player daemon";
+    enable = mkEnableOption (lib.mdDoc "Mopidy music player daemon");
 
     extensionPackages = mkOption {
       type = with types; listOf package;
       default = [ ];
       example = literalExpression
         "with pkgs; [ mopidy-spotify mopidy-mpd mopidy-mpris ]";
-      description = ''
+      description = lib.mdDoc ''
         Mopidy extensions that should be loaded by the service.
       '';
     };
@@ -92,11 +92,11 @@ in {
           };
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/mopidy/mopidy.conf</filename>.
-        </para><para>
-        See <link xlink:href="https://docs.mopidy.com/en/latest/config/"/> for
+        {file}`$XDG_CONFIG_HOME/mopidy/mopidy.conf`.
+
+        See <https://docs.mopidy.com/en/latest/config/> for
         more details.
       '';
     };
@@ -104,7 +104,7 @@ in {
     extraConfigFiles = mkOption {
       default = [ ];
       type = types.listOf types.path;
-      description = ''
+      description = lib.mdDoc ''
         Extra configuration files read by Mopidy when the service starts.
         Later files in the list override earlier configuration files and
         structured settings.

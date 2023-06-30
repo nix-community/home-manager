@@ -10,17 +10,17 @@ in {
   meta.maintainers = [ hm.maintainers.Dines97 ];
 
   options.programs.hstr = {
-    enable = mkEnableOption ''
+    enable = mkEnableOption (lib.mdDoc ''
       Bash And Zsh shell history suggest box - easily view, navigate, search and
-      manage your command history'';
+      manage your command history'');
 
     package = mkPackageOptionMD pkgs "hstr" { };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
+    enableBashIntegration = mkEnableOption (lib.mdDoc "Bash integration") // {
       default = true;
     };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
+    enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh integration") // {
       default = true;
     };
   };

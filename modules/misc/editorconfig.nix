@@ -12,16 +12,16 @@ in {
   meta.maintainers = with maintainers; [ loicreynier ];
 
   options.editorconfig = {
-    enable = mkEnableOption "EditorConfig home configuration file";
+    enable = mkEnableOption (lib.mdDoc "EditorConfig home configuration file");
 
     settings = mkOption {
       type = iniFormat.type;
       default = { };
-      description = ''
-        Configuration written to <filename>$HOME/.editorconfig</filename>.
-        <literal>root = true</literal> is automatically added to the file,
+      description = lib.mdDoc ''
+        Configuration written to {file}`$HOME/.editorconfig`.
+        `root = true` is automatically added to the file,
         it must not be added here.
-        See <link xlink:href="https://editorconfig.org"/> for documentation.
+        See <https://editorconfig.org> for documentation.
       '';
       example = literalExpression ''
         {

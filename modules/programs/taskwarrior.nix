@@ -29,7 +29,7 @@ let
 in {
   options = {
     programs.taskwarrior = {
-      enable = mkEnableOption "Task Warrior";
+      enable = mkEnableOption (lib.mdDoc "Task Warrior");
 
       config = mkOption {
         type = types.attrsOf types.anything;
@@ -49,9 +49,9 @@ in {
             };
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Key-value configuration written to
-          <filename>$XDG_CONFIG_HOME/task/taskrc</filename>.
+          {file}`$XDG_CONFIG_HOME/task/taskrc`.
         '';
       };
 
@@ -59,9 +59,9 @@ in {
         type = types.str;
         default = "${config.xdg.dataHome}/task";
         defaultText = "$XDG_DATA_HOME/task";
-        description = ''
+        description = lib.mdDoc ''
           Location where Task Warrior will store its data.
-          </para><para>
+
           Home Manager will attempt to create this directory.
         '';
       };
@@ -70,7 +70,7 @@ in {
         type = with types; nullOr (either str path);
         default = null;
         example = "dark-blue-256";
-        description = ''
+        description = lib.mdDoc ''
           Either one of the default provided theme as string, or a
           path to a theme configuration file.
         '';
@@ -79,9 +79,9 @@ in {
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Additional content written at the end of
-          <filename>$XDG_CONFIG_HOME/task/taskrc</filename>.
+          {file}`$XDG_CONFIG_HOME/task/taskrc`.
         '';
       };
 

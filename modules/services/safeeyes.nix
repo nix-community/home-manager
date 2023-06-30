@@ -11,7 +11,7 @@ in {
 
   options = {
     services.safeeyes = {
-      enable = mkEnableOption "The Safe Eyes OSGI service";
+      enable = mkEnableOption (lib.mdDoc "The Safe Eyes OSGI service");
 
       package = mkPackageOptionMD pkgs "safeeyes" { };
     };

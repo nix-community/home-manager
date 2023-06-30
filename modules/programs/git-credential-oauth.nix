@@ -9,7 +9,8 @@ in {
 
   options = {
     programs.git-credential-oauth = {
-      enable = lib.mkEnableOption "Git authentication handler for OAuth";
+      enable =
+        lib.mkEnableOption (lib.mdDoc "Git authentication handler for OAuth");
 
       package = lib.mkPackageOptionMD pkgs "git-credential-oauth" { };
     };

@@ -96,8 +96,8 @@ in {
         default = "${pkgs.systemd}/bin/systemctl";
         defaultText = literalExpression ''"''${pkgs.systemd}/bin/systemctl"'';
         type = types.str;
-        description = ''
-          Absolute path to the <command>systemctl</command> tool. This
+        description = lib.mdDoc ''
+          Absolute path to the {command}`systemctl` tool. This
           option may need to be set if running Home Manager on a
           non-NixOS distribution.
         '';
@@ -193,7 +193,7 @@ in {
       servicesStartTimeoutMs = mkOption {
         default = 0;
         type = types.ints.unsigned;
-        description = ''
+        description = lib.mdDoc ''
           How long to wait for started services to fail until their start is
           considered successful. The value 0 indicates no timeout.
         '';
@@ -203,13 +203,10 @@ in {
         default = { };
         type = with types; attrsOf (either int str);
         example = { EDITOR = "vim"; };
-        description = ''
+        description = lib.mdDoc ''
           Environment variables that will be set for the user session.
           The variable values must be as described in
-          <citerefentry>
-            <refentrytitle>environment.d</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>.
+          {manpage}`environment.d(5)`.
         '';
       };
     };

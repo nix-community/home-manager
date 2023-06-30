@@ -23,12 +23,14 @@ let
 
 in {
   options.programs.vscode.haskell = {
-    enable = mkEnableOption "Haskell integration for Visual Studio Code";
+    enable =
+      mkEnableOption (lib.mdDoc "Haskell integration for Visual Studio Code");
 
     hie.enable = mkOption {
       type = types.bool;
       default = true;
-      description = "Whether to enable Haskell IDE engine integration.";
+      description =
+        lib.mdDoc "Whether to enable Haskell IDE engine integration.";
     };
 
     hie.executablePath = mkOption {

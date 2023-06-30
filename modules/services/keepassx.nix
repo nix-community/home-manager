@@ -7,7 +7,7 @@ with lib;
 
   options = {
     services.keepassx = {
-      enable = mkEnableOption "the KeePassX password manager";
+      enable = mkEnableOption (lib.mdDoc "the KeePassX password manager");
     };
   };
 

@@ -11,19 +11,19 @@ in {
 
   options = {
     programs.pidgin = {
-      enable = mkEnableOption "Pidgin messaging client";
+      enable = mkEnableOption (lib.mdDoc "Pidgin messaging client");
 
       package = mkOption {
         type = types.package;
         default = pkgs.pidgin;
         defaultText = literalExpression "pkgs.pidgin";
-        description = "The Pidgin package to use.";
+        description = lib.mdDoc "The Pidgin package to use.";
       };
 
       plugins = mkOption {
         default = [ ];
         example = literalExpression "[ pkgs.pidgin-otr pkgs.pidgin-osd ]";
-        description = "Plugins that should be available to Pidgin.";
+        description = lib.mdDoc "Plugins that should be available to Pidgin.";
       };
     };
   };

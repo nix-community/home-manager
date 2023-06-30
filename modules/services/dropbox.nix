@@ -14,7 +14,7 @@ in {
 
   options = {
     services.dropbox = {
-      enable = mkEnableOption "Dropbox daemon";
+      enable = mkEnableOption (lib.mdDoc "Dropbox daemon");
 
       path = mkOption {
         type = types.path;
@@ -22,7 +22,7 @@ in {
         defaultText =
           literalExpression ''"''${config.home.homeDirectory}/Dropbox"'';
         apply = toString; # Prevent copies to Nix store.
-        description = "Where to put the Dropbox directory.";
+        description = lib.mdDoc "Where to put the Dropbox directory.";
       };
     };
   };

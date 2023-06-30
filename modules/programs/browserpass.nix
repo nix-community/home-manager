@@ -8,13 +8,14 @@ let
 in {
   options = {
     programs.browserpass = {
-      enable = mkEnableOption "the browserpass extension host application";
+      enable =
+        mkEnableOption (lib.mdDoc "the browserpass extension host application");
 
       browsers = mkOption {
         type = types.listOf (types.enum browsers);
         default = browsers;
         example = [ "firefox" ];
-        description = "Which browsers to install browserpass for";
+        description = lib.mdDoc "Which browsers to install browserpass for";
       };
     };
   };

@@ -14,13 +14,13 @@ in {
   meta.maintainers = [ ];
 
   options.programs.starship = {
-    enable = mkEnableOption "starship";
+    enable = mkEnableOption (lib.mdDoc "starship");
 
     package = mkOption {
       type = types.package;
       default = pkgs.starship;
       defaultText = literalExpression "pkgs.starship";
-      description = "The package to use for the starship binary.";
+      description = lib.mdDoc "The package to use for the starship binary.";
     };
 
     settings = mkOption {
@@ -49,39 +49,40 @@ in {
           };
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/starship.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://starship.rs/config/" /> for the full list
+        {file}`$XDG_CONFIG_HOME/starship.toml`.
+
+        See <https://starship.rs/config/> for the full list
         of options.
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
+    enableBashIntegration = mkEnableOption (lib.mdDoc "Bash integration") // {
       default = true;
     };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
+    enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh integration") // {
       default = true;
     };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
+    enableFishIntegration = mkEnableOption (lib.mdDoc "Fish integration") // {
       default = true;
     };
 
-    enableIonIntegration = mkEnableOption "Ion integration" // {
+    enableIonIntegration = mkEnableOption (lib.mdDoc "Ion integration") // {
       default = true;
     };
 
-    enableNushellIntegration = mkEnableOption "Nushell integration" // {
-      default = true;
-    };
+    enableNushellIntegration = mkEnableOption (lib.mdDoc "Nushell integration")
+      // {
+        default = true;
+      };
 
     enableTransience = mkOption {
       type = types.bool;
       default = false;
-      description = ''
+      description = lib.mdDoc ''
         The TransientPrompt feature of Starship replaces previous prompts with a
         custom string. This is only a valid option for the Fish shell.
 

@@ -134,7 +134,7 @@ in {
 
   options = {
     programs.firefox = {
-      enable = mkEnableOption "Firefox";
+      enable = mkEnableOption (lib.mdDoc "Firefox");
 
       package = mkOption {
         type = types.package;
@@ -154,7 +154,7 @@ in {
             };
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           The Firefox package to use. If state version ≥ 19.09 then
           this should be a wrapped Firefox package. For earlier state
           versions it should be an unwrapped Firefox package.
@@ -167,13 +167,13 @@ in {
             name = mkOption {
               type = types.str;
               default = name;
-              description = "Profile name.";
+              description = lib.mdDoc "Profile name.";
             };
 
             id = mkOption {
               type = types.ints.unsigned;
               default = 0;
-              description = ''
+              description = lib.mdDoc ''
                 Profile ID. This should be set to a unique number per profile.
               '';
             };
@@ -198,7 +198,7 @@ in {
                   }];
                 }
               '';
-              description = ''
+              description = lib.mdDoc ''
                 Attribute set of Firefox preferences.
 
                 Firefox only supports int, bool, and string types for
@@ -210,15 +210,15 @@ in {
             extraConfig = mkOption {
               type = types.lines;
               default = "";
-              description = ''
-                Extra preferences to add to <filename>user.js</filename>.
+              description = lib.mdDoc ''
+                Extra preferences to add to {file}`user.js`.
               '';
             };
 
             userChrome = mkOption {
               type = types.lines;
               default = "";
-              description = "Custom Firefox user chrome CSS.";
+              description = lib.mdDoc "Custom Firefox user chrome CSS.";
               example = ''
                 /* Hide tab bar in FF Quantum */
                 @-moz-document url("chrome://browser/content/browser.xul") {
@@ -237,7 +237,7 @@ in {
             userContent = mkOption {
               type = types.lines;
               default = "";
-              description = "Custom Firefox user content CSS.";
+              description = lib.mdDoc "Custom Firefox user content CSS.";
               example = ''
                 /* Hide scrollbar in FF Quantum */
                 *{scrollbar-width:none !important}
@@ -251,24 +251,25 @@ in {
                     name = mkOption {
                       type = types.str;
                       default = name;
-                      description = "Bookmark name.";
+                      description = lib.mdDoc "Bookmark name.";
                     };
 
                     tags = mkOption {
                       type = types.listOf types.str;
                       default = [ ];
-                      description = "Bookmark tags.";
+                      description = lib.mdDoc "Bookmark tags.";
                     };
 
                     keyword = mkOption {
                       type = types.nullOr types.str;
                       default = null;
-                      description = "Bookmark search keyword.";
+                      description = lib.mdDoc "Bookmark search keyword.";
                     };
 
                     url = mkOption {
                       type = types.str;
-                      description = "Bookmark url, use %s for search terms.";
+                      description =
+                        lib.mdDoc "Bookmark url, use %s for search terms.";
                     };
                   };
                 }) // {
@@ -282,19 +283,20 @@ in {
                     name = mkOption {
                       type = types.str;
                       default = name;
-                      description = "Directory name.";
+                      description = lib.mdDoc "Directory name.";
                     };
 
                     bookmarks = mkOption {
                       type = types.listOf nodeType;
                       default = [ ];
-                      description = "Bookmarks within directory.";
+                      description = lib.mdDoc "Bookmarks within directory.";
                     };
 
                     toolbar = mkOption {
                       type = types.bool;
                       default = false;
-                      description = "If directory should be shown in toolbar.";
+                      description =
+                        lib.mdDoc "If directory should be shown in toolbar.";
                     };
                   };
                 }) // {
@@ -334,7 +336,7 @@ in {
                   }
                 ]
               '';
-              description = ''
+              description = lib.mdDoc ''
                 Preloaded bookmarks. Note, this may silently overwrite any
                 previously existing bookmarks!
               '';
@@ -343,21 +345,21 @@ in {
             path = mkOption {
               type = types.str;
               default = name;
-              description = "Profile path.";
+              description = lib.mdDoc "Profile path.";
             };
 
             isDefault = mkOption {
               type = types.bool;
               default = config.id == 0;
               defaultText = "true if profile ID is 0";
-              description = "Whether this is a default profile.";
+              description = lib.mdDoc "Whether this is a default profile.";
             };
 
             search = {
               force = mkOption {
                 type = with types; bool;
                 default = false;
-                description = ''
+                description = lib.mdDoc ''
                   Whether to force replace the existing search
                   configuration. This is recommended since Firefox will
                   replace the symlink for the search configuration on every
@@ -370,7 +372,7 @@ in {
                 type = with types; nullOr str;
                 default = null;
                 example = "DuckDuckGo";
-                description = ''
+                description = lib.mdDoc ''
                   The default search engine used in the address bar and search bar.
                 '';
               };
@@ -379,7 +381,7 @@ in {
                 type = with types; uniq (listOf str);
                 default = [ ];
                 example = [ "DuckDuckGo" "Google" ];
-                description = ''
+                description = lib.mdDoc ''
                   The order the search engines are listed in. Any engines
                   that aren't included in this list will be listed after
                   these in an unspecified order.
@@ -415,19 +417,18 @@ in {
                     "Google".metaData.alias = "@g"; # builtin engines only support specifying one additional alias
                   }
                 '';
-                description = ''
+                description = lib.mdDoc ''
                   Attribute set of search engine configurations. Engines
-                  that only have <varname>metaData</varname> specified will
+                  that only have {var}`metaData` specified will
                   be treated as builtin to Firefox.
-                  </para><para>
-                  See <link xlink:href=
-                  "https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177">SearchEngine.jsm</link>
+
+                  See [SearchEngine.jsm](https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177)
                   in Firefox's source for available options. We maintain a
                   mapping to let you specify all options in the referenced
                   link without underscores, but it may fall out of date with
                   future options.
-                  </para><para>
-                  Note, <varname>icon</varname> is also a special option
+
+                  Note, {var}`icon` is also a special option
                   added by Home Manager to make it convenient to specify
                   absolute icon paths.
                 '';
@@ -462,17 +463,17 @@ in {
           };
         }));
         default = { };
-        description = "Attribute set of Firefox profiles.";
+        description = lib.mdDoc "Attribute set of Firefox profiles.";
       };
 
       enableGnomeExtensions = mkOption {
         type = types.bool;
         default = false;
-        description = ''
+        description = lib.mdDoc ''
           Whether to enable the GNOME Shell native host connector. Note, you
           also need to set the NixOS option
-          <literal>services.gnome.gnome-browser-connector.enable</literal> to
-          <literal>true</literal>.
+          `services.gnome.gnome-browser-connector.enable` to
+          `true`.
         '';
       };
     };

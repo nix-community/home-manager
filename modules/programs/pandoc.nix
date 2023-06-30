@@ -22,20 +22,20 @@ in {
   meta.maintainers = [ lib.maintainers.kirelagin ];
 
   options.programs.pandoc = {
-    enable = mkEnableOption "pandoc";
+    enable = mkEnableOption (lib.mdDoc "pandoc");
 
     package = mkOption {
       type = types.package;
       default = pkgs.pandoc;
       defaultText = literalExpression "pkgs.pandoc";
-      description = "The pandoc package to use.";
+      description = lib.mdDoc "The pandoc package to use.";
     };
 
     # We wrap the executable to pass some arguments
     finalPackage = mkOption {
       type = types.package;
       readOnly = true;
-      description = "Resulting package.";
+      description = lib.mdDoc "Resulting package.";
     };
 
     defaults = mkOption {
@@ -50,7 +50,7 @@ in {
           citeproc = true;
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Options to set by default.
         These will be converted to JSON and written to a defaults
         file (see Default files in pandoc documentation).
@@ -60,7 +60,7 @@ in {
     defaultsFile = mkOption {
       type = types.path;
       readOnly = true;
-      description = "Resulting defaults file.";
+      description = lib.mdDoc "Resulting defaults file.";
     };
 
     templates = mkOption {
@@ -71,14 +71,14 @@ in {
           "default.latex" = path/to/your/template;
         }
       '';
-      description = "Custom templates.";
+      description = lib.mdDoc "Custom templates.";
     };
 
     citationStyles = mkOption {
       type = types.listOf types.path;
       default = [ ];
       example = literalExpression "[ path/to/file.csl ]";
-      description = "List of .csl files to install.";
+      description = lib.mdDoc "List of .csl files to install.";
     };
   };
 

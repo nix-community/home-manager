@@ -16,15 +16,15 @@ in {
   ];
 
   options.programs.rtorrent = {
-    enable = mkEnableOption "rTorrent";
+    enable = mkEnableOption (lib.mdDoc "rTorrent");
 
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/rtorrent/rtorrent.rc</filename>. See
-        <link xlink:href="https://github.com/rakshasa/rtorrent/wiki/Config-Guide" />
+        {file}`$XDG_CONFIG_HOME/rtorrent/rtorrent.rc`. See
+        <https://github.com/rakshasa/rtorrent/wiki/Config-Guide>
         for explanation about possible values.
       '';
     };

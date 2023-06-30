@@ -13,20 +13,17 @@ in {
   meta.maintainers = [ maintainers.christoph-heiss ];
 
   options.programs.imv = {
-    enable = mkEnableOption
-      "imv: a command line image viewer intended for use with tiling window managers";
+    enable = mkEnableOption (lib.mdDoc
+      "imv: a command line image viewer intended for use with tiling window managers");
 
     package = mkPackageOptionMD pkgs "imv" { };
 
     settings = mkOption {
       default = { };
       type = with types; attrsOf (attrsOf (oneOf [ bool int str ]));
-      description = ''
+      description = lib.mdDoc ''
         Configuration options for imv. See
-        <citerefentry>
-          <refentrytitle>imv</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>.
+        {manpage}`imv(5)`.
       '';
       example = literalExpression ''
         {

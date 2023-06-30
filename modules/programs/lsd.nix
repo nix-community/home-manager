@@ -21,12 +21,12 @@ in {
   meta.maintainers = [ ];
 
   options.programs.lsd = {
-    enable = mkEnableOption "lsd";
+    enable = mkEnableOption (lib.mdDoc "lsd");
 
     enableAliases = mkOption {
       default = false;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable recommended lsd aliases.
       '';
     };
@@ -38,10 +38,10 @@ in {
         date = "relative";
         ignore-globs = [ ".git" ".hg" ];
       };
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/lsd/config.yaml</filename>. See
-        <link xlink:href="https://github.com/Peltoche/lsd#config-file-content"/>
+        {file}`$XDG_CONFIG_HOME/lsd/config.yaml`. See
+        <https://github.com/Peltoche/lsd#config-file-content>
         for supported values.
       '';
     };

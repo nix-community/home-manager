@@ -23,7 +23,7 @@ let
         type = types.bool;
         default = false;
         example = true;
-        description = "Whether to enable ${name}.";
+        description = lib.mdDoc "Whether to enable ${name}.";
       };
 
       package = mkOption {
@@ -31,7 +31,7 @@ let
         type = types.package;
         default = defaultPkg;
         defaultText = literalExpression "pkgs.${browser}";
-        description = "The ${name} package to use.";
+        description = lib.mdDoc "The ${name} package to use.";
       };
 
       commandLineArgs = mkOption {
@@ -39,14 +39,14 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = [ "--enable-logging=stderr" "--ignore-gpu-blocklist" ];
-        description = ''
+        description = lib.mdDoc ''
           List of command-line arguments to be passed to ${name}.
-          </para><para>
+
           For a list of common switches, see
-          <link xlink:href="https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.cc">Chrome switches</link>.
-          </para><para>
+          [Chrome switches](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.cc).
+
           To search switches for other components, see
-          <link xlink:href="https://source.chromium.org/search?q=file:switches.cc&amp;ss=chromium%2Fchromium%2Fsrc">Chromium codesearch</link>.
+          [Chromium codesearch](https://source.chromium.org/search?q=file:switches.cc&ss=chromium%2Fchromium%2Fsrc).
         '';
       };
     } // optionalAttrs (!isProprietaryChrome) {
@@ -60,7 +60,7 @@ let
               options = {
                 id = mkOption {
                   type = strMatching "[a-zA-Z]{32}";
-                  description = ''
+                  description = lib.mdDoc ''
                     The extension's ID from the Chrome Web Store url or the unpacked crx.
                   '';
                   default = "";
@@ -68,7 +68,7 @@ let
 
                 updateUrl = mkOption {
                   type = str;
-                  description = ''
+                  description = lib.mdDoc ''
                     URL of the extension's update manifest XML file. Linux only.
                   '';
                   default = "https://clients2.google.com/service/update2/crx";
@@ -78,7 +78,7 @@ let
 
                 crxPath = mkOption {
                   type = nullOr path;
-                  description = ''
+                  description = lib.mdDoc ''
                     Path to the extension's crx file. Linux only.
                   '';
                   default = null;
@@ -87,7 +87,7 @@ let
 
                 version = mkOption {
                   type = nullOr str;
-                  description = ''
+                  description = lib.mdDoc ''
                     The extension's version, required for local installation. Linux only.
                   '';
                   default = null;
@@ -111,16 +111,16 @@ let
             }
           ]
         '';
-        description = ''
+        description = lib.mdDoc ''
           List of ${name} extensions to install.
           To find the extension ID, check its URL on the
-          <link xlink:href="https://chrome.google.com/webstore/category/extensions">Chrome Web Store</link>.
-          </para><para>
+          [Chrome Web Store](https://chrome.google.com/webstore/category/extensions).
+
           To install extensions outside of the Chrome Web Store set
-          <literal>updateUrl</literal> or <literal>crxPath</literal> and
-          <literal>version</literal> as explained in the
-          <link xlink:href="https://developer.chrome.com/docs/extensions/mv2/external_extensions">Chrome
-          documentation</link>.
+          `updateUrl` or `crxPath` and
+          `version` as explained in the
+          [Chrome
+          documentation](https://developer.chrome.com/docs/extensions/mv2/external_extensions).
         '';
       };
     };

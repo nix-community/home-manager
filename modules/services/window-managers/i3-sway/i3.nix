@@ -91,11 +91,11 @@ let
           "${cfg.config.modifier}+r" = "mode resize";
         };
         defaultText = "Default i3 keybindings.";
-        description = ''
+        description = lib.mdDoc ''
           An attribute set that assigns a key press to an action using a key symbol.
-          See <link xlink:href="https://i3wm.org/docs/userguide.html#keybindings"/>.
-          </para><para>
-          Consider to use <literal>lib.mkOptionDefault</literal> function to extend or override
+          See <https://i3wm.org/docs/userguide.html#keybindings>.
+
+          Consider to use `lib.mkOptionDefault` function to extend or override
           default keybindings instead of specifying all of them from scratch.
         '';
         example = literalExpression ''
@@ -121,7 +121,7 @@ let
             "Return" = "mode default";
           };
         };
-        description = ''
+        description = lib.mdDoc ''
           An attribute set that defines binding modes and keybindings
           inside them
 
@@ -206,21 +206,21 @@ in {
 
   options = {
     xsession.windowManager.i3 = {
-      enable = mkEnableOption "i3 window manager";
+      enable = mkEnableOption (lib.mdDoc "i3 window manager");
 
       package = mkPackageOptionMD pkgs "i3" { };
 
       config = mkOption {
         type = types.nullOr configModule;
         default = { };
-        description = "i3 configuration options.";
+        description = lib.mdDoc "i3 configuration options.";
       };
 
       extraConfig = mkOption {
         type = types.lines;
         default = "";
         description =
-          "Extra configuration lines to add to ~/.config/i3/config.";
+          lib.mdDoc "Extra configuration lines to add to ~/.config/i3/config.";
       };
     };
   };

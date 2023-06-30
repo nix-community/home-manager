@@ -18,23 +18,20 @@ in {
 
   options = {
     wayland.windowManager.sway.swaynag = {
-      enable = mkEnableOption
-        "configuration of swaynag, a lightweight error bar for sway";
+      enable = mkEnableOption (lib.mdDoc
+        "configuration of swaynag, a lightweight error bar for sway");
 
       settings = mkOption {
         type = types.attrsOf confFormat;
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/swaynag/config</filename>.
-          </para><para>
+          {file}`$XDG_CONFIG_HOME/swaynag/config`.
+
           See
-          <citerefentry>
-            <refentrytitle>swaynag</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>
+          {manpage}`swaynag(5)`
           for a list of available options and an example configuration.
-          Note, configurations declared under <literal>&lt;config&gt;</literal>
+          Note, configurations declared under `<config>`
           will override the default type values of swaynag.
         '';
         example = literalExpression ''

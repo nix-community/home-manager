@@ -66,12 +66,12 @@ in {
   ];
 
   options.services.picom = {
-    enable = mkEnableOption "Picom X11 compositor";
+    enable = mkEnableOption (lib.mdDoc "Picom X11 compositor");
 
     fade = mkOption {
       type = types.bool;
       default = false;
-      description = ''
+      description = lib.mdDoc ''
         Fade windows in and out.
       '';
     };
@@ -80,7 +80,7 @@ in {
       type = types.ints.positive;
       default = 10;
       example = 5;
-      description = ''
+      description = lib.mdDoc ''
         Time between fade animation step (in ms).
       '';
     };
@@ -89,7 +89,7 @@ in {
       type = pairOf (types.numbers.between 1.0e-2 1);
       default = [ 2.8e-2 3.0e-2 ];
       example = [ 4.0e-2 4.0e-2 ];
-      description = ''
+      description = lib.mdDoc ''
         Opacity change between fade steps (in and out).
       '';
     };
@@ -98,16 +98,16 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
-      description = ''
+      description = lib.mdDoc ''
         List of conditions of windows that should not be faded.
-        See <literal>picom(1)</literal> man page for more examples.
+        See `picom(1)` man page for more examples.
       '';
     };
 
     shadow = mkOption {
       type = types.bool;
       default = false;
-      description = ''
+      description = lib.mdDoc ''
         Draw window shadows.
       '';
     };
@@ -116,7 +116,7 @@ in {
       type = pairOf types.int;
       default = [ (-15) (-15) ];
       example = [ (-10) (-15) ];
-      description = ''
+      description = lib.mdDoc ''
         Left and right offset for shadows (in pixels).
       '';
     };
@@ -125,7 +125,7 @@ in {
       type = types.numbers.between 0 1;
       default = 0.75;
       example = 0.8;
-      description = ''
+      description = lib.mdDoc ''
         Window shadows opacity.
       '';
     };
@@ -134,9 +134,9 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
-      description = ''
+      description = lib.mdDoc ''
         List of conditions of windows that should have no shadow.
-        See <literal>picom(1)</literal> man page for more examples.
+        See `picom(1)` man page for more examples.
       '';
     };
 
@@ -144,7 +144,7 @@ in {
       type = types.numbers.between 0 1;
       default = 1.0;
       example = 0.8;
-      description = ''
+      description = lib.mdDoc ''
         Opacity of active windows.
       '';
     };
@@ -153,7 +153,7 @@ in {
       type = types.numbers.between 0.1 1;
       default = 1.0;
       example = 0.8;
-      description = ''
+      description = lib.mdDoc ''
         Opacity of inactive windows.
       '';
     };
@@ -162,7 +162,7 @@ in {
       type = types.numbers.between 0 1;
       default = 1.0;
       example = 0.8;
-      description = ''
+      description = lib.mdDoc ''
         Opacity of dropdown and popup menu.
       '';
     };
@@ -180,7 +180,7 @@ in {
         }
       '';
       example = { };
-      description = ''
+      description = lib.mdDoc ''
         Rules for specific window types.
       '';
     };
@@ -192,7 +192,7 @@ in {
         "95:class_g = 'URxvt' && !_NET_WM_STATE@:32a"
         "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
       ];
-      description = ''
+      description = lib.mdDoc ''
         Rules that control the opacity of windows, in format PERCENT:PATTERN.
       '';
     };
@@ -200,15 +200,15 @@ in {
     backend = mkOption {
       type = types.enum [ "egl" "glx" "xrender" "xr_glx_hybrid" ];
       default = "xrender";
-      description = ''
-        Backend to use: <literal>egl</literal>, <literal>glx</literal>, <literal>xrender</literal> or <literal>xr_glx_hybrid</literal>.
+      description = lib.mdDoc ''
+        Backend to use: `egl`, `glx`, `xrender` or `xr_glx_hybrid`.
       '';
     };
 
     vSync = mkOption {
       type = types.bool;
       default = false;
-      description = ''
+      description = lib.mdDoc ''
         Enable vertical synchronization.
       '';
     };
@@ -217,7 +217,7 @@ in {
       type = with types; listOf str;
       default = [ ];
       example = literalExpression ''[ "--legacy-backends" ]'';
-      description = ''
+      description = lib.mdDoc ''
         Extra arguments to be passed to the picom executable.
       '';
     };
@@ -227,7 +227,7 @@ in {
       default = pkgs.picom;
       defaultText = literalExpression "pkgs.picom";
       example = literalExpression "pkgs.picom";
-      description = ''
+      description = lib.mdDoc ''
         Picom derivation to use.
       '';
     };
@@ -261,10 +261,10 @@ in {
               deviation = 5.0;
             };
         '';
-        description = ''
+        description = lib.mdDoc ''
           Picom settings. Use this option to configure Picom settings not exposed
           in a NixOS option or to bypass one. For the available options see the
-          CONFIGURATION FILES section at <literal>picom(1)</literal>.
+          CONFIGURATION FILES section at `picom(1)`.
         '';
       };
   };

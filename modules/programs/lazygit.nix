@@ -14,7 +14,8 @@ in {
   meta.maintainers = [ hm.maintainers.kalhauge ];
 
   options.programs.lazygit = {
-    enable = mkEnableOption "lazygit, a simple terminal UI for git commands";
+    enable = mkEnableOption
+      (lib.mdDoc "lazygit, a simple terminal UI for git commands");
 
     package = mkPackageOptionMD pkgs "lazygit" { };
 
@@ -32,13 +33,13 @@ in {
           };
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/lazygit/config.yml</filename>
-        on Linux or on Darwin if <xref linkend="opt-xdg.enable"/> is set, otherwise
-        <filename>~/Library/Application Support/lazygit/config.yml</filename>.
+        {file}`$XDG_CONFIG_HOME/lazygit/config.yml`
+        on Linux or on Darwin if [](#opt-xdg.enable) is set, otherwise
+        {file}`~/Library/Application Support/lazygit/config.yml`.
         See
-        <link xlink:href="https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md"/>
+        <https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md>
         for supported values.
       '';
     };

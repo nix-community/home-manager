@@ -8,7 +8,8 @@ let
 
 in {
   options.programs.afew = {
-    enable = mkEnableOption "the afew initial tagging script for Notmuch";
+    enable =
+      mkEnableOption (lib.mdDoc "the afew initial tagging script for Notmuch");
 
     extraConfig = mkOption {
       type = types.lines;
@@ -29,10 +30,10 @@ in {
 
         [InboxFilter]
       '';
-      description = ''
+      description = lib.mdDoc ''
         Extra lines added to afew configuration file. Available
         configuration options are described in the afew manual:
-        <link xlink:href="https://afew.readthedocs.io/en/latest/configuration.html" />.
+        <https://afew.readthedocs.io/en/latest/configuration.html>.
       '';
     };
   };

@@ -25,14 +25,14 @@ let
       text = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Text of an OpenPGP public key.
         '';
       };
 
       source = mkOption {
         type = types.path;
-        description = ''
+        description = lib.mdDoc ''
           Path of an OpenPGP public key file.
         '';
       };
@@ -139,7 +139,7 @@ let
 
 in {
   options.programs.gpg = {
-    enable = mkEnableOption "GnuPG";
+    enable = mkEnableOption (lib.mdDoc "GnuPG");
 
     package = mkOption {
       type = types.package;
@@ -147,7 +147,7 @@ in {
       defaultText = literalExpression "pkgs.gnupg";
       example = literalExpression "pkgs.gnupg23";
       description =
-        "The Gnupg package to use (also used the gpg-agent service).";
+        lib.mdDoc "The Gnupg package to use (also used the gpg-agent service).";
     };
 
     settings = mkOption {
@@ -159,17 +159,13 @@ in {
           s2k-cipher-algo = "AES128";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         GnuPG configuration options. Available options are described
         in
-        <link xlink:href="https://gnupg.org/documentation/manpage.html">
-          <citerefentry>
-              <refentrytitle>gpg</refentrytitle>
-              <manvolnum>1</manvolnum>
-          </citerefentry>
-        </link>.
-        </para>
-        <para>
+        [
+          {manpage}`gpg(1)`
+        ](https://gnupg.org/documentation/manpage.html).
+
         Note that lists are converted to duplicate keys.
       '';
     };
@@ -182,15 +178,12 @@ in {
           disable-ccid = true;
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         SCdaemon configuration options. Available options are described
         in
-        <link xlink:href="https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html">
-          <citerefentry>
-              <refentrytitle>scdaemon</refentrytitle>
-              <manvolnum>1</manvolnum>
-          </citerefentry>
-        </link>.
+        [
+          {manpage}`scdaemon(1)`
+        ](https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html).
       '';
     };
 
@@ -200,19 +193,19 @@ in {
       default = "${config.home.homeDirectory}/.gnupg";
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/.gnupg"'';
-      description = "Directory to store keychains and configuration.";
+      description = lib.mdDoc "Directory to store keychains and configuration.";
     };
 
     mutableKeys = mkOption {
       type = types.bool;
       default = true;
-      description = ''
-        If set to <literal>true</literal>, you may manage your keyring as a user
-        using the <literal>gpg</literal> command. Upon activation, the keyring
+      description = lib.mdDoc ''
+        If set to `true`, you may manage your keyring as a user
+        using the `gpg` command. Upon activation, the keyring
         will have managed keys added without overwriting unmanaged keys.
-        </para><para>
-        If set to <literal>false</literal>, the path
-        <filename>$GNUPGHOME/pubring.kbx</filename> will become an immutable
+
+        If set to `false`, the path
+        {file}`$GNUPGHOME/pubring.kbx` will become an immutable
         link to the Nix store, denying modifications.
       '';
     };
@@ -220,16 +213,16 @@ in {
     mutableTrust = mkOption {
       type = types.bool;
       default = true;
-      description = ''
-        If set to <literal>true</literal>, you may manage trust as a user using
-        the <command>gpg</command> command. Upon activation, trusted keys have
+      description = lib.mdDoc ''
+        If set to `true`, you may manage trust as a user using
+        the {command}`gpg` command. Upon activation, trusted keys have
         their trust set without overwriting unmanaged keys.
-        </para><para>
-        If set to <literal>false</literal>, the path
-        <filename>$GNUPGHOME/trustdb.gpg</filename> will be
-        <emphasis>overwritten</emphasis> on each activation, removing trust for
+
+        If set to `false`, the path
+        {file}`$GNUPGHOME/trustdb.gpg` will be
+        *overwritten* on each activation, removing trust for
         any unmanaged keys. Be careful to make a backup of your old
-        <filename>trustdb.gpg</filename> before switching to immutable trust!
+        {file}`trustdb.gpg` before switching to immutable trust!
       '';
     };
 
@@ -239,7 +232,7 @@ in {
         [ { source = ./pubkeys.txt; } ]
       '';
       default = [ ];
-      description = ''
+      description = lib.mdDoc ''
         A list of public keys to be imported into GnuPG. Note, these key files
         will be copied into the world-readable Nix store.
       '';

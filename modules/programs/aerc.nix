@@ -31,7 +31,7 @@ in {
 
   options.programs.aerc = {
 
-    enable = mkEnableOption "aerc";
+    enable = mkEnableOption (lib.mdDoc "aerc");
 
     package = mkPackageOptionMD pkgs "aerc" { };
 

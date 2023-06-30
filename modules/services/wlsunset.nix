@@ -8,30 +8,30 @@ in {
   meta.maintainers = [ hm.maintainers.matrss ];
 
   options.services.wlsunset = {
-    enable = mkEnableOption "wlsunset";
+    enable = mkEnableOption (lib.mdDoc "wlsunset");
 
     package = mkOption {
       type = types.package;
       default = pkgs.wlsunset;
       defaultText = "pkgs.wlsunset";
-      description = ''
+      description = lib.mdDoc ''
         wlsunset derivation to use.
       '';
     };
 
     latitude = mkOption {
       type = types.str;
-      description = ''
-        Your current latitude, between <literal>-90.0</literal> and
-        <literal>90.0</literal>.
+      description = lib.mdDoc ''
+        Your current latitude, between `-90.0` and
+        `90.0`.
       '';
     };
 
     longitude = mkOption {
       type = types.str;
-      description = ''
-        Your current longitude, between <literal>-180.0</literal> and
-        <literal>180.0</literal>.
+      description = lib.mdDoc ''
+        Your current longitude, between `-180.0` and
+        `180.0`.
       '';
     };
 
@@ -39,18 +39,18 @@ in {
       day = mkOption {
         type = types.int;
         default = 6500;
-        description = ''
+        description = lib.mdDoc ''
           Colour temperature to use during the day, in Kelvin (K).
-          This value must be greater than <literal>temperature.night</literal>.
+          This value must be greater than `temperature.night`.
         '';
       };
 
       night = mkOption {
         type = types.int;
         default = 4000;
-        description = ''
+        description = lib.mdDoc ''
           Colour temperature to use during the night, in Kelvin (K).
-          This value must be smaller than <literal>temperature.day</literal>.
+          This value must be smaller than `temperature.day`.
         '';
       };
     };
@@ -58,7 +58,7 @@ in {
     gamma = mkOption {
       type = types.str;
       default = "1.0";
-      description = ''
+      description = lib.mdDoc ''
         Gamma value to use.
       '';
     };
@@ -66,7 +66,7 @@ in {
     systemdTarget = mkOption {
       type = types.str;
       default = "graphical-session.target";
-      description = ''
+      description = lib.mdDoc ''
         Systemd target to bind to.
       '';
     };

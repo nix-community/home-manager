@@ -20,11 +20,11 @@ in {
         else
           cfg.settings != { };
         defaultText = "false";
-        description = ''
+        description = lib.mdDoc ''
           Whether to enable the beets music library manager. This
-          defaults to <literal>false</literal> for state
+          defaults to `false` for state
           version ≥ 19.03. For earlier versions beets is enabled if
-          <option>programs.beets.settings</option> is non-empty.
+          {option}`programs.beets.settings` is non-empty.
         '';
       };
 
@@ -34,8 +34,8 @@ in {
         defaultText = literalExpression "pkgs.beets";
         example =
           literalExpression "(pkgs.beets.override { enableCheck = true; })";
-        description = ''
-          The <literal>beets</literal> package to use.
+        description = lib.mdDoc ''
+          The `beets` package to use.
           Can be used to specify extensions.
         '';
       };
@@ -43,22 +43,22 @@ in {
       settings = mkOption {
         type = yamlFormat.type;
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/beets/config.yaml</filename>
+          {file}`$XDG_CONFIG_HOME/beets/config.yaml`
         '';
       };
 
       mpdIntegration = {
-        enableStats = mkEnableOption "mpdstats plugin and service";
+        enableStats = mkEnableOption (lib.mdDoc "mpdstats plugin and service");
 
-        enableUpdate = mkEnableOption "mpdupdate plugin";
+        enableUpdate = mkEnableOption (lib.mdDoc "mpdupdate plugin");
 
         host = mkOption {
           type = types.str;
           default = "localhost";
           example = "10.0.0.42";
-          description = "The host that mpdstats will connect to.";
+          description = lib.mdDoc "The host that mpdstats will connect to.";
         };
 
         port = mkOption {
@@ -66,7 +66,7 @@ in {
           default = config.services.mpd.network.port;
           defaultText = literalExpression "config.services.mpd.network.port";
           example = 6601;
-          description = "The port that mpdstats will connect to.";
+          description = lib.mdDoc "The port that mpdstats will connect to.";
         };
       };
     };

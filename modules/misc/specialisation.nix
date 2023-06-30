@@ -27,7 +27,7 @@ with lib;
           in extended.type;
           default = { };
           visible = "shallow";
-          description = ''
+          description = lib.mdDoc ''
             Arbitrary Home Manager configuration settings.
           '';
         };

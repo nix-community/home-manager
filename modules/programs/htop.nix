@@ -110,7 +110,7 @@ in {
   meta.maintainers = [ hm.maintainers.bjpbakker ];
 
   options.programs.htop = {
-    enable = mkEnableOption "htop";
+    enable = mkEnableOption (lib.mdDoc "htop");
 
     settings = mkOption {
       type = types.attrs;
@@ -149,9 +149,9 @@ in {
           (text "Systemd")
         ]);
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration options to add to
-        <filename>$XDG_CONFIG_HOME/htop/htoprc</filename>.
+        {file}`$XDG_CONFIG_HOME/htop/htoprc`.
       '';
     };
 
@@ -159,7 +159,7 @@ in {
       type = types.package;
       default = pkgs.htop;
       defaultText = literalExpression "pkgs.htop";
-      description = "Package containing the <command>htop</command> program.";
+      description = lib.mdDoc "Package containing the {command}`htop` program.";
     };
   };
 

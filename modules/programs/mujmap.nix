@@ -50,7 +50,7 @@ let
     lowercase = mkOption {
       type = types.bool;
       default = false;
-      description = ''
+      description = lib.mdDoc ''
         If true, translate all mailboxes to lowercase names when mapping to notmuch
         tags.
       '';
@@ -60,7 +60,7 @@ let
       type = types.str;
       default = "/";
       example = ".";
-      description = ''
+      description = lib.mdDoc ''
         Directory separator for mapping notmuch tags to maildirs.
       '';
     };
@@ -68,71 +68,71 @@ let
     inbox = mkOption {
       type = types.str;
       default = "inbox";
-      description = ''
+      description = lib.mdDoc ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <literal>Inbox</literal> name attribute.
-        </para><para>
-        If set to an empty string, this mailbox <emphasis>and its child
-        mailboxes</emphasis> are not synchronized with a tag.
+        `Inbox` name attribute.
+
+        If set to an empty string, this mailbox *and its child
+        mailboxes* are not synchronized with a tag.
       '';
     };
 
     deleted = mkOption {
       type = types.str;
       default = "deleted";
-      description = ''
+      description = lib.mdDoc ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <literal>Trash</literal> name attribute.
-        </para><para>
-        If set to an empty string, this mailbox <emphasis>and its child
-        mailboxes</emphasis> are not synchronized with a tag.
+        `Trash` name attribute.
+
+        If set to an empty string, this mailbox *and its child
+        mailboxes* are not synchronized with a tag.
       '';
     };
 
     sent = mkOption {
       type = types.str;
       default = "sent";
-      description = ''
+      description = lib.mdDoc ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <literal>Sent</literal> name attribute.
-        </para><para>
-        If set to an empty string, this mailbox <emphasis>and its child
-        mailboxes</emphasis> are not synchronized with a tag.
+        `Sent` name attribute.
+
+        If set to an empty string, this mailbox *and its child
+        mailboxes* are not synchronized with a tag.
       '';
     };
 
     spam = mkOption {
       type = types.str;
       default = "spam";
-      description = ''
+      description = lib.mdDoc ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <literal>Junk</literal> name attribute and/or with the <literal>$Junk</literal> keyword,
-        <emphasis>except</emphasis> for messages with the <literal>$NotJunk</literal> keyword.
-        </para><para>
-        If set to an empty string, this mailbox, <emphasis>its child
-        mailboxes</emphasis>, and these keywords are not synchronized with a tag.
+        `Junk` name attribute and/or with the `$Junk` keyword,
+        *except* for messages with the `$NotJunk` keyword.
+
+        If set to an empty string, this mailbox, *its child
+        mailboxes*, and these keywords are not synchronized with a tag.
       '';
     };
 
     important = mkOption {
       type = types.str;
       default = "important";
-      description = ''
+      description = lib.mdDoc ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <literal>Important</literal> name attribute and/or with the <literal>$Important</literal>
+        `Important` name attribute and/or with the `$Important`
         keyword.
-        </para><para>
-        If set to an empty string, this mailbox, <emphasis>its child
-        mailboxes</emphasis>, and these keywords are not synchronized with a tag.
+
+        If set to an empty string, this mailbox, *its child
+        mailboxes*, and these keywords are not synchronized with a tag.
       '';
     };
 
     phishing = mkOption {
       type = types.str;
       default = "phishing";
-      description = ''
-        Tag for notmuch to use for the IANA <literal>$Phishing</literal> keyword.
-        </para><para>
+      description = lib.mdDoc ''
+        Tag for notmuch to use for the IANA `$Phishing` keyword.
+
         If set to an empty string, this keyword is not synchronized with a tag.
       '';
     };
@@ -143,11 +143,11 @@ let
       type = types.nullOr types.str;
       default = null;
       example = "alice@example.com";
-      description = ''
+      description = lib.mdDoc ''
         Username for basic HTTP authentication.
-        </para><para>
-        If <literal>null</literal>, defaults to
-        <xref linkend="opt-accounts.email.accounts._name_.userName"/>.
+
+        If `null`, defaults to
+        [](#opt-accounts.email.accounts._name_.userName).
       '';
     };
 
@@ -156,12 +156,12 @@ let
       default = null;
       apply = p: if isList p then escapeShellArgs p else p;
       example = "pass alice@example.com";
-      description = ''
+      description = lib.mdDoc ''
         Shell command which will print a password to stdout for basic HTTP
         authentication.
-        </para><para>
-        If <literal>null</literal>, defaults to
-        <xref linkend="opt-accounts.email.accounts._name_.passwordCommand"/>.
+
+        If `null`, defaults to
+        [](#opt-accounts.email.accounts._name_.passwordCommand).
       '';
     };
 
@@ -169,15 +169,15 @@ let
       type = types.nullOr types.str;
       default = null;
       example = "example.com";
-      description = ''
+      description = lib.mdDoc ''
         Fully qualified domain name of the JMAP service.
-        </para><para>
+
         mujmap looks up the JMAP SRV record for this host to determine the JMAP session
         URL. Mutually exclusive with
-        <xref linkend="opt-accounts.email.accounts._name_.mujmap.settings.session_url"/>.
-        </para><para>
-        If <literal>null</literal>, defaults to
-        <xref linkend="opt-accounts.email.accounts._name_.jmap.host"/>.
+        [](#opt-accounts.email.accounts._name_.mujmap.settings.session_url).
+
+        If `null`, defaults to
+        [](#opt-accounts.email.accounts._name_.jmap.host).
       '';
     };
 
@@ -185,21 +185,21 @@ let
       type = types.nullOr types.str;
       default = null;
       example = "https://jmap.example.com/.well-known/jmap";
-      description = ''
+      description = lib.mdDoc ''
         Session URL to connect to.
-        </para><para>
+
         Mutually exclusive with
-        <xref linkend="opt-accounts.email.accounts._name_.mujmap.settings.fqdn"/>.
-        </para><para>
-        If <literal>null</literal>, defaults to
-        <xref linkend="opt-accounts.email.accounts._name_.jmap.sessionUrl"/>.
+        [](#opt-accounts.email.accounts._name_.mujmap.settings.fqdn).
+
+        If `null`, defaults to
+        [](#opt-accounts.email.accounts._name_.jmap.sessionUrl).
       '';
     };
 
     auto_create_new_mailboxes = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to create new mailboxes automatically on the server from notmuch
         tags.
       '';
@@ -208,7 +208,7 @@ let
     cache_dir = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         The cache directory in which to store mail files while they are being
         downloaded. The default is operating-system specific.
       '';
@@ -220,27 +220,28 @@ let
         options = tagsOpts;
       };
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Tag configuration.
-        </para><para>
+
         Beware that there are quirks that require manual consideration if changing the
         values of these files; please see
-        <link xlink:href="https://github.com/elizagamedev/mujmap/blob/main/mujmap.toml.example"/>
+        <https://github.com/elizagamedev/mujmap/blob/main/mujmap.toml.example>
         for more details.
       '';
     };
   };
 
   mujmapOpts = {
-    enable = mkEnableOption "mujmap JMAP synchronization for notmuch";
+    enable =
+      mkEnableOption (lib.mdDoc "mujmap JMAP synchronization for notmuch");
 
     notmuchSetupWarning = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Warn if Notmuch is not also enabled for this account.
-        </para><para>
-        This can safely be disabled if <filename>mujmap.toml</filename> is managed
+
+        This can safely be disabled if {file}`mujmap.toml` is managed
         outside of Home Manager.
       '';
     };
@@ -251,11 +252,11 @@ let
         options = rootOpts;
       };
       default = { };
-      description = ''
-        Settings which are applied to <filename>mujmap.toml</filename>
+      description = lib.mdDoc ''
+        Settings which are applied to {file}`mujmap.toml`
         for the account.
-        </para><para>
-        See the <link xlink:href="https://github.com/elizagamedev/mujmap">mujmap project</link>
+
+        See the [mujmap project](https://github.com/elizagamedev/mujmap)
         for documentation of settings not explicitly covered by this module.
       '';
     };
@@ -267,13 +268,14 @@ in {
 
   options = {
     programs.mujmap = {
-      enable = mkEnableOption "mujmap Gmail synchronization for notmuch";
+      enable =
+        mkEnableOption (lib.mdDoc "mujmap Gmail synchronization for notmuch");
 
       package = mkOption {
         type = types.package;
         default = pkgs.mujmap;
         defaultText = "pkgs.mujmap";
-        description = ''
+        description = lib.mdDoc ''
           mujmap package to use.
         '';
       };

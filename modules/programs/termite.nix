@@ -9,12 +9,12 @@ let
 in {
   options = {
     programs.termite = {
-      enable = mkEnableOption "Termite VTE-based terminal";
+      enable = mkEnableOption (lib.mdDoc "Termite VTE-based terminal");
 
       allowBold = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           Allow the output of bold characters when the bold escape sequence appears.
         '';
       };
@@ -22,13 +22,13 @@ in {
       audibleBell = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = "Have the terminal beep on the terminal bell.";
+        description = lib.mdDoc "Have the terminal beep on the terminal bell.";
       };
 
       clickableUrl = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           Auto-detected URLs can be clicked on to open them in  your browser.
           Only enabled if a browser is configured or detected.
         '';
@@ -37,26 +37,28 @@ in {
       dynamicTitle = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           Settings dynamic title allows the terminal and the shell to
           update the terminal's title.
         '';
       };
 
-      enableVteIntegration = mkEnableOption "Shell VTE integration" // {
-        default = true;
-      };
+      enableVteIntegration = mkEnableOption (lib.mdDoc "Shell VTE integration")
+        // {
+          default = true;
+        };
 
       fullscreen = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = "Enables entering fullscreen mode by pressing F11.";
+        description =
+          lib.mdDoc "Enables entering fullscreen mode by pressing F11.";
       };
 
       mouseAutohide = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           Automatically hide the mouse pointer when you start typing.
         '';
       };
@@ -64,13 +66,14 @@ in {
       scrollOnOutput = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = "Scroll to the bottom when the shell generates output.";
+        description =
+          lib.mdDoc "Scroll to the bottom when the shell generates output.";
       };
 
       scrollOnKeystroke = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           Scroll to the bottom automatically when a key is pressed.
         '';
       };
@@ -78,27 +81,30 @@ in {
       searchWrap = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = "Search from top again when you hit the bottom.";
+        description =
+          lib.mdDoc "Search from top again when you hit the bottom.";
       };
 
       urgentOnBell = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = "Sets the window as urgent on the terminal bell.";
+        description =
+          lib.mdDoc "Sets the window as urgent on the terminal bell.";
       };
 
       font = mkOption {
         default = null;
         example = "Monospace 12";
         type = types.nullOr types.str;
-        description = "The font description for the terminal's font.";
+        description = lib.mdDoc "The font description for the terminal's font.";
       };
 
       geometry = mkOption {
         default = null;
         example = "640x480";
         type = types.nullOr types.str;
-        description = "The default window geometry for new terminal windows.";
+        description =
+          lib.mdDoc "The default window geometry for new terminal windows.";
       };
 
       iconName = mkOption {
@@ -106,14 +112,14 @@ in {
         example = "terminal";
         type = types.nullOr types.str;
         description =
-          "The name of the icon to be used for the terminal process.";
+          lib.mdDoc "The name of the icon to be used for the terminal process.";
       };
 
       scrollbackLines = mkOption {
         default = null;
         example = 10000;
         type = types.nullOr types.int;
-        description =
+        description = lib.mdDoc
           "Set the number of lines to limit the terminal's scrollback.";
       };
 
@@ -121,7 +127,7 @@ in {
         default = null;
         type = types.nullOr types.str;
         example = "${pkgs.xdg-utils}/xdg-open";
-        description = ''
+        description = lib.mdDoc ''
           Set the default browser for opening links. If its not set, $BROWSER is read.
           If that's not set, url hints will be disabled.
         '';
@@ -131,7 +137,7 @@ in {
         default = null;
         example = "system";
         type = types.nullOr (types.enum [ "system" "on" "off" ]);
-        description = ''
+        description = lib.mdDoc ''
           Specify the how the terminal's cursor should behave.
           Accepts system to respect the gtk global configuration,
           on and off to explicitly enable or disable them.
@@ -142,7 +148,7 @@ in {
         default = null;
         example = "block";
         type = types.nullOr (types.enum [ "block" "underline" "ibeam" ]);
-        description = ''
+        description = lib.mdDoc ''
           Specify how the cursor should look. Accepts block, ibeam and underline.
         '';
       };
@@ -150,27 +156,24 @@ in {
       filterUnmatchedUrls = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description =
+        description = lib.mdDoc
           "Whether to hide url hints not matching input in url hints mode.";
       };
 
       modifyOtherKeys = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           Emit escape sequences for extra keys,
           like the modifyOtherKeys resource for
-          <citerefentry>
-            <refentrytitle>xterm</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>.
+          {manpage}`xterm(1)`.
         '';
       };
 
       sizeHints = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           Enable size hints. Locks the terminal resizing
           to increments of the terminal's cell size.
           Requires a window manager that respects scroll hints.
@@ -180,112 +183,112 @@ in {
       scrollbar = mkOption {
         default = null;
         type = types.nullOr (types.enum [ "off" "left" "right" ]);
-        description = "Scrollbar position.";
+        description = lib.mdDoc "Scrollbar position.";
       };
 
       backgroundColor = mkOption {
         default = null;
         example = "rgba(63, 63, 63, 0.8)";
         type = types.nullOr types.str;
-        description = "Background color value.";
+        description = lib.mdDoc "Background color value.";
       };
 
       cursorColor = mkOption {
         default = null;
         example = "#dcdccc";
         type = types.nullOr types.str;
-        description = "Cursor color value.";
+        description = lib.mdDoc "Cursor color value.";
       };
 
       cursorForegroundColor = mkOption {
         default = null;
         example = "#dcdccc";
         type = types.nullOr types.str;
-        description = "Cursor foreground color value.";
+        description = lib.mdDoc "Cursor foreground color value.";
       };
 
       foregroundColor = mkOption {
         default = null;
         example = "#dcdccc";
         type = types.nullOr types.str;
-        description = "Foreground color value.";
+        description = lib.mdDoc "Foreground color value.";
       };
 
       foregroundBoldColor = mkOption {
         default = null;
         example = "#ffffff";
         type = types.nullOr types.str;
-        description = "Foreground bold color value.";
+        description = lib.mdDoc "Foreground bold color value.";
       };
 
       highlightColor = mkOption {
         default = null;
         example = "#2f2f2f";
         type = types.nullOr types.str;
-        description = "highlight color value.";
+        description = lib.mdDoc "highlight color value.";
       };
 
       hintsActiveBackgroundColor = mkOption {
         default = null;
         example = "#3f3f3f";
         type = types.nullOr types.str;
-        description = "Hints active background color value.";
+        description = lib.mdDoc "Hints active background color value.";
       };
 
       hintsActiveForegroundColor = mkOption {
         default = null;
         example = "#e68080";
         type = types.nullOr types.str;
-        description = "Hints active foreground color value.";
+        description = lib.mdDoc "Hints active foreground color value.";
       };
 
       hintsBackgroundColor = mkOption {
         default = null;
         example = "#3f3f3f";
         type = types.nullOr types.str;
-        description = "Hints background color value.";
+        description = lib.mdDoc "Hints background color value.";
       };
 
       hintsForegroundColor = mkOption {
         default = null;
         example = "#dcdccc";
         type = types.nullOr types.str;
-        description = "Hints foreground color value.";
+        description = lib.mdDoc "Hints foreground color value.";
       };
 
       hintsBorderColor = mkOption {
         default = null;
         example = "#3f3f3f";
         type = types.nullOr types.str;
-        description = "Hints border color value.";
+        description = lib.mdDoc "Hints border color value.";
       };
 
       hintsBorderWidth = mkOption {
         default = null;
         example = "0.5";
         type = types.nullOr types.str;
-        description = "Hints border width.";
+        description = lib.mdDoc "Hints border width.";
       };
 
       hintsFont = mkOption {
         default = null;
         example = "Monospace 12";
         type = types.nullOr types.str;
-        description = "The font description for the hints font.";
+        description = lib.mdDoc "The font description for the hints font.";
       };
 
       hintsPadding = mkOption {
         default = null;
         example = 2;
         type = types.nullOr types.int;
-        description = "Hints padding.";
+        description = lib.mdDoc "Hints padding.";
       };
 
       hintsRoundness = mkOption {
         default = null;
         example = "0.2";
         type = types.nullOr types.str;
-        description = "Hints roundness.";
+        description = lib.mdDoc "Hints roundness.";
       };
 
       optionsExtra = mkOption {
@@ -293,7 +296,7 @@ in {
         example = "fullscreen = true";
         type = types.lines;
         description =
-          "Extra options that should be added to [options] section.";
+          lib.mdDoc "Extra options that should be added to [options] section.";
       };
 
       colorsExtra = mkOption {
@@ -304,7 +307,7 @@ in {
           color2 = #60b48a
         '';
         type = types.lines;
-        description =
+        description = lib.mdDoc
           "Extra colors options that should be added to [colors] section.";
       };
 
@@ -312,7 +315,7 @@ in {
         default = "";
         example = "border = #3f3f3f";
         type = types.lines;
-        description =
+        description = lib.mdDoc
           "Extra hints options that should be added to [hints] section.";
       };
     };

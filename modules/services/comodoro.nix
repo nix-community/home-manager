@@ -15,7 +15,7 @@ in {
   meta.maintainers = with lib.hm.maintainers; [ soywod ];
 
   options.services.comodoro = {
-    enable = lib.mkEnableOption "Comodoro server";
+    enable = lib.mkEnableOption (lib.mdDoc "Comodoro server");
 
     package = lib.mkPackageOptionMD pkgs "comodoro" { };
 
@@ -27,21 +27,21 @@ in {
           "PASSWORD_STORE_DIR" = "~/.password-store";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Extra environment variables to be exported in the service.
       '';
     };
 
     preset = lib.mkOption {
       type = lib.types.nonEmptyStr;
-      description = ''
+      description = lib.mdDoc ''
         Use configuration from the given preset as defined in the configuration file.
       '';
     };
 
     protocols = lib.mkOption {
       type = with lib.types; nonEmptyListOf nonEmptyStr;
-      description = ''
+      description = lib.mdDoc ''
         Define protocols the server should use to accept requests.
       '';
     };

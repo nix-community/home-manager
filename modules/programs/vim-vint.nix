@@ -13,15 +13,15 @@ in {
 
   options = {
     programs.vim-vint = {
-      enable = mkEnableOption "the Vint linter for Vimscript";
+      enable = mkEnableOption (lib.mdDoc "the Vint linter for Vimscript");
       package = mkPackageOptionMD pkgs "vim-vint" { };
 
       settings = mkOption {
         type = yamlFormat.type;
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/.vintrc.yaml</filename>
+          {file}`$XDG_CONFIG_HOME/.vintrc.yaml`
         '';
       };
     };

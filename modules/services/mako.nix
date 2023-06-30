@@ -14,21 +14,21 @@ in {
 
   options = {
     services.mako = {
-      enable = mkEnableOption ''
+      enable = mkEnableOption (lib.mdDoc ''
         Mako, lightweight notification daemon for Wayland
-      '';
+      '');
 
       package = mkOption {
         type = types.package;
         default = pkgs.mako;
         defaultText = literalExpression "pkgs.mako";
-        description = "The mako package to use.";
+        description = lib.mdDoc "The mako package to use.";
       };
 
       maxVisible = mkOption {
         default = 5;
         type = types.nullOr types.int;
-        description = ''
+        description = lib.mdDoc ''
           Set maximum number of visible notifications. Set -1 to show all.
         '';
       };
@@ -37,7 +37,7 @@ in {
         default = "-time";
         type =
           types.nullOr (types.enum [ "+time" "-time" "+priority" "-priority" ]);
-        description = ''
+        description = lib.mdDoc ''
           Sorts incoming notifications by time and/or priority in ascending(+)
           or descending(-) order.
         '';
@@ -46,7 +46,7 @@ in {
       output = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Show notifications on the specified output. If empty, notifications
           will appear on the focused output. Requires the compositor to support
           the Wayland protocol xdg-output-unstable-v1 version 2.
@@ -57,7 +57,7 @@ in {
         default = "top";
         type =
           types.nullOr (types.enum [ "background" "bottom" "top" "overlay" ]);
-        description = ''
+        description = lib.mdDoc ''
           Arrange mako at the specified layer, relative to normal windows.
           Supported values are background, bottom, top, and overlay. Using
           overlay will cause notifications to be displayed above fullscreen
@@ -77,7 +77,7 @@ in {
           "bottom-left"
           "center"
         ]);
-        description = ''
+        description = lib.mdDoc ''
           Show notifications at the specified position on the output.
           Supported values are top-right, top-center, top-left, bottom-right,
           bottom-center, bottom-left, and center.
@@ -87,7 +87,7 @@ in {
       font = mkOption {
         default = "monospace 10";
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Font to use, in Pango format.
         '';
       };
@@ -95,7 +95,7 @@ in {
       backgroundColor = mkOption {
         default = "#285577FF";
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Set popup background color to a specific color, represented in hex
           color code.
         '';
@@ -104,7 +104,7 @@ in {
       textColor = mkOption {
         default = "#FFFFFFFF";
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Set popup text color to a specific color, represented in hex color
           code.
         '';
@@ -113,7 +113,7 @@ in {
       width = mkOption {
         default = 300;
         type = types.nullOr types.int;
-        description = ''
+        description = lib.mdDoc ''
           Set width of notification popups in specified number of pixels.
         '';
       };
@@ -121,7 +121,7 @@ in {
       height = mkOption {
         default = 100;
         type = types.nullOr types.int;
-        description = ''
+        description = lib.mdDoc ''
           Set maximum height of notification popups. Notifications whose text
           takes up less space are shrunk to fit.
         '';
@@ -130,7 +130,7 @@ in {
       margin = mkOption {
         default = "10";
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Set margin of each edge specified in pixels. Specify single value to
           apply margin on all sides. Two comma-separated values will set
           vertical and horizontal edges separately. Four comma-separated will
@@ -143,7 +143,7 @@ in {
       padding = mkOption {
         default = "5";
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Set padding of each edge specified in pixels. Specify single value to
           apply margin on all sides. Two comma-separated values will set
           vertical and horizontal edges separately. Four comma-separated will
@@ -156,7 +156,7 @@ in {
       borderSize = mkOption {
         default = 1;
         type = types.nullOr types.int;
-        description = ''
+        description = lib.mdDoc ''
           Set popup border size to the specified number of pixels.
         '';
       };
@@ -164,7 +164,7 @@ in {
       borderColor = mkOption {
         default = "#4C7899FF";
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Set popup border color to a specific color, represented in hex color
           code.
         '';
@@ -173,7 +173,7 @@ in {
       borderRadius = mkOption {
         default = 0;
         type = types.nullOr types.int;
-        description = ''
+        description = lib.mdDoc ''
           Set popup corner radius to the specified number of pixels.
         '';
       };
@@ -181,12 +181,12 @@ in {
       progressColor = mkOption {
         default = "over #5588AAFF";
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Set popup progress indicator color to a specific color,
           represented in hex color code. To draw the progress
           indicator on top of the background color, use the
-          <literal>over</literal> attribute. To replace the background
-          color, use the <literal>source</literal> attribute (this can
+          `over` attribute. To replace the background
+          color, use the `source` attribute (this can
           be useful when the notification is semi-transparent).
         '';
       };
@@ -194,7 +194,7 @@ in {
       icons = mkOption {
         default = true;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           Whether or not to show icons in notifications.
         '';
       };
@@ -202,7 +202,7 @@ in {
       maxIconSize = mkOption {
         default = 64;
         type = types.nullOr types.int;
-        description = ''
+        description = lib.mdDoc ''
           Set maximum icon size to the specified number of pixels.
         '';
       };
@@ -210,15 +210,15 @@ in {
       iconPath = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Paths to search for icons when a notification specifies a name
           instead of a full path. Colon-delimited. This approximates the search
           algorithm used by the XDG Icon Theme Specification, but does not
           support any of the theme metadata. Therefore, if you want to search
           parent themes, you'll need to add them to the path manually.
-          </para><para>
-          The <filename>/usr/share/icons/hicolor</filename> and
-          <filename>/usr/share/pixmaps</filename> directories are
+
+          The {file}`/usr/share/icons/hicolor` and
+          {file}`/usr/share/pixmaps` directories are
           always searched.
         '';
       };
@@ -226,7 +226,7 @@ in {
       markup = mkOption {
         default = true;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           If 1, enable Pango markup. If 0, disable Pango markup. If enabled,
           Pango markup will be interpreted in your format specifier and in the
           body of notifications.
@@ -236,7 +236,7 @@ in {
       actions = mkOption {
         default = true;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           Applications may request an action to be associated with activating a
           notification. Disabling this will cause mako to ignore these requests.
         '';
@@ -245,7 +245,7 @@ in {
       format = mkOption {
         default = "<b>%s</b>\\n%b";
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           Set notification format string to format. See FORMAT SPECIFIERS for
           more information. To change this for grouped notifications, set it
           within a grouped criteria.
@@ -255,7 +255,7 @@ in {
       defaultTimeout = mkOption {
         default = 0;
         type = types.nullOr types.int;
-        description = ''
+        description = lib.mdDoc ''
           Set the default timeout to timeout in milliseconds. To disable the
           timeout, set it to zero.
         '';
@@ -264,7 +264,7 @@ in {
       ignoreTimeout = mkOption {
         default = false;
         type = types.nullOr types.bool;
-        description = ''
+        description = lib.mdDoc ''
           If set, mako will ignore the expire timeout sent by notifications
           and use the one provided by default-timeout instead.
         '';
@@ -273,7 +273,7 @@ in {
       groupBy = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = ''
+        description = lib.mdDoc ''
           A comma-separated list of criteria fields that will be compared to
           other visible notifications to determine if this one should form a
           group with them. All listed criteria must be exactly equal for two
@@ -288,7 +288,7 @@ in {
           [urgency=low]
           border-color=#b8bb26
         '';
-        description = "Additional configuration.";
+        description = lib.mdDoc "Additional configuration.";
       };
     };
   };

@@ -11,8 +11,8 @@ in {
   meta.maintainers = [ maintainers.shikanime ];
 
   options.programs.jujutsu = {
-    enable =
-      mkEnableOption "a Git-compatible DVCS that is both simple and powerful";
+    enable = mkEnableOption
+      (lib.mdDoc "a Git-compatible DVCS that is both simple and powerful");
 
     package = mkPackageOptionMD pkgs "jujutsu" { };
 
@@ -27,9 +27,9 @@ in {
           };
         }
       '';
-      description = ''
-        Options to add to the <filename>.jjconfig.toml</filename> file. See
-        <link xlink:href="https://github.com/martinvonz/jj/blob/main/docs/config.md"/>
+      description = lib.mdDoc ''
+        Options to add to the {file}`.jjconfig.toml` file. See
+        <https://github.com/martinvonz/jj/blob/main/docs/config.md>
         for options.
       '';
     };
@@ -37,19 +37,19 @@ in {
     enableBashIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = "Whether to enable Bash integration.";
+      description = lib.mdDoc "Whether to enable Bash integration.";
     };
 
     enableZshIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = "Whether to enable Zsh integration.";
+      description = lib.mdDoc "Whether to enable Zsh integration.";
     };
 
     enableFishIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = "Whether to enable Fish integration.";
+      description = lib.mdDoc "Whether to enable Fish integration.";
     };
   };
 

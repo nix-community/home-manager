@@ -13,26 +13,23 @@ in {
   meta.maintainers = [ maintainers.pjones ];
 
   options.services.mbsync = {
-    enable = mkEnableOption "mbsync";
+    enable = mkEnableOption (lib.mdDoc "mbsync");
 
     package = mkOption {
       type = types.package;
       default = pkgs.isync;
       defaultText = literalExpression "pkgs.isync";
       example = literalExpression "pkgs.isync";
-      description = "The package to use for the mbsync binary.";
+      description = lib.mdDoc "The package to use for the mbsync binary.";
     };
 
     frequency = mkOption {
       type = types.str;
       default = "*:0/5";
-      description = ''
+      description = lib.mdDoc ''
         How often to run mbsync.  This value is passed to the systemd
         timer configuration as the onCalendar option.  See
-        <citerefentry>
-          <refentrytitle>systemd.time</refentrytitle>
-          <manvolnum>7</manvolnum>
-        </citerefentry>
+        {manpage}`systemd.time(7)`
         for more information about the format.
       '';
     };
@@ -40,7 +37,7 @@ in {
     verbose = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether mbsync should produce verbose output.
       '';
     };
@@ -48,9 +45,9 @@ in {
     configFile = mkOption {
       type = types.nullOr types.path;
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         Optional configuration file to link to use instead of
-        the default file (<filename>~/.mbsyncrc</filename>).
+        the default file ({file}`~/.mbsyncrc`).
       '';
     };
 
@@ -58,7 +55,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "mkdir -p %h/mail";
-      description = ''
+      description = lib.mdDoc ''
         An optional command to run before mbsync executes.  This is
         useful for creating the directories mbsync is going to use.
       '';
@@ -68,7 +65,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "\${pkgs.mu}/bin/mu index";
-      description = ''
+      description = lib.mdDoc ''
         An optional command to run after mbsync executes successfully.
         This is useful for running mailbox indexing tools.
       '';

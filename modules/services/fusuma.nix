@@ -59,14 +59,14 @@ in {
   meta.maintainers = [ hm.maintainers.iosmanthus ];
 
   options.services.fusuma = {
-    enable = mkEnableOption
-      "the fusuma systemd service to automatically enable touchpad gesture";
+    enable = mkEnableOption (lib.mdDoc
+      "the fusuma systemd service to automatically enable touchpad gesture");
 
     package = mkOption {
       type = types.package;
       default = pkgs.fusuma;
       defaultText = literalExpression "pkgs.fusuma";
-      description = "Package providing <command>fusuma</command>.";
+      description = lib.mdDoc "Package providing {command}`fusuma`.";
     };
 
     settings = mkOption {
@@ -89,7 +89,7 @@ in {
           };
         };
       '';
-      description = ''
+      description = lib.mdDoc ''
         YAML config that will override the default fusuma configuration.
       '';
     };
@@ -101,7 +101,7 @@ in {
       example = literalExpression ''
         with pkgs; [ coreutils xdotool ];
       '';
-      description = ''
+      description = lib.mdDoc ''
         Extra packages needs to bring to the scope of fusuma service.
       '';
     };

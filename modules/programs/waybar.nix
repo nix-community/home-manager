@@ -15,7 +15,7 @@ let
       type = types.nullOr types.int;
       default = null;
       example = 10;
-      description = "Margin value without unit.";
+      description = lib.mdDoc "Margin value without unit.";
     };
 
   waybarBarConfig = with types;
@@ -26,9 +26,9 @@ let
         layer = mkOption {
           type = nullOr (enum [ "top" "bottom" ]);
           default = null;
-          description = ''
-            Decide if the bar is displayed in front (<literal>"top"</literal>)
-            of the windows or behind (<literal>"bottom"</literal>).
+          description = lib.mdDoc ''
+            Decide if the bar is displayed in front (`"top"`)
+            of the windows or behind (`"bottom"`).
           '';
           example = "top";
         };
@@ -39,7 +39,7 @@ let
           example = literalExpression ''
             [ "DP-1" "!DP-2" "!DP-3" ]
           '';
-          description = ''
+          description = lib.mdDoc ''
             Specifies on which screen this bar will be displayed.
             Exclamation mark(!) can be used to exclude specific output.
           '';
@@ -49,14 +49,14 @@ let
           type = nullOr (enum [ "top" "bottom" "left" "right" ]);
           default = null;
           example = "right";
-          description = "Bar position relative to the output.";
+          description = lib.mdDoc "Bar position relative to the output.";
         };
 
         height = mkOption {
           type = nullOr ints.unsigned;
           default = null;
           example = 5;
-          description =
+          description = lib.mdDoc
             "Height to be used by the bar if possible. Leave blank for a dynamic value.";
         };
 
@@ -64,14 +64,14 @@ let
           type = nullOr ints.unsigned;
           default = null;
           example = 5;
-          description =
+          description = lib.mdDoc
             "Width to be used by the bar if possible. Leave blank for a dynamic value.";
         };
 
         modules-left = mkOption {
           type = listOf str;
           default = [ ];
-          description = "Modules that will be displayed on the left.";
+          description = lib.mdDoc "Modules that will be displayed on the left.";
           example = literalExpression ''
             [ "sway/workspaces" "sway/mode" "wlr/taskbar" ]
           '';
@@ -80,7 +80,8 @@ let
         modules-center = mkOption {
           type = listOf str;
           default = [ ];
-          description = "Modules that will be displayed in the center.";
+          description =
+            lib.mdDoc "Modules that will be displayed in the center.";
           example = literalExpression ''
             [ "sway/window" ]
           '';
@@ -89,7 +90,8 @@ let
         modules-right = mkOption {
           type = listOf str;
           default = [ ];
-          description = "Modules that will be displayed on the right.";
+          description =
+            lib.mdDoc "Modules that will be displayed on the right.";
           example = literalExpression ''
             [ "mpd" "custom/mymodule#with-css-id" "temperature" ]
           '';
@@ -99,7 +101,7 @@ let
           type = jsonFormat.type;
           visible = false;
           default = null;
-          description = "Modules configuration.";
+          description = lib.mdDoc "Modules configuration.";
           example = literalExpression ''
             {
               "sway/window" = {
@@ -115,7 +117,8 @@ let
         margin = mkOption {
           type = nullOr str;
           default = null;
-          description = "Margins value using the CSS format without units.";
+          description =
+            lib.mdDoc "Margins value using the CSS format without units.";
           example = "20 5";
         };
 
@@ -127,7 +130,7 @@ let
         name = mkOption {
           type = nullOr str;
           default = null;
-          description =
+          description = lib.mdDoc
             "Optional name added as a CSS class, for styling multiple waybars.";
           example = "waybar-1";
         };
@@ -136,7 +139,7 @@ let
           type = nullOr bool;
           default = null;
           example = false;
-          description =
+          description = lib.mdDoc
             "Option to disable the use of gtk-layer-shell for popups.";
         };
       };
@@ -145,23 +148,22 @@ in {
   meta.maintainers = with lib.maintainers; [ berbiche ];
 
   options.programs.waybar = with lib.types; {
-    enable = mkEnableOption "Waybar";
+    enable = mkEnableOption (lib.mdDoc "Waybar");
 
     package = mkOption {
       type = package;
       default = pkgs.waybar;
       defaultText = literalExpression "pkgs.waybar";
-      description = ''
-        Waybar package to use. Set to <literal>null</literal> to use the default package.
+      description = lib.mdDoc ''
+        Waybar package to use. Set to `null` to use the default package.
       '';
     };
 
     settings = mkOption {
       type = either (listOf waybarBarConfig) (attrsOf waybarBarConfig);
       default = [ ];
-      description = ''
-        Configuration for Waybar, see <link
-          xlink:href="https://github.com/Alexays/Waybar/wiki/Configuration"/>
+      description = lib.mdDoc ''
+        Configuration for Waybar, see <https://github.com/Alexays/Waybar/wiki/Configuration>
         for supported values.
       '';
       example = literalExpression ''
@@ -195,18 +197,17 @@ in {
       '';
     };
 
-    systemd.enable = mkEnableOption "Waybar systemd integration";
+    systemd.enable = mkEnableOption (lib.mdDoc "Waybar systemd integration");
 
     systemd.target = mkOption {
       type = str;
       default = "graphical-session.target";
       example = "sway-session.target";
-      description = ''
+      description = lib.mdDoc ''
         The systemd target that will automatically start the Waybar service.
-        </para>
-        <para>
-        When setting this value to <literal>"sway-session.target"</literal>,
-        make sure to also enable <option>wayland.windowManager.sway.systemd.enable</option>,
+
+        When setting this value to `"sway-session.target"`,
+        make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
         otherwise the service may never be started.
       '';
     };
@@ -214,14 +215,12 @@ in {
     style = mkOption {
       type = nullOr (either path lines);
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         CSS style of the bar.
-        </para>
-        <para>
-        See <link xlink:href="https://github.com/Alexays/Waybar/wiki/Configuration"/>
+
+        See <https://github.com/Alexays/Waybar/wiki/Configuration>
         for the documentation.
-        </para>
-        <para>
+
         If the value is set to a path literal, then the path will be used as the css file.
       '';
       example = ''

@@ -12,7 +12,7 @@ let
       type = with lib.types; nullOr bool;
       default = null;
       example = true;
-      description = "Whether to enable ${name}.";
+      description = lib.mdDoc "Whether to enable ${name}.";
     };
 in {
   freeformType = with lib.types; attrsOf (attrsOf anything);
@@ -21,7 +21,7 @@ in {
     "com.apple.controlcenter".BatteryShowPercentage = mkNullableOption {
       type = lib.types.bool;
       example = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to show battery percentage in the menu bar.
       '';
     };

@@ -63,7 +63,7 @@ let
       device = mkOption {
         type = types.str;
         example = "default";
-        description = ''
+        description = lib.mdDoc ''
           Use this tool with the given xinput device.  The device with
           the name default works with any input.
         '';
@@ -73,29 +73,29 @@ let
         type = types.enum [ "pen" "eraser" "recolor" ];
         default = "pen";
         example = "eraser";
-        description = "Which type of tool this is.";
+        description = lib.mdDoc "Which type of tool this is.";
       };
 
       color = mkOption {
         type = types.str;
         default = "red";
         example = "#ff00ff";
-        description = "The stroke (or recolor) color of the tool.";
+        description = lib.mdDoc "The stroke (or recolor) color of the tool.";
       };
 
       size = mkOption {
         type = types.ints.positive;
         default = 5;
         example = 3;
-        description = "The tool size.";
+        description = lib.mdDoc "The tool size.";
       };
 
       arrowSize = mkOption {
         type = types.nullOr types.ints.positive;
         default = null;
         example = 2;
-        description = ''
-          If not <literal>null</literal>, automatically draw an arrow
+        description = lib.mdDoc ''
+          If not `null`, automatically draw an arrow
           at the end of a stroke with the given size.
         '';
       };
@@ -104,7 +104,7 @@ let
         type = types.listOf (types.enum modsAndButtons);
         default = [ ];
         example = [ "SHIFT" ];
-        description = ''
+        description = lib.mdDoc ''
           Only activate this tool if the given modifiers are also active.
         '';
       };
@@ -115,22 +115,22 @@ in {
   meta.maintainers = [ maintainers.pjones ];
 
   options.services.gromit-mpx = {
-    enable = mkEnableOption "Gromit-MPX annotation tool";
+    enable = mkEnableOption (lib.mdDoc "Gromit-MPX annotation tool");
 
     package = mkOption {
       type = types.package;
       default = pkgs.gromit-mpx;
       defaultText = "pkgs.gromit-mpx";
-      description = "The gromit-mpx package to use.";
+      description = lib.mdDoc "The gromit-mpx package to use.";
     };
 
     hotKey = mkOption {
       type = with types; nullOr (either str ints.positive);
       default = "F9";
       example = "Insert";
-      description = ''
+      description = lib.mdDoc ''
         A keysym or raw keycode that toggles the activation state of
-        gromit-mpx.  Set to <literal>null</literal> to disable the
+        gromit-mpx.  Set to `null` to disable the
         hotkey in which case you'll have to activate gromit-mpx
         manually using the command line.
       '';
@@ -139,10 +139,10 @@ in {
     undoKey = mkOption {
       type = with types; nullOr (either str ints.positive);
       default = "F10";
-      description = ''
+      description = lib.mdDoc ''
         A keysym or raw keycode that causes gromit-mpx to undo the
         last stroke.  Use this key along with the shift key to redo an
-        undone stoke.  Set to <literal>null</literal> to disable the
+        undone stoke.  Set to `null` to disable the
         undo hotkey.
       '';
     };
@@ -153,7 +153,7 @@ in {
       };
       default = 0.75;
       example = 1.0;
-      description = "Opacity of the drawing overlay.";
+      description = lib.mdDoc "Opacity of the drawing overlay.";
     };
 
     tools = mkOption {
@@ -194,7 +194,7 @@ in {
           modifiers = [ "3" ];
         }
       ];
-      description = ''
+      description = lib.mdDoc ''
         Tool definitions for gromit-mpx to use.
       '';
     };

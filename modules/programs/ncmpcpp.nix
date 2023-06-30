@@ -31,13 +31,14 @@ let
     options = {
       key = mkOption {
         type = types.str;
-        description = "Key to bind.";
+        description = lib.mdDoc "Key to bind.";
         example = "j";
       };
 
       command = mkOption {
         type = with types; either str (listOf str);
-        description = "Command or sequence of commands to be executed.";
+        description =
+          lib.mdDoc "Command or sequence of commands to be executed.";
         example = "scroll_down";
       };
     };
@@ -47,15 +48,15 @@ in {
   meta.maintainers = [ hm.maintainers.olmokramer ];
 
   options.programs.ncmpcpp = {
-    enable =
-      mkEnableOption "ncmpcpp - an ncurses Music Player Daemon (MPD) client";
+    enable = mkEnableOption
+      (lib.mdDoc "ncmpcpp - an ncurses Music Player Daemon (MPD) client");
 
     package = mkOption {
       type = types.package;
       default = pkgs.ncmpcpp;
       defaultText = literalExpression "pkgs.ncmpcpp";
-      description = ''
-        Package providing the <literal>ncmpcpp</literal> command.
+      description = lib.mdDoc ''
+        Package providing the `ncmpcpp` command.
       '';
       example =
         literalExpression "pkgs.ncmpcpp.override { visualizerSupport = true; }";
@@ -74,11 +75,11 @@ in {
         else
           null
       '';
-      description = ''
-        Value of the <literal>mpd_music_dir</literal> setting. On Linux platforms the
-        value of <varname>services.mpd.musicDirectory</varname> is used as the
-        default if <varname>services.mpd.enable</varname> is
-        <literal>true</literal>.
+      description = lib.mdDoc ''
+        Value of the `mpd_music_dir` setting. On Linux platforms the
+        value of {var}`services.mpd.musicDirectory` is used as the
+        default if {var}`services.mpd.enable` is
+        `true`.
       '';
       example = "~/music";
     };
@@ -86,13 +87,10 @@ in {
     settings = mkOption {
       type = types.attrsOf valueType;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Attribute set from name of a setting to its value. For available options
         see
-        <citerefentry>
-          <refentrytitle>ncmpcpp</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>.
+        {manpage}`ncmpcpp(1)`.
       '';
       example = { ncmpcpp_directory = "~/.local/share/ncmpcpp"; };
     };
@@ -100,7 +98,7 @@ in {
     bindings = mkOption {
       type = types.listOf bindingType;
       default = [ ];
-      description = "List of keybindings.";
+      description = lib.mdDoc "List of keybindings.";
       example = literalExpression ''
         [
           { key = "j"; command = "scroll_down"; }

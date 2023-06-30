@@ -10,13 +10,13 @@ in {
   meta.maintainers = [ maintainers.gleber ];
 
   options.services.parcellite = {
-    enable = mkEnableOption "Parcellite";
+    enable = mkEnableOption (lib.mdDoc "Parcellite");
 
     extraOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--no-icon" ];
-      description = ''
+      description = lib.mdDoc ''
         Command line arguments passed to Parcellite.
       '';
     };
@@ -26,7 +26,7 @@ in {
       default = pkgs.parcellite;
       defaultText = literalExpression "pkgs.parcellite";
       example = literalExpression "pkgs.clipit";
-      description = "Parcellite derivation to use.";
+      description = lib.mdDoc "Parcellite derivation to use.";
     };
   };
 

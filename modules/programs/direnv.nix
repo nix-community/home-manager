@@ -22,20 +22,17 @@ in {
   meta.maintainers = [ maintainers.rycee ];
 
   options.programs.direnv = {
-    enable = mkEnableOption "direnv, the environment switcher";
+    enable = mkEnableOption (lib.mdDoc "direnv, the environment switcher");
 
     config = mkOption {
       type = tomlFormat.type;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/direnv/direnv.toml</filename>.
-        </para><para>
+        {file}`$XDG_CONFIG_HOME/direnv/direnv.toml`.
+
         See
-        <citerefentry>
-          <refentrytitle>direnv.toml</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>.
+        {manpage}`direnv.toml(1)`.
         for the full list of options.
       '';
     };
@@ -43,16 +40,16 @@ in {
     stdlib = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Custom stdlib written to
-        <filename>$XDG_CONFIG_HOME/direnv/direnvrc</filename>.
+        {file}`$XDG_CONFIG_HOME/direnv/direnvrc`.
       '';
     };
 
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Bash integration.
       '';
     };
@@ -60,7 +57,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Zsh integration.
       '';
     };
@@ -69,13 +66,13 @@ in {
       default = true;
       type = types.bool;
       readOnly = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Fish integration. Note, enabling the direnv module
         will always active its functionality for Fish since the direnv package
         automatically gets loaded in Fish. If this is not the case try adding
-        <programlisting language="nix">
+        ```nix
           environment.pathsToLink = [ "/share/fish" ];
-        </programlisting>
+        ```
         to the system configuration.
       '';
     };
@@ -83,7 +80,7 @@ in {
     enableNushellIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Nushell integration.
       '';
     };

@@ -11,17 +11,16 @@ in {
   meta.maintainers = with lib.maintainers; [ AndersonTorres ];
 
   options.programs.havoc = {
-    enable = mkEnableOption "Havoc terminal";
+    enable = mkEnableOption (lib.mdDoc "Havoc terminal");
 
     package = mkPackageOptionMD pkgs "havoc" { };
 
     settings = mkOption {
       type = iniFormat.type;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/havoc.cfg</filename>. See <link
-        xlink:href="https://raw.githubusercontent.com/ii8/havoc/master/havoc.cfg"/>
+        {file}`$XDG_CONFIG_HOME/havoc.cfg`. See <https://raw.githubusercontent.com/ii8/havoc/master/havoc.cfg>
         for a list of available options.
       '';
       example = literalExpression ''

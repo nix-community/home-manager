@@ -15,16 +15,16 @@ in {
 
   options.programs.mr = {
     enable = mkEnableOption
-      "mr, a tool to manage all your version control repositories";
+      (lib.mdDoc "mr, a tool to manage all your version control repositories");
 
     package = mkPackageOptionMD pkgs "mr" { };
 
     settings = mkOption {
       type = iniFormat.type;
       default = { };
-      description = ''
-        Configuration written to <filename>$HOME/.mrconfig</filename>
-        See <link xlink:href="https://myrepos.branchable.com/"/>
+      description = lib.mdDoc ''
+        Configuration written to {file}`$HOME/.mrconfig`
+        See <https://myrepos.branchable.com/>
         for an example configuration.
       '';
       example = literalExpression ''

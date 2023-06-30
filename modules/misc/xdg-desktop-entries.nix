@@ -26,63 +26,65 @@ let
       # https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#recognized-keys
 
       type = mkOption {
-        description = "The type of the desktop entry.";
+        description = lib.mdDoc "The type of the desktop entry.";
         default = "Application";
         type = types.enum [ "Application" "Link" "Directory" ];
       };
 
       exec = mkOption {
-        description = "Program to execute, possibly with arguments.";
+        description = lib.mdDoc "Program to execute, possibly with arguments.";
         type = types.nullOr types.str;
         default = null;
       };
 
       icon = mkOption {
-        description = "Icon to display in file manager, menus, etc.";
+        description = lib.mdDoc "Icon to display in file manager, menus, etc.";
         type = with types; nullOr (either str path);
         default = null;
       };
 
       comment = mkOption {
-        description = "Tooltip for the entry.";
+        description = lib.mdDoc "Tooltip for the entry.";
         type = types.nullOr types.str;
         default = null;
       };
 
       terminal = mkOption {
-        description = "Whether the program runs in a terminal window.";
+        description =
+          lib.mdDoc "Whether the program runs in a terminal window.";
         type = types.bool;
         default = false;
       };
 
       name = mkOption {
-        description = "Specific name of the application.";
+        description = lib.mdDoc "Specific name of the application.";
         type = types.str;
       };
 
       genericName = mkOption {
-        description = "Generic name of the application.";
+        description = lib.mdDoc "Generic name of the application.";
         type = types.nullOr types.str;
         default = null;
       };
 
       mimeType = mkOption {
-        description = "The MIME type(s) supported by this application.";
+        description =
+          lib.mdDoc "The MIME type(s) supported by this application.";
         type = types.nullOr (types.listOf types.str);
         default = null;
       };
 
       categories = mkOption {
         description =
-          "Categories in which the entry should be shown in a menu.";
+          lib.mdDoc "Categories in which the entry should be shown in a menu.";
         type = types.nullOr (types.listOf types.str);
         default = null;
       };
 
       startupNotify = mkOption {
-        description = ''
+        description = lib.mdDoc ''
           If true, it is KNOWN that the application will send a "remove"
-          message when started with the <literal>DESKTOP_STARTUP_ID</literal>
+          message when started with the `DESKTOP_STARTUP_ID`
           environment variable set. If false, it is KNOWN that the application
           does not work with startup notification at all.'';
         type = types.nullOr types.bool;
@@ -90,7 +92,7 @@ let
       };
 
       noDisplay = mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Means "this application exists, but don't display it in the menus".
           This can be useful to e.g. associate this application with MIME types.
         '';
@@ -99,7 +101,7 @@ let
       };
 
       prefersNonDefaultGPU = mkOption {
-        description = ''
+        description = lib.mdDoc ''
           If true, the application prefers to be run on a more powerful discrete GPU if available.
         '';
         type = types.nullOr types.bool;
@@ -108,8 +110,8 @@ let
 
       settings = mkOption {
         type = types.attrsOf types.string;
-        description = ''
-          Extra key-value pairs to add to the <literal>[Desktop Entry]</literal> section.
+        description = lib.mdDoc ''
+          Extra key-value pairs to add to the `[Desktop Entry]` section.
           This may override other values.
         '';
         default = { };
@@ -127,17 +129,19 @@ let
             type = types.str;
             default = name;
             defaultText = literalExpression "<name>";
-            description = "Name of the action.";
+            description = lib.mdDoc "Name of the action.";
           };
           options.exec = mkOption {
             type = types.nullOr types.str;
-            description = "Program to execute, possibly with arguments.";
+            description =
+              lib.mdDoc "Program to execute, possibly with arguments.";
             default = null;
           };
           options.icon = mkOption {
             type = with types; nullOr (either str path);
             default = null;
-            description = "Icon to display in file manager, menus, etc.";
+            description =
+              lib.mdDoc "Icon to display in file manager, menus, etc.";
           };
         }));
         default = { };
@@ -149,7 +153,7 @@ let
             };
           }
         '';
-        description =
+        description = lib.mdDoc
           "The set of actions made available to application launchers.";
       };
 
@@ -180,12 +184,12 @@ in {
   meta.maintainers = [ hm.maintainers.cwyc ];
 
   options.xdg.desktopEntries = mkOption {
-    description = ''
+    description = lib.mdDoc ''
       Desktop Entries allow applications to be shown in your desktop environment's app launcher.
 
       You can define entries for programs without entries or override existing entries.
 
-      See <link xlink:href="https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#recognized-keys" /> for more information on options.
+      See <https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#recognized-keys> for more information on options.
     '';
     default = { };
     type = types.attrsOf (types.submodule desktopEntry);

@@ -10,7 +10,7 @@ in {
 
   options = {
     programs.ripgrep = {
-      enable = mkEnableOption "Ripgrep";
+      enable = mkEnableOption (lib.mdDoc "Ripgrep");
 
       package = mkPackageOptionMD pkgs "ripgrep" { };
 
@@ -18,11 +18,11 @@ in {
         type = with types; listOf str;
         default = [ ];
         example = [ "--max-columns-preview" "--colors=line:style:bold" ];
-        description = ''
+        description = lib.mdDoc ''
           List of arguments to pass to ripgrep. Each item is given to ripgrep as
           a single command line argument verbatim.
-          </para><para>
-          See <link xlink:href="https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file"/>
+
+          See <https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file>
           for an example configuration.
         '';
       };

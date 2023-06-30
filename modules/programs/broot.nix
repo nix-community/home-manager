@@ -12,7 +12,7 @@ let
     freeformType = tomlFormat.type;
 
     options = {
-      modal = mkEnableOption "modal (vim) mode";
+      modal = mkEnableOption (lib.mdDoc "modal (vim) mode");
 
       verbs = mkOption {
         type = with types; listOf (attrsOf (either bool str));
@@ -149,12 +149,13 @@ in {
   ];
 
   options.programs.broot = {
-    enable = mkEnableOption "Broot, a better way to navigate directories";
+    enable =
+      mkEnableOption (lib.mdDoc "Broot, a better way to navigate directories");
 
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Bash integration.
       '';
     };
@@ -162,7 +163,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Zsh integration.
       '';
     };
@@ -170,7 +171,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Fish integration.
       '';
     };
@@ -179,13 +180,13 @@ in {
       type = types.package;
       default = pkgs.broot;
       defaultText = literalExpression "pkgs.broot";
-      description = "Package providing broot";
+      description = lib.mdDoc "Package providing broot";
     };
 
     settings = mkOption {
       type = types.submodule settingsModule;
       default = { };
-      description = "Verbatim config entries";
+      description = lib.mdDoc "Verbatim config entries";
     };
   };
 

@@ -42,7 +42,7 @@ in {
   meta.maintainers = [ maintainers.tadfisher ];
 
   options.services.emacs = {
-    enable = mkEnableOption "the Emacs daemon";
+    enable = mkEnableOption (lib.mdDoc "the Emacs daemon");
 
     package = mkOption {
       type = types.package;
@@ -51,25 +51,26 @@ in {
         if config.programs.emacs.enable then config.programs.emacs.finalPackage
         else pkgs.emacs
       '';
-      description = "The Emacs package to use.";
+      description = lib.mdDoc "The Emacs package to use.";
     };
 
     extraOptions = mkOption {
       type = with types; listOf str;
       default = [ ];
       example = [ "-f" "exwm-enable" ];
-      description = ''
-        Extra command-line arguments to pass to <command>emacs</command>.
+      description = lib.mdDoc ''
+        Extra command-line arguments to pass to {command}`emacs`.
       '';
     };
 
     client = {
-      enable = mkEnableOption "generation of Emacs client desktop file";
+      enable =
+        mkEnableOption (lib.mdDoc "generation of Emacs client desktop file");
       arguments = mkOption {
         type = with types; listOf str;
         default = [ "-c" ];
-        description = ''
-          Command-line arguments to pass to <command>emacsclient</command>.
+        description = lib.mdDoc ''
+          Command-line arguments to pass to {command}`emacsclient`.
         '';
       };
     };
@@ -78,7 +79,8 @@ in {
     # socket path, though allowing for such is not easy to do as systemd socket
     # units don't perform variable expansion for 'ListenStream'.
     socketActivation = {
-      enable = mkEnableOption "systemd socket activation for the Emacs service";
+      enable = mkEnableOption
+        (lib.mdDoc "systemd socket activation for the Emacs service");
     };
 
     startWithUserSession = mkOption {
@@ -87,12 +89,12 @@ in {
       defaultText =
         literalExpression "!config.services.emacs.socketActivation.enable";
       example = "graphical";
-      description = ''
+      description = lib.mdDoc ''
         Whether to launch Emacs service with the systemd user session. If it is
-        <literal>true</literal>, Emacs service is started by
-        <literal>default.target</literal>. If it is
-        <literal>"graphical"</literal>, Emacs service is started by
-        <literal>graphical-session.target</literal>.
+        `true`, Emacs service is started by
+        `default.target`. If it is
+        `"graphical"`, Emacs service is started by
+        `graphical-session.target`.
       '';
     };
 
@@ -100,9 +102,9 @@ in {
       type = types.bool;
       default = false;
       example = !default;
-      description = ''
-        Whether to configure <command>emacsclient</command> as the default
-        editor using the <envar>EDITOR</envar> environment variable.
+      description = lib.mdDoc ''
+        Whether to configure {command}`emacsclient` as the default
+        editor using the {env}`EDITOR` environment variable.
       '';
     };
   };

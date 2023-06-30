@@ -7,8 +7,8 @@ with lib;
 
   options = {
     services.systembus-notify = {
-      enable =
-        mkEnableOption "systembus-notify - system bus notification daemon";
+      enable = mkEnableOption
+        (lib.mdDoc "systembus-notify - system bus notification daemon");
     };
   };
 

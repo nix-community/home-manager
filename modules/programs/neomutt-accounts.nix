@@ -8,21 +8,23 @@ let
       mailbox = mkOption {
         type = types.str;
         example = "Sent";
-        description = "Name of mailbox folder to be included";
+        description = lib.mdDoc "Name of mailbox folder to be included";
       };
 
       name = mkOption {
         type = types.nullOr types.str;
         example = "Junk";
         default = null;
-        description = "Name to display";
+        description = lib.mdDoc "Name to display";
       };
     };
   };
 
 in {
   options.notmuch.neomutt = {
-    enable = mkEnableOption "Notmuch support in NeoMutt" // { default = true; };
+    enable = mkEnableOption (lib.mdDoc "Notmuch support in NeoMutt") // {
+      default = true;
+    };
 
     virtualMailboxes = mkOption {
       type = types.listOf (types.submodule ./notmuch-virtual-mailbox.nix);
@@ -34,12 +36,12 @@ in {
         name = "My INBOX";
         query = "tag:inbox";
       }];
-      description = "List of virtual mailboxes using Notmuch queries";
+      description = lib.mdDoc "List of virtual mailboxes using Notmuch queries";
     };
   };
 
   options.neomutt = {
-    enable = mkEnableOption "NeoMutt";
+    enable = mkEnableOption (lib.mdDoc "NeoMutt");
 
     sendMailCommand = mkOption {
       type = types.nullOr types.str;
@@ -54,7 +56,7 @@ in {
           null
       '';
       example = "msmtpq --read-envelope-from --read-recipients";
-      description = ''
+      description = lib.mdDoc ''
         Command to send a mail. If not set, neomutt will be in charge of sending mails.
       '';
     };
@@ -63,7 +65,7 @@ in {
       type = types.lines;
       default = "";
       example = "color status cyan default";
-      description = ''
+      description = lib.mdDoc ''
         Extra lines to add to the folder hook for this account.
       '';
     };
@@ -72,13 +74,13 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "==== <mailbox-name> ===";
-      description = "Use a different name as mailbox name";
+      description = lib.mdDoc "Use a different name as mailbox name";
     };
 
     extraMailboxes = mkOption {
       type = with types; listOf (either str (submodule extraMailboxOptions));
       default = [ ];
-      description = "List of extra mailboxes";
+      description = lib.mdDoc "List of extra mailboxes";
     };
   };
 }

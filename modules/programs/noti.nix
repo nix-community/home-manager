@@ -10,20 +10,17 @@ in {
   meta.maintainers = [ ];
 
   options.programs.noti = {
-    enable = mkEnableOption "Noti";
+    enable = mkEnableOption (lib.mdDoc "Noti");
 
     settings = mkOption {
       type = types.attrsOf (types.attrsOf types.str);
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/noti/noti.yaml</filename>.
-        </para><para>
+        {file}`$XDG_CONFIG_HOME/noti/noti.yaml`.
+
         See
-        <citerefentry>
-          <refentrytitle>noti.yaml</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>.
+        {manpage}`noti.yaml(5)`.
         for the full list of options.
       '';
       example = literalExpression ''

@@ -31,25 +31,23 @@ in {
   meta.maintainers = [ maintainers.chisui ];
 
   options.programs.terminator = {
-    enable = mkEnableOption "terminator, a tiling terminal emulator";
+    enable =
+      mkEnableOption (lib.mdDoc "terminator, a tiling terminal emulator");
 
     package = mkOption {
       type = types.package;
       default = pkgs.terminator;
       example = literalExpression "pkgs.terminator";
-      description = "terminator package to install.";
+      description = lib.mdDoc "terminator package to install.";
     };
 
     config = mkOption {
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         configuration for terminator.
-        </para><para>
+
         For a list of all possible options refer to the
-        <citerefentry>
-          <refentrytitle>terminator_config</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>
+        {manpage}`terminator_config(5)`
         man page.
       '';
       type = types.attrsOf types.anything;

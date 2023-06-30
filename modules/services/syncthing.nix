@@ -20,14 +20,15 @@ in {
 
   options = {
     services.syncthing = {
-      enable = mkEnableOption "Syncthing continuous file synchronization";
+      enable =
+        mkEnableOption (lib.mdDoc "Syncthing continuous file synchronization");
 
       extraOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
         example = [ "--gui-apikey=apiKey" ];
-        description = ''
-          Extra command-line arguments to pass to <command>syncthing</command>.
+        description = lib.mdDoc ''
+          Extra command-line arguments to pass to {command}`syncthing`.
         '';
       };
 
@@ -38,7 +39,8 @@ in {
               enable = mkOption {
                 type = types.bool;
                 default = false;
-                description = "Whether to enable a syncthing tray service.";
+                description =
+                  lib.mdDoc "Whether to enable a syncthing tray service.";
               };
 
               command = mkOption {
@@ -46,7 +48,7 @@ in {
                 default = "syncthingtray";
                 defaultText = literalExpression "syncthingtray";
                 example = literalExpression "qsyncthingtray";
-                description = "Syncthing tray command to use.";
+                description = lib.mdDoc "Syncthing tray command to use.";
               };
 
               package = mkOption {
@@ -54,12 +56,12 @@ in {
                 default = pkgs.syncthingtray-minimal;
                 defaultText = literalExpression "pkgs.syncthingtray-minimal";
                 example = literalExpression "pkgs.qsyncthingtray";
-                description = "Syncthing tray package to use.";
+                description = lib.mdDoc "Syncthing tray package to use.";
               };
             };
           });
         default = { enable = false; };
-        description = "Syncthing tray service configuration.";
+        description = lib.mdDoc "Syncthing tray service configuration.";
       };
     };
   };

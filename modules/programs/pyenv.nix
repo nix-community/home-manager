@@ -10,19 +10,19 @@ in {
   meta.maintainers = with lib.maintainers; [ tmarkus ];
 
   options.programs.pyenv = {
-    enable = lib.mkEnableOption "pyenv";
+    enable = lib.mkEnableOption (lib.mdDoc "pyenv");
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.pyenv;
       defaultText = lib.literalExpression "pkgs.pyenv";
-      description = "The package to use for pyenv.";
+      description = lib.mdDoc "The package to use for pyenv.";
     };
 
     enableBashIntegration = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable pyenv's Bash integration.
       '';
     };
@@ -30,7 +30,7 @@ in {
     enableZshIntegration = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable pyenv's Zsh integration.
       '';
     };
@@ -38,7 +38,7 @@ in {
     enableFishIntegration = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable pyenv's Fish integration.
       '';
     };

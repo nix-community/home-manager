@@ -31,7 +31,7 @@ in {
 
   options = {
     services.cbatticon = {
-      enable = mkEnableOption "cbatticon";
+      enable = mkEnableOption (lib.mdDoc "cbatticon");
 
       commandCriticalLevel = mkOption {
         type = types.nullOr types.lines;
@@ -39,7 +39,7 @@ in {
         example = ''
           notify-send "battery critical!"
         '';
-        description = ''
+        description = lib.mdDoc ''
           Command to execute when the critical battery level is reached.
         '';
       };
@@ -47,7 +47,7 @@ in {
       commandLeftClick = mkOption {
         type = types.nullOr types.lines;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Command to execute when left clicking on the tray icon.
         '';
       };
@@ -57,14 +57,14 @@ in {
           types.nullOr (types.enum [ "standard" "notification" "symbolic" ]);
         default = null;
         example = "symbolic";
-        description = "Icon type to display in the system tray.";
+        description = lib.mdDoc "Icon type to display in the system tray.";
       };
 
       lowLevelPercent = mkOption {
         type = types.nullOr (types.ints.between 0 100);
         default = null;
         example = 20;
-        description = ''
+        description = lib.mdDoc ''
           Low level percentage of the battery in percent (without the
           percent symbol).
         '';
@@ -74,7 +74,7 @@ in {
         type = types.nullOr (types.ints.between 0 100);
         default = null;
         example = 5;
-        description = ''
+        description = lib.mdDoc ''
           Critical level percentage of the battery in percent (without
           the percent symbol).
         '';
@@ -84,7 +84,7 @@ in {
         type = types.nullOr types.ints.positive;
         default = null;
         example = 5;
-        description = ''
+        description = lib.mdDoc ''
           Number of seconds between updates of the battery information.
         '';
       };
@@ -92,7 +92,7 @@ in {
       hideNotification = mkOption {
         type = types.nullOr types.bool;
         default = null;
-        description = "Hide the notification popups.";
+        description = lib.mdDoc "Hide the notification popups.";
       };
     };
   };

@@ -124,14 +124,14 @@ in {
 
   options = {
     programs.thunderbird = {
-      enable = mkEnableOption "Thunderbird";
+      enable = mkEnableOption (lib.mdDoc "Thunderbird");
 
       package = mkOption {
         type = types.package;
         default = pkgs.thunderbird;
         defaultText = literalExpression "pkgs.thunderbird";
         example = literalExpression "pkgs.thunderbird-91";
-        description = "The Thunderbird package to use.";
+        description = lib.mdDoc "The Thunderbird package to use.";
       };
 
       profiles = mkOption {
@@ -142,14 +142,14 @@ in {
                 type = types.str;
                 default = name;
                 readOnly = true;
-                description = "This profile's name.";
+                description = lib.mdDoc "This profile's name.";
               };
 
               isDefault = mkOption {
                 type = types.bool;
                 default = false;
                 example = true;
-                description = ''
+                description = lib.mdDoc ''
                   Whether this is a default profile. There must be exactly one
                   default profile.
                 '';
@@ -163,9 +163,9 @@ in {
                     "mail.spellcheck.inline" = false;
                   }
                 '';
-                description = ''
+                description = lib.mdDoc ''
                   Preferences to add to this profile's
-                  <filename>user.js</filename>.
+                  {file}`user.js`.
                 '';
               };
 
@@ -173,13 +173,14 @@ in {
                 type = types.bool;
                 default = false;
                 example = true;
-                description = "Allow using external GPG keys with GPGME.";
+                description =
+                  lib.mdDoc "Allow using external GPG keys with GPGME.";
               };
 
               userChrome = mkOption {
                 type = types.lines;
                 default = "";
-                description = "Custom Thunderbird user chrome CSS.";
+                description = lib.mdDoc "Custom Thunderbird user chrome CSS.";
                 example = ''
                   /* Hide tab bar in Thunderbird */
                   #tabs-toolbar {
@@ -191,7 +192,7 @@ in {
               userContent = mkOption {
                 type = types.lines;
                 default = "";
-                description = "Custom Thunderbird user content CSS.";
+                description = lib.mdDoc "Custom Thunderbird user content CSS.";
                 example = ''
                   /* Hide scrollbar on Thunderbird pages */
                   *{scrollbar-width:none !important}
@@ -201,13 +202,13 @@ in {
               extraConfig = mkOption {
                 type = types.lines;
                 default = "";
-                description = ''
-                  Extra preferences to add to <filename>user.js</filename>.
+                description = lib.mdDoc ''
+                  Extra preferences to add to {file}`user.js`.
                 '';
               };
             };
           }));
-        description = "Attribute set of Thunderbird profiles.";
+        description = lib.mdDoc "Attribute set of Thunderbird profiles.";
       };
 
       settings = mkOption {
@@ -219,7 +220,7 @@ in {
             "privacy.donottrackheader.enabled" = true;
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Attribute set of Thunderbird preferences to be added to
           all profiles.
         '';
@@ -231,7 +232,7 @@ in {
         example = false;
         visible = isDarwin;
         readOnly = !isDarwin;
-        description = ''
+        description = lib.mdDoc ''
           Warn to set environment variables before using this module. Only
           relevant on Darwin.
         '';
@@ -242,8 +243,8 @@ in {
       type = with types;
         attrsOf (submodule {
           options.thunderbird = {
-            enable =
-              mkEnableOption "the Thunderbird mail client for this account";
+            enable = mkEnableOption
+              (lib.mdDoc "the Thunderbird mail client for this account");
 
             profiles = mkOption {
               type = with types; listOf str;
@@ -251,7 +252,7 @@ in {
               example = literalExpression ''
                 [ "profile1" "profile2" ]
               '';
-              description = ''
+              description = lib.mdDoc ''
                 List of Thunderbird profiles for which this account should be
                 enabled. If this list is empty (the default), this account will
                 be enabled for all declared profiles.
@@ -267,9 +268,9 @@ in {
                   "mail.server.server_''${id}.check_new_mail" = false;
                 };
               '';
-              description = ''
+              description = lib.mdDoc ''
                 Extra settings to add to this Thunderbird account configuration.
-                The <varname>id</varname> given as argument is an automatically
+                The {var}`id` given as argument is an automatically
                 generated account identifier.
               '';
             };
@@ -284,9 +285,9 @@ in {
                   "mail.identity.id_''${id}.autoEncryptDrafts" = false;
                 };
               '';
-              description = ''
+              description = lib.mdDoc ''
                 Extra settings to add to each identity of this Thunderbird
-                account configuration. The <varname>id</varname> given as
+                account configuration. The {var}`id` given as
                 argument is an automatically generated identifier.
               '';
             };

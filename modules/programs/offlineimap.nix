@@ -88,7 +88,7 @@ let
 in {
   options = {
     programs.offlineimap = {
-      enable = mkEnableOption "OfflineIMAP";
+      enable = mkEnableOption (lib.mdDoc "OfflineIMAP");
 
       package = mkPackageOptionMD pkgs "offlineimap" {
         example = ''
@@ -108,7 +108,7 @@ in {
           def get_pass(service, cmd):
               return subprocess.check_output(cmd, )
         '';
-        description = ''
+        description = lib.mdDoc ''
           Python code that can then be used in other parts of the
           configuration.
         '';
@@ -121,9 +121,9 @@ in {
           maxage = 30;
           ui = "blinkenlights";
         };
-        description = ''
+        description = lib.mdDoc ''
           Extra configuration options added to the
-          <option>general</option> section.
+          {option}`general` section.
         '';
       };
 
@@ -131,9 +131,9 @@ in {
         type = extraConfigType;
         default = { };
         example = { gmailtrashfolder = "[Gmail]/Papierkorb"; };
-        description = ''
+        description = lib.mdDoc ''
           Extra configuration options added to the
-          <option>DEFAULT</option> section.
+          {option}`DEFAULT` section.
         '';
       };
 
@@ -149,9 +149,9 @@ in {
             footer = "'\\n'";
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Extra configuration options added to the
-          <literal>mbnames</literal> section.
+          `mbnames` section.
         '';
       };
     };

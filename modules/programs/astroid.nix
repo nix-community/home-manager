@@ -55,13 +55,13 @@ let
 in {
   options = {
     programs.astroid = {
-      enable = mkEnableOption "Astroid";
+      enable = mkEnableOption (lib.mdDoc "Astroid");
 
       pollScript = mkOption {
         type = types.str;
         default = "";
         example = "mbsync gmail";
-        description = ''
+        description = lib.mdDoc ''
           Script to run to fetch/update mails.
         '';
       };
@@ -104,7 +104,7 @@ in {
             poll.interval = 0;
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           JSON config that will override the default Astroid configuration.
         '';
       };

@@ -11,14 +11,14 @@ in {
 
   options = {
     services.volnoti = {
-      enable = mkEnableOption "Volnoti volume HUD daemon";
+      enable = mkEnableOption (lib.mdDoc "Volnoti volume HUD daemon");
 
       package = mkOption {
         type = types.package;
         default = pkgs.volnoti;
         defaultText = literalExpression "pkgs.volnoti";
-        description = ''
-          Package containing the <command>volnoti</command> program.
+        description = lib.mdDoc ''
+          Package containing the {command}`volnoti` program.
         '';
       };
     };

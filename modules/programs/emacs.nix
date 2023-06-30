@@ -28,14 +28,14 @@ in {
 
   options = {
     programs.emacs = {
-      enable = mkEnableOption "Emacs";
+      enable = mkEnableOption (lib.mdDoc "Emacs");
 
       package = mkOption {
         type = types.package;
         default = pkgs.emacs;
         defaultText = literalExpression "pkgs.emacs";
         example = literalExpression "pkgs.emacs25-nox";
-        description = "The Emacs package to use.";
+        description = lib.mdDoc "The Emacs package to use.";
       };
 
       # NOTE: The config is placed in default.el instead of ~/.emacs.d so that
@@ -48,12 +48,12 @@ in {
         example = ''
           (setq standard-indent 2)
         '';
-        description = ''
+        description = lib.mdDoc ''
           Configuration to include in the Emacs default init file. See
-          <link xlink:href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Init-File.html"/>
+          <https://www.gnu.org/software/emacs/manual/html_node/elisp/Init-File.html>
           for more.
-          </para><para>
-          Note, the <literal>inhibit-startup-message</literal> Emacs option
+
+          Note, the `inhibit-startup-message` Emacs option
           cannot be set here since Emacs disallows setting it from the default
           initialization file.
         '';
@@ -64,10 +64,10 @@ in {
         type = hm.types.selectorFunction;
         defaultText = "epkgs: []";
         example = literalExpression "epkgs: [ epkgs.emms epkgs.magit ]";
-        description = ''
+        description = lib.mdDoc ''
           Extra packages available to Emacs. To get a list of
           available packages run:
-          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A emacsPackages</command>.
+          {command}`nix-env -f '<nixpkgs>' -qaP -A emacsPackages`.
         '';
       };
 
@@ -81,7 +81,7 @@ in {
             # ...
           };
         '';
-        description = ''
+        description = lib.mdDoc ''
           Allows overriding packages within the Emacs package set.
         '';
       };
@@ -90,7 +90,7 @@ in {
         type = types.package;
         visible = false;
         readOnly = true;
-        description = ''
+        description = lib.mdDoc ''
           The Emacs package including any overrides and extra packages.
         '';
       };

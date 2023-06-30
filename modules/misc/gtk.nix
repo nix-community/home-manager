@@ -31,9 +31,9 @@ let
         type = types.nullOr types.package;
         default = null;
         example = literalExpression "pkgs.gnome.gnome-themes-extra";
-        description = ''
+        description = lib.mdDoc ''
           Package providing the theme. This package will be installed
-          to your profile. If <literal>null</literal> then the theme
+          to your profile. If `null` then the theme
           is assumed to already be available in your profile.
         '';
       };
@@ -41,7 +41,7 @@ let
       name = mkOption {
         type = types.str;
         example = "Adwaita";
-        description = "The name of the theme within the package.";
+        description = lib.mdDoc "The name of the theme within the package.";
       };
     };
   };
@@ -52,9 +52,9 @@ let
         type = types.nullOr types.package;
         default = null;
         example = literalExpression "pkgs.gnome.adwaita-icon-theme";
-        description = ''
+        description = lib.mdDoc ''
           Package providing the icon theme. This package will be installed
-          to your profile. If <literal>null</literal> then the theme
+          to your profile. If `null` then the theme
           is assumed to already be available in your profile.
         '';
       };
@@ -62,7 +62,8 @@ let
       name = mkOption {
         type = types.str;
         example = "Adwaita";
-        description = "The name of the icon theme within the package.";
+        description =
+          lib.mdDoc "The name of the icon theme within the package.";
       };
     };
   };
@@ -73,9 +74,9 @@ let
         type = types.nullOr types.package;
         default = null;
         example = literalExpression "pkgs.vanilla-dmz";
-        description = ''
+        description = lib.mdDoc ''
           Package providing the cursor theme. This package will be installed
-          to your profile. If <literal>null</literal> then the theme
+          to your profile. If `null` then the theme
           is assumed to already be available in your profile.
         '';
       };
@@ -83,14 +84,15 @@ let
       name = mkOption {
         type = types.str;
         example = "Vanilla-DMZ";
-        description = "The name of the cursor theme within the package.";
+        description =
+          lib.mdDoc "The name of the cursor theme within the package.";
       };
 
       size = mkOption {
         type = types.nullOr types.int;
         default = null;
         example = 16;
-        description = ''
+        description = lib.mdDoc ''
           The size of the cursor.
         '';
       };
@@ -108,12 +110,12 @@ in {
 
   options = {
     gtk = {
-      enable = mkEnableOption "GTK 2/3 configuration";
+      enable = mkEnableOption (lib.mdDoc "GTK 2/3 configuration");
 
       font = mkOption {
         type = types.nullOr hm.types.fontType;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           The font to use in GTK+ 2/3 applications.
         '';
       };
@@ -121,19 +123,19 @@ in {
       cursorTheme = mkOption {
         type = types.nullOr cursorThemeType;
         default = null;
-        description = "The cursor theme to use.";
+        description = lib.mdDoc "The cursor theme to use.";
       };
 
       iconTheme = mkOption {
         type = types.nullOr iconThemeType;
         default = null;
-        description = "The icon theme to use.";
+        description = lib.mdDoc "The icon theme to use.";
       };
 
       theme = mkOption {
         type = types.nullOr themeType;
         default = null;
-        description = "The GTK+2/3 theme to use.";
+        description = lib.mdDoc "The GTK+2/3 theme to use.";
       };
 
       gtk2 = {
@@ -141,9 +143,9 @@ in {
           type = types.lines;
           default = "";
           example = "gtk-can-change-accels = 1";
-          description = ''
+          description = lib.mdDoc ''
             Extra configuration lines to add verbatim to
-            <filename>~/.gtkrc-2.0</filename>.
+            {file}`~/.gtkrc-2.0`.
           '';
         };
 
@@ -154,7 +156,7 @@ in {
             literalExpression ''"''${config.home.homeDirectory}/.gtkrc-2.0"'';
           example =
             literalExpression ''"''${config.xdg.configHome}/gtk-2.0/gtkrc"'';
-          description = ''
+          description = lib.mdDoc ''
             The location to put the GTK configuration file.
           '';
         };
@@ -165,7 +167,8 @@ in {
           type = types.listOf types.str;
           default = [ ];
           example = [ "file:///home/jane/Documents" ];
-          description = "Bookmarks in the sidebar of the GTK file browser";
+          description =
+            lib.mdDoc "Bookmarks in the sidebar of the GTK file browser";
         };
 
         extraConfig = mkOption {
@@ -175,18 +178,18 @@ in {
             gtk-cursor-blink = false;
             gtk-recent-files-limit = 20;
           };
-          description = ''
+          description = lib.mdDoc ''
             Extra configuration options to add to
-            <filename>$XDG_CONFIG_HOME/gtk-3.0/settings.ini</filename>.
+            {file}`$XDG_CONFIG_HOME/gtk-3.0/settings.ini`.
           '';
         };
 
         extraCss = mkOption {
           type = types.lines;
           default = "";
-          description = ''
+          description = lib.mdDoc ''
             Extra configuration lines to add verbatim to
-            <filename>$XDG_CONFIG_HOME/gtk-3.0/gtk.css</filename>.
+            {file}`$XDG_CONFIG_HOME/gtk-3.0/gtk.css`.
           '';
         };
       };
@@ -199,18 +202,18 @@ in {
             gtk-cursor-blink = false;
             gtk-recent-files-limit = 20;
           };
-          description = ''
+          description = lib.mdDoc ''
             Extra configuration options to add to
-            <filename>$XDG_CONFIG_HOME/gtk-4.0/settings.ini</filename>.
+            {file}`$XDG_CONFIG_HOME/gtk-4.0/settings.ini`.
           '';
         };
 
         extraCss = mkOption {
           type = types.lines;
           default = "";
-          description = ''
+          description = lib.mdDoc ''
             Extra configuration lines to add verbatim to
-            <filename>$XDG_CONFIG_HOME/gtk-4.0/gtk.css</filename>.
+            {file}`$XDG_CONFIG_HOME/gtk-4.0/gtk.css`.
           '';
         };
       };

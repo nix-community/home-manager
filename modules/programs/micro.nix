@@ -13,7 +13,7 @@ in {
 
   options = {
     programs.micro = {
-      enable = mkEnableOption "micro, a terminal-based text editor";
+      enable = mkEnableOption (lib.mdDoc "micro, a terminal-based text editor");
 
       settings = mkOption {
         type = jsonFormat.type;
@@ -24,10 +24,10 @@ in {
             cursorline = false;
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/micro/settings.json</filename>. See
-          <link xlink:href="https://github.com/zyedidia/micro/blob/master/runtime/help/options.md"/>
+          {file}`$XDG_CONFIG_HOME/micro/settings.json`. See
+          <https://github.com/zyedidia/micro/blob/master/runtime/help/options.md>
           for supported values.
         '';
       };

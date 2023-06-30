@@ -9,8 +9,8 @@ let
 in {
   meta.maintainers = [ maintainers.thibautmarty ];
 
-  options.services.mpris-proxy.enable = mkEnableOption
-    "a proxy forwarding Bluetooth MIDI controls via MPRIS2 to control media players";
+  options.services.mpris-proxy.enable = mkEnableOption (lib.mdDoc
+    "a proxy forwarding Bluetooth MIDI controls via MPRIS2 to control media players");
 
   config = mkIf cfg.enable {
     assertions = [

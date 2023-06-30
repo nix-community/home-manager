@@ -82,9 +82,9 @@ let
 
 in {
   options.nix = {
-    enable = mkEnableOption ''
+    enable = mkEnableOption (lib.mdDoc ''
       the Nix configuration module
-    '' // {
+    '') // {
       default = true;
       visible = false;
     };
@@ -93,7 +93,7 @@ in {
       type = types.nullOr types.package;
       default = null;
       example = literalExpression "pkgs.nix";
-      description = ''
+      description = lib.mdDoc ''
         The Nix package that the configuration should be generated for.
       '';
     };
@@ -110,7 +110,7 @@ in {
               type = "indirect";
               id = "nixpkgs";
             };
-            description = "The flake reference to be rewritten.";
+            description = lib.mdDoc "The flake reference to be rewritten.";
           };
           to = mkOption {
             type = inputAttrs;
@@ -119,24 +119,24 @@ in {
               owner = "my-org";
               repo = "my-nixpkgs";
             };
-            description =
-              "The flake reference to which <option>from></option> is to be rewritten.";
+            description = lib.mdDoc
+              "The flake reference to which {option}`from>` is to be rewritten.";
           };
           flake = mkOption {
             type = types.nullOr types.attrs;
             default = null;
             example = literalExpression "nixpkgs";
-            description = ''
-              The flake input to which <option>from></option> is to be rewritten.
+            description = lib.mdDoc ''
+              The flake input to which {option}`from>` is to be rewritten.
             '';
           };
           exact = mkOption {
             type = types.bool;
             default = true;
-            description = ''
-              Whether the <option>from</option> reference needs to match exactly. If set,
-              a <option>from</option> reference like <literal>nixpkgs</literal> does not
-              match with a reference like <literal>nixpkgs/nixos-20.03</literal>.
+            description = lib.mdDoc ''
+              Whether the {option}`from` reference needs to match exactly. If set,
+              a {option}`from` reference like `nixpkgs` does not
+              match with a reference like `nixpkgs/nixos-20.03`.
             '';
           };
         };
@@ -154,7 +154,7 @@ in {
         };
       }));
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         User level flake registry.
       '';
     };
@@ -163,13 +163,13 @@ in {
       type = types.int;
       default = 2;
       internal = true;
-      description = "The flake registry format version.";
+      description = lib.mdDoc "The flake registry format version.";
     };
 
     checkConfig = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         If enabled (the default), checks for data type mismatches and that Nix
         can parse the generated nix.conf.
       '';
@@ -182,8 +182,7 @@ in {
         keep-outputs = true
         keep-derivations = true
       '';
-      description =
-        "Additional text appended to <filename>nix.conf</filename>.";
+      description = lib.mdDoc "Additional text appended to {file}`nix.conf`.";
     };
 
     settings = mkOption {

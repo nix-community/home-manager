@@ -78,14 +78,14 @@ in {
   meta.maintainers = [ maintainers.foo-dogsquared ];
 
   options.services.recoll = {
-    enable = mkEnableOption "Recoll file index service";
+    enable = mkEnableOption (lib.mdDoc "Recoll file index service");
 
     package = mkOption {
       type = types.package;
       default = pkgs.recoll;
       defaultText = literalExpression "pkgs.recoll";
-      description = ''
-        Package providing the <literal>recoll</literal> binary.
+      description = lib.mdDoc ''
+        Package providing the `recoll` binary.
       '';
       example = literalExpression "(pkgs.recoll.override { withGui = false; })";
     };
@@ -94,28 +94,22 @@ in {
       type = types.str;
       default = "hourly";
       example = "00/2:00";
-      description = ''
+      description = lib.mdDoc ''
         When or how often the periodic update should run. Must be the format
         described from
-        <citerefentry>
-          <refentrytitle>systemd.time</refentrytitle>
-          <manvolnum>7</manvolnum>
-        </citerefentry>.
+        {manpage}`systemd.time(7)`.
       '';
     };
 
     settings = mkOption {
       type = settingsFormat.type;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         The configuration to be written at
-        <filename>''${config.services.recoll.configDir}/recoll.conf</filename>.
+        {file}`''${config.services.recoll.configDir}/recoll.conf`.
 
         See
-        <citerefentry>
-          <refentrytitle>recoll</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry> for more details about the configuration.
+        {manpage}`recoll(5)` for more details about the configuration.
       '';
       example = literalExpression ''
         {
@@ -139,9 +133,9 @@ in {
       default = "${config.home.homeDirectory}/.recoll";
       defaultText = literalExpression "\${config.home.homeDirectory}/.recoll";
       example = literalExpression "\${config.xdg.configHome}/recoll";
-      description = ''
+      description = lib.mdDoc ''
         The directory to contain Recoll configuration files. This will be set
-        as <literal>RECOLL_CONFDIR</literal>.
+        as `RECOLL_CONFDIR`.
       '';
     };
   };

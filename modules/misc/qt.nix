@@ -41,7 +41,7 @@ in {
 
   options = {
     qt = {
-      enable = mkEnableOption "Qt 4, 5 and 6 configuration";
+      enable = mkEnableOption (lib.mdDoc "Qt 4, 5 and 6 configuration");
 
       platformTheme = mkOption {
         type = types.nullOr (types.enum [ "gtk" "gnome" "qtct" "kde" ]);
@@ -119,9 +119,9 @@ in {
           type = with types; nullOr (either package (listOf package));
           default = null;
           example = literalExpression "pkgs.adwaita-qt";
-          description = ''
+          description = lib.mdDoc ''
             Theme package to be used in Qt5/Qt6 applications.
-            Auto-detected from <option>qt.style.name</option> if possible.
+            Auto-detected from {option}`qt.style.name` if possible.
           '';
         };
       };

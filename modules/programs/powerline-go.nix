@@ -49,16 +49,16 @@ in {
 
   options = {
     programs.powerline-go = {
-      enable = mkEnableOption
-        "Powerline-go, a beautiful and useful low-latency prompt for your shell";
+      enable = mkEnableOption (lib.mdDoc
+        "Powerline-go, a beautiful and useful low-latency prompt for your shell");
 
       modules = mkOption {
         default = null;
         type = types.nullOr (types.listOf types.str);
-        description = ''
+        description = lib.mdDoc ''
           List of module names to load. The list of all available
           modules as well as the choice of default ones are at
-          <link xlink:href="https://github.com/justjanne/powerline-go"/>.
+          <https://github.com/justjanne/powerline-go>.
         '';
         example = [ "host" "ssh" "cwd" "gitlite" "jobs" "exit" ];
       };
@@ -66,7 +66,7 @@ in {
       modulesRight = mkOption {
         default = null;
         type = types.nullOr (types.listOf types.str);
-        description = ''
+        description = lib.mdDoc ''
           List of module names to load to be displayed on the right side.
           Currently not supported by bash. Specifying a value for this
           option will force powerline-go to use the eval format to set
@@ -78,7 +78,7 @@ in {
       newline = mkOption {
         default = false;
         type = types.bool;
-        description = ''
+        description = lib.mdDoc ''
           Set to true if the prompt should be on a line of its own.
         '';
         example = true;
@@ -87,7 +87,7 @@ in {
       pathAliases = mkOption {
         default = null;
         type = types.nullOr (types.attrsOf types.str);
-        description = ''
+        description = lib.mdDoc ''
           Pairs of full-path and corresponding desired short name. You
           may use '~' to represent your home directory but you should
           protect it to avoid shell substitution.
@@ -100,9 +100,9 @@ in {
       settings = mkOption {
         default = { };
         type = with types; attrsOf (oneOf [ bool int str (listOf str) ]);
-        description = ''
+        description = lib.mdDoc ''
           This can be any key/value pair as described in
-          <link xlink:href="https://github.com/justjanne/powerline-go"/>.
+          <https://github.com/justjanne/powerline-go>.
         '';
         example = literalExpression ''
           {
@@ -116,7 +116,8 @@ in {
 
       extraUpdatePS1 = mkOption {
         default = "";
-        description = "Shell code to execute after the prompt is set.";
+        description =
+          lib.mdDoc "Shell code to execute after the prompt is set.";
         example = ''
           PS1=$PS1"NixOS> ";
         '';

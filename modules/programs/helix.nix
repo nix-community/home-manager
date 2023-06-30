@@ -9,21 +9,21 @@ in {
   meta.maintainers = [ hm.maintainers.Philipp-M ];
 
   options.programs.helix = {
-    enable = mkEnableOption "helix text editor";
+    enable = mkEnableOption (lib.mdDoc "helix text editor");
 
     package = mkOption {
       type = types.package;
       default = pkgs.helix;
       defaultText = literalExpression "pkgs.helix";
-      description = "The package to use for helix.";
+      description = lib.mdDoc "The package to use for helix.";
     };
 
     defaultEditor = mkOption {
       type = types.bool;
       default = false;
-      description = ''
-        Whether to configure <command>hx</command> as the default
-        editor using the <envar>EDITOR</envar> environment variable.
+      description = lib.mdDoc ''
+        Whether to configure {command}`hx` as the default
+        editor using the {env}`EDITOR` environment variable.
       '';
     };
 
@@ -45,11 +45,11 @@ in {
           };
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/helix/config.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://docs.helix-editor.com/configuration.html" />
+        {file}`$XDG_CONFIG_HOME/helix/config.toml`.
+
+        See <https://docs.helix-editor.com/configuration.html>
         for the full list of options.
       '';
     };
@@ -80,11 +80,11 @@ in {
           }];
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Language specific configuration at
-        <filename>$XDG_CONFIG_HOME/helix/languages.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://docs.helix-editor.com/languages.html" />
+        {file}`$XDG_CONFIG_HOME/helix/languages.toml`.
+
+        See <https://docs.helix-editor.com/languages.html>
         for more information.
       '';
     };
@@ -149,12 +149,12 @@ in {
           };
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Each theme is written to
-        <filename>$XDG_CONFIG_HOME/helix/themes/theme-name.toml</filename>.
+        {file}`$XDG_CONFIG_HOME/helix/themes/theme-name.toml`.
         Where the name of each attribute is the theme-name (in the example "base16").
-        </para><para>
-        See <link xlink:href="https://docs.helix-editor.com/themes.html" />
+
+        See <https://docs.helix-editor.com/themes.html>
         for the full list of options.
       '';
     };

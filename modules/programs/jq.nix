@@ -8,7 +8,7 @@ let
 
   colorType = mkOption {
     type = types.str;
-    description = "ANSI color definition";
+    description = lib.mdDoc "ANSI color definition";
     example = "1;31";
     visible = false;
   };
@@ -28,13 +28,13 @@ let
 in {
   options = {
     programs.jq = {
-      enable = mkEnableOption "the jq command-line JSON processor";
+      enable = mkEnableOption (lib.mdDoc "the jq command-line JSON processor");
 
       package = mkOption {
         type = types.package;
         default = pkgs.jq;
         defaultText = literalExpression "pkgs.jq";
-        description = "jq package to use.";
+        description = lib.mdDoc "jq package to use.";
       };
 
       colors = mkOption {

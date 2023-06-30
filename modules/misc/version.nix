@@ -21,13 +21,13 @@ in {
         "23.05"
         "23.11"
       ];
-      description = ''
+      description = lib.mdDoc ''
         It is occasionally necessary for Home Manager to change
         configuration defaults in a way that is incompatible with
         stateful data. This could, for example, include switching the
         default data format or location of a file.
-        </para><para>
-        The <emphasis>state version</emphasis> indicates which default
+
+        The *state version* indicates which default
         settings are in effect and will therefore help avoid breaking
         program configurations. Switching to a higher state version
         typically requires performing some manual steps, such as data
@@ -46,7 +46,7 @@ in {
             optionalString (revision != null) "+${substring 0 8 revision}";
         in "${release}${suffix}";
         example = "22.11+213a0629";
-        description = "The full Home Manager version.";
+        description = lib.mdDoc "The full Home Manager version.";
       };
 
       release = mkOption {
@@ -55,7 +55,7 @@ in {
         type = types.str;
         default = releaseInfo.release;
         example = "22.11";
-        description = "The Home Manager release.";
+        description = lib.mdDoc "The Home Manager release.";
       };
 
       isReleaseBranch = mkOption {
@@ -63,7 +63,7 @@ in {
         readOnly = true;
         type = types.bool;
         default = releaseInfo.isReleaseBranch;
-        description = ''
+        description = lib.mdDoc ''
           Whether the Home Manager version is from a versioned
           release branch.
         '';
@@ -74,7 +74,7 @@ in {
         type = types.nullOr types.str;
         default = let gitRepo = "${toString ./../..}/.git";
         in if pathIsGitRepo gitRepo then commitIdFromGitRepo gitRepo else null;
-        description = ''
+        description = lib.mdDoc ''
           The Git revision from which this Home Manager configuration was built.
         '';
       };

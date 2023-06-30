@@ -5,28 +5,29 @@ with lib; {
       type = types.str;
       example = "My INBOX";
       default = "My INBOX";
-      description = "Name to display";
+      description = lib.mdDoc "Name to display";
     };
 
     query = mkOption {
       type = types.str;
       example = "tag:inbox";
       default = "tag:inbox";
-      description = "Notmuch query";
+      description = lib.mdDoc "Notmuch query";
     };
 
     limit = mkOption {
       type = types.nullOr types.int;
       example = 10;
       default = null;
-      description = "Restricts number of messages/threads in the result.";
+      description =
+        lib.mdDoc "Restricts number of messages/threads in the result.";
     };
 
     type = mkOption {
       type = types.nullOr (types.enum ([ "threads" "messages" ]));
       example = "threads";
       default = null;
-      description =
+      description = lib.mdDoc
         "Reads all matching messages or whole-threads. The default is 'messages' or nm_query_type.";
     };
   };

@@ -22,25 +22,25 @@ let
       left = mkOption {
         type = types.str;
         default = "h";
-        description = "Home row direction key for moving left.";
+        description = lib.mdDoc "Home row direction key for moving left.";
       };
 
       down = mkOption {
         type = types.str;
         default = "j";
-        description = "Home row direction key for moving down.";
+        description = lib.mdDoc "Home row direction key for moving down.";
       };
 
       up = mkOption {
         type = types.str;
         default = "k";
-        description = "Home row direction key for moving up.";
+        description = lib.mdDoc "Home row direction key for moving up.";
       };
 
       right = mkOption {
         type = types.str;
         default = "l";
-        description = "Home row direction key for moving right.";
+        description = lib.mdDoc "Home row direction key for moving right.";
       };
 
       keybindings = mkOption {
@@ -121,11 +121,11 @@ let
           "${cfg.config.modifier}+r" = "mode resize";
         };
         defaultText = "Default sway keybindings.";
-        description = ''
+        description = lib.mdDoc ''
           An attribute set that assigns a key press to an action using a key symbol.
-          See <link xlink:href="https://i3wm.org/docs/userguide.html#keybindings"/>.
-          </para><para>
-          Consider to use <literal>lib.mkOptionDefault</literal> function to extend or override
+          See <https://i3wm.org/docs/userguide.html#keybindings>.
+
+          Consider to use `lib.mkOptionDefault` function to extend or override
           default keybindings instead of specifying all of them from scratch.
         '';
         example = literalExpression ''
@@ -143,8 +143,8 @@ let
         type = types.bool;
         default = false;
         example = true;
-        description = ''
-          Whether to make use of <option>--to-code</option> in keybindings.
+        description = lib.mdDoc ''
+          Whether to make use of {option}`--to-code` in keybindings.
         '';
       };
 
@@ -152,12 +152,9 @@ let
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
         example = { "*" = { xkb_variant = "dvorak"; }; };
-        description = ''
+        description = lib.mdDoc ''
           An attribute set that defines input modules. See
-          <citerefentry>
-            <refentrytitle>sway-input</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>
+          {manpage}`sway-input(5)`
           for options.
         '';
       };
@@ -166,12 +163,9 @@ let
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
         example = { "HDMI-A-2" = { bg = "~/path/to/background.png fill"; }; };
-        description = ''
+        description = lib.mdDoc ''
           An attribute set that defines output modules. See
-          <citerefentry>
-            <refentrytitle>sway-output</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>
+          {manpage}`sway-output(5)`
           for options.
         '';
       };
@@ -180,12 +174,9 @@ let
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
         example = { "*" = { hide_cursor = "when-typing enable"; }; };
-        description = ''
+        description = lib.mdDoc ''
           An attribute set that defines seat modules. See
-          <citerefentry>
-            <refentrytitle>sway-input</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>
+          {manpage}`sway-input(5)`
           for options.
         '';
       };
@@ -206,7 +197,7 @@ let
             "Return" = "mode default";
           };
         };
-        description = ''
+        description = lib.mdDoc ''
           An attribute set that defines binding modes and keybindings
           inside them
 
@@ -224,7 +215,7 @@ let
           type = types.bool;
           inherit default;
           example = !default;
-          description = "Whether to make use of the ${description}";
+          description = lib.mdDoc "Whether to make use of the ${description}";
         };
     in {
       base = mkWrapperFeature true ''
@@ -343,16 +334,16 @@ in {
   ];
 
   options.wayland.windowManager.sway = {
-    enable = mkEnableOption "sway wayland compositor";
+    enable = mkEnableOption (lib.mdDoc "sway wayland compositor");
 
     package = mkOption {
       type = with types; nullOr package;
       default = defaultSwayPackage;
       defaultText = literalExpression "${pkgs.sway}";
-      description = ''
+      description = lib.mdDoc ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
-        Set to <literal>null</literal> to not add any Sway package to your
+        Set to `null` to not add any Sway package to your
         path. This should be done if you want to use the NixOS Sway
         module to install Sway.
       '';
@@ -376,19 +367,16 @@ in {
         '';
       };
 
-      xdgAutostart = mkEnableOption ''
+      xdgAutostart = mkEnableOption (lib.mdDoc ''
         autostart of applications using
-        <citerefentry>
-          <refentrytitle>systemd-xdg-autostart-generator</refentrytitle>
-          <manvolnum>8</manvolnum>
-        </citerefentry>
-      '';
+        {manpage}`systemd-xdg-autostart-generator(8)`
+      '');
     };
 
     xwayland = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Enable xwayland, which is needed for the default configuration of sway.
       '';
     };
@@ -397,7 +385,7 @@ in {
       type = wrapperOptions;
       default = { };
       example = { gtk = true; };
-      description = ''
+      description = lib.mdDoc ''
         Attribute set of features to enable in the wrapper.
       '';
     };
@@ -414,7 +402,7 @@ in {
         # use this if they aren't displayed properly:
         export _JAVA_AWT_WM_NONREPARENTING=1
       '';
-      description = ''
+      description = lib.mdDoc ''
         Shell commands executed just before Sway is started.
       '';
     };
@@ -428,7 +416,7 @@ in {
         "--unsupported-gpu"
         "--my-next-gpu-wont-be-nvidia"
       ];
-      description = ''
+      description = lib.mdDoc ''
         Command line arguments passed to launch Sway. Please DO NOT report
         issues if you use an unsupported GPU (proprietary drivers).
       '';
@@ -437,20 +425,20 @@ in {
     config = mkOption {
       type = types.nullOr configModule;
       default = { };
-      description = "Sway configuration options.";
+      description = lib.mdDoc "Sway configuration options.";
     };
 
     extraConfig = mkOption {
       type = types.lines;
       default = "";
       description =
-        "Extra configuration lines to add to ~/.config/sway/config.";
+        lib.mdDoc "Extra configuration lines to add to ~/.config/sway/config.";
     };
 
     extraConfigEarly = mkOption {
       type = types.lines;
       default = "";
-      description =
+      description = lib.mdDoc
         "Like extraConfig, except lines are added to ~/.config/sway/config before all other configuration.";
     };
   };

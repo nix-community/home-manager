@@ -12,31 +12,31 @@ in {
   meta.maintainers = [ maintainers.hawkw ];
 
   options.programs.atuin = {
-    enable = mkEnableOption "atuin";
+    enable = mkEnableOption (lib.mdDoc "atuin");
 
     package = mkOption {
       type = types.package;
       default = pkgs.atuin;
       defaultText = literalExpression "pkgs.atuin";
-      description = "The package to use for atuin.";
+      description = lib.mdDoc "The package to use for atuin.";
     };
 
     enableBashIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Atuin's Bash integration. This will bind
-        <literal>ctrl-r</literal> to open the Atuin history.
+        `ctrl-r` to open the Atuin history.
       '';
     };
 
     enableZshIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Atuin's Zsh integration.
-        </para><para>
-        If enabled, this will bind <literal>ctrl-r</literal> and the up-arrow
+
+        If enabled, this will bind `ctrl-r` and the up-arrow
         key to open the Atuin history.
       '';
     };
@@ -44,9 +44,9 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Atuin's Fish integration.
-        </para><para>
+
         If enabled, this will bind the up-arrow key to open the Atuin history.
       '';
     };
@@ -55,7 +55,7 @@ in {
       default = [ ];
       type = types.listOf types.str;
       example = [ "--disable-up-arrow" "--disable-ctrl-r" ];
-      description = ''
+      description = lib.mdDoc ''
         Flags to append to the shell hook.
       '';
     };
@@ -78,11 +78,11 @@ in {
           search_mode = "prefix";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/atuin/config.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://atuin.sh/docs/config/" /> for the full list
+        {file}`$XDG_CONFIG_HOME/atuin/config.toml`.
+
+        See <https://atuin.sh/docs/config/> for the full list
         of options.
       '';
     };
@@ -90,7 +90,7 @@ in {
     enableNushellIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Nushell integration.
       '';
     };

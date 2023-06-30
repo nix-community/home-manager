@@ -9,7 +9,7 @@ in {
   options = {
     programs.discocss = {
       enable = mkEnableOption
-        "discocss, a tiny Discord CSS injector for Linux and MacOS";
+        (lib.mdDoc "discocss, a tiny Discord CSS injector for Linux and MacOS");
 
       package = mkPackageOptionMD pkgs "discocss" { };
 
@@ -18,13 +18,13 @@ in {
       discordAlias = mkOption {
         type = types.bool;
         default = true;
-        description = "Whether to alias discocss to discord.";
+        description = lib.mdDoc "Whether to alias discocss to discord.";
       };
 
       css = mkOption {
         type = types.str;
         default = "";
-        description = "The custom CSS for discocss to use.";
+        description = lib.mdDoc "The custom CSS for discocss to use.";
       };
     };
   };

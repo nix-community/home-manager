@@ -92,14 +92,14 @@ in {
   options = {
     services.trayer = {
       enable = mkEnableOption
-        "trayer, the lightweight GTK2+ systray for UNIX desktops";
+        (lib.mdDoc "trayer, the lightweight GTK2+ systray for UNIX desktops");
 
       package = mkOption {
         default = pkgs.trayer;
         defaultText = literalExpression "pkgs.trayer";
         type = types.package;
         example = literalExpression "pkgs.trayer";
-        description = "The package to use for the trayer binary.";
+        description = lib.mdDoc "The package to use for the trayer binary.";
       };
 
       settings = mkOption {

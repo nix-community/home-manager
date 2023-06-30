@@ -18,13 +18,13 @@ in {
   meta.maintainers = [ maintainers.ivar ];
 
   options.services.pbgopy = {
-    enable = mkEnableOption "pbgopy";
+    enable = mkEnableOption (lib.mdDoc "pbgopy");
 
     port = mkOption {
       type = types.port;
       default = 9090;
       example = 8080;
-      description = ''
+      description = lib.mdDoc ''
         The port to host the pbgopy server on.
       '';
     };
@@ -33,8 +33,8 @@ in {
       type = types.str;
       default = "24h";
       example = "10m";
-      description = ''
-        The TTL for the cache. Use <literal>"0s"</literal> to disable it.
+      description = lib.mdDoc ''
+        The TTL for the cache. Use `"0s"` to disable it.
       '';
     };
 
@@ -42,7 +42,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "user:pass";
-      description = ''
+      description = lib.mdDoc ''
         Basic HTTP authentication's username and password. Both the username and
         password are escaped.
       '';

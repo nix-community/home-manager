@@ -18,8 +18,8 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = literalExpression ''[ "/etc/xdg" ]'';
-      description = ''
-        Directory names to add to <envar>XDG_CONFIG_DIRS</envar>
+      description = lib.mdDoc ''
+        Directory names to add to {env}`XDG_CONFIG_DIRS`
         in the user session.
       '';
     };
@@ -28,8 +28,8 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = literalExpression ''[ "/usr/share" "/usr/local/share" ]'';
-      description = ''
-        Directory names to add to <envar>XDG_DATA_DIRS</envar>
+      description = lib.mdDoc ''
+        Directory names to add to {env}`XDG_DATA_DIRS`
         in the user session.
       '';
     };

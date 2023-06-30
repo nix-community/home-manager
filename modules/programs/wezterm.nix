@@ -15,13 +15,13 @@ in {
   meta.maintainers = [ hm.maintainers.blmhemu ];
 
   options.programs.wezterm = {
-    enable = mkEnableOption "wezterm";
+    enable = mkEnableOption (lib.mdDoc "wezterm");
 
     package = mkOption {
       type = types.package;
       default = pkgs.wezterm;
       defaultText = literalExpression "pkgs.wezterm";
-      description = "The Wezterm package to install.";
+      description = lib.mdDoc "The Wezterm package to install.";
     };
 
     extraConfig = mkOption {
@@ -44,10 +44,10 @@ in {
           }
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Extra configuration written to
-        <filename>$XDG_CONFIG_HOME/wezterm/wezterm.lua</filename>. See
-        <link xlink:href="https://wezfurlong.org/wezterm/config/files.html"/>
+        {file}`$XDG_CONFIG_HOME/wezterm/wezterm.lua`. See
+        <https://wezfurlong.org/wezterm/config/files.html>
         how to configure.
       '';
     };
@@ -74,22 +74,24 @@ in {
           selection_fg = "#E9E9E9";
         };
       '';
-      description = ''
+      description = lib.mdDoc ''
         Attribute set of additional color schemes to be written to
-        <filename>$XDG_CONFIG_HOME/wezterm/colors</filename>, where each key is
+        {file}`$XDG_CONFIG_HOME/wezterm/colors`, where each key is
         taken as the name of the corresponding color scheme. See
-        <link xlink:href="https://wezfurlong.org/wezterm/config/appearance.html#defining-a-color-scheme-in-a-separate-file"/>
+        <https://wezfurlong.org/wezterm/config/appearance.html#defining-a-color-scheme-in-a-separate-file>
         for more details of the TOML color scheme format.
       '';
     };
 
-    enableBashIntegration = mkEnableOption "WezTerm's Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration =
+      mkEnableOption (lib.mdDoc "WezTerm's Bash integration") // {
+        default = true;
+      };
 
-    enableZshIntegration = mkEnableOption "WezTerm's Zsh integration" // {
-      default = true;
-    };
+    enableZshIntegration =
+      mkEnableOption (lib.mdDoc "WezTerm's Zsh integration") // {
+        default = true;
+      };
   };
 
   config = mkIf cfg.enable {

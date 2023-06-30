@@ -26,9 +26,9 @@ in {
             };
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           kime configuration. Refer to
-          <link xlink:href="https://github.com/Riey/kime/blob/develop/docs/CONFIGURATION.md"/>
+          <https://github.com/Riey/kime/blob/develop/docs/CONFIGURATION.md>
           for details on supported values.
         '';
       };

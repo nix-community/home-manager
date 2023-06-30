@@ -11,14 +11,14 @@ in {
 
   options = {
     xsession = {
-      enable = mkEnableOption "X Session";
+      enable = mkEnableOption (lib.mdDoc "X Session");
 
       scriptPath = mkOption {
         type = types.str;
         default = ".xsession";
         example = ".xsession-hm";
-        description = ''
-          Path, relative to <envar>HOME</envar>, where Home Manager
+        description = lib.mdDoc ''
+          Path, relative to {env}`HOME`, where Home Manager
           should write the X session script.
         '';
       };
@@ -27,8 +27,8 @@ in {
         type = types.str;
         default = ".xprofile";
         example = ".xprofile-hm";
-        description = ''
-          Path, relative to <envar>HOME</envar>, where Home Manager
+        description = lib.mdDoc ''
+          Path, relative to {env}`HOME`, where Home Manager
           should write the X profile script.
         '';
       };
@@ -44,12 +44,12 @@ in {
             "''${xmonad}/bin/xmonad";
         '';
         default = ''test -n "$1" && eval "$@"'';
-        description = ''
+        description = lib.mdDoc ''
           Command to use to start the window manager.
-          </para><para>
+
           The default value allows integration with NixOS' generated xserver configuration.
-          </para><para>
-          Extra actions and commands can be specified in <option>xsession.initExtra</option>.
+
+          Extra actions and commands can be specified in {option}`xsession.initExtra`.
         '';
       };
 
@@ -57,7 +57,7 @@ in {
         type = types.bool;
         default = false;
         example = true;
-        description = ''
+        description = lib.mdDoc ''
           Whether tray applets should prefer using the Status Notifier
           Items (SNI) protocol, commonly called App Indicators. Note,
           not all tray applets or status bars support SNI.
@@ -67,13 +67,15 @@ in {
       profileExtra = mkOption {
         type = types.lines;
         default = "";
-        description = "Extra shell commands to run before session start.";
+        description =
+          lib.mdDoc "Extra shell commands to run before session start.";
       };
 
       initExtra = mkOption {
         type = types.lines;
         default = "";
-        description = "Extra shell commands to run during initialization.";
+        description =
+          lib.mdDoc "Extra shell commands to run during initialization.";
       };
 
       importedVariables = mkOption {
@@ -81,7 +83,7 @@ in {
         apply = unique;
         example = [ "GDK_PIXBUF_ICON_LOADER" ];
         visible = false;
-        description = ''
+        description = lib.mdDoc ''
           Environment variables to import into the user systemd
           session. The will be available for use by graphical
           services.

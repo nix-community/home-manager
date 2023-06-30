@@ -125,7 +125,7 @@ in {
   meta.maintainers = [ hm.maintainers.dwagenk ];
 
   options.programs.kodi = {
-    enable = mkEnableOption "Kodi";
+    enable = mkEnableOption (lib.mdDoc "Kodi");
 
     package = mkOption {
       type = types.package;
@@ -133,8 +133,8 @@ in {
       defaultText = literalExpression "pkgs.kodi";
       example = literalExpression
         "pkgs.kodi.withPackages (exts: [ exts.pvr-iptvsimple ])";
-      description = ''
-        The <literal>kodi</literal> package to use.
+      description = lib.mdDoc ''
+        The `kodi` package to use.
         Can be used to specify extensions.
       '';
     };
@@ -145,7 +145,7 @@ in {
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/.kodi"'';
       example = literalExpression ''"''${config.xdg.dataHome}/kodi"'';
-      description = "Directory to store configuration and metadata.";
+      description = lib.mdDoc "Directory to store configuration and metadata.";
     };
 
     settings = mkOption {
@@ -159,14 +159,14 @@ in {
       example = literalExpression ''
         { videolibrary.showemptytvshows = "true"; }
       '';
-      description = ''
-        Configuration to write to the <literal>advancedsettings.xml</literal>
+      description = lib.mdDoc ''
+        Configuration to write to the `advancedsettings.xml`
         file in kodis userdata directory. Settings specified here will be
         immutable from inside kodi and be hidden from the GUI settings dialog.
-        </para><para>
-        See <link xlink:href="https://kodi.wiki/view/Advancedsettings.xml"/> as
+
+        See <https://kodi.wiki/view/Advancedsettings.xml> as
         reference for how settings need to be specified.
-        </para><para>
+
         The innermost attributes must be of type str.
       '';
     };
@@ -190,17 +190,17 @@ in {
           };
         }
       '';
-      description = ''
-        Contents to populate the file <literal>sources.xml</literal> in kodis
+      description = lib.mdDoc ''
+        Contents to populate the file `sources.xml` in kodis
         userdata directory.
-        </para><para>
-        See <link xlink:href="https://kodi.wiki/view/Sources.xml"/> as
+
+        See <https://kodi.wiki/view/Sources.xml> as
         reference for how sources need to be specified.
-        </para><para>
+
         Kodi will still show the dialogs to modify sources in the GUI and they
         appear to be mutable. This however is not the case and the sources will
         stay as specified via Home Manager.
-        </para><para>
+
         The innermost attributes must be of type str.
       '';
     };
@@ -211,10 +211,10 @@ in {
       example = literalExpression ''
         { "service.xbmc.versioncheck".versioncheck_enable = "false"; }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Attribute set with the plugin namespace as toplevel key and the plugins
         settings as lower level key/value pairs.
-        </para><para>
+
         Kodi will still show the settings of plugins configured via this
         mechanism in the GUI and they appear to be mutable. This however is
         not the case and the settings will stay as specified via Home Manager.

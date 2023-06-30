@@ -18,7 +18,8 @@ in {
   meta.maintainers = [ maintainers.arjan-s ];
 
   options.programs.oh-my-posh = {
-    enable = mkEnableOption "oh-my-posh, a prompt theme engine for any shell";
+    enable = mkEnableOption
+      (lib.mdDoc "oh-my-posh, a prompt theme engine for any shell");
 
     package = mkPackageOptionMD pkgs "oh-my-posh" { };
 
@@ -27,11 +28,11 @@ in {
       default = { };
       example = literalExpression ''
         builtins.fromJSON (builtins.unsafeDiscardStringContext (builtins.readFile "''${pkgs.oh-my-posh}/share/oh-my-posh/themes/space.omp.json"))'';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/oh-my-posh/config.json</filename>. See
-        <link xlink:href="https://ohmyposh.dev/docs/configuration/overview"/>
-        for details. The <literal>useTheme</literal> option is ignored when this
+        {file}`$XDG_CONFIG_HOME/oh-my-posh/config.json`. See
+        <https://ohmyposh.dev/docs/configuration/overview>
+        for details. The `useTheme` option is ignored when this
         option is used.
       '';
     };
@@ -39,18 +40,18 @@ in {
     useTheme = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         Use one of the official themes. This should be a name from this list:
-        <link xlink:href="https://ohmyposh.dev/docs/themes"/>. Because a theme
+        <https://ohmyposh.dev/docs/themes>. Because a theme
         is essentially a configuration file, this option is not used when a
-        <literal>configFile</literal> is set.
+        `configFile` is set.
       '';
     };
 
     enableBashIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Bash integration.
       '';
     };
@@ -58,7 +59,7 @@ in {
     enableZshIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Zsh integration.
       '';
     };
@@ -66,7 +67,7 @@ in {
     enableFishIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Fish integration.
       '';
     };

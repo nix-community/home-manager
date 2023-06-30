@@ -61,14 +61,14 @@ let
 in {
   options = {
     programs.mpv = {
-      enable = mkEnableOption "mpv";
+      enable = mkEnableOption (lib.mdDoc "mpv");
 
       package = mkOption {
         type = types.package;
         default = pkgs.mpv;
         example = literalExpression
           "pkgs.wrapMpv (pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }) { youtubeSupport = true; }";
-        description = ''
+        description = lib.mdDoc ''
           Package providing mpv.
         '';
       };
@@ -77,7 +77,7 @@ in {
         type = types.package;
         readOnly = true;
         visible = false;
-        description = ''
+        description = lib.mdDoc ''
           Resulting mpv package.
         '';
       };
@@ -86,19 +86,16 @@ in {
         type = with types; listOf package;
         default = [ ];
         example = literalExpression "[ pkgs.mpvScripts.mpris ]";
-        description = ''
+        description = lib.mdDoc ''
           List of scripts to use with mpv.
         '';
       };
 
       scriptOpts = mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Script options added to
-          <filename>$XDG_CONFIG_HOME/mpv/script-opts/</filename>. See
-          <citerefentry>
-            <refentrytitle>mpv</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>
+          {file}`$XDG_CONFIG_HOME/mpv/script-opts/`. See
+          {manpage}`mpv(1)`
           for the full list of options of builtin scripts.
         '';
         type = types.attrsOf mpvOptions;
@@ -113,13 +110,10 @@ in {
       };
 
       config = mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/mpv/mpv.conf</filename>. See
-          <citerefentry>
-            <refentrytitle>mpv</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>
+          {file}`$XDG_CONFIG_HOME/mpv/mpv.conf`. See
+          {manpage}`mpv(1)`
           for the full list of options.
         '';
         type = mpvOptions;
@@ -135,10 +129,10 @@ in {
       };
 
       profiles = mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Sub-configuration options for specific profiles written to
-          <filename>$XDG_CONFIG_HOME/mpv/mpv.conf</filename>. See
-          <option>programs.mpv.config</option> for more information.
+          {file}`$XDG_CONFIG_HOME/mpv/mpv.conf`. See
+          {option}`programs.mpv.config` for more information.
         '';
         type = mpvProfiles;
         default = { };
@@ -156,9 +150,9 @@ in {
       };
 
       defaultProfiles = mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Profiles to be applied by default. Options set by them are overridden
-          by options set in <xref linkend="opt-programs.mpv.config"/>.
+          by options set in [](#opt-programs.mpv.config).
         '';
         type = mpvDefaultProfiles;
         default = [ ];
@@ -166,13 +160,10 @@ in {
       };
 
       bindings = mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Input configuration written to
-          <filename>$XDG_CONFIG_HOME/mpv/input.conf</filename>. See
-          <citerefentry>
-            <refentrytitle>mpv</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>
+          {file}`$XDG_CONFIG_HOME/mpv/input.conf`. See
+          {manpage}`mpv(1)`
           for the full list of options.
         '';
         type = mpvBindings;

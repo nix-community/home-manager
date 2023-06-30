@@ -39,9 +39,9 @@ in rec {
         type = types.nullOr types.package;
         default = null;
         example = literalExpression "pkgs.dejavu_fonts";
-        description = ''
+        description = lib.mdDoc ''
           Package providing the font. This package will be installed
-          to your profile. If <literal>null</literal> then the font
+          to your profile. If `null` then the font
           is assumed to already be available in your profile.
         '';
       };
@@ -49,7 +49,7 @@ in rec {
       name = mkOption {
         type = types.str;
         example = "DejaVu Sans";
-        description = ''
+        description = lib.mdDoc ''
           The family name of the font within the package.
         '';
       };
@@ -58,7 +58,7 @@ in rec {
         type = types.nullOr types.number;
         default = null;
         example = "8";
-        description = ''
+        description = lib.mdDoc ''
           The size of the font.
         '';
       };

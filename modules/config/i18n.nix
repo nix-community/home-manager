@@ -40,14 +40,14 @@ in {
   options = {
     i18n.glibcLocales = mkOption {
       type = types.path;
-      description = ''
-        Customized <literal>glibcLocales</literal> package providing
-        the <literal>LOCALE_ARCHIVE_*</literal> environment variable.
-        </para><para>
+      description = lib.mdDoc ''
+        Customized `glibcLocales` package providing
+        the `LOCALE_ARCHIVE_*` environment variable.
+
         This option only applies to the Linux platform.
-        </para><para>
+
         When Home Manager is configured with NixOS, the default value
-        will be set to <varname>i18n.glibcLocales</varname> from the
+        will be set to {var}`i18n.glibcLocales` from the
         system configuration.
       '';
       example = literalExpression ''

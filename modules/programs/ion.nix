@@ -12,13 +12,14 @@ in {
   meta.maintainers = [ maintainers.jo1gi ];
 
   options.programs.ion = {
-    enable = mkEnableOption "the Ion Shell. Compatible with Redox and Linux";
+    enable = mkEnableOption
+      (lib.mdDoc "the Ion Shell. Compatible with Redox and Linux");
 
     package = mkOption {
       type = types.package;
       default = pkgs.ion;
       defaultText = literalExpression "pkgs.ion";
-      description = ''
+      description = lib.mdDoc ''
         The ion package to install. May be used to change the version.
       '';
     };
@@ -26,7 +27,7 @@ in {
     initExtra = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Ion script which is called during ion initialization.
       '';
     };
@@ -39,7 +40,7 @@ in {
           g = "git";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         An attribute set that maps aliases (the top level attribute names
         in this option) to command strings or directly to build outputs.
       '';

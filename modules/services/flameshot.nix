@@ -14,13 +14,13 @@ in {
   meta.maintainers = [ maintainers.hamhut1066 ];
 
   options.services.flameshot = {
-    enable = mkEnableOption "Flameshot";
+    enable = mkEnableOption (lib.mdDoc "Flameshot");
 
     package = mkOption {
       type = types.package;
       default = pkgs.flameshot;
       defaultText = literalExpression "pkgs.flameshot";
-      description = "Package providing <command>flameshot</command>.";
+      description = lib.mdDoc "Package providing {command}`flameshot`.";
     };
 
     settings = mkOption {
@@ -32,9 +32,9 @@ in {
           showStartupLaunchMessage = false;
         };
       };
-      description = ''
+      description = lib.mdDoc ''
         Configuration to use for Flameshot. See
-        <link xlink:href="https://github.com/flameshot-org/flameshot/blob/master/flameshot.example.ini"/>
+        <https://github.com/flameshot-org/flameshot/blob/master/flameshot.example.ini>
         for available options.
       '';
     };

@@ -23,23 +23,23 @@ in {
   ];
 
   options.services.screen-locker = {
-    enable = mkEnableOption "screen locker for X session";
+    enable = mkEnableOption (lib.mdDoc "screen locker for X session");
 
     lockCmd = mkOption {
       type = types.str;
-      description = "Locker command to run.";
+      description = lib.mdDoc "Locker command to run.";
       example = "\${pkgs.i3lock}/bin/i3lock -n -c 000000";
     };
 
     inactiveInterval = mkOption {
       type = types.int;
       default = 10;
-      description = ''
+      description = lib.mdDoc ''
         Inactive time interval in minutes after which session will be locked.
         The minimum is 1 minute, and the maximum is 1 hour.
-        If <option>xautolock.enable</option> is true, it will use this setting.
-        See <link xlink:href="https://linux.die.net/man/1/xautolock"/>.
-        Otherwise, this will be used with <command>xset</command> to configure
+        If {option}`xautolock.enable` is true, it will use this setting.
+        See <https://linux.die.net/man/1/xautolock>.
+        Otherwise, this will be used with {command}`xset` to configure
         the X server's screensaver timeout.
       '';
     };
@@ -48,32 +48,32 @@ in {
       enable = mkOption {
         type = types.bool;
         default = true;
-        description = "Use xautolock for time-based locking.";
+        description = lib.mdDoc "Use xautolock for time-based locking.";
       };
 
       package = mkOption {
         type = types.package;
         default = pkgs.xautolock;
-        description = ''
-          Package providing the <command>xautolock</command> binary.
+        description = lib.mdDoc ''
+          Package providing the {command}`xautolock` binary.
         '';
       };
 
       detectSleep = mkOption {
         type = types.bool;
         default = true;
-        description = ''
+        description = lib.mdDoc ''
           Whether to reset xautolock timers when awaking from sleep.
-          No effect if <option>xautolock.enable</option> is false.
+          No effect if {option}`xautolock.enable` is false.
         '';
       };
 
       extraOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = ''
-          Extra command-line arguments to pass to <command>xautolock</command>.
-          No effect if <option>xautolock.enable</option> is false.
+        description = lib.mdDoc ''
+          Extra command-line arguments to pass to {command}`xautolock`.
+          No effect if {option}`xautolock.enable` is false.
         '';
       };
     };
@@ -82,25 +82,25 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.xss-lock;
-        description = ''
-          Package providing the <command>xss-lock</command> binary.
+        description = lib.mdDoc ''
+          Package providing the {command}`xss-lock` binary.
         '';
       };
 
       extraOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = ''
-          Extra command-line arguments to pass to <command>xss-lock</command>.
+        description = lib.mdDoc ''
+          Extra command-line arguments to pass to {command}`xss-lock`.
         '';
       };
 
       screensaverCycle = mkOption {
         type = types.int;
         default = 600;
-        description = ''
+        description = lib.mdDoc ''
           The X server's screensaver cycle value expressed as seconds.
-          This will be used with <command>xset</command> to configure
+          This will be used with {command}`xset` to configure
           the cycle along with timeout.
         '';
       };

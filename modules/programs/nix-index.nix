@@ -4,24 +4,26 @@ in {
   meta.maintainers = with lib.hm.maintainers; [ ambroisie ];
 
   options.programs.nix-index = with lib; {
-    enable = mkEnableOption "nix-index, a file database for nixpkgs";
+    enable =
+      mkEnableOption (lib.mdDoc "nix-index, a file database for nixpkgs");
 
     package = mkOption {
       type = types.package;
       default = pkgs.nix-index;
       defaultText = literalExpression "pkgs.nix-index";
-      description = "Package providing the <command>nix-index</command> tool.";
+      description =
+        lib.mdDoc "Package providing the {command}`nix-index` tool.";
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
+    enableBashIntegration = mkEnableOption (lib.mdDoc "Bash integration") // {
       default = true;
     };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
+    enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh integration") // {
       default = true;
     };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
+    enableFishIntegration = mkEnableOption (lib.mdDoc "Fish integration") // {
       default = true;
     };
   };

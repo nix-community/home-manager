@@ -16,9 +16,9 @@ in {
     manual.html.enable = mkOption {
       type = types.bool;
       default = false;
-      description = ''
+      description = lib.mdDoc ''
         Whether to install the HTML manual. This also installs the
-        <command>home-manager-help</command> tool, which opens a local
+        {command}`home-manager-help` tool, which opens a local
         copy of the Home Manager manual in the system web browser.
       '';
     };
@@ -27,10 +27,10 @@ in {
       type = types.bool;
       default = true;
       example = false;
-      description = ''
+      description = lib.mdDoc ''
         Whether to install the configuration manual page. The manual can
-        be reached by <command>man home-configuration.nix</command>.
-        </para><para>
+        be reached by {command}`man home-configuration.nix`.
+
         When looking at the manual page pretend that all references to
         NixOS stuff are actually references to Home Manager stuff.
         Thanks!
@@ -41,10 +41,10 @@ in {
       type = types.bool;
       default = false;
       example = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether to install a JSON formatted list of all Home Manager
         options. This can be located at
-        <filename>&lt;profile directory&gt;/share/doc/home-manager/options.json</filename>,
+        {file}`<profile directory>/share/doc/home-manager/options.json`,
         and may be used for navigating definitions, auto-completing,
         and other miscellaneous tasks.
       '';

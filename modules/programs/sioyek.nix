@@ -14,22 +14,22 @@ let
 in {
   options = {
     programs.sioyek = {
-      enable = mkEnableOption
-        "Sioyek, a PDF viewer designed for reading research papers and technical books";
+      enable = mkEnableOption (lib.mdDoc
+        "Sioyek, a PDF viewer designed for reading research papers and technical books");
 
       package = mkOption {
         default = pkgs.sioyek;
         defaultText = literalExpression "pkgs.sioyek";
         type = types.package;
-        description = "Package providing the sioyek binary";
+        description = lib.mdDoc "Package providing the sioyek binary";
       };
 
       bindings = mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Input configuration written to
-          <filename>$XDG_CONFIG_HOME/sioyek/keys_user.config</filename>.
-          See <link xlink:href="https://github.com/ahrm/sioyek/blob/main/pdf_viewer/keys.config"/>.
-          </para><para>
+          {file}`$XDG_CONFIG_HOME/sioyek/keys_user.config`.
+          See <https://github.com/ahrm/sioyek/blob/main/pdf_viewer/keys.config>.
+
           Each attribute could also accept a list of strings to set multiple
           bindings of the same command.
         '';
@@ -48,10 +48,10 @@ in {
       };
 
       config = mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Input configuration written to
-          <filename>$XDG_CONFIG_HOME/sioyek/prefs_user.config</filename>.
-          See <link xlink:href="https://github.com/ahrm/sioyek/blob/main/pdf_viewer/prefs.config"/>.
+          {file}`$XDG_CONFIG_HOME/sioyek/prefs_user.config`.
+          See <https://github.com/ahrm/sioyek/blob/main/pdf_viewer/prefs.config>.
         '';
         type = types.attrsOf types.str;
         default = { };

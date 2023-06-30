@@ -8,13 +8,13 @@ let
 
 in {
   options.offlineimap = {
-    enable = mkEnableOption "OfflineIMAP";
+    enable = mkEnableOption (lib.mdDoc "OfflineIMAP");
 
     extraConfig.account = mkOption {
       type = extraConfigType;
       default = { };
       example = { autorefresh = 20; };
-      description = ''
+      description = lib.mdDoc ''
         Extra configuration options to add to the account section.
       '';
     };
@@ -23,7 +23,7 @@ in {
       type = extraConfigType;
       default = { };
       example = { sync_deletes = true; };
-      description = ''
+      description = lib.mdDoc ''
         Extra configuration options to add to the local account
         section.
       '';
@@ -36,7 +36,7 @@ in {
         maxconnections = 2;
         expunge = false;
       };
-      description = ''
+      description = lib.mdDoc ''
         Extra configuration options to add to the remote account
         section.
       '';
@@ -45,7 +45,7 @@ in {
     postSyncHookCommand = mkOption {
       type = types.lines;
       default = "";
-      description = "Command to run after fetching new mails.";
+      description = lib.mdDoc "Command to run after fetching new mails.";
     };
   };
 }

@@ -11,18 +11,18 @@ in {
   meta.maintainers = [ hm.maintainers.katexochen ];
 
   options.programs.k9s = {
-    enable =
-      mkEnableOption "k9s - Kubernetes CLI To Manage Your Clusters In Style";
+    enable = mkEnableOption
+      (lib.mdDoc "k9s - Kubernetes CLI To Manage Your Clusters In Style");
 
     package = mkPackageOptionMD pkgs "k9s" { };
 
     settings = mkOption {
       type = yamlFormat.type;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/k9s/config.yml</filename>. See
-        <link xlink:href="https://k9scli.io/topics/config/"/>
+        {file}`$XDG_CONFIG_HOME/k9s/config.yml`. See
+        <https://k9scli.io/topics/config/>
         for supported values.
       '';
       example = literalExpression ''
@@ -35,10 +35,10 @@ in {
     skin = mkOption {
       type = yamlFormat.type;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Skin written to
-        <filename>$XDG_CONFIG_HOME/k9s/skin.yml</filename>. See
-        <link xlink:href="https://k9scli.io/topics/skins/"/>
+        {file}`$XDG_CONFIG_HOME/k9s/skin.yml`. See
+        <https://k9scli.io/topics/skins/>
         for supported values.
       '';
       example = literalExpression ''

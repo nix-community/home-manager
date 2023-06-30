@@ -41,18 +41,18 @@ in {
         DSDontWriteUSBStores = true;
       };
     };
-    description = ''
-      Set macOS user defaults. Values set to <literal>null</literal> are
+    description = lib.mdDoc ''
+      Set macOS user defaults. Values set to `null` are
       ignored.
 
-      <warning>
-      <para>Some settings might require a re-login to take effect.</para>
-      </warning>
+      ::: {.warning}
+      Some settings might require a re-login to take effect.
+      :::
 
-      <warning>
-      <para>Some settings are only read from
-      <option>targets.darwin.currentHostDefaults</option>.</para>
-      </warning>
+      ::: {.warning}
+      Some settings are only read from
+      {option}`targets.darwin.currentHostDefaults`.
+      :::
     '';
   };
 
@@ -62,16 +62,16 @@ in {
     example = {
       "com.apple.controlcenter" = { BatteryShowPercentage = true; };
     };
-    description = ''
-      Set macOS user defaults. Unlike <option>targets.darwin.defaults</option>,
+    description = lib.mdDoc ''
+      Set macOS user defaults. Unlike {option}`targets.darwin.defaults`,
       the preferences will only be applied to the currently logged-in host. This
       distinction is important for networked accounts.
 
-      Values set to <literal>null</literal> are ignored.
+      Values set to `null` are ignored.
 
-      <warning>
-      <para>Some settings might require a re-login to take effect.</para>
-      </warning>
+      ::: {.warning}
+      Some settings might require a re-login to take effect.
+      :::
     '';
   };
 

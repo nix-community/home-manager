@@ -20,49 +20,49 @@ let
           type = str;
           default = "";
           example = "shutdown";
-          description = "CSS label of button.";
+          description = lib.mdDoc "CSS label of button.";
         };
 
         action = mkOption {
           type = either path str;
           default = "";
           example = "systemctl poweroff";
-          description = "Command to execute when clicked.";
+          description = lib.mdDoc "Command to execute when clicked.";
         };
 
         text = mkOption {
           type = str;
           default = "";
           example = "Shutdown";
-          description = "Text displayed on button.";
+          description = lib.mdDoc "Text displayed on button.";
         };
 
         keybind = mkOption {
           type = str;
           default = "";
           example = "s";
-          description = "Keyboard character to trigger this action.";
+          description = lib.mdDoc "Keyboard character to trigger this action.";
         };
 
         height = mkOption {
           type = nullOr (numbers.between 0 1);
           default = null;
           example = 0.5;
-          description = "Relative height of tile.";
+          description = lib.mdDoc "Relative height of tile.";
         };
 
         width = mkOption {
           type = nullOr (numbers.between 0 1);
           default = null;
           example = 0.5;
-          description = "Relative width of tile.";
+          description = lib.mdDoc "Relative width of tile.";
         };
 
         circular = mkOption {
           type = nullOr bool;
           default = null;
           example = true;
-          description = "Make button circular.";
+          description = lib.mdDoc "Make button circular.";
         };
       };
     };
@@ -70,16 +70,15 @@ in {
   meta.maintainers = [ lib.maintainers.Scrumplex ];
 
   options.programs.wlogout = with lib.types; {
-    enable = mkEnableOption "wlogout";
+    enable = mkEnableOption (lib.mdDoc "wlogout");
 
     package = mkPackageOptionMD pkgs "wlogout" { };
 
     layout = mkOption {
       type = listOf wlogoutLayoutConfig;
       default = [ ];
-      description = ''
-        Layout configuration for wlogout, see <link
-          xlink:href="https://github.com/ArtsyMacaw/wlogout#config"/>
+      description = lib.mdDoc ''
+        Layout configuration for wlogout, see <https://github.com/ArtsyMacaw/wlogout#config>
         for supported values.
       '';
       example = literalExpression ''
@@ -97,14 +96,12 @@ in {
     style = mkOption {
       type = nullOr (either path str);
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         CSS style of the bar.
-        </para>
-        <para>
-        See <link xlink:href="https://github.com/ArtsyMacaw/wlogout#style"/>
+
+        See <https://github.com/ArtsyMacaw/wlogout#style>
         for the documentation.
-        </para>
-        <para>
+
         If the value is set to a path literal, then the path will be used as the css file.
       '';
       example = ''

@@ -9,13 +9,13 @@ in {
   meta.maintainers = with maintainers; [ ethancedwards8 ];
 
   options.programs.piston-cli = {
-    enable = mkEnableOption "piston-cli, code runner";
+    enable = mkEnableOption (lib.mdDoc "piston-cli, code runner");
 
     package = mkOption {
       type = types.package;
       default = pkgs.piston-cli;
       defaultText = literalExpression "pkgs.piston-cli";
-      description = "The piston-cli package to use.";
+      description = lib.mdDoc "The piston-cli package to use.";
     };
 
     settings = mkOption {
@@ -29,9 +29,9 @@ in {
           prompt_start = ">>>";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/piston-cli/config.yml</filename>.
+        {file}`$XDG_CONFIG_HOME/piston-cli/config.yml`.
       '';
     };
   };

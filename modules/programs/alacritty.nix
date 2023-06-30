@@ -8,13 +8,13 @@ let
 in {
   options = {
     programs.alacritty = {
-      enable = mkEnableOption "Alacritty";
+      enable = mkEnableOption (lib.mdDoc "Alacritty");
 
       package = mkOption {
         type = types.package;
         default = pkgs.alacritty;
         defaultText = literalExpression "pkgs.alacritty";
-        description = "The Alacritty package to install.";
+        description = lib.mdDoc "The Alacritty package to install.";
       };
 
       settings = mkOption {
@@ -35,10 +35,10 @@ in {
             ];
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/alacritty/alacritty.yml</filename>. See
-          <link xlink:href="https://github.com/alacritty/alacritty/blob/master/alacritty.yml"/>
+          {file}`$XDG_CONFIG_HOME/alacritty/alacritty.yml`. See
+          <https://github.com/alacritty/alacritty/blob/master/alacritty.yml>
           for the default configuration.
         '';
       };

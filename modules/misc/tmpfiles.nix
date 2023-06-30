@@ -13,13 +13,10 @@ in {
     type = types.listOf types.str;
     default = [ ];
     example = [ "L /home/user/Documents - - - - /mnt/data/Documents" ];
-    description = ''
+    description = lib.mdDoc ''
       Rules for creating and cleaning up temporary files
       automatically. See
-      <citerefentry>
-        <refentrytitle>tmpfiles.d</refentrytitle>
-        <manvolnum>5</manvolnum>
-      </citerefentry>
+      {manpage}`tmpfiles.d(5)`
       for the exact format.
     '';
   };

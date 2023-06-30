@@ -11,12 +11,12 @@ in {
 
   options = {
     services.gnome-keyring = {
-      enable = mkEnableOption "GNOME Keyring";
+      enable = mkEnableOption (lib.mdDoc "GNOME Keyring");
 
       components = mkOption {
         type = types.listOf (types.enum [ "pkcs11" "secrets" "ssh" ]);
         default = [ ];
-        description = ''
+        description = lib.mdDoc ''
           The GNOME keyring components to start. If empty then the
           default set of components will be started.
         '';

@@ -10,21 +10,22 @@ in {
   meta.maintainers = [ maintainers.DamienCassou ];
 
   options.services.clipmenu = {
-    enable = mkEnableOption "clipmenu, the clipboard management daemon";
+    enable =
+      mkEnableOption (lib.mdDoc "clipmenu, the clipboard management daemon");
 
     package = mkOption {
       type = types.package;
       default = pkgs.clipmenu;
       defaultText = "pkgs.clipmenu";
-      description = "clipmenu derivation to use.";
+      description = lib.mdDoc "clipmenu derivation to use.";
     };
 
     launcher = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "rofi";
-      description = ''
-        Launcher command, if not set, <command>dmenu</command>
+      description = lib.mdDoc ''
+        Launcher command, if not set, {command}`dmenu`
         will be used by default.
       '';
     };

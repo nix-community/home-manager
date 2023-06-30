@@ -8,16 +8,17 @@ in {
   meta.maintainers = with lib.hm.maintainers; [ soywod ];
 
   options.programs.comodoro = {
-    enable = lib.mkEnableOption "Comodoro, a CLI to manage your time";
+    enable =
+      lib.mkEnableOption (lib.mdDoc "Comodoro, a CLI to manage your time");
 
     package = lib.mkPackageOptionMD pkgs "comodoro" { };
 
     settings = lib.mkOption {
       type = lib.types.submodule { freeformType = tomlFormat.type; };
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Comodoro configuration.
-        See <link xlink:href="https://pimalaya.org/comodoro/cli/configuration/"/> for supported values.
+        See <https://pimalaya.org/comodoro/cli/configuration/> for supported values.
       '';
     };
   };

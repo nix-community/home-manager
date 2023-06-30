@@ -17,11 +17,11 @@ in {
 
   options.programs.pls = {
     enable =
-      mkEnableOption "pls, a modern replacement for <command>ls</command>";
+      mkEnableOption (lib.mdDoc "pls, a modern replacement for {command}`ls`");
 
     package = mkPackageOptionMD pkgs "pls" { };
 
-    enableAliases = mkEnableOption "recommended pls aliases";
+    enableAliases = mkEnableOption (lib.mdDoc "recommended pls aliases");
   };
 
   config = mkIf cfg.enable {

@@ -36,12 +36,12 @@ in {
   meta.maintainers = [ hm.maintainers.justinlovinger ];
 
   options.programs.i3status = {
-    enable = mkEnableOption "i3status";
+    enable = mkEnableOption (lib.mdDoc "i3status");
 
     enableDefault = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Whether or not to enable
         the default configuration.
       '';
@@ -50,14 +50,11 @@ in {
     general = mkOption {
       type = settingsType;
       default = { };
-      description = ''
-        Configuration to add to i3status <filename>config</filename>
-        <literal>general</literal> section.
+      description = lib.mdDoc ''
+        Configuration to add to i3status {file}`config`
+        `general` section.
         See
-        <citerefentry>
-         <refentrytitle>i3status</refentrytitle>
-         <manvolnum>1</manvolnum>
-        </citerefentry>
+        {manpage}`i3status(1)`
         for options.
       '';
       example = literalExpression ''
@@ -77,26 +74,23 @@ in {
           enable = mkOption {
             type = types.bool;
             default = true;
-            description = ''
+            description = lib.mdDoc ''
               Whether or not to enable this module.
             '';
           };
           position = mkOption {
             type = with types; either int float;
-            description = ''
-              Position of this module in i3status <literal>order</literal>.
+            description = lib.mdDoc ''
+              Position of this module in i3status `order`.
             '';
           };
           settings = mkOption {
             type = settingsType;
             default = { };
-            description = ''
+            description = lib.mdDoc ''
               Configuration to add to this i3status module.
               See
-              <citerefentry>
-               <refentrytitle>i3status</refentrytitle>
-               <manvolnum>1</manvolnum>
-              </citerefentry>
+              {manpage}`i3status(1)`
               for options.
             '';
             example = literalExpression ''
@@ -110,13 +104,10 @@ in {
         };
       });
       default = { };
-      description = ''
-        Modules to add to i3status <filename>config</filename> file.
+      description = lib.mdDoc ''
+        Modules to add to i3status {file}`config` file.
         See
-        <citerefentry>
-         <refentrytitle>i3status</refentrytitle>
-         <manvolnum>1</manvolnum>
-        </citerefentry>
+        {manpage}`i3status(1)`
         for options.
       '';
       example = literalExpression ''

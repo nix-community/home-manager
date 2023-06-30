@@ -64,13 +64,13 @@ let
         type = types.nullOr types.str;
         visible = false;
         default = null;
-        description = "Name of the channel.";
+        description = lib.mdDoc "Name of the channel.";
       };
 
       autoJoin = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether to join this channel on connect.";
+        description = lib.mdDoc "Whether to join this channel on connect.";
       };
     };
   };
@@ -85,50 +85,51 @@ let
 
       nick = mkOption {
         type = types.str;
-        description = "Nickname in that network.";
+        description = lib.mdDoc "Nickname in that network.";
       };
 
       type = mkOption {
         type = types.str;
-        description = "Type of the network.";
+        description = lib.mdDoc "Type of the network.";
         default = "IRC";
       };
 
       autoCommands = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = "List of commands to execute on connect.";
+        description = lib.mdDoc "List of commands to execute on connect.";
       };
 
       server = {
         address = mkOption {
           type = types.str;
-          description = "Address of the chat server.";
+          description = lib.mdDoc "Address of the chat server.";
         };
 
         port = mkOption {
           type = types.port;
           default = 6667;
-          description = "Port of the chat server.";
+          description = lib.mdDoc "Port of the chat server.";
         };
 
         ssl = {
           enable = mkOption {
             type = types.bool;
             default = true;
-            description = "Whether SSL should be used.";
+            description = lib.mdDoc "Whether SSL should be used.";
           };
 
           verify = mkOption {
             type = types.bool;
             default = true;
-            description = "Whether the SSL certificate should be verified.";
+            description =
+              lib.mdDoc "Whether the SSL certificate should be verified.";
           };
 
           certificateFile = mkOption {
             type = types.nullOr types.path;
             default = null;
-            description = ''
+            description = lib.mdDoc ''
               Path to a file containing the certificate used for
               client authentication to the server.
             '';
@@ -138,12 +139,13 @@ let
         autoConnect = mkOption {
           type = types.bool;
           default = false;
-          description = "Whether Irssi connects to the server on launch.";
+          description =
+            lib.mdDoc "Whether Irssi connects to the server on launch.";
         };
       };
 
       channels = mkOption {
-        description = "Channels for the given network.";
+        description = lib.mdDoc "Channels for the given network.";
         type = types.attrsOf channelType;
         default = { };
       };
@@ -151,9 +153,9 @@ let
       saslExternal = mkOption {
         type = types.bool;
         default = false;
-        description = ''
+        description = lib.mdDoc ''
           Enable SASL external authentication. This requires setting a path in
-          <xref linkend="opt-programs.irssi.networks._name_.server.ssl.certificateFile"/>.
+          [](#opt-programs.irssi.networks._name_.server.ssl.certificateFile).
         '';
       };
     };
@@ -163,11 +165,12 @@ in {
 
   options = {
     programs.irssi = {
-      enable = mkEnableOption "the Irssi chat client";
+      enable = mkEnableOption (lib.mdDoc "the Irssi chat client");
 
       extraConfig = mkOption {
         default = "";
-        description = "These lines are appended to the Irssi configuration.";
+        description =
+          lib.mdDoc "These lines are appended to the Irssi configuration.";
         type = types.lines;
       };
 
@@ -177,7 +180,8 @@ in {
           J = "join";
           BYE = "quit";
         };
-        description = "An attribute set that maps aliases to commands.";
+        description =
+          lib.mdDoc "An attribute set that maps aliases to commands.";
         type = types.attrsOf types.str;
       };
 
@@ -198,7 +202,7 @@ in {
             };
           }
         '';
-        description = "An attribute set of chat networks.";
+        description = lib.mdDoc "An attribute set of chat networks.";
         type = types.attrsOf networkType;
       };
     };

@@ -32,7 +32,7 @@ let
 
 in {
   options.programs.readline = {
-    enable = mkEnableOption "readline";
+    enable = mkEnableOption (lib.mdDoc "readline");
 
     bindings = mkOption {
       default = { };
@@ -40,14 +40,14 @@ in {
       example = literalExpression ''
         { "\\C-h" = "backward-kill-word"; }
       '';
-      description = "Readline bindings.";
+      description = lib.mdDoc "Readline bindings.";
     };
 
     variables = mkOption {
       type = with types; attrsOf (either str (either int bool));
       default = { };
       example = { expand-tilde = true; };
-      description = ''
+      description = lib.mdDoc ''
         Readline customization variable assignments.
       '';
     };
@@ -55,15 +55,16 @@ in {
     includeSystemConfig = mkOption {
       type = types.bool;
       default = true;
-      description = "Whether to include the system-wide configuration.";
+      description =
+        lib.mdDoc "Whether to include the system-wide configuration.";
     };
 
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Configuration lines appended unchanged to the end of the
-        <filename>~/.inputrc</filename> file.
+        {file}`~/.inputrc` file.
       '';
     };
   };

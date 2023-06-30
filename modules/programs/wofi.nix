@@ -14,20 +14,17 @@ in {
   meta.maintainers = [ maintainers.christoph-heiss ];
 
   options.programs.wofi = {
-    enable = mkEnableOption
-      "wofi: a launcher/menu program for wlroots based wayland compositors such as sway";
+    enable = mkEnableOption (lib.mdDoc
+      "wofi: a launcher/menu program for wlroots based wayland compositors such as sway");
 
     package = mkPackageOptionMD pkgs "wofi" { };
 
     settings = mkOption {
       default = { };
       type = types.attrs;
-      description = ''
+      description = lib.mdDoc ''
         Configuration options for wofi. See
-        <citerefentry>
-          <refentrytitle>wofi</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>.
+        {manpage}`wofi(5)`.
       '';
       example = literalExpression ''
         {
@@ -41,12 +38,9 @@ in {
     style = mkOption {
       default = null;
       type = types.nullOr types.str;
-      description = ''
+      description = lib.mdDoc ''
         CSS style for wofi to use as a stylesheet. See
-        <citerefentry>
-          <refentrytitle>wofi</refentrytitle>
-          <manvolnum>7</manvolnum>
-        </citerefentry>.
+        {manpage}`wofi(7)`.
       '';
       example = ''
         * {

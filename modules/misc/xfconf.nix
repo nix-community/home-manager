@@ -10,7 +10,7 @@ let
     options = {
       type = mkOption {
         type = types.enum [ "int" "uint" "uint64" ];
-        description = ''
+        description = lib.mdDoc ''
           To distinguish between int, uint and uint64 in xfconf,
           you can specify the type in xfconf with this submodule.
           For other types, you don't need to use this submodule,
@@ -19,7 +19,7 @@ let
       };
       value = mkOption {
         type = types.int;
-        description = "The value in xfconf.";
+        description = lib.mdDoc "The value in xfconf.";
       };
     };
   };
@@ -63,11 +63,11 @@ in {
       type = types.bool;
       default = true;
       visible = false;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Xfconf settings.
-        </para><para>
+
         Note, if you use NixOS then you must add
-        <literal>programs.xfconf.enable = true</literal>
+        `programs.xfconf.enable = true`
         to your system configuration. Otherwise you will see a systemd error
         message when your configuration is activated.
       '';
@@ -93,7 +93,7 @@ in {
           };
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Settings to write to the Xfconf configuration system.
       '';
     };

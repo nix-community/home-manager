@@ -10,18 +10,18 @@ let
 
   sidebarModule = types.submodule {
     options = {
-      enable = mkEnableOption "sidebar support";
+      enable = mkEnableOption (lib.mdDoc "sidebar support");
 
       width = mkOption {
         type = types.int;
         default = 22;
-        description = "Width of the sidebar";
+        description = lib.mdDoc "Width of the sidebar";
       };
 
       shortPath = mkOption {
         type = types.bool;
         default = true;
-        description = ''
+        description = lib.mdDoc ''
           By default sidebar shows the full path of the mailbox, but
           with this enabled only the relative name is shown.
         '';
@@ -30,7 +30,7 @@ let
       format = mkOption {
         type = types.str;
         default = "%D%?F? [%F]?%* %?N?%N/?%S";
-        description = ''
+        description = lib.mdDoc ''
           Sidebar format. Check neomutt documentation for details.
         '';
       };
@@ -71,19 +71,19 @@ let
           ];
         in with types; either (enum menus) (listOf (enum menus));
         default = "index";
-        description = "Select the menu to bind the command to.";
+        description = lib.mdDoc "Select the menu to bind the command to.";
       };
 
       key = mkOption {
         type = types.str;
         example = "<left>";
-        description = "The key to bind.";
+        description = lib.mdDoc "The key to bind.";
       };
 
       action = mkOption {
         type = types.str;
         example = "<enter-command>toggle sidebar_visible<enter><refresh>";
-        description = "Specify the action to take.";
+        description = lib.mdDoc "Specify the action to take.";
       };
     };
   };
@@ -251,31 +251,31 @@ let
 in {
   options = {
     programs.neomutt = {
-      enable = mkEnableOption "the NeoMutt mail client";
+      enable = mkEnableOption (lib.mdDoc "the NeoMutt mail client");
 
       package = mkOption {
         type = types.package;
         default = pkgs.neomutt;
         defaultText = literalExpression "pkgs.neomutt";
-        description = "The neomutt package to use.";
+        description = lib.mdDoc "The neomutt package to use.";
       };
 
       sidebar = mkOption {
         type = sidebarModule;
         default = { };
-        description = "Options related to the sidebar.";
+        description = lib.mdDoc "Options related to the sidebar.";
       };
 
       binds = mkOption {
         type = types.listOf bindModule;
         default = [ ];
-        description = "List of keybindings.";
+        description = lib.mdDoc "List of keybindings.";
       };
 
       macros = mkOption {
         type = types.listOf bindModule;
         default = [ ];
-        description = "List of macros.";
+        description = lib.mdDoc "List of macros.";
       };
 
       sort = mkOption {
@@ -283,43 +283,44 @@ in {
         type = types.enum
           (sortOptions ++ (map (option: "reverse-" + option) sortOptions));
         default = "threads";
-        description = "Sorting method on messages.";
+        description = lib.mdDoc "Sorting method on messages.";
       };
 
       vimKeys = mkOption {
         type = types.bool;
         default = false;
-        description = "Enable vim-like bindings.";
+        description = lib.mdDoc "Enable vim-like bindings.";
       };
 
       checkStatsInterval = mkOption {
         type = types.nullOr types.int;
         default = null;
         example = 60;
-        description = "Enable and set the interval of automatic mail check.";
+        description =
+          lib.mdDoc "Enable and set the interval of automatic mail check.";
       };
 
       editor = mkOption {
         type = types.str;
         default = "$EDITOR";
-        description = "Select the editor used for writing mail.";
+        description = lib.mdDoc "Select the editor used for writing mail.";
       };
 
       settings = mkOption {
         type = types.attrsOf types.str;
         default = { };
-        description = "Extra configuration appended to the end.";
+        description = lib.mdDoc "Extra configuration appended to the end.";
       };
 
-      changeFolderWhenSourcingAccount =
-        mkEnableOption "changing the folder when sourcing an account" // {
+      changeFolderWhenSourcingAccount = mkEnableOption
+        (lib.mdDoc "changing the folder when sourcing an account") // {
           default = true;
         };
 
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = "Extra configuration appended to the end.";
+        description = lib.mdDoc "Extra configuration appended to the end.";
       };
     };
 

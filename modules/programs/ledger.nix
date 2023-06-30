@@ -19,7 +19,8 @@ in {
   meta.maintainers = [ ];
 
   options.programs.ledger = {
-    enable = mkEnableOption "ledger, a double-entry accounting system";
+    enable =
+      mkEnableOption (lib.mdDoc "ledger, a double-entry accounting system");
 
     package = mkPackageOptionMD pkgs "ledger" { };
 
@@ -36,9 +37,9 @@ in {
           "~/finances/income.ledger"
         ];
       };
-      description = ''
-        Configuration written to <filename>$XDG_CONFIG_HOME/ledger/ledgerrc</filename>.
-        See <link xlink:href="https://www.ledger-cli.org/3.0/doc/ledger3.html#Detailed-Option-Description"/>
+      description = lib.mdDoc ''
+        Configuration written to {file}`$XDG_CONFIG_HOME/ledger/ledgerrc`.
+        See <https://www.ledger-cli.org/3.0/doc/ledger3.html#Detailed-Option-Description>
         for explanation about possible values.
       '';
     };
@@ -51,9 +52,9 @@ in {
         --effective
         --date-format %Y-%m-%d
       '';
-      description = ''
+      description = lib.mdDoc ''
         Extra configuration to add to
-        <filename>$XDG_CONFIG_HOME/ledger/ledgerrc</filename>.
+        {file}`$XDG_CONFIG_HOME/ledger/ledgerrc`.
       '';
     };
   };

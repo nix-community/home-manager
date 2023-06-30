@@ -11,13 +11,13 @@ in {
   meta.maintainers = [ hm.maintainers.mainrs ];
 
   options.programs.zellij = {
-    enable = mkEnableOption "zellij";
+    enable = mkEnableOption (lib.mdDoc "zellij");
 
     package = mkOption {
       type = types.package;
       default = pkgs.zellij;
       defaultText = literalExpression "pkgs.zellij";
-      description = ''
+      description = lib.mdDoc ''
         The zellij package to install.
       '';
     };
@@ -31,24 +31,24 @@ in {
           themes.custom.fg = "#ffffff";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/zellij/config.yaml</filename>.
-        </para><para>
-        See <link xlink:href="https://zellij.dev/documentation" /> for the full
+        {file}`$XDG_CONFIG_HOME/zellij/config.yaml`.
+
+        See <https://zellij.dev/documentation> for the full
         list of options.
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
+    enableBashIntegration = mkEnableOption (lib.mdDoc "Bash integration") // {
       default = false;
     };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
+    enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh integration") // {
       default = false;
     };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
+    enableFishIntegration = mkEnableOption (lib.mdDoc "Fish integration") // {
       default = false;
     };
   };

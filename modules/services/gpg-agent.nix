@@ -75,12 +75,12 @@ in {
 
   options = {
     services.gpg-agent = {
-      enable = mkEnableOption "GnuPG private key agent";
+      enable = mkEnableOption (lib.mdDoc "GnuPG private key agent");
 
       defaultCacheTtl = mkOption {
         type = types.nullOr types.int;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Set the time a cache entry is valid to the given number of
           seconds.
         '';
@@ -89,7 +89,7 @@ in {
       defaultCacheTtlSsh = mkOption {
         type = types.nullOr types.int;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Set the time a cache entry used for SSH keys is valid to the
           given number of seconds.
         '';
@@ -98,7 +98,7 @@ in {
       maxCacheTtl = mkOption {
         type = types.nullOr types.int;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Set the maximum time a cache entry is valid to n seconds. After this
           time a cache entry will be expired even if it has been accessed
           recently or has been set using gpg-preset-passphrase. The default is
@@ -109,7 +109,7 @@ in {
       maxCacheTtlSsh = mkOption {
         type = types.nullOr types.int;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Set the maximum time a cache entry used for SSH keys is valid to n
           seconds. After this time a cache entry will be expired even if it has
           been accessed recently or has been set using gpg-preset-passphrase.
@@ -120,7 +120,7 @@ in {
       enableSshSupport = mkOption {
         type = types.bool;
         default = false;
-        description = ''
+        description = lib.mdDoc ''
           Whether to use the GnuPG key agent for SSH keys.
         '';
       };
@@ -128,7 +128,7 @@ in {
       sshKeys = mkOption {
         type = types.nullOr (types.listOf types.str);
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           Which GPG keys (by keygrip) to expose as SSH keys.
         '';
       };
@@ -136,7 +136,7 @@ in {
       enableExtraSocket = mkOption {
         type = types.bool;
         default = false;
-        description = ''
+        description = lib.mdDoc ''
           Whether to enable extra socket of the GnuPG key agent (useful for GPG
           Agent forwarding).
         '';
@@ -145,7 +145,7 @@ in {
       verbose = mkOption {
         type = types.bool;
         default = false;
-        description = ''
+        description = lib.mdDoc ''
           Whether to produce verbose output.
         '';
       };
@@ -153,22 +153,22 @@ in {
       grabKeyboardAndMouse = mkOption {
         type = types.bool;
         default = true;
-        description = ''
+        description = lib.mdDoc ''
           Tell the pinentry to grab the keyboard and mouse. This
           option should in general be used to avoid X-sniffing
           attacks. When disabled, this option passes
-          <option>no-grab</option> setting to gpg-agent.
+          {option}`no-grab` setting to gpg-agent.
         '';
       };
 
       enableScDaemon = mkOption {
         type = types.bool;
         default = true;
-        description = ''
+        description = lib.mdDoc ''
           Make use of the scdaemon tool. This option has the effect of
           enabling the ability to do smartcard operations. When
           disabled, this option passes
-          <option>disable-scdaemon</option> setting to gpg-agent.
+          {option}`disable-scdaemon` setting to gpg-agent.
         '';
       };
 
@@ -179,7 +179,7 @@ in {
           allow-emacs-pinentry
           allow-loopback-pinentry
         '';
-        description = ''
+        description = lib.mdDoc ''
           Extra configuration lines to append to the gpg-agent
           configuration file.
         '';
@@ -189,31 +189,31 @@ in {
         type = types.nullOr (types.enum pkgs.pinentry.flavors);
         example = "gnome3";
         default = "gtk2";
-        description = ''
+        description = lib.mdDoc ''
           Which pinentry interface to use. If not
-          <literal>null</literal>, it sets
-          <option>pinentry-program</option> in
-          <filename>gpg-agent.conf</filename>. Beware that
-          <literal>pinentry-gnome3</literal> may not work on non-Gnome
+          `null`, it sets
+          {option}`pinentry-program` in
+          {file}`gpg-agent.conf`. Beware that
+          `pinentry-gnome3` may not work on non-Gnome
           systems. You can fix it by adding the following to your
           system configuration:
-          <programlisting language="nix">
+          ```nix
           services.dbus.packages = [ pkgs.gcr ];
-          </programlisting>
-          For this reason, the default is <literal>gtk2</literal> for
+          ```
+          For this reason, the default is `gtk2` for
           now.
         '';
       };
 
-      enableBashIntegration = mkEnableOption "Bash integration" // {
+      enableBashIntegration = mkEnableOption (lib.mdDoc "Bash integration") // {
         default = true;
       };
 
-      enableZshIntegration = mkEnableOption "Zsh integration" // {
+      enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh integration") // {
         default = true;
       };
 
-      enableFishIntegration = mkEnableOption "Fish integration" // {
+      enableFishIntegration = mkEnableOption (lib.mdDoc "Fish integration") // {
         default = true;
       };
     };

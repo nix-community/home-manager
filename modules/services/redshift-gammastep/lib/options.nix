@@ -29,13 +29,13 @@ in {
   ];
 
   options = {
-    enable = mkEnableOption programName;
+    enable = mkEnableOption (lib.mdDoc programName);
 
     dawnTime = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "6:00-7:45";
-      description = ''
+      description = lib.mdDoc ''
         Set the time interval of dawn manually.
         The times must be specified as HH:MM in 24-hour format.
       '';
@@ -45,7 +45,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "18:35-20:15";
-      description = ''
+      description = lib.mdDoc ''
         Set the time interval of dusk manually.
         The times must be specified as HH:MM in 24-hour format.
       '';
@@ -54,9 +54,9 @@ in {
     latitude = mkOption {
       type = with types; nullOr (either str float);
       default = null;
-      description = ''
-        Your current latitude, between <literal>-90.0</literal> and
-        <literal>90.0</literal>. Must be provided along with
+      description = lib.mdDoc ''
+        Your current latitude, between `-90.0` and
+        `90.0`. Must be provided along with
         longitude.
       '';
     };
@@ -64,9 +64,9 @@ in {
     longitude = mkOption {
       type = with types; nullOr (either str float);
       default = null;
-      description = ''
-        Your current longitude, between <literal>-180.0</literal> and
-        <literal>180.0</literal>. Must be provided along with
+      description = lib.mdDoc ''
+        Your current longitude, between `-180.0` and
+        `180.0`. Must be provided along with
         latitude.
       '';
     };
@@ -74,10 +74,10 @@ in {
     provider = mkOption {
       type = types.enum [ "manual" "geoclue2" ];
       default = "manual";
-      description = ''
+      description = lib.mdDoc ''
         The location provider to use for determining your location. If set to
-        <literal>manual</literal> you must also provide latitude/longitude.
-        If set to <literal>geoclue2</literal>, you must also enable the global
+        `manual` you must also provide latitude/longitude.
+        If set to `geoclue2`, you must also enable the global
         geoclue2 service.
       '';
     };
@@ -86,17 +86,17 @@ in {
       day = mkOption {
         type = types.int;
         default = 5500;
-        description = ''
+        description = lib.mdDoc ''
           Colour temperature to use during the day, between
-          <literal>1000</literal> and <literal>25000</literal> K.
+          `1000` and `25000` K.
         '';
       };
       night = mkOption {
         type = types.int;
         default = 3700;
-        description = ''
+        description = lib.mdDoc ''
           Colour temperature to use at night, between
-          <literal>1000</literal> and <literal>25000</literal> K.
+          `1000` and `25000` K.
         '';
       };
     };
@@ -105,18 +105,18 @@ in {
       type = types.package;
       default = defaultPackage;
       defaultText = literalExpression examplePackage;
-      description = ''
+      description = lib.mdDoc ''
         ${programName} derivation to use.
       '';
     };
 
-    enableVerboseLogging = mkEnableOption "verbose service logging";
+    enableVerboseLogging = mkEnableOption (lib.mdDoc "verbose service logging");
 
     tray = mkOption {
       type = types.bool;
       default = false;
       example = true;
-      description = ''
+      description = lib.mdDoc ''
         Start the ${appletExecutable} tray applet.
       '';
     };
@@ -134,13 +134,10 @@ in {
           };
         };
       '';
-      description = ''
+      description = lib.mdDoc ''
         The configuration to pass to ${programName}.
         Available options for ${programName} described in
-        <citerefentry>
-          <refentrytitle>${moduleName}</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>.
+        {manpage}`${moduleName}(1)`.
       '';
     };
   };

@@ -11,7 +11,7 @@ in {
 
   options = {
     services.megasync = {
-      enable = mkEnableOption "Megasync client";
+      enable = mkEnableOption (lib.mdDoc "Megasync client");
 
       package = mkPackageOptionMD pkgs "megasync" { };
     };

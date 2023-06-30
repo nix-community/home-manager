@@ -35,17 +35,18 @@ let
       options = {
         org = mkOption {
           type = types.str;
-          description = "The organization the artifact is published under.";
+          description =
+            lib.mdDoc "The organization the artifact is published under.";
         };
 
         artifact = mkOption {
           type = types.str;
-          description = "The name of the artifact.";
+          description = lib.mdDoc "The name of the artifact.";
         };
 
         version = mkOption {
           type = types.str;
-          description = "The version of the plugin.";
+          description = lib.mdDoc "The version of the plugin.";
         };
       };
     };
@@ -54,23 +55,24 @@ let
       options = {
         realm = mkOption {
           type = types.str;
-          description = "The realm of the repository you're authenticating to.";
+          description =
+            lib.mdDoc "The realm of the repository you're authenticating to.";
         };
 
         host = mkOption {
           type = types.str;
-          description =
+          description = lib.mdDoc
             "The hostname of the repository you're authenticating to.";
         };
 
         user = mkOption {
           type = types.str;
-          description = "The user you're using to authenticate.";
+          description = lib.mdDoc "The user you're using to authenticate.";
         };
 
         passwordCommand = mkOption {
           type = types.str;
-          description = ''
+          description = lib.mdDoc ''
             The command that provides the password or authentication token for
             the repository.
           '';
@@ -90,21 +92,21 @@ in {
   meta.maintainers = [ maintainers.kubukoz ];
 
   options.programs.sbt = {
-    enable = mkEnableOption "sbt";
+    enable = mkEnableOption (lib.mdDoc "sbt");
 
     package = mkOption {
       type = types.package;
       default = pkgs.sbt;
       defaultText = literalExpression "pkgs.sbt";
-      description = "The package with sbt to be installed.";
+      description = lib.mdDoc "The package with sbt to be installed.";
     };
 
     baseUserConfigPath = mkOption {
       type = types.str;
       default = ".sbt";
-      description = ''
+      description = lib.mdDoc ''
         Where the sbt configuration files should be located, relative
-        <envar>HOME</envar>.
+        {env}`HOME`.
       '';
     };
 
@@ -125,7 +127,7 @@ in {
           }
         ]
       '';
-      description = ''
+      description = lib.mdDoc ''
         A list of plugins to place in the sbt configuration directory.
       '';
     };
@@ -141,7 +143,7 @@ in {
           passwordCommand = "pass show sbt/user@example.com";
         }]
       '';
-      description = ''
+      description = lib.mdDoc ''
         A list of credentials to define in the sbt configuration directory.
       '';
     };
@@ -159,28 +161,22 @@ in {
           "maven-central"
         ]
       '';
-      description = ''
+      description = lib.mdDoc ''
         A list of repositories to use when resolving dependencies. Defined as a
         list of pre-defined repository or custom repository as a set of name to
-        URL. The list will be used populate the <literal>~/.sbt/repositories</literal>
+        URL. The list will be used populate the `~/.sbt/repositories`
         file in the order specified.
 
-        </para><para>
-
-        Pre-defined repositories must be one of <literal>local</literal>,
-        <literal>maven-local</literal>, <literal>maven-central</literal>.
-
-        </para><para>
+        Pre-defined repositories must be one of `local`,
+        `maven-local`, `maven-central`.
 
         Custom repositories are defined as
-        <literal>{ name-of-repo = "https://url.to.repo.com"}</literal>.
-
-        </para><para>
+        `{ name-of-repo = "https://url.to.repo.com"}`.
 
         See
-        <link xlink:href="https://www.scala-sbt.org/1.x/docs/Launcher-Configuration.html#3.+Repositories+Section"/>
+        <https://www.scala-sbt.org/1.x/docs/Launcher-Configuration.html#3.+Repositories+Section>
         about this configuration section and
-        <link xlink:href="https://www.scala-sbt.org/1.x/docs/Proxy-Repositories.html"/>
+        <https://www.scala-sbt.org/1.x/docs/Proxy-Repositories.html>
         to read about proxy repositories.
       '';
     };

@@ -13,22 +13,19 @@ in {
 
   options = {
     services.home-manager.autoUpgrade = {
-      enable = lib.mkEnableOption ''
+      enable = lib.mkEnableOption (lib.mdDoc ''
         the Home Manager upgrade service that periodically updates your Nix
-        channels before running <literal>home-manager switch</literal>'';
+        channels before running `home-manager switch`'');
 
       frequency = lib.mkOption {
         type = lib.types.str;
         example = "weekly";
-        description = ''
+        description = lib.mdDoc ''
           The interval at which the Home Manager auto upgrade is run.
           This value is passed to the systemd timer configuration
-          as the <literal>OnCalendar</literal> option.
+          as the `OnCalendar` option.
           The format is described in
-          <citerefentry>
-            <refentrytitle>systemd.time</refentrytitle>
-            <manvolnum>7</manvolnum>
-          </citerefentry>.
+          {manpage}`systemd.time(7)`.
         '';
       };
     };

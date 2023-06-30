@@ -11,7 +11,7 @@ in {
 
   options = {
     programs.darcs = {
-      enable = mkEnableOption "darcs";
+      enable = mkEnableOption (lib.mdDoc "darcs");
 
       package = mkPackageOption pkgs "darcs" { };
 
@@ -19,7 +19,7 @@ in {
         type = types.listOf types.str;
         default = [ ];
         example = [ "Fred Bloggs <fred@example.net>" ];
-        description = ''
+        description = lib.mdDoc ''
           If this list has a single entry, it will be used as the author
           when you record a patch. If there are multiple entries, Darcs
           will prompt you to choose one of them.
@@ -30,7 +30,7 @@ in {
         type = types.listOf types.str;
         default = [ ];
         example = [ "^.idea$" ".iml$" "^.stack-work$" ];
-        description = "File patterns to ignore";
+        description = lib.mdDoc "File patterns to ignore";
       };
     };
   };

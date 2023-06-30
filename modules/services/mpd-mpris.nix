@@ -25,7 +25,7 @@ in {
 
   options.services.mpd-mpris = {
     enable = lib.mkEnableOption
-      "mpd-mpris: An implementation of the MPRIS protocol for MPD";
+      (lib.mdDoc "mpd-mpris: An implementation of the MPRIS protocol for MPD");
 
     package = lib.mkPackageOptionMD pkgs "mpd-mpris" { };
 
@@ -34,10 +34,10 @@ in {
         type = lib.types.bool;
         default = config.services.mpd.enable;
         defaultText = lib.literalExpression "config.services.mpd.enable";
-        description = ''
+        description = lib.mdDoc ''
           Whether to configure for the local MPD daemon. If
-          <literal>true</literal> the <literal>network</literal>,
-          <literal>host</literal>, and <literal>port</literal>
+          `true` the `network`,
+          `host`, and `port`
           settings are ignored.
         '';
       };
@@ -45,9 +45,9 @@ in {
       network = lib.mkOption {
         type = with lib.types; nullOr str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           The network used to dial to the MPD server. Check
-          <link xlink:href="https://golang.org/pkg/net/#Dial" />
+          <https://golang.org/pkg/net/#Dial>
           for available values (most common are "tcp" and "unix")
         '';
       };
@@ -56,13 +56,14 @@ in {
         type = with lib.types; nullOr str;
         default = null;
         example = "192.168.1.1";
-        description = "The address where MPD is listening for connections.";
+        description =
+          lib.mdDoc "The address where MPD is listening for connections.";
       };
 
       port = lib.mkOption {
         type = with lib.types; nullOr port;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           The port number where MPD is listening for connections.
         '';
       };
@@ -70,7 +71,7 @@ in {
       password = lib.mkOption {
         type = with lib.types; nullOr str;
         default = null;
-        description = ''
+        description = lib.mdDoc ''
           The password to connect to MPD.
         '';
       };

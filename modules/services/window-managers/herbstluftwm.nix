@@ -35,15 +35,15 @@ in {
   meta.maintainers = [ lib.hm.maintainers.olmokramer ];
 
   options.xsession.windowManager.herbstluftwm = {
-    enable = lib.mkEnableOption "herbstluftwm window manager";
+    enable = lib.mkEnableOption (lib.mdDoc "herbstluftwm window manager");
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.herbstluftwm;
       defaultText = lib.literalExpression "pkgs.herbstluftwm";
-      description = ''
-        Package providing the <command>herbstluftwm</command> and
-        <command>herbstclient</command> commands.
+      description = lib.mdDoc ''
+        Package providing the {command}`herbstluftwm` and
+        {command}`herbstclient` commands.
       '';
     };
 
@@ -57,7 +57,7 @@ in {
           window_border_active_color = "#FF0000";
         }
       '';
-      description = "Herbstluftwm settings.";
+      description = lib.mdDoc "Herbstluftwm settings.";
     };
 
     keybinds = lib.mkOption {
@@ -69,7 +69,7 @@ in {
           Mod4-u = "split bottom";
         }
       '';
-      description = "Herbstluftwm keybinds.";
+      description = lib.mdDoc "Herbstluftwm keybinds.";
     };
 
     mousebinds = lib.mkOption {
@@ -81,7 +81,7 @@ in {
           Mod4-B3 = "resize";
         }
       '';
-      description = "Herbstluftwm mousebinds.";
+      description = lib.mdDoc "Herbstluftwm mousebinds.";
     };
 
     rules = lib.mkOption {
@@ -93,7 +93,7 @@ in {
           "windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off"
         ]
       '';
-      description = "Herbstluftwm rules.";
+      description = lib.mdDoc "Herbstluftwm rules.";
     };
 
     tags = lib.mkOption {
@@ -102,7 +102,7 @@ in {
       example = lib.literalExpression ''
         [ "work" "browser" "music" "gaming" ]
       '';
-      description = "Tags to create on startup.";
+      description = lib.mdDoc "Tags to create on startup.";
     };
 
     extraConfig = lib.mkOption {
@@ -112,9 +112,9 @@ in {
         herbstclient set_layout max
         herbstclient detect_monitors
       '';
-      description = ''
+      description = lib.mdDoc ''
         Extra configuration lines to add verbatim to
-        <filename>$XDG_CONFIG_HOME/herbstluftwm/autostart</filename>.
+        {file}`$XDG_CONFIG_HOME/herbstluftwm/autostart`.
       '';
     };
   };

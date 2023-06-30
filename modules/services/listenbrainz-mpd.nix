@@ -13,16 +13,16 @@ in {
   meta.maintainers = [ lib.maintainers.Scrumplex ];
 
   options.services.listenbrainz-mpd = {
-    enable = mkEnableOption "listenbrainz-mpd";
+    enable = mkEnableOption (lib.mdDoc "listenbrainz-mpd");
 
     package = mkPackageOptionMD pkgs "listenbrainz-mpd" { };
 
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Configuration for listenbrainz-mpd written to
-        <filename>$XDG_CONFIG_HOME/listenbrainz-mpd/config.toml</filename>.
+        {file}`$XDG_CONFIG_HOME/listenbrainz-mpd/config.toml`.
       '';
       example = { submission.tokenFile = "/run/secrets/listenbrainz-mpd"; };
     };

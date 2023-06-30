@@ -10,19 +10,19 @@ in {
   meta.maintainers = [ ];
 
   options.programs.opam = {
-    enable = mkEnableOption "Opam";
+    enable = mkEnableOption (lib.mdDoc "Opam");
 
     package = mkOption {
       type = types.package;
       default = pkgs.opam;
       defaultText = literalExpression "pkgs.opam";
-      description = "Opam package to install.";
+      description = lib.mdDoc "Opam package to install.";
     };
 
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Bash integration.
       '';
     };
@@ -30,7 +30,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Zsh integration.
       '';
     };
@@ -38,7 +38,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Fish integration.
       '';
     };

@@ -11,37 +11,37 @@ let
         autoconnect = mkOption {
           type = nullOr bool;
           default = false;
-          description = "Autoconnect to network.";
+          description = lib.mdDoc "Autoconnect to network.";
         };
 
         connectToSelectedServerOnly = mkOption {
           type = nullOr bool;
           default = true;
-          description = "Connect to selected server only.";
+          description = lib.mdDoc "Connect to selected server only.";
         };
 
         bypassProxy = mkOption {
           type = nullOr bool;
           default = true;
-          description = "Bypass proxy.";
+          description = lib.mdDoc "Bypass proxy.";
         };
 
         forceSSL = mkOption {
           type = nullOr bool;
           default = false;
-          description = "Use SSL for all servers.";
+          description = lib.mdDoc "Use SSL for all servers.";
         };
 
         acceptInvalidSSLCertificates = mkOption {
           type = nullOr bool;
           default = false;
-          description = "Accept invalid SSL certificates.";
+          description = lib.mdDoc "Accept invalid SSL certificates.";
         };
 
         useGlobalUserInformation = mkOption {
           type = nullOr bool;
           default = false;
-          description = "Use global user information.";
+          description = lib.mdDoc "Use global user information.";
         };
       };
     };
@@ -53,21 +53,23 @@ let
           type = listOf str;
           default = [ ];
           example = [ "#home-manager" "#linux" "#nix" ];
-          description = "Channels list to autojoin on connecting to server.";
+          description =
+            lib.mdDoc "Channels list to autojoin on connecting to server.";
         };
 
         charset = mkOption {
           type = nullOr str;
           default = null;
           example = "UTF-8 (Unicode)";
-          description = "Character set.";
+          description = lib.mdDoc "Character set.";
         };
 
         commands = mkOption {
           type = listOf str;
           default = [ ];
           example = literalExpression ''[ "ECHO Greetings fellow Nixer! ]'';
-          description = "Commands to be executed on connecting to server.";
+          description =
+            lib.mdDoc "Commands to be executed on connecting to server.";
         };
 
         loginMethod = mkOption {
@@ -108,13 +110,13 @@ let
         nickname = mkOption {
           type = nullOr str;
           default = null;
-          description = "Primary nickname.";
+          description = lib.mdDoc "Primary nickname.";
         };
 
         nickname2 = mkOption {
           type = nullOr str;
           default = null;
-          description = "Secondary nickname.";
+          description = lib.mdDoc "Secondary nickname.";
         };
 
         options = mkOption {
@@ -124,13 +126,13 @@ let
             autoconnect = true;
             useGlobalUserInformation = true;
           };
-          description = "Channel options.";
+          description = lib.mdDoc "Channel options.";
         };
 
         password = mkOption {
           type = nullOr str;
           default = null;
-          description = ''
+          description = lib.mdDoc ''
             Password to use. Note this password will be readable by all user's
             in the Nix store.
           '';
@@ -139,17 +141,17 @@ let
         realName = mkOption {
           type = nullOr str;
           default = null;
-          description = ''
+          description = lib.mdDoc ''
             Real name. Is used to populate the real name field that appears when
-            someone uses the <literal>WHOIS</literal> command on your nick.
+            someone uses the `WHOIS` command on your nick.
           '';
         };
 
         userName = mkOption {
           type = nullOr str;
           default = null;
-          description = ''
-            User name. Part of your <literal>user@host</literal> hostmask that
+          description = lib.mdDoc ''
+            User name. Part of your `user@host` hostmask that
             appears to other on IRC.
           '';
         };
@@ -158,7 +160,7 @@ let
           type = listOf str;
           default = [ ];
           example = [ "irc.oftc.net" ];
-          description = "IRC Server Address List.";
+          description = lib.mdDoc "IRC Server Address List.";
         };
       };
     };
@@ -219,7 +221,7 @@ in {
   meta.maintainers = with maintainers; [ thiagokokada ];
 
   options.programs.hexchat = with types; {
-    enable = mkEnableOption "HexChat, a graphical IRC client";
+    enable = mkEnableOption (lib.mdDoc "HexChat, a graphical IRC client");
 
     channels = mkOption {
       type = attrsOf modChannelOption;
@@ -254,8 +256,8 @@ in {
             userName = "my_username";
           };
         }'';
-      description = ''
-        Configures <filename>$XDG_CONFIG_HOME/hexchat/servlist.conf</filename>.
+      description = lib.mdDoc ''
+        Configures {file}`$XDG_CONFIG_HOME/hexchat/servlist.conf`.
       '';
     };
 
@@ -270,9 +272,9 @@ in {
           text_font = "Monospace 14";
         };
       '';
-      description = ''
-        Configuration for <filename>$XDG_CONFIG_HOME/hexchat/hexchat.conf</filename>, see
-        <link xlink:href="https://hexchat.readthedocs.io/en/latest/settings.html#list-of-settings"/>
+      description = lib.mdDoc ''
+        Configuration for {file}`$XDG_CONFIG_HOME/hexchat/hexchat.conf`, see
+        <https://hexchat.readthedocs.io/en/latest/settings.html#list-of-settings>
         for supported values.
       '';
     };
@@ -307,9 +309,9 @@ in {
           stripRoot = false;
         };
       '';
-      description = ''
+      description = lib.mdDoc ''
         Theme package for HexChat. Expects a derivation containing decompressed
-        theme files. Note, <literal>.hct</literal> files are actually ZIP files,
+        theme files. Note, `.hct` files are actually ZIP files,
         as seen in example.
       '';
     };

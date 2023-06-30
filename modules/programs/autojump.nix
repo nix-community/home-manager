@@ -11,12 +11,12 @@ in {
   meta.maintainers = [ maintainers.evanjs ];
 
   options.programs.autojump = {
-    enable = mkEnableOption "autojump";
+    enable = mkEnableOption (lib.mdDoc "autojump");
 
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Bash integration.
       '';
     };
@@ -24,7 +24,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Zsh integration.
       '';
     };
@@ -32,7 +32,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable Fish integration.
       '';
     };

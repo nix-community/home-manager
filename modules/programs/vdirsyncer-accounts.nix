@@ -8,12 +8,12 @@ let
 
 in {
   options.vdirsyncer = {
-    enable = mkEnableOption "synchronization using vdirsyncer";
+    enable = mkEnableOption (lib.mdDoc "synchronization using vdirsyncer");
 
     collections = mkOption {
       type = types.nullOr (types.listOf collection);
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         The collections to synchronize between the storages.
       '';
     };
@@ -23,10 +23,10 @@ in {
         (types.either (types.enum [ "remote wins" "local wins" ])
           (types.listOf types.str));
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         What to do in case of a conflict between the storages. Either
-        <literal>remote wins</literal> or
-        <literal>local wins</literal> or
+        `remote wins` or
+        `local wins` or
         a list that contains a command to run. By default, an error
         message is printed.
       '';
@@ -35,13 +35,13 @@ in {
     partialSync = mkOption {
       type = types.nullOr (types.enum [ "revert" "error" "ignore" ]);
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         What should happen if synchronization in one direction
         is impossible due to one storage being read-only.
-        Defaults to <literal>revert</literal>.
-        </para><para>
+        Defaults to `revert`.
+
         See
-        <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#pair-section"/>
+        <https://vdirsyncer.pimutils.org/en/stable/config.html#pair-section>
         for more information.
       '';
     };
@@ -50,7 +50,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "color" "displayname" ];
-      description = ''
+      description = lib.mdDoc ''
         Metadata keys that should be synchronized when vdirsyncer
         metasync is executed.
       '';
@@ -61,19 +61,19 @@ in {
         options = {
           start = mkOption {
             type = types.str;
-            description = "Start of time range to show.";
+            description = lib.mdDoc "Start of time range to show.";
           };
 
           end = mkOption {
             type = types.str;
-            description = "End of time range to show.";
+            description = lib.mdDoc "End of time range to show.";
           };
         };
       });
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         A time range to synchronize. start and end can be any Python
-        expression that returns a <literal>datetime.datetime</literal>
+        expression that returns a `datetime.datetime`
         object.
       '';
       example = {
@@ -85,7 +85,7 @@ in {
     itemTypes = mkOption {
       type = types.nullOr (types.listOf types.str);
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         Kinds of items to show. The default is to show everything.
         This depends on particular features of the server, the results
         are not validated.
@@ -95,17 +95,17 @@ in {
     verify = mkOption {
       type = types.nullOr types.bool;
       default = null;
-      description = "Verify SSL certificate.";
+      description = lib.mdDoc "Verify SSL certificate.";
     };
 
     verifyFingerprint = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         Optional. SHA1 or MD5 fingerprint of the expected server certificate.
-        </para><para>
+
         See
-        <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/ssl-tutorial.html#ssl-tutorial"/>
+        <https://vdirsyncer.pimutils.org/en/stable/ssl-tutorial.html#ssl-tutorial>
         for more information.
       '';
     };
@@ -113,15 +113,15 @@ in {
     auth = mkOption {
       type = types.nullOr (types.enum [ "basic" "digest" "guess" ]);
       default = null;
-      description = ''
-        Authentication settings. The default is <literal>basic</literal>.
+      description = lib.mdDoc ''
+        Authentication settings. The default is `basic`.
       '';
     };
 
     authCert = mkOption {
       type = types.nullOr (types.either types.str (types.listOf types.str));
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         Either a path to a certificate with a client certificate and
         the key or a list of paths to the files with them.
       '';
@@ -130,16 +130,16 @@ in {
     userAgent = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         The user agent to report to the server. Defaults to
-        <literal>vdirsyncer</literal>.
+        `vdirsyncer`.
       '';
     };
 
     postHook = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Command to call for each item creation and modification.
         The command will be called with the path of the new/updated
         file.
@@ -151,7 +151,7 @@ in {
     tokenFile = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         A file path where access tokens are stored.
       '';
     };
@@ -160,12 +160,12 @@ in {
       type = types.nullOr (types.listOf types.str);
       default = null;
       example = [ "pass" "client_id" ];
-      description = ''
+      description = lib.mdDoc ''
         A command that prints the OAuth credentials to standard
         output.
-        </para><para>
+
         See
-        <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#google"/>
+        <https://vdirsyncer.pimutils.org/en/stable/config.html#google>
         for more information.
       '';
     };
@@ -174,12 +174,12 @@ in {
       type = types.nullOr (types.listOf types.str);
       default = null;
       example = [ "pass" "client_secret" ];
-      description = ''
+      description = lib.mdDoc ''
         A command that prints the OAuth credentials to standard
         output.
-        </para><para>
+
         See
-        <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#google"/>
+        <https://vdirsyncer.pimutils.org/en/stable/config.html#google>
         for more information.
       '';
     };

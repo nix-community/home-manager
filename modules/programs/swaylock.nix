@@ -16,7 +16,7 @@ in {
         false otherwise
       '';
       example = true;
-      description = "Whether to enable swaylock.";
+      description = lib.mdDoc "Whether to enable swaylock.";
     };
 
     package = mkPackageOptionMD pkgs "swaylock" { };
@@ -24,8 +24,8 @@ in {
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool float int str ]);
       default = { };
-      description = ''
-        Default arguments to <command>swaylock</command>. An empty set
+      description = lib.mdDoc ''
+        Default arguments to {command}`swaylock`. An empty set
         disables configuration generation.
       '';
       example = {

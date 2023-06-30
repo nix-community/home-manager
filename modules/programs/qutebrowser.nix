@@ -36,19 +36,19 @@ let
 
 in {
   options.programs.qutebrowser = {
-    enable = mkEnableOption "qutebrowser";
+    enable = mkEnableOption (lib.mdDoc "qutebrowser");
 
     package = mkOption {
       type = types.package;
       default = pkgs.qutebrowser;
       defaultText = literalExpression "pkgs.qutebrowser";
-      description = "Qutebrowser package to install.";
+      description = lib.mdDoc "Qutebrowser package to install.";
     };
 
     aliases = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Aliases for commands.
       '';
     };
@@ -56,7 +56,7 @@ in {
     loadAutoconfig = mkOption {
       type = types.bool;
       default = false;
-      description = ''
+      description = lib.mdDoc ''
         Load settings configured via the GUI.
       '';
     };
@@ -64,18 +64,18 @@ in {
     searchEngines = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Search engines that can be used via the address bar. Maps a search
-        engine name (such as <literal>DEFAULT</literal>, or
-        <literal>ddg</literal>) to a URL with a <literal>{}</literal>
+        engine name (such as `DEFAULT`, or
+        `ddg`) to a URL with a `{}`
         placeholder. The placeholder will be replaced by the search term, use
-        <literal>{{</literal> and <literal>}}</literal> for literal
-        <literal>{/}</literal> signs. The search engine named
-        <literal>DEFAULT</literal> is used when
-        <literal>url.auto_search</literal> is turned on and something else than
+        `{{` and `}}` for literal
+        `{/}` signs. The search engine named
+        `DEFAULT` is used when
+        `url.auto_search` is turned on and something else than
         a URL was entered to be opened. Other search engines can be used by
         prepending the search engine name to the search term, for example
-        <literal>:open google qutebrowser</literal>.
+        `:open google qutebrowser`.
       '';
       example = literalExpression ''
         {
@@ -90,9 +90,9 @@ in {
     settings = mkOption {
       type = types.attrsOf types.anything;
       default = { };
-      description = ''
-        Options to add to qutebrowser <filename>config.py</filename> file.
-        See <link xlink:href="https://qutebrowser.org/doc/help/settings.html"/>
+      description = lib.mdDoc ''
+        Options to add to qutebrowser {file}`config.py` file.
+        See <https://qutebrowser.org/doc/help/settings.html>
         for options.
       '';
       example = literalExpression ''
@@ -112,20 +112,20 @@ in {
     keyMappings = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         This setting can be used to map keys to other keys. When the key used
         as dictionary-key is pressed, the binding for the key used as
         dictionary-value is invoked instead. This is useful for global
         remappings of keys, for example to map Ctrl-[ to Escape. Note that when
-        a key is bound (via <literal>bindings.default</literal> or
-        <literal>bindings.commands</literal>), the mapping is ignored.
+        a key is bound (via `bindings.default` or
+        `bindings.commands`), the mapping is ignored.
       '';
     };
 
     enableDefaultBindings = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Disable to prevent loading default key bindings.
       '';
     };
@@ -227,8 +227,8 @@ in {
     quickmarks = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = ''
-        Quickmarks to add to qutebrowser's <filename>quickmarks</filename> file.
+      description = lib.mdDoc ''
+        Quickmarks to add to qutebrowser's {file}`quickmarks` file.
         Note that when Home Manager manages your quickmarks, you cannot edit them at runtime.
       '';
       example = literalExpression ''
@@ -242,8 +242,8 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = ''
-        Extra lines added to qutebrowser <filename>config.py</filename> file.
+      description = lib.mdDoc ''
+        Extra lines added to qutebrowser {file}`config.py` file.
       '';
     };
   };

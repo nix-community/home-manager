@@ -16,7 +16,7 @@ let
   mkRetentionOption = frequency:
     mkNullableOption {
       type = types.int;
-      description =
+      description = lib.mdDoc
         "Number of ${frequency} archives to keep. Use -1 for no limit.";
       example = 3;
     };
@@ -24,20 +24,20 @@ let
   extraConfigOption = mkOption {
     type = yamlFormat.type;
     default = { };
-    description = "Extra settings.";
+    description = lib.mdDoc "Extra settings.";
   };
 
   consistencyCheckModule = types.submodule {
     options = {
       name = mkOption {
         type = types.enum [ "repository" "archives" "data" "extract" ];
-        description = "Name of consistency check to run.";
+        description = lib.mdDoc "Name of consistency check to run.";
         example = "repository";
       };
 
       frequency = mkNullableOption {
         type = types.strMatching "([[:digit:]]+ .*)|always";
-        description = "Frequency of this type of check";
+        description = lib.mdDoc "Frequency of this type of check";
         example = "2 weeks";
       };
     };
@@ -51,20 +51,20 @@ let
       location = {
         sourceDirectories = mkOption {
           type = types.listOf types.str;
-          description = "Directories to backup.";
+          description = lib.mdDoc "Directories to backup.";
           example = literalExpression "[config.home.homeDirectory]";
         };
 
         repositories = mkOption {
           type = types.listOf types.str;
-          description = "Paths to repositories.";
+          description = lib.mdDoc "Paths to repositories.";
           example =
             literalExpression ''["ssh://myuser@myrepo.myserver.com/./repo"]'';
         };
 
         excludeHomeManagerSymlinks = mkOption {
           type = types.bool;
-          description = ''
+          description = lib.mdDoc ''
             Whether to exclude Home Manager generated symbolic links from
             the backups. This facilitates restoring the whole home
             directory when the Nix store doesn't contain the latest
@@ -80,7 +80,8 @@ let
       storage = {
         encryptionPasscommand = mkNullableOption {
           type = types.str;
-          description = "Command writing the passphrase to standard output.";
+          description =
+            lib.mdDoc "Command writing the passphrase to standard output.";
           example =
             literalExpression ''"''${pkgs.password-store}/bin/pass borg-repo"'';
         };
@@ -90,7 +91,8 @@ let
       retention = {
         keepWithin = mkNullableOption {
           type = types.strMatching "[[:digit:]]+[Hdwmy]";
-          description = "Keep all archives within this time interval.";
+          description =
+            lib.mdDoc "Keep all archives within this time interval.";
           example = "2d";
         };
 
@@ -109,7 +111,7 @@ let
         checks = mkOption {
           type = types.listOf consistencyCheckModule;
           default = [ ];
-          description = "Consistency checks to run";
+          description = lib.mdDoc "Consistency checks to run";
           example = literalExpression ''
             [
               {
@@ -180,13 +182,13 @@ in {
 
   options = {
     programs.borgmatic = {
-      enable = mkEnableOption "Borgmatic";
+      enable = mkEnableOption (lib.mdDoc "Borgmatic");
 
       package = mkPackageOptionMD pkgs "borgmatic" { };
 
       backups = mkOption {
         type = types.attrsOf configModule;
-        description = ''
+        description = lib.mdDoc ''
           Borgmatic allows for several named backup configurations,
           each with its own source directories and repositories.
         '';

@@ -81,7 +81,7 @@ in {
       '';
     };
 
-    verbose = mkEnableOption "verbose output on activation";
+    verbose = mkEnableOption (lib.mdDoc "verbose output on activation");
 
     users = mkOption {
       type = types.attrsOf hmModule;

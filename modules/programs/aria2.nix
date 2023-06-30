@@ -17,18 +17,15 @@ in {
   meta.maintainers = [ hm.maintainers.justinlovinger ];
 
   options.programs.aria2 = {
-    enable = mkEnableOption "aria2";
+    enable = mkEnableOption (lib.mdDoc "aria2");
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool float int str ]);
       default = { };
-      description = ''
-        Options to add to <filename>aria2.conf</filename> file.
+      description = lib.mdDoc ''
+        Options to add to {file}`aria2.conf` file.
         See
-        <citerefentry>
-          <refentrytitle>aria2c</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>
+        {manpage}`aria2c(1)`
         for options.
       '';
       example = literalExpression ''
@@ -45,8 +42,8 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = ''
-        Extra lines added to <filename>aria2.conf</filename> file.
+      description = lib.mdDoc ''
+        Extra lines added to {file}`aria2.conf` file.
       '';
     };
   };

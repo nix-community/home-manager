@@ -10,15 +10,16 @@ in {
   meta.maintainers = [ maintainers.gerschtli ];
 
   options.services.lorri = {
-    enable = mkEnableOption "lorri build daemon";
+    enable = mkEnableOption (lib.mdDoc "lorri build daemon");
 
-    enableNotifications = mkEnableOption "lorri build notifications";
+    enableNotifications =
+      mkEnableOption (lib.mdDoc "lorri build notifications");
 
     package = mkOption {
       type = types.package;
       default = pkgs.lorri;
       defaultText = literalExpression "pkgs.lorri";
-      description = "Which lorri package to install.";
+      description = lib.mdDoc "Which lorri package to install.";
     };
 
     nixPackage = mkOption {
@@ -26,7 +27,7 @@ in {
       default = pkgs.nix;
       defaultText = literalExpression "pkgs.nix";
       example = literalExpression "pkgs.nixVersions.unstable";
-      description = "Which nix package to use.";
+      description = lib.mdDoc "Which nix package to use.";
     };
   };
 

@@ -21,14 +21,14 @@ let
             pv = "pr view";
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Aliases that allow you to create nicknames for gh commands.
         '';
       };
       editor = mkOption {
         type = types.str;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           The editor that gh should run when creating issues, pull requests, etc.
           If blank, will refer to environment.
         '';
@@ -37,7 +37,7 @@ let
         type = types.str;
         default = "https";
         example = "ssh";
-        description = ''
+        description = lib.mdDoc ''
           The protocol to use when performing Git operations.
         '';
       };
@@ -63,20 +63,20 @@ in {
     ];
 
   options.programs.gh = {
-    enable = mkEnableOption "GitHub CLI tool";
+    enable = mkEnableOption (lib.mdDoc "GitHub CLI tool");
 
     package = mkOption {
       type = types.package;
       default = pkgs.gh;
       defaultText = literalExpression "pkgs.gh";
-      description = "Package providing <command>gh</command>.";
+      description = lib.mdDoc "Package providing {command}`gh`.";
     };
 
     settings = mkOption {
       type = settingsType;
       default = { };
-      description =
-        "Configuration written to <filename>$XDG_CONFIG_HOME/gh/config.yml</filename>.";
+      description = lib.mdDoc
+        "Configuration written to {file}`$XDG_CONFIG_HOME/gh/config.yml`.";
       example = literalExpression ''
         {
           git_protocol = "ssh";
@@ -92,15 +92,16 @@ in {
     };
 
     enableGitCredentialHelper =
-      mkEnableOption "the gh git credential helper for github.com" // {
+      mkEnableOption (lib.mdDoc "the gh git credential helper for github.com")
+      // {
         default = true;
       };
 
     extensions = mkOption {
       type = types.listOf types.package;
       default = [ ];
-      description = ''
-        gh extensions, see <link xlink:href="https://cli.github.com/manual/gh_extension"/>.
+      description = lib.mdDoc ''
+        gh extensions, see <https://cli.github.com/manual/gh_extension>.
       '';
       example = literalExpression "[ pkgs.gh-eco ]";
     };

@@ -17,7 +17,7 @@ in {
   meta.maintainers = [ ];
 
   options.programs.bat = {
-    enable = mkEnableOption "bat, a cat clone with wings";
+    enable = mkEnableOption (lib.mdDoc "bat, a cat clone with wings");
 
     config = mkOption {
       type = with types; attrsOf (either str (listOf str));
@@ -27,7 +27,7 @@ in {
         pager = "less -FR";
         map-syntax = [ "*.jenkinsfile:Groovy" "*.props:Java Properties" ];
       };
-      description = ''
+      description = lib.mdDoc ''
         Bat configuration.
       '';
     };
@@ -37,7 +37,7 @@ in {
       default = [ ];
       example = literalExpression
         "with pkgs.bat-extras; [ batdiff batman batgrep batwatch ];";
-      description = ''
+      description = lib.mdDoc ''
         Additional bat packages to install.
       '';
     };
@@ -55,7 +55,7 @@ in {
           } + "/Dracula.tmTheme");
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Additional themes to provide.
       '';
     };

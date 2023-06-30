@@ -23,20 +23,20 @@ in {
 
   options = {
     programs.octant = {
-      enable = mkEnableOption "octant";
+      enable = mkEnableOption (lib.mdDoc "octant");
 
       package = mkOption {
         type = types.package;
         default = pkgs.octant;
         defaultText = literalExpression "pkgs.octant";
         example = literalExpression "pkgs.octant-other";
-        description = "The Octant package to use.";
+        description = lib.mdDoc "The Octant package to use.";
       };
 
       plugins = mkOption {
         default = [ ];
         example = literalExpression "[ pkgs.starboard-octant-plugin ]";
-        description = "Optional Octant plugins.";
+        description = lib.mdDoc "Optional Octant plugins.";
         type = types.listOf types.package;
       };
     };

@@ -47,7 +47,7 @@ let
 in {
   options = {
     programs.notmuch = {
-      enable = mkEnableOption "Notmuch mail indexer";
+      enable = mkEnableOption (lib.mdDoc "Notmuch mail indexer");
 
       new = mkOption {
         type = types.submodule {
@@ -55,9 +55,9 @@ in {
             ignore = mkOption {
               type = types.listOf types.str;
               default = [ ];
-              description = ''
+              description = lib.mdDoc ''
                 A list to specify files and directories that will not be
-                searched for messages by <command>notmuch new</command>.
+                searched for messages by {command}`notmuch new`.
               '';
             };
 
@@ -65,24 +65,24 @@ in {
               type = types.listOf types.str;
               default = [ "unread" "inbox" ];
               example = [ "new" ];
-              description = ''
+              description = lib.mdDoc ''
                 A list of tags that will be added to all messages
-                incorporated by <command>notmuch new</command>.
+                incorporated by {command}`notmuch new`.
               '';
             };
           };
         };
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Options related to email processing performed by
-          <command>notmuch new</command>.
+          {command}`notmuch new`.
         '';
       };
 
       extraConfig = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
-        description = ''
+        description = lib.mdDoc ''
           Options that should be appended to the notmuch configuration file.
         '';
       };
@@ -92,7 +92,7 @@ in {
           type = types.lines;
           default = "";
           example = "mbsync --all";
-          description = ''
+          description = lib.mdDoc ''
             Bash statements run before scanning or importing new
             messages into the database.
           '';
@@ -104,7 +104,7 @@ in {
           example = ''
             notmuch tag +nixos -- tag:new and from:nixos1@discoursemail.com
           '';
-          description = ''
+          description = lib.mdDoc ''
             Bash statements run after new messages have been imported
             into the database and initial tags have been applied.
           '';
@@ -113,7 +113,7 @@ in {
         postInsert = mkOption {
           type = types.lines;
           default = "";
-          description = ''
+          description = lib.mdDoc ''
             Bash statements run after a message has been inserted
             into the database and initial tags have been applied.
           '';
@@ -124,7 +124,7 @@ in {
         synchronizeFlags = mkOption {
           type = types.bool;
           default = true;
-          description = ''
+          description = lib.mdDoc ''
             Whether to synchronize Maildir flags.
           '';
         };
@@ -135,7 +135,7 @@ in {
           type = types.listOf types.str;
           default = [ "deleted" "spam" ];
           example = [ "trash" "spam" ];
-          description = ''
+          description = lib.mdDoc ''
             A  list  of  tags  that  will be excluded from search results by
             default. Using an excluded tag in a  query  will  override  that
             exclusion.
@@ -147,7 +147,8 @@ in {
     accounts.email.accounts = mkOption {
       type = with types;
         attrsOf (submodule {
-          options.notmuch.enable = mkEnableOption "notmuch indexing";
+          options.notmuch.enable =
+            mkEnableOption (lib.mdDoc "notmuch indexing");
         });
     };
   };

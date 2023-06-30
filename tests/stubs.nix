@@ -9,7 +9,7 @@ let
       name = mkOption {
         type = types.str;
         default = "dummy";
-        description = "The stub package name.";
+        description = lib.mdDoc "The stub package name.";
       };
 
       outPath = mkOption {
@@ -60,7 +60,7 @@ in {
     type = types.attrsOf stubType;
     default = { };
     description =
-      "Package attributes that should be replaced by a stub package.";
+      lib.mdDoc "Package attributes that should be replaced by a stub package.";
   };
 
   config = {

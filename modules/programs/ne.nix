@@ -22,7 +22,7 @@ in {
   meta.maintainers = [ hm.maintainers.cwyc ];
 
   options.programs.ne = {
-    enable = mkEnableOption "ne";
+    enable = mkEnableOption (lib.mdDoc "ne");
 
     keybindings = mkOption {
       type = types.lines;
@@ -31,7 +31,7 @@ in {
         KEY 7f BS
         SEQ "\x1b[1;5D" 7f
       '';
-      description = ''
+      description = lib.mdDoc ''
         Keybinding file for ne.
       '';
     };
@@ -39,10 +39,10 @@ in {
     defaultPreferences = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Default preferences for ne.
-        </para><para>
-        Equivalent to <literal>programs.ne.automaticPreferences.".default"</literal>.
+
+        Equivalent to `programs.ne.automaticPreferences.".default"`.
       '';
     };
 
@@ -60,7 +60,7 @@ in {
           ''';
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Automatic preferences files for ne.
       '';
     };
@@ -68,7 +68,7 @@ in {
     menus = mkOption {
       type = types.lines;
       default = "";
-      description = "Menu configuration file for ne.";
+      description = lib.mdDoc "Menu configuration file for ne.";
     };
 
     virtualExtensions = mkOption {
@@ -78,7 +78,7 @@ in {
         sh   1  ^#!\s*/.*\b(bash|sh|ksh|zsh)\s*
         csh  1  ^#!\s*/.*\b(csh|tcsh)\s*
       '';
-      description = "Virtual extensions configuration file for ne.";
+      description = lib.mdDoc "Virtual extensions configuration file for ne.";
     };
   };
 

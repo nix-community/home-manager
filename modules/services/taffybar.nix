@@ -11,14 +11,14 @@ in {
 
   options = {
     services.taffybar = {
-      enable = mkEnableOption "Taffybar";
+      enable = mkEnableOption (lib.mdDoc "Taffybar");
 
       package = mkOption {
         default = pkgs.taffybar;
         defaultText = literalExpression "pkgs.taffybar";
         type = types.package;
         example = literalExpression "pkgs.taffybar";
-        description = "The package to use for the Taffybar binary.";
+        description = lib.mdDoc "The package to use for the Taffybar binary.";
       };
     };
   };

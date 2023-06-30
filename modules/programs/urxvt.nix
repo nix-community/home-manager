@@ -8,26 +8,26 @@ let
 
 in {
   options.programs.urxvt = {
-    enable = mkEnableOption "rxvt-unicode terminal emulator";
+    enable = mkEnableOption (lib.mdDoc "rxvt-unicode terminal emulator");
 
     package = mkOption {
       type = types.package;
       default = pkgs.rxvt-unicode;
       defaultText = literalExpression "pkgs.rxvt-unicode";
-      description = "rxvt-unicode package to install.";
+      description = lib.mdDoc "rxvt-unicode package to install.";
     };
 
     fonts = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      description = "List of fonts to be used.";
+      description = lib.mdDoc "List of fonts to be used.";
       example = [ "xft:Droid Sans Mono Nerd Font:size=9" ];
     };
 
     keybindings = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = "Mapping of keybindings to actions";
+      description = lib.mdDoc "Mapping of keybindings to actions";
       example = literalExpression ''
         {
           "Shift-Control-C" = "eval:selection_to_clipboard";
@@ -39,7 +39,7 @@ in {
     iso14755 = mkOption {
       type = types.bool;
       default = true;
-      description =
+      description = lib.mdDoc
         "ISO14755 support for viewing and entering unicode characters.";
     };
 
@@ -50,69 +50,71 @@ in {
             enable = mkOption {
               type = types.bool;
               default = true;
-              description = "Whether to enable the scrollbar";
+              description = lib.mdDoc "Whether to enable the scrollbar";
             };
 
             style = mkOption {
               type = types.enum [ "rxvt" "plain" "next" "xterm" ];
               default = "plain";
-              description = "Scrollbar style.";
+              description = lib.mdDoc "Scrollbar style.";
             };
 
             align = mkOption {
               type = types.enum [ "top" "bottom" "center" ];
               default = "center";
-              description = "Scrollbar alignment.";
+              description = lib.mdDoc "Scrollbar alignment.";
             };
 
             position = mkOption {
               type = types.enum [ "left" "right" ];
               default = "right";
-              description = "Scrollbar position.";
+              description = lib.mdDoc "Scrollbar position.";
             };
 
             floating = mkOption {
               type = types.bool;
               default = true;
-              description =
+              description = lib.mdDoc
                 "Whether to display an rxvt scrollbar without a trough.";
             };
           };
         };
         default = { };
-        description = "Scrollbar settings.";
+        description = lib.mdDoc "Scrollbar settings.";
       };
 
       lines = mkOption {
         type = types.ints.unsigned;
         default = 10000;
-        description = "Number of lines to save in the scrollback buffer.";
+        description =
+          lib.mdDoc "Number of lines to save in the scrollback buffer.";
       };
 
       keepPosition = mkOption {
         type = types.bool;
         default = true;
-        description =
+        description = lib.mdDoc
           "Whether to keep a scroll position when TTY receives new lines.";
       };
 
       scrollOnKeystroke = mkOption {
         type = types.bool;
         default = true;
-        description = "Whether to scroll to bottom on keyboard input.";
+        description =
+          lib.mdDoc "Whether to scroll to bottom on keyboard input.";
       };
 
       scrollOnOutput = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether to scroll to bottom on TTY output.";
+        description = lib.mdDoc "Whether to scroll to bottom on TTY output.";
       };
     };
 
     transparent = mkOption {
       type = types.bool;
       default = false;
-      description = "Whether to enable pseudo-transparency.";
+      description = lib.mdDoc "Whether to enable pseudo-transparency.";
     };
 
     shading = mkOption {
@@ -125,7 +127,7 @@ in {
     extraConfig = mkOption {
       default = { };
       type = types.attrsOf types.anything;
-      description = "Additional configuration to add.";
+      description = lib.mdDoc "Additional configuration to add.";
       example = { "shading" = 15; };
     };
 

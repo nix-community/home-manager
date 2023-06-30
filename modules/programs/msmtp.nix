@@ -49,28 +49,28 @@ in {
 
   options = {
     programs.msmtp = {
-      enable = mkEnableOption "msmtp";
+      enable = mkEnableOption (lib.mdDoc "msmtp");
 
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = ''
-          Extra configuration lines to add to <filename>~/.msmtprc</filename>.
-          See <link xlink:href="https://marlam.de/msmtp/msmtprc.txt"/> for examples.
-          </para><para>
+        description = lib.mdDoc ''
+          Extra configuration lines to add to {file}`~/.msmtprc`.
+          See <https://marlam.de/msmtp/msmtprc.txt> for examples.
+
           Note, if running msmtp fails with the error message "account default
           was already defined" then you probably have an account command here.
           Account commands should be placed in
-          <xref linkend="opt-accounts.email.accounts._name_.msmtp.extraConfig"/>.
+          [](#opt-accounts.email.accounts._name_.msmtp.extraConfig).
         '';
       };
 
       extraAccounts = mkOption {
         type = types.lines;
         default = "";
-        description = ''
-          Extra configuration lines to add to the end of <filename>~/.msmtprc</filename>.
-          See <link xlink:href="https://marlam.de/msmtp/msmtprc.txt"/> for examples.
+        description = lib.mdDoc ''
+          Extra configuration lines to add to the end of {file}`~/.msmtprc`.
+          See <https://marlam.de/msmtp/msmtprc.txt> for examples.
         '';
       };
     };

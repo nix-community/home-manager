@@ -7,17 +7,17 @@ with lib;
     enable = mkOption {
       type = types.bool;
       default = false;
-      description = ''
+      description = lib.mdDoc ''
         Whether to enable msmtp.
-        </para><para>
+
         If enabled then it is possible to use the
-        <literal>--account</literal> command line
+        `--account` command line
         option to send a message for a given account using the
-        <command>msmtp</command> or <command>msmtpq</command> tool.
-        For example, <command>msmtp --account=private</command> would
+        {command}`msmtp` or {command}`msmtpq` tool.
+        For example, {command}`msmtp --account=private` would
         send using the account defined in
-        <option>accounts.email.accounts.private</option>. If the
-        <literal>--account</literal> option is not
+        {option}`accounts.email.accounts.private`. If the
+        `--account` option is not
         given then the primary account will be used.
       '';
     };
@@ -27,10 +27,10 @@ with lib;
         types.nullOr (types.strMatching "([[:alnum:]]{2}:)+[[:alnum:]]{2}");
       default = null;
       example = "my:SH:a2:56:ha:sh";
-      description = ''
+      description = lib.mdDoc ''
         Fingerprint of a trusted TLS certificate.
         The fingerprint can be obtained by executing
-        <command>msmtp --serverinfo --tls --tls-certcheck=off</command>.
+        {command}`msmtp --serverinfo --tls --tls-certcheck=off`.
       '';
     };
 
@@ -38,9 +38,9 @@ with lib;
       type = types.attrsOf types.str;
       default = { };
       example = { auth = "login"; };
-      description = ''
-        Extra configuration options to add to <filename>~/.msmtprc</filename>.
-        See <link xlink:href="https://marlam.de/msmtp/msmtprc.txt"/> for
+      description = lib.mdDoc ''
+        Extra configuration options to add to {file}`~/.msmtprc`.
+        See <https://marlam.de/msmtp/msmtprc.txt> for
         examples.
       '';
     };

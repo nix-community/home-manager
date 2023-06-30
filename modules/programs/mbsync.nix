@@ -192,14 +192,15 @@ in {
 
   options = {
     programs.mbsync = {
-      enable = mkEnableOption "mbsync IMAP4 and Maildir mailbox synchronizer";
+      enable = mkEnableOption
+        (lib.mdDoc "mbsync IMAP4 and Maildir mailbox synchronizer");
 
       package = mkOption {
         type = types.package;
         default = pkgs.isync;
         defaultText = literalExpression "pkgs.isync";
         example = literalExpression "pkgs.isync";
-        description = "The package to use for the mbsync binary.";
+        description = lib.mdDoc "The package to use for the mbsync binary.";
       };
 
       groups = mkOption {
@@ -213,7 +214,7 @@ in {
             };
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Definition of groups.
         '';
       };
@@ -221,7 +222,7 @@ in {
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Extra configuration lines to add to the mbsync configuration.
         '';
       };

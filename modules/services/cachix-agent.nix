@@ -10,20 +10,20 @@ in {
   meta.maintainers = [ maintainers.rycee ];
 
   options.services.cachix-agent = {
-    enable = mkEnableOption ''
-      Cachix Deploy Agent: <link xlink:href="https://docs.cachix.org/deploy/"/>'';
+    enable = mkEnableOption
+      (lib.mdDoc "Cachix Deploy Agent: <https://docs.cachix.org/deploy/>");
 
     name = mkOption {
       type = types.str;
-      description = "The unique agent name.";
+      description = lib.mdDoc "The unique agent name.";
     };
 
-    verbose = mkEnableOption "verbose output";
+    verbose = mkEnableOption (lib.mdDoc "verbose output");
 
     profile = mkOption {
       type = types.str;
       default = "home-manager";
-      description = ''
+      description = lib.mdDoc ''
         The Nix profile name.
       '';
     };
@@ -31,7 +31,7 @@ in {
     host = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = "Cachix URI to use.";
+      description = lib.mdDoc "Cachix URI to use.";
     };
 
     package = mkPackageOptionMD pkgs "cachix" { };
@@ -41,9 +41,9 @@ in {
       default = "${config.xdg.configHome}/cachix-agent.token";
       defaultText =
         literalExpression ''"''${config.xdg.configHome}/cachix-agent.token"'';
-      description = ''
+      description = lib.mdDoc ''
         Required file that needs to contain
-        <literal>CACHIX_AGENT_TOKEN=...</literal>.
+        `CACHIX_AGENT_TOKEN=...`.
       '';
     };
   };

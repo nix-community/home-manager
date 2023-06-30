@@ -17,7 +17,7 @@ in {
   meta.maintainers = [ ];
 
   options.programs.papis = {
-    enable = mkEnableOption "papis";
+    enable = mkEnableOption (lib.mdDoc "papis");
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool int str ]);
@@ -29,10 +29,10 @@ in {
           add-edit = true;
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/papis/config</filename>. See
-        <link xlink:href="https://papis.readthedocs.io/en/latest/configuration.html"/>
+        {file}`$XDG_CONFIG_HOME/papis/config`. See
+        <https://papis.readthedocs.io/en/latest/configuration.html>
         for supported values.
       '';
     };
@@ -44,14 +44,14 @@ in {
             type = types.str;
             default = name;
             readOnly = true;
-            description = "This library's name.";
+            description = lib.mdDoc "This library's name.";
           };
 
           isDefault = mkOption {
             type = types.bool;
             default = false;
             example = true;
-            description = ''
+            description = lib.mdDoc ''
               Whether this is a default library. There must be exactly one
               default library.
             '';
@@ -65,13 +65,13 @@ in {
                 dir = "~/papers/";
               }
             '';
-            description = ''
+            description = lib.mdDoc ''
               Configuration for this library.
             '';
           };
         };
       }));
-      description = "Attribute set of papis libraries.";
+      description = lib.mdDoc "Attribute set of papis libraries.";
     };
   };
 

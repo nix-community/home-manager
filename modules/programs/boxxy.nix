@@ -12,7 +12,7 @@ let
     options = {
       name = mkOption {
         type = types.str;
-        description = ''
+        description = lib.mdDoc ''
           Unique identifier of the boxxy rule. This can be any single-line string.
         '';
       };
@@ -21,7 +21,7 @@ let
         type = types.str;
         default = "";
         example = "~/.ssh";
-        description = ''
+        description = lib.mdDoc ''
           What directory/file to redirect.
         '';
       };
@@ -30,7 +30,7 @@ let
         type = types.str;
         default = "";
         example = literalExpression ''"''${config.xdg.configHome}/ssh"'';
-        description = ''
+        description = lib.mdDoc ''
           Where that file/directory should be rewritten to.
         '';
       };
@@ -38,7 +38,7 @@ let
       mode = mkOption {
         type = types.enum [ "file" "directory" ];
         default = "directory";
-        description = ''
+        description = lib.mdDoc ''
           Does the current path redirect a file or a directory?
         '';
       };
@@ -52,7 +52,7 @@ let
             "/usr/bin/sh"
           ]
         '';
-        description = ''
+        description = lib.mdDoc ''
           Apply redirection ONLY to specified executable names.
         '';
       };
@@ -61,7 +61,7 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = [ "/home/example/Projects/my-project" ];
-        description = ''
+        description = lib.mdDoc ''
           Apply redirection ONLY when in a certain directory.
         '';
       };
@@ -74,7 +74,7 @@ let
             MY_ENV_VAR = "my_env_var_value";
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Give certain environment variables for said match.
         '';
       };
@@ -82,14 +82,15 @@ let
   };
 in {
   options.programs.boxxy = {
-    enable = mkEnableOption "boxxy: Boxes in badly behaving applications";
+    enable =
+      mkEnableOption (lib.mdDoc "boxxy: Boxes in badly behaving applications");
 
     package = mkPackageOptionMD pkgs "boxxy" { };
 
     rules = mkOption {
       type = types.listOf boxxyRulesOpts;
       default = [ ];
-      description = "List of boxxy rules";
+      description = lib.mdDoc "List of boxxy rules";
     };
   };
 

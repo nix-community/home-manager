@@ -17,19 +17,19 @@ let
 in {
   options = {
     services.getmail = {
-      enable = mkEnableOption
-        "the getmail systemd service to automatically retrieve mail";
+      enable = mkEnableOption (lib.mdDoc
+        "the getmail systemd service to automatically retrieve mail");
 
       frequency = mkOption {
         type = types.str;
         default = "*:0/5";
         example = "hourly";
-        description = ''
-          The refresh frequency. Check <literal>man systemd.time</literal> for
+        description = lib.mdDoc ''
+          The refresh frequency. Check `man systemd.time` for
           more information on the syntax. If you use a gpg-agent in
           combination with the passwordCommand, keep the poll
           frequency below the cache-ttl value (as set by the
-          <literal>default</literal>) to avoid pinentry asking
+          `default`) to avoid pinentry asking
           permanently for a password.
         '';
       };

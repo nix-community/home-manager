@@ -18,17 +18,17 @@ let
 in {
   options = {
     xsession.windowManager.xmonad = {
-      enable = mkEnableOption "xmonad window manager";
+      enable = mkEnableOption (lib.mdDoc "xmonad window manager");
 
       haskellPackages = mkOption {
         default = pkgs.haskellPackages;
         defaultText = literalExpression "pkgs.haskellPackages";
         example = literalExpression "pkgs.haskell.packages.ghc784";
-        description = ''
-          The <varname>haskellPackages</varname> used to build xmonad
+        description = lib.mdDoc ''
+          The {var}`haskellPackages` used to build xmonad
           and other packages. This can be used to change the GHC
           version used to build xmonad and the packages listed in
-          <varname>extraPackages</varname>.
+          {var}`extraPackages`.
         '';
       };
 
@@ -41,10 +41,10 @@ in {
             haskellPackages.monad-logger
           ]
         '';
-        description = ''
+        description = lib.mdDoc ''
           Extra packages available to GHC when rebuilding xmonad. The
           value must be a function which receives the attribute set
-          defined in <varname>haskellPackages</varname> as the sole
+          defined in {var}`haskellPackages` as the sole
           argument.
         '';
       };
@@ -52,7 +52,7 @@ in {
       enableContribAndExtras = mkOption {
         default = false;
         type = types.bool;
-        description = "Enable xmonad-{contrib,extras} in xmonad.";
+        description = lib.mdDoc "Enable xmonad-{contrib,extras} in xmonad.";
       };
 
       config = mkOption {
@@ -68,16 +68,15 @@ in {
                 }
           '''
         '';
-        description = ''
+        description = lib.mdDoc ''
           The configuration file to be used for xmonad. This must be
-          an absolute path or <literal>null</literal> in which case
-          <filename>~/.xmonad/xmonad.hs</filename> will not be managed
+          an absolute path or `null` in which case
+          {file}`~/.xmonad/xmonad.hs` will not be managed
           by Home Manager.
-          </para>
-          <para>
-          If this option is set to a non-<literal>null</literal> value,
+
+          If this option is set to a non-`null` value,
           recompilation of xmonad outside of Home Manager (e.g. via
-          <command>xmonad --recompile</command>) will fail.
+          {command}`xmonad --recompile`) will fail.
         '';
       };
 
@@ -92,9 +91,9 @@ in {
              ''';
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           Additional files that will be saved in
-          <filename>~/.xmonad/lib/</filename> and included in the configuration
+          {file}`~/.xmonad/lib/` and included in the configuration
           build. The keys are the file names while the values are paths to the
           contents of the files.
         '';

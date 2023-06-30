@@ -31,13 +31,14 @@ let
 
 in {
   options.programs.command-not-found = {
-    enable = mkEnableOption "command-not-found hook for interactive shell";
+    enable =
+      mkEnableOption (lib.mdDoc "command-not-found hook for interactive shell");
 
     dbPath = mkOption {
       default =
         "/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite";
-      description = ''
-        Absolute path to <filename>programs.sqlite</filename>. By
+      description = lib.mdDoc ''
+        Absolute path to {file}`programs.sqlite`. By
         default this file will be provided by your channel
         (nixexprs.tar.xz).
       '';

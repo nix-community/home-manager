@@ -39,10 +39,10 @@ let
       });
     default = null;
     example = { token_endpoint = "<token_endpoint>"; };
-    description = ''
+    description = lib.mdDoc ''
       Sets the oauth2 params if authentication mechanism oauthbearer or
       xoauth2 is used.
-      See <citerefentry><refentrytitle>aerc-imap</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+      See {manpage}`aerc-imap(5)`.
     '';
   };
 
@@ -50,16 +50,16 @@ in {
   type = mkOption {
     type = types.attrsOf (types.submodule {
       options.aerc = {
-        enable = mkEnableOption "aerc";
+        enable = mkEnableOption (lib.mdDoc "aerc");
         extraAccounts = mkOption {
           type = confSection;
           default = { };
           example =
             literalExpression ''{ source = "maildir://~/Maildir/example"; }'';
-          description = ''
+          description = lib.mdDoc ''
             Extra config added to the configuration section for this account in
-            <filename>$HOME/.config/aerc/accounts.conf</filename>.
-            See <citerefentry><refentrytitle>aerc-accounts</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+            {file}`$HOME/.config/aerc/accounts.conf`.
+            See {manpage}`aerc-accounts(5)`.
           '';
         };
 
@@ -68,10 +68,10 @@ in {
           default = { };
           example = literalExpression
             ''{ messages = { d = ":move ''${folder.trash}<Enter>"; }; }'';
-          description = ''
+          description = lib.mdDoc ''
             Extra bindings specific to this account, added to
-            <filename>$HOME/.config/aerc/binds.conf</filename>.
-            See <citerefentry><refentrytitle>aerc-binds</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+            {file}`$HOME/.config/aerc/binds.conf`.
+            See {manpage}`aerc-binds(5)`.
           '';
         };
 
@@ -79,12 +79,12 @@ in {
           type = confSections;
           default = { };
           example = literalExpression "{ ui = { sidebar-width = 25; }; }";
-          description = ''
-            Config specific to this account, added to <filename>$HOME/.config/aerc/aerc.conf</filename>.
+          description = lib.mdDoc ''
+            Config specific to this account, added to {file}`$HOME/.config/aerc/aerc.conf`.
             Aerc only supports per-account UI configuration.
-            For other sections of <filename>$HOME/.config/aerc/aerc.conf</filename>,
-            use <literal>programs.aerc.extraConfig</literal>.
-            See <citerefentry><refentrytitle>aerc-config</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+            For other sections of {file}`$HOME/.config/aerc/aerc.conf`,
+            use `programs.aerc.extraConfig`.
+            See {manpage}`aerc-config(5)`.
           '';
         };
 
@@ -92,10 +92,10 @@ in {
           type = with types; nullOr (enum [ "oauthbearer" "xoauth2" ]);
           default = null;
           example = "auth";
-          description = ''
+          description = lib.mdDoc ''
             Sets the authentication mechanism if imap is used as the incoming
             method.
-            See <citerefentry><refentrytitle>aerc-imap</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+            See {manpage}`aerc-imap(5)`.
           '';
         };
 
@@ -106,10 +106,10 @@ in {
             nullOr (enum [ "none" "plain" "login" "oauthbearer" "xoauth2" ]);
           default = "plain";
           example = "auth";
-          description = ''
+          description = lib.mdDoc ''
             Sets the authentication mechanism if smtp is used as the outgoing
             method.
-            See <citerefentry><refentrytitle>aerc-smtp</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+            See {manpage}`aerc-smtp(5)`.
           '';
         };
 

@@ -24,12 +24,12 @@ in {
       enable = mkOption {
         type = types.bool;
         default = false;
-        description = ''
+        description = lib.mdDoc ''
           Whether to enable fontconfig configuration. This will, for
           example, allow fontconfig to discover fonts and
           configurations installed through
-          <varname>home.packages</varname> and
-          <command>nix-env</command>.
+          {var}`home.packages` and
+          {command}`nix-env`.
         '';
       };
     };

@@ -13,7 +13,8 @@ let
         email = mkOption {
           type = types.str;
           example = "name@example.com";
-          description = "The email address for your bitwarden account.";
+          description =
+            lib.mdDoc "The email address for your bitwarden account.";
         };
 
         base_url = mkOption {
@@ -21,21 +22,22 @@ let
           default = null;
           example = "bitwarden.example.com";
           description =
-            "The base-url for a self-hosted bitwarden installation.";
+            lib.mdDoc "The base-url for a self-hosted bitwarden installation.";
         };
 
         identity_url = mkOption {
           type = with types; nullOr str;
           default = null;
           example = "identity.example.com";
-          description = "The identity url for your bitwarden installation.";
+          description =
+            lib.mdDoc "The identity url for your bitwarden installation.";
         };
 
         lock_timeout = mkOption {
           type = types.ints.unsigned;
           default = 3600;
           example = 300;
-          description = ''
+          description = lib.mdDoc ''
             The amount of time that your login information should be cached.
           '';
         };
@@ -44,15 +46,15 @@ let
           type = with types; either package (enum pkgs.pinentry.flavors);
           example = "gnome3";
           default = "gtk2";
-          description = ''
+          description = lib.mdDoc ''
             Which pinentry interface to use. Beware that
-            <literal>pinentry-gnome3</literal> may not work on non-Gnome
+            `pinentry-gnome3` may not work on non-Gnome
             systems. You can fix it by adding the following to your
             system configuration:
-            <programlisting language="nix">
+            ```nix
             services.dbus.packages = [ pkgs.gcr ];
-            </programlisting>
-            For this reason, the default is <literal>gtk2</literal> for
+            ```
+            For this reason, the default is `gtk2` for
             now.
           '';
           # we want the program in the config
@@ -68,15 +70,15 @@ in {
   meta.maintainers = with lib.hm.maintainers; [ ambroisie ];
 
   options.programs.rbw = with lib; {
-    enable = mkEnableOption "rbw, a CLI Bitwarden client";
+    enable = mkEnableOption (lib.mdDoc "rbw, a CLI Bitwarden client");
 
     package = mkOption {
       type = types.package;
       default = pkgs.rbw;
       defaultText = literalExpression "pkgs.rbw";
-      description = ''
-        Package providing the <command>rbw</command> tool and its
-        <command>rbw-agent</command> daemon.
+      description = lib.mdDoc ''
+        Package providing the {command}`rbw` tool and its
+        {command}`rbw-agent` daemon.
       '';
     };
 
@@ -90,7 +92,7 @@ in {
           pinentry = "gnome3";
         }
       '';
-      description = ''
+      description = lib.mdDoc ''
         rbw configuration, if not defined the configuration will not be
         managed by Home Manager.
       '';

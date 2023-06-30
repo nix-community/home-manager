@@ -17,36 +17,40 @@ in {
   meta.maintainers = [ maintainers.polykernel ];
 
   options.programs.watson = {
-    enable = mkEnableOption "watson, a wonderful CLI to track your time";
+    enable =
+      mkEnableOption (lib.mdDoc "watson, a wonderful CLI to track your time");
 
     package = mkOption {
       type = types.package;
       default = pkgs.watson;
       defaultText = literalExpression "pkgs.watson";
-      description = "Package providing the <command>watson</command>.";
+      description = lib.mdDoc "Package providing the {command}`watson`.";
     };
 
-    enableBashIntegration = mkEnableOption "watson's bash integration" // {
-      default = true;
-    };
+    enableBashIntegration =
+      mkEnableOption (lib.mdDoc "watson's bash integration") // {
+        default = true;
+      };
 
-    enableZshIntegration = mkEnableOption "watson's zsh integration" // {
-      default = true;
-    };
+    enableZshIntegration = mkEnableOption (lib.mdDoc "watson's zsh integration")
+      // {
+        default = true;
+      };
 
-    enableFishIntegration = mkEnableOption "watson's fish integration" // {
-      default = true;
-    };
+    enableFishIntegration =
+      mkEnableOption (lib.mdDoc "watson's fish integration") // {
+        default = true;
+      };
 
     settings = mkOption {
       type = iniFormat.type;
       default = { };
-      description = ''
+      description = lib.mdDoc ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/watson/config</filename> on Linux or
-        <filename>$HOME/Library/Application Support/watson/config</filename> on Darwin.
-        </para><para>
-        See <link xlink:href="https://github.com/TailorDev/Watson/blob/master/docs/user-guide/configuration.md"/>
+        {file}`$XDG_CONFIG_HOME/watson/config` on Linux or
+        {file}`$HOME/Library/Application Support/watson/config` on Darwin.
+
+        See <https://github.com/TailorDev/Watson/blob/master/docs/user-guide/configuration.md>
         for an example configuration.
       '';
       example = literalExpression ''

@@ -13,19 +13,22 @@ let
     options = {
       command = mkOption {
         type = types.str;
-        description = "Preview command for files matched by this association.";
+        description =
+          lib.mdDoc "Preview command for files matched by this association.";
       };
 
       fpath = mkOption {
         type = types.str;
         default = "";
-        description = "File path regex that this association should match.";
+        description =
+          lib.mdDoc "File path regex that this association should match.";
       };
 
       mime = mkOption {
         type = types.str;
         default = "";
-        description = "Mime type regex that this association should match.";
+        description =
+          lib.mdDoc "Mime type regex that this association should match.";
       };
     };
   };
@@ -38,7 +41,8 @@ in {
   meta.maintainers = [ hm.maintainers.mtoohey ];
 
   options.programs.pistol = {
-    enable = mkEnableOption "file previewer for terminal file managers";
+    enable =
+      mkEnableOption (lib.mdDoc "file previewer for terminal file managers");
 
     associations = mkOption {
       type = types.listOf association;
@@ -50,9 +54,9 @@ in {
           { fpath = ".*.md$"; command = "sh: bat --paging=never --color=always %pistol-filename% | head -8"; }
         ]
       '';
-      description = ''
+      description = lib.mdDoc ''
         Associations written to the Pistol configuration at
-        <filename>$XDG_CONFIG_HOME/pistol/pistol.conf</filename>.
+        {file}`$XDG_CONFIG_HOME/pistol/pistol.conf`.
       '';
     };
 

@@ -12,12 +12,13 @@ in {
 
   options = {
     services.kdeconnect = {
-      enable = mkEnableOption "KDE connect";
+      enable = mkEnableOption (lib.mdDoc "KDE connect");
 
       indicator = mkOption {
         type = types.bool;
         default = false;
-        description = "Whether to enable kdeconnect-indicator service.";
+        description =
+          lib.mdDoc "Whether to enable kdeconnect-indicator service.";
       };
 
     };

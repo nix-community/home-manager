@@ -18,27 +18,24 @@ in {
   meta.maintainers = [ maintainers.rprospero ];
 
   options.programs.zathura = {
-    enable = mkEnableOption ''
+    enable = mkEnableOption (lib.mdDoc ''
       Zathura, a highly customizable and functional document viewer
-      focused on keyboard interaction'';
+      focused on keyboard interaction'');
 
     package = mkOption {
       type = types.package;
       default = pkgs.zathura;
       defaultText = "pkgs.zathura";
-      description = "The Zathura package to use";
+      description = lib.mdDoc "The Zathura package to use";
     };
 
     options = mkOption {
       default = { };
       type = with types; attrsOf (either str (either bool int));
-      description = ''
-        Add <option>:set</option> command options to zathura and make
+      description = lib.mdDoc ''
+        Add {option}`:set` command options to zathura and make
         them permanent. See
-        <citerefentry>
-          <refentrytitle>zathurarc</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>
+        {manpage}`zathurarc(5)`
         for the full list of options.
       '';
       example = {
@@ -50,17 +47,14 @@ in {
     mappings = mkOption {
       default = { };
       type = with types; attrsOf str;
-      description = ''
-        Add <option>:map</option> mappings to zathura and make
+      description = lib.mdDoc ''
+        Add {option}`:map` mappings to zathura and make
         them permanent. See
-        <citerefentry>
-          <refentrytitle>zathurarc</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>
+        {manpage}`zathurarc(5)`
         for the full list of possible mappings.
 
         You can create a mode-specific mapping by specifying the mode before the key:
-        <literal>"[normal] &lt;C-b&gt;" = "scroll left";</literal>
+        `"[normal] <C-b>" = "scroll left";`
       '';
       example = {
         D = "toggle_page_mode";
@@ -72,9 +66,9 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = ''
+      description = lib.mdDoc ''
         Additional commands for zathura that will be added to the
-        <filename>zathurarc</filename> file.
+        {file}`zathurarc` file.
       '';
     };
   };

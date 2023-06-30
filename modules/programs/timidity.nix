@@ -8,19 +8,20 @@ in {
   meta.maintainers = [ lib.hm.maintainers.amesgen ];
 
   options.programs.timidity = {
-    enable = lib.mkEnableOption "timidity, a software MIDI renderer";
+    enable =
+      lib.mkEnableOption (lib.mdDoc "timidity, a software MIDI renderer");
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.timidity;
       defaultText = lib.literalExpression "pkgs.timidity";
-      description = "The timidity package to use.";
+      description = lib.mdDoc "The timidity package to use.";
     };
 
     finalPackage = lib.mkOption {
       readOnly = true;
       type = lib.types.package;
-      description = "Resulting package.";
+      description = lib.mdDoc "Resulting package.";
     };
 
     extraConfig = lib.mkOption {
@@ -31,7 +32,7 @@ in {
           soundfont ''${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2
         '''
       '';
-      description = "Extra configuration.";
+      description = lib.mdDoc "Extra configuration.";
     };
   };
 
