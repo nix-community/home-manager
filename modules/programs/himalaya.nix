@@ -118,7 +118,7 @@ in {
 
   options = {
     programs.himalaya = {
-      enable = lib.mkEnableOption "Enable the Himalaya email client.";
+      enable = lib.mkEnableOption "the Himalaya email client";
       package = lib.mkPackageOption pkgs "himalaya" { };
       settings = lib.mkOption {
         type = lib.types.submodule { freeformType = tomlFormat.type; };
@@ -132,8 +132,7 @@ in {
 
     services = {
       himalaya-notify = {
-        enable =
-          lib.mkEnableOption "Enable the Himalaya new emails notifier service.";
+        enable = lib.mkEnableOption "the Himalaya new emails notifier service";
 
         environment = lib.mkOption {
           type = with lib.types; attrsOf str;
@@ -171,8 +170,8 @@ in {
       };
 
       himalaya-watch = {
-        enable = lib.mkEnableOption
-          "Enable the Himalaya folder changes watcher service.";
+        enable =
+          lib.mkEnableOption "the Himalaya folder changes watcher service";
 
         environment = lib.mkOption {
           type = with lib.types; attrsOf str;
@@ -213,7 +212,7 @@ in {
     accounts.email.accounts = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule {
         options.himalaya = {
-          enable = lib.mkEnableOption "Enable Himalaya for this email account.";
+          enable = lib.mkEnableOption "Himalaya for this email account";
 
           # TODO: remove me for the next release
           backend = lib.mkOption {

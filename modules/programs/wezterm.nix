@@ -83,11 +83,11 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "WezTerm's Bash integration." // {
+    enableBashIntegration = mkEnableOption "WezTerm's Bash integration" // {
       default = true;
     };
 
-    enableZshIntegration = mkEnableOption "WezTerm's Zsh integration." // {
+    enableZshIntegration = mkEnableOption "WezTerm's Zsh integration" // {
       default = true;
     };
   };

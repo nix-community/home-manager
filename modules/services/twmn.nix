@@ -209,7 +209,7 @@ in {
 
         bounce = {
           enable = mkEnableOption
-            "notification bounce when displaying next notification directly.";
+            "notification bounce when displaying next notification directly";
 
           duration = mkOption {
             type = types.ints.unsigned;

@@ -15,7 +15,7 @@ in {
   options = {
     programs.sioyek = {
       enable = mkEnableOption
-        "Sioyek is a PDF viewer designed for reading research papers and technical books.";
+        "Sioyek, a PDF viewer designed for reading research papers and technical books";
 
       package = mkOption {
         default = pkgs.sioyek;
