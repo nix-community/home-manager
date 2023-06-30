@@ -19,7 +19,7 @@ in {
       default = { };
       description = ''
         Configuration written to <filename>$HOME/.editorconfig</filename>.
-        <code>root = true</code> is automatically added to the file,
+        <literal>root = true</literal> is automatically added to the file,
         it must not be added here.
         See <link xlink:href="https://editorconfig.org"/> for documentation.
       '';

@@ -181,8 +181,10 @@ in {
 
   options.xdg.desktopEntries = mkOption {
     description = ''
-      Desktop Entries allow applications to be shown in your desktop environment's app launcher. </para><para>
-      You can define entries for programs without entries or override existing entries. </para><para>
+      Desktop Entries allow applications to be shown in your desktop environment's app launcher.
+
+      You can define entries for programs without entries or override existing entries.
+
       See <link xlink:href="https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#recognized-keys" /> for more information on options.
     '';
     default = { };

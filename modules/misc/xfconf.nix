@@ -67,7 +67,7 @@ in {
         Whether to enable Xfconf settings.
         </para><para>
         Note, if you use NixOS then you must add
-        <code>programs.xfconf.enable = true</code>
+        <literal>programs.xfconf.enable = true</literal>
         to your system configuration. Otherwise you will see a systemd error
         message when your configuration is activated.
       '';

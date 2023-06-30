@@ -70,7 +70,7 @@ let
       default = "inbox";
       description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <code>Inbox</code> name attribute.
+        <literal>Inbox</literal> name attribute.
         </para><para>
         If set to an empty string, this mailbox <emphasis>and its child
         mailboxes</emphasis> are not synchronized with a tag.
@@ -82,7 +82,7 @@ let
       default = "deleted";
       description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <code>Trash</code> name attribute.
+        <literal>Trash</literal> name attribute.
         </para><para>
         If set to an empty string, this mailbox <emphasis>and its child
         mailboxes</emphasis> are not synchronized with a tag.
@@ -94,7 +94,7 @@ let
       default = "sent";
       description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <code>Sent</code> name attribute.
+        <literal>Sent</literal> name attribute.
         </para><para>
         If set to an empty string, this mailbox <emphasis>and its child
         mailboxes</emphasis> are not synchronized with a tag.
@@ -106,8 +106,8 @@ let
       default = "spam";
       description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <code>Junk</code> name attribute and/or with the <code>$Junk</code> keyword,
-        <emphasis>except</emphasis> for messages with the <code>$NotJunk</code> keyword.
+        <literal>Junk</literal> name attribute and/or with the <literal>$Junk</literal> keyword,
+        <emphasis>except</emphasis> for messages with the <literal>$NotJunk</literal> keyword.
         </para><para>
         If set to an empty string, this mailbox, <emphasis>its child
         mailboxes</emphasis>, and these keywords are not synchronized with a tag.
@@ -119,7 +119,7 @@ let
       default = "important";
       description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <code>Important</code> name attribute and/or with the <code>$Important</code>
+        <literal>Important</literal> name attribute and/or with the <literal>$Important</literal>
         keyword.
         </para><para>
         If set to an empty string, this mailbox, <emphasis>its child
@@ -131,7 +131,7 @@ let
       type = types.str;
       default = "phishing";
       description = ''
-        Tag for notmuch to use for the IANA <code>$Phishing</code> keyword.
+        Tag for notmuch to use for the IANA <literal>$Phishing</literal> keyword.
         </para><para>
         If set to an empty string, this keyword is not synchronized with a tag.
       '';

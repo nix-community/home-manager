@@ -104,7 +104,7 @@ in {
         }
       '';
       description = ''
-        Color scheme options added to <code>FZF_DEFAULT_OPTS</code>. See
+        Color scheme options added to <literal>FZF_DEFAULT_OPTS</literal>. See
         <link xlink:href="https://github.com/junegunn/fzf/wiki/Color-schemes"/>
         for documentation.
       '';

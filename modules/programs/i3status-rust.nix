@@ -165,7 +165,7 @@ in {
         Attribute set of i3status-rust bars, each with their own configuration.
         Each bar <varname>name</varname> generates a config file suffixed with
         the bar's <varname>name</varname> from the attribute set, like so:
-        <filename>config-<replaceable>name</replaceable>.toml</filename>.
+        <filename>config-''${name}.toml</filename>.
         </para><para>
         This way, multiple config files can be generated, such as for having a
         top and a bottom bar.

@@ -46,15 +46,12 @@ in {
       ignored.
 
       <warning>
-        <para>
-          Some settings might require a re-login to take effect.
-        </para>
+      <para>Some settings might require a re-login to take effect.</para>
       </warning>
+
       <warning>
-        <para>
-          Some settings are only read from
-          <option>targets.darwin.currentHostDefaults</option>.
-        </para>
+      <para>Some settings are only read from
+      <option>targets.darwin.currentHostDefaults</option>.</para>
       </warning>
     '';
   };
@@ -73,9 +70,7 @@ in {
       Values set to <literal>null</literal> are ignored.
 
       <warning>
-        <para>
-          Some settings might require a re-login to take effect.
-        </para>
+      <para>Some settings might require a re-login to take effect.</para>
       </warning>
     '';
   };

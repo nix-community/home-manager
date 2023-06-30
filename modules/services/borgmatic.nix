@@ -17,7 +17,7 @@ in {
         default = "hourly";
         description = ''
           How often to run borgmatic when
-          <code language="nix">services.borgmatic.enable = true</code>.
+          <literal>services.borgmatic.enable = true</literal>.
           This value is passed to the systemd timer configuration as
           the onCalendar option. See
           <citerefentry>

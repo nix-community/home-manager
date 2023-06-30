@@ -103,7 +103,7 @@ in {
         example = [ "extglob" "-cdspell" ];
         description = ''
           Shell options to set. Prefix an option with
-          <quote><literal>-</literal></quote> to unset.
+          "<literal>-</literal>" to unset.
         '';
       };
 

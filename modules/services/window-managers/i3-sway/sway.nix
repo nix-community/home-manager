@@ -125,7 +125,7 @@ let
           An attribute set that assigns a key press to an action using a key symbol.
           See <link xlink:href="https://i3wm.org/docs/userguide.html#keybindings"/>.
           </para><para>
-          Consider to use <code>lib.mkOptionDefault</code> function to extend or override
+          Consider to use <literal>lib.mkOptionDefault</literal> function to extend or override
           default keybindings instead of specifying all of them from scratch.
         '';
         example = literalExpression ''
@@ -352,7 +352,7 @@ in {
       description = ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
-        Set to <code>null</code> to not add any Sway package to your
+        Set to <literal>null</literal> to not add any Sway package to your
         path. This should be done if you want to use the NixOS Sway
         module to install Sway.
       '';

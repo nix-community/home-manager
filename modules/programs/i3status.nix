@@ -52,7 +52,7 @@ in {
       default = { };
       description = ''
         Configuration to add to i3status <filename>config</filename>
-        <code>general</code> section.
+        <literal>general</literal> section.
         See
         <citerefentry>
          <refentrytitle>i3status</refentrytitle>
@@ -84,7 +84,7 @@ in {
           position = mkOption {
             type = with types; either int float;
             description = ''
-              Position of this module in i3status <code>order</code>.
+              Position of this module in i3status <literal>order</literal>.
             '';
           };
           settings = mkOption {

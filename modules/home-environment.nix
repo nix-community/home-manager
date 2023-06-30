@@ -264,11 +264,11 @@ in
         The values may refer to other environment variables using
         POSIX.2 style variable references. For example, a variable
         <varname>parameter</varname> may be referenced as
-        <code>$parameter</code> or <code>''${parameter}</code>. A
+        <literal>$parameter</literal> or <literal>''${parameter}</literal>. A
         default value <literal>foo</literal> may be given as per
-        <code>''${parameter:-foo}</code> and, similarly, an alternate
+        <literal>''${parameter:-foo}</literal> and, similarly, an alternate
         value <literal>bar</literal> can be given as per
-        <code>''${parameter:+bar}</code>.
+        <literal>''${parameter:+bar}</literal>.
         </para><para>
         Note, these variables may be set in any order so no session
         variable may have a runtime dependency on another session
@@ -314,9 +314,9 @@ in
         </para><para>
 
         These directories are added to the <envar>PATH</envar> variable in a
-        double-quoted context, so expressions like <code>$HOME</code> are
-        expanded by the shell. However, since expressions like <code>~</code> or
-        <code>*</code> are escaped, they will end up in the <envar>PATH</envar>
+        double-quoted context, so expressions like <literal>$HOME</literal> are
+        expanded by the shell. However, since expressions like <literal>~</literal> or
+        <literal>*</literal> are escaped, they will end up in the <envar>PATH</envar>
         verbatim.
       '';
     };

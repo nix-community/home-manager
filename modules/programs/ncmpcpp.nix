@@ -55,7 +55,7 @@ in {
       default = pkgs.ncmpcpp;
       defaultText = literalExpression "pkgs.ncmpcpp";
       description = ''
-        Package providing the <code>ncmpcpp</code> command.
+        Package providing the <literal>ncmpcpp</literal> command.
       '';
       example =
         literalExpression "pkgs.ncmpcpp.override { visualizerSupport = true; }";
@@ -75,7 +75,7 @@ in {
           null
       '';
       description = ''
-        Value of the <code>mpd_music_dir</code> setting. On Linux platforms the
+        Value of the <literal>mpd_music_dir</literal> setting. On Linux platforms the
         value of <varname>services.mpd.musicDirectory</varname> is used as the
         default if <varname>services.mpd.enable</varname> is
         <literal>true</literal>.

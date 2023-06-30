@@ -15,7 +15,7 @@ in {
       default = false;
       description = ''
         Whether to manage <filename>.dir_colors</filename>
-        and set <code>LS_COLORS</code>.
+        and set <literal>LS_COLORS</literal>.
       '';
     };
 

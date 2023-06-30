@@ -95,7 +95,7 @@ let
           An attribute set that assigns a key press to an action using a key symbol.
           See <link xlink:href="https://i3wm.org/docs/userguide.html#keybindings"/>.
           </para><para>
-          Consider to use <code>lib.mkOptionDefault</code> function to extend or override
+          Consider to use <literal>lib.mkOptionDefault</literal> function to extend or override
           default keybindings instead of specifying all of them from scratch.
         '';
         example = literalExpression ''

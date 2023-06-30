@@ -151,7 +151,7 @@ in {
         '';
         description = ''
           Extra configuration options added to the
-          <code>mbnames</code> section.
+          <literal>mbnames</literal> section.
         '';
       };
     };

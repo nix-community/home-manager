@@ -50,7 +50,7 @@ in {
         All other values are directly formatted using builtins.toString.
         Note, that 2-dimensional lists are not supported and specifying one will throw an exception.
         If this and all other xresources options are
-        <code>null</code>, then this feature is disabled and no
+        <literal>null</literal>, then this feature is disabled and no
         <filename>~/.Xresources</filename> link is produced.
       '';
     };
@@ -71,7 +71,7 @@ in {
       description = ''
         Additional X server resources contents.
         If this and all other xresources options are
-        <code>null</code>, then this feature is disabled and no
+        <literal>null</literal>, then this feature is disabled and no
         <filename>~/.Xresources</filename> link is produced.
       '';
     };

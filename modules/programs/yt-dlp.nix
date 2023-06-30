@@ -41,9 +41,9 @@ in {
         Configuration written to
         <filename>$XDG_CONFIG_HOME/yt-dlp/config</filename>.
         </para><para>
-        Options must be specified in their <quote>long form</quote>, for
-        example, <code>update = true;</code> instead of <code>U = true;</code>.
-        Short options can be specified in the <code>extraConfig</code> option.
+        Options must be specified in their "long form", for
+        example, <literal>update = true;</literal> instead of <literal>U = true;</literal>.
+        Short options can be specified in the <literal>extraConfig</literal> option.
         See <link xlink:href="https://github.com/yt-dlp/yt-dlp#configuration"/>
         for explanation about possible values.
       '';

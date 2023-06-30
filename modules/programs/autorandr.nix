@@ -28,7 +28,7 @@ let
         type = types.attrsOf types.str;
         description = ''
           Output name to EDID mapping.
-          Use <code>autorandr --fingerprint</code> to get current setup values.
+          Use <literal>autorandr --fingerprint</literal> to get current setup values.
         '';
         default = { };
       };
@@ -160,9 +160,9 @@ let
             <manvolnum>1</manvolnum>
           </citerefentry>
           option
-          <parameter class="command">--scale-from</parameter>
+          <literal>--scale-from</literal>
           will be used; when using factor method the option
-          <parameter class="command">--scale</parameter>
+          <literal>--scale</literal>
           will be used.
           </para><para>
           This option is a shortcut version of the transform option and they are mutually

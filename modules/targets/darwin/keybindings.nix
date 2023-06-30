@@ -22,10 +22,8 @@ in {
       for more details.
 
       <warning>
-        <para>
-          Existing keybinding configuration will be wiped when using this
-          option.
-        </para>
+      <para>Existing keybinding configuration will be wiped when using this
+      option.</para>
       </warning>
     '';
   };

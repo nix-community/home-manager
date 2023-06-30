@@ -162,18 +162,18 @@ in {
       description = ''
         A list of repositories to use when resolving dependencies. Defined as a
         list of pre-defined repository or custom repository as a set of name to
-        URL. The list will be used populate the <code>~/.sbt/repositories</code>
+        URL. The list will be used populate the <literal>~/.sbt/repositories</literal>
         file in the order specified.
 
         </para><para>
 
-        Pre-defined repositories must be one of <code>local</code>,
-        <code>maven-local</code>, <code>maven-central</code>.
+        Pre-defined repositories must be one of <literal>local</literal>,
+        <literal>maven-local</literal>, <literal>maven-central</literal>.
 
         </para><para>
 
         Custom repositories are defined as
-        <code language="nix">{ name-of-repo = "https://url.to.repo.com"}</code>.
+        <literal>{ name-of-repo = "https://url.to.repo.com"}</literal>.
 
         </para><para>
 

@@ -27,8 +27,8 @@ let
           type = nullOr (enum [ "top" "bottom" ]);
           default = null;
           description = ''
-            Decide if the bar is displayed in front (<code>"top"</code>)
-            of the windows or behind (<code>"bottom"</code>).
+            Decide if the bar is displayed in front (<literal>"top"</literal>)
+            of the windows or behind (<literal>"bottom"</literal>).
           '';
           example = "top";
         };
@@ -152,7 +152,7 @@ in {
       default = pkgs.waybar;
       defaultText = literalExpression "pkgs.waybar";
       description = ''
-        Waybar package to use. Set to <code>null</code> to use the default package.
+        Waybar package to use. Set to <literal>null</literal> to use the default package.
       '';
     };
 

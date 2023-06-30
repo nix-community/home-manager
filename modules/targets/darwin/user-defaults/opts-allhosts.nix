@@ -123,10 +123,8 @@ in {
           Configures the web inspector.
 
           <warning>
-            <para>
-              Instead of setting this option directly, set
-              <option>IncludeDevelopMenu</option> instead.
-            </para>
+          <para>Instead of setting this option directly, set
+          <option>IncludeDevelopMenu</option> instead.</para>
           </warning>
         '';
       };
@@ -136,10 +134,8 @@ in {
           Configures the web inspector.
 
           <warning>
-            <para>
-              Instead of setting this option directly, set
-              <option>IncludeDevelopMenu</option> instead.
-            </para>
+          <para>Instead of setting this option directly, set
+          <option>IncludeDevelopMenu</option> instead.</para>
           </warning>
         '';
       };
@@ -152,10 +148,8 @@ in {
           Show the "Develop" menu in Safari's menubar.
 
           <warning>
-            <para>
-              Instead of setting this option directly, set
-              <option>"com.apple.Safari".IncludeDevelopMenu</option> instead.
-            </para>
+          <para>Instead of setting this option directly, set
+          <option>"com.apple.Safari".IncludeDevelopMenu</option> instead.</para>
           </warning>
         '';
       };

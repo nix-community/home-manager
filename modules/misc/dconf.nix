@@ -37,7 +37,7 @@ in {
           Whether to enable dconf settings.
           </para><para>
           Note, if you use NixOS then you must add
-          <code>programs.dconf.enable = true</code>
+          <literal>programs.dconf.enable = true</literal>
           to your system configuration. Otherwise you will see a systemd error
           message when your configuration is activated.
         '';

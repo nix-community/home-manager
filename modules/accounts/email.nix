@@ -147,7 +147,7 @@ let
           </para><para>
           If both this option and <xref
           linkend="opt-accounts.email.accounts._name_.jmap.sessionUrl"/> are specified,
-          <code>host</code> is preferred by applications when establishing a
+          <literal>host</literal> is preferred by applications when establishing a
           session.
         '';
       };
@@ -161,7 +161,7 @@ let
           </para><para>
           If both this option and <xref
           linkend="opt-accounts.email.accounts._name_.jmap.host"/> are specified,
-          <code>host</code> is preferred by applications when establishing a
+          <literal>host</literal> is preferred by applications when establishing a
           session.
         '';
       };

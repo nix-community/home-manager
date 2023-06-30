@@ -52,7 +52,7 @@ in {
       '';
       description = ''
         Extra environment variables to be exported in the script.
-        These options are passed unescaped as <code>export name=value</code>.
+        These options are passed unescaped as <literal>export name=value</literal>.
       '';
     };
 

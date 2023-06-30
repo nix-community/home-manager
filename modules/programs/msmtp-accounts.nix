@@ -11,13 +11,13 @@ with lib;
         Whether to enable msmtp.
         </para><para>
         If enabled then it is possible to use the
-        <parameter class="command">--account</parameter> command line
+        <literal>--account</literal> command line
         option to send a message for a given account using the
         <command>msmtp</command> or <command>msmtpq</command> tool.
         For example, <command>msmtp --account=private</command> would
         send using the account defined in
         <option>accounts.email.accounts.private</option>. If the
-        <parameter class="command">--account</parameter> option is not
+        <literal>--account</literal> option is not
         given then the primary account will be used.
       '';
     };
