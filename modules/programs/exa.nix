@@ -6,17 +6,15 @@ with lib;
   meta.maintainers = [ hm.maintainers.kalhauge ];
 
   options.programs.exa = {
-    enable =
-      mkEnableOption (lib.mdDoc "exa, a modern replacement for {command}`ls`");
+    enable = mkEnableOption "exa, a modern replacement for {command}`ls`";
 
-    enableAliases =
-      mkEnableOption (lib.mdDoc "recommended exa aliases (ls, ll…)");
+    enableAliases = mkEnableOption "recommended exa aliases (ls, ll…)";
 
     extraOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--group-directories-first" "--header" ];
-      description = lib.mdDoc ''
+      description = ''
         Extra command line options passed to exa.
       '';
     };
@@ -24,7 +22,7 @@ with lib;
     icons = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Display icons next to file names ({option}`--icons` argument).
       '';
     };
@@ -32,12 +30,12 @@ with lib;
     git = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         List each file's Git status if tracked or ignored ({option}`--git` argument).
       '';
     };
 
-    package = mkPackageOptionMD pkgs "exa" { };
+    package = mkPackageOption pkgs "exa" { };
   };
 
   config = let

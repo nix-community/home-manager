@@ -10,8 +10,8 @@ in {
 
   options = {
     services.autorandr = {
-      enable = mkEnableOption (lib.mdDoc "") // {
-        description = lib.mdDoc ''
+      enable = mkEnableOption "" // {
+        description = ''
           Whether to enable the Autorandr systemd service.
           This module is complementary to {option}`programs.autorandr`
           which handles the configuration (profiles).
@@ -22,7 +22,7 @@ in {
         default = false;
         type = types.bool;
         description =
-          lib.mdDoc "Treat outputs as connected even if their lids are closed.";
+          "Treat outputs as connected even if their lids are closed.";
       };
     };
   };

@@ -7,7 +7,7 @@ let
   cfg = config.services.keynav;
 
 in {
-  options.services.keynav = { enable = mkEnableOption (lib.mdDoc "keynav"); };
+  options.services.keynav = { enable = mkEnableOption "keynav"; };
 
   config = mkIf cfg.enable {
     assertions = [

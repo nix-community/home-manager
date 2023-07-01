@@ -19,7 +19,7 @@ in
         enable = mkOption {
           type = types.bool;
           default = true;
-          description = lib.mdDoc ''
+          description = ''
             Whether this file should be generated. This option allows specific
             files to be disabled.
           '';
@@ -32,7 +32,7 @@ in
             in
               removePrefix (homeDirectory + "/") absPath;
           defaultText = literalExpression "name";
-          description = lib.mdDoc ''
+          description = ''
             Path to target file relative to ${basePathDesc}.
           '';
         };
@@ -40,7 +40,7 @@ in
         text = mkOption {
           default = null;
           type = types.nullOr types.lines;
-          description = lib.mdDoc ''
+          description = ''
             Text of the file. If this option is null then
             [](#opt-${opt}._name_.source)
             must be set.
@@ -49,7 +49,7 @@ in
 
         source = mkOption {
           type = types.path;
-          description = lib.mdDoc ''
+          description = ''
             Path of the source file or directory. If
             [](#opt-${opt}._name_.text)
             is non-null then this option will automatically point to a file
@@ -60,7 +60,7 @@ in
         executable = mkOption {
           type = types.nullOr types.bool;
           default = null;
-          description = lib.mdDoc ''
+          description = ''
             Set the execute bit. If `null`, defaults to the mode
             of the {var}`source` file or to `false`
             for files created through the {var}`text` option.
@@ -70,7 +70,7 @@ in
         recursive = mkOption {
           type = types.bool;
           default = false;
-          description = lib.mdDoc ''
+          description = ''
             If the file source is a directory, then this option
             determines whether the directory should be recursively
             linked to the target location. This option has no effect
@@ -87,7 +87,7 @@ in
         onChange = mkOption {
           type = types.lines;
           default = "";
-          description = lib.mdDoc ''
+          description = ''
             Shell commands to run when file has changed between
             generations. The script will be run
             *after* the new files have been linked
@@ -102,7 +102,7 @@ in
           type = types.bool;
           default = false;
           visible = false;
-          description = lib.mdDoc ''
+          description = ''
             Whether the target path should be unconditionally replaced
             by the managed file source. Warning, this will silently
             delete the target regardless of whether it is a file or

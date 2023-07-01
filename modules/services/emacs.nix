@@ -42,7 +42,7 @@ in {
   meta.maintainers = [ maintainers.tadfisher ];
 
   options.services.emacs = {
-    enable = mkEnableOption (lib.mdDoc "the Emacs daemon");
+    enable = mkEnableOption "the Emacs daemon";
 
     package = mkOption {
       type = types.package;
@@ -51,25 +51,24 @@ in {
         if config.programs.emacs.enable then config.programs.emacs.finalPackage
         else pkgs.emacs
       '';
-      description = lib.mdDoc "The Emacs package to use.";
+      description = "The Emacs package to use.";
     };
 
     extraOptions = mkOption {
       type = with types; listOf str;
       default = [ ];
       example = [ "-f" "exwm-enable" ];
-      description = lib.mdDoc ''
+      description = ''
         Extra command-line arguments to pass to {command}`emacs`.
       '';
     };
 
     client = {
-      enable =
-        mkEnableOption (lib.mdDoc "generation of Emacs client desktop file");
+      enable = mkEnableOption "generation of Emacs client desktop file";
       arguments = mkOption {
         type = with types; listOf str;
         default = [ "-c" ];
-        description = lib.mdDoc ''
+        description = ''
           Command-line arguments to pass to {command}`emacsclient`.
         '';
       };
@@ -79,8 +78,7 @@ in {
     # socket path, though allowing for such is not easy to do as systemd socket
     # units don't perform variable expansion for 'ListenStream'.
     socketActivation = {
-      enable = mkEnableOption
-        (lib.mdDoc "systemd socket activation for the Emacs service");
+      enable = mkEnableOption "systemd socket activation for the Emacs service";
     };
 
     startWithUserSession = mkOption {
@@ -89,7 +87,7 @@ in {
       defaultText =
         literalExpression "!config.services.emacs.socketActivation.enable";
       example = "graphical";
-      description = lib.mdDoc ''
+      description = ''
         Whether to launch Emacs service with the systemd user session. If it is
         `true`, Emacs service is started by
         `default.target`. If it is
@@ -102,7 +100,7 @@ in {
       type = types.bool;
       default = false;
       example = !default;
-      description = lib.mdDoc ''
+      description = ''
         Whether to configure {command}`emacsclient` as the default
         editor using the {env}`EDITOR` environment variable.
       '';

@@ -24,7 +24,7 @@ in {
       enable = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable fontconfig configuration. This will, for
           example, allow fontconfig to discover fonts and
           configurations installed through

@@ -25,14 +25,14 @@ let
       text = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Text of an OpenPGP public key.
         '';
       };
 
       source = mkOption {
         type = types.path;
-        description = lib.mdDoc ''
+        description = ''
           Path of an OpenPGP public key file.
         '';
       };
@@ -62,7 +62,7 @@ let
             }.${v}
           else
             v;
-        description = lib.mdDoc ''
+        description = ''
           The amount of trust you have in the key ownership and the care the
           owner puts into signing other keys. The available levels are
 
@@ -139,7 +139,7 @@ let
 
 in {
   options.programs.gpg = {
-    enable = mkEnableOption (lib.mdDoc "GnuPG");
+    enable = mkEnableOption "GnuPG";
 
     package = mkOption {
       type = types.package;
@@ -147,7 +147,7 @@ in {
       defaultText = literalExpression "pkgs.gnupg";
       example = literalExpression "pkgs.gnupg23";
       description =
-        lib.mdDoc "The Gnupg package to use (also used the gpg-agent service).";
+        "The Gnupg package to use (also used the gpg-agent service).";
     };
 
     settings = mkOption {
@@ -159,7 +159,7 @@ in {
           s2k-cipher-algo = "AES128";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         GnuPG configuration options. Available options are described
         in
         [
@@ -178,7 +178,7 @@ in {
           disable-ccid = true;
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         SCdaemon configuration options. Available options are described
         in
         [
@@ -193,13 +193,13 @@ in {
       default = "${config.home.homeDirectory}/.gnupg";
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/.gnupg"'';
-      description = lib.mdDoc "Directory to store keychains and configuration.";
+      description = "Directory to store keychains and configuration.";
     };
 
     mutableKeys = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         If set to `true`, you may manage your keyring as a user
         using the `gpg` command. Upon activation, the keyring
         will have managed keys added without overwriting unmanaged keys.
@@ -213,7 +213,7 @@ in {
     mutableTrust = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         If set to `true`, you may manage trust as a user using
         the {command}`gpg` command. Upon activation, trusted keys have
         their trust set without overwriting unmanaged keys.
@@ -232,7 +232,7 @@ in {
         [ { source = ./pubkeys.txt; } ]
       '';
       default = [ ];
-      description = lib.mdDoc ''
+      description = ''
         A list of public keys to be imported into GnuPG. Note, these key files
         will be copied into the world-readable Nix store.
       '';

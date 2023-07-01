@@ -26,19 +26,19 @@ let
 in {
   options = {
     programs.mangohud = {
-      enable = mkEnableOption (lib.mdDoc "Mangohud");
+      enable = mkEnableOption "Mangohud";
 
       package = mkOption {
         type = types.package;
         default = pkgs.mangohud;
         defaultText = literalExpression "pkgs.mangohud";
-        description = lib.mdDoc "The Mangohud package to install.";
+        description = "The Mangohud package to install.";
       };
 
       enableSessionWide = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Sets environment variables so that
           MangoHud is started on any application that supports it.
         '';
@@ -53,7 +53,7 @@ in {
             full = true;
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/MangoHud/MangoHud.conf`. See
           <https://github.com/flightlessmango/MangoHud/blob/master/data/MangoHud.conf>
@@ -71,7 +71,7 @@ in {
             }
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Sets MangoHud settings per application.
           Configuration written to
           {file}`$XDG_CONFIG_HOME/MangoHud/{application_name}.conf`. See

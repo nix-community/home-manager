@@ -5,9 +5,7 @@ with lib;
 let cfg = config.programs.pywal;
 
 in {
-  options = {
-    programs.pywal = { enable = mkEnableOption (lib.mdDoc "pywal"); };
-  };
+  options = { programs.pywal = { enable = mkEnableOption "pywal"; }; };
 
   config = mkIf cfg.enable {
 

@@ -118,12 +118,12 @@ in {
 
   options = {
     programs.himalaya = {
-      enable = lib.mkEnableOption (lib.mdDoc "the Himalaya email client");
-      package = lib.mkPackageOptionMD pkgs "himalaya" { };
+      enable = lib.mkEnableOption "the Himalaya email client";
+      package = lib.mkPackageOption pkgs "himalaya" { };
       settings = lib.mkOption {
         type = lib.types.submodule { freeformType = tomlFormat.type; };
         default = { };
-        description = lib.mdDoc ''
+        description = ''
           Himalaya global configuration.
           See <https://pimalaya.org/himalaya/cli/configuration/global.html> for supported values.
         '';
@@ -132,8 +132,7 @@ in {
 
     services = {
       himalaya-notify = {
-        enable = lib.mkEnableOption
-          (lib.mdDoc "the Himalaya new emails notifier service");
+        enable = lib.mkEnableOption "the Himalaya new emails notifier service";
 
         environment = lib.mkOption {
           type = with lib.types; attrsOf str;
@@ -143,7 +142,7 @@ in {
               "PASSWORD_STORE_DIR" = "~/.password-store";
             }
           '';
-          description = lib.mdDoc ''
+          description = ''
             Extra environment variables to be exported in the service.
           '';
         };
@@ -153,7 +152,7 @@ in {
             type = with lib.types; nullOr str;
             default = null;
             example = "gmail";
-            description = lib.mdDoc ''
+            description = ''
               Name of the account the notifier should be started for. If
               no account is given, the default one is used.
             '';
@@ -163,7 +162,7 @@ in {
             type = with lib.types; nullOr int;
             default = null;
             example = "500";
-            description = lib.mdDoc ''
+            description = ''
               Notifier lifetime of the IDLE session (in seconds). 
             '';
           };
@@ -171,8 +170,8 @@ in {
       };
 
       himalaya-watch = {
-        enable = lib.mkEnableOption
-          (lib.mdDoc "the Himalaya folder changes watcher service");
+        enable =
+          lib.mkEnableOption "the Himalaya folder changes watcher service";
 
         environment = lib.mkOption {
           type = with lib.types; attrsOf str;
@@ -182,7 +181,7 @@ in {
               "PASSWORD_STORE_DIR" = "~/.password-store";
             }
           '';
-          description = lib.mdDoc ''
+          description = ''
             Extra environment variables to be exported in the service.
           '';
         };
@@ -192,7 +191,7 @@ in {
             type = with lib.types; nullOr str;
             default = null;
             example = "gmail";
-            description = lib.mdDoc ''
+            description = ''
               Name of the account the watcher should be started for. If
               no account is given, the default one is used.
             '';
@@ -202,7 +201,7 @@ in {
             type = with lib.types; nullOr int;
             default = null;
             example = "500";
-            description = lib.mdDoc ''
+            description = ''
               Watcher lifetime of the IDLE session (in seconds). 
             '';
           };
@@ -213,14 +212,13 @@ in {
     accounts.email.accounts = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule {
         options.himalaya = {
-          enable =
-            lib.mkEnableOption (lib.mdDoc "Himalaya for this email account");
+          enable = lib.mkEnableOption "Himalaya for this email account";
 
           # TODO: remove me for the next release
           backend = lib.mkOption {
             type = with lib.types; nullOr str;
             default = null;
-            description = lib.mdDoc ''
+            description = ''
               Specifying {option}`accounts.email.accounts.*.himalaya.backend` is deprecated,
               set {option}`accounts.email.accounts.*.himalaya.settings.backend` instead.
             '';
@@ -229,7 +227,7 @@ in {
           # TODO: remove me for the next release
           sender = lib.mkOption {
             type = with lib.types; nullOr str;
-            description = lib.mdDoc ''
+            description = ''
               Specifying {option}`accounts.email.accounts.*.himalaya.sender` is deprecated,
               set {option}'accounts.email.accounts.*.himalaya.settings.sender' instead.
             '';
@@ -238,7 +236,7 @@ in {
           settings = lib.mkOption {
             type = lib.types.submodule { freeformType = tomlFormat.type; };
             default = { };
-            description = lib.mdDoc ''
+            description = ''
               Himalaya configuration for this email account.
               See <https://pimalaya.org/himalaya/cli/configuration/account.html> for supported values.
             '';

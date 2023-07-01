@@ -35,15 +35,15 @@ in {
   meta.maintainers = [ maintainers.pjones ];
 
   options.services.mpdris2 = {
-    enable = mkEnableOption (lib.mdDoc "mpDris2 the MPD to MPRIS2 bridge");
-    notifications = mkEnableOption (lib.mdDoc "song change notifications");
-    multimediaKeys = mkEnableOption (lib.mdDoc "multimedia key support");
+    enable = mkEnableOption "mpDris2 the MPD to MPRIS2 bridge";
+    notifications = mkEnableOption "song change notifications";
+    multimediaKeys = mkEnableOption "multimedia key support";
 
     package = mkOption {
       type = types.package;
       default = pkgs.mpdris2;
       defaultText = literalExpression "pkgs.mpdris2";
-      description = lib.mdDoc "The mpDris2 package to use.";
+      description = "The mpDris2 package to use.";
     };
 
     mpd = {
@@ -52,15 +52,14 @@ in {
         default = config.services.mpd.network.listenAddress;
         defaultText = "config.services.mpd.network.listenAddress";
         example = "192.168.1.1";
-        description =
-          lib.mdDoc "The address where MPD is listening for connections.";
+        description = "The address where MPD is listening for connections.";
       };
 
       port = mkOption {
         type = types.port;
         default = config.services.mpd.network.port;
         defaultText = "config.services.mpd.network.port";
-        description = lib.mdDoc ''
+        description = ''
           The port number where MPD is listening for connections.
         '';
       };
@@ -69,7 +68,7 @@ in {
         type = types.nullOr types.path;
         default = config.services.mpd.musicDirectory;
         defaultText = "config.services.mpd.musicDirectory";
-        description = lib.mdDoc ''
+        description = ''
           If set, mpDris2 will use this directory to access music artwork.
         '';
       };
@@ -77,7 +76,7 @@ in {
       password = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           The password to connect to MPD.
         '';
       };

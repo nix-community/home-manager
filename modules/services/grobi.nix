@@ -14,13 +14,13 @@ in {
 
   options = {
     services.grobi = {
-      enable = mkEnableOption (lib.mdDoc "the grobi display setup daemon");
+      enable = mkEnableOption "the grobi display setup daemon";
 
       executeAfter = mkOption {
         type = with types; listOf str;
         default = [ ];
         example = [ "setxkbmap dvorak" ];
-        description = lib.mdDoc ''
+        description = ''
           Commands to be run after an output configuration was
           changed. The Nix value declared here will be translated to
           JSON and written to the {option}`execute_after` key
@@ -57,7 +57,7 @@ in {
             }
           ]
         '';
-        description = lib.mdDoc ''
+        description = ''
           These are the rules grobi tries to match to the current
           output configuration. The rules are evaluated top to bottom,
           the first matching rule is applied and processing stops. See

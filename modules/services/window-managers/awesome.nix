@@ -14,19 +14,19 @@ let
 in {
   options = {
     xsession.windowManager.awesome = {
-      enable = mkEnableOption (lib.mdDoc "Awesome window manager");
+      enable = mkEnableOption "Awesome window manager";
 
       package = mkOption {
         type = types.package;
         default = pkgs.awesome;
         defaultText = literalExpression "pkgs.awesome";
-        description = lib.mdDoc "Package to use for running the Awesome WM.";
+        description = "Package to use for running the Awesome WM.";
       };
 
       luaModules = mkOption {
         default = [ ];
         type = types.listOf types.package;
-        description = lib.mdDoc ''
+        description = ''
           List of lua packages available for being
           used in the Awesome configuration.
         '';
@@ -36,7 +36,7 @@ in {
       noArgb = mkOption {
         default = false;
         type = types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Disable client transparency support, which can be greatly
           detrimental to performance in some setups
         '';

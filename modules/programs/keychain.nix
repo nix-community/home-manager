@@ -19,13 +19,13 @@ in {
   meta.maintainers = [ ];
 
   options.programs.keychain = {
-    enable = mkEnableOption (lib.mdDoc "keychain");
+    enable = mkEnableOption "keychain";
 
     package = mkOption {
       type = types.package;
       default = pkgs.keychain;
       defaultText = literalExpression "pkgs.keychain";
-      description = lib.mdDoc ''
+      description = ''
         Keychain package to install.
       '';
     };
@@ -33,7 +33,7 @@ in {
     keys = mkOption {
       type = types.listOf types.str;
       default = [ "id_rsa" ];
-      description = lib.mdDoc ''
+      description = ''
         Keys to add to keychain.
       '';
     };
@@ -41,7 +41,7 @@ in {
     agents = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      description = lib.mdDoc ''
+      description = ''
         Agents to add.
       '';
     };
@@ -50,7 +50,7 @@ in {
       type =
         types.nullOr (types.enum [ "local" "any" "local-once" "any-once" ]);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Inherit type to attempt from agent variables from the environment.
       '';
     };
@@ -58,7 +58,7 @@ in {
     extraFlags = mkOption {
       type = types.listOf types.str;
       default = [ "--quiet" ];
-      description = lib.mdDoc ''
+      description = ''
         Extra flags to pass to keychain.
       '';
     };
@@ -66,7 +66,7 @@ in {
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Bash integration.
       '';
     };
@@ -74,7 +74,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Fish integration.
       '';
     };
@@ -82,7 +82,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Zsh integration.
       '';
     };
@@ -90,7 +90,7 @@ in {
     enableNushellIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Nushell integration.
       '';
     };
@@ -99,7 +99,7 @@ in {
       default = true;
       type = types.bool;
       visible = pkgs.stdenv.hostPlatform.isLinux;
-      description = lib.mdDoc ''
+      description = ''
         Whether to run keychain from your {file}`~/.xsession`.
       '';
     };

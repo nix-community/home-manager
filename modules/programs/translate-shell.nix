@@ -25,7 +25,7 @@ in {
   meta.maintainers = [ ];
 
   options.programs.translate-shell = {
-    enable = mkEnableOption (lib.mdDoc "translate-shell");
+    enable = mkEnableOption "translate-shell";
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool str (listOf str) ]);
@@ -35,7 +35,7 @@ in {
         hl = "en";
         tl = [ "es" "fr" ];
       };
-      description = lib.mdDoc ''
+      description = ''
         Options to add to {file}`$XDG_CONFIG_HOME/translate-shell/init.trans` file.
         See <https://github.com/soimort/translate-shell/wiki/Configuration>
         for options.

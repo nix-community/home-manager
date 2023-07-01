@@ -41,7 +41,7 @@ in {
 
   options = {
     qt = {
-      enable = mkEnableOption (lib.mdDoc "Qt 4, 5 and 6 configuration");
+      enable = mkEnableOption "Qt 4, 5 and 6 configuration";
 
       platformTheme = mkOption {
         type = types.nullOr (types.enum [ "gtk" "gnome" "qtct" "kde" ]);
@@ -55,7 +55,7 @@ in {
           [ "libsForQt5" "plasma-integration" ]
           [ "libsForQt5" "systemsettings" ]
         ];
-        description = lib.mdDoc ''
+        description = ''
           Platform theme to use for Qt applications.
 
           The options are
@@ -92,7 +92,7 @@ in {
             [ "libsForQt5" "qtstyleplugin-kvantum" ]
             [ "qt6Packages" "qtstyleplugin-kvantum" ]
           ];
-          description = lib.mdDoc ''
+          description = ''
             Style to use for Qt5/Qt6 applications. Case-insensitive.
 
             Some examples are
@@ -119,7 +119,7 @@ in {
           type = with types; nullOr (either package (listOf package));
           default = null;
           example = literalExpression "pkgs.adwaita-qt";
-          description = lib.mdDoc ''
+          description = ''
             Theme package to be used in Qt5/Qt6 applications.
             Auto-detected from {option}`qt.style.name` if possible.
           '';

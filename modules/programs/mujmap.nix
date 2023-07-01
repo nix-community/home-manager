@@ -50,7 +50,7 @@ let
     lowercase = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         If true, translate all mailboxes to lowercase names when mapping to notmuch
         tags.
       '';
@@ -60,7 +60,7 @@ let
       type = types.str;
       default = "/";
       example = ".";
-      description = lib.mdDoc ''
+      description = ''
         Directory separator for mapping notmuch tags to maildirs.
       '';
     };
@@ -68,7 +68,7 @@ let
     inbox = mkOption {
       type = types.str;
       default = "inbox";
-      description = lib.mdDoc ''
+      description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
         `Inbox` name attribute.
 
@@ -80,7 +80,7 @@ let
     deleted = mkOption {
       type = types.str;
       default = "deleted";
-      description = lib.mdDoc ''
+      description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
         `Trash` name attribute.
 
@@ -92,7 +92,7 @@ let
     sent = mkOption {
       type = types.str;
       default = "sent";
-      description = lib.mdDoc ''
+      description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
         `Sent` name attribute.
 
@@ -104,7 +104,7 @@ let
     spam = mkOption {
       type = types.str;
       default = "spam";
-      description = lib.mdDoc ''
+      description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
         `Junk` name attribute and/or with the `$Junk` keyword,
         *except* for messages with the `$NotJunk` keyword.
@@ -117,7 +117,7 @@ let
     important = mkOption {
       type = types.str;
       default = "important";
-      description = lib.mdDoc ''
+      description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
         `Important` name attribute and/or with the `$Important`
         keyword.
@@ -130,7 +130,7 @@ let
     phishing = mkOption {
       type = types.str;
       default = "phishing";
-      description = lib.mdDoc ''
+      description = ''
         Tag for notmuch to use for the IANA `$Phishing` keyword.
 
         If set to an empty string, this keyword is not synchronized with a tag.
@@ -143,7 +143,7 @@ let
       type = types.nullOr types.str;
       default = null;
       example = "alice@example.com";
-      description = lib.mdDoc ''
+      description = ''
         Username for basic HTTP authentication.
 
         If `null`, defaults to
@@ -156,7 +156,7 @@ let
       default = null;
       apply = p: if isList p then escapeShellArgs p else p;
       example = "pass alice@example.com";
-      description = lib.mdDoc ''
+      description = ''
         Shell command which will print a password to stdout for basic HTTP
         authentication.
 
@@ -169,7 +169,7 @@ let
       type = types.nullOr types.str;
       default = null;
       example = "example.com";
-      description = lib.mdDoc ''
+      description = ''
         Fully qualified domain name of the JMAP service.
 
         mujmap looks up the JMAP SRV record for this host to determine the JMAP session
@@ -185,7 +185,7 @@ let
       type = types.nullOr types.str;
       default = null;
       example = "https://jmap.example.com/.well-known/jmap";
-      description = lib.mdDoc ''
+      description = ''
         Session URL to connect to.
 
         Mutually exclusive with
@@ -199,7 +199,7 @@ let
     auto_create_new_mailboxes = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to create new mailboxes automatically on the server from notmuch
         tags.
       '';
@@ -208,7 +208,7 @@ let
     cache_dir = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         The cache directory in which to store mail files while they are being
         downloaded. The default is operating-system specific.
       '';
@@ -220,7 +220,7 @@ let
         options = tagsOpts;
       };
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Tag configuration.
 
         Beware that there are quirks that require manual consideration if changing the
@@ -232,13 +232,12 @@ let
   };
 
   mujmapOpts = {
-    enable =
-      mkEnableOption (lib.mdDoc "mujmap JMAP synchronization for notmuch");
+    enable = mkEnableOption "mujmap JMAP synchronization for notmuch";
 
     notmuchSetupWarning = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Warn if Notmuch is not also enabled for this account.
 
         This can safely be disabled if {file}`mujmap.toml` is managed
@@ -252,7 +251,7 @@ let
         options = rootOpts;
       };
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Settings which are applied to {file}`mujmap.toml`
         for the account.
 
@@ -268,14 +267,13 @@ in {
 
   options = {
     programs.mujmap = {
-      enable =
-        mkEnableOption (lib.mdDoc "mujmap Gmail synchronization for notmuch");
+      enable = mkEnableOption "mujmap Gmail synchronization for notmuch";
 
       package = mkOption {
         type = types.package;
         default = pkgs.mujmap;
         defaultText = "pkgs.mujmap";
-        description = lib.mdDoc ''
+        description = ''
           mujmap package to use.
         '';
       };

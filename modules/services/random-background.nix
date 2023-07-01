@@ -15,8 +15,8 @@ in {
 
   options = {
     services.random-background = {
-      enable = mkEnableOption (lib.mdDoc "") // {
-        description = lib.mdDoc ''
+      enable = mkEnableOption "" // {
+        description = ''
           Whether to enable random desktop background.
 
           Note, if you are using NixOS and have set up a custom
@@ -30,7 +30,7 @@ in {
       imageDirectory = mkOption {
         type = types.str;
         example = "%h/backgrounds";
-        description = lib.mdDoc ''
+        description = ''
           The directory of images from which a background should be
           chosen. Should be formatted in a way understood by systemd,
           e.g., '%h' is the home directory.
@@ -40,15 +40,14 @@ in {
       display = mkOption {
         type = types.enum [ "center" "fill" "max" "scale" "tile" ];
         default = "fill";
-        description =
-          lib.mdDoc "Display background images according to this option.";
+        description = "Display background images according to this option.";
       };
 
       interval = mkOption {
         default = null;
         type = types.nullOr types.str;
         example = "1h";
-        description = lib.mdDoc ''
+        description = ''
           The duration between changing background image, set to null
           to only set background when logging in. Should be formatted
           as a duration understood by systemd.
@@ -58,7 +57,7 @@ in {
       enableXinerama = mkOption {
         default = true;
         type = types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Will place a separate image per screen when enabled,
           otherwise a single image will be stretched across all
           screens.

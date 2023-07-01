@@ -8,16 +8,16 @@ in {
   meta.maintainers = [ lib.maintainers.DamienCassou ];
 
   options.services.copyq = {
-    enable = lib.mkEnableOption
-      (lib.mdDoc "CopyQ, a clipboard manager with advanced features");
+    enable =
+      lib.mkEnableOption "CopyQ, a clipboard manager with advanced features";
 
-    package = lib.mkPackageOptionMD pkgs "copyq" { };
+    package = lib.mkPackageOption pkgs "copyq" { };
 
     systemdTarget = lib.mkOption {
       type = lib.types.str;
       default = "graphical-session.target";
       example = "sway-session.target";
-      description = lib.mdDoc ''
+      description = ''
         The systemd target that will automatically start the CopyQ service.
 
         When setting this value to `"sway-session.target"`,

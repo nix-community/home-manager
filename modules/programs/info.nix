@@ -38,7 +38,7 @@ in {
     '')
   ];
 
-  options.programs.info.enable = mkEnableOption (lib.mdDoc "GNU Info");
+  options.programs.info.enable = mkEnableOption "GNU Info";
 
   config = mkIf cfg.enable {
     home.packages = [

@@ -22,7 +22,7 @@ let
             "";
           defaultText = literalExpression
             "if source is defined, the content of source, otherwise empty";
-          description = lib.mdDoc ''
+          description = ''
             Text of the nushell {file}`${name}` file.
             If unset then the source option will be preferred.
           '';
@@ -31,7 +31,7 @@ let
         source = mkOption {
           type = types.nullOr types.path;
           default = null;
-          description = lib.mdDoc ''
+          description = ''
             Path of the nushell {file}`${name}` file to use.
             If the text option is set, it will be preferred.
           '';
@@ -52,13 +52,13 @@ in {
   ];
 
   options.programs.nushell = {
-    enable = mkEnableOption (lib.mdDoc "nushell");
+    enable = mkEnableOption "nushell";
 
     package = mkOption {
       type = types.package;
       default = pkgs.nushell;
       defaultText = literalExpression "pkgs.nushell";
-      description = lib.mdDoc "The package to use for nushell.";
+      description = "The package to use for nushell.";
     };
 
     configFile = mkOption {
@@ -74,7 +74,7 @@ in {
           ''';
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         The configuration file to be used for nushell.
 
         See <https://www.nushell.sh/book/configuration.html#configuration> for more information.
@@ -87,7 +87,7 @@ in {
       example = ''
         let-env FOO = 'BAR'
       '';
-      description = lib.mdDoc ''
+      description = ''
         The environment variables file to be used for nushell.
 
         See <https://www.nushell.sh/book/configuration.html#configuration> for more information.
@@ -103,7 +103,7 @@ in {
           echo "Hello, World"
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         The login file to be used for nushell upon logging in.
 
         See <https://www.nushell.sh/book/configuration.html#configuring-nu-as-a-login-shell> for more information.
@@ -113,7 +113,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Additional configuration to add to the nushell configuration file.
       '';
     };
@@ -121,7 +121,7 @@ in {
     extraEnv = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Additional configuration to add to the nushell environment variables file.
       '';
     };
@@ -129,7 +129,7 @@ in {
     extraLogin = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Additional configuration to add to the nushell login file.
       '';
     };
@@ -138,7 +138,7 @@ in {
       type = types.attrsOf types.str;
       default = { };
       example = { ll = "ls -l"; };
-      description = lib.mdDoc ''
+      description = ''
         An attribute set that maps aliases (the top level attribute names in
         this option) to command strings or directly to build outputs.
       '';
@@ -148,7 +148,7 @@ in {
       type = types.attrsOf types.str;
       default = { };
       example = { FOO = "BAR"; };
-      description = lib.mdDoc ''
+      description = ''
         An attribute set that maps an environment variable to a shell interpreted string.
       '';
     };

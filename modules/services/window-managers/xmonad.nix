@@ -18,13 +18,13 @@ let
 in {
   options = {
     xsession.windowManager.xmonad = {
-      enable = mkEnableOption (lib.mdDoc "xmonad window manager");
+      enable = mkEnableOption "xmonad window manager";
 
       haskellPackages = mkOption {
         default = pkgs.haskellPackages;
         defaultText = literalExpression "pkgs.haskellPackages";
         example = literalExpression "pkgs.haskell.packages.ghc784";
-        description = lib.mdDoc ''
+        description = ''
           The {var}`haskellPackages` used to build xmonad
           and other packages. This can be used to change the GHC
           version used to build xmonad and the packages listed in
@@ -41,7 +41,7 @@ in {
             haskellPackages.monad-logger
           ]
         '';
-        description = lib.mdDoc ''
+        description = ''
           Extra packages available to GHC when rebuilding xmonad. The
           value must be a function which receives the attribute set
           defined in {var}`haskellPackages` as the sole
@@ -52,7 +52,7 @@ in {
       enableContribAndExtras = mkOption {
         default = false;
         type = types.bool;
-        description = lib.mdDoc "Enable xmonad-{contrib,extras} in xmonad.";
+        description = "Enable xmonad-{contrib,extras} in xmonad.";
       };
 
       config = mkOption {
@@ -68,7 +68,7 @@ in {
                 }
           '''
         '';
-        description = lib.mdDoc ''
+        description = ''
           The configuration file to be used for xmonad. This must be
           an absolute path or `null` in which case
           {file}`~/.xmonad/xmonad.hs` will not be managed
@@ -91,7 +91,7 @@ in {
              ''';
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Additional files that will be saved in
           {file}`~/.xmonad/lib/` and included in the configuration
           build. The keys are the file names while the values are paths to the

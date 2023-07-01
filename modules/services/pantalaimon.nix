@@ -11,14 +11,14 @@ in {
 
   options = {
     services.pantalaimon = {
-      enable = mkEnableOption (lib.mdDoc
-        "Pantalaimon, an E2EE aware proxy daemon for matrix clients");
+      enable = mkEnableOption
+        "Pantalaimon, an E2EE aware proxy daemon for matrix clients";
 
       package = mkOption {
         type = types.package;
         default = pkgs.pantalaimon;
         defaultText = literalExpression "pkgs.pantalaimon";
-        description = lib.mdDoc
+        description =
           "Package providing the {command}`pantalaimon` executable to use.";
       };
 
@@ -39,7 +39,7 @@ in {
             };
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/pantalaimon/pantalaimon.conf`.
 

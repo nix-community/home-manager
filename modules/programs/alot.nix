@@ -25,7 +25,7 @@ let
     options = {
       translated = mkOption {
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           Fixed string representation for this tag. The tag can be
           hidden from view, if the key translated is set to
           `""`, the empty string.
@@ -35,7 +35,7 @@ let
       translation = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           A pair of strings that define a regular substitution to
           compute the string representation on the fly using
           `re.sub`.
@@ -46,7 +46,7 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "'','', 'white','light red', 'white','#d66'";
-        description = lib.mdDoc ''
+        description = ''
           How to display the tag when unfocused.
           See <https://alot.readthedocs.io/en/latest/configuration/theming.html#tagstring-formatting>.
         '';
@@ -55,7 +55,7 @@ let
       focus = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc "How to display the tag when focused.";
+        description = "How to display the tag when focused.";
       };
     };
   };
@@ -125,7 +125,7 @@ in {
         type = types.bool;
         default = false;
         example = true;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable the Alot mail user agent. Alot uses the
           Notmuch email system and will therefore be automatically
           enabled for each email account that is managed by Notmuch.
@@ -135,7 +135,7 @@ in {
       hooks = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Content of the hooks file.
         '';
       };
@@ -146,42 +146,42 @@ in {
             global = mkOption {
               type = types.attrsOf types.str;
               default = { };
-              description = lib.mdDoc "Global keybindings.";
+              description = "Global keybindings.";
             };
 
             bufferlist = mkOption {
               type = types.attrsOf types.str;
               default = { };
-              description = lib.mdDoc "Bufferlist mode keybindings.";
+              description = "Bufferlist mode keybindings.";
             };
 
             search = mkOption {
               type = types.attrsOf types.str;
               default = { };
-              description = lib.mdDoc "Search mode keybindings.";
+              description = "Search mode keybindings.";
             };
 
             envelope = mkOption {
               type = types.attrsOf types.str;
               default = { };
-              description = lib.mdDoc "Envelope mode keybindings.";
+              description = "Envelope mode keybindings.";
             };
 
             taglist = mkOption {
               type = types.attrsOf types.str;
               default = { };
-              description = lib.mdDoc "Taglist mode keybindings.";
+              description = "Taglist mode keybindings.";
             };
 
             thread = mkOption {
               type = types.attrsOf types.str;
               default = { };
-              description = lib.mdDoc "Thread mode keybindings.";
+              description = "Thread mode keybindings.";
             };
           };
         };
         default = { };
-        description = lib.mdDoc ''
+        description = ''
           Keybindings.
         '';
       };
@@ -189,7 +189,7 @@ in {
       tags = mkOption {
         type = types.attrsOf tagSubmodule;
         default = { };
-        description = lib.mdDoc "How to display the tags.";
+        description = "How to display the tags.";
       };
 
       settings = mkOption {
@@ -209,7 +209,7 @@ in {
             thread_indent_replies = 2;
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Configuration options added to alot configuration file.
         '';
       };
@@ -217,7 +217,7 @@ in {
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Extra lines added to alot configuration file.
         '';
       };

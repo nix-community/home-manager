@@ -14,20 +14,20 @@ in {
   meta.maintainers = [ maintainers.pjones ];
 
   options.services.vdirsyncer = {
-    enable = mkEnableOption (lib.mdDoc "vdirsyncer");
+    enable = mkEnableOption "vdirsyncer";
 
     package = mkOption {
       type = types.package;
       default = pkgs.vdirsyncer;
       defaultText = "pkgs.vdirsyncer";
       example = literalExpression "pkgs.vdirsyncer";
-      description = lib.mdDoc "The package to use for the vdirsyncer binary.";
+      description = "The package to use for the vdirsyncer binary.";
     };
 
     frequency = mkOption {
       type = types.str;
       default = "*:0/5";
-      description = lib.mdDoc ''
+      description = ''
         How often to run vdirsyncer.  This value is passed to the systemd
         timer configuration as the onCalendar option.  See
         {manpage}`systemd.time(7)`
@@ -39,7 +39,7 @@ in {
       type = types.nullOr
         (types.enum [ "CRITICAL" "ERROR" "WARNING" "INFO" "DEBUG" ]);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Whether vdirsyncer should produce verbose output.
       '';
     };
@@ -47,7 +47,7 @@ in {
     configFile = mkOption {
       type = types.nullOr types.path;
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Optional configuration file to link to use instead of
         the default file ({file}`$XDG_CONFIG_HOME/vdirsyncer/config`).
       '';

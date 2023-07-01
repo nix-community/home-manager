@@ -21,7 +21,7 @@ in {
     enable = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether to manage {file}`$XDG_CONFIG_HOME/user-dirs.dirs`.
 
         The generated file is read-only.
@@ -36,7 +36,7 @@ in {
       default = "${config.home.homeDirectory}/Desktop";
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/Desktop"'';
-      description = lib.mdDoc "The Desktop directory.";
+      description = "The Desktop directory.";
     };
 
     documents = mkOption {
@@ -44,7 +44,7 @@ in {
       default = "${config.home.homeDirectory}/Documents";
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/Documents"'';
-      description = lib.mdDoc "The Documents directory.";
+      description = "The Documents directory.";
     };
 
     download = mkOption {
@@ -52,7 +52,7 @@ in {
       default = "${config.home.homeDirectory}/Downloads";
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/Downloads"'';
-      description = lib.mdDoc "The Downloads directory.";
+      description = "The Downloads directory.";
     };
 
     music = mkOption {
@@ -60,7 +60,7 @@ in {
       default = "${config.home.homeDirectory}/Music";
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/Music"'';
-      description = lib.mdDoc "The Music directory.";
+      description = "The Music directory.";
     };
 
     pictures = mkOption {
@@ -68,7 +68,7 @@ in {
       default = "${config.home.homeDirectory}/Pictures";
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/Pictures"'';
-      description = lib.mdDoc "The Pictures directory.";
+      description = "The Pictures directory.";
     };
 
     publicShare = mkOption {
@@ -76,7 +76,7 @@ in {
       default = "${config.home.homeDirectory}/Public";
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/Public"'';
-      description = lib.mdDoc "The Public share directory.";
+      description = "The Public share directory.";
     };
 
     templates = mkOption {
@@ -84,7 +84,7 @@ in {
       default = "${config.home.homeDirectory}/Templates";
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/Templates"'';
-      description = lib.mdDoc "The Templates directory.";
+      description = "The Templates directory.";
     };
 
     videos = mkOption {
@@ -92,7 +92,7 @@ in {
       default = "${config.home.homeDirectory}/Videos";
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/Videos"'';
-      description = lib.mdDoc "The Videos directory.";
+      description = "The Videos directory.";
     };
 
     extraConfig = mkOption {
@@ -104,11 +104,11 @@ in {
           XDG_MISC_DIR = "''${config.home.homeDirectory}/Misc";
         }
       '';
-      description = lib.mdDoc "Other user directories.";
+      description = "Other user directories.";
     };
 
-    createDirectories = mkEnableOption
-      (lib.mdDoc "automatic creation of the XDG user directories");
+    createDirectories =
+      mkEnableOption "automatic creation of the XDG user directories";
   };
 
   config = let

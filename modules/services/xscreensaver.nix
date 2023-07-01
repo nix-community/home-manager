@@ -11,7 +11,7 @@ in {
 
   options = {
     services.xscreensaver = {
-      enable = mkEnableOption (lib.mdDoc "XScreenSaver");
+      enable = mkEnableOption "XScreenSaver";
 
       settings = mkOption {
         type = with types; attrsOf (either bool (either int str));
@@ -21,7 +21,7 @@ in {
           lock = false;
           fadeTicks = 20;
         };
-        description = lib.mdDoc ''
+        description = ''
           The settings to use for XScreenSaver.
         '';
       };

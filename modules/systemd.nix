@@ -96,7 +96,7 @@ in {
         default = "${pkgs.systemd}/bin/systemctl";
         defaultText = literalExpression ''"''${pkgs.systemd}/bin/systemctl"'';
         type = types.str;
-        description = lib.mdDoc ''
+        description = ''
           Absolute path to the {command}`systemctl` tool. This
           option may need to be set if running Home Manager on a
           non-NixOS distribution.
@@ -106,56 +106,56 @@ in {
       services = mkOption {
         default = { };
         type = unitType "service";
-        description = lib.mdDoc (unitDescription "service");
+        description = (unitDescription "service");
         example = unitExample "Service";
       };
 
       slices = mkOption {
         default = { };
         type = unitType "slice";
-        description = lib.mdDoc (unitDescription "slice");
+        description = (unitDescription "slice");
         example = unitExample "Slice";
       };
 
       sockets = mkOption {
         default = { };
         type = unitType "socket";
-        description = lib.mdDoc (unitDescription "socket");
+        description = (unitDescription "socket");
         example = unitExample "Socket";
       };
 
       targets = mkOption {
         default = { };
         type = unitType "target";
-        description = lib.mdDoc (unitDescription "target");
+        description = (unitDescription "target");
         example = unitExample "Target";
       };
 
       timers = mkOption {
         default = { };
         type = unitType "timer";
-        description = lib.mdDoc (unitDescription "timer");
+        description = (unitDescription "timer");
         example = unitExample "Timer";
       };
 
       paths = mkOption {
         default = { };
         type = unitType "path";
-        description = lib.mdDoc (unitDescription "path");
+        description = (unitDescription "path");
         example = unitExample "Path";
       };
 
       mounts = mkOption {
         default = { };
         type = unitType "mount";
-        description = lib.mdDoc (unitDescription "mount");
+        description = (unitDescription "mount");
         example = unitExample "Mount";
       };
 
       automounts = mkOption {
         default = { };
         type = unitType "automount";
-        description = lib.mdDoc (unitDescription "automount");
+        description = (unitDescription "automount");
         example = unitExample "Automount";
       };
 
@@ -164,7 +164,7 @@ in {
         type = with types;
           either bool (enum [ "suggest" "legacy" "sd-switch" ]);
         apply = p: if isBool p then if p then "legacy" else "suggest" else p;
-        description = lib.mdDoc ''
+        description = ''
           Whether new or changed services that are wanted by active targets
           should be started. Additionally, stop obsolete services from the
           previous generation.
@@ -193,7 +193,7 @@ in {
       servicesStartTimeoutMs = mkOption {
         default = 0;
         type = types.ints.unsigned;
-        description = lib.mdDoc ''
+        description = ''
           How long to wait for started services to fail until their start is
           considered successful. The value 0 indicates no timeout.
         '';
@@ -203,7 +203,7 @@ in {
         default = { };
         type = with types; attrsOf (either int str);
         example = { EDITOR = "vim"; };
-        description = lib.mdDoc ''
+        description = ''
           Environment variables that will be set for the user session.
           The variable values must be as described in
           {manpage}`environment.d(5)`.

@@ -19,13 +19,12 @@ in {
   meta.maintainers = [ maintainers.rprospero ];
 
   options.programs.matplotlib = {
-    enable =
-      mkEnableOption (lib.mdDoc "matplotlib, a plotting library for python");
+    enable = mkEnableOption "matplotlib, a plotting library for python";
 
     config = mkOption {
       default = { };
       type = types.attrsOf types.anything;
-      description = lib.mdDoc ''
+      description = ''
         Add terms to the {file}`matplotlibrc` file to
         control the default matplotlib behavior.
       '';
@@ -45,7 +44,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Additional commands for matplotlib that will be added to the
         {file}`matplotlibrc` file.
       '';

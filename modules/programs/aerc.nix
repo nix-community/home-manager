@@ -31,16 +31,16 @@ in {
 
   options.programs.aerc = {
 
-    enable = mkEnableOption (lib.mdDoc "aerc");
+    enable = mkEnableOption "aerc";
 
-    package = mkPackageOptionMD pkgs "aerc" { };
+    package = mkPackageOption pkgs "aerc" { };
 
     extraAccounts = mkOption {
       type = sectionsOrLines;
       default = { };
       example = literalExpression
         ''{ Work = { source = "maildir://~/Maildir/work"; }; }'';
-      description = lib.mdDoc ''
+      description = ''
         Extra lines added to {file}`$HOME/.config/aerc/accounts.conf`.
 
         See {manpage}`aerc-config(5)`.
@@ -51,7 +51,7 @@ in {
       type = sectionsOrLines;
       default = { };
       example = literalExpression ''{ messages = { q = ":quit<Enter>"; }; }'';
-      description = lib.mdDoc ''
+      description = ''
         Extra lines added to {file}`$HOME/.config/aerc/binds.conf`.
         Global keybindings can be set in the `global` section.
 
@@ -63,7 +63,7 @@ in {
       type = sectionsOrLines;
       default = { };
       example = literalExpression ''{ ui = { sort = "-r date"; }; }'';
-      description = lib.mdDoc ''
+      description = ''
         Extra lines added to {file}`$HOME/.config/aerc/aerc.conf`.
 
         See {manpage}`aerc-config(5)`.
@@ -76,7 +76,7 @@ in {
       example = literalExpression ''
         { default = { ui = { "tab.selected.reverse" = toggle; }; }; };
       '';
-      description = lib.mdDoc ''
+      description = ''
         Stylesets added to {file}`$HOME/.config/aerc/stylesets/`.
 
         See {manpage}`aerc-stylesets(7)`.
@@ -89,7 +89,7 @@ in {
       example = literalExpression ''
         { new_message = "Hello!"; };
       '';
-      description = lib.mdDoc ''
+      description = ''
         Templates added to {file}`$HOME/.config/aerc/templates/`.
 
         See {manpage}`aerc-templates(7)`.

@@ -21,14 +21,14 @@ let
             pv = "pr view";
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Aliases that allow you to create nicknames for gh commands.
         '';
       };
       editor = mkOption {
         type = types.str;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           The editor that gh should run when creating issues, pull requests, etc.
           If blank, will refer to environment.
         '';
@@ -37,7 +37,7 @@ let
         type = types.str;
         default = "https";
         example = "ssh";
-        description = lib.mdDoc ''
+        description = ''
           The protocol to use when performing Git operations.
         '';
       };
@@ -63,19 +63,19 @@ in {
     ];
 
   options.programs.gh = {
-    enable = mkEnableOption (lib.mdDoc "GitHub CLI tool");
+    enable = mkEnableOption "GitHub CLI tool";
 
     package = mkOption {
       type = types.package;
       default = pkgs.gh;
       defaultText = literalExpression "pkgs.gh";
-      description = lib.mdDoc "Package providing {command}`gh`.";
+      description = "Package providing {command}`gh`.";
     };
 
     settings = mkOption {
       type = settingsType;
       default = { };
-      description = lib.mdDoc
+      description =
         "Configuration written to {file}`$XDG_CONFIG_HOME/gh/config.yml`.";
       example = literalExpression ''
         {
@@ -92,15 +92,14 @@ in {
     };
 
     enableGitCredentialHelper =
-      mkEnableOption (lib.mdDoc "the gh git credential helper for github.com")
-      // {
+      mkEnableOption "the gh git credential helper for github.com" // {
         default = true;
       };
 
     extensions = mkOption {
       type = types.listOf types.package;
       default = [ ];
-      description = lib.mdDoc ''
+      description = ''
         gh extensions, see <https://cli.github.com/manual/gh_extension>.
       '';
       example = literalExpression "[ pkgs.gh-eco ]";

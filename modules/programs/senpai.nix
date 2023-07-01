@@ -7,12 +7,12 @@ let
   cfgFmt = pkgs.formats.yaml { };
 in {
   options.programs.senpai = {
-    enable = mkEnableOption (lib.mdDoc "senpai");
+    enable = mkEnableOption "senpai";
     package = mkOption {
       type = types.package;
       default = pkgs.senpai;
       defaultText = literalExpression "pkgs.senpai";
-      description = lib.mdDoc "The `senpai` package to use.";
+      description = "The `senpai` package to use.";
     };
     config = mkOption {
       type = types.submodule {
@@ -20,7 +20,7 @@ in {
         options = {
           addr = mkOption {
             type = types.str;
-            description = lib.mdDoc ''
+            description = ''
               The address (host[:port]) of the IRC server. senpai uses TLS
               connections by default unless you specify no-tls option. TLS
               connections default to port 6697, plain-text use port 6667.
@@ -28,7 +28,7 @@ in {
           };
           nick = mkOption {
             type = types.str;
-            description = lib.mdDoc ''
+            description = ''
               Your nickname, sent with a NICK IRC message. It mustn't contain
               spaces or colons (:).
             '';
@@ -36,7 +36,7 @@ in {
           password = mkOption {
             type = types.nullOr types.str;
             default = null;
-            description = lib.mdDoc ''
+            description = ''
               Your password, used for SASL authentication. Note that it will
               reside world-readable in the Nix store.
             '';
@@ -44,7 +44,7 @@ in {
           no-tls = mkOption {
             type = types.bool;
             default = false;
-            description = lib.mdDoc "Disables TLS encryption.";
+            description = "Disables TLS encryption.";
           };
         };
       };
@@ -55,7 +55,7 @@ in {
           password = "verysecurepassword";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration for senpai. For a complete list of options, see
         {manpage}`senpai(5)`.
       '';

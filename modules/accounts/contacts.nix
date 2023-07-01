@@ -13,24 +13,24 @@ let
           type = types.str;
           default = "${cfg.basePath}/${name}";
           defaultText = "‹accounts.contact.basePath›/‹name›";
-          description = lib.mdDoc "The path of the storage.";
+          description = "The path of the storage.";
         };
 
         type = mkOption {
           type = types.enum [ "filesystem" "singlefile" ];
-          description = lib.mdDoc "The type of the storage.";
+          description = "The type of the storage.";
         };
 
         fileExt = mkOption {
           type = types.nullOr types.str;
           default = null;
-          description = lib.mdDoc "The file extension to use.";
+          description = "The file extension to use.";
         };
 
         encoding = mkOption {
           type = types.nullOr types.str;
           default = null;
-          description = lib.mdDoc ''
+          description = ''
             File encoding for items, both content and file name.
             Defaults to UTF-8.
           '';
@@ -42,19 +42,19 @@ let
     options = {
       type = mkOption {
         type = types.enum [ "carddav" "http" "google_contacts" ];
-        description = lib.mdDoc "The type of the storage.";
+        description = "The type of the storage.";
       };
 
       url = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc "The URL of the storage.";
+        description = "The URL of the storage.";
       };
 
       userName = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc "User name for authentication.";
+        description = "User name for authentication.";
       };
 
       # userNameCommand = mkOption {
@@ -70,7 +70,7 @@ let
         type = types.nullOr (types.listOf types.str);
         default = null;
         example = [ "pass" "caldav" ];
-        description = lib.mdDoc ''
+        description = ''
           A command that prints the password to standard output.
         '';
       };
@@ -82,7 +82,7 @@ let
       name = mkOption {
         type = types.str;
         readOnly = true;
-        description = lib.mdDoc ''
+        description = ''
           Unique identifier of the contact account. This is set to the
           attribute name of the contact configuration.
         '';
@@ -91,7 +91,7 @@ let
       local = mkOption {
         type = types.nullOr (localModule name);
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Local configuration for the contacts.
         '';
       };
@@ -99,7 +99,7 @@ let
       remote = mkOption {
         type = types.nullOr remoteModule;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Remote configuration for the contacts.
         '';
       };
@@ -114,7 +114,7 @@ in {
       type = types.str;
       apply = p:
         if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
-      description = lib.mdDoc ''
+      description = ''
         The base directory in which to save contacts. May be a
         relative path, in which case it is relative the home
         directory.
@@ -128,7 +128,7 @@ in {
         (import ../programs/khal-accounts.nix)
       ]);
       default = { };
-      description = lib.mdDoc "List of contacts.";
+      description = "List of contacts.";
     };
   };
 }

@@ -25,9 +25,9 @@ let
 
 in {
   options.programs.feh = {
-    enable = mkEnableOption (lib.mdDoc "feh - a fast and light image viewer");
+    enable = mkEnableOption "feh - a fast and light image viewer";
 
-    package = mkPackageOptionMD pkgs "feh" { };
+    package = mkPackageOption pkgs "feh" { };
 
     buttons = mkOption {
       default = { };
@@ -37,7 +37,7 @@ in {
         zoom_out = "C-4";
         prev_img = [ 3 "C-3" ];
       };
-      description = lib.mdDoc ''
+      description = ''
         Override feh's default mouse button mapping. If you want to disable an
         action, set its value to null. If you want to bind multiple buttons to
         an action, set its value to a list.
@@ -54,7 +54,7 @@ in {
         zoom_out = "minus";
         prev_img = [ "h" "Left" ];
       };
-      description = lib.mdDoc ''
+      description = ''
         Override feh's default keybindings. If you want to disable a keybinding
         set its value to null. If you want to bind multiple keys to an action,
         set its value to a list.

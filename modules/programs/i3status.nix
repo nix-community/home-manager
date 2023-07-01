@@ -36,12 +36,12 @@ in {
   meta.maintainers = [ hm.maintainers.justinlovinger ];
 
   options.programs.i3status = {
-    enable = mkEnableOption (lib.mdDoc "i3status");
+    enable = mkEnableOption "i3status";
 
     enableDefault = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether or not to enable
         the default configuration.
       '';
@@ -50,7 +50,7 @@ in {
     general = mkOption {
       type = settingsType;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Configuration to add to i3status {file}`config`
         `general` section.
         See
@@ -74,20 +74,20 @@ in {
           enable = mkOption {
             type = types.bool;
             default = true;
-            description = lib.mdDoc ''
+            description = ''
               Whether or not to enable this module.
             '';
           };
           position = mkOption {
             type = with types; either int float;
-            description = lib.mdDoc ''
+            description = ''
               Position of this module in i3status `order`.
             '';
           };
           settings = mkOption {
             type = settingsType;
             default = { };
-            description = lib.mdDoc ''
+            description = ''
               Configuration to add to this i3status module.
               See
               {manpage}`i3status(1)`
@@ -104,7 +104,7 @@ in {
         };
       });
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Modules to add to i3status {file}`config` file.
         See
         {manpage}`i3status(1)`
@@ -130,7 +130,7 @@ in {
       '';
     };
 
-    package = mkPackageOptionMD pkgs "i3status" { };
+    package = mkPackageOption pkgs "i3status" { };
   };
 
   config = mkIf cfg.enable {

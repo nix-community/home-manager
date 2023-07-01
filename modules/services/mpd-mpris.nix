@@ -25,16 +25,16 @@ in {
 
   options.services.mpd-mpris = {
     enable = lib.mkEnableOption
-      (lib.mdDoc "mpd-mpris: An implementation of the MPRIS protocol for MPD");
+      "mpd-mpris: An implementation of the MPRIS protocol for MPD";
 
-    package = lib.mkPackageOptionMD pkgs "mpd-mpris" { };
+    package = lib.mkPackageOption pkgs "mpd-mpris" { };
 
     mpd = {
       useLocal = lib.mkOption {
         type = lib.types.bool;
         default = config.services.mpd.enable;
         defaultText = lib.literalExpression "config.services.mpd.enable";
-        description = lib.mdDoc ''
+        description = ''
           Whether to configure for the local MPD daemon. If
           `true` the `network`,
           `host`, and `port`
@@ -45,7 +45,7 @@ in {
       network = lib.mkOption {
         type = with lib.types; nullOr str;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           The network used to dial to the MPD server. Check
           <https://golang.org/pkg/net/#Dial>
           for available values (most common are "tcp" and "unix")
@@ -56,14 +56,13 @@ in {
         type = with lib.types; nullOr str;
         default = null;
         example = "192.168.1.1";
-        description =
-          lib.mdDoc "The address where MPD is listening for connections.";
+        description = "The address where MPD is listening for connections.";
       };
 
       port = lib.mkOption {
         type = with lib.types; nullOr port;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           The port number where MPD is listening for connections.
         '';
       };
@@ -71,7 +70,7 @@ in {
       password = lib.mkOption {
         type = with lib.types; nullOr str;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           The password to connect to MPD.
         '';
       };

@@ -31,7 +31,7 @@ let
         type = types.nullOr types.package;
         default = null;
         example = literalExpression "pkgs.gnome.gnome-themes-extra";
-        description = lib.mdDoc ''
+        description = ''
           Package providing the theme. This package will be installed
           to your profile. If `null` then the theme
           is assumed to already be available in your profile.
@@ -41,7 +41,7 @@ let
       name = mkOption {
         type = types.str;
         example = "Adwaita";
-        description = lib.mdDoc "The name of the theme within the package.";
+        description = "The name of the theme within the package.";
       };
     };
   };
@@ -52,7 +52,7 @@ let
         type = types.nullOr types.package;
         default = null;
         example = literalExpression "pkgs.gnome.adwaita-icon-theme";
-        description = lib.mdDoc ''
+        description = ''
           Package providing the icon theme. This package will be installed
           to your profile. If `null` then the theme
           is assumed to already be available in your profile.
@@ -62,8 +62,7 @@ let
       name = mkOption {
         type = types.str;
         example = "Adwaita";
-        description =
-          lib.mdDoc "The name of the icon theme within the package.";
+        description = "The name of the icon theme within the package.";
       };
     };
   };
@@ -74,7 +73,7 @@ let
         type = types.nullOr types.package;
         default = null;
         example = literalExpression "pkgs.vanilla-dmz";
-        description = lib.mdDoc ''
+        description = ''
           Package providing the cursor theme. This package will be installed
           to your profile. If `null` then the theme
           is assumed to already be available in your profile.
@@ -84,15 +83,14 @@ let
       name = mkOption {
         type = types.str;
         example = "Vanilla-DMZ";
-        description =
-          lib.mdDoc "The name of the cursor theme within the package.";
+        description = "The name of the cursor theme within the package.";
       };
 
       size = mkOption {
         type = types.nullOr types.int;
         default = null;
         example = 16;
-        description = lib.mdDoc ''
+        description = ''
           The size of the cursor.
         '';
       };
@@ -110,12 +108,12 @@ in {
 
   options = {
     gtk = {
-      enable = mkEnableOption (lib.mdDoc "GTK 2/3 configuration");
+      enable = mkEnableOption "GTK 2/3 configuration";
 
       font = mkOption {
         type = types.nullOr hm.types.fontType;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           The font to use in GTK+ 2/3 applications.
         '';
       };
@@ -123,19 +121,19 @@ in {
       cursorTheme = mkOption {
         type = types.nullOr cursorThemeType;
         default = null;
-        description = lib.mdDoc "The cursor theme to use.";
+        description = "The cursor theme to use.";
       };
 
       iconTheme = mkOption {
         type = types.nullOr iconThemeType;
         default = null;
-        description = lib.mdDoc "The icon theme to use.";
+        description = "The icon theme to use.";
       };
 
       theme = mkOption {
         type = types.nullOr themeType;
         default = null;
-        description = lib.mdDoc "The GTK+2/3 theme to use.";
+        description = "The GTK+2/3 theme to use.";
       };
 
       gtk2 = {
@@ -143,7 +141,7 @@ in {
           type = types.lines;
           default = "";
           example = "gtk-can-change-accels = 1";
-          description = lib.mdDoc ''
+          description = ''
             Extra configuration lines to add verbatim to
             {file}`~/.gtkrc-2.0`.
           '';
@@ -156,7 +154,7 @@ in {
             literalExpression ''"''${config.home.homeDirectory}/.gtkrc-2.0"'';
           example =
             literalExpression ''"''${config.xdg.configHome}/gtk-2.0/gtkrc"'';
-          description = lib.mdDoc ''
+          description = ''
             The location to put the GTK configuration file.
           '';
         };
@@ -167,8 +165,7 @@ in {
           type = types.listOf types.str;
           default = [ ];
           example = [ "file:///home/jane/Documents" ];
-          description =
-            lib.mdDoc "Bookmarks in the sidebar of the GTK file browser";
+          description = "Bookmarks in the sidebar of the GTK file browser";
         };
 
         extraConfig = mkOption {
@@ -178,7 +175,7 @@ in {
             gtk-cursor-blink = false;
             gtk-recent-files-limit = 20;
           };
-          description = lib.mdDoc ''
+          description = ''
             Extra configuration options to add to
             {file}`$XDG_CONFIG_HOME/gtk-3.0/settings.ini`.
           '';
@@ -187,7 +184,7 @@ in {
         extraCss = mkOption {
           type = types.lines;
           default = "";
-          description = lib.mdDoc ''
+          description = ''
             Extra configuration lines to add verbatim to
             {file}`$XDG_CONFIG_HOME/gtk-3.0/gtk.css`.
           '';
@@ -202,7 +199,7 @@ in {
             gtk-cursor-blink = false;
             gtk-recent-files-limit = 20;
           };
-          description = lib.mdDoc ''
+          description = ''
             Extra configuration options to add to
             {file}`$XDG_CONFIG_HOME/gtk-4.0/settings.ini`.
           '';
@@ -211,7 +208,7 @@ in {
         extraCss = mkOption {
           type = types.lines;
           default = "";
-          description = lib.mdDoc ''
+          description = ''
             Extra configuration lines to add verbatim to
             {file}`$XDG_CONFIG_HOME/gtk-4.0/gtk.css`.
           '';

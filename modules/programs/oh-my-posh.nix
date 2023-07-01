@@ -18,17 +18,16 @@ in {
   meta.maintainers = [ maintainers.arjan-s ];
 
   options.programs.oh-my-posh = {
-    enable = mkEnableOption
-      (lib.mdDoc "oh-my-posh, a prompt theme engine for any shell");
+    enable = mkEnableOption "oh-my-posh, a prompt theme engine for any shell";
 
-    package = mkPackageOptionMD pkgs "oh-my-posh" { };
+    package = mkPackageOption pkgs "oh-my-posh" { };
 
     settings = mkOption {
       type = jsonFormat.type;
       default = { };
       example = literalExpression ''
         builtins.fromJSON (builtins.unsafeDiscardStringContext (builtins.readFile "''${pkgs.oh-my-posh}/share/oh-my-posh/themes/space.omp.json"))'';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/oh-my-posh/config.json`. See
         <https://ohmyposh.dev/docs/configuration/overview>
@@ -40,7 +39,7 @@ in {
     useTheme = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Use one of the official themes. This should be a name from this list:
         <https://ohmyposh.dev/docs/themes>. Because a theme
         is essentially a configuration file, this option is not used when a
@@ -51,7 +50,7 @@ in {
     enableBashIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Bash integration.
       '';
     };
@@ -59,7 +58,7 @@ in {
     enableZshIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Zsh integration.
       '';
     };
@@ -67,7 +66,7 @@ in {
     enableFishIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Fish integration.
       '';
     };

@@ -15,7 +15,7 @@ in {
       "^u" = "deleteToBeginningOfLine:";
       "^w" = "deleteWordBackward:";
     };
-    description = lib.mdDoc ''
+    description = ''
       This will configure the default keybindings for text fields in macOS
       applications. See
       [Apple's documentation](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/EventOverview/TextDefaultsBindings/TextDefaultsBindings.html)

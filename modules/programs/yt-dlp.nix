@@ -16,13 +16,13 @@ in {
   meta.maintainers = [ ];
 
   options.programs.yt-dlp = {
-    enable = mkEnableOption (lib.mdDoc "yt-dlp");
+    enable = mkEnableOption "yt-dlp";
 
     package = mkOption {
       type = types.package;
       default = pkgs.yt-dlp;
       defaultText = literalExpression "pkgs.yt-dlp";
-      description = lib.mdDoc "Package providing the {command}`yt-dlp` tool.";
+      description = "Package providing the {command}`yt-dlp` tool.";
     };
 
     settings = mkOption {
@@ -37,7 +37,7 @@ in {
           downloader-args = "aria2c:'-c -x8 -s8 -k1M'";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/yt-dlp/config`.
 
@@ -56,7 +56,7 @@ in {
         --update
         -F
       '';
-      description = lib.mdDoc ''
+      description = ''
         Extra configuration to add to
         {file}`$XDG_CONFIG_HOME/yt-dlp/config`.
       '';

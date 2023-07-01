@@ -78,13 +78,13 @@ in {
   meta.maintainers = [ maintainers.foo-dogsquared ];
 
   options.services.recoll = {
-    enable = mkEnableOption (lib.mdDoc "Recoll file index service");
+    enable = mkEnableOption "Recoll file index service";
 
     package = mkOption {
       type = types.package;
       default = pkgs.recoll;
       defaultText = literalExpression "pkgs.recoll";
-      description = lib.mdDoc ''
+      description = ''
         Package providing the `recoll` binary.
       '';
       example = literalExpression "(pkgs.recoll.override { withGui = false; })";
@@ -94,7 +94,7 @@ in {
       type = types.str;
       default = "hourly";
       example = "00/2:00";
-      description = lib.mdDoc ''
+      description = ''
         When or how often the periodic update should run. Must be the format
         described from
         {manpage}`systemd.time(7)`.
@@ -104,7 +104,7 @@ in {
     settings = mkOption {
       type = settingsFormat.type;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         The configuration to be written at
         {file}`''${config.services.recoll.configDir}/recoll.conf`.
 
@@ -133,7 +133,7 @@ in {
       default = "${config.home.homeDirectory}/.recoll";
       defaultText = literalExpression "\${config.home.homeDirectory}/.recoll";
       example = literalExpression "\${config.xdg.configHome}/recoll";
-      description = lib.mdDoc ''
+      description = ''
         The directory to contain Recoll configuration files. This will be set
         as `RECOLL_CONFDIR`.
       '';

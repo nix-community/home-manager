@@ -12,7 +12,7 @@ let
     freeformType = tomlFormat.type;
 
     options = {
-      modal = mkEnableOption (lib.mdDoc "modal (vim) mode");
+      modal = mkEnableOption "modal (vim) mode";
 
       verbs = mkOption {
         type = with types; listOf (attrsOf (either bool str));
@@ -30,7 +30,7 @@ let
             }
           ]
         '';
-        description = lib.mdDoc ''
+        description = ''
           Define new verbs. For more information, see
           [Verb Definition Attributes](https://dystroy.org/broot/documentation/configuration/#verb-definition-attributes)
           in the broot documentation.
@@ -81,7 +81,7 @@ let
             code_fg = "lightyellow";
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Color configuration.
 
           Complete list of keys (expected to change before the v1 of broot):
@@ -149,13 +149,12 @@ in {
   ];
 
   options.programs.broot = {
-    enable =
-      mkEnableOption (lib.mdDoc "Broot, a better way to navigate directories");
+    enable = mkEnableOption "Broot, a better way to navigate directories";
 
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Bash integration.
       '';
     };
@@ -163,7 +162,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Zsh integration.
       '';
     };
@@ -171,7 +170,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Fish integration.
       '';
     };
@@ -180,13 +179,13 @@ in {
       type = types.package;
       default = pkgs.broot;
       defaultText = literalExpression "pkgs.broot";
-      description = lib.mdDoc "Package providing broot";
+      description = "Package providing broot";
     };
 
     settings = mkOption {
       type = types.submodule settingsModule;
       default = { };
-      description = lib.mdDoc "Verbatim config entries";
+      description = "Verbatim config entries";
     };
   };
 

@@ -13,7 +13,7 @@ in {
       default = pkgs.stdenv.hostPlatform.isLinux;
       defaultText =
         literalExpression "true if host platform is Linux, false otherwise";
-      description = lib.mdDoc ''
+      description = ''
         Whether to install programs and files to support the
         XDG Shared MIME-info specification and XDG MIME Applications
         specification at

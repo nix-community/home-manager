@@ -13,20 +13,20 @@ in {
   meta.maintainers = [ maintainers.pjones ];
 
   options.services.mbsync = {
-    enable = mkEnableOption (lib.mdDoc "mbsync");
+    enable = mkEnableOption "mbsync";
 
     package = mkOption {
       type = types.package;
       default = pkgs.isync;
       defaultText = literalExpression "pkgs.isync";
       example = literalExpression "pkgs.isync";
-      description = lib.mdDoc "The package to use for the mbsync binary.";
+      description = "The package to use for the mbsync binary.";
     };
 
     frequency = mkOption {
       type = types.str;
       default = "*:0/5";
-      description = lib.mdDoc ''
+      description = ''
         How often to run mbsync.  This value is passed to the systemd
         timer configuration as the onCalendar option.  See
         {manpage}`systemd.time(7)`
@@ -37,7 +37,7 @@ in {
     verbose = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether mbsync should produce verbose output.
       '';
     };
@@ -45,7 +45,7 @@ in {
     configFile = mkOption {
       type = types.nullOr types.path;
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Optional configuration file to link to use instead of
         the default file ({file}`~/.mbsyncrc`).
       '';
@@ -55,7 +55,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "mkdir -p %h/mail";
-      description = lib.mdDoc ''
+      description = ''
         An optional command to run before mbsync executes.  This is
         useful for creating the directories mbsync is going to use.
       '';
@@ -65,7 +65,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "\${pkgs.mu}/bin/mu index";
-      description = lib.mdDoc ''
+      description = ''
         An optional command to run after mbsync executes successfully.
         This is useful for running mailbox indexing tools.
       '';

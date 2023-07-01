@@ -7,7 +7,7 @@ with lib;
     type = mkOption {
       type = types.nullOr (types.enum [ "calendar" "discover" ]);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Either a single calendar (calendar which is the default) or a directory with multiple calendars (discover).
       '';
     };
@@ -15,7 +15,7 @@ with lib;
     glob = mkOption {
       type = types.str;
       default = "*";
-      description = lib.mdDoc ''
+      description = ''
         The glob expansion to be searched for events or birthdays when
         type is set to discover.
       '';
@@ -41,7 +41,7 @@ with lib;
         "light red"
       ]);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Color in which events in this calendar are displayed.
       '';
       example = "light green";
@@ -50,7 +50,7 @@ with lib;
     priority = mkOption {
       type = types.int;
       default = 10;
-      description = lib.mdDoc ''
+      description = ''
         Priority of a calendar used for coloring.
       '';
     };

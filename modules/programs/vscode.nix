@@ -60,14 +60,14 @@ in {
 
   options = {
     programs.vscode = {
-      enable = mkEnableOption (lib.mdDoc "Visual Studio Code");
+      enable = mkEnableOption "Visual Studio Code";
 
       package = mkOption {
         type = types.package;
         default = pkgs.vscode;
         defaultText = literalExpression "pkgs.vscode";
         example = literalExpression "pkgs.vscodium";
-        description = lib.mdDoc ''
+        description = ''
           Version of Visual Studio Code to install.
         '';
       };
@@ -75,7 +75,7 @@ in {
       enableUpdateCheck = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable update checks/notifications.
         '';
       };
@@ -83,7 +83,7 @@ in {
       enableExtensionUpdateCheck = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable update notifications for extensions.
         '';
       };
@@ -97,7 +97,7 @@ in {
             "[nix]"."editor.tabSize" = 2;
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Configuration written to Visual Studio Code's
           {file}`settings.json`.
         '';
@@ -118,7 +118,7 @@ in {
             ];
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Configuration written to Visual Studio Code's
           {file}`tasks.json`.
         '';
@@ -130,20 +130,20 @@ in {
             key = mkOption {
               type = types.str;
               example = "ctrl+c";
-              description = lib.mdDoc "The key or key-combination to bind.";
+              description = "The key or key-combination to bind.";
             };
 
             command = mkOption {
               type = types.str;
               example = "editor.action.clipboardCopyAction";
-              description = lib.mdDoc "The VS Code command to execute.";
+              description = "The VS Code command to execute.";
             };
 
             when = mkOption {
               type = types.nullOr (types.str);
               default = null;
               example = "textInputFocus";
-              description = lib.mdDoc "Optional context filter.";
+              description = "Optional context filter.";
             };
 
             # https://code.visualstudio.com/docs/getstarted/keybindings#_command-arguments
@@ -151,7 +151,7 @@ in {
               type = types.nullOr (jsonFormat.type);
               default = null;
               example = { direction = "up"; };
-              description = lib.mdDoc "Optional arguments for a command.";
+              description = "Optional arguments for a command.";
             };
           };
         });
@@ -165,7 +165,7 @@ in {
             }
           ]
         '';
-        description = lib.mdDoc ''
+        description = ''
           Keybindings written to Visual Studio Code's
           {file}`keybindings.json`.
         '';
@@ -175,7 +175,7 @@ in {
         type = types.listOf types.package;
         default = [ ];
         example = literalExpression "[ pkgs.vscode-extensions.bbenoist.nix ]";
-        description = lib.mdDoc ''
+        description = ''
           The extensions Visual Studio Code should be started with.
         '';
       };
@@ -184,7 +184,7 @@ in {
         type = types.bool;
         default = true;
         example = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether extensions can be installed or updated manually
           or by Visual Studio Code.
         '';
@@ -202,8 +202,7 @@ in {
             };
           };
         };
-        description =
-          lib.mdDoc "Defines user snippets for different languages.";
+        description = "Defines user snippets for different languages.";
       };
 
       globalSnippets = mkOption {
@@ -216,7 +215,7 @@ in {
             description = "Insert a FIXME remark";
           };
         };
-        description = lib.mdDoc "Defines global user snippets.";
+        description = "Defines global user snippets.";
       };
     };
   };

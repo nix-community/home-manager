@@ -12,7 +12,7 @@ let
 
   launchdConfig = { config, name, ... }: {
     options = {
-      enable = mkEnableOption (lib.mdDoc name);
+      enable = mkEnableOption name;
       config = mkOption {
         type = types.submodule (import ./launchd.nix);
         default = { };
@@ -27,7 +27,7 @@ let
             ];
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Define a launchd job. See {manpage}`launchd.plist(5)` for details.
         '';
       };
@@ -64,7 +64,7 @@ in {
       type = types.bool;
       default = isDarwin;
       defaultText = literalExpression "pkgs.stdenv.hostPlatform.isDarwin";
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Home Manager to define per-user daemons by making use
         of launchd's LaunchAgents.
       '';
@@ -73,7 +73,7 @@ in {
     agents = mkOption {
       type = with types; attrsOf (submodule launchdConfig);
       default = { };
-      description = lib.mdDoc "Define LaunchAgents.";
+      description = "Define LaunchAgents.";
     };
   };
 

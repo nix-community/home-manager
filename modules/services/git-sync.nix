@@ -35,18 +35,18 @@ let
         internal = true;
         default = name;
         type = types.str;
-        description = lib.mdDoc "The name that should be given to this unit.";
+        description = "The name that should be given to this unit.";
       };
 
       path = mkOption {
         type = types.path;
-        description = lib.mdDoc "The path at which to sync the repository";
+        description = "The path at which to sync the repository";
       };
 
       uri = mkOption {
         type = types.str;
         example = "git+ssh://user@example.com:/~[user]/path/to/repo.git";
-        description = lib.mdDoc ''
+        description = ''
           The URI of the remote to be synchronized. This is only used in the
           event that the directory does not already exist. See
           <https://git-scm.com/docs/git-clone#_git_urls>
@@ -57,7 +57,7 @@ let
       interval = mkOption {
         type = types.int;
         default = 500;
-        description = lib.mdDoc ''
+        description = ''
           The interval, specified in seconds, at which the synchronization will
           be triggered even without filesystem changes.
         '';
@@ -70,20 +70,20 @@ in {
 
   options = {
     services.git-sync = {
-      enable = mkEnableOption (lib.mdDoc "git-sync services");
+      enable = mkEnableOption "git-sync services";
 
       package = mkOption {
         type = types.package;
         default = pkgs.git-sync;
         defaultText = literalExpression "pkgs.git-sync";
-        description = lib.mdDoc ''
+        description = ''
           Package containing the {command}`git-sync` program.
         '';
       };
 
       repositories = mkOption {
         type = with types; attrsOf repositoryType;
-        description = lib.mdDoc ''
+        description = ''
           The repositories that should be synchronized.
         '';
       };

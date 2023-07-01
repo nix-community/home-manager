@@ -11,7 +11,7 @@ let
       type = types.ints.between 0 40;
       default = 38;
       example = 19;
-      description = lib.mdDoc ''
+      description = ''
         The qt easing-curve animation to use for the animation. See
         [
         QEasingCurve documentation](https://doc.qt.io/qt-5/qeasingcurve.html#Type-enum).
@@ -22,7 +22,7 @@ let
       type = types.ints.unsigned;
       default = 1000;
       example = 618;
-      description = lib.mdDoc "The animation duration in milliseconds.";
+      description = "The animation duration in milliseconds.";
     };
   };
 
@@ -30,14 +30,13 @@ in {
   meta.maintainers = [ hm.maintainers.austreelis ];
 
   options.services.twmn = {
-    enable = mkEnableOption
-      (lib.mdDoc "twmn, a tiling window manager notification daemon");
+    enable = mkEnableOption "twmn, a tiling window manager notification daemon";
 
     duration = mkOption {
       type = types.ints.unsigned;
       default = 3000;
       example = 5000;
-      description = lib.mdDoc ''
+      description = ''
         The time each notification remains visible, in milliseconds.
       '';
     };
@@ -47,7 +46,7 @@ in {
       default = { };
       example = literalExpression
         ''{ main.activation_command = "\${pkgs.hello}/bin/hello"; }'';
-      description = lib.mdDoc ''
+      description = ''
         Extra configuration options to add to the twmnd config file. See
         <https://github.com/sboli/twmn/blob/master/README.md>
         for details.
@@ -58,40 +57,40 @@ in {
       type = types.str;
       default = "127.0.0.1";
       example = "laptop.lan";
-      description = lib.mdDoc "Host address to listen on for notifications.";
+      description = "Host address to listen on for notifications.";
     };
 
     icons = {
       critical = mkOption {
         type = types.nullOr types.path;
         default = null;
-        description = lib.mdDoc "Path to the critical notifications' icon.";
+        description = "Path to the critical notifications' icon.";
       };
 
       info = mkOption {
         type = types.nullOr types.path;
         default = null;
-        description = lib.mdDoc "Path to the informative notifications' icon.";
+        description = "Path to the informative notifications' icon.";
       };
 
       warning = mkOption {
         type = types.nullOr types.path;
         default = null;
-        description = lib.mdDoc "Path to the warning notifications' icon.";
+        description = "Path to the warning notifications' icon.";
       };
     };
 
     port = mkOption {
       type = types.port;
       default = 9797;
-      description = lib.mdDoc "UDP port to listen on for notifications.";
+      description = "UDP port to listen on for notifications.";
     };
 
     screen = mkOption {
       type = types.nullOr types.int;
       default = null;
       example = 0;
-      description = lib.mdDoc ''
+      description = ''
         Screen number to display notifications on when using a multi-head
         desktop.
       '';
@@ -100,8 +99,7 @@ in {
     soundCommand = mkOption {
       type = types.str;
       default = "";
-      description =
-        lib.mdDoc "Command to execute to play a notification's sound.";
+      description = "Command to execute to play a notification's sound.";
     };
 
     text = {
@@ -109,7 +107,7 @@ in {
         type = types.str;
         default = "#999999";
         example = "lightgray";
-        description = lib.mdDoc ''
+        description = ''
           Notification's text color. RGB hex and keywords (e.g. `lightgray`)
           are supported.
         '';
@@ -120,7 +118,7 @@ in {
           type = types.nullOr types.package;
           default = null;
           example = literalExpression "pkgs.dejavu_fonts";
-          description = lib.mdDoc ''
+          description = ''
             Notification text's font package. If `null` then
             the font is assumed to already be available in your profile.
           '';
@@ -130,14 +128,14 @@ in {
           type = types.str;
           default = "Sans";
           example = "Noto Sans";
-          description = lib.mdDoc "Notification text's font family.";
+          description = "Notification text's font family.";
         };
 
         size = mkOption {
           type = types.ints.unsigned;
           default = 13;
           example = 42;
-          description = lib.mdDoc "Notification text's font size.";
+          description = "Notification text's font size.";
         };
 
         variant = mkOption {
@@ -164,7 +162,7 @@ in {
           ];
           default = "medium";
           example = "heavy";
-          description = lib.mdDoc "Notification text's font variant.";
+          description = "Notification text's font variant.";
         };
       };
 
@@ -172,7 +170,7 @@ in {
         type = types.nullOr types.ints.unsigned;
         default = null;
         example = 80;
-        description = lib.mdDoc ''
+        description = ''
           Maximum length of the text before it is cut and suffixed with "...".
           Never cuts if `null`.
         '';
@@ -180,8 +178,8 @@ in {
     };
 
     window = {
-      alwaysOnTop = mkEnableOption
-        (lib.mdDoc "forcing the notification window to always be on top");
+      alwaysOnTop =
+        mkEnableOption "forcing the notification window to always be on top";
 
       animation = {
         easeIn = mkOption {
@@ -193,8 +191,7 @@ in {
               duration = 618;
             }
           '';
-          description =
-            lib.mdDoc "Options for the notification appearance's animation.";
+          description = "Options for the notification appearance's animation.";
         };
 
         easeOut = mkOption {
@@ -207,19 +204,18 @@ in {
             }
           '';
           description =
-            lib.mdDoc "Options for the notification disappearance's animation.";
+            "Options for the notification disappearance's animation.";
         };
 
         bounce = {
-          enable = mkEnableOption (lib.mdDoc
-            "notification bounce when displaying next notification directly");
+          enable = mkEnableOption
+            "notification bounce when displaying next notification directly";
 
           duration = mkOption {
             type = types.ints.unsigned;
             default = 500;
             example = 618;
-            description =
-              lib.mdDoc "The bounce animation duration in milliseconds.";
+            description = "The bounce animation duration in milliseconds.";
           };
         };
       };
@@ -228,7 +224,7 @@ in {
         type = types.str;
         default = "#000000";
         example = "lightgray";
-        description = lib.mdDoc ''
+        description = ''
           Notification's background color. RGB hex and keywords (e.g.
           `lightgray`) are supported.
         '';
@@ -238,7 +234,7 @@ in {
         type = types.ints.unsigned;
         default = 18;
         example = 42;
-        description = lib.mdDoc ''
+        description = ''
           Height of the slide bar. Useful to match your tiling window
           manager's bar.
         '';
@@ -249,7 +245,7 @@ in {
           type = types.int;
           default = 0;
           example = 50;
-          description = lib.mdDoc ''
+          description = ''
             Offset of the notification's slide starting point in pixels on the
             horizontal axis (positive is rightward).
           '';
@@ -259,7 +255,7 @@ in {
           type = types.int;
           default = 0;
           example = -100;
-          description = lib.mdDoc ''
+          description = ''
             Offset of the notification's slide starting point in pixels on the
             vertical axis (positive is upward).
           '';
@@ -270,7 +266,7 @@ in {
         type = types.ints.between 0 100;
         default = 100;
         example = 80;
-        description = lib.mdDoc "The notification window's opacity.";
+        description = "The notification window's opacity.";
       };
 
       position = mkOption {
@@ -292,7 +288,7 @@ in {
         ];
         default = "top_right";
         example = "bottom_left";
-        description = lib.mdDoc ''
+        description = ''
           Position of the notification slide. The notification will slide
           in vertically from the border if placed in
           `top_center` or `bottom_center`,

@@ -20,7 +20,7 @@ in {
         else
           cfg.settings != { };
         defaultText = "false";
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable the beets music library manager. This
           defaults to `false` for state
           version ≥ 19.03. For earlier versions beets is enabled if
@@ -34,7 +34,7 @@ in {
         defaultText = literalExpression "pkgs.beets";
         example =
           literalExpression "(pkgs.beets.override { enableCheck = true; })";
-        description = lib.mdDoc ''
+        description = ''
           The `beets` package to use.
           Can be used to specify extensions.
         '';
@@ -43,22 +43,22 @@ in {
       settings = mkOption {
         type = yamlFormat.type;
         default = { };
-        description = lib.mdDoc ''
+        description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/beets/config.yaml`
         '';
       };
 
       mpdIntegration = {
-        enableStats = mkEnableOption (lib.mdDoc "mpdstats plugin and service");
+        enableStats = mkEnableOption "mpdstats plugin and service";
 
-        enableUpdate = mkEnableOption (lib.mdDoc "mpdupdate plugin");
+        enableUpdate = mkEnableOption "mpdupdate plugin";
 
         host = mkOption {
           type = types.str;
           default = "localhost";
           example = "10.0.0.42";
-          description = lib.mdDoc "The host that mpdstats will connect to.";
+          description = "The host that mpdstats will connect to.";
         };
 
         port = mkOption {
@@ -66,7 +66,7 @@ in {
           default = config.services.mpd.network.port;
           defaultText = literalExpression "config.services.mpd.network.port";
           example = 6601;
-          description = lib.mdDoc "The port that mpdstats will connect to.";
+          description = "The port that mpdstats will connect to.";
         };
       };
     };

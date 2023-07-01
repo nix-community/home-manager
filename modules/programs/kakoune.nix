@@ -51,7 +51,7 @@ let
           "User"
         ];
         example = "SetOption";
-        description = lib.mdDoc ''
+        description = ''
           The name of the hook. For a description, see
           <https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc#default-hooks>.
         '';
@@ -60,7 +60,7 @@ let
       once = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Remove the hook after running it once.
         '';
       };
@@ -68,7 +68,7 @@ let
       group = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Add the hook to the named group.
         '';
       };
@@ -77,7 +77,7 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "filetype=latex";
-        description = lib.mdDoc ''
+        description = ''
           Additional option to pass to the hook.
         '';
       };
@@ -86,7 +86,7 @@ let
         type = types.lines;
         default = "";
         example = "set-option window indentwidth 2";
-        description = lib.mdDoc ''
+        description = ''
           Commands to run when the hook is activated.
         '';
       };
@@ -98,7 +98,7 @@ let
       mode = mkOption {
         type = types.str;
         example = "user";
-        description = lib.mdDoc ''
+        description = ''
           The mode in which the mapping takes effect.
         '';
       };
@@ -106,7 +106,7 @@ let
       docstring = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Optional documentation text to display in info boxes.
         '';
       };
@@ -114,7 +114,7 @@ let
       key = mkOption {
         type = types.str;
         example = "<a-x>";
-        description = lib.mdDoc ''
+        description = ''
           The key to be mapped. See
           <https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc#mappable-keys>
           for possible values.
@@ -124,7 +124,7 @@ let
       effect = mkOption {
         type = types.str;
         example = ":wq<ret>";
-        description = lib.mdDoc ''
+        description = ''
           The sequence of keys to be mapped.
         '';
       };
@@ -136,7 +136,7 @@ let
       colorScheme = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Set the color scheme. To see available schemes, enter
           {command}`colorscheme` at the kakoune prompt.
         '';
@@ -145,7 +145,7 @@ let
       tabStop = mkOption {
         type = types.nullOr types.ints.unsigned;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           The width of a tab in spaces. The kakoune default is
           `6`.
         '';
@@ -154,7 +154,7 @@ let
       indentWidth = mkOption {
         type = types.nullOr types.ints.unsigned;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           The width of an indentation in spaces.
           The kakoune default is `4`.
           If `0`, a tab will be used instead.
@@ -164,7 +164,7 @@ let
       incrementalSearch = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Execute a search as it is being typed.
         '';
       };
@@ -172,7 +172,7 @@ let
       alignWithTabs = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Use tabs for the align command.
         '';
       };
@@ -182,7 +182,7 @@ let
           (types.listOf (types.enum [ "command" "onkey" "normal" ]));
         default = null;
         example = [ "command" "normal" ];
-        description = lib.mdDoc ''
+        description = ''
           Contexts in which to display automatic information box.
           The kakoune default is `[ "command" "onkey" ]`.
         '';
@@ -191,7 +191,7 @@ let
       autoComplete = mkOption {
         type = types.nullOr (types.listOf (types.enum [ "insert" "prompt" ]));
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Modes in which to display possible completions.
           The kakoune default is `[ "insert" "prompt" ]`.
         '';
@@ -200,7 +200,7 @@ let
       autoReload = mkOption {
         type = types.nullOr (types.enum [ "yes" "no" "ask" ]);
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Reload buffers when an external modification is detected.
           The kakoune default is `"ask"`.
         '';
@@ -212,7 +212,7 @@ let
             lines = mkOption {
               type = types.ints.unsigned;
               default = 0;
-              description = lib.mdDoc ''
+              description = ''
                 The number of lines to keep visible around the cursor.
               '';
             };
@@ -220,14 +220,14 @@ let
             columns = mkOption {
               type = types.ints.unsigned;
               default = 0;
-              description = lib.mdDoc ''
+              description = ''
                 The number of columns to keep visible around the cursor.
               '';
             };
           };
         });
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           How many lines and columns to keep visible around the cursor.
         '';
       };
@@ -238,7 +238,7 @@ let
             setTitle = mkOption {
               type = types.bool;
               default = false;
-              description = lib.mdDoc ''
+              description = ''
                 Change the title of the terminal emulator.
               '';
             };
@@ -246,7 +246,7 @@ let
             statusLine = mkOption {
               type = types.enum [ "top" "bottom" ];
               default = "bottom";
-              description = lib.mdDoc ''
+              description = ''
                 Where to display the status line.
               '';
             };
@@ -254,7 +254,7 @@ let
             assistant = mkOption {
               type = types.enum [ "clippy" "cat" "dilbert" "none" ];
               default = "clippy";
-              description = lib.mdDoc ''
+              description = ''
                 The assistant displayed in info boxes.
               '';
             };
@@ -262,7 +262,7 @@ let
             enableMouse = mkOption {
               type = types.bool;
               default = false;
-              description = lib.mdDoc ''
+              description = ''
                 Whether to enable mouse support.
               '';
             };
@@ -270,7 +270,7 @@ let
             changeColors = mkOption {
               type = types.bool;
               default = true;
-              description = lib.mdDoc ''
+              description = ''
                 Change color palette.
               '';
             };
@@ -278,7 +278,7 @@ let
             wheelDownButton = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description = lib.mdDoc ''
+              description = ''
                 Button to send for wheel down events.
               '';
             };
@@ -286,7 +286,7 @@ let
             wheelUpButton = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description = lib.mdDoc ''
+              description = ''
                 Button to send for wheel up events.
               '';
             };
@@ -294,7 +294,7 @@ let
             shiftFunctionKeys = mkOption {
               type = types.nullOr types.ints.unsigned;
               default = null;
-              description = lib.mdDoc ''
+              description = ''
                 Amount by which shifted function keys are offset. That
                 is, if the terminal sends F13 for Shift-F1, this
                 should be `12`.
@@ -304,14 +304,14 @@ let
             useBuiltinKeyParser = mkOption {
               type = types.bool;
               default = false;
-              description = lib.mdDoc ''
+              description = ''
                 Bypass ncurses key parser and use an internal one.
               '';
             };
           };
         });
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Settings for the ncurses interface.
         '';
       };
@@ -319,7 +319,7 @@ let
       showMatching = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Highlight the matching char of the character under the
           selections' cursor using the `MatchingChar`
           face.
@@ -329,12 +329,12 @@ let
       wrapLines = mkOption {
         type = types.nullOr (types.submodule {
           options = {
-            enable = mkEnableOption (lib.mdDoc "the wrap lines highlighter");
+            enable = mkEnableOption "the wrap lines highlighter";
 
             word = mkOption {
               type = types.bool;
               default = false;
-              description = lib.mdDoc ''
+              description = ''
                 Wrap at word boundaries instead of codepoint boundaries.
               '';
             };
@@ -342,7 +342,7 @@ let
             indent = mkOption {
               type = types.bool;
               default = false;
-              description = lib.mdDoc ''
+              description = ''
                 Preserve line indentation when wrapping.
               '';
             };
@@ -350,7 +350,7 @@ let
             maxWidth = mkOption {
               type = types.nullOr types.ints.unsigned;
               default = null;
-              description = lib.mdDoc ''
+              description = ''
                 Wrap text at maxWidth, even if the window is wider.
               '';
             };
@@ -359,7 +359,7 @@ let
               type = types.nullOr types.str;
               default = null;
               example = "⏎";
-              description = lib.mdDoc ''
+              description = ''
                 Prefix wrapped lines with marker text.
                 If not `null`,
                 the marker text will be displayed in the indentation if possible.
@@ -368,7 +368,7 @@ let
           };
         });
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Settings for the wrap lines highlighter.
         '';
       };
@@ -376,12 +376,12 @@ let
       numberLines = mkOption {
         type = types.nullOr (types.submodule {
           options = {
-            enable = mkEnableOption (lib.mdDoc "the number lines highlighter");
+            enable = mkEnableOption "the number lines highlighter";
 
             relative = mkOption {
               type = types.bool;
               default = false;
-              description = lib.mdDoc ''
+              description = ''
                 Show line numbers relative to the main cursor line.
               '';
             };
@@ -389,7 +389,7 @@ let
             highlightCursor = mkOption {
               type = types.bool;
               default = false;
-              description = lib.mdDoc ''
+              description = ''
                 Highlight the cursor line with a separate face.
               '';
             };
@@ -397,7 +397,7 @@ let
             separator = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description = lib.mdDoc ''
+              description = ''
                 String that separates the line number column from the
                 buffer contents. The kakoune default is
                 `"|"`.
@@ -406,7 +406,7 @@ let
           };
         });
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Settings for the number lines highlighter.
         '';
       };
@@ -414,13 +414,12 @@ let
       showWhitespace = mkOption {
         type = types.nullOr (types.submodule {
           options = {
-            enable =
-              mkEnableOption (lib.mdDoc "the show whitespace highlighter");
+            enable = mkEnableOption "the show whitespace highlighter";
 
             lineFeed = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description = lib.mdDoc ''
+              description = ''
                 The character to display for line feeds.
                 The kakoune default is `"¬"`.
               '';
@@ -429,7 +428,7 @@ let
             space = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description = lib.mdDoc ''
+              description = ''
                 The character to display for spaces.
                 The kakoune default is `"·"`.
               '';
@@ -438,7 +437,7 @@ let
             nonBreakingSpace = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description = lib.mdDoc ''
+              description = ''
                 The character to display for non-breaking spaces.
                 The kakoune default is `"⍽"`.
               '';
@@ -447,7 +446,7 @@ let
             tab = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description = lib.mdDoc ''
+              description = ''
                 The character to display for tabs.
                 The kakoune default is `"→"`.
               '';
@@ -456,7 +455,7 @@ let
             tabStop = mkOption {
               type = types.nullOr types.str;
               default = null;
-              description = lib.mdDoc ''
+              description = ''
                 The character to append to tabs to reach the width of a tabstop.
                 The kakoune default is `" "`.
               '';
@@ -464,7 +463,7 @@ let
           };
         });
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Settings for the show whitespaces highlighter.
         '';
       };
@@ -472,7 +471,7 @@ let
       keyMappings = mkOption {
         type = types.listOf keyMapping;
         default = [ ];
-        description = lib.mdDoc ''
+        description = ''
           User-defined key mappings. For documentation, see
           <https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc>.
         '';
@@ -481,7 +480,7 @@ let
       hooks = mkOption {
         type = types.listOf hook;
         default = [ ];
-        description = lib.mdDoc ''
+        description = ''
           Global hooks. For documentation, see
           <https://github.com/mawww/kakoune/blob/master/doc/pages/hooks.asciidoc>.
         '';
@@ -621,20 +620,20 @@ let
 in {
   options = {
     programs.kakoune = {
-      enable = mkEnableOption (lib.mdDoc "the kakoune text editor");
+      enable = mkEnableOption "the kakoune text editor";
 
-      package = mkPackageOptionMD pkgs "kakoune-unwrapped" { };
+      package = mkPackageOption pkgs "kakoune-unwrapped" { };
 
       config = mkOption {
         type = types.nullOr configModule;
         default = { };
-        description = lib.mdDoc "kakoune configuration options.";
+        description = "kakoune configuration options.";
       };
 
       defaultEditor = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to configure {command}`kak` as the default
           editor using the {env}`EDITOR` environment variable.
         '';
@@ -643,7 +642,7 @@ in {
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Extra configuration lines to add to
           {file}`$XDG_CONFIG_HOME/kak/kakrc`.
         '';
@@ -653,7 +652,7 @@ in {
         type = with types; listOf package;
         default = [ ];
         example = literalExpression "[ pkgs.kakounePlugins.kak-fzf ]";
-        description = lib.mdDoc ''
+        description = ''
           List of kakoune plugins to install. To get a list of
           supported plugins run:
           {command}`nix-env -f '<nixpkgs>' -qaP -A kakounePlugins`.

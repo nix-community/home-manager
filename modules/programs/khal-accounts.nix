@@ -4,12 +4,12 @@ with lib;
 
 {
   options.khal = {
-    enable = lib.mkEnableOption (lib.mdDoc "khal access");
+    enable = lib.mkEnableOption "khal access";
 
     readOnly = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Keep khal from making any changes to this account.
       '';
     };

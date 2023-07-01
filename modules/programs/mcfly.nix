@@ -20,12 +20,12 @@ in {
   ];
 
   options.programs.mcfly = {
-    enable = mkEnableOption (lib.mdDoc "mcfly");
+    enable = mkEnableOption "mcfly";
 
     keyScheme = mkOption {
       type = types.enum [ "emacs" "vim" ];
       default = "emacs";
-      description = lib.mdDoc ''
+      description = ''
         Key scheme to use.
       '';
     };
@@ -33,7 +33,7 @@ in {
     enableLightTheme = mkOption {
       default = false;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable light mode theme.
       '';
     };
@@ -41,7 +41,7 @@ in {
     fuzzySearchFactor = mkOption {
       default = 0;
       type = types.ints.unsigned;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable fuzzy searching.
         0 is off; higher numbers weight toward shorter matches.
         Values in the 2-5 range get good results so far.
@@ -51,7 +51,7 @@ in {
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Bash integration.
       '';
     };
@@ -59,7 +59,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Zsh integration.
       '';
     };
@@ -67,7 +67,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Fish integration.
       '';
     };

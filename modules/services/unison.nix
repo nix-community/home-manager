@@ -16,7 +16,7 @@ let
         type = types.path;
         default = "${config.xdg.dataHome}/unison";
         defaultText = "$XDG_DATA_HOME/unison";
-        description = lib.mdDoc ''
+        description = ''
           Unison state directory to use.
         '';
       };
@@ -32,7 +32,7 @@ let
           batch = "true";
           log = "false"; # don't log to file, handled by systemd
         };
-        description = lib.mdDoc ''
+        description = ''
           Additional command line options as a dictionary to pass to the
           `unison` program.
 
@@ -52,7 +52,7 @@ let
             "ssh://remote/documents"
           ]
         '';
-        description = lib.mdDoc ''
+        description = ''
           Pair of roots to synchronise.
         '';
       };
@@ -74,7 +74,7 @@ in {
   meta.maintainers = with maintainers; [ pacien ];
 
   options.services.unison = {
-    enable = mkEnableOption (lib.mdDoc "Unison synchronisation");
+    enable = mkEnableOption "Unison synchronisation";
 
     pairs = mkOption {
       type = with types; attrsOf (submodule pairOptions);
@@ -89,7 +89,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Unison root pairs to keep synchronised.
       '';
     };

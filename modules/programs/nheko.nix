@@ -22,9 +22,9 @@ in {
   meta.maintainers = [ maintainers.gvolpe ];
 
   options.programs.nheko = {
-    enable = mkEnableOption (lib.mdDoc "Qt desktop client for Matrix");
+    enable = mkEnableOption "Qt desktop client for Matrix";
 
-    package = mkPackageOptionMD pkgs "nheko" { };
+    package = mkPackageOption pkgs "nheko" { };
 
     settings = mkOption {
       type = iniFmt.type;
@@ -47,7 +47,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Attribute set of Nheko preferences (converted to an INI file).
 
         For now, it is recommended to run nheko and sign-in before filling in

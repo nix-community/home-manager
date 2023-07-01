@@ -22,25 +22,25 @@ let
       left = mkOption {
         type = types.str;
         default = "h";
-        description = lib.mdDoc "Home row direction key for moving left.";
+        description = "Home row direction key for moving left.";
       };
 
       down = mkOption {
         type = types.str;
         default = "j";
-        description = lib.mdDoc "Home row direction key for moving down.";
+        description = "Home row direction key for moving down.";
       };
 
       up = mkOption {
         type = types.str;
         default = "k";
-        description = lib.mdDoc "Home row direction key for moving up.";
+        description = "Home row direction key for moving up.";
       };
 
       right = mkOption {
         type = types.str;
         default = "l";
-        description = lib.mdDoc "Home row direction key for moving right.";
+        description = "Home row direction key for moving right.";
       };
 
       keybindings = mkOption {
@@ -121,7 +121,7 @@ let
           "${cfg.config.modifier}+r" = "mode resize";
         };
         defaultText = "Default sway keybindings.";
-        description = lib.mdDoc ''
+        description = ''
           An attribute set that assigns a key press to an action using a key symbol.
           See <https://i3wm.org/docs/userguide.html#keybindings>.
 
@@ -143,7 +143,7 @@ let
         type = types.bool;
         default = false;
         example = true;
-        description = lib.mdDoc ''
+        description = ''
           Whether to make use of {option}`--to-code` in keybindings.
         '';
       };
@@ -152,7 +152,7 @@ let
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
         example = { "*" = { xkb_variant = "dvorak"; }; };
-        description = lib.mdDoc ''
+        description = ''
           An attribute set that defines input modules. See
           {manpage}`sway-input(5)`
           for options.
@@ -163,7 +163,7 @@ let
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
         example = { "HDMI-A-2" = { bg = "~/path/to/background.png fill"; }; };
-        description = lib.mdDoc ''
+        description = ''
           An attribute set that defines output modules. See
           {manpage}`sway-output(5)`
           for options.
@@ -174,7 +174,7 @@ let
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
         example = { "*" = { hide_cursor = "when-typing enable"; }; };
-        description = lib.mdDoc ''
+        description = ''
           An attribute set that defines seat modules. See
           {manpage}`sway-input(5)`
           for options.
@@ -197,7 +197,7 @@ let
             "Return" = "mode default";
           };
         };
-        description = lib.mdDoc ''
+        description = ''
           An attribute set that defines binding modes and keybindings
           inside them
 
@@ -215,7 +215,7 @@ let
           type = types.bool;
           inherit default;
           example = !default;
-          description = lib.mdDoc "Whether to make use of the ${description}";
+          description = "Whether to make use of the ${description}";
         };
     in {
       base = mkWrapperFeature true ''
@@ -334,13 +334,13 @@ in {
   ];
 
   options.wayland.windowManager.sway = {
-    enable = mkEnableOption (lib.mdDoc "sway wayland compositor");
+    enable = mkEnableOption "sway wayland compositor";
 
     package = mkOption {
       type = with types; nullOr package;
       default = defaultSwayPackage;
       defaultText = literalExpression "${pkgs.sway}";
-      description = lib.mdDoc ''
+      description = ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
         Set to `null` to not add any Sway package to your
@@ -354,7 +354,7 @@ in {
         type = types.bool;
         default = pkgs.stdenv.isLinux;
         example = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable {file}`sway-session.target` on
           sway startup. This links to
           {file}`graphical-session.target`.
@@ -367,16 +367,16 @@ in {
         '';
       };
 
-      xdgAutostart = mkEnableOption (lib.mdDoc ''
+      xdgAutostart = mkEnableOption ''
         autostart of applications using
         {manpage}`systemd-xdg-autostart-generator(8)`
-      '');
+      '';
     };
 
     xwayland = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Enable xwayland, which is needed for the default configuration of sway.
       '';
     };
@@ -385,7 +385,7 @@ in {
       type = wrapperOptions;
       default = { };
       example = { gtk = true; };
-      description = lib.mdDoc ''
+      description = ''
         Attribute set of features to enable in the wrapper.
       '';
     };
@@ -402,7 +402,7 @@ in {
         # use this if they aren't displayed properly:
         export _JAVA_AWT_WM_NONREPARENTING=1
       '';
-      description = lib.mdDoc ''
+      description = ''
         Shell commands executed just before Sway is started.
       '';
     };
@@ -416,7 +416,7 @@ in {
         "--unsupported-gpu"
         "--my-next-gpu-wont-be-nvidia"
       ];
-      description = lib.mdDoc ''
+      description = ''
         Command line arguments passed to launch Sway. Please DO NOT report
         issues if you use an unsupported GPU (proprietary drivers).
       '';
@@ -425,20 +425,20 @@ in {
     config = mkOption {
       type = types.nullOr configModule;
       default = { };
-      description = lib.mdDoc "Sway configuration options.";
+      description = "Sway configuration options.";
     };
 
     extraConfig = mkOption {
       type = types.lines;
       default = "";
       description =
-        lib.mdDoc "Extra configuration lines to add to ~/.config/sway/config.";
+        "Extra configuration lines to add to ~/.config/sway/config.";
     };
 
     extraConfigEarly = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc
+      description =
         "Like extraConfig, except lines are added to ~/.config/sway/config before all other configuration.";
     };
   };

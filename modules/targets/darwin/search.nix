@@ -16,7 +16,7 @@ in {
   options.targets.darwin.search = mkOption {
     type = with types; nullOr (enum (attrNames searchEngines));
     default = null;
-    description = lib.mdDoc "Default search engine.";
+    description = "Default search engine.";
   };
 
   config = mkIf (cfg.search != null) {

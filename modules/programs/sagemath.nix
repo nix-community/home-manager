@@ -10,21 +10,20 @@ in {
   meta.maintainers = [ lib.maintainers.kirelagin ];
 
   options.programs.sagemath = {
-    enable =
-      mkEnableOption (lib.mdDoc "SageMath, a mathematics software system");
+    enable = mkEnableOption "SageMath, a mathematics software system";
 
     package = mkOption {
       type = types.package;
       default = pkgs.sage;
       defaultText = literalExpression "pkgs.sage";
-      description = lib.mdDoc "The SageMath package to use.";
+      description = "The SageMath package to use.";
     };
 
     configDir = mkOption {
       type = types.str;
       default = "${config.xdg.configHome}/sage";
       defaultText = literalExpression "\${config.xdg.configHome}/sage";
-      description = lib.mdDoc ''
+      description = ''
         Directory where the {file}`sage.init` file will be stored.
         Note that the upstream default is {file}`~/.sage`,
         but our default is to follow XDG.
@@ -35,7 +34,7 @@ in {
       type = types.str;
       default = "${config.xdg.dataHome}/sage";
       defaultText = literalExpression "\${config.xdg.dataHome}/sage";
-      description = lib.mdDoc ''
+      description = ''
         Location for {env}`DOT_SAGE`.
         Note that the upstream default is {file}`~/.sage`,
         but our default is to follow XDG.
@@ -46,7 +45,7 @@ in {
       type = types.lines;
       default = "";
       example = "%colors linux";
-      description = lib.mdDoc ''
+      description = ''
         Contents of the {file}`init.sage` file that is loaded on startup.
       '';
     };

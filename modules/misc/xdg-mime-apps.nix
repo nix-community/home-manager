@@ -16,7 +16,7 @@ in {
     enable = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether to manage {file}`$XDG_CONFIG_HOME/mimeapps.list`.
 
         The generated file is read-only.
@@ -35,7 +35,7 @@ in {
           "mimetype2" = "foo4.desktop";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Defines additional associations of applications with
         mimetypes, as if the .desktop file was listing this mimetype
         in the first place.
@@ -46,7 +46,7 @@ in {
       type = types.attrsOf strListOrSingleton;
       default = { };
       example = { "mimetype1" = "foo5.desktop"; };
-      description = lib.mdDoc ''
+      description = ''
         Removes associations of applications with mimetypes, as if the
         .desktop file was *not* listing this
         mimetype in the first place.
@@ -61,7 +61,7 @@ in {
           "mimetype1" = [ "default1.desktop" "default2.desktop" ];
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         The default application to be used for a given mimetype. This
         is, for instance, the one that will be started when
         double-clicking on a file in a file manager. If the

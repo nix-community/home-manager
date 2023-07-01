@@ -75,12 +75,12 @@ in {
 
   options = {
     services.gpg-agent = {
-      enable = mkEnableOption (lib.mdDoc "GnuPG private key agent");
+      enable = mkEnableOption "GnuPG private key agent";
 
       defaultCacheTtl = mkOption {
         type = types.nullOr types.int;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Set the time a cache entry is valid to the given number of
           seconds.
         '';
@@ -89,7 +89,7 @@ in {
       defaultCacheTtlSsh = mkOption {
         type = types.nullOr types.int;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Set the time a cache entry used for SSH keys is valid to the
           given number of seconds.
         '';
@@ -98,7 +98,7 @@ in {
       maxCacheTtl = mkOption {
         type = types.nullOr types.int;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Set the maximum time a cache entry is valid to n seconds. After this
           time a cache entry will be expired even if it has been accessed
           recently or has been set using gpg-preset-passphrase. The default is
@@ -109,7 +109,7 @@ in {
       maxCacheTtlSsh = mkOption {
         type = types.nullOr types.int;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Set the maximum time a cache entry used for SSH keys is valid to n
           seconds. After this time a cache entry will be expired even if it has
           been accessed recently or has been set using gpg-preset-passphrase.
@@ -120,7 +120,7 @@ in {
       enableSshSupport = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to use the GnuPG key agent for SSH keys.
         '';
       };
@@ -128,7 +128,7 @@ in {
       sshKeys = mkOption {
         type = types.nullOr (types.listOf types.str);
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Which GPG keys (by keygrip) to expose as SSH keys.
         '';
       };
@@ -136,7 +136,7 @@ in {
       enableExtraSocket = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable extra socket of the GnuPG key agent (useful for GPG
           Agent forwarding).
         '';
@@ -145,7 +145,7 @@ in {
       verbose = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to produce verbose output.
         '';
       };
@@ -153,7 +153,7 @@ in {
       grabKeyboardAndMouse = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Tell the pinentry to grab the keyboard and mouse. This
           option should in general be used to avoid X-sniffing
           attacks. When disabled, this option passes
@@ -164,7 +164,7 @@ in {
       enableScDaemon = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Make use of the scdaemon tool. This option has the effect of
           enabling the ability to do smartcard operations. When
           disabled, this option passes
@@ -179,7 +179,7 @@ in {
           allow-emacs-pinentry
           allow-loopback-pinentry
         '';
-        description = lib.mdDoc ''
+        description = ''
           Extra configuration lines to append to the gpg-agent
           configuration file.
         '';
@@ -189,7 +189,7 @@ in {
         type = types.nullOr (types.enum pkgs.pinentry.flavors);
         example = "gnome3";
         default = "gtk2";
-        description = lib.mdDoc ''
+        description = ''
           Which pinentry interface to use. If not
           `null`, it sets
           {option}`pinentry-program` in
@@ -205,15 +205,15 @@ in {
         '';
       };
 
-      enableBashIntegration = mkEnableOption (lib.mdDoc "Bash integration") // {
+      enableBashIntegration = mkEnableOption "Bash integration" // {
         default = true;
       };
 
-      enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh integration") // {
+      enableZshIntegration = mkEnableOption "Zsh integration" // {
         default = true;
       };
 
-      enableFishIntegration = mkEnableOption (lib.mdDoc "Fish integration") // {
+      enableFishIntegration = mkEnableOption "Fish integration" // {
         default = true;
       };
     };

@@ -82,9 +82,9 @@ let
 
 in {
   options.nix = {
-    enable = mkEnableOption (lib.mdDoc ''
+    enable = mkEnableOption ''
       the Nix configuration module
-    '') // {
+    '' // {
       default = true;
       visible = false;
     };
@@ -93,7 +93,7 @@ in {
       type = types.nullOr types.package;
       default = null;
       example = literalExpression "pkgs.nix";
-      description = lib.mdDoc ''
+      description = ''
         The Nix package that the configuration should be generated for.
       '';
     };
@@ -110,7 +110,7 @@ in {
               type = "indirect";
               id = "nixpkgs";
             };
-            description = lib.mdDoc "The flake reference to be rewritten.";
+            description = "The flake reference to be rewritten.";
           };
           to = mkOption {
             type = inputAttrs;
@@ -119,21 +119,21 @@ in {
               owner = "my-org";
               repo = "my-nixpkgs";
             };
-            description = lib.mdDoc
+            description =
               "The flake reference to which {option}`from>` is to be rewritten.";
           };
           flake = mkOption {
             type = types.nullOr types.attrs;
             default = null;
             example = literalExpression "nixpkgs";
-            description = lib.mdDoc ''
+            description = ''
               The flake input to which {option}`from>` is to be rewritten.
             '';
           };
           exact = mkOption {
             type = types.bool;
             default = true;
-            description = lib.mdDoc ''
+            description = ''
               Whether the {option}`from` reference needs to match exactly. If set,
               a {option}`from` reference like `nixpkgs` does not
               match with a reference like `nixpkgs/nixos-20.03`.
@@ -154,7 +154,7 @@ in {
         };
       }));
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         User level flake registry.
       '';
     };
@@ -163,13 +163,13 @@ in {
       type = types.int;
       default = 2;
       internal = true;
-      description = lib.mdDoc "The flake registry format version.";
+      description = "The flake registry format version.";
     };
 
     checkConfig = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         If enabled (the default), checks for data type mismatches and that Nix
         can parse the generated nix.conf.
       '';
@@ -182,7 +182,7 @@ in {
         keep-outputs = true
         keep-derivations = true
       '';
-      description = lib.mdDoc "Additional text appended to {file}`nix.conf`.";
+      description = "Additional text appended to {file}`nix.conf`.";
     };
 
     settings = mkOption {
@@ -195,7 +195,7 @@ in {
           system-features = [ "big-parallel" "kvm" "recursive-nix" ];
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration for Nix; see {manpage}`nix.conf(5)` for available options.
         The value declared here will be translated directly to the key-value pairs Nix expects.
 

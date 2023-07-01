@@ -43,7 +43,7 @@ in {
           "XTerm*charClass" = [ "37:48" "45-47:48" "58:48" "64:48" "126:48" ];
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         X server resources that should be set.
         Booleans are formatted as "true" or "false" respectively.
         List elements are recursively formatted as a string and joined by commas.
@@ -68,7 +68,7 @@ in {
             } + "/Xresources.dark"
         )
       '';
-      description = lib.mdDoc ''
+      description = ''
         Additional X server resources contents.
         If this and all other xresources options are
         `null`, then this feature is disabled and no
@@ -80,7 +80,7 @@ in {
       type = types.str;
       default = "${config.home.homeDirectory}/.Xresources";
       defaultText = "$HOME/.Xresources";
-      description = lib.mdDoc
+      description =
         "Path where Home Manager should link the {file}`.Xresources` file.";
     };
   };

@@ -11,40 +11,39 @@ let
       package = mkOption {
         type = types.package;
         example = literalExpression "pkgs.vanilla-dmz";
-        description = lib.mdDoc "Package providing the cursor theme.";
+        description = "Package providing the cursor theme.";
       };
 
       name = mkOption {
         type = types.str;
         example = "Vanilla-DMZ";
-        description = lib.mdDoc "The cursor name within the package.";
+        description = "The cursor name within the package.";
       };
 
       size = mkOption {
         type = types.int;
         default = 32;
         example = 64;
-        description = lib.mdDoc "The cursor size.";
+        description = "The cursor size.";
       };
 
       x11 = {
-        enable = mkEnableOption (lib.mdDoc ''
+        enable = mkEnableOption ''
           x11 config generation for {option}`home.pointerCursor`
-        '');
+        '';
 
         defaultCursor = mkOption {
           type = types.str;
           default = "left_ptr";
           example = "X_cursor";
-          description =
-            lib.mdDoc "The default cursor file to use within the package.";
+          description = "The default cursor file to use within the package.";
         };
       };
 
       gtk = {
-        enable = mkEnableOption (lib.mdDoc ''
+        enable = mkEnableOption ''
           gtk config generation for {option}`home.pointerCursor`
-        '');
+        '';
       };
     };
   };
@@ -57,22 +56,22 @@ in {
   meta.maintainers = [ maintainers.polykernel maintainers.league ];
 
   imports = [
-    (mkAliasOptionModuleMD [ "xsession" "pointerCursor" "package" ] [
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
       "home"
       "pointerCursor"
       "package"
     ])
-    (mkAliasOptionModuleMD [ "xsession" "pointerCursor" "name" ] [
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "name" ] [
       "home"
       "pointerCursor"
       "name"
     ])
-    (mkAliasOptionModuleMD [ "xsession" "pointerCursor" "size" ] [
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "size" ] [
       "home"
       "pointerCursor"
       "size"
     ])
-    (mkAliasOptionModuleMD [ "xsession" "pointerCursor" "defaultCursor" ] [
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
       "home"
       "pointerCursor"
       "x11"
@@ -95,7 +94,7 @@ in {
     home.pointerCursor = mkOption {
       type = types.nullOr pointerCursorModule;
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Cursor configuration. Set to `null` to disable.
 
         Top-level options declared under this submodule are backend independent

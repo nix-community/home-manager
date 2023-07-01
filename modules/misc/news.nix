@@ -13,7 +13,7 @@ let
       id = mkOption {
         internal = true;
         type = types.str;
-        description = lib.mdDoc ''
+        description = ''
           A unique entry identifier. By default it is a base16
           formatted hash of the entry message.
         '';
@@ -23,7 +23,7 @@ let
         internal = true;
         type = types.str;
         example = "2017-07-10T21:55:04+00:00";
-        description = lib.mdDoc ''
+        description = ''
           News entry time stamp in ISO-8601 format. Must be in UTC
           (ending in '+00:00').
         '';
@@ -32,13 +32,13 @@ let
       condition = mkOption {
         internal = true;
         default = true;
-        description = lib.mdDoc "Whether the news entry should be active.";
+        description = "Whether the news entry should be active.";
       };
 
       message = mkOption {
         internal = true;
         type = types.str;
-        description = lib.mdDoc "The news entry content.";
+        description = "The news entry content.";
       };
     };
 
@@ -57,7 +57,7 @@ in
       display = mkOption {
         type = types.enum [ "silent" "notify" "show" ];
         default = "notify";
-        description = lib.mdDoc ''
+        description = ''
           How unread and relevant news should be presented when
           running {command}`home-manager build` and
           {command}`home-manager switch`.
@@ -83,7 +83,7 @@ in
         internal = true;
         type = types.listOf entryModule;
         default = [ ];
-        description = lib.mdDoc "News entries.";
+        description = "News entries.";
       };
     };
   };

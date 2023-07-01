@@ -10,13 +10,13 @@ in {
   meta.maintainers = [ hm.maintainers.fendse ];
 
   options.services.playerctld = {
-    enable = mkEnableOption (lib.mdDoc "playerctld daemon");
+    enable = mkEnableOption "playerctld daemon";
 
     package = mkOption {
       type = types.package;
       default = pkgs.playerctl;
       defaultText = literalExpression "pkgs.playerctl";
-      description = lib.mdDoc "The playerctl package to use.";
+      description = "The playerctl package to use.";
     };
   };
 

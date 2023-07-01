@@ -9,12 +9,12 @@ let
 in {
   options = {
     services.kbfs = {
-      enable = mkEnableOption (lib.mdDoc "Keybase File System");
+      enable = mkEnableOption "Keybase File System";
 
       mountPoint = mkOption {
         type = types.str;
         default = "keybase";
-        description = lib.mdDoc ''
+        description = ''
           Mount point for the Keybase filesystem, relative to
           {env}`HOME`.
         '';
@@ -24,7 +24,7 @@ in {
         type = types.listOf types.str;
         default = [ ];
         example = [ "-label kbfs" "-mount-type normal" ];
-        description = lib.mdDoc ''
+        description = ''
           Additional flags to pass to the Keybase filesystem on launch.
         '';
       };

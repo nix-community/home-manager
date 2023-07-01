@@ -12,13 +12,12 @@ let
     options = {
       plugin = mkOption {
         type = types.package;
-        description = lib.mdDoc "Path of the configuration file to include.";
+        description = "Path of the configuration file to include.";
       };
 
       extraConfig = mkOption {
         type = types.lines;
-        description =
-          lib.mdDoc "Additional configuration for the associated plugin.";
+        description = "Additional configuration for the associated plugin.";
         default = "";
       };
     };
@@ -135,7 +134,7 @@ in {
       aggressiveResize = mkOption {
         default = false;
         type = types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Resize the window to the size of the smallest session for
           which it is the current window.
         '';
@@ -145,19 +144,19 @@ in {
         default = 0;
         example = 1;
         type = types.ints.unsigned;
-        description = lib.mdDoc "Base index for windows and panes.";
+        description = "Base index for windows and panes.";
       };
 
       clock24 = mkOption {
         default = false;
         type = types.bool;
-        description = lib.mdDoc "Use 24 hour clock.";
+        description = "Use 24 hour clock.";
       };
 
       customPaneNavigationAndResize = mkOption {
         default = false;
         type = types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Override the hjkl and HJKL bindings for pane navigation and
           resizing in VI mode.
         '';
@@ -166,18 +165,18 @@ in {
       disableConfirmationPrompt = mkOption {
         default = false;
         type = types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Disable confirmation prompt before killing a pane or window
         '';
       };
 
-      enable = mkEnableOption (lib.mdDoc "tmux");
+      enable = mkEnableOption "tmux";
 
       escapeTime = mkOption {
         default = 500;
         example = 0;
         type = types.ints.unsigned;
-        description = lib.mdDoc ''
+        description = ''
           Time in milliseconds for which tmux waits after an escape is
           input.
         '';
@@ -186,7 +185,7 @@ in {
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Additional configuration to add to
           {file}`tmux.conf`.
         '';
@@ -196,23 +195,22 @@ in {
         default = 2000;
         example = 5000;
         type = types.ints.positive;
-        description =
-          lib.mdDoc "Maximum number of lines held in window history.";
+        description = "Maximum number of lines held in window history.";
       };
 
       keyMode = mkOption {
         default = defaultKeyMode;
         example = "vi";
         type = types.enum [ "emacs" "vi" ];
-        description = lib.mdDoc "VI or Emacs style shortcuts.";
+        description = "VI or Emacs style shortcuts.";
       };
 
-      mouse = mkEnableOption (lib.mdDoc "mouse support");
+      mouse = mkEnableOption "mouse support";
 
       newSession = mkOption {
         default = false;
         type = types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Automatically spawn a session if trying to attach and none
           are running.
         '';
@@ -223,26 +221,26 @@ in {
         default = pkgs.tmux;
         defaultText = literalExpression "pkgs.tmux";
         example = literalExpression "pkgs.tmux";
-        description = lib.mdDoc "The tmux package to install";
+        description = "The tmux package to install";
       };
 
       reverseSplit = mkOption {
         default = false;
         type = types.bool;
-        description = lib.mdDoc "Reverse the window split shortcuts.";
+        description = "Reverse the window split shortcuts.";
       };
 
       resizeAmount = mkOption {
         default = defaultResize;
         example = 10;
         type = types.ints.positive;
-        description = lib.mdDoc "Number of lines/columns when resizing.";
+        description = "Number of lines/columns when resizing.";
       };
 
       sensibleOnTop = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Run the sensible plugin at the top of the configuration. It
           is possible to override the sensible settings using the
           {option}`programs.tmux.extraConfig` option.
@@ -253,7 +251,7 @@ in {
         default = null;
         example = "C-a";
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           Set the prefix key. Overrules the "shortcut" option when set.
         '';
       };
@@ -262,7 +260,7 @@ in {
         default = defaultShortcut;
         example = "a";
         type = types.str;
-        description = lib.mdDoc ''
+        description = ''
           CTRL following by this key is used as the main shortcut.
         '';
       };
@@ -271,36 +269,36 @@ in {
         default = defaultTerminal;
         example = "screen-256color";
         type = types.str;
-        description = lib.mdDoc "Set the $TERM variable.";
+        description = "Set the $TERM variable.";
       };
 
       shell = mkOption {
         default = defaultShell;
         example = "\${pkgs.zsh}/bin/zsh";
         type = with types; nullOr str;
-        description = lib.mdDoc "Set the default-shell tmux variable.";
+        description = "Set the default-shell tmux variable.";
       };
 
       secureSocket = mkOption {
         default = pkgs.stdenv.isLinux;
         type = types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Store tmux socket under {file}`/run`, which is more
           secure than {file}`/tmp`, but as a downside it doesn't
           survive user logout.
         '';
       };
 
-      tmuxp.enable = mkEnableOption (lib.mdDoc "tmuxp");
+      tmuxp.enable = mkEnableOption "tmuxp";
 
-      tmuxinator.enable = mkEnableOption (lib.mdDoc "tmuxinator");
+      tmuxinator.enable = mkEnableOption "tmuxinator";
 
       plugins = mkOption {
         type = with types;
           listOf (either package pluginModule) // {
             description = "list of plugin packages or submodules";
           };
-        description = lib.mdDoc ''
+        description = ''
           List of tmux plugins to be included at the end of your tmux
           configuration. The sensible plugin, however, is defaulted to
           run at the top of your configuration.

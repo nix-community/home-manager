@@ -16,13 +16,13 @@ in {
   meta.maintainers = [ ];
 
   options.programs.navi = {
-    enable = mkEnableOption (lib.mdDoc "Navi");
+    enable = mkEnableOption "Navi";
 
     package = mkOption {
       type = types.package;
       default = pkgs.navi;
       defaultText = literalExpression "pkgs.navi";
-      description = lib.mdDoc "The package to use for the navi binary.";
+      description = "The package to use for the navi binary.";
     };
 
     settings = mkOption {
@@ -37,7 +37,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/navi/config.yaml` on Linux or
         {file}`$HOME/Library/Application Support/navi/config.yaml`
@@ -47,15 +47,15 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption (lib.mdDoc "Bash integration") // {
+    enableBashIntegration = mkEnableOption "Bash integration" // {
       default = true;
     };
 
-    enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh integration") // {
+    enableZshIntegration = mkEnableOption "Zsh integration" // {
       default = true;
     };
 
-    enableFishIntegration = mkEnableOption (lib.mdDoc "Fish integration") // {
+    enableFishIntegration = mkEnableOption "Fish integration" // {
       default = true;
     };
   };

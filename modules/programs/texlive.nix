@@ -14,12 +14,12 @@ in {
 
   options = {
     programs.texlive = {
-      enable = mkEnableOption (lib.mdDoc "TeX Live");
+      enable = mkEnableOption "TeX Live";
 
       packageSet = mkOption {
         default = pkgs.texlive;
         defaultText = literalExpression "pkgs.texlive";
-        description = lib.mdDoc "TeX Live package set to use.";
+        description = "TeX Live package set to use.";
       };
 
       extraPackages = mkOption {
@@ -28,12 +28,12 @@ in {
         example = literalExpression ''
           tpkgs: { inherit (tpkgs) collection-fontsrecommended algorithms; }
         '';
-        description = lib.mdDoc "Extra packages available to TeX Live.";
+        description = "Extra packages available to TeX Live.";
       };
 
       package = mkOption {
         type = types.package;
-        description = lib.mdDoc "Resulting customized TeX Live package.";
+        description = "Resulting customized TeX Live package.";
         readOnly = true;
       };
     };

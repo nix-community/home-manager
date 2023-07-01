@@ -23,14 +23,14 @@ let
           }) + "/plugins";
         '';
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Path to the plugin folder.
         '';
       };
 
       mappings = mkOption {
         type = with types; attrsOf str;
-        description = lib.mdDoc ''
+        description = ''
           Key mappings to the plugins.
         '';
         default = { };
@@ -49,7 +49,7 @@ in {
 
   options = {
     programs.nnn = {
-      enable = mkEnableOption (lib.mdDoc "nnn");
+      enable = mkEnableOption "nnn";
 
       package = mkOption {
         type = types.package;
@@ -57,7 +57,7 @@ in {
         defaultText = literalExpression "pkgs.nnn";
         example =
           literalExpression "pkgs.nnn.override ({ withNerdIcons = true; });";
-        description = lib.mdDoc ''
+        description = ''
           Package containing the {command}`nnn` program.
         '';
       };
@@ -66,14 +66,14 @@ in {
         type = types.package;
         readOnly = true;
         visible = false;
-        description = lib.mdDoc ''
+        description = ''
           Resulting nnn package.
         '';
       };
 
       bookmarks = mkOption {
         type = with types; attrsOf str;
-        description = lib.mdDoc ''
+        description = ''
           Directory bookmarks.
         '';
         example = literalExpression ''
@@ -91,7 +91,7 @@ in {
         type = with types; listOf package;
         example =
           literalExpression "with pkgs; [ ffmpegthumbnailer mediainfo sxiv ]";
-        description = lib.mdDoc ''
+        description = ''
           Extra packages available to nnn.
         '';
         default = [ ];
@@ -99,7 +99,7 @@ in {
 
       plugins = mkOption {
         type = pluginModule;
-        description = lib.mdDoc ''
+        description = ''
           Manage nnn plugins.
         '';
         default = { };

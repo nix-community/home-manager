@@ -22,12 +22,11 @@ in {
   ];
   options = {
     services.espanso = {
-      enable = mkEnableOption
-        (lib.mdDoc "Espanso: cross platform text expander in Rust");
+      enable = mkEnableOption "Espanso: cross platform text expander in Rust";
 
       package = mkOption {
         type = types.package;
-        description = lib.mdDoc "Which espanso package to use";
+        description = "Which espanso package to use";
         default = pkgs.espanso;
         defaultText = literalExpression "pkgs.espanso";
       };
@@ -46,7 +45,7 @@ in {
             };
           };
         '';
-        description = lib.mdDoc ''
+        description = ''
           The Espanso configuration to use. See
           <https://espanso.org/docs/configuration/basics/>
           for a description of available options.
@@ -90,7 +89,7 @@ in {
             };
           };
         '';
-        description = lib.mdDoc ''
+        description = ''
           The Espanso matches to use. See
           <https://espanso.org/docs/matches/basics/>
           for a description of available options.

@@ -10,14 +10,14 @@ in {
   meta.maintainers = [ hm.maintainers.mifom ];
 
   options.programs.gitui = {
-    enable = mkEnableOption
-      (lib.mdDoc "gitui, blazing fast terminal-ui for git written in rust");
+    enable =
+      mkEnableOption "gitui, blazing fast terminal-ui for git written in rust";
 
     package = mkOption {
       type = types.package;
       default = pkgs.gitui;
       defaultText = "pkgs.gitui";
-      description = lib.mdDoc "The package to use.";
+      description = "The package to use.";
     };
 
     keyConfig = mkOption {
@@ -28,7 +28,7 @@ in {
         quit: Some(( code: Char('q'), modifiers: ( bits: 0,),)),
         exit_popup: Some(( code: Esc, modifiers: ( bits: 0,),)),
       '';
-      description = lib.mdDoc ''
+      description = ''
         Key config in Ron file format. This is written to
         {file}`$XDG_CONFIG_HOME/gitui/key_config.ron`.
       '';
@@ -61,7 +61,7 @@ in {
           branch_fg: LightYellow,
         )
       '';
-      description = lib.mdDoc ''
+      description = ''
         Theme in Ron file format. This is written to
         {file}`$XDG_CONFIG_HOME/gitui/theme.ron`.
       '';

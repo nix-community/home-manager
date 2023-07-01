@@ -10,12 +10,12 @@ in {
   meta.maintainers = [ maintainers.seylerius ];
 
   options.programs.rofi.pass = {
-    enable = mkEnableOption (lib.mdDoc "rofi integration with password-store");
+    enable = mkEnableOption "rofi integration with password-store";
 
     stores = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      description = lib.mdDoc ''
+      description = ''
         Directory roots of your password-stores.
       '';
     };
@@ -28,7 +28,7 @@ in {
         USERNAME_field='user'
         AUTOTYPE_field='autotype'
       '';
-      description = lib.mdDoc ''
+      description = ''
         Extra configuration to be added at to the rofi-pass config file.
         Additional examples can be found at
         <https://github.com/carnager/rofi-pass/blob/master/config.example>.

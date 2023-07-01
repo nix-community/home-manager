@@ -23,18 +23,18 @@ in {
   ];
 
   options.services.screen-locker = {
-    enable = mkEnableOption (lib.mdDoc "screen locker for X session");
+    enable = mkEnableOption "screen locker for X session";
 
     lockCmd = mkOption {
       type = types.str;
-      description = lib.mdDoc "Locker command to run.";
+      description = "Locker command to run.";
       example = "\${pkgs.i3lock}/bin/i3lock -n -c 000000";
     };
 
     inactiveInterval = mkOption {
       type = types.int;
       default = 10;
-      description = lib.mdDoc ''
+      description = ''
         Inactive time interval in minutes after which session will be locked.
         The minimum is 1 minute, and the maximum is 1 hour.
         If {option}`xautolock.enable` is true, it will use this setting.
@@ -48,13 +48,13 @@ in {
       enable = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc "Use xautolock for time-based locking.";
+        description = "Use xautolock for time-based locking.";
       };
 
       package = mkOption {
         type = types.package;
         default = pkgs.xautolock;
-        description = lib.mdDoc ''
+        description = ''
           Package providing the {command}`xautolock` binary.
         '';
       };
@@ -62,7 +62,7 @@ in {
       detectSleep = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Whether to reset xautolock timers when awaking from sleep.
           No effect if {option}`xautolock.enable` is false.
         '';
@@ -71,7 +71,7 @@ in {
       extraOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = lib.mdDoc ''
+        description = ''
           Extra command-line arguments to pass to {command}`xautolock`.
           No effect if {option}`xautolock.enable` is false.
         '';
@@ -82,7 +82,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.xss-lock;
-        description = lib.mdDoc ''
+        description = ''
           Package providing the {command}`xss-lock` binary.
         '';
       };
@@ -90,7 +90,7 @@ in {
       extraOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = lib.mdDoc ''
+        description = ''
           Extra command-line arguments to pass to {command}`xss-lock`.
         '';
       };
@@ -98,7 +98,7 @@ in {
       screensaverCycle = mkOption {
         type = types.int;
         default = 600;
-        description = lib.mdDoc ''
+        description = ''
           The X server's screensaver cycle value expressed as seconds.
           This will be used with {command}`xset` to configure
           the cycle along with timeout.

@@ -35,7 +35,7 @@ let
     drop_non_existing_label = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Allow missing labels on the Gmail side to be dropped.
       '';
     };
@@ -44,7 +44,7 @@ let
       type = types.str;
       default = "";
       example = "mbox";
-      description = lib.mdDoc ''
+      description = ''
         Extension to include in local file names, which can be useful
         for indexing with third-party programs.
       '';
@@ -53,7 +53,7 @@ let
     ignore_empty_history = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Work around a Gmail API quirk where an empty change history
         is sometimes returned.
 
@@ -72,7 +72,7 @@ let
         "CATEGORY_SOCIAL"
         "CATEGORY_PERSONAL"
       ];
-      description = lib.mdDoc ''
+      description = ''
         Set Gmail labels to ignore when syncing from remote labels to
         local tags (before translations).
       '';
@@ -81,7 +81,7 @@ let
     ignore_tags = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      description = lib.mdDoc ''
+      description = ''
         Set labels to ignore when syncing from local tags to
         remote labels (after translations).
       '';
@@ -90,7 +90,7 @@ let
     local_trash_tag = mkOption {
       type = types.str;
       default = "trash";
-      description = lib.mdDoc ''
+      description = ''
         Local tag to which the remote Gmail 'TRASH' label is translated.
       '';
     };
@@ -98,7 +98,7 @@ let
     remove_local_messages = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Remove local messages that have been deleted on the remote.
       '';
     };
@@ -106,7 +106,7 @@ let
     replace_slash_with_dot = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Replace '/' with '.' in Gmail labels.
       '';
     };
@@ -114,19 +114,19 @@ let
     timeout = mkOption {
       type = types.ints.unsigned;
       default = 600;
-      description = lib.mdDoc ''
+      description = ''
         HTTP timeout in seconds. 0 means forever or system timeout.
       '';
     };
   };
 
   syncOpts = {
-    enable = mkEnableOption (lib.mdDoc "lieer synchronization service");
+    enable = mkEnableOption "lieer synchronization service";
 
     frequency = mkOption {
       type = types.str;
       default = "*:0/5";
-      description = lib.mdDoc ''
+      description = ''
         How often to synchronize the account.
 
         This value is passed to the systemd timer configuration as the
@@ -138,13 +138,12 @@ let
   };
 
   lieerOpts = {
-    enable =
-      mkEnableOption (lib.mdDoc "lieer Gmail synchronization for notmuch");
+    enable = mkEnableOption "lieer Gmail synchronization for notmuch";
 
     notmuchSetupWarning = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Warn if Notmuch is not also enabled for this account.
 
         This can safely be disabled if {command}`notmuch init`
@@ -159,7 +158,7 @@ let
         options = settingsOpts;
       };
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Settings which are applied to {file}`.gmailieer.json`
         for the account.
 
@@ -232,14 +231,13 @@ in {
 
   options = {
     programs.lieer = {
-      enable =
-        mkEnableOption (lib.mdDoc "lieer Gmail synchronization for notmuch");
+      enable = mkEnableOption "lieer Gmail synchronization for notmuch";
 
       package = mkOption {
         type = types.package;
         default = pkgs.lieer;
         defaultText = "pkgs.lieer";
-        description = lib.mdDoc ''
+        description = ''
           lieer package to use.
         '';
       };

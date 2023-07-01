@@ -48,7 +48,7 @@ in {
       default = null;
       example = { allowBroken = true; };
       type = types.nullOr configType;
-      description = lib.mdDoc ''
+      description = ''
         The configuration of the Nix Packages collection. (For
         details, see the Nixpkgs documentation.) It allows you to set
         package configuration options.
@@ -86,7 +86,7 @@ in {
         ]
       '';
       type = types.nullOr (types.listOf overlayType);
-      description = lib.mdDoc ''
+      description = ''
         List of overlays to use with the Nix Packages collection. (For
         details, see the Nixpkgs documentation.) It allows you to
         override packages globally. This is a function that takes as
@@ -109,7 +109,7 @@ in {
       type = types.str;
       example = "i686-linux";
       internal = true;
-      description = lib.mdDoc ''
+      description = ''
         Specifies the Nix platform type for which the user environment
         should be built. If unset, it defaults to the platform type of
         your host system. Specifying this option is useful when doing

@@ -49,12 +49,12 @@ in {
 
   options = {
     programs.msmtp = {
-      enable = mkEnableOption (lib.mdDoc "msmtp");
+      enable = mkEnableOption "msmtp";
 
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Extra configuration lines to add to {file}`~/.msmtprc`.
           See <https://marlam.de/msmtp/msmtprc.txt> for examples.
 
@@ -68,7 +68,7 @@ in {
       extraAccounts = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Extra configuration lines to add to the end of {file}`~/.msmtprc`.
           See <https://marlam.de/msmtp/msmtprc.txt> for examples.
         '';

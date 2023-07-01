@@ -30,13 +30,13 @@ in {
 
   options = {
     xsession.windowManager.spectrwm = {
-      enable = mkEnableOption (lib.mdDoc "Spectrwm window manager");
+      enable = mkEnableOption "Spectrwm window manager";
 
       package = mkOption {
         type = types.package;
         default = pkgs.spectrwm;
         defaultText = literalExpression "pkgs.spectrwm";
-        description = lib.mdDoc ''
+        description = ''
           Package providing the {command}`spectrwm` command.
         '';
       };
@@ -52,7 +52,7 @@ in {
             focus_close = "next";
           }
         '';
-        description = lib.mdDoc "Spectrwm settings.";
+        description = "Spectrwm settings.";
       };
 
       bindings = mkOption {
@@ -65,7 +65,7 @@ in {
             quit = "Mod+Shift+q";
           }
         '';
-        description = lib.mdDoc "Spectrwm keybindings.";
+        description = "Spectrwm keybindings.";
       };
 
       unbindings = mkOption {
@@ -81,7 +81,7 @@ in {
             "MOD+t"
           ]
         '';
-        description = lib.mdDoc ''
+        description = ''
           List of keybindings to disable from default Spectrwm configuration.
         '';
       };
@@ -95,7 +95,7 @@ in {
             search = "dmenu -ip -p 'Window name/id:';
           }
         '';
-        description = lib.mdDoc "Spectrwm programs variables.";
+        description = "Spectrwm programs variables.";
       };
 
       quirks = mkOption {
@@ -107,7 +107,7 @@ in {
             Pavucontrol = "FLOAT";
           }
         '';
-        description = lib.mdDoc "Spectrwm quicks (custom window rules).";
+        description = "Spectrwm quicks (custom window rules).";
       };
     };
   };

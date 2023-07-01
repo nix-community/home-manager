@@ -12,21 +12,21 @@ let
 
   preztoModule = types.submodule {
     options = {
-      enable = mkEnableOption (lib.mdDoc "prezto");
+      enable = mkEnableOption "prezto";
 
       caseSensitive = mkOption {
         type = types.nullOr types.bool;
         default = null;
         example = true;
         description =
-          lib.mdDoc "Set case-sensitivity for completion, history lookup, etc.";
+          "Set case-sensitivity for completion, history lookup, etc.";
       };
 
       color = mkOption {
         type = types.nullOr types.bool;
         default = true;
         example = false;
-        description = lib.mdDoc ''
+        description = ''
           Color output (automatically set to `false` on dumb terminals).
         '';
       };
@@ -35,14 +35,13 @@ let
         type = types.listOf types.path;
         default = [ ];
         example = [ "$HOME/.zprezto-contrib" ];
-        description =
-          lib.mdDoc "Add additional directories to load prezto modules from.";
+        description = "Add additional directories to load prezto modules from.";
       };
 
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Additional configuration to add to {file}`.zpreztorc`.
         '';
       };
@@ -51,7 +50,7 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = [ "attr" "stat" ];
-        description = lib.mdDoc ''
+        description = ''
           Set the Zsh modules to load ({manpage}`zshmodules(1)`).
         '';
       };
@@ -60,7 +59,7 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = [ "zargs" "zmv" ];
-        description = lib.mdDoc ''
+        description = ''
           Set the Zsh functions to load ({manpage}`zshcontrib(1)`).
         '';
       };
@@ -78,7 +77,7 @@ let
           "completion"
           "prompt"
         ];
-        description = lib.mdDoc
+        description =
           "Set the Prezto modules to load (browse modules). The order matters.";
       };
 
@@ -86,14 +85,14 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "fg=blue";
-        description = lib.mdDoc "Set the query found color.";
+        description = "Set the query found color.";
       };
 
       completions.ignoredHosts = mkOption {
         type = types.listOf types.str;
         default = [ ];
         example = [ "0.0.0.0" "127.0.0.1" ];
-        description = lib.mdDoc ''
+        description = ''
           Set the entries to ignore in static {file}`/etc/hosts` for
           host completion.
         '';
@@ -104,7 +103,7 @@ let
           type = types.nullOr (types.enum [ "emacs" "vi" ]);
           default = "emacs";
           example = "vi";
-          description = lib.mdDoc ''
+          description = ''
             Set the key mapping style to `emacs` or `vi`.
           '';
         };
@@ -113,7 +112,7 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = lib.mdDoc ''
+          description = ''
             Automatically convert `....` to `../..`
           '';
         };
@@ -122,7 +121,7 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = lib.mdDoc "Allow the Zsh prompt context to be shown.";
+          description = "Allow the Zsh prompt context to be shown.";
         };
       };
 
@@ -130,7 +129,7 @@ let
         type = types.nullOr (types.enum [ "dirty" "untracked" "all" "none" ]);
         default = null;
         example = "all";
-        description = lib.mdDoc ''
+        description = ''
           Ignore submodules when they are `dirty`, `untracked`, `all`,
           or `none`.
         '';
@@ -140,7 +139,7 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "g";
-        description = lib.mdDoc "Set the command prefix on non-GNU systems.";
+        description = "Set the command prefix on non-GNU systems.";
       };
 
       historySubstring = {
@@ -148,20 +147,20 @@ let
           type = types.nullOr types.str;
           default = null;
           example = "fg=blue";
-          description = lib.mdDoc "Set the query found color.";
+          description = "Set the query found color.";
         };
 
         notFoundColor = mkOption {
           type = types.nullOr types.str;
           default = null;
           example = "fg=red";
-          description = lib.mdDoc "Set the query not found color.";
+          description = "Set the query not found color.";
         };
 
         globbingFlags = mkOption {
           type = types.nullOr types.str;
           default = null;
-          description = lib.mdDoc "Set the search globbing flags.";
+          description = "Set the search globbing flags.";
         };
       };
 
@@ -169,7 +168,7 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "manpages";
-        description = lib.mdDoc ''
+        description = ''
           Set the keyword used by {command}`mand` to open man pages
           in Dash.app.
         '';
@@ -180,7 +179,7 @@ let
           type = types.nullOr types.str;
           default = "sorin";
           example = "pure";
-          description = lib.mdDoc ''
+          description = ''
             Set the prompt theme to load. Setting it to `random`
             loads a random theme. Automatically set to `off` on dumb
             terminals.
@@ -191,7 +190,7 @@ let
           type = types.nullOr (types.enum [ "short" "long" "full" ]);
           default = null;
           example = "short";
-          description = lib.mdDoc ''
+          description = ''
             Set the working directory prompt display length. By
             default, it is set to `short`. Set it to `long` (without `~`
             expansion) for longer or `full` (with `~` expansion) for
@@ -203,7 +202,7 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = lib.mdDoc ''
+          description = ''
             Set the prompt to display the return code along with an
             indicator for non-zero return codes. This is not supported by all prompts.
           '';
@@ -215,15 +214,14 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description =
-            lib.mdDoc "Auto switch to Python virtualenv on directory change.";
+          description = "Auto switch to Python virtualenv on directory change.";
         };
 
         virtualenvInitialize = mkOption {
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = lib.mdDoc
+          description =
             "Automatically initialize virtualenvwrapper if pre-requisites are met.";
         };
       };
@@ -232,8 +230,7 @@ let
         type = types.nullOr types.bool;
         default = null;
         example = true;
-        description =
-          lib.mdDoc "Auto switch the Ruby version on directory change.";
+        description = "Auto switch the Ruby version on directory change.";
       };
 
       screen = {
@@ -241,7 +238,7 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = lib.mdDoc
+          description =
             "Auto start a session when Zsh is launched in a local terminal.";
         };
 
@@ -249,7 +246,7 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = lib.mdDoc
+          description =
             "Auto start a session when Zsh is launched in a SSH connection.";
         };
       };
@@ -258,8 +255,7 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = [ "id_rsa" "id_rsa2" "id_github" ];
-        description =
-          lib.mdDoc "Set the SSH identities to load into the agent.";
+        description = "Set the SSH identities to load into the agent.";
       };
 
       syntaxHighlighting = {
@@ -267,7 +263,7 @@ let
           type = types.listOf types.str;
           default = [ ];
           example = [ "main" "brackets" "pattern" "line" "cursor" "root" ];
-          description = lib.mdDoc ''
+          description = ''
             Set syntax highlighters. By default, only the main
             highlighter is enabled.
           '';
@@ -281,14 +277,14 @@ let
             command = "bg=blue";
             function = "bg=blue";
           };
-          description = lib.mdDoc "Set syntax highlighting styles.";
+          description = "Set syntax highlighting styles.";
         };
 
         pattern = mkOption {
           type = types.attrsOf types.str;
           default = { };
           example = { "rm*-rf*" = "fg=white,bold,bg=red"; };
-          description = lib.mdDoc "Set syntax pattern styles.";
+          description = "Set syntax pattern styles.";
         };
       };
 
@@ -297,28 +293,28 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = lib.mdDoc "Auto set the tab and window titles.";
+          description = "Auto set the tab and window titles.";
         };
 
         windowTitleFormat = mkOption {
           type = types.nullOr types.str;
           default = null;
           example = "%n@%m: %s";
-          description = lib.mdDoc "Set the window title format.";
+          description = "Set the window title format.";
         };
 
         tabTitleFormat = mkOption {
           type = types.nullOr types.str;
           default = null;
           example = "%m: %s";
-          description = lib.mdDoc "Set the tab title format.";
+          description = "Set the tab title format.";
         };
 
         multiplexerTitleFormat = mkOption {
           type = types.nullOr types.str;
           default = null;
           example = "%s";
-          description = lib.mdDoc "Set the multiplexer title format.";
+          description = "Set the multiplexer title format.";
         };
       };
 
@@ -327,7 +323,7 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = lib.mdDoc
+          description =
             "Auto start a session when Zsh is launched in a local terminal.";
         };
 
@@ -335,7 +331,7 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = lib.mdDoc
+          description =
             "Auto start a session when Zsh is launched in a SSH connection.";
         };
 
@@ -343,14 +339,14 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description = lib.mdDoc "Integrate with iTerm2.";
+          description = "Integrate with iTerm2.";
         };
 
         defaultSessionName = mkOption {
           type = types.nullOr types.str;
           default = null;
           example = "YOUR DEFAULT SESSION NAME";
-          description = lib.mdDoc "Set the default session name.";
+          description = "Set the default session name.";
         };
       };
 
@@ -358,7 +354,7 @@ let
         type = types.nullOr types.bool;
         default = null;
         example = true;
-        description = lib.mdDoc ''
+        description = ''
           Enabled safe options. This aliases {command}`cp`,
           {command}`ln`, {command}`mv` and {command}`rm` so that they
           prompt before deleting or overwriting files. Set to `no` to
@@ -375,7 +371,7 @@ in {
       prezto = mkOption {
         type = preztoModule;
         default = { };
-        description = lib.mdDoc "Options to configure prezto.";
+        description = "Options to configure prezto.";
       };
     };
   };

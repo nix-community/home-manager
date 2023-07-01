@@ -7,7 +7,7 @@ with lib;
     enable = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable msmtp.
 
         If enabled then it is possible to use the
@@ -27,7 +27,7 @@ with lib;
         types.nullOr (types.strMatching "([[:alnum:]]{2}:)+[[:alnum:]]{2}");
       default = null;
       example = "my:SH:a2:56:ha:sh";
-      description = lib.mdDoc ''
+      description = ''
         Fingerprint of a trusted TLS certificate.
         The fingerprint can be obtained by executing
         {command}`msmtp --serverinfo --tls --tls-certcheck=off`.
@@ -38,7 +38,7 @@ with lib;
       type = types.attrsOf types.str;
       default = { };
       example = { auth = "login"; };
-      description = lib.mdDoc ''
+      description = ''
         Extra configuration options to add to {file}`~/.msmtprc`.
         See <https://marlam.de/msmtp/msmtprc.txt> for
         examples.

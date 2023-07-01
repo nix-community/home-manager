@@ -11,13 +11,13 @@ in {
 
   options = {
     services.xembed-sni-proxy = {
-      enable = mkEnableOption (lib.mdDoc "XEmbed SNI Proxy");
+      enable = mkEnableOption "XEmbed SNI Proxy";
 
       package = mkOption {
         type = types.package;
         default = pkgs.plasma-workspace;
         defaultText = literalExpression "pkgs.plasma-workspace";
-        description = lib.mdDoc ''
+        description = ''
           Package containing the {command}`xembedsniproxy`
           program.
         '';

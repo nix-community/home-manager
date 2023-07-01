@@ -25,13 +25,13 @@ in {
 
   options = {
     services.xsettingsd = {
-      enable = mkEnableOption (lib.mdDoc "xsettingsd");
+      enable = mkEnableOption "xsettingsd";
 
       package = mkOption {
         type = types.package;
         default = pkgs.xsettingsd;
         defaultText = literalExpression "pkgs.xsettingsd";
-        description = lib.mdDoc ''
+        description = ''
           Package containing the {command}`xsettingsd` program.
         '';
       };
@@ -47,7 +47,7 @@ in {
             "Xft/RGBA" = "rgb";
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Xsettingsd options for configuration file. See
           <https://github.com/derat/xsettingsd/wiki/Settings>
           for documentation on these values.

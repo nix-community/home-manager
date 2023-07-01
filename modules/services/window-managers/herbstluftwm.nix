@@ -35,13 +35,13 @@ in {
   meta.maintainers = [ lib.hm.maintainers.olmokramer ];
 
   options.xsession.windowManager.herbstluftwm = {
-    enable = lib.mkEnableOption (lib.mdDoc "herbstluftwm window manager");
+    enable = lib.mkEnableOption "herbstluftwm window manager";
 
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.herbstluftwm;
       defaultText = lib.literalExpression "pkgs.herbstluftwm";
-      description = lib.mdDoc ''
+      description = ''
         Package providing the {command}`herbstluftwm` and
         {command}`herbstclient` commands.
       '';
@@ -57,7 +57,7 @@ in {
           window_border_active_color = "#FF0000";
         }
       '';
-      description = lib.mdDoc "Herbstluftwm settings.";
+      description = "Herbstluftwm settings.";
     };
 
     keybinds = lib.mkOption {
@@ -69,7 +69,7 @@ in {
           Mod4-u = "split bottom";
         }
       '';
-      description = lib.mdDoc "Herbstluftwm keybinds.";
+      description = "Herbstluftwm keybinds.";
     };
 
     mousebinds = lib.mkOption {
@@ -81,7 +81,7 @@ in {
           Mod4-B3 = "resize";
         }
       '';
-      description = lib.mdDoc "Herbstluftwm mousebinds.";
+      description = "Herbstluftwm mousebinds.";
     };
 
     rules = lib.mkOption {
@@ -93,7 +93,7 @@ in {
           "windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off"
         ]
       '';
-      description = lib.mdDoc "Herbstluftwm rules.";
+      description = "Herbstluftwm rules.";
     };
 
     tags = lib.mkOption {
@@ -102,7 +102,7 @@ in {
       example = lib.literalExpression ''
         [ "work" "browser" "music" "gaming" ]
       '';
-      description = lib.mdDoc "Tags to create on startup.";
+      description = "Tags to create on startup.";
     };
 
     extraConfig = lib.mkOption {
@@ -112,7 +112,7 @@ in {
         herbstclient set_layout max
         herbstclient detect_monitors
       '';
-      description = lib.mdDoc ''
+      description = ''
         Extra configuration lines to add verbatim to
         {file}`$XDG_CONFIG_HOME/herbstluftwm/autostart`.
       '';

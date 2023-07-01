@@ -14,10 +14,9 @@ in {
   meta.maintainers = [ hm.maintainers.kalhauge ];
 
   options.programs.lazygit = {
-    enable = mkEnableOption
-      (lib.mdDoc "lazygit, a simple terminal UI for git commands");
+    enable = mkEnableOption "lazygit, a simple terminal UI for git commands";
 
-    package = mkPackageOptionMD pkgs "lazygit" { };
+    package = mkPackageOption pkgs "lazygit" { };
 
     settings = mkOption {
       type = yamlFormat.type;
@@ -33,7 +32,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/lazygit/config.yml`
         on Linux or on Darwin if [](#opt-xdg.enable) is set, otherwise

@@ -23,7 +23,7 @@ let
         type = types.bool;
         default = false;
         example = true;
-        description = lib.mdDoc "Whether to enable ${name}.";
+        description = "Whether to enable ${name}.";
       };
 
       package = mkOption {
@@ -31,7 +31,7 @@ let
         type = types.package;
         default = defaultPkg;
         defaultText = literalExpression "pkgs.${browser}";
-        description = lib.mdDoc "The ${name} package to use.";
+        description = "The ${name} package to use.";
       };
 
       commandLineArgs = mkOption {
@@ -39,7 +39,7 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = [ "--enable-logging=stderr" "--ignore-gpu-blocklist" ];
-        description = lib.mdDoc ''
+        description = ''
           List of command-line arguments to be passed to ${name}.
 
           For a list of common switches, see
@@ -60,7 +60,7 @@ let
               options = {
                 id = mkOption {
                   type = strMatching "[a-zA-Z]{32}";
-                  description = lib.mdDoc ''
+                  description = ''
                     The extension's ID from the Chrome Web Store url or the unpacked crx.
                   '';
                   default = "";
@@ -68,7 +68,7 @@ let
 
                 updateUrl = mkOption {
                   type = str;
-                  description = lib.mdDoc ''
+                  description = ''
                     URL of the extension's update manifest XML file. Linux only.
                   '';
                   default = "https://clients2.google.com/service/update2/crx";
@@ -78,7 +78,7 @@ let
 
                 crxPath = mkOption {
                   type = nullOr path;
-                  description = lib.mdDoc ''
+                  description = ''
                     Path to the extension's crx file. Linux only.
                   '';
                   default = null;
@@ -87,7 +87,7 @@ let
 
                 version = mkOption {
                   type = nullOr str;
-                  description = lib.mdDoc ''
+                  description = ''
                     The extension's version, required for local installation. Linux only.
                   '';
                   default = null;
@@ -111,7 +111,7 @@ let
             }
           ]
         '';
-        description = lib.mdDoc ''
+        description = ''
           List of ${name} extensions to install.
           To find the extension ID, check its URL on the
           [Chrome Web Store](https://chrome.google.com/webstore/category/extensions).

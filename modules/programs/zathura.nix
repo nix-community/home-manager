@@ -18,21 +18,21 @@ in {
   meta.maintainers = [ maintainers.rprospero ];
 
   options.programs.zathura = {
-    enable = mkEnableOption (lib.mdDoc ''
+    enable = mkEnableOption ''
       Zathura, a highly customizable and functional document viewer
-      focused on keyboard interaction'');
+      focused on keyboard interaction'';
 
     package = mkOption {
       type = types.package;
       default = pkgs.zathura;
       defaultText = "pkgs.zathura";
-      description = lib.mdDoc "The Zathura package to use";
+      description = "The Zathura package to use";
     };
 
     options = mkOption {
       default = { };
       type = with types; attrsOf (either str (either bool int));
-      description = lib.mdDoc ''
+      description = ''
         Add {option}`:set` command options to zathura and make
         them permanent. See
         {manpage}`zathurarc(5)`
@@ -47,7 +47,7 @@ in {
     mappings = mkOption {
       default = { };
       type = with types; attrsOf str;
-      description = lib.mdDoc ''
+      description = ''
         Add {option}`:map` mappings to zathura and make
         them permanent. See
         {manpage}`zathurarc(5)`
@@ -66,7 +66,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Additional commands for zathura that will be added to the
         {file}`zathurarc` file.
       '';

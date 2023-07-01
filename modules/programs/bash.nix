@@ -27,12 +27,12 @@ in {
 
   options = {
     programs.bash = {
-      enable = mkEnableOption (lib.mdDoc "GNU Bourne-Again SHell");
+      enable = mkEnableOption "GNU Bourne-Again SHell";
 
       enableCompletion = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable Bash completion for all interactive Bash shells.
 
           Note, if you use NixOS or nix-darwin and do not have Bash completion
@@ -51,34 +51,33 @@ in {
       historySize = mkOption {
         type = types.int;
         default = 10000;
-        description = lib.mdDoc "Number of history lines to keep in memory.";
+        description = "Number of history lines to keep in memory.";
       };
 
       historyFile = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc "Location of the bash history file.";
+        description = "Location of the bash history file.";
       };
 
       historyFileSize = mkOption {
         type = types.int;
         default = 100000;
-        description = lib.mdDoc "Number of history lines to keep on file.";
+        description = "Number of history lines to keep on file.";
       };
 
       historyControl = mkOption {
         type =
           types.listOf (types.enum [ "erasedups" "ignoredups" "ignorespace" ]);
         default = [ ];
-        description =
-          lib.mdDoc "Controlling how commands are saved on the history list.";
+        description = "Controlling how commands are saved on the history list.";
       };
 
       historyIgnore = mkOption {
         type = types.listOf types.str;
         default = [ ];
         example = [ "ls" "cd" "exit" ];
-        description = lib.mdDoc
+        description =
           "List of commands that should not be saved to the history list.";
       };
 
@@ -100,7 +99,7 @@ in {
           "checkjobs"
         ];
         example = [ "extglob" "-cdspell" ];
-        description = lib.mdDoc ''
+        description = ''
           Shell options to set. Prefix an option with
           "`-`" to unset.
         '';
@@ -110,7 +109,7 @@ in {
         default = { };
         type = types.attrs;
         example = { MAILCHECK = 30; };
-        description = lib.mdDoc ''
+        description = ''
           Environment variables that will be set for the Bash session.
         '';
       };
@@ -124,7 +123,7 @@ in {
             ".." = "cd ..";
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           An attribute set that maps aliases (the top level attribute names in
           this option) to command strings or directly to build outputs.
         '';
@@ -133,7 +132,7 @@ in {
       profileExtra = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc ''
+        description = ''
           Extra commands that should be run when initializing a login
           shell.
         '';
@@ -142,7 +141,7 @@ in {
       initExtra = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc ''
+        description = ''
           Extra commands that should be run when initializing an
           interactive shell.
         '';
@@ -151,7 +150,7 @@ in {
       bashrcExtra = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc ''
+        description = ''
           Extra commands that should be placed in {file}`~/.bashrc`.
           Note that these commands will be run even in non-interactive shells.
         '';
@@ -160,7 +159,7 @@ in {
       logoutExtra = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc ''
+        description = ''
           Extra commands that should be run when logging out of an
           interactive shell.
         '';

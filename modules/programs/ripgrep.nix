@@ -10,15 +10,15 @@ in {
 
   options = {
     programs.ripgrep = {
-      enable = mkEnableOption (lib.mdDoc "Ripgrep");
+      enable = mkEnableOption "Ripgrep";
 
-      package = mkPackageOptionMD pkgs "ripgrep" { };
+      package = mkPackageOption pkgs "ripgrep" { };
 
       arguments = mkOption {
         type = with types; listOf str;
         default = [ ];
         example = [ "--max-columns-preview" "--colors=line:style:bold" ];
-        description = lib.mdDoc ''
+        description = ''
           List of arguments to pass to ripgrep. Each item is given to ripgrep as
           a single command line argument verbatim.
 

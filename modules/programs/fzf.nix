@@ -17,20 +17,20 @@ in {
   ];
 
   options.programs.fzf = {
-    enable = mkEnableOption (lib.mdDoc "fzf - a command-line fuzzy finder");
+    enable = mkEnableOption "fzf - a command-line fuzzy finder";
 
     package = mkOption {
       type = types.package;
       default = pkgs.fzf;
       defaultText = literalExpression "pkgs.fzf";
-      description = lib.mdDoc "Package providing the {command}`fzf` tool.";
+      description = "Package providing the {command}`fzf` tool.";
     };
 
     defaultCommand = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "fd --type f";
-      description = lib.mdDoc ''
+      description = ''
         The command that gets executed as the default source for fzf
         when running.
       '';
@@ -40,7 +40,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--height 40%" "--border" ];
-      description = lib.mdDoc ''
+      description = ''
         Extra command line options given to fzf by default.
       '';
     };
@@ -49,7 +49,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "fd --type f";
-      description = lib.mdDoc ''
+      description = ''
         The command that gets executed as the source for fzf for the
         CTRL-T keybinding.
       '';
@@ -59,7 +59,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--preview 'head {}'" ];
-      description = lib.mdDoc ''
+      description = ''
         Command line options for the CTRL-T keybinding.
       '';
     };
@@ -68,7 +68,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "fd --type d";
-      description = lib.mdDoc ''
+      description = ''
         The command that gets executed as the source for fzf for the
         ALT-C keybinding.
       '';
@@ -78,7 +78,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--preview 'tree -C {} | head -200'" ];
-      description = lib.mdDoc ''
+      description = ''
         Command line options for the ALT-C keybinding.
       '';
     };
@@ -87,7 +87,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--sort" "--exact" ];
-      description = lib.mdDoc ''
+      description = ''
         Command line options for the CTRL-R keybinding.
       '';
     };
@@ -103,7 +103,7 @@ in {
           "fg+" = "#d4d4d4";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Color scheme options added to `FZF_DEFAULT_OPTS`. See
         <https://github.com/junegunn/fzf/wiki/Color-schemes>
         for documentation.
@@ -111,15 +111,15 @@ in {
     };
 
     tmux = {
-      enableShellIntegration = mkEnableOption (lib.mdDoc ''
+      enableShellIntegration = mkEnableOption ''
         setting `FZF_TMUX=1` which causes shell integration to use fzf-tmux
-      '');
+      '';
 
       shellIntegrationOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
         example = literalExpression ''[ "-d 40%" ]'';
-        description = lib.mdDoc ''
+        description = ''
           If {option}`programs.fzf.tmux.enableShellIntegration` is set to `true`,
           shell integration will use these options for fzf-tmux.
           See {command}`fzf-tmux --help` for available options.
@@ -130,7 +130,7 @@ in {
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Bash integration.
       '';
     };
@@ -138,7 +138,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Zsh integration.
       '';
     };
@@ -146,7 +146,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Fish integration.
       '';
     };

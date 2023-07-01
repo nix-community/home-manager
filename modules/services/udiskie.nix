@@ -25,8 +25,8 @@ in {
 
   options = {
     services.udiskie = {
-      enable = mkEnableOption (lib.mdDoc "") // {
-        description = lib.mdDoc ''
+      enable = mkEnableOption "" // {
+        description = ''
           Whether to enable the udiskie mount daemon.
 
           Note, if you use NixOS then you must add
@@ -48,7 +48,7 @@ in {
             icon_names.media = [ "media-optical" ];
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/udiskie/config.yml`.
 
@@ -60,19 +60,19 @@ in {
       automount = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc "Whether to automatically mount new devices.";
+        description = "Whether to automatically mount new devices.";
       };
 
       notify = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc "Whether to show pop-up notifications.";
+        description = "Whether to show pop-up notifications.";
       };
 
       tray = mkOption {
         type = types.enum [ "always" "auto" "never" ];
         default = "auto";
-        description = lib.mdDoc ''
+        description = ''
           Whether to display tray icon.
 
           The options are

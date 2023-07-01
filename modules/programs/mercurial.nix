@@ -12,35 +12,35 @@ in {
 
   options = {
     programs.mercurial = {
-      enable = mkEnableOption (lib.mdDoc "Mercurial");
+      enable = mkEnableOption "Mercurial";
 
       package = mkOption {
         type = types.package;
         default = pkgs.mercurial;
         defaultText = literalExpression "pkgs.mercurial";
-        description = lib.mdDoc "Mercurial package to install.";
+        description = "Mercurial package to install.";
       };
 
       userName = mkOption {
         type = types.str;
-        description = lib.mdDoc "Default user name to use.";
+        description = "Default user name to use.";
       };
 
       userEmail = mkOption {
         type = types.str;
-        description = lib.mdDoc "Default user email to use.";
+        description = "Default user email to use.";
       };
 
       aliases = mkOption {
         type = types.attrsOf types.anything;
         default = { };
-        description = lib.mdDoc "Mercurial aliases to define.";
+        description = "Mercurial aliases to define.";
       };
 
       extraConfig = mkOption {
         type = types.either (types.attrsOf types.anything) types.lines;
         default = { };
-        description = lib.mdDoc "Additional configuration to add.";
+        description = "Additional configuration to add.";
       };
 
       iniContent = mkOption {
@@ -52,15 +52,14 @@ in {
         type = types.listOf types.str;
         default = [ ];
         example = [ "*~" "*.swp" ];
-        description =
-          lib.mdDoc "List of globs for files to be globally ignored.";
+        description = "List of globs for files to be globally ignored.";
       };
 
       ignoresRegexp = mkOption {
         type = types.listOf types.str;
         default = [ ];
         example = [ "^.*~$" "^.*\\.swp$" ];
-        description = lib.mdDoc
+        description =
           "List of regular expressions for files to be globally ignored.";
       };
     };

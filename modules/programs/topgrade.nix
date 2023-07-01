@@ -13,13 +13,13 @@ in {
   meta.maintainers = [ hm.maintainers.msfjarvis ];
 
   options.programs.topgrade = {
-    enable = mkEnableOption (lib.mdDoc "topgrade");
+    enable = mkEnableOption "topgrade";
 
     package = mkOption {
       type = types.package;
       default = pkgs.topgrade;
       defaultText = literalExpression "pkgs.topgrade";
-      description = lib.mdDoc "The package to use for the topgrade binary.";
+      description = "The package to use for the topgrade binary.";
     };
 
     settings = mkOption {
@@ -40,7 +40,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/topgrade.toml`.
 

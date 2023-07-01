@@ -14,13 +14,13 @@ in {
   meta.maintainers = [ ];
 
   options.programs.starship = {
-    enable = mkEnableOption (lib.mdDoc "starship");
+    enable = mkEnableOption "starship";
 
     package = mkOption {
       type = types.package;
       default = pkgs.starship;
       defaultText = literalExpression "pkgs.starship";
-      description = lib.mdDoc "The package to use for the starship binary.";
+      description = "The package to use for the starship binary.";
     };
 
     settings = mkOption {
@@ -49,7 +49,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/starship.toml`.
 
@@ -58,31 +58,30 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption (lib.mdDoc "Bash integration") // {
+    enableBashIntegration = mkEnableOption "Bash integration" // {
       default = true;
     };
 
-    enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh integration") // {
+    enableZshIntegration = mkEnableOption "Zsh integration" // {
       default = true;
     };
 
-    enableFishIntegration = mkEnableOption (lib.mdDoc "Fish integration") // {
+    enableFishIntegration = mkEnableOption "Fish integration" // {
       default = true;
     };
 
-    enableIonIntegration = mkEnableOption (lib.mdDoc "Ion integration") // {
+    enableIonIntegration = mkEnableOption "Ion integration" // {
       default = true;
     };
 
-    enableNushellIntegration = mkEnableOption (lib.mdDoc "Nushell integration")
-      // {
-        default = true;
-      };
+    enableNushellIntegration = mkEnableOption "Nushell integration" // {
+      default = true;
+    };
 
     enableTransience = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         The TransientPrompt feature of Starship replaces previous prompts with a
         custom string. This is only a valid option for the Fish shell.
 

@@ -52,7 +52,7 @@ in {
   meta.maintainers = [ maintainers.tadfisher ];
 
   options.services.lieer.enable =
-    mkEnableOption (lib.mdDoc "lieer Gmail synchronization service");
+    mkEnableOption "lieer Gmail synchronization service";
 
   config = mkIf cfg.enable {
     assertions = [

@@ -14,18 +14,18 @@ let
 in {
   options = {
     programs.sioyek = {
-      enable = mkEnableOption (lib.mdDoc
-        "Sioyek, a PDF viewer designed for reading research papers and technical books");
+      enable = mkEnableOption
+        "Sioyek, a PDF viewer designed for reading research papers and technical books";
 
       package = mkOption {
         default = pkgs.sioyek;
         defaultText = literalExpression "pkgs.sioyek";
         type = types.package;
-        description = lib.mdDoc "Package providing the sioyek binary";
+        description = "Package providing the sioyek binary";
       };
 
       bindings = mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Input configuration written to
           {file}`$XDG_CONFIG_HOME/sioyek/keys_user.config`.
           See <https://github.com/ahrm/sioyek/blob/main/pdf_viewer/keys.config>.
@@ -48,7 +48,7 @@ in {
       };
 
       config = mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Input configuration written to
           {file}`$XDG_CONFIG_HOME/sioyek/prefs_user.config`.
           See <https://github.com/ahrm/sioyek/blob/main/pdf_viewer/prefs.config>.

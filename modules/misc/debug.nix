@@ -4,8 +4,8 @@ with lib;
 
 {
   options.home = {
-    enableDebugInfo = mkEnableOption (lib.mdDoc "") // {
-      description = lib.mdDoc ''
+    enableDebugInfo = mkEnableOption "" // {
+      description = ''
         Some Nix packages provide debug symbols for
         {command}`gdb` in the `debug` output.
         This option ensures that those are automatically fetched from

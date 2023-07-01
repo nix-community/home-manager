@@ -36,19 +36,19 @@ let
 
 in {
   options.programs.qutebrowser = {
-    enable = mkEnableOption (lib.mdDoc "qutebrowser");
+    enable = mkEnableOption "qutebrowser";
 
     package = mkOption {
       type = types.package;
       default = pkgs.qutebrowser;
       defaultText = literalExpression "pkgs.qutebrowser";
-      description = lib.mdDoc "Qutebrowser package to install.";
+      description = "Qutebrowser package to install.";
     };
 
     aliases = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Aliases for commands.
       '';
     };
@@ -56,7 +56,7 @@ in {
     loadAutoconfig = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Load settings configured via the GUI.
       '';
     };
@@ -64,7 +64,7 @@ in {
     searchEngines = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Search engines that can be used via the address bar. Maps a search
         engine name (such as `DEFAULT`, or
         `ddg`) to a URL with a `{}`
@@ -90,7 +90,7 @@ in {
     settings = mkOption {
       type = types.attrsOf types.anything;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Options to add to qutebrowser {file}`config.py` file.
         See <https://qutebrowser.org/doc/help/settings.html>
         for options.
@@ -112,7 +112,7 @@ in {
     keyMappings = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         This setting can be used to map keys to other keys. When the key used
         as dictionary-key is pressed, the binding for the key used as
         dictionary-value is invoked instead. This is useful for global
@@ -125,7 +125,7 @@ in {
     enableDefaultBindings = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Disable to prevent loading default key bindings.
       '';
     };
@@ -133,7 +133,7 @@ in {
     keyBindings = mkOption {
       type = with types; attrsOf (attrsOf (separatedString " ;; "));
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Key bindings mapping keys to commands in different modes. This setting
         is a dictionary containing mode names and dictionaries mapping keys to
         commands: `{mode: {key: command}}` If you want to map
@@ -227,7 +227,7 @@ in {
     quickmarks = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Quickmarks to add to qutebrowser's {file}`quickmarks` file.
         Note that when Home Manager manages your quickmarks, you cannot edit them at runtime.
       '';
@@ -242,7 +242,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Extra lines added to qutebrowser {file}`config.py` file.
       '';
     };

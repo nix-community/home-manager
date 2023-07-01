@@ -7,7 +7,7 @@ let
   cfg = config.services.keybase;
 
 in {
-  options.services.keybase.enable = mkEnableOption (lib.mdDoc "Keybase");
+  options.services.keybase.enable = mkEnableOption "Keybase";
 
   config = mkIf cfg.enable {
     assertions = [

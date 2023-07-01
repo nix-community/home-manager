@@ -9,7 +9,7 @@ in {
   meta.maintainers = [ hm.maintainers.pltanton ];
 
   options.services.avizo = {
-    enable = mkEnableOption (lib.mdDoc "avizo, a simple notification daemon");
+    enable = mkEnableOption "avizo, a simple notification daemon";
 
     settings = mkOption {
       type = (pkgs.formats.ini { }).type;
@@ -25,7 +25,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         The settings that will be written to the avizo configuration file.
       '';
     };
@@ -39,7 +39,7 @@ in {
           patchPhase = "cp ''${./images}/*.png data/images/";
         })
       '';
-      description = lib.mdDoc "The `avizo` package to use.";
+      description = "The `avizo` package to use.";
     };
   };
 

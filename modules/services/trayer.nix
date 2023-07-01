@@ -92,19 +92,19 @@ in {
   options = {
     services.trayer = {
       enable = mkEnableOption
-        (lib.mdDoc "trayer, the lightweight GTK2+ systray for UNIX desktops");
+        "trayer, the lightweight GTK2+ systray for UNIX desktops";
 
       package = mkOption {
         default = pkgs.trayer;
         defaultText = literalExpression "pkgs.trayer";
         type = types.package;
         example = literalExpression "pkgs.trayer";
-        description = lib.mdDoc "The package to use for the trayer binary.";
+        description = "The package to use for the trayer binary.";
       };
 
       settings = mkOption {
         type = with types; attrsOf (nullOr (either str (either bool int)));
-        description = lib.mdDoc ''
+        description = ''
           Trayer configuration as a set of attributes. Further details can be
           found in [trayer's README](https://github.com/sargon/trayer-srg/blob/master/README).
 

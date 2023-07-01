@@ -9,9 +9,9 @@ let
 in {
   options = {
     services.owncloud-client = {
-      enable = mkEnableOption (lib.mdDoc "Owncloud Client");
+      enable = mkEnableOption "Owncloud Client";
 
-      package = mkPackageOptionMD pkgs "owncloud-client" { };
+      package = mkPackageOption pkgs "owncloud-client" { };
     };
   };
 

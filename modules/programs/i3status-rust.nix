@@ -12,8 +12,7 @@ in {
   meta.maintainers = with lib.maintainers; [ farlion thiagokokada ];
 
   options.programs.i3status-rust = {
-    enable =
-      mkEnableOption (lib.mdDoc "a replacement for i3-status written in Rust");
+    enable = mkEnableOption "a replacement for i3-status written in Rust";
 
     bars = mkOption {
       type = types.attrsOf (types.submodule {
@@ -50,7 +49,7 @@ in {
                 format = " $timestamp.datetime(f:'%a %d/%m %R') ";
               }
             ];
-            description = lib.mdDoc ''
+            description = ''
               Configuration blocks to add to i3status-rust
               {file}`config`. See
               <https://github.com/greshake/i3status-rust/blob/master/blocks.md>
@@ -87,7 +86,7 @@ in {
           settings = mkOption {
             type = settingsFormat.type;
             default = { };
-            description = lib.mdDoc ''
+            description = ''
               Any extra options to add to i3status-rust
               {file}`config`.
             '';
@@ -107,7 +106,7 @@ in {
           icons = mkOption {
             type = types.str;
             default = "none";
-            description = lib.mdDoc ''
+            description = ''
               The icons set to use. See
               <https://github.com/greshake/i3status-rust/blob/master/doc/themes.md>
               for a list of available icon sets.
@@ -118,7 +117,7 @@ in {
           theme = mkOption {
             type = types.str;
             default = "plain";
-            description = lib.mdDoc ''
+            description = ''
               The theme to use. See
               <https://github.com/greshake/i3status-rust/blob/master/doc/themes.md>
               for a list of available themes.
@@ -162,7 +161,7 @@ in {
           ];
         };
       };
-      description = lib.mdDoc ''
+      description = ''
         Attribute set of i3status-rust bars, each with their own configuration.
         Each bar {var}`name` generates a config file suffixed with
         the bar's {var}`name` from the attribute set, like so:
@@ -226,7 +225,7 @@ in {
       type = types.package;
       default = pkgs.i3status-rust;
       defaultText = literalExpression "pkgs.i3status-rust";
-      description = lib.mdDoc "Package providing i3status-rust";
+      description = "Package providing i3status-rust";
     };
 
   };

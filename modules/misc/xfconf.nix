@@ -10,7 +10,7 @@ let
     options = {
       type = mkOption {
         type = types.enum [ "int" "uint" "uint64" ];
-        description = lib.mdDoc ''
+        description = ''
           To distinguish between int, uint and uint64 in xfconf,
           you can specify the type in xfconf with this submodule.
           For other types, you don't need to use this submodule,
@@ -19,7 +19,7 @@ let
       };
       value = mkOption {
         type = types.int;
-        description = lib.mdDoc "The value in xfconf.";
+        description = "The value in xfconf.";
       };
     };
   };
@@ -63,7 +63,7 @@ in {
       type = types.bool;
       default = true;
       visible = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Xfconf settings.
 
         Note, if you use NixOS then you must add
@@ -93,7 +93,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Settings to write to the Xfconf configuration system.
       '';
     };

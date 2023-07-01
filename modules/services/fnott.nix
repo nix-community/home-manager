@@ -13,22 +13,22 @@ in {
 
   options = {
     services.fnott = {
-      enable = mkEnableOption (lib.mdDoc ''
+      enable = mkEnableOption ''
         fnott, a lightweight Wayland notification daemon for wlroots-based compositors
-      '');
+      '';
 
       package = mkOption {
         type = types.package;
         default = pkgs.fnott;
         defaultText = literalExpression "pkgs.fnott";
-        description = lib.mdDoc "Package providing {command}`fnott`.";
+        description = "Package providing {command}`fnott`.";
       };
 
       extraFlags = mkOption {
         type = types.listOf types.str;
         default = [ ];
         example = [ "-s" ];
-        description = lib.mdDoc ''
+        description = ''
           Extra arguments to use for executing fnott.
         '';
       };
@@ -37,7 +37,7 @@ in {
         type = types.either types.str types.path;
         default = "${config.xdg.configHome}/fnott/fnott.ini";
         defaultText = "$XDG_CONFIG_HOME/fnott/fnott.ini";
-        description = lib.mdDoc ''
+        description = ''
           Path to the configuration file read by fnott.
 
           Note that environment variables in the path won't be properly expanded.
@@ -53,7 +53,7 @@ in {
       settings = mkOption {
         type = iniFormat.type;
         default = { };
-        description = lib.mdDoc ''
+        description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/fnott/fnott.ini`.
 

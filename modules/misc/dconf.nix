@@ -33,7 +33,7 @@ in {
         # re-enabled, unclear whether there's actual value in it though.
         default = !pkgs.stdenv.hostPlatform.isDarwin;
         visible = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable dconf settings.
 
           Note, if you use NixOS then you must add
@@ -57,7 +57,7 @@ in {
             };
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Settings to write to the dconf configuration system.
 
           Note that the database is strongly-typed so you need to use the same types

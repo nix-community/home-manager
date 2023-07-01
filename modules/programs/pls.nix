@@ -16,12 +16,11 @@ in {
   meta.maintainers = [ maintainers.arjan-s ];
 
   options.programs.pls = {
-    enable =
-      mkEnableOption (lib.mdDoc "pls, a modern replacement for {command}`ls`");
+    enable = mkEnableOption "pls, a modern replacement for {command}`ls`";
 
-    package = mkPackageOptionMD pkgs "pls" { };
+    package = mkPackageOption pkgs "pls" { };
 
-    enableAliases = mkEnableOption (lib.mdDoc "recommended pls aliases");
+    enableAliases = mkEnableOption "recommended pls aliases";
   };
 
   config = mkIf cfg.enable {

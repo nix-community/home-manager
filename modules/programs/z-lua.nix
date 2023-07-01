@@ -18,13 +18,13 @@ in {
   meta.maintainers = [ ];
 
   options.programs.z-lua = {
-    enable = mkEnableOption (lib.mdDoc "z.lua");
+    enable = mkEnableOption "z.lua";
 
     options = mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [ "enhanced" "once" "fzf" ];
-      description = lib.mdDoc ''
+      description = ''
         List of options to pass to z.lua.
       '';
     };
@@ -32,7 +32,7 @@ in {
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Bash integration.
       '';
     };
@@ -40,7 +40,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Zsh integration.
       '';
     };
@@ -48,7 +48,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Fish integration.
       '';
     };
@@ -56,7 +56,7 @@ in {
     enableAliases = mkOption {
       default = false;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable recommended z.lua aliases.
       '';
     };

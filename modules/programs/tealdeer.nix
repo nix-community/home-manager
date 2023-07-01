@@ -15,7 +15,7 @@ in {
   meta.maintainers = [ ];
 
   options.programs.tealdeer = {
-    enable = mkEnableOption (lib.mdDoc "Tealdeer");
+    enable = mkEnableOption "Tealdeer";
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -32,7 +32,7 @@ in {
           };
         };
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/tealdeer/config.toml` on Linux or
         {file}`$HOME/Library/Application Support/tealdeer/config.toml`

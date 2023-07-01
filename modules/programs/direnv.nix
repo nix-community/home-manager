@@ -22,12 +22,12 @@ in {
   meta.maintainers = [ maintainers.rycee ];
 
   options.programs.direnv = {
-    enable = mkEnableOption (lib.mdDoc "direnv, the environment switcher");
+    enable = mkEnableOption "direnv, the environment switcher";
 
     config = mkOption {
       type = tomlFormat.type;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/direnv/direnv.toml`.
 
@@ -40,7 +40,7 @@ in {
     stdlib = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Custom stdlib written to
         {file}`$XDG_CONFIG_HOME/direnv/direnvrc`.
       '';
@@ -49,7 +49,7 @@ in {
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Bash integration.
       '';
     };
@@ -57,7 +57,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Zsh integration.
       '';
     };
@@ -66,7 +66,7 @@ in {
       default = true;
       type = types.bool;
       readOnly = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Fish integration. Note, enabling the direnv module
         will always active its functionality for Fish since the direnv package
         automatically gets loaded in Fish. If this is not the case try adding
@@ -80,15 +80,15 @@ in {
     enableNushellIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Nushell integration.
       '';
     };
 
     nix-direnv = {
-      enable = mkEnableOption (lib.mdDoc ''
+      enable = mkEnableOption ''
         [nix-direnv](https://github.com/nix-community/nix-direnv),
-        a fast, persistent use_nix implementation for direnv'');
+        a fast, persistent use_nix implementation for direnv'';
     };
 
   };

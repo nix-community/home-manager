@@ -16,7 +16,7 @@ in {
     manual.html.enable = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether to install the HTML manual. This also installs the
         {command}`home-manager-help` tool, which opens a local
         copy of the Home Manager manual in the system web browser.
@@ -27,7 +27,7 @@ in {
       type = types.bool;
       default = true;
       example = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether to install the configuration manual page. The manual can
         be reached by {command}`man home-configuration.nix`.
 
@@ -41,7 +41,7 @@ in {
       type = types.bool;
       default = false;
       example = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to install a JSON formatted list of all Home Manager
         options. This can be located at
         {file}`<profile directory>/share/doc/home-manager/options.json`,

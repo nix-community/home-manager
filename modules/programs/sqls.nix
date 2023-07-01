@@ -12,8 +12,7 @@ in {
   meta.maintainers = [ ];
 
   options.programs.sqls = {
-    enable =
-      mkEnableOption (lib.mdDoc "sqls, a SQL language server written in Go");
+    enable = mkEnableOption "sqls, a SQL language server written in Go";
 
     settings = mkOption {
       type = yamlFormat.type;
@@ -29,7 +28,7 @@ in {
            ];
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/sqls/config.yml`. See
         <https://github.com/lighttiger2505/sqls#db-configuration>

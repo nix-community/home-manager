@@ -8,12 +8,12 @@ let
 
 in {
   options.vdirsyncer = {
-    enable = mkEnableOption (lib.mdDoc "synchronization using vdirsyncer");
+    enable = mkEnableOption "synchronization using vdirsyncer";
 
     collections = mkOption {
       type = types.nullOr (types.listOf collection);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         The collections to synchronize between the storages.
       '';
     };
@@ -23,7 +23,7 @@ in {
         (types.either (types.enum [ "remote wins" "local wins" ])
           (types.listOf types.str));
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         What to do in case of a conflict between the storages. Either
         `remote wins` or
         `local wins` or
@@ -35,7 +35,7 @@ in {
     partialSync = mkOption {
       type = types.nullOr (types.enum [ "revert" "error" "ignore" ]);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         What should happen if synchronization in one direction
         is impossible due to one storage being read-only.
         Defaults to `revert`.
@@ -50,7 +50,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "color" "displayname" ];
-      description = lib.mdDoc ''
+      description = ''
         Metadata keys that should be synchronized when vdirsyncer
         metasync is executed.
       '';
@@ -61,17 +61,17 @@ in {
         options = {
           start = mkOption {
             type = types.str;
-            description = lib.mdDoc "Start of time range to show.";
+            description = "Start of time range to show.";
           };
 
           end = mkOption {
             type = types.str;
-            description = lib.mdDoc "End of time range to show.";
+            description = "End of time range to show.";
           };
         };
       });
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         A time range to synchronize. start and end can be any Python
         expression that returns a `datetime.datetime`
         object.
@@ -85,7 +85,7 @@ in {
     itemTypes = mkOption {
       type = types.nullOr (types.listOf types.str);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Kinds of items to show. The default is to show everything.
         This depends on particular features of the server, the results
         are not validated.
@@ -95,13 +95,13 @@ in {
     verify = mkOption {
       type = types.nullOr types.bool;
       default = null;
-      description = lib.mdDoc "Verify SSL certificate.";
+      description = "Verify SSL certificate.";
     };
 
     verifyFingerprint = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Optional. SHA1 or MD5 fingerprint of the expected server certificate.
 
         See
@@ -113,7 +113,7 @@ in {
     auth = mkOption {
       type = types.nullOr (types.enum [ "basic" "digest" "guess" ]);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Authentication settings. The default is `basic`.
       '';
     };
@@ -121,7 +121,7 @@ in {
     authCert = mkOption {
       type = types.nullOr (types.either types.str (types.listOf types.str));
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Either a path to a certificate with a client certificate and
         the key or a list of paths to the files with them.
       '';
@@ -130,7 +130,7 @@ in {
     userAgent = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         The user agent to report to the server. Defaults to
         `vdirsyncer`.
       '';
@@ -139,7 +139,7 @@ in {
     postHook = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Command to call for each item creation and modification.
         The command will be called with the path of the new/updated
         file.
@@ -151,7 +151,7 @@ in {
     tokenFile = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         A file path where access tokens are stored.
       '';
     };
@@ -160,7 +160,7 @@ in {
       type = types.nullOr (types.listOf types.str);
       default = null;
       example = [ "pass" "client_id" ];
-      description = lib.mdDoc ''
+      description = ''
         A command that prints the OAuth credentials to standard
         output.
 
@@ -174,7 +174,7 @@ in {
       type = types.nullOr (types.listOf types.str);
       default = null;
       example = [ "pass" "client_secret" ];
-      description = lib.mdDoc ''
+      description = ''
         A command that prints the OAuth credentials to standard
         output.
 

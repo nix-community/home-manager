@@ -5,21 +5,21 @@ in {
   meta.maintainers = [ maintainers.cpcloud ];
 
   options.programs.scmpuff = {
-    enable = mkEnableOption (lib.mdDoc ''
+    enable = mkEnableOption ''
       scmpuff, a command line tool that allows you to work quicker with Git by
-      substituting numeric shortcuts for files'');
+      substituting numeric shortcuts for files'';
 
     package = mkOption {
       type = types.package;
       default = pkgs.scmpuff;
       defaultText = literalExpression "pkgs.scmpuff";
-      description = lib.mdDoc "Package providing the {command}`scmpuff` tool.";
+      description = "Package providing the {command}`scmpuff` tool.";
     };
 
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Bash integration.
       '';
     };
@@ -27,7 +27,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Zsh integration.
       '';
     };
@@ -35,7 +35,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable fish integration.
       '';
     };

@@ -16,36 +16,36 @@ in {
 
     client = {
 
-      enable = mkEnableOption (lib.mdDoc "Barrier Client daemon");
+      enable = mkEnableOption "Barrier Client daemon";
 
       name = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Screen name of client. Defaults to hostname.
         '';
       };
 
       server = mkOption {
         type = types.str;
-        description = lib.mdDoc ''
+        description = ''
           Server to connect to formatted as
           `<host>[:<port>]`.
           Port defaults to `24800`.
         '';
       };
 
-      enableCrypto = mkEnableOption (lib.mdDoc "crypto (SSL) plugin") // {
+      enableCrypto = mkEnableOption "crypto (SSL) plugin" // {
         default = true;
       };
 
-      enableDragDrop = mkEnableOption (lib.mdDoc "file drag &amp; drop");
+      enableDragDrop = mkEnableOption "file drag &amp; drop";
 
       extraFlags = mkOption {
         type = types.listOf types.str;
         default = [ "-f" ];
         defaultText = literalExpression ''[ "-f" ]'';
-        description = lib.mdDoc ''
+        description = ''
           Additional flags to pass to {command}`barrierc`.
           See {command}`barrierc --help`.
         '';

@@ -10,13 +10,13 @@ let
     options = {
       name = mkOption {
         type = types.str;
-        description = lib.mdDoc "The name of the plugin.";
+        description = "The name of the plugin.";
       };
 
       tags = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = lib.mdDoc "The plugin tags.";
+        description = "The plugin tags.";
       };
     };
 
@@ -24,12 +24,12 @@ let
 
 in {
   options.programs.zsh.zplug = {
-    enable = mkEnableOption (lib.mdDoc "zplug - a zsh plugin manager");
+    enable = mkEnableOption "zplug - a zsh plugin manager";
 
     plugins = mkOption {
       default = [ ];
       type = types.listOf pluginModule;
-      description = lib.mdDoc "List of zplug plugins.";
+      description = "List of zplug plugins.";
     };
 
     zplugHome = mkOption {
@@ -37,7 +37,7 @@ in {
       default = "${config.home.homeDirectory}/.zplug";
       defaultText = "~/.zplug";
       apply = toString;
-      description = lib.mdDoc "Path to zplug home directory.";
+      description = "Path to zplug home directory.";
     };
   };
 

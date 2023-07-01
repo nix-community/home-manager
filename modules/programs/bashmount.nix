@@ -10,12 +10,12 @@ in {
   meta.maintainers = [ maintainers.AndersonTorres ];
 
   options.programs.bashmount = {
-    enable = mkEnableOption (lib.mdDoc "bashmount");
+    enable = mkEnableOption "bashmount";
 
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/bashmount/config`. Look at
         <https://github.com/jamielinux/bashmount/blob/master/bashmount.conf>

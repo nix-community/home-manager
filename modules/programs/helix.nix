@@ -9,19 +9,19 @@ in {
   meta.maintainers = [ hm.maintainers.Philipp-M ];
 
   options.programs.helix = {
-    enable = mkEnableOption (lib.mdDoc "helix text editor");
+    enable = mkEnableOption "helix text editor";
 
     package = mkOption {
       type = types.package;
       default = pkgs.helix;
       defaultText = literalExpression "pkgs.helix";
-      description = lib.mdDoc "The package to use for helix.";
+      description = "The package to use for helix.";
     };
 
     defaultEditor = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether to configure {command}`hx` as the default
         editor using the {env}`EDITOR` environment variable.
       '';
@@ -45,7 +45,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/helix/config.toml`.
 
@@ -80,7 +80,7 @@ in {
           }];
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Language specific configuration at
         {file}`$XDG_CONFIG_HOME/helix/languages.toml`.
 
@@ -149,7 +149,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Each theme is written to
         {file}`$XDG_CONFIG_HOME/helix/themes/theme-name.toml`.
         Where the name of each attribute is the theme-name (in the example "base16").

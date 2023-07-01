@@ -11,7 +11,7 @@ in {
 
   options = {
     services.status-notifier-watcher = {
-      enable = mkEnableOption (lib.mdDoc "Status Notifier Watcher");
+      enable = mkEnableOption "Status Notifier Watcher";
 
       package = mkOption {
         default = pkgs.haskellPackages.status-notifier-item;
@@ -19,7 +19,7 @@ in {
           literalExpression "pkgs.haskellPackages.status-notifier-item";
         type = types.package;
         example = literalExpression "pkgs.haskellPackages.status-notifier-item";
-        description = lib.mdDoc
+        description =
           "The package to use for the status notifier watcher binary.";
       };
     };

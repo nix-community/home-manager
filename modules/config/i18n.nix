@@ -40,7 +40,7 @@ in {
   options = {
     i18n.glibcLocales = mkOption {
       type = types.path;
-      description = lib.mdDoc ''
+      description = ''
         Customized `glibcLocales` package providing
         the `LOCALE_ARCHIVE_*` environment variable.
 

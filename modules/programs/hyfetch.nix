@@ -10,13 +10,13 @@ in {
   meta.maintainers = [ maintainers.lilyinstarlight ];
 
   options.programs.hyfetch = {
-    enable = mkEnableOption (lib.mdDoc "hyfetch");
+    enable = mkEnableOption "hyfetch";
 
     package = mkOption {
       type = types.package;
       default = pkgs.hyfetch;
       defaultText = literalExpression "pkgs.hyfetch";
-      description = lib.mdDoc "The hyfetch package to use.";
+      description = "The hyfetch package to use.";
     };
 
     settings = mkOption {
@@ -31,7 +31,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc "JSON config for HyFetch";
+      description = "JSON config for HyFetch";
     };
   };
 

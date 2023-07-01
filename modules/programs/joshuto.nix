@@ -9,19 +9,19 @@ in {
   meta.maintainers = [ hm.maintainers.rasmus-kirk ];
 
   options.programs.joshuto = {
-    enable = mkEnableOption (lib.mdDoc "joshuto file manager");
+    enable = mkEnableOption "joshuto file manager";
 
     package = mkOption {
       type = types.package;
       default = pkgs.joshuto;
       defaultText = literalExpression "pkgs.joshuto";
-      description = lib.mdDoc "The package to use for joshuto.";
+      description = "The package to use for joshuto.";
     };
 
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/joshuto/joshuto.toml`.
 
@@ -33,7 +33,7 @@ in {
     keymap = mkOption {
       type = tomlFormat.type;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/joshuto/keymap.toml`.
 
@@ -45,7 +45,7 @@ in {
     mimetype = mkOption {
       type = tomlFormat.type;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/joshuto/mimetype.toml`.
 
@@ -57,7 +57,7 @@ in {
     theme = mkOption {
       type = tomlFormat.type;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/joshuto/theme.toml`.
 

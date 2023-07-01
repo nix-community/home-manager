@@ -10,14 +10,14 @@ in {
   meta.maintainers = [ hm.maintainers.mainrs ];
 
   options.programs.eww = {
-    enable = mkEnableOption (lib.mdDoc "eww");
+    enable = mkEnableOption "eww";
 
     package = mkOption {
       type = types.package;
       default = pkgs.eww;
       defaultText = literalExpression "pkgs.eww";
       example = literalExpression "pkgs.eww";
-      description = lib.mdDoc ''
+      description = ''
         The eww package to install.
       '';
     };
@@ -25,7 +25,7 @@ in {
     configDir = mkOption {
       type = types.path;
       example = literalExpression "./eww-config-dir";
-      description = lib.mdDoc ''
+      description = ''
         The directory that gets symlinked to
         {file}`$XDG_CONFIG_HOME/eww`.
       '';

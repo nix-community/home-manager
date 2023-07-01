@@ -26,14 +26,14 @@ let
       type = types.str;
       default = "localhost";
       example = "example.org";
-      description = lib.mdDoc "The address where to bind the port.";
+      description = "The address where to bind the port.";
     };
 
     port = mkOption {
       type = types.nullOr types.port;
       default = null;
       example = 8080;
-      description = lib.mdDoc "Specifies port number to bind on bind address.";
+      description = "Specifies port number to bind on bind address.";
     };
   };
 
@@ -50,14 +50,14 @@ let
           type = types.nullOr types.str;
           default = null;
           example = "example.org";
-          description = lib.mdDoc "The address where to forward the traffic to.";
+          description = "The address where to forward the traffic to.";
         };
 
         port = mkOption {
           type = types.nullOr types.port;
           default = null;
           example = 80;
-          description = lib.mdDoc "Specifies port number to forward the traffic to.";
+          description = "Specifies port number to forward the traffic to.";
         };
       };
     };
@@ -69,7 +69,7 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "*.example.org";
-        description = lib.mdDoc ''
+        description = ''
           `Host` pattern used by this conditional block.
           See
           {manpage}`ssh_config(5)`
@@ -84,7 +84,7 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "host <hostname> canonical\nhost <hostname> exec \"ping -c1 -q 192.168.17.1\"";
-        description = lib.mdDoc ''
+        description = ''
           `Match` block conditions used by this block. See
           {manpage}`ssh_config(5)`
           for `Match` block details.
@@ -97,13 +97,13 @@ let
       port = mkOption {
         type = types.nullOr types.port;
         default = null;
-        description = lib.mdDoc "Specifies port number to connect on remote host.";
+        description = "Specifies port number to connect on remote host.";
       };
 
       forwardAgent = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Whether the connection to the authentication agent (if any)
           will be forwarded to the remote machine.
         '';
@@ -112,7 +112,7 @@ let
       forwardX11 = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Specifies whether X11 connections will be automatically redirected
           over the secure channel and {env}`DISPLAY` set.
         '';
@@ -121,7 +121,7 @@ let
       forwardX11Trusted = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Specifies whether remote X11 clients will have full access to the
           original X11 display.
         '';
@@ -130,7 +130,7 @@ let
       identitiesOnly = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Specifies that ssh should only use the authentication
           identity explicitly configured in the
           {file}`~/.ssh/config` files or passed on the
@@ -146,7 +146,7 @@ let
           if p == null then []
           else if isString p then [p]
           else p;
-        description = lib.mdDoc ''
+        description = ''
           Specifies files from which the user identity is read.
           Identities will be tried in the given order.
         '';
@@ -155,26 +155,26 @@ let
       user = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc "Specifies the user to log in as.";
+        description = "Specifies the user to log in as.";
       };
 
       hostname = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc "Specifies the real host name to log into.";
+        description = "Specifies the real host name to log into.";
       };
 
       serverAliveInterval = mkOption {
         type = types.int;
         default = 0;
         description =
-          lib.mdDoc "Set timeout in seconds after which response will be requested.";
+          "Set timeout in seconds after which response will be requested.";
       };
 
       serverAliveCountMax = mkOption {
         type = types.ints.positive;
         default = 3;
-        description = lib.mdDoc ''
+        description = ''
           Sets the number of server alive messages which may be sent
           without SSH receiving any messages back from the server.
         '';
@@ -183,7 +183,7 @@ let
       sendEnv = mkOption {
         type = types.listOf types.str;
         default = [];
-        description = lib.mdDoc ''
+        description = ''
           Environment variables to send from the local host to the
           server.
         '';
@@ -192,7 +192,7 @@ let
       setEnv = mkOption {
         type = with types; attrsOf (oneOf [ str path int float ]);
         default = {};
-        description = lib.mdDoc ''
+        description = ''
           Environment variables and their value to send to the server.
         '';
       };
@@ -200,7 +200,7 @@ let
       compression = mkOption {
         type = types.nullOr types.bool;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Specifies whether to use compression. Omitted from the host
           block when `null`.
         '';
@@ -209,7 +209,7 @@ let
       checkHostIP = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Check the host IP address in the
           {file}`known_hosts` file.
         '';
@@ -218,13 +218,13 @@ let
       proxyCommand = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc "The command to use to connect to the server.";
+        description = "The command to use to connect to the server.";
       };
 
       proxyJump = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc "The proxy host to use to connect to the server.";
+        description = "The proxy host to use to connect to the server.";
       };
 
       certificateFile = mkOption {
@@ -234,7 +234,7 @@ let
           if p == null then []
           else if isString p then [p]
           else p;
-        description = lib.mdDoc ''
+        description = ''
           Specifies files from which the user certificate is read.
         '';
       };
@@ -242,7 +242,7 @@ let
       addressFamily = mkOption {
         default = null;
         type = types.nullOr (types.enum ["any" "inet" "inet6"]);
-        description = lib.mdDoc ''
+        description = ''
           Specifies which address family to use when connecting.
         '';
       };
@@ -259,7 +259,7 @@ let
             }
           ];
         '';
-        description = lib.mdDoc ''
+        description = ''
           Specify local port forwardings. See
           {manpage}`ssh_config(5)` for `LocalForward`.
         '';
@@ -277,7 +277,7 @@ let
             }
           ];
         '';
-        description = lib.mdDoc ''
+        description = ''
           Specify remote port forwardings. See
           {manpage}`ssh_config(5)` for `RemoteForward`.
         '';
@@ -289,7 +289,7 @@ let
         example = literalExpression ''
           [ { port = 8080; } ];
         '';
-        description = lib.mdDoc ''
+        description = ''
           Specify dynamic port forwardings. See
           {manpage}`ssh_config(5)` for `DynamicForward`.
         '';
@@ -298,7 +298,7 @@ let
       extraOptions = mkOption {
         type = types.attrsOf types.str;
         default = {};
-        description = lib.mdDoc "Extra configuration options for the host.";
+        description = "Extra configuration options for the host.";
       };
     };
 
@@ -344,9 +344,9 @@ in
   meta.maintainers = [ maintainers.rycee ];
 
   options.programs.ssh = {
-    enable = mkEnableOption (lib.mdDoc "SSH client configuration");
+    enable = mkEnableOption "SSH client configuration";
 
-    package = mkPackageOptionMD pkgs "openssh" {
+    package = mkPackageOption pkgs "openssh" {
       nullable = true;
       default = null;
       extraDescription = "By default, the client provided by your system is used.";
@@ -355,7 +355,7 @@ in
     forwardAgent = mkOption {
       default = false;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether the connection to the authentication agent (if any)
         will be forwarded to the remote machine.
       '';
@@ -364,13 +364,13 @@ in
     compression = mkOption {
       default = false;
       type = types.bool;
-      description = lib.mdDoc "Specifies whether to use compression.";
+      description = "Specifies whether to use compression.";
     };
 
     serverAliveInterval = mkOption {
       type = types.int;
       default = 0;
-      description = lib.mdDoc ''
+      description = ''
         Set default timeout in seconds after which response will be requested.
       '';
     };
@@ -378,7 +378,7 @@ in
     serverAliveCountMax = mkOption {
       type = types.ints.positive;
       default = 3;
-      description = lib.mdDoc ''
+      description = ''
         Sets the default number of server alive messages which may be
         sent without SSH receiving any messages back from the server.
       '';
@@ -387,7 +387,7 @@ in
     hashKnownHosts = mkOption {
       default = false;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Indicates that
         {manpage}`ssh(1)`
         should hash host names and addresses when they are added to
@@ -398,7 +398,7 @@ in
     userKnownHostsFile = mkOption {
       type = types.str;
       default = "~/.ssh/known_hosts";
-      description = lib.mdDoc ''
+      description = ''
         Specifies one or more files to use for the user host key
         database, separated by whitespace. The default is
         {file}`~/.ssh/known_hosts`.
@@ -408,7 +408,7 @@ in
     controlMaster = mkOption {
       default = "no";
       type = types.enum ["yes" "no" "ask" "auto" "autoask"];
-      description = lib.mdDoc ''
+      description = ''
         Configure sharing of multiple sessions over a single network connection.
       '';
     };
@@ -416,7 +416,7 @@ in
     controlPath = mkOption {
       type = types.str;
       default = "~/.ssh/master-%r@%n:%p";
-      description = lib.mdDoc ''
+      description = ''
         Specify path to the control socket used for connection sharing.
       '';
     };
@@ -425,7 +425,7 @@ in
       type = types.str;
       default = "no";
       example = "10m";
-      description = lib.mdDoc ''
+      description = ''
         Whether control socket should remain open in the background.
       '';
     };
@@ -433,7 +433,7 @@ in
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Extra configuration.
       '';
     };
@@ -441,7 +441,7 @@ in
     extraOptionOverrides = mkOption {
       type = types.attrsOf types.str;
       default = {};
-      description = lib.mdDoc ''
+      description = ''
         Extra SSH configuration options that take precedence over any
         host specific configuration.
       '';
@@ -450,7 +450,7 @@ in
     includes = mkOption {
       type = types.listOf types.str;
       default = [];
-      description = lib.mdDoc ''
+      description = ''
         File globs of ssh config files that should be included via the
         `Include` directive.
 
@@ -475,7 +475,7 @@ in
           };
         };
       '';
-      description = lib.mdDoc ''
+      description = ''
         Specify per-host settings. Note, if the order of rules matter
         then use the DAG functions to express the dependencies as
         shown in the example.

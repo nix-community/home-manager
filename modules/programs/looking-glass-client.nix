@@ -9,14 +9,14 @@ in {
   meta.maintainers = with maintainers; [ j-brn ];
 
   options.programs.looking-glass-client = {
-    enable = mkEnableOption (lib.mdDoc "looking-glass-client");
+    enable = mkEnableOption "looking-glass-client";
 
-    package = mkPackageOptionMD pkgs "looking-glass-client" { };
+    package = mkPackageOption pkgs "looking-glass-client" { };
 
     settings = mkOption {
       type = settingsFormat.type;
       default = { };
-      description = lib.mdDoc "looking-glass-client settings.";
+      description = "looking-glass-client settings.";
       example = literalExpression ''
         {
           app = {

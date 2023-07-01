@@ -6,7 +6,7 @@ with lib;
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
-    services.tahoe-lafs = { enable = mkEnableOption (lib.mdDoc "Tahoe-LAFS"); };
+    services.tahoe-lafs = { enable = mkEnableOption "Tahoe-LAFS"; };
   };
 
   config = mkIf config.services.tahoe-lafs.enable {

@@ -20,8 +20,8 @@ in {
   ];
 
   options.targets.genericLinux = {
-    enable = mkEnableOption (lib.mdDoc "") // {
-      description = lib.mdDoc ''
+    enable = mkEnableOption "" // {
+      description = ''
         Whether to enable settings that make Home Manager work better on
         GNU/Linux distributions other than NixOS.
       '';

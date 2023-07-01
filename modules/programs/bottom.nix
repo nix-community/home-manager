@@ -11,21 +11,21 @@ let
 in {
   options = {
     programs.bottom = {
-      enable = mkEnableOption (lib.mdDoc ''
+      enable = mkEnableOption ''
         bottom, a cross-platform graphical process/system monitor with a
-        customizable interface'');
+        customizable interface'';
 
       package = mkOption {
         type = types.package;
         default = pkgs.bottom;
         defaultText = literalExpression "pkgs.bottom";
-        description = lib.mdDoc "Package providing {command}`bottom`.";
+        description = "Package providing {command}`bottom`.";
       };
 
       settings = mkOption {
         type = tomlFormat.type;
         default = { };
-        description = lib.mdDoc ''
+        description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/bottom/bottom.toml`.
 

@@ -21,25 +21,25 @@ in {
   meta.maintainers = [ maintainers.adisbladis ];
 
   options.services.hound = {
-    enable = mkEnableOption (lib.mdDoc "hound");
+    enable = mkEnableOption "hound";
 
     maxConcurrentIndexers = mkOption {
       type = types.ints.positive;
       default = 2;
-      description = lib.mdDoc "Limit the amount of concurrent indexers.";
+      description = "Limit the amount of concurrent indexers.";
     };
 
     databasePath = mkOption {
       type = types.path;
       default = "${config.xdg.dataHome}/hound";
       defaultText = "$XDG_DATA_HOME/hound";
-      description = lib.mdDoc "The Hound database path.";
+      description = "The Hound database path.";
     };
 
     listenAddress = mkOption {
       type = types.str;
       default = "localhost:6080";
-      description = lib.mdDoc "Listen address of the Hound daemon.";
+      description = "Listen address of the Hound daemon.";
     };
 
     repositories = mkOption {
@@ -54,7 +54,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc "The repository configuration.";
+      description = "The repository configuration.";
     };
   };
 

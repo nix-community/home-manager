@@ -17,7 +17,7 @@ let
     options = {
       config = mkOption {
         type = types.nullOr types.lines;
-        description = lib.mdDoc
+        description =
           "Script to configure this plugin. The scripting language should match type.";
         default = null;
       };
@@ -25,18 +25,18 @@ let
       type = mkOption {
         type =
           types.either (types.enum [ "lua" "viml" "teal" "fennel" ]) types.str;
-        description = lib.mdDoc
+        description =
           "Language used in config. Configurations are aggregated per-language.";
         default = "viml";
       };
 
-      optional = mkEnableOption (lib.mdDoc "optional") // {
+      optional = mkEnableOption "optional" // {
         description = "Don't load by default (load with :packadd)";
       };
 
       plugin = mkOption {
         type = types.package;
-        description = lib.mdDoc "vim plugin";
+        description = "vim plugin";
       };
 
       runtime = mkOption {
@@ -48,7 +48,7 @@ let
         example = literalExpression ''
           { "ftplugin/c.vim".text = "setlocal omnifunc=v:lua.vim.lsp.omnifunc"; }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Set of files that have to be linked in nvim config folder.
         '';
       };
@@ -97,12 +97,12 @@ in {
 
   options = {
     programs.neovim = {
-      enable = mkEnableOption (lib.mdDoc "Neovim");
+      enable = mkEnableOption "Neovim";
 
       viAlias = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Symlink {command}`vi` to {command}`nvim` binary.
         '';
       };
@@ -110,7 +110,7 @@ in {
       vimAlias = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Symlink {command}`vim` to {command}`nvim` binary.
         '';
       };
@@ -118,7 +118,7 @@ in {
       vimdiffAlias = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Alias {command}`vimdiff` to {command}`nvim -d`.
         '';
       };
@@ -126,7 +126,7 @@ in {
       withNodeJs = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Enable node provider. Set to `true` to
           use Node plugins.
         '';
@@ -135,7 +135,7 @@ in {
       withRuby = mkOption {
         type = types.nullOr types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Enable ruby provider.
         '';
       };
@@ -143,7 +143,7 @@ in {
       withPython3 = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Enable Python 3 provider. Set to `true` to
           use Python 3 plugins.
         '';
@@ -166,7 +166,7 @@ in {
         defaultText = literalExpression "ps: [ ]";
         example =
           literalExpression "pyPkgs: with pyPkgs; [ python-language-server ]";
-        description = lib.mdDoc ''
+        description = ''
           The extra Python 3 packages required for your plugins to work.
           This option accepts a function that takes a Python 3 package set as an argument,
           and selects the required Python 3 packages from this package set.
@@ -190,7 +190,7 @@ in {
         default = _: [ ];
         defaultText = literalExpression "ps: [ ]";
         example = literalExpression "luaPkgs: with luaPkgs; [ luautf8 ]";
-        description = lib.mdDoc ''
+        description = ''
           The extra Lua packages required for your plugins to work.
           This option accepts a function that takes a Lua package set as an argument,
           and selects the required Lua packages from this package set.
@@ -202,7 +202,7 @@ in {
         type = types.lines;
         visible = true;
         readOnly = true;
-        description = lib.mdDoc ''
+        description = ''
           Generated vimscript config.
         '';
       };
@@ -223,7 +223,7 @@ in {
               vim.opt.background = "dark"
             ''';
           }'';
-        description = lib.mdDoc ''
+        description = ''
           Generated configurations with as key their language (set via type).
         '';
       };
@@ -232,20 +232,20 @@ in {
         type = types.package;
         default = pkgs.neovim-unwrapped;
         defaultText = literalExpression "pkgs.neovim-unwrapped";
-        description = lib.mdDoc "The package to use for the neovim binary.";
+        description = "The package to use for the neovim binary.";
       };
 
       finalPackage = mkOption {
         type = types.package;
         visible = false;
         readOnly = true;
-        description = lib.mdDoc "Resulting customized neovim package.";
+        description = "Resulting customized neovim package.";
       };
 
       defaultEditor = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to configure {command}`nvim` as the default
           editor using the {env}`EDITOR` environment variable.
         '';
@@ -257,7 +257,7 @@ in {
         example = ''
           set nobackup
         '';
-        description = lib.mdDoc ''
+        description = ''
           Custom vimrc lines.
         '';
       };
@@ -268,7 +268,7 @@ in {
         example = ''
           vim.opt.nobackup = true
         '';
-        description = lib.mdDoc ''
+        description = ''
           Custom lua lines.
         '';
       };
@@ -277,7 +277,7 @@ in {
         type = with types; listOf package;
         default = [ ];
         example = literalExpression "[ pkgs.shfmt ]";
-        description = lib.mdDoc "Extra packages available to nvim.";
+        description = "Extra packages available to nvim.";
       };
 
       plugins = mkOption {
@@ -292,7 +292,7 @@ in {
             }
           ]
         '';
-        description = lib.mdDoc ''
+        description = ''
           List of vim plugins to install optionally associated with
           configuration to be placed in init.vim.
 
@@ -301,13 +301,13 @@ in {
       };
 
       coc = {
-        enable = mkEnableOption (lib.mdDoc "Coc");
+        enable = mkEnableOption "Coc";
 
         package = mkOption {
           type = types.package;
           default = pkgs.vimPlugins.coc-nvim;
           defaultText = literalExpression "pkgs.vimPlugins.coc-nvim";
-          description = lib.mdDoc "The package to use for the CoC plugin.";
+          description = "The package to use for the CoC plugin.";
         };
 
         settings = mkOption {
@@ -335,7 +335,7 @@ in {
               };
             };
           '';
-          description = lib.mdDoc ''
+          description = ''
             Extra configuration lines to add to
             {file}`$XDG_CONFIG_HOME/nvim/coc-settings.json`
             See
@@ -347,7 +347,7 @@ in {
         pluginConfig = mkOption {
           type = types.lines;
           default = "";
-          description = lib.mdDoc "Script to configure CoC. Must be viml.";
+          description = "Script to configure CoC. Must be viml.";
         };
       };
     };

@@ -5,16 +5,15 @@ in {
   meta.maintainers = [ maintainers.jwygoda ];
 
   options.services.clipman = {
-    enable = mkEnableOption
-      (lib.mdDoc "clipman, a simple clipboard manager for Wayland");
+    enable = mkEnableOption "clipman, a simple clipboard manager for Wayland";
 
-    package = mkPackageOptionMD pkgs "clipman" { };
+    package = mkPackageOption pkgs "clipman" { };
 
     systemdTarget = mkOption {
       type = types.str;
       default = "graphical-session.target";
       example = "sway-session.target";
-      description = lib.mdDoc ''
+      description = ''
         The systemd target that will automatically start the clipman service.
 
         When setting this value to `"sway-session.target"`,

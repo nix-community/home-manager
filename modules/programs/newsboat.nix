@@ -37,7 +37,7 @@ in {
 
   options = {
     programs.newsboat = {
-      enable = mkEnableOption (lib.mdDoc "the Newsboat feed reader");
+      enable = mkEnableOption "the Newsboat feed reader";
 
       urls = mkOption {
         type = types.listOf (types.submodule {
@@ -45,21 +45,21 @@ in {
             url = mkOption {
               type = types.str;
               example = "http://example.com";
-              description = lib.mdDoc "Feed URL.";
+              description = "Feed URL.";
             };
 
             tags = mkOption {
               type = types.listOf types.str;
               default = [ ];
               example = [ "foo" "bar" ];
-              description = lib.mdDoc "Feed tags.";
+              description = "Feed tags.";
             };
 
             title = mkOption {
               type = types.nullOr types.str;
               default = null;
               example = "ORF News";
-              description = lib.mdDoc "Feed title.";
+              description = "Feed title.";
             };
           };
         });
@@ -68,7 +68,7 @@ in {
           url = "http://example.com";
           tags = [ "foo" "bar" ];
         }];
-        description = lib.mdDoc ''
+        description = ''
           List of news feeds. Leave it empty if you want to manage feeds
           imperatively, for example, using Syncthing.
         '';
@@ -77,21 +77,19 @@ in {
       maxItems = mkOption {
         type = types.int;
         default = 0;
-        description =
-          lib.mdDoc "Maximum number of items per feed, 0 for infinite.";
+        description = "Maximum number of items per feed, 0 for infinite.";
       };
 
       reloadThreads = mkOption {
         type = types.int;
         default = 5;
-        description =
-          lib.mdDoc "How many threads to use for updating the feeds.";
+        description = "How many threads to use for updating the feeds.";
       };
 
       autoReload = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable automatic reloading while newsboat is running.
         '';
       };
@@ -99,26 +97,26 @@ in {
       reloadTime = mkOption {
         type = types.nullOr types.int;
         default = 60;
-        description = lib.mdDoc "Time in minutes between reloads.";
+        description = "Time in minutes between reloads.";
       };
 
       browser = mkOption {
         type = types.str;
         default = "${pkgs.xdg-utils}/bin/xdg-open";
-        description = lib.mdDoc "External browser to use.";
+        description = "External browser to use.";
       };
 
       queries = mkOption {
         type = types.attrsOf types.str;
         default = { };
         example = { "foo" = ''rssurl =~ "example.com"''; };
-        description = lib.mdDoc "A list of queries to use.";
+        description = "A list of queries to use.";
       };
 
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Extra configuration values that will be appended to the end.
         '';
       };

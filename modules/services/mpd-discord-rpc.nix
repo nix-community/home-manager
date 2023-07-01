@@ -10,7 +10,7 @@ in {
   meta.maintainers = [ maintainers.kranzes ];
 
   options.services.mpd-discord-rpc = {
-    enable = mkEnableOption (lib.mdDoc "the mpd-discord-rpc service");
+    enable = mkEnableOption "the mpd-discord-rpc service";
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -24,7 +24,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration included in `config.toml`.
         For available options see <https://github.com/JakeStanger/mpd-discord-rpc#configuration>
       '';
@@ -34,7 +34,7 @@ in {
       type = types.package;
       default = pkgs.mpd-discord-rpc;
       defaultText = literalExpression "pkgs.mpd-discord-rpc";
-      description = lib.mdDoc "mpd-discord-rpc package to use.";
+      description = "mpd-discord-rpc package to use.";
     };
   };
 

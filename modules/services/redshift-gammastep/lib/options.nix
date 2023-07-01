@@ -29,13 +29,13 @@ in {
   ];
 
   options = {
-    enable = mkEnableOption (lib.mdDoc programName);
+    enable = mkEnableOption programName;
 
     dawnTime = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "6:00-7:45";
-      description = lib.mdDoc ''
+      description = ''
         Set the time interval of dawn manually.
         The times must be specified as HH:MM in 24-hour format.
       '';
@@ -45,7 +45,7 @@ in {
       type = types.nullOr types.str;
       default = null;
       example = "18:35-20:15";
-      description = lib.mdDoc ''
+      description = ''
         Set the time interval of dusk manually.
         The times must be specified as HH:MM in 24-hour format.
       '';
@@ -54,7 +54,7 @@ in {
     latitude = mkOption {
       type = with types; nullOr (either str float);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Your current latitude, between `-90.0` and
         `90.0`. Must be provided along with
         longitude.
@@ -64,7 +64,7 @@ in {
     longitude = mkOption {
       type = with types; nullOr (either str float);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Your current longitude, between `-180.0` and
         `180.0`. Must be provided along with
         latitude.
@@ -74,7 +74,7 @@ in {
     provider = mkOption {
       type = types.enum [ "manual" "geoclue2" ];
       default = "manual";
-      description = lib.mdDoc ''
+      description = ''
         The location provider to use for determining your location. If set to
         `manual` you must also provide latitude/longitude.
         If set to `geoclue2`, you must also enable the global
@@ -86,7 +86,7 @@ in {
       day = mkOption {
         type = types.int;
         default = 5500;
-        description = lib.mdDoc ''
+        description = ''
           Colour temperature to use during the day, between
           `1000` and `25000` K.
         '';
@@ -94,7 +94,7 @@ in {
       night = mkOption {
         type = types.int;
         default = 3700;
-        description = lib.mdDoc ''
+        description = ''
           Colour temperature to use at night, between
           `1000` and `25000` K.
         '';
@@ -105,18 +105,18 @@ in {
       type = types.package;
       default = defaultPackage;
       defaultText = literalExpression examplePackage;
-      description = lib.mdDoc ''
+      description = ''
         ${programName} derivation to use.
       '';
     };
 
-    enableVerboseLogging = mkEnableOption (lib.mdDoc "verbose service logging");
+    enableVerboseLogging = mkEnableOption "verbose service logging";
 
     tray = mkOption {
       type = types.bool;
       default = false;
       example = true;
-      description = lib.mdDoc ''
+      description = ''
         Start the ${appletExecutable} tray applet.
       '';
     };
@@ -134,7 +134,7 @@ in {
           };
         };
       '';
-      description = lib.mdDoc ''
+      description = ''
         The configuration to pass to ${programName}.
         Available options for ${programName} described in
         {manpage}`${moduleName}(1)`.

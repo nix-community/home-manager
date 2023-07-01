@@ -11,12 +11,12 @@ in {
 
   options = {
     services.fluidsynth = {
-      enable = mkEnableOption (lib.mdDoc "fluidsynth midi synthesizer");
+      enable = mkEnableOption "fluidsynth midi synthesizer";
 
       soundFont = mkOption {
         type = types.path;
         default = "${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
-        description = lib.mdDoc ''
+        description = ''
           The soundfont file to use, in SoundFont 2 format.
         '';
       };
@@ -25,7 +25,7 @@ in {
         type = types.enum [ "jack" "pipewire-pulse" "pulseaudio" ];
         default = "pulseaudio";
         example = "pipewire-pulse";
-        description = lib.mdDoc ''
+        description = ''
           The systemd sound service to depend on.
         '';
       };
@@ -34,7 +34,7 @@ in {
         type = types.listOf types.str;
         default = [ ];
         example = [ "--sample-rate 96000" ];
-        description = lib.mdDoc ''
+        description = ''
           Extra arguments, added verbatim to the fluidsynth command. See
           {manpage}`fluidsynth.conf(1)`.
         '';

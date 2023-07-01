@@ -14,19 +14,19 @@ in {
   meta.maintainers = [ maintainers.valodim ];
 
   options.services.etesync-dav = {
-    enable = mkEnableOption (lib.mdDoc "etesync-dav");
+    enable = mkEnableOption "etesync-dav";
 
     package = mkOption {
       type = types.package;
       default = pkgs.etesync-dav;
       defaultText = "pkgs.etesync-dav";
-      description = lib.mdDoc "The etesync-dav derivation to use.";
+      description = "The etesync-dav derivation to use.";
     };
 
     serverUrl = mkOption {
       type = types.str;
       default = "https://api.etesync.com/";
-      description = lib.mdDoc "The URL to the etesync server.";
+      description = "The URL to the etesync server.";
     };
 
     settings = mkOption {
@@ -38,7 +38,7 @@ in {
           ETESYNC_LISTEN_PORT = 37358;
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Settings for etesync-dav, passed as environment variables.
       '';
     };

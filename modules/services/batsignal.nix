@@ -9,14 +9,14 @@ in {
 
   options = {
     services.batsignal = {
-      enable = lib.mkEnableOption (lib.mdDoc "Batsignal Battery Daemon");
+      enable = lib.mkEnableOption "Batsignal Battery Daemon";
 
-      package = lib.mkPackageOptionMD pkgs "batsignal" { };
+      package = lib.mkPackageOption pkgs "batsignal" { };
 
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         default = [ ];
-        description = lib.mdDoc ''
+        description = ''
           Extra arguments to be passed to the batsignal executable.
         '';
       };

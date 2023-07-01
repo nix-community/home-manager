@@ -5,13 +5,13 @@ with lib;
 let cfg = config.programs.xmobar;
 in {
   options.programs.xmobar = {
-    enable = mkEnableOption (lib.mdDoc "Xmobar, a minimalistic status bar");
+    enable = mkEnableOption "Xmobar, a minimalistic status bar";
 
     package = mkOption {
       default = pkgs.haskellPackages.xmobar;
       defaultText = literalExpression "pkgs.haskellPackages.xmobar";
       type = types.package;
-      description = lib.mdDoc ''
+      description = ''
         Package providing the {command}`xmobar` binary.
       '';
     };
@@ -40,7 +40,7 @@ in {
           }
       '';
       type = types.lines;
-      description = lib.mdDoc ''
+      description = ''
         Extra configuration lines to add to
         {file}`$XDG_CONFIG_HOME/xmobar/.xmobarrc`.
         See

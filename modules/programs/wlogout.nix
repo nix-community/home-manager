@@ -2,7 +2,7 @@
 
 let
   inherit (lib) all filterAttrs isStorePath literalExpression types;
-  inherit (lib.options) mkEnableOption mkPackageOptionMD mkOption;
+  inherit (lib.options) mkEnableOption mkPackageOption mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.strings) concatMapStrings;
   inherit (builtins) toJSON;
@@ -20,49 +20,49 @@ let
           type = str;
           default = "";
           example = "shutdown";
-          description = lib.mdDoc "CSS label of button.";
+          description = "CSS label of button.";
         };
 
         action = mkOption {
           type = either path str;
           default = "";
           example = "systemctl poweroff";
-          description = lib.mdDoc "Command to execute when clicked.";
+          description = "Command to execute when clicked.";
         };
 
         text = mkOption {
           type = str;
           default = "";
           example = "Shutdown";
-          description = lib.mdDoc "Text displayed on button.";
+          description = "Text displayed on button.";
         };
 
         keybind = mkOption {
           type = str;
           default = "";
           example = "s";
-          description = lib.mdDoc "Keyboard character to trigger this action.";
+          description = "Keyboard character to trigger this action.";
         };
 
         height = mkOption {
           type = nullOr (numbers.between 0 1);
           default = null;
           example = 0.5;
-          description = lib.mdDoc "Relative height of tile.";
+          description = "Relative height of tile.";
         };
 
         width = mkOption {
           type = nullOr (numbers.between 0 1);
           default = null;
           example = 0.5;
-          description = lib.mdDoc "Relative width of tile.";
+          description = "Relative width of tile.";
         };
 
         circular = mkOption {
           type = nullOr bool;
           default = null;
           example = true;
-          description = lib.mdDoc "Make button circular.";
+          description = "Make button circular.";
         };
       };
     };
@@ -70,14 +70,14 @@ in {
   meta.maintainers = [ lib.maintainers.Scrumplex ];
 
   options.programs.wlogout = with lib.types; {
-    enable = mkEnableOption (lib.mdDoc "wlogout");
+    enable = mkEnableOption "wlogout";
 
-    package = mkPackageOptionMD pkgs "wlogout" { };
+    package = mkPackageOption pkgs "wlogout" { };
 
     layout = mkOption {
       type = listOf wlogoutLayoutConfig;
       default = [ ];
-      description = lib.mdDoc ''
+      description = ''
         Layout configuration for wlogout, see <https://github.com/ArtsyMacaw/wlogout#config>
         for supported values.
       '';
@@ -96,7 +96,7 @@ in {
     style = mkOption {
       type = nullOr (either path str);
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         CSS style of the bar.
 
         See <https://github.com/ArtsyMacaw/wlogout#style>

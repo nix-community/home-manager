@@ -36,7 +36,7 @@ in {
       enable = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable MPD, the music player daemon.
         '';
       };
@@ -45,7 +45,7 @@ in {
         type = types.package;
         default = pkgs.mpd;
         defaultText = "pkgs.mpd";
-        description = lib.mdDoc ''
+        description = ''
           The MPD package to run.
         '';
       };
@@ -58,7 +58,7 @@ in {
           undefined                      otherwise
         '';
         apply = toString; # Prevent copies to Nix store.
-        description = lib.mdDoc ''
+        description = ''
           The directory where mpd reads music from.
 
           If [](#opt-xdg.userDirs.enable) is
@@ -72,7 +72,7 @@ in {
         default = "${cfg.dataDir}/playlists";
         defaultText = "\${dataDir}/playlists";
         apply = toString; # Prevent copies to Nix store.
-        description = lib.mdDoc ''
+        description = ''
           The directory where mpd stores playlists.
         '';
       };
@@ -80,7 +80,7 @@ in {
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Extra directives added to to the end of MPD's configuration
           file, {file}`mpd.conf`. Basic configuration
           like file location and uid/gid is added automatically to the
@@ -93,7 +93,7 @@ in {
         type = types.listOf types.str;
         default = [ ];
         example = [ "--verbose" ];
-        description = lib.mdDoc ''
+        description = ''
           Extra command-line arguments to pass to MPD.
         '';
       };
@@ -103,7 +103,7 @@ in {
         default = "${config.xdg.dataHome}/${name}";
         defaultText = "$XDG_DATA_HOME/mpd";
         apply = toString; # Prevent copies to Nix store.
-        description = lib.mdDoc ''
+        description = ''
           The directory where MPD stores its state, tag cache,
           playlists etc.
         '';
@@ -113,7 +113,7 @@ in {
         startWhenNeeded = mkOption {
           type = types.bool;
           default = false;
-          description = lib.mdDoc ''
+          description = ''
             Enable systemd socket activation.
           '';
         };
@@ -122,7 +122,7 @@ in {
           type = types.str;
           default = "127.0.0.1";
           example = "any";
-          description = lib.mdDoc ''
+          description = ''
             The address for the daemon to listen on.
             Use `any` to listen on all addresses.
           '';
@@ -131,7 +131,7 @@ in {
         port = mkOption {
           type = types.port;
           default = 6600;
-          description = lib.mdDoc ''
+          description = ''
             The TCP port on which the the daemon will listen.
           '';
         };
@@ -142,7 +142,7 @@ in {
         type = types.nullOr types.str;
         default = "${cfg.dataDir}/tag_cache";
         defaultText = "\${dataDir}/tag_cache";
-        description = lib.mdDoc ''
+        description = ''
           The path to MPD's database. If set to
           `null` the parameter is omitted from the
           configuration.

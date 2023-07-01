@@ -12,19 +12,19 @@ in {
   meta.maintainers = [ maintainers.hawkw ];
 
   options.programs.atuin = {
-    enable = mkEnableOption (lib.mdDoc "atuin");
+    enable = mkEnableOption "atuin";
 
     package = mkOption {
       type = types.package;
       default = pkgs.atuin;
       defaultText = literalExpression "pkgs.atuin";
-      description = lib.mdDoc "The package to use for atuin.";
+      description = "The package to use for atuin.";
     };
 
     enableBashIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Atuin's Bash integration. This will bind
         `ctrl-r` to open the Atuin history.
       '';
@@ -33,7 +33,7 @@ in {
     enableZshIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Atuin's Zsh integration.
 
         If enabled, this will bind `ctrl-r` and the up-arrow
@@ -44,7 +44,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Atuin's Fish integration.
 
         If enabled, this will bind the up-arrow key to open the Atuin history.
@@ -55,7 +55,7 @@ in {
       default = [ ];
       type = types.listOf types.str;
       example = [ "--disable-up-arrow" "--disable-ctrl-r" ];
-      description = lib.mdDoc ''
+      description = ''
         Flags to append to the shell hook.
       '';
     };
@@ -78,7 +78,7 @@ in {
           search_mode = "prefix";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/atuin/config.toml`.
 
@@ -90,7 +90,7 @@ in {
     enableNushellIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Nushell integration.
       '';
     };

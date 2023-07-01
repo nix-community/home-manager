@@ -21,7 +21,7 @@ in {
         "23.05"
         "23.11"
       ];
-      description = lib.mdDoc ''
+      description = ''
         It is occasionally necessary for Home Manager to change
         configuration defaults in a way that is incompatible with
         stateful data. This could, for example, include switching the
@@ -46,7 +46,7 @@ in {
             optionalString (revision != null) "+${substring 0 8 revision}";
         in "${release}${suffix}";
         example = "22.11+213a0629";
-        description = lib.mdDoc "The full Home Manager version.";
+        description = "The full Home Manager version.";
       };
 
       release = mkOption {
@@ -55,7 +55,7 @@ in {
         type = types.str;
         default = releaseInfo.release;
         example = "22.11";
-        description = lib.mdDoc "The Home Manager release.";
+        description = "The Home Manager release.";
       };
 
       isReleaseBranch = mkOption {
@@ -63,7 +63,7 @@ in {
         readOnly = true;
         type = types.bool;
         default = releaseInfo.isReleaseBranch;
-        description = lib.mdDoc ''
+        description = ''
           Whether the Home Manager version is from a versioned
           release branch.
         '';
@@ -74,7 +74,7 @@ in {
         type = types.nullOr types.str;
         default = let gitRepo = "${toString ./../..}/.git";
         in if pathIsGitRepo gitRepo then commitIdFromGitRepo gitRepo else null;
-        description = lib.mdDoc ''
+        description = ''
           The Git revision from which this Home Manager configuration was built.
         '';
       };

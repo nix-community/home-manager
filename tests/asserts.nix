@@ -8,13 +8,13 @@ with lib;
       enable = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc "Whether warning asserts are enabled.";
+        description = "Whether warning asserts are enabled.";
       };
 
       expected = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = lib.mdDoc ''
+        description = ''
           List of expected warnings.
         '';
       };
@@ -24,13 +24,13 @@ with lib;
       enable = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc "Whether assertion asserts are enabled.";
+        description = "Whether assertion asserts are enabled.";
       };
 
       expected = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = lib.mdDoc ''
+        description = ''
           List of expected assertions.
         '';
       };

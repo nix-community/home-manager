@@ -22,13 +22,13 @@ let
 
 in {
   options.xdg = {
-    enable = mkEnableOption (lib.mdDoc "management of XDG base directories");
+    enable = mkEnableOption "management of XDG base directories";
 
     cacheHome = mkOption {
       type = types.path;
       defaultText = "~/.cache";
       apply = toString;
-      description = lib.mdDoc ''
+      description = ''
         Absolute path to directory holding application caches.
       '';
     };
@@ -36,7 +36,7 @@ in {
     configFile = mkOption {
       type = fileType "xdg.configFile" "{var}`xdg.configHome`" cfg.configHome;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Attribute set of files to link into the user's XDG
         configuration home.
       '';
@@ -46,7 +46,7 @@ in {
       type = types.path;
       defaultText = "~/.config";
       apply = toString;
-      description = lib.mdDoc ''
+      description = ''
         Absolute path to directory holding application configurations.
       '';
     };
@@ -55,7 +55,7 @@ in {
       type =
         fileType "xdg.dataFile" "<varname>xdg.dataHome</varname>" cfg.dataHome;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Attribute set of files to link into the user's XDG
         data home.
       '';
@@ -65,7 +65,7 @@ in {
       type = types.path;
       defaultText = "~/.local/share";
       apply = toString;
-      description = lib.mdDoc ''
+      description = ''
         Absolute path to directory holding application data.
       '';
     };
@@ -74,7 +74,7 @@ in {
       type = types.path;
       defaultText = "~/.local/state";
       apply = toString;
-      description = lib.mdDoc ''
+      description = ''
         Absolute path to directory holding application states.
       '';
     };

@@ -19,18 +19,18 @@ in {
   meta.maintainers = [ maintainers.hitsmaxft ];
 
   options.programs.zsh.antidote = {
-    enable = mkEnableOption (lib.mdDoc "antidote - a zsh plugin manager");
+    enable = mkEnableOption "antidote - a zsh plugin manager";
 
     plugins = mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [ "zsh-users/zsh-autosuggestions" ];
-      description = lib.mdDoc "List of antidote plugins.";
+      description = "List of antidote plugins.";
     };
 
-    useFriendlyNames = mkEnableOption (lib.mdDoc "friendly names");
+    useFriendlyNames = mkEnableOption "friendly names";
 
-    package = mkPackageOptionMD pkgs "antidote" { };
+    package = mkPackageOption pkgs "antidote" { };
   };
 
   config = mkIf cfg.enable {

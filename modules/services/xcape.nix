@@ -11,13 +11,13 @@ in {
 
   options = {
     services.xcape = {
-      enable = mkEnableOption (lib.mdDoc "xcape");
+      enable = mkEnableOption "xcape";
 
       timeout = mkOption {
         type = types.nullOr types.int;
         default = null;
         example = 500;
-        description = lib.mdDoc ''
+        description = ''
           If you hold a key longer than this timeout, xcape will not
           generate a key event. Default is 500 ms.
         '';
@@ -30,7 +30,7 @@ in {
           Shift_L = "Escape";
           Control_L = "Control_L|O";
         };
-        description = lib.mdDoc ''
+        description = ''
           The value has the grammar `Key[|OtherKey]`.
 
           The list of key names is found in the header file

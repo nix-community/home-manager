@@ -37,14 +37,14 @@ let
       size = mkOption {
         type = types.int;
         default = 10000;
-        description = lib.mdDoc "Number of history lines to keep.";
+        description = "Number of history lines to keep.";
       };
 
       save = mkOption {
         type = types.int;
         defaultText = 10000;
         default = config.size;
-        description = lib.mdDoc "Number of history lines to save.";
+        description = "Number of history lines to save.";
       };
 
       path = mkOption {
@@ -57,14 +57,14 @@ let
           "$ZDOTDIR/.zsh_history" otherwise
         '';
         example = literalExpression ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
-        description = lib.mdDoc "History file location";
+        description = "History file location";
       };
 
       ignorePatterns = mkOption {
         type = types.listOf types.str;
         default = [];
         example = literalExpression ''[ "rm *" "pkill *" ]'';
-        description = lib.mdDoc ''
+        description = ''
           Do not enter command lines into the history list
           if they match any one of the given shell patterns.
         '';
@@ -73,7 +73,7 @@ let
       ignoreDups = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Do not enter command lines into the history list
           if they are duplicates of the previous event.
         '';
@@ -82,7 +82,7 @@ let
       ignoreSpace = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Do not enter command lines into the history list
           if the first character is a space.
         '';
@@ -91,19 +91,19 @@ let
       expireDuplicatesFirst = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc "Expire duplicates first.";
+        description = "Expire duplicates first.";
       };
 
       extended = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc "Save timestamp into the history file.";
+        description = "Save timestamp into the history file.";
       };
 
       share = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc "Share command history between zsh sessions.";
+        description = "Share command history between zsh sessions.";
       };
     };
   });
@@ -112,7 +112,7 @@ let
     options = {
       src = mkOption {
         type = types.path;
-        description = lib.mdDoc ''
+        description = ''
           Path to the plugin folder.
 
           Will be added to {env}`fpath` and {env}`PATH`.
@@ -121,7 +121,7 @@ let
 
       name = mkOption {
         type = types.str;
-        description = lib.mdDoc ''
+        description = ''
           The name of the plugin.
 
           Don't forget to add {option}`file`
@@ -131,7 +131,7 @@ let
 
       file = mkOption {
         type = types.str;
-        description = lib.mdDoc "The plugin script to source.";
+        description = "The plugin script to source.";
       };
     };
 
@@ -140,15 +140,15 @@ let
 
   ohMyZshModule = types.submodule {
     options = {
-      enable = mkEnableOption (lib.mdDoc "oh-my-zsh");
+      enable = mkEnableOption "oh-my-zsh";
 
-      package = mkPackageOptionMD pkgs "oh-my-zsh" { };
+      package = mkPackageOption pkgs "oh-my-zsh" { };
 
       plugins = mkOption {
         default = [];
         example = [ "git" "sudo" ];
         type = types.listOf types.str;
-        description = lib.mdDoc ''
+        description = ''
           List of oh-my-zsh plugins
         '';
       };
@@ -157,7 +157,7 @@ let
         default = "";
         type = types.str;
         example = "$HOME/my_customizations";
-        description = lib.mdDoc ''
+        description = ''
           Path to a custom oh-my-zsh package to override config of
           oh-my-zsh. See <https://github.com/robbyrussell/oh-my-zsh/wiki/Customization>
           for more information.
@@ -168,7 +168,7 @@ let
         default = "";
         example = "robbyrussell";
         type = types.str;
-        description = lib.mdDoc ''
+        description = ''
           Name of the theme to be used by oh-my-zsh.
         '';
       };
@@ -179,7 +179,7 @@ let
           zstyle :omz:plugins:ssh-agent identities id_rsa id_rsa2 id_github
         '';
         type = types.lines;
-        description = lib.mdDoc ''
+        description = ''
           Extra settings for plugins.
         '';
       };
@@ -188,11 +188,11 @@ let
 
   historySubstringSearchModule = types.submodule {
     options = {
-      enable = mkEnableOption (lib.mdDoc "history substring search");
+      enable = mkEnableOption "history substring search";
       searchUpKey = mkOption {
         type = with types; either (listOf str) str ;
         default = [ "^[[A" ];
-        description = lib.mdDoc ''
+        description = ''
           The key codes to be used when searching up.
           The default of `^[[A` corresponds to the UP key.
         '';
@@ -200,7 +200,7 @@ let
       searchDownKey = mkOption {
         type = with types; either (listOf str) str ;
         default = [ "^[[B" ];
-        description = lib.mdDoc ''
+        description = ''
           The key codes to be used when searching down.
           The default of `^[[B` corresponds to the DOWN key.
         '';
@@ -210,14 +210,14 @@ let
 
   syntaxHighlightingModule = types.submodule {
     options = {
-      enable = mkEnableOption (lib.mdDoc "zsh syntax highlighting");
+      enable = mkEnableOption "zsh syntax highlighting";
 
-      package = mkPackageOptionMD pkgs "zsh-syntax-highlighting" { };
+      package = mkPackageOption pkgs "zsh-syntax-highlighting" { };
 
       styles = mkOption {
         type = types.attrsOf types.str;
         default = {};
-        description = lib.mdDoc ''
+        description = ''
           Custom styles for syntax highlighting.
           See each highlighter's options: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md>
         '';
@@ -234,13 +234,13 @@ in
 
   options = {
     programs.zsh = {
-      enable = mkEnableOption (lib.mdDoc "Z shell (Zsh)");
+      enable = mkEnableOption "Z shell (Zsh)";
 
-      package = mkPackageOptionMD pkgs "zsh" { };
+      package = mkPackageOption pkgs "zsh" { };
 
       autocd = mkOption {
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Automatically enter into a directory if typed directly into shell.
         '';
         type = types.nullOr types.bool;
@@ -248,7 +248,7 @@ in
 
       cdpath = mkOption {
         default = [];
-        description = lib.mdDoc ''
+        description = ''
           List of paths to autocomplete calls to {command}`cd`.
         '';
         type = types.listOf types.str;
@@ -257,7 +257,7 @@ in
       dotDir = mkOption {
         default = null;
         example = ".config/zsh";
-        description = lib.mdDoc ''
+        description = ''
           Directory where the zsh configuration and more should be located,
           relative to the users home directory. The default is the home
           directory.
@@ -273,7 +273,7 @@ in
             ".." = "cd ..";
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           An attribute set that maps aliases (the top level attribute names in
           this option) to command strings or directly to build outputs.
         '';
@@ -288,7 +288,7 @@ in
             G = "| grep";
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Similar to [](#opt-programs.zsh.shellAliases),
           but are substituted anywhere on a line.
         '';
@@ -304,7 +304,7 @@ in
             dl    = "$HOME/Downloads";
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           An attribute set that adds to named directory hash table.
         '';
         type = types.attrsOf types.str;
@@ -312,7 +312,7 @@ in
 
       enableCompletion = mkOption {
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Enable zsh completion. Don't forget to add
           ```nix
             environment.pathsToLink = [ "/share/zsh" ];
@@ -324,87 +324,87 @@ in
 
       completionInit = mkOption {
         default = "autoload -U compinit && compinit";
-        description = lib.mdDoc "Initialization commands to run when completion is enabled.";
+        description = "Initialization commands to run when completion is enabled.";
         type = types.lines;
       };
 
       enableAutosuggestions = mkOption {
         default = false;
-        description = lib.mdDoc "Enable zsh autosuggestions";
+        description = "Enable zsh autosuggestions";
       };
 
       syntaxHighlighting = mkOption {
         type = syntaxHighlightingModule;
         default = {};
-        description = lib.mdDoc "Options related to zsh-syntax-highlighting.";
+        description = "Options related to zsh-syntax-highlighting.";
       };
 
       historySubstringSearch = mkOption {
         type = historySubstringSearchModule;
         default = {};
-        description = lib.mdDoc "Options related to zsh-history-substring-search.";
+        description = "Options related to zsh-history-substring-search.";
       };
 
       history = mkOption {
         type = historyModule;
         default = {};
-        description = lib.mdDoc "Options related to commands history configuration.";
+        description = "Options related to commands history configuration.";
       };
 
       defaultKeymap = mkOption {
         type = types.nullOr (types.enum (attrNames bindkeyCommands));
         default = null;
         example = "emacs";
-        description = lib.mdDoc "The default base keymap to use.";
+        description = "The default base keymap to use.";
       };
 
       sessionVariables = mkOption {
         default = {};
         type = types.attrs;
         example = { MAILCHECK = 30; };
-        description = lib.mdDoc "Environment variables that will be set for zsh session.";
+        description = "Environment variables that will be set for zsh session.";
       };
 
       initExtraBeforeCompInit = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc "Extra commands that should be added to {file}`.zshrc` before compinit.";
+        description = "Extra commands that should be added to {file}`.zshrc` before compinit.";
       };
 
       initExtra = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc "Extra commands that should be added to {file}`.zshrc`.";
+        description = "Extra commands that should be added to {file}`.zshrc`.";
       };
 
       initExtraFirst = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc "Commands that should be added to top of {file}`.zshrc`.";
+        description = "Commands that should be added to top of {file}`.zshrc`.";
       };
 
       envExtra = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc "Extra commands that should be added to {file}`.zshenv`.";
+        description = "Extra commands that should be added to {file}`.zshenv`.";
       };
 
       profileExtra = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc "Extra commands that should be added to {file}`.zprofile`.";
+        description = "Extra commands that should be added to {file}`.zprofile`.";
       };
 
       loginExtra = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc "Extra commands that should be added to {file}`.zlogin`.";
+        description = "Extra commands that should be added to {file}`.zlogin`.";
       };
 
       logoutExtra = mkOption {
         default = "";
         type = types.lines;
-        description = lib.mdDoc "Extra commands that should be added to {file}`.zlogout`.";
+        description = "Extra commands that should be added to {file}`.zlogout`.";
       };
 
       plugins = mkOption {
@@ -434,20 +434,20 @@ in
             }
           ]
         '';
-        description = lib.mdDoc "Plugins to source in {file}`.zshrc`.";
+        description = "Plugins to source in {file}`.zshrc`.";
       };
 
       oh-my-zsh = mkOption {
         type = ohMyZshModule;
         default = {};
-        description = lib.mdDoc "Options to configure oh-my-zsh.";
+        description = "Options to configure oh-my-zsh.";
       };
 
       localVariables = mkOption {
         type = types.attrs;
         default = {};
         example = { POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=["dir" "vcs"]; };
-        description = lib.mdDoc ''
+        description = ''
           Extra local variables defined at the top of {file}`.zshrc`.
         '';
       };

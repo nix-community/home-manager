@@ -31,7 +31,7 @@ in {
           (types.enum [ "fcitx" "fcitx5" "nabi" "uim" "hime" "kime" ]);
         default = null;
         example = "fcitx5";
-        description = lib.mdDoc ''
+        description = ''
           Select the enabled input method. Input methods are software to input
           symbols that are not available on standard input devices.
 
@@ -65,7 +65,7 @@ in {
         internal = true;
         type = types.nullOr types.path;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           The input method method package.
         '';
       };

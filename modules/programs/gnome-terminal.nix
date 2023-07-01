@@ -18,12 +18,12 @@ let
     options = {
       foreground = mkOption {
         type = types.str;
-        description = lib.mdDoc "The foreground color.";
+        description = "The foreground color.";
       };
 
       background = mkOption {
         type = types.str;
-        description = lib.mdDoc "The background color.";
+        description = "The background color.";
       };
     };
   });
@@ -32,37 +32,35 @@ let
     options = {
       foregroundColor = mkOption {
         type = types.str;
-        description = lib.mdDoc "The foreground color.";
+        description = "The foreground color.";
       };
 
       backgroundColor = mkOption {
         type = types.str;
-        description = lib.mdDoc "The background color.";
+        description = "The background color.";
       };
 
       boldColor = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description =
-          lib.mdDoc "The bold color, null to use same as foreground.";
+        description = "The bold color, null to use same as foreground.";
       };
 
       palette = mkOption {
         type = types.listOf types.str;
-        description = lib.mdDoc "The terminal palette.";
+        description = "The terminal palette.";
       };
 
       cursor = mkOption {
         default = null;
         type = types.nullOr backForeSubModule;
-        description = lib.mdDoc "The color for the terminal cursor.";
+        description = "The color for the terminal cursor.";
       };
 
       highlight = mkOption {
         default = null;
         type = types.nullOr backForeSubModule;
-        description =
-          lib.mdDoc "The colors for the terminal’s highlighted area.";
+        description = "The colors for the terminal’s highlighted area.";
       };
     };
   });
@@ -72,43 +70,42 @@ let
       default = mkOption {
         default = false;
         type = types.bool;
-        description = lib.mdDoc "Whether this should be the default profile.";
+        description = "Whether this should be the default profile.";
       };
 
       visibleName = mkOption {
         type = types.str;
-        description = lib.mdDoc "The profile name.";
+        description = "The profile name.";
       };
 
       colors = mkOption {
         default = null;
         type = types.nullOr profileColorsSubModule;
-        description =
-          lib.mdDoc "The terminal colors, null to use system default.";
+        description = "The terminal colors, null to use system default.";
       };
 
       cursorBlinkMode = mkOption {
         default = "system";
         type = types.enum [ "system" "on" "off" ];
-        description = lib.mdDoc "The cursor blink mode.";
+        description = "The cursor blink mode.";
       };
 
       cursorShape = mkOption {
         default = "block";
         type = types.enum [ "block" "ibeam" "underline" ];
-        description = lib.mdDoc "The cursor shape.";
+        description = "The cursor shape.";
       };
 
       font = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc "The font name, null to use system default.";
+        description = "The font name, null to use system default.";
       };
 
       allowBold = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = lib.mdDoc ''
+        description = ''
           If `true`, allow applications in the
           terminal to make text boldface.
         '';
@@ -117,19 +114,19 @@ let
       scrollOnOutput = mkOption {
         default = true;
         type = types.bool;
-        description = lib.mdDoc "Whether to scroll when output is written.";
+        description = "Whether to scroll when output is written.";
       };
 
       showScrollbar = mkOption {
         default = true;
         type = types.bool;
-        description = lib.mdDoc "Whether the scroll bar should be visible.";
+        description = "Whether the scroll bar should be visible.";
       };
 
       scrollbackLines = mkOption {
         default = 10000;
         type = types.nullOr types.int;
-        description = lib.mdDoc ''
+        description = ''
           The number of scrollback lines to keep, null for infinite.
         '';
       };
@@ -137,7 +134,7 @@ let
       customCommand = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The command to use to start the shell, or null for default shell.
         '';
       };
@@ -145,13 +142,13 @@ let
       loginShell = mkOption {
         default = false;
         type = types.bool;
-        description = lib.mdDoc "Run command as a login shell.";
+        description = "Run command as a login shell.";
       };
 
       backspaceBinding = mkOption {
         default = "ascii-delete";
         type = eraseBinding;
-        description = lib.mdDoc ''
+        description = ''
           Which string the terminal should send to an application when the user
           presses the *Backspace* key.
 
@@ -175,13 +172,13 @@ let
       boldIsBright = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description = lib.mdDoc "Whether bold text is shown in bright colors.";
+        description = "Whether bold text is shown in bright colors.";
       };
 
       deleteBinding = mkOption {
         default = "delete-sequence";
         type = eraseBinding;
-        description = lib.mdDoc ''
+        description = ''
           Which string the terminal should send to an application when the user
           presses the *Delete* key.
 
@@ -205,13 +202,13 @@ let
       audibleBell = mkOption {
         default = true;
         type = types.bool;
-        description = lib.mdDoc "Turn on/off the terminal's bell.";
+        description = "Turn on/off the terminal's bell.";
       };
 
       transparencyPercent = mkOption {
         default = null;
         type = types.nullOr (types.ints.between 0 100);
-        description = lib.mdDoc "Background transparency in percent.";
+        description = "Background transparency in percent.";
       };
     };
   });
@@ -278,24 +275,24 @@ in {
 
   options = {
     programs.gnome-terminal = {
-      enable = mkEnableOption (lib.mdDoc "Gnome Terminal");
+      enable = mkEnableOption "Gnome Terminal";
 
       showMenubar = mkOption {
         default = true;
         type = types.bool;
-        description = lib.mdDoc "Whether to show the menubar by default";
+        description = "Whether to show the menubar by default";
       };
 
       themeVariant = mkOption {
         default = "default";
         type = types.enum [ "default" "light" "dark" "system" ];
-        description = lib.mdDoc "The theme variation to request";
+        description = "The theme variation to request";
       };
 
       profile = mkOption {
         default = { };
         type = types.attrsOf profileSubModule;
-        description = lib.mdDoc "A set of Gnome Terminal profiles.";
+        description = "A set of Gnome Terminal profiles.";
       };
     };
   };

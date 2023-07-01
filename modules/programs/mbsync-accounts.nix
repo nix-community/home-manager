@@ -14,7 +14,7 @@ let
         # Make value of name the same as the name used with the dot prefix
         default = name;
         readOnly = true;
-        description = lib.mdDoc ''
+        description = ''
           The name of this group for this account. These names are different than
           some others, because they will hide channel names that are the same.
         '';
@@ -23,7 +23,7 @@ let
       channels = mkOption {
         type = types.attrsOf (types.submodule channel);
         default = { };
-        description = lib.mdDoc ''
+        description = ''
           List of channels that should be grouped together into this group. When
           performing a synchronization, the groups are synchronized, rather than
           the individual channels.
@@ -42,7 +42,7 @@ let
         type = types.str;
         default = name;
         readOnly = true;
-        description = lib.mdDoc ''
+        description = ''
           The unique name for THIS channel in THIS group. The group will refer to
           this channel by this name.
 
@@ -55,7 +55,7 @@ let
         type = types.str;
         default = "";
         example = "[Gmail]/Sent Mail";
-        description = lib.mdDoc ''
+        description = ''
           IMAP4 patterns for which mailboxes on the remote mail server to sync.
           If `Patterns` are specified, `farPattern`
           is interpreted as a prefix which is not matched against the patterns,
@@ -70,7 +70,7 @@ let
         type = types.str;
         default = "";
         example = "Sent";
-        description = lib.mdDoc ''
+        description = ''
           Name for where mail coming from the remote (far) mail server will end up
           locally. The mailbox specified by the far pattern will be placed in
           this directory.
@@ -84,7 +84,7 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = [ "INBOX" ];
-        description = lib.mdDoc ''
+        description = ''
           Instead of synchronizing *just* the mailboxes that
           match the `farPattern`, use it as a prefix which is
           not matched against the patterns, and is not affected by mailbox list
@@ -103,7 +103,7 @@ let
             MaxSize = "1m";
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Extra configuration lines to add to *THIS* channel's
           configuration.
         '';
@@ -113,13 +113,13 @@ let
 
 in {
   options.mbsync = {
-    enable = mkEnableOption (lib.mdDoc "synchronization using mbsync");
+    enable = mkEnableOption "synchronization using mbsync";
 
     flatten = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = ".";
-      description = lib.mdDoc ''
+      description = ''
         If set, flattens the hierarchy within the maildir by
         substituting the canonical hierarchy delimiter
         `/` with this value.
@@ -130,7 +130,7 @@ in {
       type = types.enum [ "Verbatim" "Maildir++" "Legacy" ];
       default = "Verbatim";
       example = "Maildir++";
-      description = lib.mdDoc ''
+      description = ''
         The on-disk folder naming style. This option has no
         effect when {option}`flatten` is used.
       '';
@@ -140,7 +140,7 @@ in {
       type = types.enum [ "none" "maildir" "imap" "both" ];
       default = "none";
       example = "maildir";
-      description = lib.mdDoc ''
+      description = ''
         Automatically create missing mailboxes within the
         given mail store.
       '';
@@ -150,7 +150,7 @@ in {
       type = types.enum [ "none" "maildir" "imap" "both" ];
       default = "none";
       example = "imap";
-      description = lib.mdDoc ''
+      description = ''
         Propagate mailbox deletions to the given mail store.
       '';
     };
@@ -159,7 +159,7 @@ in {
       type = types.enum [ "none" "maildir" "imap" "both" ];
       default = "none";
       example = "both";
-      description = lib.mdDoc ''
+      description = ''
         Permanently remove messages marked for deletion from
         the given mail store.
       '';
@@ -168,7 +168,7 @@ in {
     patterns = mkOption {
       type = types.listOf types.str;
       default = [ "*" ];
-      description = lib.mdDoc ''
+      description = ''
         Pattern of mailboxes to synchronize.
       '';
     };
@@ -179,7 +179,7 @@ in {
       # The default cannot actually be empty, but contains an attribute set where
       # the channels set is empty. If a group is specified, then a name is given,
       # creating the attribute set.
-      description = lib.mdDoc ''
+      description = ''
         Some email providers (Gmail) have a different directory hierarchy for
         synchronized email messages. Namely, when using mbsync without specifying
         a set of channels into a group, all synchronized directories end up beneath
@@ -199,7 +199,7 @@ in {
           MaxSize = "1m";
         };
       '';
-      description = lib.mdDoc ''
+      description = ''
         Per channel extra configuration.
       '';
     };
@@ -207,7 +207,7 @@ in {
     extraConfig.local = mkOption {
       type = extraConfigType;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Local store extra configuration.
       '';
     };
@@ -215,7 +215,7 @@ in {
     extraConfig.remote = mkOption {
       type = extraConfigType;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Remote store extra configuration.
       '';
     };
@@ -229,7 +229,7 @@ in {
           Timeout = 60;
         };
       '';
-      description = lib.mdDoc ''
+      description = ''
         Account section extra configuration.
       '';
     };

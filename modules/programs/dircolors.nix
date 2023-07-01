@@ -13,7 +13,7 @@ in {
     enable = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether to manage {file}`.dir_colors`
         and set `LS_COLORS`.
       '';
@@ -22,7 +22,7 @@ in {
     enableBashIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Bash integration.
       '';
     };
@@ -30,7 +30,7 @@ in {
     enableFishIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Fish integration.
       '';
     };
@@ -38,7 +38,7 @@ in {
     enableZshIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Zsh integration.
       '';
     };
@@ -46,7 +46,7 @@ in {
     settings = mkOption {
       type = with types; attrsOf str;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Options to add to {file}`.dir_colors` file.
         See {command}`dircolors --print-database`
         for options.
@@ -63,7 +63,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Extra lines added to {file}`.dir_colors` file.
       '';
     };

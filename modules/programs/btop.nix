@@ -28,9 +28,9 @@ in {
   meta.maintainers = [ hm.maintainers.GaetanLepage ];
 
   options.programs.btop = {
-    enable = mkEnableOption (lib.mdDoc "btop");
+    enable = mkEnableOption "btop";
 
-    package = mkPackageOptionMD pkgs "btop" { };
+    package = mkPackageOption pkgs "btop" { };
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool float int str ]);
@@ -39,7 +39,7 @@ in {
         color_theme = "Default";
         theme_background = false;
       };
-      description = lib.mdDoc ''
+      description = ''
         Options to add to {file}`btop.conf` file.
         See <https://github.com/aristocratos/btop#configurability>
         for options.
@@ -49,7 +49,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Extra lines added to the {file}`btop.conf` file.
       '';
     };

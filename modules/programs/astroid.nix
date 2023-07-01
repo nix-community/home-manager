@@ -55,13 +55,13 @@ let
 in {
   options = {
     programs.astroid = {
-      enable = mkEnableOption (lib.mdDoc "Astroid");
+      enable = mkEnableOption "Astroid";
 
       pollScript = mkOption {
         type = types.str;
         default = "";
         example = "mbsync gmail";
-        description = lib.mdDoc ''
+        description = ''
           Script to run to fetch/update mails.
         '';
       };
@@ -79,7 +79,7 @@ in {
           };
         example =
           "nvim-qt -- -c 'set ft=mail' '+set fileencoding=utf-8' '+set ff=unix' '+set enc=utf-8' '+set fo+=w' %1";
-        description = lib.mdDoc ''
+        description = ''
           You can use the following variables:
 
           `%1`
@@ -104,7 +104,7 @@ in {
             poll.interval = 0;
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           JSON config that will override the default Astroid configuration.
         '';
       };

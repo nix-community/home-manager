@@ -56,13 +56,13 @@ in {
 
   options = {
     programs.lf = {
-      enable = mkEnableOption (lib.mdDoc "lf");
+      enable = mkEnableOption "lf";
 
       package = mkOption {
         type = types.package;
         default = pkgs.lf;
         defaultText = literalExpression "pkgs.lf";
-        description = lib.mdDoc ''
+        description = ''
           lf package to use.
         '';
       };
@@ -75,7 +75,7 @@ in {
           number = true;
           ratios = "1:1:2";
         };
-        description = lib.mdDoc ''
+        description = ''
           An attribute set of lf settings. The attribute names and corresponding
           values must be among the following supported options.
 
@@ -99,7 +99,7 @@ in {
           get-mime-type = ''%xdg-mime query filetype "$f"'';
           open = "$$OPENER $f";
         };
-        description = lib.mdDoc ''
+        description = ''
           Commands to declare. Commands set to null or an empty string are
           deleted.
         '';
@@ -115,7 +115,7 @@ in {
           U = "!du -sh";
           gg = null;
         };
-        description = lib.mdDoc
+        description =
           "Keys to bind. Keys set to null or an empty string are deleted.";
       };
 
@@ -123,7 +123,7 @@ in {
         type = with types; attrsOf (nullOr str);
         default = { };
         example = literalExpression ''{ "<c-g>" = "cmd-escape"; }'';
-        description = lib.mdDoc ''
+        description = ''
           Keys to bind to command line commands which can only be one of the
           builtin commands. Keys set to null or an empty string are deleted.
         '';
@@ -146,7 +146,7 @@ in {
             esac
           '''
         '';
-        description = lib.mdDoc ''
+        description = ''
           Script or executable to use to preview files. Sets lf's
           {var}`previewer` option.
         '';
@@ -156,7 +156,7 @@ in {
         type = with types; nullOr str;
         default = null;
         example = "i";
-        description = lib.mdDoc ''
+        description = ''
           Key to bind to the script at {var}`previewer.source` and
           pipe through less. Setting to null will not bind any key.
         '';
@@ -168,7 +168,7 @@ in {
         example = ''
           $mkdir -p ~/.trash
         '';
-        description = lib.mdDoc "Custom lfrc lines.";
+        description = "Custom lfrc lines.";
       };
     };
   };

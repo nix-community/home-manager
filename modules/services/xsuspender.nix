@@ -11,44 +11,43 @@ let
   xsuspenderOptions = types.submodule {
     options = {
       matchWmClassContains = mkOption {
-        description = lib.mdDoc "Match windows that wm class contains string.";
+        description = "Match windows that wm class contains string.";
         type = types.nullOr types.str;
         default = null;
       };
 
       matchWmClassGroupContains = mkOption {
-        description =
-          lib.mdDoc "Match windows where wm class group contains string.";
+        description = "Match windows where wm class group contains string.";
         type = types.nullOr types.str;
         default = null;
       };
 
       matchWmNameContains = mkOption {
-        description = lib.mdDoc "Match windows where wm name contains string.";
+        description = "Match windows where wm name contains string.";
         type = types.nullOr types.str;
         default = null;
       };
 
       suspendDelay = mkOption {
-        description = lib.mdDoc "Initial suspend delay in seconds.";
+        description = "Initial suspend delay in seconds.";
         type = types.int;
         default = 5;
       };
 
       resumeEvery = mkOption {
-        description = lib.mdDoc "Resume interval in seconds.";
+        description = "Resume interval in seconds.";
         type = types.int;
         default = 50;
       };
 
       resumeFor = mkOption {
-        description = lib.mdDoc "Resume duration in seconds.";
+        description = "Resume duration in seconds.";
         type = types.int;
         default = 5;
       };
 
       execSuspend = mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Before suspending, execute this shell script. If it fails,
           abort suspension.
         '';
@@ -58,7 +57,7 @@ let
       };
 
       execResume = mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Before resuming, execute this shell script. Resume the
           process regardless script failure.
         '';
@@ -68,7 +67,7 @@ let
       };
 
       sendSignals = mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Whether to send SIGSTOP / SIGCONT signals or not.
           If false just the exec scripts are run.
         '';
@@ -78,20 +77,19 @@ let
 
       suspendSubtreePattern = mkOption {
         description =
-          lib.mdDoc "Also suspend descendant processes that match this regex.";
+          "Also suspend descendant processes that match this regex.";
         type = types.nullOr types.str;
         default = null;
       };
 
       onlyOnBattery = mkOption {
-        description =
-          lib.mdDoc "Whether to enable process suspend only on battery.";
+        description = "Whether to enable process suspend only on battery.";
         type = types.bool;
         default = false;
       };
 
       autoSuspendOnBattery = mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Whether to auto-apply rules when switching to battery
           power even if the window(s) didn't just lose focus.
         '';
@@ -100,7 +98,7 @@ let
       };
 
       downclockOnBattery = mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Limit CPU consumption for this factor when on battery power.
           Value 1 means 50% decrease, 2 means 66%, 3 means 75% etc.
         '';
@@ -115,16 +113,16 @@ in {
 
   options = {
     services.xsuspender = {
-      enable = mkEnableOption (lib.mdDoc "XSuspender");
+      enable = mkEnableOption "XSuspender";
 
       defaults = mkOption {
-        description = lib.mdDoc "XSuspender defaults.";
+        description = "XSuspender defaults.";
         type = xsuspenderOptions;
         default = { };
       };
 
       rules = mkOption {
-        description = lib.mdDoc "Attribute set of XSuspender rules.";
+        description = "Attribute set of XSuspender rules.";
         type = types.attrsOf xsuspenderOptions;
         default = { };
         example = {
@@ -137,7 +135,7 @@ in {
       };
 
       debug = mkOption {
-        description = lib.mdDoc "Whether to enable debug output.";
+        description = "Whether to enable debug output.";
         type = types.bool;
         default = false;
       };

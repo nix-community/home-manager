@@ -10,18 +10,18 @@ let
 in {
   meta.maintainers = [ hm.maintainers.florpe ];
   options.programs.pylint = {
-    enable = mkEnableOption (lib.mdDoc "the pylint Python linter");
+    enable = mkEnableOption "the pylint Python linter";
     package = mkOption {
       type = types.package;
       default = pkgs.python3Packages.pylint;
       defaultText = literalExpression "pkgs.python3Packages.pylint";
-      description = lib.mdDoc "The pylint package to use.";
+      description = "The pylint package to use.";
     };
     settings = mkOption {
       type = iniFormat.type;
       default = { };
       defaultText = literalExpression "{}";
-      description = lib.mdDoc "The pylint configuration.";
+      description = "The pylint configuration.";
     };
   };
   config = mkIf cfg.enable {

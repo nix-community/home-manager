@@ -14,8 +14,8 @@ in {
 
   options = {
     programs.java = {
-      enable = mkEnableOption (lib.mdDoc "") // {
-        description = lib.mdDoc ''
+      enable = mkEnableOption "" // {
+        description = ''
           Install the Java development kit and set the
           {env}`JAVA_HOME` variable.
         '';
@@ -25,7 +25,7 @@ in {
         type = types.package;
         default = pkgs.jdk;
         defaultText = "pkgs.jdk";
-        description = lib.mdDoc ''
+        description = ''
           Java package to install. Typical values are
           `pkgs.jdk` or `pkgs.jre`.
         '';

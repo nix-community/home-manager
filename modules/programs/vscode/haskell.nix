@@ -23,21 +23,19 @@ let
 
 in {
   options.programs.vscode.haskell = {
-    enable =
-      mkEnableOption (lib.mdDoc "Haskell integration for Visual Studio Code");
+    enable = mkEnableOption "Haskell integration for Visual Studio Code";
 
     hie.enable = mkOption {
       type = types.bool;
       default = true;
-      description =
-        lib.mdDoc "Whether to enable Haskell IDE engine integration.";
+      description = "Whether to enable Haskell IDE engine integration.";
     };
 
     hie.executablePath = mkOption {
       type = types.path;
       default = defaultHieNixExe;
       defaultText = defaultHieNixExeText;
-      description = lib.mdDoc ''
+      description = ''
         The path to the Haskell IDE Engine executable.
 
         Because hie-nix is not packaged in Nixpkgs, you need to add it as an

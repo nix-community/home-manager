@@ -14,7 +14,7 @@ let
         type = types.str;
         default = "";
         example = "Count the number of commits in the current branch";
-        description = lib.mdDoc ''
+        description = ''
           Description of the snippet.
         '';
       };
@@ -23,7 +23,7 @@ let
         type = types.str;
         default = "";
         example = "git rev-list --count HEAD";
-        description = lib.mdDoc ''
+        description = ''
           The command.
         '';
       };
@@ -32,7 +32,7 @@ let
         type = types.str;
         default = "";
         example = "473";
-        description = lib.mdDoc ''
+        description = ''
           Example output of the command.
         '';
       };
@@ -41,7 +41,7 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = literalExpression ''["git" "nixpkgs"]'';
-        description = lib.mdDoc ''
+        description = ''
           List of tags attached to the command.
         '';
       };
@@ -50,12 +50,12 @@ let
 
 in {
   options.programs.pet = {
-    enable = mkEnableOption (lib.mdDoc "pet");
+    enable = mkEnableOption "pet";
 
     settings = mkOption {
       type = format.type;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Settings written to {file}`config.toml`. See the pet
         documentation for details.
       '';
@@ -65,7 +65,7 @@ in {
       type = types.package;
       default = pkgs.fzf;
       defaultText = literalExpression "pkgs.fzf";
-      description = lib.mdDoc ''
+      description = ''
         The package needed for the {var}`settings.selectcmd`.
       '';
     };
@@ -73,7 +73,7 @@ in {
     snippets = mkOption {
       type = types.listOf snippetType;
       default = [ ];
-      description = lib.mdDoc ''
+      description = ''
         The snippets.
       '';
     };

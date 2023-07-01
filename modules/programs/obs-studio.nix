@@ -11,13 +11,13 @@ in {
 
   options = {
     programs.obs-studio = {
-      enable = mkEnableOption (lib.mdDoc "obs-studio");
+      enable = mkEnableOption "obs-studio";
 
       package = mkOption {
         type = types.package;
         default = pkgs.obs-studio;
         defaultText = literalExpression "pkgs.obs-studio";
-        description = lib.mdDoc ''
+        description = ''
           OBS Studio package to install.
         '';
       };
@@ -26,13 +26,13 @@ in {
         type = types.package;
         visible = false;
         readOnly = true;
-        description = lib.mdDoc "Resulting customized OBS Studio package.";
+        description = "Resulting customized OBS Studio package.";
       };
 
       plugins = mkOption {
         default = [ ];
         example = literalExpression "[ pkgs.obs-studio-plugins.wlrobs ]";
-        description = lib.mdDoc "Optional OBS plugins.";
+        description = "Optional OBS plugins.";
         type = types.listOf types.package;
       };
     };

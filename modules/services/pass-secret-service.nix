@@ -10,16 +10,16 @@ in {
   meta.maintainers = with maintainers; [ cab404 cyntheticfox ];
 
   options.services.pass-secret-service = {
-    enable = mkEnableOption (lib.mdDoc "Pass libsecret service");
+    enable = mkEnableOption "Pass libsecret service";
 
-    package = mkPackageOptionMD pkgs "pass-secret-service" { };
+    package = mkPackageOption pkgs "pass-secret-service" { };
 
     storePath = mkOption {
       type = with types; nullOr str;
       default = null;
       defaultText = "$HOME/.password-store";
       example = "/home/user/.local/share/password-store";
-      description = lib.mdDoc ''
+      description = ''
         Absolute path to password store. Defaults to
         {file}`$HOME/.password-store` if the
         {option}`programs.password-store` module is not enabled, and

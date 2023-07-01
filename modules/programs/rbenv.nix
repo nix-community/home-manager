@@ -10,13 +10,13 @@ let
     options = {
       src = mkOption {
         type = types.path;
-        description = lib.mdDoc ''
+        description = ''
           Path to the plugin folder.
         '';
       };
       name = mkOption {
         type = types.str;
-        description = lib.mdDoc ''
+        description = ''
           Name of the plugin.
         '';
       };
@@ -27,9 +27,9 @@ in {
   meta.maintainers = [ ];
 
   options.programs.rbenv = {
-    enable = mkEnableOption (lib.mdDoc "rbenv");
+    enable = mkEnableOption "rbenv";
 
-    package = mkPackageOptionMD pkgs "rbenv" { };
+    package = mkPackageOption pkgs "rbenv" { };
 
     plugins = mkOption {
       type = types.listOf pluginModule;
@@ -47,7 +47,7 @@ in {
           }
         ]
       '';
-      description = lib.mdDoc ''
+      description = ''
         rbenv plugins to install in {file}`$HOME/.rbenv/plugins/`.
 
         See <https://github.com/rbenv/rbenv/wiki/Plugins>
@@ -55,15 +55,15 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption (lib.mdDoc "Bash integration") // {
+    enableBashIntegration = mkEnableOption "Bash integration" // {
       default = true;
     };
 
-    enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh integration") // {
+    enableZshIntegration = mkEnableOption "Zsh integration" // {
       default = true;
     };
 
-    enableFishIntegration = mkEnableOption (lib.mdDoc "Fish integration") // {
+    enableFishIntegration = mkEnableOption "Fish integration" // {
       default = true;
     };
   };

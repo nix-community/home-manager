@@ -9,7 +9,7 @@ in {
       enable = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable manual pages and the {command}`man`
           command. This also includes "man" outputs of all
           `home.packages`.
@@ -20,13 +20,13 @@ in {
         type = types.package;
         default = pkgs.man;
         defaultText = literalExpression "pkgs.man";
-        description = lib.mdDoc "The man package to use.";
+        description = "The man package to use.";
       };
 
       generateCaches = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to generate the manual page index caches using
           {manpage}`mandb(8)`. This allows searching for a page or
           keyword using utilities like {manpage}`apropos(1)`.

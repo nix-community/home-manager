@@ -9,9 +9,7 @@ let
 in {
   meta.maintainers = [ maintainers.evanjs ];
 
-  options = {
-    xsession.numlock.enable = mkEnableOption (lib.mdDoc "Num Lock");
-  };
+  options = { xsession.numlock.enable = mkEnableOption "Num Lock"; };
 
   config = mkIf cfg.enable {
     assertions = [

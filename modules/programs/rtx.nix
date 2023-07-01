@@ -10,20 +10,19 @@ in {
 
   options = {
     programs.rtx = {
-      enable =
-        mkEnableOption (lib.mdDoc "RTX. Runtime Executor (asdf Rust clone)");
+      enable = mkEnableOption "RTX. Runtime Executor (asdf Rust clone)";
 
-      package = mkPackageOptionMD pkgs "rtx" { };
+      package = mkPackageOption pkgs "rtx" { };
 
-      enableBashIntegration = mkEnableOption (lib.mdDoc "Bash Integration") // {
+      enableBashIntegration = mkEnableOption "Bash Integration" // {
         default = true;
       };
 
-      enableZshIntegration = mkEnableOption (lib.mdDoc "Zsh Integration") // {
+      enableZshIntegration = mkEnableOption "Zsh Integration" // {
         default = true;
       };
 
-      enableFishIntegration = mkEnableOption (lib.mdDoc "Fish Integration") // {
+      enableFishIntegration = mkEnableOption "Fish Integration" // {
         default = true;
       };
 
@@ -41,7 +40,7 @@ in {
             experimental = false;
           };
         '';
-        description = lib.mdDoc ''
+        description = ''
           Settings written to {file}`$XDG_CONFIG_HOME/rtx/config.toml`.
 
           See <https://github.com/jdxcode/rtx#global-config-configrtxconfigtoml>

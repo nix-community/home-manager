@@ -70,13 +70,13 @@ let
 in {
   options = {
     services.polybar = {
-      enable = mkEnableOption (lib.mdDoc "Polybar status bar");
+      enable = mkEnableOption "Polybar status bar";
 
       package = mkOption {
         type = types.package;
         default = pkgs.polybar;
         defaultText = literalExpression "pkgs.polybar";
-        description = lib.mdDoc "Polybar package to install.";
+        description = "Polybar package to install.";
         example = literalExpression ''
           pkgs.polybar.override {
             i3GapsSupport = true;
@@ -91,7 +91,7 @@ in {
         type = types.coercedTo types.path
           (p: { "section/base" = { include-file = "${p}"; }; })
           (types.attrsOf (types.attrsOf eitherStrBoolIntList));
-        description = lib.mdDoc ''
+        description = ''
           Polybar configuration. Can be either path to a file, or set of attributes
           that will be used to create the final configuration.
           See also {option}`services.polybar.settings` for a more nix-friendly format.
@@ -122,7 +122,7 @@ in {
         type = with types;
           let ty = oneOf [ bool int float str (listOf ty) (attrsOf ty) ];
           in attrsOf (attrsOf ty // { description = "attribute sets"; });
-        description = lib.mdDoc ''
+        description = ''
           Polybar configuration. This takes a nix attrset and converts it to the
           strange data format that polybar uses.
           Each entry will be converted to a section in the output file.
@@ -172,7 +172,7 @@ in {
 
       extraConfig = mkOption {
         type = types.lines;
-        description = lib.mdDoc "Additional configuration to add.";
+        description = "Additional configuration to add.";
         default = "";
         example = ''
           [module/date]
@@ -187,7 +187,7 @@ in {
 
       script = mkOption {
         type = types.lines;
-        description = lib.mdDoc ''
+        description = ''
           This script will be used to start the polybars.
           Set all necessary environment variables here and start all bars.
           It can be assumed that {command}`polybar` executable is in the {env}`PATH`.

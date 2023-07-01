@@ -26,7 +26,7 @@ in {
             };
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           kime configuration. Refer to
           <https://github.com/Riey/kime/blob/develop/docs/CONFIGURATION.md>
           for details on supported values.

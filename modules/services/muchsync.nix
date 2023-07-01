@@ -12,7 +12,7 @@ let
       frequency = mkOption {
         type = types.str;
         default = "*:0/5";
-        description = lib.mdDoc ''
+        description = ''
           How often to run {command}`muchsync`. This
           value is passed to the systemd timer configuration as the
           `OnCalendar` option. See
@@ -25,7 +25,7 @@ let
         type = types.str;
         default = "${pkgs.openssh}/bin/ssh -CTaxq";
         defaultText = "ssh -CTaxq";
-        description = lib.mdDoc ''
+        description = ''
           Specifies a command line to pass to {command}`/bin/sh`
           to execute a command on another machine.
 
@@ -37,7 +37,7 @@ let
       upload = mkOption {
         type = types.bool;
         default = true;
-        description = lib.mdDoc ''
+        description = ''
           Whether to propagate local changes to the remote.
         '';
       };
@@ -46,7 +46,7 @@ let
         checkForModifiedFiles = mkOption {
           type = types.bool;
           default = false;
-          description = lib.mdDoc ''
+          description = ''
             Check for locally modified files.
             Without this option, muchsync assumes that files in a maildir are
             never edited.
@@ -65,7 +65,7 @@ let
         importNew = mkOption {
           type = types.bool;
           default = true;
-          description = lib.mdDoc ''
+          description = ''
             Whether to begin the synchronisation by running
             {command}`notmuch new` locally.
           '';
@@ -75,7 +75,7 @@ let
       remote = {
         host = mkOption {
           type = types.str;
-          description = lib.mdDoc ''
+          description = ''
             Remote SSH host to synchronize with.
           '';
         };
@@ -84,7 +84,7 @@ let
           type = types.str;
           default = "";
           defaultText = "$PATH/muchsync";
-          description = lib.mdDoc ''
+          description = ''
             Specifies the path to muchsync on the server.
             Ordinarily, muchsync should be in the default PATH on the server
             so this option is not required.
@@ -97,7 +97,7 @@ let
         checkForModifiedFiles = mkOption {
           type = types.bool;
           default = false;
-          description = lib.mdDoc ''
+          description = ''
             Check for modified files on the remote side.
             Without this option, muchsync assumes that files in a maildir are
             never edited.
@@ -116,7 +116,7 @@ let
         importNew = mkOption {
           type = types.bool;
           default = true;
-          description = lib.mdDoc ''
+          description = ''
             Whether to begin the synchronisation by running
             {command}`notmuch new` on the remote side.
           '';
@@ -140,7 +140,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Muchsync remotes to synchronise with.
       '';
     };

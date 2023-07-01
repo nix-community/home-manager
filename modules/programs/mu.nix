@@ -27,7 +27,7 @@ in {
 
   options = {
     programs.mu = {
-      enable = mkEnableOption (lib.mdDoc "mu, a maildir indexer and searcher");
+      enable = mkEnableOption "mu, a maildir indexer and searcher";
 
       # No options/config file present for mu, and program author will not be
       # adding one soon. See https://github.com/djcb/mu/issues/882 for more
@@ -36,9 +36,8 @@ in {
 
     accounts.email.accounts = mkOption {
       type = with types;
-        attrsOf (submodule {
-          options.mu.enable = mkEnableOption (lib.mdDoc "mu indexing");
-        });
+        attrsOf
+        (submodule { options.mu.enable = mkEnableOption "mu indexing"; });
     };
   };
 

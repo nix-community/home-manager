@@ -12,13 +12,13 @@ in {
   meta.maintainers = [ ];
 
   options.programs.zoxide = {
-    enable = mkEnableOption (lib.mdDoc "zoxide");
+    enable = mkEnableOption "zoxide";
 
     package = mkOption {
       type = types.package;
       default = pkgs.zoxide;
       defaultText = literalExpression "pkgs.zoxide";
-      description = lib.mdDoc ''
+      description = ''
         Zoxide package to install.
       '';
     };
@@ -27,7 +27,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--no-aliases" ];
-      description = lib.mdDoc ''
+      description = ''
         List of options to pass to zoxide.
       '';
     };
@@ -35,7 +35,7 @@ in {
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Bash integration.
       '';
     };
@@ -43,7 +43,7 @@ in {
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Zsh integration.
       '';
     };
@@ -51,7 +51,7 @@ in {
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Fish integration.
       '';
     };
@@ -59,7 +59,7 @@ in {
     enableNushellIntegration = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc ''
+      description = ''
         Whether to enable Nushell integration.
       '';
     };

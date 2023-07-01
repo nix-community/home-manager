@@ -35,18 +35,17 @@ let
       options = {
         org = mkOption {
           type = types.str;
-          description =
-            lib.mdDoc "The organization the artifact is published under.";
+          description = "The organization the artifact is published under.";
         };
 
         artifact = mkOption {
           type = types.str;
-          description = lib.mdDoc "The name of the artifact.";
+          description = "The name of the artifact.";
         };
 
         version = mkOption {
           type = types.str;
-          description = lib.mdDoc "The version of the plugin.";
+          description = "The version of the plugin.";
         };
       };
     };
@@ -55,24 +54,23 @@ let
       options = {
         realm = mkOption {
           type = types.str;
-          description =
-            lib.mdDoc "The realm of the repository you're authenticating to.";
+          description = "The realm of the repository you're authenticating to.";
         };
 
         host = mkOption {
           type = types.str;
-          description = lib.mdDoc
+          description =
             "The hostname of the repository you're authenticating to.";
         };
 
         user = mkOption {
           type = types.str;
-          description = lib.mdDoc "The user you're using to authenticate.";
+          description = "The user you're using to authenticate.";
         };
 
         passwordCommand = mkOption {
           type = types.str;
-          description = lib.mdDoc ''
+          description = ''
             The command that provides the password or authentication token for
             the repository.
           '';
@@ -92,19 +90,19 @@ in {
   meta.maintainers = [ maintainers.kubukoz ];
 
   options.programs.sbt = {
-    enable = mkEnableOption (lib.mdDoc "sbt");
+    enable = mkEnableOption "sbt";
 
     package = mkOption {
       type = types.package;
       default = pkgs.sbt;
       defaultText = literalExpression "pkgs.sbt";
-      description = lib.mdDoc "The package with sbt to be installed.";
+      description = "The package with sbt to be installed.";
     };
 
     baseUserConfigPath = mkOption {
       type = types.str;
       default = ".sbt";
-      description = lib.mdDoc ''
+      description = ''
         Where the sbt configuration files should be located, relative
         {env}`HOME`.
       '';
@@ -127,7 +125,7 @@ in {
           }
         ]
       '';
-      description = lib.mdDoc ''
+      description = ''
         A list of plugins to place in the sbt configuration directory.
       '';
     };
@@ -143,7 +141,7 @@ in {
           passwordCommand = "pass show sbt/user@example.com";
         }]
       '';
-      description = lib.mdDoc ''
+      description = ''
         A list of credentials to define in the sbt configuration directory.
       '';
     };
@@ -161,7 +159,7 @@ in {
           "maven-central"
         ]
       '';
-      description = lib.mdDoc ''
+      description = ''
         A list of repositories to use when resolving dependencies. Defined as a
         list of pre-defined repository or custom repository as a set of name to
         URL. The list will be used populate the `~/.sbt/repositories`

@@ -10,7 +10,7 @@ with lib;
       type = types.bool;
       default = false;
       internal = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether the Home Manager module system is used as a submodule
         in, for example, NixOS or nix-darwin.
       '';
@@ -20,7 +20,7 @@ with lib;
       type = types.bool;
       default = false;
       internal = true;
-      description = lib.mdDoc ''
+      description = ''
         Whether the packages of {option}`home.packages` are
         installed separately from the Home Manager activation script.
         In NixOS, for example, this may be accomplished by installing

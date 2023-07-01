@@ -63,13 +63,13 @@ let
 in {
   options = {
     programs.vim = {
-      enable = mkEnableOption (lib.mdDoc "Vim");
+      enable = mkEnableOption "Vim";
 
       plugins = mkOption {
         type = with types; listOf (either str package);
         default = defaultPlugins;
         example = literalExpression "[ pkgs.vimPlugins.YankRing ]";
-        description = lib.mdDoc ''
+        description = ''
           List of vim plugins to install. To get a list of supported plugins run:
           {command}`nix-env -f '<nixpkgs>' -qaP -A vimPlugins`.
 
@@ -87,7 +87,7 @@ in {
             background = "dark";
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           At attribute set of Vim settings. The attribute names and
           corresponding values must be among the following supported
           options.
@@ -110,18 +110,18 @@ in {
           set nocompatible
           set nobackup
         '';
-        description = lib.mdDoc "Custom .vimrc lines";
+        description = "Custom .vimrc lines";
       };
 
       package = mkOption {
         type = types.package;
-        description = lib.mdDoc "Resulting customized vim package";
+        description = "Resulting customized vim package";
         readOnly = true;
       };
 
       packageConfigurable = mkOption {
         type = types.package;
-        description = lib.mdDoc "Vim package to customize";
+        description = "Vim package to customize";
         default = pkgs.vim-full or pkgs.vim_configurable;
         defaultText = literalExpression "pkgs.vim-full";
         example = literalExpression "pkgs.vim";
@@ -130,7 +130,7 @@ in {
       defaultEditor = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to configure {command}`vim` as the default
           editor using the {env}`EDITOR` environment variable.
         '';

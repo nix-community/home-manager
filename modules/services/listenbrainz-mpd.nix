@@ -2,7 +2,7 @@
 
 let
 
-  inherit (lib.options) mkEnableOption mkPackageOptionMD mkOption;
+  inherit (lib.options) mkEnableOption mkPackageOption mkOption;
   inherit (lib.modules) mkIf;
 
   cfg = config.services.listenbrainz-mpd;
@@ -13,14 +13,14 @@ in {
   meta.maintainers = [ lib.maintainers.Scrumplex ];
 
   options.services.listenbrainz-mpd = {
-    enable = mkEnableOption (lib.mdDoc "listenbrainz-mpd");
+    enable = mkEnableOption "listenbrainz-mpd";
 
-    package = mkPackageOptionMD pkgs "listenbrainz-mpd" { };
+    package = mkPackageOption pkgs "listenbrainz-mpd" { };
 
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Configuration for listenbrainz-mpd written to
         {file}`$XDG_CONFIG_HOME/listenbrainz-mpd/config.toml`.
       '';

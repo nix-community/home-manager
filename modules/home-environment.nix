@@ -13,7 +13,7 @@ let
       base = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use unless overridden by a more specific option.
         '';
       };
@@ -21,7 +21,7 @@ let
       ctype = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           Character classification category.
         '';
       };
@@ -29,7 +29,7 @@ let
       numeric = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use for numerical values.
         '';
       };
@@ -37,7 +37,7 @@ let
       time = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use for formatting times.
         '';
       };
@@ -45,7 +45,7 @@ let
       collate = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use for collation (alphabetical ordering).
         '';
       };
@@ -53,7 +53,7 @@ let
       monetary = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use for formatting currencies and money amounts.
         '';
       };
@@ -61,7 +61,7 @@ let
       messages = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use for messages, application UI languages, etc.
         '';
       };
@@ -69,7 +69,7 @@ let
       paper = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use for paper sizes.
         '';
       };
@@ -77,7 +77,7 @@ let
       name = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use for personal names.
         '';
       };
@@ -85,7 +85,7 @@ let
       address = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use for addresses.
         '';
       };
@@ -93,7 +93,7 @@ let
       telephone = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use for telephone numbers.
         '';
       };
@@ -101,7 +101,7 @@ let
       measurement = mkOption {
         default = null;
         type = types.nullOr types.str;
-        description = lib.mdDoc ''
+        description = ''
           The language to use for measurement values.
         '';
       };
@@ -118,7 +118,7 @@ let
           then null
           else "us";
         defaultText = literalExpression "null";
-        description = lib.mdDoc ''
+        description = ''
           Keyboard layout. If `null`, then the system
           configuration will be used.
 
@@ -131,7 +131,7 @@ let
         type = with types; nullOr str;
         default = null;
         example = "presario";
-        description = lib.mdDoc ''
+        description = ''
           Keyboard model.
         '';
       };
@@ -140,7 +140,7 @@ let
         type = types.listOf types.str;
         default = [];
         example = ["grp:caps_toggle" "grp_led:scroll"];
-        description = lib.mdDoc ''
+        description = ''
           X keyboard options; layout switching goes here.
         '';
       };
@@ -153,7 +153,7 @@ let
           else "";
         defaultText = literalExpression "null";
         example = "colemak";
-        description = lib.mdDoc ''
+        description = ''
           X keyboard variant. If `null`, then the
           system configuration will be used.
 
@@ -189,7 +189,7 @@ in
         undefined for state version ≥ 20.09
       '';
       example = "jane.doe";
-      description = lib.mdDoc "The user's username.";
+      description = "The user's username.";
     };
 
     home.homeDirectory = mkOption {
@@ -200,7 +200,7 @@ in
       '';
       apply = toString;
       example = "/home/jane.doe";
-      description = lib.mdDoc "The user's home directory. Must be an absolute path.";
+      description = "The user's home directory. Must be an absolute path.";
     };
 
     home.profileDirectory = mkOption {
@@ -210,7 +210,7 @@ in
         "/etc/profiles/per-user/''${home.username}"
       '';
       readOnly = true;
-      description = lib.mdDoc ''
+      description = ''
         The profile directory where Home Manager generations are installed.
       '';
     };
@@ -218,7 +218,7 @@ in
     home.language = mkOption {
       type = languageSubModule;
       default = {};
-      description = lib.mdDoc "Language configuration.";
+      description = "Language configuration.";
     };
 
     home.keyboard = mkOption {
@@ -228,7 +228,7 @@ in
         "{ }"  for state version < 21.11,
         "null" for state version ≥ 21.11
       '';
-      description = lib.mdDoc ''
+      description = ''
         Keyboard configuration. Set to `null` to
         disable Home Manager keyboard management.
       '';
@@ -243,7 +243,7 @@ in
           "..." = "cd ../..";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         An attribute set that maps aliases (the top level attribute names
         in this option) to command strings or directly to build outputs.
 
@@ -258,7 +258,7 @@ in
       default = {};
       type = with types; lazyAttrsOf (oneOf [ str path int float ]);
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
-      description = lib.mdDoc ''
+      description = ''
         Environment variables to always set at login.
 
         The values may refer to other environment variables using
@@ -294,7 +294,7 @@ in
     home.sessionVariablesPackage = mkOption {
       type = types.package;
       internal = true;
-      description = lib.mdDoc ''
+      description = ''
         The package containing the
         {file}`hm-session-vars.sh` file.
       '';
@@ -308,7 +308,7 @@ in
         "\${xdg.configHome}/emacs/bin"
         ".git/safe/../../bin"
       ];
-      description = lib.mdDoc ''
+      description = ''
         Extra directories to add to {env}`PATH`.
 
         These directories are added to the {env}`PATH` variable in a
@@ -323,7 +323,7 @@ in
       type = types.lines;
       default = "";
       internal = true;
-      description = lib.mdDoc ''
+      description = ''
         Extra configuration to add to the
         {file}`hm-session-vars.sh` file.
       '';
@@ -332,14 +332,14 @@ in
     home.packages = mkOption {
       type = types.listOf types.package;
       default = [];
-      description = lib.mdDoc "The set of packages to appear in the user environment.";
+      description = "The set of packages to appear in the user environment.";
     };
 
     home.extraOutputsToInstall = mkOption {
       type = types.listOf types.str;
       default = [];
       example = [ "doc" "info" "devdoc" ];
-      description = lib.mdDoc ''
+      description = ''
         List of additional package outputs of the packages
         {var}`home.packages` that should be installed into
         the user environment.
@@ -348,7 +348,7 @@ in
 
     home.path = mkOption {
       internal = true;
-      description = lib.mdDoc "The derivation installing the user packages.";
+      description = "The derivation installing the user packages.";
     };
 
     home.emptyActivationPath = mkOption {
@@ -359,7 +359,7 @@ in
         false   for state version < 22.11,
         true    for state version ≥ 22.11
       '';
-      description = lib.mdDoc ''
+      description = ''
         Whether the activation script should start with an empty
         {env}`PATH` variable. When `false` then the
         user's {env}`PATH` will be accessible in the script. It is
@@ -379,7 +379,7 @@ in
           ''';
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         The activation scripts blocks to run when activating a Home
         Manager generation. Any entry here should be idempotent,
         meaning running twice or more times produces the same result
@@ -414,14 +414,14 @@ in
     home.activationPackage = mkOption {
       internal = true;
       type = types.package;
-      description = lib.mdDoc "The package containing the complete activation script.";
+      description = "The package containing the complete activation script.";
     };
 
     home.extraActivationPath = mkOption {
       internal = true;
       type = types.listOf types.package;
       default = [ ];
-      description = lib.mdDoc ''
+      description = ''
         Extra packages to add to {env}`PATH` within the activation
         script.
       '';
@@ -431,7 +431,7 @@ in
       type = types.lines;
       default = "";
       internal = true;
-      description = lib.mdDoc ''
+      description = ''
         Extra commands to run in the Home Manager generation builder.
       '';
     };
@@ -440,7 +440,7 @@ in
       type = types.lines;
       default = "";
       internal = true;
-      description = lib.mdDoc ''
+      description = ''
         Extra commands to run in the Home Manager profile builder.
       '';
     };
@@ -448,7 +448,7 @@ in
     home.enableNixpkgsReleaseCheck = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Determines whether to check for release version mismatch between Home
         Manager and Nixpkgs. Using mismatched versions is likely to cause errors
         and unexpected behavior. It is therefore highly recommended to use a

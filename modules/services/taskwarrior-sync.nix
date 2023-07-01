@@ -10,12 +10,12 @@ in {
   meta.maintainers = with maintainers; [ minijackson pacien ];
 
   options.services.taskwarrior-sync = {
-    enable = mkEnableOption (lib.mdDoc "Taskwarrior periodic sync");
+    enable = mkEnableOption "Taskwarrior periodic sync";
 
     frequency = mkOption {
       type = types.str;
       default = "*:0/5";
-      description = lib.mdDoc ''
+      description = ''
         How often to run `taskwarrior sync`. This
         value is passed to the systemd timer configuration as the
         `OnCalendar` option. See

@@ -11,13 +11,13 @@ in {
 
   options = {
     services.notify-osd = {
-      enable = mkEnableOption (lib.mdDoc "notify-osd");
+      enable = mkEnableOption "notify-osd";
 
       package = mkOption {
         type = types.package;
         default = pkgs.notify-osd;
         defaultText = literalExpression "pkgs.notify-osd";
-        description = lib.mdDoc ''
+        description = ''
           Package containing the {command}`notify-osd` program.
         '';
       };

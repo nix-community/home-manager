@@ -10,9 +10,9 @@ in {
   meta.maintainers = [ hm.maintainers.pltanton ];
 
   options.services.swayosd = {
-    enable = mkEnableOption (lib.mdDoc ''
+    enable = mkEnableOption ''
       swayosd, a GTK based on screen display for keyboard shortcuts like
-      caps-lock and volume'');
+      caps-lock and volume'';
 
     package = mkPackageOption pkgs "swayosd" { };
 
@@ -20,7 +20,7 @@ in {
       type = types.nullOr types.ints.unsigned;
       default = null;
       example = 120;
-      description = lib.mdDoc ''
+      description = ''
         Sets the maximum volume.
       '';
     };

@@ -9,20 +9,19 @@ let
 in {
   options = {
     services.stalonetray = {
-      enable = mkEnableOption (lib.mdDoc "Stalonetray system tray");
+      enable = mkEnableOption "Stalonetray system tray";
 
       package = mkOption {
         default = pkgs.stalonetray;
         defaultText = literalExpression "pkgs.stalonetray";
         type = types.package;
         example = literalExpression "pkgs.stalonetray";
-        description =
-          lib.mdDoc "The package to use for the Stalonetray binary.";
+        description = "The package to use for the Stalonetray binary.";
       };
 
       config = mkOption {
         type = with types; attrsOf (nullOr (either str (either bool int)));
-        description = lib.mdDoc ''
+        description = ''
           Stalonetray configuration as a set of attributes.
         '';
         default = { };
@@ -37,8 +36,7 @@ in {
 
       extraConfig = mkOption {
         type = types.lines;
-        description =
-          lib.mdDoc "Additional configuration lines for stalonetrayrc.";
+        description = "Additional configuration lines for stalonetrayrc.";
         default = "";
         example = ''
           geometry 3x1-600+0

@@ -12,7 +12,7 @@ in {
   meta.maintainers = [ ];
 
   options.programs.gallery-dl = {
-    enable = mkEnableOption (lib.mdDoc "gallery-dl");
+    enable = mkEnableOption "gallery-dl";
 
     settings = mkOption {
       type = jsonFormat.type;
@@ -22,7 +22,7 @@ in {
           extractor.base-directory = "~/Downloads";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/gallery-dl/config.json`. See
         <https://github.com/mikf/gallery-dl#configuration>

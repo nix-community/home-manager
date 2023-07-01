@@ -31,14 +31,13 @@ let
     options = {
       key = mkOption {
         type = types.str;
-        description = lib.mdDoc "Key to bind.";
+        description = "Key to bind.";
         example = "j";
       };
 
       command = mkOption {
         type = with types; either str (listOf str);
-        description =
-          lib.mdDoc "Command or sequence of commands to be executed.";
+        description = "Command or sequence of commands to be executed.";
         example = "scroll_down";
       };
     };
@@ -48,14 +47,14 @@ in {
   meta.maintainers = [ hm.maintainers.olmokramer ];
 
   options.programs.ncmpcpp = {
-    enable = mkEnableOption
-      (lib.mdDoc "ncmpcpp - an ncurses Music Player Daemon (MPD) client");
+    enable =
+      mkEnableOption "ncmpcpp - an ncurses Music Player Daemon (MPD) client";
 
     package = mkOption {
       type = types.package;
       default = pkgs.ncmpcpp;
       defaultText = literalExpression "pkgs.ncmpcpp";
-      description = lib.mdDoc ''
+      description = ''
         Package providing the `ncmpcpp` command.
       '';
       example =
@@ -75,7 +74,7 @@ in {
         else
           null
       '';
-      description = lib.mdDoc ''
+      description = ''
         Value of the `mpd_music_dir` setting. On Linux platforms the
         value of {var}`services.mpd.musicDirectory` is used as the
         default if {var}`services.mpd.enable` is
@@ -87,7 +86,7 @@ in {
     settings = mkOption {
       type = types.attrsOf valueType;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Attribute set from name of a setting to its value. For available options
         see
         {manpage}`ncmpcpp(1)`.
@@ -98,7 +97,7 @@ in {
     bindings = mkOption {
       type = types.listOf bindingType;
       default = [ ];
-      description = lib.mdDoc "List of keybindings.";
+      description = "List of keybindings.";
       example = literalExpression ''
         [
           { key = "j"; command = "scroll_down"; }

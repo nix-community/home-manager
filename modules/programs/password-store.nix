@@ -10,7 +10,7 @@ in {
   meta.maintainers = with maintainers; [ pacien ];
 
   options.programs.password-store = {
-    enable = mkEnableOption (lib.mdDoc "Password store");
+    enable = mkEnableOption "Password store";
 
     package = mkOption {
       type = types.package;
@@ -19,7 +19,7 @@ in {
       example = literalExpression ''
         pkgs.pass.withExtensions (exts: [ exts.pass-otp ])
       '';
-      description = lib.mdDoc ''
+      description = ''
         The `pass` package to use.
         Can be used to specify extensions.
       '';
@@ -41,7 +41,7 @@ in {
           PASSWORD_STORE_CLIP_TIME = "60";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         The `pass` environment variables dictionary.
 
         See the "Environment variables" section of

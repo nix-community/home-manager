@@ -11,13 +11,13 @@ in {
 
   options = {
     xsession = {
-      enable = mkEnableOption (lib.mdDoc "X Session");
+      enable = mkEnableOption "X Session";
 
       scriptPath = mkOption {
         type = types.str;
         default = ".xsession";
         example = ".xsession-hm";
-        description = lib.mdDoc ''
+        description = ''
           Path, relative to {env}`HOME`, where Home Manager
           should write the X session script.
         '';
@@ -27,7 +27,7 @@ in {
         type = types.str;
         default = ".xprofile";
         example = ".xprofile-hm";
-        description = lib.mdDoc ''
+        description = ''
           Path, relative to {env}`HOME`, where Home Manager
           should write the X profile script.
         '';
@@ -44,7 +44,7 @@ in {
             "''${xmonad}/bin/xmonad";
         '';
         default = ''test -n "$1" && eval "$@"'';
-        description = lib.mdDoc ''
+        description = ''
           Command to use to start the window manager.
 
           The default value allows integration with NixOS' generated xserver configuration.
@@ -57,7 +57,7 @@ in {
         type = types.bool;
         default = false;
         example = true;
-        description = lib.mdDoc ''
+        description = ''
           Whether tray applets should prefer using the Status Notifier
           Items (SNI) protocol, commonly called App Indicators. Note,
           not all tray applets or status bars support SNI.
@@ -67,15 +67,13 @@ in {
       profileExtra = mkOption {
         type = types.lines;
         default = "";
-        description =
-          lib.mdDoc "Extra shell commands to run before session start.";
+        description = "Extra shell commands to run before session start.";
       };
 
       initExtra = mkOption {
         type = types.lines;
         default = "";
-        description =
-          lib.mdDoc "Extra shell commands to run during initialization.";
+        description = "Extra shell commands to run during initialization.";
       };
 
       importedVariables = mkOption {
@@ -83,7 +81,7 @@ in {
         apply = unique;
         example = [ "GDK_PIXBUF_ICON_LOADER" ];
         visible = false;
-        description = lib.mdDoc ''
+        description = ''
           Environment variables to import into the user systemd
           session. The will be available for use by graphical
           services.

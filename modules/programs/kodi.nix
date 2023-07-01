@@ -125,7 +125,7 @@ in {
   meta.maintainers = [ hm.maintainers.dwagenk ];
 
   options.programs.kodi = {
-    enable = mkEnableOption (lib.mdDoc "Kodi");
+    enable = mkEnableOption "Kodi";
 
     package = mkOption {
       type = types.package;
@@ -133,7 +133,7 @@ in {
       defaultText = literalExpression "pkgs.kodi";
       example = literalExpression
         "pkgs.kodi.withPackages (exts: [ exts.pvr-iptvsimple ])";
-      description = lib.mdDoc ''
+      description = ''
         The `kodi` package to use.
         Can be used to specify extensions.
       '';
@@ -145,7 +145,7 @@ in {
       defaultText =
         literalExpression ''"''${config.home.homeDirectory}/.kodi"'';
       example = literalExpression ''"''${config.xdg.dataHome}/kodi"'';
-      description = lib.mdDoc "Directory to store configuration and metadata.";
+      description = "Directory to store configuration and metadata.";
     };
 
     settings = mkOption {
@@ -159,7 +159,7 @@ in {
       example = literalExpression ''
         { videolibrary.showemptytvshows = "true"; }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration to write to the `advancedsettings.xml`
         file in kodis userdata directory. Settings specified here will be
         immutable from inside kodi and be hidden from the GUI settings dialog.
@@ -190,7 +190,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Contents to populate the file `sources.xml` in kodis
         userdata directory.
 
@@ -211,7 +211,7 @@ in {
       example = literalExpression ''
         { "service.xbmc.versioncheck".versioncheck_enable = "false"; }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Attribute set with the plugin namespace as toplevel key and the plugins
         settings as lower level key/value pairs.
 

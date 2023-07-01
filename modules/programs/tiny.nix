@@ -13,14 +13,13 @@ in {
 
   options = {
     programs.tiny = {
-      enable =
-        mkEnableOption (lib.mdDoc "tiny, a TUI IRC client written in Rust");
+      enable = mkEnableOption "tiny, a TUI IRC client written in Rust";
 
       package = mkOption {
         type = types.package;
         default = pkgs.tiny;
         defaultText = literalExpression "pkgs.tiny";
-        description = lib.mdDoc "The {command}`tiny` package to install.";
+        description = "The {command}`tiny` package to install.";
       };
 
       settings = mkOption {
@@ -46,7 +45,7 @@ in {
             };
           };
         '';
-        description = lib.mdDoc ''
+        description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/tiny/config.yml`. See
           <https://github.com/osa1/tiny/blob/master/crates/tiny/config.yml>

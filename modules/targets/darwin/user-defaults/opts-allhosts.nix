@@ -14,7 +14,7 @@ let
       type = with types; nullOr bool;
       default = null;
       example = true;
-      description = lib.mdDoc "Whether to enable ${name}.";
+      description = "Whether to enable ${name}.";
     };
 
   safari = config."com.apple.Safari";
@@ -26,26 +26,25 @@ in {
       AppleLanguages = mkNullableOption {
         type = with types; listOf str;
         example = [ "en" ];
-        description =
-          lib.mdDoc "Sets the language to use in the preferred order.";
+        description = "Sets the language to use in the preferred order.";
       };
 
       AppleLocale = mkNullableOption {
         type = types.str;
         example = "en_US";
-        description = lib.mdDoc "Configures the user locale.";
+        description = "Configures the user locale.";
       };
 
       AppleMeasurementUnits = mkNullableOption {
         type = types.enum [ "Centimeters" "Inches" ];
         example = "Centimeters";
-        description = lib.mdDoc "Sets the measurement unit.";
+        description = "Sets the measurement unit.";
       };
 
       AppleTemperatureUnit = mkNullableOption {
         type = types.enum [ "Celsius" "Fahrenheit" ];
         example = "Celsius";
-        description = lib.mdDoc "Sets the temperature unit.";
+        description = "Sets the temperature unit.";
       };
 
       AppleMetricUnits = mkNullableEnableOption "the metric system";
@@ -70,7 +69,7 @@ in {
       DSDontWriteNetworkStores = mkNullableOption {
         type = types.bool;
         example = false;
-        description = lib.mdDoc ''
+        description = ''
           Disable use of {file}`.DS_Store` files on network shares.
           See [the
           official article](https://support.apple.com/en-us/HT208209) for more info.
@@ -79,7 +78,7 @@ in {
       DSDontWriteUSBStores = mkNullableOption {
         type = types.bool;
         example = false;
-        description = lib.mdDoc ''
+        description = ''
           Disable use of {file}`.DS_Store` files on thumb drives.
         '';
       };
@@ -89,7 +88,7 @@ in {
       tilesize = mkNullableOption {
         type = types.int;
         example = 64;
-        description = lib.mdDoc "Sets the size of the dock.";
+        description = "Sets the size of the dock.";
       };
       size-immutable = mkNullableEnableOption "locking of the dock size";
       expose-group-apps = mkNullableEnableOption
@@ -99,7 +98,7 @@ in {
     "com.apple.menuextra.battery".ShowPercent = mkNullableOption {
       type = types.enum [ "YES" "NO" ];
       example = "NO";
-      description = lib.mdDoc ''
+      description = ''
         This option no longer works on macOS 11 and later. Instead, use
         {option}`targets.darwin.currentHostDefaults.\"com.apple.controlcenter\".BatteryShowPercentage`.
 
@@ -120,7 +119,7 @@ in {
 
       WebKitDeveloperExtrasEnabledPreferenceKey = mkNullableOption {
         type = types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Configures the web inspector.
 
           ::: {.warning}
@@ -131,7 +130,7 @@ in {
       };
       "WebKitPreferences.developerExtrasEnabled" = mkNullableOption {
         type = types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Configures the web inspector.
 
           ::: {.warning}
@@ -145,7 +144,7 @@ in {
     "com.apple.Safari.SandboxBroker" = {
       ShowDevelopMenu = mkNullableOption {
         type = types.bool;
-        description = lib.mdDoc ''
+        description = ''
           Show the "Develop" menu in Safari's menubar.
 
           ::: {.warning}
@@ -169,7 +168,7 @@ in {
       OpenTmuxWindowsIn = mkNullableOption {
         type = types.int;
         example = 2;
-        description = lib.mdDoc ''
+        description = ''
           Configures how to restore tmux windows when attaching to a session.
 
           **Possible Values**

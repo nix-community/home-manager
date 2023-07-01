@@ -7,14 +7,14 @@ in {
 
   options = {
     services.devilspie2 = {
-      enable = mkEnableOption (lib.mdDoc ''
+      enable = mkEnableOption ''
         Devilspie2, a window matching utility, allowing the user to
-        perform scripted actions on windows as they are created'');
+        perform scripted actions on windows as they are created'';
 
       config = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Content of file placed in the devilspie2 config directory.
         '';
         example = ''

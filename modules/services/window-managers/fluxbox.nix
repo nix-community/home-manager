@@ -11,14 +11,14 @@ in {
 
   options = {
     xsession.windowManager.fluxbox = {
-      enable = mkEnableOption (lib.mdDoc "Fluxbox window manager");
+      enable = mkEnableOption "Fluxbox window manager";
 
-      package = mkPackageOptionMD pkgs "fluxbox" { };
+      package = mkPackageOption pkgs "fluxbox" { };
 
       init = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Init configuration for Fluxbox, written to
           {file}`~/.fluxbox/init`. Look at the
           {manpage}`fluxbox(1)` manpage for details.
@@ -28,7 +28,7 @@ in {
       apps = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Apps configuration for Fluxbox, written to
           {file}`~/.fluxbox/apps`. Look at the
           {manpage}`fluxbox(1)` manpage for details.
@@ -38,7 +38,7 @@ in {
       keys = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Keyboard shortcuts configuration for Fluxbox, written to
           {file}`~/.fluxbox/keys`. Look at the
           {manpage}`fluxbox-keys(1)` manpage for details.
@@ -48,7 +48,7 @@ in {
       menu = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Menu configuration for Fluxbox, written to
           {file}`~/.fluxbox/menu`. Look at the
           {manpage}`fluxbox-menu(1)` manpage for details.
@@ -58,7 +58,7 @@ in {
       slitlist = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Slitlist configuration for Fluxbox, written to
           {file}`~/.fluxbox/slitlist`. Look at the
           {manpage}`fluxbox(1)` manpage for details.
@@ -68,7 +68,7 @@ in {
       windowmenu = mkOption {
         type = types.lines;
         default = "";
-        description = lib.mdDoc ''
+        description = ''
           Window menu configuration for Fluxbox, written to
           {file}`~/.fluxbox/windowmenu`. Look at the
           {manpage}`fluxbox-menu(1)`
@@ -80,7 +80,7 @@ in {
         type = with types; listOf str;
         default = [ ];
         example = [ "-log" "/tmp/fluxbox.log" ];
-        description = lib.mdDoc ''
+        description = ''
           Extra command line arguments to pass to {command}`fluxbox`.
           Look at the
           {manpage}`fluxbox(1)` manpage for details.

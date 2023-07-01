@@ -8,7 +8,7 @@ let
 
   colorType = mkOption {
     type = types.str;
-    description = lib.mdDoc "ANSI color definition";
+    description = "ANSI color definition";
     example = "1;31";
     visible = false;
   };
@@ -28,17 +28,17 @@ let
 in {
   options = {
     programs.jq = {
-      enable = mkEnableOption (lib.mdDoc "the jq command-line JSON processor");
+      enable = mkEnableOption "the jq command-line JSON processor";
 
       package = mkOption {
         type = types.package;
         default = pkgs.jq;
         defaultText = literalExpression "pkgs.jq";
-        description = lib.mdDoc "jq package to use.";
+        description = "jq package to use.";
       };
 
       colors = mkOption {
-        description = lib.mdDoc ''
+        description = ''
           The colors used in colored JSON output.
 
           See the [Colors section](https://jqlang.github.io/jq/manual/#Colors)

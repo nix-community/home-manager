@@ -4,9 +4,9 @@ in {
   meta.maintainers = [ lib.maintainers.janik ];
 
   options.programs.script-directory = {
-    enable = lib.mkEnableOption (lib.mdDoc "script-directory");
+    enable = lib.mkEnableOption "script-directory";
 
-    package = lib.mkPackageOptionMD pkgs "script-directory" { };
+    package = lib.mkPackageOption pkgs "script-directory" { };
 
     settings = lib.mkOption {
       default = { };
@@ -18,7 +18,7 @@ in {
           SD_CAT = "lolcat";
         }
       '';
-      description = lib.mdDoc
+      description =
         "script-directory config, for options take a look at the [documentation](github.com/ianthehenry/sd#options)";
     };
   };

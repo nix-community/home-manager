@@ -2,8 +2,7 @@
 
 let
 
-  inherit (lib)
-    literalExpression mkEnableOption mkPackageOptionMD mkOption mkIf;
+  inherit (lib) literalExpression mkEnableOption mkPackageOption mkOption mkIf;
 
   cfg = config.programs.fuzzel;
 
@@ -13,9 +12,9 @@ in {
   meta.maintainers = [ lib.maintainers.Scrumplex ];
 
   options.programs.fuzzel = {
-    enable = mkEnableOption (lib.mdDoc "fuzzel");
+    enable = mkEnableOption "fuzzel";
 
-    package = mkPackageOptionMD pkgs "fuzzel" { };
+    package = mkPackageOption pkgs "fuzzel" { };
 
     settings = mkOption {
       type = iniFormat.type;
@@ -29,7 +28,7 @@ in {
           colors.background = "ffffffff";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration for fuzzel written to
         {file}`$XDG_CONFIG_HOME/fuzzel/fuzzel.ini`. See
         {manpage}`fuzzel.ini(5)` for a list of available options.

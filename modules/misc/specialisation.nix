@@ -27,14 +27,14 @@ with lib;
           in extended.type;
           default = { };
           visible = "shallow";
-          description = lib.mdDoc ''
+          description = ''
             Arbitrary Home Manager configuration settings.
           '';
         };
       };
     });
     default = { };
-    description = lib.mdDoc ''
+    description = ''
       A set of named specialized configurations. These can be used to extend
       your base configuration with additional settings. For example, you can
       have specialisations named "light" and "dark"

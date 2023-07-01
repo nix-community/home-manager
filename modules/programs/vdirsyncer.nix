@@ -167,13 +167,13 @@ let
 in {
   options = {
     programs.vdirsyncer = {
-      enable = mkEnableOption (lib.mdDoc "vdirsyncer");
+      enable = mkEnableOption "vdirsyncer";
 
       package = mkOption {
         type = types.package;
         default = pkgs.vdirsyncer;
         defaultText = "pkgs.vdirsyncer";
-        description = lib.mdDoc ''
+        description = ''
           vdirsyncer package to use.
         '';
       };
@@ -182,7 +182,7 @@ in {
         type = types.str;
         default = "${config.xdg.dataHome}/vdirsyncer/status";
         defaultText = "$XDG_DATA_HOME/vdirsyncer/status";
-        description = lib.mdDoc ''
+        description = ''
           A directory where vdirsyncer will store some additional data for the next sync.
 
           For more information, see the

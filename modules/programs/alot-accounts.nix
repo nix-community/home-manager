@@ -7,7 +7,7 @@ with lib;
   options.alot = {
     sendMailCommand = mkOption {
       type = types.nullOr types.str;
-      description = lib.mdDoc ''
+      description = ''
         Command to send a mail. If msmtp is enabled for the account,
         then this is set to
         {command}`msmtpq --read-envelope-from --read-recipients`.
@@ -33,7 +33,7 @@ with lib;
           ignorecase = "True";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Contact completion configuration as expected per alot.
         See [alot's wiki](http://alot.readthedocs.io/en/latest/configuration/contacts_completion.html) for
         explanation about possible values.
@@ -43,7 +43,7 @@ with lib;
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Extra settings to add to this Alot account configuration.
       '';
     };

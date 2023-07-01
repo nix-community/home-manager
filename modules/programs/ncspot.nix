@@ -12,13 +12,13 @@ in {
   meta.maintainers = [ ];
 
   options.programs.ncspot = {
-    enable = mkEnableOption (lib.mdDoc "ncspot");
+    enable = mkEnableOption "ncspot";
 
     package = mkOption {
       type = types.package;
       default = pkgs.ncspot;
       defaultText = literalExpression "pkgs.ncspot";
-      description = lib.mdDoc "The package to use for ncspot.";
+      description = "The package to use for ncspot.";
     };
 
     settings = mkOption {
@@ -30,7 +30,7 @@ in {
           gapless = true;
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/ncspot/config.toml`.
 

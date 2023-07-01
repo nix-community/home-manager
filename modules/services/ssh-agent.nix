@@ -9,7 +9,7 @@ in {
 
   options = {
     services.ssh-agent = {
-      enable = lib.mkEnableOption (lib.mdDoc "OpenSSH private key agent");
+      enable = lib.mkEnableOption "OpenSSH private key agent";
     };
   };
 

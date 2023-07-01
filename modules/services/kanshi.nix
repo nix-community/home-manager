@@ -11,7 +11,7 @@ let
 
       criteria = mkOption {
         type = types.str;
-        description = lib.mdDoc ''
+        description = ''
           The criteria can either be an output name, an output description or "*".
           The latter can be used to match any output.
 
@@ -25,7 +25,7 @@ let
       status = mkOption {
         type = types.nullOr (types.enum [ "enable" "disable" ]);
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Enables or disables the specified output.
         '';
       };
@@ -34,7 +34,7 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "1920x1080@60Hz";
-        description = lib.mdDoc ''
+        description = ''
           &lt;width&gt;x&lt;height&gt;[@&lt;rate&gt;[Hz]]
 
           Configures the specified output to use the specified mode.
@@ -47,7 +47,7 @@ let
         type = types.nullOr types.str;
         default = null;
         example = "1600,0";
-        description = lib.mdDoc ''
+        description = ''
           &lt;x&gt;,&lt;y&gt;
 
           Places the output at the specified position in the global coordinates
@@ -59,7 +59,7 @@ let
         type = types.nullOr types.float;
         default = null;
         example = 2;
-        description = lib.mdDoc ''
+        description = ''
           Scales the output by the specified scale factor.
         '';
       };
@@ -76,7 +76,7 @@ let
           "flipped-270"
         ]);
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           Sets the output transform.
         '';
       };
@@ -95,7 +95,7 @@ let
       outputs = mkOption {
         type = types.listOf outputModule;
         default = [ ];
-        description = lib.mdDoc ''
+        description = ''
           Outputs configuration.
         '';
       };
@@ -105,7 +105,7 @@ let
         default = [ ];
         example =
           "[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]";
-        description = lib.mdDoc ''
+        description = ''
           Commands executed after the profile is successfully applied.
           Note that if you provide multiple commands, they will be
           executed asynchronously with no guaranteed ordering.
@@ -128,14 +128,14 @@ in {
   meta.maintainers = [ hm.maintainers.nurelin ];
 
   options.services.kanshi = {
-    enable = mkEnableOption (lib.mdDoc
-      "kanshi, a Wayland daemon that automatically configures outputs");
+    enable = mkEnableOption
+      "kanshi, a Wayland daemon that automatically configures outputs";
 
     package = mkOption {
       type = types.package;
       default = pkgs.kanshi;
       defaultText = literalExpression "pkgs.kanshi";
-      description = lib.mdDoc ''
+      description = ''
         kanshi derivation to use.
       '';
     };
@@ -143,7 +143,7 @@ in {
     profiles = mkOption {
       type = types.attrsOf profileModule;
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         List of profiles.
       '';
       example = literalExpression ''
@@ -171,7 +171,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Extra configuration lines to append to the kanshi
         configuration file.
       '';
@@ -180,7 +180,7 @@ in {
     systemdTarget = mkOption {
       type = types.str;
       default = "sway-session.target";
-      description = lib.mdDoc ''
+      description = ''
         Systemd target to bind to.
       '';
     };

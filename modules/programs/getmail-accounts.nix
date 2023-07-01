@@ -4,14 +4,13 @@ with lib;
 
 {
   options.getmail = {
-    enable =
-      mkEnableOption (lib.mdDoc "the getmail mail retriever for this account");
+    enable = mkEnableOption "the getmail mail retriever for this account";
 
     destinationCommand = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "\${pkgs.maildrop}/bin/maildrop";
-      description = lib.mdDoc ''
+      description = ''
         Specify a command delivering the incoming mail to your maildir.
       '';
     };
@@ -20,7 +19,7 @@ with lib;
       type = types.nonEmptyListOf types.str;
       default = [ ];
       example = [ "INBOX" "INBOX.spam" ];
-      description = lib.mdDoc ''
+      description = ''
         A non-empty list of mailboxes. To download all mail you can
         use the `ALL` mailbox.
       '';
@@ -29,7 +28,7 @@ with lib;
     delete = mkOption {
       type = types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Enable if you want to delete read messages from the server. Most
         users should either enable `delete` or disable
         `readAll`.
@@ -39,7 +38,7 @@ with lib;
     readAll = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         Enable if you want to fetch all, even the read messages from the
         server. Most users should either enable `delete` or
         disable `readAll`.

@@ -10,12 +10,12 @@ in {
 
   options = {
     services.borgmatic = {
-      enable = mkEnableOption (lib.mdDoc "Borgmatic service");
+      enable = mkEnableOption "Borgmatic service";
 
       frequency = mkOption {
         type = types.str;
         default = "hourly";
-        description = lib.mdDoc ''
+        description = ''
           How often to run borgmatic when
           `services.borgmatic.enable = true`.
           This value is passed to the systemd timer configuration as

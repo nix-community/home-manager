@@ -13,7 +13,7 @@ in {
         type = with types; listOf package;
         default = [ ];
         example = literalExpression "with pkgs; [ fcitx5-rime ]";
-        description = lib.mdDoc ''
+        description = ''
           Enabled Fcitx5 addons.
         '';
       };

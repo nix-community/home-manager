@@ -17,12 +17,12 @@ in {
   meta.maintainers = [ hm.maintainers.justinlovinger ];
 
   options.programs.aria2 = {
-    enable = mkEnableOption (lib.mdDoc "aria2");
+    enable = mkEnableOption "aria2";
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool float int str ]);
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Options to add to {file}`aria2.conf` file.
         See
         {manpage}`aria2c(1)`
@@ -42,7 +42,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Extra lines added to {file}`aria2.conf` file.
       '';
     };

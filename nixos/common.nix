@@ -43,20 +43,20 @@ let
 
 in {
   options.home-manager = {
-    useUserPackages = mkEnableOption (mdDoc ''
+    useUserPackages = mkEnableOption ''
       installation of user packages through the
-      {option}`users.users.<name>.packages` option'');
+      {option}`users.users.<name>.packages` option'';
 
-    useGlobalPkgs = mkEnableOption (mdDoc ''
+    useGlobalPkgs = mkEnableOption ''
       using the system configuration's `pkgs`
       argument in Home Manager. This disables the Home Manager
-      options {option}`nixpkgs.*`'');
+      options {option}`nixpkgs.*`'';
 
     backupFileExtension = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "backup";
-      description = mdDoc ''
+      description = ''
         On activation move existing files by appending the given
         file extension rather than exiting with an error.
       '';
@@ -66,7 +66,7 @@ in {
       type = types.attrs;
       default = { };
       example = literalExpression "{ inherit emacs-overlay; }";
-      description = mdDoc ''
+      description = ''
         Extra `specialArgs` passed to Home Manager. This
         option can be used to pass additional arguments to all modules.
       '';
@@ -76,19 +76,19 @@ in {
       type = with types; listOf raw;
       default = [ ];
       example = literalExpression "[ { home.packages = [ nixpkgs-fmt ]; } ]";
-      description = mdDoc ''
+      description = ''
         Extra modules added to all users.
       '';
     };
 
-    verbose = mkEnableOption (lib.mdDoc "verbose output on activation");
+    verbose = mkEnableOption "verbose output on activation";
 
     users = mkOption {
       type = types.attrsOf hmModule;
       default = { };
       # Prevent the entire submodule being included in the documentation.
       visible = "shallow";
-      description = mdDoc ''
+      description = ''
         Per-user Home Manager configuration.
       '';
     };

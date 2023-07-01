@@ -11,13 +11,13 @@ in {
 
   options = {
     programs.go = {
-      enable = mkEnableOption (lib.mdDoc "Go");
+      enable = mkEnableOption "Go";
 
       package = mkOption {
         type = types.package;
         default = pkgs.go;
         defaultText = literalExpression "pkgs.go";
-        description = lib.mdDoc "The Go package to use.";
+        description = "The Go package to use.";
       };
 
       packages = mkOption {
@@ -29,14 +29,14 @@ in {
             "golang.org/x/time" = builtins.fetchGit "https://go.googlesource.com/time";
           }
         '';
-        description = lib.mdDoc "Packages to add to GOPATH.";
+        description = "Packages to add to GOPATH.";
       };
 
       goPath = mkOption {
         type = with types; nullOr str;
         default = null;
         example = "go";
-        description = lib.mdDoc ''
+        description = ''
           Primary {env}`GOPATH` relative to
           {env}`HOME`. It will be exported first and therefore
           used by default by the Go tooling.
@@ -47,7 +47,7 @@ in {
         type = types.listOf types.str;
         default = [ ];
         example = [ "extraGoPath1" "extraGoPath2" ];
-        description = lib.mdDoc ''
+        description = ''
           Extra {env}`GOPATH`s relative to {env}`HOME` appended
           after [](#opt-programs.go.goPath), if that option is set.
         '';
@@ -57,14 +57,14 @@ in {
         type = with types; nullOr str;
         default = null;
         example = ".local/bin.go";
-        description = lib.mdDoc "GOBIN relative to HOME";
+        description = "GOBIN relative to HOME";
       };
 
       goPrivate = mkOption {
         type = with types; listOf str;
         default = [ ];
         example = [ "*.corp.example.com" "rsc.io/private" ];
-        description = lib.mdDoc ''
+        description = ''
           The {env}`GOPRIVATE` environment variable controls
           which modules the go command considers to be private (not
           available publicly) and should therefore not use the proxy

@@ -12,7 +12,7 @@ let
 
 in {
   options.services.spotifyd = {
-    enable = mkEnableOption (lib.mdDoc "SpotifyD connect");
+    enable = mkEnableOption "SpotifyD connect";
 
     package = mkOption {
       type = types.package;
@@ -20,7 +20,7 @@ in {
       defaultText = literalExpression "pkgs.spotifyd";
       example =
         literalExpression "(pkgs.spotifyd.override { withKeyring = true; })";
-      description = lib.mdDoc ''
+      description = ''
         The `spotifyd` package to use.
         Can be used to specify extensions.
       '';
@@ -29,7 +29,7 @@ in {
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
-      description = lib.mdDoc "Configuration for spotifyd";
+      description = "Configuration for spotifyd";
       example = literalExpression ''
         {
           global = {

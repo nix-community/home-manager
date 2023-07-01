@@ -11,14 +11,14 @@ in {
 
   options = {
     programs.eclipse = {
-      enable = mkEnableOption (lib.mdDoc "Eclipse");
+      enable = mkEnableOption "Eclipse";
 
       package = mkOption {
         type = types.package;
         default = pkgs.eclipses.eclipse-platform;
         defaultText = literalExpression "pkgs.eclipses.eclipse-platform";
         example = literalExpression "pkgs.eclipses.eclipse-java";
-        description = lib.mdDoc ''
+        description = ''
           The Eclipse package to install.
         '';
       };
@@ -27,7 +27,7 @@ in {
         type = types.bool;
         default = false;
         example = true;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable the Lombok Java Agent in Eclipse. This is
           necessary to use the Lombok class annotations.
         '';
@@ -36,13 +36,13 @@ in {
       jvmArgs = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = lib.mdDoc "JVM arguments to use for the Eclipse process.";
+        description = "JVM arguments to use for the Eclipse process.";
       };
 
       plugins = mkOption {
         type = types.listOf types.package;
         default = [ ];
-        description = lib.mdDoc "Plugins that should be added to Eclipse.";
+        description = "Plugins that should be added to Eclipse.";
       };
     };
   };

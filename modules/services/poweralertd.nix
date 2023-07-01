@@ -8,7 +8,7 @@ in {
   meta.maintainers = [ maintainers.thibautmarty ];
 
   options.services.poweralertd.enable =
-    mkEnableOption (lib.mdDoc "the Upower-powered power alertd");
+    mkEnableOption "the Upower-powered power alertd";
 
   config = mkIf cfg.enable {
     assertions = [

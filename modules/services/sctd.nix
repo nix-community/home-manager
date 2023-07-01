@@ -7,12 +7,12 @@ with lib;
 
   options = {
     services.sctd = {
-      enable = mkEnableOption (lib.mdDoc "sctd");
+      enable = mkEnableOption "sctd";
 
       baseTemperature = mkOption {
         type = types.ints.between 2500 9000;
         default = 4500;
-        description = lib.mdDoc ''
+        description = ''
           The base color temperature used by sctd, which should be between 2500 and 9000.
           See
           {manpage}`sctd(1)`

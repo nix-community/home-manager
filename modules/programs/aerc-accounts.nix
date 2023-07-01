@@ -18,28 +18,28 @@ let
           token_endpoint = mkOption {
             type = nullOr str;
             default = null;
-            description = lib.mdDoc "The OAuth2 token endpoint.";
+            description = "The OAuth2 token endpoint.";
           };
           client_id = mkOption {
             type = nullOr str;
             default = null;
-            description = lib.mdDoc "The OAuth2 client identifier.";
+            description = "The OAuth2 client identifier.";
           };
           client_secret = mkOption {
             type = nullOr str;
             default = null;
-            description = lib.mdDoc "The OAuth2 client secret.";
+            description = "The OAuth2 client secret.";
           };
           scope = mkOption {
             type = nullOr str;
             default = null;
-            description = lib.mdDoc "The OAuth2 requested scope.";
+            description = "The OAuth2 requested scope.";
           };
         };
       });
     default = null;
     example = { token_endpoint = "<token_endpoint>"; };
-    description = lib.mdDoc ''
+    description = ''
       Sets the oauth2 params if authentication mechanism oauthbearer or
       xoauth2 is used.
       See {manpage}`aerc-imap(5)`.
@@ -50,13 +50,13 @@ in {
   type = mkOption {
     type = types.attrsOf (types.submodule {
       options.aerc = {
-        enable = mkEnableOption (lib.mdDoc "aerc");
+        enable = mkEnableOption "aerc";
         extraAccounts = mkOption {
           type = confSection;
           default = { };
           example =
             literalExpression ''{ source = "maildir://~/Maildir/example"; }'';
-          description = lib.mdDoc ''
+          description = ''
             Extra config added to the configuration section for this account in
             {file}`$HOME/.config/aerc/accounts.conf`.
             See {manpage}`aerc-accounts(5)`.
@@ -68,7 +68,7 @@ in {
           default = { };
           example = literalExpression
             ''{ messages = { d = ":move ''${folder.trash}<Enter>"; }; }'';
-          description = lib.mdDoc ''
+          description = ''
             Extra bindings specific to this account, added to
             {file}`$HOME/.config/aerc/binds.conf`.
             See {manpage}`aerc-binds(5)`.
@@ -79,7 +79,7 @@ in {
           type = confSections;
           default = { };
           example = literalExpression "{ ui = { sidebar-width = 25; }; }";
-          description = lib.mdDoc ''
+          description = ''
             Config specific to this account, added to {file}`$HOME/.config/aerc/aerc.conf`.
             Aerc only supports per-account UI configuration.
             For other sections of {file}`$HOME/.config/aerc/aerc.conf`,
@@ -92,7 +92,7 @@ in {
           type = with types; nullOr (enum [ "oauthbearer" "xoauth2" ]);
           default = null;
           example = "auth";
-          description = lib.mdDoc ''
+          description = ''
             Sets the authentication mechanism if imap is used as the incoming
             method.
             See {manpage}`aerc-imap(5)`.
@@ -106,7 +106,7 @@ in {
             nullOr (enum [ "none" "plain" "login" "oauthbearer" "xoauth2" ]);
           default = "plain";
           example = "auth";
-          description = lib.mdDoc ''
+          description = ''
             Sets the authentication mechanism if smtp is used as the outgoing
             method.
             See {manpage}`aerc-smtp(5)`.

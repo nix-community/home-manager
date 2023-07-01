@@ -11,9 +11,9 @@ in {
 
   options.services.plan9port = {
     fontsrv.enable =
-      mkEnableOption (lib.mdDoc "the Plan 9 file system access to host fonts");
-    plumber.enable = mkEnableOption
-      (lib.mdDoc "the Plan 9 file system for interprocess messaging");
+      mkEnableOption "the Plan 9 file system access to host fonts";
+    plumber.enable =
+      mkEnableOption "the Plan 9 file system for interprocess messaging";
   };
 
   config = mkIf (cfg.fontsrv.enable || cfg.plumber.enable) {

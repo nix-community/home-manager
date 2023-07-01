@@ -134,7 +134,7 @@ in {
 
   options = {
     programs.firefox = {
-      enable = mkEnableOption (lib.mdDoc "Firefox");
+      enable = mkEnableOption "Firefox";
 
       package = mkOption {
         type = types.package;
@@ -154,7 +154,7 @@ in {
             };
           }
         '';
-        description = lib.mdDoc ''
+        description = ''
           The Firefox package to use. If state version ≥ 19.09 then
           this should be a wrapped Firefox package. For earlier state
           versions it should be an unwrapped Firefox package.
@@ -167,13 +167,13 @@ in {
             name = mkOption {
               type = types.str;
               default = name;
-              description = lib.mdDoc "Profile name.";
+              description = "Profile name.";
             };
 
             id = mkOption {
               type = types.ints.unsigned;
               default = 0;
-              description = lib.mdDoc ''
+              description = ''
                 Profile ID. This should be set to a unique number per profile.
               '';
             };
@@ -198,7 +198,7 @@ in {
                   }];
                 }
               '';
-              description = lib.mdDoc ''
+              description = ''
                 Attribute set of Firefox preferences.
 
                 Firefox only supports int, bool, and string types for
@@ -210,7 +210,7 @@ in {
             extraConfig = mkOption {
               type = types.lines;
               default = "";
-              description = lib.mdDoc ''
+              description = ''
                 Extra preferences to add to {file}`user.js`.
               '';
             };
@@ -218,7 +218,7 @@ in {
             userChrome = mkOption {
               type = types.lines;
               default = "";
-              description = lib.mdDoc "Custom Firefox user chrome CSS.";
+              description = "Custom Firefox user chrome CSS.";
               example = ''
                 /* Hide tab bar in FF Quantum */
                 @-moz-document url("chrome://browser/content/browser.xul") {
@@ -237,7 +237,7 @@ in {
             userContent = mkOption {
               type = types.lines;
               default = "";
-              description = lib.mdDoc "Custom Firefox user content CSS.";
+              description = "Custom Firefox user content CSS.";
               example = ''
                 /* Hide scrollbar in FF Quantum */
                 *{scrollbar-width:none !important}
@@ -251,25 +251,24 @@ in {
                     name = mkOption {
                       type = types.str;
                       default = name;
-                      description = lib.mdDoc "Bookmark name.";
+                      description = "Bookmark name.";
                     };
 
                     tags = mkOption {
                       type = types.listOf types.str;
                       default = [ ];
-                      description = lib.mdDoc "Bookmark tags.";
+                      description = "Bookmark tags.";
                     };
 
                     keyword = mkOption {
                       type = types.nullOr types.str;
                       default = null;
-                      description = lib.mdDoc "Bookmark search keyword.";
+                      description = "Bookmark search keyword.";
                     };
 
                     url = mkOption {
                       type = types.str;
-                      description =
-                        lib.mdDoc "Bookmark url, use %s for search terms.";
+                      description = "Bookmark url, use %s for search terms.";
                     };
                   };
                 }) // {
@@ -283,20 +282,19 @@ in {
                     name = mkOption {
                       type = types.str;
                       default = name;
-                      description = lib.mdDoc "Directory name.";
+                      description = "Directory name.";
                     };
 
                     bookmarks = mkOption {
                       type = types.listOf nodeType;
                       default = [ ];
-                      description = lib.mdDoc "Bookmarks within directory.";
+                      description = "Bookmarks within directory.";
                     };
 
                     toolbar = mkOption {
                       type = types.bool;
                       default = false;
-                      description =
-                        lib.mdDoc "If directory should be shown in toolbar.";
+                      description = "If directory should be shown in toolbar.";
                     };
                   };
                 }) // {
@@ -336,7 +334,7 @@ in {
                   }
                 ]
               '';
-              description = lib.mdDoc ''
+              description = ''
                 Preloaded bookmarks. Note, this may silently overwrite any
                 previously existing bookmarks!
               '';
@@ -345,21 +343,21 @@ in {
             path = mkOption {
               type = types.str;
               default = name;
-              description = lib.mdDoc "Profile path.";
+              description = "Profile path.";
             };
 
             isDefault = mkOption {
               type = types.bool;
               default = config.id == 0;
               defaultText = "true if profile ID is 0";
-              description = lib.mdDoc "Whether this is a default profile.";
+              description = "Whether this is a default profile.";
             };
 
             search = {
               force = mkOption {
                 type = with types; bool;
                 default = false;
-                description = lib.mdDoc ''
+                description = ''
                   Whether to force replace the existing search
                   configuration. This is recommended since Firefox will
                   replace the symlink for the search configuration on every
@@ -372,7 +370,7 @@ in {
                 type = with types; nullOr str;
                 default = null;
                 example = "DuckDuckGo";
-                description = lib.mdDoc ''
+                description = ''
                   The default search engine used in the address bar and search bar.
                 '';
               };
@@ -381,7 +379,7 @@ in {
                 type = with types; uniq (listOf str);
                 default = [ ];
                 example = [ "DuckDuckGo" "Google" ];
-                description = lib.mdDoc ''
+                description = ''
                   The order the search engines are listed in. Any engines
                   that aren't included in this list will be listed after
                   these in an unspecified order.
@@ -417,7 +415,7 @@ in {
                     "Google".metaData.alias = "@g"; # builtin engines only support specifying one additional alias
                   }
                 '';
-                description = lib.mdDoc ''
+                description = ''
                   Attribute set of search engine configurations. Engines
                   that only have {var}`metaData` specified will
                   be treated as builtin to Firefox.
@@ -443,7 +441,7 @@ in {
                   privacy-badger
                 ]
               '';
-              description = lib.mdDoc ''
+              description = ''
                 List of Firefox add-on packages to install for this profile.
                 Some pre-packaged add-ons are accessible from the
                 [Nix User Repository](https://github.com/nix-community/NUR).
@@ -463,13 +461,13 @@ in {
           };
         }));
         default = { };
-        description = lib.mdDoc "Attribute set of Firefox profiles.";
+        description = "Attribute set of Firefox profiles.";
       };
 
       enableGnomeExtensions = mkOption {
         type = types.bool;
         default = false;
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable the GNOME Shell native host connector. Note, you
           also need to set the NixOS option
           `services.gnome.gnome-browser-connector.enable` to

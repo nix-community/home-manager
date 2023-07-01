@@ -4,11 +4,11 @@ with lib;
 
 {
   options.astroid = {
-    enable = mkEnableOption (lib.mdDoc "Astroid");
+    enable = mkEnableOption "Astroid";
 
     sendMailCommand = mkOption {
       type = types.str;
-      description = lib.mdDoc ''
+      description = ''
         Command to send a mail. If msmtp is enabled for the account,
         then this is set to
         {command}`msmtpq --read-envelope-from --read-recipients`.
@@ -19,7 +19,7 @@ with lib;
       type = types.attrsOf types.anything;
       default = { };
       example = { select_query = ""; };
-      description = lib.mdDoc ''
+      description = ''
         Extra settings to add to this astroid account configuration.
       '';
     };

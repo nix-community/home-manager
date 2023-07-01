@@ -43,7 +43,7 @@ let
     dateformat = mkOption {
       type = T.str;
       default = "%x";
-      description = lib.mdDoc ''
+      description = ''
         khal will display and understand all dates in this format.
 
         ${suffix}
@@ -53,7 +53,7 @@ let
     timeformat = mkOption {
       type = T.str;
       default = "%X";
-      description = lib.mdDoc ''
+      description = ''
         khal will display and understand all times in this format.
 
         ${suffix}
@@ -63,7 +63,7 @@ let
     datetimeformat = mkOption {
       type = T.str;
       default = "%c";
-      description = lib.mdDoc ''
+      description = ''
         khal will display and understand all datetimes in this format.
 
         ${suffix}
@@ -73,7 +73,7 @@ let
     longdateformat = mkOption {
       type = T.str;
       default = "%x";
-      description = lib.mdDoc ''
+      description = ''
         khal will display and understand all dates in this format.
         It should contain a year (e.g. `%Y`).
 
@@ -84,7 +84,7 @@ let
     longdatetimeformat = mkOption {
       type = T.str;
       default = "%c";
-      description = lib.mdDoc ''
+      description = ''
         khal will display and understand all datetimes in this format.
         It should contain a year (e.g. `%Y`).
 
@@ -98,7 +98,7 @@ let
     unicode_symbols = mkOption {
       type = T.bool;
       default = true;
-      description = lib.mdDoc ''
+      description = ''
         By default khal uses some Unicode symbols (as in "non-ASCII") as
         indicators for things like repeating events.
         If your font, encoding etc. does not support those symbols, set this
@@ -109,7 +109,7 @@ let
     default_timezone = mkOption {
       type = T.nullOr T.str;
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         Default for new events or if khal does not understand the timezone
         in an ical file.
         If `null`, the timezone of your computer will be used.
@@ -119,7 +119,7 @@ let
     local_timezone = mkOption {
       type = T.nullOr T.str;
       default = null;
-      description = lib.mdDoc ''
+      description = ''
         khal will show all times in this timezone.
         If `null`, the timezone of your computer will be used.
       '';
@@ -128,7 +128,7 @@ let
     firstweekday = mkOption {
       type = T.ints.between 0 6;
       default = 0;
-      description = lib.mdDoc ''
+      description = ''
         The first day of the week, where Monday is 0 and Sunday is 6.
       '';
     };
@@ -136,7 +136,7 @@ let
     weeknumbers = mkOption {
       type = T.enum [ "off" "left" "right" ];
       default = "off";
-      description = lib.mdDoc ''
+      description = ''
         Enable week numbers in calendar and interactive (ikhal) mode.
         As those are ISO week numbers, they only work properly if
         {option}`firstweekday` is set to 0.
@@ -146,10 +146,10 @@ let
 
 in {
   options.programs.khal = {
-    enable = mkEnableOption (lib.mdDoc "khal, a CLI calendar application");
+    enable = mkEnableOption "khal, a CLI calendar application";
     locale = mkOption {
       type = lib.types.submodule { options = localeOptions; };
-      description = lib.mdDoc ''
+      description = ''
         khal locale settings. 
       '';
     };

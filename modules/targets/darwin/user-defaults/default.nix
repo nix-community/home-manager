@@ -41,7 +41,7 @@ in {
         DSDontWriteUSBStores = true;
       };
     };
-    description = lib.mdDoc ''
+    description = ''
       Set macOS user defaults. Values set to `null` are
       ignored.
 
@@ -62,7 +62,7 @@ in {
     example = {
       "com.apple.controlcenter" = { BatteryShowPercentage = true; };
     };
-    description = lib.mdDoc ''
+    description = ''
       Set macOS user defaults. Unlike {option}`targets.darwin.defaults`,
       the preferences will only be applied to the currently logged-in host. This
       distinction is important for networked accounts.

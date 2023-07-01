@@ -28,14 +28,14 @@ in {
 
   options = {
     programs.emacs = {
-      enable = mkEnableOption (lib.mdDoc "Emacs");
+      enable = mkEnableOption "Emacs";
 
       package = mkOption {
         type = types.package;
         default = pkgs.emacs;
         defaultText = literalExpression "pkgs.emacs";
         example = literalExpression "pkgs.emacs25-nox";
-        description = lib.mdDoc "The Emacs package to use.";
+        description = "The Emacs package to use.";
       };
 
       # NOTE: The config is placed in default.el instead of ~/.emacs.d so that
@@ -48,7 +48,7 @@ in {
         example = ''
           (setq standard-indent 2)
         '';
-        description = lib.mdDoc ''
+        description = ''
           Configuration to include in the Emacs default init file. See
           <https://www.gnu.org/software/emacs/manual/html_node/elisp/Init-File.html>
           for more.
@@ -64,7 +64,7 @@ in {
         type = hm.types.selectorFunction;
         defaultText = "epkgs: []";
         example = literalExpression "epkgs: [ epkgs.emms epkgs.magit ]";
-        description = lib.mdDoc ''
+        description = ''
           Extra packages available to Emacs. To get a list of
           available packages run:
           {command}`nix-env -f '<nixpkgs>' -qaP -A emacsPackages`.
@@ -81,7 +81,7 @@ in {
             # ...
           };
         '';
-        description = lib.mdDoc ''
+        description = ''
           Allows overriding packages within the Emacs package set.
         '';
       };
@@ -90,7 +90,7 @@ in {
         type = types.package;
         visible = false;
         readOnly = true;
-        description = lib.mdDoc ''
+        description = ''
           The Emacs package including any overrides and extra packages.
         '';
       };

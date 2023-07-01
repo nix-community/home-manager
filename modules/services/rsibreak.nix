@@ -9,7 +9,7 @@ let
 in {
   options.services.rsibreak = {
 
-    enable = mkEnableOption (lib.mdDoc "rsibreak");
+    enable = mkEnableOption "rsibreak";
 
   };
 

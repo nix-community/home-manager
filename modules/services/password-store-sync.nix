@@ -11,12 +11,12 @@ in {
   meta.maintainers = with maintainers; [ pacien ];
 
   options.services.password-store-sync = {
-    enable = mkEnableOption (lib.mdDoc "Password store periodic sync");
+    enable = mkEnableOption "Password store periodic sync";
 
     frequency = mkOption {
       type = types.str;
       default = "*:0/5";
-      description = lib.mdDoc ''
+      description = ''
         How often to synchronise the password store git repository with its
         default upstream.
 

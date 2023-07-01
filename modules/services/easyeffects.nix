@@ -12,25 +12,25 @@ in {
   meta.maintainers = [ maintainers.fufexan ];
 
   options.services.easyeffects = {
-    enable = mkEnableOption (lib.mdDoc ''
+    enable = mkEnableOption ''
       Easyeffects daemon.
       Note, it is necessary to add
       ```nix
       programs.dconf.enable = true;
       ```
-      to your system configuration for the daemon to work correctly'');
+      to your system configuration for the daemon to work correctly'';
 
     package = mkOption {
       type = types.package;
       default = pkgs.easyeffects;
       defaultText = literalExpression "pkgs.easyeffects";
-      description = lib.mdDoc "The `easyeffects` package to use.";
+      description = "The `easyeffects` package to use.";
     };
 
     preset = mkOption {
       type = types.str;
       default = "";
-      description = lib.mdDoc ''
+      description = ''
         Which preset to use when starting easyeffects.
         Will likely need to launch easyeffects to initially create preset.
       '';

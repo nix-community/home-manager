@@ -6,19 +6,15 @@ with lib;
   meta.maintainers = [ maintainers.rycee ];
 
   options.programs = let
-    description = lib.mdDoc ''
+    description = ''
       Whether to enable integration with terminals using the VTE
       library. This will let the terminal track the current working
       directory.
     '';
   in {
-    bash.enableVteIntegration = mkEnableOption (lib.mdDoc "") // {
-      inherit description;
-    };
+    bash.enableVteIntegration = mkEnableOption "" // { inherit description; };
 
-    zsh.enableVteIntegration = mkEnableOption (lib.mdDoc "") // {
-      inherit description;
-    };
+    zsh.enableVteIntegration = mkEnableOption "" // { inherit description; };
   };
 
   config = mkMerge [

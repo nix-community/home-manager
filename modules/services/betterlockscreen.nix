@@ -9,28 +9,26 @@ in {
 
   options = {
     services.betterlockscreen = {
-      enable =
-        mkEnableOption (lib.mdDoc "betterlockscreen, a screen-locker module");
+      enable = mkEnableOption "betterlockscreen, a screen-locker module";
 
       package = mkOption {
         type = types.package;
         default = pkgs.betterlockscreen;
         defaultText = literalExpression "pkgs.betterlockscreen";
-        description =
-          lib.mdDoc "Package providing {command}`betterlockscreen`.";
+        description = "Package providing {command}`betterlockscreen`.";
       };
 
       arguments = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = lib.mdDoc
+        description =
           "List of arguments appended to `./betterlockscreen --lock [args]`";
       };
 
       inactiveInterval = mkOption {
         type = types.int;
         default = 10;
-        description = lib.mdDoc ''
+        description = ''
           Value used for {option}`services.screen-locker.inactiveInterval`.
         '';
       };

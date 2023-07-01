@@ -13,8 +13,7 @@ let
         email = mkOption {
           type = types.str;
           example = "name@example.com";
-          description =
-            lib.mdDoc "The email address for your bitwarden account.";
+          description = "The email address for your bitwarden account.";
         };
 
         base_url = mkOption {
@@ -22,22 +21,21 @@ let
           default = null;
           example = "bitwarden.example.com";
           description =
-            lib.mdDoc "The base-url for a self-hosted bitwarden installation.";
+            "The base-url for a self-hosted bitwarden installation.";
         };
 
         identity_url = mkOption {
           type = with types; nullOr str;
           default = null;
           example = "identity.example.com";
-          description =
-            lib.mdDoc "The identity url for your bitwarden installation.";
+          description = "The identity url for your bitwarden installation.";
         };
 
         lock_timeout = mkOption {
           type = types.ints.unsigned;
           default = 3600;
           example = 300;
-          description = lib.mdDoc ''
+          description = ''
             The amount of time that your login information should be cached.
           '';
         };
@@ -46,7 +44,7 @@ let
           type = with types; either package (enum pkgs.pinentry.flavors);
           example = "gnome3";
           default = "gtk2";
-          description = lib.mdDoc ''
+          description = ''
             Which pinentry interface to use. Beware that
             `pinentry-gnome3` may not work on non-Gnome
             systems. You can fix it by adding the following to your
@@ -70,13 +68,13 @@ in {
   meta.maintainers = with lib.hm.maintainers; [ ambroisie ];
 
   options.programs.rbw = with lib; {
-    enable = mkEnableOption (lib.mdDoc "rbw, a CLI Bitwarden client");
+    enable = mkEnableOption "rbw, a CLI Bitwarden client";
 
     package = mkOption {
       type = types.package;
       default = pkgs.rbw;
       defaultText = literalExpression "pkgs.rbw";
-      description = lib.mdDoc ''
+      description = ''
         Package providing the {command}`rbw` tool and its
         {command}`rbw-agent` daemon.
       '';
@@ -92,7 +90,7 @@ in {
           pinentry = "gnome3";
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         rbw configuration, if not defined the configuration will not be
         managed by Home Manager.
       '';

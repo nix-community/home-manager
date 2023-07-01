@@ -5,8 +5,8 @@ with lib;
 {
   options = {
     services.blueman-applet = {
-      enable = mkEnableOption (lib.mdDoc "") // {
-        description = lib.mdDoc ''
+      enable = mkEnableOption "" // {
+        description = ''
           Whether to enable the Blueman applet.
 
           Note that for the applet to work, the `blueman` service should

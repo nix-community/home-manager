@@ -11,13 +11,13 @@ in {
 
   options = {
     programs.home-manager = {
-      enable = mkEnableOption (lib.mdDoc "Home Manager");
+      enable = mkEnableOption "Home Manager";
 
       path = mkOption {
         type = types.nullOr types.str;
         default = null;
         example = "$HOME/devel/home-manager";
-        description = lib.mdDoc ''
+        description = ''
           The default path to use for Home Manager. When
           `null`, then the {file}`home-manager`
           channel, {file}`$HOME/.config/nixpkgs/home-manager`, and

@@ -14,7 +14,7 @@ in {
       default = { };
       type = types.attrs;
       example = { EDITOR = "vim"; };
-      description = lib.mdDoc ''
+      description = ''
         Environment variables that will be set for the PAM session.
         The variable values must be as described in
         {manpage}`pam_env.conf(5)`.
@@ -34,7 +34,7 @@ in {
             };
           in listOf yubiKeyId;
         default = [ ];
-        description = lib.mdDoc ''
+        description = ''
           List of authorized YubiKey token IDs. Refer to
           <https://developers.yubico.com/yubico-pam>
           for details on how to obtain the token ID of a YubiKey.
@@ -44,7 +44,7 @@ in {
       path = mkOption {
         type = types.str;
         default = ".yubico/authorized_yubikeys";
-        description = lib.mdDoc ''
+        description = ''
           File path to write the authorized YubiKeys,
           relative to {env}`HOME`.
         '';

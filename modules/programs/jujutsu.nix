@@ -11,10 +11,10 @@ in {
   meta.maintainers = [ maintainers.shikanime ];
 
   options.programs.jujutsu = {
-    enable = mkEnableOption
-      (lib.mdDoc "a Git-compatible DVCS that is both simple and powerful");
+    enable =
+      mkEnableOption "a Git-compatible DVCS that is both simple and powerful";
 
-    package = mkPackageOptionMD pkgs "jujutsu" { };
+    package = mkPackageOption pkgs "jujutsu" { };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -27,7 +27,7 @@ in {
           };
         }
       '';
-      description = lib.mdDoc ''
+      description = ''
         Options to add to the {file}`.jjconfig.toml` file. See
         <https://github.com/martinvonz/jj/blob/main/docs/config.md>
         for options.
@@ -37,19 +37,19 @@ in {
     enableBashIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc "Whether to enable Bash integration.";
+      description = "Whether to enable Bash integration.";
     };
 
     enableZshIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc "Whether to enable Zsh integration.";
+      description = "Whether to enable Zsh integration.";
     };
 
     enableFishIntegration = mkOption {
       type = types.bool;
       default = true;
-      description = lib.mdDoc "Whether to enable Fish integration.";
+      description = "Whether to enable Fish integration.";
     };
   };
 

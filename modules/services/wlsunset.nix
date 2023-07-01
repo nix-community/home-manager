@@ -8,20 +8,20 @@ in {
   meta.maintainers = [ hm.maintainers.matrss ];
 
   options.services.wlsunset = {
-    enable = mkEnableOption (lib.mdDoc "wlsunset");
+    enable = mkEnableOption "wlsunset";
 
     package = mkOption {
       type = types.package;
       default = pkgs.wlsunset;
       defaultText = "pkgs.wlsunset";
-      description = lib.mdDoc ''
+      description = ''
         wlsunset derivation to use.
       '';
     };
 
     latitude = mkOption {
       type = types.str;
-      description = lib.mdDoc ''
+      description = ''
         Your current latitude, between `-90.0` and
         `90.0`.
       '';
@@ -29,7 +29,7 @@ in {
 
     longitude = mkOption {
       type = types.str;
-      description = lib.mdDoc ''
+      description = ''
         Your current longitude, between `-180.0` and
         `180.0`.
       '';
@@ -39,7 +39,7 @@ in {
       day = mkOption {
         type = types.int;
         default = 6500;
-        description = lib.mdDoc ''
+        description = ''
           Colour temperature to use during the day, in Kelvin (K).
           This value must be greater than `temperature.night`.
         '';
@@ -48,7 +48,7 @@ in {
       night = mkOption {
         type = types.int;
         default = 4000;
-        description = lib.mdDoc ''
+        description = ''
           Colour temperature to use during the night, in Kelvin (K).
           This value must be smaller than `temperature.day`.
         '';
@@ -58,7 +58,7 @@ in {
     gamma = mkOption {
       type = types.str;
       default = "1.0";
-      description = lib.mdDoc ''
+      description = ''
         Gamma value to use.
       '';
     };
@@ -66,7 +66,7 @@ in {
     systemdTarget = mkOption {
       type = types.str;
       default = "graphical-session.target";
-      description = lib.mdDoc ''
+      description = ''
         Systemd target to bind to.
       '';
     };
