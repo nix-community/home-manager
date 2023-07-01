@@ -164,40 +164,29 @@ in {
         type = with types;
           either bool (enum [ "suggest" "legacy" "sd-switch" ]);
         apply = p: if isBool p then if p then "legacy" else "suggest" else p;
-        description = ''
+        description = lib.mdDoc ''
           Whether new or changed services that are wanted by active targets
           should be started. Additionally, stop obsolete services from the
           previous generation.
-          </para><para>
+
           The alternatives are
-          <variablelist>
-          <varlistentry>
-            <term><literal>suggest</literal> (or <literal>false</literal>)</term>
-            <listitem><para>
-              Use a very simple shell script to print suggested
-              <command>systemctl</command> commands to run. You will have to
-              manually run those commands after the switch.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>legacy</literal> (or <literal>true</literal>)</term>
-            <listitem><para>
-              Use a Ruby script to, in a more robust fashion, determine the
-              necessary changes and automatically run the
-              <command>systemctl</command> commands.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>sd-switch</literal></term>
-            <listitem><para>
-              Use sd-switch, a third party application, to perform the service
-              updates. This tool offers more features while having a small
-              closure size. Note, it requires a fully functional user D-Bus
-              session. Once tested and deemed sufficiently robust, this will
-              become the default.
-            </para></listitem>
-          </varlistentry>
-          </variablelist>
+
+          `suggest` (or `false`)
+          : Use a very simple shell script to print suggested
+            {command}`systemctl` commands to run. You will have to
+            manually run those commands after the switch.
+
+          `legacy` (or `true`)
+          : Use a Ruby script to, in a more robust fashion, determine the
+            necessary changes and automatically run the
+            {command}`systemctl` commands.
+
+          `sd-switch`
+          : Use sd-switch, a third party application, to perform the service
+            updates. This tool offers more features while having a small
+            closure size. Note, it requires a fully functional user D-Bus
+            session. Once tested and deemed sufficiently robust, this will
+            become the default.
         '';
       };
 

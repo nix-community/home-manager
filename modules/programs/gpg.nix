@@ -62,34 +62,27 @@ let
             }.${v}
           else
             v;
-        description = ''
+        description = lib.mdDoc ''
           The amount of trust you have in the key ownership and the care the
           owner puts into signing other keys. The available levels are
-          <variablelist>
-            <varlistentry>
-              <term><literal>unknown</literal> or <literal>1</literal></term>
-              <listitem><para>I don't know or won't say.</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>never</literal> or <literal>2</literal></term>
-              <listitem><para>I do NOT trust.</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>marginal</literal> or <literal>3</literal></term>
-              <listitem><para>I trust marginally.</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>full</literal> or <literal>4</literal></term>
-              <listitem><para>I trust fully.</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>ultimate</literal> or <literal>5</literal></term>
-              <listitem><para>I trust ultimately.</para></listitem>
-            </varlistentry>
-          </variablelist>
-          </para><para>
-          See <link xlink:href="https://www.gnupg.org/gph/en/manual/x334.html"/>
-          for more.
+
+          `unknown` or `1`
+          : I don't know or won't say.
+
+          `never` or `2`
+          : I do **not** trust.
+
+          `marginal` or `3`
+          : I trust marginally.
+
+          `full` or `4`
+          : I trust fully.
+
+          `ultimate` or `5`
+          : I trust ultimately.
+
+          See the [Key Management chapter](https://www.gnupg.org/gph/en/manual/x334.html)
+          of the GNU Privacy Handbook for more.
         '';
       };
     };

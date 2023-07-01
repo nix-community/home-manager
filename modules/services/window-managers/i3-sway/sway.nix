@@ -363,18 +363,16 @@ in {
         type = types.bool;
         default = pkgs.stdenv.isLinux;
         example = false;
-        description = ''
-          Whether to enable <filename>sway-session.target</filename> on
+        description = lib.mdDoc ''
+          Whether to enable {file}`sway-session.target` on
           sway startup. This links to
-          <filename>graphical-session.target</filename>.
+          {file}`graphical-session.target`.
           Some important environment variables will be imported to systemd
           and dbus user environment before reaching the target, including
-          <itemizedlist>
-            <listitem><para><literal>DISPLAY</literal></para></listitem>
-            <listitem><para><literal>WAYLAND_DISPLAY</literal></para></listitem>
-            <listitem><para><literal>SWAYSOCK</literal></para></listitem>
-            <listitem><para><literal>XDG_CURRENT_DESKTOP</literal></para></listitem>
-          </itemizedlist>
+          * {env}`DISPLAY`
+          * {env}`WAYLAND_DISPLAY`
+          * {env}`SWAYSOCK`
+          * {env}`XDG_CURRENT_DESKTOP`
         '';
       };
 

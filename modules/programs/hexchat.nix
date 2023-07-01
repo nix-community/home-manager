@@ -73,48 +73,35 @@ let
         loginMethod = mkOption {
           type = nullOr (enum (attrNames loginMethodMap));
           default = null;
-          description = ''
+          description = lib.mdDoc ''
             The login method. The allowed options are:
-            <variablelist>
-              <varlistentry>
-                <term><literal>null</literal></term>
-                <listitem><para>Default</para></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term><literal>"nickServMsg"</literal></term>
-                <listitem><para>NickServ (/MSG NickServ + password)</para></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term><literal>"nickServ"</literal></term>
-                <listitem><para>NickServ (/NICKSERV + password)</para></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term><literal>"challengeAuth"</literal></term>
-                <listitem><para>Challenge Auth (username + password)</para></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term><literal>"sasl"</literal></term>
-                <listitem><para>SASL (username + password)</para></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term><literal>"serverPassword"</literal></term>
-                <listitem><para>Server password (/PASS password)</para></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term><literal>"saslExternal"</literal></term>
-                <listitem><para>SASL EXTERNAL (cert)</para></listitem>
-              </varlistentry>
-              <varlistentry>
-                <term><literal>"customCommands"</literal></term>
-                <listitem>
-                  <para>Use "commands" field for auth. For example
-                  <programlisting language="nix">
-            commands = [ "/msg NickServ IDENTIFY my_password" ]
-            </programlisting>
-                  </para>
-                </listitem>
-              </varlistentry>
-            </variablelist>
+
+            `null`
+            :  Default
+
+            `"nickServMsg"`
+            :  NickServ (`/MSG NickServ` + password)
+
+            `"nickServ"`
+            :  NickServ (`/NICKSERV` + password)
+
+            `"challengeAuth"`
+            :  Challenge Auth (username + password)
+
+            `"sasl"`
+            :  SASL (username + password)
+
+            `"serverPassword"`
+            :  Server password (`/PASS` password)
+
+            `"saslExternal"`
+            :  SASL EXTERNAL (cert)
+
+            `"customCommands"`
+            : Use "commands" field for auth. For example
+              ```nix
+              commands = [ "/msg NickServ IDENTIFY my_password" ]
+              ```
           '';
         };
 
@@ -293,25 +280,20 @@ in {
     overwriteConfigFiles = mkOption {
       type = nullOr bool;
       default = false;
-      description = ''
+      description = lib.mdDoc ''
         Enables overwriting HexChat configuration files
-        (<filename>hexchat.conf</filename>, <filename>servlist.conf</filename>).
-        Any existing HexChat configuration will be lost. Certify to back-up any
-        previous configuration before enabling this.
-        </para><para>
+        ({file}`hexchat.conf`, {file}`servlist.conf`).
+        Any existing HexChat configuration will be lost. Make sure to back up
+        any previous configuration before enabling this.
+
         Enabling this setting is recommended, because everytime HexChat
         application is closed it overwrites Nix/Home Manager provided
         configuration files, causing:
-        <orderedlist numeration="arabic">
-          <listitem><para>
-            Nix/Home Manager provided configuration to be out of sync with
-            actual active HexChat configuration.
-          </para></listitem>
-          <listitem><para>
-            Blocking Nix/Home Manager updates until configuration files are
-            manually removed.
-          </para></listitem>
-        </orderedlist>
+
+        1. Nix/Home Manager provided configuration to be out of sync with
+           actual active HexChat configuration.
+        2. Nix/Home Manager updates to be blocked until configuration files are
+           manually removed.
       '';
     };
 

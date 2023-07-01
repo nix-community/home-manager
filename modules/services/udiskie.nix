@@ -72,26 +72,19 @@ in {
       tray = mkOption {
         type = types.enum [ "always" "auto" "never" ];
         default = "auto";
-        description = ''
+        description = lib.mdDoc ''
           Whether to display tray icon.
-          </para><para>
+
           The options are
-          <variablelist>
-          <varlistentry>
-            <term><literal>always</literal></term>
-            <listitem><para>Always show tray icon.</para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>auto</literal></term>
-            <listitem><para>
-              Show tray icon only when there is a device available.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>never</literal></term>
-            <listitem><para>Never show tray icon.</para></listitem>
-          </varlistentry>
-          </variablelist>
+
+          `always`
+          : Always show tray icon.
+
+          `auto`
+          : Show tray icon only when there is a device available.
+
+          `never`
+          : Never show tray icon.
         '';
       };
     };

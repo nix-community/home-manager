@@ -174,23 +174,19 @@ in {
       OpenTmuxWindowsIn = mkNullableOption {
         type = types.int;
         example = 2;
-        description = ''
+        description = lib.mdDoc ''
           Configures how to restore tmux windows when attaching to a session.
 
-          <variablelist><title>Possible Values</title>
-            <varlistentry>
-              <term><literal>0</literal></term>
-              <listitem><para>Native windows</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>1</literal></term>
-              <listitem><para>Native tabs in a new window</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>2</literal></term>
-              <listitem><para>Tabs in the attaching window</para></listitem>
-            </varlistentry>
-          </variablelist>
+          **Possible Values**
+
+          `0`
+          : Native windows
+
+          `1`
+          : Native tabs in a new window
+
+          `2`
+          : Tabs in the attaching window
         '';
       };
 
