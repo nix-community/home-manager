@@ -56,22 +56,22 @@ in {
   meta.maintainers = [ maintainers.polykernel maintainers.league ];
 
   imports = [
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
+    (mkAliasOptionModuleMD [ "xsession" "pointerCursor" "package" ] [
       "home"
       "pointerCursor"
       "package"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "name" ] [
+    (mkAliasOptionModuleMD [ "xsession" "pointerCursor" "name" ] [
       "home"
       "pointerCursor"
       "name"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "size" ] [
+    (mkAliasOptionModuleMD [ "xsession" "pointerCursor" "size" ] [
       "home"
       "pointerCursor"
       "size"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
+    (mkAliasOptionModuleMD [ "xsession" "pointerCursor" "defaultCursor" ] [
       "home"
       "pointerCursor"
       "x11"
