@@ -18,18 +18,22 @@ let
           token_endpoint = mkOption {
             type = nullOr str;
             default = null;
+            description = lib.mdDoc "The OAuth2 token endpoint.";
           };
           client_id = mkOption {
             type = nullOr str;
             default = null;
+            description = lib.mdDoc "The OAuth2 client identifier.";
           };
           client_secret = mkOption {
             type = nullOr str;
             default = null;
+            description = lib.mdDoc "The OAuth2 client secret.";
           };
           scope = mkOption {
             type = nullOr str;
             default = null;
+            description = lib.mdDoc "The OAuth2 requested scope.";
           };
         };
       });

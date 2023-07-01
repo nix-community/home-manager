@@ -71,6 +71,7 @@ in {
           };
         };
       }));
+      description = "Attribute set of papis libraries.";
     };
   };
 

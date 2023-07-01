@@ -207,6 +207,7 @@ in {
               };
             };
           }));
+        description = "Attribute set of Thunderbird profiles.";
       };
 
       settings = mkOption {
