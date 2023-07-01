@@ -14,10 +14,10 @@ in {
 
   options = {
     programs.java = {
-      enable = mkEnableOption "" // {
-        description = ''
-          Install the Java development kit and set the <envar>JAVA_HOME</envar>
-          variable.
+      enable = mkEnableOption (lib.mdDoc "") // {
+        description = lib.mdDoc ''
+          Install the Java development kit and set the
+          {env}`JAVA_HOME` variable.
         '';
       };
 

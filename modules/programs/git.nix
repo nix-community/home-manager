@@ -265,10 +265,10 @@ in {
       };
 
       difftastic = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Enable the <command>difftastic</command> syntax highlighter.
-            See <link xlink:href="https://github.com/Wilfred/difftastic" />.
+        enable = mkEnableOption (lib.mdDoc "") // {
+          description = lib.mdDoc ''
+            Enable the {command}`difftastic` syntax highlighter.
+            See <https://github.com/Wilfred/difftastic>.
           '';
         };
 
@@ -303,10 +303,10 @@ in {
       };
 
       delta = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Whether to enable the <command>delta</command> syntax highlighter.
-            See <link xlink:href="https://github.com/dandavison/delta" />.
+        enable = mkEnableOption (lib.mdDoc "") // {
+          description = lib.mdDoc ''
+            Whether to enable the {command}`delta` syntax highlighter.
+            See <https://github.com/dandavison/delta>.
           '';
         };
 
@@ -335,10 +335,10 @@ in {
       };
 
       diff-so-fancy = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Enable the <command>diff-so-fancy</command> diff colorizer.
-            See <link xlink:href="https://github.com/so-fancy/diff-so-fancy" />.
+        enable = mkEnableOption (lib.mdDoc "") // {
+          description = lib.mdDoc ''
+            Enable the {command}`diff-so-fancy` diff colorizer.
+            See <https://github.com/so-fancy/diff-so-fancy>.
           '';
         };
 

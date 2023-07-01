@@ -30,7 +30,8 @@ in {
       '';
     };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
+    enableZshIntegration = mkOption {
+      type = types.bool;
       default = true;
       description = ''
         Whether to enable Atuin's Zsh integration.
