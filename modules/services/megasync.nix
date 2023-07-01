@@ -13,7 +13,7 @@ in {
     services.megasync = {
       enable = mkEnableOption "Megasync client";
 
-      package = mkPackageOption pkgs "megasync" { };
+      package = mkPackageOptionMD pkgs "megasync" { };
     };
   };
 

@@ -30,7 +30,7 @@ in {
 
     useFriendlyNames = mkEnableOption "friendly names";
 
-    package = mkPackageOption pkgs "antidote" { };
+    package = mkPackageOptionMD pkgs "antidote" { };
   };
 
   config = mkIf cfg.enable {

@@ -310,7 +310,7 @@ in {
           '';
         };
 
-        package = mkPackageOption pkgs "delta" { };
+        package = mkPackageOptionMD pkgs "delta" { };
 
         options = mkOption {
           type = with types;

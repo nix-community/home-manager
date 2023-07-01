@@ -16,7 +16,7 @@ in {
     enable = mkEnableOption
       "imv: a command line image viewer intended for use with tiling window managers";
 
-    package = mkPackageOption pkgs "imv" { };
+    package = mkPackageOptionMD pkgs "imv" { };
 
     settings = mkOption {
       default = { };

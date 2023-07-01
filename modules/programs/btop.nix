@@ -30,7 +30,7 @@ in {
   options.programs.btop = {
     enable = mkEnableOption "btop";
 
-    package = mkPackageOption pkgs "btop" { };
+    package = mkPackageOptionMD pkgs "btop" { };
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool float int str ]);

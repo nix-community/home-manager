@@ -14,7 +14,7 @@ in {
       Bash And Zsh shell history suggest box - easily view, navigate, search and
       manage your command history'';
 
-    package = mkPackageOption pkgs "hstr" { };
+    package = mkPackageOptionMD pkgs "hstr" { };
 
     enableBashIntegration = mkEnableOption "Bash integration" // {
       default = true;

@@ -14,7 +14,7 @@ in {
   options.services.pueue = {
     enable = mkEnableOption "Pueue, CLI process scheduler and manager";
 
-    package = mkPackageOption pkgs "pueue" { };
+    package = mkPackageOptionMD pkgs "pueue" { };
 
     settings = mkOption {
       type = yamlFormat.type;

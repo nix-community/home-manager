@@ -17,7 +17,7 @@ in {
   options.services.comodoro = {
     enable = lib.mkEnableOption "Comodoro server";
 
-    package = lib.mkPackageOption pkgs "comodoro" { };
+    package = lib.mkPackageOptionMD pkgs "comodoro" { };
 
     environment = lib.mkOption {
       type = with lib.types; attrsOf str;

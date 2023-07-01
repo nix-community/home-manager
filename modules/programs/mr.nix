@@ -17,7 +17,7 @@ in {
     enable = mkEnableOption
       "mr, a tool to manage all your version control repositories";
 
-    package = mkPackageOption pkgs "mr" { };
+    package = mkPackageOptionMD pkgs "mr" { };
 
     settings = mkOption {
       type = iniFormat.type;

@@ -19,7 +19,7 @@ in {
     enable =
       mkEnableOption "pls, a modern replacement for <command>ls</command>";
 
-    package = mkPackageOption pkgs "pls" { };
+    package = mkPackageOptionMD pkgs "pls" { };
 
     enableAliases = mkEnableOption "recommended pls aliases";
   };

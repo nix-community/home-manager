@@ -27,7 +27,7 @@ in {
     enable = lib.mkEnableOption
       "mpd-mpris: An implementation of the MPRIS protocol for MPD";
 
-    package = lib.mkPackageOption pkgs "mpd-mpris" { };
+    package = lib.mkPackageOptionMD pkgs "mpd-mpris" { };
 
     mpd = {
       useLocal = lib.mkOption {

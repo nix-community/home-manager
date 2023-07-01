@@ -7,7 +7,7 @@ in {
   options.services.clipman = {
     enable = mkEnableOption "clipman, a simple clipboard manager for Wayland";
 
-    package = mkPackageOption pkgs "clipman" { };
+    package = mkPackageOptionMD pkgs "clipman" { };
 
     systemdTarget = mkOption {
       type = types.str;

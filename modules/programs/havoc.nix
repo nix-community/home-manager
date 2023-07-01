@@ -13,7 +13,7 @@ in {
   options.programs.havoc = {
     enable = mkEnableOption "Havoc terminal";
 
-    package = mkPackageOption pkgs "havoc" { };
+    package = mkPackageOptionMD pkgs "havoc" { };
 
     settings = mkOption {
       type = iniFormat.type;

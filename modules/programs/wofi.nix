@@ -17,7 +17,7 @@ in {
     enable = mkEnableOption
       "wofi: a launcher/menu program for wlroots based wayland compositors such as sway";
 
-    package = mkPackageOption pkgs "wofi" { };
+    package = mkPackageOptionMD pkgs "wofi" { };
 
     settings = mkOption {
       default = { };

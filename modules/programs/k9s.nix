@@ -14,7 +14,7 @@ in {
     enable =
       mkEnableOption "k9s - Kubernetes CLI To Manage Your Clusters In Style";
 
-    package = mkPackageOption pkgs "k9s" { };
+    package = mkPackageOptionMD pkgs "k9s" { };
 
     settings = mkOption {
       type = yamlFormat.type;

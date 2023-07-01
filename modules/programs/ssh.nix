@@ -361,7 +361,7 @@ in
   options.programs.ssh = {
     enable = mkEnableOption "SSH client configuration";
 
-    package = mkPackageOption pkgs "openssh" {
+    package = mkPackageOptionMD pkgs "openssh" {
       nullable = true;
       default = null;
       extraDescription = "By default, the client provided by your system is used.";

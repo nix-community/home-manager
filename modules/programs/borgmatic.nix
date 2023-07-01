@@ -182,7 +182,7 @@ in {
     programs.borgmatic = {
       enable = mkEnableOption "Borgmatic";
 
-      package = mkPackageOption pkgs "borgmatic" { };
+      package = mkPackageOptionMD pkgs "borgmatic" { };
 
       backups = mkOption {
         type = types.attrsOf configModule;

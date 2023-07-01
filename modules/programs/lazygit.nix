@@ -16,7 +16,7 @@ in {
   options.programs.lazygit = {
     enable = mkEnableOption "lazygit, a simple terminal UI for git commands";
 
-    package = mkPackageOption pkgs "lazygit" { };
+    package = mkPackageOptionMD pkgs "lazygit" { };
 
     settings = mkOption {
       type = yamlFormat.type;

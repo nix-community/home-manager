@@ -19,7 +19,7 @@ in {
       description = "Whether to enable swaylock.";
     };
 
-    package = mkPackageOption pkgs "swaylock" { };
+    package = mkPackageOptionMD pkgs "swaylock" { };
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool float int str ]);

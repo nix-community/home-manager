@@ -12,7 +12,7 @@ in {
     programs.rtx = {
       enable = mkEnableOption "RTX. Runtime Executor (asdf Rust clone)";
 
-      package = mkPackageOption pkgs "rtx" { };
+      package = mkPackageOptionMD pkgs "rtx" { };
 
       enableBashIntegration = mkEnableOption "Bash Integration" // {
         default = true;

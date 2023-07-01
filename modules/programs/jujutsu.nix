@@ -14,7 +14,7 @@ in {
     enable =
       mkEnableOption "a Git-compatible DVCS that is both simple and powerful";
 
-    package = mkPackageOption pkgs "jujutsu" { };
+    package = mkPackageOptionMD pkgs "jujutsu" { };
 
     settings = mkOption {
       type = tomlFormat.type;

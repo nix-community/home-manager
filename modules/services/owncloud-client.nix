@@ -11,7 +11,7 @@ in {
     services.owncloud-client = {
       enable = mkEnableOption "Owncloud Client";
 
-      package = mkPackageOption pkgs "owncloud-client" { };
+      package = mkPackageOptionMD pkgs "owncloud-client" { };
     };
   };
 

@@ -21,7 +21,7 @@ in {
   options.programs.ledger = {
     enable = mkEnableOption "ledger, a double-entry accounting system";
 
-    package = mkPackageOption pkgs "ledger" { };
+    package = mkPackageOptionMD pkgs "ledger" { };
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool int str (listOf str) ]);

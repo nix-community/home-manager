@@ -622,7 +622,7 @@ in {
     programs.kakoune = {
       enable = mkEnableOption "the kakoune text editor";
 
-      package = mkPackageOption pkgs "kakoune-unwrapped" { };
+      package = mkPackageOptionMD pkgs "kakoune-unwrapped" { };
 
       config = mkOption {
         type = types.nullOr configModule;

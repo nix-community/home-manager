@@ -36,7 +36,7 @@ with lib;
       '';
     };
 
-    package = mkPackageOption pkgs "exa" { };
+    package = mkPackageOptionMD pkgs "exa" { };
   };
 
   config = let

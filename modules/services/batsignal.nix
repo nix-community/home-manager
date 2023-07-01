@@ -11,7 +11,7 @@ in {
     services.batsignal = {
       enable = lib.mkEnableOption "Batsignal Battery Daemon";
 
-      package = lib.mkPackageOption pkgs "batsignal" { };
+      package = lib.mkPackageOptionMD pkgs "batsignal" { };
 
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;

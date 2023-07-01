@@ -90,7 +90,7 @@ in {
     programs.offlineimap = {
       enable = mkEnableOption "OfflineIMAP";
 
-      package = mkPackageOption pkgs "offlineimap" {
+      package = mkPackageOptionMD pkgs "offlineimap" {
         example = ''
           pkgs.offlineimap.overridePythonAttrs ( old: {
             propagatedBuildInputs = old.propagatedBuildInputs

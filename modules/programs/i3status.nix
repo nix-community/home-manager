@@ -139,7 +139,7 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "i3status" { };
+    package = mkPackageOptionMD pkgs "i3status" { };
   };
 
   config = mkIf cfg.enable {

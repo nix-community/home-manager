@@ -2,7 +2,8 @@
 
 let
 
-  inherit (lib) literalExpression mkEnableOption mkPackageOption mkOption mkIf;
+  inherit (lib)
+    literalExpression mkEnableOption mkPackageOptionMD mkOption mkIf;
 
   cfg = config.programs.fuzzel;
 
@@ -14,7 +15,7 @@ in {
   options.programs.fuzzel = {
     enable = mkEnableOption "fuzzel";
 
-    package = mkPackageOption pkgs "fuzzel" { };
+    package = mkPackageOptionMD pkgs "fuzzel" { };
 
     settings = mkOption {
       type = iniFormat.type;

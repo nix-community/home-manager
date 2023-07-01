@@ -208,7 +208,7 @@ in {
     xsession.windowManager.i3 = {
       enable = mkEnableOption "i3 window manager";
 
-      package = mkPackageOption pkgs "i3" { };
+      package = mkPackageOptionMD pkgs "i3" { };
 
       config = mkOption {
         type = types.nullOr configModule;

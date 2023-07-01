@@ -11,9 +11,9 @@ in {
       enable = mkEnableOption
         "discocss, a tiny Discord CSS injector for Linux and MacOS";
 
-      package = mkPackageOption pkgs "discocss" { };
+      package = mkPackageOptionMD pkgs "discocss" { };
 
-      discordPackage = mkPackageOption pkgs "discord" { };
+      discordPackage = mkPackageOptionMD pkgs "discord" { };
 
       discordAlias = mkOption {
         type = types.bool;

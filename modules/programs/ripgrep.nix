@@ -12,7 +12,7 @@ in {
     programs.ripgrep = {
       enable = mkEnableOption "Ripgrep";
 
-      package = mkPackageOption pkgs "ripgrep" { };
+      package = mkPackageOptionMD pkgs "ripgrep" { };
 
       arguments = mkOption {
         type = with types; listOf str;

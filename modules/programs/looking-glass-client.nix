@@ -11,7 +11,7 @@ in {
   options.programs.looking-glass-client = {
     enable = mkEnableOption "looking-glass-client";
 
-    package = mkPackageOption pkgs "looking-glass-client" { };
+    package = mkPackageOptionMD pkgs "looking-glass-client" { };
 
     settings = mkOption {
       type = settingsFormat.type;

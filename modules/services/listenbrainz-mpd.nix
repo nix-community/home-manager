@@ -2,7 +2,7 @@
 
 let
 
-  inherit (lib.options) mkEnableOption mkPackageOption mkOption;
+  inherit (lib.options) mkEnableOption mkPackageOptionMD mkOption;
   inherit (lib.modules) mkIf;
 
   cfg = config.services.listenbrainz-mpd;
@@ -15,7 +15,7 @@ in {
   options.services.listenbrainz-mpd = {
     enable = mkEnableOption "listenbrainz-mpd";
 
-    package = mkPackageOption pkgs "listenbrainz-mpd" { };
+    package = mkPackageOptionMD pkgs "listenbrainz-mpd" { };
 
     settings = mkOption {
       type = tomlFormat.type;

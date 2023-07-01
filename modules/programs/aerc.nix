@@ -33,7 +33,7 @@ in {
 
     enable = mkEnableOption "aerc";
 
-    package = mkPackageOption pkgs "aerc" { };
+    package = mkPackageOptionMD pkgs "aerc" { };
 
     extraAccounts = mkOption {
       type = sectionsOrLines;

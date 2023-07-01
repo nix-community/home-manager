@@ -12,7 +12,7 @@ in {
   options.services.pass-secret-service = {
     enable = mkEnableOption "Pass libsecret service";
 
-    package = mkPackageOption pkgs "pass-secret-service" { };
+    package = mkPackageOptionMD pkgs "pass-secret-service" { };
 
     storePath = mkOption {
       type = with types; nullOr str;

@@ -34,7 +34,7 @@ in {
       description = "Cachix URI to use.";
     };
 
-    package = mkPackageOption pkgs "cachix" { };
+    package = mkPackageOptionMD pkgs "cachix" { };
 
     credentialsFile = mkOption {
       type = types.path;

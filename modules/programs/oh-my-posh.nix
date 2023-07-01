@@ -20,7 +20,7 @@ in {
   options.programs.oh-my-posh = {
     enable = mkEnableOption "oh-my-posh, a prompt theme engine for any shell";
 
-    package = mkPackageOption pkgs "oh-my-posh" { };
+    package = mkPackageOptionMD pkgs "oh-my-posh" { };
 
     settings = mkOption {
       type = jsonFormat.type;

@@ -24,7 +24,7 @@ in {
   options.programs.nheko = {
     enable = mkEnableOption "Qt desktop client for Matrix";
 
-    package = mkPackageOption pkgs "nheko" { };
+    package = mkPackageOptionMD pkgs "nheko" { };
 
     settings = mkOption {
       type = iniFmt.type;

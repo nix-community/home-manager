@@ -29,7 +29,7 @@ in {
   options.programs.rbenv = {
     enable = mkEnableOption "rbenv";
 
-    package = mkPackageOption pkgs "rbenv" { };
+    package = mkPackageOptionMD pkgs "rbenv" { };
 
     plugins = mkOption {
       type = types.listOf pluginModule;

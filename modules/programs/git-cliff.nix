@@ -13,7 +13,7 @@ in {
   options.programs.git-cliff = {
     enable = mkEnableOption "git-cliff changelog generator";
 
-    package = mkPackageOption pkgs "git-cliff" { };
+    package = mkPackageOptionMD pkgs "git-cliff" { };
 
     settings = mkOption {
       type = tomlFormat.type;

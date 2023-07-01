@@ -2,7 +2,7 @@
 
 let
   inherit (lib) all filterAttrs isStorePath literalExpression types;
-  inherit (lib.options) mkEnableOption mkPackageOption mkOption;
+  inherit (lib.options) mkEnableOption mkPackageOptionMD mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.strings) concatMapStrings;
   inherit (builtins) toJSON;
@@ -72,7 +72,7 @@ in {
   options.programs.wlogout = with lib.types; {
     enable = mkEnableOption "wlogout";
 
-    package = mkPackageOption pkgs "wlogout" { };
+    package = mkPackageOptionMD pkgs "wlogout" { };
 
     layout = mkOption {
       type = listOf wlogoutLayoutConfig;

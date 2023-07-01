@@ -11,7 +11,7 @@ in {
     enable =
       lib.mkEnableOption "CopyQ, a clipboard manager with advanced features";
 
-    package = lib.mkPackageOption pkgs "copyq" { };
+    package = lib.mkPackageOptionMD pkgs "copyq" { };
 
     systemdTarget = lib.mkOption {
       type = lib.types.str;

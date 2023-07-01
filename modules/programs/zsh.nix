@@ -142,7 +142,7 @@ let
     options = {
       enable = mkEnableOption "oh-my-zsh";
 
-      package = mkPackageOption pkgs "oh-my-zsh" { };
+      package = mkPackageOptionMD pkgs "oh-my-zsh" { };
 
       plugins = mkOption {
         default = [];
@@ -212,7 +212,7 @@ let
     options = {
       enable = mkEnableOption "zsh syntax highlighting";
 
-      package = mkPackageOption pkgs "zsh-syntax-highlighting" { };
+      package = mkPackageOptionMD pkgs "zsh-syntax-highlighting" { };
 
       styles = mkOption {
         type = types.attrsOf types.str;
@@ -236,7 +236,7 @@ in
     programs.zsh = {
       enable = mkEnableOption "Z shell (Zsh)";
 
-      package = mkPackageOption pkgs "zsh" { };
+      package = mkPackageOptionMD pkgs "zsh" { };
 
       autocd = mkOption {
         default = null;

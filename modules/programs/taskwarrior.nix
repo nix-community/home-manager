@@ -85,7 +85,7 @@ in {
         '';
       };
 
-      package = mkPackageOption pkgs "taskwarrior" { };
+      package = mkPackageOptionMD pkgs "taskwarrior" { };
     };
   };
 

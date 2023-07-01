@@ -10,7 +10,7 @@ in {
   options.programs.comodoro = {
     enable = lib.mkEnableOption "Comodoro, a CLI to manage your time";
 
-    package = lib.mkPackageOption pkgs "comodoro" { };
+    package = lib.mkPackageOptionMD pkgs "comodoro" { };
 
     settings = lib.mkOption {
       type = lib.types.submodule { freeformType = tomlFormat.type; };

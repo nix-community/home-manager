@@ -14,7 +14,7 @@ in {
   options = {
     programs.vim-vint = {
       enable = mkEnableOption "the Vint linter for Vimscript";
-      package = mkPackageOption pkgs "vim-vint" { };
+      package = mkPackageOptionMD pkgs "vim-vint" { };
 
       settings = mkOption {
         type = yamlFormat.type;
