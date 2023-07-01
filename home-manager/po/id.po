@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-05-27 09:08+0200\n"
-"PO-Revision-Date: 2023-06-22 09:51+0000\n"
-"Last-Translator: Abdul V Vahry <cyberaioff@gmail.com>\n"
+"PO-Revision-Date: 2023-07-01 13:50+0000\n"
+"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/home-manager/"
 "cli/id/>\n"
 "Language: id\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.18.1\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -27,12 +27,11 @@ msgstr "Tidak ada file konfigurasi yang ditemukan di %s"
 #. 'home.nix' or 'flake.nix'.
 #: home-manager/home-manager:88 home-manager/home-manager:92
 #: home-manager/home-manager:154
-#, fuzzy
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
-"Mempertahankan Pengelola Rumah Anda %s di %s tidak digunakan lagi,\n"
+"Mempertahankan Pengelola Beranda Anda %s di %s tidak digunakan lagi,\n"
 "tolong pindahkan ke %s"
 
 #: home-manager/home-manager:99
@@ -45,9 +44,8 @@ msgstr "Tidak dapat menemukan direktori profil yang sesuai, mencoba %s dan %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:191
-#, fuzzy
 msgid "Can't inspect options of a flake configuration"
-msgstr "Tidak dapat memeriksa opsi konfigurasi serpih"
+msgstr "Tidak dapat memeriksa opsi konfigurasi flake"
 
 #: home-manager/home-manager:253 home-manager/home-manager:276
 #: home-manager/home-manager:973
@@ -56,7 +54,7 @@ msgstr "%s: opsi tidak diketahui '%s'"
 
 #: home-manager/home-manager:258 home-manager/home-manager:974
 msgid "Run '%s --help' for usage help"
-msgstr ""
+msgstr "Jalankan '%s --help' untuk bantuan penggunaan"
 
 #: home-manager/home-manager:284 home-manager/home-manager:383
 msgid "The file %s already exists, leaving it unchanged..."
