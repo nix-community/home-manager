@@ -75,23 +75,19 @@ in {
           number = true;
           ratios = "1:1:2";
         };
-        description = ''
+        description = lib.mdDoc ''
           An attribute set of lf settings. The attribute names and corresponding
           values must be among the following supported options.
 
-          <informaltable frame="none"><tgroup cols="1"><tbody>
           ${concatStringsSep "\n" (mapAttrsToList (n: v: ''
-            <row>
-              <entry><varname>${n}</varname></entry>
-              <entry>${v.description}</entry>
-            </row>
+            {var}`${n}`
+            : ${v.description}
           '') knownSettings)}
-          </tbody></tgroup></informaltable>
 
           See the lf documentation for detailed descriptions of these options.
-          Note, use <varname>previewer</varname> to set lf's
-          <varname>previewer</varname> option, and
-          <varname>extraConfig</varname> for any other option not listed above.
+          Use {option}`programs.lf.previewer.*` to set lf's
+          {var}`previewer` option, and
+          [](#opt-programs.lf.extraConfig) for any other option not listed above.
           All string options are quoted with double quotes.
         '';
       };

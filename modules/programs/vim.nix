@@ -89,23 +89,19 @@ in {
             background = "dark";
           }
         '';
-        description = ''
+        description = lib.mdDoc ''
           At attribute set of Vim settings. The attribute names and
           corresponding values must be among the following supported
           options.
 
-          <informaltable frame="none"><tgroup cols="1"><tbody>
           ${concatStringsSep "\n" (mapAttrsToList (n: v: ''
-            <row>
-              <entry><varname>${n}</varname></entry>
-              <entry>${v.description}</entry>
-            </row>
+            {var}`${n}`
+            : ${v.description}
           '') knownSettings)}
-          </tbody></tgroup></informaltable>
 
           See the Vim documentation for detailed descriptions of these
-          options. Note, use <varname>extraConfig</varname> to
-          manually set any options not listed above.
+          options. Use [](#opt-programs.vim.extraConfig) to manually
+          set any options not listed above.
         '';
       };
 
