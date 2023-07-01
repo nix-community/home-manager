@@ -49,7 +49,6 @@ let
   buildOptionsDocs = args@{ modules, ... }:
     pkgs.buildPackages.nixosOptionsDoc ({
       options = (lib.evalModules { inherit modules; }).options;
-      warningsAreErrors = false;
       transformOptions = opt:
         opt // {
           # Clean up declaration sites to not refer to the Home Manager
@@ -130,15 +129,6 @@ in {
         --replace \
           '${hmOptionsDocs.optionsJSON}/share/doc/nixos' \
           "$out/share/doc/home-manager"
-    '';
-
-    # Temporary export for Markdown migration.
-    docBookForMigration = pkgs.runCommand "hm-docbook-for-migration" { } ''
-      cat \
-        ${hmOptionsDocs.optionsDocBook} \
-        ${nixDarwinOptionsDocs.optionsDocBook} \
-        ${nixosOptionsDocs.optionsDocBook} \
-        > $out
     '';
   };
 
