@@ -58,6 +58,13 @@ in {
       description = "Whether to include the system-wide configuration.";
     };
 
+    useXdgConfigDir = mkOption {
+      type = types.bool;
+      default = false;
+      description =
+        "Whether to use the XDG config directory rather than the home directory.";
+    };
+
     extraConfig = mkOption {
       type = types.lines;
       default = "";
@@ -68,8 +75,8 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    home.file.".inputrc".text = let
+  config = mkIf cfg.enable (let
+    finalConfig = let
       configStr = concatStringsSep "\n"
         (optional cfg.includeSystemConfig "$include /etc/inputrc"
           ++ mapAttrsToList mkSetVariableStr cfg.variables
@@ -80,5 +87,11 @@ in {
       ${configStr}
       ${cfg.extraConfig}
     '';
-  };
+  in {
+    home.file = mkIf (!cfg.useXdgConfigDir) { ".inputrc".text = finalConfig; };
+    xdg.configFile = mkIf cfg.useXdgConfigDir { inputrc.text = finalConfig; };
+    home.sessionVariables = mkIf cfg.useXdgConfigDir {
+      INPUTRC = "${config.xdg.configHome}/inputrc";
+    };
+  });
 }
