@@ -1,0 +1,8 @@
+[addressbooks]
+[[test]]
+path = /home/hm-user/.contacts/test
+
+
+[general]
+default_action=list
+
