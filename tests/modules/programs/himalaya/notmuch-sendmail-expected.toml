@@ -5,7 +5,7 @@ backend = "notmuch"
 default = true
 display-name = "H. M. Test"
 email = "hm@example.com"
-notmuch-db-path = "/home/hm-user/Maildir/hm@example.com"
+notmuch-db-path = "/home/hm-user/Maildir"
 sender = "sendmail"
 sendmail-cmd = "msmtp"
 
