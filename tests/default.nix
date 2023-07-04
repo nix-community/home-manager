@@ -88,6 +88,7 @@ import nmt {
     ./modules/programs/k9s
     ./modules/programs/kakoune
     ./modules/programs/kitty
+    ./modules/programs/khal
     ./modules/programs/ledger
     ./modules/programs/less
     ./modules/programs/lf
