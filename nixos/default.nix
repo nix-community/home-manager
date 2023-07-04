@@ -23,6 +23,9 @@ in {
           # fontconfig by default.
           fonts.fontconfig.enable = lib.mkDefault
             (cfg.useUserPackages && config.fonts.fontconfig.enable);
+
+          # Inherit glibcLocales setting from NixOS.
+          i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
         }];
       };
     }

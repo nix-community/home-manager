@@ -15,15 +15,16 @@
 # below for changes:
 # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/development/libraries/glibc/nix-locale-archive.patch
 
-{ lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 
 with lib;
 
 let
+  inherit (config.i18n) glibcLocales;
 
-  inherit (pkgs.glibcLocales) version;
+  inherit (glibcLocales) version;
 
-  archivePath = "${pkgs.glibcLocales}/lib/locale/locale-archive";
+  archivePath = "${glibcLocales}/lib/locale/locale-archive";
 
   # lookup the version of glibcLocales and set the appropriate environment vars
   localeVars = if versionAtLeast version "2.27" then {
@@ -35,6 +36,31 @@ let
 
 in {
   meta.maintainers = with maintainers; [ midchildan ];
+
+  options = {
+    i18n.glibcLocales = mkOption {
+      type = types.path;
+      description = ''
+        Customized <literal>glibcLocales</literal> package providing
+        the <literal>LOCALE_ARCHIVE_*</literal> environment variable.
+        </para><para>
+        This option only applies to the Linux platform.
+        </para><para>
+        When Home Manager is configured with NixOS, the default value
+        will be set to <varname>i18n.glibcLocales</varname> from the
+        system configuration.
+      '';
+      example = literalExpression ''
+        pkgs.glibcLocales.override {
+          allLocales = false;
+          locales = [ "en_US.UTF-8/UTF-8" ];
+        }
+      '';
+      # NB. See nixos/default.nix for NixOS default.
+      default = pkgs.glibcLocales;
+      defaultText = literalExpression "pkgs.glibcLocales";
+    };
+  };
 
   config = mkIf pkgs.stdenv.hostPlatform.isLinux {
     # For shell sessions.

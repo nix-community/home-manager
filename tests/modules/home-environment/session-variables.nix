@@ -9,7 +9,7 @@ let
     if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
     export __HM_SESS_VARS_SOURCED=1
 
-    export LOCALE_ARCHIVE_2_27="${pkgs.glibcLocales}/lib/locale/locale-archive"
+    export LOCALE_ARCHIVE_2_27="${config.i18n.glibcLocales}/lib/locale/locale-archive"
     export V1="v1"
     export V2="v2-v1"
     export XDG_CACHE_HOME="/home/hm-user/.cache"
