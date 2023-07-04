@@ -53,9 +53,9 @@ in {
           example =
             literalExpression ''{ source = "maildir://~/Maildir/example"; }'';
           description = ''
-            Extra config added to the configuration of this account in
+            Extra config added to the configuration section for this account in
             <filename>$HOME/.config/aerc/accounts.conf</filename>.
-            See aerc-config(5).
+            See <citerefentry><refentrytitle>aerc-accounts</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
           '';
         };
 
@@ -66,18 +66,20 @@ in {
             ''{ messages = { d = ":move ''${folder.trash}<Enter>"; }; }'';
           description = ''
             Extra bindings specific to this account, added to
-            <filename>$HOME/.config/aerc/accounts.conf</filename>.
-            See <citerefentry><refentrytitle>aerc-config</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+            <filename>$HOME/.config/aerc/binds.conf</filename>.
+            See <citerefentry><refentrytitle>aerc-binds</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
           '';
         };
 
         extraConfig = mkOption {
           type = confSections;
           default = { };
-          example = literalExpression "{ ui = { sidebar-width = 42; }; }";
+          example = literalExpression "{ ui = { sidebar-width = 25; }; }";
           description = ''
-            Extra config specific to this account, added to
-            <filename>$HOME/.config/aerc/aerc.conf</filename>.
+            Config specific to this account, added to <filename>$HOME/.config/aerc/aerc.conf</filename>.
+            Aerc only supports per-account UI configuration.
+            For other sections of <filename>$HOME/.config/aerc/aerc.conf</filename>,
+            use <literal>.programs.aerc.extraConfig</literal>.
             See <citerefentry><refentrytitle>aerc-config</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
           '';
         };
