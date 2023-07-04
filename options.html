@@ -1281,6 +1281,19 @@ conversion or moving files.</p><p><span class="emphasis"><em>Type:</em></span> o
 undefined for state version ≥ 20.09
 </pre><p><span class="emphasis"><em>Example:</em></span> <code class="literal">"jane.doe"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix#blob-path" target="_top">
                     &lt;home-manager/modules/home-environment.nix&gt;
+                </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-i18n.glibcLocales"></a><a class="link" href="options.html#opt-i18n.glibcLocales"><code class="option">i18n.glibcLocales</code></a></span></dt><dd><p>Customized <code class="literal">glibcLocales</code> package providing
+the <code class="literal">LOCALE_ARCHIVE_*</code> environment variable.
+</p><p>
+This option only applies to the Linux platform.
+</p><p>
+When Home Manager is configured with NixOS, the default value
+will be set to <code class="varname">i18n.glibcLocales</code> from the
+system configuration.</p><p><span class="emphasis"><em>Type:</em></span> path</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">pkgs.glibcLocales</code></p><p><span class="emphasis"><em>Example:</em></span> </p><pre class="programlisting">pkgs.glibcLocales.override {
+  allLocales = false;
+  locales = [ "en_US.UTF-8/UTF-8" ];
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/config/i18n.nix#blob-path" target="_top">
+                    &lt;home-manager/modules/config/i18n.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-i18n.inputMethod.enabled"></a><a class="link" href="options.html#opt-i18n.inputMethod.enabled"><code class="option">i18n.inputMethod.enabled</code></a></span></dt><dd><p>Select the enabled input method. Input methods is a software to input
 symbols that are not available on standard input devices.
 </p><p>
