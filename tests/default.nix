@@ -77,6 +77,7 @@ import nmt {
     ./modules/programs/fish
     ./modules/programs/gallery-dl
     ./modules/programs/gh
+    ./modules/programs/gh-dash
     ./modules/programs/git-cliff
     ./modules/programs/git
     ./modules/programs/gpg
