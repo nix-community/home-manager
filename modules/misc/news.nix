@@ -1143,6 +1143,13 @@ in
           A new module is available: 'services.ssh-agent'
         '';
       }
+
+      {
+        time = "2023-07-07T06:00:00+00:00";
+        message = ''
+          A new module is available: 'programs.swappy'.
+        '';
+      }
     ];
   };
 }
