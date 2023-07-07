@@ -1,0 +1,1 @@
+{ swayosd = ./swayosd.nix; }
