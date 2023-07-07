@@ -9585,9 +9585,11 @@ The options are
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.unison.pairs._name_.commandOptions"></a><a class="link" href="options.html#opt-services.unison.pairs._name_.commandOptions"><code class="option">services.unison.pairs.&lt;name&gt;.commandOptions</code></a></span></dt><dd><p>Additional command line options as a dictionary to pass to the
 <code class="literal">unison</code> program.
 </p><p>
+Use a list of strings to declare the same option multiple times.
+</p><p>
 See
 <span class="citerefentry"><span class="refentrytitle">unison</span>(1)</span>
-for a list of available options.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of string</p><p><span class="emphasis"><em>Default:</em></span> </p><pre class="programlisting">{
+for a list of available options.</p><p><span class="emphasis"><em>Type:</em></span> attribute set of (string or list of string)</p><p><span class="emphasis"><em>Default:</em></span> </p><pre class="programlisting">{
   auto = "true";
   batch = "true";
   log = "false";
