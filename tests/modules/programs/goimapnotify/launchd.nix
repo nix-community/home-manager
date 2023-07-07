@@ -33,8 +33,9 @@ with lib;
   nmt.script = let
     serviceFileName = "org.nix-community.home.imapnotify-hm-example.com.plist";
   in ''
-    serviceFile=LaunchAgents/${serviceFileName}
+    serviceFile="LaunchAgents/${serviceFileName}"
+    serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
     assertFileExists $serviceFile
-    assertFileContent $serviceFile ${./launchd.plist}
+    assertFileContent $serviceFileNormalized ${./launchd.plist}
   '';
 }

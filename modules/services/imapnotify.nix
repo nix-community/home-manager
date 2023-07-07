@@ -21,10 +21,9 @@ let
         Unit = { Description = "imapnotify for ${name}"; };
 
         Service = {
+          # Use the nix store path for config to ensure service restarts when it changes
           ExecStart =
-            "${getExe cfg.package} -conf '${config.xdg.configHome}/imapnotify/${
-              configName account
-            }'";
+            "${getExe cfg.package} -conf '${genAccountConfig account}'";
           Restart = "always";
           RestartSec = 30;
           Type = "simple";
@@ -44,11 +43,9 @@ let
       value = {
         enable = true;
         config = {
-          ProgramArguments = [
-            "${getExe cfg.package}"
-            "-conf"
-            "${config.xdg.configHome}/imapnotify/${configName account}"
-          ];
+          # Use the nix store path for config to ensure service restarts when it changes
+          ProgramArguments =
+            [ "${getExe cfg.package}" "-conf" "${genAccountConfig account}" ];
           KeepAlive = true;
           ThrottleInterval = 30;
           ExitTimeOut = 0;

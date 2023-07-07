@@ -19,7 +19,7 @@
 	<array>
 		<string>@goimapnotify@/bin/goimapnotify</string>
 		<string>-conf</string>
-		<string>/home/hm-user/.config/imapnotify/imapnotify-hm-example.com-config.json</string>
+		<string>/nix/store/00000000000000000000000000000000-imapnotify-hm-example.com-config.json</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
