@@ -1150,6 +1150,13 @@ in
           A new modules is available: 'programs.darcs'
         '';
       }
+
+      {
+        time = "2023-07-08T09:21:06+00:00";
+        message = ''
+          A new module is available: 'programs.pyenv'.
+        '';
+      }
     ];
   };
 }

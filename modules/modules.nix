@@ -169,6 +169,7 @@ let
     ./programs/pls.nix
     ./programs/powerline-go.nix
     ./programs/pubs.nix
+    ./programs/pyenv.nix
     ./programs/pylint.nix
     ./programs/qutebrowser.nix
     ./programs/rbw.nix
