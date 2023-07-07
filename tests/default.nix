@@ -145,6 +145,7 @@ import nmt {
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
     ./modules/targets-darwin
+    ./modules/programs/goimapnotify
   ] ++ lib.optionals isLinux [
     ./modules/config/i18n
     ./modules/i18n/input-method
