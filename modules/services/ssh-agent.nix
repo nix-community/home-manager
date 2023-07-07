@@ -14,6 +14,11 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.ssh-agent" pkgs
+        lib.platforms.linux)
+    ];
+
     home.sessionVariablesExtra = ''
       if [[ -z "$SSH_AUTH_SOCK" ]]; then
         export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent

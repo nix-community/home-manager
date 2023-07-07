@@ -1138,7 +1138,7 @@ in
 
       {
         time = "2023-06-30T14:46:22+00:00";
-        condition = config.services.ssh-agent.enable;
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.ssh-agent'
         '';
