@@ -2,40 +2,48 @@
 let
   cfg = config.services.git-workspace;
   tomlFormat = pkgs.formats.toml { };
-  workspaceType = lib.types.submodule {
+  workspaceType = types.submodule {
     freeformType = tomlFormat.type;
-    options.provider = lib.mkOption {
-      type = lib.types.listOf (lib.types.submodule {
+
+    options.provider = mkOption {
+      type = types.listOf (types.submodule {
         freeformType = tomlFormat.type;
         options = {
-          provider = lib.mkOption {
-            type = lib.types.str;
+          provider = mkOption {
+            type = types.str;
             example = "github";
           };
-          name = lib.mkOption {
-            type = lib.types.str;
+
+          name = mkOption {
+            type = types.str;
             example = "torvalds";
           };
-          path = lib.mkOption {
-            type = lib.types.path;
-            example = lib.literalExpression
-              ''"''${config.home.homeDirectory}/projects"'';
+
+          path = mkOption {
+            type = types.path;
+            example =
+              literalExpression ''"''${config.home.homeDirectory}/projects"'';
           };
         };
       });
     };
   };
+  inherit (lib)
+    mkOption mkEnableOption mkPackageOption types literalExpression mkIf
+    mapAttrs';
 in {
   meta.maintainers = [ lib.maintainers.aciceri ];
+
   options.services.git-workspace = {
-    enable = lib.mkEnableOption "git-workspace systemd timer";
-    package = lib.mkOption {
-      type = lib.types.package;
+    enable = mkEnableOption "git-workspace systemd timer";
+
+    package = mkOption {
+      type = types.package;
       default = if config.programs.git-workspace.enable then
         config.programs.git-workspace.package
       else
         pkgs.git-workspace;
-      defaultText = lib.literalExpression ''
+      defaultText = literalExpression ''
         if config.programs.git-workspace.enable then
           config.programs.git-workspace.package
         else
@@ -43,8 +51,9 @@ in {
       '';
       description = "The git-workspace package to use";
     };
-    frequency = lib.mkOption {
-      type = lib.types.str;
+
+    frequency = mkOption {
+      type = types.str;
       example = "daily";
       default = "daily";
       description = ''
@@ -52,8 +61,9 @@ in {
         more information on the syntax.
       '';
     };
-    environmentFile = lib.mkOption {
-      type = lib.types.path;
+
+    environmentFile = mkOption {
+      type = types.path;
       description = ''
         Path to the systemd <literal>EnvironmentFile</literal> to keep tokens,
         do not put a derivation output here since it would expose secrets in
@@ -69,14 +79,15 @@ in {
       '';
       example = "/var/lib/git-workspace-tokens";
     };
-    workspaces = lib.mkOption {
-      type = lib.types.attrsOf workspaceType;
+
+    workspaces = mkOption {
+      type = types.attrsOf workspaceType;
       default = { };
       description = ''
         1:1 representation of a single <literal>workspace.toml</literal> consumed
         by git-workspace.
       '';
-      example = lib.literalExpression ''
+      example = literalExpression ''
         {
           personal.provider = [
             {
@@ -104,18 +115,22 @@ in {
       '';
     };
   };
-  config = lib.mkIf cfg.enable {
+
+  config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.git-workspace" pkgs
         lib.platforms.linux)
     ];
+
     home.packages = [ cfg.package ];
-    xdg.configFile = lib.mapAttrs' (workspaceName: workspace: {
+
+    xdg.configFile = mapAttrs' (workspaceName: workspace: {
       name = "git-workspace/${workspaceName}/workspace.toml";
       value.source = (tomlFormat.generate "${workspaceName}-workspace.toml"
         workspace).outPath;
     }) cfg.workspaces;
-    systemd.user.services = lib.mapAttrs' (workspaceName: workspace: rec {
+
+    systemd.user.services = mapAttrs' (workspaceName: workspace: rec {
       name = "git-workspace-${workspaceName}-update";
       value = {
         Unit.Description = "Runs `git-workspace update` for ${workspaceName}";
@@ -135,7 +150,8 @@ in {
         };
       };
     }) cfg.workspaces;
-    systemd.user.timers = lib.mapAttrs' (workspaceName: workspace: {
+
+    systemd.user.timers = mapAttrs' (workspaceName: workspace: {
       name = "git-workspace-${workspaceName}-update";
       value = {
         Unit = {
