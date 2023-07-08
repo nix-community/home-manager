@@ -125,7 +125,7 @@ in {
       in {
         inherit name;
         value = {
-          Unit.Description = "Runs `git-workspace update` for ${workspaceName}";
+          Unit.Description = "git-workspace update for ${workspaceName}";
           Service = {
             EnvironmentFile = cfg.environmentFile;
             ExecStart = let
@@ -148,7 +148,7 @@ in {
       value = {
         Unit = {
           Description =
-            "Automatically runs `git-workspace update` for ${workspaceName}";
+            "git-workspace update for ${workspaceName}";
         };
         Timer = {
           Unit = "git-workspace-${workspaceName}-update.unit";
