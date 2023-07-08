@@ -79,7 +79,7 @@ in {
             Config specific to this account, added to <filename>$HOME/.config/aerc/aerc.conf</filename>.
             Aerc only supports per-account UI configuration.
             For other sections of <filename>$HOME/.config/aerc/aerc.conf</filename>,
-            use <literal>.programs.aerc.extraConfig</literal>.
+            use <literal>programs.aerc.extraConfig</literal>.
             See <citerefentry><refentrytitle>aerc-config</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
           '';
         };

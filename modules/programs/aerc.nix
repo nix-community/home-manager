@@ -166,7 +166,7 @@ in {
       This will prevent aerc from starting; see `unsafe-accounts-conf` in the man page aerc-config(5):
       > By default, the file permissions of accounts.conf must be restrictive and only allow reading by the file owner (0600).
       > Set this option to true to ignore this permission check. Use this with care as it may expose your credentials.
-      These permissions are not possible with home-manger, since the generated file is in the nix-store (permissions 0444).
+      These permissions are not possible with home-manager, since the generated file is in the nix-store (permissions 0444).
       Therefore, please set `programs.aerc.extraConfig.general.unsafe-accounts-conf = true`.
       This option is safe; if `passwordCommand` is properly set, no credentials will be written to the nix store.
     ''] else
@@ -178,9 +178,9 @@ in {
           (mapAttrsToList (_: v: attrNames v.aerc.extraConfig) aerc-accounts)));
       in extraConfigSections == [ ] || extraConfigSections == [ "ui" ];
       message = ''
-        Only the UI section of <filename>$XDG_CONFIG_HOME/aerc/aerc.conf</filename>
-        supports contextual (per-account configuration. Please move any other
-        configuration to <literal>programs.aerc.extraConfig</literal>.
+        Only the ui section of $XDG_CONFIG_HOME/aerc.conf supports contextual (per-account) configuration.
+        Please configure it with accounts.email.accounts._.aerc.extraConfig.ui and move any other
+        configuration to programs.aerc.extraConfig.
       '';
     }];
 
