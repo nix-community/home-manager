@@ -37,20 +37,7 @@ in {
   options.services.git-workspace = {
     enable = mkEnableOption "git-workspace systemd timer";
 
-    package = mkOption {
-      type = types.package;
-      default = if config.programs.git-workspace.enable then
-        config.programs.git-workspace.package
-      else
-        pkgs.git-workspace;
-      defaultText = literalExpression ''
-        if config.programs.git-workspace.enable then
-          config.programs.git-workspace.package
-        else
-          pkgs.git-workspace;
-      '';
-      description = "The git-workspace package to use";
-    };
+    package = mkPackageOption pkgs "git-workspace" { };
 
     frequency = mkOption {
       type = types.str;
