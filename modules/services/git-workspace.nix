@@ -120,26 +120,28 @@ in {
         workspace).outPath;
     }) cfg.workspaces;
 
-    systemd.user.services = mapAttrs' (workspaceName: workspace: rec {
-      name = "git-workspace-${workspaceName}-update";
-      value = {
-        Unit.Description = "Runs `git-workspace update` for ${workspaceName}";
-        Service = {
-          EnvironmentFile = cfg.environmentFile;
-          ExecStart = let
-            script = pkgs.writeShellApplication {
-              name = "${name}-launcher";
-              text = ''
-                ${cfg.package}/bin/git-workspace \
-                  --workspace ${config.xdg.configHome}/git-workspace/${workspaceName} \
-                  update
-              '';
-              runtimeInputs = with pkgs; [ busybox openssh git ];
-            };
-          in "${script}/bin/${name}-launcher";
+    systemd.user.services = mapAttrs' (workspaceName: workspace:
+      let name = "git-workspace-${workspaceName}-update";
+      in {
+        inherit name;
+        value = {
+          Unit.Description = "Runs `git-workspace update` for ${workspaceName}";
+          Service = {
+            EnvironmentFile = cfg.environmentFile;
+            ExecStart = let
+              script = pkgs.writeShellApplication {
+                name = "${name}-launcher";
+                text = ''
+                  ${cfg.package}/bin/git-workspace \
+                    --workspace ${config.xdg.configHome}/git-workspace/${workspaceName} \
+                    update
+                '';
+                runtimeInputs = with pkgs; [ busybox openssh git ];
+              };
+            in "${script}/bin/${name}-launcher";
+          };
         };
-      };
-    }) cfg.workspaces;
+      }) cfg.workspaces;
 
     systemd.user.timers = mapAttrs' (workspaceName: workspace: {
       name = "git-workspace-${workspaceName}-update";
