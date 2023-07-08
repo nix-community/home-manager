@@ -12,17 +12,20 @@ let
           provider = mkOption {
             type = types.enum [ "github" "gitlab" ];
             example = "github";
+            description = "Provider: only GitHub and GitLab are supported";
           };
 
           name = mkOption {
             type = types.str;
             example = "torvalds";
+            description = "User or organization name";
           };
 
           path = mkOption {
             type = types.path;
             example =
               literalExpression ''"''${config.home.homeDirectory}/projects"'';
+            description = "Path that will contain repositories";
           };
         };
       });
