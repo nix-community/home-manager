@@ -127,6 +127,7 @@ in {
         value = {
           Unit.Description = "git-workspace update for ${workspaceName}";
           Service = {
+            Type = "oneshot";
             EnvironmentFile = cfg.environmentFile;
             Environment = with pkgs; [ busybox openssh git ];
             ExecStart = ''
