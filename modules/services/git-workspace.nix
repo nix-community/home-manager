@@ -128,17 +128,12 @@ in {
           Unit.Description = "git-workspace update for ${workspaceName}";
           Service = {
             EnvironmentFile = cfg.environmentFile;
-            ExecStart = let
-              script = pkgs.writeShellApplication {
-                name = "${name}-launcher";
-                text = ''
-                  ${getExe cfg.package} \
-                    --workspace ${config.xdg.configHome}/git-workspace/${workspaceName} \
-                    update
-                '';
-                runtimeInputs = with pkgs; [ busybox openssh git ];
-              };
-            in "${script}/bin/${name}-launcher";
+            Environment = with pkgs; [ busybox openssh git ];
+            ExecStart = ''
+              ${getExe cfg.package} \
+                --workspace ${config.xdg.configHome}/git-workspace/${workspaceName} \
+                update
+            '';
           };
         };
       }) cfg.workspaces;
