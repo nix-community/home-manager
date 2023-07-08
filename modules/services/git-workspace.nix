@@ -109,6 +109,7 @@ in {
       (lib.hm.assertions.assertPlatform "services.git-workspace" pkgs
         lib.platforms.linux)
     ];
+    home.packages = [ cfg.package ];
     xdg.configFile = lib.mapAttrs' (workspaceName: workspace: {
       name = "git-workspace/${workspaceName}/workspace.toml";
       value.source = (tomlFormat.generate "${workspaceName}-workspace.toml"
