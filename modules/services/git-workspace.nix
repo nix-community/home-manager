@@ -89,8 +89,8 @@ in {
             {
               provider = "gitlab"
               name = "gitlab_username"
-              # it's possible to use the same path as previous provider
-              # if there are not name clashes
+              # It's possible to use the same path as a previous provider
+              # if there are no name clashes.
               path = "''${config.home.homeDirectory}/personal_projects"
             }
           ];
