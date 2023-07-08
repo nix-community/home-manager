@@ -10,7 +10,7 @@ let
         freeformType = tomlFormat.type;
         options = {
           provider = mkOption {
-            type = types.str;
+            type = types.enum [ "github" "gitlab" ];
             example = "github";
           };
 
