@@ -33,7 +33,7 @@ let
   };
   inherit (lib)
     mkOption mkEnableOption mkPackageOption types literalExpression mkIf
-    mapAttrs';
+    mapAttrs' getExe;
 in {
   meta.maintainers = [ lib.maintainers.aciceri ];
 
@@ -132,7 +132,7 @@ in {
               script = pkgs.writeShellApplication {
                 name = "${name}-launcher";
                 text = ''
-                  ${cfg.package}/bin/git-workspace \
+                  ${getExe cfg.package} \
                     --workspace ${config.xdg.configHome}/git-workspace/${workspaceName} \
                     update
                 '';
@@ -146,10 +146,7 @@ in {
     systemd.user.timers = mapAttrs' (workspaceName: workspace: {
       name = "git-workspace-${workspaceName}-update";
       value = {
-        Unit = {
-          Description =
-            "git-workspace update for ${workspaceName}";
-        };
+        Unit = { Description = "git-workspace update for ${workspaceName}"; };
         Timer = {
           Unit = "git-workspace-${workspaceName}-update.unit";
           OnCalendar = cfg.frequency;
