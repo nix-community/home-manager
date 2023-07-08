@@ -33,7 +33,7 @@ let
   };
   inherit (lib)
     mkOption mkEnableOption mkPackageOption types literalExpression mkIf
-    mapAttrs' getExe;
+    mapAttrs' getExe escapeShellArgs;
 in {
   meta.maintainers = [ lib.maintainers.aciceri ];
 
@@ -132,8 +132,13 @@ in {
             Environment = with pkgs; [ busybox openssh git ];
             ExecStart = ''
               ${getExe cfg.package} \
-                --workspace ${config.xdg.configHome}/git-workspace/${workspaceName} \
-                update
+                            ${
+                              escapeShellArgs [
+                                "--workspace"
+                                "${config.xdg.configHome}/git-workspace/${workspaceName}"
+                                "update"
+                              ]
+                            }
             '';
           };
         };
