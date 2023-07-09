@@ -1143,6 +1143,28 @@ in
           A new module is available: 'services.ssh-agent'
         '';
       }
+
+      {
+        time = "2023-07-08T08:27:41+00:00";
+        message = ''
+          A new modules is available: 'programs.darcs'
+        '';
+      }
+
+      {
+        time = "2023-07-08T09:21:06+00:00";
+        message = ''
+          A new module is available: 'programs.pyenv'.
+        '';
+      }
+
+      {
+        time = "2023-07-08T09:44:56+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.swayosd'
+        '';
+      }
     ];
   };
 }

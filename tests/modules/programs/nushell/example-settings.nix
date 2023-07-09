@@ -16,6 +16,13 @@
       let-env FOO = 'BAR'
     '';
 
+    loginFile.text = ''
+      # Prints "Hello, World" upon logging into tty1
+      if (tty) == "/dev/tty1" {
+        echo "Hello, World"
+      }
+    '';
+
     shellAliases = {
       "lsname" = "(ls | get name)";
       "ll" = "ls -a";
@@ -38,5 +45,8 @@
     assertFileContent \
       "${configDir}/env.nu" \
       ${./env-expected.nu}
+    assertFileContent \
+      "${configDir}/login.nu" \
+      ${./login-expected.nu}
   '';
 }

@@ -8,14 +8,18 @@ let
   # attrs util that removes entries containing a null value
   compactAttrs = lib.filterAttrs (_: val: !isNull val);
 
+  # Needed for notmuch config, because the DB is here, and not in each account's dir
+  maildirBasePath = config.accounts.email.maildirBasePath;
+
   # make a himalaya config from a home-manager email account config
   mkAccountConfig = _: account:
     let
-      imapEnabled = !isNull account.imap;
-      maildirEnabled = !imapEnabled && !isNull account.maildir
-        && !account.notmuch.enable;
-      notmuchEnabled = !imapEnabled && !isNull account.maildir
-        && account.notmuch.enable;
+      # Use notmuch if it's enabled, otherwise fallback to IMAP then maildir
+      # Maildir is always set, so there's no easy way to detect if it's being used
+      notmuchEnabled = account.notmuch.enable;
+      imapEnabled = !isNull account.imap && !notmuchEnabled;
+      maildirEnabled = !isNull account.maildir && !imapEnabled
+        && !notmuchEnabled;
 
       globalConfig = {
         email = account.address;
@@ -55,7 +59,7 @@ let
 
       notmuchConfig = lib.optionalAttrs notmuchEnabled (compactAttrs {
         backend = "notmuch";
-        notmuch-db-path = account.maildir.absPath;
+        notmuch-db-path = maildirBasePath;
       });
 
       smtpConfig = lib.optionalAttrs (!isNull account.smtp) (compactAttrs {

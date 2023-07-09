@@ -770,7 +770,7 @@ in {
         [
         { command = "systemctl --user restart polybar"; always = true; notification = false; }
         { command = "dropbox start"; notification = false; }
-        { command = "firefox"; workspace = "1: web"; }
+        { command = "firefox"; }
         ];
       ''
     else

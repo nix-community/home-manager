@@ -68,6 +68,7 @@ import nmt {
     ./modules/programs/browserpass
     ./modules/programs/btop
     ./modules/programs/comodoro
+    ./modules/programs/darcs
     ./modules/programs/dircolors
     ./modules/programs/direnv
     ./modules/programs/emacs
@@ -88,6 +89,7 @@ import nmt {
     ./modules/programs/k9s
     ./modules/programs/kakoune
     ./modules/programs/kitty
+    ./modules/programs/khal
     ./modules/programs/ledger
     ./modules/programs/less
     ./modules/programs/lf
@@ -115,6 +117,7 @@ import nmt {
     ./modules/programs/pls
     ./modules/programs/powerline-go
     ./modules/programs/pubs
+    ./modules/programs/pyenv
     ./modules/programs/qutebrowser
     ./modules/programs/readline
     ./modules/programs/ripgrep
@@ -143,6 +146,7 @@ import nmt {
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
+    ./modules/services/imapnotify-darwin
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
     ./modules/config/i18n
@@ -201,6 +205,7 @@ import nmt {
     ./modules/services/gpg-agent
     ./modules/services/gromit-mpx
     ./modules/services/home-manager-auto-upgrade
+    ./modules/services/imapnotify
     ./modules/services/kanshi
     ./modules/services/lieer
     ./modules/services/mopidy
@@ -218,6 +223,7 @@ import nmt {
     ./modules/services/redshift-gammastep
     ./modules/services/screen-locker
     ./modules/services/swayidle
+    ./modules/services/swayosd
     ./modules/services/sxhkd
     ./modules/services/syncthing/linux
     ./modules/services/trayer

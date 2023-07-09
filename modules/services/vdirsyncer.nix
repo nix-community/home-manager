@@ -67,9 +67,11 @@ in {
       Service = {
         Type = "oneshot";
         # TODO `vdirsyncer discover`
-        ExecStart = "${cfg.package}/bin/vdirsyncer ${
-            concatStringsSep " " vdirsyncerOptions
-          } sync";
+        ExecStart = let optStr = concatStringsSep " " vdirsyncerOptions;
+        in [
+          "${cfg.package}/bin/vdirsyncer ${optStr} metasync"
+          "${cfg.package}/bin/vdirsyncer ${optStr} sync"
+        ];
       };
     };
 
