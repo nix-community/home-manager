@@ -146,8 +146,8 @@ import nmt {
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
+    ./modules/services/imapnotify-darwin
     ./modules/targets-darwin
-    ./modules/programs/goimapnotify
   ] ++ lib.optionals isLinux [
     ./modules/config/i18n
     ./modules/i18n/input-method
@@ -205,6 +205,7 @@ import nmt {
     ./modules/services/gpg-agent
     ./modules/services/gromit-mpx
     ./modules/services/home-manager-auto-upgrade
+    ./modules/services/imapnotify
     ./modules/services/kanshi
     ./modules/services/lieer
     ./modules/services/mopidy
