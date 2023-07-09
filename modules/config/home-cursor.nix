@@ -42,7 +42,8 @@ let
 
       gtk = {
         enable = mkEnableOption ''
-          gtk config generation for <option>home.pointerCursor</option>
+          gtk config generation for <option>home.pointerCursor</option>.
+	  Note that <option>gtk</option> has to be enabled for the configs to take effect
         '';
       };
     };
@@ -152,7 +153,6 @@ in {
     })
 
     (mkIf cfg.gtk.enable {
-      gtk.enable = true;
       gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
     })
   ]);
