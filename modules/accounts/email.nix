@@ -133,6 +133,21 @@ let
           Configuration for secure connections.
         '';
       };
+
+      authentication = mkOption {
+        type = types.enum [
+          "password"
+          "encrypted-password"
+          "gssapi"
+          "ntlm"
+          "tls"
+          "oauth2"
+        ];
+        default = "password";
+        description = ''
+          Authentication method for login.
+        '';
+      };
     };
   };
 
@@ -193,6 +208,21 @@ let
         default = { };
         description = ''
           Configuration for secure connections.
+        '';
+      };
+
+      authentication = mkOption {
+        type = types.enum [
+          "password"
+          "encrypted-password"
+          "gssapi"
+          "ntlm"
+          "tls"
+          "oauth2"
+        ];
+        default = "password";
+        description = ''
+          Authentication method for login.
         '';
       };
     };

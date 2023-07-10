@@ -21,6 +21,7 @@
         realName = "H. M. Test Jr.";
         passwordCommand = "password-command 2";
         imap.host = "imap.example.org";
+        imap.authentication = "oauth2";
         smtp.host = "smtp.example.org";
         smtp.tls.useStartTls = true;
       };
