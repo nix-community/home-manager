@@ -7,6 +7,15 @@ let
 
   cfg = config.programs.thunderbird;
 
+  authMethods = {
+    password = 3;
+    encrypted-password = 4;
+    gssapi = 5;
+    ntlm = 6;
+    tls = 7;
+    oauth2 = 10;
+  };
+
   enabledAccounts = attrValues
     (filterAttrs (_: a: a.thunderbird.enable) config.accounts.email.accounts);
 
@@ -76,6 +85,8 @@ let
     } // optionalAttrs account.primary {
       "mail.accountmanager.defaultaccount" = "account_${id}";
     } // optionalAttrs (account.imap != null) {
+      "mail.server.server_${id}.authMethod" =
+        authMethods.${account.imap.authentication};
       "mail.server.server_${id}.directory" =
         "${thunderbirdProfilesPath}/${profile.name}/ImapMail/${id}";
       "mail.server.server_${id}.directory-rel" = "[ProfD]ImapMail/${id}";
@@ -94,7 +105,8 @@ let
       "mail.server.server_${id}.userName" = account.userName;
     } // optionalAttrs (account.smtp != null) {
       "mail.identity.id_${id}.smtpServer" = "smtp_${id}";
-      "mail.smtpserver.smtp_${id}.authMethod" = 3;
+      "mail.smtpserver.smtp_${id}.authMethod" =
+        authMethods.${account.smtp.authentication};
       "mail.smtpserver.smtp_${id}.hostname" = account.smtp.host;
       "mail.smtpserver.smtp_${id}.port" =
         if (account.smtp.port != null) then account.smtp.port else 587;
