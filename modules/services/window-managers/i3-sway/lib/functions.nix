@@ -150,7 +150,8 @@ rec {
   windowCommandsStr = { command, criteria, ... }:
     "for_window ${criteriaStr criteria} ${command}";
   workspaceOutputStr = item:
-    ''workspace "${item.workspace}" output "${item.output}"'';
+    let outputs = concatMapStringsSep " " strings.escapeNixString item.output;
+    in ''workspace "${item.workspace}" output ${outputs}'';
 
   indent = list:
     { includesWrapper ? true, level ? 1 }:

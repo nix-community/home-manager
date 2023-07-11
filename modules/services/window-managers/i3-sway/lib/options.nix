@@ -912,11 +912,12 @@ in {
             };
 
             output = mkOption {
-              type = str;
+              type = with types; either str (listOf str);
               default = "";
+              apply = lists.toList;
               example = "eDP";
               description = ''
-                Name of the output from <command>
+                Name(s) of the output(s) from <command>
                   ${if isSway then "swaymsg" else "i3-msg"} -t get_outputs
                 </command>.
               '';
