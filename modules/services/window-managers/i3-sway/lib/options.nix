@@ -469,12 +469,11 @@ in {
         };
 
         modifier = mkOption {
-          type =
-            types.enum [ "Shift" "Control" "Mod1" "Mod2" "Mod3" "Mod4" "Mod5" ];
+          type = types.str;
           default = cfg.config.modifier;
           defaultText = "${moduleName}.config.modifier";
           description =
-            "Modifier key that can be used to drag floating windows.";
+            "Modifier key or keys that can be used to drag floating windows.";
           example = "Mod4";
         };
 
