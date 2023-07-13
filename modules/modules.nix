@@ -7,8 +7,9 @@
   # Whether to enable module type checking.
   check ? true,
 
-  # If disabled, the pkgs attribute passed to this function is used instead.
-  useNixpkgsModule ? true,
+  # If enabled, the pkgs attribute passed to this function is used instead of
+  # re-importing Nixpkgs.
+  inheritGlobalPkgs ? false,
 }:
 
 let
@@ -37,6 +38,7 @@ let
       ./misc/news.nix
       ./misc/nix.nix
       ./misc/nixgl.nix
+      ./misc/nixpkgs.nix
       ./misc/numlock.nix
       ./misc/pam.nix
       ./misc/qt.nix
@@ -516,25 +518,28 @@ let
       (lib.mkRemovedOptionModule [ "services" "keepassx" ] ''
         KeePassX is no longer maintained.
       '')
-    ]
-    ++ lib.optional useNixpkgsModule ./misc/nixpkgs.nix
-    ++ lib.optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
+    ];
 
-  pkgsModule = { config, ... }: {
-    config = {
-      _module.args.baseModules = modules;
-      _module.args.pkgsPath = lib.mkDefault
-        (if lib.versionAtLeast config.home.stateVersion "20.09" then
-          pkgs.path
-        else
-          <nixpkgs>);
-      _module.args.superPkgs = pkgs;
-      _module.check = check;
-      lib = lib.hm;
-    } // lib.optionalAttrs useNixpkgsModule {
-      nixpkgs.system = lib.mkDefault pkgs.stdenv.hostPlatform.system;
+  pkgsModule =
+    { config, ... }:
+    {
+      config =
+        {
+          _module.args.baseModules = modules;
+          _module.args.pkgsPath = lib.mkDefault (
+            if lib.versionAtLeast config.home.stateVersion "20.09" then pkgs.path else <nixpkgs>
+          );
+          _module.args.superPkgs = pkgs;
+          _module.check = check;
+          lib = lib.hm;
+          nixpkgs = {
+            inheritGlobalPkgs = lib.mkDefault inheritGlobalPkgs;
+            system = lib.mkDefault (
+              if config.nixpkgs.inheritGlobalPkgs then null else pkgs.stdenv.hostPlatform.system
+            );
+          };
+        };
     };
-  };
 
 in
 modules ++ [ pkgsModule ]

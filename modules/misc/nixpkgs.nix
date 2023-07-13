@@ -5,10 +5,13 @@
   lib,
   pkgs,
   pkgsPath,
+  superPkgs,
   ...
 }:
 
 let
+
+  cfg = config.nixpkgs;
 
   isConfig = x: builtins.isAttrs x || builtins.isFunction x;
 
@@ -53,13 +56,37 @@ let
     merge = lib.mergeOneOption;
   };
 
-  _pkgs = import pkgsPath (lib.filterAttrs (n: v: v != null) config.nixpkgs);
+  _pkgs = if cfg.inheritGlobalPkgs then
+    if cfg.config == { } && cfg.overlays == [ ] && cfg.system == null then
+      superPkgs
+    else
+      import superPkgs.path {
+        localSystem = superPkgs.stdenv.buildPlatform;
+        crossSystem = if cfg.system == null then
+          superPkgs.stdenv.hostPlatform
+        else
+          cfg.system;
+        config = mergeConfig superPkgs.config cfg.config;
+        overlays = superPkgs.overlays ++ cfg.overlays;
+      }
+  else
+    import pkgsPath (lib.filterAttrs (n: v: v != null) cfg);
 
 in
 {
   options.nixpkgs = {
+    inheritGlobalPkgs = lib.mkOption {
+      defaultText = lib.literalExpression "usingNixosModule && useGlobalPkgs";
+      example = false;
+      type = lib.types.bool;
+      description = ''
+        Whether to build the configuration with the Nixpkgs passed to
+        Home Manager instead of re-importing it fresh.
+      '';
+    };
+
     config = lib.mkOption {
-      default = null;
+      default = { };
       example = {
         allowBroken = true;
       };
@@ -69,9 +96,9 @@ in
         details, see the Nixpkgs documentation.) It allows you to set
         package configuration options.
 
-        If `null`, then configuration is taken from
-        the fallback location, for example,
-        {file}`~/.config/nixpkgs/config.nix`.
+        If `null` and {option}`nixpkgs.inheritGlobalPkgs` is `false`,
+        then configuration is taken from the fallback location, for
+        example, {file}`~/.config/nixpkgs/config.nix`.
 
         Note, this option will not apply outside your Home Manager
         configuration like when installing manually through
@@ -89,7 +116,7 @@ in
     };
 
     overlays = lib.mkOption {
-      default = null;
+      default = [ ];
       example = lib.literalExpression ''
         [
           (final: prev: {
@@ -110,9 +137,9 @@ in
         first argument should be used for finding dependencies, and
         the second should be used for overriding recipes.
 
-        If `null`, then the overlays are taken from
-        the fallback location, for example,
-        {file}`~/.config/nixpkgs/overlays`.
+        If `null` and {option}`nixpkgs.inheritGlobalPkgs` is `false`,
+        then the overlays are taken from the fallback location, for
+        example, {file}`~/.config/nixpkgs/overlays`.
 
         Like {var}`nixpkgs.config` this option only
         applies within the Home Manager configuration. See
@@ -122,7 +149,7 @@ in
     };
 
     system = lib.mkOption {
-      type = lib.types.str;
+      type = lib.types.nullOr lib.types.str;
       example = "i686-linux";
       internal = true;
       description = ''
@@ -137,9 +164,11 @@ in
 
   config = {
     _module.args = {
-      # We use a no-op override to make sure that the option can be merged without evaluating
-      # `_pkgs`, see https://github.com/nix-community/home-manager/pull/993
-      pkgs = lib.mkOverride lib.modules.defaultOverridePriority _pkgs;
+
+      # An override is also necessary here to make sure that the option
+      # can be merged without evaluating `_pkgs`, see
+      # https://github.com/nix-community/home-manager/pull/993
+      pkgs = lib.mkDefault _pkgs;
       pkgs_i686 =
         if _pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86 then _pkgs.pkgsi686Linux else { };
     };
