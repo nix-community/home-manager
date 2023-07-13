@@ -85,6 +85,18 @@ in
       '';
     };
 
+    readOnly = lib.mkOption {
+      default = false;
+      example = true;
+      type = lib.types.bool;
+      description = ''
+        Whether to prohibit specifying <option>nixpkgs.config</option>,
+        <option>nixpkgs.overlays</option> or, in the case
+        <option>nixpkgs.inheritGlobalPkgs</option> is
+        <literal>true</literal>, <option>nixpkgs.system</option>.
+      '';
+    };
+
     config = lib.mkOption {
       default = { };
       example = {
@@ -172,5 +184,14 @@ in
       pkgs_i686 =
         if _pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86 then _pkgs.pkgsi686Linux else { };
     };
+
+    assertions = [{
+      assertion = !cfg.readOnly || cfg.config == { } && cfg.overlays == [ ]
+        && (!cfg.inheritGlobalPkgs || cfg.system == null);
+      message = ''
+        Nixpkgs cannot be reconfigured or extended because
+        <option>nixpkgs.readOnly</option> is <literal>true</literal>.
+      '';
+    }];
   };
 }
