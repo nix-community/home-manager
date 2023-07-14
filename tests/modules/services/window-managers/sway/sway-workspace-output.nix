@@ -6,6 +6,7 @@ let
     ws2 = "ABC";
     ws3 = "3: Test";
     ws4 = ''!"§$%&/(){}[]=?\*#<>-_.:,;²³'';
+    ws5 = "Multiple";
   };
 
 in {
@@ -33,6 +34,10 @@ in {
       {
         workspace = "${i3.ws4}";
         output = "DVI";
+      }
+      {
+        workspace = "${i3.ws5}";
+        output = [ "DVI" "HDMI" "DP" ];
       }
     ];
   };
