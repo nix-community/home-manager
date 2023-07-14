@@ -104,6 +104,12 @@ in {
         backends, you can toggle them via the enable option. For example,
         <xref linkend="opt-home.pointerCursor.x11.enable"/>
         will enable x11 cursor configurations.
+        </para><para>
+        Note that this will merely generate the cursor configurations.
+        To apply the configurations, the relevant subsytems must also be configured.
+        For example, <xref linkend="opt-home.pointerCursor.gtk.enable"/> will generate
+        the gtk cursor configuration, but <xref linkend="opt-gtk.enable"/> needs
+        to be set for it to be applied.
       '';
     };
   };
