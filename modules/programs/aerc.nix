@@ -8,7 +8,7 @@ let
     ((type: either type (listOf type)) (nullOr (oneOf [ str int bool float ])))
     // {
       description =
-        "values (null, bool, int, string of float) or a list of values, that will be joined with a comma";
+        "values (null, bool, int, string, or float) or a list of values, that will be joined with a comma";
     };
 
   confSection = types.attrsOf primitive;
@@ -162,15 +162,27 @@ in {
   in mkIf cfg.enable {
     warnings = if genAccountsConf
     && (cfg.extraConfig.general.unsafe-accounts-conf or false) == false then [''
-      aerc: An email account was configured, but `extraConfig.general.unsafe-accounts-conf` is set to false or unset.
-      This will prevent aerc from starting, see `unsafe-accounts-conf` in the man page aerc-config(5), which states:
+      aerc: `programs.aerc.enable` is set, but `...extraConfig.general.unsafe-accounts-conf` is set to false or unset.
+      This will prevent aerc from starting; see `unsafe-accounts-conf` in the man page aerc-config(5):
       > By default, the file permissions of accounts.conf must be restrictive and only allow reading by the file owner (0600).
       > Set this option to true to ignore this permission check. Use this with care as it may expose your credentials.
-      These file permissions are not possible with home-manger, since the generated file is stored in the nix-store with read-only access for all users (0444).
-      If `passwordCommand` is properly set, no credentials will be stored in the nix store.
-      Therefore, consider setting the option `extraConfig.general.unsafe-accounts-conf` to true.
+      These permissions are not possible with home-manager, since the generated file is in the nix-store (permissions 0444).
+      Therefore, please set `programs.aerc.extraConfig.general.unsafe-accounts-conf = true`.
+      This option is safe; if `passwordCommand` is properly set, no credentials will be written to the nix store.
     ''] else
       [ ];
+
+    assertions = [{
+      assertion = let
+        extraConfigSections = (unique (flatten
+          (mapAttrsToList (_: v: attrNames v.aerc.extraConfig) aerc-accounts)));
+      in extraConfigSections == [ ] || extraConfigSections == [ "ui" ];
+      message = ''
+        Only the ui section of $XDG_CONFIG_HOME/aerc.conf supports contextual (per-account) configuration.
+        Please configure it with accounts.email.accounts._.aerc.extraConfig.ui and move any other
+        configuration to programs.aerc.extraConfig.
+      '';
+    }];
 
     home.packages = [ cfg.package ];
 
