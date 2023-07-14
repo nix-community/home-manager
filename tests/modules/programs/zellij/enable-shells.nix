@@ -26,14 +26,23 @@
     assertFileExists home-files/.bashrc
     assertFileContains \
       home-files/.bashrc \
+      'eval "$(zellij setup --generate-completion bash)"'
+    assertFileContains \
+      home-files/.bashrc \
       'eval "$(zellij setup --generate-auto-start bash)"'
 
     assertFileExists home-files/.zshrc
     assertFileContains \
       home-files/.zshrc \
+      'eval "$(zellij setup --generate-completion zsh)"'
+    assertFileContains \
+      home-files/.zshrc \
       'eval "$(zellij setup --generate-auto-start zsh)"'
 
     assertFileExists home-files/.config/fish/config.fish
+    assertFileContains \
+      home-files/.config/fish/config.fish \
+      'eval (zellij setup --generate-completion fish | string collect)'
     assertFileContains \
       home-files/.config/fish/config.fish \
       'eval (zellij setup --generate-auto-start fish | string collect)'

@@ -69,15 +69,18 @@ in {
       };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
+      eval "$(zellij setup --generate-completion bash)"
       eval "$(zellij setup --generate-auto-start bash)"
     '');
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200 ''
+      eval "$(zellij setup --generate-completion zsh)"
       eval "$(zellij setup --generate-auto-start zsh)"
     '');
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration
       (mkOrder 200 ''
+        eval (zellij setup --generate-completion fish | string collect)
         eval (zellij setup --generate-auto-start fish | string collect)
       '');
   };
