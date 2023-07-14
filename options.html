@@ -1189,7 +1189,13 @@ are backend specific options. By default, only backend independent cursor
 configurations are generated. If you need configurations for specific
 backends, you can toggle them via the enable option. For example,
 <a class="xref" href="options.html#opt-home.pointerCursor.x11.enable"><code class="option">home.pointerCursor.x11.enable</code></a>
-will enable x11 cursor configurations.</p><p><span class="emphasis"><em>Type:</em></span> null or (submodule)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix#blob-path" target="_top">
+will enable x11 cursor configurations.
+</p><p>
+Note that this will merely generate the cursor configurations.
+To apply the configurations, the relevant subsytems must also be configured.
+For example, <a class="xref" href="options.html#opt-home.pointerCursor.gtk.enable"><code class="option">home.pointerCursor.gtk.enable</code></a> will generate
+the gtk cursor configuration, but <a class="xref" href="options.html#opt-gtk.enable"><code class="option">gtk.enable</code></a> needs
+to be set for it to be applied.</p><p><span class="emphasis"><em>Type:</em></span> null or (submodule)</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix#blob-path" target="_top">
                     &lt;home-manager/modules/config/home-cursor.nix&gt;
                 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-home.pointerCursor.package"></a><a class="link" href="options.html#opt-home.pointerCursor.package"><code class="option">home.pointerCursor.package</code></a></span></dt><dd><p>Package providing the cursor theme.</p><p><span class="emphasis"><em>Type:</em></span> package</p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">pkgs.vanilla-dmz</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix#blob-path" target="_top">
                     &lt;home-manager/modules/config/home-cursor.nix&gt;
