@@ -483,8 +483,8 @@ in
 
     warnings =
       let
-        hmRelease = fileContents ../.release;
-        nixpkgsRelease = pkgs.lib.trivial.release;
+        hmRelease = config.home.version.release;
+        nixpkgsRelease = lib.trivial.release;
         releaseMismatch =
           config.home.enableNixpkgsReleaseCheck
           && hmRelease != nixpkgsRelease;

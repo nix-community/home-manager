@@ -2,7 +2,9 @@
 
 with lib;
 
-{
+let releaseInfo = lib.importJSON ../../release.json;
+
+in {
   options = {
     home.stateVersion = mkOption {
       type = types.enum [
@@ -51,9 +53,20 @@ with lib;
         internal = true;
         readOnly = true;
         type = types.str;
-        default = fileContents ../../.release;
+        default = releaseInfo.release;
         example = "22.11";
         description = "The Home Manager release.";
+      };
+
+      isReleaseBranch = mkOption {
+        internal = true;
+        readOnly = true;
+        type = types.bool;
+        default = releaseInfo.isReleaseBranch;
+        description = ''
+          Whether the Home Manager version is from a versioned
+          release branch.
+        '';
       };
 
       revision = mkOption {

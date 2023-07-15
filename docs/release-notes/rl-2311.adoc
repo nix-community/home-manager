@@ -16,6 +16,13 @@ but could theoretically break
 if you have very complex bash expressions in a session variable.
 Please report any issues you experience.
 
+* The `.release` file in the Home Manager source tree
+has been supplanted by `release.json`,
+which contains more information about the branch.
+If you have any external code reading this file,
+please migrate to using `release.json` instead.
+The `.release` file will be removed in 24.05.
+
 [[sec-release-23.11-state-version-changes]]
 === State Version Changes
 
