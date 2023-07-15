@@ -55,9 +55,23 @@ in {
           }
         ];
         signing = {
-          gpgPath = "path-to-gpg";
-          key = "00112233445566778899AABBCCDDEEFF";
           signByDefault = true;
+          gpg = {
+            enable = true;
+            program = "path-to-gpg";
+            key = "00112233445566778899AABBCCDDEEFF";
+          };
+          ssh = {
+            enable = false;
+            program = "path-to-ssh";
+            key =
+              "ssh-ed25519 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/ user@example.org";
+          };
+          x509 = {
+            enable = false;
+            program = "path-to-gpgsm";
+            certId = "00112233445566778899AABBCCDDEEFF";
+          };
         };
         userEmail = "user@example.org";
         userName = "John Doe";

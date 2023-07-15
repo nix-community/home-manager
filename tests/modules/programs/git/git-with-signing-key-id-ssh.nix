@@ -6,17 +6,19 @@
       userEmail = "user@example.org";
 
       signing.signByDefault = true;
-      signing.gpg = {
+      signing.ssh = {
         enable = true;
-        key = null;
-        program = "path-to-gpg";
+        program = "path-to-ssh";
+        key =
+          "ssh-ed25519 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/ user@example.org";
+        defaultKeyCommand = "path-to-key-provider";
       };
     };
 
     nmt.script = ''
       assertFileExists home-files/.config/git/config
       assertFileContent home-files/.config/git/config ${
-        ./git-without-signing-key-id-expected.conf
+        ./git-with-signing-key-id-ssh-expected.conf
       }
     '';
   };

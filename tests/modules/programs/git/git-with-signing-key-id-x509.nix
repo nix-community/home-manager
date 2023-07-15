@@ -5,17 +5,18 @@
       userName = "John Doe";
       userEmail = "user@example.org";
 
-      signing = {
-        gpgPath = "path-to-gpg";
-        key = "00112233445566778899AABBCCDDEEFF";
-        signByDefault = true;
+      signing.signByDefault = true;
+      signing.x509 = {
+        enable = true;
+        program = "path-to-gpgsm";
+        certId = "00112233445566778899AABBCCDDEEFF";
       };
     };
 
     nmt.script = ''
       assertFileExists home-files/.config/git/config
       assertFileContent home-files/.config/git/config ${
-        ./git-with-signing-key-id-expected.conf
+        ./git-with-signing-key-id-x509-expected.conf
       }
     '';
   };

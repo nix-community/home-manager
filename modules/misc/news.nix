@@ -1165,6 +1165,19 @@ in
           A new module is available: 'services.swayosd'
         '';
       }
+
+      {
+        time = "2023-07-15T05:44:07+00:00";
+        condition = config.programs.git.enable && config.programs.git.signing != null;
+        message = ''
+          The options 'programs.git.signing.gpgPath' and 'programs.git.signing.key'
+          have been deprecated and replaced by new options specific to each signing method.
+
+          Supported signing methods include GnuPG, SSH and X.509, and they're 
+          configured and enabled under 'programs.git.signing.gpg',
+          'programs.git.signing.ssh', and 'programs.git.signing.x509' respectively.
+        '';
+      }
     ];
   };
 }

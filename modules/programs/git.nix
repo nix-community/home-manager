@@ -59,28 +59,90 @@ let
     in attrsOf supersectionType;
 
   signModule = types.submodule {
-    options = {
-      key = mkOption {
-        type = types.nullOr types.str;
-        description = ''
-          The default GPG signing key fingerprint.
-          </para><para>
-          Set to <literal>null</literal> to let GnuPG decide what signing key
-          to use depending on commit’s author.
-        '';
-      };
+    imports = [
+      (mkRenamedOptionModule [ "gpgPath" ] [ "gpg" "program" ])
+      (mkRenamedOptionModule [ "key" ] [ "gpg" "key" ])
+    ];
 
+    options = {
       signByDefault = mkOption {
         type = types.bool;
         default = false;
         description = "Whether commits and tags should be signed by default.";
       };
 
-      gpgPath = mkOption {
-        type = types.str;
-        default = "${pkgs.gnupg}/bin/gpg2";
-        defaultText = "\${pkgs.gnupg}/bin/gpg2";
-        description = "Path to GnuPG binary to use.";
+      gpg = {
+        enable = mkEnableOption "commit and tag signing with GnuPG";
+        program = mkOption {
+          type = types.str;
+          default = "${pkgs.gnupg}/bin/gpg2";
+          defaultText = "\${pkgs.gnupg}/bin/gpg2";
+          description = "Path to the GnuPG binary to use.";
+        };
+        key = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            The default GPG signing key fingerprint.
+            </para><para>
+            Set to <literal>null</literal> to let GnuPG decide what signing key
+            to use depending on commit’s author.
+          '';
+        };
+      };
+      ssh = {
+        enable = mkEnableOption "commit and tag signing with SSH keys";
+        program = mkOption {
+          type = types.str;
+          default = "${pkgs.ssh}/bin/ssh";
+          defaultText = "\${pkgs.ssh}/bin/ssh";
+          description = "Path to the SSH binary to use.";
+        };
+        key = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            The default SSH signing key fingerprint.
+            </para><para>
+            Set to <literal>null</literal> to let SSH decide what signing key
+            to use depending on commit’s author.
+          '';
+        };
+        defaultKeyCommand = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            The command that will be run when the signing key is not set, and a SSH signature is requested.
+            This command, if run successfully, should output a valid SSH public key prefixed with 
+            <literal>key::</literal> on the first line.
+
+            See https://git-scm.com/docs/git-config#Documentation/git-config.txt-gpgsshdefaultKeyCommand
+            for more information.
+          '';
+        };
+      };
+      # TODO(pluiedev): maybe the terminology is not _exactly_ correct - nobody near me uses X.509
+      # signing and so I have no idea how to properly call them
+      x509 = {
+        enable =
+          mkEnableOption "commit and tag signing using X.509 certificates";
+        program = mkOption {
+          type = types.str;
+          default = "${pkgs.gnupg}/bin/gpgsm";
+          defaultText = "\${pkgs.gnupg}/bin/gpgsm";
+          description =
+            "Path to the X.509 signer binary (usually GPGSM) to use.";
+        };
+        certId = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            The ID of the default X.509 certificate.
+            </para><para>
+            Set to <literal>null</literal> to let the signer decide what certificate 
+            to use depending on commit’s author.
+          '';
+        };
       };
     };
   };
@@ -146,6 +208,18 @@ let
         (gitToIni config.contents)));
   });
 
+  assertAtMostOneIsSet = attrs: options:
+    let
+      enabled = (builtins.map (path: lib.attrByPath path false attrs) options);
+      paths =
+        builtins.map (path: "'programs.git.${lib.concatStringsSep "." path}'")
+        options;
+    in {
+      assertion = count id enabled <= 1;
+      message = "At most one of ${
+          lib.concatStringsSep ", " paths
+        } can be set to true at the same time.";
+    };
 in {
   meta.maintainers = [ maintainers.rycee ];
 
@@ -185,7 +259,7 @@ in {
       signing = mkOption {
         type = types.nullOr signModule;
         default = null;
-        description = "Options related to signing commits using GnuPG.";
+        description = "Options related to signing commits and tags.";
       };
 
       extraConfig = mkOption {
@@ -406,14 +480,19 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       home.packages = [ cfg.package ];
-      assertions = [{
-        assertion = let
-          enabled =
-            [ cfg.delta.enable cfg.diff-so-fancy.enable cfg.difftastic.enable ];
-        in count id enabled <= 1;
-        message =
-          "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' can be set to true at the same time.";
-      }];
+      assertions = [
+        (assertAtMostOneIsSet cfg (builtins.map (tool: [ tool "enable" ]) [
+          "delta"
+          "diff-so-fancy"
+          "difftastic"
+        ]))
+        (assertAtMostOneIsSet cfg
+          (builtins.map (method: [ "signing" method "enable" ]) [
+            "gpg"
+            "ssh"
+            "x509"
+          ]))
+      ];
 
       programs.git.iniContent.user = {
         name = mkIf (cfg.userName != null) cfg.userName;
@@ -466,12 +545,40 @@ in {
     }
 
     (mkIf (cfg.signing != null) {
-      programs.git.iniContent = {
-        user.signingKey = mkIf (cfg.signing.key != null) cfg.signing.key;
-        commit.gpgSign = mkDefault cfg.signing.signByDefault;
-        tag.gpgSign = mkDefault cfg.signing.signByDefault;
-        gpg.program = cfg.signing.gpgPath;
-      };
+      programs.git.iniContent = with cfg.signing;
+        let
+          format = if (ssh ? enable && ssh.enable) then
+            "ssh"
+          else if (x509 ? enable && x509.enable) then
+            "x509"
+          else if ((gpg ? enable && gpg.enable) || key != null || gpgPath
+            != null # Backwards compatibility
+          ) then
+            "openpgp"
+          else
+            null;
+        in {
+          gpg = {
+            format = mkIf (format != null) format;
+
+            openpgp.program = mkIf (format == "openpgp") gpg.program;
+            ssh = mkIf (format == "ssh") {
+              program = ssh.program;
+              defaultKeyCommand =
+                mkIf (ssh.defaultKeyCommand != null) ssh.defaultKeyCommand;
+            };
+            x509.program = mkIf (format == "x509") x509.program;
+          };
+
+          user.signingKey = mkMerge [
+            (mkIf (format == "openpgp" && gpg.key != null) gpg.key)
+            (mkIf (format == "ssh" && ssh.key != null) ssh.key)
+            (mkIf (format == "x509" && x509.certId != null) x509.certId)
+          ];
+
+          commit.gpgSign = mkDefault signByDefault;
+          tag.gpgSign = mkDefault signByDefault;
+        };
     })
 
     (mkIf (cfg.hooks != { }) {
