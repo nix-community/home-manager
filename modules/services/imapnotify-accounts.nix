@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ pkgs, lib, ... }:
 
 with lib;
 
@@ -31,7 +31,7 @@ with lib;
     };
 
     extraConfig = mkOption {
-      type = with types; attrsOf (oneOf [ bool int str ]);
+      type = let jsonFormat = pkgs.formats.json { }; in jsonFormat.type;
       default = { };
       example = { wait = 10; };
       description = "Additional configuration to add for this account.";

@@ -99,7 +99,9 @@ in {
     };
 
     accounts.email.accounts = mkOption {
-      type = with types; attrsOf (submodule (import ./imapnotify-accounts.nix));
+      type = with types;
+        attrsOf
+        (submodule (import ./imapnotify-accounts.nix { inherit pkgs lib; }));
     };
   };
 
