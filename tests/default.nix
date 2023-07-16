@@ -143,6 +143,7 @@ import nmt {
     ./modules/programs/zellij
     ./modules/programs/zplug
     ./modules/programs/zsh
+    ./modules/services/gpg-agent
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
@@ -202,7 +203,6 @@ import nmt {
     ./modules/services/fnott
     ./modules/services/fusuma
     ./modules/services/git-sync
-    ./modules/services/gpg-agent
     ./modules/services/gromit-mpx
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/imapnotify

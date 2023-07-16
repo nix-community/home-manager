@@ -3,11 +3,15 @@
 with lib;
 
 let
-
   cfg = config.services.gpg-agent;
   gpgPkg = config.programs.gpg.package;
 
   homedir = config.programs.gpg.homedir;
+
+  pinentryBinPath = (if cfg.pinentryFlavor == "mac" then
+    "${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac"
+  else
+    "${pkgs.pinentry.${cfg.pinentryFlavor}}/bin/pinentry");
 
   gpgSshSupportStr = ''
     ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
@@ -17,6 +21,18 @@ let
     GPG_TTY="$(tty)"
     export GPG_TTY
   '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
+
+  # for darwin systems, we explicitly override this as, by default, the system ssh-agent
+  # runs as a daemon, so this is already set.
+  sshAuthSockStr =
+    let sockPathCmd = "$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)";
+    in if pkgs.stdenv.hostPlatform.isLinux then ''
+      if [[ -z "$SSH_AUTH_SOCK" ]]; then
+        export SSH_AUTH_SOCK="${sockPathCmd}"
+      fi
+    '' else ''
+      export SSH_AUTH_SOCK="${sockPathCmd}"
+    '';
 
   gpgFishInitStr = ''
     set -gx GPG_TTY (tty)
@@ -71,7 +87,7 @@ let
   in hexString: (foldl' go initState (splitChars hexString)).ret;
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with maintainers; [ rycee montchr cmacrae ];
 
   options = {
     services.gpg-agent = {
@@ -186,9 +202,11 @@ in {
       };
 
       pinentryFlavor = mkOption {
-        type = types.nullOr (types.enum pkgs.pinentry.flavors);
+        type = types.nullOr (types.enum (pkgs.pinentry.flavors ++ [ "mac" ]));
         example = "gnome3";
-        default = "gtk2";
+        default = if pkgs.stdenv.hostPlatform.isMacOS then "mac" else "gtk2";
+        defaultText = literalExpression
+          ''if pkgs.stdenv.hostPlatform.isMacOS then "mac" else "gtk2"'';
         description = ''
           Which pinentry interface to use. If not
           <literal>null</literal>, it sets
@@ -200,8 +218,13 @@ in {
           <programlisting language="nix">
           services.dbus.packages = [ pkgs.gcr ];
           </programlisting>
-          For this reason, the default is <literal>gtk2</literal> for
-          now.
+          For this reason, on Linux systems, the default is
+          <literal>gtk2</literal> for now.
+          On macOS, while <literal>gtk2</literal> will work, the dialog
+          will not receive proper focus.<literal>pinentry-mac</literal>
+          integrates with macOS smoothly, so it will be used as the default.
+          On Darwin (as opposed to macOS specifically),
+          <literal>gtk2</literal> may still be a preferable default.
         '';
       };
 
@@ -221,27 +244,27 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.file."${homedir}/gpg-agent.conf".text = concatStringsSep "\n"
-        (optional (cfg.enableSshSupport) "enable-ssh-support"
-          ++ optional cfg.grabKeyboardAndMouse "grab"
-          ++ optional (!cfg.enableScDaemon) "disable-scdaemon"
-          ++ optional (cfg.defaultCacheTtl != null)
-          "default-cache-ttl ${toString cfg.defaultCacheTtl}"
-          ++ optional (cfg.defaultCacheTtlSsh != null)
-          "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
-          ++ optional (cfg.maxCacheTtl != null)
-          "max-cache-ttl ${toString cfg.maxCacheTtl}"
-          ++ optional (cfg.maxCacheTtlSsh != null)
-          "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
-          ++ optional (cfg.pinentryFlavor != null)
-          "pinentry-program ${pkgs.pinentry.${cfg.pinentryFlavor}}/bin/pinentry"
-          ++ [ cfg.extraConfig ]);
+      home.file."${homedir}/gpg-agent.conf" = {
+        text = concatStringsSep "\n"
+          (optional (cfg.enableSshSupport) "enable-ssh-support"
+            ++ optional cfg.grabKeyboardAndMouse "grab"
+            ++ optional (!cfg.enableScDaemon) "disable-scdaemon"
+            ++ optional (cfg.defaultCacheTtl != null)
+            "default-cache-ttl ${toString cfg.defaultCacheTtl}"
+            ++ optional (cfg.defaultCacheTtlSsh != null)
+            "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
+            ++ optional (cfg.maxCacheTtl != null)
+            "max-cache-ttl ${toString cfg.maxCacheTtl}"
+            ++ optional (cfg.maxCacheTtlSsh != null)
+            "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
+            ++ optional (cfg.pinentryFlavor != null)
+            "pinentry-program ${pinentryBinPath}" ++ [ cfg.extraConfig ]);
+        onChange =
+          optionalString pkgs.stdenv.hostPlatform.isDarwin gpgSshSupportStr;
+      };
 
-      home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''
-        if [[ -z "$SSH_AUTH_SOCK" ]]; then
-          export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
-        fi
-      '';
+      home.sessionVariablesExtra =
+        optionalString cfg.enableSshSupport sshAuthSockStr;
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration gpgInitStr;
       programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgInitStr;
@@ -263,10 +286,6 @@ in {
     #
     # directory.
     {
-      assertions = [
-        (hm.assertions.assertPlatform "services.gpg-agent" pkgs platforms.linux)
-      ];
-
       systemd.user.services.gpg-agent = {
         Unit = {
           Description = "GnuPG cryptographic agent and passphrase cache";
@@ -299,6 +318,17 @@ in {
         };
 
         Install = { WantedBy = [ "sockets.target" ]; };
+      };
+
+      launchd.agents.gpg-agent = {
+        enable = true;
+        config = {
+          ProgramArguments = [ "${gpgPkg}/bin/gpgconf" "--launch" "gpg-agent" ]
+            ++ optionals cfg.verbose [ "--verbose" ];
+          RunAtLoad = true;
+          KeepAlive.SuccessfulExit = false;
+          EnvironmentVariables.GNUPGHOME = homedir;
+        };
       };
     }
 

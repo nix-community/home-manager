@@ -71,6 +71,16 @@
     github = "JustinLovinger";
     githubId = 7183441;
   };
+  montchr = {
+    name = "Chris Montgomery";
+    email = "chris@cdom.io";
+    github = "montchr";
+    githubId = 1757914;
+    keys = [{
+      longkeyid = "rsa4096/0x135EEDD0F71934F3";
+      fingerprint = "6460 4147 C434 F65E C306  A21F 135E EDD0 F719 34F3";
+    }];
+  };
   owm111 = {
     email = "7798336+owm111@users.noreply.github.com";
     name = "Owen McGrath";
