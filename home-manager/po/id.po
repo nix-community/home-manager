@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-07-16 10:09+0200\n"
-"PO-Revision-Date: 2023-07-01 13:50+0000\n"
+"PO-Revision-Date: 2023-07-17 10:03+0000\n"
 "Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/home-manager/"
 "cli/id/>\n"
@@ -40,7 +40,7 @@ msgstr "Tidak ada file konfigurasi yang ditemukan. Silakan buat di %s"
 
 #: home-manager/home-manager:114
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home Manager tidak ditemukan di %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:122
@@ -48,6 +48,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"Path fallback Home Manager %s sudah tidak digunakan lagi dan file/direktori "
+"ditemukan di sana."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:125
@@ -215,3 +217,4 @@ msgstr ""
 #: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
+"Derivasi ini tidak dapat dibangun, silakan jalankan menggunakan nix-shell."
