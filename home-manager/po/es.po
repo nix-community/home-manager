@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-07-16 10:09+0200\n"
-"PO-Revision-Date: 2023-04-10 22:05+0000\n"
+"PO-Revision-Date: 2023-07-17 10:03+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/home-manager/cli/"
 "es/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -40,7 +40,7 @@ msgstr "Archivo de configuración no encontrado. Por favor cree uno en %s"
 
 #: home-manager/home-manager:114
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "No se ha encontrado el Home Manager en %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:122
@@ -48,6 +48,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"La ruta alternativa de Home Manager %s ha quedado obsoleta y se encontró un "
+"archivo/directorio allí."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:125
@@ -70,6 +72,24 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"Para eliminar esta advertencia, realiza una de las siguientes acciones.\n"
+"\n"
+"1. Indica explícitamente a Home Manager que utilice la ruta, por ejemplo "
+"añadiendo\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   a tu configuración.\n"
+"\n"
+"   Si importa Home Manager directamente, puede utilizar el parámetro `path`\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   al llamar al paquete Home Manager.\n"
+"\n"
+"2. Elimina la ruta obsoleta.\n"
+"\n"
+"     $ rm -r \"%s\""
 
 #: home-manager/home-manager:164
 msgid "Could not find suitable profile directory, tried %s and %s"
