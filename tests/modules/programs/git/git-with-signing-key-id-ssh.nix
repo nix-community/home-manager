@@ -5,13 +5,12 @@
       userName = "John Doe";
       userEmail = "user@example.org";
 
-      signing.signByDefault = true;
-      signing.ssh = {
-        enable = true;
+      signing = {
+        signByDefault = true;
+        format = "ssh";
         program = "path-to-ssh";
         key =
           "ssh-ed25519 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/ user@example.org";
-        defaultKeyCommand = "path-to-key-provider";
       };
     };
 

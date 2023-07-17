@@ -5,9 +5,9 @@
       userName = "John Doe";
       userEmail = "user@example.org";
 
-      signing.signByDefault = true;
-      signing.gpg = {
-        enable = true;
+      signing = {
+        signByDefault = true;
+        format = "openpgp";
         program = "path-to-gpg";
         key = "00112233445566778899AABBCCDDEEFF";
       };

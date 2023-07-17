@@ -1167,15 +1167,21 @@ in
       }
 
       {
-        time = "2023-07-15T05:44:07+00:00";
+        time = "2023-07-17T06:05:35+00:00";
         condition = config.programs.git.enable && config.programs.git.signing != null;
         message = ''
-          The options 'programs.git.signing.gpgPath' and 'programs.git.signing.key'
-          have been deprecated and replaced by new options specific to each signing method.
+          The Git module now supports specifying the signing method to use
+          while signing commits and tags, via the `programs.git.signing.format`
+          option.
 
-          Supported signing methods include GnuPG, SSH and X.509, and they're 
-          configured and enabled under 'programs.git.signing.gpg',
-          'programs.git.signing.ssh', and 'programs.git.signing.x509' respectively.
+          As of present, valid options include `openpgp` for OpenPGP/GnuPG,
+          `ssh` for SSH, and `x509` for X.509 (S/MIME).
+
+          As a result, the option 'programs.git.signing.gpgPath' has been renamed to
+          `programs.git.signing.program`, to support signers for other signing methods.
+
+          Unfortunately, due to NixOS/nixpkgs#96006, migrating the option automatically is 
+          currently not possible - you'll have to migrate manually.
         '';
       }
     ];

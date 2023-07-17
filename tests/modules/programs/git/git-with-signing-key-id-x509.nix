@@ -5,11 +5,11 @@
       userName = "John Doe";
       userEmail = "user@example.org";
 
-      signing.signByDefault = true;
-      signing.x509 = {
-        enable = true;
+      signing = {
+        signByDefault = true;
+        format = "x509";
         program = "path-to-gpgsm";
-        certId = "00112233445566778899AABBCCDDEEFF";
+        key = "00112233445566778899AABBCCDDEEFF";
       };
     };
 
