@@ -223,6 +223,11 @@
     githubId = 33058747;
     name = "Gaetan Lepage";
   };
+  genericnerdyusername = {
+    email = "genericnerdyusername@proton.me";
+    github = "genericnerdyusername";
+    githubId = 111183546;
+  };
   maximsmol = {
     email = "maximsmol@gmail.com";
     github = "maximsmol";
