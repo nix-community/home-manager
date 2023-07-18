@@ -56,7 +56,6 @@ let
     in attrsOf supersectionType;
 
   signModule = types.submodule {
-    imports = [ (mkRenamedOptionModule [ "gpgPath" ] [ "program" ]) ];
     options = {
       signByDefault = mkOption {
         type = types.bool;
@@ -425,6 +424,7 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       home.packages = [ cfg.package ];
+
       assertions = [
         (assertAtMostOneIsSet cfg (builtins.map (tool: [ tool "enable" ]) [
           "delta"
@@ -432,11 +432,6 @@ in {
           "difftastic"
         ]))
       ];
-      warnings = if (cfg.signing.gpgPath or "") != "" then [''
-        `programs.git.signing.gpgPath` has been deprecated.
-        Please use `programs.git.signing.program` instead.
-      ''] else
-        [ ];
 
       programs.git.iniContent.user = {
         name = mkIf (cfg.userName != null) cfg.userName;
