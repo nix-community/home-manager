@@ -1,5 +1,6 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/6616de389ed55fba6eeba60377fc04732d5a207c.tar.gz -i bash -p git gnugrep gnused findutils nixfmt
+#! nix-shell -i bash -p git gnugrep gnused findutils nixfmt
+#1 nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/6616de389ed55fba6eeba60377fc04732d5a207c.tar.gz -i bash -p git gnugrep gnused findutils nixfmt
 
 nixfmt_args=()
 files=()

@@ -1,5 +1,10 @@
 { pkgs, ... }: {
   config = {
+    test.asserts.warnings.expected = [''
+      `programs.git.signing.gpgPath` has been deprecated.
+      Please use `programs.git.signing.program` instead.
+    ''];
+
     programs.git = {
       enable = true;
       userName = "John Doe";

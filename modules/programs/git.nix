@@ -489,28 +489,19 @@ in {
     }
 
     (mkIf (cfg.signing != null) {
-      programs.git.iniContent = with cfg.signing;
+      programs.git.iniContent = with cfg;
         let
-          formats = [
-            {
-              format = "openpgp";
-              defaultProgram = "${pkgs.gnupg}/bin/gpg2";
-            }
-            {
-              format = "ssh";
-              defaultProgram = "${pkgs.openssh}/bin/ssh";
-            }
-            {
-              format = "x509";
-              defaultProgram = "${pkgs.gnupg}/bin/gpgsm";
-            }
-          ];
+          formats = {
+            openpgp = "${pkgs.gnupg}/bin/gpg2";
+            ssh = "${pkgs.openssh}/bin/ssh";
+            x509 = "${pkgs.gnupg}/bin/gpgsm";
+          };
         in {
           gpg = {
             format = mkIf (signing.format != null) signing.format;
-          } // lib.genAttrs formats ({ format, defaultProgram, }: {
-            program =
-              mkIf (signing.format == f) signing.program or defaultProgram;
+          } // lib.genAttrs (builtins.attrNames formats) (f: {
+            program = mkIf (signing.format == f)
+              signing.program or (builtins.getAttr f);
           });
 
           user.signingKey = mkIf (signing.key != null) signing.key;
