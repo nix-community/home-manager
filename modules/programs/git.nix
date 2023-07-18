@@ -1,9 +1,6 @@
 { config, lib, pkgs, ... }:
-
 with lib;
-
 let
-
   cfg = config.programs.git;
 
   # create [section "subsection"] keys from "section.subsection" attrset names
@@ -59,6 +56,7 @@ let
     in attrsOf supersectionType;
 
   signModule = types.submodule {
+    imports = [ (mkRenamedOptionModule [ "gpgPath" ] [ "program" ]) ];
     options = {
       signByDefault = mkOption {
         type = types.bool;
@@ -86,9 +84,9 @@ let
       program = mkOption {
         type = types.str;
         defaultText = ''
-          With OpenPGP/GnuPG: \${pkgs.gnupg}/bin/gpg2
-          With SSH: \${pkgs.ssh}/bin/ssh
-          With X.509: \${pkgs.gnupg}/bin/gpgsm
+          With OpenPGP/GnuPG: ''${pkgs.gnupg}/bin/gpg2
+          With SSH: ''${pkgs.openssh}/bin/ssh
+          With X.509: ''${pkgs.gnupg}/bin/gpgsm
         '';
         description = "Path to the signer binary.";
       };
@@ -148,7 +146,6 @@ let
           Nix store name for the git configuration text file,
           when generating the configuration text from nix options.
         '';
-
       };
     };
     config.path = mkIf (config.contents != { }) (mkDefault
@@ -158,7 +155,7 @@ let
 
   assertAtMostOneIsSet = attrs: options:
     let
-      enabled = (builtins.map (path: lib.attrByPath path false attrs) options);
+      enabled = builtins.map (path: lib.attrByPath path false attrs) options;
       paths =
         builtins.map (path: "'programs.git.${lib.concatStringsSep "." path}'")
         options;
@@ -435,6 +432,11 @@ in {
           "difftastic"
         ]))
       ];
+      warnings = if (cfg.signing.gpgPath or "") != "" then [''
+        `programs.git.signing.gpgPath` has been deprecated.
+        Please use `programs.git.signing.program` instead.
+      ''] else
+        [ ];
 
       programs.git.iniContent.user = {
         name = mkIf (cfg.userName != null) cfg.userName;
@@ -487,17 +489,35 @@ in {
     }
 
     (mkIf (cfg.signing != null) {
-      programs.git.iniContent = with cfg.signing; {
-        gpg = {
-          format = mkIf (format != null) format;
-        } // lib.genAttrs [ "openpgp" "ssh" "x509" ]
-          (f: { program = mkIf (format == f) program; });
+      programs.git.iniContent = with cfg.signing;
+        let
+          formats = [
+            {
+              format = "openpgp";
+              defaultProgram = "${pkgs.gnupg}/bin/gpg2";
+            }
+            {
+              format = "ssh";
+              defaultProgram = "${pkgs.openssh}/bin/ssh";
+            }
+            {
+              format = "x509";
+              defaultProgram = "${pkgs.gnupg}/bin/gpgsm";
+            }
+          ];
+        in {
+          gpg = {
+            format = mkIf (signing.format != null) signing.format;
+          } // lib.genAttrs formats ({ format, defaultProgram, }: {
+            program =
+              mkIf (signing.format == f) signing.program or defaultProgram;
+          });
 
-        user.signingKey = mkIf (key != null) key;
+          user.signingKey = mkIf (signing.key != null) signing.key;
 
-        commit.gpgSign = mkDefault signByDefault;
-        tag.gpgSign = mkDefault signByDefault;
-      };
+          commit.gpgSign = mkDefault signing.signByDefault;
+          tag.gpgSign = mkDefault signing.signByDefault;
+        };
     })
 
     (mkIf (cfg.hooks != { }) {
