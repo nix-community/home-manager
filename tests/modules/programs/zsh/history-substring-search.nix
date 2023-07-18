@@ -10,6 +10,7 @@ with lib;
         enable = true;
         searchDownKey = "^[[B";
         searchUpKey = [ "^[[A" "\\eOA" ];
+        prefixed = true;
       };
     };
 
@@ -20,6 +21,7 @@ with lib;
       assertFileRegex home-files/.zshrc "^bindkey '\^\[\[B' history-substring-search-down$"
       assertFileRegex home-files/.zshrc "^bindkey '\^\[\[A' history-substring-search-up$"
       assertFileRegex home-files/.zshrc "^bindkey '\\\\eOA' history-substring-search-up$"
+      assertFileRegex home-files/.zshrc "^HISTORY_SUBSTRING_SEARCH_PREFIXED=true$"
     '';
   };
 }

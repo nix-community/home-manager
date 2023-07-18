@@ -205,6 +205,15 @@ let
           The default of `^[[B` corresponds to the DOWN key.
         '';
       };
+      prefixed = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Defines how the command history will be searched for your query.
+          If set to true, your query will be matched against the start of
+          each history entry.
+        '';
+      };
     };
   };
 
@@ -631,6 +640,9 @@ in
             (downKey: "bindkey '${downKey}' history-substring-search-down")
             (lib.toList cfg.historySubstringSearch.searchDownKey)
           }
+          ${optionalString cfg.historySubstringSearch.prefixed ''
+            HISTORY_SUBSTRING_SEARCH_PREFIXED=true
+          ''}
         '')
       ]);
     }
