@@ -30,13 +30,13 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home = {
-      packages = [ cfg.package ];
+    home = mkMerge [
+      { packages = [ cfg.package ]; }
+      (mkIf (cfg.arguments != [ ]) {
+        file."${configPath}".text = lib.concatLines cfg.arguments;
 
-      file."${configPath}" =
-        mkIf (cfg.arguments != [ ]) { text = lib.concatLines cfg.arguments; };
-
-      sessionVariables = { "RIPGREP_CONFIG_PATH" = configPath; };
-    };
+        sessionVariables."RIPGREP_CONFIG_PATH" = configPath;
+      })
+    ];
   };
 }
