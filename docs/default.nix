@@ -46,9 +46,13 @@ let
 
   hmPath = toString ./..;
 
-  buildOptionsDocs = args@{ modules, ... }:
-    pkgs.buildPackages.nixosOptionsDoc ({
-      options = (lib.evalModules { inherit modules; }).options;
+  buildOptionsDocs = args@{ modules, includeModuleSystemOptions ? true, ... }:
+    let options = (lib.evalModules { inherit modules; }).options;
+    in pkgs.buildPackages.nixosOptionsDoc ({
+      options = if includeModuleSystemOptions then
+        options
+      else
+        builtins.removeAttrs options [ "_module" ];
       transformOptions = opt:
         opt // {
           # Clean up declaration sites to not refer to the Home Manager
@@ -64,7 +68,7 @@ let
             else
               decl) opt.declarations;
         };
-    } // builtins.removeAttrs args [ "modules" ]);
+    } // builtins.removeAttrs args [ "modules" "includeModuleSystemOptions" ]);
 
   hmOptionsDocs = buildOptionsDocs {
     modules = import ../modules/modules.nix {
@@ -76,12 +80,14 @@ let
 
   nixosOptionsDocs = buildOptionsDocs {
     modules = [ ../nixos scrubbedPkgsModule dontCheckDefinitions ];
+    includeModuleSystemOptions = false;
     variablelistId = "nixos-options";
     optionIdPrefix = "nixos-opt-";
   };
 
   nixDarwinOptionsDocs = buildOptionsDocs {
     modules = [ ../nix-darwin scrubbedPkgsModule dontCheckDefinitions ];
+    includeModuleSystemOptions = false;
     variablelistId = "nix-darwin-options";
     optionIdPrefix = "nix-darwin-opt-";
   };
