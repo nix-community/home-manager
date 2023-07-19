@@ -19,9 +19,9 @@ in {
         example = "$HOME/devel/home-manager";
         description = ''
           The default path to use for Home Manager. When
-          <literal>null</literal>, then the <filename>home-manager</filename>
-          channel, <filename>$HOME/.config/nixpkgs/home-manager</filename>, and
-          <filename>$HOME/.nixpkgs/home-manager</filename> will be attempted.
+          `null`, then the {file}`home-manager`
+          channel, {file}`$HOME/.config/nixpkgs/home-manager`, and
+          {file}`$HOME/.nixpkgs/home-manager` will be attempted.
         '';
       };
     };

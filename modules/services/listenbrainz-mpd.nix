@@ -22,7 +22,7 @@ in {
       default = { };
       description = ''
         Configuration for listenbrainz-mpd written to
-        <filename>$XDG_CONFIG_HOME/listenbrainz-mpd/config.toml</filename>.
+        {file}`$XDG_CONFIG_HOME/listenbrainz-mpd/config.toml`.
       '';
       example = { submission.tokenFile = "/run/secrets/listenbrainz-mpd"; };
     };

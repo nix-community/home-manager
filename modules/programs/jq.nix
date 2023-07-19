@@ -39,9 +39,10 @@ in {
 
       colors = mkOption {
         description = ''
-          The colors used in colored JSON output.</para>
+          The colors used in colored JSON output.
 
-          <para>See <link xlink:href="https://stedolan.github.io/jq/manual/#Colors"/>.
+          See the [Colors section](https://jqlang.github.io/jq/manual/#Colors)
+          of the jq manual.
         '';
 
         example = literalExpression ''

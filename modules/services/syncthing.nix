@@ -27,7 +27,7 @@ in {
         default = [ ];
         example = [ "--gui-apikey=apiKey" ];
         description = ''
-          Extra command-line arguments to pass to <command>syncthing</command>.
+          Extra command-line arguments to pass to {command}`syncthing`.
         '';
       };
 

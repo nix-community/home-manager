@@ -23,7 +23,7 @@ let
           defaultText = literalExpression
             "if source is defined, the content of source, otherwise empty";
           description = ''
-            Text of the nushell <filename>${name}</filename> file.
+            Text of the nushell {file}`${name}` file.
             If unset then the source option will be preferred.
           '';
         };
@@ -32,7 +32,7 @@ let
           type = types.nullOr types.path;
           default = null;
           description = ''
-            Path of the nushell <filename>${name}</filename> file to use.
+            Path of the nushell {file}`${name}` file to use.
             If the text option is set, it will be preferred.
           '';
         };
@@ -76,9 +76,8 @@ in {
       '';
       description = ''
         The configuration file to be used for nushell.
-        </para>
-        <para>
-        See <link xlink:href="https://www.nushell.sh/book/configuration.html#configuration" /> for more information.
+
+        See <https://www.nushell.sh/book/configuration.html#configuration> for more information.
       '';
     };
 
@@ -90,9 +89,8 @@ in {
       '';
       description = ''
         The environment variables file to be used for nushell.
-        </para>
-        <para>
-        See <link xlink:href="https://www.nushell.sh/book/configuration.html#configuration" /> for more information.
+
+        See <https://www.nushell.sh/book/configuration.html#configuration> for more information.
       '';
     };
 
@@ -107,9 +105,8 @@ in {
       '';
       description = ''
         The login file to be used for nushell upon logging in.
-        </para>
-        <para>
-        See <link xlink:href="https://www.nushell.sh/book/configuration.html#configuring-nu-as-a-login-shell" /> for more information.
+
+        See <https://www.nushell.sh/book/configuration.html#configuring-nu-as-a-login-shell> for more information.
       '';
     };
 

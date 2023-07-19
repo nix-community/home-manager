@@ -66,7 +66,7 @@ in {
       type = types.package;
       default = pkgs.fusuma;
       defaultText = literalExpression "pkgs.fusuma";
-      description = "Package providing <command>fusuma</command>.";
+      description = "Package providing {command}`fusuma`.";
     };
 
     settings = mkOption {

@@ -19,10 +19,9 @@ in {
       example = "sway-session.target";
       description = ''
         The systemd target that will automatically start the CopyQ service.
-        </para>
-        <para>
-        When setting this value to <literal>"sway-session.target"</literal>,
-        make sure to also enable <option>wayland.windowManager.sway.systemd.enable</option>,
+
+        When setting this value to `"sway-session.target"`,
+        make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
         otherwise the service may never be started.
       '';
     };

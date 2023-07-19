@@ -41,7 +41,7 @@ in {
         Override feh's default mouse button mapping. If you want to disable an
         action, set its value to null. If you want to bind multiple buttons to
         an action, set its value to a list.
-        See <link xlink:href="https://man.finalrewind.org/1/feh/#x425554544f4e53"/> for
+        See <https://man.finalrewind.org/1/feh/#x425554544f4e53> for
         default bindings and available commands.
       '';
     };
@@ -58,7 +58,7 @@ in {
         Override feh's default keybindings. If you want to disable a keybinding
         set its value to null. If you want to bind multiple keys to an action,
         set its value to a list.
-        See <link xlink:href="https://man.finalrewind.org/1/feh/#x4b455953"/> for
+        See <https://man.finalrewind.org/1/feh/#x4b455953> for
         default bindings and available commands.
       '';
     };

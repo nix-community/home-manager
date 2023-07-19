@@ -19,7 +19,7 @@ in {
         type = types.package;
         default = pkgs.tiny;
         defaultText = literalExpression "pkgs.tiny";
-        description = "The <command>tiny</command> package to install.";
+        description = "The {command}`tiny` package to install.";
       };
 
       settings = mkOption {
@@ -47,8 +47,8 @@ in {
         '';
         description = ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/tiny/config.yml</filename>. See
-          <link xlink:href="https://github.com/osa1/tiny/blob/master/crates/tiny/config.yml"/>
+          {file}`$XDG_CONFIG_HOME/tiny/config.yml`. See
+          <https://github.com/osa1/tiny/blob/master/crates/tiny/config.yml>
           for the default configuration.
         '';
       };

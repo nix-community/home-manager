@@ -50,10 +50,10 @@ in {
         '';
         description = ''
           Configuration to include in the Emacs default init file. See
-          <link xlink:href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Init-File.html"/>
+          <https://www.gnu.org/software/emacs/manual/html_node/elisp/Init-File.html>
           for more.
-          </para><para>
-          Note, the <literal>inhibit-startup-message</literal> Emacs option
+
+          Note, the `inhibit-startup-message` Emacs option
           cannot be set here since Emacs disallows setting it from the default
           initialization file.
         '';
@@ -67,7 +67,7 @@ in {
         description = ''
           Extra packages available to Emacs. To get a list of
           available packages run:
-          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A emacsPackages</command>.
+          {command}`nix-env -f '<nixpkgs>' -qaP -A emacsPackages`.
         '';
       };
 

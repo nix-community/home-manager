@@ -95,7 +95,7 @@ let
         default = null;
         example = 2;
         description = ''
-          If not <literal>null</literal>, automatically draw an arrow
+          If not `null`, automatically draw an arrow
           at the end of a stroke with the given size.
         '';
       };
@@ -130,7 +130,7 @@ in {
       example = "Insert";
       description = ''
         A keysym or raw keycode that toggles the activation state of
-        gromit-mpx.  Set to <literal>null</literal> to disable the
+        gromit-mpx.  Set to `null` to disable the
         hotkey in which case you'll have to activate gromit-mpx
         manually using the command line.
       '';
@@ -142,7 +142,7 @@ in {
       description = ''
         A keysym or raw keycode that causes gromit-mpx to undo the
         last stroke.  Use this key along with the shift key to redo an
-        undone stoke.  Set to <literal>null</literal> to disable the
+        undone stoke.  Set to `null` to disable the
         undo hotkey.
       '';
     };

@@ -33,9 +33,9 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/zellij/config.yaml</filename>.
-        </para><para>
-        See <link xlink:href="https://zellij.dev/documentation" /> for the full
+        {file}`$XDG_CONFIG_HOME/zellij/config.yaml`.
+
+        See <https://zellij.dev/documentation> for the full
         list of options.
       '';
     };

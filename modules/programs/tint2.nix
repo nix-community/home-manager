@@ -24,7 +24,7 @@ in {
       type = types.lines;
       default = "";
       description = ''
-        Commands for tint2 that will be add to the <filename>tint2rc</filename>
+        Commands for tint2 that will be add to the {file}`tint2rc`
         file.
       '';
     };

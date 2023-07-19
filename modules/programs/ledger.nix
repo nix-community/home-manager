@@ -37,8 +37,8 @@ in {
         ];
       };
       description = ''
-        Configuration written to <filename>$XDG_CONFIG_HOME/ledger/ledgerrc</filename>.
-        See <link xlink:href="https://www.ledger-cli.org/3.0/doc/ledger3.html#Detailed-Option-Description"/>
+        Configuration written to {file}`$XDG_CONFIG_HOME/ledger/ledgerrc`.
+        See <https://www.ledger-cli.org/3.0/doc/ledger3.html#Detailed-Option-Description>
         for explanation about possible values.
       '';
     };
@@ -53,7 +53,7 @@ in {
       '';
       description = ''
         Extra configuration to add to
-        <filename>$XDG_CONFIG_HOME/ledger/ledgerrc</filename>.
+        {file}`$XDG_CONFIG_HOME/ledger/ledgerrc`.
       '';
     };
   };

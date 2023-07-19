@@ -51,13 +51,10 @@ in {
       type = settingsType;
       default = { };
       description = ''
-        Configuration to add to i3status <filename>config</filename>
-        <code>general</code> section.
+        Configuration to add to i3status {file}`config`
+        `general` section.
         See
-        <citerefentry>
-         <refentrytitle>i3status</refentrytitle>
-         <manvolnum>1</manvolnum>
-        </citerefentry>
+        {manpage}`i3status(1)`
         for options.
       '';
       example = literalExpression ''
@@ -84,7 +81,7 @@ in {
           position = mkOption {
             type = with types; either int float;
             description = ''
-              Position of this module in i3status <code>order</code>.
+              Position of this module in i3status `order`.
             '';
           };
           settings = mkOption {
@@ -93,10 +90,7 @@ in {
             description = ''
               Configuration to add to this i3status module.
               See
-              <citerefentry>
-               <refentrytitle>i3status</refentrytitle>
-               <manvolnum>1</manvolnum>
-              </citerefentry>
+              {manpage}`i3status(1)`
               for options.
             '';
             example = literalExpression ''
@@ -111,12 +105,9 @@ in {
       });
       default = { };
       description = ''
-        Modules to add to i3status <filename>config</filename> file.
+        Modules to add to i3status {file}`config` file.
         See
-        <citerefentry>
-         <refentrytitle>i3status</refentrytitle>
-         <manvolnum>1</manvolnum>
-        </citerefentry>
+        {manpage}`i3status(1)`
         for options.
       '';
       example = literalExpression ''

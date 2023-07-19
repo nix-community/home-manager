@@ -27,8 +27,8 @@ let
           type = nullOr (enum [ "top" "bottom" ]);
           default = null;
           description = ''
-            Decide if the bar is displayed in front (<code>"top"</code>)
-            of the windows or behind (<code>"bottom"</code>).
+            Decide if the bar is displayed in front (`"top"`)
+            of the windows or behind (`"bottom"`).
           '';
           example = "top";
         };
@@ -152,7 +152,7 @@ in {
       default = pkgs.waybar;
       defaultText = literalExpression "pkgs.waybar";
       description = ''
-        Waybar package to use. Set to <code>null</code> to use the default package.
+        Waybar package to use. Set to `null` to use the default package.
       '';
     };
 
@@ -160,8 +160,7 @@ in {
       type = either (listOf waybarBarConfig) (attrsOf waybarBarConfig);
       default = [ ];
       description = ''
-        Configuration for Waybar, see <link
-          xlink:href="https://github.com/Alexays/Waybar/wiki/Configuration"/>
+        Configuration for Waybar, see <https://github.com/Alexays/Waybar/wiki/Configuration>
         for supported values.
       '';
       example = literalExpression ''
@@ -203,10 +202,9 @@ in {
       example = "sway-session.target";
       description = ''
         The systemd target that will automatically start the Waybar service.
-        </para>
-        <para>
-        When setting this value to <literal>"sway-session.target"</literal>,
-        make sure to also enable <option>wayland.windowManager.sway.systemd.enable</option>,
+
+        When setting this value to `"sway-session.target"`,
+        make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
         otherwise the service may never be started.
       '';
     };
@@ -216,12 +214,10 @@ in {
       default = null;
       description = ''
         CSS style of the bar.
-        </para>
-        <para>
-        See <link xlink:href="https://github.com/Alexays/Waybar/wiki/Configuration"/>
+
+        See <https://github.com/Alexays/Waybar/wiki/Configuration>
         for the documentation.
-        </para>
-        <para>
+
         If the value is set to a path literal, then the path will be used as the css file.
       '';
       example = ''

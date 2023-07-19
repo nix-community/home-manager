@@ -34,8 +34,7 @@ in {
     };
 
     configFile = mkOption {
-      type = fileType "xdg.configFile" "<varname>xdg.configHome</varname>"
-        cfg.configHome;
+      type = fileType "xdg.configFile" "{var}`xdg.configHome`" cfg.configHome;
       default = { };
       description = ''
         Attribute set of files to link into the user's XDG

@@ -25,7 +25,7 @@ in {
       type = with types; attrsOf (oneOf [ bool float int str ]);
       default = { };
       description = ''
-        Default arguments to <command>swaylock</command>. An empty set
+        Default arguments to {command}`swaylock`. An empty set
         disables configuration generation.
       '';
       example = {

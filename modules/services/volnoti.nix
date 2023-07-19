@@ -18,7 +18,7 @@ in {
         default = pkgs.volnoti;
         defaultText = literalExpression "pkgs.volnoti";
         description = ''
-          Package containing the <command>volnoti</command> program.
+          Package containing the {command}`volnoti` program.
         '';
       };
     };

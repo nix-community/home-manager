@@ -115,7 +115,7 @@ let
         description = ''
           Path to the plugin folder.
 
-          Will be added to <envar>fpath</envar> and <envar>PATH</envar>.
+          Will be added to {env}`fpath` and {env}`PATH`.
         '';
       };
 
@@ -124,7 +124,7 @@ let
         description = ''
           The name of the plugin.
 
-          Don't forget to add <option>file</option>
+          Don't forget to add {option}`file`
           if the script name does not follow convention.
         '';
       };
@@ -159,7 +159,7 @@ let
         example = "$HOME/my_customizations";
         description = ''
           Path to a custom oh-my-zsh package to override config of
-          oh-my-zsh. See <link xlink:href="https://github.com/robbyrussell/oh-my-zsh/wiki/Customization"/>
+          oh-my-zsh. See <https://github.com/robbyrussell/oh-my-zsh/wiki/Customization>
           for more information.
         '';
       };
@@ -194,7 +194,7 @@ let
         default = [ "^[[A" ];
         description = ''
           The key codes to be used when searching up.
-          The default of <literal>^[[A</literal> corresponds to the UP key.
+          The default of `^[[A` corresponds to the UP key.
         '';
       };
       searchDownKey = mkOption {
@@ -202,7 +202,7 @@ let
         default = [ "^[[B" ];
         description = ''
           The key codes to be used when searching down.
-          The default of <literal>^[[B</literal> corresponds to the DOWN key.
+          The default of `^[[B` corresponds to the DOWN key.
         '';
       };
     };
@@ -219,7 +219,7 @@ let
         default = {};
         description = ''
           Custom styles for syntax highlighting.
-          See each highlighter's options: <link xlink:href="https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md"/>
+          See each highlighter's options: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md>
         '';
       };
     };
@@ -249,7 +249,7 @@ in
       cdpath = mkOption {
         default = [];
         description = ''
-          List of paths to autocomplete calls to `cd`.
+          List of paths to autocomplete calls to {command}`cd`.
         '';
         type = types.listOf types.str;
       };
@@ -289,7 +289,7 @@ in
           }
         '';
         description = ''
-          Similar to <xref linkend="opt-programs.zsh.shellAliases"/>,
+          Similar to [](#opt-programs.zsh.shellAliases),
           but are substituted anywhere on a line.
         '';
         type = types.attrsOf types.str;
@@ -314,9 +314,9 @@ in
         default = true;
         description = ''
           Enable zsh completion. Don't forget to add
-          <programlisting language="nix">
+          ```nix
             environment.pathsToLink = [ "/share/zsh" ];
-          </programlisting>
+          ```
           to your system configuration to get completion for system packages (e.g. systemd).
         '';
         type = types.bool;
@@ -368,43 +368,43 @@ in
       initExtraBeforeCompInit = mkOption {
         default = "";
         type = types.lines;
-        description = "Extra commands that should be added to <filename>.zshrc</filename> before compinit.";
+        description = "Extra commands that should be added to {file}`.zshrc` before compinit.";
       };
 
       initExtra = mkOption {
         default = "";
         type = types.lines;
-        description = "Extra commands that should be added to <filename>.zshrc</filename>.";
+        description = "Extra commands that should be added to {file}`.zshrc`.";
       };
 
       initExtraFirst = mkOption {
         default = "";
         type = types.lines;
-        description = "Commands that should be added to top of <filename>.zshrc</filename>.";
+        description = "Commands that should be added to top of {file}`.zshrc`.";
       };
 
       envExtra = mkOption {
         default = "";
         type = types.lines;
-        description = "Extra commands that should be added to <filename>.zshenv</filename>.";
+        description = "Extra commands that should be added to {file}`.zshenv`.";
       };
 
       profileExtra = mkOption {
         default = "";
         type = types.lines;
-        description = "Extra commands that should be added to <filename>.zprofile</filename>.";
+        description = "Extra commands that should be added to {file}`.zprofile`.";
       };
 
       loginExtra = mkOption {
         default = "";
         type = types.lines;
-        description = "Extra commands that should be added to <filename>.zlogin</filename>.";
+        description = "Extra commands that should be added to {file}`.zlogin`.";
       };
 
       logoutExtra = mkOption {
         default = "";
         type = types.lines;
-        description = "Extra commands that should be added to <filename>.zlogout</filename>.";
+        description = "Extra commands that should be added to {file}`.zlogout`.";
       };
 
       plugins = mkOption {
@@ -434,7 +434,7 @@ in
             }
           ]
         '';
-        description = "Plugins to source in <filename>.zshrc</filename>.";
+        description = "Plugins to source in {file}`.zshrc`.";
       };
 
       oh-my-zsh = mkOption {
@@ -448,7 +448,7 @@ in
         default = {};
         example = { POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=["dir" "vcs"]; };
         description = ''
-          Extra local variables defined at the top of <filename>.zshrc</filename>.
+          Extra local variables defined at the top of {file}`.zshrc`.
         '';
       };
     };

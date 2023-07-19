@@ -91,8 +91,8 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/kitty/kitty.conf</filename>. See
-        <link xlink:href="https://sw.kovidgoyal.net/kitty/conf.html" />
+        {file}`$XDG_CONFIG_HOME/kitty/kitty.conf`. See
+        <https://sw.kovidgoyal.net/kitty/conf.html>
         for the documentation.
       '';
     };
@@ -102,8 +102,8 @@ in {
       default = null;
       description = ''
         Apply a Kitty color theme. This option takes the friendly name of
-        any theme given by the command <command>kitty +kitten themes</command>.
-        See <link xlink:href="https://github.com/kovidgoyal/kitty-themes"/>
+        any theme given by the command {command}`kitty +kitten themes`.
+        See <https://github.com/kovidgoyal/kitty-themes>
         for more details.
       '';
       example = "Space Gray Eighties";
@@ -145,9 +145,9 @@ in {
         example = "no-cursor";
         description = ''
           Set the mode of the shell integration. This accepts the same options
-          as the <literal>shell_integration</literal> option of Kitty. Note that
-          <literal>no-rc</literal> is always implied. See
-          <link xlink:href="https://sw.kovidgoyal.net/kitty/shell-integration"/>
+          as the `shell_integration` option of Kitty. Note that
+          `no-rc` is always implied. See
+          <https://sw.kovidgoyal.net/kitty/shell-integration>
           for more details.
         '';
       };

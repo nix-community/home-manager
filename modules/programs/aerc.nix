@@ -41,8 +41,9 @@ in {
       example = literalExpression
         ''{ Work = { source = "maildir://~/Maildir/work"; }; }'';
       description = ''
-        Extra lines added to <filename>$HOME/.config/aerc/accounts.conf</filename>.
-        See aerc-config(5).
+        Extra lines added to {file}`$HOME/.config/aerc/accounts.conf`.
+
+        See {manpage}`aerc-config(5)`.
       '';
     };
 
@@ -51,9 +52,10 @@ in {
       default = { };
       example = literalExpression ''{ messages = { q = ":quit<Enter>"; }; }'';
       description = ''
-        Extra lines added to <filename>$HOME/.config/aerc/binds.conf</filename>.
+        Extra lines added to {file}`$HOME/.config/aerc/binds.conf`.
         Global keybindings can be set in the `global` section.
-        See aerc-config(5).
+
+        See {manpage}`aerc-config(5)`.
       '';
     };
 
@@ -62,8 +64,9 @@ in {
       default = { };
       example = literalExpression ''{ ui = { sort = "-r date"; }; }'';
       description = ''
-        Extra lines added to <filename>$HOME/.config/aerc/aerc.conf</filename>.
-        See aerc-config(5).
+        Extra lines added to {file}`$HOME/.config/aerc/aerc.conf`.
+
+        See {manpage}`aerc-config(5)`.
       '';
     };
 
@@ -74,8 +77,9 @@ in {
         { default = { ui = { "tab.selected.reverse" = toggle; }; }; };
       '';
       description = ''
-        Stylesets added to <filename>$HOME/.config/aerc/stylesets/</filename>.
-        See aerc-stylesets(7).
+        Stylesets added to {file}`$HOME/.config/aerc/stylesets/`.
+
+        See {manpage}`aerc-stylesets(7)`.
       '';
     };
 
@@ -86,8 +90,9 @@ in {
         { new_message = "Hello!"; };
       '';
       description = ''
-        Templates added to <filename>$HOME/.config/aerc/templates/</filename>.
-        See aerc-templates(7).
+        Templates added to {file}`$HOME/.config/aerc/templates/`.
+
+        See {manpage}`aerc-templates(7)`.
       '';
     };
   };

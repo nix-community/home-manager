@@ -18,7 +18,7 @@ in {
         default = pkgs.notify-osd;
         defaultText = literalExpression "pkgs.notify-osd";
         description = ''
-          Package containing the <command>notify-osd</command> program.
+          Package containing the {command}`notify-osd` program.
         '';
       };
     };

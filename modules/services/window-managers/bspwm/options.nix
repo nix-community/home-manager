@@ -90,7 +90,7 @@ let
         type = types.nullOr types.bool;
         default = null;
         description = ''
-          Whether the node should ignore <command>node --close</command>
+          Whether the node should ignore {command}`node --close`
           messages.
         '';
         example = true;
@@ -147,8 +147,7 @@ let
       rectangle = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description =
-          "The node's geometry, in the format <literal>WxH+X+Y</literal>.";
+        description = "The node's geometry, in the format `WxH+X+Y`.";
         example = "800x600+32+32";
       };
     };
@@ -169,7 +168,7 @@ in {
     settings = mkOption {
       type = with types; attrsOf (either primitive (listOf primitive));
       default = { };
-      description = "General settings given to <literal>bspc config</literal>.";
+      description = "General settings given to `bspc config`.";
       example = {
         "border_width" = 2;
         "split_ratio" = 0.52;
@@ -206,12 +205,12 @@ in {
       type = types.bool;
       default = true;
       description = ''
-        If set to <literal>true</literal>, desktops configured in <option>monitors</option> will be reset
+        If set to `true`, desktops configured in {option}`monitors` will be reset
         every time the config is run.
 
-        If set to <literal>false</literal>, desktops will only be configured the first time the config is run.
+        If set to `false`, desktops will only be configured the first time the config is run.
         This is useful if you want to dynamically add desktops and you don't want them to be destroyed if you
-        re-run <literal>bspwmrc</literal>.
+        re-run `bspwmrc`.
       '';
     };
 

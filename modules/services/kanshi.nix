@@ -16,12 +16,9 @@ let
           The latter can be used to match any output.
 
           On
-          <citerefentry>
-            <refentrytitle>sway</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>,
+          {manpage}`sway(1)`,
           output names and descriptions can be obtained via
-          <literal>swaymsg -t get_outputs</literal>.
+          `swaymsg -t get_outputs`.
         '';
       };
 
@@ -39,7 +36,7 @@ let
         example = "1920x1080@60Hz";
         description = ''
           &lt;width&gt;x&lt;height&gt;[@&lt;rate&gt;[Hz]]
-          </para><para>
+
           Configures the specified output to use the specified mode.
           Modes are a combination of width and height (in pixels) and
           a refresh rate (in Hz) that your display can be configured to use.
@@ -52,7 +49,7 @@ let
         example = "1600,0";
         description = ''
           &lt;x&gt;,&lt;y&gt;
-          </para><para>
+
           Places the output at the specified position in the global coordinates
           space.
         '';

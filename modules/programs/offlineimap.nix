@@ -123,7 +123,7 @@ in {
         };
         description = ''
           Extra configuration options added to the
-          <option>general</option> section.
+          {option}`general` section.
         '';
       };
 
@@ -133,7 +133,7 @@ in {
         example = { gmailtrashfolder = "[Gmail]/Papierkorb"; };
         description = ''
           Extra configuration options added to the
-          <option>DEFAULT</option> section.
+          {option}`DEFAULT` section.
         '';
       };
 
@@ -151,7 +151,7 @@ in {
         '';
         description = ''
           Extra configuration options added to the
-          <code>mbnames</code> section.
+          `mbnames` section.
         '';
       };
     };

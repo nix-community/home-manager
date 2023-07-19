@@ -56,7 +56,7 @@ in {
         default = "";
         description = ''
           Additional content written at the end of
-          <filename>~/.tmate.conf</filename>.
+          {file}`~/.tmate.conf`.
         '';
       };
     };

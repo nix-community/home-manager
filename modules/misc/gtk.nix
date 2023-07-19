@@ -33,7 +33,7 @@ let
         example = literalExpression "pkgs.gnome.gnome-themes-extra";
         description = ''
           Package providing the theme. This package will be installed
-          to your profile. If <literal>null</literal> then the theme
+          to your profile. If `null` then the theme
           is assumed to already be available in your profile.
         '';
       };
@@ -54,7 +54,7 @@ let
         example = literalExpression "pkgs.gnome.adwaita-icon-theme";
         description = ''
           Package providing the icon theme. This package will be installed
-          to your profile. If <literal>null</literal> then the theme
+          to your profile. If `null` then the theme
           is assumed to already be available in your profile.
         '';
       };
@@ -75,7 +75,7 @@ let
         example = literalExpression "pkgs.vanilla-dmz";
         description = ''
           Package providing the cursor theme. This package will be installed
-          to your profile. If <literal>null</literal> then the theme
+          to your profile. If `null` then the theme
           is assumed to already be available in your profile.
         '';
       };
@@ -143,7 +143,7 @@ in {
           example = "gtk-can-change-accels = 1";
           description = ''
             Extra configuration lines to add verbatim to
-            <filename>~/.gtkrc-2.0</filename>.
+            {file}`~/.gtkrc-2.0`.
           '';
         };
 
@@ -177,7 +177,7 @@ in {
           };
           description = ''
             Extra configuration options to add to
-            <filename>$XDG_CONFIG_HOME/gtk-3.0/settings.ini</filename>.
+            {file}`$XDG_CONFIG_HOME/gtk-3.0/settings.ini`.
           '';
         };
 
@@ -186,7 +186,7 @@ in {
           default = "";
           description = ''
             Extra configuration lines to add verbatim to
-            <filename>$XDG_CONFIG_HOME/gtk-3.0/gtk.css</filename>.
+            {file}`$XDG_CONFIG_HOME/gtk-3.0/gtk.css`.
           '';
         };
       };
@@ -201,7 +201,7 @@ in {
           };
           description = ''
             Extra configuration options to add to
-            <filename>$XDG_CONFIG_HOME/gtk-4.0/settings.ini</filename>.
+            {file}`$XDG_CONFIG_HOME/gtk-4.0/settings.ini`.
           '';
         };
 
@@ -210,7 +210,7 @@ in {
           default = "";
           description = ''
             Extra configuration lines to add verbatim to
-            <filename>$XDG_CONFIG_HOME/gtk-4.0/gtk.css</filename>.
+            {file}`$XDG_CONFIG_HOME/gtk-4.0/gtk.css`.
           '';
         };
       };

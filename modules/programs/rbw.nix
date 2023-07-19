@@ -46,13 +46,13 @@ let
           default = "gtk2";
           description = ''
             Which pinentry interface to use. Beware that
-            <literal>pinentry-gnome3</literal> may not work on non-Gnome
+            `pinentry-gnome3` may not work on non-Gnome
             systems. You can fix it by adding the following to your
             system configuration:
-            <programlisting language="nix">
+            ```nix
             services.dbus.packages = [ pkgs.gcr ];
-            </programlisting>
-            For this reason, the default is <literal>gtk2</literal> for
+            ```
+            For this reason, the default is `gtk2` for
             now.
           '';
           # we want the program in the config
@@ -75,8 +75,8 @@ in {
       default = pkgs.rbw;
       defaultText = literalExpression "pkgs.rbw";
       description = ''
-        Package providing the <command>rbw</command> tool and its
-        <command>rbw-agent</command> daemon.
+        Package providing the {command}`rbw` tool and its
+        {command}`rbw-agent` daemon.
       '';
     };
 

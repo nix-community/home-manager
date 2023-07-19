@@ -29,13 +29,10 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/direnv/direnv.toml</filename>.
-        </para><para>
+        {file}`$XDG_CONFIG_HOME/direnv/direnv.toml`.
+
         See
-        <citerefentry>
-          <refentrytitle>direnv.toml</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>.
+        {manpage}`direnv.toml(1)`.
         for the full list of options.
       '';
     };
@@ -45,7 +42,7 @@ in {
       default = "";
       description = ''
         Custom stdlib written to
-        <filename>$XDG_CONFIG_HOME/direnv/direnvrc</filename>.
+        {file}`$XDG_CONFIG_HOME/direnv/direnvrc`.
       '';
     };
 
@@ -73,9 +70,9 @@ in {
         Whether to enable Fish integration. Note, enabling the direnv module
         will always active its functionality for Fish since the direnv package
         automatically gets loaded in Fish. If this is not the case try adding
-        <programlisting language="nix">
+        ```nix
           environment.pathsToLink = [ "/share/fish" ];
-        </programlisting>
+        ```
         to the system configuration.
       '';
     };
@@ -90,9 +87,8 @@ in {
 
     nix-direnv = {
       enable = mkEnableOption ''
-        <link
-            xlink:href="https://github.com/nix-community/nix-direnv">nix-direnv</link>,
-            a fast, persistent use_nix implementation for direnv'';
+        [nix-direnv](https://github.com/nix-community/nix-direnv),
+        a fast, persistent use_nix implementation for direnv'';
     };
 
   };

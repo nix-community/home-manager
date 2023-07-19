@@ -12,7 +12,7 @@ in {
       type = types.package;
       default = pkgs.senpai;
       defaultText = literalExpression "pkgs.senpai";
-      description = "The <literal>senpai</literal> package to use.";
+      description = "The `senpai` package to use.";
     };
     config = mkOption {
       type = types.submodule {
@@ -57,8 +57,7 @@ in {
       '';
       description = ''
         Configuration for senpai. For a complete list of options, see
-        <citerefentry><refentrytitle>senpai</refentrytitle>
-        <manvolnum>5</manvolnum></citerefentry>.
+        {manpage}`senpai(5)`.
       '';
     };
   };

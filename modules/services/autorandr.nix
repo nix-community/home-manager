@@ -13,8 +13,8 @@ in {
       enable = mkEnableOption "" // {
         description = ''
           Whether to enable the Autorandr systemd service.
-          This module is complementary to <code>programs.autorandr</code> which handles the
-          configuration (profiles).
+          This module is complementary to {option}`programs.autorandr`
+          which handles the configuration (profiles).
         '';
       };
 

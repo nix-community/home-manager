@@ -59,13 +59,10 @@ let
   unitDescription = type: ''
     Definition of systemd per-user ${type} units. Attributes are
     merged recursively.
-    </para><para>
+
     Note that the attributes follow the capitalization and naming used
     by systemd. More details can be found in
-    <citerefentry>
-      <refentrytitle>systemd.${type}</refentrytitle>
-      <manvolnum>5</manvolnum>
-    </citerefentry>.
+    {manpage}`systemd.${type}(5)`.
   '';
 
   unitExample = type:
@@ -100,7 +97,7 @@ in {
         defaultText = literalExpression ''"''${pkgs.systemd}/bin/systemctl"'';
         type = types.str;
         description = ''
-          Absolute path to the <command>systemctl</command> tool. This
+          Absolute path to the {command}`systemctl` tool. This
           option may need to be set if running Home Manager on a
           non-NixOS distribution.
         '';
@@ -109,56 +106,56 @@ in {
       services = mkOption {
         default = { };
         type = unitType "service";
-        description = unitDescription "service";
+        description = (unitDescription "service");
         example = unitExample "Service";
       };
 
       slices = mkOption {
         default = { };
         type = unitType "slice";
-        description = unitDescription "slice";
+        description = (unitDescription "slice");
         example = unitExample "Slice";
       };
 
       sockets = mkOption {
         default = { };
         type = unitType "socket";
-        description = unitDescription "socket";
+        description = (unitDescription "socket");
         example = unitExample "Socket";
       };
 
       targets = mkOption {
         default = { };
         type = unitType "target";
-        description = unitDescription "target";
+        description = (unitDescription "target");
         example = unitExample "Target";
       };
 
       timers = mkOption {
         default = { };
         type = unitType "timer";
-        description = unitDescription "timer";
+        description = (unitDescription "timer");
         example = unitExample "Timer";
       };
 
       paths = mkOption {
         default = { };
         type = unitType "path";
-        description = unitDescription "path";
+        description = (unitDescription "path");
         example = unitExample "Path";
       };
 
       mounts = mkOption {
         default = { };
         type = unitType "mount";
-        description = unitDescription "mount";
+        description = (unitDescription "mount");
         example = unitExample "Mount";
       };
 
       automounts = mkOption {
         default = { };
         type = unitType "automount";
-        description = unitDescription "automount";
+        description = (unitDescription "automount");
         example = unitExample "Automount";
       };
 
@@ -171,36 +168,25 @@ in {
           Whether new or changed services that are wanted by active targets
           should be started. Additionally, stop obsolete services from the
           previous generation.
-          </para><para>
+
           The alternatives are
-          <variablelist>
-          <varlistentry>
-            <term><literal>suggest</literal> (or <literal>false</literal>)</term>
-            <listitem><para>
-              Use a very simple shell script to print suggested
-              <command>systemctl</command> commands to run. You will have to
-              manually run those commands after the switch.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>legacy</literal> (or <literal>true</literal>)</term>
-            <listitem><para>
-              Use a Ruby script to, in a more robust fashion, determine the
-              necessary changes and automatically run the
-              <command>systemctl</command> commands.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>sd-switch</literal></term>
-            <listitem><para>
-              Use sd-switch, a third party application, to perform the service
-              updates. This tool offers more features while having a small
-              closure size. Note, it requires a fully functional user D-Bus
-              session. Once tested and deemed sufficiently robust, this will
-              become the default.
-            </para></listitem>
-          </varlistentry>
-          </variablelist>
+
+          `suggest` (or `false`)
+          : Use a very simple shell script to print suggested
+            {command}`systemctl` commands to run. You will have to
+            manually run those commands after the switch.
+
+          `legacy` (or `true`)
+          : Use a Ruby script to, in a more robust fashion, determine the
+            necessary changes and automatically run the
+            {command}`systemctl` commands.
+
+          `sd-switch`
+          : Use sd-switch, a third party application, to perform the service
+            updates. This tool offers more features while having a small
+            closure size. Note, it requires a fully functional user D-Bus
+            session. Once tested and deemed sufficiently robust, this will
+            become the default.
         '';
       };
 
@@ -220,10 +206,7 @@ in {
         description = ''
           Environment variables that will be set for the user session.
           The variable values must be as described in
-          <citerefentry>
-            <refentrytitle>environment.d</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>.
+          {manpage}`environment.d(5)`.
         '';
       };
     };

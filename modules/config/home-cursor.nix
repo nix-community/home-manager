@@ -29,7 +29,7 @@ let
 
       x11 = {
         enable = mkEnableOption ''
-          x11 config generation for <option>home.pointerCursor</option>
+          x11 config generation for {option}`home.pointerCursor`
         '';
 
         defaultCursor = mkOption {
@@ -42,7 +42,7 @@ let
 
       gtk = {
         enable = mkEnableOption ''
-          gtk config generation for <option>home.pointerCursor</option>
+          gtk config generation for {option}`home.pointerCursor`
         '';
       };
     };
@@ -95,20 +95,20 @@ in {
       type = types.nullOr pointerCursorModule;
       default = null;
       description = ''
-        Cursor configuration. Set to <literal>null</literal> to disable.
-        </para><para>
+        Cursor configuration. Set to `null` to disable.
+
         Top-level options declared under this submodule are backend independent
-        options. Options declared under namespaces such as <literal>x11</literal>
+        options. Options declared under namespaces such as `x11`
         are backend specific options. By default, only backend independent cursor
         configurations are generated. If you need configurations for specific
         backends, you can toggle them via the enable option. For example,
-        <xref linkend="opt-home.pointerCursor.x11.enable"/>
+        [](#opt-home.pointerCursor.x11.enable)
         will enable x11 cursor configurations.
-        </para><para>
+
         Note that this will merely generate the cursor configurations.
         To apply the configurations, the relevant subsytems must also be configured.
-        For example, <xref linkend="opt-home.pointerCursor.gtk.enable"/> will generate
-        the gtk cursor configuration, but <xref linkend="opt-gtk.enable"/> needs
+        For example, [](#opt-home.pointerCursor.gtk.enable) will generate
+        the gtk cursor configuration, but [](#opt-gtk.enable) needs
         to be set for it to be applied.
       '';
     };

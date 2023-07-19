@@ -28,7 +28,7 @@ let
         type = types.attrsOf types.str;
         description = ''
           Output name to EDID mapping.
-          Use <code>autorandr --fingerprint</code> to get current setup values.
+          Use `autorandr --fingerprint` to get current setup values.
         '';
         default = { };
       };
@@ -115,10 +115,7 @@ let
         '';
         description = ''
           Refer to
-          <citerefentry>
-            <refentrytitle>xrandr</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>
+          {manpage}`xrandr(1)`
           for the documentation of the transform matrix.
         '';
       };
@@ -153,18 +150,15 @@ let
         });
         description = ''
           Output scale configuration.
-          </para><para>
+
           Either configure by pixels or a scaling factor. When using pixel method the
-          <citerefentry>
-            <refentrytitle>xrandr</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>
+          {manpage}`xrandr(1)`
           option
-          <parameter class="command">--scale-from</parameter>
+          `--scale-from`
           will be used; when using factor method the option
-          <parameter class="command">--scale</parameter>
+          `--scale`
           will be used.
-          </para><para>
+
           This option is a shortcut version of the transform option and they are mutually
           exclusive.
         '';

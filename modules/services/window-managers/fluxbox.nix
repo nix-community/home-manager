@@ -20,10 +20,8 @@ in {
         default = "";
         description = ''
           Init configuration for Fluxbox, written to
-          <filename>~/.fluxbox/init</filename>. Look at the
-          <citerefentry>
-          <refentrytitle>fluxbox</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {file}`~/.fluxbox/init`. Look at the
+          {manpage}`fluxbox(1)` manpage for details.
         '';
       };
 
@@ -32,9 +30,8 @@ in {
         default = "";
         description = ''
           Apps configuration for Fluxbox, written to
-          <filename>~/.fluxbox/apps</filename>. Look at the
-          <citerefentry><refentrytitle>fluxbox</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {file}`~/.fluxbox/apps`. Look at the
+          {manpage}`fluxbox(1)` manpage for details.
         '';
       };
 
@@ -43,9 +40,8 @@ in {
         default = "";
         description = ''
           Keyboard shortcuts configuration for Fluxbox, written to
-          <filename>~/.fluxbox/keys</filename>. Look at the
-          <citerefentry><refentrytitle>fluxbox-keys</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {file}`~/.fluxbox/keys`. Look at the
+          {manpage}`fluxbox-keys(1)` manpage for details.
         '';
       };
 
@@ -54,9 +50,8 @@ in {
         default = "";
         description = ''
           Menu configuration for Fluxbox, written to
-          <filename>~/.fluxbox/menu</filename>. Look at the
-          <citerefentry><refentrytitle>fluxbox-menu</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {file}`~/.fluxbox/menu`. Look at the
+          {manpage}`fluxbox-menu(1)` manpage for details.
         '';
       };
 
@@ -65,9 +60,8 @@ in {
         default = "";
         description = ''
           Slitlist configuration for Fluxbox, written to
-          <filename>~/.fluxbox/slitlist</filename>. Look at the
-          <citerefentry><refentrytitle>fluxbox</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {file}`~/.fluxbox/slitlist`. Look at the
+          {manpage}`fluxbox(1)` manpage for details.
         '';
       };
 
@@ -76,9 +70,8 @@ in {
         default = "";
         description = ''
           Window menu configuration for Fluxbox, written to
-          <filename>~/.fluxbox/windowmenu</filename>. Look at the
-          <citerefentry><refentrytitle>fluxbox-menu</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry>
+          {file}`~/.fluxbox/windowmenu`. Look at the
+          {manpage}`fluxbox-menu(1)`
           manpage for details.
         '';
       };
@@ -88,10 +81,9 @@ in {
         default = [ ];
         example = [ "-log" "/tmp/fluxbox.log" ];
         description = ''
-          Extra command line arguments to pass to <command>fluxbox</command>.
+          Extra command line arguments to pass to {command}`fluxbox`.
           Look at the
-          <citerefentry><refentrytitle>fluxbox</refentrytitle>
-          <manvolnum>1</manvolnum></citerefentry> manpage for details.
+          {manpage}`fluxbox(1)` manpage for details.
         '';
       };
     };

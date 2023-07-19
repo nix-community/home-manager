@@ -59,44 +59,23 @@ in
         default = "notify";
         description = ''
           How unread and relevant news should be presented when
-          running <command>home-manager build</command> and
-          <command>home-manager switch</command>.
-
-          </para><para>
+          running {command}`home-manager build` and
+          {command}`home-manager switch`.
 
           The options are
 
-          <variablelist>
-          <varlistentry>
-            <term><literal>silent</literal></term>
-            <listitem>
-              <para>
-                Do not print anything during build or switch. The
-                <command>home-manager news</command> command still
-                works for viewing the entries.
-              </para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>notify</literal></term>
-            <listitem>
-              <para>
-                The number of unread and relevant news entries will be
-                printed to standard output. The <command>home-manager
-                news</command> command can later be used to view the
-                entries.
-              </para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>show</literal></term>
-            <listitem>
-              <para>
-                A pager showing unread news entries is opened.
-              </para>
-            </listitem>
-          </varlistentry>
-          </variablelist>
+          `silent`
+          : Do not print anything during build or switch. The
+            {command}`home-manager news` command still
+            works for viewing the entries.
+
+          `notify`
+          : The number of unread and relevant news entries will be
+            printed to standard output. The {command}`home-manager
+            news` command can later be used to view the entries.
+
+          `show`
+          : A pager showing unread news entries is opened.
         '';
       };
 

@@ -56,7 +56,7 @@ in {
       type = format.type;
       default = { };
       description = ''
-        Settings written to <filename>config.toml</filename>. See the pet
+        Settings written to {file}`config.toml`. See the pet
         documentation for details.
       '';
     };
@@ -66,7 +66,7 @@ in {
       default = pkgs.fzf;
       defaultText = literalExpression "pkgs.fzf";
       description = ''
-        The package needed for the <varname>settings.selectcmd</varname>.
+        The package needed for the {var}`settings.selectcmd`.
       '';
     };
 

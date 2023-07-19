@@ -44,11 +44,11 @@ let
         # passing actual "${xdg.configHome}/nvim" as basePath was a bit tricky
         # due to how fileType.target is implemented
         type = fileType "programs.neovim.plugins._.runtime"
-          "<varname>xdg.configHome/nvim</varname>" "nvim";
+          "{var}`xdg.configHome/nvim`" "nvim";
         example = literalExpression ''
           { "ftplugin/c.vim".text = "setlocal omnifunc=v:lua.vim.lsp.omnifunc"; }
         '';
-        description = lib.mdDoc ''
+        description = ''
           Set of files that have to be linked in nvim config folder.
         '';
       };
@@ -103,7 +103,7 @@ in {
         type = types.bool;
         default = false;
         description = ''
-          Symlink <command>vi</command> to <command>nvim</command> binary.
+          Symlink {command}`vi` to {command}`nvim` binary.
         '';
       };
 
@@ -111,7 +111,7 @@ in {
         type = types.bool;
         default = false;
         description = ''
-          Symlink <command>vim</command> to <command>nvim</command> binary.
+          Symlink {command}`vim` to {command}`nvim` binary.
         '';
       };
 
@@ -119,7 +119,7 @@ in {
         type = types.bool;
         default = false;
         description = ''
-          Alias <command>vimdiff</command> to <command>nvim -d</command>.
+          Alias {command}`vimdiff` to {command}`nvim -d`.
         '';
       };
 
@@ -127,7 +127,7 @@ in {
         type = types.bool;
         default = false;
         description = ''
-          Enable node provider. Set to <literal>true</literal> to
+          Enable node provider. Set to `true` to
           use Node plugins.
         '';
       };
@@ -144,7 +144,7 @@ in {
         type = types.bool;
         default = true;
         description = ''
-          Enable Python 3 provider. Set to <literal>true</literal> to
+          Enable Python 3 provider. Set to `true` to
           use Python 3 plugins.
         '';
       };
@@ -246,8 +246,8 @@ in {
         type = types.bool;
         default = false;
         description = ''
-          Whether to configure <command>nvim</command> as the default
-          editor using the <envar>EDITOR</envar> environment variable.
+          Whether to configure {command}`nvim` as the default
+          editor using the {env}`EDITOR` environment variable.
         '';
       };
 
@@ -296,9 +296,7 @@ in {
           List of vim plugins to install optionally associated with
           configuration to be placed in init.vim.
 
-          </para><para>
-
-          This option is mutually exclusive with <varname>configure</varname>.
+          This option is mutually exclusive with {var}`configure`.
         '';
       };
 
@@ -339,9 +337,9 @@ in {
           '';
           description = ''
             Extra configuration lines to add to
-            <filename>$XDG_CONFIG_HOME/nvim/coc-settings.json</filename>
+            {file}`$XDG_CONFIG_HOME/nvim/coc-settings.json`
             See
-            <link xlink:href="https://github.com/neoclide/coc.nvim/wiki/Using-the-configuration-file" />
+            <https://github.com/neoclide/coc.nvim/wiki/Using-the-configuration-file>
             for options.
           '';
         };

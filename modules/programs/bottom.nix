@@ -19,7 +19,7 @@ in {
         type = types.package;
         default = pkgs.bottom;
         defaultText = literalExpression "pkgs.bottom";
-        description = "Package providing <command>bottom</command>.";
+        description = "Package providing {command}`bottom`.";
       };
 
       settings = mkOption {
@@ -27,9 +27,9 @@ in {
         default = { };
         description = ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/bottom/bottom.toml</filename>.
-          </para><para>
-          See <link xlink:href="https://github.com/ClementTsang/bottom/blob/master/sample_configs/default_config.toml"/>
+          {file}`$XDG_CONFIG_HOME/bottom/bottom.toml`.
+
+          See <https://github.com/ClementTsang/bottom/blob/master/sample_configs/default_config.toml>
           for the default configuration.
         '';
         example = literalExpression ''

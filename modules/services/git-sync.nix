@@ -49,7 +49,7 @@ let
         description = ''
           The URI of the remote to be synchronized. This is only used in the
           event that the directory does not already exist. See
-          <link xlink:href="https://git-scm.com/docs/git-clone#_git_urls"/>
+          <https://git-scm.com/docs/git-clone#_git_urls>
           for the supported URIs.
         '';
       };
@@ -77,7 +77,7 @@ in {
         default = pkgs.git-sync;
         defaultText = literalExpression "pkgs.git-sync";
         description = ''
-          Package containing the <command>git-sync</command> program.
+          Package containing the {command}`git-sync` program.
         '';
       };
 

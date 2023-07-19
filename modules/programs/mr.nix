@@ -23,8 +23,8 @@ in {
       type = iniFormat.type;
       default = { };
       description = ''
-        Configuration written to <filename>$HOME/.mrconfig</filename>
-        See <link xlink:href="https://myrepos.branchable.com/"/>
+        Configuration written to {file}`$HOME/.mrconfig`
+        See <https://myrepos.branchable.com/>
         for an example configuration.
       '';
       example = literalExpression ''

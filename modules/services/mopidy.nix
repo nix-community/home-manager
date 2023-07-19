@@ -94,9 +94,9 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/mopidy/mopidy.conf</filename>.
-        </para><para>
-        See <link xlink:href="https://docs.mopidy.com/en/latest/config/"/> for
+        {file}`$XDG_CONFIG_HOME/mopidy/mopidy.conf`.
+
+        See <https://docs.mopidy.com/en/latest/config/> for
         more details.
       '';
     };

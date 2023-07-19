@@ -99,7 +99,7 @@ in {
         '';
         description = ''
           Configuration written to Visual Studio Code's
-          <filename>settings.json</filename>.
+          {file}`settings.json`.
         '';
       };
 
@@ -120,7 +120,7 @@ in {
         '';
         description = ''
           Configuration written to Visual Studio Code's
-          <filename>tasks.json</filename>.
+          {file}`tasks.json`.
         '';
       };
 
@@ -167,7 +167,7 @@ in {
         '';
         description = ''
           Keybindings written to Visual Studio Code's
-          <filename>keybindings.json</filename>.
+          {file}`keybindings.json`.
         '';
       };
 

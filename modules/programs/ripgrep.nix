@@ -21,8 +21,8 @@ in {
         description = ''
           List of arguments to pass to ripgrep. Each item is given to ripgrep as
           a single command line argument verbatim.
-          </para><para>
-          See <link xlink:href="https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file"/>
+
+          See <https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file>
           for an example configuration.
         '';
       };

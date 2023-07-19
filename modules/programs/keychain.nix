@@ -100,7 +100,7 @@ in {
       type = types.bool;
       visible = pkgs.stdenv.hostPlatform.isLinux;
       description = ''
-        Whether to run keychain from your <filename>~/.xsession</filename>.
+        Whether to run keychain from your {file}`~/.xsession`.
       '';
     };
   };

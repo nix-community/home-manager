@@ -33,12 +33,9 @@ in {
       default = { };
       type = with types; attrsOf (either str (either bool int));
       description = ''
-        Add <option>:set</option> command options to zathura and make
+        Add {option}`:set` command options to zathura and make
         them permanent. See
-        <citerefentry>
-          <refentrytitle>zathurarc</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>
+        {manpage}`zathurarc(5)`
         for the full list of options.
       '';
       example = {
@@ -51,16 +48,13 @@ in {
       default = { };
       type = with types; attrsOf str;
       description = ''
-        Add <option>:map</option> mappings to zathura and make
+        Add {option}`:map` mappings to zathura and make
         them permanent. See
-        <citerefentry>
-          <refentrytitle>zathurarc</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>
+        {manpage}`zathurarc(5)`
         for the full list of possible mappings.
 
         You can create a mode-specific mapping by specifying the mode before the key:
-        <literal>"[normal] &lt;C-b&gt;" = "scroll left";</literal>
+        `"[normal] <C-b>" = "scroll left";`
       '';
       example = {
         D = "toggle_page_mode";
@@ -74,7 +68,7 @@ in {
       default = "";
       description = ''
         Additional commands for zathura that will be added to the
-        <filename>zathurarc</filename> file.
+        {file}`zathurarc` file.
       '';
     };
   };

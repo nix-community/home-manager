@@ -24,7 +24,7 @@ in {
       default = null;
       example = "rofi";
       description = ''
-        Launcher command, if not set, <command>dmenu</command>
+        Launcher command, if not set, {command}`dmenu`
         will be used by default.
       '';
     };

@@ -23,7 +23,7 @@ in {
       type = types.package;
       default = pkgs.fzf;
       defaultText = literalExpression "pkgs.fzf";
-      description = "Package providing the <command>fzf</command> tool.";
+      description = "Package providing the {command}`fzf` tool.";
     };
 
     defaultCommand = mkOption {
@@ -104,15 +104,15 @@ in {
         }
       '';
       description = ''
-        Color scheme options added to <code>FZF_DEFAULT_OPTS</code>. See
-        <link xlink:href="https://github.com/junegunn/fzf/wiki/Color-schemes"/>
+        Color scheme options added to `FZF_DEFAULT_OPTS`. See
+        <https://github.com/junegunn/fzf/wiki/Color-schemes>
         for documentation.
       '';
     };
 
     tmux = {
       enableShellIntegration = mkEnableOption ''
-        setting <literal>FZF_TMUX=1</literal> which causes shell integration to use fzf-tmux
+        setting `FZF_TMUX=1` which causes shell integration to use fzf-tmux
       '';
 
       shellIntegrationOptions = mkOption {
@@ -120,9 +120,9 @@ in {
         default = [ ];
         example = literalExpression ''[ "-d 40%" ]'';
         description = ''
-          If <option>programs.fzf.tmux.enableShellIntegration</option> is set to <literal>true</literal>,
+          If {option}`programs.fzf.tmux.enableShellIntegration` is set to `true`,
           shell integration will use these options for fzf-tmux.
-          See <command>fzf-tmux --help</command> for available options.
+          See {command}`fzf-tmux --help` for available options.
         '';
       };
     };

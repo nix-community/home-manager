@@ -52,7 +52,7 @@ in {
       '';
       description = ''
         Extra environment variables to be exported in the script.
-        These options are passed unescaped as <code>export name=value</code>.
+        These options are passed unescaped as `export name=value`.
       '';
     };
 
@@ -127,10 +127,10 @@ in {
       '';
       description = ''
         A set of commands to be executed after a specific idle timeout.
-        The commands specified in <literal>command</literal> and <literal>canceller</literal>
+        The commands specified in `command` and `canceller`
         are passed escaped to the script.
         To use or re-use environment variables that are script-dependent, specify them
-        in the <literal>environment</literal> section.
+        in the `environment` section.
       '';
     };
   };

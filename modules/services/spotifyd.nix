@@ -21,7 +21,7 @@ in {
       example =
         literalExpression "(pkgs.spotifyd.override { withKeyring = true; })";
       description = ''
-        The <literal>spotifyd</literal> package to use.
+        The `spotifyd` package to use.
         Can be used to specify extensions.
       '';
     };

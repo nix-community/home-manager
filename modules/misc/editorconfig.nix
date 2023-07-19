@@ -18,10 +18,10 @@ in {
       type = iniFormat.type;
       default = { };
       description = ''
-        Configuration written to <filename>$HOME/.editorconfig</filename>.
-        <code>root = true</code> is automatically added to the file,
+        Configuration written to {file}`$HOME/.editorconfig`.
+        `root = true` is automatically added to the file,
         it must not be added here.
-        See <link xlink:href="https://editorconfig.org"/> for documentation.
+        See <https://editorconfig.org> for documentation.
       '';
       example = literalExpression ''
         {

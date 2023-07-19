@@ -34,15 +34,12 @@ let
         };
         description = ''
           Additional command line options as a dictionary to pass to the
-          <literal>unison</literal> program.
-          </para><para>
+          `unison` program.
+
           Use a list of strings to declare the same option multiple times.
-          </para><para>
+
           See
-          <citerefentry>
-            <refentrytitle>unison</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>
+          {manpage}`unison(1)`
           for a list of available options.
         '';
       };

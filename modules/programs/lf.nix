@@ -79,19 +79,15 @@ in {
           An attribute set of lf settings. The attribute names and corresponding
           values must be among the following supported options.
 
-          <informaltable frame="none"><tgroup cols="1"><tbody>
           ${concatStringsSep "\n" (mapAttrsToList (n: v: ''
-            <row>
-              <entry><varname>${n}</varname></entry>
-              <entry>${v.description}</entry>
-            </row>
+            {var}`${n}`
+            : ${v.description}
           '') knownSettings)}
-          </tbody></tgroup></informaltable>
 
           See the lf documentation for detailed descriptions of these options.
-          Note, use <varname>previewer</varname> to set lf's
-          <varname>previewer</varname> option, and
-          <varname>extraConfig</varname> for any other option not listed above.
+          Use {option}`programs.lf.previewer.*` to set lf's
+          {var}`previewer` option, and
+          [](#opt-programs.lf.extraConfig) for any other option not listed above.
           All string options are quoted with double quotes.
         '';
       };
@@ -152,7 +148,7 @@ in {
         '';
         description = ''
           Script or executable to use to preview files. Sets lf's
-          <varname>previewer</varname> option.
+          {var}`previewer` option.
         '';
       };
 
@@ -161,7 +157,7 @@ in {
         default = null;
         example = "i";
         description = ''
-          Key to bind to the script at <varname>previewer.source</varname> and
+          Key to bind to the script at {var}`previewer.source` and
           pipe through less. Setting to null will not bind any key.
         '';
       };

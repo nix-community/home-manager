@@ -187,7 +187,7 @@ in {
         default = "";
         description = ''
           Additional configuration to add to
-          <filename>tmux.conf</filename>.
+          {file}`tmux.conf`.
         '';
       };
 
@@ -243,7 +243,7 @@ in {
         description = ''
           Run the sensible plugin at the top of the configuration. It
           is possible to override the sensible settings using the
-          <option>programs.tmux.extraConfig</option> option.
+          {option}`programs.tmux.extraConfig` option.
         '';
       };
 
@@ -283,8 +283,8 @@ in {
         default = pkgs.stdenv.isLinux;
         type = types.bool;
         description = ''
-          Store tmux socket under <filename>/run</filename>, which is more
-          secure than <filename>/tmp</filename>, but as a downside it doesn't
+          Store tmux socket under {file}`/run`, which is more
+          secure than {file}`/tmp`, but as a downside it doesn't
           survive user logout.
         '';
       };

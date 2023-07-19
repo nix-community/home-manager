@@ -6,10 +6,10 @@ with lib;
   options.home = {
     enableDebugInfo = mkEnableOption "" // {
       description = ''
-        Some Nix-packages provide debug symbols for
-        <command>gdb</command> in the <literal>debug</literal>-output.
+        Some Nix packages provide debug symbols for
+        {command}`gdb` in the `debug` output.
         This option ensures that those are automatically fetched from
-        the binary cache if available and <command>gdb</command> is
+        the binary cache if available and {command}`gdb` is
         configured to find those symbols.
       '';
     };

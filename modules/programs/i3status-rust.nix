@@ -51,8 +51,8 @@ in {
             ];
             description = ''
               Configuration blocks to add to i3status-rust
-              <filename>config</filename>. See
-              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/blocks.md"/>
+              {file}`config`. See
+              <https://github.com/greshake/i3status-rust/blob/master/blocks.md>
               for block options.
             '';
             example = literalExpression ''
@@ -88,7 +88,7 @@ in {
             default = { };
             description = ''
               Any extra options to add to i3status-rust
-              <filename>config</filename>.
+              {file}`config`.
             '';
             example = literalExpression ''
               {
@@ -108,7 +108,7 @@ in {
             default = "none";
             description = ''
               The icons set to use. See
-              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/doc/themes.md"/>
+              <https://github.com/greshake/i3status-rust/blob/master/doc/themes.md>
               for a list of available icon sets.
             '';
             example = "awesome6";
@@ -119,7 +119,7 @@ in {
             default = "plain";
             description = ''
               The theme to use. See
-              <link xlink:href="https://github.com/greshake/i3status-rust/blob/master/doc/themes.md"/>
+              <https://github.com/greshake/i3status-rust/blob/master/doc/themes.md>
               for a list of available themes.
             '';
             example = "gruvbox-dark";
@@ -163,18 +163,15 @@ in {
       };
       description = ''
         Attribute set of i3status-rust bars, each with their own configuration.
-        Each bar <varname>name</varname> generates a config file suffixed with
-        the bar's <varname>name</varname> from the attribute set, like so:
-        <filename>config-<replaceable>name</replaceable>.toml</filename>.
-        </para><para>
+        Each bar {var}`name` generates a config file suffixed with
+        the bar's {var}`name` from the attribute set, like so:
+        {file}`config-''${name}.toml`.
+
         This way, multiple config files can be generated, such as for having a
         top and a bottom bar.
-        </para><para>
+
         See
-        <citerefentry>
-         <refentrytitle>i3status-rust</refentrytitle>
-         <manvolnum>1</manvolnum>
-        </citerefentry>
+        {manpage}`i3status-rust(1)`
         for options.
       '';
       example = literalExpression ''

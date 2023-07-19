@@ -18,8 +18,8 @@ in {
           t        forw-line
         '';
         description = ''
-          Extra configuration for <command>less</command> written to
-          <filename>$XDG_CONFIG_HOME/lesskey</filename>.
+          Extra configuration for {command}`less` written to
+          {file}`$XDG_CONFIG_HOME/lesskey`.
         '';
       };
     };

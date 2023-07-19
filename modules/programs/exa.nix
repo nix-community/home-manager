@@ -6,8 +6,7 @@ with lib;
   meta.maintainers = [ hm.maintainers.kalhauge ];
 
   options.programs.exa = {
-    enable =
-      mkEnableOption "exa, a modern replacement for <command>ls</command>";
+    enable = mkEnableOption "exa, a modern replacement for {command}`ls`";
 
     enableAliases = mkEnableOption "recommended exa aliases (ls, ll…)";
 
@@ -24,7 +23,7 @@ with lib;
       type = types.bool;
       default = false;
       description = ''
-        Display icons next to file names (<option>--icons</option> argument).
+        Display icons next to file names ({option}`--icons` argument).
       '';
     };
 
@@ -32,7 +31,7 @@ with lib;
       type = types.bool;
       default = false;
       description = ''
-        List each file's Git status if tracked or ignored (<option>--git</option> argument).
+        List each file's Git status if tracked or ignored ({option}`--git` argument).
       '';
     };
 

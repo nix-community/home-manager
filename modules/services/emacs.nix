@@ -59,7 +59,7 @@ in {
       default = [ ];
       example = [ "-f" "exwm-enable" ];
       description = ''
-        Extra command-line arguments to pass to <command>emacs</command>.
+        Extra command-line arguments to pass to {command}`emacs`.
       '';
     };
 
@@ -69,7 +69,7 @@ in {
         type = with types; listOf str;
         default = [ "-c" ];
         description = ''
-          Command-line arguments to pass to <command>emacsclient</command>.
+          Command-line arguments to pass to {command}`emacsclient`.
         '';
       };
     };
@@ -89,10 +89,10 @@ in {
       example = "graphical";
       description = ''
         Whether to launch Emacs service with the systemd user session. If it is
-        <literal>true</literal>, Emacs service is started by
-        <literal>default.target</literal>. If it is
-        <literal>"graphical"</literal>, Emacs service is started by
-        <literal>graphical-session.target</literal>.
+        `true`, Emacs service is started by
+        `default.target`. If it is
+        `"graphical"`, Emacs service is started by
+        `graphical-session.target`.
       '';
     };
 
@@ -101,8 +101,8 @@ in {
       default = false;
       example = !default;
       description = ''
-        Whether to configure <command>emacsclient</command> as the default
-        editor using the <envar>EDITOR</envar> environment variable.
+        Whether to configure {command}`emacsclient` as the default
+        editor using the {env}`EDITOR` environment variable.
       '';
     };
   };

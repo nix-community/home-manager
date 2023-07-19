@@ -66,16 +66,16 @@ in {
       default = { };
       description = ''
         Search engines that can be used via the address bar. Maps a search
-        engine name (such as <literal>DEFAULT</literal>, or
-        <literal>ddg</literal>) to a URL with a <literal>{}</literal>
+        engine name (such as `DEFAULT`, or
+        `ddg`) to a URL with a `{}`
         placeholder. The placeholder will be replaced by the search term, use
-        <literal>{{</literal> and <literal>}}</literal> for literal
-        <literal>{/}</literal> signs. The search engine named
-        <literal>DEFAULT</literal> is used when
-        <literal>url.auto_search</literal> is turned on and something else than
+        `{{` and `}}` for literal
+        `{/}` signs. The search engine named
+        `DEFAULT` is used when
+        `url.auto_search` is turned on and something else than
         a URL was entered to be opened. Other search engines can be used by
         prepending the search engine name to the search term, for example
-        <literal>:open google qutebrowser</literal>.
+        `:open google qutebrowser`.
       '';
       example = literalExpression ''
         {
@@ -91,8 +91,8 @@ in {
       type = types.attrsOf types.anything;
       default = { };
       description = ''
-        Options to add to qutebrowser <filename>config.py</filename> file.
-        See <link xlink:href="https://qutebrowser.org/doc/help/settings.html"/>
+        Options to add to qutebrowser {file}`config.py` file.
+        See <https://qutebrowser.org/doc/help/settings.html>
         for options.
       '';
       example = literalExpression ''
@@ -117,8 +117,8 @@ in {
         as dictionary-key is pressed, the binding for the key used as
         dictionary-value is invoked instead. This is useful for global
         remappings of keys, for example to map Ctrl-[ to Escape. Note that when
-        a key is bound (via <literal>bindings.default</literal> or
-        <literal>bindings.commands</literal>), the mapping is ignored.
+        a key is bound (via `bindings.default` or
+        `bindings.commands`), the mapping is ignored.
       '';
     };
 
@@ -136,108 +136,74 @@ in {
       description = ''
         Key bindings mapping keys to commands in different modes. This setting
         is a dictionary containing mode names and dictionaries mapping keys to
-        commands: <literal>{mode: {key: command}}</literal> If you want to map
-        a key to another key, check the <literal>keyMappings</literal> setting
-        instead. For modifiers, you can use either <literal>-</literal> or
-        <literal>+</literal> as delimiters, and these names:
+        commands: `{mode: {key: command}}` If you want to map
+        a key to another key, check the `keyMappings` setting
+        instead. For modifiers, you can use either `-` or
+        `+` as delimiters, and these names:
 
-        <itemizedlist>
-          <listitem><para>
-            Control: <literal>Control</literal>, <literal>Ctrl</literal>
-          </para></listitem>
-          <listitem><para>
-            Meta: <literal>Meta</literal>, <literal>Windows</literal>,
-            <literal>Mod4</literal>
-          </para></listitem>
-          <listitem><para>
-            Alt: <literal>Alt</literal>, <literal>Mod1</literal>
-          </para></listitem>
-          <listitem><para>
-            Shift: <literal>Shift</literal>
-          </para></listitem>
-        </itemizedlist>
+        Control
+        : `Control`, `Ctrl`
 
-        For simple keys (no <literal>&lt;&gt;</literal>-signs), a capital
+        Meta
+        : `Meta`, `Windows`, `Mod4`
+
+        Alt
+        : `Alt`, `Mod1`
+
+        Shift
+        : `Shift`
+
+        For simple keys (no `<>`-signs), a capital
         letter means the key is pressed with Shift. For special keys (with
-        <literal>&lt;&gt;</literal>-signs), you need to explicitly add
-        <literal>Shift-</literal> to match a key pressed with shift. If you
-        want a binding to do nothing, bind it to the <literal>nop</literal>
+        `<>`-signs), you need to explicitly add
+        `Shift-` to match a key pressed with shift. If you
+        want a binding to do nothing, bind it to the `nop`
         command. If you want a default binding to be passed through to the
         website, bind it to null. Note that some commands which are only useful
         for bindings (but not used interactively) are hidden from the command
-        completion. See <literal>:</literal>help for a full list of available
+        completion. See `:help` for a full list of available
         commands. The following modes are available:
 
-        <variablelist>
-          <varlistentry>
-            <term><literal>normal</literal></term>
-            <listitem><para>
-              Default mode, where most commands are invoked.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>insert</literal></term>
-            <listitem><para>
-              Entered when an input field is focused on a website, or by
-              pressing i in normal mode. Passes through almost all keypresses
-              to the website, but has some bindings like
-              <literal>&lt;Ctrl-e&gt;</literal> to open an external editor.
-              Note that single keys can’t be bound in this mode.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>hint</literal></term>
-            <listitem><para>
-              Entered when f is pressed to select links with the keyboard. Note
-              that single keys can’t be bound in this mode.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>passthrough</literal></term>
-            <listitem><para>
-              Similar to insert mode, but passes through all keypresses except
-              <literal>&lt;Escape&gt;</literal> to leave the mode. It might be
-              useful to bind <literal>&lt;Escape&gt;</literal> to some other
-              key in this mode if you want to be able to send an Escape key to
-              the website as well. Note that single keys can’t be bound in this
-              mode.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>command</literal></term>
-            <listitem><para>
-              Entered when pressing the : key in order to enter a command. Note
-              that single keys can’t be bound in this mode.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>prompt</literal></term>
-            <listitem><para>
-              Entered when there’s a prompt to display, like for download
-              locations or when invoked from JavaScript.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>yesno</literal></term>
-            <listitem><para>
-              Entered when there’s a yes/no prompt displayed.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>caret</literal></term>
-            <listitem><para>
-              Entered when pressing the v mode, used to select text using the
-              keyboard.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>register</literal></term>
-            <listitem><para>
-              Entered when qutebrowser is waiting for a register name/key for
-              commands like <literal>:set-mark</literal>.
-            </para></listitem>
-          </varlistentry>
-        </variablelist>
+        `normal`
+        : Default mode, where most commands are invoked.
+
+        `insert`
+        : Entered when an input field is focused on a website, or by
+          pressing `i` in normal mode. Passes through almost all keypresses
+          to the website, but has some bindings like
+          `<Ctrl-e>` to open an external editor.
+          Note that single keys can't be bound in this mode.
+
+        `hint`
+        : Entered when `f` is pressed to select links with the keyboard. Note
+          that single keys can't be bound in this mode.
+
+        `passthrough`
+        : Similar to insert mode, but passes through all keypresses except
+          `<Escape>` to leave the mode. It might be
+          useful to bind `<Escape>` to some other
+          key in this mode if you want to be able to send an Escape key to
+          the website as well. Note that single keys can't be bound in this
+          mode.
+
+        `command`
+        : Entered when pressing the `:` key in order to enter a command. Note
+          that single keys can't be bound in this mode.
+
+        `prompt`
+        : Entered when there's a prompt to display, like for download
+          locations or when invoked from JavaScript.
+
+        `yesno`
+        : Entered when there's a yes/no prompt displayed.
+
+        `caret`
+        : Entered when pressing the `v` mode, used to select text using the
+          keyboard.
+
+        `register`
+        : Entered when qutebrowser is waiting for a register name/key for
+          commands like `:set-mark`.
       '';
       example = literalExpression ''
         {
@@ -262,7 +228,7 @@ in {
       type = types.attrsOf types.str;
       default = { };
       description = ''
-        Quickmarks to add to qutebrowser's <filename>quickmarks</filename> file.
+        Quickmarks to add to qutebrowser's {file}`quickmarks` file.
         Note that when Home Manager manages your quickmarks, you cannot edit them at runtime.
       '';
       example = literalExpression ''
@@ -277,7 +243,7 @@ in {
       type = types.lines;
       default = "";
       description = ''
-        Extra lines added to qutebrowser <filename>config.py</filename> file.
+        Extra lines added to qutebrowser {file}`config.py` file.
       '';
     };
   };

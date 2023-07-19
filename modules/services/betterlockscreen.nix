@@ -15,21 +15,21 @@ in {
         type = types.package;
         default = pkgs.betterlockscreen;
         defaultText = literalExpression "pkgs.betterlockscreen";
-        description = "Package providing <command>betterlockscreen</command>.";
+        description = "Package providing {command}`betterlockscreen`.";
       };
 
       arguments = mkOption {
         type = types.listOf types.str;
         default = [ ];
         description =
-          "List of arguments appended to <literal>./betterlockscreen --lock [args]</literal>";
+          "List of arguments appended to `./betterlockscreen --lock [args]`";
       };
 
       inactiveInterval = mkOption {
         type = types.int;
         default = 10;
         description = ''
-          Value used for <option>services.screen-locker.inactiveInterval</option>.
+          Value used for {option}`services.screen-locker.inactiveInterval`.
         '';
       };
 

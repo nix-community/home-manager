@@ -41,8 +41,8 @@ in {
       default = "";
       description = ''
         Default preferences for ne.
-        </para><para>
-        Equivalent to <literal>programs.ne.automaticPreferences.".default"</literal>.
+
+        Equivalent to `programs.ne.automaticPreferences.".default"`.
       '';
     };
 

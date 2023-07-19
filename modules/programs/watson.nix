@@ -23,7 +23,7 @@ in {
       type = types.package;
       default = pkgs.watson;
       defaultText = literalExpression "pkgs.watson";
-      description = "Package providing the <command>watson</command>.";
+      description = "Package providing the {command}`watson`.";
     };
 
     enableBashIntegration = mkEnableOption "watson's bash integration" // {
@@ -43,10 +43,10 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/watson/config</filename> on Linux or
-        <filename>$HOME/Library/Application Support/watson/config</filename> on Darwin.
-        </para><para>
-        See <link xlink:href="https://github.com/TailorDev/Watson/blob/master/docs/user-guide/configuration.md"/>
+        {file}`$XDG_CONFIG_HOME/watson/config` on Linux or
+        {file}`$HOME/Library/Application Support/watson/config` on Darwin.
+
+        See <https://github.com/TailorDev/Watson/blob/master/docs/user-guide/configuration.md>
         for an example configuration.
       '';
       example = literalExpression ''

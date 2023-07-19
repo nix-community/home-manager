@@ -37,8 +37,8 @@ in {
         default = null;
         example = "go";
         description = ''
-          Primary <envar>GOPATH</envar> relative to
-          <envar>HOME</envar>. It will be exported first and therefore
+          Primary {env}`GOPATH` relative to
+          {env}`HOME`. It will be exported first and therefore
           used by default by the Go tooling.
         '';
       };
@@ -48,8 +48,8 @@ in {
         default = [ ];
         example = [ "extraGoPath1" "extraGoPath2" ];
         description = ''
-          Extra <envar>GOPATH</envar>s relative to <envar>HOME</envar> appended
-          after <xref linkend="opt-programs.go.goPath"/>, if that option is set.
+          Extra {env}`GOPATH`s relative to {env}`HOME` appended
+          after [](#opt-programs.go.goPath), if that option is set.
         '';
       };
 
@@ -65,7 +65,7 @@ in {
         default = [ ];
         example = [ "*.corp.example.com" "rsc.io/private" ];
         description = ''
-          The <envar>GOPRIVATE</envar> environment variable controls
+          The {env}`GOPRIVATE` environment variable controls
           which modules the go command considers to be private (not
           available publicly) and should therefore not use the proxy
           or checksum database.

@@ -119,11 +119,11 @@ let
           else "us";
         defaultText = literalExpression "null";
         description = ''
-          Keyboard layout. If <literal>null</literal>, then the system
+          Keyboard layout. If `null`, then the system
           configuration will be used.
-          </para><para>
-          This defaults to <literal>null</literal> for state
-          version ≥ 19.09 and <literal>"us"</literal> otherwise.
+
+          This defaults to `null` for state
+          version ≥ 19.09 and `"us"` otherwise.
         '';
       };
 
@@ -154,11 +154,11 @@ let
         defaultText = literalExpression "null";
         example = "colemak";
         description = ''
-          X keyboard variant. If <literal>null</literal>, then the
+          X keyboard variant. If `null`, then the
           system configuration will be used.
-          </para><para>
-          This defaults to <literal>null</literal> for state
-          version ≥ 19.09 and <literal>""</literal> otherwise.
+
+          This defaults to `null` for state
+          version ≥ 19.09 and `""` otherwise.
         '';
       };
     };
@@ -229,7 +229,7 @@ in
         "null" for state version ≥ 21.11
       '';
       description = ''
-        Keyboard configuration. Set to <literal>null</literal> to
+        Keyboard configuration. Set to `null` to
         disable Home Manager keyboard management.
       '';
     };
@@ -246,11 +246,11 @@ in
       description = ''
         An attribute set that maps aliases (the top level attribute names
         in this option) to command strings or directly to build outputs.
-        </para><para>
+
         This option should only be used to manage simple aliases that are
         compatible across all shells. If you need to use a shell specific
         feature then make sure to use a shell specific option, for example
-        <xref linkend="opt-programs.bash.shellAliases"/> for Bash.
+        [](#opt-programs.bash.shellAliases) for Bash.
       '';
     };
 
@@ -260,34 +260,34 @@ in
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
       description = ''
         Environment variables to always set at login.
-        </para><para>
+
         The values may refer to other environment variables using
         POSIX.2 style variable references. For example, a variable
-        <varname>parameter</varname> may be referenced as
-        <code>$parameter</code> or <code>''${parameter}</code>. A
-        default value <literal>foo</literal> may be given as per
-        <code>''${parameter:-foo}</code> and, similarly, an alternate
-        value <literal>bar</literal> can be given as per
-        <code>''${parameter:+bar}</code>.
-        </para><para>
+        {var}`parameter` may be referenced as
+        `$parameter` or `''${parameter}`. A
+        default value `foo` may be given as per
+        `''${parameter:-foo}` and, similarly, an alternate
+        value `bar` can be given as per
+        `''${parameter:+bar}`.
+
         Note, these variables may be set in any order so no session
         variable may have a runtime dependency on another session
         variable. In particular code like
-        <programlisting language="nix">
+        ```nix
         home.sessionVariables = {
           FOO = "Hello";
           BAR = "$FOO World!";
         };
-        </programlisting>
+        ```
         may not work as expected. If you need to reference another
         session variable, then do so inside Nix instead. The above
         example then becomes
-        <programlisting language="nix">
+        ```nix
         home.sessionVariables = {
           FOO = "Hello";
           BAR = "''${config.home.sessionVariables.FOO} World!";
         };
-        </programlisting>
+        ```
       '';
     };
 
@@ -296,7 +296,7 @@ in
       internal = true;
       description = ''
         The package containing the
-        <filename>hm-session-vars.sh</filename> file.
+        {file}`hm-session-vars.sh` file.
       '';
     };
 
@@ -309,14 +309,12 @@ in
         ".git/safe/../../bin"
       ];
       description = ''
-        Extra directories to add to <envar>PATH</envar>.
+        Extra directories to add to {env}`PATH`.
 
-        </para><para>
-
-        These directories are added to the <envar>PATH</envar> variable in a
-        double-quoted context, so expressions like <code>$HOME</code> are
-        expanded by the shell. However, since expressions like <code>~</code> or
-        <code>*</code> are escaped, they will end up in the <envar>PATH</envar>
+        These directories are added to the {env}`PATH` variable in a
+        double-quoted context, so expressions like `$HOME` are
+        expanded by the shell. However, since expressions like `~` or
+        `*` are escaped, they will end up in the {env}`PATH`
         verbatim.
       '';
     };
@@ -327,7 +325,7 @@ in
       internal = true;
       description = ''
         Extra configuration to add to the
-        <filename>hm-session-vars.sh</filename> file.
+        {file}`hm-session-vars.sh` file.
       '';
     };
 
@@ -343,7 +341,7 @@ in
       example = [ "doc" "info" "devdoc" ];
       description = ''
         List of additional package outputs of the packages
-        <varname>home.packages</varname> that should be installed into
+        {var}`home.packages` that should be installed into
         the user environment.
       '';
     };
@@ -363,9 +361,9 @@ in
       '';
       description = ''
         Whether the activation script should start with an empty
-        <envar>PATH</envar> variable. When <literal>false</literal> then the
-        user's <envar>PATH</envar> will be accessible in the script. It is
-        recommended to keep this at <literal>true</literal> to avoid
+        {env}`PATH` variable. When `false` then the
+        user's {env}`PATH` will be accessible in the script. It is
+        recommended to keep this at `true` to avoid
         uncontrolled use of tools found in PATH.
       '';
     };
@@ -387,35 +385,29 @@ in
         meaning running twice or more times produces the same result
         as running it once.
 
-        </para><para>
-
         If the script block produces any observable side effect, such
         as writing or deleting files, then it
-        <emphasis>must</emphasis> be placed after the special
-        <literal>writeBoundary</literal> script block. Prior to the
+        *must* be placed after the special
+        `writeBoundary` script block. Prior to the
         write boundary one can place script blocks that verifies, but
         does not modify, the state of the system and exits if an
         unexpected state is found. For example, the
-        <literal>checkLinkTargets</literal> script block checks for
+        `checkLinkTargets` script block checks for
         collisions between non-managed files and files defined in
-        <xref linkend="opt-home.file"/>.
+        [](#opt-home.file).
 
-        </para><para>
-
-        A script block should respect the <varname>DRY_RUN</varname>
+        A script block should respect the {var}`DRY_RUN`
         variable, if it is set then the actions taken by the script
         should be logged to standard out and not actually performed.
-        The variable <varname>DRY_RUN_CMD</varname> is set to
-        <command>echo</command> if dry run is enabled.
-
-        </para><para>
+        The variable {var}`DRY_RUN_CMD` is set to
+        {command}`echo` if dry run is enabled.
 
         A script block should also respect the
-        <varname>VERBOSE</varname> variable, and if set print
+        {var}`VERBOSE` variable, and if set print
         information on standard out that may be useful for debugging
         any issue that may arise. The variable
-        <varname>VERBOSE_ARG</varname> is set to
-        <option>--verbose</option> if verbose output is enabled.
+        {var}`VERBOSE_ARG` is set to
+        {option}`--verbose` if verbose output is enabled.
       '';
     };
 
@@ -430,7 +422,7 @@ in
       type = types.listOf types.package;
       default = [ ];
       description = ''
-        Extra packages to add to <envar>PATH</envar> within the activation
+        Extra packages to add to {env}`PATH` within the activation
         script.
       '';
     };
@@ -462,7 +454,7 @@ in
         and unexpected behavior. It is therefore highly recommended to use a
         release of Home Manager that corresponds with your chosen release of
         Nixpkgs.
-        </para><para>
+
         When this option is enabled and a mismatch is detected then a warning
         will be printed when the user configuration is being built.
       '';
@@ -483,8 +475,8 @@ in
 
     warnings =
       let
-        hmRelease = fileContents ../.release;
-        nixpkgsRelease = pkgs.lib.trivial.release;
+        hmRelease = config.home.version.release;
+        nixpkgsRelease = lib.trivial.release;
         releaseMismatch =
           config.home.enableNixpkgsReleaseCheck
           && hmRelease != nixpkgsRelease;

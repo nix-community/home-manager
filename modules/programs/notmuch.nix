@@ -57,7 +57,7 @@ in {
               default = [ ];
               description = ''
                 A list to specify files and directories that will not be
-                searched for messages by <command>notmuch new</command>.
+                searched for messages by {command}`notmuch new`.
               '';
             };
 
@@ -67,7 +67,7 @@ in {
               example = [ "new" ];
               description = ''
                 A list of tags that will be added to all messages
-                incorporated by <command>notmuch new</command>.
+                incorporated by {command}`notmuch new`.
               '';
             };
           };
@@ -75,7 +75,7 @@ in {
         default = { };
         description = ''
           Options related to email processing performed by
-          <command>notmuch new</command>.
+          {command}`notmuch new`.
         '';
       };
 

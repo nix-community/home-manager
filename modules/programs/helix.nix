@@ -22,8 +22,8 @@ in {
       type = types.bool;
       default = false;
       description = ''
-        Whether to configure <command>hx</command> as the default
-        editor using the <envar>EDITOR</envar> environment variable.
+        Whether to configure {command}`hx` as the default
+        editor using the {env}`EDITOR` environment variable.
       '';
     };
 
@@ -47,9 +47,9 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/helix/config.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://docs.helix-editor.com/configuration.html" />
+        {file}`$XDG_CONFIG_HOME/helix/config.toml`.
+
+        See <https://docs.helix-editor.com/configuration.html>
         for the full list of options.
       '';
     };
@@ -82,9 +82,9 @@ in {
       '';
       description = ''
         Language specific configuration at
-        <filename>$XDG_CONFIG_HOME/helix/languages.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://docs.helix-editor.com/languages.html" />
+        {file}`$XDG_CONFIG_HOME/helix/languages.toml`.
+
+        See <https://docs.helix-editor.com/languages.html>
         for more information.
       '';
     };
@@ -151,10 +151,10 @@ in {
       '';
       description = ''
         Each theme is written to
-        <filename>$XDG_CONFIG_HOME/helix/themes/theme-name.toml</filename>.
+        {file}`$XDG_CONFIG_HOME/helix/themes/theme-name.toml`.
         Where the name of each attribute is the theme-name (in the example "base16").
-        </para><para>
-        See <link xlink:href="https://docs.helix-editor.com/themes.html" />
+
+        See <https://docs.helix-editor.com/themes.html>
         for the full list of options.
       '';
     };

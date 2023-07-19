@@ -40,17 +40,17 @@ with lib;
       type = types.nullOr types.bool;
       default = null;
       description = ''
-        This optional key is used as a hint to <literal>launchctl(1)</literal> that it should not submit this job to launchd when
+        This optional key is used as a hint to `launchctl(1)` that it should not submit this job to launchd when
         loading a job or jobs. The value of this key does NOT reflect the current state of the job on the running
         system. If you wish to know whether a job is loaded in launchd, reading this key from a configuration
         file yourself is not a sufficient test. You should query launchd for the presence of the job using
-        the <literal>launchctl(1)</literal> list subcommand or use the ServiceManagement framework's
-        <literal>SMJobCopyDictionary()</literal> method.
+        the `launchctl(1)` list subcommand or use the ServiceManagement framework's
+        `SMJobCopyDictionary()` method.
 
         Note that as of Mac OS X v10.6, this key's value in a configuration file conveys a default value, which
-        is changed with the [-w] option of the <literal>launchctl(1)</literal> load and unload subcommands. These subcommands no
+        is changed with the [-w] option of the `launchctl(1)` load and unload subcommands. These subcommands no
         longer modify the configuration file, so the value displayed in the configuration file is not necessarily
-        the value that <literal>launchctl(1)</literal> will apply. See <literal>launchctl(1)</literal> for more information.
+        the value that `launchctl(1)` will apply. See `launchctl(1)` for more information.
 
         Please also be mindful that you should only use this key if the provided on-demand and KeepAlive criteria
         are insufficient to describe the conditions under which your job needs to run. The cost to have a
@@ -91,7 +91,7 @@ with lib;
             default = null;
             description = ''
               This flag corresponds to the "wait" or "nowait" option of inetd. If true, then the listening
-              socket is passed via the standard in/out/error file descriptors. If false, then <literal>accept(2)</literal> is
+              socket is passed via the standard in/out/error file descriptors. If false, then `accept(2)` is
               called on behalf of the job, and the result is passed via the standard in/out/error descriptors.
             '';
           };
@@ -104,7 +104,7 @@ with lib;
       default = null;
       description = ''
         This configuration file only applies to the hosts listed with this key. Note: One should set kern.hostname
-        in <literal>sysctl.conf(5)</literal> for this feature to work reliably.
+        in `sysctl.conf(5)` for this feature to work reliably.
       '';
     };
 
@@ -113,7 +113,7 @@ with lib;
       default = null;
       description = ''
         This configuration file only applies to hosts NOT listed with this key. Note: One should set kern.hostname
-        in <literal>sysctl.conf(5)</literal> for this feature to work reliably.
+        in `sysctl.conf(5)` for this feature to work reliably.
       '';
     };
 
@@ -122,7 +122,7 @@ with lib;
       default = null;
       description = ''
         This configuration file only applies to sessions of the type specified. This key is used in concert
-        with the -S flag to <command>launchctl</command>.
+        with the -S flag to {command}`launchctl`.
       '';
     };
 
@@ -130,7 +130,7 @@ with lib;
       type = types.nullOr types.path;
       default = null;
       description = ''
-        This key maps to the first argument of <literal>execvp(3)</literal>.  If this key is missing, then the first element of
+        This key maps to the first argument of `execvp(3)`.  If this key is missing, then the first element of
         the array of strings provided to the ProgramArguments will be used instead.  This key is required in
         the absence of the ProgramArguments key.
       '';
@@ -140,8 +140,8 @@ with lib;
       type = types.nullOr (types.listOf types.str);
       default = null;
       description = ''
-        This key maps to the second argument of <literal>execvp(3)</literal>.  This key is required in the absence of the Program
-        key. Please note: many people are confused by this key. Please read <literal>execvp(3)</literal> very carefully!
+        This key maps to the second argument of `execvp(3)`.  This key is required in the absence of the Program
+        key. Please note: many people are confused by this key. Please read `execvp(3)` very carefully!
       '';
     };
 
@@ -149,7 +149,7 @@ with lib;
       type = types.nullOr types.bool;
       default = null;
       description = ''
-        This flag causes launchd to use the <literal>glob(3)</literal> mechanism to update the program arguments before invocation.
+        This flag causes launchd to use the `glob(3)` mechanism to update the program arguments before invocation.
       '';
     };
 
@@ -157,8 +157,8 @@ with lib;
       type = types.nullOr types.bool;
       default = null;
       description = ''
-        This flag instructs launchd that the job promises to use <literal>vproc_transaction_begin(3)</literal> and
-        <literal>vproc_transaction_end(3)</literal> to track outstanding transactions that need to be reconciled before the
+        This flag instructs launchd that the job promises to use `vproc_transaction_begin(3)` and
+        `vproc_transaction_end(3)` to track outstanding transactions that need to be reconciled before the
         process can safely terminate. If no outstanding transactions are in progress, then launchd is free to
         send the SIGKILL signal.
       '';
@@ -263,7 +263,7 @@ with lib;
       type = types.nullOr types.str;
       default = null;
       description = ''
-        This optional key is used to specify a directory to <literal>chroot(2)</literal> to before running the job.
+        This optional key is used to specify a directory to `chroot(2)` to before running the job.
       '';
     };
 
@@ -271,7 +271,7 @@ with lib;
       type = types.nullOr types.str;
       default = null;
       description = ''
-        This optional key is used to specify a directory to <literal>chdir(2)</literal> to before running the job.
+        This optional key is used to specify a directory to `chdir(2)` to before running the job.
       '';
     };
 
@@ -288,7 +288,7 @@ with lib;
       type = types.nullOr types.int;
       default = null;
       description = ''
-        This optional key specifies what value should be passed to <literal>umask(2)</literal> before running the job. Known bug:
+        This optional key specifies what value should be passed to `umask(2)` before running the job. Known bug:
         Property lists don't support octal, so please convert the value to decimal.
       '';
     };
@@ -327,7 +327,7 @@ with lib;
       type = types.nullOr types.bool;
       default = null;
       description = ''
-        This optional key specifies whether <literal>initgroups(3)</literal> should be called before running the job.  The default
+        This optional key specifies whether `initgroups(3)` should be called before running the job.  The default
         is true in 10.5 and false in 10.4. This key will be ignored if the UserName key is not set.
       '';
     };
@@ -375,7 +375,7 @@ with lib;
       };
       description = ''
         This optional key causes the job to be started every calendar interval as specified. Missing arguments
-        are considered to be wildcard. The semantics are much like <literal>crontab(5)</literal>.  Unlike cron which skips job
+        are considered to be wildcard. The semantics are much like `crontab(5)`.  Unlike cron which skips job
         invocations when the computer is asleep, launchd will start the job the next time the computer wakes
         up.  If multiple intervals transpire before the computer is woken, those events will be coalesced into
         one event upon wake from sleep.
@@ -430,7 +430,7 @@ with lib;
       default = null;
       description = ''
         This optional key specifies what file should be used for data being supplied to stdin when using
-        <literal>stdio(3)</literal>.
+        `stdio(3)`.
       '';
     };
 
@@ -438,7 +438,7 @@ with lib;
       type = types.nullOr types.path;
       default = null;
       description = ''
-        This optional key specifies what file should be used for data being sent to stdout when using <literal>stdio(3)</literal>.
+        This optional key specifies what file should be used for data being sent to stdout when using `stdio(3)`.
       '';
     };
 
@@ -446,7 +446,7 @@ with lib;
       type = types.nullOr types.path;
       default = null;
       description = ''
-        This optional key specifies what file should be used for data being sent to stderr when using <literal>stdio(3)</literal>.
+        This optional key specifies what file should be used for data being sent to stderr when using `stdio(3)`.
       '';
     };
 
@@ -471,7 +471,7 @@ with lib;
     SoftResourceLimits = mkOption {
       default = null;
       description = ''
-        Resource limits to be imposed on the job. These adjust variables set with <literal>setrlimit(2)</literal>.  The following
+        Resource limits to be imposed on the job. These adjust variables set with `setrlimit(2)`.  The following
         keys apply:
       '';
       type = types.nullOr (types.submodule {
@@ -497,7 +497,7 @@ with lib;
             default = null;
             description = ''
               The maximum size (in bytes) of the data segment for a process; this defines how far a program may
-              extend its break with the <literal>sbrk(2)</literal> system call.
+              extend its break with the `sbrk(2)` system call.
             '';
           };
 
@@ -522,8 +522,8 @@ with lib;
             default = null;
             description = ''
               The maximum number of open files for this process.  Setting this value in a system wide daemon
-              will set the <literal>sysctl(3)</literal> kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
-              value in addition to the <literal>setrlimit(2)</literal> values.
+              will set the `sysctl(3)` kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
+              value in addition to the `setrlimit(2)` values.
             '';
           };
 
@@ -532,8 +532,8 @@ with lib;
             default = null;
             description = ''
               The maximum number of simultaneous processes for this user id.  Setting this value in a system
-              wide daemon will set the <literal>sysctl(3)</literal> kern.maxproc (SoftResourceLimits) or kern.maxprocperuid
-              (HardResourceLimits) value in addition to the <literal>setrlimit(2)</literal> values.
+              wide daemon will set the `sysctl(3)` kern.maxproc (SoftResourceLimits) or kern.maxprocperuid
+              (HardResourceLimits) value in addition to the `setrlimit(2)` values.
             '';
           };
 
@@ -563,7 +563,7 @@ with lib;
       default = null;
       example = { NumberOfFiles = 4096; };
       description = ''
-        Resource limits to be imposed on the job. These adjust variables set with <literal>setrlimit(2)</literal>.  The following
+        Resource limits to be imposed on the job. These adjust variables set with `setrlimit(2)`.  The following
         keys apply:
       '';
       type = types.nullOr (types.submodule {
@@ -589,7 +589,7 @@ with lib;
             default = null;
             description = ''
               The maximum size (in bytes) of the data segment for a process; this defines how far a program may
-              extend its break with the <literal>sbrk(2)</literal> system call.
+              extend its break with the `sbrk(2)` system call.
             '';
           };
 
@@ -605,7 +605,7 @@ with lib;
             type = types.nullOr types.int;
             default = null;
             description = ''
-              The maximum size (in bytes) which a process may lock into memory using the <literal>mlock(2)</literal> function.
+              The maximum size (in bytes) which a process may lock into memory using the `mlock(2)` function.
             '';
           };
 
@@ -614,8 +614,8 @@ with lib;
             default = null;
             description = ''
               The maximum number of open files for this process.  Setting this value in a system wide daemon
-              will set the <literal>sysctl(3)</literal> kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
-              value in addition to the <literal>setrlimit(2)</literal> values.
+              will set the `sysctl(3)` kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
+              value in addition to the `setrlimit(2)` values.
             '';
           };
 
@@ -624,8 +624,8 @@ with lib;
             default = null;
             description = ''
               The maximum number of simultaneous processes for this user id.  Setting this value in a system
-              wide daemon will set the <literal>sysctl(3)</literal> kern.maxproc (SoftResourceLimits) or kern.maxprocperuid
-              (HardResourceLimits) value in addition to the <literal>setrlimit(2)</literal> values.
+              wide daemon will set the `sysctl(3)` kern.maxproc (SoftResourceLimits) or kern.maxprocperuid
+              (HardResourceLimits) value in addition to the `setrlimit(2)` values.
             '';
           };
 
@@ -670,21 +670,21 @@ with lib;
         resource limits to the job, throttling its CPU usage and I/O bandwidth. The following are valid values:
 
            Background
-           Background jobs are generally processes that do work that was not directly requested by the user.
-           The resource limits applied to Background jobs are intended to prevent them from disrupting the
-           user experience.
+           : Background jobs are generally processes that do work that was not directly requested by the user.
+             The resource limits applied to Background jobs are intended to prevent them from disrupting the
+             user experience.
 
            Standard
-           Standard jobs are equivalent to no ProcessType being set.
+           :  Standard jobs are equivalent to no ProcessType being set.
 
            Adaptive
-           Adaptive jobs move between the Background and Interactive classifications based on activity over
-           XPC connections. See <literal>xpc_transaction_begin(3)</literal> for details.
+           :  Adaptive jobs move between the Background and Interactive classifications based on activity over
+              XPC connections. See {manpage}`xpc_transaction_begin(3)` for details.
 
            Interactive
-           Interactive jobs run with the same resource limitations as apps, that is to say, none. Interactive
-           jobs are critical to maintaining a responsive user experience, and this key should only be
-           used if an app's ability to be responsive depends on it, and cannot be made Adaptive.
+           :  Interactive jobs run with the same resource limitations as apps, that is to say, none. Interactive
+              jobs are critical to maintaining a responsive user experience, and this key should only be
+              used if an app's ability to be responsive depends on it, and cannot be made Adaptive.
       '';
     };
 
@@ -790,7 +790,7 @@ with lib;
         to be effectively equivalent, even though each file descriptor likely represents a different networking
         protocol which conforms to the criteria specified in the job configuration file.
 
-        The parameters below are used as inputs to call <literal>getaddrinfo(3)</literal>.
+        The parameters below are used as inputs to call `getaddrinfo(3)`.
       '';
       type = types.nullOr (types.attrsOf (types.submodule {
         options = {
@@ -807,7 +807,7 @@ with lib;
             type = types.nullOr types.bool;
             default = null;
             description = ''
-              This optional key specifies whether <literal>listen(2)</literal> or <literal>connect(2)</literal> should be called on the created file
+              This optional key specifies whether `listen(2)` or `connect(2)` should be called on the created file
               descriptor. The default is true ("to listen").
             '';
           };
@@ -816,7 +816,7 @@ with lib;
             type = types.nullOr types.str;
             default = null;
             description = ''
-              This optional key specifies the node to <literal>connect(2)</literal> or <literal>bind(2)</literal> to.
+              This optional key specifies the node to `connect(2)` or `bind(2)` to.
             '';
           };
 
@@ -824,7 +824,7 @@ with lib;
             type = types.nullOr types.str;
             default = null;
             description = ''
-              This optional key specifies the service on the node to <literal>connect(2)</literal> or <literal>bind(2)</literal> to.
+              This optional key specifies the service on the node to `connect(2)` or `bind(2)` to.
             '';
           };
 
@@ -840,7 +840,7 @@ with lib;
             type = types.nullOr (types.enum [ "TCP" ]);
             default = null;
             description = ''
-              This optional key specifies the protocol to be passed to <literal>socket(2)</literal>.  The only value understood by
+              This optional key specifies the protocol to be passed to `socket(2)`.  The only value understood by
               this key at the moment is "TCP".
             '';
           };
@@ -849,8 +849,8 @@ with lib;
             type = types.nullOr types.path;
             default = null;
             description = ''
-              This optional key implies SockFamily is set to "Unix". It specifies the path to <literal>connect(2)</literal> or
-              <literal>bind(2)</literal> to.
+              This optional key implies SockFamily is set to "Unix". It specifies the path to `connect(2)` or
+              `bind(2)` to.
             '';
           };
 
@@ -879,7 +879,7 @@ with lib;
             default = null;
             description = ''
               This optional key can be used to request that the service be registered with the
-              <literal>mDNSResponder(8)</literal>.  If the value is boolean, the service name is inferred from the SockServiceName.
+              `mDNSResponder(8)`.  If the value is boolean, the service name is inferred from the SockServiceName.
             '';
           };
 
@@ -888,7 +888,7 @@ with lib;
             default = null;
             description = ''
               This optional key can be used to request that the datagram socket join a multicast group.  If the
-              value is a hostname, then <literal>getaddrinfo(3)</literal> will be used to join the correct multicast address for a
+              value is a hostname, then `getaddrinfo(3)` will be used to join the correct multicast address for a
               given socket family.  If an explicit IPv4 or IPv6 address is given, it is required that the SockFamily
               family also be set, otherwise the results are undefined.
             '';

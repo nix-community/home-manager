@@ -1,7 +1,7 @@
 {
   description = "Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs = { self, nixpkgs, ... }:
     {
@@ -103,7 +103,11 @@
       packages = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          docs = import ./docs { inherit pkgs; };
+          releaseInfo = nixpkgs.lib.importJSON ./release.json;
+          docs = import ./docs {
+            inherit pkgs;
+            inherit (releaseInfo) release isReleaseBranch;
+          };
           hmPkg = pkgs.callPackage ./home-manager { path = toString ./.; };
         in {
           default = hmPkg;

@@ -64,8 +64,8 @@ let
         type = types.nullOr types.str;
         description = ''
           The default GPG signing key fingerprint.
-          </para><para>
-          Set to <literal>null</literal> to let GnuPG decide what signing key
+
+          Set to `null` to let GnuPG decide what signing key
           to use depending on commit’s author.
         '';
       };
@@ -91,12 +91,9 @@ let
         type = types.nullOr types.str;
         default = null;
         description = ''
-          Include this configuration only when <varname>condition</varname>
+          Include this configuration only when {var}`condition`
           matches. Allowed conditions are described in
-          <citerefentry>
-            <refentrytitle>git-config</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>.
+          {manpage}`git-config(1)`.
         '';
       };
 
@@ -124,10 +121,7 @@ let
           Configuration to include. If empty then a path must be given.
 
           This follows the configuration structure as described in
-          <citerefentry>
-            <refentrytitle>git-config</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>.
+          {manpage}`git-config(1)`.
         '';
       };
 
@@ -158,8 +152,8 @@ in {
         default = pkgs.git;
         defaultText = literalExpression "pkgs.git";
         description = ''
-          Git package to install. Use <varname>pkgs.gitAndTools.gitFull</varname>
-          to gain access to <command>git send-email</command> for instance.
+          Git package to install. Use {var}`pkgs.gitAndTools.gitFull`
+          to gain access to {command}`git send-email` for instance.
         '';
       };
 
@@ -211,7 +205,7 @@ in {
         '';
         description = ''
           Configuration helper for Git hooks.
-          See <link xlink:href="https://git-scm.com/docs/githooks" />
+          See <https://git-scm.com/docs/githooks>
           for reference.
         '';
       };
@@ -258,7 +252,7 @@ in {
           default = false;
           description = ''
             Skip automatic downloading of objects on clone or pull.
-            This requires a manual <command>git lfs pull</command>
+            This requires a manual {command}`git lfs pull`
             every time a new commit is checked out on your repository.
           '';
         };
@@ -267,8 +261,8 @@ in {
       difftastic = {
         enable = mkEnableOption "" // {
           description = ''
-            Enable the <command>difftastic</command> syntax highlighter.
-            See <link xlink:href="https://github.com/Wilfred/difftastic" />.
+            Enable the {command}`difftastic` syntax highlighter.
+            See <https://github.com/Wilfred/difftastic>.
           '';
         };
 
@@ -305,8 +299,8 @@ in {
       delta = {
         enable = mkEnableOption "" // {
           description = ''
-            Whether to enable the <command>delta</command> syntax highlighter.
-            See <link xlink:href="https://github.com/dandavison/delta" />.
+            Whether to enable the {command}`delta` syntax highlighter.
+            See <https://github.com/dandavison/delta>.
           '';
         };
 
@@ -337,8 +331,8 @@ in {
       diff-so-fancy = {
         enable = mkEnableOption "" // {
           description = ''
-            Enable the <command>diff-so-fancy</command> diff colorizer.
-            See <link xlink:href="https://github.com/so-fancy/diff-so-fancy" />.
+            Enable the {command}`diff-so-fancy` diff colorizer.
+            See <https://github.com/so-fancy/diff-so-fancy>.
           '';
         };
 
@@ -346,7 +340,7 @@ in {
           type = types.listOf types.str;
           default = [ "--tabs=4" "-RFX" ];
           description = ''
-            Arguments to be passed to <command>less</command>.
+            Arguments to be passed to {command}`less`.
           '';
         };
 
@@ -373,7 +367,7 @@ in {
           default = true;
           example = false;
           description = ''
-            Whether the <literal>+</literal> or <literal>-</literal> at
+            Whether the `+` or `-` at
             line-start should be removed.
           '';
         };

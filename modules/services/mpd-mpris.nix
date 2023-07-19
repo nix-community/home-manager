@@ -36,8 +36,8 @@ in {
         defaultText = lib.literalExpression "config.services.mpd.enable";
         description = ''
           Whether to configure for the local MPD daemon. If
-          <literal>true</literal> the <literal>network</literal>,
-          <literal>host</literal>, and <literal>port</literal>
+          `true` the `network`,
+          `host`, and `port`
           settings are ignored.
         '';
       };
@@ -47,7 +47,7 @@ in {
         default = null;
         description = ''
           The network used to dial to the MPD server. Check
-          <link xlink:href="https://golang.org/pkg/net/#Dial" />
+          <https://golang.org/pkg/net/#Dial>
           for available values (most common are "tcp" and "unix")
         '';
       };

@@ -37,7 +37,7 @@ in {
       default =
         "/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite";
       description = ''
-        Absolute path to <filename>programs.sqlite</filename>. By
+        Absolute path to {file}`programs.sqlite`. By
         default this file will be provided by your channel
         (nixexprs.tar.xz).
       '';

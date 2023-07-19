@@ -13,7 +13,7 @@ in {
       type = types.package;
       default = pkgs.scmpuff;
       defaultText = literalExpression "pkgs.scmpuff";
-      description = "Package providing the <command>scmpuff</command> tool.";
+      description = "Package providing the {command}`scmpuff` tool.";
     };
 
     enableBashIntegration = mkOption {

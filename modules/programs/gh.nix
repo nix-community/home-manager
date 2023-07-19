@@ -69,14 +69,14 @@ in {
       type = types.package;
       default = pkgs.gh;
       defaultText = literalExpression "pkgs.gh";
-      description = "Package providing <command>gh</command>.";
+      description = "Package providing {command}`gh`.";
     };
 
     settings = mkOption {
       type = settingsType;
       default = { };
       description =
-        "Configuration written to <filename>$XDG_CONFIG_HOME/gh/config.yml</filename>.";
+        "Configuration written to {file}`$XDG_CONFIG_HOME/gh/config.yml`.";
       example = literalExpression ''
         {
           git_protocol = "ssh";
@@ -100,7 +100,7 @@ in {
       type = types.listOf types.package;
       default = [ ];
       description = ''
-        gh extensions, see <link xlink:href="https://cli.github.com/manual/gh_extension"/>.
+        gh extensions, see <https://cli.github.com/manual/gh_extension>.
       '';
       example = literalExpression "[ pkgs.gh-eco ]";
     };

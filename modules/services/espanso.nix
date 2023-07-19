@@ -47,7 +47,7 @@ in {
         '';
         description = ''
           The Espanso configuration to use. See
-          <link xlink:href="https://espanso.org/docs/configuration/basics/"/>
+          <https://espanso.org/docs/configuration/basics/>
           for a description of available options.
         '';
       };
@@ -91,7 +91,7 @@ in {
         '';
         description = ''
           The Espanso matches to use. See
-          <link xlink:href="https://espanso.org/docs/matches/basics/"/>
+          <https://espanso.org/docs/matches/basics/>
           for a description of available options.
         '';
       };

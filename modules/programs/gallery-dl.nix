@@ -24,8 +24,8 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/gallery-dl/config.json</filename>. See
-        <link xlink:href="https://github.com/mikf/gallery-dl#configuration"/>
+        {file}`$XDG_CONFIG_HOME/gallery-dl/config.json`. See
+        <https://github.com/mikf/gallery-dl#configuration>
         for supported values.
       '';
     };

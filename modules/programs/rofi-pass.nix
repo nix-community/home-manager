@@ -31,7 +31,7 @@ in {
       description = ''
         Extra configuration to be added at to the rofi-pass config file.
         Additional examples can be found at
-        <link xlink:href="https://github.com/carnager/rofi-pass/blob/master/config.example"/>.
+        <https://github.com/carnager/rofi-pass/blob/master/config.example>.
       '';
     };
   };

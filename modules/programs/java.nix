@@ -16,8 +16,8 @@ in {
     programs.java = {
       enable = mkEnableOption "" // {
         description = ''
-          Install the Java development kit and set the <envar>JAVA_HOME</envar>
-          variable.
+          Install the Java development kit and set the
+          {env}`JAVA_HOME` variable.
         '';
       };
 
@@ -27,7 +27,7 @@ in {
         defaultText = "pkgs.jdk";
         description = ''
           Java package to install. Typical values are
-          <literal>pkgs.jdk</literal> or <literal>pkgs.jre</literal>.
+          `pkgs.jdk` or `pkgs.jre`.
         '';
       };
     };

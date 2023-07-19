@@ -32,7 +32,7 @@ in {
         default = pkgs.xsettingsd;
         defaultText = literalExpression "pkgs.xsettingsd";
         description = ''
-          Package containing the <command>xsettingsd</command> program.
+          Package containing the {command}`xsettingsd` program.
         '';
       };
 
@@ -49,7 +49,7 @@ in {
         '';
         description = ''
           Xsettingsd options for configuration file. See
-          <link xlink:href="https://github.com/derat/xsettingsd/wiki/Settings"/>
+          <https://github.com/derat/xsettingsd/wiki/Settings>
           for documentation on these values.
         '';
       };
