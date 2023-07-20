@@ -19,7 +19,7 @@ in {
         }
       '';
       description =
-        "script-directory config, for options take a look at the [documentation](github.com/ianthehenry/sd#options)";
+        "script-directory config, for options take a look at the [documentation](https://github.com/ianthehenry/sd#options)";
     };
   };
   config = lib.mkIf cfg.enable {
