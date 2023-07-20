@@ -15431,6 +15431,86 @@ boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/targets/generic-linux.nix" target="_top">
 &lt;home-manager/modules/targets/generic-linux.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.hyprland.enable"></a><a class="term" href="options.html#opt-wayland.windowManager.hyprland.enable"><code class="option">wayland.windowManager.hyprland.enable</code></a></span></dt><dd><p>Whether to enable Hyprland wayland compositor.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/hyprland.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.hyprland.enableNvidiaPatches"></a><a class="term" href="options.html#opt-wayland.windowManager.hyprland.enableNvidiaPatches"><code class="option">wayland.windowManager.hyprland.enableNvidiaPatches</code></a></span></dt><dd><p>Whether to enable patching wlroots for better Nvidia support.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/hyprland.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.hyprland.package"></a><a class="term" href="options.html#opt-wayland.windowManager.hyprland.package"><code class="option">wayland.windowManager.hyprland.package</code></a></span></dt><dd><p>The hyprland package to use.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.hyprland</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/hyprland.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.hyprland.extraConfig"></a><a class="term" href="options.html#opt-wayland.windowManager.hyprland.extraConfig"><code class="option">wayland.windowManager.hyprland.extraConfig</code></a></span></dt><dd><p>Extra configuration lines to add to <code class="literal">~/.config/hypr/hyprland.conf</code>.</p><p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">""</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">''
+  # window resize
+  bind = $mod, S, submap, resize
+  
+  submap = resize
+  binde = , right, resizeactive, 10 0
+  binde = , left, resizeactive, -10 0
+  binde = , up, resizeactive, 0 -10
+  binde = , down, resizeactive, 0 10
+  bind = , escape, submap, reset
+  submap = reset
+''
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/hyprland.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.hyprland.finalPackage"></a><a class="term" href="options.html#opt-wayland.windowManager.hyprland.finalPackage"><code class="option">wayland.windowManager.hyprland.finalPackage</code></a></span></dt><dd><p>The Hyprland package after applying configuration.</p><p><span class="emphasis"><em>Type:</em></span>
+package <span class="emphasis"><em>(read only)</em></span></p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">wayland.windowManager.hyprland.package</code> with applied configuration</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/hyprland.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.hyprland.plugins"></a><a class="term" href="options.html#opt-wayland.windowManager.hyprland.plugins"><code class="option">wayland.windowManager.hyprland.plugins</code></a></span></dt><dd><p>List of Hyprland plugins to use. Can either be packages or
+absolute plugin paths.</p><p><span class="emphasis"><em>Type:</em></span>
+list of (package or path)</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/hyprland.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.hyprland.settings"></a><a class="term" href="options.html#opt-wayland.windowManager.hyprland.settings"><code class="option">wayland.windowManager.hyprland.settings</code></a></span></dt><dd><p>Hyprland configuration written in Nix. Entries with the same key
+should be written as lists. Variables’ and colors’ names should be
+quoted. See <a class="link" href="https://wiki.hyprland.org" target="_top">https://wiki.hyprland.org</a> for more examples.</p><div class="note"><h3 class="title">Note</h3><p>Use the <a class="xref" href="options.html#opt-wayland.windowManager.hyprland.plugins"><code class="option">wayland.windowManager.hyprland.plugins</code></a> option to
+declare plugins.</p></div><p><span class="emphasis"><em>Type:</em></span>
+Hyprland configuration value</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  decoration = {
+    shadow_offset = "0 5";
+    "col.shadow" = "rgba(00000099)";
+  };
+
+  "$mod" = "SUPER";
+
+  bindm = [
+    # mouse movements
+    "$mod, mouse:272, movewindow"
+    "$mod, mouse:273, resizewindow"
+    "$mod ALT, mouse:272, resizewindow"
+  ];
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/hyprland.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.hyprland.systemdIntegration"></a><a class="term" href="options.html#opt-wayland.windowManager.hyprland.systemdIntegration"><code class="option">wayland.windowManager.hyprland.systemdIntegration</code></a></span></dt><dd><p>Whether to enable <code class="filename">hyprland-session.target</code> on
+hyprland startup. This links to <code class="literal">graphical-session.target</code>.
+Some important environment variables will be imported to systemd
+and dbus user environment before reaching the target, including</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">DISPLAY</code></p></li><li class="listitem"><p><code class="literal">HYPRLAND_INSTANCE_SIGNATURE</code></p></li><li class="listitem"><p><code class="literal">WAYLAND_DISPLAY</code></p></li><li class="listitem"><p><code class="literal">XDG_CURRENT_DESKTOP</code></p></li></ul></div><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/hyprland.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.hyprland.xwayland.enable"></a><a class="term" href="options.html#opt-wayland.windowManager.hyprland.xwayland.enable"><code class="option">wayland.windowManager.hyprland.xwayland.enable</code></a></span></dt><dd><p>Whether to enable XWayland.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/hyprland.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.hyprland.xwayland.hidpi"></a><a class="term" href="options.html#opt-wayland.windowManager.hyprland.xwayland.hidpi"><code class="option">wayland.windowManager.hyprland.xwayland.hidpi</code></a></span></dt><dd><p>Enable HiDPI XWayland, based on <a class="link" href="https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733" target="_top">XWayland MR 733</a>.
+See <a class="link" href="https://wiki.hyprland.org/Nix/Options-Overrides/#xwayland-hidpi" target="_top">https://wiki.hyprland.org/Nix/Options-Overrides/#xwayland-hidpi</a> for more info.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/hyprland.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-wayland.windowManager.sway.enable"></a><a class="term" href="options.html#opt-wayland.windowManager.sway.enable"><code class="option">wayland.windowManager.sway.enable</code></a></span></dt><dd><p>Whether to enable sway wayland compositor.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
