@@ -147,6 +147,7 @@ import nmt {
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
+    ./modules/services/git-sync-darwin
     ./modules/services/imapnotify-darwin
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [

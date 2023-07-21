@@ -24,9 +24,21 @@ let
     };
   };
 
+  mkAgent = name: repo: {
+    enable = true;
+    config = {
+      StartInterval = repo.interval;
+      ProcessType = "Background";
+      WorkingDirectory = "${repo.path}";
+      WatchPaths = [ "${repo.path}" ];
+      ProgramArguments = [ "${cfg.package}/bin/git-sync" ];
+    };
+  };
+
+  mkService = if pkgs.stdenv.isLinux then mkUnit else mkAgent;
   services = mapAttrs' (name: repo: {
     name = "git-sync-${name}";
-    value = mkUnit name repo;
+    value = mkService name repo;
   }) cfg.repositories;
 
   repositoryType = types.submodule ({ name, ... }: {
@@ -51,6 +63,8 @@ let
           event that the directory does not already exist. See
           <https://git-scm.com/docs/git-clone#_git_urls>
           for the supported URIs.
+
+          This option is not supported on Darwin.
         '';
       };
 
@@ -66,7 +80,8 @@ let
   });
 
 in {
-  meta.maintainers = [ maintainers.imalison maintainers.cab404 ];
+  meta.maintainers =
+    [ maintainers.imalison maintainers.cab404 maintainers.ryane ];
 
   options = {
     services.git-sync = {
@@ -90,12 +105,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "services.git-sync" pkgs
-        lib.platforms.linux)
-    ];
+  config = mkIf cfg.enable (mkMerge [
+    (mkIf pkgs.stdenv.isLinux { systemd.user.services = services; })
+    (mkIf pkgs.stdenv.isDarwin { launchd.agents = services; })
+  ]);
 
-    systemd.user.services = services;
-  };
 }
