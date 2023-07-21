@@ -125,6 +125,19 @@ in {
           };
         '';
       };
+
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
+        example = ''
+          [global]
+          frame_color = "#3b4252"
+          separator_color = "#404859"
+        '';
+        description = ''
+          Extra configuration lines to add to the end of the dunstrc file.
+        '';
+      };
     };
   };
 
@@ -197,7 +210,7 @@ in {
 
     (mkIf (cfg.settings != { }) {
       xdg.configFile."dunst/dunstrc" = {
-        text = toDunstIni cfg.settings;
+        text = toDunstIni cfg.settings + cfg.extraConfig;
         onChange = ''
           ${pkgs.procps}/bin/pkill -u "$USER" ''${VERBOSE+-e} dunst || true
         '';
