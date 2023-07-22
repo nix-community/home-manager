@@ -15,6 +15,21 @@
 
       "$mod" = "SUPER";
 
+      animations = {
+        enabled = true;
+        animation = [
+          "border, 1, 2, smoothIn"
+          "fade, 1, 4, smoothOut"
+          "windows, 1, 3, overshot, popin 80%"
+        ];
+      };
+
+      bezier = [
+        "smoothOut, 0.36, 0, 0.66, -0.56"
+        "smoothIn, 0.25, 1, 0.5, 1"
+        "overshot, 0.4,0.8,0.2,1.2"
+      ];
+
       input = {
         kb_layout = "ro";
         follow_mouse = 1;
