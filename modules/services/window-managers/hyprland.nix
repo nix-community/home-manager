@@ -178,7 +178,7 @@ in {
       toHyprconf = with lib;
         attrs: indentLevel:
         let
-          indent = concatStringsSep "" (replicate indentLevel "  ");
+          indent = concatStrings (replicate indentLevel "  ");
 
           mkSection = n: attrs: ''
             ${indent}${n} {
