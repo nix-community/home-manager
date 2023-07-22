@@ -175,22 +175,34 @@ in {
       shouldGenerate = cfg.systemdIntegration || cfg.extraConfig != ""
         || combinedSettings != { };
 
-      toHyprconf = attrs:
+      toHyprconf = with lib;
+        attrs: indentLevel:
         let
+          indent = concatStrings (replicate indentLevel "  ");
+
           mkSection = n: attrs: ''
-            ${n} {
-              ${toHyprconf attrs}}
+            ${indent}${n} {
+            ${toHyprconf attrs (indentLevel + 1)}${indent}}
           '';
-          mkFields = lib.generators.toKeyValue { listsAsDuplicateKeys = true; };
-          sections = lib.filterAttrs (n: v: lib.isAttrs v) attrs;
-          fields = lib.filterAttrs (n: v: !(lib.isAttrs v)) attrs;
-        in lib.concatStringsSep "\n" (lib.mapAttrsToList mkSection sections)
-        + mkFields fields;
+          sections = filterAttrs (n: v: isAttrs v) attrs;
+
+          mkFields = generators.toKeyValue { listsAsDuplicateKeys = true; };
+          allFields = filterAttrs (n: v: !(isAttrs v)) attrs;
+          importantFields =
+            filterAttrs (n: _: (hasPrefix "$" n) || (hasPrefix "bezier" n))
+            allFields;
+          fields = builtins.removeAttrs allFields
+            (mapAttrsToList (n: _: n) importantFields);
+        in mkFields importantFields
+        + concatStringsSep "\n" (mapAttrsToList mkSection sections)
+        + removeSuffix indent (indent + (concatStringsSep ''
+
+          ${indent}'' (splitString "\n" (mkFields fields))));
     in lib.mkIf shouldGenerate {
       text = lib.optionalString cfg.systemdIntegration ''
         exec-once = ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP && systemctl --user start hyprland-session.target
       '' + lib.optionalString (combinedSettings != { })
-        (toHyprconf combinedSettings)
+        (toHyprconf combinedSettings 0)
         + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
       onChange = lib.mkIf (cfg.package != null) ''
         (  # execute in subshell so that `shopt` won't affect other scripts
