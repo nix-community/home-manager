@@ -4449,6 +4449,26 @@ string</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">"https"</code></p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">"ssh"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix" target="_top">
 &lt;home-manager/modules/programs/gh.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh-dash.enable"></a><a class="term" href="options.html#opt-programs.gh-dash.enable"><code class="option">programs.gh-dash.enable</code></a></span></dt><dd><p>Whether to enable GitHub CLI dashboard plugin.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh-dash.nix" target="_top">
+&lt;home-manager/modules/programs/gh-dash.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh-dash.package"></a><a class="term" href="options.html#opt-programs.gh-dash.package"><code class="option">programs.gh-dash.package</code></a></span></dt><dd><p>The gh-dash package to use.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.gh-dash</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh-dash.nix" target="_top">
+&lt;home-manager/modules/programs/gh-dash.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.gh-dash.settings"></a><a class="term" href="options.html#opt-programs.gh-dash.settings"><code class="option">programs.gh-dash.settings</code></a></span></dt><dd><p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/gh-dash/config.yml</code>.</p><p><span class="emphasis"><em>Type:</em></span>
+YAML value</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  prSections = [{
+    title = "My Pull Requests";
+    filters = "is:open author:@me";
+  }];
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh-dash.nix" target="_top">
+&lt;home-manager/modules/programs/gh-dash.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.git.enable"></a><a class="term" href="options.html#opt-programs.git.enable"><code class="option">programs.git.enable</code></a></span></dt><dd><p>Whether to enable Git.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
