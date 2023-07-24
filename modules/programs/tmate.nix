@@ -65,7 +65,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file.".tmate.conf".text = let
+    home.file.".tmate.conf" = let
       conf =
         optional (cfg.host != null) ''set -g tmate-server-host "${cfg.host}"''
         ++ optional (cfg.port != null)
@@ -75,6 +75,6 @@ in {
         ++ optional (cfg.rsaFingerprint != null)
         ''set -g tmate-server-rsa-fingerprint "${cfg.rsaFingerprint}"''
         ++ optional (cfg.extraConfig != "") cfg.extraConfig;
-    in concatStringsSep "\n" conf + "\n";
+    in mkIf (conf != [ ]) { text = concatLines conf; };
   };
 }
