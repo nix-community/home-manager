@@ -12413,7 +12413,7 @@ path</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border=
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.git-sync.repositories._name_.uri"></a><a class="term" href="options.html#opt-services.git-sync.repositories._name_.uri"><code class="option">services.git-sync.repositories.&lt;name&gt;.uri</code></a></span></dt><dd><p>The URI of the remote to be synchronized. This is only used in the
 event that the directory does not already exist. See
 <a class="link" href="https://git-scm.com/docs/git-clone#_git_urls" target="_top">https://git-scm.com/docs/git-clone#_git_urls</a>
-for the supported URIs.</p><p><span class="emphasis"><em>Type:</em></span>
+for the supported URIs.</p><p>This option is not supported on Darwin.</p><p><span class="emphasis"><em>Type:</em></span>
 string</p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">"git+ssh://user@example.com:/~[user]/path/to/repo.git"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/git-sync.nix" target="_top">
 &lt;home-manager/modules/services/git-sync.nix&gt;
