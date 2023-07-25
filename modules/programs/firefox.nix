@@ -137,7 +137,7 @@ in {
       enable = mkEnableOption "Firefox";
 
       package = mkOption {
-        type = types.package;
+        type = with types; nullOr package;
         default = if versionAtLeast config.home.stateVersion "19.09" then
           pkgs.firefox
         else
@@ -158,6 +158,7 @@ in {
           The Firefox package to use. If state version ≥ 19.09 then
           this should be a wrapped Firefox package. For earlier state
           versions it should be an unwrapped Firefox package.
+          Set to <literal>null</literal> to disable installing Firefox.
         '';
       };
 
@@ -526,7 +527,7 @@ in {
         cfg.package.override (old: { cfg = old.cfg or { } // fcfg; })
       else
         (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
-    in [ package ];
+    in lib.optional (cfg.package != null) package;
 
     home.file = mkMerge ([{
       "${firefoxConfigPath}/profiles.ini" =
