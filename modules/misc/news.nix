@@ -1159,6 +1159,14 @@ in
           A new module is available: 'programs.gh-dash'
         '';
       }
+
+      {
+        time = "2023-07-25T07:16:09+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          A new module is available: 'services.git-sync'.
+        '';
+      }
     ];
   };
 }
