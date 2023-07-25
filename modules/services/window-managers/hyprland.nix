@@ -186,7 +186,10 @@ in {
           '';
           sections = filterAttrs (n: v: isAttrs v) attrs;
 
-          mkFields = generators.toKeyValue { listsAsDuplicateKeys = true; };
+          mkFields = generators.toKeyValue {
+            listsAsDuplicateKeys = true;
+            inherit indent;
+          };
           allFields = filterAttrs (n: v: !(isAttrs v)) attrs;
           importantFields =
             filterAttrs (n: _: (hasPrefix "$" n) || (hasPrefix "bezier" n))
@@ -195,9 +198,7 @@ in {
             (mapAttrsToList (n: _: n) importantFields);
         in mkFields importantFields
         + concatStringsSep "\n" (mapAttrsToList mkSection sections)
-        + removeSuffix indent (indent + (concatStringsSep ''
-
-          ${indent}'' (splitString "\n" (mkFields fields))));
+        + mkFields fields;
     in lib.mkIf shouldGenerate {
       text = lib.optionalString cfg.systemdIntegration ''
         exec-once = ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP && systemctl --user start hyprland-session.target
