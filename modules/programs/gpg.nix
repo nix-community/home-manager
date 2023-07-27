@@ -147,7 +147,7 @@ in {
       defaultText = literalExpression "pkgs.gnupg";
       example = literalExpression "pkgs.gnupg23";
       description =
-        "The Gnupg package to use (also used the gpg-agent service).";
+        "The Gnupg package to use (also used by the gpg-agent service).";
     };
 
     settings = mkOption {
