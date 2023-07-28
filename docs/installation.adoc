@@ -151,7 +151,7 @@ For example, a NixOS configuration may include the lines
 
 [source,nix]
 ----
-users.users.eve.isNormalUser = true;
+home-manager.users.eve.isNormalUser = true;
 home-manager.users.eve = { pkgs, ... }: {
   home.packages = [ pkgs.atool pkgs.httpie ];
   programs.bash.enable = true;
