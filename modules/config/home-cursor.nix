@@ -52,6 +52,27 @@ let
       escapeShellArg cfg.x11.defaultCursor
     }";
 
+  defaultIndexThemePackage = pkgs.writeTextFile {
+    name = "index.theme";
+    destination = "/share/icons/default/index.theme";
+    # Set name in icons theme, for compatibility with AwesomeWM etc. See:
+    # https://github.com/nix-community/home-manager/issues/2081
+    # https://wiki.archlinux.org/title/Cursor_themes#XDG_specification
+    text = ''
+      [Icon Theme]
+      Name=Default
+      Comment=Default Cursor Theme
+      Inherits=${cfg.name}
+    '';
+  };
+
+  iconMappings = let
+    knownFiles = filterAttrs (_: type: type != "unknown")
+      (builtins.readDir "${cfg.package}/share/icons");
+  in mapAttrs'
+  (n: _: nameValuePair ".icons/${n}" "${cfg.package}/share/icons/${n}")
+  knownFiles;
+
 in {
   meta.maintainers = [ maintainers.polykernel maintainers.league ];
 
@@ -120,17 +141,7 @@ in {
         (hm.assertions.assertPlatform "home.pointerCursor" pkgs platforms.linux)
       ];
 
-      home.packages = [ cfg.package ];
-
-      # Set name in icons theme, for compatibility with AwesomeWM etc. See:
-      # https://github.com/nix-community/home-manager/issues/2081
-      # https://wiki.archlinux.org/title/Cursor_themes#XDG_specification
-      xdg.dataFile."icons/default/index.theme".text = ''
-        [icon theme]
-        Name=Default
-        Comment=Default Cursor Theme
-        Inherits=${cfg.name}
-      '';
+      home.packages = [ cfg.package defaultIndexThemePackage ];
 
       # Set directory to look for cursors in, needed for some applications
       # that are unable to find cursors otherwise. See:
@@ -142,6 +153,21 @@ in {
         XCURSOR_SIZE = mkDefault cfg.size;
         XCURSOR_THEME = mkDefault cfg.name;
       };
+
+      # Add symlinks of cursor icons to subdirectories in $HOME/.icons, needed for
+      # backwards compatibility with some applications. See:
+      # https://specifications.freedesktop.org/icon-theme-spec/latest/ar01s03.html
+      home.file = (mapAttrs (_: source: { inherit source; }) iconMappings) // {
+        ".icons/default/index.theme".source =
+          "${defaultIndexThemePackage}/share/icons/default/index.theme";
+      };
+
+      # Add cursor icon links to $XDG_DATA_HOME as well for redundancy.
+      xdg.dataFile = (mapAttrs (_: source: { inherit source; }) iconMappings)
+        // {
+          ".icons/default/index.theme".source =
+            "${defaultIndexThemePackage}/share/icons/default/index.theme";
+        };
     }
 
     (mkIf cfg.x11.enable {
