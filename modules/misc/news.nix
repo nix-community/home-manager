@@ -85,10 +85,22 @@ in
         default = [ ];
         description = "News entries.";
       };
+
+      json = {
+        output = mkOption {
+          internal = true;
+          type = types.package;
+          description = "The generated JSON file package.";
+        };
+      };
     };
   };
 
   config = {
+    news.json.output = pkgs.writeText "hm-news.json" (builtins.toJSON {
+      inherit (cfg) display entries;
+    });
+
     # Add news entries in chronological order (i.e., latest time
     # should be at the bottom of the list). The time should be
     # formatted as given in the output of
