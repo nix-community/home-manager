@@ -292,12 +292,30 @@ in {
       profile = mkOption {
         default = { };
         type = types.attrsOf profileSubModule;
-        description = "A set of Gnome Terminal profiles.";
+        description = ''
+          A set of Gnome Terminal profiles. Note, the name of a profile must be
+          a UUID. You can generate one, for example, using {command}`uuidgen`
+          (from `util-linux`).
+        '';
       };
     };
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (let
+        uuidre =
+          "[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}";
+        erroneous =
+          filter (n: builtins.match uuidre n == null) (attrNames cfg.profile);
+      in {
+        assertion = erroneous == [ ];
+        message = ''
+          The attribute name of a Gnome Terminal profile must be a UUID.
+          Incorrect profile names: ${concatStringsSep ", " erroneous}'';
+      })
+    ];
+
     home.packages = [ pkgs.gnome.gnome-terminal ];
 
     dconf.settings = let dconfPath = "org/gnome/terminal/legacy";
