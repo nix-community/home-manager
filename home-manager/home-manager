@@ -798,6 +798,7 @@ function doUninstall() {
             echo "{ lib, ... }: {"  > "$HOME_MANAGER_CONFIG"
             echo "  home.file = lib.mkForce {};" >> "$HOME_MANAGER_CONFIG"
             echo "  home.stateVersion = \"18.09\";" >> "$HOME_MANAGER_CONFIG"
+            echo "  manual.manpages.enable = false;" >> "$HOME_MANAGER_CONFIG"
             echo "}" >> "$HOME_MANAGER_CONFIG"
             doSwitch
             $DRY_RUN_CMD $REMOVE_CMD home-manager-path || true
