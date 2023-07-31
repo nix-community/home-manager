@@ -128,8 +128,8 @@ in {
     xdg.configFile."gh/config.yml".source =
       yamlFormat.generate "gh-config.yml" cfg.settings;
 
-    programs.git.extraConfig.credential =
-      lib.mkIf cfg.gitCredentialHelper.enable (builtins.listToAttrs (map (host:
+    programs.git.extraConfig.credential = mkIf cfg.gitCredentialHelper.enable
+      (builtins.listToAttrs (map (host:
         lib.nameValuePair host {
           helper = "${cfg.package}/bin/gh auth git-credential";
         }) cfg.gitCredentialHelper.hosts));
