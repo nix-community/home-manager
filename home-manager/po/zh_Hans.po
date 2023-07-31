@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-07-16 10:09+0200\n"
-"PO-Revision-Date: 2023-06-12 10:49+0000\n"
-"Last-Translator: Hongtyu Bhe <mfthits@gmail.com>\n"
+"PO-Revision-Date: 2023-07-31 21:25+0000\n"
+"Last-Translator: Vollow <muffinslog@proton.me>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "home-manager/cli/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -40,14 +40,14 @@ msgstr "未找到配置文件。请在 %s 处创建一份"
 
 #: home-manager/home-manager:114
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "未在 %s 找到 Home Manager。"
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:122
 msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
-msgstr ""
+msgstr "后备 Home Manager 路径 %s 已被弃用，但在这里找到了一个文件或文件夹。"
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:125
@@ -70,6 +70,22 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"为移除该警告，请完成下列建议的任意一项。\n"
+"\n"
+"1. 明确地告诉 Home Manager 使用这个路径，例如添加\n"
+"\n"
+"    { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   到您的配置。\n"
+"\n"
+"   如果您直接引用 Home Manager，则可以在使用 Home Manager 包时使用 `path` "
+"参数，如下。\n"
+"\n"
+"    pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"2. 移除被弃用的路径。\n"
+"\n"
+"    $ rm -r \"%s\""
 
 #: home-manager/home-manager:164
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -164,19 +180,19 @@ msgstr "无法在只读目录中运行构建"
 
 #: home-manager/home-manager:669
 msgid "No generation with ID %s"
-msgstr "没有 ID 为 %s 的世代"
+msgstr "没有 ID 为 %s 的生成结果"
 
 #: home-manager/home-manager:671
 msgid "Cannot remove the current generation %s"
-msgstr "无法移除当前世代 %s"
+msgstr "无法移除当前生成结果 %s"
 
 #: home-manager/home-manager:673
 msgid "Removing generation %s"
-msgstr "正在移除世代 %s"
+msgstr "正在移除生成结果 %s"
 
 #: home-manager/home-manager:692
 msgid "No generations to expire"
-msgstr "没有即将过期的世代"
+msgstr "没有即将过期的生成结果"
 
 #: home-manager/home-manager:703
 msgid "No home-manager packages seem to be installed."
@@ -225,7 +241,7 @@ msgstr "未知命令：%s"
 
 #: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
-msgstr "此配置文件/变体不可构建，请在 nix-shell 中运行它。"
+msgstr "此配置文件/变体不可构建，请使用 nix-shell 运行它。"
 
 #~ msgid "Creating initial Home Manager configuration..."
 #~ msgstr "正在创建初始 Home Manager 配置 ..."
