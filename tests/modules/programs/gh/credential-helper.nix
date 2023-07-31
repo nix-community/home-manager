@@ -3,8 +3,10 @@
 {
   programs.gh = {
     enable = true;
-    enableGitCredentialHelper = true;
-    extraGitCredentialHelperHosts = [ "https://github.example.com" ];
+    gitCredentialHelper = {
+      enable = true;
+      hosts = [ "https://github.com" "https://github.example.com" ];
+    };
   };
 
   programs.git.enable = true;

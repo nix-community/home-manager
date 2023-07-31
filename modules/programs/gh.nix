@@ -60,6 +60,12 @@ in {
         "settings"
         "git_protocol"
       ])
+      (mkRenamedOptionModule [ "programs" "gh" "enableGitCredentialHelper" ] [
+        "programs"
+        "gh"
+        "gitCredentialHelper"
+        "enable"
+      ])
     ];
 
   options.programs.gh = {
@@ -91,19 +97,19 @@ in {
       '';
     };
 
-    enableGitCredentialHelper =
-      mkEnableOption "the gh git credential helper for github.com" // {
+    gitCredentialHelper = {
+      enable = mkEnableOption "the gh git credential helper" // {
         default = true;
       };
 
-    extraGitCredentialHelperHosts = mkOption {
-      type = types.listOf types.string;
-      default = [ ];
-      description =
-        "Additional GitHub Enterprise hosts to enable the gh git credential helper for";
-      example = literalExpression ''
-        [ "https://github.example.com" ]
-      '';
+      hosts = mkOption {
+        type = types.listOf types.str;
+        default = [ "https://github.com" ];
+        description = "GitHub hosts to enable the gh git credential helper for";
+        example = literalExpression ''
+          [ "https://github.com" "https://github.example.com" ]
+        '';
+      };
     };
 
     extensions = mkOption {
@@ -122,13 +128,11 @@ in {
     xdg.configFile."gh/config.yml".source =
       yamlFormat.generate "gh-config.yml" cfg.settings;
 
-    programs.git.extraConfig.credential = let
-      hosts = lib.optional cfg.enableGitCredentialHelper "https://github.com"
-        ++ cfg.extraGitCredentialHelperHosts;
-    in builtins.listToAttrs (map (host:
-      lib.nameValuePair host {
-        helper = "${cfg.package}/bin/gh auth git-credential";
-      }) hosts);
+    programs.git.extraConfig.credential =
+      lib.mkIf cfg.gitCredentialHelper.enable (builtins.listToAttrs (map (host:
+        lib.nameValuePair host {
+          helper = "${cfg.package}/bin/gh auth git-credential";
+        }) cfg.gitCredentialHelper.hosts));
 
     xdg.dataFile."gh/extensions" = mkIf (cfg.extensions != [ ]) {
       source = pkgs.linkFarm "gh-extensions" (builtins.map (p: {
