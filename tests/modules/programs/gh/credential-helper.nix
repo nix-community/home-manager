@@ -4,6 +4,7 @@
   programs.gh = {
     enable = true;
     enableGitCredentialHelper = true;
+    extraGitCredentialHelperHosts = [ "https://github.example.com" ];
   };
 
   programs.git.enable = true;
