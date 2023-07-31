@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-16 10:09+0200\n"
+"POT-Creation-Date: 2023-07-30 09:08+0200\n"
 "PO-Revision-Date: 2023-04-23 12:49+0000\n"
 "Last-Translator: Leix b <abone9999@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/home-manager/cli/"
@@ -82,11 +82,11 @@ msgid "Can't inspect options of a flake configuration"
 msgstr "No s'han pogut inspeccionar les opcions de configuració de flake"
 
 #: home-manager/home-manager:281 home-manager/home-manager:304
-#: home-manager/home-manager:1000
+#: home-manager/home-manager:1023
 msgid "%s: unknown option '%s'"
 msgstr "%: opció desconeguda '%s'"
 
-#: home-manager/home-manager:286 home-manager/home-manager:1001
+#: home-manager/home-manager:286 home-manager/home-manager:1024
 msgid "Run '%s --help' for usage help"
 msgstr "Executa '%s --help' per veure l'ajuda d'ús"
 
@@ -139,7 +139,7 @@ msgstr ""
 msgid "Can't instantiate a flake configuration"
 msgstr "No es pot instanciar una configuració flake"
 
-#: home-manager/home-manager:549
+#: home-manager/home-manager:552
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -153,80 +153,73 @@ msgstr[1] ""
 "Hi han %d notícies rellevants no llegides.\n"
 "Llegeix-les executant la comanda \"%s news\"."
 
-#: home-manager/home-manager:563
+#: home-manager/home-manager:566
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Configuració \"news.display\" no reconeguda \"%s\"."
 
-#: home-manager/home-manager:570
+#: home-manager/home-manager:573
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "Si us plau, defineix la variable d'entorn $EDITOR"
 
-#: home-manager/home-manager:585
+#: home-manager/home-manager:588
 msgid "Cannot run build in read-only directory"
 msgstr "Impossible executar la compilació en un directori només lectura"
 
-#: home-manager/home-manager:669
+#: home-manager/home-manager:666
 msgid "No generation with ID %s"
 msgstr "No existeix la generació amb ID %s"
 
-#: home-manager/home-manager:671
+#: home-manager/home-manager:668
 msgid "Cannot remove the current generation %s"
 msgstr "Impossible eliminar la generació actual %s"
 
-#: home-manager/home-manager:673
+#: home-manager/home-manager:670
 msgid "Removing generation %s"
 msgstr "Eliminant la generació %s"
 
-#: home-manager/home-manager:692
+#: home-manager/home-manager:689
 msgid "No generations to expire"
 msgstr "No s'han trobat generacions a expirar"
 
-#: home-manager/home-manager:703
+#: home-manager/home-manager:700
 msgid "No home-manager packages seem to be installed."
 msgstr "Cap paquet home-manager sembla estar instal·lat."
 
-#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:730
-msgid "Sorry, this command is not yet supported in flake setup"
-msgstr ""
-"Ho sentim, aquesta comanda encara no està suportada en la configuració de "
-"flake"
-
-#: home-manager/home-manager:767
+#: home-manager/home-manager:781
 msgid "Unknown argument %s"
 msgstr "Argument desconegut %s"
 
-#: home-manager/home-manager:783
+#: home-manager/home-manager:805
 msgid "This will remove Home Manager from your system."
 msgstr "Home Manager serà esborrat del sistema."
 
-#: home-manager/home-manager:786
+#: home-manager/home-manager:808
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Això és un simulacre, res serà realment desinstal·lat."
 
-#: home-manager/home-manager:790
+#: home-manager/home-manager:812
 msgid "Really uninstall Home Manager?"
 msgstr "Estàs segur que vols desinstal·lar Home Manager?"
 
-#: home-manager/home-manager:796
+#: home-manager/home-manager:818
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Canviant a configuració buida de Home Manager..."
 
-#: home-manager/home-manager:823
+#: home-manager/home-manager:846
 msgid "Yay!"
 msgstr "Visca!"
 
-#: home-manager/home-manager:828
+#: home-manager/home-manager:851
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr ""
 "Home Manager ha estat desinstal·lat però el vostre home.nix es manté intacte."
 
-#: home-manager/home-manager:1040
+#: home-manager/home-manager:1063
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations espera un argument, obtinguts %d."
 
-#: home-manager/home-manager:1062
+#: home-manager/home-manager:1085
 msgid "Unknown command: %s"
 msgstr "Comanda desconeguda: %s"
 
@@ -235,6 +228,11 @@ msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
 "Aquesta derivació no es pot construir, si us plau executa-la utilitzant nix-"
 "shell."
+
+#~ msgid "Sorry, this command is not yet supported in flake setup"
+#~ msgstr ""
+#~ "Ho sentim, aquesta comanda encara no està suportada en la configuració de "
+#~ "flake"
 
 #~ msgid "Creating initial Home Manager configuration..."
 #~ msgstr "Creant configuració inicial de Home Manager..."

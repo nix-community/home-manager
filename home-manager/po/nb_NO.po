@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-16 10:09+0200\n"
+"POT-Creation-Date: 2023-07-30 09:08+0200\n"
 "PO-Revision-Date: 2023-03-08 07:22+0000\n"
 "Last-Translator: \"Kim A. Ødegaard\" <kim@dyktig.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/home-"
@@ -79,11 +79,11 @@ msgid "Can't inspect options of a flake configuration"
 msgstr "Kan ikke inspisere alternativer for et flake-oppsett"
 
 #: home-manager/home-manager:281 home-manager/home-manager:304
-#: home-manager/home-manager:1000
+#: home-manager/home-manager:1023
 msgid "%s: unknown option '%s'"
 msgstr "%s: ukjent alternativ «%s»"
 
-#: home-manager/home-manager:286 home-manager/home-manager:1001
+#: home-manager/home-manager:286 home-manager/home-manager:1024
 msgid "Run '%s --help' for usage help"
 msgstr "Kjør «%s --help» for brukshjelp"
 
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Can't instantiate a flake configuration"
 msgstr "Kan ikke igangsette flak-oppsett"
 
-#: home-manager/home-manager:549
+#: home-manager/home-manager:552
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -150,77 +150,72 @@ msgstr[1] ""
 "Det er %d uleste og relevante nyhetssaker.\n"
 "Les dem ved å kjøre kommandoen «%s news»."
 
-#: home-manager/home-manager:563
+#: home-manager/home-manager:566
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Ukjent «news.display»-innstilling «%s»."
 
-#: home-manager/home-manager:570
+#: home-manager/home-manager:573
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "Sett «$EDITOR»-miljøvariabelen"
 
-#: home-manager/home-manager:585
+#: home-manager/home-manager:588
 msgid "Cannot run build in read-only directory"
 msgstr "Kan ikke kjøre bygg i skrivebeskyttet mappe"
 
-#: home-manager/home-manager:669
+#: home-manager/home-manager:666
 msgid "No generation with ID %s"
 msgstr "Ingen generering med ID-en %s"
 
-#: home-manager/home-manager:671
+#: home-manager/home-manager:668
 msgid "Cannot remove the current generation %s"
 msgstr "Kan ikke fjerne nåværende generering %s"
 
-#: home-manager/home-manager:673
+#: home-manager/home-manager:670
 msgid "Removing generation %s"
 msgstr "Fjerner generering %s"
 
-#: home-manager/home-manager:692
+#: home-manager/home-manager:689
 msgid "No generations to expire"
 msgstr "Ingen genereringer til utløp"
 
-#: home-manager/home-manager:703
+#: home-manager/home-manager:700
 msgid "No home-manager packages seem to be installed."
 msgstr "Ingen «home-manager»-pakker ser ut til å være installert."
 
-#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:730
-msgid "Sorry, this command is not yet supported in flake setup"
-msgstr ""
-
-#: home-manager/home-manager:767
+#: home-manager/home-manager:781
 msgid "Unknown argument %s"
 msgstr "Ukjent parameter %s"
 
-#: home-manager/home-manager:783
+#: home-manager/home-manager:805
 msgid "This will remove Home Manager from your system."
 msgstr "Dette vil fjerne Home Manager fra systemet ditt."
 
-#: home-manager/home-manager:786
+#: home-manager/home-manager:808
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Dette er en testkjøring. Ingenting vil bli avinstallert."
 
-#: home-manager/home-manager:790
+#: home-manager/home-manager:812
 msgid "Really uninstall Home Manager?"
 msgstr "Vil du avinstallere Home Manager?"
 
-#: home-manager/home-manager:796
+#: home-manager/home-manager:818
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Bytter til tomt Home Manager-oppsett …"
 
-#: home-manager/home-manager:823
+#: home-manager/home-manager:846
 msgid "Yay!"
 msgstr "Hurra!"
 
-#: home-manager/home-manager:828
+#: home-manager/home-manager:851
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager er avinstallert, men din home.nix er levnet uforandret."
 
-#: home-manager/home-manager:1040
+#: home-manager/home-manager:1063
 msgid "expire-generations expects one argument, got %d."
 msgstr "«expire-generations» forventet ett argument, mottok %d."
 
-#: home-manager/home-manager:1062
+#: home-manager/home-manager:1085
 msgid "Unknown command: %s"
 msgstr "Ukjent kommando: %s"
 

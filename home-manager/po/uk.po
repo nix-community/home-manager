@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-16 10:09+0200\n"
+"POT-Creation-Date: 2023-07-30 09:08+0200\n"
 "PO-Revision-Date: 2023-07-17 10:03+0000\n"
 "Last-Translator: Dan <jonweblin2205@protonmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/home-manager/"
@@ -16,8 +16,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 5.0-dev\n"
 
 #: home-manager/home-manager:71
@@ -101,11 +101,11 @@ msgid "Can't inspect options of a flake configuration"
 msgstr "Неможливо перевірити параметри flake-конфігурації"
 
 #: home-manager/home-manager:281 home-manager/home-manager:304
-#: home-manager/home-manager:1000
+#: home-manager/home-manager:1023
 msgid "%s: unknown option '%s'"
 msgstr "%s: невідомий параметр '%s'"
 
-#: home-manager/home-manager:286 home-manager/home-manager:1001
+#: home-manager/home-manager:286 home-manager/home-manager:1024
 msgid "Run '%s --help' for usage help"
 msgstr "Запустіть '%s --help' для отримання довідки про використання"
 
@@ -159,7 +159,7 @@ msgstr ""
 msgid "Can't instantiate a flake configuration"
 msgstr "Не вдається створити екземпляр flake-конфігурації"
 
-#: home-manager/home-manager:549
+#: home-manager/home-manager:552
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -176,77 +176,72 @@ msgstr[2] ""
 "Є %d непрочитаних і ревалентних новин.\n"
 "Прочитайте їх, виконавши команду \"%s news\"."
 
-#: home-manager/home-manager:563
+#: home-manager/home-manager:566
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Невідоме налаштування \"news.display\" \"%s\"."
 
-#: home-manager/home-manager:570
+#: home-manager/home-manager:573
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "Будь ласка, встановіть змінну середовища $EDITOR"
 
-#: home-manager/home-manager:585
+#: home-manager/home-manager:588
 msgid "Cannot run build in read-only directory"
 msgstr "Неможливо запустити збірку в каталозі, доступному лише для читання"
 
-#: home-manager/home-manager:669
+#: home-manager/home-manager:666
 msgid "No generation with ID %s"
 msgstr "Немає генерації з ID %s"
 
-#: home-manager/home-manager:671
+#: home-manager/home-manager:668
 msgid "Cannot remove the current generation %s"
 msgstr "Не вдається видалити поточну генерацію %s"
 
-#: home-manager/home-manager:673
+#: home-manager/home-manager:670
 msgid "Removing generation %s"
 msgstr "Видалення генерації %s"
 
-#: home-manager/home-manager:692
+#: home-manager/home-manager:689
 msgid "No generations to expire"
 msgstr "Немає генерацій, термін дії яких закінчується"
 
-#: home-manager/home-manager:703
+#: home-manager/home-manager:700
 msgid "No home-manager packages seem to be installed."
 msgstr "Здається, не встановлено жодних пакунків home-manager."
 
-#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:730
-msgid "Sorry, this command is not yet supported in flake setup"
-msgstr "На жаль, ця команда ще не підтримується в налаштуваннях flake"
-
-#: home-manager/home-manager:767
+#: home-manager/home-manager:781
 msgid "Unknown argument %s"
 msgstr "Невідомий аргумент %s"
 
-#: home-manager/home-manager:783
+#: home-manager/home-manager:805
 msgid "This will remove Home Manager from your system."
 msgstr "Це призведе до видалення Home Manager з вашої системи."
 
-#: home-manager/home-manager:786
+#: home-manager/home-manager:808
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Це пробний запуск, насправді нічого не буде видалено."
 
-#: home-manager/home-manager:790
+#: home-manager/home-manager:812
 msgid "Really uninstall Home Manager?"
 msgstr "Дійсно видаліть Home Manager?"
 
-#: home-manager/home-manager:796
+#: home-manager/home-manager:818
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Перехід до порожньої конфігурації Home Manager..."
 
-#: home-manager/home-manager:823
+#: home-manager/home-manager:846
 msgid "Yay!"
 msgstr "Ура!"
 
-#: home-manager/home-manager:828
+#: home-manager/home-manager:851
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager буде видалено, але ваш home.nix залишиться недоторканим."
 
-#: home-manager/home-manager:1040
+#: home-manager/home-manager:1063
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generation очікує один аргумент, отримав %d."
 
-#: home-manager/home-manager:1062
+#: home-manager/home-manager:1085
 msgid "Unknown command: %s"
 msgstr "Невідома команда: %s"
 
@@ -254,6 +249,9 @@ msgstr "Невідома команда: %s"
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
 "Цю похідну не можна зібрати, будь ласка, запустіть її за допомогою nix-shell."
+
+#~ msgid "Sorry, this command is not yet supported in flake setup"
+#~ msgstr "На жаль, ця команда ще не підтримується в налаштуваннях flake"
 
 #~ msgid "Creating initial Home Manager configuration..."
 #~ msgstr "Створення початкової конфігурації Home Manager..."

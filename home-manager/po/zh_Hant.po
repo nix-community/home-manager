@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-16 10:09+0200\n"
+"POT-Creation-Date: 2023-07-30 09:08+0200\n"
 "PO-Revision-Date: 2021-12-29 08:48+0000\n"
 "Last-Translator: WhiredPlanck <fungdaat31@outlook.com>\n"
 "Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
@@ -79,11 +79,11 @@ msgid "Can't inspect options of a flake configuration"
 msgstr "無法檢查 flake 配置中的選項"
 
 #: home-manager/home-manager:281 home-manager/home-manager:304
-#: home-manager/home-manager:1000
+#: home-manager/home-manager:1023
 msgid "%s: unknown option '%s'"
 msgstr "%s：未知選項 ‘%s’"
 
-#: home-manager/home-manager:286 home-manager/home-manager:1001
+#: home-manager/home-manager:286 home-manager/home-manager:1024
 msgid "Run '%s --help' for usage help"
 msgstr "執行 ‘%s --help’ 獲取用法幫助"
 
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Can't instantiate a flake configuration"
 msgstr "無法建立 flake 配置例項"
 
-#: home-manager/home-manager:549
+#: home-manager/home-manager:552
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -147,77 +147,72 @@ msgstr[0] ""
 "有 %d 條未讀的相關新聞或訊息。\n"
 "可執行 “%s news” 命令進行閱讀。"
 
-#: home-manager/home-manager:563
+#: home-manager/home-manager:566
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "未知的 “news.display” 設定項 “%s”。"
 
-#: home-manager/home-manager:570
+#: home-manager/home-manager:573
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "請設定 $EDITOR 環境變數"
 
-#: home-manager/home-manager:585
+#: home-manager/home-manager:588
 msgid "Cannot run build in read-only directory"
 msgstr "無法在只讀目錄中執行構建"
 
-#: home-manager/home-manager:669
+#: home-manager/home-manager:666
 msgid "No generation with ID %s"
 msgstr "沒有 ID 為 %s 的世代"
 
-#: home-manager/home-manager:671
+#: home-manager/home-manager:668
 msgid "Cannot remove the current generation %s"
 msgstr "無法移除當前世代 %s"
 
-#: home-manager/home-manager:673
+#: home-manager/home-manager:670
 msgid "Removing generation %s"
 msgstr "正在移除世代 %s"
 
-#: home-manager/home-manager:692
+#: home-manager/home-manager:689
 msgid "No generations to expire"
 msgstr "沒有即將過期的世代"
 
-#: home-manager/home-manager:703
+#: home-manager/home-manager:700
 msgid "No home-manager packages seem to be installed."
 msgstr "似乎沒有安裝 home-manager 軟體包。"
 
-#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:730
-msgid "Sorry, this command is not yet supported in flake setup"
-msgstr ""
-
-#: home-manager/home-manager:767
+#: home-manager/home-manager:781
 msgid "Unknown argument %s"
 msgstr "未知引數 %s"
 
-#: home-manager/home-manager:783
+#: home-manager/home-manager:805
 msgid "This will remove Home Manager from your system."
 msgstr "這將會從系統中移除 Home Manager。"
 
-#: home-manager/home-manager:786
+#: home-manager/home-manager:808
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "這是試執行結果，沒有實際解除安裝任何軟體包。"
 
-#: home-manager/home-manager:790
+#: home-manager/home-manager:812
 msgid "Really uninstall Home Manager?"
 msgstr "確定要解除安裝 Home Manager 嗎？"
 
-#: home-manager/home-manager:796
+#: home-manager/home-manager:818
 msgid "Switching to empty Home Manager configuration..."
 msgstr "正在切換至空的 Home Manager 配置 ..."
 
-#: home-manager/home-manager:823
+#: home-manager/home-manager:846
 msgid "Yay!"
 msgstr "好耶！"
 
-#: home-manager/home-manager:828
+#: home-manager/home-manager:851
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager 已解除安裝，但未改動您的 home.nix 配置檔案。"
 
-#: home-manager/home-manager:1040
+#: home-manager/home-manager:1063
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations 須要一個引數，但獲取到了 %d 個。"
 
-#: home-manager/home-manager:1062
+#: home-manager/home-manager:1085
 msgid "Unknown command: %s"
 msgstr "未知命令：%s"
 
