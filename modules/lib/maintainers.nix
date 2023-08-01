@@ -37,6 +37,12 @@
     github = "CarlosLoboxyz";
     githubId = 86011416;
   };
+  cvoges12 = {
+    name = "Clayton Voges";
+    email = "38054771+cvoges12@users.noreply.github.com";
+    github = "cvoges12";
+    githubId = 38054771;
+  };
   d-dervishi = {
     email = "david.dervishi@epfl.ch";
     github = "d-dervishi";
