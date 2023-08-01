@@ -13,7 +13,7 @@
     '';
 
     envFile.text = ''
-      let-env FOO = 'BAR'
+      $env.FOO = 'BAR'
     '';
 
     loginFile.text = ''
