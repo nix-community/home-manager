@@ -7810,7 +7810,7 @@ strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.nushell.envFile"></a><a class="term" href="options.html#opt-programs.nushell.envFile"><code class="option">programs.nushell.envFile</code></a></span></dt><dd><p>The environment variables file to be used for nushell.</p><p>See <a class="link" href="https://www.nushell.sh/book/configuration.html#configuration" target="_top">https://www.nushell.sh/book/configuration.html#configuration</a> for more information.</p><p><span class="emphasis"><em>Type:</em></span>
 null or (submodule)</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">''
-  let-env FOO = 'BAR'
+  $env.FOO = 'BAR'
 ''
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix" target="_top">
 &lt;home-manager/modules/programs/nushell.nix&gt;
