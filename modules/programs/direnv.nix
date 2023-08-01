@@ -128,10 +128,10 @@ in {
       # Using mkAfter to make it more likely to appear after other
       # manipulations of the prompt.
       mkAfter ''
-        let-env config = ($env | default {} config).config
-        let-env config = ($env.config | default {} hooks)
-        let-env config = ($env.config | update hooks ($env.config.hooks | default [] pre_prompt))
-        let-env config = ($env.config | update hooks.pre_prompt ($env.config.hooks.pre_prompt | append {
+        $env.config = ($env | default {} config).config
+        $env.config = ($env.config | default {} hooks)
+        $env.config = ($env.config | update hooks ($env.config.hooks | default [] pre_prompt))
+        $env.config = ($env.config | update hooks.pre_prompt ($env.config.hooks.pre_prompt | append {
           code: "
             let direnv = (${pkgs.direnv}/bin/direnv export json | from json)
             let direnv = if ($direnv | length) == 1 { $direnv } else { {} }

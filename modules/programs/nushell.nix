@@ -85,7 +85,7 @@ in {
       type = types.nullOr (linesOrSource "env.nu");
       default = null;
       example = ''
-        let-env FOO = 'BAR'
+        $env.FOO = 'BAR'
       '';
       description = ''
         The environment variables file to be used for nushell.
@@ -174,8 +174,7 @@ in {
 
       (let
         envVarsStr = concatStringsSep "\n"
-          (mapAttrsToList (k: v: "let-env ${k} = ${v}")
-            cfg.environmentVariables);
+          (mapAttrsToList (k: v: "$env.${k} = ${v}") cfg.environmentVariables);
       in mkIf (cfg.envFile != null || cfg.extraEnv != "" || envVarsStr != "") {
         "${configDir}/env.nu".text = mkMerge [
           (mkIf (cfg.envFile != null) cfg.envFile.text)
