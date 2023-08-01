@@ -57,13 +57,15 @@ in {
         };
 
         # Generate a database of all manpages in ${manualPages}.
-        manualCache = pkgs.runCommandLocal "man-cache" { } ''
+        manualCache = pkgs.runCommandLocal "man-cache" {
+          nativeBuildInputs = [ cfg.package ];
+        } ''
           # Generate a temporary man.conf so mandb knows where to
           # write cache files.
           echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
 
           # Run mandb to generate cache files:
-          ${cfg.package}/bin/mandb -C man.conf --no-straycats --create \
+          mandb -C man.conf --no-straycats --create \
             ${manualPages}/share/man
         '';
       in ''
