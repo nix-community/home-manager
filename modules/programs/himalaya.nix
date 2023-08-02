@@ -36,7 +36,7 @@ let
       signatureConfig =
         lib.optionalAttrs (account.signature.showSignature == "append") {
           # TODO: signature cannot be attached yet
-          # https://todo.sr.ht/~soywod/himalaya/27
+          # https://todo.sr.ht/~soywod/pimalaya/27
           signature = account.signature.text;
           signature-delim = account.signature.delimiter;
         };
