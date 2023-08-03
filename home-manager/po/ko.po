@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-07-30 09:08+0200\n"
-"PO-Revision-Date: 2023-04-19 15:49+0000\n"
-"Last-Translator: Suwon Park <sepiabrown@naver.com>\n"
+"PO-Revision-Date: 2023-08-03 05:07+0000\n"
+"Last-Translator: 박수원 <bboxone@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/home-manager/cli/"
 "ko/>\n"
 "Language: ko\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -40,14 +40,15 @@ msgstr "설정 파일을 찾을 수 없음. %s에 설정 파일을 생성하십�
 
 #: home-manager/home-manager:114
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "%s에서 홈 매니저가 발견되지 않음."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:122
 msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
-msgstr ""
+msgstr "대체 홈 매니저 경로 %s는 더 이상 사용되지 않게 되었고 어떤 파일/디렉토리가 "
+"그곳에서 발견 되었습니다."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:125
@@ -70,6 +71,24 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"이 경고를 제거하려면, 다음 항목 중 한가지를 하십시오.\n"
+"\n"
+"1. 홈 매니저에게 명시적으로 경로를 사용하도록 설정합니다.\n"
+"\n"
+"예를들어, 다음을 설정에 추가하십시오.\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"\n"
+"   만약 직접 홈 매니저를 import하면, 홈 매니저 패키지를 호출할 때 다음과 "
+"같이 `path` 파라미터를 사용할 수 있습니다. \n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   \n"
+"2. 더이상 사용하지 않는 경로를 지우십시오.\n"
+"\n"
+"     $ rm -r \"%s\""
 
 #: home-manager/home-manager:164
 msgid "Could not find suitable profile directory, tried %s and %s"
