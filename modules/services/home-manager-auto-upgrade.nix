@@ -1,11 +1,12 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, pkgsPath, ... }:
 
 let
 
   cfg = config.services.home-manager.autoUpgrade;
 
   homeManagerPackage = pkgs.callPackage ../../home-manager {
-    path = config.programs.home-manager.path;
+    inherit (config.programs.home-manager) path;
+    inherit pkgsPath;
   };
 
 in {

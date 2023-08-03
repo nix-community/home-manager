@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, pkgsPath, ... }:
 
 with lib;
 
@@ -7,7 +7,7 @@ let
   cfg = config.manual;
 
   docs = import ../docs {
-    inherit pkgs lib;
+    inherit pkgs pkgsPath;
     inherit (config.home.version) release isReleaseBranch;
   };
 

@@ -5,16 +5,16 @@
 
   outputs = { self, nixpkgs, ... }:
     {
-      nixosModules = rec {
+      nixosModules = {
         home-manager = import ./nixos;
-        default = home-manager;
+        default = self.nixosModules.home-manager;
       };
       # deprecated in Nix 2.8
       nixosModule = self.nixosModules.default;
 
-      darwinModules = rec {
+      darwinModules = {
         home-manager = import ./nix-darwin;
-        default = home-manager;
+        default = self.darwinModules.home-manager;
       };
       # unofficial; deprecated in Nix 2.8
       darwinModule = self.darwinModules.default;
@@ -38,59 +38,14 @@
 
       lib = {
         hm = (import ./modules/lib/stdlib-extended.nix nixpkgs.lib).hm;
-        homeManagerConfiguration = { modules ? [ ], pkgs, lib ? pkgs.lib
-          , extraSpecialArgs ? { }, check ? true
-            # Deprecated:
-          , configuration ? null, extraModules ? null, stateVersion ? null
-          , username ? null, homeDirectory ? null, system ? null }@args:
-          let
-            msgForRemovedArg = ''
-              The 'homeManagerConfiguration' arguments
-
-                - 'configuration',
-                - 'username',
-                - 'homeDirectory'
-                - 'stateVersion',
-                - 'extraModules', and
-                - 'system'
-
-              have been removed. Instead use the arguments 'pkgs' and
-              'modules'. See the 22.11 release notes for more: https://nix-community.github.io/home-manager/release-notes.html#sec-release-22.11-highlights
-            '';
-
-            throwForRemovedArgs = v:
-              let
-                used = builtins.filter (n: (args.${n} or null) != null) [
-                  "configuration"
-                  "username"
-                  "homeDirectory"
-                  "stateVersion"
-                  "extraModules"
-                  "system"
-                ];
-                msg = msgForRemovedArg + ''
-
-
-                  Deprecated args passed: ''
-                  + builtins.concatStringsSep " " used;
-              in lib.throwIf (used != [ ]) msg v;
-
-          in throwForRemovedArgs (import ./modules {
-            inherit pkgs lib check extraSpecialArgs;
-            configuration = { ... }: {
-              imports = modules
-                ++ [{ programs.home-manager.path = toString ./.; }];
-              nixpkgs = { inherit (pkgs) config overlays; };
-            };
-          });
+        homeManagerConfiguration = args:
+          import ./modules/lib/homeManagerConfiguration.nix nixpkgs.lib args;
       };
     } // (let
       forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
     in {
       devShells = forAllSystems (system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-          tests = import ./tests { inherit pkgs; };
+        let tests = import ./tests { inherit nixpkgs system; };
         in tests.run);
 
       formatter = forAllSystems (system:
@@ -105,10 +60,14 @@
           pkgs = nixpkgs.legacyPackages.${system};
           releaseInfo = nixpkgs.lib.importJSON ./release.json;
           docs = import ./docs {
-            inherit pkgs;
             inherit (releaseInfo) release isReleaseBranch;
+            inherit pkgs;
+            pkgsPath = nixpkgs.outPath;
           };
-          hmPkg = pkgs.callPackage ./home-manager { path = toString ./.; };
+          hmPkg = pkgs.callPackage ./home-manager {
+            path = self.outPath;
+            pkgsPath = nixpkgs.outPath;
+          };
         in {
           default = hmPkg;
           home-manager = hmPkg;

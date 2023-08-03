@@ -243,7 +243,7 @@ function doInspectOption() {
     modulesExpr+="confAttr = \"${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX}\"; in "
     modulesExpr+="(import <home-manager/modules> {"
     modulesExpr+=" configuration = if confAttr == \"\" then confPath else (import confPath).\${confAttr};"
-    modulesExpr+=" pkgs = import <nixpkgs> {}; check = true; })"
+    modulesExpr+=" nixpkgs = @pkgsPath@; check = true; })"
 
     nixos-option \
         --options_expr "$modulesExpr.options" \
@@ -345,6 +345,8 @@ $xdgVars
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
   home.stateVersion = "23.05"; # Please read the comment before changing.
+  # The system to build this configuration for 
+  nixpkgs.system = "$(nix eval --expr builtins.currentSystem --raw --impure)";
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -412,9 +414,6 @@ EOF
         else
             _i 'Creating %s...' "$flakeFile"
 
-            local nixSystem
-            nixSystem=$(nix eval --expr builtins.currentSystem --raw --impure)
-
             mkdir -p "$confDir"
             cat > "$flakeFile" <<EOF
 {
@@ -429,22 +428,19 @@ EOF
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
-    let
-      system = "$nixSystem";
-      pkgs = nixpkgs.legacyPackages.\${system};
-    in {
-      homeConfigurations."$USER" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+  outputs = { nixpkgs, home-manager, ... }@inputs: {
+    homeConfigurations.$USER = home-manager.lib.homeManagerConfiguration {
+      inherit nixpkgs;
 
-        # Specify your home configuration modules here, for example,
-        # the path to your home.nix.
-        modules = [ ./home.nix ];
+      # Specify your home configuration modules here, for example,
+      # the path to your home.nix.
+      modules = [ ./home.nix ];
 
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
-      };
+      # Optionally use extraSpecialArgs
+      # to pass through arguments to home.nix
+      #extraSpecialArgs = { inherit inputs };
     };
+  };
 }
 EOF
         fi
@@ -493,7 +489,8 @@ function doInstantiate() {
         "${extraArgs[@]}" \
         "${PASSTHROUGH_OPTS[@]}" \
         --argstr confPath "$HOME_MANAGER_CONFIG" \
-        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE" \
+        --argstr pkgsPath "@pkgsPath@"
 }
 
 function doBuildAttr() {
@@ -514,7 +511,8 @@ function doBuildAttr() {
         "${extraArgs[@]}" \
         "${PASSTHROUGH_OPTS[@]}" \
         --argstr confPath "$HOME_MANAGER_CONFIG" \
-        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE" \
+        --argstr pkgsPath "@pkgsPath@"
 }
 
 function doBuildFlake() {
@@ -822,6 +820,7 @@ function doUninstall() {
             echo "  home.file = lib.mkForce {};" >> "$HOME_MANAGER_CONFIG"
             echo "  home.stateVersion = \"18.09\";" >> "$HOME_MANAGER_CONFIG"
             echo "  manual.manpages.enable = false;" >> "$HOME_MANAGER_CONFIG"
+            echo "  nixpkgs.system = \"$(nix eval --expr builtins.currentSystem --raw --impure)\";" >> "$HOME_MANAGER_CONFIG"
             echo "}" >> "$HOME_MANAGER_CONFIG"
             doSwitch
             $DRY_RUN_CMD $REMOVE_CMD home-manager-path || true

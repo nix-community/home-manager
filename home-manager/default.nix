@@ -1,17 +1,16 @@
-{ runCommand, lib, bash, callPackage, coreutils, findutils, gettext, gnused
-, less, ncurses, unixtools
+{ runCommand, lib, bash, coreutils, findutils, gettext, gnused, less, ncurses
+, unixtools
 # used for pkgs.path for nixos-option
-, pkgs
-
+, pkgsPath
 # Path to use as the Home Manager channel.
-, path ? null }:
+, path ? null
+  # Do we need this anymore??
+, callPackage, nixos-option ?
+  (callPackage "${pkgsPath}/nixos/modules/installer/tools/nixos-option" { }) }:
 
 let
 
   pathStr = if path == null then "" else path;
-
-  nixos-option = pkgs.nixos-option or (callPackage
-    (pkgs.path + "/nixos/modules/installer/tools/nixos-option") { });
 
 in runCommand "home-manager" {
   preferLocalBuild = true;
@@ -42,7 +41,8 @@ in runCommand "home-manager" {
     }" \
     --subst-var-by HOME_MANAGER_LIB '${../lib/bash/home-manager.sh}' \
     --subst-var-by HOME_MANAGER_PATH '${pathStr}' \
-    --subst-var-by OUT "$out"
+    --subst-var-by OUT "$out" \
+    --subst-var-by pkgsPath '${pkgsPath}'
 
   install -D -m755 ${./completion.bash} \
     $out/share/bash-completion/completions/home-manager

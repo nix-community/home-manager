@@ -1,8 +1,15 @@
-{ pkgs ? import <nixpkgs> {}, enableBig ? true }:
+{ system, nixpkgs ? <nixpkgs>, enableBig ? true }:
 
 let
+    pkgsPath =
+        if (nixpkgs._type or "") == "flake"
+        then nixpkgs.outPath
+        else toString nixpkgs
+        ;
 
-  lib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
+    lib = import ../modules/lib/stdlib-extended.nix (import "${pkgsPath}/lib");
+
+  pkgs = import pkgsPath { inherit system;};
 
   nmt = fetchTarball {
     url =
@@ -10,15 +17,12 @@ let
     sha256 = "1cyly1zazgj8z6bazml4js7lqaqvpp8lw045aqchlpvp42bl1lp4";
   };
 
-  modules = import ../modules/modules.nix {
-    inherit lib pkgs;
+  modules = import ../modules/all-modules.nix {
+    inherit lib pkgsPath;
     check = false;
   } ++ [
     {
-      # Bypass <nixpkgs> reference inside modules/modules.nix to make the test
-      # suite more pure.
-      _module.args.pkgsPath = pkgs.path;
-
+      nixpkgs.system = system;
       # Fix impurities. Without these some of the user's environment
       # will leak into the tests through `builtins.getEnv`.
       xdg.enable = true;

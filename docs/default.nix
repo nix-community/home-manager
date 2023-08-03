@@ -1,11 +1,10 @@
-{ pkgs
+{ pkgs, pkgsPath,
 
-# Note, this should be "the standard library" + HM extensions.
-, lib ? import ../modules/lib/stdlib-extended.nix pkgs.lib
-
-, release, isReleaseBranch }:
+release, isReleaseBranch }:
 
 let
+
+  lib = import ../modules/lib/stdlib-extended.nix (import "${pkgsPath}/lib");
 
   nmdSrc = fetchTarball {
     url =
@@ -28,10 +27,7 @@ let
   # instantiating derivations.
   scrubbedPkgsModule = {
     imports = [{
-      _module.args = {
-        pkgs = lib.mkForce (nmd.scrubDerivations "pkgs" pkgs);
-        pkgs_i686 = lib.mkForce { };
-      };
+      _module.args = { pkgs = lib.mkForce (nmd.scrubDerivations "pkgs" pkgs); };
     }];
   };
 
@@ -71,8 +67,8 @@ let
     } // builtins.removeAttrs args [ "modules" "includeModuleSystemOptions" ]);
 
   hmOptionsDocs = buildOptionsDocs {
-    modules = import ../modules/modules.nix {
-      inherit lib pkgs;
+    modules = import ../modules/all-modules.nix {
+      inherit lib pkgsPath;
       check = false;
     } ++ [ scrubbedPkgsModule ];
     variablelistId = "home-manager-options";
@@ -145,8 +141,8 @@ in {
   # Unstable, mainly for CI.
   jsonModuleMaintainers = pkgs.writeText "hm-module-maintainers.json" (let
     result = lib.evalModules {
-      modules = import ../modules/modules.nix {
-        inherit lib pkgs;
+      modules = import ../modules/all-modules.nix {
+        inherit lib pkgsPath;
         check = false;
       } ++ [ scrubbedPkgsModule ];
     };

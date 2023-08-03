@@ -6,6 +6,7 @@
 with lib;
 
 let
+  hostPkgs = pkgs;
 
   cfg = config.home-manager;
 
@@ -20,13 +21,14 @@ let
     } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
-        imports = import ../modules/modules.nix {
-          inherit pkgs;
+        imports = import ../modules/all-modules.nix {
           lib = extendedLib;
-          useNixpkgsModule = !cfg.useGlobalPkgs;
+          pkgsPath = pkgs.path;
         };
 
         config = {
+          nixpkgs.system = pkgs.stdenv.hostPlatform.system;
+          nixpkgs.pkgs = lib.mkIf (cfg.useGlobalPkgs) hostPkgs;
           submoduleSupport.enable = true;
           submoduleSupport.externalPackageInstall = cfg.useUserPackages;
 
