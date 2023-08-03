@@ -11,11 +11,15 @@ in {
   imports = [
     (lib.mkRemovedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "disableAutoreload" ]
-      "Autoreloading now always happen")
+      "Autoreloading now always happens")
 
     (lib.mkRemovedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "recommendedEnvironment" ]
       "Recommended environment variables are now always set")
+
+    (lib.mkRemovedOptionModule # \
+      [ "wayland" "windowManager" "hyprland" "xwayland" "hidpi" ]
+      "HiDPI patches are deprecated. Refer to https://wiki.hyprland.org/Configuring/XWayland")
 
     (lib.mkRenamedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "nvidiaPatches" ] # \
@@ -32,8 +36,7 @@ in {
       readOnly = true;
       default = cfg.package.override {
         enableXWayland = cfg.xwayland.enable;
-        hidpiXWayland = cfg.xwayland.hidpi;
-        nvidiaPatches = cfg.enableNvidiaPatches;
+        enableNvidiaPatches = cfg.enableNvidiaPatches;
       };
       defaultText = lib.literalMD
         "`wayland.windowManager.hyprland.package` with applied configuration";
@@ -66,15 +69,7 @@ in {
       '';
     };
 
-    xwayland = {
-      enable = lib.mkEnableOption "XWayland" // { default = true; };
-      hidpi = lib.mkEnableOption null // {
-        description = ''
-          Enable HiDPI XWayland, based on [XWayland MR 733](https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733).
-          See <https://wiki.hyprland.org/Nix/Options-Overrides/#xwayland-hidpi> for more info.
-        '';
-      };
-    };
+    xwayland.enable = lib.mkEnableOption "XWayland" // { default = true; };
 
     enableNvidiaPatches =
       lib.mkEnableOption "patching wlroots for better Nvidia support";
