@@ -256,6 +256,7 @@ let
     ./programs/zsh/prezto.nix
     ./programs/zsh/zsh-abbr.nix
     ./services/arrpc.nix
+    ./services/activitywatch.nix
     ./services/autorandr.nix
     ./services/avizo.nix
     ./services/barrier.nix
