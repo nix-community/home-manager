@@ -211,6 +211,7 @@ in import nmtSrc {
     ./modules/programs/wpaperd
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
+    ./modules/services/activitywatch
     ./modules/services/avizo
     ./modules/services/barrier
     ./modules/services/borgmatic
