@@ -79,6 +79,16 @@ let
         '';
       };
 
+      ignoreAllDups = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          If a new command line being added to the history list
+          duplicates an older one, the older command is removed
+          from the list (even if it is not the previous event).
+        '';
+      };
+
       ignoreSpace = mkOption {
         type = types.bool;
         default = true;
@@ -588,6 +598,7 @@ in
 
         setopt HIST_FCNTL_LOCK
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
+        ${if cfg.history.ignoreAllDups then "setopt" else "unsetopt"} HIST_IGNORE_ALL_DUPS
         ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
         ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
         ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
