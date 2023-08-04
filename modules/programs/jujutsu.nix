@@ -65,7 +65,7 @@ in {
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      source <(${pkgs.jujutsu}/bin/jj util completion --zsh | sed '$d')
+      source <(${pkgs.jujutsu}/bin/jj util completion --zsh)
       compdef _jj ${pkgs.jujutsu}/bin/jj
     '';
 
