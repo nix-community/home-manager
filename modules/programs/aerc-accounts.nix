@@ -177,21 +177,20 @@ in {
               params = cfg.aerc.smtpOauth2Params;
             };
 
-            protocol = if smtp.tls.enable && !smtp.tls.useStartTls then
-              "smtps${loginMethod'}"
+            protocol = if smtp.tls.enable then
+              if smtp.tls.useStartTls then
+                "smtp${loginMethod'}"
+              else
+                "smtps${loginMethod'}"
             else
-              "smtp${loginMethod'}";
+              "smtp+insecure${loginMethod'}";
 
             port' = optPort smtp.port;
-
-            smtp-starttls =
-              if smtp.tls.enable && smtp.tls.useStartTls then "yes" else null;
 
           in {
             outgoing =
               "${protocol}://${userName}@${smtp.host}${port'}${oauthParams'}";
-          } // optPwCmd "outgoing" passwordCommand
-          // optAttr "smtp-starttls" smtp-starttls;
+          } // optPwCmd "outgoing" passwordCommand;
 
         msmtp = cfg: {
           outgoing = "msmtpq --read-envelope-from --read-recipients";

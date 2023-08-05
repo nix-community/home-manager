@@ -38,7 +38,6 @@ source-cred-cmd = echo PaSsWorD!
 [e_smtp-nopasscmd-tls-starttls]
 from = Foo Bar <addr@mail.invalid>
 outgoing = smtp+plain://foobar@smtp.host.invalid:42
-smtp-starttls = yes
 
 [f_smtp-passcmd-tls-nostarttls]
 from = Foo Bar <addr@mail.invalid>
@@ -47,12 +46,12 @@ outgoing-cred-cmd = echo PaSsWorD!
 
 [g_smtp-passcmd-notls-nostarttls]
 from = Foo Bar <addr@mail.invalid>
-outgoing = smtp+plain://foobar@smtp.host.invalid:42
+outgoing = smtp+insecure+plain://foobar@smtp.host.invalid:42
 outgoing-cred-cmd = echo PaSsWorD!
 
 [h_smtp-passcmd-notls-starttls]
 from = Foo Bar <addr@mail.invalid>
-outgoing = smtp+plain://foobar@smtp.host.invalid:42
+outgoing = smtp+insecure+plain://foobar@smtp.host.invalid:42
 outgoing-cred-cmd = echo PaSsWorD!
 
 [i_maildir-mbsync]
