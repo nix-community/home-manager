@@ -44,7 +44,7 @@ in {
       enable = mkEnableOption "Qt 4, 5 and 6 configuration";
 
       platformTheme = mkOption {
-        type = types.nullOr (types.enum [ "gtk" "gnome" "qtct" "kde" ]);
+        type = types.nullOr (types.enum [ "gtk" "gtk3" "gnome" "qtct" "kde" ]);
         default = null;
         example = "gnome";
         relatedPackages = [
@@ -63,6 +63,10 @@ in {
           `gtk`
           : Use GTK theme with
             [`qtstyleplugins`](https://github.com/qt/qtstyleplugins)
+
+          `gtk3`
+          : Use [GTK3 integration](https://github.com/qt/qtbase/tree/dev/src/plugins/platformthemes/gtk3)
+            for file picker dialogs, font and theme configuration
 
           `gnome`
           : Use GNOME theme with
