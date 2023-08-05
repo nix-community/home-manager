@@ -128,7 +128,7 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && cfg.platformTheme != null) {
+  config = mkIf cfg.enable {
     assertions = [{
       assertion = cfg.platformTheme == "gnome" -> cfg.style.name != null
         && cfg.style.package != null;
@@ -160,9 +160,10 @@ in {
     ] else if cfg.platformTheme == "kde" then [
       pkgs.libsForQt5.plasma-integration
       pkgs.libsForQt5.systemsettings
-    ] else
-      [ pkgs.libsForQt5.qtstyleplugins ])
-      ++ lib.optionals (cfg.style.package != null)
+    ] else if cfg.platformTheme == "gtk2" then
+      [ pkgs.libsForQt5.qtstyleplugins ]
+    else
+      [ ]) ++ lib.optionals (cfg.style.package != null)
       (lib.toList cfg.style.package);
 
     xsession.importedVariables = [ "QT_QPA_PLATFORMTHEME" ]
