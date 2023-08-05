@@ -79,6 +79,32 @@ in {
         '';
       };
 
+      pluginPath = mkOption {
+        type = types.listOf (types.path);
+        default = [ ];
+        example = literalExpression
+          ''[ "''${pkgs.fcitx5-with-addons}/lib/qt-6-plugins" ]'';
+        description = ''
+          Configure the lookup path for Qt plugins.
+          This sets or prepends to QT_PLUGIN_PATH.
+          Note that home-manager profile path is already included.
+          See [the Qt documentation](https://doc.qt.io/qt-6/deployment-plugins.html) for further details.
+        '';
+      };
+
+      qmlImportPath = mkOption {
+        type = types.listOf (types.path);
+        default = [ ];
+        example =
+          literalExpression ''[ "''${pkgs.qt6.qtwayland}/lib/qt-5.15.9/qml" ]'';
+        description = ''
+          Configure the lookup path for QML modules.
+          This sets or prepends to QML2_IMPORT_PATH.
+          Note that home-manager profile path is already included.
+          See [the Qt documentation](https://doc.qt.io/qt-6/qtqml-syntax-imports.html) for further details.
+        '';
+      };
+
       style = {
         name = mkOption {
           type = types.nullOr types.str;
@@ -141,6 +167,18 @@ in {
     qt.style.package = mkIf (cfg.style.name != null)
       (mkDefault (stylePackages.${toLower cfg.style.name} or null));
 
+    qt.pluginPath =
+      builtins.map (prefix: "${config.home.profileDirectoty}/${prefix}") [
+        pkgs.qt6.qtbase.qtPluginPrefix
+        pkgs.qt5.qtbase.qtPluginPrefix
+      ];
+
+    qt.qmlImportPath =
+      builtins.map (prefix: "${config.home.profileDirectoty}/${prefix}") [
+        pkgs.qt6.qtbase.qtQmlPrefix
+        pkgs.qt5.qtbase.qtQmlPrefix
+      ];
+
     # Necessary because home.sessionVariables doesn't support mkIf
     home.sessionVariables = filterAttrs (n: v: v != null) {
       QT_QPA_PLATFORMTHEME = if cfg.platformTheme == "gtk" then
@@ -150,6 +188,12 @@ in {
       else
         cfg.platformTheme;
       QT_STYLE_OVERRIDE = cfg.style.name;
+      QT_PLUGIN_PATH = "${
+          concatStringsSep ":" cfg.pluginPath
+        }\${QT_PLUGIN_PATH:+:}$QT_PLUGIN_PATH";
+      QML2_IMPORT_PATH = "${
+          concatStringsSep ":" cfg.qmlImportPath
+        }\${QML2_IMPORT_PATH:+:}$QML2_IMPORT_PATH";
     };
 
     home.packages = (if cfg.platformTheme == "gnome" then
