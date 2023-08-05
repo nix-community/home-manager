@@ -16,10 +16,10 @@ let
     cde = libsForQt5.qtstyleplugins;
     plastique = libsForQt5.qtstyleplugins;
 
-    adwaita = adwaita-qt;
-    adwaita-dark = adwaita-qt;
-    adwaita-highcontrast = adwaita-qt;
-    adwaita-highcontrastinverse = adwaita-qt;
+    adwaita = [ adwaita-qt adwaita-qt6 ];
+    adwaita-dark = [ adwaita-qt adwaita-qt6 ];
+    adwaita-highcontrast = [ adwaita-qt adwaita-qt6 ];
+    adwaita-highcontrastinverse = [ adwaita-qt adwaita-qt6 ];
 
     breeze = libsForQt5.breeze-qt5;
 
