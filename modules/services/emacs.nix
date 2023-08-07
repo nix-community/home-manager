@@ -176,6 +176,13 @@ in {
         };
       };
 
+      launchd.user.agents.emacs = {
+        config.ProgramArguments =
+          [  "${emacsBinPath}/emacs" "--fg-daemon" "${escapeShellArgs cfg.extraOptions}" ];
+        config.RunAtLoad = true;
+      };
+
+
       home = {
         packages = optional cfg.client.enable (hiPrio clientDesktopItem);
 
