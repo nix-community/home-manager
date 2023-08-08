@@ -10037,7 +10037,7 @@ package</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.tmate</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tmate.nix" target="_top">
 &lt;home-manager/modules/programs/tmate.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.tmate.dsaFingerprint"></a><a class="term" href="options.html#opt-programs.tmate.dsaFingerprint"><code class="option">programs.tmate.dsaFingerprint</code></a></span></dt><dd><p>Tmate server EdDSA key fingerprint.</p><p><span class="emphasis"><em>Type:</em></span>
-null or Concatenated string</p><p><span class="emphasis"><em>Default:</em></span>
+null or string</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">SHA256:1111111111111111111111111111111111111111111</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tmate.nix" target="_top">
 &lt;home-manager/modules/programs/tmate.nix&gt;
@@ -10057,7 +10057,7 @@ null or 16 bit unsigned integer; between 0 and 65535 (both inclusive)</p><p><spa
 <code class="literal">2222</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tmate.nix" target="_top">
 &lt;home-manager/modules/programs/tmate.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.tmate.rsaFingerprint"></a><a class="term" href="options.html#opt-programs.tmate.rsaFingerprint"><code class="option">programs.tmate.rsaFingerprint</code></a></span></dt><dd><p>Tmate server RSA key fingerprint.</p><p><span class="emphasis"><em>Type:</em></span>
-null or Concatenated string</p><p><span class="emphasis"><em>Default:</em></span>
+null or string</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">SHA256:1111111111111111111111111111111111111111111</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tmate.nix" target="_top">
 &lt;home-manager/modules/programs/tmate.nix&gt;
@@ -16432,7 +16432,7 @@ null or boolean</p><p><span class="emphasis"><em>Default:</em></span>
 &lt;home-manager/modules/misc/xdg-desktop-entries.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-xdg.desktopEntries._name_.settings"></a><a class="term" href="options.html#opt-xdg.desktopEntries._name_.settings"><code class="option">xdg.desktopEntries.&lt;name&gt;.settings</code></a></span></dt><dd><p>Extra key-value pairs to add to the <code class="literal">[Desktop Entry]</code> section.
 This may override other values.</p><p><span class="emphasis"><em>Type:</em></span>
-attribute set of Concatenated string</p><p><span class="emphasis"><em>Default:</em></span>
+attribute set of string</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
   Keywords = "calc;math";
   DBusActivatable = "false";
