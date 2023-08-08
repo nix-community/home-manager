@@ -598,13 +598,27 @@ in
         ''
       else
         ''
+          function nixProfileList() {
+            # We attempt to use `--json` first (added in Nix 2.17). Otherwise attempt to
+            # parse the legacy output format.
+            {
+              nix profile list --json 2>/dev/null \
+                | jq -r --arg name "$1" '.elements[].storePaths[] | select(endswith($name))'
+            } || {
+              nix profile list \
+                | { grep "$1\$" || test $? = 1; } \
+                | cut -d ' ' -f 4
+            }
+          }
+
+          function nixRemoveProfileByName() {
+              nixProfileList "$1" | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+          }
+
           function nixReplaceProfile() {
             local oldNix="$(command -v nix)"
 
-            nix profile list \
-              | { grep 'home-manager-path$' || test $? = 1; } \
-              | cut -d ' ' -f 4 \
-              | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+            nixRemoveProfileByName 'home-manager-path'
 
             $DRY_RUN_CMD $oldNix profile install $1
           }
@@ -626,7 +640,7 @@ in
             _iError $'Oops, Nix failed to install your new Home Manager profile!\n\nPerhaps there is a conflict with a package that was installed using\n"%s"? Try running\n\n    %s\n\nand if there is a conflicting package you can remove it with\n\n    %s\n\nThen try activating your Home Manager configuration again.' "$INSTALL_CMD" "$LIST_CMD" "$REMOVE_CMD_SYNTAX"
             exit 1
           fi
-          unset -f nixReplaceProfile
+          unset -f nixProfileList nixRemoveProfileByName nixReplaceProfile
           unset INSTALL_CMD INSTALL_CMD_ACTUAL LIST_CMD REMOVE_CMD_SYNTAX
         ''
     );
@@ -678,6 +692,7 @@ in
             gettext
             gnugrep
             gnused
+            jq
             ncurses             # For `tput`.
           ]
           ++ config.home.extraActivationPath
