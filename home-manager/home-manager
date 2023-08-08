@@ -11,11 +11,21 @@ export TEXTDOMAINDIR=@OUT@/share/locale
 # shellcheck disable=1091
 source @HOME_MANAGER_LIB@
 
+function nixProfileList() {
+    # We attempt to use `--json` first (added in Nix 2.17). Otherwise attempt to
+    # parse the legacy output format.
+    {
+        nix profile list --json 2>/dev/null \
+            | jq -r --arg name "$1" '.elements[].storePaths[] | select(endswith($name))'
+    } || {
+        nix profile list \
+            | { grep "$1\$" || test $? = 1; } \
+            | cut -d ' ' -f 4
+    }
+}
+
 function removeByName() {
-  nix profile list \
-      | { grep "$1" || test $? = 1; } \
-      | cut -d ' ' -f 4 \
-      | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+    nixProfileList "$1" | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
 }
 
 function setNixProfileCommands() {
