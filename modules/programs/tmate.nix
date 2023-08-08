@@ -36,7 +36,7 @@ in {
       };
 
       dsaFingerprint = mkOption {
-        type = with types; nullOr string;
+        type = with types; nullOr str;
         default = null;
         example = literalExpression
           "SHA256:1111111111111111111111111111111111111111111";
@@ -44,7 +44,7 @@ in {
       };
 
       rsaFingerprint = mkOption {
-        type = with types; nullOr string;
+        type = with types; nullOr str;
         default = null;
         example = literalExpression
           "SHA256:1111111111111111111111111111111111111111111";

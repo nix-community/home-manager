@@ -107,7 +107,7 @@ let
       };
 
       settings = mkOption {
-        type = types.attrsOf types.string;
+        type = types.attrsOf types.str;
         description = ''
           Extra key-value pairs to add to the `[Desktop Entry]` section.
           This may override other values.
