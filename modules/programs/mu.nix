@@ -29,6 +29,8 @@ in {
     programs.mu = {
       enable = mkEnableOption "mu, a maildir indexer and searcher";
 
+      package = mkPackageOption pkgs "mu" { };
+
       # No options/config file present for mu, and program author will not be
       # adding one soon. See https://github.com/djcb/mu/issues/882 for more
       # information about this.
@@ -42,7 +44,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.mu ];
+    home.packages = [ cfg.package ];
 
     home.activation.runMuInit = let
       maildirOption = genCmdMaildir config.accounts.email.maildirBasePath;
@@ -52,7 +54,9 @@ in {
       # In theory, mu is the only thing that creates that directory, and it is
       # only created during the initial index.
       if [[ ! -d "${dbLocation}" ]]; then
-        $DRY_RUN_CMD ${pkgs.mu}/bin/mu init ${maildirOption} ${myAddresses} $VERBOSE_ARG;
+        $DRY_RUN_CMD ${
+          getExe cfg.package
+        } init ${maildirOption} ${myAddresses} $VERBOSE_ARG;
       fi
     '';
   };

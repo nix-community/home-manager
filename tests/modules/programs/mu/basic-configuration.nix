@@ -12,7 +12,7 @@
 
   programs.mu.enable = true;
 
-  test.stubs.mu = { };
+  test.stubs.mu = { name = "mu"; };
 
   nmt.script = ''
     assertFileContains activate \
