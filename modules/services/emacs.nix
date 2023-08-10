@@ -176,7 +176,7 @@ in {
         };
       };
 
-      launchd.user.agents.emacs = {
+      launchd.agents.emacs = {
         config.ProgramArguments =
           [  "${emacsBinPath}/emacs" "--fg-daemon" "${escapeShellArgs cfg.extraOptions}" ];
         config.RunAtLoad = true;
