@@ -80,15 +80,28 @@ let
           Sets the output transform.
         '';
       };
+
+      adaptiveSync = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        example = true;
+        description = ''
+          Enables or disables adaptive synchronization
+          (aka. Variable Refresh Rate).
+        '';
+      };
     };
   };
 
-  outputStr = { criteria, status, mode, position, scale, transform, ... }:
+  outputStr =
+    { criteria, status, mode, position, scale, transform, adaptiveSync, ... }:
     ''output "${criteria}"'' + optionalString (status != null) " ${status}"
     + optionalString (mode != null) " mode ${mode}"
     + optionalString (position != null) " position ${position}"
     + optionalString (scale != null) " scale ${toString scale}"
-    + optionalString (transform != null) " transform ${transform}";
+    + optionalString (transform != null) " transform ${transform}"
+    + optionalString (adaptiveSync != null)
+    " adaptive_sync ${if adaptiveSync then "on" else "off"}";
 
   profileModule = types.submodule {
     options = {
