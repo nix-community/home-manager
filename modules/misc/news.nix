@@ -1414,6 +1414,16 @@ in {
           A new module is available: 'programs.jetbrains-remote'
         '';
       }
+
+      {
+        time = "2023-02-14T08:45:52+00:00";
+        message = ''
+          Three new modules are available:
+            'virtualisation.containers',
+            'virtualisation.oci-containers',
+            'virtualisation.podman'.
+        '';
+      }
     ];
   };
 }
