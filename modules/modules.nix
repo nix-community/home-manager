@@ -368,6 +368,9 @@ let
     ./systemd.nix
     ./targets/darwin
     ./targets/generic-linux.nix
+    ./virtualisation/containers.nix
+    ./virtualisation/oci-containers.nix
+    ./virtualisation/podman/podman.nix
     ./xresources.nix
     ./xsession.nix
     ./misc/nix.nix

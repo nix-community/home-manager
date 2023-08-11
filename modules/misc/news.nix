@@ -1348,6 +1348,16 @@ in
           A new module is available: 'programs.gradle'.
         '';
       }
+
+      {
+        time = "2023-12-23T08:45:52+00:00";
+        message = ''
+          Three new modules are available:
+            'virtualisation.containers',
+            'virtualisation.oci-containers',
+            'virtualisation.podman'.
+        '';
+      }
     ];
   };
 }

@@ -159,6 +159,7 @@ import nmt {
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/services/syncthing/common
+    ./modules/virtualisation/podman
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
@@ -263,6 +264,7 @@ import nmt {
     ./modules/services/wlsunset
     ./modules/services/xsettingsd
     ./modules/systemd
+    ./modules/virtualisation/oci-containers
     ./modules/targets-linux
   ]);
 }
