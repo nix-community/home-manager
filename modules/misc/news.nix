@@ -1414,6 +1414,14 @@ in {
           A new module is available: 'programs.jetbrains-remote'
         '';
       }
+
+      {
+        time = "2024-02-21T23:01:27+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'wayland.windowManager.river'.
+        '';
+      }
     ];
   };
 }
