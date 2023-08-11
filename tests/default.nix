@@ -260,6 +260,7 @@ in import nmtSrc {
     ./modules/services/window-managers/herbstluftwm
     ./modules/services/window-managers/hyprland
     ./modules/services/window-managers/i3
+    ./modules/services/window-managers/river
     ./modules/services/window-managers/spectrwm
     ./modules/services/window-managers/sway
     ./modules/services/wlsunset
