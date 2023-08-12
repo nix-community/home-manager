@@ -173,6 +173,7 @@ let
     ./programs/pubs.nix
     ./programs/pyenv.nix
     ./programs/pylint.nix
+    ./programs/qcal.nix
     ./programs/qutebrowser.nix
     ./programs/rbw.nix
     ./programs/readline.nix

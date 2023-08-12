@@ -120,6 +120,7 @@ import nmt {
     ./modules/programs/powerline-go
     ./modules/programs/pubs
     ./modules/programs/pyenv
+    ./modules/programs/qcal
     ./modules/programs/qutebrowser
     ./modules/programs/readline
     ./modules/programs/ripgrep
