@@ -71,7 +71,7 @@ in {
         ignorecase = false;
         icons = true;
         tabstop = 4;
-        ratios = "2:2:3";
+        ratios = [ 2 2 3 ];
       };
     };
 
