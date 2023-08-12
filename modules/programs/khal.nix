@@ -152,6 +152,7 @@ in {
       description = ''
         khal locale settings. 
       '';
+      default = { };
     };
   };
 
@@ -161,7 +162,7 @@ in {
     xdg.configFile."khal/config".text = concatStringsSep "\n" ([ "[calendars]" ]
       ++ mapAttrsToList genCalendarStr khalAccounts ++ [
         (generators.toINI { } {
-          # locale = definedAttrs (cfg.locale // { _module = null; });
+          locale = definedAttrs (cfg.locale // { _module = null; });
 
           default = optionalAttrs (!isNull primaryAccount) {
             highlight_event_days = true;
