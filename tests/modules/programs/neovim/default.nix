@@ -6,4 +6,5 @@
   # waiting for a nixpkgs patch
   neovim-no-init = ./no-init.nix;
   neovim-extra-lua-init = ./extra-lua-init.nix;
+  neovim-init-newline = ./init-newline.nix;
 }
