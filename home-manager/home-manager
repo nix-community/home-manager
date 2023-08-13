@@ -397,8 +397,10 @@ $xdgVars
     # '';
   };
 
-  # You can also manage environment variables but you will have to manually
-  # source
+  # Home Manager can also manage your environment variables through
+  # 'home.sessionVariables'. If you don't want to manage your shell through Home
+  # Manager then you have to manually source 'hm-session-vars.sh' located at
+  # either
   #
   #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
   #
@@ -406,7 +408,6 @@ $xdgVars
   #
   #  /etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh
   #
-  # if you don't want to manage your shell through Home Manager.
   home.sessionVariables = {
     # EDITOR = "emacs";
   };
