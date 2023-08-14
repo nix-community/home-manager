@@ -27,7 +27,7 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && !config.submoduleSupport.enable) {
+  config = mkIf cfg.enable {
     home.packages =
       [ (pkgs.callPackage ../../home-manager { inherit (cfg) path; }) ];
   };
