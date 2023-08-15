@@ -65,20 +65,19 @@ let
   luaPackages = cfg.finalPackage.unwrapped.lua.pkgs;
   resolvedExtraLuaPackages = cfg.extraLuaPackages luaPackages;
 
-  extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
-    ''--suffix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
-  extraMakeWrapperLuaCArgs =
-    lib.optionalString (resolvedExtraLuaPackages != [ ]) ''
-      --suffix LUA_CPATH ";" "${
+  # TODO pass as lists
+  extraMakeWrapperArgs = lib.optionals (cfg.extraPackages != [ ]) 
+    [ "--suffix" "PATH" ":" "${lib.makeBinPath cfg.extraPackages}"];
+  extraMakeWrapperLuaCArgs = lib.optionals (resolvedExtraLuaPackages != [ ]) [
+    "--suffix" "LUA_CPATH" ";" "${
         lib.concatMapStringsSep ";" luaPackages.getLuaCPath
         resolvedExtraLuaPackages
-      }"'';
-  extraMakeWrapperLuaArgs = lib.optionalString (resolvedExtraLuaPackages != [ ])
-    ''
-      --suffix LUA_PATH ";" "${
+    }"];
+  extraMakeWrapperLuaArgs = lib.optionals (resolvedExtraLuaPackages != [ ]) [
+    "--suffix" "LUA_PATH" ";" "${
         lib.concatMapStringsSep ";" luaPackages.getLuaPath
         resolvedExtraLuaPackages
-      }"'';
+    }"];
 in {
   imports = [
     (mkRemovedOptionModule [ "programs" "neovim" "withPython" ]
@@ -416,9 +415,11 @@ in {
 
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {
-        wrapperArgs = (lib.escapeShellArgs neovimConfig.wrapperArgs) + " "
-          + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
-          + extraMakeWrapperLuaArgs;
+        wrapperArgs = lib.escapeShellArgs (neovimConfig.wrapperArgs 
+          ++ extraMakeWrapperArgs ++ extraMakeWrapperLuaCArgs
+          ++ extraMakeWrapperLuaArgs
+      );
+        # we write the init.lua ourself
         wrapRc = false;
       });
 
