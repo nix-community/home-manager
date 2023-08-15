@@ -1179,6 +1179,17 @@ in
           A new module is available: 'services.git-sync'.
         '';
       }
+
+      {
+        time = "2023-08-07T18:02:54+00:00";
+        message = ''
+          Multiple new options are available:
+
+          - 'nix.nixPath'
+          - 'nix.keepOldNixPath'
+          - 'nix.channels'
+        '';
+      }
     ];
   };
 }
