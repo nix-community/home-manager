@@ -128,7 +128,20 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && cfg.platformTheme != null) {
+  config = let
+
+    # Necessary because home.sessionVariables doesn't support mkIf
+    envVars = filterAttrs (n: v: v != null) {
+      QT_QPA_PLATFORMTHEME = if cfg.platformTheme == "gtk" then
+        "gtk2"
+      else if cfg.platformTheme == "qtct" then
+        "qt5ct"
+      else
+        cfg.platformTheme;
+      QT_STYLE_OVERRIDE = cfg.style.name;
+    };
+
+  in mkIf (cfg.enable && cfg.platformTheme != null) {
     assertions = [{
       assertion = cfg.platformTheme == "gnome" -> cfg.style.name != null
         && cfg.style.package != null;
@@ -141,16 +154,10 @@ in {
     qt.style.package = mkIf (cfg.style.name != null)
       (mkDefault (stylePackages.${toLower cfg.style.name} or null));
 
-    # Necessary because home.sessionVariables doesn't support mkIf
-    home.sessionVariables = filterAttrs (n: v: v != null) {
-      QT_QPA_PLATFORMTHEME = if cfg.platformTheme == "gtk" then
-        "gtk2"
-      else if cfg.platformTheme == "qtct" then
-        "qt5ct"
-      else
-        cfg.platformTheme;
-      QT_STYLE_OVERRIDE = cfg.style.name;
-    };
+    home.sessionVariables = envVars;
+
+    # Apply theming also to apps started by systemd.
+    systemd.user.sessionVariables = envVars;
 
     home.packages = (if cfg.platformTheme == "gnome" then
       [ pkgs.qgnomeplatform ]
