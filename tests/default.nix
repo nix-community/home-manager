@@ -118,7 +118,6 @@ import nmt {
     ./modules/programs/pistol
     ./modules/programs/pls
     ./modules/programs/powerline-go
-    ./modules/programs/pqiv
     ./modules/programs/pubs
     ./modules/programs/pyenv
     ./modules/programs/qutebrowser
@@ -180,6 +179,7 @@ import nmt {
     ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux
+    ./modules/programs/pqiv
     ./modules/programs/rbw
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
