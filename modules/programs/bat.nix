@@ -72,8 +72,11 @@ in {
       (name: body: { "bat/themes/${name}.tmTheme" = { text = body; }; }));
 
     home.activation.batCache = hm.dag.entryAfter [ "linkGeneration" ] ''
-      $VERBOSE_ECHO "Rebuilding bat theme cache"
-      $DRY_RUN_CMD ${lib.getExe package} cache --build
+      (
+        export XDG_CACHE_HOME=${escapeShellArg config.xdg.cacheHome}
+        $VERBOSE_ECHO "Rebuilding bat theme cache"
+        $DRY_RUN_CMD ${lib.getExe package} cache --build
+      )
     '';
   };
 }
