@@ -123,6 +123,20 @@ let
           documentation](https://developer.chrome.com/docs/extensions/mv2/external_extensions).
         '';
       };
+
+      dictionaries = mkOption {
+        inherit visible;
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression ''
+          [
+            pkgs.hunspellDictsChromium.en_US
+          ]
+        '';
+        description = ''
+          List of ${name} dictionaries to install.
+        '';
+      };
     };
 
   browserConfig = cfg:
@@ -159,6 +173,11 @@ let
           });
         };
 
+      dictionary = pkg: {
+        name = "${configDir}/Dictionaries/${pkg.passthru.dictFileName}";
+        value.source = pkg;
+      };
+
       package = if cfg.commandLineArgs != [ ] then
         cfg.package.override {
           commandLineArgs = concatStringsSep " " cfg.commandLineArgs;
@@ -168,8 +187,9 @@ let
 
     in mkIf cfg.enable {
       home.packages = [ package ];
-      home.file = optionalAttrs (!isProprietaryChrome)
-        (listToAttrs (map extensionJson cfg.extensions));
+      home.file = optionalAttrs (!isProprietaryChrome) (listToAttrs
+        ((map extensionJson cfg.extensions)
+          ++ (map dictionary cfg.dictionaries)));
     };
 
 in {
