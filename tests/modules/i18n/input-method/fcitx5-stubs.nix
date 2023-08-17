@@ -6,9 +6,11 @@
       buildScript = ''
         mkdir -p $out/bin $out/share/applications $out/etc/xdg/autostart
         touch $out/bin/fcitx5 \
+              $out/bin/fcitx5-config-qt \
               $out/share/applications/org.fcitx.Fcitx5.desktop \
               $out/etc/xdg/autostart/org.fcitx.Fcitx5.desktop
-        chmod +x $out/bin/fcitx5
+        chmod +x $out/bin/fcitx5 \
+                 $out/bin/fcitx5-config-qt
       '';
     };
     fcitx5-configtool = { outPath = null; };

@@ -169,6 +169,7 @@ let
     ./programs/piston-cli.nix
     ./programs/pls.nix
     ./programs/powerline-go.nix
+    ./programs/pqiv.nix
     ./programs/pubs.nix
     ./programs/pyenv.nix
     ./programs/pylint.nix

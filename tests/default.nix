@@ -179,6 +179,7 @@ import nmt {
     ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux
+    ./modules/programs/pqiv
     ./modules/programs/rbw
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
