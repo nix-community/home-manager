@@ -112,7 +112,7 @@ Manager Weblate
 project](https://hosted.weblate.org/engage/home-manager/).
 
 <a href="https://hosted.weblate.org/engage/home-manager/">
-<img src="https://hosted.weblate.org/widgets/home-manager/-/multi-auto.svg" alt="Translation status" />
+    <img src="https://hosted.weblate.org/widgets/home-manager/-/multi-auto.svg" alt="Translation status" />
 </a>
 
 License
