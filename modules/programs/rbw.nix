@@ -95,11 +95,47 @@ in {
         managed by Home Manager.
       '';
     };
+
+    enableBashIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Bash integration.
+      '';
+    };
+
+    enableZshIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Zsh integration.
+      '';
+    };
+
+    enableFishIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Fish integration.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = [ cfg.package ];
+
+      programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
+        source ${cfg.package}/share/bash-completion/completions/rbw.bash
+      '';
+
+      programs.zsh.initExtra = lib.mkIf cfg.enableZshIntegration ''
+        source ${cfg.package}/share/zsh/site-functions/_rbw
+      '';
+
+      programs.fish.shellInit = lib.mkIf cfg.enableFishIntegration ''
+        source ${cfg.package}/share/fish/vendor_completions.d/rbw.fish
+      '';
     }
 
     # Only manage configuration if not empty
