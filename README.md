@@ -114,18 +114,18 @@ License
 
 This project is licensed under the terms of the [MIT license](LICENSE).
 
-[Nix]: https://nixos.org/explore.html
-[NixOS]: https://nixos.org/
-[Nixpkgs]: https://github.com/NixOS/nixpkgs
-[manual]: https://nix-community.github.io/home-manager/index.html
-[contributing]: https://nix-community.github.io/home-manager/#ch-contributing
-[configuration options]: https://nix-community.github.io/home-manager/options.html
 [#home-manager]: https://webchat.oftc.net/?channels=home-manager
-[OFTC]: https://oftc.net/
 [Nix Flakes]: https://nixos.wiki/wiki/Flakes
-[nix-darwin]: https://github.com/LnL7/nix-darwin
-[manual standalone install]: https://nix-community.github.io/home-manager/index.html#sec-install-standalone
-[manual nixos install]: https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module
-[manual nix-darwin install]: https://nix-community.github.io/home-manager/index.html#sec-install-nix-darwin-module
+[NixOS]: https://nixos.org/
+[Nix]: https://nixos.org/explore.html
+[Nixpkgs]: https://github.com/NixOS/nixpkgs
+[OFTC]: https://oftc.net/
+[configuration options]: https://nix-community.github.io/home-manager/options.html
+[contributing]: https://nix-community.github.io/home-manager/#ch-contributing
 [manual nix flakes]: https://nix-community.github.io/home-manager/index.html#ch-nix-flakes
+[manual nix-darwin install]: https://nix-community.github.io/home-manager/index.html#sec-install-nix-darwin-module
+[manual nixos install]: https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module
+[manual standalone install]: https://nix-community.github.io/home-manager/index.html#sec-install-standalone
+[manual]: https://nix-community.github.io/home-manager/index.html
+[nix-darwin]: https://github.com/LnL7/nix-darwin
 [rollbacks]: https://nix-community.github.io/home-manager/index.html#sec-usage-rollbacks
