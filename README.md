@@ -17,7 +17,8 @@ please see
 
 - the [Home Manager manual][manual],
 - the [Home Manager configuration options][configuration options], and
-- the 3rd party [Home Manager option search](https://mipmip.github.io/home-manager-option-search/).
+- the 3rd party [Home Manager option
+  search](https://mipmip.github.io/home-manager-option-search/).
 
 If you would like to contribute to Home Manager
 then please have a look at the [contributing][] chapter of the
@@ -68,9 +69,10 @@ all this out you can go ahead and read the rest of this text.
 Contact
 -------
 
-You can chat with us on IRC in the channel [#home-manager][] on [OFTC][].
-There is also a [Matrix room](https://matrix.to/#/#hm:rycee.net),
-which is bridged to the IRC channel.
+You can chat with us on IRC in the channel [#home-manager][] on
+[OFTC][]. There is also a [Matrix
+room](https://matrix.to/#/#hm:rycee.net), which is bridged to the IRC
+channel.
 
 Installation
 ------------
@@ -95,8 +97,9 @@ Home Manager can be used in three primary ways:
    installation][manual nix-darwin install] in the [manual][] for a
    description of this setup.
 
-Home Manager provides both the channel-based setup and the flake-based one.
-See [Nix Flakes][manual nix flakes] for a description of the flake-based setup.
+Home Manager provides both the channel-based setup and the flake-based
+one. See [Nix Flakes][manual nix flakes] for a description of the
+flake-based setup.
 
 Translations
 ------------
@@ -104,8 +107,9 @@ Translations
 Home Manager has basic support for internationalization through
 [gettext](https://www.gnu.org/software/gettext/). The translations are
 hosted by [Weblate](https://weblate.org/). If you would like to
-contribute to the translation effort then start by going to the
-[Home Manager Weblate project](https://hosted.weblate.org/engage/home-manager/).
+contribute to the translation effort then start by going to the [Home
+Manager Weblate
+project](https://hosted.weblate.org/engage/home-manager/).
 
 <a href="https://hosted.weblate.org/engage/home-manager/">
 <img src="https://hosted.weblate.org/widgets/home-manager/-/multi-auto.svg" alt="Translation status" />
