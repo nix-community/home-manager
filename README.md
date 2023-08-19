@@ -9,7 +9,8 @@ specific (non global) packages and dotfiles.
 Usage
 -----
 
-Before attempting to use Home Manager please read the warning below.
+Before attempting to use Home Manager please read [the warning
+below](#words-of-warning).
 
 For a systematic overview of Home Manager and its available options,
 please see
