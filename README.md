@@ -119,7 +119,6 @@ This project is licensed under the terms of the [MIT license](LICENSE).
 [Nixpkgs]: https://github.com/NixOS/nixpkgs
 [manual]: https://nix-community.github.io/home-manager/index.html
 [contributing]: https://nix-community.github.io/home-manager/#ch-contributing
-[manual usage]: https://nix-community.github.io/home-manager/#ch-usage
 [configuration options]: https://nix-community.github.io/home-manager/options.html
 [#home-manager]: https://webchat.oftc.net/?channels=home-manager
 [OFTC]: https://oftc.net/
