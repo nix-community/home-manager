@@ -347,6 +347,12 @@
     github = "sebtm";
     githubId = 17243347;
   };
+  shimunn = {
+    name = "shimun";
+    email = "home-manager.c.shimun@shimun.net";
+    github = "shimunn";
+    githubId = 41011289;
+  };
   rasmus-kirk = {
     name = "Rasmus Kirk";
     email = "mail@rasmuskirk.com";

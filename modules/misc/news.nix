@@ -1230,6 +1230,13 @@ in
           Rio is a hardware-accelerated GPU terminal emulator powered by WebGPU.
         '';
       }
+
+      {
+        time = "2023-09-24T10:06:47+00:00";
+        message = ''
+          A new module is available: 'programs.bacon'.
+        '';
+      }
     ];
   };
 }
