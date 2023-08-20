@@ -60,6 +60,7 @@ let
     ./programs/bash.nix
     ./programs/bashmount.nix
     ./programs/bat.nix
+    ./programs/bacon.nix
     ./programs/beets.nix
     ./programs/borgmatic.nix
     ./programs/bottom.nix

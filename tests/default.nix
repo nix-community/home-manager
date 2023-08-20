@@ -62,6 +62,7 @@ import nmt {
     ./modules/programs/aria2
     ./modules/programs/atuin
     ./modules/programs/autojump
+    ./modules/programs/bacon
     ./modules/programs/bash
     ./modules/programs/bat
     ./modules/programs/bottom
