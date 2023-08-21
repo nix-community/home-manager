@@ -94,20 +94,23 @@ in {
     };
   };
 
-  config = mkIf (cfg.users != { }) {
-    warnings = flatten (flip mapAttrsToList cfg.users (user: config:
-      flip map config.warnings (warning: "${user} profile: ${warning}")));
+  config = (mkMerge [
+    # Fix potential recursion when configuring home-manager users based on values in users.users #594
+    (mkIf (cfg.useUserPackages && cfg.users != { }) {
+      users.users =
+        (mapAttrs (username: usercfg: { packages = [ usercfg.home.path ]; })
+          cfg.users);
+      environment.pathsToLink = [ "/etc/profile.d" ];
+    })
+    (mkIf (cfg.users != { }) {
+      warnings = flatten (flip mapAttrsToList cfg.users (user: config:
+        flip map config.warnings (warning: "${user} profile: ${warning}")));
 
-    assertions = flatten (flip mapAttrsToList cfg.users (user: config:
-      flip map config.assertions (assertion: {
-        inherit (assertion) assertion;
-        message = "${user} profile: ${assertion.message}";
-      })));
-
-    users.users = mkIf cfg.useUserPackages
-      (mapAttrs (username: usercfg: { packages = [ usercfg.home.path ]; })
-        cfg.users);
-
-    environment.pathsToLink = mkIf cfg.useUserPackages [ "/etc/profile.d" ];
-  };
+      assertions = flatten (flip mapAttrsToList cfg.users (user: config:
+        flip map config.assertions (assertion: {
+          inherit (assertion) assertion;
+          message = "${user} profile: ${assertion.message}";
+        })));
+    })
+  ]);
 }
