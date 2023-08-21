@@ -66,13 +66,6 @@ let
     '';
   };
 
-  iconMappings = let
-    knownFiles = filterAttrs (_: type: type != "unknown")
-      (builtins.readDir "${cfg.package}/share/icons");
-  in mapAttrs'
-  (n: _: nameValuePair ".icons/${n}" "${cfg.package}/share/icons/${n}")
-  knownFiles;
-
 in {
   meta.maintainers = [ maintainers.polykernel maintainers.league ];
 
@@ -154,20 +147,19 @@ in {
         XCURSOR_THEME = mkDefault cfg.name;
       };
 
-      # Add symlinks of cursor icons to subdirectories in $HOME/.icons, needed for
+      # Add symlink of cursor icon directory to $HOME/.icons, needed for
       # backwards compatibility with some applications. See:
       # https://specifications.freedesktop.org/icon-theme-spec/latest/ar01s03.html
-      home.file = (mapAttrs (_: source: { inherit source; }) iconMappings) // {
-        ".icons/default/index.theme".source =
-          "${defaultIndexThemePackage}/share/icons/default/index.theme";
-      };
+      home.file.".icons/default/index.theme".source =
+        "${defaultIndexThemePackage}/share/icons/default/index.theme";
+      home.file.".icons/${cfg.name}".source =
+        "${cfg.package}/share/icons/${cfg.name}";
 
-      # Add cursor icon links to $XDG_DATA_HOME as well for redundancy.
-      xdg.dataFile = (mapAttrs (_: source: { inherit source; }) iconMappings)
-        // {
-          ".icons/default/index.theme".source =
-            "${defaultIndexThemePackage}/share/icons/default/index.theme";
-        };
+      # Add cursor icon link to $XDG_DATA_HOME as well for redundancy.
+      xdg.dataFile.".icons/default/index.theme".source =
+        "${defaultIndexThemePackage}/share/icons/default/index.theme";
+      xdg.dataFile.".icons/${cfg.name}".source =
+        "${cfg.package}/share/icons/${cfg.name}";
     }
 
     (mkIf cfg.x11.enable {
