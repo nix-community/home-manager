@@ -1200,6 +1200,13 @@ in
           A new module is available: 'programs.qcal'.
         '';
       }
+
+      {
+        time = "2023-08-23T12:01:06+00:00";
+        message = ''
+          A new module is available: 'programs.yazi'.
+        '';
+      }
     ];
   };
 }
