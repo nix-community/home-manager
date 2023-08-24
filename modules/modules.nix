@@ -118,6 +118,7 @@ let
     ./programs/kakoune.nix
     ./programs/keychain.nix
     ./programs/khal.nix
+    ./programs/khard.nix
     ./programs/kitty.nix
     ./programs/kodi.nix
     ./programs/lazygit.nix

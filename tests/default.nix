@@ -92,6 +92,7 @@ import nmt {
     ./modules/programs/kakoune
     ./modules/programs/kitty
     ./modules/programs/khal
+    ./modules/programs/khard
     ./modules/programs/ledger
     ./modules/programs/less
     ./modules/programs/lf

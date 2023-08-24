@@ -1,0 +1,28 @@
+[addressbooks]
+[[family]]
+path=~/.contacts/family/
+[[friends]]
+path=~/.contacts/friends/
+[contact table]
+display=first_name
+group_by_addressbook=no
+localize_dates=yes
+preferred_email_address_type=pref, work, home
+preferred_phone_number_type=pref, cell, home
+reverse=no
+show_kinds=no
+show_nicknames=no
+show_uids=yes
+sort=last_name
+
+[general]
+debug=no
+default_action=list
+editor=vim, -i, NONE
+merge_editor=vimdiff
+
+[vcard]
+preferred_version=3.0
+private_objects=Jabber, Skype, Twitter
+search_in_source_files=no
+skip_unparsable=no
