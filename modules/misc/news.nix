@@ -1200,6 +1200,13 @@ in
           A new module is available: 'programs.qcal'.
         '';
       }
+
+      {
+        time = "2023-08-23T20:23:23+00:00";
+        message = ''
+          A new module is available: 'programs.carapace'.
+        '';
+      }
     ];
   };
 }
