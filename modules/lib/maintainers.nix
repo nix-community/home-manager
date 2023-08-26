@@ -113,6 +113,12 @@
     github = "foo-dogsquared";
     githubId = 34962634;
   };
+  fpob = {
+    name = "Filip Pobořil";
+    email = "fpob@proton.me";
+    github = "fpob";
+    githubId = 6289078;
+  };
   olmokramer = {
     name = "Olmo Kramer";
     email = "olmokramer@users.noreply.github.com";

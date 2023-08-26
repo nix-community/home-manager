@@ -126,6 +126,7 @@ in import nmtSrc {
     ./modules/programs/pyenv
     ./modules/programs/qcal
     ./modules/programs/qutebrowser
+    ./modules/programs/ranger
     ./modules/programs/readline
     ./modules/programs/rio
     ./modules/programs/ripgrep
