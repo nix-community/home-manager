@@ -189,6 +189,7 @@ let
     ./programs/pylint.nix
     ./programs/qcal.nix
     ./programs/qutebrowser.nix
+    ./programs/ranger.nix
     ./programs/rbw.nix
     ./programs/readline.nix
     ./programs/rio.nix
