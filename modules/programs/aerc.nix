@@ -104,7 +104,6 @@ in {
       let
         global = conf.global or { };
         local = removeAttrs conf [ "global" ];
-        optNewLine = if global != { } && local != { } then "\n" else "";
         mkValueString = v:
           if isList v then # join with comma
             concatStringsSep "," (map (generators.mkValueStringDefault { }) v)
