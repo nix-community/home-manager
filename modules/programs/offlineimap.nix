@@ -17,22 +17,6 @@ let
       in "${key} = ${value'}";
   };
 
-  # Generates a script to fetch only a specific account.
-  #
-  # Note, these scripts are not actually created and installed at the
-  # moment. It will need some thinking on whether this is a good idea
-  # and whether other modules should have some similar functionality.
-  #
-  # Perhaps have a single tool `email` that wraps the command?
-  # Something like
-  #
-  #     $ email <account name> <program name> <program args>
-  genOfflineImapScript = account:
-    with account;
-    pkgs.writeShellScriptBin "offlineimap-${name}" ''
-      exec ${cfg.package}/bin/offlineimap -a${account.name} "$@"
-    '';
-
   accountStr = account:
     with account;
     let
