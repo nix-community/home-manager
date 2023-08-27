@@ -3605,6 +3605,14 @@ list of string</p><p><span class="emphasis"><em>Default:</em></span>
 ]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/chromium.nix" target="_top">
 &lt;home-manager/modules/programs/chromium.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.chromium.dictionaries"></a><a class="term" href="options.html#opt-programs.chromium.dictionaries"><code class="option">programs.chromium.dictionaries</code></a></span></dt><dd><p>List of Chromium dictionaries to install.</p><p><span class="emphasis"><em>Type:</em></span>
+list of package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">[
+  pkgs.hunspellDictsChromium.en_US
+]
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/chromium.nix" target="_top">
+&lt;home-manager/modules/programs/chromium.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.chromium.extensions"></a><a class="term" href="options.html#opt-programs.chromium.extensions"><code class="option">programs.chromium.extensions</code></a></span></dt><dd><p>List of Chromium extensions to install.
 To find the extension ID, check its URL on the
 <a class="link" href="https://chrome.google.com/webstore/category/extensions" target="_top">Chrome Web Store</a>.</p><p>To install extensions outside of the Chrome Web Store set
