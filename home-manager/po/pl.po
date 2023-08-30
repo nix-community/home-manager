@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-07-30 09:08+0200\n"
-"PO-Revision-Date: 2023-05-03 19:48+0000\n"
-"Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
+"PO-Revision-Date: 2023-08-30 13:45+0000\n"
+"Last-Translator: Marcin Kaczorek <hostedweblateorgmk@karek.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/home-manager/cli/"
 "pl/>\n"
 "Language: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -32,7 +32,7 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
-"Przechowywanie Home Manager %s w %s jest przestarzałe,\n"
+"Przechowywanie %s Home Managera w %s jest przestarzałe,\n"
 "proszę przenieść go do %s"
 
 #: home-manager/home-manager:99
@@ -41,7 +41,7 @@ msgstr "Nie znaleziono pliku konfiguracyjnego. Proszę utworzyć plik %s"
 
 #: home-manager/home-manager:114
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home Manager nie znaleziony w %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:122
@@ -49,6 +49,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"Rezerwowa ścieżka Home Managera %s jest przestarzała ale zawiera plik lub "
+"katalog."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:125
@@ -71,6 +73,25 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"Zrób jedną z tych rzeczy aby aby pozbyć się tego ostrzeżenia:\n"
+"\n"
+"1. Jednoznacznie skonfiguruj Home Manager żeby używał konkretnej ścieżki, "
+"np. dodając\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   do twojej konfiguracji.\n"
+"\n"
+"   Jeśli importujesz Home Manager bezpośrednio, możesz użyć parametru `path`"
+"\n"
+"\n"
+"     pkgs.callPackage /ścieżka/do/pakiet-home-manager { path = \"%s\"; }\n"
+"\n"
+"   przy wywołaniu pakietu Home Manager.\n"
+"\n"
+"2. Usuń przestarzałą ścieżkę.\n"
+"\n"
+"     $ rm -r \"%s\""
 
 #: home-manager/home-manager:164
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -112,7 +133,8 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
-"Skończone! Narzędzie home-manager powinno być zainstalowane i może edytować\n"
+"Skończone! Narzędzie home-manager powinno być zainstalowane i możesz "
+"edytować\n"
 "\n"
 "    %s\n"
 "\n"
@@ -137,7 +159,7 @@ msgstr ""
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:476
 msgid "Can't instantiate a flake configuration"
-msgstr "Nie mogę zinstancjować konfiguracji flake'a"
+msgstr "Nie mogę utworzyć instancji konfiguracji flake'a"
 
 #: home-manager/home-manager:552
 msgid ""
@@ -220,7 +242,7 @@ msgstr ""
 
 #: home-manager/home-manager:1063
 msgid "expire-generations expects one argument, got %d."
-msgstr "expire-generations oczekuje jednego argumentu, otrzymane %d."
+msgstr "expire-generations oczekuje jednego argumentu, otrzymano %d."
 
 #: home-manager/home-manager:1085
 msgid "Unknown command: %s"
