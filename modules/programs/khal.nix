@@ -7,6 +7,8 @@ let
 
   cfg = config.programs.khal;
 
+  iniFormat = pkgs.formats.ini { };
+
   khalCalendarAccounts =
     filterAttrs (_: a: a.khal.enable) config.accounts.calendar.accounts;
 
@@ -147,12 +149,32 @@ let
 in {
   options.programs.khal = {
     enable = mkEnableOption "khal, a CLI calendar application";
+
     locale = mkOption {
       type = lib.types.submodule { options = localeOptions; };
       description = ''
         khal locale settings. 
       '';
       default = { };
+    };
+
+    settings = mkOption {
+      type = iniFormat.type;
+      default = { };
+      example = literalExpression ''
+        {
+          default = {
+            default_calendar = "Calendar";
+            timedelta = "5d";
+          };
+          view = {
+            agenda_event_format =
+              "{calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}";
+          };
+        }'';
+      description = ''
+        Configuration options to add to the various sections in the configuration file.
+      '';
     };
   };
 
@@ -161,7 +183,7 @@ in {
 
     xdg.configFile."khal/config".text = concatStringsSep "\n" ([ "[calendars]" ]
       ++ mapAttrsToList genCalendarStr khalAccounts ++ [
-        (generators.toINI { } {
+        (generators.toINI { } (recursiveUpdate cfg.settings {
           locale = definedAttrs (cfg.locale // { _module = null; });
 
           default = optionalAttrs (!isNull primaryAccount) {
@@ -171,7 +193,7 @@ in {
             else
               primaryAccount.primaryCollection;
           };
-        })
+        }))
       ]);
   };
 }
