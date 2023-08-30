@@ -6390,6 +6390,20 @@ As those are ISO week numbers, they only work properly if
 one of “off”, “left”, “right”</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">"off"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/khal.nix" target="_top">
 &lt;home-manager/modules/programs/khal.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.khal.settings"></a><a class="term" href="options.html#opt-programs.khal.settings"><code class="option">programs.khal.settings</code></a></span></dt><dd><p>Configuration options to add to the various sections in the configuration file.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (INI atom (null, bool, int, float or string))</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  default = {
+    default_calendar = "Calendar";
+    timedelta = "5d";
+  };
+  view = {
+    agenda_event_format =
+      "{calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}";
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/khal.nix" target="_top">
+&lt;home-manager/modules/programs/khal.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kitty.enable"></a><a class="term" href="options.html#opt-programs.kitty.enable"><code class="option">programs.kitty.enable</code></a></span></dt><dd><p>Whether to enable Kitty terminal emulator.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
