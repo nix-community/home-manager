@@ -94,9 +94,10 @@ in {
       Install = { WantedBy = [ "graphical-session.target" ]; };
     };
 
-    xdg.configFile."grobi.conf".text = builtins.toJSON {
-      execute_after = cfg.executeAfter;
-      rules = cfg.rules;
-    };
+    xdg.configFile."grobi.conf".source =
+      (pkgs.formats.yaml { }).generate "grobi-config" {
+        execute_after = cfg.executeAfter;
+        rules = cfg.rules;
+      };
   };
 }
