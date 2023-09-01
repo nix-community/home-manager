@@ -5,10 +5,16 @@ with lib;
 let
   cfg = config.programs.nnn;
 
-  renderSetting = key: value: "${key}:${value}";
+  renderAttrs = sep: renderer: attrs:
+    concatStringsSep sep (mapAttrsToList renderer attrs);
 
-  renderSettings = settings:
-    concatStringsSep ";" (mapAttrsToList renderSetting settings);
+  renderSettings = renderAttrs ";" (key: value: "${key}:${value}");
+
+  renderVariables =
+    renderAttrs " " (key: value: ''--prefix ${key} : "${value}"'');
+
+  renderArgs =
+    concatMapStringsSep " " (arg: "--add-flags ${escapeShellArg arg}");
 
   pluginModule = types.submodule ({ ... }: {
     options = {
@@ -104,6 +110,34 @@ in {
         '';
         default = { };
       };
+
+      extraArgs = mkOption {
+        type = with types; listOf str;
+        example = literalExpression ''
+          [
+            "-b d" # Start in bookmark assigned to d key
+            "-P c" # Run plugin assigned to c key on opening
+          ]
+        '';
+        description = ''
+          Extra arguments to pass to nnn independently of a shell.
+        '';
+        default = [ ];
+      };
+
+      extraSessionVariables = mkOption {
+        type = with types; attrsOf str;
+        example = literalExpression ''
+          {
+            NNN_OPTS = "cEnrx";
+            NNN_COLORS = "#0a1b2c3d";
+          };
+        '';
+        description = ''
+          Extra environment variables to set for nnn independently of a shell.
+        '';
+        default = { };
+      };
     };
   };
 
@@ -117,7 +151,9 @@ in {
         wrapProgram $out/bin/nnn \
           --prefix PATH : "${makeBinPath cfg.extraPackages}" \
           --prefix NNN_BMS : "${renderSettings cfg.bookmarks}" \
-          --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}"
+          --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}" \
+          ${renderArgs cfg.extraArgs} \
+          ${renderVariables cfg.extraSessionVariables}
       '';
     });
   in mkIf cfg.enable {

@@ -19,6 +19,11 @@
         v = "imgview";
       };
     };
+    extraArgs = [ "-b d" "-P c" ];
+    extraSessionVariables = {
+      NNN_OPTS = "cEnrx";
+      NNN_COLORS = "#0a1b2c3d";
+    };
   };
 
   test.stubs = {
@@ -48,6 +53,15 @@
       for plugin in 'export NNN_PLUG' 'fzcd' 'finder' 'imgview'; do
         assertFileRegex home-path/bin/nnn "$plugin"
       done
+
+      for argument in '\-b d' '\-P c'; do
+        assertFileRegex home-path/bin/nnn "$argument"
+      done
+
+      for variable in 'export NNN_OPTS' 'cEnrx' 'export NNN_COLORS' '#0a1b2c3d'; do
+        assertFileRegex home-path/bin/nnn "$variable"
+      done
+
     '';
   };
 }
