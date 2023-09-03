@@ -58,15 +58,6 @@ let
         description = "User name for authentication.";
       };
 
-      # userNameCommand = mkOption {
-      #   type = types.nullOr (types.listOf types.str);
-      #   default = null;
-      #   example = [ "~/get-username.sh" ];
-      #   description = ''
-      #     A command that prints the user name to standard output.
-      #   '';
-      # };
-
       passwordCommand = mkOption {
         type = types.nullOr (types.listOf types.str);
         default = null;
