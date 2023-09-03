@@ -67,6 +67,7 @@ let
     ./programs/broot.nix
     ./programs/browserpass.nix
     ./programs/btop.nix
+    ./programs/carapace.nix
     ./programs/chromium.nix
     ./programs/command-not-found/command-not-found.nix
     ./programs/comodoro.nix
