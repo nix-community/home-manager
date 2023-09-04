@@ -465,9 +465,15 @@ let
       })
 
       (mkIf (config.flavor == "runbox.com") {
-        imap = { host = "mail.runbox.com"; };
+        imap = {
+          host = "mail.runbox.com";
+          port = 993;
+        };
 
-        smtp = { host = "mail.runbox.com"; };
+        smtp = {
+          host = "mail.runbox.com";
+          port = if config.smtp.tls.useStartTls then 587 else 465;
+        };
       })
     ];
   };
