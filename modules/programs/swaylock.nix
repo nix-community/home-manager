@@ -16,7 +16,21 @@ in {
         false otherwise
       '';
       example = true;
-      description = "Whether to enable swaylock.";
+      description = ''
+        Whether to enable swaylock.
+
+        Note that PAM must be configured to enable swaylock to perform
+        authentication. The package installed through home-manager
+        will *not* be able to unlock the session without this
+        configuration.
+
+        On NixOS, this is by default enabled with the sway module, but
+        for other compositors it can currently be enabled using:
+
+        ```nix
+        security.pam.services.swaylock = {};
+        ```
+      '';
     };
 
     package = mkPackageOption pkgs "swaylock" { };
