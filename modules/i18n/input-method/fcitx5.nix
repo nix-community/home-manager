@@ -42,18 +42,14 @@ in {
       };
       settings = {
         globalOptions = mkOption {
-          type = types.submodule {
-            freeformType = settingsFormat.type;
-          };
+          type = types.submodule { freeformType = settingsFormat.type; };
           default = { };
           description = mdDoc ''
             The global options in `config` file in ini format.
           '';
         };
         inputMethod = mkOption {
-          type = types.submodule {
-            freeformType = settingsFormat.type;
-          };
+          type = types.submodule { freeformType = settingsFormat.type; };
           default = { };
           description = mdDoc ''
             The input method configure in `profile` file in ini format.
@@ -66,7 +62,8 @@ in {
             The addon configures in `conf` folder in ini format with global sections.
             Each item is written to the corresponding file.
           '';
-          example = literalExpression "{ pinyin.globalSection.EmojiEnabled = \"True\"; }";
+          example = literalExpression
+            ''{ pinyin.globalSection.EmojiEnabled = "True"; }'';
         };
       };
     };
@@ -80,36 +77,33 @@ in {
         (concatStringsSep "\n"
           (mapAttrsToList (name: value: "${name} ${value}") cfg.quickPhrase)))
     ] ++ optionals (cfg.quickPhraseFiles != { }) [
-      (pkgs.linkFarm "quickPhraseFiles" (mapAttrs'
-        (name: value: nameValuePair ("share/fcitx5/data/quickphrase.d/${name}.mb") value)
+      (pkgs.linkFarm "quickPhraseFiles" (mapAttrs' (name: value:
+        nameValuePair ("share/fcitx5/data/quickphrase.d/${name}.mb") value)
         cfg.quickPhraseFiles))
     ];
 
-    xdg.configFile =
-      let
-        optionalFile = p: f: v: optionalAttrs (v != { }) {
+    xdg.configFile = let
+      optionalFile = p: f: v:
+        optionalAttrs (v != { }) {
           "fcitx5/${p}".source = pkgs.writeTextFile {
             name = p;
             text = f v;
           };
         };
-      in
-      attrsets.mergeAttrsList [
-        (optionalFile "config" (generators.toINI { }) cfg.settings.globalOptions)
-        (optionalFile "profile" (generators.toINI { }) cfg.settings.inputMethod)
-        (concatMapAttrs
-          (name: value: optionalFile
-            "conf/${name}.conf"
-            (generators.toINIWithGlobalSection { })
-            value)
-          cfg.settings.addons)
-      ];
+    in attrsets.mergeAttrsList [
+      (optionalFile "config" (generators.toINI { }) cfg.settings.globalOptions)
+      (optionalFile "profile" (generators.toINI { }) cfg.settings.inputMethod)
+      (concatMapAttrs (name: value:
+        optionalFile "conf/${name}.conf" (generators.toINIWithGlobalSection { })
+        value) cfg.settings.addons)
+    ];
 
     home.sessionVariables = {
       GTK_IM_MODULE = "fcitx";
       QT_IM_MODULE = "fcitx";
       XMODIFIERS = "@im=fcitx";
-      QT_PLUGIN_PATH = "$QT_PLUGIN_PATH:${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}";
+      QT_PLUGIN_PATH =
+        "$QT_PLUGIN_PATH:${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}";
     };
 
     systemd.user.services.fcitx5-daemon = {
