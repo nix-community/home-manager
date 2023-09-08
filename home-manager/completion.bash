@@ -301,7 +301,7 @@ _home-manager_completions ()
               "--verbose" "--cores" "--debug" "--impure" "--keep-failed" \
               "--keep-going" "-j" "--max-jobs" "--no-substitute" "--no-out-link" \
               "-L" "--print-build-logs" \
-              "--show-trace" "--substitute" "--builders" "--version" \
+              "--show-trace" "--flake" "--substitute" "--builders" "--version" \
               "--update-input" "--override-input" "--experimental-features" \
               "--extra-experimental-features" "--refresh")
 
