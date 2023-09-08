@@ -175,7 +175,7 @@ in
       done automatically if the shell configuration is managed by Home
       Manager. If not, then you must source the
 
-        ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+        ${cfg.profileDirectory}/etc/profile.d/hm-session-vars.sh
 
       file yourself.
     '')
@@ -585,7 +585,7 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-          if [[ -e $HOME/.nix-profile/manifest.json ]] ; then
+          if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
             nix profile list \
               | { grep 'home-manager-path$' || test $? = 1; } \
               | cut -d ' ' -f 4 \
@@ -623,7 +623,7 @@ in
             $DRY_RUN_CMD $oldNix profile install $1
           }
 
-          if [[ -e $HOME/.nix-profile/manifest.json ]] ; then
+          if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
             INSTALL_CMD="nix profile install"
             INSTALL_CMD_ACTUAL="nixReplaceProfile"
             LIST_CMD="nix profile list"
