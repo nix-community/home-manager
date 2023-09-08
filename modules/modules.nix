@@ -79,7 +79,6 @@ let
     ./programs/emacs.nix
     ./programs/eww.nix
     ./programs/eza.nix
-    ./programs/exa.nix
     ./programs/feh.nix
     ./programs/firefox.nix
     ./programs/fish.nix
