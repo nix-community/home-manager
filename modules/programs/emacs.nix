@@ -19,6 +19,7 @@ let
       userConfig = epkgs.trivialBuild {
         pname = "default";
         src = pkgs.writeText "default.el" cfg.extraConfig;
+        version = "0.1.0";
         packageRequires = packages;
       };
     in packages ++ optional (cfg.extraConfig != "") userConfig;
