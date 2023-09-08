@@ -3,6 +3,11 @@
 with lib;
 
 {
+  imports = let
+    mkRenamed = opt:
+      mkRenamedOptionModule [ "programs" "exa" opt ] [ "programs" "eza" opt ];
+  in map mkRenamed [ "enable" "enableAliases" "extraOptions" "icons" "git" ];
+
   meta.maintainers = [ maintainers.cafkafk ];
 
   options.programs.eza = {
