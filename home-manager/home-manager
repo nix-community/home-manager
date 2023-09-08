@@ -29,7 +29,9 @@ function removeByName() {
 }
 
 function setNixProfileCommands() {
-    if [[ -e $HOME/.nix-profile/manifest.json ]] ; then
+    if  [[ -e $HOME/.nix-profile/manifest.json \
+        || -e ${XDG_STATE_HOME:-$HOME/.local/state}/nix/profile/manifest.json ]] ; then
+
         LIST_OUTPATH_CMD="nix profile list"
         REMOVE_CMD="removeByName"
     else
@@ -403,6 +405,10 @@ $xdgVars
   # either
   #
   #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+  #
+  # or
+  #
+  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
   #
   # or
   #
