@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-07-30 09:08+0200\n"
-"PO-Revision-Date: 2023-09-08 12:55+0000\n"
+"PO-Revision-Date: 2023-09-09 13:54+0000\n"
 "Last-Translator: Karel Kremel <charles@alembiq.net>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/home-manager/cli/"
 "cs/>\n"
@@ -107,19 +107,19 @@ msgstr "%s: neznámý parametr '%s'"
 
 #: home-manager/home-manager:286 home-manager/home-manager:1024
 msgid "Run '%s --help' for usage help"
-msgstr ""
+msgstr "Spusťte '%s --help' pro vypsání nápovědy"
 
 #: home-manager/home-manager:312 home-manager/home-manager:411
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "Soubor %s již existuje, ponechán beze změn..."
 
 #: home-manager/home-manager:314 home-manager/home-manager:413
 msgid "Creating %s..."
-msgstr ""
+msgstr "Vytvářím %s..."
 
 #: home-manager/home-manager:455
 msgid "Creating initial Home Manager generation..."
-msgstr ""
+msgstr "Vytvářím první generaci Home Manageru..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/home-manager:460
@@ -131,6 +131,12 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
+"Vše dokončeno! Nástroj home-manager je nainstalován. Můžete upravovat\n"
+"\n"
+"    %s\n"
+"\n"
+"čimž konfigurujete Home Manager. Spusťte 'man home-configuration.nix' \n"
+"k zobrazení všech dostupných možností."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/home-manager:465
@@ -141,11 +147,15 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
+"Ehm ehm, instalace se nezdařila! Pokud chyba vypadá jako\n"
+"chyba Homa manageru, prosím založte problém na\n"
+"\n"
+"    %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:476
 msgid "Can't instantiate a flake configuration"
-msgstr ""
+msgstr "Nelze vytvořit instanci flake konfigurace"
 
 #: home-manager/home-manager:552
 msgid ""
@@ -155,77 +165,84 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
+"%d nepřečtená novinka.\n"
+"Přečtěte ji pomocí příkazu \"%s news\"."
 msgstr[1] ""
+"%d nepřečtené novinky.\n"
+"Přečtěte je pomocí příkazu \"%s news\"."
+msgstr[2] ""
+"%d nepřečtených novinek.\n"
+"Přečtěte je pomocí příkazu \"%s news\"."
 
 #: home-manager/home-manager:566
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr ""
+msgstr "Neznáme nastavení \"news.display\" \"%s\"."
 
 #: home-manager/home-manager:573
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
-msgstr ""
+msgstr "Prosím nastavte proměnou prostředí $EDITOR"
 
 #: home-manager/home-manager:588
 msgid "Cannot run build in read-only directory"
-msgstr ""
+msgstr "Sestavení nelze provést v adresáři dostupném pouze pro čtení"
 
 #: home-manager/home-manager:666
 msgid "No generation with ID %s"
-msgstr ""
+msgstr "Generace s ID %s neexistuje"
 
 #: home-manager/home-manager:668
 msgid "Cannot remove the current generation %s"
-msgstr ""
+msgstr "Nelze odstranit současnou generaci %s"
 
 #: home-manager/home-manager:670
 msgid "Removing generation %s"
-msgstr ""
+msgstr "Odstraňuji generaci %s"
 
 #: home-manager/home-manager:689
 msgid "No generations to expire"
-msgstr ""
+msgstr "Žádná generace k vypršení platnosti"
 
 #: home-manager/home-manager:700
 msgid "No home-manager packages seem to be installed."
-msgstr ""
+msgstr "Žádný home-manager balíček není nainstalován."
 
 #: home-manager/home-manager:781
 msgid "Unknown argument %s"
-msgstr ""
+msgstr "Neznámý parametr %s"
 
 #: home-manager/home-manager:805
 msgid "This will remove Home Manager from your system."
-msgstr ""
+msgstr "Toto odstraní Home Manager z vašeho systému."
 
 #: home-manager/home-manager:808
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr ""
+msgstr "Toto zkouška na nečisto, nic nebude odinstalováno."
 
 #: home-manager/home-manager:812
 msgid "Really uninstall Home Manager?"
-msgstr ""
+msgstr "Opravdu odinstalovat Home Manager?"
 
 #: home-manager/home-manager:818
 msgid "Switching to empty Home Manager configuration..."
-msgstr ""
+msgstr "Přepínám na prázdou konfiguraci Home Manageru..."
 
 #: home-manager/home-manager:846
 msgid "Yay!"
-msgstr ""
+msgstr "Hurá!"
 
 #: home-manager/home-manager:851
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr ""
+msgstr "Home Manager se odinstalovává, ale váš home.nix nebyl změněn."
 
 #: home-manager/home-manager:1063
 msgid "expire-generations expects one argument, got %d."
-msgstr ""
+msgstr "expire-generations očekává jeden parametr, přítomno %d."
 
 #: home-manager/home-manager:1085
 msgid "Unknown command: %s"
-msgstr ""
+msgstr "Neznámý příkaz: %s"
 
 #: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
-msgstr ""
+msgstr "Tuto odvozeninu nelze sestavit, prosím spusťte ji pomocí nix-shell."
