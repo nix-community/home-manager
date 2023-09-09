@@ -222,6 +222,7 @@ let
     ./programs/wlogout.nix
     ./programs/wofi.nix
     ./programs/xmobar.nix
+    ./programs/xplr.nix
     ./programs/yazi.nix
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix
