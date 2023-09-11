@@ -1422,6 +1422,13 @@ in {
           A new module is available: 'wayland.windowManager.river'.
         '';
       }
+
+      {
+        time = "2024-03-08T22:20:04+00:00";
+        message = ''
+          A new module is available: 'programs.zk'
+        '';
+      }
     ];
   };
 }

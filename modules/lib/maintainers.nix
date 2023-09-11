@@ -205,6 +205,12 @@
       fingerprint = "F0E0 0311 126A CD72 4392  25E6 68BF 2EAE 6D91 CAFF";
     }];
   };
+  silmarp = {
+    name = "Silmar Pereira da Silva Junior";
+    email = "silmarjr2@gmail.com";
+    github = "silmarp";
+    githubID = 67292496;
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";

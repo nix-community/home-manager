@@ -153,6 +153,7 @@ in import nmtSrc {
     ./modules/programs/wezterm
     ./modules/programs/yazi
     ./modules/programs/zellij
+    ./modules/programs/zk
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/services/syncthing/common

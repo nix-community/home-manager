@@ -1,0 +1,15 @@
+[extra]
+author = "Mickaël"
+
+[note]
+default-title = "Untitled"
+extension = "md"
+filename = "{{id}}-{{slug title}}"
+id-case = "lower"
+id-charset = "alphanum"
+id-length = 4
+language = "en"
+template = "default.md"
+
+[notebook]
+dir = "~/notebook"
