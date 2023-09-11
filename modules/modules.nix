@@ -247,6 +247,7 @@ let
     ./programs/z-lua.nix
     ./programs/zathura.nix
     ./programs/zellij.nix
+    ./programs/zk.nix
     ./programs/zoxide.nix
     ./programs/zplug.nix
     ./programs/zsh.nix
