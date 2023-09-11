@@ -9661,7 +9661,12 @@ Starship configuration</p><p><span class="emphasis"><em>Default:</em></span>
 
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/starship.nix" target="_top">
 &lt;home-manager/modules/programs/starship.nix&gt;
-</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.swaylock.enable"></a><a class="term" href="options.html#opt-programs.swaylock.enable"><code class="option">programs.swaylock.enable</code></a></span></dt><dd><p>Whether to enable swaylock.</p><p><span class="emphasis"><em>Type:</em></span>
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.swaylock.enable"></a><a class="term" href="options.html#opt-programs.swaylock.enable"><code class="option">programs.swaylock.enable</code></a></span></dt><dd><p>Whether to enable swaylock.</p><p>Note that PAM must be configured to enable swaylock to perform
+authentication. The package installed through home-manager
+will <span class="emphasis"><em>not</em></span> be able to unlock the session without this
+configuration.</p><p>On NixOS, this is by default enabled with the sway module, but
+for other compositors it can currently be enabled using:</p><pre class="programlisting nix">security.pam.services.swaylock = {};
+</pre><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span></p><pre class="programlisting">true  if state version &lt; 23.05 and settings ≠ { },
 false otherwise
 
