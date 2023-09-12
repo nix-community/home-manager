@@ -60,6 +60,24 @@ in {
       '';
     };
 
+    syntaxes = mkOption {
+      type = types.attrsOf types.lines;
+      default = { };
+      example = literalExpression ''
+        {
+          syntaxes.gleam = builtins.readFile (pkgs.fetchFromGitHub {
+            owner = "molnarmark";
+            repo = "sublime-gleam";
+            rev = "2e761cdb1a87539d827987f997a20a35efd68aa9";
+            hash = "sha256-Zj2DKTcO1t9g18qsNKtpHKElbRSc9nBRE2QBzRn9+qs=";
+          } + "/syntax/gleam.sublime-syntax");
+        }
+      '';
+      description = ''
+        Additional syntaxes to provide.
+      '';
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -69,7 +87,10 @@ in {
       "bat/config" =
         mkIf (cfg.config != { }) { text = toConfigFile cfg.config; };
     }] ++ flip mapAttrsToList cfg.themes
-      (name: body: { "bat/themes/${name}.tmTheme" = { text = body; }; }));
+      (name: body: { "bat/themes/${name}.tmTheme" = { text = body; }; })
+      ++ flip mapAttrsToList cfg.syntaxes (name: body: {
+        "bat/syntaxes/${name}.sublime-syntax" = { text = body; };
+      }));
 
     home.activation.batCache = hm.dag.entryAfter [ "linkGeneration" ] ''
       (

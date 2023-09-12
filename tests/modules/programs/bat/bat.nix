@@ -16,6 +16,10 @@ with lib;
       themes.testtheme = ''
         This is a test theme.
       '';
+
+      syntaxes.testsyntax = ''
+        This is a test syntax.
+      '';
     };
 
     test.stubs.bat = { };
@@ -35,6 +39,13 @@ with lib;
       assertFileContent home-files/.config/bat/themes/testtheme.tmTheme ${
         pkgs.writeText "bat.expected" ''
           This is a test theme.
+        ''
+      }
+
+      assertFileExists home-files/.config/bat/syntaxes/testsyntax.sublime-syntax
+      assertFileContent home-files/.config/bat/syntaxes/testsyntax.sublime-syntax ${
+        pkgs.writeText "bat.expected" ''
+          This is a test syntax.
         ''
       }
     '';
