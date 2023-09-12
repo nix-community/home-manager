@@ -514,6 +514,7 @@ in import nmtSrc {
     ./modules/services/git-sync
     ./modules/services/glance
     ./modules/services/gromit-mpx
+    ./modules/services/home-manager-auto-expire
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/hypridle
     ./modules/services/hyprpaper
