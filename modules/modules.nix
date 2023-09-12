@@ -315,6 +315,7 @@ let
     ./services/gpg-agent.nix
     ./services/grobi.nix
     ./services/gromit-mpx.nix
+    ./services/home-manager-auto-expire.nix
     ./services/home-manager-auto-upgrade.nix
     ./services/hound.nix
     ./services/hypridle.nix
