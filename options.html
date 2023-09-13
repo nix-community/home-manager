@@ -10989,6 +10989,31 @@ strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em
 
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/xmobar.nix" target="_top">
 &lt;home-manager/modules/programs/xmobar.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.xplr.enable"></a><a class="term" href="options.html#opt-programs.xplr.enable"><code class="option">programs.xplr.enable</code></a></span></dt><dd><p>Whether to enable xplr, terminal UI based file explorer.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/xplr.nix" target="_top">
+&lt;home-manager/modules/programs/xplr.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.xplr.package"></a><a class="term" href="options.html#opt-programs.xplr.package"><code class="option">programs.xplr.package</code></a></span></dt><dd><p>The xplr package to use.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.xplr</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/xplr.nix" target="_top">
+&lt;home-manager/modules/programs/xplr.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.xplr.extraConfig"></a><a class="term" href="options.html#opt-programs.xplr.extraConfig"><code class="option">programs.xplr.extraConfig</code></a></span></dt><dd><p>Extra xplr configuration.</p><p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">""</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">require("wl-clipboard").setup {
+  copy_command = "wl-copy -t text/uri-list",
+  paste_command = "wl-paste",
+  keep_selection = true,
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/xplr.nix" target="_top">
+&lt;home-manager/modules/programs/xplr.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.xplr.plugins"></a><a class="term" href="options.html#opt-programs.xplr.plugins"><code class="option">programs.xplr.plugins</code></a></span></dt><dd><p>Plugins to be added to your configuration file.</p><p>Must be a package, an absolute plugin path, or string to be recognized
+by xplr. Paths will be relative to
+<code class="filename">$XDG_CONFIG_HOME/xplr/init.lua</code> unless they are absolute.</p><p><span class="emphasis"><em>Type:</em></span>
+null or (list of (package or string))</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[]</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/xplr.nix" target="_top">
+&lt;home-manager/modules/programs/xplr.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.yazi.enable"></a><a class="term" href="options.html#opt-programs.yazi.enable"><code class="option">programs.yazi.enable</code></a></span></dt><dd><p>Whether to enable yazi.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
