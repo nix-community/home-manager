@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-30 09:08+0200\n"
+"POT-Creation-Date: 2023-09-13 23:46+0200\n"
 "PO-Revision-Date: 2023-08-03 05:07+0000\n"
 "Last-Translator: 박수원 <bboxone@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/home-manager/"
@@ -37,7 +37,7 @@ msgstr ""
 "바뀐 것이 없어서 가장 최근의 profile 세대 %s를 다시 사용하는 것으로 설정하는 "
 "중"
 
-#: modules/home-environment.nix:626
+#: modules/home-environment.nix:640
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -65,7 +65,7 @@ msgstr ""
 "\n"
 "그런 후, 다시 홈 매니저 설정을 활성화 해보세요."
 
-#: modules/home-environment.nix:659
+#: modules/home-environment.nix:673
 msgid "Activating %s"
 msgstr "%s를 활성화 하는 중"
 

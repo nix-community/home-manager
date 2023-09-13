@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-30 09:08+0200\n"
+"POT-Creation-Date: 2023-09-13 23:46+0200\n"
 "PO-Revision-Date: 2023-04-10 11:48+0000\n"
 "Last-Translator: Pablo Bollansee <pablo.bollansee@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/home-manager/"
@@ -36,7 +36,7 @@ msgid "No change so reusing latest profile generation %s"
 msgstr ""
 "Geen veranderingen dus de laatste profiel generatie %s wordt hergebruikt"
 
-#: modules/home-environment.nix:626
+#: modules/home-environment.nix:640
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -65,7 +65,7 @@ msgstr ""
 "\n"
 "Probeer daarna je Home Manager configuratie opnieuw te activeren."
 
-#: modules/home-environment.nix:659
+#: modules/home-environment.nix:673
 msgid "Activating %s"
 msgstr "%s aan het activeren"
 
