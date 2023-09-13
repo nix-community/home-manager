@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-30 09:08+0200\n"
+"POT-Creation-Date: 2023-09-13 23:46+0200\n"
 "PO-Revision-Date: 2023-06-12 10:49+0000\n"
 "Last-Translator: Hongtyu Bhe <mfthits@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -35,7 +35,7 @@ msgstr "正在创建配置文件世代 %s"
 msgid "No change so reusing latest profile generation %s"
 msgstr "未发生变化，正在重新使用最近一次的配置文件世代 %s"
 
-#: modules/home-environment.nix:626
+#: modules/home-environment.nix:640
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "来移除。然后尝试再次激活您的 Home Manager 配置。"
 
-#: modules/home-environment.nix:659
+#: modules/home-environment.nix:673
 msgid "Activating %s"
 msgstr "正在激活 %s"
 
