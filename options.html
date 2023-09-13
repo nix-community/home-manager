@@ -3194,6 +3194,19 @@ list of package</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">[ ]</code></p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">with pkgs.bat-extras; [ batdiff batman batgrep batwatch ];</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bat.nix" target="_top">
 &lt;home-manager/modules/programs/bat.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bat.syntaxes"></a><a class="term" href="options.html#opt-programs.bat.syntaxes"><code class="option">programs.bat.syntaxes</code></a></span></dt><dd><p>Additional syntaxes to provide.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  syntaxes.gleam = builtins.readFile (pkgs.fetchFromGitHub {
+    owner = "molnarmark";
+    repo = "sublime-gleam";
+    rev = "2e761cdb1a87539d827987f997a20a35efd68aa9";
+    hash = "sha256-Zj2DKTcO1t9g18qsNKtpHKElbRSc9nBRE2QBzRn9+qs=";
+  } + "/syntax/gleam.sublime-syntax");
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bat.nix" target="_top">
+&lt;home-manager/modules/programs/bat.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bat.themes"></a><a class="term" href="options.html#opt-programs.bat.themes"><code class="option">programs.bat.themes</code></a></span></dt><dd><p>Additional themes to provide.</p><p><span class="emphasis"><em>Type:</em></span>
 attribute set of strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
