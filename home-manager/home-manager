@@ -623,6 +623,8 @@ function doSwitch() {
 }
 
 function doListGens() {
+    setHomeManagerPathVariables
+
     # Whether to colorize the generations output.
     local color="never"
     if [[ ! -v NO_COLOR && -t 1 ]]; then
@@ -640,6 +642,7 @@ function doListGens() {
 # Removes linked generations. Takes as arguments identifiers of
 # generations to remove.
 function doRmGenerations() {
+    setHomeManagerPathVariables
     setVerboseAndDryRun
 
     pushd "$HM_PROFILE_DIR" > /dev/null
@@ -661,6 +664,8 @@ function doRmGenerations() {
 }
 
 function doExpireGenerations() {
+    setHomeManagerPathVariables
+
     local generations
     generations="$( \
         find "$HM_PROFILE_DIR" -name 'home-manager-*-link' -not -newermt "$1" \
@@ -759,6 +764,7 @@ function doShowNews() {
 }
 
 function doUninstall() {
+    setHomeManagerPathVariables
     setVerboseAndDryRun
     setNixProfileCommands
 
@@ -892,8 +898,6 @@ PASSTHROUGH_OPTS=()
 COMMAND=""
 COMMAND_ARGS=()
 FLAKE_ARG=""
-
-setHomeManagerPathVariables
 
 while [[ $# -gt 0 ]]; do
     opt="$1"
