@@ -16,10 +16,9 @@ with lib;
     nmt.script = ''
       assertPathNotExists home-files/.config/waybar/config
       assertPathNotExists home-files/.config/waybar/style.css
-
       serviceFile=$(normalizeStorePaths home-files/.config/systemd/user/waybar.service)
       assertFileContent "$serviceFile" ${
-        ./systemd-with-graphical-session-target.service
+        ./systemd-with-tray-target.service
       }
     '';
   };
