@@ -203,6 +203,7 @@ import nmt {
     ./modules/services/pantalaimon
     ./modules/services/parcellite
     ./modules/services/pass-secret-service
+    ./modules/services/pasystray
     ./modules/services/pbgopy
     ./modules/services/picom
     ./modules/services/playerctld
