@@ -170,6 +170,7 @@ import nmt {
     ./modules/programs/beets  # One test relies on services.mpd
     ./modules/programs/borgmatic
     ./modules/programs/boxxy
+    ./modules/programs/bumblebee-status
     ./modules/programs/firefox
     ./modules/programs/foot
     ./modules/programs/fuzzel
