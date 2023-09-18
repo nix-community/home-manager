@@ -299,6 +299,12 @@
     github = "nurelin";
     githubId = 5276274;
   };
+  otavio = {
+    email = "otavio.salvador@ossystems.com.br";
+    github = "otavio";
+    githubId = 25278;
+    name = "Otavio Salvador";
+  };
   pltanton = {
     name = "pltanton";
     email = "plotnikovanton@gmail.com";
