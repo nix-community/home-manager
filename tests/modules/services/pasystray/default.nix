@@ -1,0 +1,1 @@
+{ pasystray-service = ./service.nix; }
