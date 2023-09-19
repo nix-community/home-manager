@@ -6,6 +6,7 @@
     package = config.lib.test.mkStubPackage { outPath = "@fusuma@"; };
     extraPackages = [
       (config.lib.test.mkStubPackage { outPath = "@coreutils@"; })
+      (config.lib.test.mkStubPackage { outPath = "@gnugrep@"; })
       (config.lib.test.mkStubPackage { outPath = "@xdotool@"; })
     ];
     settings = { };

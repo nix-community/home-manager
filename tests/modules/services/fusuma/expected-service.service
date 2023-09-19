@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-Environment=PATH=@coreutils@/bin:@xdotool@/bin
+Environment=PATH=@coreutils@/bin:@gnugrep@/bin:@xdotool@/bin
 ExecStart=@fusuma@/bin/fusuma -c /home/hm-user/.config/fusuma/config.yaml
 
 [Unit]

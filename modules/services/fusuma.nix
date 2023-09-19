@@ -96,10 +96,10 @@ in {
 
     extraPackages = mkOption {
       type = types.listOf types.package;
-      default = with pkgs; [ coreutils ];
-      defaultText = literalExpression "pkgs.coreutils";
+      default = with pkgs; [ coreutils gnugrep ];
+      defaultText = literalExpression "pkgs.coreutils pkgs.gnugrep";
       example = literalExpression ''
-        with pkgs; [ coreutils xdotool ];
+        with pkgs; [ coreutils gnugrep xdotool ];
       '';
       description = ''
         Extra packages needs to bring to the scope of fusuma service.
