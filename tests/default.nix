@@ -79,8 +79,8 @@ import nmt {
     ./modules/programs/gallery-dl
     ./modules/programs/gh
     ./modules/programs/gh-dash
-    ./modules/programs/git-cliff
     ./modules/programs/git
+    ./modules/programs/git-cliff
     ./modules/programs/gpg
     ./modules/programs/helix
     ./modules/programs/himalaya
@@ -91,8 +91,8 @@ import nmt {
     ./modules/programs/jujutsu
     ./modules/programs/k9s
     ./modules/programs/kakoune
-    ./modules/programs/kitty
     ./modules/programs/khal
+    ./modules/programs/kitty
     ./modules/programs/ledger
     ./modules/programs/less
     ./modules/programs/lf
@@ -134,7 +134,6 @@ import nmt {
     ./modules/programs/sm64ex
     ./modules/programs/ssh
     ./modules/programs/starship
-    ./modules/services/syncthing/common
     ./modules/programs/taskwarrior
     ./modules/programs/texlive
     ./modules/programs/tmate
@@ -149,6 +148,7 @@ import nmt {
     ./modules/programs/zellij
     ./modules/programs/zplug
     ./modules/programs/zsh
+    ./modules/services/syncthing/common
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
@@ -218,8 +218,8 @@ import nmt {
     ./modules/services/lieer
     ./modules/services/mopidy
     ./modules/services/mpd
-    ./modules/services/mpdris2
     ./modules/services/mpd-mpris
+    ./modules/services/mpdris2
     ./modules/services/pantalaimon
     ./modules/services/parcellite
     ./modules/services/pass-secret-service
