@@ -2,9 +2,9 @@ Home Manager using Nix
 ======================
 
 This project provides a basic system for managing a user environment
-using the [Nix][] package manager together with the [Nix][] libraries
-found in [Nixpkgs][]. It allows declarative configuration of user
-specific (non-global) packages and dotfiles.
+using the [Nix][] package manager together with the Nix libraries found
+in [Nixpkgs][]. It allows declarative configuration of user specific
+(non-global) packages and dotfiles.
 
 Usage
 -----
@@ -29,7 +29,7 @@ Releases
 Home Manager is developed against `nixpkgs-unstable` branch, which often
 causes it to contain tweaks for changes/packages not yet released in
 stable [NixOS][]. To avoid breaking users' configurations, Home Manager
-is released in branches corresponding to [NixOS][] releases (e.g.
+is released in branches corresponding to NixOS releases (e.g.
 `release-23.05`). These branches get fixes, but usually not new modules.
 If you need a module to be backported, then feel free to open an issue.
 
@@ -38,12 +38,12 @@ Words of warning
 
 Unfortunately, it is quite possible to get difficult to understand
 errors when working with Home Manager. You should therefore be
-comfortable using the [Nix][] language and the various tools in the
-[Nix][] ecosystem.
+comfortable using the [Nix][] language and the various tools in the Nix
+ecosystem.
 
-If you are not very familiar with [Nix][] but still want to use Home
-Manager then you are strongly encouraged to start with a small and very
-simple configuration and gradually make it more elaborate as you learn.
+If you are not very familiar with Nix but still want to use Home Manager
+then you are strongly encouraged to start with a small and very simple
+configuration and gradually make it more elaborate as you learn.
 
 In some cases Home Manager cannot detect whether it will overwrite a
 previous manual configuration. For example, the Gnome Terminal module
@@ -51,9 +51,9 @@ will write to your dconf store and cannot tell whether a configuration
 that it is about to be overwritten was from a previous Home Manager
 generation or from manual configuration.
 
-Home Manager targets [NixOS][] unstable and [NixOS][] version 23.05 (the
+Home Manager targets [NixOS][] unstable and NixOS version 23.05 (the
 current stable version), it may or may not work on other Linux
-distributions and [NixOS][] versions.
+distributions and NixOS versions.
 
 Also, the `home-manager` tool does not explicitly support rollbacks at
 the moment so if your home directory gets messed up you'll have to fix
@@ -78,13 +78,13 @@ Home Manager can be used in three primary ways:
 
 1. Using the standalone `home-manager` tool. For platforms other than
    [NixOS][] and Darwin, this is the only available choice. It is also
-   recommended for people on [NixOS][] or Darwin that want to manage
-   their home directory independently of the system as a whole. See
+   recommended for people on NixOS or Darwin that want to manage their
+   home directory independently of the system as a whole. See
    [Standalone installation][manual standalone install] in the
    [manual][] for instructions on how to perform this installation.
 
-2. As a module within a [NixOS][] system configuration. This allows the
-   user profiles to be built together with the system when running
+2. As a module within a NixOS system configuration. This allows the user
+   profiles to be built together with the system when running
    `nixos-rebuild`. See [NixOS module installation][manual nixos
    install] in the manual for a description of this setup.
 
