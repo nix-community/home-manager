@@ -19,7 +19,7 @@ For a systematic overview of Home Manager and its available options, please see:
 - [3rd party Home Manager option
   search](https://mipmip.github.io/home-manager-option-search/)
 
-If you would like to contribute to Home Manager then please have a look at
+If you would like to contribute to Home Manager, then please have a look at
 [Section 5, "Contributing" in the manual][contributing].
 
 Releases
