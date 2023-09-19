@@ -20,20 +20,18 @@ please see
 - the 3rd party [Home Manager option
   search](https://mipmip.github.io/home-manager-option-search/).
 
-If you would like to contribute to Home Manager
-then please have a look at the [contributing][] chapter of the
-[manual][].
+If you would like to contribute to Home Manager then please have a look
+at the [contributing][] chapter of the [manual][].
 
 Releases
 --------
 
-Home Manager is developed against `nixpkgs-unstable` branch, which
-often causes it to contain tweaks for changes/packages not yet
-released in stable [NixOS][]. To avoid breaking users' configurations,
-Home Manager is released in branches corresponding to [NixOS][] releases
-(e.g. `release-23.05`). These branches get fixes, but usually not new
-modules. If you need a module to be backported, then feel free to open
-an issue.
+Home Manager is developed against `nixpkgs-unstable` branch, which often
+causes it to contain tweaks for changes/packages not yet released in
+stable [NixOS][]. To avoid breaking users' configurations, Home Manager
+is released in branches corresponding to [NixOS][] releases (e.g.
+`release-23.05`). These branches get fixes, but usually not new modules.
+If you need a module to be backported, then feel free to open an issue.
 
 Words of warning
 ----------------
@@ -44,9 +42,8 @@ comfortable using the [Nix][] language and the various tools in the
 [Nix][] ecosystem.
 
 If you are not very familiar with [Nix][] but still want to use Home
-Manager then you are strongly encouraged to start with a small and
-very simple configuration and gradually make it more elaborate as you
-learn.
+Manager then you are strongly encouraged to start with a small and very
+simple configuration and gradually make it more elaborate as you learn.
 
 In some cases Home Manager cannot detect whether it will overwrite a
 previous manual configuration. For example, the Gnome Terminal module
@@ -91,11 +88,11 @@ Home Manager can be used in three primary ways:
    `nixos-rebuild`. See [NixOS module installation][manual nixos
    install] in the manual for a description of this setup.
 
-3. As a module within a [nix-darwin][] system configuration. This
-   allows the user profiles to be built together with the system when
-   running `darwin-rebuild`. See [nix-darwin module
-   installation][manual nix-darwin install] in the [manual][] for a
-   description of this setup.
+3. As a module within a [nix-darwin][] system configuration. This allows
+   the user profiles to be built together with the system when running
+   `darwin-rebuild`. See [nix-darwin module installation][manual
+   nix-darwin install] in the [manual][] for a description of this
+   setup.
 
 Home Manager provides both the channel-based setup and the flake-based
 one. See [Nix Flakes][manual nix flakes] for a description of the
