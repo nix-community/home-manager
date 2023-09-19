@@ -48,6 +48,9 @@ let
     // optionalAttrs (!cfg.enableUpdateCheck) { "update.mode" = "none"; }
     // optionalAttrs (!cfg.enableExtensionUpdateCheck) {
       "extensions.autoCheckUpdates" = false;
+    } // optionalAttrs (!cfg.enableExtensionUpdate) {
+      "extensions.autoUpdate" = false;
+      "extensions.autoCheckUpdates" = false;
     };
 in {
   imports = [
@@ -77,6 +80,15 @@ in {
         default = true;
         description = ''
           Whether to enable update checks/notifications.
+        '';
+      };
+
+      enableExtensionUpdate = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to enable automatic extension updates.
+          Disabling this also disables update checks.
         '';
       };
 
