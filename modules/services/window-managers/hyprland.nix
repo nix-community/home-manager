@@ -3,6 +3,13 @@ let
 
   cfg = config.wayland.windowManager.hyprland;
 
+  variables = builtins.concatStringsSep " " cfg.systemd.variables;
+  extraCommands = builtins.concatStringsSep " "
+    (map (f: "&& ${f}") cfg.systemd.extraCommands);
+  systemdActivation = ''
+    exec-once = ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}
+  '';
+
 in {
   meta.maintainers = [ lib.maintainers.fufexan ];
 
@@ -24,6 +31,10 @@ in {
     (lib.mkRenamedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "nvidiaPatches" ] # \
       [ "wayland" "windowManager" "hyprland" "enableNvidiaPatches" ])
+
+    (lib.mkRenamedOptionModule # \
+      [ "wayland" "windowManager" "hyprland" "systemdIntegration" ] # \
+      [ "wayland" "windowManager" "hyprland" "systemd" "enable" ])
   ];
 
   options.wayland.windowManager.hyprland = {
@@ -54,19 +65,44 @@ in {
       '';
     };
 
-    systemdIntegration = lib.mkOption {
-      type = lib.types.bool;
-      default = pkgs.stdenv.isLinux;
-      description = ''
-        Whether to enable {file}`hyprland-session.target` on
-        hyprland startup. This links to `graphical-session.target`.
-        Some important environment variables will be imported to systemd
-        and dbus user environment before reaching the target, including
-        - `DISPLAY`
-        - `HYPRLAND_INSTANCE_SIGNATURE`
-        - `WAYLAND_DISPLAY`
-        - `XDG_CURRENT_DESKTOP`
-      '';
+    systemd = {
+      enable = lib.mkEnableOption null // {
+        default = true;
+        description = ''
+          Whether to enable {file}`hyprland-session.target` on
+          hyprland startup. This links to `graphical-session.target`.
+          Some important environment variables will be imported to systemd
+          and D-Bus user environment before reaching the target, including
+          - `DISPLAY`
+          - `HYPRLAND_INSTANCE_SIGNATURE`
+          - `WAYLAND_DISPLAY`
+          - `XDG_CURRENT_DESKTOP`
+        '';
+      };
+
+      variables = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [
+          "DISPLAY"
+          "HYPRLAND_INSTANCE_SIGNATURE"
+          "WAYLAND_DISPLAY"
+          "XDG_CURRENT_DESKTOP"
+        ];
+        example = [ "-all" ];
+        description = ''
+          Environment variables to be imported in the systemd & D-Bus user
+          environment.
+        '';
+      };
+
+      extraCommands = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [
+          "systemctl --user stop hyprland-session.target"
+          "systemctl --user start hyprland-session.target"
+        ];
+        description = "Extra commands to be run after D-Bus activation.";
+      };
     };
 
     xwayland.enable = lib.mkEnableOption "XWayland" // { default = true; };
@@ -148,10 +184,10 @@ in {
     ];
 
     warnings = let
-      inconsistent = (cfg.systemdIntegration || cfg.plugins != [ ])
+      inconsistent = (cfg.systemd.enable || cfg.plugins != [ ])
         && cfg.extraConfig == "" && cfg.settings == { };
       warning =
-        "You have enabled hyprland.systemdIntegration or listed plugins in hyprland.plugins but do not have any configuration in hyprland.settings or hyprland.extraConfig. This is almost certainly a mistake.";
+        "You have enabled hyprland.systemd.enable or listed plugins in hyprland.plugins but do not have any configuration in hyprland.settings or hyprland.extraConfig. This is almost certainly a mistake.";
     in lib.optional inconsistent warning;
 
     home.packages = lib.optional (cfg.package != null) cfg.finalPackage;
@@ -167,7 +203,7 @@ in {
         in map mkEntry cfg.plugins;
       };
 
-      shouldGenerate = cfg.systemdIntegration || cfg.extraConfig != ""
+      shouldGenerate = cfg.systemd.enable || cfg.extraConfig != ""
         || combinedSettings != { };
 
       toHyprconf = with lib;
@@ -195,11 +231,11 @@ in {
         + concatStringsSep "\n" (mapAttrsToList mkSection sections)
         + mkFields fields;
     in lib.mkIf shouldGenerate {
-      text = lib.optionalString cfg.systemdIntegration ''
-        exec-once = ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP && systemctl --user start hyprland-session.target
-      '' + lib.optionalString (combinedSettings != { })
+      text = lib.optionalString cfg.systemd.enable systemdActivation
+        + lib.optionalString (combinedSettings != { })
         (toHyprconf combinedSettings 0)
         + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
+
       onChange = lib.mkIf (cfg.package != null) ''
         (  # execute in subshell so that `shopt` won't affect other scripts
           shopt -s nullglob  # so that nothing is done if /tmp/hypr/ does not exist or is empty
@@ -211,7 +247,7 @@ in {
       '';
     };
 
-    systemd.user.targets.hyprland-session = lib.mkIf cfg.systemdIntegration {
+    systemd.user.targets.hyprland-session = lib.mkIf cfg.systemd.enable {
       Unit = {
         Description = "Hyprland compositor session";
         Documentation = [ "man:systemd.special(7)" ];
