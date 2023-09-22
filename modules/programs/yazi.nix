@@ -6,7 +6,7 @@ let
   cfg = config.programs.yazi;
   tomlFormat = pkgs.formats.toml { };
 
-  shellIntegration = ''
+  bashIntegration = ''
     function ya() {
       tmp="$(mktemp -t "yazi-cwd.XXXXX")"
       yazi --cwd-file="$tmp"
@@ -14,6 +14,29 @@ let
         cd -- "$cwd"
       fi
       rm -f -- "$tmp"
+    }
+  '';
+
+  fishIntegration = ''
+    function ya
+      set tmp (mktemp -t "yazi-cwd.XXXXX")
+      yazi --cwd-file="$tmp"
+      if set cwd (cat -- "$tmp") && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]
+        cd -- "$cwd"
+      end
+      rm -f -- "$tmp"
+    end
+  '';
+
+  nushellIntegration = ''
+    def-env ya [] {
+      let tmp = (mktemp -t "yazi-cwd.XXXXX")
+      yazi --cwd-file $tmp
+      let cwd = (cat -- $tmp)
+      if $cwd != "" and $cwd != $env.PWD {
+        cd $cwd
+      }
+      rm -f $tmp
     }
   '';
 in {
@@ -32,6 +55,10 @@ in {
     enableBashIntegration = mkEnableOption "Bash integration";
 
     enableZshIntegration = mkEnableOption "Zsh integration";
+
+    enableFishIntegration = mkEnableOption "Fish integration";
+
+    enableNushellIntegration = mkEnableOption "Nushell integration";
 
     keymap = mkOption {
       type = tomlFormat.type;
@@ -113,9 +140,15 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration shellIntegration;
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration shellIntegration;
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration bashIntegration;
+
+    programs.fish.interactiveShellInit =
+      mkIf cfg.enableFishIntegration fishIntegration;
+
+    programs.nushell.extraConfig =
+      mkIf cfg.enableNushellIntegration nushellIntegration;
 
     xdg.configFile = {
       "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
