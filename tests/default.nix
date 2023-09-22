@@ -96,6 +96,7 @@ import nmt {
     ./modules/programs/ledger
     ./modules/programs/less
     ./modules/programs/lf
+    ./modules/programs/lsd
     ./modules/programs/lieer
     ./modules/programs/man
     ./modules/programs/mbsync
