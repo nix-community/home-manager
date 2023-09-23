@@ -134,7 +134,7 @@ in {
         $env.config = ($env.config | update hooks.pre_prompt ($env.config.hooks.pre_prompt | append {
           code: "
             let direnv = (${pkgs.direnv}/bin/direnv export json | from json)
-            let direnv = if ($direnv | length) == 1 { $direnv } else { {} }
+            let direnv = if not ($direnv | is-empty) { $direnv } else { {} }
             $direnv | load-env
             "
         }))
