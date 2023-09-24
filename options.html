@@ -3063,6 +3063,29 @@ strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em
 strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/autorandr.nix" target="_top">
 &lt;home-manager/modules/programs/autorandr.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bacon.enable"></a><a class="term" href="options.html#opt-programs.bacon.enable"><code class="option">programs.bacon.enable</code></a></span></dt><dd><p>Whether to enable bacon, a background rust code checker.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bacon.nix" target="_top">
+&lt;home-manager/modules/programs/bacon.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bacon.settings"></a><a class="term" href="options.html#opt-programs.bacon.settings"><code class="option">programs.bacon.settings</code></a></span></dt><dd><p>Bacon configuration.
+For available settings see <a class="link" href="https://dystroy.org/bacon/#global-preferences" target="_top">https://dystroy.org/bacon/#global-preferences</a>.</p><p><span class="emphasis"><em>Type:</em></span>
+TOML value</p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  jobs = {
+    default = {
+      command = [
+        "cargo"
+        "build"
+        "--all-features"
+        "--color"
+        "always"
+      ];
+      need_stdout = true;
+    };
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bacon.nix" target="_top">
+&lt;home-manager/modules/programs/bacon.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bash.enable"></a><a class="term" href="options.html#opt-programs.bash.enable"><code class="option">programs.bash.enable</code></a></span></dt><dd><p>Whether to enable GNU Bourne-Again SHell.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
