@@ -19,6 +19,12 @@
     githubId = 56743515;
     name = "Morgane Austreelis";
   };
+  Avimitin = {
+    name = "Avimitin";
+    email = "dev@avimit.in";
+    github = "Avimitin";
+    githubId = 30021675;
+  };
   blmhemu = {
     name = "blmhemu";
     email = "19410501+blmhemu@users.noreply.github.com";
