@@ -224,6 +224,7 @@ let
     ./programs/wezterm.nix
     ./programs/wlogout.nix
     ./programs/wofi.nix
+    ./programs/wpaperd.nix
     ./programs/xmobar.nix
     ./programs/xplr.nix
     ./programs/yazi.nix

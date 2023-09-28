@@ -196,6 +196,7 @@ import nmt {
     ./modules/programs/waybar
     ./modules/programs/wlogout
     ./modules/programs/wofi
+    ./modules/programs/wpaperd
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
     ./modules/services/avizo
