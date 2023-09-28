@@ -25,6 +25,8 @@ let
     ${cfg.extraConfig}
   '';
 
+  mpdArgs = [ "${cfg.package}/bin/mpd" "--no-daemon" mpdConf ] ++ cfg.extraArgs;
+
 in {
 
   ###### interface
@@ -155,9 +157,12 @@ in {
   ###### implementation
 
   config = mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "services.mpd" pkgs lib.platforms.linux)
-    ];
+    assertions = [{
+      assertion = !(pkgs.stdenv.isDarwin && cfg.network.startWhenNeeded);
+      message = ''
+        The 'services.mpd.config.network.startWhenNeeded' option is not supported on darwin.
+      '';
+    }];
 
     services.mpd = mkMerge [
       (mkIf (versionAtLeast config.home.stateVersion "22.11"
@@ -182,9 +187,7 @@ in {
 
       Service = {
         Environment = "PATH=${config.home.profileDirectory}/bin";
-        ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf} ${
-            escapeShellArgs cfg.extraArgs
-          }";
+        ExecStart = escapeShellArgs mpdArgs;
         Type = "notify";
         ExecStartPre = ''
           ${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
@@ -205,6 +208,23 @@ in {
       };
 
       Install = { WantedBy = [ "sockets.target" ]; };
+    };
+
+    launchd.agents.mpd = {
+      enable = true;
+      config = {
+        Program = let
+          startMpd = pkgs.writeShellScriptBin "start-mpd" ''
+            ${pkgs.coreutils}/bin/mkdir -p \
+              ${escapeShellArg cfg.dataDir} \
+              ${escapeShellArg cfg.playlistDirectory}
+            ${escapeShellArgs mpdArgs}
+          '';
+        in "${startMpd}/bin/start-mpd";
+        EnvironmentVariables.PATH = "${config.home.profileDirectory}/bin";
+        KeepAlive = true;
+        ProcessType = "Interactive";
+      };
     };
 
     home.packages = [ cfg.package ];
