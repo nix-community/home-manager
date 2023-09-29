@@ -170,6 +170,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/programs/awscli
     ./modules/programs/beets  # One test relies on services.mpd
     ./modules/programs/borgmatic
     ./modules/programs/boxxy
