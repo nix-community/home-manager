@@ -57,6 +57,7 @@ let
     ./programs/atuin.nix
     ./programs/autojump.nix
     ./programs/autorandr.nix
+    ./programs/awscli.nix
     ./programs/bash.nix
     ./programs/bashmount.nix
     ./programs/bat.nix
