@@ -214,6 +214,7 @@ import nmt {
     ./modules/services/git-sync
     ./modules/services/gpg-agent
     ./modules/services/gromit-mpx
+    ./modules/services/home-manager-auto-expire
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/imapnotify
     ./modules/services/kanshi

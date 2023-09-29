@@ -1237,6 +1237,13 @@ in
           A new module is available: 'programs.bacon'.
         '';
       }
+
+      {
+        time = "2023-09-29T18:00:00+00:00";
+        message = ''
+          A new service is available: 'services.home-manager.autoExpire'.
+        '';
+      }
     ];
   };
 }
