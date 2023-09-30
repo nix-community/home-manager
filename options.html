@@ -3063,6 +3063,39 @@ strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em
 strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/autorandr.nix" target="_top">
 &lt;home-manager/modules/programs/autorandr.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.awscli.enable"></a><a class="term" href="options.html#opt-programs.awscli.enable"><code class="option">programs.awscli.enable</code></a></span></dt><dd><p>Whether to enable AWS CLI tool.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix" target="_top">
+&lt;home-manager/modules/programs/awscli.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.awscli.package"></a><a class="term" href="options.html#opt-programs.awscli.package"><code class="option">programs.awscli.package</code></a></span></dt><dd><p>Package providing <span class="command"><strong>aws</strong></span>.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.awscli2</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix" target="_top">
+&lt;home-manager/modules/programs/awscli.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.awscli.credentials"></a><a class="term" href="options.html#opt-programs.awscli.credentials"><code class="option">programs.awscli.credentials</code></a></span></dt><dd><p>Configuration written to <code class="filename">$HOME/.aws/credentials</code>.</p><p>For security reasons, never store cleartext passwords here.
+We recommend that you use <code class="literal">credential_process</code> option to retrieve
+the IAM credentials from your favorite password manager during runtime,
+or use AWS IAM Identity Center to get short-term credentials.</p><p>See <a class="link" href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-authentication.html" target="_top">https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-authentication.html</a>.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (INI atom (null, bool, int, float or string))</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  "default" = {
+    "credential_process" = "${pkgs.pass}/bin/pass show aws";
+  };
+};
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix" target="_top">
+&lt;home-manager/modules/programs/awscli.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.awscli.settings"></a><a class="term" href="options.html#opt-programs.awscli.settings"><code class="option">programs.awscli.settings</code></a></span></dt><dd><p>Configuration written to <code class="filename">$HOME/.aws/config</code>.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (INI atom (null, bool, int, float or string))</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  "default" = {
+    region = "eu-west-3";
+    output = "json";
+  };
+};
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix" target="_top">
+&lt;home-manager/modules/programs/awscli.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.bacon.enable"></a><a class="term" href="options.html#opt-programs.bacon.enable"><code class="option">programs.bacon.enable</code></a></span></dt><dd><p>Whether to enable bacon, a background rust code checker.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
