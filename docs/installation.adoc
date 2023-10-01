@@ -70,7 +70,7 @@ $ nix-channel --update
 Manager generation:
 +
 [source,console]
-$ nix-shell '<home-manager>' -A install
+$ nix-shell ~/.nix-defexpr/channels/home-manager -A install
 +
 Once finished, Home Manager should be active and available in your
 user environment.
