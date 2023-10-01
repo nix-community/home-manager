@@ -11067,6 +11067,33 @@ null or string</p><p><span class="emphasis"><em>Default:</em></span>
 ''
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wofi.nix" target="_top">
 &lt;home-manager/modules/programs/wofi.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wpaperd.enable"></a><a class="term" href="options.html#opt-programs.wpaperd.enable"><code class="option">programs.wpaperd.enable</code></a></span></dt><dd><p>Whether to enable wpaperd.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wpaperd.nix" target="_top">
+&lt;home-manager/modules/programs/wpaperd.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wpaperd.package"></a><a class="term" href="options.html#opt-programs.wpaperd.package"><code class="option">programs.wpaperd.package</code></a></span></dt><dd><p>The wpaperd package to use.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.wpaperd</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wpaperd.nix" target="_top">
+&lt;home-manager/modules/programs/wpaperd.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.wpaperd.settings"></a><a class="term" href="options.html#opt-programs.wpaperd.settings"><code class="option">programs.wpaperd.settings</code></a></span></dt><dd><p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/wpaperd/wallpaper.toml</code>.
+See <a class="link" href="https://github.com/danyspin97/wpaperd#wallpaper-configuration" target="_top">https://github.com/danyspin97/wpaperd#wallpaper-configuration</a>
+for the full list of options.</p><p><span class="emphasis"><em>Type:</em></span>
+TOML value</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  eDP-1 = {
+    path = "/home/foo/Pictures/Wallpaper";
+    apply-shadow = true;
+  };
+  DP-2 = {
+    path = "/home/foo/Pictures/Anime";
+    sorting = "descending";
+  };
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wpaperd.nix" target="_top">
+&lt;home-manager/modules/programs/wpaperd.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.xmobar.enable"></a><a class="term" href="options.html#opt-programs.xmobar.enable"><code class="option">programs.xmobar.enable</code></a></span></dt><dd><p>Whether to enable Xmobar, a minimalistic status bar.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
