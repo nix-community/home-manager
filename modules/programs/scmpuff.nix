@@ -39,22 +39,34 @@ in {
         Whether to enable fish integration.
       '';
     };
+
+    enableAliases = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable aliases (e.g. gs, ga, gd, gco).
+      '';
+    };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.enable (let
+    mkArgs = shell:
+      concatStringsSep " " ([ "--shell=${shell}" ]
+        ++ optional (!cfg.enableAliases) "--aliases=false");
+  in {
     home.packages = [ cfg.package ];
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(${cfg.package}/bin/scmpuff init -s)"
+      eval "$(${cfg.package}/bin/scmpuff init ${mkArgs "bash"})"
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      eval "$(${cfg.package}/bin/scmpuff init -s)"
+      eval "$(${cfg.package}/bin/scmpuff init ${mkArgs "zsh"})"
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration
       (mkAfter ''
-        ${cfg.package}/bin/scmpuff init -s --shell=fish | source
+        ${cfg.package}/bin/scmpuff init ${mkArgs "fish"} | source
       '');
-  };
+  });
 }
