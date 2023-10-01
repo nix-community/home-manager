@@ -237,7 +237,9 @@ string</p><p><span class="emphasis"><em>Declared by:</em></span></p><table borde
 &lt;home-manager/modules/accounts/calendar.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.contact.accounts"></a><a class="term" href="options.html#opt-accounts.contact.accounts"><code class="option">accounts.contact.accounts</code></a></span></dt><dd><p>List of contacts.</p><p><span class="emphasis"><em>Type:</em></span>
 attribute set of (submodule)</p><p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">{ }</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/contacts.nix" target="_top">
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/khard.nix" target="_top">
+&lt;home-manager/modules/programs/khard.nix&gt;
+</a></code></td></tr><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/contacts.nix" target="_top">
 &lt;home-manager/modules/accounts/contacts.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.contact.accounts._name_.khal.enable"></a><a class="term" href="options.html#opt-accounts.contact.accounts._name_.khal.enable"><code class="option">accounts.contact.accounts.&lt;name&gt;.khal.enable</code></a></span></dt><dd><p>Whether to enable khal access.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
@@ -248,6 +250,11 @@ boolean</p><p><span class="emphasis"><em>Default:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/contacts.nix" target="_top">
 &lt;home-manager/modules/accounts/contacts.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.contact.accounts._name_.khard.enable"></a><a class="term" href="options.html#opt-accounts.contact.accounts._name_.khard.enable"><code class="option">accounts.contact.accounts.&lt;name&gt;.khard.enable</code></a></span></dt><dd><p>Whether to enable khard access.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/khard.nix" target="_top">
+&lt;home-manager/modules/programs/khard.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-accounts.contact.accounts._name_.local"></a><a class="term" href="options.html#opt-accounts.contact.accounts._name_.local"><code class="option">accounts.contact.accounts.&lt;name&gt;.local</code></a></span></dt><dd><p>Local configuration for the contacts.</p><p><span class="emphasis"><em>Type:</em></span>
 null or (submodule)</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/contacts.nix" target="_top">
@@ -6510,6 +6517,38 @@ attribute set of attribute set of (INI atom (null, bool, int, float or string))<
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/khal.nix" target="_top">
 &lt;home-manager/modules/programs/khal.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.khard.enable"></a><a class="term" href="options.html#opt-programs.khard.enable"><code class="option">programs.khard.enable</code></a></span></dt><dd><p>Whether to enable Khard: an address book for the Unix console.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/khard.nix" target="_top">
+&lt;home-manager/modules/programs/khard.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.khard.settings"></a><a class="term" href="options.html#opt-programs.khard.settings"><code class="option">programs.khard.settings</code></a></span></dt><dd><p>Khard settings. See
+<a class="link" href="https://khard.readthedocs.io/en/latest/#configuration" target="_top">https://khard.readthedocs.io/en/latest/#configuration</a>
+for more information.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (boolean or string or list of string)</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  general = {
+    default_action = "list";
+    editor = ["vim" "-i" "NONE"];
+  };
+
+  "contact table" = {
+    display = "formatted_name";
+    preferred_phone_number_type = ["pref" "cell" "home"];
+    preferred_email_address_type = ["pref" "work" "home"];
+  };
+
+  vcard = {
+    private_objects = ["Jabber" "Skype" "Twitter"];
+  };
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/khard.nix" target="_top">
+&lt;home-manager/modules/programs/khard.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.khard.settings.general.default_action"></a><a class="term" href="options.html#opt-programs.khard.settings.general.default_action"><code class="option">programs.khard.settings.general.default_action</code></a></span></dt><dd><p>The default action to execute.</p><p><span class="emphasis"><em>Type:</em></span>
+string</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">"list"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/khard.nix" target="_top">
+&lt;home-manager/modules/programs/khard.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.kitty.enable"></a><a class="term" href="options.html#opt-programs.kitty.enable"><code class="option">programs.kitty.enable</code></a></span></dt><dd><p>Whether to enable Kitty terminal emulator.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
