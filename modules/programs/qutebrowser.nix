@@ -130,6 +130,14 @@ in {
       '';
     };
 
+    enableReadabilityJs = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Install dependencies for readability-js userscript.
+      '';
+    };
+
     keyBindings = mkOption {
       type = with types; attrsOf (attrsOf (separatedString " ;; "));
       default = { };
@@ -265,8 +273,35 @@ in {
 
     quickmarksFile = optionals (cfg.quickmarks != { }) concatStringsSep "\n"
       ((mapAttrsToList formatQuickmarks cfg.quickmarks));
+
+    readabilityJsDeps = pkgs.buildNpmPackage {
+      name = "readability-js-deps";
+      buildInputs = [ pkgs.nodejs ];
+      src = ./qutebrowser/readability-js;
+      npmDepsHash = "sha256-cEFM56s0Ki/lsgJf5KevZwyVtQCvl26NCDQB7RDH5IA=";
+      dontNpmBuild = true;
+      installPhase = ''
+        mkdir -p $out
+        cp -r node_modules $out
+      '';
+    };
+
+    packageWithReadabilityJs = pkgs.symlinkJoin {
+      name = "qutebrowser-with-readability-js";
+      paths = [ cfg.package ];
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/qutebrowser \
+          --prefix PATH : "${lib.makeBinPath [ pkgs.nodejs ]}" \
+          --prefix NODE_PATH : "${readabilityJsDeps}/node_modules"
+      '';
+    };
+
+    finalPackage =
+      if cfg.enableReadabilityJs then packageWithReadabilityJs else cfg.package;
+
   in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = [ finalPackage ];
 
     home.file.".qutebrowser/config.py" =
       mkIf pkgs.stdenv.hostPlatform.isDarwin { text = qutebrowserConfig; };
