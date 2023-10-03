@@ -257,6 +257,12 @@
     githubId = 605641;
     name = "Bart Bakker";
   };
+  ilaumjd = {
+    name = "Ilham AM";
+    email = "ilaumjd@gmail.com";
+    github = "ilaumjd";
+    githubId = 16514431;
+  };
   jrobsonchase = {
     email = "josh@robsonchase.com";
     github = "jrobsonchase";
