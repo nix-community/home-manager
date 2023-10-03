@@ -155,6 +155,11 @@ function setHomeManagerNixPath() {
 
 # Sets some useful Home Manager related paths as global read-only variables.
 function setHomeManagerPathVariables() {
+    # If called twice then just exit early.
+    if [[ -v HM_DATA_HOME ]]; then
+        return
+    fi
+
     declare -r globalNixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
     declare -r globalProfilesDir="$globalNixStateDir/profiles/per-user/$USER"
     declare -r globalGcrootsDir="$globalNixStateDir/gcroots/per-user/$USER"
