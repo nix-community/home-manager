@@ -165,6 +165,7 @@ let
     ./programs/offlineimap.nix
     ./programs/oh-my-posh.nix
     ./programs/opam.nix
+    ./programs/openstackclient.nix
     ./programs/pandoc.nix
     ./programs/papis.nix
     ./programs/password-store.nix
