@@ -13,6 +13,7 @@
 
   nmt.script = ''
     assertFileNotRegex home-files/.bashrc '@thefuck@/bin/thefuck'
+    assertFileNotRegex home-files/.config/fish/config.fish '@thefuck@/bin/thefuck'
     assertFileNotRegex home-files/.zshrc '@thefuck@/bin/thefuck'
   '';
 }

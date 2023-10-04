@@ -18,6 +18,14 @@ in {
       '';
     };
 
+    enableFishIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Fish integration.
+      '';
+    };
+
     enableZshIntegration = mkOption {
       default = true;
       type = types.bool;
@@ -33,6 +41,13 @@ in {
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       eval "$(${cfg.package}/bin/thefuck --alias)"
     '';
+
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (
+      # Using mkAfter to make it more likely to appear after other
+      # manipulations of the prompt.
+      mkAfter ''
+        ${cfg.package}/bin/thefuck --alias | source 
+      '');
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/thefuck --alias)"
