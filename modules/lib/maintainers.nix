@@ -405,6 +405,12 @@
     github = "lukasngl";
     githubId = 69244516;
   };
+  sohalt = {
+    email = "nixos@sohalt.net";
+    github = "Sohalt";
+    githubId = 2157287;
+    name = "sohalt";
+  };
   soywod = {
     name = "Clément DOUIN";
     email = "clement.douin@posteo.net";
