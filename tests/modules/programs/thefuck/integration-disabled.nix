@@ -4,6 +4,7 @@
   programs = {
     thefuck.enable = true;
     thefuck.enableBashIntegration = false;
+    thefuck.enableFishIntegration = false;
     thefuck.enableZshIntegration = false;
     bash.enable = true;
     zsh.enable = true;
