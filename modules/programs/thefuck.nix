@@ -18,12 +18,8 @@ in {
       '';
     };
 
-    enableFishIntegration = mkOption {
+    enableFishIntegration = mkEnableOption "Fish integration" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
     };
 
     enableZshIntegration = mkOption {
