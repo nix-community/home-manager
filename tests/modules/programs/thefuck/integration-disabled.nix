@@ -14,7 +14,7 @@
 
   nmt.script = ''
     assertFileNotRegex home-files/.bashrc '@thefuck@/bin/thefuck'
-    assertFileNotRegex home-files/.config/fish/config.fish '@thefuck@/bin/thefuck'
+    assertFileNotExists home-files/.config/fish/functions/fuck.fish
     assertFileNotRegex home-files/.zshrc '@thefuck@/bin/thefuck'
   '';
 }

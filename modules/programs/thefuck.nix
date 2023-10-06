@@ -38,12 +38,20 @@ in {
       eval "$(${cfg.package}/bin/thefuck --alias)"
     '';
 
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (
-      # Using mkAfter to make it more likely to appear after other
-      # manipulations of the prompt.
-      mkAfter ''
-        ${cfg.package}/bin/thefuck --alias | source 
-      '');
+    programs.fish.functions = mkIf cfg.enableFishIntegration {
+      fuck = {
+        description = "Correct your previous console command";
+        body = ''
+          set -l fucked_up_command $history[1]
+          env TF_SHELL=fish TF_ALIAS=fuck PYTHONIOENCODING=utf-8 ${cfg.package}/bin/thefuck $fucked_up_command THEFUCK_ARGUMENT_PLACEHOLDER $argv | read -l unfucked_command
+          if [ "$unfucked_command" != "" ]
+            eval $unfucked_command
+            builtin history delete --exact --case-sensitive -- $fucked_up_command
+            builtin history merge
+          end
+        '';
+      };
+    };
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/thefuck --alias)"
