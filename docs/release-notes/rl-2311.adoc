@@ -32,6 +32,9 @@ If you have any external Home Manager modules,
 their option descriptions and literal examples should be translated
 to {nixpkgs-markdown}[Nixpkgs-flavoured Markdown].
 
+* The `services.password-store-sync` module has been removed.
+Use `services.git-sync` instead.
+
 [[sec-release-23.11-state-version-changes]]
 === State Version Changes
 
