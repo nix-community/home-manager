@@ -301,7 +301,6 @@ let
     ./services/pantalaimon.nix
     ./services/parcellite.nix
     ./services/pass-secret-service.nix
-    ./services/password-store-sync.nix
     ./services/pasystray.nix
     ./services/pbgopy.nix
     ./services/picom.nix
@@ -364,6 +363,10 @@ let
     ./misc/nix.nix
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
+
+    (mkRemovedOptionModule [ "services" "password-store-sync" ] ''
+      Use services.git-sync instead.
+    '')
   ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
     ++ optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
 
