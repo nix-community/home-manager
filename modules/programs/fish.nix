@@ -143,7 +143,7 @@ let
       cfg.shellAbbrs);
 
   aliasesStr = concatStringsSep "\n"
-    (mapAttrsToList (k: v: "alias ${k} ${escapeShellArg v}") cfg.shellAliases);
+    (mapAttrsToList (k: v: "function ${k} -w ${escapeShellArg v}; ${v} $argv; end") cfg.shellAliases);
 
   fishIndent = name: text:
     pkgs.runCommand name {
