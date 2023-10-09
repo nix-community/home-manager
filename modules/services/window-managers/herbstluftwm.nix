@@ -42,8 +42,8 @@ in {
       default = pkgs.herbstluftwm;
       defaultText = lib.literalExpression "pkgs.herbstluftwm";
       description = ''
-        Package providing the <command>herbstluftwm</command> and
-        <command>herbstclient</command> commands.
+        Package providing the {command}`herbstluftwm` and
+        {command}`herbstclient` commands.
       '';
     };
 
@@ -114,7 +114,7 @@ in {
       '';
       description = ''
         Extra configuration lines to add verbatim to
-        <filename>$XDG_CONFIG_HOME/herbstluftwm/autostart</filename>.
+        {file}`$XDG_CONFIG_HOME/herbstluftwm/autostart`.
       '';
     };
   };

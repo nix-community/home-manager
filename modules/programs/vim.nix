@@ -71,9 +71,7 @@ in {
         example = literalExpression "[ pkgs.vimPlugins.YankRing ]";
         description = ''
           List of vim plugins to install. To get a list of supported plugins run:
-          <command>nix-env -f '&lt;nixpkgs&gt;' -qaP -A vimPlugins</command>.
-
-          </para><para>
+          {command}`nix-env -f '<nixpkgs>' -qaP -A vimPlugins`.
 
           Note: String values are deprecated, please use actual packages.
         '';
@@ -94,18 +92,14 @@ in {
           corresponding values must be among the following supported
           options.
 
-          <informaltable frame="none"><tgroup cols="1"><tbody>
           ${concatStringsSep "\n" (mapAttrsToList (n: v: ''
-            <row>
-              <entry><varname>${n}</varname></entry>
-              <entry>${v.description}</entry>
-            </row>
+            {var}`${n}`
+            : ${v.description}
           '') knownSettings)}
-          </tbody></tgroup></informaltable>
 
           See the Vim documentation for detailed descriptions of these
-          options. Note, use <varname>extraConfig</varname> to
-          manually set any options not listed above.
+          options. Use [](#opt-programs.vim.extraConfig) to manually
+          set any options not listed above.
         '';
       };
 
@@ -137,8 +131,8 @@ in {
         type = types.bool;
         default = false;
         description = ''
-          Whether to configure <command>vim</command> as the default
-          editor using the <envar>EDITOR</envar> environment variable.
+          Whether to configure {command}`vim` as the default
+          editor using the {env}`EDITOR` environment variable.
         '';
       };
     };

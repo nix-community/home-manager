@@ -22,9 +22,8 @@ in {
       type = types.bool;
       default = false;
       description = ''
-        Whether to manage <filename>$XDG_CONFIG_HOME/user-dirs.dirs</filename>.
-        </para>
-        <para>
+        Whether to manage {file}`$XDG_CONFIG_HOME/user-dirs.dirs`.
+
         The generated file is read-only.
       '';
     };

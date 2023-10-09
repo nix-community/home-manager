@@ -26,8 +26,8 @@ in {
         '';
         description = ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/micro/settings.json</filename>. See
-          <link xlink:href="https://github.com/zyedidia/micro/blob/master/runtime/help/options.md"/>
+          {file}`$XDG_CONFIG_HOME/micro/settings.json`. See
+          <https://github.com/zyedidia/micro/blob/master/runtime/help/options.md>
           for supported values.
         '';
       };

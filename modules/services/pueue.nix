@@ -28,7 +28,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/pueue/pueue.yml</filename>.
+        {file}`$XDG_CONFIG_HOME/pueue/pueue.yml`.
       '';
     };
   };

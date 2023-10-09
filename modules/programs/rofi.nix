@@ -108,7 +108,7 @@ in {
       default = pkgs.rofi;
       type = types.package;
       description = ''
-        Package providing the <command>rofi</command> binary.
+        Package providing the {command}`rofi` binary.
       '';
       example = literalExpression ''
         pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
@@ -211,7 +211,7 @@ in {
       description = ''
         Name of theme or path to theme file in rasi format or attribute set with
         theme configuration. Available named themes can be viewed using the
-        <command>rofi-theme-selector</command> tool.
+        {command}`rofi-theme-selector` tool.
       '';
     };
 

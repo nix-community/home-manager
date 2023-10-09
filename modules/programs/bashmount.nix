@@ -17,8 +17,8 @@ in {
       default = "";
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/bashmount/config</filename>. Look at
-        <link xlink:href="https://github.com/jamielinux/bashmount/blob/master/bashmount.conf" />
+        {file}`$XDG_CONFIG_HOME/bashmount/config`. Look at
+        <https://github.com/jamielinux/bashmount/blob/master/bashmount.conf>
         for explanation about possible values.
       '';
     };

@@ -29,9 +29,9 @@ in {
         builtins.fromJSON (builtins.unsafeDiscardStringContext (builtins.readFile "''${pkgs.oh-my-posh}/share/oh-my-posh/themes/space.omp.json"))'';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/oh-my-posh/config.json</filename>. See
-        <link xlink:href="https://ohmyposh.dev/docs/configuration/overview"/>
-        for details. The <literal>useTheme</literal> option is ignored when this
+        {file}`$XDG_CONFIG_HOME/oh-my-posh/config.json`. See
+        <https://ohmyposh.dev/docs/configuration/overview>
+        for details. The `useTheme` option is ignored when this
         option is used.
       '';
     };
@@ -41,9 +41,9 @@ in {
       default = null;
       description = ''
         Use one of the official themes. This should be a name from this list:
-        <link xlink:href="https://ohmyposh.dev/docs/themes"/>. Because a theme
+        <https://ohmyposh.dev/docs/themes>. Because a theme
         is essentially a configuration file, this option is not used when a
-        <literal>configFile</literal> is set.
+        `configFile` is set.
       '';
     };
 

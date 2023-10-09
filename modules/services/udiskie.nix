@@ -25,12 +25,12 @@ in {
 
   options = {
     services.udiskie = {
-      enable = mkEnableOption "udiskie mount daemon" // {
+      enable = mkEnableOption "" // {
         description = ''
           Whether to enable the udiskie mount daemon.
-          </para><para>
+
           Note, if you use NixOS then you must add
-          <code>services.udisks2.enable = true</code>
+          `services.udisks2.enable = true`
           to your system configuration. Otherwise mounting will fail because
           the Udisk2 DBus service is not found.
         '';
@@ -50,9 +50,9 @@ in {
         '';
         description = ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/udiskie/config.yml</filename>.
-          </para><para>
-          See <link xlink:href="https://github.com/coldfix/udiskie/blob/master/doc/udiskie.8.txt#configuration" />
+          {file}`$XDG_CONFIG_HOME/udiskie/config.yml`.
+
+          See <https://github.com/coldfix/udiskie/blob/master/doc/udiskie.8.txt#configuration>
           for the full list of options.
         '';
       };
@@ -74,24 +74,17 @@ in {
         default = "auto";
         description = ''
           Whether to display tray icon.
-          </para><para>
+
           The options are
-          <variablelist>
-          <varlistentry>
-            <term><literal>always</literal></term>
-            <listitem><para>Always show tray icon.</para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>auto</literal></term>
-            <listitem><para>
-              Show tray icon only when there is a device available.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>never</literal></term>
-            <listitem><para>Never show tray icon.</para></listitem>
-          </varlistentry>
-          </variablelist>
+
+          `always`
+          : Always show tray icon.
+
+          `auto`
+          : Show tray icon only when there is a device available.
+
+          `never`
+          : Never show tray icon.
         '';
       };
     };

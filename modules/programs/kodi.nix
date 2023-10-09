@@ -134,7 +134,7 @@ in {
       example = literalExpression
         "pkgs.kodi.withPackages (exts: [ exts.pvr-iptvsimple ])";
       description = ''
-        The <literal>kodi</literal> package to use.
+        The `kodi` package to use.
         Can be used to specify extensions.
       '';
     };
@@ -160,13 +160,13 @@ in {
         { videolibrary.showemptytvshows = "true"; }
       '';
       description = ''
-        Configuration to write to the <literal>advancedsettings.xml</literal>
+        Configuration to write to the `advancedsettings.xml`
         file in kodis userdata directory. Settings specified here will be
         immutable from inside kodi and be hidden from the GUI settings dialog.
-        </para><para>
-        See <link xlink:href="https://kodi.wiki/view/Advancedsettings.xml"/> as
+
+        See <https://kodi.wiki/view/Advancedsettings.xml> as
         reference for how settings need to be specified.
-        </para><para>
+
         The innermost attributes must be of type str.
       '';
     };
@@ -191,16 +191,16 @@ in {
         }
       '';
       description = ''
-        Contents to populate the file <literal>sources.xml</literal> in kodis
+        Contents to populate the file `sources.xml` in kodis
         userdata directory.
-        </para><para>
-        See <link xlink:href="https://kodi.wiki/view/Sources.xml"/> as
+
+        See <https://kodi.wiki/view/Sources.xml> as
         reference for how sources need to be specified.
-        </para><para>
+
         Kodi will still show the dialogs to modify sources in the GUI and they
         appear to be mutable. This however is not the case and the sources will
         stay as specified via Home Manager.
-        </para><para>
+
         The innermost attributes must be of type str.
       '';
     };
@@ -214,7 +214,7 @@ in {
       description = ''
         Attribute set with the plugin namespace as toplevel key and the plugins
         settings as lower level key/value pairs.
-        </para><para>
+
         Kodi will still show the settings of plugins configured via this
         mechanism in the GUI and they appear to be mutable. This however is
         not the case and the settings will stay as specified via Home Manager.

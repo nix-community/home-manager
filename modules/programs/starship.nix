@@ -51,9 +51,9 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/starship.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://starship.rs/config/" /> for the full list
+        {file}`$XDG_CONFIG_HOME/starship.toml`.
+
+        See <https://starship.rs/config/> for the full list
         of options.
       '';
     };
@@ -137,7 +137,7 @@ in {
         ${starshipCmd} init nu | save --force ${config.xdg.cacheHome}/starship/init.nu
       '';
       extraConfig = ''
-        source ${config.xdg.cacheHome}/starship/init.nu
+        use ${config.xdg.cacheHome}/starship/init.nu
       '';
     };
   };

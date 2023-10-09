@@ -21,8 +21,8 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/k9s/config.yml</filename>. See
-        <link xlink:href="https://k9scli.io/topics/config/"/>
+        {file}`$XDG_CONFIG_HOME/k9s/config.yml`. See
+        <https://k9scli.io/topics/config/>
         for supported values.
       '';
       example = literalExpression ''
@@ -37,8 +37,8 @@ in {
       default = { };
       description = ''
         Skin written to
-        <filename>$XDG_CONFIG_HOME/k9s/skin.yml</filename>. See
-        <link xlink:href="https://k9scli.io/topics/skins/"/>
+        {file}`$XDG_CONFIG_HOME/k9s/skin.yml`. See
+        <https://k9scli.io/topics/skins/>
         for supported values.
       '';
       example = literalExpression ''

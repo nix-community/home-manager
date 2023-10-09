@@ -20,7 +20,7 @@ in {
       type = types.package;
       default = pkgs.flameshot;
       defaultText = literalExpression "pkgs.flameshot";
-      description = "Package providing <command>flameshot</command>.";
+      description = "Package providing {command}`flameshot`.";
     };
 
     settings = mkOption {
@@ -34,7 +34,7 @@ in {
       };
       description = ''
         Configuration to use for Flameshot. See
-        <link xlink:href="https://github.com/flameshot-org/flameshot/blob/master/flameshot.example.ini"/>
+        <https://github.com/flameshot-org/flameshot/blob/master/flameshot.example.ini>
         for available options.
       '';
     };

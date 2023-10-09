@@ -25,8 +25,8 @@ in {
         }
       '';
       description = ''
-        Configuration included in <literal>config.toml</literal>.
-        For available options see <link xlink:href="https://github.com/JakeStanger/mpd-discord-rpc#configuration"/>
+        Configuration included in `config.toml`.
+        For available options see <https://github.com/JakeStanger/mpd-discord-rpc#configuration>
       '';
     };
 

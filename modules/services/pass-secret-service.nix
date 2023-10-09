@@ -21,9 +21,9 @@ in {
       example = "/home/user/.local/share/password-store";
       description = ''
         Absolute path to password store. Defaults to
-        <filename>$HOME/.password-store</filename> if the
-        <option>programs.password-store</option> module is not enabled, and
-        <option>programs.password-store.settings.PASSWORD_STORE_DIR</option> if it is.
+        {file}`$HOME/.password-store` if the
+        {option}`programs.password-store` module is not enabled, and
+        {option}`programs.password-store.settings.PASSWORD_STORE_DIR` if it is.
       '';
     };
   };

@@ -23,9 +23,9 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/joshuto/joshuto.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://github.com/kamiyaa/joshuto/blob/main/docs/configuration/joshuto.toml.md" />
+        {file}`$XDG_CONFIG_HOME/joshuto/joshuto.toml`.
+
+        See <https://github.com/kamiyaa/joshuto/blob/main/docs/configuration/joshuto.toml.md>
         for the full list of options.
       '';
     };
@@ -35,9 +35,9 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/joshuto/keymap.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://github.com/kamiyaa/joshuto/blob/main/docs/configuration/keymap.toml.md" />
+        {file}`$XDG_CONFIG_HOME/joshuto/keymap.toml`.
+
+        See <https://github.com/kamiyaa/joshuto/blob/main/docs/configuration/keymap.toml.md>
         for the full list of options. Note that this option will overwrite any existing keybinds.
       '';
     };
@@ -47,9 +47,9 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/joshuto/mimetype.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://github.com/kamiyaa/joshuto/blob/main/docs/configuration/mimetype.toml.md" />
+        {file}`$XDG_CONFIG_HOME/joshuto/mimetype.toml`.
+
+        See <https://github.com/kamiyaa/joshuto/blob/main/docs/configuration/mimetype.toml.md>
         for the full list of options
       '';
     };
@@ -59,9 +59,9 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/joshuto/theme.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://github.com/kamiyaa/joshuto/blob/main/docs/configuration/theme.toml.md" />
+        {file}`$XDG_CONFIG_HOME/joshuto/theme.toml`.
+
+        See <https://github.com/kamiyaa/joshuto/blob/main/docs/configuration/theme.toml.md>
         for the full list of options
       '';
     };

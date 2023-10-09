@@ -6,6 +6,7 @@ _arguments \
   '-A[attribute]:ATTRIBUTE:()' \
   '-I[search path]:PATH:_files -/' \
   '-b[backup files]:EXT:()' \
+  '--flake[flake-uri]:PATH:_files -/' \
   '--cores[cores]:NUM:()' \
   '--debug[debug]' \
   '--impure[impure]' \
@@ -53,6 +54,7 @@ case "$state" in
       build|switch)
         _arguments \
           '--cores[cores]:NUM:()' \
+          '--flake[flake-uri]:PATH:_files -/' \
           '--debug[debug]' \
           '--impure[impure]' \
           '--keep-failed[keep failed]' \

@@ -15,10 +15,7 @@ with lib;
         description = ''
           The base color temperature used by sctd, which should be between 2500 and 9000.
           See
-          <citerefentry>
-            <refentrytitle>sctd</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>
+          {manpage}`sctd(1)`
           for more details.
         '';
       };

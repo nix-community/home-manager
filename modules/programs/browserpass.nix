@@ -4,7 +4,7 @@ with lib;
 
 let
   cfg = config.programs.browserpass;
-  browsers = [ "brave" "chrome" "chromium" "firefox" "vivaldi" ];
+  browsers = [ "brave" "chrome" "chromium" "firefox" "librewolf" "vivaldi" ];
 in {
   options = {
     programs.browserpass = {
@@ -72,6 +72,17 @@ in {
           "${dir}/com.github.browserpass.native.json".source =
             "${pkgs.browserpass}/lib/browserpass/hosts/firefox/com.github.browserpass.native.json";
         }]
+      else if x == "librewolf" then
+        let
+          dir = if isDarwin then
+            "Library/Application Support/LibreWolf/NativeMessagingHosts"
+          else
+            ".librewolf/native-messaging-hosts";
+        in [{
+          "${dir}/com.github.browserpass.native.json".source =
+            "${pkgs.browserpass}/lib/browserpass/hosts/firefox/com.github.browserpass.native.json";
+        }]
+
       else if x == "vivaldi" then
         let
           dir = if isDarwin then

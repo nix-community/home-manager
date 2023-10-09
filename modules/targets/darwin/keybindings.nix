@@ -18,15 +18,13 @@ in {
     description = ''
       This will configure the default keybindings for text fields in macOS
       applications. See
-      <link xlink:href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/EventOverview/TextDefaultsBindings/TextDefaultsBindings.html">Apple's documentation</link>
+      [Apple's documentation](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/EventOverview/TextDefaultsBindings/TextDefaultsBindings.html)
       for more details.
 
-      <warning>
-        <para>
-          Existing keybinding configuration will be wiped when using this
-          option.
-        </para>
-      </warning>
+      ::: {.warning}
+      Existing keybinding configuration will be wiped when using this
+      option.
+      :::
     '';
   };
 

@@ -30,10 +30,7 @@ in {
       description = ''
         How often to run vdirsyncer.  This value is passed to the systemd
         timer configuration as the onCalendar option.  See
-        <citerefentry>
-          <refentrytitle>systemd.time</refentrytitle>
-          <manvolnum>7</manvolnum>
-        </citerefentry>
+        {manpage}`systemd.time(7)`
         for more information about the format.
       '';
     };
@@ -52,7 +49,7 @@ in {
       default = null;
       description = ''
         Optional configuration file to link to use instead of
-        the default file (<filename>$XDG_CONFIG_HOME/vdirsyncer/config</filename>).
+        the default file ({file}`$XDG_CONFIG_HOME/vdirsyncer/config`).
       '';
     };
   };
@@ -67,9 +64,11 @@ in {
       Service = {
         Type = "oneshot";
         # TODO `vdirsyncer discover`
-        ExecStart = "${cfg.package}/bin/vdirsyncer ${
-            concatStringsSep " " vdirsyncerOptions
-          } sync";
+        ExecStart = let optStr = concatStringsSep " " vdirsyncerOptions;
+        in [
+          "${cfg.package}/bin/vdirsyncer ${optStr} metasync"
+          "${cfg.package}/bin/vdirsyncer ${optStr} sync"
+        ];
       };
     };
 

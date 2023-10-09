@@ -4,15 +4,13 @@ with lib;
 let
   cfg = config.programs.zsh.antidote;
 
-  relToDotDir = file:
-    (optionalString (config.programs.zsh.dotDir != null)
-      (config.programs.zsh.dotDir + "/")) + file;
+  zPluginStr = (pluginNames:
+    optionalString (pluginNames != [ ]) "${concatStrings (map (name: ''
+      ${name}
+    '') pluginNames)}");
 
-  zPluginStr = with lib;
-    (pluginNames:
-      optionalString (pluginNames != [ ]) "${concatStrings (map (name: ''
-        ${name}
-      '') pluginNames)}");
+  parseHashId = path:
+    elemAt (builtins.match "/nix/store/([a-zA-Z0-9]+)-.*" path) 0;
 in {
   meta.maintainers = [ maintainers.hitsmaxft ];
 
@@ -33,20 +31,24 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-
-    home.file."${relToDotDir ".zsh_plugins.txt"}".text = zPluginStr cfg.plugins;
-
-    ### move zsh_plugins.txt
-    programs.zsh.initExtraBeforeCompInit = ''
+    programs.zsh.initExtraBeforeCompInit = let
+      configFiles = pkgs.runCommand "hm_antidote-files" { } ''
+        echo "${zPluginStr cfg.plugins}" > $out
+      '';
+      hashId = parseHashId "${configFiles}";
+    in ''
       ## home-manager/antidote begin :
       source ${cfg.package}/share/antidote/antidote.zsh
       ${optionalString cfg.useFriendlyNames
       "zstyle ':antidote:bundle' use-friendly-names 'yes'"}
-      bundlefile=${relToDotDir ".zsh_plugins.txt"}
+
+      bundlefile=${configFiles}
       zstyle ':antidote:bundle' file $bundlefile
-      staticfile=${relToDotDir ".zsh_plugins.zsh"}
+      staticfile=/tmp/tmp_hm_zsh_plugins.zsh-${hashId}
       zstyle ':antidote:static' file $staticfile
+
       antidote load $bundlefile $staticfile
+
       ## home-manager/antidote end
     '';
   };

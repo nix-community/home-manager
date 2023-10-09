@@ -35,9 +35,9 @@ in {
         visible = false;
         description = ''
           Whether to enable dconf settings.
-          </para><para>
+
           Note, if you use NixOS then you must add
-          <code>programs.dconf.enable = true</code>
+          `programs.dconf.enable = true`
           to your system configuration. Otherwise you will see a systemd error
           message when your configuration is activated.
         '';
@@ -59,16 +59,16 @@ in {
         '';
         description = ''
           Settings to write to the dconf configuration system.
-          </para><para>
+
           Note that the database is strongly-typed so you need to use the same types
           as described in the GSettings schema. For example, if an option is of type
-          <literal>uint32</literal> (<literal>u</literal>), you need to wrap the number
-          using the <literal>lib.hm.gvariant.mkUint32</literal> constructor.
-          Otherwise, since Nix integers are implicitly coerced to <literal>int32</literal>
-          (<literal>i</literal>), it would get stored in the database as such, and GSettings
+          `uint32` (`u`), you need to wrap the number
+          using the `lib.hm.gvariant.mkUint32` constructor.
+          Otherwise, since Nix integers are implicitly coerced to `int32`
+          (`i`), it would get stored in the database as such, and GSettings
           might be confused when loading the setting.
-          </para><para>
-          You might want to use <link xlink:href="https://github.com/gvolpe/dconf2nix">dconf2nix</link>
+
+          You might want to use [dconf2nix](https://github.com/gvolpe/dconf2nix)
           to convert dconf database dumps into compatible Nix expression.
         '';
       };

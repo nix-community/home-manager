@@ -44,12 +44,9 @@ in {
       default = { };
       description = ''
         configuration for terminator.
-        </para><para>
+
         For a list of all possible options refer to the
-        <citerefentry>
-          <refentrytitle>terminator_config</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>
+        {manpage}`terminator_config(5)`
         man page.
       '';
       type = types.attrsOf types.anything;

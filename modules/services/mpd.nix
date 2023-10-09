@@ -60,9 +60,9 @@ in {
         apply = toString; # Prevent copies to Nix store.
         description = ''
           The directory where mpd reads music from.
-          </para><para>
-          If <xref linkend="opt-xdg.userDirs.enable"/> is
-          <literal>true</literal> then the defined XDG music directory is used.
+
+          If [](#opt-xdg.userDirs.enable) is
+          `true` then the defined XDG music directory is used.
           Otherwise, you must explicitly specify a value.
         '';
       };
@@ -82,13 +82,10 @@ in {
         default = "";
         description = ''
           Extra directives added to to the end of MPD's configuration
-          file, <filename>mpd.conf</filename>. Basic configuration
+          file, {file}`mpd.conf`. Basic configuration
           like file location and uid/gid is added automatically to the
           beginning of the file. For available options see
-          <citerefentry>
-            <refentrytitle>mpd.conf</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>.
+          {manpage}`mpd.conf(5)`.
         '';
       };
 
@@ -127,7 +124,7 @@ in {
           example = "any";
           description = ''
             The address for the daemon to listen on.
-            Use <literal>any</literal> to listen on all addresses.
+            Use `any` to listen on all addresses.
           '';
         };
 
@@ -147,7 +144,7 @@ in {
         defaultText = "\${dataDir}/tag_cache";
         description = ''
           The path to MPD's database. If set to
-          <literal>null</literal> the parameter is omitted from the
+          `null` the parameter is omitted from the
           configuration.
         '';
       };

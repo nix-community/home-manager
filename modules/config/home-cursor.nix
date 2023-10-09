@@ -29,7 +29,7 @@ let
 
       x11 = {
         enable = mkEnableOption ''
-          x11 config generation for <option>home.pointerCursor</option>
+          x11 config generation for {option}`home.pointerCursor`
         '';
 
         defaultCursor = mkOption {
@@ -42,7 +42,7 @@ let
 
       gtk = {
         enable = mkEnableOption ''
-          gtk config generation for <option>home.pointerCursor</option>
+          gtk config generation for {option}`home.pointerCursor`
         '';
       };
     };
@@ -51,6 +51,20 @@ let
   cursorPath = "${cfg.package}/share/icons/${escapeShellArg cfg.name}/cursors/${
       escapeShellArg cfg.x11.defaultCursor
     }";
+
+  defaultIndexThemePackage = pkgs.writeTextFile {
+    name = "index.theme";
+    destination = "/share/icons/default/index.theme";
+    # Set name in icons theme, for compatibility with AwesomeWM etc. See:
+    # https://github.com/nix-community/home-manager/issues/2081
+    # https://wiki.archlinux.org/title/Cursor_themes#XDG_specification
+    text = ''
+      [Icon Theme]
+      Name=Default
+      Comment=Default Cursor Theme
+      Inherits=${cfg.name}
+    '';
+  };
 
 in {
   meta.maintainers = [ maintainers.polykernel maintainers.league ];
@@ -95,15 +109,21 @@ in {
       type = types.nullOr pointerCursorModule;
       default = null;
       description = ''
-        Cursor configuration. Set to <literal>null</literal> to disable.
-        </para><para>
+        Cursor configuration. Set to `null` to disable.
+
         Top-level options declared under this submodule are backend independent
-        options. Options declared under namespaces such as <literal>x11</literal>
+        options. Options declared under namespaces such as `x11`
         are backend specific options. By default, only backend independent cursor
         configurations are generated. If you need configurations for specific
         backends, you can toggle them via the enable option. For example,
-        <xref linkend="opt-home.pointerCursor.x11.enable"/>
+        [](#opt-home.pointerCursor.x11.enable)
         will enable x11 cursor configurations.
+
+        Note that this will merely generate the cursor configurations.
+        To apply the configurations, the relevant subsytems must also be configured.
+        For example, [](#opt-home.pointerCursor.gtk.enable) will generate
+        the gtk cursor configuration, but [](#opt-gtk.enable) needs
+        to be set for it to be applied.
       '';
     };
   };
@@ -114,17 +134,7 @@ in {
         (hm.assertions.assertPlatform "home.pointerCursor" pkgs platforms.linux)
       ];
 
-      home.packages = [ cfg.package ];
-
-      # Set name in icons theme, for compatibility with AwesomeWM etc. See:
-      # https://github.com/nix-community/home-manager/issues/2081
-      # https://wiki.archlinux.org/title/Cursor_themes#XDG_specification
-      xdg.dataFile."icons/default/index.theme".text = ''
-        [icon theme]
-        Name=Default
-        Comment=Default Cursor Theme
-        Inherits=${cfg.name}
-      '';
+      home.packages = [ cfg.package defaultIndexThemePackage ];
 
       # Set directory to look for cursors in, needed for some applications
       # that are unable to find cursors otherwise. See:
@@ -136,6 +146,20 @@ in {
         XCURSOR_SIZE = mkDefault cfg.size;
         XCURSOR_THEME = mkDefault cfg.name;
       };
+
+      # Add symlink of cursor icon directory to $HOME/.icons, needed for
+      # backwards compatibility with some applications. See:
+      # https://specifications.freedesktop.org/icon-theme-spec/latest/ar01s03.html
+      home.file.".icons/default/index.theme".source =
+        "${defaultIndexThemePackage}/share/icons/default/index.theme";
+      home.file.".icons/${cfg.name}".source =
+        "${cfg.package}/share/icons/${cfg.name}";
+
+      # Add cursor icon link to $XDG_DATA_HOME as well for redundancy.
+      xdg.dataFile.".icons/default/index.theme".source =
+        "${defaultIndexThemePackage}/share/icons/default/index.theme";
+      xdg.dataFile.".icons/${cfg.name}".source =
+        "${cfg.package}/share/icons/${cfg.name}";
     }
 
     (mkIf cfg.x11.enable {

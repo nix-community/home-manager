@@ -50,15 +50,11 @@ in {
       description = ''
         Attribute set of Nheko preferences (converted to an INI file).
 
-        </para><para>
-
         For now, it is recommended to run nheko and sign-in before filling in
         the configuration settings in this module, as nheko writes the access
-        token to <filename>$XDG_CONFIG_HOME/nheko/nheko.conf</filename> the
+        token to {file}`$XDG_CONFIG_HOME/nheko/nheko.conf` the
         first time we sign in, and we need that data into these settings for the
         correct functionality of the application.
-
-        </para><para>
 
         This a temporary inconvenience, however, as nheko has plans to move the
         authentication stuff into the local database they currently use. Once

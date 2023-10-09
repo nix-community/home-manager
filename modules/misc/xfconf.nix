@@ -65,9 +65,9 @@ in {
       visible = false;
       description = ''
         Whether to enable Xfconf settings.
-        </para><para>
+
         Note, if you use NixOS then you must add
-        <code>programs.xfconf.enable = true</code>
+        `programs.xfconf.enable = true`
         to your system configuration. Otherwise you will see a systemd error
         message when your configuration is activated.
       '';
@@ -76,7 +76,7 @@ in {
     settings = mkOption {
       type = with types;
       # xfIntVariant must come AFTER str; otherwise strings are treated as submodule imports...
-        let value = oneOf [ bool int float str xfIntVariant ];
+        let value = nullOr (oneOf [ bool int float str xfIntVariant ]);
         in attrsOf (attrsOf (either value (listOf value))) // {
           description = "xfconf settings";
         };
@@ -108,8 +108,11 @@ in {
         mkCommand = channel: property: value: ''
           $DRY_RUN_CMD ${pkgs.xfce.xfconf}/bin/xfconf-query \
             ${
-              escapeShellArgs
-              ([ "-n" "-c" channel "-p" "/${property}" ] ++ withType value)
+              escapeShellArgs ([ "-c" channel "-p" "/${property}" ]
+                ++ (if value == null then
+                  [ "-r" ]
+                else
+                  [ "-n" ] ++ withType value))
             }
         '';
 

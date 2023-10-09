@@ -14,7 +14,7 @@ in {
       type = types.package;
       default = pkgs.skim;
       defaultText = literalExpression "pkgs.skim";
-      description = "Package providing the <command>skim</command> tool.";
+      description = "Package providing the {command}`skim` tool.";
     };
 
     defaultCommand = mkOption {

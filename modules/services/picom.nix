@@ -100,7 +100,7 @@ in {
       example = [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
       description = ''
         List of conditions of windows that should not be faded.
-        See <literal>picom(1)</literal> man page for more examples.
+        See `picom(1)` man page for more examples.
       '';
     };
 
@@ -136,7 +136,7 @@ in {
       example = [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
       description = ''
         List of conditions of windows that should have no shadow.
-        See <literal>picom(1)</literal> man page for more examples.
+        See `picom(1)` man page for more examples.
       '';
     };
 
@@ -201,7 +201,7 @@ in {
       type = types.enum [ "egl" "glx" "xrender" "xr_glx_hybrid" ];
       default = "xrender";
       description = ''
-        Backend to use: <literal>egl</literal>, <literal>glx</literal>, <literal>xrender</literal> or <literal>xr_glx_hybrid</literal>.
+        Backend to use: `egl`, `glx`, `xrender` or `xr_glx_hybrid`.
       '';
     };
 
@@ -264,7 +264,7 @@ in {
         description = ''
           Picom settings. Use this option to configure Picom settings not exposed
           in a NixOS option or to bypass one. For the available options see the
-          CONFIGURATION FILES section at <literal>picom(1)</literal>.
+          CONFIGURATION FILES section at `picom(1)`.
         '';
       };
   };

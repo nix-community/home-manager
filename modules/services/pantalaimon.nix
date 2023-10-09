@@ -19,7 +19,7 @@ in {
         default = pkgs.pantalaimon;
         defaultText = literalExpression "pkgs.pantalaimon";
         description =
-          "Package providing the <command>pantalaimon</command> executable to use.";
+          "Package providing the {command}`pantalaimon` executable to use.";
       };
 
       settings = mkOption {
@@ -41,13 +41,10 @@ in {
         '';
         description = ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/pantalaimon/pantalaimon.conf</filename>.
-          </para><para>
-          See <link xlink:href="https://github.com/matrix-org/pantalaimon/blob/master/docs/manpantalaimon.5.md" /> or
-          <citerefentry>
-            <refentrytitle>pantalaimon</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>
+          {file}`$XDG_CONFIG_HOME/pantalaimon/pantalaimon.conf`.
+
+          See <https://github.com/matrix-org/pantalaimon/blob/master/docs/manpantalaimon.5.md> or
+          {manpage}`pantalaimon(5)`
           for options.
         '';
       };

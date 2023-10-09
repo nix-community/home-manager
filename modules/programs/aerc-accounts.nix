@@ -1,4 +1,4 @@
-{ config, lib, pkgs, confSections, confSection, ... }:
+{ config, lib, confSections, confSection, ... }:
 
 with lib;
 
@@ -18,18 +18,22 @@ let
           token_endpoint = mkOption {
             type = nullOr str;
             default = null;
+            description = "The OAuth2 token endpoint.";
           };
           client_id = mkOption {
             type = nullOr str;
             default = null;
+            description = "The OAuth2 client identifier.";
           };
           client_secret = mkOption {
             type = nullOr str;
             default = null;
+            description = "The OAuth2 client secret.";
           };
           scope = mkOption {
             type = nullOr str;
             default = null;
+            description = "The OAuth2 requested scope.";
           };
         };
       });
@@ -38,7 +42,7 @@ let
     description = ''
       Sets the oauth2 params if authentication mechanism oauthbearer or
       xoauth2 is used.
-      See <citerefentry><refentrytitle>aerc-imap</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+      See {manpage}`aerc-imap(5)`.
     '';
   };
 
@@ -53,9 +57,9 @@ in {
           example =
             literalExpression ''{ source = "maildir://~/Maildir/example"; }'';
           description = ''
-            Extra config added to the configuration of this account in
-            <filename>$HOME/.config/aerc/accounts.conf</filename>.
-            See aerc-config(5).
+            Extra config added to the configuration section for this account in
+            {file}`$HOME/.config/aerc/accounts.conf`.
+            See {manpage}`aerc-accounts(5)`.
           '';
         };
 
@@ -66,19 +70,21 @@ in {
             ''{ messages = { d = ":move ''${folder.trash}<Enter>"; }; }'';
           description = ''
             Extra bindings specific to this account, added to
-            <filename>$HOME/.config/aerc/accounts.conf</filename>.
-            See <citerefentry><refentrytitle>aerc-config</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+            {file}`$HOME/.config/aerc/binds.conf`.
+            See {manpage}`aerc-binds(5)`.
           '';
         };
 
         extraConfig = mkOption {
           type = confSections;
           default = { };
-          example = literalExpression "{ ui = { sidebar-width = 42; }; }";
+          example = literalExpression "{ ui = { sidebar-width = 25; }; }";
           description = ''
-            Extra config specific to this account, added to
-            <filename>$HOME/.config/aerc/aerc.conf</filename>.
-            See <citerefentry><refentrytitle>aerc-config</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+            Config specific to this account, added to {file}`$HOME/.config/aerc/aerc.conf`.
+            Aerc only supports per-account UI configuration.
+            For other sections of {file}`$HOME/.config/aerc/aerc.conf`,
+            use `programs.aerc.extraConfig`.
+            See {manpage}`aerc-config(5)`.
           '';
         };
 
@@ -89,7 +95,7 @@ in {
           description = ''
             Sets the authentication mechanism if imap is used as the incoming
             method.
-            See <citerefentry><refentrytitle>aerc-imap</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+            See {manpage}`aerc-imap(5)`.
           '';
         };
 
@@ -103,7 +109,7 @@ in {
           description = ''
             Sets the authentication mechanism if smtp is used as the outgoing
             method.
-            See <citerefentry><refentrytitle>aerc-smtp</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+            See {manpage}`aerc-smtp(5)`.
           '';
         };
 
@@ -171,21 +177,20 @@ in {
               params = cfg.aerc.smtpOauth2Params;
             };
 
-            protocol = if smtp.tls.enable && !smtp.tls.useStartTls then
-              "smtps${loginMethod'}"
+            protocol = if smtp.tls.enable then
+              if smtp.tls.useStartTls then
+                "smtp${loginMethod'}"
+              else
+                "smtps${loginMethod'}"
             else
-              "smtp${loginMethod'}";
+              "smtp+insecure${loginMethod'}";
 
             port' = optPort smtp.port;
-
-            smtp-starttls =
-              if smtp.tls.enable && smtp.tls.useStartTls then "yes" else null;
 
           in {
             outgoing =
               "${protocol}://${userName}@${smtp.host}${port'}${oauthParams'}";
-          } // optPwCmd "outgoing" passwordCommand
-          // optAttr "smtp-starttls" smtp-starttls;
+          } // optPwCmd "outgoing" passwordCommand;
 
         msmtp = cfg: {
           outgoing = "msmtpq --read-envelope-from --read-recipients";

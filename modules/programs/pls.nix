@@ -16,8 +16,7 @@ in {
   meta.maintainers = [ maintainers.arjan-s ];
 
   options.programs.pls = {
-    enable =
-      mkEnableOption "pls, a modern replacement for <command>ls</command>";
+    enable = mkEnableOption "pls, a modern replacement for {command}`ls`";
 
     package = mkPackageOption pkgs "pls" { };
 

@@ -70,15 +70,12 @@ let
         default = null;
         example = "*.example.org";
         description = ''
-          <literal>Host</literal> pattern used by this conditional block.
+          `Host` pattern used by this conditional block.
           See
-          <citerefentry>
-          <refentrytitle>ssh_config</refentrytitle>
-          <manvolnum>5</manvolnum>
-          </citerefentry>
-          for <literal>Host</literal> block details.
+          {manpage}`ssh_config(5)`
+          for `Host` block details.
           This option is ignored if
-          <option>ssh.matchBlocks.*.match</option>
+          {option}`ssh.matchBlocks.*.match`
           if defined.
         '';
       };
@@ -88,14 +85,11 @@ let
         default = null;
         example = "host <hostname> canonical\nhost <hostname> exec \"ping -c1 -q 192.168.17.1\"";
         description = ''
-          <literal>Match</literal> block conditions used by this block. See
-          <citerefentry>
-          <refentrytitle>ssh_config</refentrytitle>
-          <manvolnum>5</manvolnum>
-          </citerefentry>
-          for <literal>Match</literal> block details.
+          `Match` block conditions used by this block. See
+          {manpage}`ssh_config(5)`
+          for `Match` block details.
           This option takes precedence over
-          <option>ssh.matchBlocks.*.host</option>
+          {option}`ssh.matchBlocks.*.host`
           if defined.
         '';
       };
@@ -120,7 +114,7 @@ let
         default = false;
         description = ''
           Specifies whether X11 connections will be automatically redirected
-          over the secure channel and <envar>DISPLAY</envar> set.
+          over the secure channel and {env}`DISPLAY` set.
         '';
       };
 
@@ -139,8 +133,8 @@ let
         description = ''
           Specifies that ssh should only use the authentication
           identity explicitly configured in the
-          <filename>~/.ssh/config</filename> files or passed on the
-          ssh command-line, even if <command>ssh-agent</command>
+          {file}`~/.ssh/config` files or passed on the
+          ssh command-line, even if {command}`ssh-agent`
           offers more identities.
         '';
       };
@@ -208,7 +202,7 @@ let
         default = null;
         description = ''
           Specifies whether to use compression. Omitted from the host
-          block when <literal>null</literal>.
+          block when `null`.
         '';
       };
 
@@ -217,7 +211,7 @@ let
         default = true;
         description = ''
           Check the host IP address in the
-          <filename>known_hosts</filename> file.
+          {file}`known_hosts` file.
         '';
       };
 
@@ -267,10 +261,7 @@ let
         '';
         description = ''
           Specify local port forwardings. See
-          <citerefentry>
-            <refentrytitle>ssh_config</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry> for <literal>LocalForward</literal>.
+          {manpage}`ssh_config(5)` for `LocalForward`.
         '';
       };
 
@@ -288,10 +279,7 @@ let
         '';
         description = ''
           Specify remote port forwardings. See
-          <citerefentry>
-            <refentrytitle>ssh_config</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry> for <literal>RemoteForward</literal>.
+          {manpage}`ssh_config(5)` for `RemoteForward`.
         '';
       };
 
@@ -303,10 +291,7 @@ let
         '';
         description = ''
           Specify dynamic port forwardings. See
-          <citerefentry>
-            <refentrytitle>ssh_config</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry> for <literal>DynamicForward</literal>.
+          {manpage}`ssh_config(5)` for `DynamicForward`.
         '';
       };
 
@@ -404,10 +389,7 @@ in
       type = types.bool;
       description = ''
         Indicates that
-        <citerefentry>
-          <refentrytitle>ssh</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>
+        {manpage}`ssh(1)`
         should hash host names and addresses when they are added to
         the known hosts file.
       '';
@@ -419,7 +401,7 @@ in
       description = ''
         Specifies one or more files to use for the user host key
         database, separated by whitespace. The default is
-        <filename>~/.ssh/known_hosts</filename>.
+        {file}`~/.ssh/known_hosts`.
       '';
     };
 
@@ -470,13 +452,10 @@ in
       default = [];
       description = ''
         File globs of ssh config files that should be included via the
-        <literal>Include</literal> directive.
-        </para><para>
+        `Include` directive.
+
         See
-        <citerefentry>
-          <refentrytitle>ssh_config</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>
+        {manpage}`ssh_config(5)`
         for more information.
       '';
     };
@@ -500,12 +479,9 @@ in
         Specify per-host settings. Note, if the order of rules matter
         then use the DAG functions to express the dependencies as
         shown in the example.
-        </para><para>
+
         See
-        <citerefentry>
-          <refentrytitle>ssh_config</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>
+        {manpage}`ssh_config(5)`
         for more information.
       '';
     };

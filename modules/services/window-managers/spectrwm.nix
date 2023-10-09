@@ -37,7 +37,7 @@ in {
         default = pkgs.spectrwm;
         defaultText = literalExpression "pkgs.spectrwm";
         description = ''
-          Package providing the <command>spectrwm</command> command.
+          Package providing the {command}`spectrwm` command.
         '';
       };
 

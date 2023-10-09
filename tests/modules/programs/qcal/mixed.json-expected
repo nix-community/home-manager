@@ -1,0 +1,14 @@
+{
+  "Calendars": [
+    {
+      "Url": "https://example.com/events.ical"
+    },
+    {
+      "PasswordCmd": "pass show calendar",
+      "Url": "https://cal.example.com/anton/work",
+      "Username": "anton"
+    }
+  ],
+  "DefaultNumDays": 30,
+  "Timezone": "Local"
+}

@@ -22,7 +22,7 @@ in {
       type = types.package;
       default = pkgs.yt-dlp;
       defaultText = literalExpression "pkgs.yt-dlp";
-      description = "Package providing the <command>yt-dlp</command> tool.";
+      description = "Package providing the {command}`yt-dlp` tool.";
     };
 
     settings = mkOption {
@@ -39,12 +39,12 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/yt-dlp/config</filename>.
-        </para><para>
-        Options must be specified in their <quote>long form</quote>, for
-        example, <code>update = true;</code> instead of <code>U = true;</code>.
-        Short options can be specified in the <code>extraConfig</code> option.
-        See <link xlink:href="https://github.com/yt-dlp/yt-dlp#configuration"/>
+        {file}`$XDG_CONFIG_HOME/yt-dlp/config`.
+
+        Options must be specified in their "long form", for
+        example, `update = true;` instead of `U = true;`.
+        Short options can be specified in the `extraConfig` option.
+        See <https://github.com/yt-dlp/yt-dlp#configuration>
         for explanation about possible values.
       '';
     };
@@ -58,7 +58,7 @@ in {
       '';
       description = ''
         Extra configuration to add to
-        <filename>$XDG_CONFIG_HOME/yt-dlp/config</filename>.
+        {file}`$XDG_CONFIG_HOME/yt-dlp/config`.
       '';
     };
   };

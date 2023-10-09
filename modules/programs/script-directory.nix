@@ -6,7 +6,7 @@ in {
   options.programs.script-directory = {
     enable = lib.mkEnableOption "script-directory";
 
-    package = lib.mkPackageOptionMD pkgs "script-directory" { };
+    package = lib.mkPackageOption pkgs "script-directory" { };
 
     settings = lib.mkOption {
       default = { };
@@ -18,8 +18,8 @@ in {
           SD_CAT = "lolcat";
         }
       '';
-      description = lib.mdDoc
-        "script-directory config, for options take a look at the [documentation](github.com/ianthehenry/sd#options)";
+      description =
+        "script-directory config, for options take a look at the [documentation](https://github.com/ianthehenry/sd#options)";
     };
   };
   config = lib.mkIf cfg.enable {

@@ -8,14 +8,18 @@ let
   # attrs util that removes entries containing a null value
   compactAttrs = lib.filterAttrs (_: val: !isNull val);
 
+  # Needed for notmuch config, because the DB is here, and not in each account's dir
+  maildirBasePath = config.accounts.email.maildirBasePath;
+
   # make a himalaya config from a home-manager email account config
   mkAccountConfig = _: account:
     let
-      imapEnabled = !isNull account.imap;
-      maildirEnabled = !imapEnabled && !isNull account.maildir
-        && !account.notmuch.enable;
-      notmuchEnabled = !imapEnabled && !isNull account.maildir
-        && account.notmuch.enable;
+      # Use notmuch if it's enabled, otherwise fallback to IMAP then maildir
+      # Maildir is always set, so there's no easy way to detect if it's being used
+      notmuchEnabled = account.notmuch.enable;
+      imapEnabled = !isNull account.imap && !notmuchEnabled;
+      maildirEnabled = !isNull account.maildir && !imapEnabled
+        && !notmuchEnabled;
 
       globalConfig = {
         email = account.address;
@@ -32,7 +36,7 @@ let
       signatureConfig =
         lib.optionalAttrs (account.signature.showSignature == "append") {
           # TODO: signature cannot be attached yet
-          # https://todo.sr.ht/~soywod/himalaya/27
+          # https://todo.sr.ht/~soywod/pimalaya/27
           signature = account.signature.text;
           signature-delim = account.signature.delimiter;
         };
@@ -55,7 +59,7 @@ let
 
       notmuchConfig = lib.optionalAttrs notmuchEnabled (compactAttrs {
         backend = "notmuch";
-        notmuch-db-path = account.maildir.absPath;
+        notmuch-db-path = maildirBasePath;
       });
 
       smtpConfig = lib.optionalAttrs (!isNull account.smtp) (compactAttrs {
@@ -114,22 +118,21 @@ in {
 
   options = {
     programs.himalaya = {
-      enable = lib.mkEnableOption "Enable the Himalaya email client.";
+      enable = lib.mkEnableOption "the Himalaya email client";
       package = lib.mkPackageOption pkgs "himalaya" { };
       settings = lib.mkOption {
         type = lib.types.submodule { freeformType = tomlFormat.type; };
         default = { };
         description = ''
           Himalaya global configuration.
-          See <link xlink:href="https://pimalaya.org/himalaya/cli/configuration/global.html"/> for supported values.
+          See <https://pimalaya.org/himalaya/cli/configuration/global.html> for supported values.
         '';
       };
     };
 
     services = {
       himalaya-notify = {
-        enable =
-          lib.mkEnableOption "Enable the Himalaya new emails notifier service.";
+        enable = lib.mkEnableOption "the Himalaya new emails notifier service";
 
         environment = lib.mkOption {
           type = with lib.types; attrsOf str;
@@ -167,8 +170,8 @@ in {
       };
 
       himalaya-watch = {
-        enable = lib.mkEnableOption
-          "Enable the Himalaya folder changes watcher service.";
+        enable =
+          lib.mkEnableOption "the Himalaya folder changes watcher service";
 
         environment = lib.mkOption {
           type = with lib.types; attrsOf str;
@@ -209,15 +212,15 @@ in {
     accounts.email.accounts = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule {
         options.himalaya = {
-          enable = lib.mkEnableOption "Enable Himalaya for this email account.";
+          enable = lib.mkEnableOption "Himalaya for this email account";
 
           # TODO: remove me for the next release
           backend = lib.mkOption {
             type = with lib.types; nullOr str;
             default = null;
             description = ''
-              Specifying 'accounts.email.accounts.*.himalaya.backend' is deprecated,
-              set 'accounts.email.accounts.*.himalaya.settings.backend' instead.
+              Specifying {option}`accounts.email.accounts.*.himalaya.backend` is deprecated,
+              set {option}`accounts.email.accounts.*.himalaya.settings.backend` instead.
             '';
           };
 
@@ -225,8 +228,8 @@ in {
           sender = lib.mkOption {
             type = with lib.types; nullOr str;
             description = ''
-              Specifying 'accounts.email.accounts.*.himalaya.sender' is deprecated,
-              set 'accounts.email.accounts.*.himalaya.settings.sender' instead.
+              Specifying {option}`accounts.email.accounts.*.himalaya.sender` is deprecated,
+              set {option}'accounts.email.accounts.*.himalaya.settings.sender' instead.
             '';
           };
 
@@ -235,7 +238,7 @@ in {
             default = { };
             description = ''
               Himalaya configuration for this email account.
-              See <link xlink:href="https://pimalaya.org/himalaya/cli/configuration/account.html"/> for supported values.
+              See <https://pimalaya.org/himalaya/cli/configuration/account.html> for supported values.
             '';
           };
         };

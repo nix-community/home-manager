@@ -56,9 +56,9 @@ let
       description = ''
         Work around a Gmail API quirk where an empty change history
         is sometimes returned.
-        </para><para>
+
         See this
-        <link xlink:href="https://github.com/gauteh/lieer/issues/120">GitHub issue</link>
+        [GitHub issue](https://github.com/gauteh/lieer/issues/120)
         for more details.
       '';
     };
@@ -128,13 +128,10 @@ let
       default = "*:0/5";
       description = ''
         How often to synchronize the account.
-        </para><para>
+
         This value is passed to the systemd timer configuration as the
         onCalendar option. See
-        <citerefentry>
-          <refentrytitle>systemd.time</refentrytitle>
-          <manvolnum>7</manvolnum>
-        </citerefentry>
+        {manpage}`systemd.time(7)`
         for more information about the format.
       '';
     };
@@ -148,8 +145,8 @@ let
       default = true;
       description = ''
         Warn if Notmuch is not also enabled for this account.
-        </para><para>
-        This can safely be disabled if <command>notmuch init</command>
+
+        This can safely be disabled if {command}`notmuch init`
         has been used to configure this account outside of Home
         Manager.
       '';
@@ -162,10 +159,10 @@ let
       };
       default = { };
       description = ''
-        Settings which are applied to <filename>.gmailieer.json</filename>
+        Settings which are applied to {file}`.gmailieer.json`
         for the account.
-        </para><para>
-        See the <link xlink:href="https://github.com/gauteh/lieer/">lieer manual</link>
+
+        See the [lieer manual](https://github.com/gauteh/lieer/)
         for documentation of settings not explicitly covered by this module.
       '';
     };

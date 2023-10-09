@@ -165,7 +165,7 @@ in {
                 '';
                 description = ''
                   Preferences to add to this profile's
-                  <filename>user.js</filename>.
+                  {file}`user.js`.
                 '';
               };
 
@@ -202,11 +202,12 @@ in {
                 type = types.lines;
                 default = "";
                 description = ''
-                  Extra preferences to add to <filename>user.js</filename>.
+                  Extra preferences to add to {file}`user.js`.
                 '';
               };
             };
           }));
+        description = "Attribute set of Thunderbird profiles.";
       };
 
       settings = mkOption {
@@ -268,7 +269,7 @@ in {
               '';
               description = ''
                 Extra settings to add to this Thunderbird account configuration.
-                The <varname>id</varname> given as argument is an automatically
+                The {var}`id` given as argument is an automatically
                 generated account identifier.
               '';
             };
@@ -285,7 +286,7 @@ in {
               '';
               description = ''
                 Extra settings to add to each identity of this Thunderbird
-                account configuration. The <varname>id</varname> given as
+                account configuration. The {var}`id` given as
                 argument is an automatically generated identifier.
               '';
             };

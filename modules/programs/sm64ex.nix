@@ -64,7 +64,7 @@ in {
       default = null;
       description = ''
         Extra flags to pass to the compiler. See
-        <link xlink:href="https://github.com/sm64pc/sm64ex/wiki/Build-options"/>
+        <https://github.com/sm64pc/sm64ex/wiki/Build-options>
         for more information.
       '';
       example = literalExpression ''
@@ -80,7 +80,7 @@ in {
         nullOr (attrsOf (either str (either int (either bool (listOf str)))));
       default = null;
       description =
-        "Settings for sm64ex's <filename>$XDG_DATA_HOME/sm64pc/sm64config.txt</filename> file.";
+        "Settings for sm64ex's {file}`$XDG_DATA_HOME/sm64pc/sm64config.txt` file.";
       example = literalExpression ''
         {
           fullscreen = false;

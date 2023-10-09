@@ -57,9 +57,11 @@ let
     ./programs/atuin.nix
     ./programs/autojump.nix
     ./programs/autorandr.nix
+    ./programs/awscli.nix
     ./programs/bash.nix
     ./programs/bashmount.nix
     ./programs/bat.nix
+    ./programs/bacon.nix
     ./programs/beets.nix
     ./programs/borgmatic.nix
     ./programs/bottom.nix
@@ -67,16 +69,18 @@ let
     ./programs/broot.nix
     ./programs/browserpass.nix
     ./programs/btop.nix
+    ./programs/carapace.nix
     ./programs/chromium.nix
     ./programs/command-not-found/command-not-found.nix
     ./programs/comodoro.nix
+    ./programs/darcs.nix
     ./programs/dircolors.nix
     ./programs/direnv.nix
     ./programs/discocss.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
     ./programs/eww.nix
-    ./programs/exa.nix
+    ./programs/eza.nix
     ./programs/feh.nix
     ./programs/firefox.nix
     ./programs/fish.nix
@@ -86,6 +90,7 @@ let
     ./programs/gallery-dl.nix
     ./programs/getmail.nix
     ./programs/gh.nix
+    ./programs/gh-dash.nix
     ./programs/git-cliff.nix
     ./programs/git-credential-oauth.nix
     ./programs/git.nix
@@ -116,6 +121,7 @@ let
     ./programs/kakoune.nix
     ./programs/keychain.nix
     ./programs/khal.nix
+    ./programs/khard.nix
     ./programs/kitty.nix
     ./programs/kodi.nix
     ./programs/lazygit.nix
@@ -167,11 +173,15 @@ let
     ./programs/piston-cli.nix
     ./programs/pls.nix
     ./programs/powerline-go.nix
+    ./programs/pqiv.nix
     ./programs/pubs.nix
+    ./programs/pyenv.nix
     ./programs/pylint.nix
+    ./programs/qcal.nix
     ./programs/qutebrowser.nix
     ./programs/rbw.nix
     ./programs/readline.nix
+    ./programs/rio.nix
     ./programs/ripgrep.nix
     ./programs/rofi-pass.nix
     ./programs/rofi.nix
@@ -194,6 +204,7 @@ let
     ./programs/terminator.nix
     ./programs/termite.nix
     ./programs/texlive.nix
+    ./programs/thefuck.nix
     ./programs/thunderbird.nix
     ./programs/timidity.nix
     ./programs/tint2.nix
@@ -215,7 +226,10 @@ let
     ./programs/wezterm.nix
     ./programs/wlogout.nix
     ./programs/wofi.nix
+    ./programs/wpaperd.nix
     ./programs/xmobar.nix
+    ./programs/xplr.nix
+    ./programs/yazi.nix
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix
     ./programs/zathura.nix
@@ -224,6 +238,7 @@ let
     ./programs/zplug.nix
     ./programs/zsh.nix
     ./programs/zsh/prezto.nix
+    ./programs/zsh/zsh-abbr.nix
     ./services/autorandr.nix
     ./services/avizo.nix
     ./services/barrier.nix
@@ -306,9 +321,11 @@ let
     ./services/screen-locker.nix
     ./services/sctd.nix
     ./services/spotifyd.nix
+    ./services/ssh-agent.nix
     ./services/stalonetray.nix
     ./services/status-notifier-watcher.nix
     ./services/swayidle.nix
+    ./services/swayosd.nix
     ./services/sxhkd.nix
     ./services/syncthing.nix
     ./services/systembus-notify.nix
@@ -326,6 +343,7 @@ let
     ./services/window-managers/bspwm/default.nix
     ./services/window-managers/fluxbox.nix
     ./services/window-managers/herbstluftwm.nix
+    ./services/window-managers/hyprland.nix
     ./services/window-managers/i3-sway/i3.nix
     ./services/window-managers/i3-sway/sway.nix
     ./services/window-managers/i3-sway/swaynag.nix

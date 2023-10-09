@@ -68,7 +68,7 @@ let
         ''
           ${indent indentLevel}<DT><A HREF="${
             escapeXML bookmark.url
-          }" ADD_DATE="0" LAST_MODIFIED="0"${
+          }" ADD_DATE="1" LAST_MODIFIED="1"${
             lib.optionalString (bookmark.keyword != null)
             " SHORTCUTURL=\"${escapeXML bookmark.keyword}\""
           }${
@@ -137,7 +137,7 @@ in {
       enable = mkEnableOption "Firefox";
 
       package = mkOption {
-        type = types.package;
+        type = with types; nullOr package;
         default = if versionAtLeast config.home.stateVersion "19.09" then
           pkgs.firefox
         else
@@ -158,6 +158,7 @@ in {
           The Firefox package to use. If state version ≥ 19.09 then
           this should be a wrapped Firefox package. For earlier state
           versions it should be an unwrapped Firefox package.
+          Set to <literal>null</literal> to disable installing Firefox.
         '';
       };
 
@@ -211,7 +212,7 @@ in {
               type = types.lines;
               default = "";
               description = ''
-                Extra preferences to add to <filename>user.js</filename>.
+                Extra preferences to add to {file}`user.js`.
               '';
             };
 
@@ -417,17 +418,16 @@ in {
                 '';
                 description = ''
                   Attribute set of search engine configurations. Engines
-                  that only have <varname>metaData</varname> specified will
+                  that only have {var}`metaData` specified will
                   be treated as builtin to Firefox.
-                  </para><para>
-                  See <link xlink:href=
-                  "https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177">SearchEngine.jsm</link>
+
+                  See [SearchEngine.jsm](https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177)
                   in Firefox's source for available options. We maintain a
                   mapping to let you specify all options in the referenced
                   link without underscores, but it may fall out of date with
                   future options.
-                  </para><para>
-                  Note, <varname>icon</varname> is also a special option
+
+                  Note, {var}`icon` is also a special option
                   added by Home Manager to make it convenient to specify
                   absolute icon paths.
                 '';
@@ -444,17 +444,15 @@ in {
               '';
               description = ''
                 List of Firefox add-on packages to install for this profile.
-                Some pre-packaged add-ons are accessible from NUR,
-                <link xlink:href="https://github.com/nix-community/NUR"/>.
+                Some pre-packaged add-ons are accessible from the
+                [Nix User Repository](https://github.com/nix-community/NUR).
                 Once you have NUR installed run
 
-                <screen language="console">
-                  <prompt>$</prompt> <userinput>nix-env -f '&lt;nixpkgs&gt;' -qaP -A nur.repos.rycee.firefox-addons</userinput>
-                </screen>
+                ```console
+                $ nix-env -f '<nixpkgs>' -qaP -A nur.repos.rycee.firefox-addons
+                ```
 
                 to list the available Firefox add-ons.
-
-                </para><para>
 
                 Note that it is necessary to manually enable these extensions
                 inside Firefox after the first installation.
@@ -473,8 +471,8 @@ in {
         description = ''
           Whether to enable the GNOME Shell native host connector. Note, you
           also need to set the NixOS option
-          <literal>services.gnome.gnome-browser-connector.enable</literal> to
-          <literal>true</literal>.
+          `services.gnome.gnome-browser-connector.enable` to
+          `true`.
         '';
       };
     };
@@ -529,7 +527,7 @@ in {
         cfg.package.override (old: { cfg = old.cfg or { } // fcfg; })
       else
         (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
-    in [ package ];
+    in lib.optional (cfg.package != null) package;
 
     home.file = mkMerge ([{
       "${firefoxConfigPath}/profiles.ini" =

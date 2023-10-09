@@ -12,6 +12,6 @@
   test.stubs.scmpuff = { };
 
   nmt.script = ''
-    assertFileNotRegex home-files/.bashrc '@scmpuff@/bin/scmpuff'
+    assertFileNotRegex home-files/.bashrc '@scmpuff@'
   '';
 }

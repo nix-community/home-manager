@@ -1,0 +1,15 @@
+[[filetype.rules]]
+fg = "#7AD9E5"
+mime = "image/*"
+
+[[filetype.rules]]
+fg = "#F3D398"
+mime = "video/*"
+
+[[filetype.rules]]
+fg = "#F3D398"
+mime = "audio/*"
+
+[[filetype.rules]]
+fg = "#CD9EFC"
+mime = "application/x-bzip"

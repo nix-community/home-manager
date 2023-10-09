@@ -119,7 +119,7 @@ in {
       type = types.ints.between 0 200;
       default = 100;
       description =
-        "Darken (0 .. 99) or lighten (101 .. 200) the transparent background.";
+        "Darken (0 to 99) or lighten (101 to 200) the transparent background.";
     };
 
     extraConfig = mkOption {

@@ -28,9 +28,7 @@ let
           }
         '';
         description = ''
-          Define a launchd job. See <citerefentry>
-          <refentrytitle>launchd.plist</refentrytitle><manvolnum>5</manvolnum>
-          </citerefentry> for details.
+          Define a launchd job. See {manpage}`launchd.plist(5)` for details.
         '';
       };
     };

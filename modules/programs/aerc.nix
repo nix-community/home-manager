@@ -8,7 +8,7 @@ let
     ((type: either type (listOf type)) (nullOr (oneOf [ str int bool float ])))
     // {
       description =
-        "values (null, bool, int, string of float) or a list of values, that will be joined with a comma";
+        "values (null, bool, int, string, or float) or a list of values, that will be joined with a comma";
     };
 
   confSection = types.attrsOf primitive;
@@ -41,8 +41,9 @@ in {
       example = literalExpression
         ''{ Work = { source = "maildir://~/Maildir/work"; }; }'';
       description = ''
-        Extra lines added to <filename>$HOME/.config/aerc/accounts.conf</filename>.
-        See aerc-config(5).
+        Extra lines added to {file}`$HOME/.config/aerc/accounts.conf`.
+
+        See {manpage}`aerc-config(5)`.
       '';
     };
 
@@ -51,9 +52,10 @@ in {
       default = { };
       example = literalExpression ''{ messages = { q = ":quit<Enter>"; }; }'';
       description = ''
-        Extra lines added to <filename>$HOME/.config/aerc/binds.conf</filename>.
+        Extra lines added to {file}`$HOME/.config/aerc/binds.conf`.
         Global keybindings can be set in the `global` section.
-        See aerc-config(5).
+
+        See {manpage}`aerc-config(5)`.
       '';
     };
 
@@ -62,8 +64,9 @@ in {
       default = { };
       example = literalExpression ''{ ui = { sort = "-r date"; }; }'';
       description = ''
-        Extra lines added to <filename>$HOME/.config/aerc/aerc.conf</filename>.
-        See aerc-config(5).
+        Extra lines added to {file}`$HOME/.config/aerc/aerc.conf`.
+
+        See {manpage}`aerc-config(5)`.
       '';
     };
 
@@ -74,8 +77,9 @@ in {
         { default = { ui = { "tab.selected.reverse" = toggle; }; }; };
       '';
       description = ''
-        Stylesets added to <filename>$HOME/.config/aerc/stylesets/</filename>.
-        See aerc-stylesets(7).
+        Stylesets added to {file}`$HOME/.config/aerc/stylesets/`.
+
+        See {manpage}`aerc-stylesets(7)`.
       '';
     };
 
@@ -86,8 +90,9 @@ in {
         { new_message = "Hello!"; };
       '';
       description = ''
-        Templates added to <filename>$HOME/.config/aerc/templates/</filename>.
-        See aerc-templates(7).
+        Templates added to {file}`$HOME/.config/aerc/templates/`.
+
+        See {manpage}`aerc-templates(7)`.
       '';
     };
   };
@@ -99,7 +104,6 @@ in {
       let
         global = conf.global or { };
         local = removeAttrs conf [ "global" ];
-        optNewLine = if global != { } && local != { } then "\n" else "";
         mkValueString = v:
           if isList v then # join with comma
             concatStringsSep "," (map (generators.mkValueStringDefault { }) v)
@@ -162,15 +166,27 @@ in {
   in mkIf cfg.enable {
     warnings = if genAccountsConf
     && (cfg.extraConfig.general.unsafe-accounts-conf or false) == false then [''
-      aerc: An email account was configured, but `extraConfig.general.unsafe-accounts-conf` is set to false or unset.
-      This will prevent aerc from starting, see `unsafe-accounts-conf` in the man page aerc-config(5), which states:
+      aerc: `programs.aerc.enable` is set, but `...extraConfig.general.unsafe-accounts-conf` is set to false or unset.
+      This will prevent aerc from starting; see `unsafe-accounts-conf` in the man page aerc-config(5):
       > By default, the file permissions of accounts.conf must be restrictive and only allow reading by the file owner (0600).
       > Set this option to true to ignore this permission check. Use this with care as it may expose your credentials.
-      These file permissions are not possible with home-manger, since the generated file is stored in the nix-store with read-only access for all users (0444).
-      If `passwordCommand` is properly set, no credentials will be stored in the nix store.
-      Therefore, consider setting the option `extraConfig.general.unsafe-accounts-conf` to true.
+      These permissions are not possible with home-manager, since the generated file is in the nix-store (permissions 0444).
+      Therefore, please set `programs.aerc.extraConfig.general.unsafe-accounts-conf = true`.
+      This option is safe; if `passwordCommand` is properly set, no credentials will be written to the nix store.
     ''] else
       [ ];
+
+    assertions = [{
+      assertion = let
+        extraConfigSections = (unique (flatten
+          (mapAttrsToList (_: v: attrNames v.aerc.extraConfig) aerc-accounts)));
+      in extraConfigSections == [ ] || extraConfigSections == [ "ui" ];
+      message = ''
+        Only the ui section of $XDG_CONFIG_HOME/aerc.conf supports contextual (per-account) configuration.
+        Please configure it with accounts.email.accounts._.aerc.extraConfig.ui and move any other
+        configuration to programs.aerc.extraConfig.
+      '';
+    }];
 
     home.packages = [ cfg.package ];
 

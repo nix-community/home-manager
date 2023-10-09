@@ -34,10 +34,10 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/tealdeer/config.toml</filename> on Linux or
-        <filename>$HOME/Library/Application Support/tealdeer/config.toml</filename>
+        {file}`$XDG_CONFIG_HOME/tealdeer/config.toml` on Linux or
+        {file}`$HOME/Library/Application Support/tealdeer/config.toml`
         on Darwin. See
-        <link xlink:href="https://dbrgn.github.io/tealdeer/config.html"/>
+        <https://dbrgn.github.io/tealdeer/config.html>
         for more information.
       '';
     };

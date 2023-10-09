@@ -25,26 +25,26 @@ in {
       type = types.package;
       default = pkgs.sxhkd;
       defaultText = "pkgs.sxhkd";
-      description =
-        "Package containing the <command>sxhkd</command> executable.";
+      description = "Package containing the {command}`sxhkd` executable.";
     };
 
     extraOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      description =
-        "Command line arguments to invoke <command>sxhkd</command> with.";
+      description = "Command line arguments to invoke {command}`sxhkd` with.";
       example = literalExpression ''[ "-m 1" ]'';
     };
 
     keybindings = mkOption {
-      type = types.attrsOf (types.nullOr types.str);
+      type =
+        types.attrsOf (types.nullOr (types.oneOf [ types.str types.path ]));
       default = { };
       description = "An attribute set that assigns hotkeys to commands.";
       example = literalExpression ''
         {
           "super + shift + {r,c}" = "i3-msg {restart,reload}";
           "super + {s,w}"         = "i3-msg {stacking,tabbed}";
+          "super + F1"            = pkgs.writeShellScript "script" "echo $USER";
         }
       '';
     };

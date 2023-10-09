@@ -94,11 +94,11 @@ All contributed code _must_ pass the test suite.
 [[sec-guidelines-module-maintainer]]
 
 ==== Add relevant documentation
+:nixpkgs-markdown: https://nixos.org/manual/nixpkgs/unstable/#sec-contributing-markup
 :docbook: https://tdg.docbook.org/
 :asciidoc: https://asciidoc.org/
-:docbook-rocks: https://berbiche.github.io/docbook.rocks/
 
-Many code changes require changing the documentation as well. Module options should be documented with DocBook. See {docbook-rocks}[DocBook rocks!] for a quick introduction and {docbook}[DocBook 5: The Definitive Guide] for in-depth information of DocBook. Home Manager is itself documented using a combination of DocBook and {asciidoc}[AsciiDoc]. All text is hosted in Home Manager's Git repository.
+Many code changes require changing the documentation as well. Module options should be documented with {nixpkgs-markdown}[Nixpkgs-flavoured Markdown]. Home Manager is itself documented using a combination of {docbook}[DocBook] and {asciidoc}[AsciiDoc]. All text is hosted in Home Manager's Git repository.
 
 The HTML version of the manual containing both the module option descriptions and the documentation of Home Manager can be generated and opened by typing the following in a shell within a clone of the Home Manager Git repository:
 

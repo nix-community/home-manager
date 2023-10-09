@@ -19,14 +19,11 @@ in {
       description = ''
         How often to synchronise the password store git repository with its
         default upstream.
-        </para><para>
+
         This value is passed to the systemd timer configuration as the
-        <literal>onCalendar</literal> option.
+        `onCalendar` option.
         See
-        <citerefentry>
-          <refentrytitle>systemd.time</refentrytitle>
-          <manvolnum>7</manvolnum>
-        </citerefentry>
+        {manpage}`systemd.time(7)`
         for more information about the format.
       '';
     };

@@ -120,23 +120,23 @@ in {
               repo = "my-nixpkgs";
             };
             description =
-              "The flake reference to which <option>from></option> is to be rewritten.";
+              "The flake reference to which {option}`from>` is to be rewritten.";
           };
           flake = mkOption {
             type = types.nullOr types.attrs;
             default = null;
             example = literalExpression "nixpkgs";
             description = ''
-              The flake input to which <option>from></option> is to be rewritten.
+              The flake input to which {option}`from>` is to be rewritten.
             '';
           };
           exact = mkOption {
             type = types.bool;
             default = true;
             description = ''
-              Whether the <option>from</option> reference needs to match exactly. If set,
-              a <option>from</option> reference like <literal>nixpkgs</literal> does not
-              match with a reference like <literal>nixpkgs/nixos-20.03</literal>.
+              Whether the {option}`from` reference needs to match exactly. If set,
+              a {option}`from` reference like `nixpkgs` does not
+              match with a reference like `nixpkgs/nixos-20.03`.
             '';
           };
         };
@@ -182,8 +182,7 @@ in {
         keep-outputs = true
         keep-derivations = true
       '';
-      description =
-        "Additional text appended to <filename>nix.conf</filename>.";
+      description = "Additional text appended to {file}`nix.conf`.";
     };
 
     settings = mkOption {
@@ -197,16 +196,10 @@ in {
         }
       '';
       description = ''
-        Configuration for Nix, see
-        <link xlink:href="https://nixos.org/manual/nix/stable/#sec-conf-file"/> or
-        <citerefentry>
-          <refentrytitle>nix.conf</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry> for available options.
+        Configuration for Nix; see {manpage}`nix.conf(5)` for available options.
         The value declared here will be translated directly to the key-value pairs Nix expects.
-        </para>
-        <para>
-        Configuration specified in <option>nix.extraOptions</option> which will be appended
+
+        Configuration specified in [](#opt-nix.extraOptions) will be appended
         verbatim to the resulting config file.
       '';
     };

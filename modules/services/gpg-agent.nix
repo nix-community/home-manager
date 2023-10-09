@@ -157,7 +157,7 @@ in {
           Tell the pinentry to grab the keyboard and mouse. This
           option should in general be used to avoid X-sniffing
           attacks. When disabled, this option passes
-          <option>no-grab</option> setting to gpg-agent.
+          {option}`no-grab` setting to gpg-agent.
         '';
       };
 
@@ -168,7 +168,7 @@ in {
           Make use of the scdaemon tool. This option has the effect of
           enabling the ability to do smartcard operations. When
           disabled, this option passes
-          <option>disable-scdaemon</option> setting to gpg-agent.
+          {option}`disable-scdaemon` setting to gpg-agent.
         '';
       };
 
@@ -191,16 +191,16 @@ in {
         default = "gtk2";
         description = ''
           Which pinentry interface to use. If not
-          <literal>null</literal>, it sets
-          <option>pinentry-program</option> in
-          <filename>gpg-agent.conf</filename>. Beware that
-          <literal>pinentry-gnome3</literal> may not work on non-Gnome
+          `null`, it sets
+          {option}`pinentry-program` in
+          {file}`gpg-agent.conf`. Beware that
+          `pinentry-gnome3` may not work on non-Gnome
           systems. You can fix it by adding the following to your
           system configuration:
-          <programlisting language="nix">
+          ```nix
           services.dbus.packages = [ pkgs.gcr ];
-          </programlisting>
-          For this reason, the default is <literal>gtk2</literal> for
+          ```
+          For this reason, the default is `gtk2` for
           now.
         '';
       };

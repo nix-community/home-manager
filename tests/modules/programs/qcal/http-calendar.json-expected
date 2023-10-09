@@ -1,0 +1,9 @@
+{
+  "Calendars": [
+    {
+      "Url": "https://example.com/events.ical"
+    }
+  ],
+  "DefaultNumDays": 30,
+  "Timezone": "Local"
+}

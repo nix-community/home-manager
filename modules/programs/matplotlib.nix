@@ -25,7 +25,7 @@ in {
       default = { };
       type = types.attrsOf types.anything;
       description = ''
-        Add terms to the <filename>matplotlibrc</filename> file to
+        Add terms to the {file}`matplotlibrc` file to
         control the default matplotlib behavior.
       '';
       example = literalExpression ''
@@ -46,7 +46,7 @@ in {
       default = "";
       description = ''
         Additional commands for matplotlib that will be added to the
-        <filename>matplotlibrc</filename> file.
+        {file}`matplotlibrc` file.
       '';
     };
   };

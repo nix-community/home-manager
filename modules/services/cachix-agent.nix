@@ -10,8 +10,8 @@ in {
   meta.maintainers = [ maintainers.rycee ];
 
   options.services.cachix-agent = {
-    enable = mkEnableOption ''
-      Cachix Deploy Agent: <link xlink:href="https://docs.cachix.org/deploy/"/>'';
+    enable =
+      mkEnableOption "Cachix Deploy Agent: <https://docs.cachix.org/deploy/>";
 
     name = mkOption {
       type = types.str;
@@ -43,7 +43,7 @@ in {
         literalExpression ''"''${config.xdg.configHome}/cachix-agent.token"'';
       description = ''
         Required file that needs to contain
-        <literal>CACHIX_AGENT_TOKEN=...</literal>.
+        `CACHIX_AGENT_TOKEN=...`.
       '';
     };
   };

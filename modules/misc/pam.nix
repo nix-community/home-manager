@@ -17,11 +17,8 @@ in {
       description = ''
         Environment variables that will be set for the PAM session.
         The variable values must be as described in
-        <citerefentry>
-          <refentrytitle>pam_env.conf</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>.
-        </para><para>
+        {manpage}`pam_env.conf(5)`.
+
         Note, this option will become deprecated in the future and its use is
         therefore discouraged.
       '';
@@ -39,7 +36,7 @@ in {
         default = [ ];
         description = ''
           List of authorized YubiKey token IDs. Refer to
-          <link xlink:href="https://developers.yubico.com/yubico-pam"/>
+          <https://developers.yubico.com/yubico-pam>
           for details on how to obtain the token ID of a YubiKey.
         '';
       };
@@ -49,7 +46,7 @@ in {
         default = ".yubico/authorized_yubikeys";
         description = ''
           File path to write the authorized YubiKeys,
-          relative to <envar>HOME</envar>.
+          relative to {env}`HOME`.
         '';
       };
     };

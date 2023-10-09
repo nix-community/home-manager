@@ -39,15 +39,15 @@
  <xi:include href="faq.xml" />
  <appendix xml:id="ch-options">
   <title>Configuration Options</title>
-  <xi:include href="./nmd-result/home-manager-options.xml" />
+  <xi:include href="./nmd-result/home-manager-options.xml" xpointer="home-manager-options" />
  </appendix>
  <appendix xml:id="ch-nixos-options">
   <title>NixOS Module Options</title>
-  <xi:include href="./nmd-result/nixos-options.xml" />
+  <xi:include href="./nmd-result/nixos-options.xml" xpointer="nixos-options" />
  </appendix>
  <appendix xml:id="ch-nix-darwin-options">
   <title>nix-darwin Module Options</title>
-  <xi:include href="./nmd-result/nix-darwin-options.xml" />
+  <xi:include href="./nmd-result/nix-darwin-options.xml" xpointer="nix-darwin-options" />
  </appendix>
  <appendix xml:id="ch-tools">
   <title>Tools</title>

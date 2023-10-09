@@ -19,9 +19,9 @@ in {
         set autosave=true
       '';
       description = ''
-        Extra lines added to <filename>$HOME/.config/abook/abookrc</filename>.
+        Extra lines added to {file}`$HOME/.config/abook/abookrc`.
         Available configuration options are described in the abook repository:
-        <link xlink:href="https://sourceforge.net/p/abook/git/ci/master/tree/sample.abookrc" />.
+        <https://sourceforge.net/p/abook/git/ci/master/tree/sample.abookrc>.
       '';
     };
   };

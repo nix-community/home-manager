@@ -15,16 +15,16 @@ in {
     enable = mkEnableOption ''
       Easyeffects daemon.
       Note, it is necessary to add
-      <programlisting language="nix">
+      ```nix
       programs.dconf.enable = true;
-      </programlisting>
+      ```
       to your system configuration for the daemon to work correctly'';
 
     package = mkOption {
       type = types.package;
       default = pkgs.easyeffects;
       defaultText = literalExpression "pkgs.easyeffects";
-      description = "The <literal>easyeffects</literal> package to use.";
+      description = "The `easyeffects` package to use.";
     };
 
     preset = mkOption {

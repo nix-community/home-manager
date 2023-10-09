@@ -104,7 +104,7 @@ in {
       default = ".sbt";
       description = ''
         Where the sbt configuration files should be located, relative
-        <envar>HOME</envar>.
+        {env}`HOME`.
       '';
     };
 
@@ -162,25 +162,19 @@ in {
       description = ''
         A list of repositories to use when resolving dependencies. Defined as a
         list of pre-defined repository or custom repository as a set of name to
-        URL. The list will be used populate the <code>~/.sbt/repositories</code>
+        URL. The list will be used populate the `~/.sbt/repositories`
         file in the order specified.
 
-        </para><para>
-
-        Pre-defined repositories must be one of <code>local</code>,
-        <code>maven-local</code>, <code>maven-central</code>.
-
-        </para><para>
+        Pre-defined repositories must be one of `local`,
+        `maven-local`, `maven-central`.
 
         Custom repositories are defined as
-        <code language="nix">{ name-of-repo = "https://url.to.repo.com"}</code>.
-
-        </para><para>
+        `{ name-of-repo = "https://url.to.repo.com"}`.
 
         See
-        <link xlink:href="https://www.scala-sbt.org/1.x/docs/Launcher-Configuration.html#3.+Repositories+Section"/>
+        <https://www.scala-sbt.org/1.x/docs/Launcher-Configuration.html#3.+Repositories+Section>
         about this configuration section and
-        <link xlink:href="https://www.scala-sbt.org/1.x/docs/Proxy-Repositories.html"/>
+        <https://www.scala-sbt.org/1.x/docs/Proxy-Repositories.html>
         to read about proxy repositories.
       '';
     };

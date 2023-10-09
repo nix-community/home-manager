@@ -13,8 +13,8 @@ let
       example = 19;
       description = ''
         The qt easing-curve animation to use for the animation. See
-        <link xlink:href="https://doc.qt.io/qt-5/qeasingcurve.html#Type-enum">
-        QEasingCurve documentation</link>.
+        [
+        QEasingCurve documentation](https://doc.qt.io/qt-5/qeasingcurve.html#Type-enum).
       '';
     };
 
@@ -48,7 +48,7 @@ in {
         ''{ main.activation_command = "\${pkgs.hello}/bin/hello"; }'';
       description = ''
         Extra configuration options to add to the twmnd config file. See
-        <link xlink:href="https://github.com/sboli/twmn/blob/master/README.md"/>
+        <https://github.com/sboli/twmn/blob/master/README.md>
         for details.
       '';
     };
@@ -108,7 +108,7 @@ in {
         default = "#999999";
         example = "lightgray";
         description = ''
-          Notification's text color. RGB hex and keywords (e.g. <literal>lightgray</literal>)
+          Notification's text color. RGB hex and keywords (e.g. `lightgray`)
           are supported.
         '';
       };
@@ -119,7 +119,7 @@ in {
           default = null;
           example = literalExpression "pkgs.dejavu_fonts";
           description = ''
-            Notification text's font package. If <literal>null</literal> then
+            Notification text's font package. If `null` then
             the font is assumed to already be available in your profile.
           '';
         };
@@ -172,7 +172,7 @@ in {
         example = 80;
         description = ''
           Maximum length of the text before it is cut and suffixed with "...".
-          Never cuts if <literal>null</literal>.
+          Never cuts if `null`.
         '';
       };
     };
@@ -209,7 +209,7 @@ in {
 
         bounce = {
           enable = mkEnableOption
-            "notification bounce when displaying next notification directly.";
+            "notification bounce when displaying next notification directly";
 
           duration = mkOption {
             type = types.ints.unsigned;
@@ -226,7 +226,7 @@ in {
         example = "lightgray";
         description = ''
           Notification's background color. RGB hex and keywords (e.g.
-          <literal>lightgray</literal>) are supported.
+          `lightgray`) are supported.
         '';
       };
 
@@ -291,7 +291,7 @@ in {
         description = ''
           Position of the notification slide. The notification will slide
           in vertically from the border if placed in
-          <literal>top_center</literal> or <literal>bottom_center</literal>,
+          `top_center` or `bottom_center`,
           horizontally otherwise.
         '';
       };

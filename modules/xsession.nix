@@ -18,7 +18,7 @@ in {
         default = ".xsession";
         example = ".xsession-hm";
         description = ''
-          Path, relative to <envar>HOME</envar>, where Home Manager
+          Path, relative to {env}`HOME`, where Home Manager
           should write the X session script.
         '';
       };
@@ -28,7 +28,7 @@ in {
         default = ".xprofile";
         example = ".xprofile-hm";
         description = ''
-          Path, relative to <envar>HOME</envar>, where Home Manager
+          Path, relative to {env}`HOME`, where Home Manager
           should write the X profile script.
         '';
       };
@@ -46,10 +46,10 @@ in {
         default = ''test -n "$1" && eval "$@"'';
         description = ''
           Command to use to start the window manager.
-          </para><para>
+
           The default value allows integration with NixOS' generated xserver configuration.
-          </para><para>
-          Extra actions and commands can be specified in <option>xsession.initExtra</option>.
+
+          Extra actions and commands can be specified in {option}`xsession.initExtra`.
         '';
       };
 

@@ -17,9 +17,9 @@ in {
         Whether to install programs and files to support the
         XDG Shared MIME-info specification and XDG MIME Applications
         specification at
-        <link xlink:href="https://specifications.freedesktop.org/shared-mime-info-spec/shared-mime-info-spec-latest.html"/>
+        <https://specifications.freedesktop.org/shared-mime-info-spec/shared-mime-info-spec-latest.html>
         and
-        <link xlink:href="https://specifications.freedesktop.org/mime-apps-spec/mime-apps-spec-latest.html"/>,
+        <https://specifications.freedesktop.org/mime-apps-spec/mime-apps-spec-latest.html>,
         respectively.
       '';
     };

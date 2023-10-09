@@ -20,8 +20,7 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/havoc.cfg</filename>. See <link
-        xlink:href="https://raw.githubusercontent.com/ii8/havoc/master/havoc.cfg"/>
+        {file}`$XDG_CONFIG_HOME/havoc.cfg`. See <https://raw.githubusercontent.com/ii8/havoc/master/havoc.cfg>
         for a list of available options.
       '';
       example = literalExpression ''

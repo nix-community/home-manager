@@ -16,13 +16,10 @@ in {
       type = types.str;
       default = "*:0/5";
       description = ''
-        How often to run <literal>taskwarrior sync</literal>. This
+        How often to run `taskwarrior sync`. This
         value is passed to the systemd timer configuration as the
-        <literal>OnCalendar</literal> option. See
-        <citerefentry>
-          <refentrytitle>systemd.time</refentrytitle>
-          <manvolnum>7</manvolnum>
-        </citerefentry>
+        `OnCalendar` option. See
+        {manpage}`systemd.time(7)`
         for more information about the format.
       '';
     };

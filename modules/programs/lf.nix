@@ -2,55 +2,7 @@
 
 with lib;
 
-let
-  cfg = config.programs.lf;
-
-  knownSettings = {
-    anchorfind = types.bool;
-    color256 = types.bool;
-    dircounts = types.bool;
-    dirfirst = types.bool;
-    drawbox = types.bool;
-    globsearch = types.bool;
-    icons = types.bool;
-    hidden = types.bool;
-    ignorecase = types.bool;
-    ignoredia = types.bool;
-    incsearch = types.bool;
-    preview = types.bool;
-    reverse = types.bool;
-    smartcase = types.bool;
-    smartdia = types.bool;
-    wrapscan = types.bool;
-    wrapscroll = types.bool;
-    number = types.bool;
-    relativenumber = types.bool;
-    findlen = types.int;
-    period = types.int;
-    scrolloff = types.int;
-    tabstop = types.int;
-    errorfmt = types.str;
-    filesep = types.str;
-    ifs = types.str;
-    promptfmt = types.str;
-    shell = types.str;
-    sortby = types.str;
-    timefmt = types.str;
-    ratios = types.str;
-    info = types.str;
-    shellopts = types.str;
-  };
-
-  lfSettingsType = types.submodule {
-    options = let
-      opt = name: type:
-        mkOption {
-          type = types.nullOr type;
-          default = null;
-          visible = false;
-        };
-    in mapAttrs opt knownSettings;
-  };
+let cfg = config.programs.lf;
 in {
   meta.maintainers = [ hm.maintainers.owm111 ];
 
@@ -68,31 +20,19 @@ in {
       };
 
       settings = mkOption {
-        type = lfSettingsType;
+        type = with types;
+          attrsOf (oneOf [ str int (listOf (either str int)) bool ]);
         default = { };
         example = {
           tabstop = 4;
           number = true;
-          ratios = "1:1:2";
+          ratios = [ 1 1 2 ];
         };
         description = ''
-          An attribute set of lf settings. The attribute names and corresponding
-          values must be among the following supported options.
-
-          <informaltable frame="none"><tgroup cols="1"><tbody>
-          ${concatStringsSep "\n" (mapAttrsToList (n: v: ''
-            <row>
-              <entry><varname>${n}</varname></entry>
-              <entry>${v.description}</entry>
-            </row>
-          '') knownSettings)}
-          </tbody></tgroup></informaltable>
-
-          See the lf documentation for detailed descriptions of these options.
-          Note, use <varname>previewer</varname> to set lf's
-          <varname>previewer</varname> option, and
-          <varname>extraConfig</varname> for any other option not listed above.
-          All string options are quoted with double quotes.
+          An attribute set of lf settings. See the lf documentation for
+          detailed descriptions of these options. Prefer
+          {option}`programs.lf.previewer.*` for setting lf's {var}`previewer`
+          option. All string options are quoted with double quotes.
         '';
       };
 
@@ -152,7 +92,7 @@ in {
         '';
         description = ''
           Script or executable to use to preview files. Sets lf's
-          <varname>previewer</varname> option.
+          {var}`previewer` option.
         '';
       };
 
@@ -161,7 +101,7 @@ in {
         default = null;
         example = "i";
         description = ''
-          Key to bind to the script at <varname>previewer.source</varname> and
+          Key to bind to the script at {var}`previewer.source` and
           pipe through less. Setting to null will not bind any key.
         '';
       };
@@ -185,12 +125,14 @@ in {
         optionalString (v != null) "set ${
           if isBool v then
             "${optionalString (!v) "no"}${k}"
+          else if isList v then
+            ''${k} "${concatStringsSep ":" (map (w: toString w) v)}"''
           else
             "${k} ${if isInt v then toString v else ''"${v}"''}"
         }";
 
-      settingsStr = concatStringsSep "\n" (remove "" (mapAttrsToList fmtSetting
-        (builtins.intersectAttrs knownSettings cfg.settings)));
+      settingsStr = concatStringsSep "\n"
+        (remove "" (mapAttrsToList fmtSetting cfg.settings));
 
       fmtCmdMap = before: k: v:
         "${before} ${k}${optionalString (v != null && v != "") " ${v}"}";

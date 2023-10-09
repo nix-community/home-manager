@@ -16,6 +16,7 @@ let
   mkTestPackage = epkgs:
     epkgs.trivialBuild {
       pname = "hm-test";
+      version = "0.1.0";
       src = pkgs.writeText "hm-test.el" ''
         (defun hm-test-fn () 'success)
         (provide 'hm-test)

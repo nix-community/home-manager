@@ -16,7 +16,7 @@ in {
         default = "keybase";
         description = ''
           Mount point for the Keybase filesystem, relative to
-          <envar>HOME</envar>.
+          {env}`HOME`.
         '';
       };
 

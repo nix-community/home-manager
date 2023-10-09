@@ -59,44 +59,23 @@ in
         default = "notify";
         description = ''
           How unread and relevant news should be presented when
-          running <command>home-manager build</command> and
-          <command>home-manager switch</command>.
-
-          </para><para>
+          running {command}`home-manager build` and
+          {command}`home-manager switch`.
 
           The options are
 
-          <variablelist>
-          <varlistentry>
-            <term><literal>silent</literal></term>
-            <listitem>
-              <para>
-                Do not print anything during build or switch. The
-                <command>home-manager news</command> command still
-                works for viewing the entries.
-              </para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>notify</literal></term>
-            <listitem>
-              <para>
-                The number of unread and relevant news entries will be
-                printed to standard output. The <command>home-manager
-                news</command> command can later be used to view the
-                entries.
-              </para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>show</literal></term>
-            <listitem>
-              <para>
-                A pager showing unread news entries is opened.
-              </para>
-            </listitem>
-          </varlistentry>
-          </variablelist>
+          `silent`
+          : Do not print anything during build or switch. The
+            {command}`home-manager news` command still
+            works for viewing the entries.
+
+          `notify`
+          : The number of unread and relevant news entries will be
+            printed to standard output. The {command}`home-manager
+            news` command can later be used to view the entries.
+
+          `show`
+          : A pager showing unread news entries is opened.
         '';
       };
 
@@ -106,10 +85,22 @@ in
         default = [ ];
         description = "News entries.";
       };
+
+      json = {
+        output = mkOption {
+          internal = true;
+          type = types.package;
+          description = "The generated JSON file package.";
+        };
+      };
     };
   };
 
   config = {
+    news.json.output = pkgs.writeText "hm-news.json" (builtins.toJSON {
+      inherit (cfg) display entries;
+    });
+
     # Add news entries in chronological order (i.e., latest time
     # should be at the bottom of the list). The time should be
     # formatted as given in the output of
@@ -1132,7 +1123,154 @@ in
         time = "2023-06-17T22:18:22+00:00";
         condition = config.programs.zsh.enable;
         message = ''
-          A new modules is available: 'programs.zsh.antidote'
+          A new module is available: 'programs.zsh.antidote'
+        '';
+      }
+
+      {
+        time = "2023-06-30T14:46:22+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.ssh-agent'
+        '';
+      }
+
+      {
+        time = "2023-07-08T08:27:41+00:00";
+        message = ''
+          A new modules is available: 'programs.darcs'
+        '';
+      }
+
+      {
+        time = "2023-07-08T09:21:06+00:00";
+        message = ''
+          A new module is available: 'programs.pyenv'.
+        '';
+      }
+
+      {
+        time = "2023-07-08T09:44:56+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.swayosd'
+        '';
+      }
+
+      {
+        time = "2023-07-20T21:56:49+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'wayland.windowManager.hyprland'
+        '';
+      }
+
+      {
+        time = "2023-07-24T10:38:23+00:00";
+        message = ''
+          A new module is available: 'programs.gh-dash'
+        '';
+      }
+
+      {
+        time = "2023-07-25T07:16:09+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          A new module is available: 'services.git-sync'.
+        '';
+      }
+
+      {
+        time = "2023-08-15T15:45:45+00:00";
+        message = ''
+          A new module is available: 'programs.xplr'.
+        '';
+      }
+
+      {
+        time = "2023-08-16T15:43:30+00:00";
+        message = ''
+          A new module is available: 'programs.pqiv'.
+        '';
+      }
+
+      {
+        time = "2023-08-22T16:06:52+00:00";
+        message = ''
+          A new module is available: 'programs.qcal'.
+        '';
+      }
+
+      {
+        time = "2023-08-23T12:01:06+00:00";
+        message = ''
+          A new module is available: 'programs.yazi'.
+        '';
+      }
+
+      {
+        time = "2023-09-05T06:38:05+00:00";
+        message = ''
+          A new module is available: 'programs.carapace'.
+        '';
+      }
+
+      {
+        time = "2023-09-07T14:52:19+00:00";
+        message = ''
+          A new module is available: 'programs.eza'.
+        '';
+      }
+
+      {
+        time = "2023-09-18T11:44:11+00:00";
+        message = ''
+          A new module is available: 'programs.rio'.
+
+          Rio is a hardware-accelerated GPU terminal emulator powered by WebGPU.
+        '';
+      }
+
+      {
+        time = "2023-09-24T10:06:47+00:00";
+        message = ''
+          A new module is available: 'programs.bacon'.
+        '';
+      }
+
+      {
+        time = "2023-09-30T07:47:23+00:00";
+        message = ''
+          A new module is available: 'programs.awscli'.
+        '';
+      }
+
+      {
+        time = "2023-10-01T07:23:26+00:00";
+        message = ''
+          A new module is available: 'programs.wpaperd'.
+        '';
+      }
+
+      {
+        time = "2023-10-01T07:28:45+00:00";
+        message = ''
+          A new module is available: 'programs.khard'.
+        '';
+      }
+
+      {
+        time = "2023-10-04T06:06:08+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          A new module is available: 'programs.zsh.zsh-abbr'
+        '';
+      }
+
+      {
+        time = "2023-10-04T06:44:15+00:00";
+        message = ''
+          A new module is available: 'programs.thefuck'.
         '';
       }
     ];

@@ -21,7 +21,7 @@ in {
         type = types.package;
         default = pkgs.fnott;
         defaultText = literalExpression "pkgs.fnott";
-        description = "Package providing <command>fnott</command>.";
+        description = "Package providing {command}`fnott`.";
       };
 
       extraFlags = mkOption {
@@ -39,12 +39,12 @@ in {
         defaultText = "$XDG_CONFIG_HOME/fnott/fnott.ini";
         description = ''
           Path to the configuration file read by fnott.
-          </para><para>
+
           Note that environment variables in the path won't be properly expanded.
-          </para><para>
+
           The configuration specified under
-          <option>services.fnott.settings</option> will be generated and
-          written to <filename>$XDG_CONFIG_HOME/fnott/fnott.ini</filename>
+          {option}`services.fnott.settings` will be generated and
+          written to {file}`$XDG_CONFIG_HOME/fnott/fnott.ini`
           regardless of this option. This allows using a mutable configuration file
           generated from the immutable one, useful in scenarios where live reloading is desired.
         '';
@@ -55,14 +55,10 @@ in {
         default = { };
         description = ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/fnott/fnott.ini</filename>.
-          </para><para>
+          {file}`$XDG_CONFIG_HOME/fnott/fnott.ini`.
+
           See
-          <citerefentry>
-            <refentrytitle>fnott.ini</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry> for a list of available options and <link
-          xlink:href="https://codeberg.org/dnkl/fnott/src/branch/master/fnott.ini"/>
+          {manpage}`fnott.ini(5)` for a list of available options and <https://codeberg.org/dnkl/fnott/src/branch/master/fnott.ini>
           for an example configuration.
         '';
         example = literalExpression ''

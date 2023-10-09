@@ -41,17 +41,15 @@ in {
           };
         '';
         description = ''
-          Settings written to <filename>$XDG_CONFIG_HOME/rtx/config.toml</filename>.
-          </para><para>
-          See <link xlink:href="https://github.com/jdxcode/rtx#global-config-configrtxconfigtoml"/>
+          Settings written to {file}`$XDG_CONFIG_HOME/rtx/config.toml`.
+
+          See <https://github.com/jdxcode/rtx#global-config-configrtxconfigtoml>
           for details on supported values.
 
-          <warning>
-            <para>
-              Modifying the <literal>tools</literal> section doesn't make RTX install them. 
-              You have to manually run <literal>rtx install</literal> to install the tools.
-            </para>
-          </warning>
+          ::: {.warning}
+          Modifying the `tools` section doesn't make RTX install them.
+          You have to manually run `rtx install` to install the tools.
+          :::
         '';
       };
     };

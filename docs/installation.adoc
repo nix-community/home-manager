@@ -33,7 +33,7 @@ standard way using channels. If you prefer to use
 === Standalone installation
 
 :nix-allowed-users: https://nixos.org/nix/manual/#conf-allowed-users
-:nixos-allowed-users: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
+:nixos-allowed-users: https://nixos.org/manual/nixos/stable/options.html#opt-nix.settings.allowed-users
 :bash: https://www.gnu.org/software/bash/
 :zsh: http://zsh.sourceforge.net/
 :fish: https://fishshell.com
@@ -47,7 +47,7 @@ example, you should be able to successfully run a command like
 root user. For a multi-user install of Nix this means that your user
 must be covered by the {nix-allowed-users}[`allowed-users`] Nix
 option. On NixOS you can control this option using the
-{nixos-allowed-users}[`nix.allowedUsers`] system option.
+{nixos-allowed-users}[`nix.settings.allowed-users`] system option.
 
 2. Add the appropriate Home Manager channel. If you are following
 Nixpkgs master or an unstable channel you can run

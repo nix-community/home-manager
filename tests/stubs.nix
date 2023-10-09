@@ -33,7 +33,8 @@ let
 
   defaultBuildScript = "mkdir $out";
 
-  dummyPackage = pkgs.runCommandLocal "dummy" { } defaultBuildScript;
+  dummyPackage = pkgs.runCommandLocal "dummy" { meta.mainProgram = "dummy"; }
+    defaultBuildScript;
 
   mkStubPackage = { name ? "dummy", outPath ? null, version ? null
     , buildScript ? defaultBuildScript }:
@@ -41,7 +42,10 @@ let
       pkg = if name == "dummy" && buildScript == defaultBuildScript then
         dummyPackage
       else
-        pkgs.runCommandLocal name { pname = name; } buildScript;
+        pkgs.runCommandLocal name {
+          pname = name;
+          meta.mainProgram = name;
+        } buildScript;
     in pkg // optionalAttrs (outPath != null) {
       inherit outPath;
 

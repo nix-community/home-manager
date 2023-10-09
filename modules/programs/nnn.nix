@@ -58,7 +58,7 @@ in {
         example =
           literalExpression "pkgs.nnn.override ({ withNerdIcons = true; });";
         description = ''
-          Package containing the <command>nnn</command> program.
+          Package containing the {command}`nnn` program.
         '';
       };
 

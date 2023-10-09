@@ -30,8 +30,8 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/sqls/config.yml</filename>. See
-        <link xlink:href="https://github.com/lighttiger2505/sqls#db-configuration"/>
+        {file}`$XDG_CONFIG_HOME/sqls/config.yml`. See
+        <https://github.com/lighttiger2505/sqls#db-configuration>
         for supported values.
       '';
     };

@@ -15,6 +15,6 @@
     assertFileExists home-files/.zshrc
     assertFileContains \
       home-files/.zshrc \
-      'eval "$(@scmpuff@/bin/scmpuff init -s)"'
+      'eval "$(@scmpuff@/bin/scmpuff init --shell=zsh)"'
   '';
 }
