@@ -4,7 +4,12 @@ with lib;
 
 {
   config = {
-    services.syncthing.tray.enable = true;
+    services.syncthing.tray = {
+      enable = true;
+      extraOptions = [ "--wait" ];
+    };
+
+    test.stubs.syncthingtray = { };
 
     nixpkgs.overlays = [
       (self: super: {
@@ -16,6 +21,7 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/syncthingtray.service
+      assertFileContains home-files/.config/systemd/user/syncthingtray.service "ExecStart='@syncthingtray@/bin/syncthingtray' '--wait'"
     '';
   };
 }
