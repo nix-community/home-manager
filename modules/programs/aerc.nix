@@ -3,6 +3,7 @@
 with lib;
 let
   cfg = config.programs.aerc;
+  homeDir = config.home.homeDirectory;
 
   primitive = with types;
     ((type: either type (listOf type)) (nullOr (oneOf [ str int bool float ])))
@@ -216,5 +217,12 @@ in {
         ];
       };
     } // (mkStyleset cfg.stylesets) // (mkTemplates cfg.templates);
+
+    home.activation = if pkgs.stdenv.isDarwin then {
+      linkAerc = ''
+        ln -s ${homeDir}/.config/aerc ${homeDir}/Library/Preferences/aerc || true
+      '';
+    } else
+      { };
   };
 }
