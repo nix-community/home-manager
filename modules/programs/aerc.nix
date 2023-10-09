@@ -24,6 +24,11 @@ let
   aerc-accounts =
     attrsets.filterAttrs (_: v: v.aerc.enable) config.accounts.email.accounts;
 
+  configDir = if pkgs.stdenv.isDarwin then
+    "Library/Preferences/aerc"
+  else
+    "${config.xdg.configHome}/aerc";
+
 in {
   meta.maintainers = with lib.hm.maintainers; [ lukasngl ];
 
@@ -121,12 +126,12 @@ in {
     mkStyleset = attrsets.mapAttrs' (k: v:
       let value = if isString v then v else toINI { global = v; };
       in {
-        name = "aerc/stylesets/${k}";
+        name = "${configDir}/stylesets/${k}";
         value.text = joinCfg [ header value ];
       });
 
     mkTemplates = attrsets.mapAttrs' (k: v: {
-      name = "aerc/templates/${k}";
+      name = "${configDir}/templates/${k}";
       value.text = v;
     });
 
@@ -190,8 +195,8 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile = {
-      "aerc/accounts.conf" = mkIf genAccountsConf {
+    home.file = {
+      "${configDir}/accounts.conf" = mkIf genAccountsConf {
         text = joinCfg [
           header
           (mkINI cfg.extraAccounts)
@@ -200,7 +205,7 @@ in {
         ];
       };
 
-      "aerc/aerc.conf" = mkIf genAercConf {
+      "${configDir}/aerc.conf" = mkIf genAercConf {
         text = joinCfg [
           header
           (mkINI cfg.extraConfig)
@@ -208,7 +213,7 @@ in {
         ];
       };
 
-      "aerc/binds.conf" = mkIf genBindsConf {
+      "${configDir}/binds.conf" = mkIf genBindsConf {
         text = joinCfg [
           header
           (mkINI cfg.extraBinds)
