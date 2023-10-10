@@ -204,7 +204,8 @@ let
         default = [ "^[[A" ];
         description = ''
           The key codes to be used when searching up.
-          The default of `^[[A` corresponds to the UP key.
+          The default of `^[[A` may correspond to the UP key -- if not, try
+          `$terminfo[kcuu1]`.
         '';
       };
       searchDownKey = mkOption {
@@ -212,7 +213,8 @@ let
         default = [ "^[[B" ];
         description = ''
           The key codes to be used when searching down.
-          The default of `^[[B` corresponds to the DOWN key.
+          The default of `^[[B` may correspond to the DOWN key -- if not, try
+          `$terminfo[kcud1]`.
         '';
       };
     };
@@ -635,11 +637,11 @@ in
         ''
           source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
           ${lib.concatMapStringsSep "\n"
-            (upKey: "bindkey '${upKey}' history-substring-search-up")
+            (upKey: "bindkey \"${upKey}\" history-substring-search-up")
             (lib.toList cfg.historySubstringSearch.searchUpKey)
           }
           ${lib.concatMapStringsSep "\n"
-            (downKey: "bindkey '${downKey}' history-substring-search-down")
+            (downKey: "bindkey \"${downKey}\" history-substring-search-down")
             (lib.toList cfg.historySubstringSearch.searchDownKey)
           }
         '')
