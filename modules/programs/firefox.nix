@@ -111,6 +111,29 @@ let
       </p></DL>
     '';
 
+  mkNoDuplicateAssertion = entities: entityKind:
+    (let
+      # Return an attribute set with entity IDs as keys and a list of
+      # entity names with corresponding ID as value. An ID is present in
+      # the result only if more than one entity has it. The argument
+      # entities is a list of AttrSet of one id/name pair.
+      findDuplicateIds = entities:
+        filterAttrs (_entityId: entityNames: length entityNames != 1)
+        (zipAttrs entities);
+
+      duplicates = findDuplicateIds (mapAttrsToList
+        (entityName: entity: { "${toString entity.id}" = entityName; })
+        entities);
+
+      mkMsg = entityId: entityNames:
+        "  - ID ${entityId} is used by " + concatStringsSep ", " entityNames;
+    in {
+      assertion = duplicates == { };
+      message = ''
+        Must not have a Firefox ${entityKind} with an existing ID but
+      '' + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
+    });
+
 in {
   meta.maintainers = [ maintainers.rycee maintainers.kira-bruneau ];
 
@@ -490,17 +513,7 @@ in {
           (", namely " + concatStringsSep ", " defaults);
       })
 
-      (let
-        duplicates = filterAttrs (_: v: length v != 1) (zipAttrs
-          (mapAttrsToList (n: v: { "${toString v.id}" = n; }) (cfg.profiles)));
-
-        mkMsg = n: v: "  - ID ${n} is used by ${concatStringsSep ", " v}";
-      in {
-        assertion = duplicates == { };
-        message = ''
-          Must not have Firefox profiles with duplicate IDs but
-        '' + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
-      })
+      (mkNoDuplicateAssertion cfg.profiles "profile")
     ];
 
     warnings = optional (cfg.enableGnomeExtensions or false) ''

@@ -5,7 +5,7 @@
 
   config = lib.mkIf config.test.enableBig {
     test.asserts.assertions.expected = [''
-      Must not have Firefox profiles with duplicate IDs but
+      Must not have a Firefox profile with an existing ID but
         - ID 1 is used by first, second''];
 
     programs.firefox = {
