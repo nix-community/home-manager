@@ -21,7 +21,10 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/syncthingtray.service
-      assertFileContains home-files/.config/systemd/user/syncthingtray.service "ExecStart='@syncthingtray@/bin/syncthingtray' '--wait'"
+      # See earlier iterations of #4276: the author wasn't able to rewrite the
+      # nix store path to @syncthingtray@, therefore the test matches only
+      # a substring.
+      assertFileContains home-files/.config/systemd/user/syncthingtray.service "/bin/syncthingtray' '--wait'"
     '';
   };
 }
