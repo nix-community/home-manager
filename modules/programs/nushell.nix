@@ -182,9 +182,13 @@ in {
           envVarsStr
         ];
       })
-      (mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
+      (let
+        sessionVariables = concatStringsSep "\n"
+          (mapAttrsToList (k: v: "$env.${k} = ${v}") config.home.sessionVariables);
+      in mkIf (cfg.loginFile != null || cfg.extraLogin != "" || sessionVariables != "") {
         "${configDir}/login.nu".text = mkMerge [
           (mkIf (cfg.loginFile != null) cfg.loginFile.text)
+          sessionVariables
           cfg.extraLogin
         ];
       })
