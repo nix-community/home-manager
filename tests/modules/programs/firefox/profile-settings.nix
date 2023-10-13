@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 {
   imports = [ ./setup-firefox-mock-overlay.nix ];
 
@@ -142,6 +140,17 @@ with lib;
           };
         };
       };
+
+      profiles.containers = {
+        id = 5;
+        containers = {
+          "shopping" = {
+            id = 6;
+            icon = "circle";
+            color = "yellow";
+          };
+        };
+      };
     };
 
     nmt.script = ''
@@ -154,6 +163,10 @@ with lib;
       assertFileContent \
         home-files/.mozilla/firefox/test/user.js \
         ${./profile-settings-expected-user.js}
+
+      assertFileContent \
+        home-files/.mozilla/firefox/containers/containers.json \
+        ${./profile-settings-expected-containers.json}
 
       bookmarksUserJs=$(normalizeStorePaths \
         home-files/.mozilla/firefox/bookmarks/user.js)
