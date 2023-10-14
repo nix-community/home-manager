@@ -11624,14 +11624,16 @@ boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix" target="_top">
 &lt;home-manager/modules/programs/zsh.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zsh.historySubstringSearch.searchDownKey"></a><a class="term" href="options.html#opt-programs.zsh.historySubstringSearch.searchDownKey"><code class="option">programs.zsh.historySubstringSearch.searchDownKey</code></a></span></dt><dd><p>The key codes to be used when searching down.
-The default of <code class="literal">^[[B</code> corresponds to the DOWN key.</p><p><span class="emphasis"><em>Type:</em></span>
+The default of <code class="literal">^[[B</code> may correspond to the DOWN key – if not, try
+<code class="literal">$terminfo[kcud1]</code>.</p><p><span class="emphasis"><em>Type:</em></span>
 (list of string) or string</p><p><span class="emphasis"><em>Default:</em></span></p><pre class="programlisting">[
   "^[[B"
 ]
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix" target="_top">
 &lt;home-manager/modules/programs/zsh.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.zsh.historySubstringSearch.searchUpKey"></a><a class="term" href="options.html#opt-programs.zsh.historySubstringSearch.searchUpKey"><code class="option">programs.zsh.historySubstringSearch.searchUpKey</code></a></span></dt><dd><p>The key codes to be used when searching up.
-The default of <code class="literal">^[[A</code> corresponds to the UP key.</p><p><span class="emphasis"><em>Type:</em></span>
+The default of <code class="literal">^[[A</code> may correspond to the UP key – if not, try
+<code class="literal">$terminfo[kcuu1]</code>.</p><p><span class="emphasis"><em>Type:</em></span>
 (list of string) or string</p><p><span class="emphasis"><em>Default:</em></span></p><pre class="programlisting">[
   "^[[A"
 ]
