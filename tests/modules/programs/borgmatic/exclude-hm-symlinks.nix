@@ -28,7 +28,7 @@ in {
 
     declare -A expectations
 
-    expectations[location.exclude_from[0]]="${excludeFile}"
+    expectations[exclude_from[0]]="${excludeFile}"
 
     yq=${pkgs.yq-go}/bin/yq
 
@@ -41,7 +41,7 @@ in {
       fi
     done
 
-    hmExclusionsFile=$($yq '.location.exclude_from[1]' $config_file)
+    hmExclusionsFile=$($yq '.exclude_from[1]' $config_file)
     expected_content='/home/hm-user/.config/borgmatic.d/main.yaml'
 
     grep --quiet "$expected_content" "$hmExclusionsFile"
