@@ -205,6 +205,7 @@ import nmt {
     ./modules/services/barrier
     ./modules/services/borgmatic
     ./modules/services/cachix-agent
+    ./modules/services/cliphist
     ./modules/services/clipman
     ./modules/services/comodoro
     ./modules/services/devilspie2

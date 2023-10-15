@@ -249,6 +249,7 @@ let
     ./services/cachix-agent.nix
     ./services/caffeine.nix
     ./services/cbatticon.nix
+    ./services/cliphist.nix
     ./services/clipman.nix
     ./services/clipmenu.nix
     ./services/comodoro.nix
