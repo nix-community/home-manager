@@ -551,7 +551,7 @@ in
       destination = "/etc/profile.d/hm-session-vars.sh";
       text = ''
         # Only source this once.
-        if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+        if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
         export __HM_SESS_VARS_SOURCED=1
 
         ${config.lib.shell.exportAll cfg.sessionVariables}
@@ -715,6 +715,7 @@ in
 
           export PATH="${activationBinPaths}"
           ${config.lib.bash.initHomeManagerLib}
+          source ${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh
 
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
