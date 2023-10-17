@@ -12398,6 +12398,56 @@ string</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">"graphical-session.target"</code></p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">"sway-session.target"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/copyq.nix" target="_top">
 &lt;home-manager/modules/services/copyq.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.darkman.enable"></a><a class="term" href="options.html#opt-services.darkman.enable"><code class="option">services.darkman.enable</code></a></span></dt><dd><p>Whether to enable darkman, a tool that automatically switches dark-mode on and off based on
+the time of the day.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/darkman.nix" target="_top">
+&lt;home-manager/modules/services/darkman.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.darkman.package"></a><a class="term" href="options.html#opt-services.darkman.package"><code class="option">services.darkman.package</code></a></span></dt><dd><p>The darkman package to use.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.darkman</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/darkman.nix" target="_top">
+&lt;home-manager/modules/services/darkman.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.darkman.darkModeScripts"></a><a class="term" href="options.html#opt-services.darkman.darkModeScripts"><code class="option">services.darkman.darkModeScripts</code></a></span></dt><dd><p>Scripts to run when switching to “dark mode”.</p><p>Multiline strings are interpreted as Bash shell scripts and a shebang is
+not required.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of (path or strings concatenated with “\n”)</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  gtk-theme = ''
+    ${pkgs.dconf}/bin/dconf write \
+        /org/gnome/desktop/interface/color-scheme "'prefer-dark'"
+  '';
+  my-python-script = pkgs.writers.writePython3 "my-python-script" { } ''
+    print('Do something!')
+  '';
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/darkman.nix" target="_top">
+&lt;home-manager/modules/services/darkman.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.darkman.lightModeScripts"></a><a class="term" href="options.html#opt-services.darkman.lightModeScripts"><code class="option">services.darkman.lightModeScripts</code></a></span></dt><dd><p>Scripts to run when switching to “light mode”.</p><p>Multiline strings are interpreted as Bash shell scripts and a shebang is
+not required.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of (path or strings concatenated with “\n”)</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  gtk-theme = ''
+    ${pkgs.dconf}/bin/dconf write \
+        /org/gnome/desktop/interface/color-scheme "'prefer-light'"
+  '';
+  my-python-script = pkgs.writers.writePython3 "my-python-script" { } ''
+    print('Do something!')
+  '';
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/darkman.nix" target="_top">
+&lt;home-manager/modules/services/darkman.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.darkman.settings"></a><a class="term" href="options.html#opt-services.darkman.settings"><code class="option">services.darkman.settings</code></a></span></dt><dd><p>Settings for the <span class="command"><strong>darkman</strong></span> command. See
+<a class="link" href="https://darkman.whynothugo.nl/#CONFIGURATION" target="_top">https://darkman.whynothugo.nl/#CONFIGURATION</a> for details.</p><p><span class="emphasis"><em>Type:</em></span>
+YAML value</p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  lat = 52.3;
+  lng = 4.8;
+  usegeoclue = true;
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/darkman.nix" target="_top">
+&lt;home-manager/modules/services/darkman.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.devilspie2.enable"></a><a class="term" href="options.html#opt-services.devilspie2.enable"><code class="option">services.devilspie2.enable</code></a></span></dt><dd><p>Whether to enable Devilspie2, a window matching utility, allowing the user to
 perform scripted actions on windows as they are created.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
