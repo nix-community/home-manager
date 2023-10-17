@@ -139,6 +139,7 @@ in {
 
           Service = {
             Type = "forking";
+            Restart = "on-failure";
             ExecStart = let
               script = pkgs.writeShellScript "xplugrc" ''
                 case "$1,$3" in
