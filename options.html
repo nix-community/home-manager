@@ -14482,20 +14482,18 @@ boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/recoll.nix" target="_top">
 &lt;home-manager/modules/services/recoll.nix&gt;
-</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.recoll.package"></a><a class="term" href="options.html#opt-services.recoll.package"><code class="option">services.recoll.package</code></a></span></dt><dd><p>Package providing the <code class="literal">recoll</code> binary.</p><p><span class="emphasis"><em>Type:</em></span>
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.recoll.package"></a><a class="term" href="options.html#opt-services.recoll.package"><code class="option">services.recoll.package</code></a></span></dt><dd><p>Package providing the <span class="command"><strong>recoll</strong></span> binary.</p><p><span class="emphasis"><em>Type:</em></span>
 package</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.recoll</code></p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">(pkgs.recoll.override { withGui = false; })</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/recoll.nix" target="_top">
 &lt;home-manager/modules/services/recoll.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.recoll.configDir"></a><a class="term" href="options.html#opt-services.recoll.configDir"><code class="option">services.recoll.configDir</code></a></span></dt><dd><p>The directory to contain Recoll configuration files. This will be set
-as <code class="literal">RECOLL_CONFDIR</code>.</p><p><span class="emphasis"><em>Type:</em></span>
+as <code class="envar">RECOLL_CONFDIR</code>.</p><p><span class="emphasis"><em>Type:</em></span>
 string</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">${config.home.homeDirectory}/.recoll</code></p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">${config.xdg.configHome}/recoll</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/recoll.nix" target="_top">
 &lt;home-manager/modules/services/recoll.nix&gt;
-</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.recoll.settings"></a><a class="term" href="options.html#opt-services.recoll.settings"><code class="option">services.recoll.settings</code></a></span></dt><dd><p>The configuration to be written at
-<code class="filename">${config.services.recoll.configDir}/recoll.conf</code>.</p><p>See
-<span class="citerefentry"><span class="refentrytitle">recoll</span>(5)</span> for more details about the configuration.</p><p><span class="emphasis"><em>Type:</em></span>
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.recoll.settings"></a><a class="term" href="options.html#opt-services.recoll.settings"><code class="option">services.recoll.settings</code></a></span></dt><dd><p>The configuration to be written at <code class="filename">$RECOLL_CONFDIR/recoll.conf</code>.</p><p>See <span class="citerefentry"><span class="refentrytitle">recoll.conf</span>(5)</span> for more details about the configuration.</p><p><span class="emphasis"><em>Type:</em></span>
 attribute set of (Recoll config value)</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
   nocjk = true;
@@ -14514,8 +14512,7 @@ attribute set of (Recoll config value)</p><p><span class="emphasis"><em>Default:
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/recoll.nix" target="_top">
 &lt;home-manager/modules/services/recoll.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.recoll.startAt"></a><a class="term" href="options.html#opt-services.recoll.startAt"><code class="option">services.recoll.startAt</code></a></span></dt><dd><p>When or how often the periodic update should run. Must be the format
-described from
-<a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a>.</p><p><span class="emphasis"><em>Type:</em></span>
+described from <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a>.</p><p><span class="emphasis"><em>Type:</em></span>
 string</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">"hourly"</code></p><p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">"00/2:00"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/recoll.nix" target="_top">
