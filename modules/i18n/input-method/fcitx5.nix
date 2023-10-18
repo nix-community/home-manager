@@ -23,13 +23,15 @@ in {
   config = mkIf (im.enabled == "fcitx5") {
     i18n.inputMethod.package = fcitx5Package;
 
-    home.sessionVariables = {
-      GLFW_IM_MODULE = "ibus"; # IME support in kitty
-      GTK_IM_MODULE = "fcitx";
-      QT_IM_MODULE = "fcitx";
-      XMODIFIERS = "@im=fcitx";
-      QT_PLUGIN_PATH =
-        "$QT_PLUGIN_PATH\${QT_PLUGIN_PATH:+:}${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}";
+    home = {
+      sessionVariables = {
+        GLFW_IM_MODULE = "ibus"; # IME support in kitty
+        GTK_IM_MODULE = "fcitx";
+        QT_IM_MODULE = "fcitx";
+        XMODIFIERS = "@im=fcitx";
+      };
+      sessionSearchVariables.QT_PLUGIN_PATH =
+        [ "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}" ];
     };
 
     systemd.user.services.fcitx5-daemon = {
