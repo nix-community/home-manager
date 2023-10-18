@@ -28,8 +28,9 @@ in {
       GTK_IM_MODULE = "fcitx";
       QT_IM_MODULE = "fcitx";
       XMODIFIERS = "@im=fcitx";
-      QT_PLUGIN_PATH =
-        "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}:\${QT_PLUGIN_PATH}";
+      # Using mkDefault here since we override this value in qt module if enabled
+      QT_PLUGIN_PATH = lib.mkDefault
+        "$QT_PLUGIN_PATH\${QT_PLUGIN_PATH:+:}${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}";
     };
 
     systemd.user.services.fcitx5-daemon = {
