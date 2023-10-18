@@ -6,6 +6,7 @@
       enable = true;
       platformTheme = "gtk";
     };
+    i18n.inputMethod.enabled = "fcitx5";
 
     nmt.script = ''
       assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \

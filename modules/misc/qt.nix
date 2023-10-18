@@ -130,6 +130,7 @@ in {
     envVars = let
       inherit (config.home) profileDirectory;
       qtVersions = with pkgs; [ qt5 qt6 ];
+      makeQtPath = prefix: basePath: qt: "${basePath}/${qt.qtbase.${prefix}}";
     in lib.filterAttrs (n: v: v != null) {
       QT_QPA_PLATFORMTHEME = if cfg.platformTheme == "gtk" then
         "gtk2"
@@ -140,12 +141,15 @@ in {
       QT_STYLE_OVERRIDE = cfg.style.name;
       QT_PLUGIN_PATH = "$QT_PLUGIN_PATH\${QT_PLUGIN_PATH:+:}"
         + (lib.concatStringsSep ":"
-          (map (qt: "${profileDirectory}/${qt.qtbase.qtPluginPrefix}")
-            qtVersions));
+          # Workaround issue with home.sessionVariables that does not support
+          # multiple different values since fcitx5 also needs to set QT_PLUGIN_PATH.
+          (lib.optional (config.i18n.inputMethod == "fcitx5")
+            (makeQtPath "qtPluginPrefix" config.i18n.inputMethod.package
+              pkgs.qt6) ++ (map (makeQtPath "qtPluginPrefix" profileDirectory)
+                qtVersions)));
       QML2_IMPORT_PATH = "$QML2_IMPORT_PATH\${QML2_IMPORT_PATH:+:}"
         + (lib.concatStringsSep ":"
-          (map (qt: "${profileDirectory}/${qt.qtbase.qtQmlPrefix}")
-            qtVersions));
+          (map (makeQtPath "qtQmlPrefix" profileDirectory) qtVersions));
     };
 
   in lib.mkIf (cfg.enable && cfg.platformTheme != null) {
