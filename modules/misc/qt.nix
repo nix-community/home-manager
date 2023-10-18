@@ -4,7 +4,7 @@ let
   cfg = config.qt;
 
   platformPackages = with pkgs; {
-    gnome = [ qgnomeplatform ];
+    gnome = [ qgnomeplatform qgnomeplatform-qt6 ];
     gtk = [ libsForQt5.qtstyleplugins qt6Packages.qt6gtk2 ];
     kde = [ libsForQt5.plasma-integration libsForQt5.systemsettings ];
     lxqt = [ lxqt.lxqt-qtplugin lxqt.lxqt-config ];
@@ -55,6 +55,7 @@ in {
         example = "gnome";
         relatedPackages = [
           "qgnomeplatform"
+          "qgnomeplatform-qt6"
           [ "libsForQt5" "plasma-integration" ]
           [ "libsForQt5" "qt5ct" ]
           [ "libsForQt5" "qtstyleplugins" ]
