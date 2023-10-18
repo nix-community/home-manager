@@ -127,7 +127,10 @@ in {
   config = let
 
     # Necessary because home.sessionVariables doesn't support mkIf
-    envVars = filterAttrs (n: v: v != null) {
+    envVars = let
+      inherit (config.home) profileDirectory;
+      qtVersions = with pkgs; [ qt5 qt6 ];
+    in filterAttrs (n: v: v != null) {
       QT_QPA_PLATFORMTHEME = if cfg.platformTheme == "gtk" then
         "gtk2"
       else if cfg.platformTheme == "qtct" then
@@ -135,6 +138,14 @@ in {
       else
         cfg.platformTheme;
       QT_STYLE_OVERRIDE = cfg.style.name;
+      QT_PLUGIN_PATH = "$QT_PLUGIN_PATH\${QT_PLUGIN_PATH:+:}"
+        + (lib.concatStringsSep ":"
+          (map (qt: "${profileDirectory}/${qt.qtbase.qtPluginPrefix}")
+            qtVersions));
+      QML2_IMPORT_PATH = "$QML2_IMPORT_PATH\${QML2_IMPORT_PATH:+:}"
+        + (lib.concatStringsSep ":"
+          (map (qt: "${profileDirectory}/${qt.qtbase.qtQmlPrefix}")
+            qtVersions));
     };
 
   in mkIf (cfg.enable && cfg.platformTheme != null) {
@@ -168,7 +179,8 @@ in {
       ++ lib.optionals (cfg.style.package != null)
       (lib.toList cfg.style.package);
 
-    xsession.importedVariables = [ "QT_QPA_PLATFORMTHEME" ]
+    xsession.importedVariables =
+      [ "QT_QPA_PLATFORMTHEME" "QT_PLUGIN_PATH" "QML2_IMPORT_PATH" ]
       ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
   };
 }
