@@ -8659,6 +8659,23 @@ attribute set of string</p><p><span class="emphasis"><em>Default:</em></span>
 strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qutebrowser.nix" target="_top">
 &lt;home-manager/modules/programs/qutebrowser.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.qutebrowser.greasemonkey"></a><a class="term" href="options.html#opt-programs.qutebrowser.greasemonkey"><code class="option">programs.qutebrowser.greasemonkey</code></a></span></dt><dd><p>Greasemonkey userscripts to add to qutebrowser’s <code class="filename">greasemonkey</code>
+directory.</p><p><span class="emphasis"><em>Type:</em></span>
+list of package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">[
+  (pkgs.fetchurl {
+    url = "https://raw.githubusercontent.com/afreakk/greasemonkeyscripts/1d1be041a65c251692ee082eda64d2637edf6444/youtube_sponsorblock.js";
+    sha256 = "sha256-e3QgDPa3AOpPyzwvVjPQyEsSUC9goisjBUDMxLwg8ZE=";
+  })
+  (pkgs.writeText "some-script.js" ''
+    // ==UserScript==
+    // @name  Some Greasemonkey script
+    // ==/UserScript==
+  '')
+]
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qutebrowser.nix" target="_top">
+&lt;home-manager/modules/programs/qutebrowser.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.qutebrowser.keyBindings"></a><a class="term" href="options.html#opt-programs.qutebrowser.keyBindings"><code class="option">programs.qutebrowser.keyBindings</code></a></span></dt><dd><p>Key bindings mapping keys to commands in different modes. This setting
 is a dictionary containing mode names and dictionaries mapping keys to
 commands: <code class="literal">{mode: {key: command}}</code> If you want to map
