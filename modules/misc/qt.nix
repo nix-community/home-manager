@@ -8,15 +8,15 @@ let
     bb10bright = libsForQt5.qtstyleplugins;
     bb10dark = libsForQt5.qtstyleplugins;
     cleanlooks = libsForQt5.qtstyleplugins;
-    gtk2 = libsForQt5.qtstyleplugins;
+    gtk2 = [ libsForQt5.qtstyleplugins qt6Packages.qt6gtk2 ];
     motif = libsForQt5.qtstyleplugins;
     cde = libsForQt5.qtstyleplugins;
     plastique = libsForQt5.qtstyleplugins;
 
-    adwaita = adwaita-qt;
-    adwaita-dark = adwaita-qt;
-    adwaita-highcontrast = adwaita-qt;
-    adwaita-highcontrastinverse = adwaita-qt;
+    adwaita = [ adwaita-qt adwaita-qt6 ];
+    adwaita-dark = [ adwaita-qt adwaita-qt6 ];
+    adwaita-highcontrast = [ adwaita-qt adwaita-qt6 ];
+    adwaita-highcontrastinverse = [ adwaita-qt adwaita-qt6 ];
 
     breeze = libsForQt5.breeze-qt5;
 
@@ -83,9 +83,11 @@ in {
           example = "adwaita-dark";
           relatedPackages = [
             "adwaita-qt"
+            "adwaita-qt6"
             [ "libsForQt5" "breeze-qt5" ]
-            [ "libsForQt5" "qtstyleplugins" ]
             [ "libsForQt5" "qtstyleplugin-kvantum" ]
+            [ "libsForQt5" "qtstyleplugins" ]
+            [ "qt6Packages" "qt6gtk2" ]
             [ "qt6Packages" "qtstyleplugin-kvantum" ]
           ];
           description = ''
