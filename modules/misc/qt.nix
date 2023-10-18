@@ -154,25 +154,23 @@ in {
   config = let
 
     # Necessary because home.sessionVariables doesn't support mkIf
-    envVars = let
-      inherit (config.home) profileDirectory;
-      qtVersions = with pkgs; [ qt5 qt6 ];
-      makeQtPath = prefix: basePath: qt: "${basePath}/${qt.qtbase.${prefix}}";
-    in lib.filterAttrs (n: v: v != null) {
+    envVars = lib.filterAttrs (n: v: v != null) {
       QT_QPA_PLATFORMTHEME =
         styleNames.${cfg.platformTheme} or cfg.platformTheme;
       QT_STYLE_OVERRIDE = cfg.style.name;
+    };
+
+    envVarsExtra = let
+      inherit (config.home) profileDirectory;
+      qtVersions = with pkgs; [ qt5 qt6 ];
+      makeQtPath = prefix:
+        lib.concatStringsSep ":"
+        (map (qt: "${profileDirectory}/${qt.qtbase.${prefix}}") qtVersions);
+    in {
       QT_PLUGIN_PATH = "$QT_PLUGIN_PATH\${QT_PLUGIN_PATH:+:}"
-        + (lib.concatStringsSep ":"
-          # Workaround issue with home.sessionVariables that does not support
-          # multiple different values since fcitx5 also needs to set QT_PLUGIN_PATH.
-          (lib.optional (config.i18n.inputMethod == "fcitx5")
-            (makeQtPath "qtPluginPrefix" config.i18n.inputMethod.package
-              pkgs.qt6) ++ (map (makeQtPath "qtPluginPrefix" profileDirectory)
-                qtVersions)));
+        + (makeQtPath "qtPluginPrefix");
       QML2_IMPORT_PATH = "$QML2_IMPORT_PATH\${QML2_IMPORT_PATH:+:}"
-        + (lib.concatStringsSep ":"
-          (map (makeQtPath "qtQmlPrefix" profileDirectory) qtVersions));
+        + (makeQtPath "qtQmlPrefix");
     };
 
   in lib.mkIf (cfg.enable && cfg.platformTheme != null) {
@@ -188,10 +186,21 @@ in {
     qt.style.package = lib.mkIf (cfg.style.name != null)
       (lib.mkDefault (stylePackages.${lib.toLower cfg.style.name} or null));
 
-    home.sessionVariables = envVars;
+    home = {
+      sessionVariables = envVars;
+      # home.sessionVariables does not support setting the same environment
+      # variable to different values.
+      # Since some other modules may set the QT_PLUGIN_PATH or QML2_IMPORT_PATH
+      # to their own value, e.g.: fcitx5, we avoid conflicts by setting
+      # the values in home.sessionVariablesExtra instead.
+      sessionVariablesExtra = ''
+        export QT_PLUGIN_PATH=${envVarsExtra.QT_PLUGIN_PATH}
+        export QML2_IMPORT_PATH=${envVarsExtra.QML2_IMPORT_PATH}
+      '';
+    };
 
     # Apply theming also to apps started by systemd.
-    systemd.user.sessionVariables = envVars;
+    systemd.user.sessionVariables = envVars // envVarsExtra;
 
     home.packages = (platformPackages.${cfg.platformTheme} or [ ])
       ++ lib.optionals (cfg.style.package != null)
