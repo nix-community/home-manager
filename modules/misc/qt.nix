@@ -3,12 +3,19 @@
 let
   cfg = config.qt;
 
+  # Map platform names to their packages.
   platformPackages = with pkgs; {
     gnome = [ qgnomeplatform qgnomeplatform-qt6 ];
     gtk = [ libsForQt5.qtstyleplugins qt6Packages.qt6gtk2 ];
     kde = [ libsForQt5.plasma-integration libsForQt5.systemsettings ];
     lxqt = [ lxqt.lxqt-qtplugin lxqt.lxqt-config ];
     qtct = [ libsForQt5.qt5ct qt6Packages.qt6ct ];
+  };
+
+  # Maps style names to their QT_QPA_PLATFORMTHEME, if necessary.
+  styleNames = {
+    gtk = "gtk2";
+    qtct = "qt5ct";
   };
 
   # Maps known lowercase style names to style packages. Non-exhaustive.
@@ -152,12 +159,8 @@ in {
       qtVersions = with pkgs; [ qt5 qt6 ];
       makeQtPath = prefix: basePath: qt: "${basePath}/${qt.qtbase.${prefix}}";
     in lib.filterAttrs (n: v: v != null) {
-      QT_QPA_PLATFORMTHEME = if cfg.platformTheme == "gtk" then
-        "gtk2"
-      else if cfg.platformTheme == "qtct" then
-        "qt5ct"
-      else
-        cfg.platformTheme;
+      QT_QPA_PLATFORMTHEME =
+        styleNames.${cfg.platformTheme} or cfg.platformTheme;
       QT_STYLE_OVERRIDE = cfg.style.name;
       QT_PLUGIN_PATH = "$QT_PLUGIN_PATH\${QT_PLUGIN_PATH:+:}"
         + (lib.concatStringsSep ":"
