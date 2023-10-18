@@ -1,9 +1,6 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
-
   cfg = config.qt;
 
   # Maps known lowercase style names to style packages. Non-exhaustive.
@@ -28,20 +25,23 @@ let
   };
 
 in {
-  meta.maintainers = with maintainers; [ rycee thiagokokada ];
+  meta.maintainers = with lib.maintainers; [ rycee thiagokokada ];
 
   imports = [
-    (mkChangedOptionModule [ "qt" "useGtkTheme" ] [ "qt" "platformTheme" ]
+    (lib.mkChangedOptionModule [ "qt" "useGtkTheme" ] [ "qt" "platformTheme" ]
       (config:
-        if getAttrFromPath [ "qt" "useGtkTheme" ] config then "gtk" else null))
+        if lib.getAttrFromPath [ "qt" "useGtkTheme" ] config then
+          "gtk"
+        else
+          null))
   ];
 
   options = {
     qt = {
-      enable = mkEnableOption "Qt 5 and 6 configuration";
+      enable = lib.mkEnableOption "Qt 5 and 6 configuration";
 
-      platformTheme = mkOption {
-        type = types.nullOr (types.enum [ "gtk" "gnome" "qtct" "kde" ]);
+      platformTheme = lib.mkOption {
+        type = with lib.types; nullOr (enum [ "gtk" "gnome" "qtct" "kde" ]);
         default = null;
         example = "gnome";
         relatedPackages = [
@@ -77,8 +77,8 @@ in {
       };
 
       style = {
-        name = mkOption {
-          type = types.nullOr types.str;
+        name = lib.mkOption {
+          type = with lib.types; nullOr str;
           default = null;
           example = "adwaita-dark";
           relatedPackages = [
@@ -111,10 +111,10 @@ in {
           '';
         };
 
-        package = mkOption {
-          type = with types; nullOr (either package (listOf package));
+        package = lib.mkOption {
+          type = with lib.types; nullOr (either package (listOf package));
           default = null;
-          example = literalExpression "pkgs.adwaita-qt";
+          example = lib.literalExpression "pkgs.adwaita-qt";
           description = ''
             Theme package to be used in Qt5/Qt6 applications.
             Auto-detected from {option}`qt.style.name` if possible.
@@ -130,7 +130,7 @@ in {
     envVars = let
       inherit (config.home) profileDirectory;
       qtVersions = with pkgs; [ qt5 qt6 ];
-    in filterAttrs (n: v: v != null) {
+    in lib.filterAttrs (n: v: v != null) {
       QT_QPA_PLATFORMTHEME = if cfg.platformTheme == "gtk" then
         "gtk2"
       else if cfg.platformTheme == "qtct" then
@@ -148,7 +148,7 @@ in {
             qtVersions));
     };
 
-  in mkIf (cfg.enable && cfg.platformTheme != null) {
+  in lib.mkIf (cfg.enable && cfg.platformTheme != null) {
     assertions = [{
       assertion = cfg.platformTheme == "gnome" -> cfg.style.name != null
         && cfg.style.package != null;
@@ -158,8 +158,8 @@ in {
       '';
     }];
 
-    qt.style.package = mkIf (cfg.style.name != null)
-      (mkDefault (stylePackages.${toLower cfg.style.name} or null));
+    qt.style.package = lib.mkIf (cfg.style.name != null)
+      (lib.mkDefault (stylePackages.${lib.toLower cfg.style.name} or null));
 
     home.sessionVariables = envVars;
 
