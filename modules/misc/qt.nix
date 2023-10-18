@@ -3,6 +3,14 @@
 let
   cfg = config.qt;
 
+  platformPackages = with pkgs; {
+    gnome = [ qgnomeplatform ];
+    gtk = [ libsForQt5.qtstyleplugins qt6Packages.qt6gtk2 ];
+    kde = [ libsForQt5.plasma-integration libsForQt5.systemsettings ];
+    lxqt = [ lxqt.lxqt-qtplugin lxqt.lxqt-config ];
+    qtct = [ libsForQt5.qt5ct qt6Packages.qt6ct ];
+  };
+
   # Maps known lowercase style names to style packages. Non-exhaustive.
   stylePackages = with pkgs; {
     bb10bright = libsForQt5.qtstyleplugins;
@@ -41,16 +49,20 @@ in {
       enable = lib.mkEnableOption "Qt 5 and 6 configuration";
 
       platformTheme = lib.mkOption {
-        type = with lib.types; nullOr (enum [ "gtk" "gnome" "qtct" "kde" ]);
+        type = with lib.types;
+          nullOr (enum [ "gtk" "gnome" "lxqt" "qtct" "kde" ]);
         default = null;
         example = "gnome";
         relatedPackages = [
           "qgnomeplatform"
-          [ "libsForQt5" "qtstyleplugins" ]
-          [ "libsForQt5" "qt5ct" ]
-          [ "qt6Packages" "qt6ct" ]
           [ "libsForQt5" "plasma-integration" ]
+          [ "libsForQt5" "qt5ct" ]
+          [ "libsForQt5" "qtstyleplugins" ]
           [ "libsForQt5" "systemsettings" ]
+          [ "lxqt" "lxqt-config" ]
+          [ "lxqt" "lxqt-qtplugin" ]
+          [ "qt6Packages" "qt6ct" ]
+          [ "qt6Packages" "qt6gtk2" ]
         ];
         description = ''
           Platform theme to use for Qt applications.
@@ -64,6 +76,11 @@ in {
           `gnome`
           : Use GNOME theme with
             [`qgnomeplatform`](https://github.com/FedoraQt/QGnomePlatform)
+
+          `lxqt`
+          : Use LXQt theme style set using the
+            [`lxqt-config-appearance`](https://github.com/lxqt/lxqt-config)
+            application
 
           `qtct`
           : Use Qt style set using
@@ -172,16 +189,7 @@ in {
     # Apply theming also to apps started by systemd.
     systemd.user.sessionVariables = envVars;
 
-    home.packages = (if cfg.platformTheme == "gnome" then
-      [ pkgs.qgnomeplatform ]
-    else if cfg.platformTheme == "qtct" then [
-      pkgs.libsForQt5.qt5ct
-      pkgs.qt6Packages.qt6ct
-    ] else if cfg.platformTheme == "kde" then [
-      pkgs.libsForQt5.plasma-integration
-      pkgs.libsForQt5.systemsettings
-    ] else
-      [ pkgs.libsForQt5.qtstyleplugins ])
+    home.packages = (platformPackages.${cfg.platformTheme} or [ ])
       ++ lib.optionals (cfg.style.package != null)
       (lib.toList cfg.style.package);
 
