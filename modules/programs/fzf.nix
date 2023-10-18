@@ -190,7 +190,7 @@ in {
       fi
     '');
 
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
       source ${cfg.package}/share/fzf/key-bindings.fish && fzf_key_bindings
     '';
   };
