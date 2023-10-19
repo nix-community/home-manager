@@ -10,6 +10,6 @@
     hmSessVars=home-path/etc/profile.d/hm-session-vars.sh
     assertFileExists $hmSessVars
     assertFileContains $hmSessVars \
-      'export TEST="$TEST''${TEST:+:}bar:baz:foo"'
+      'export TEST="bar:baz:foo''${TEST:+:}$TEST"'
   '';
 }

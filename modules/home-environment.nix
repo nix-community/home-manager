@@ -309,7 +309,7 @@ in
         ".git/safe/../../bin"
       ];
       description = ''
-        Extra directories to add to {env}`PATH`.
+        Extra directories to be prepend to {env}`PATH`.
 
         These directories are added to the {env}`PATH` variable in a
         double-quoted context, so expressions like `$HOME` are
@@ -329,9 +329,9 @@ in
         ];
       };
       description = ''
-        Extra directories to add to arbitrary PATH-like environment
-        variables (e.g.: {env}`MANPATH`). The values will be concatenated
-        by `:`.
+        Extra directories to be prepend to arbitrary PATH-like
+        environment variables (e.g.: {env}`MANPATH`). The values
+        will be concatenated by `:`.
 
         These directories are added to the environment variable in a
         double-quoted context, so expressions like `$HOME` are
@@ -581,7 +581,7 @@ in
         (mapAttrsToList
           (env: values: config.lib.shell.export
             env
-            (config.lib.shell.appendToVar ":" env values))
+            (config.lib.shell.prependToVar ":" env values))
           cfg.sessionSearchVariables)
         + cfg.sessionVariablesExtra;
     };
