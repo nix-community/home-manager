@@ -579,8 +579,9 @@ in
         ${config.lib.shell.exportAll cfg.sessionVariables}
       '' + concatStringsSep "\n"
         (mapAttrsToList
-          (env: values: ''
-            export ${env}="''$${env}''${${env}:+:}${concatStringsSep ":" values}"'')
+          (env: values: config.lib.shell.export
+            env
+            (config.lib.shell.appendToVar ":" env values))
           cfg.sessionSearchVariables)
         + cfg.sessionVariablesExtra;
     };
