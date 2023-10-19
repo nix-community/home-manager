@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-01-09 11:33+0000\n"
-"Last-Translator: Kornelijus Tvarijanavičius <kornelijus@tvaria.com>\n"
+"PO-Revision-Date: 2023-10-19 04:00+0000\n"
+"Last-Translator: Yogurt <donatas.karta@gmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/home-manager/"
 "cli/lt/>\n"
 "Language: lt\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > "
 "19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? "
 "1 : 2);\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 5.1\n"
 
 #: home-manager/home-manager:81
 msgid "No configuration file found at %s"
@@ -29,10 +29,13 @@ msgstr "Nerastas konfigūracijos failas %s"
 #. 'home.nix' or 'flake.nix'.
 #: home-manager/home-manager:98 home-manager/home-manager:102
 #: home-manager/home-manager:192
+#, fuzzy
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Home Manager saugojimas %s viduje %s yra pasenes,\n"
+"prašome perkelti į %s"
 
 #: home-manager/home-manager:109
 msgid "No configuration file found. Please create one at %s"
@@ -40,7 +43,7 @@ msgstr "Nerastas konfigūracijos failas. Sukurkite jį adresu %s"
 
 #: home-manager/home-manager:124
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Nerastas Home Manager šioje vietoje %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:132
@@ -73,7 +76,7 @@ msgstr ""
 
 #: home-manager/home-manager:174
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Nepavyko rasti tinkamo profilio katalogo, bandyta naudoti %s ir %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:229
@@ -91,11 +94,11 @@ msgstr "Paleiskite „%s --help“, kad gautumėte naudojimosi instrukcijas"
 
 #: home-manager/home-manager:322 home-manager/home-manager:421
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "Failas %s jau egzistuoja, jis paliekamas nepakeistas..."
 
 #: home-manager/home-manager:324 home-manager/home-manager:423
 msgid "Creating %s..."
-msgstr ""
+msgstr "Kuriamas %s..."
 
 #: home-manager/home-manager:465
 msgid "Creating initial Home Manager generation..."
@@ -129,6 +132,11 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
+"O ne, įdiegimas nepavyko! Prašome užpildyti pranešimą apie problemą \n"
+"\n"
+"    %s\n"
+"\n"
+"jei atrodo, kad klaida įvyko dėl Home Manager."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:486
@@ -162,8 +170,9 @@ msgid "Please set the $EDITOR environment variable"
 msgstr "Prašome nustatyti $EDITOR aplinkos kintamąjį"
 
 #: home-manager/home-manager:598
+#, fuzzy
 msgid "Cannot run build in read-only directory"
-msgstr ""
+msgstr "Negalima vykdyti kompiliavimo read-only kataloge"
 
 #: home-manager/home-manager:676
 msgid "No generation with ID %s"
@@ -179,7 +188,7 @@ msgstr "Pašalinama generacija %s"
 
 #: home-manager/home-manager:699
 msgid "No generations to expire"
-msgstr ""
+msgstr "Nėra generacijų, kurios baigtų galioti"
 
 #: home-manager/home-manager:710
 msgid "No home-manager packages seem to be installed."
@@ -224,6 +233,7 @@ msgstr "Nežinoma komanda: %s"
 #: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
+"Šis darinys negali būti sukurtas, prašome jį paleisti naudojant nix-shell."
 
 #~ msgid "Creating initial Home Manager configuration..."
 #~ msgstr "Kuriama pradinė Home Manager konfigūracija..."
