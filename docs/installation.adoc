@@ -158,7 +158,7 @@ home-manager.users.eve = { pkgs, ... }: {
 
   # The state version is required and should stay at the version you
   # originally installed.
-  system.stateVersion = "23.05";
+  home.stateVersion = "23.05";
 };
 ----
 
@@ -285,7 +285,7 @@ home-manager.users.eve = { pkgs, ... }: {
 
   # The state version is required and should stay at the version you
   # originally installed.
-  system.stateVersion = "23.05";
+  home.stateVersion = "23.05";
 };
 ----
 
