@@ -68,5 +68,7 @@ with lib;
     programs.fish.shellAliases = aliases;
 
     programs.ion.shellAliases = aliases;
+
+    programs.nushell.shellAliases = aliases;
   };
 }
