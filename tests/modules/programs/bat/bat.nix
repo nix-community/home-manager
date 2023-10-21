@@ -13,8 +13,12 @@ with lib;
         map-syntax = [ "*.jenkinsfile:Groovy" "*.props:Java Properties" ];
       };
 
-      themes.testtheme = ''
+      themes.testtheme.src = pkgs.writeText "testtheme.tmTheme" ''
         This is a test theme.
+      '';
+
+      syntaxes.testsyntax.src = pkgs.writeText "testsyntax.sublime-syntax" ''
+        This is a test syntax.
       '';
     };
 
@@ -35,6 +39,13 @@ with lib;
       assertFileContent home-files/.config/bat/themes/testtheme.tmTheme ${
         pkgs.writeText "bat.expected" ''
           This is a test theme.
+        ''
+      }
+
+      assertFileExists home-files/.config/bat/syntaxes/testsyntax.sublime-syntax
+      assertFileContent home-files/.config/bat/syntaxes/testsyntax.sublime-syntax ${
+        pkgs.writeText "bat.expected" ''
+          This is a test syntax.
         ''
       }
     '';

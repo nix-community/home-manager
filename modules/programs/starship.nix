@@ -137,7 +137,7 @@ in {
         ${starshipCmd} init nu | save --force ${config.xdg.cacheHome}/starship/init.nu
       '';
       extraConfig = ''
-        source ${config.xdg.cacheHome}/starship/init.nu
+        use ${config.xdg.cacheHome}/starship/init.nu
       '';
     };
   };

@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-30 09:08+0200\n"
-"PO-Revision-Date: 2022-09-19 18:22+0000\n"
-"Last-Translator: cafkafk <christina@cafkafk.com>\n"
+"POT-Creation-Date: 2023-09-13 23:46+0200\n"
+"PO-Revision-Date: 2023-09-27 11:02+0000\n"
+"Last-Translator: Emil Heilbo <yuki@yukie.dev>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/home-manager/"
 "modules/da/>\n"
 "Language: da\n"
@@ -17,25 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 5.1-dev\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
-msgstr "Skaber hjemme fil links i %s"
+msgstr "Opretter hjemme fil links i %s"
 
 #: modules/files.nix:247
 msgid "Cleaning up orphan links from %s"
-msgstr "Opryder forældreløse links fra %s"
+msgstr "Oprydder forældreløse links fra %s"
 
 #: modules/files.nix:263
 msgid "Creating profile generation %s"
-msgstr "Kreere profil generation %s"
+msgstr "Opretter profil generation %s"
 
 #: modules/files.nix:280
 msgid "No change so reusing latest profile generation %s"
-msgstr "Ingen ændring så genbrug den seneste profil generation %s"
+msgstr "Ingen ændring, dermed genanvendes seneste profil generation %s"
 
-#: modules/home-environment.nix:626
+#: modules/home-environment.nix:640
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -50,34 +50,34 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
-"Åh nej, Nix fejlede i at installere din nye Home Manager profil! \n"
-" \n"
+"Åh nej, Nix fejlede i at installere din nye Home Manager profil!\n"
+"\n"
 "Måske er der en konflikt med en pakke der blev installeret gennem\n"
-"\"%s\"? Prøv at køre \n"
+"\"%s\"? Prøv at køre\n"
 "\n"
 "    %s\n"
-" \n"
-"og hvis der er en pakke konflikt, kan du fjerne pakken med \n"
-" \n"
+"\n"
+"og hvis der er en pakke-konflikt, kan du fjerne pakken med\n"
+"\n"
 "    %s\n"
-" \n"
-"og så prøve at genaktivere din Home Manager konfiguration igen."
+"\n"
+"Derefter prøv at aktivere din Home Manager konfiguration igen."
 
-#: modules/home-environment.nix:659
+#: modules/home-environment.nix:673
 msgid "Activating %s"
-msgstr "Aktivere %s"
+msgstr "Aktiverer %s"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "Migrerer profil fra %s til %s"
 
 #: modules/lib-bash/activation-init.sh:53
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Kunne ikke finde en passende profilmappe, forsøgte %s og %s"
 
 #: modules/lib-bash/activation-init.sh:81
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr "Tjekker fornuften af oldGenNum and oldGenPath"
+msgstr "Tjekker fornuften af oldGenNum og oldGenPath"
 
 #: modules/lib-bash/activation-init.sh:84
 msgid ""
@@ -94,38 +94,38 @@ msgid ""
 "\n"
 "and trying home-manager switch again. Good luck!"
 msgstr ""
-"Den forrige generations nummer og sti er i konflikt! Disse\n"
-"skal enten begge være tomme, eller begge være sat, men er nu sat til \n"
-" \n"
-"    '%s' and '%s'\n"
-" \n"
+"Det forrige generationsnummer og sti er i konflikt! Disse skal\n"
+"enten begge være tomme, eller begge være sat, men er nu sat til\n"
+"\n"
+"    '%s' og '%s'\n"
+"\n"
 "Hvis du ikke har noget mod at miste tidligere profil generationer så\n"
-"er den nemmeste løsning nok at køre \n"
-" \n"
+"er den nemmeste løsning nok at køre\n"
+"\n"
 "   rm %s/home-manager*\n"
 "   rm %s/current-home\n"
-" \n"
-"og så prøve at køre home-manager switch igen. Held og lykke!"
+"\n"
+"og forsøge at køre home-manager switch igen. Held og lykke!"
 
 #: modules/lib-bash/activation-init.sh:95
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Fejl: USER er sat til \"%s\", men vi forventer \"%s\""
 
 #: modules/lib-bash/activation-init.sh:104
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Fejl: HOME er sat til \"%s\", men vi forventer \"%s\""
 
 #: modules/lib-bash/activation-init.sh:119
 msgid "Starting Home Manager activation"
-msgstr "Starter Home Manager aktivation"
+msgstr "Starter Home Manager aktivering"
 
 #: modules/lib-bash/activation-init.sh:123
 msgid "Sanity checking Nix"
-msgstr "Udføre fornuft check af Nix"
+msgstr "Tjekker fornuften af Nix"
 
 #: modules/lib-bash/activation-init.sh:133
 msgid "This is a dry run"
-msgstr "Dette er en tør kørsel"
+msgstr "Dette er en test-kørsel"
 
 #: modules/lib-bash/activation-init.sh:137
 msgid "This is a live run"
@@ -137,4 +137,4 @@ msgstr "Bruger Nix version: %s"
 
 #: modules/lib-bash/activation-init.sh:146
 msgid "Activation variables:"
-msgstr "Aktivere variable:"
+msgstr "Aktiveringsvariabler:"

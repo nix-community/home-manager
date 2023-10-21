@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-30 09:08+0200\n"
-"PO-Revision-Date: 2023-02-19 10:19+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
+"POT-Creation-Date: 2023-09-13 23:46+0200\n"
+"PO-Revision-Date: 2023-10-19 04:00+0000\n"
+"Last-Translator: SrGesus <gabriel.fcf04@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/home-manager/"
 "modules/pt/>\n"
 "Language: pt\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 5.1\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
@@ -35,7 +35,7 @@ msgstr "A criar geração %s para o perfil"
 msgid "No change so reusing latest profile generation %s"
 msgstr "Nenhuma mudança, portanto a reusar a última geração %s para o perfil"
 
-#: modules/home-environment.nix:626
+#: modules/home-environment.nix:640
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,17 +63,19 @@ msgstr ""
 "\n"
 "E então tente novamente ativar a sua configuração do Home Manager."
 
-#: modules/home-environment.nix:659
+#: modules/home-environment.nix:673
 msgid "Activating %s"
 msgstr "Ativando %s"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "A migrar perfil de %s para %s"
 
 #: modules/lib-bash/activation-init.sh:53
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
+"Não foi possível encontrar uma diretoria de perfil apropriada, foi tentado "
+"%s e %s"
 
 #: modules/lib-bash/activation-init.sh:81
 msgid "Sanity checking oldGenNum and oldGenPath"
@@ -109,11 +111,11 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:95
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Erro: USER está definido como \"%s\" mas é esperado \"%s\""
 
 #: modules/lib-bash/activation-init.sh:104
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Erro: HOME está definida como \"%s\" mas é esperado \"%s\""
 
 #: modules/lib-bash/activation-init.sh:119
 msgid "Starting Home Manager activation"

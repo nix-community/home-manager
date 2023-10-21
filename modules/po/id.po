@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-30 09:08+0200\n"
-"PO-Revision-Date: 2023-07-17 10:03+0000\n"
+"POT-Creation-Date: 2023-09-13 23:46+0200\n"
+"PO-Revision-Date: 2023-10-04 06:02+0000\n"
 "Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/home-manager/"
 "modules/id/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
@@ -36,7 +36,7 @@ msgid "No change so reusing latest profile generation %s"
 msgstr ""
 "Tidak ada perubahan, jadi gunakan kembali pembuatan profil terbaru %s%s"
 
-#: modules/home-environment.nix:626
+#: modules/home-environment.nix:640
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -64,7 +64,7 @@ msgstr ""
 "\n"
 "Kemudian coba aktifkan kembali konfigurasi Home Manager Anda."
 
-#: modules/home-environment.nix:659
+#: modules/home-environment.nix:673
 msgid "Activating %s"
 msgstr "Mengaktifkan %s"
 
@@ -74,11 +74,11 @@ msgstr "Memigrasi profil dari %s ke %s"
 
 #: modules/lib-bash/activation-init.sh:53
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Tidak dapat menemukan direktori profil yang sesuai, coba %s dan %s"
 
 #: modules/lib-bash/activation-init.sh:81
 msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr ""
+msgstr "Sanity memeriksa oldGenNum dan oldGenPath"
 
 #: modules/lib-bash/activation-init.sh:84
 msgid ""
@@ -98,32 +98,32 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:95
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Error: PENGGUNA diatur ke \"%s\" tetapi kami mengharapkan \"%s\""
 
 #: modules/lib-bash/activation-init.sh:104
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Error: BERANDA diatur ke \"%s\" tetapi kami mengharapkan \"%s\""
 
 #: modules/lib-bash/activation-init.sh:119
 msgid "Starting Home Manager activation"
-msgstr ""
+msgstr "Memulai aktivasi Home Manager"
 
 #: modules/lib-bash/activation-init.sh:123
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Pemeriksaan sanity Nix"
 
 #: modules/lib-bash/activation-init.sh:133
 msgid "This is a dry run"
-msgstr ""
+msgstr "Ini adalah dry run"
 
 #: modules/lib-bash/activation-init.sh:137
 msgid "This is a live run"
-msgstr ""
+msgstr "Ini adalah live run"
 
 #: modules/lib-bash/activation-init.sh:143
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Menggunakan versi Nix: %s"
 
 #: modules/lib-bash/activation-init.sh:146
 msgid "Activation variables:"
-msgstr ""
+msgstr "Variabel aktivasi:"

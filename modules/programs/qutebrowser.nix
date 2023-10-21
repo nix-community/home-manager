@@ -239,6 +239,28 @@ in {
       '';
     };
 
+    greasemonkey = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      example = literalExpression ''
+        [
+          (pkgs.fetchurl {
+            url = "https://raw.githubusercontent.com/afreakk/greasemonkeyscripts/1d1be041a65c251692ee082eda64d2637edf6444/youtube_sponsorblock.js";
+            sha256 = "sha256-e3QgDPa3AOpPyzwvVjPQyEsSUC9goisjBUDMxLwg8ZE=";
+          })
+          (pkgs.writeText "some-script.js" '''
+            // ==UserScript==
+            // @name  Some Greasemonkey script
+            // ==/UserScript==
+          ''')
+        ]
+      '';
+      description = ''
+        Greasemonkey userscripts to add to qutebrowser's {file}`greasemonkey`
+        directory.
+      '';
+    };
+
     extraConfig = mkOption {
       type = types.lines;
       default = "";
@@ -265,6 +287,9 @@ in {
 
     quickmarksFile = optionals (cfg.quickmarks != { }) concatStringsSep "\n"
       ((mapAttrsToList formatQuickmarks cfg.quickmarks));
+
+    greasemonkeyDir = optionals (cfg.greasemonkey != [ ]) pkgs.linkFarmFromDrvs
+      "greasemonkey-userscripts" cfg.greasemonkey;
   in mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
@@ -299,6 +324,16 @@ in {
     xdg.configFile."qutebrowser/quickmarks" =
       mkIf (cfg.quickmarks != { } && pkgs.stdenv.hostPlatform.isLinux) {
         text = quickmarksFile;
+      };
+
+    home.file.".qutebrowser/greasemonkey" =
+      mkIf (cfg.greasemonkey != [ ] && pkgs.stdenv.hostPlatform.isDarwin) {
+        source = greasemonkeyDir;
+      };
+
+    xdg.configFile."qutebrowser/greasemonkey" =
+      mkIf (cfg.greasemonkey != [ ] && pkgs.stdenv.hostPlatform.isLinux) {
+        source = greasemonkeyDir;
       };
   };
 }

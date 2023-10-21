@@ -11,4 +11,5 @@
   neomutt-with-named-mailboxes = ./neomutt-with-named-mailboxes.nix;
   neomutt-with-signature = ./neomutt-with-signature.nix;
   neomutt-with-signature-command = ./neomutt-with-signature-command.nix;
+  neomutt-with-starttls = ./neomutt-with-starttls.nix;
 }

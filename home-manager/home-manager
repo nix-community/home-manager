@@ -132,7 +132,7 @@ function setHomeManagerNixPath() {
             _iWarn $'The fallback Home Manager path %s has been deprecated and a file/directory was found there.' \
                    "$p"
             # translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-            _i $'To remove this warning, do one of the fallowing.
+            _i $'To remove this warning, do one of the following.
 
 1. Explicitly tell Home Manager to use the path, for example by adding
 
@@ -155,6 +155,11 @@ function setHomeManagerNixPath() {
 
 # Sets some useful Home Manager related paths as global read-only variables.
 function setHomeManagerPathVariables() {
+    # If called twice then just exit early.
+    if [[ -v HM_DATA_HOME ]]; then
+        return
+    fi
+
     declare -r globalNixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
     declare -r globalProfilesDir="$globalNixStateDir/profiles/per-user/$USER"
     declare -r globalGcrootsDir="$globalNixStateDir/gcroots/per-user/$USER"
@@ -648,6 +653,8 @@ function doSwitch() {
 }
 
 function doListGens() {
+    setHomeManagerPathVariables
+
     # Whether to colorize the generations output.
     local color="never"
     if [[ ! -v NO_COLOR && -t 1 ]]; then
@@ -665,6 +672,7 @@ function doListGens() {
 # Removes linked generations. Takes as arguments identifiers of
 # generations to remove.
 function doRmGenerations() {
+    setHomeManagerPathVariables
     setVerboseAndDryRun
 
     pushd "$HM_PROFILE_DIR" > /dev/null
@@ -686,6 +694,8 @@ function doRmGenerations() {
 }
 
 function doExpireGenerations() {
+    setHomeManagerPathVariables
+
     local generations
     generations="$( \
         find "$HM_PROFILE_DIR" -name 'home-manager-*-link' -not -newermt "$1" \
@@ -810,6 +820,7 @@ function doShowNews() {
 }
 
 function doUninstall() {
+    setHomeManagerPathVariables
     setVerboseAndDryRun
     setNixProfileCommands
 
@@ -944,8 +955,6 @@ PASSTHROUGH_OPTS=()
 COMMAND=""
 COMMAND_ARGS=()
 FLAKE_ARG=""
-
-setHomeManagerPathVariables
 
 while [[ $# -gt 0 ]]; do
     opt="$1"

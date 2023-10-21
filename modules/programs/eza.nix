@@ -3,19 +3,24 @@
 with lib;
 
 {
-  meta.maintainers = [ hm.maintainers.kalhauge ];
+  imports = let
+    mkRenamed = opt:
+      mkRenamedOptionModule [ "programs" "exa" opt ] [ "programs" "eza" opt ];
+  in map mkRenamed [ "enable" "enableAliases" "extraOptions" "icons" "git" ];
 
-  options.programs.exa = {
-    enable = mkEnableOption "exa, a modern replacement for {command}`ls`";
+  meta.maintainers = [ maintainers.cafkafk ];
 
-    enableAliases = mkEnableOption "recommended exa aliases (ls, ll…)";
+  options.programs.eza = {
+    enable = mkEnableOption "eza, a modern replacement for {command}`ls`";
+
+    enableAliases = mkEnableOption "recommended eza aliases (ls, ll…)";
 
     extraOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--group-directories-first" "--header" ];
       description = ''
-        Extra command line options passed to exa.
+        Extra command line options passed to eza.
       '';
     };
 
@@ -35,23 +40,23 @@ with lib;
       '';
     };
 
-    package = mkPackageOption pkgs "exa" { };
+    package = mkPackageOption pkgs "eza" { };
   };
 
   config = let
-    cfg = config.programs.exa;
+    cfg = config.programs.eza;
 
     args = escapeShellArgs (optional cfg.icons "--icons"
       ++ optional cfg.git "--git" ++ cfg.extraOptions);
 
     aliases = {
-      exa = "exa ${args}";
+      eza = "eza ${args}";
     } // optionalAttrs cfg.enableAliases {
-      ls = "exa";
-      ll = "exa -l";
-      la = "exa -a";
-      lt = "exa --tree";
-      lla = "exa -la";
+      ls = "eza";
+      ll = "eza -l";
+      la = "eza -a";
+      lt = "eza --tree";
+      lla = "eza -la";
     };
   in mkIf cfg.enable {
     home.packages = [ cfg.package ];

@@ -152,29 +152,22 @@ let
   hmExcludeFile = pkgs.writeText "hm-symlinks.txt" hmExcludePatterns;
 
   writeConfig = config:
-    generators.toYAML { } {
-      location = removeNullValues {
-        source_directories = config.location.sourceDirectories;
-        repositories = config.location.repositories;
-      } // config.location.extraConfig;
-      storage = removeNullValues {
-        encryption_passcommand = config.storage.encryptionPasscommand;
-      } // config.storage.extraConfig;
-      retention = removeNullValues {
-        keep_within = config.retention.keepWithin;
-        keep_secondly = config.retention.keepSecondly;
-        keep_minutely = config.retention.keepMinutely;
-        keep_hourly = config.retention.keepHourly;
-        keep_daily = config.retention.keepDaily;
-        keep_weekly = config.retention.keepWeekly;
-        keep_monthly = config.retention.keepMonthly;
-        keep_yearly = config.retention.keepYearly;
-      } // config.retention.extraConfig;
-      consistency = removeNullValues { checks = config.consistency.checks; }
-        // config.consistency.extraConfig;
-      output = config.output.extraConfig;
-      hooks = config.hooks.extraConfig;
-    };
+    generators.toYAML { } (removeNullValues ({
+      source_directories = config.location.sourceDirectories;
+      repositories = config.location.repositories;
+      encryption_passcommand = config.storage.encryptionPasscommand;
+      keep_within = config.retention.keepWithin;
+      keep_secondly = config.retention.keepSecondly;
+      keep_minutely = config.retention.keepMinutely;
+      keep_hourly = config.retention.keepHourly;
+      keep_daily = config.retention.keepDaily;
+      keep_weekly = config.retention.keepWeekly;
+      keep_monthly = config.retention.keepMonthly;
+      keep_yearly = config.retention.keepYearly;
+      checks = config.consistency.checks;
+    } // config.location.extraConfig // config.storage.extraConfig
+      // config.retention.extraConfig // config.consistency.extraConfig
+      // config.output.extraConfig // config.hooks.extraConfig));
 in {
   meta.maintainers = [ maintainers.DamienCassou ];
 

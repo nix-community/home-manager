@@ -290,7 +290,8 @@ let
 
       trayOutput = mkNullableOption {
         type = types.str;
-        default = "primary";
+        # Sway/Wayland doesn't have the concept of a primary output. The default for sway is to show it on all outputs
+        default = if isI3 then "primary" else "*";
         description = "Where to output tray.";
       };
 

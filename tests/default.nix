@@ -62,12 +62,14 @@ import nmt {
     ./modules/programs/aria2
     ./modules/programs/atuin
     ./modules/programs/autojump
+    ./modules/programs/bacon
     ./modules/programs/bash
     ./modules/programs/bat
     ./modules/programs/bottom
     ./modules/programs/broot
     ./modules/programs/browserpass
     ./modules/programs/btop
+    ./modules/programs/carapace
     ./modules/programs/comodoro
     ./modules/programs/darcs
     ./modules/programs/dircolors
@@ -78,8 +80,8 @@ import nmt {
     ./modules/programs/gallery-dl
     ./modules/programs/gh
     ./modules/programs/gh-dash
-    ./modules/programs/git-cliff
     ./modules/programs/git
+    ./modules/programs/git-cliff
     ./modules/programs/gpg
     ./modules/programs/helix
     ./modules/programs/himalaya
@@ -90,11 +92,13 @@ import nmt {
     ./modules/programs/jujutsu
     ./modules/programs/k9s
     ./modules/programs/kakoune
-    ./modules/programs/kitty
     ./modules/programs/khal
+    ./modules/programs/khard
+    ./modules/programs/kitty
     ./modules/programs/ledger
     ./modules/programs/less
     ./modules/programs/lf
+    ./modules/programs/lsd
     ./modules/programs/lieer
     ./modules/programs/man
     ./modules/programs/mbsync
@@ -120,8 +124,10 @@ import nmt {
     ./modules/programs/powerline-go
     ./modules/programs/pubs
     ./modules/programs/pyenv
+    ./modules/programs/qcal
     ./modules/programs/qutebrowser
     ./modules/programs/readline
+    ./modules/programs/rio
     ./modules/programs/ripgrep
     ./modules/programs/rtx
     ./modules/programs/sagemath
@@ -131,9 +137,9 @@ import nmt {
     ./modules/programs/sm64ex
     ./modules/programs/ssh
     ./modules/programs/starship
-    ./modules/services/syncthing/common
     ./modules/programs/taskwarrior
     ./modules/programs/texlive
+    ./modules/programs/thefuck
     ./modules/programs/tmate
     ./modules/programs/tmux
     ./modules/programs/topgrade
@@ -142,9 +148,11 @@ import nmt {
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
+    ./modules/programs/yazi
     ./modules/programs/zellij
     ./modules/programs/zplug
     ./modules/programs/zsh
+    ./modules/services/syncthing/common
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
@@ -164,6 +172,7 @@ import nmt {
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
+    ./modules/programs/awscli
     ./modules/programs/beets  # One test relies on services.mpd
     ./modules/programs/borgmatic
     ./modules/programs/boxxy
@@ -189,14 +198,17 @@ import nmt {
     ./modules/programs/waybar
     ./modules/programs/wlogout
     ./modules/programs/wofi
+    ./modules/programs/wpaperd
     ./modules/programs/xmobar
     ./modules/programs/yt-dlp
     ./modules/services/avizo
     ./modules/services/barrier
     ./modules/services/borgmatic
     ./modules/services/cachix-agent
+    ./modules/services/cliphist
     ./modules/services/clipman
     ./modules/services/comodoro
+    ./modules/services/darkman
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/emacs
@@ -214,11 +226,12 @@ import nmt {
     ./modules/services/lieer
     ./modules/services/mopidy
     ./modules/services/mpd
-    ./modules/services/mpdris2
     ./modules/services/mpd-mpris
+    ./modules/services/mpdris2
     ./modules/services/pantalaimon
     ./modules/services/parcellite
     ./modules/services/pass-secret-service
+    ./modules/services/pasystray
     ./modules/services/pbgopy
     ./modules/services/picom
     ./modules/services/playerctld

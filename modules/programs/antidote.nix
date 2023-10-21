@@ -4,10 +4,6 @@ with lib;
 let
   cfg = config.programs.zsh.antidote;
 
-  relToDotDir = file:
-    (optionalString (config.programs.zsh.dotDir != null)
-      (config.programs.zsh.dotDir + "/")) + file;
-
   zPluginStr = (pluginNames:
     optionalString (pluginNames != [ ]) "${concatStrings (map (name: ''
       ${name}

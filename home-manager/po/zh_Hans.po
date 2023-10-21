@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-07-30 09:08+0200\n"
+"POT-Creation-Date: 2023-09-13 23:46+0200\n"
 "PO-Revision-Date: 2023-07-31 21:25+0000\n"
 "Last-Translator: Vollow <muffinslog@proton.me>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -19,14 +19,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.0-dev\n"
 
-#: home-manager/home-manager:71
+#: home-manager/home-manager:81
 msgid "No configuration file found at %s"
 msgstr "未在 %s 找到配置文件"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
-#: home-manager/home-manager:88 home-manager/home-manager:92
-#: home-manager/home-manager:182
+#: home-manager/home-manager:98 home-manager/home-manager:102
+#: home-manager/home-manager:192
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
@@ -34,25 +34,25 @@ msgstr ""
 "需要确保 Home Manager 在 %s 中，%s 已废弃。\n"
 "请手动移动到 %s"
 
-#: home-manager/home-manager:99
+#: home-manager/home-manager:109
 msgid "No configuration file found. Please create one at %s"
 msgstr "未找到配置文件。请在 %s 处创建一份"
 
-#: home-manager/home-manager:114
+#: home-manager/home-manager:124
 msgid "Home Manager not found at %s."
 msgstr "未在 %s 找到 Home Manager。"
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-#: home-manager/home-manager:122
+#: home-manager/home-manager:132
 msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr "后备 Home Manager 路径 %s 已被弃用，但在这里找到了一个文件或文件夹。"
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-#: home-manager/home-manager:125
+#: home-manager/home-manager:135
 msgid ""
-"To remove this warning, do one of the fallowing.\n"
+"To remove this warning, do one of the following.\n"
 "\n"
 "1. Explicitly tell Home Manager to use the path, for example by adding\n"
 "\n"
@@ -87,38 +87,38 @@ msgstr ""
 "\n"
 "    $ rm -r \"%s\""
 
-#: home-manager/home-manager:164
+#: home-manager/home-manager:174
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "在 %s 以及 %s 中未能找到合适的档案目录"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:219
+#: home-manager/home-manager:229
 msgid "Can't inspect options of a flake configuration"
 msgstr "无法检查 flake 配置中的选项"
 
-#: home-manager/home-manager:281 home-manager/home-manager:304
-#: home-manager/home-manager:1023
+#: home-manager/home-manager:291 home-manager/home-manager:314
+#: home-manager/home-manager:1034
 msgid "%s: unknown option '%s'"
 msgstr "%s：未知选项 ‘%s’"
 
-#: home-manager/home-manager:286 home-manager/home-manager:1024
+#: home-manager/home-manager:296 home-manager/home-manager:1035
 msgid "Run '%s --help' for usage help"
 msgstr "运行 ‘%s --help’ 获取用法帮助"
 
-#: home-manager/home-manager:312 home-manager/home-manager:411
+#: home-manager/home-manager:322 home-manager/home-manager:421
 msgid "The file %s already exists, leaving it unchanged..."
 msgstr "文件 %s 已存在，未对其更改 ..."
 
-#: home-manager/home-manager:314 home-manager/home-manager:413
+#: home-manager/home-manager:324 home-manager/home-manager:423
 msgid "Creating %s..."
 msgstr "正在创建 %s ..."
 
-#: home-manager/home-manager:455
+#: home-manager/home-manager:465
 msgid "Creating initial Home Manager generation..."
 msgstr "正在创建 Home Manager 初始化配置生成 ..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
-#: home-manager/home-manager:460
+#: home-manager/home-manager:470
 msgid ""
 "All done! The home-manager tool should now be installed and you can edit\n"
 "\n"
@@ -135,7 +135,7 @@ msgstr ""
 "来查看所有可用选项。"
 
 #. translators: The "%s" specifier will be replaced by a URL.
-#: home-manager/home-manager:465
+#: home-manager/home-manager:475
 msgid ""
 "Uh oh, the installation failed! Please create an issue at\n"
 "\n"
@@ -150,11 +150,11 @@ msgstr ""
 "处创建 Issue 告知我们。"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:476
+#: home-manager/home-manager:486
 msgid "Can't instantiate a flake configuration"
 msgstr "无法创建 flake 配置实例"
 
-#: home-manager/home-manager:552
+#: home-manager/home-manager:562
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -165,72 +165,72 @@ msgstr[0] ""
 "有 %d 条未读的相关新闻或消息。\n"
 "可运行 “%s news” 命令进行阅读。"
 
-#: home-manager/home-manager:566
+#: home-manager/home-manager:576
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "未知的 “news.display” 设置项 “%s”。"
 
-#: home-manager/home-manager:573
+#: home-manager/home-manager:583
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
 msgstr "请设定 $EDITOR 环境变量"
 
-#: home-manager/home-manager:588
+#: home-manager/home-manager:598
 msgid "Cannot run build in read-only directory"
 msgstr "无法在只读目录中运行构建"
 
-#: home-manager/home-manager:666
+#: home-manager/home-manager:676
 msgid "No generation with ID %s"
 msgstr "没有 ID 为 %s 的生成结果"
 
-#: home-manager/home-manager:668
+#: home-manager/home-manager:678
 msgid "Cannot remove the current generation %s"
 msgstr "无法移除当前生成结果 %s"
 
-#: home-manager/home-manager:670
+#: home-manager/home-manager:680
 msgid "Removing generation %s"
 msgstr "正在移除生成结果 %s"
 
-#: home-manager/home-manager:689
+#: home-manager/home-manager:699
 msgid "No generations to expire"
 msgstr "没有即将过期的生成结果"
 
-#: home-manager/home-manager:700
+#: home-manager/home-manager:710
 msgid "No home-manager packages seem to be installed."
 msgstr "似乎没有安装 home-manager 软件包。"
 
-#: home-manager/home-manager:781
+#: home-manager/home-manager:792
 msgid "Unknown argument %s"
 msgstr "未知参数 %s"
 
-#: home-manager/home-manager:805
+#: home-manager/home-manager:816
 msgid "This will remove Home Manager from your system."
 msgstr "这将会从系统中移除 Home Manager。"
 
-#: home-manager/home-manager:808
+#: home-manager/home-manager:819
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "这是试运行结果，没有实际卸载任何软件包。"
 
-#: home-manager/home-manager:812
+#: home-manager/home-manager:823
 msgid "Really uninstall Home Manager?"
 msgstr "确定要卸载 Home Manager 吗？"
 
-#: home-manager/home-manager:818
+#: home-manager/home-manager:829
 msgid "Switching to empty Home Manager configuration..."
 msgstr "正在切换至空的 Home Manager 配置 ..."
 
-#: home-manager/home-manager:846
+#: home-manager/home-manager:857
 msgid "Yay!"
 msgstr "好耶！"
 
-#: home-manager/home-manager:851
+#: home-manager/home-manager:862
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager 已卸载，但未改动您的 home.nix 配置文件。"
 
-#: home-manager/home-manager:1063
+#: home-manager/home-manager:1074
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations 须要一个参数，但获取到了 %d 个。"
 
-#: home-manager/home-manager:1085
+#: home-manager/home-manager:1096
 msgid "Unknown command: %s"
 msgstr "未知命令：%s"
 

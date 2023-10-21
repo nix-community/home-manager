@@ -107,8 +107,7 @@ in {
         mkIf (cfg.windowmenu != "") { text = cfg.windowmenu; };
     };
 
-    xsession.windowManager.command = concatStringsSep " "
-      ([ "${cfg.package}/bin/fluxbox" ]
-        ++ escapeShellArgs (remove "" cfg.extraCommandLineArgs));
+    xsession.windowManager.command = escapeShellArgs
+      ([ "${cfg.package}/bin/fluxbox" ] ++ remove "" cfg.extraCommandLineArgs);
   };
 }

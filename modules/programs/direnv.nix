@@ -24,6 +24,8 @@ in {
   options.programs.direnv = {
     enable = mkEnableOption "direnv, the environment switcher";
 
+    package = mkPackageOption pkgs "direnv" { };
+
     config = mkOption {
       type = tomlFormat.type;
       default = { };
@@ -89,12 +91,14 @@ in {
       enable = mkEnableOption ''
         [nix-direnv](https://github.com/nix-community/nix-direnv),
         a fast, persistent use_nix implementation for direnv'';
+
+      package = mkPackageOption pkgs "nix-direnv" { };
     };
 
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.direnv ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."direnv/direnv.toml" = mkIf (cfg.config != { }) {
       source = tomlFormat.generate "direnv-config" cfg.config;
@@ -103,25 +107,25 @@ in {
     xdg.configFile."direnv/direnvrc" = let
       text = concatStringsSep "\n" (optional (cfg.stdlib != "") cfg.stdlib
         ++ optional cfg.nix-direnv.enable
-        "source ${pkgs.nix-direnv}/share/nix-direnv/direnvrc");
+        "source ${cfg.nix-direnv.package}/share/nix-direnv/direnvrc");
     in mkIf (text != "") { inherit text; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
       # Using mkAfter to make it more likely to appear after other
       # manipulations of the prompt.
       mkAfter ''
-        eval "$(${pkgs.direnv}/bin/direnv hook bash)"
+        eval "$(${cfg.package}/bin/direnv hook bash)"
       '');
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
+      eval "$(${cfg.package}/bin/direnv hook zsh)"
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (
       # Using mkAfter to make it more likely to appear after other
       # manipulations of the prompt.
       mkAfter ''
-        ${pkgs.direnv}/bin/direnv hook fish | source
+        ${cfg.package}/bin/direnv hook fish | source
       '');
 
     programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration (
@@ -133,8 +137,8 @@ in {
         $env.config = ($env.config | update hooks ($env.config.hooks | default [] pre_prompt))
         $env.config = ($env.config | update hooks.pre_prompt ($env.config.hooks.pre_prompt | append {
           code: "
-            let direnv = (${pkgs.direnv}/bin/direnv export json | from json)
-            let direnv = if ($direnv | length) == 1 { $direnv } else { {} }
+            let direnv = (${cfg.package}/bin/direnv export json | from json)
+            let direnv = if not ($direnv | is-empty) { $direnv } else { {} }
             $direnv | load-env
             "
         }))
