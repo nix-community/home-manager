@@ -3,7 +3,7 @@ Home Manager using Nix
 
 This project provides a basic system for managing a user environment
 using the [Nix][] package manager together with the Nix libraries
-found in [Nixpkgs][]. It allows declarative configuration of user
+found in [Nixpkgs][]. It allows declarative configuration of user-
 specific (non global) packages and dotfiles.
 
 Usage
@@ -24,7 +24,7 @@ then please have a look at the [contributing][] chapter of the manual.
 Releases
 --------
 
-Home Manager is developed against `nixpkgs-unstable` branch, which
+Home Manager is developed against a `nixpkgs-unstable` branch, which
 often causes it to contain tweaks for changes/packages not yet
 released in stable NixOS. To avoid breaking users' configurations,
 Home Manager is released in branches corresponding to NixOS releases
@@ -36,7 +36,7 @@ Words of warning
 ----------------
 
 Unfortunately, it is quite possible to get difficult to understand
-errors when working with Home Manager. You should therefore be
+errors when working with a Home Manager. You should therefore be
 comfortable using the Nix language and the various tools in the Nix
 ecosystem.
 
@@ -45,7 +45,7 @@ Manager then you are strongly encouraged to start with a small and
 very simple configuration and gradually make it more elaborate as you
 learn.
 
-In some cases Home Manager cannot detect whether it will overwrite a
+In some cases, Home Manager cannot detect whether it will overwrite a
 previous manual configuration. For example, the Gnome Terminal module
 will write to your dconf store and cannot tell whether a configuration
 that it is about to be overwritten was from a previous Home Manager
@@ -77,7 +77,7 @@ Home Manager can be used in three primary ways:
 
 1. Using the standalone `home-manager` tool. For platforms other than
    NixOS and Darwin, this is the only available choice. It is also
-   recommended for people on NixOS or Darwin that want to manage their
+   recommended for people on NixOS or Darwin who want to manage their
    home directory independently of the system as a whole. See
    [Standalone installation][manual standalone install] in the manual
    for instructions on how to perform this installation.
@@ -89,7 +89,7 @@ Home Manager can be used in three primary ways:
 
 3. As a module within a [nix-darwin][] system configuration. This
    allows the user profiles to be built together with the system when
-   running `darwin-rebuild`. See [nix-darwin module
+   running `darwin-rebuild`. See the [nix-darwin module
    installation][manual nix-darwin install] in the manual for a
    description of this setup.
 
