@@ -76,6 +76,10 @@ in {
   options.services.unison = {
     enable = mkEnableOption "Unison synchronisation";
 
+    package = mkPackageOption pkgs "unison" {
+      example = "pkgs.unison.override { enableX11 = false; }";
+    };
+
     pairs = mkOption {
       type = with types; attrsOf (submodule pairOptions);
       default = { };
@@ -117,7 +121,7 @@ in {
 
         Environment = [ "UNISON='${toString pairCfg.stateDirectory}'" ];
         ExecStart = ''
-          ${pkgs.unison}/bin/unison \
+          ${cfg.package}/bin/unison \
             ${serialiseArgs pairCfg.commandOptions} \
             ${strings.concatMapStringsSep " " escapeShellArg pairCfg.roots}
         '';

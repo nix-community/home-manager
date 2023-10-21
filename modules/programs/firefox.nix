@@ -68,7 +68,7 @@ let
         ''
           ${indent indentLevel}<DT><A HREF="${
             escapeXML bookmark.url
-          }" ADD_DATE="0" LAST_MODIFIED="0"${
+          }" ADD_DATE="1" LAST_MODIFIED="1"${
             lib.optionalString (bookmark.keyword != null)
             " SHORTCUTURL=\"${escapeXML bookmark.keyword}\""
           }${

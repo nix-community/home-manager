@@ -249,10 +249,12 @@ let
     ./services/cachix-agent.nix
     ./services/caffeine.nix
     ./services/cbatticon.nix
+    ./services/cliphist.nix
     ./services/clipman.nix
     ./services/clipmenu.nix
     ./services/comodoro.nix
     ./services/copyq.nix
+    ./services/darkman.nix
     ./services/devilspie2.nix
     ./services/dropbox.nix
     ./services/dunst.nix
@@ -301,7 +303,6 @@ let
     ./services/pantalaimon.nix
     ./services/parcellite.nix
     ./services/pass-secret-service.nix
-    ./services/password-store-sync.nix
     ./services/pasystray.nix
     ./services/pbgopy.nix
     ./services/picom.nix
@@ -364,6 +365,10 @@ let
     ./misc/nix.nix
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
+
+    (mkRemovedOptionModule [ "services" "password-store-sync" ] ''
+      Use services.git-sync instead.
+    '')
   ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
     ++ optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
 

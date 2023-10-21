@@ -13,16 +13,30 @@ with lib;
         map-syntax = [ "*.jenkinsfile:Groovy" "*.props:Java Properties" ];
       };
 
-      themes.testtheme.src = pkgs.writeText "testtheme.tmTheme" ''
+      themes.testtheme = ''
         This is a test theme.
       '';
 
-      syntaxes.testsyntax.src = pkgs.writeText "testsyntax.sublime-syntax" ''
+      syntaxes.testsyntax = ''
         This is a test syntax.
       '';
     };
 
     test.stubs.bat = { };
+
+    test.asserts.warnings.enable = true;
+    test.asserts.warnings.expected = [
+      ''
+        Using programs.bat.themes as a string option is deprecated and will be
+        removed in the future. Please change to using it as an attribute set
+        instead.
+      ''
+      ''
+        Using programs.bat.syntaxes as a string option is deprecated and will be
+        removed in the future. Please change to using it as an attribute set
+        instead.
+      ''
+    ];
 
     nmt.script = ''
       assertFileExists home-files/.config/bat/config
