@@ -173,7 +173,7 @@ in {
         + (makeQtPath "qtQmlPrefix");
     };
 
-  in lib.mkIf (cfg.enable && cfg.platformTheme != null) {
+  in lib.mkIf cfg.enable {
     assertions = [{
       assertion = cfg.platformTheme == "gnome" -> cfg.style.name != null
         && cfg.style.package != null;
@@ -206,8 +206,8 @@ in {
       ++ lib.optionals (cfg.style.package != null)
       (lib.toList cfg.style.package);
 
-    xsession.importedVariables =
-      [ "QT_QPA_PLATFORMTHEME" "QT_PLUGIN_PATH" "QML2_IMPORT_PATH" ]
+    xsession.importedVariables = [ "QT_PLUGIN_PATH" "QML2_IMPORT_PATH" ]
+      ++ lib.optionals (cfg.platformTheme != null) [ "QT_QPA_PLATFORMTHEME" ]
       ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
   };
 }
