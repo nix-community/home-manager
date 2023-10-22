@@ -586,7 +586,7 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-          if [[ -e $HOME/.nix-profile/manifest.json ]] || [[ -e $HOME/.local/state/nix/profile/manifest.json ]] ; then
+          if [[ -e $HOME/.nix-profile/manifest.json || -e "${config.xdg.stateHome}/nix/profile/manifest.json" ]] ; then
             nix profile list \
               | { grep 'home-manager-path$' || test $? = 1; } \
               | cut -d ' ' -f 4 \
