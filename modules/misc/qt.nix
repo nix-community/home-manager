@@ -57,7 +57,7 @@ in {
 
       platformTheme = lib.mkOption {
         type = with lib.types;
-          nullOr (enum [ "gtk" "gnome" "lxqt" "qtct" "kde" ]);
+          nullOr (enum [ "gtk" "gtk3" "gnome" "lxqt" "qtct" "kde" ]);
         default = null;
         example = "gnome";
         relatedPackages = [
@@ -80,6 +80,10 @@ in {
           `gtk`
           : Use GTK theme with
             [`qtstyleplugins`](https://github.com/qt/qtstyleplugins)
+
+          `gtk3`
+          : Use [GTK3 integration](https://github.com/qt/qtbase/tree/dev/src/plugins/platformthemes/gtk3)
+            for file picker dialogs, font and theme configuration
 
           `gnome`
           : Use GNOME theme with
