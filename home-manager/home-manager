@@ -29,7 +29,7 @@ function removeByName() {
 }
 
 function setNixProfileCommands() {
-    if [[ -e $HOME/.nix-profile/manifest.json ]] || [[ -e $HOME/.local/state/nix/profile/manifest.json ]] ; then
+    if [[ -e $HOME/.nix-profile/manifest.json || -e "${XDG_STATE_HOME:-$HOME/.local/state}/nix/profile/manifest.json" ]] ; then
         LIST_OUTPATH_CMD="nix profile list"
         REMOVE_CMD="removeByName"
     else

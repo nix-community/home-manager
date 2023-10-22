@@ -207,7 +207,7 @@ in
       type = types.path;
       defaultText = literalExpression ''
         "''${home.homeDirectory}/.nix-profile"  or
-        "''${home.homeDirectory}/.local/state/nix/profile"  or
+        "''${config.xdg.stateHome}/nix/profile"  or
         "/etc/profiles/per-user/''${home.username}"
       '';
       readOnly = true;
@@ -624,7 +624,7 @@ in
             $DRY_RUN_CMD $oldNix profile install $1
           }
 
-          if [[ -e $HOME/.nix-profile/manifest.json ]] || [[ -e $HOME/.local/state/nix/profile/manifest.json ]] ; then
+          if [[ -e $HOME/.nix-profile/manifest.json || -e "${config.xdg.stateHome}/nix/profile/manifest.json" ]] ; then
             INSTALL_CMD="nix profile install"
             INSTALL_CMD_ACTUAL="nixReplaceProfile"
             LIST_CMD="nix profile list"
