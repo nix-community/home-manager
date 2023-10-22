@@ -213,6 +213,9 @@ let
   aliasesStr = concatStringsSep "\n"
     (mapAttrsToList (k: v: "alias ${k} ${escapeShellArg v}") cfg.shellAliases);
 
+  bindsStr = concatStringsSep "\n"
+    (mapAttrsToList (k: v: "bind ${k} ${escapeShellArg v}") cfg.shellBinds);
+
   fishIndent = name: text:
     pkgs.runCommand name {
       nativeBuildInputs = [ cfg.package ];
@@ -285,6 +288,20 @@ in {
           An attribute set that maps aliases (the top level attribute names
           in this option) to abbreviations. Abbreviations are expanded with
           the longer phrase after they are entered.
+        '';
+      };
+
+      shellBinds = mkOption {
+        type = with types; attrsOf str;
+        default = { };
+        example = literalExpression ''
+          {
+            "\cg" = "git diff; commandline -f repaint";
+          }
+        '';
+        description = ''
+          An attribute set that maps a key bindings (the top level attribute names
+          in this option) to command strings or directly to build outputs.
         '';
       };
 
@@ -473,6 +490,9 @@ in {
 
           # Aliases
           ${aliasesStr}
+
+          # Binds
+          ${bindsStr}
 
           # Interactive shell initialisation
           ${cfg.interactiveShellInit}
