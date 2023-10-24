@@ -1288,6 +1288,13 @@ in
           A new module is available: 'programs.cava'.
         '';
       }
+
+      {
+        time = "2023-11-01T21:18:20+00:00";
+        message = ''
+          A new module is available: 'programs.granted'.
+        '';
+      }
     ];
   };
 }
