@@ -44,7 +44,6 @@ in {
 
     finalPackage = lib.mkOption {
       type = lib.types.package;
-      readOnly = true;
       default = cfg.package.override {
         enableXWayland = cfg.xwayland.enable;
         enableNvidiaPatches = cfg.enableNvidiaPatches;
