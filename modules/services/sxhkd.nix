@@ -75,7 +75,7 @@ in {
       sxhkdCommand = "${cfg.package}/bin/sxhkd ${toString cfg.extraOptions}";
     in ''
       systemctl --user stop sxhkd.scope 2> /dev/null || true
-      systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd ${sxhkdCommand} &
+      systemd-cat -t sxhkd systemd-run --user --scope --property=OOMPolicy=continue -u sxhkd ${sxhkdCommand} &
     '';
   };
 }
