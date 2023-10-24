@@ -3697,6 +3697,31 @@ boolean</p><p><span class="emphasis"><em>Default:</em></span>
 package</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.carapace</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/carapace.nix" target="_top">
 &lt;home-manager/modules/programs/carapace.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.cava.enable"></a><a class="term" href="options.html#opt-programs.cava.enable"><code class="option">programs.cava.enable</code></a></span></dt><dd><p>Whether to enable Cava audio visualizer.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cava.nix" target="_top">
+&lt;home-manager/modules/programs/cava.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.cava.package"></a><a class="term" href="options.html#opt-programs.cava.package"><code class="option">programs.cava.package</code></a></span></dt><dd><p>The cava package to use.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.cava</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cava.nix" target="_top">
+&lt;home-manager/modules/programs/cava.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.cava.settings"></a><a class="term" href="options.html#opt-programs.cava.settings"><code class="option">programs.cava.settings</code></a></span></dt><dd><p>Settings to be written to the Cava configuration file. See
+<a class="link" href="https://github.com/karlstav/cava/blob/master/example_files/config" target="_top">https://github.com/karlstav/cava/blob/master/example_files/config</a> for
+all available options.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (INI atom (null, bool, int, float or string))</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  general.framerate = 60;
+  input.method = "alsa";
+  smoothing.noise_reduction = 88;
+  color = {
+    background = "'#000000'";
+    foreground = "'#FFFFFF'";
+  };
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cava.nix" target="_top">
+&lt;home-manager/modules/programs/cava.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.chromium.enable"></a><a class="term" href="options.html#opt-programs.chromium.enable"><code class="option">programs.chromium.enable</code></a></span></dt><dd><p>Whether to enable Chromium.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
