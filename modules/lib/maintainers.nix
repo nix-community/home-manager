@@ -448,4 +448,10 @@
     github = "liyangau";
     githubId = 71299093;
   };
+  wcarlsen = {
+    name = "Willi Carlsen";
+    email = "carlsenwilli+nix@gmail.com";
+    github = "wcarlsen";
+    githubId = 17003032;
+  };
 }
