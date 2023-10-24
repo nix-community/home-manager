@@ -21,10 +21,6 @@ in {
       "Autoreloading now always happens")
 
     (lib.mkRemovedOptionModule # \
-      [ "wayland" "windowManager" "hyprland" "recommendedEnvironment" ]
-      "Recommended environment variables are now always set")
-
-    (lib.mkRemovedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "xwayland" "hidpi" ]
       "HiDPI patches are deprecated. Refer to https://wiki.hyprland.org/Configuring/XWayland")
 
@@ -110,6 +106,12 @@ in {
     enableNvidiaPatches =
       lib.mkEnableOption "patching wlroots for better Nvidia support";
 
+    recommendedEnvironment = lib.mkEnableOption null // {
+      description = lib.mdDoc ''
+        Whether to set the recommended environment variables, namely `NIXOS_OZONE_WL`.
+      '';
+    };
+
     settings = lib.mkOption {
       type = with lib.types;
         let
@@ -191,6 +193,9 @@ in {
     in lib.optional inconsistent warning;
 
     home.packages = lib.optional (cfg.package != null) cfg.finalPackage;
+
+    home.sessionVariables =
+      lib.mkIf cfg.recommendedEnvironment { NIXOS_OZONE_WL = "1"; };
 
     xdg.configFile."hypr/hyprland.conf" = let
       combinedSettings = cfg.settings // {
