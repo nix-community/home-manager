@@ -18,6 +18,13 @@ in {
       description = "The package to use for helix.";
     };
 
+    extraPackages = mkOption {
+      type = with types; listOf package;
+      default = [ ];
+      example = literalExpression "[ pkgs.marksman ]";
+      description = "Extra packages available to hx.";
+    };
+
     defaultEditor = mkOption {
       type = types.bool;
       default = false;
@@ -161,7 +168,22 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = if cfg.extraPackages != [ ] then
+      [
+        (pkgs.symlinkJoin {
+          name =
+            "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+          paths = [ cfg.package ];
+          preferLocalBuild = true;
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/hx \
+              --prefix PATH : ${lib.makeBinPath cfg.extraPackages}
+          '';
+        })
+      ]
+    else
+      [ cfg.package ];
 
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "hx"; };
 
