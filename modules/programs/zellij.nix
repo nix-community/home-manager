@@ -7,7 +7,8 @@ let
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
 
-in {
+in
+{
   meta.maintainers = [ hm.maintainers.mainrs ];
 
   options.programs.zellij = {
@@ -58,15 +59,22 @@ in {
 
     # Zellij switched from yaml to KDL in version 0.32.0:
     # https://github.com/zellij-org/zellij/releases/tag/v0.32.0
-    xdg.configFile."zellij/config.yaml" = mkIf
-      (cfg.settings != { } && (versionOlder cfg.package.version "0.32.0")) {
-        source = yamlFormat.generate "zellij.yaml" cfg.settings;
-      };
-
-    xdg.configFile."zellij/config.kdl" = mkIf
-      (cfg.settings != { } && (versionAtLeast cfg.package.version "0.32.0")) {
-        text = lib.hm.generators.toKDL { } cfg.settings;
-      };
+    xdg.configFile =
+      let
+        config = {
+          "zellij/config.yaml" = mkIf
+            (cfg.settings != { } && (versionOlder cfg.package.version "0.32.0"))
+            {
+              source = yamlFormat.generate "zellij.yaml" cfg.settings;
+            };
+          "zellij/config.kdl" = mkIf
+            (cfg.settings != { } && (versionAtLeast cfg.package.version "0.32.0"))
+            {
+              text = lib.hm.generators.toKDL { } cfg.settings;
+            };
+        };
+      in
+      config;
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
       eval "$(zellij setup --generate-auto-start bash)"
