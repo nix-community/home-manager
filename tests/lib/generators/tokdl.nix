@@ -10,6 +10,8 @@
       \t \n \" "
     '';
     unsafeString = " \" \n 	 ";
+    "singleQuote 'test'" = true;
+    "singleQuote 'test' 2" = "don't change them here";
     flatItems = [ 1 2 "asdf" true null ];
     bigFlatItems = [
       23847590283751

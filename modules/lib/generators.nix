@@ -1,39 +1,42 @@
 { lib }:
 
 {
-  toKDL = { }:
+  toKDL = {}:
     let
       inherit (lib) concatStringsSep splitString mapAttrsToList any;
       inherit (builtins) typeOf replaceStrings elem;
 
       # ListOf String -> String
-      indentStrings = let
-        # Although the input of this function is a list of strings,
-        # the strings themselves *will* contain newlines, so you need
-        # to normalize the list by joining and resplitting them.
-        unlines = lib.splitString "\n";
-        lines = lib.concatStringsSep "\n";
-        indentAll = lines: concatStringsSep "\n" (map (x: "	" + x) lines);
-      in stringsWithNewlines: indentAll (unlines (lines stringsWithNewlines));
+      indentStrings =
+        let
+          # Although the input of this function is a list of strings,
+          # the strings themselves *will* contain newlines, so you need
+          # to normalize the list by joining and resplitting them.
+          unlines = lib.splitString "\n";
+          lines = lib.concatStringsSep "\n";
+          indentAll = lines: concatStringsSep "\n" (map (x: "	" + x) lines);
+        in
+        stringsWithNewlines: indentAll (unlines (lines stringsWithNewlines));
 
       # String -> String
       sanitizeString = replaceStrings [ "\n" ''"'' ] [ "\\n" ''\"'' ];
+      replaceSingleQuotes = replaceStrings [ "'" ] [ ''"'' ];
 
       # OneOf [Int Float String Bool Null] -> String
       literalValueToString = element:
         lib.throwIfNot
-        (elem (typeOf element) [ "int" "float" "string" "bool" "null" ])
-        "Cannot convert value of type ${typeOf element} to KDL literal."
-        (if typeOf element == "null" then
-          "null"
-        else if element == false then
-          "false"
-        else if element == true then
-          "true"
-        else if typeOf element == "string" then
-          ''"${sanitizeString element}"''
-        else
-          toString element);
+          (elem (typeOf element) [ "int" "float" "string" "bool" "null" ])
+          "Cannot convert value of type ${typeOf element} to KDL literal."
+          (if typeOf element == "null" then
+            "null"
+          else if element == false then
+            "false"
+          else if element == true then
+            "true"
+          else if typeOf element == "string" then
+            ''"${sanitizeString element}"''
+          else
+            toString element);
 
       # Attrset Conversion
       # String -> AttrsOf Anything -> String
@@ -56,7 +59,8 @@
 
           children =
             lib.filterAttrs (name: _: !(elem name [ "_args" "_props" ])) attrs;
-        in ''
+        in
+        ''
           ${name} ${optArgsString}${optPropsString}{
           ${indentStrings (mapAttrsToList convertAttributeToKDL children)}
           }'';
@@ -84,19 +88,23 @@
       # Combined Conversion
       # String -> Anything  -> String
       convertAttributeToKDL = name: value:
-        let vType = typeOf value;
-        in if elem vType [ "int" "float" "bool" "null" "string" ] then
-          "${name} ${literalValueToString value}"
+        let
+          vType = typeOf value;
+          normName = replaceSingleQuotes name;
+        in
+        if elem vType [ "int" "float" "bool" "null" "string" ] then
+          "${normName} ${literalValueToString value}"
         else if vType == "set" then
-          convertAttrsToKDL name value
+          convertAttrsToKDL normName value
         else if vType == "list" then
-          convertListToKDL name value
+          convertListToKDL normName value
         else
           throw ''
             Cannot convert type `(${typeOf value})` to KDL:
               ${name} = ${toString value}
           '';
-    in attrs: ''
+    in
+    attrs: ''
       ${concatStringsSep "\n" (mapAttrsToList convertAttributeToKDL attrs)}
     '';
 }
