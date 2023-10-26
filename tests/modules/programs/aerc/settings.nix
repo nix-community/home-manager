@@ -5,7 +5,7 @@ with lib;
 {
   config = {
     nmt.script = let
-      dir = if pkgs.stdenv.isDarwin then
+      dir = if (pkgs.stdenv.isDarwin && !config.xdg.enable) then
         "home-files/Library/Preferences/aerc"
       else
         "home-files/.config/aerc";
