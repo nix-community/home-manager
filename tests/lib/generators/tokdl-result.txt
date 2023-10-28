@@ -38,6 +38,4 @@ nested {
 	- 
 	- null
 }
-singleQuote "test" true
-singleQuote "test" 2 "don't change them here"
 unsafeString " \" \n 	 "
