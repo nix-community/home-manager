@@ -33,9 +33,9 @@ listInAttrsInList {
 	}
 }
 nested {
-	- 1 2
-	- true false
-	- 
-	- null
+	1 2
+	true false
+	
+	null
 }
 unsafeString " \" \n 	 "

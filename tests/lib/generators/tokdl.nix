@@ -38,11 +38,15 @@
         { b = true; }
         {
           c = null;
-          d = [{ e = "asdfadfasdfasdf"; }];
+          d = [{ e = ''"asdfadfasdfasdf"''; }];
         }
       ];
       list2 = [{ a = 8; }];
     };
+    layout = [
+      "unbind \"a\""
+      "unbind \"b\""
+    ];
   };
 
   nmt.script = ''
