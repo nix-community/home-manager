@@ -98,7 +98,7 @@ in {
 
       extension =
         if (versionOlder cfg.package.version "0.32.0") then "yaml" else "kdl";
-      layouts = builtins.trace cfg lib.mapAttrs' (name: layout: {
+      layouts = lib.mapAttrs' (name: layout: {
         name = "zellij/layouts/${name}.${extension}";
         value = {
           source = pkgs.writeText "zellij-layout-${name}.${extension}" layout;
