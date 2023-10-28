@@ -6,7 +6,6 @@ let
 
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
-
 in
 {
   meta.maintainers = [ hm.maintainers.mainrs ];
@@ -38,6 +37,30 @@ in
 
         See <https://zellij.dev/documentation> for the full
         list of options.
+      '';
+    };
+
+    layouts = mkOption {
+      type = types.attrsOf types.lines;
+      default = { };
+      example = literalExpression ''
+        default = \'\'
+          layout {
+            pane size=1 borderless=true {
+              plugin location="zellij:tab-bar"
+            }
+            pane
+            pane size=2 borderless=true {
+              plugin location="zellij:status-bar"
+            }
+          }
+        \'\'
+      '';
+      description = ''
+        A set of zellij layouts written to {file}`$XDG_CONFIG_HOME/zellij/layouts/`.
+        Each key corresponds to one layout.
+
+        See <https://zellij.dev/documentation/layouts> for the full list of options.
       '';
     };
 
@@ -73,8 +96,18 @@ in
               text = lib.hm.generators.toKDL { } cfg.settings;
             };
         };
+
+        extension = if (versionOlder cfg.package.version "0.32.0") then "yaml" else "kdl";
+        layouts = builtins.trace cfg lib.mapAttrs'
+          (name: layout: {
+            name = "zellij/layouts/${name}.${extension}";
+            value = {
+              source = pkgs.writeText "zellij-layout-${name}.${extension}" layout;
+            };
+          })
+          cfg.layouts;
       in
-      config;
+      config // layouts;
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
       eval "$(zellij setup --generate-auto-start bash)"
