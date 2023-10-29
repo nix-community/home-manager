@@ -1,6 +1,20 @@
 default_mode "locked"
 keybinds {
 	locked {
+		bind "Alt j" {
+			MoveFocus "Down"
+		}
+		bind "Alt k" {
+			MoveFocus "Up"
+		}
+		bind "Alt h" {
+			MoveFocusOrTab "Left"
+		}
+		bind "Alt l" {
+			MoveFocusOrTab "Right"
+		}
+	}
+	normal {
 		bind "Alt h" {
 			MoveFocusOrTab "Left"
 		}
@@ -23,10 +37,10 @@ keybinds {
 }
 layouts {
 	pane size=1 borderless=true {
-		plugin location="zellij:tab-bar"
+		plugin "location=\"zellij:tab-bar\""
 	}
 	pane
 	pane size=2 borderless=true {
-		plugin location = "zellij:status-bar"
+		plugin location="zellij:status-bar"
 	}
 }

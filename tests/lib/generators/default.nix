@@ -1,4 +1,4 @@
 {
-  generators-tokdl-general = ./tokdl.nix;
-  generators-tokdl-zellij = ./tokdl_zellij.nix;
+  generators-tokdl-types = ./tokdl-types.nix;
+  generators-tokdl-zellij = ./tokdl-zellij.nix;
 }
