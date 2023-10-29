@@ -516,6 +516,7 @@ in
     programs.bash.shellAliases = cfg.shellAliases;
     programs.zsh.shellAliases = cfg.shellAliases;
     programs.fish.shellAliases = cfg.shellAliases;
+    programs.nushell.shellAliases = cfg.shellAliases;
 
     home.sessionVariables =
       let
