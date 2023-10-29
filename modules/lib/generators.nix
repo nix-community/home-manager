@@ -7,10 +7,10 @@
       inherit (builtins) typeOf replaceStrings elem;
       inherit (lib.lists) flatten;
 
-      indentListOfStrings = list: map (x: "	" + x) (flatten list);
+      indentListOfStrings = list: map (x: "	" + x) list;
 
       # String -> String
-      sanitizeName = replaceStrings [ "\n" ] [ "\\n" ];
+      sanitizeName = replaceStrings [ "'" ] [ ''"'' ];
       sanitizeValue = replaceStrings [ "\n" ''"'' ] [ "\\n" ''\"'' ];
 
       isLiteral = element:
@@ -20,27 +20,24 @@
       convertLiteralValueToString = isName: element:
         lib.throwIfNot (isLiteral element)
           "Cannot convert value of type ${typeOf element} to KDL literal."
-          (
-            if typeOf element == "null" then
-              "null"
-            else if element == false then
-              "false"
-            else if element == true then
-              "true"
-            else if typeOf element == "string" then
-              if isName then
-                sanitizeName element
-              else
-                ''"'' + sanitizeValue element + ''"''
+          (if typeOf element == "null" then
+            "null"
+          else if element == false then
+            "false"
+          else if element == true then
+            "true"
+          else if typeOf element == "string" then
+            if isName then
+              sanitizeName element
             else
-              toString element
-          );
+              ''"'' + sanitizeValue element + ''"''
+          else
+            toString element);
 
       convertListElement = elem:
         if builtins.isAttrs elem then
           convertSetToKDL elem
         else
-        # elem can only be a string, otherwise the configuration is not valid
           builtins.trace elem (convertLiteralValueToString true elem);
 
       # flatten list first since hierarchical lists are equivalent to flattened lists
@@ -48,21 +45,25 @@
       convertListToKDL = list: flatten (map convertListElement (flatten list));
 
       convertSetElement = name: value:
+        let
+          emptyRet = [ (sanitizeName name) ];
+          prefix = [ (sanitizeName name + " {") ];
+          suffix = [ "}" ];
+        in
         if builtins.isList value then
           if value == [ ] then
-            [ name ]
+            emptyRet
           else
-            [ (name + " {") ] ++ indentListOfStrings (convertListToKDL value) ++ [ "}" ]
+            prefix ++ indentListOfStrings (convertListToKDL value) ++ suffix
         else if builtins.isAttrs value then
           if value == { } then
-            [ name ]
+            emptyRet
           else
-            [ (name + " {") ] ++ indentListOfStrings (convertSetToKDL value) ++ [ "}" ]
+            prefix ++ indentListOfStrings (convertSetToKDL value) ++ suffix
         else
-          name + " " + (convertLiteralValueToString false value);
+          sanitizeName name + " " + (convertLiteralValueToString false value);
 
-      convertSetToKDL = set:
-        mapAttrsToList (name: value: convertSetElement name value) set;
+      convertSetToKDL = set: flatten (mapAttrsToList convertSetElement set);
     in
     attrs: lib.concatStringsSep "\n" (flatten (convertSetToKDL attrs));
 }
