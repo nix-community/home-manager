@@ -1,7 +1,7 @@
 { lib }:
 
 {
-  toKDL = {}:
+  toKDL = { }:
     let
       inherit (lib) mapAttrsToList;
       inherit (builtins) typeOf replaceStrings elem;
@@ -19,20 +19,20 @@
       # OneOf [Int Float String Bool Null] -> String
       convertLiteralValueToString = isName: element:
         lib.throwIfNot (isLiteral element)
-          "Cannot convert value of type ${typeOf element} to KDL literal."
-          (if typeOf element == "null" then
-            "null"
-          else if element == false then
-            "false"
-          else if element == true then
-            "true"
-          else if typeOf element == "string" then
-            if isName then
-              sanitizeName element
-            else
-              ''"'' + sanitizeValue element + ''"''
+        "Cannot convert value of type ${typeOf element} to KDL literal."
+        (if typeOf element == "null" then
+          "null"
+        else if element == false then
+          "false"
+        else if element == true then
+          "true"
+        else if typeOf element == "string" then
+          if isName then
+            sanitizeName element
           else
-            toString element);
+            ''"'' + sanitizeValue element + ''"''
+        else
+          toString element);
 
       convertListElement = elem:
         if builtins.isAttrs elem then
@@ -49,8 +49,7 @@
           emptyRet = [ (sanitizeName name) ];
           prefix = [ (sanitizeName name + " {") ];
           suffix = [ "}" ];
-        in
-        if builtins.isList value then
+        in if builtins.isList value then
           if value == [ ] then
             emptyRet
           else
@@ -64,6 +63,5 @@
           sanitizeName name + " " + (convertLiteralValueToString false value);
 
       convertSetToKDL = set: flatten (mapAttrsToList convertSetElement set);
-    in
-    attrs: lib.concatStringsSep "\n" (flatten (convertSetToKDL attrs));
+    in attrs: lib.concatStringsSep "\n" (flatten (convertSetToKDL attrs));
 }
