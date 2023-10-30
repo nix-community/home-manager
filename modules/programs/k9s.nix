@@ -8,7 +8,7 @@ let
   yamlFormat = pkgs.formats.yaml { };
 
 in {
-  meta.maintainers = [ hm.maintainers.katexochen ];
+  meta.maintainers = [ hm.maintainers.katexochen maintainers.liyangau ];
 
   options.programs.k9s = {
     enable =
@@ -49,6 +49,29 @@ in {
         };
       '';
     };
+
+    hotkey = mkOption {
+      type = yamlFormat.type;
+      default = { };
+      description = ''
+        hotkeys written to
+        {file}`$XDG_CONFIG_HOME/k9s/hotkey.yml`. See
+        <https://k9scli.io/topics/hotkeys/>
+        for supported values.
+      '';
+      example = literalExpression ''
+        hotkey = {
+          # Make sure this is camel case
+          hotKey = {
+            shift-0 = {
+              shortCut = "Shift-0";
+              description = "Viewing pods";
+              command = "pods";
+            };
+          };
+        };
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -60,6 +83,10 @@ in {
 
     xdg.configFile."k9s/skin.yml" = mkIf (cfg.skin != { }) {
       source = yamlFormat.generate "k9s-skin" cfg.skin;
+    };
+
+    xdg.configFile."k9s/hotkey.yml" = mkIf (cfg.hotkey != { }) {
+      source = yamlFormat.generate "k9s-hotkey" cfg.hotkey;
     };
   };
 }
