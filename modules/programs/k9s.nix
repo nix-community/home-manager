@@ -8,7 +8,7 @@ let
   yamlFormat = pkgs.formats.yaml { };
 
 in {
-  meta.maintainers = [ hm.maintainers.katexochen maintainers.liyangau ];
+  meta.maintainers = with maintainers;  [ katexochen liyangau ];
 
   options.programs.k9s = {
     enable =
