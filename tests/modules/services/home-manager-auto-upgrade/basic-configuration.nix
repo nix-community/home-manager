@@ -4,6 +4,7 @@
   config = {
     services.home-manager.autoUpgrade = {
       enable = true;
+      flake = "github:alice/dotfiles";
       frequency = "00:00";
     };
 
