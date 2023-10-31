@@ -492,7 +492,7 @@ in
 
     (mkIf (cfg.dotDir != null) {
       home.file."${relToDotDir ".zshenv"}".text = ''
-        ZDOTDIR=${zdotdir}
+        export ZDOTDIR=${zdotdir}
       '';
 
       # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
