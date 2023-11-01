@@ -152,6 +152,27 @@ let
       '' + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
     });
 
+  wrapPackage = package:
+    let
+      # The configuration expected by the Firefox wrapper.
+      fcfg = { enableGnomeExtensions = cfg.enableGnomeExtensions; };
+
+      # A bit of hackery to force a config into the wrapper.
+      browserName =
+        package.browserName or (builtins.parseDrvName package.name).name;
+
+      # The configuration expected by the Firefox wrapper builder.
+      bcfg = setAttrByPath [ browserName ] fcfg;
+
+    in if package == null then
+      null
+    else if isDarwin then
+      package
+    else if versionAtLeast config.home.stateVersion "19.09" then
+      package.override (old: { cfg = old.cfg or { } // fcfg; })
+    else
+      (pkgs.wrapFirefox.override { config = bcfg; }) package { };
+
 in {
   meta.maintainers = [ maintainers.rycee maintainers.kira-bruneau ];
 
@@ -201,6 +222,12 @@ in {
           versions it should be an unwrapped Firefox package.
           Set to <literal>null</literal> to disable installing Firefox.
         '';
+      };
+
+      finalPackage = mkOption {
+        type = with types; nullOr package;
+        readOnly = true;
+        description = "Resulting Firefox package.";
       };
 
       profiles = mkOption {
@@ -620,24 +647,9 @@ in {
       its example for how to do this.
     '';
 
-    home.packages = let
-      # The configuration expected by the Firefox wrapper.
-      fcfg = { enableGnomeExtensions = cfg.enableGnomeExtensions; };
+    programs.firefox.finalPackage = wrapPackage cfg.package;
 
-      # A bit of hackery to force a config into the wrapper.
-      browserName = cfg.package.browserName or (builtins.parseDrvName
-        cfg.package.name).name;
-
-      # The configuration expected by the Firefox wrapper builder.
-      bcfg = setAttrByPath [ browserName ] fcfg;
-
-      package = if isDarwin then
-        cfg.package
-      else if versionAtLeast config.home.stateVersion "19.09" then
-        cfg.package.override (old: { cfg = old.cfg or { } // fcfg; })
-      else
-        (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
-    in lib.optional (cfg.package != null) package;
+    home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
 
     home.file = mkMerge ([{
       "${firefoxConfigPath}/profiles.ini" =
