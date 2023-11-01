@@ -13,7 +13,15 @@
         headless = false;
       };
     };
-
+    hotkey = {
+      hotKey = {
+        shift-0 = {
+          shortCut = "Shift-0";
+          description = "Viewing pods";
+          command = "pods";
+        };
+      };
+    };
     skin = {
       k9s = {
         body = {
@@ -35,8 +43,12 @@
       home-files/.config/k9s/config.yml \
       ${./example-config-expected.yml}
     assertFileExists home-files/.config/k9s/skin.yml
+    assertFileExists home-files/.config/k9s/hotkey.yml
     assertFileContent \
       home-files/.config/k9s/skin.yml \
       ${./example-skin-expected.yml}
+    assertFileContent \
+      home-files/.config/k9s/hotkey.yml \
+      ${./example-hotkey-expected.yml}
   '';
 }
