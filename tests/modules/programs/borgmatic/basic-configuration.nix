@@ -12,7 +12,14 @@ in {
       main = {
         location = {
           sourceDirectories = [ "/my-stuff-to-backup" ];
-          repositories = [ "/mnt/disk1" "/mnt/disk2" ];
+          repositories = [
+            "/mnt/disk1"
+            { path = "/mnt/disk2"; }
+            {
+              path = "/mnt/disk3";
+              label = "disk3";
+            }
+          ];
           extraConfig = {
             one_file_system = true;
             exclude_patterns = [ "*.swp" ];
@@ -65,11 +72,17 @@ in {
     expectations[source_directories[0]]="${
       builtins.elemAt backups.main.location.sourceDirectories 0
     }"
-    expectations[repositories[0]]="${
-      builtins.elemAt backups.main.location.repositories 0
+    expectations[repositories[0].path]="${
+      (builtins.elemAt backups.main.location.repositories 0).path
     }"
-    expectations[repositories[1]]="${
-      builtins.elemAt backups.main.location.repositories 1
+    expectations[repositories[1].path]="${
+      (builtins.elemAt backups.main.location.repositories 1).path
+    }"
+    expectations[repositories[2].path]="${
+      (builtins.elemAt backups.main.location.repositories 2).path
+    }"
+    expectations[repositories[2].label]="${
+      (builtins.elemAt backups.main.location.repositories 2).label
     }"
     expectations[one_file_system]="${
       boolToString backups.main.location.extraConfig.one_file_system

@@ -13,6 +13,13 @@ let
       default = null;
     });
 
+  cleanRepositories = repos:
+    map (repo:
+      if builtins.isString repo then {
+        path = repo;
+      } else
+        removeNullValues repo) repos;
+
   mkRetentionOption = frequency:
     mkNullableOption {
       type = types.int;
@@ -25,6 +32,26 @@ let
     type = yamlFormat.type;
     default = { };
     description = "Extra settings.";
+  };
+
+  repositoryOption = types.submodule {
+    options = {
+      path = mkOption {
+        type = types.str;
+        example = "ssh://myuser@myrepo.myserver.com/./repo";
+        description = "Path of the repository.";
+      };
+
+      label = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "remote";
+        description = ''
+          Short text describing the repository. Can be used with the
+          `--repository` flag to select a repository.
+        '';
+      };
+    };
   };
 
   consistencyCheckModule = types.submodule {
@@ -56,10 +83,23 @@ let
         };
 
         repositories = mkOption {
-          type = types.listOf types.str;
-          description = "Paths to repositories.";
-          example =
-            literalExpression ''["ssh://myuser@myrepo.myserver.com/./repo"]'';
+          type = types.listOf (types.either types.str repositoryOption);
+          apply = cleanRepositories;
+          example = literalExpression ''
+            [
+              {
+                "path" = "ssh://myuser@myrepo.myserver.com/./repo";
+                "label" = "server";
+              }
+              {
+                "path" = "/var/lib/backups/local.borg";
+                "label" = "local";
+              }
+            ]
+          '';
+          description = ''
+            List of local or remote repositories with paths and optional labels.
+          '';
         };
 
         excludeHomeManagerSymlinks = mkOption {
