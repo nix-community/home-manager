@@ -169,7 +169,10 @@ let
     else if isDarwin then
       package
     else if versionAtLeast config.home.stateVersion "19.09" then
-      package.override (old: { cfg = old.cfg or { } // fcfg; })
+      package.override (old: {
+        cfg = old.cfg or { } // fcfg;
+        extraPolicies = cfg.policies;
+      })
     else
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
 
@@ -228,6 +231,17 @@ in {
         type = with types; nullOr package;
         readOnly = true;
         description = "Resulting Firefox package.";
+      };
+
+      policies = mkOption {
+        type = types.attrsOf jsonFormat.type;
+        default = { };
+        description =
+          "[See list of policies](https://mozilla.github.io/policy-templates/).";
+        example = {
+          DefaultDownloadDirectory = "\${home}/Downloads";
+          BlockAboutConfig = true;
+        };
       };
 
       profiles = mkOption {
