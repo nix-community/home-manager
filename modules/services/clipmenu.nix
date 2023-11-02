@@ -49,10 +49,12 @@ in {
 
       Service = {
         ExecStart = "${cfg.package}/bin/clipmenud";
-        Environment = "PATH=${
+        Environment = [
+          "PATH=${
             makeBinPath
             (with pkgs; [ coreutils findutils gnugrep gnused systemd ])
-          }";
+          }"
+        ];
       };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
