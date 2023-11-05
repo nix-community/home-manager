@@ -201,6 +201,7 @@ let
     ./programs/ssh.nix
     ./programs/starship.nix
     ./programs/swaylock.nix
+    ./programs/swayr.nix
     ./programs/taskwarrior.nix
     ./programs/tealdeer.nix
     ./programs/terminator.nix
