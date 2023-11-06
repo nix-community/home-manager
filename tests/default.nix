@@ -139,6 +139,7 @@ import nmt {
     ./modules/programs/sapling
     ./modules/programs/sbt
     ./modules/programs/scmpuff
+    ./modules/programs/sftpman
     ./modules/programs/sioyek
     ./modules/programs/sm64ex
     ./modules/programs/ssh
