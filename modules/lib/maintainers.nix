@@ -460,4 +460,10 @@
     github = "wcarlsen";
     githubId = 17003032;
   };
+  "9p4" = {
+    name = "9p4";
+    email = "vcs@ersei.net";
+    github = "9p4";
+    githubId = 17993169;
+  };
 }
