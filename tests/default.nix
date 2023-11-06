@@ -195,6 +195,7 @@ import nmt {
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
     ./modules/programs/swaylock
+    ./modules/programs/swayr
     ./modules/programs/terminator
     ./modules/programs/thunderbird
     ./modules/programs/waybar
