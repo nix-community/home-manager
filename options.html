@@ -9938,6 +9938,88 @@ attribute set of (boolean or floating point number or signed integer or string)<
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/swaylock.nix" target="_top">
 &lt;home-manager/modules/programs/swaylock.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.swayr.enable"></a><a class="term" href="options.html#opt-programs.swayr.enable"><code class="option">programs.swayr.enable</code></a></span></dt><dd><p>Whether to enable the swayr service.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/swayr.nix" target="_top">
+&lt;home-manager/modules/programs/swayr.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.swayr.package"></a><a class="term" href="options.html#opt-programs.swayr.package"><code class="option">programs.swayr.package</code></a></span></dt><dd><p>swayr package to use.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.swayr</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/swayr.nix" target="_top">
+&lt;home-manager/modules/programs/swayr.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.swayr.extraConfig"></a><a class="term" href="options.html#opt-programs.swayr.extraConfig"><code class="option">programs.swayr.extraConfig</code></a></span></dt><dd><p>Extra configuration lines to append to the swayr
+configuration file.</p><p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">""</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/swayr.nix" target="_top">
+&lt;home-manager/modules/programs/swayr.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.swayr.settings"></a><a class="term" href="options.html#opt-programs.swayr.settings"><code class="option">programs.swayr.settings</code></a></span></dt><dd><p>Configuration included in <code class="literal">config.toml</code>.
+For available options see <a class="link" href="https://git.sr.ht/~tsdh/swayr#swayr-configuration" target="_top">https://git.sr.ht/~tsdh/swayr#swayr-configuration</a></p><p><span class="emphasis"><em>Type:</em></span>
+null or TOML value</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">menu = {
+  executable = "${pkgs.wofi}/bin/wofi";
+  args = [
+    "--show=dmenu"
+    "--allow-markup"
+    "--allow-images"
+    "--insensitive"
+    "--cache-file=/dev/null"
+    "--parse-search"
+    "--height=40%"
+    "--prompt={prompt}"
+  ];
+};
+
+format = {
+  output_format = "{indent}&lt;b&gt;Output {name}&lt;/b&gt;    &lt;span alpha=\"20000\"&gt;({id})&lt;/span&gt;";
+  workspace_format = "{indent}&lt;b&gt;Workspace {name} [{layout}]&lt;/b&gt; on output {output_name}    &lt;span alpha=\"20000\"&gt;({id})&lt;/span&gt;";
+  container_format = "{indent}&lt;b&gt;Container [{layout}]&lt;/b&gt; &lt;i&gt;{marks}&lt;/i&gt; on workspace {workspace_name}    &lt;span alpha=\"20000\"&gt;({id})&lt;/span&gt;";
+  window_format = "img:{app_icon}:text:{indent}&lt;i&gt;{app_name}&lt;/i&gt; — {urgency_start}&lt;b&gt;“{title}”&lt;/b&gt;{urgency_end} &lt;i&gt;{marks}&lt;/i&gt; on workspace {workspace_name} / {output_name}    &lt;span alpha=\"20000\"&gt;({id})&lt;/span&gt;";
+  indent = "    ";
+  urgency_start = "&lt;span background=\"darkred\" foreground=\"yellow\"&gt;";
+  urgency_end = "&lt;/span&gt;";
+  html_escape = true;
+};
+
+layout = {
+  auto_tile = false;
+  auto_tile_min_window_width_per_output_width = [
+    [ 800 400 ]
+    [ 1024 500 ]
+    [ 1280 600 ]
+    [ 1400 680 ]
+    [ 1440 700 ]
+    [ 1600 780 ]
+    [ 1680 780 ]
+    [ 1920 920 ]
+    [ 2048 980 ]
+    [ 2560 1000 ]
+    [ 3440 1200 ]
+    [ 3840 1280 ]
+    [ 4096 1400 ]
+    [ 4480 1600 ]
+    [ 7680 2400 ]
+  ];
+};
+
+focus = {
+  lockin_delay = 750;
+};
+
+misc = {
+  seq_inhibit = false;
+};
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/swayr.nix" target="_top">
+&lt;home-manager/modules/programs/swayr.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.swayr.systemd.enable"></a><a class="term" href="options.html#opt-programs.swayr.systemd.enable"><code class="option">programs.swayr.systemd.enable</code></a></span></dt><dd><p>Whether to enable swayr systemd integration.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/swayr.nix" target="_top">
+&lt;home-manager/modules/programs/swayr.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.swayr.systemd.target"></a><a class="term" href="options.html#opt-programs.swayr.systemd.target"><code class="option">programs.swayr.systemd.target</code></a></span></dt><dd><p>Systemd target to bind to.</p><p><span class="emphasis"><em>Type:</em></span>
+string</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">"graphical-session.target"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/swayr.nix" target="_top">
+&lt;home-manager/modules/programs/swayr.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.taskwarrior.enable"></a><a class="term" href="options.html#opt-programs.taskwarrior.enable"><code class="option">programs.taskwarrior.enable</code></a></span></dt><dd><p>Whether to enable Task Warrior.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
