@@ -24,7 +24,7 @@ then please have a look at the [contributing][] chapter of the manual.
 Releases
 --------
 
-Home Manager is developed against a `nixpkgs-unstable` branch, which
+Home Manager is developed against the `nixpkgs-unstable` branch, which
 often causes it to contain tweaks for changes/packages not yet
 released in stable NixOS. To avoid breaking users' configurations,
 Home Manager is released in branches corresponding to NixOS releases
@@ -36,7 +36,7 @@ Words of warning
 ----------------
 
 Unfortunately, it is quite possible to get difficult to understand
-errors when working with a Home Manager. You should therefore be
+errors when working with Home Manager. You should therefore be
 comfortable using the Nix language and the various tools in the Nix
 ecosystem.
 
