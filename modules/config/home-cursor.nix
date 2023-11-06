@@ -155,10 +155,10 @@ in {
       home.file.".icons/${cfg.name}".source =
         "${cfg.package}/share/icons/${cfg.name}";
 
-      # Add cursor icon link to $XDG_DATA_HOME as well for redundancy.
-      xdg.dataFile.".icons/default/index.theme".source =
+      # Add cursor icon link to $XDG_DATA_HOME/icons as well for redundancy.
+      xdg.dataFile."icons/default/index.theme".source =
         "${defaultIndexThemePackage}/share/icons/default/index.theme";
-      xdg.dataFile.".icons/${cfg.name}".source =
+      xdg.dataFile."icons/${cfg.name}".source =
         "${cfg.package}/share/icons/${cfg.name}";
     }
 
