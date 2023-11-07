@@ -15849,6 +15849,31 @@ attribute set of (signed integer or string)</p><p><span class="emphasis"><em>Def
 }
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/systemd.nix" target="_top">
 &lt;home-manager/modules/systemd.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.settings"></a><a class="term" href="options.html#opt-systemd.user.settings"><code class="option">systemd.user.settings</code></a></span></dt><dd><p>Extra config options for user session service manager. See <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd-user.conf.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd-user.conf</span>(5)</span></a> for
+available options.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (INI atom (null, bool, int, float or string) or a list of them for duplicate keys)</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  Manager.DefaultCPUAccounting = true;
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/systemd.nix" target="_top">
+&lt;home-manager/modules/systemd.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.settings.Manager.DefaultEnvironment"></a><a class="term" href="options.html#opt-systemd.user.settings.Manager.DefaultEnvironment"><code class="option">systemd.user.settings.Manager.DefaultEnvironment</code></a></span></dt><dd><p>Configures environment variables passed to all executed processes.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of (null or string or path or package)</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  PATH = "%u/bin:%u/.cargo/bin";
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/systemd.nix" target="_top">
+&lt;home-manager/modules/systemd.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.settings.Manager.ManagerEnvironment"></a><a class="term" href="options.html#opt-systemd.user.settings.Manager.ManagerEnvironment"><code class="option">systemd.user.settings.Manager.ManagerEnvironment</code></a></span></dt><dd><p>Sets environment variables just for the manager process itself.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of (null or string or path or package)</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  PATH = "%u/bin:%u/.cargo/bin";
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/systemd.nix" target="_top">
+&lt;home-manager/modules/systemd.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-systemd.user.slices"></a><a class="term" href="options.html#opt-systemd.user.slices"><code class="option">systemd.user.slices</code></a></span></dt><dd><p>Definition of systemd per-user slice units. Attributes are
 merged recursively.</p><p>Note that the attributes follow the capitalization and naming used
 by systemd. More details can be found in
