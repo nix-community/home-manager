@@ -261,62 +261,66 @@ let
   systemdActivation = ''
     exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
 
-  configFile = pkgs.writeText "sway.conf" (concatStringsSep "\n"
-    ((optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
-      ++ (if cfg.config != null then
-        with cfg.config;
-        ([
-          (fontConfigStr fonts)
-          "floating_modifier ${floating.modifier}"
-          (windowBorderString window floating)
-          "hide_edge_borders ${window.hideEdgeBorders}"
-          "focus_wrapping ${focus.wrapping}"
-          "focus_follows_mouse ${focus.followMouse}"
-          "focus_on_window_activation ${focus.newWindow}"
-          "mouse_warping ${
-            if builtins.isString (focus.mouseWarping) then
-              focus.mouseWarping
-            else if focus.mouseWarping then
-              "output"
-            else
-              "none"
-          }"
-          "workspace_layout ${workspaceLayout}"
-          "workspace_auto_back_and_forth ${
-            lib.hm.booleans.yesNo workspaceAutoBackAndForth
-          }"
-          "client.focused ${colorSetStr colors.focused}"
-          "client.focused_inactive ${colorSetStr colors.focusedInactive}"
-          "client.unfocused ${colorSetStr colors.unfocused}"
-          "client.urgent ${colorSetStr colors.urgent}"
-          "client.placeholder ${colorSetStr colors.placeholder}"
-          "client.background ${colors.background}"
-          (keybindingsStr {
-            keybindings = keybindingDefaultWorkspace;
-            bindsymArgs =
-              lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-          })
-          (keybindingsStr {
-            keybindings = keybindingsRest;
-            bindsymArgs =
-              lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-          })
-          (keycodebindingsStr keycodebindings)
-        ] ++ mapAttrsToList inputStr input
-          ++ mapAttrsToList outputStr output # outputs
-          ++ mapAttrsToList seatStr seat # seats
-          ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
-          ++ mapAttrsToList assignStr assigns # assigns
-          ++ map barStr bars # bars
-          ++ optional (gaps != null) gapsStr # gaps
-          ++ map floatingCriteriaStr floating.criteria # floating
-          ++ map windowCommandsStr window.commands # window commands
-          ++ map startupEntryStr startup # startup
-          ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
-        )
-      else
-        [ ]) ++ (optional cfg.systemd.enable systemdActivation)
-      ++ (optional (!cfg.xwayland) "xwayland disable") ++ [ cfg.extraConfig ]));
+  configFile = pkgs.writeTextFile {
+    name = "sway.conf";
+    text = (concatStringsSep "\n"
+      ((optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
+        ++ (if cfg.config != null then
+          with cfg.config;
+          ([
+            (fontConfigStr fonts)
+            "floating_modifier ${floating.modifier}"
+            (windowBorderString window floating)
+            "hide_edge_borders ${window.hideEdgeBorders}"
+            "focus_wrapping ${focus.wrapping}"
+            "focus_follows_mouse ${focus.followMouse}"
+            "focus_on_window_activation ${focus.newWindow}"
+            "mouse_warping ${
+              if builtins.isString (focus.mouseWarping) then
+                focus.mouseWarping
+              else if focus.mouseWarping then
+                "output"
+              else
+                "none"
+            }"
+            "workspace_layout ${workspaceLayout}"
+            "workspace_auto_back_and_forth ${
+              lib.hm.booleans.yesNo workspaceAutoBackAndForth
+            }"
+            "client.focused ${colorSetStr colors.focused}"
+            "client.focused_inactive ${colorSetStr colors.focusedInactive}"
+            "client.unfocused ${colorSetStr colors.unfocused}"
+            "client.urgent ${colorSetStr colors.urgent}"
+            "client.placeholder ${colorSetStr colors.placeholder}"
+            "client.background ${colors.background}"
+            (keybindingsStr {
+              keybindings = keybindingDefaultWorkspace;
+              bindsymArgs =
+                lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+            })
+            (keybindingsStr {
+              keybindings = keybindingsRest;
+              bindsymArgs =
+                lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+            })
+            (keycodebindingsStr keycodebindings)
+          ] ++ mapAttrsToList inputStr input
+            ++ mapAttrsToList outputStr output # outputs
+            ++ mapAttrsToList seatStr seat # seats
+            ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
+            ++ mapAttrsToList assignStr assigns # assigns
+            ++ map barStr bars # bars
+            ++ optional (gaps != null) gapsStr # gaps
+            ++ map floatingCriteriaStr floating.criteria # floating
+            ++ map windowCommandsStr window.commands # window commands
+            ++ map startupEntryStr startup # startup
+            ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
+          )
+        else
+          [ ]) ++ (optional cfg.systemd.enable systemdActivation)
+        ++ (optional (!cfg.xwayland) "xwayland disable")
+        ++ [ cfg.extraConfig ]));
+  };
 
   defaultSwayPackage = pkgs.sway.override {
     extraSessionCommands = cfg.extraSessionCommands;
