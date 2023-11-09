@@ -12,6 +12,10 @@ let
   clientWMClass =
     if versionAtLeast emacsVersion "28" then "Emacsd" else "Emacs";
 
+  # Workaround for https://debbugs.gnu.org/47511
+  needsSocketWorkaround = versionOlder emacsVersion "28"
+    && cfg.socketActivation.enable;
+
   # Adapted from upstream emacs.desktop
   clientDesktopItem = pkgs.writeTextDir "share/applications/emacsclient.desktop"
     (generators.toINI { } {
@@ -128,7 +132,7 @@ in {
           # Avoid killing the Emacs session, which may be full of
           # unsaved buffers.
           X-RestartIfChanged = false;
-        } // optionalAttrs (cfg.socketActivation.enable) {
+        } // optionalAttrs needsSocketWorkaround {
           # Emacs deletes its socket when shutting down, which systemd doesn't
           # handle, resulting in a server without a socket.
           # See https://github.com/nix-community/home-manager/issues/2018
@@ -157,7 +161,7 @@ in {
           SuccessExitStatus = 15;
 
           Restart = "on-failure";
-        } // optionalAttrs (cfg.socketActivation.enable) {
+        } // optionalAttrs needsSocketWorkaround {
           # Use read-only directory permissions to prevent emacs from
           # deleting systemd's socket file before exiting.
           ExecStartPost =
