@@ -32,6 +32,20 @@ listInAttrsInList {
 		}
 	}
 }
+literalNodes {
+	node "arg1" "arg2" prop1=1 prop2=2 {
+		child1 
+		child2 
+	}
+	node "arg2" prop1=1 prop2=2 {
+		child1 
+		child2 
+	}
+	node "arg2" prop2=2 {
+		child1 
+		child2 
+	}
+}
 nested {
 	- 1 2
 	- true false
@@ -39,3 +53,29 @@ nested {
 	- null
 }
 unsafeString " \" \n 	 "
+zellijExampleSettings {
+	keybinds clear-defaults=true {
+		locked {
+			bind "Ctrl q" "Alt F4" {
+				Quit 
+			}
+			bind "Alt l" {
+				MoveFocusOrTab "Right"
+			}
+		}
+		normal {
+			bind "Ctrl q" "Alt F4" {
+				Quit 
+			}
+			bind "Alt l" {
+				MoveFocusOrTab "Right"
+			}
+		}
+	}
+	theme "custom"
+	themes {
+		custom {
+			fg "#ffffff"
+		}
+	}
+}
