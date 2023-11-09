@@ -258,12 +258,21 @@ let
 
   variables = concatStringsSep " " cfg.systemd.variables;
   extraCommands = concatStringsSep " && " cfg.systemd.extraCommands;
+  swayPackage = if cfg.package == null then pkgs.sway else cfg.package;
   systemdActivation = ''
     exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
 
   configFile = pkgs.writeTextFile {
     name = "sway.conf";
-    text = (concatStringsSep "\n"
+
+    # Sway always does some init, see https://github.com/swaywm/sway/issues/4691
+    checkPhase = lib.optionalString cfg.checkConfig ''
+      export DBUS_SESSION_BUS_ADDRESS=/dev/null
+      export XDG_RUNTIME_DIR=$(mktemp -d)
+      ${pkgs.xvfb-run}/bin/xvfb-run ${swayPackage}/bin/sway --config "$target" --validate --unsupported-gpu
+    '';
+
+    text = concatStringsSep "\n"
       ((optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
         ++ (if cfg.config != null then
           with cfg.config;
@@ -319,7 +328,7 @@ let
         else
           [ ]) ++ (optional cfg.systemd.enable systemdActivation)
         ++ (optional (!cfg.xwayland) "xwayland disable")
-        ++ [ cfg.extraConfig ]));
+        ++ [ cfg.extraConfig ]);
   };
 
   defaultSwayPackage = pkgs.sway.override {
@@ -469,6 +478,13 @@ in {
       description = "Sway configuration options.";
     };
 
+    checkConfig = mkOption {
+      type = types.bool;
+      default = true;
+      description =
+        "If enabled (the default), validates the generated config file.";
+    };
+
     extraConfig = mkOption {
       type = types.lines;
       default = "";
@@ -506,9 +522,7 @@ in {
       home.packages = optional (cfg.package != null) cfg.package
         ++ optional cfg.xwayland pkgs.xwayland;
 
-      xdg.configFile."sway/config" = let
-        swayPackage = if cfg.package == null then pkgs.sway else cfg.package;
-      in {
+      xdg.configFile."sway/config" = {
         source = configFile;
         onChange = ''
           swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x sway || true).sock"
