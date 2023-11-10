@@ -4,7 +4,9 @@ let
 
   cfg = config.systemd.user;
 
-  inherit (lib) getAttr hm isBool literalExpression mkIf mkMerge mkOption types;
+  inherit (lib)
+    any attrValues getAttr hm isBool literalExpression mkIf mkMerge mkOption
+    types;
 
   settingsFormat = pkgs.formats.ini { listsAsDuplicateKeys = true; };
 
@@ -93,7 +95,7 @@ let
       + "\n";
   };
 
-  settings = mkIf (cfg.settings != { }) {
+  settings = mkIf (any (v: v != { }) (attrValues cfg.settings)) {
     "systemd/user.conf".source =
       settingsFormat.generate "user.conf" cfg.settings;
   };
