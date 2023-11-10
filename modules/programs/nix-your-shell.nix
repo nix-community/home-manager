@@ -4,7 +4,7 @@ let
   cfg = config.programs.nix-your-shell;
 
   # In principle `bash` is supported too, but...  😹
-  shells = [ "fish" "nushell" "zsh" ];
+  shells = [ "fish" "ion" "nushell" "zsh" ];
   programs = [ "nix" "nix-shell" ];
 in {
   meta.maintainers = with lib.maintainers; [ nicoo ];
