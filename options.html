@@ -4167,6 +4167,41 @@ previously existing bookmarks!</p><p><span class="emphasis"><em>Type:</em></span
 
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix" target="_top">
 &lt;home-manager/modules/programs/firefox.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.containers"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.containers"><code class="option">programs.firefox.profiles.&lt;name&gt;.containers</code></a></span></dt><dd><p>Attribute set of container configurations. See
+<a class="link" href="https://support.mozilla.org/en-US/kb/containers" target="_top">Multi-Account
+Containers</a>
+for more information.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  dangerous = {
+    color = "red";
+    icon = "fruit";
+    id = 2;
+  };
+  shopping = {
+    color = "blue";
+    icon = "cart";
+    id = 1;
+  };
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix" target="_top">
+&lt;home-manager/modules/programs/firefox.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.containers._name_.color"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.containers._name_.color"><code class="option">programs.firefox.profiles.&lt;name&gt;.containers.&lt;name&gt;.color</code></a></span></dt><dd><p>Container color.</p><p><span class="emphasis"><em>Type:</em></span>
+one of “blue”, “turquoise”, “green”, “yellow”, “orange”, “red”, “pink”, “purple”, “toolbar”</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">"pink"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix" target="_top">
+&lt;home-manager/modules/programs/firefox.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.containers._name_.icon"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.containers._name_.icon"><code class="option">programs.firefox.profiles.&lt;name&gt;.containers.&lt;name&gt;.icon</code></a></span></dt><dd><p>Container icon.</p><p><span class="emphasis"><em>Type:</em></span>
+one of “briefcase”, “cart”, “circle”, “dollar”, “fence”, “fingerprint”, “gift”, “vacation”, “food”, “fruit”, “pet”, “tree”, “chill”</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">"fruit"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix" target="_top">
+&lt;home-manager/modules/programs/firefox.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.containers._name_.id"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.containers._name_.id"><code class="option">programs.firefox.profiles.&lt;name&gt;.containers.&lt;name&gt;.id</code></a></span></dt><dd><p>Container ID. This should be set to a unique number per container in this profile.</p><p><span class="emphasis"><em>Type:</em></span>
+unsigned integer, meaning &gt;=0</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">0</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix" target="_top">
+&lt;home-manager/modules/programs/firefox.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.containers._name_.name"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.containers._name_.name"><code class="option">programs.firefox.profiles.&lt;name&gt;.containers.&lt;name&gt;.name</code></a></span></dt><dd><p>Container name, e.g., shopping.</p><p><span class="emphasis"><em>Type:</em></span>
+string</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">"‹name›"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix" target="_top">
+&lt;home-manager/modules/programs/firefox.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.firefox.profiles._name_.extensions"></a><a class="term" href="options.html#opt-programs.firefox.profiles._name_.extensions"><code class="option">programs.firefox.profiles.&lt;name&gt;.extensions</code></a></span></dt><dd><p>List of Firefox add-on packages to install for this profile.
 Some pre-packaged add-ons are accessible from the
 <a class="link" href="https://github.com/nix-community/NUR" target="_top">Nix User Repository</a>.
