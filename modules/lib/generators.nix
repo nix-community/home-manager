@@ -99,4 +99,97 @@
     in attrs: ''
       ${concatStringsSep "\n" (mapAttrsToList convertAttributeToKDL attrs)}
     '';
+
+  toSCFG = { }:
+    let
+      inherit (lib) concatStringsSep mapAttrsToList any;
+      inherit (builtins) typeOf replaceStrings elem;
+
+      # ListOf String -> String
+      indentStrings = let
+        # Although the input of this function is a list of strings,
+        # the strings themselves *will* contain newlines, so you need
+        # to normalize the list by joining and resplitting them.
+        unlines = lib.splitString "\n";
+        lines = lib.concatStringsSep "\n";
+        indentAll = lines: concatStringsSep "\n" (map (x: "	" + x) lines);
+      in stringsWithNewlines: indentAll (unlines (lines stringsWithNewlines));
+
+      # String -> Bool
+      specialChars = s:
+        any (char: elem char (reserved ++ [ " " "'" "{" "}" ]))
+        (lib.stringToCharacters s);
+
+      # String -> String
+      sanitizeString =
+        replaceStrings reserved [ ''\"'' "\\\\" "\\r" "\\n" "\\t" ];
+
+      reserved = [ ''"'' "\\" "\r" "\n" "	" ];
+
+      # OneOf [Int Float String Bool] -> String
+      literalValueToString = element:
+        lib.throwIfNot (elem (typeOf element) [ "int" "float" "string" "bool" ])
+        "Cannot convert value of type ${typeOf element} to SCFG literal."
+        (if element == false then
+          "false"
+        else if element == true then
+          "true"
+        else if typeOf element == "string" then
+          if element == "" || specialChars element then
+            ''"${sanitizeString element}"''
+          else
+            element
+        else
+          toString element);
+
+      # Bool -> ListOf (OneOf [Int Float String Bool]) -> String
+      toOptParamsString = cond: list:
+        lib.optionalString (cond) (lib.pipe list [
+          (map literalValueToString)
+          (concatStringsSep " ")
+          (s: " " + s)
+        ]);
+
+      # Attrset Conversion
+      # String -> AttrsOf Anything -> String
+      convertAttrsToSCFG = name: attrs:
+        let
+          optParamsString = toOptParamsString (attrs ? "_params") attrs._params;
+        in ''
+          ${name}${optParamsString} {
+          ${indentStrings (convertToAttrsSCFG' attrs)}
+          }'';
+
+      # Attrset Conversion
+      # AttrsOf Anything -> ListOf String
+      convertToAttrsSCFG' = attrs:
+        mapAttrsToList convertAttributeToSCFG
+        (lib.filterAttrs (name: val: !isNull val && name != "_params") attrs);
+
+      # List Conversion
+      # String -> ListOf (OneOf [Int Float String Bool]) -> String
+      convertListOfFlatAttrsToSCFG = name: list:
+        let optParamsString = toOptParamsString (list != [ ]) list;
+        in "${name}${optParamsString}";
+
+      # Combined Conversion
+      # String -> Anything  -> String
+      convertAttributeToSCFG = name: value:
+        lib.throwIf (name == "") "Directive must not be empty"
+        (let vType = typeOf value;
+        in if elem vType [ "int" "float" "bool" "string" ] then
+          "${name} ${literalValueToString value}"
+        else if vType == "set" then
+          convertAttrsToSCFG name value
+        else if vType == "list" then
+          convertListOfFlatAttrsToSCFG name value
+        else
+          throw ''
+            Cannot convert type `(${typeOf value})` to SCFG:
+              ${name} = ${toString value}
+          '');
+    in attrs:
+    lib.optionalString (attrs != { }) ''
+      ${concatStringsSep "\n" (convertToAttrsSCFG' attrs)}
+    '';
 }
