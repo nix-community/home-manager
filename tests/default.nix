@@ -244,6 +244,7 @@ import nmt {
     ./modules/services/recoll
     ./modules/services/redshift-gammastep
     ./modules/services/screen-locker
+    ./modules/services/signaturepdf
     ./modules/services/swayidle
     ./modules/services/swayosd
     ./modules/services/sxhkd
