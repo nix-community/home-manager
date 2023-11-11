@@ -1,0 +1,8 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=/signaturepdf/bin/signaturepdf 9494 '-d' 'upload_max_filesize=24M'
+
+[Unit]
+Description=signaturepdf; signing, organizing, editing metadatas or compressing PDFs

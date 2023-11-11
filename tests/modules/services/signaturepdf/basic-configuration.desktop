@@ -1,0 +1,7 @@
+[Desktop Entry]
+Exec=@xdg-utils@/bin/xdg-open http://localhost:9494
+Icon=/signaturepdf/share/signaturepdf/public/favicon.ico
+Name=SignaturePDF
+Terminal=false
+Type=Application
+Version=1.4

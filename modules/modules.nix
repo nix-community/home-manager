@@ -326,6 +326,7 @@ let
     ./services/safeeyes.nix
     ./services/screen-locker.nix
     ./services/sctd.nix
+    ./services/signaturepdf.nix
     ./services/spotifyd.nix
     ./services/ssh-agent.nix
     ./services/stalonetray.nix
