@@ -438,7 +438,7 @@ in {
               default = mkOption {
                 type = with types; nullOr str;
                 default = null;
-                example = "Google";
+                example = "DuckDuckGo";
                 description = ''
                   The default search engine used in the address bar and search bar.
                 '';
