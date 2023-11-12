@@ -75,7 +75,8 @@
         id = 3;
         search = {
           force = true;
-          default = "DuckDuckGo";
+          default = "Google";
+          privateDefault = "DuckDuckGo";
           order = [ "Nix Packages" "NixOS Wiki" ];
           engines = {
             "Nix Packages" = {
