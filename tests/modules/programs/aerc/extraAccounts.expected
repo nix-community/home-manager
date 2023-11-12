@@ -54,9 +54,17 @@ from = Foo Bar <addr@mail.invalid>
 outgoing = smtp+insecure+plain://foobar@smtp.host.invalid:42
 outgoing-cred-cmd = echo PaSsWorD!
 
-[i_maildir-mbsync]
+[i1_maildir-mbsync]
 from = Foo Bar <addr@mail.invalid>
-source = maildir:///home/hm-user/Maildir/i_maildir-mbsync
+source = maildir:///home/hm-user/Maildir/i1_maildir-mbsync
+
+[i2_maildirpp-mbsync]
+from = Foo Bar <addr@mail.invalid>
+source = maildirpp:///home/hm-user/Maildir/i2_maildirpp-mbsync/Inbox
+
+[i3_maildir_flatten-mbsync]
+from = Foo Bar <addr@mail.invalid>
+source = maildir:///home/hm-user/Maildir/i3_maildir_flatten-mbsync
 
 [j_maildir-offlineimap]
 from = Foo Bar <addr@mail.invalid>
