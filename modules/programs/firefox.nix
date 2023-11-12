@@ -220,7 +220,7 @@ in {
           The Firefox package to use. If state version ≥ 19.09 then
           this should be a wrapped Firefox package. For earlier state
           versions it should be an unwrapped Firefox package.
-          Set to <literal>null</literal> to disable installing Firefox.
+          Set to `null` to disable installing Firefox.
         '';
       };
 
