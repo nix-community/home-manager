@@ -39,7 +39,7 @@ in {
       '';
       description = ''
         Attribute set of LibreWolf settings and overrides. Refer to
-        <link xlink:href="https://librewolf.net/docs/settings/"/>
+        <https://librewolf.net/docs/settings/>
         for details on supported values.
       '';
     };

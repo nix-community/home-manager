@@ -24,7 +24,7 @@ in {
       default = null;
       example = "rofi";
       description = ''
-        Launcher command, if not set, <command>dmenu</command>
+        Launcher command, if not set, {command}`dmenu`
         will be used by default.
       '';
     };
@@ -49,10 +49,12 @@ in {
 
       Service = {
         ExecStart = "${cfg.package}/bin/clipmenud";
-        Environment = "PATH=${
+        Environment = [
+          "PATH=${
             makeBinPath
             (with pkgs; [ coreutils findutils gnugrep gnused systemd ])
-          }";
+          }"
+        ];
       };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };

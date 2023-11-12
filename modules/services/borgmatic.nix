@@ -17,13 +17,10 @@ in {
         default = "hourly";
         description = ''
           How often to run borgmatic when
-          <code language="nix">services.borgmatic.enable = true</code>.
+          `services.borgmatic.enable = true`.
           This value is passed to the systemd timer configuration as
           the onCalendar option. See
-          <citerefentry>
-            <refentrytitle>systemd.time</refentrytitle>
-            <manvolnum>7</manvolnum>
-          </citerefentry>
+          {manpage}`systemd.time(7)`
           for more information about the format.
         '';
       };

@@ -17,7 +17,7 @@ in {
       default = { };
       description = ''
         Comodoro configuration.
-        See <link xlink:href="https://pimalaya.org/comodoro/cli/configuration/"/> for supported values.
+        See <https://pimalaya.org/comodoro/cli/configuration/> for supported values.
       '';
     };
   };

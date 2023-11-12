@@ -17,22 +17,6 @@ let
       in "${key} = ${value'}";
   };
 
-  # Generates a script to fetch only a specific account.
-  #
-  # Note, these scripts are not actually created and installed at the
-  # moment. It will need some thinking on whether this is a good idea
-  # and whether other modules should have some similar functionality.
-  #
-  # Perhaps have a single tool `email` that wraps the command?
-  # Something like
-  #
-  #     $ email <account name> <program name> <program args>
-  genOfflineImapScript = account:
-    with account;
-    pkgs.writeShellScriptBin "offlineimap-${name}" ''
-      exec ${cfg.package}/bin/offlineimap -a${account.name} "$@"
-    '';
-
   accountStr = account:
     with account;
     let
@@ -123,7 +107,7 @@ in {
         };
         description = ''
           Extra configuration options added to the
-          <option>general</option> section.
+          {option}`general` section.
         '';
       };
 
@@ -133,7 +117,7 @@ in {
         example = { gmailtrashfolder = "[Gmail]/Papierkorb"; };
         description = ''
           Extra configuration options added to the
-          <option>DEFAULT</option> section.
+          {option}`DEFAULT` section.
         '';
       };
 
@@ -151,7 +135,7 @@ in {
         '';
         description = ''
           Extra configuration options added to the
-          <code>mbnames</code> section.
+          `mbnames` section.
         '';
       };
     };

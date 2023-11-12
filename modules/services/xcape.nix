@@ -31,19 +31,17 @@ in {
           Control_L = "Control_L|O";
         };
         description = ''
-          The value has the grammar <literal>Key[|OtherKey]</literal>.
-          </para>
-          <para>
+          The value has the grammar `Key[|OtherKey]`.
+
           The list of key names is found in the header file
-          <filename>X11/keysymdef.h</filename> (remove the
-          <literal>XK_</literal> prefix). Note that due to limitations
+          {file}`X11/keysymdef.h` (remove the
+          `XK_` prefix). Note that due to limitations
           of X11 shifted keys must be specified as a shift key
           followed by the key to be pressed rather than the actual
           name of the character. For example to generate "{" the
-          expression <literal>Shift_L|bracketleft</literal> could be
+          expression `Shift_L|bracketleft` could be
           used (assuming that you have a key with "{" above "[").
-          </para>
-          <para>
+
           You can also specify keys in decimal (prefix #), octal (#0),
           or hexadecimal (#0x). They will be interpreted as keycodes
           unless no corresponding key name is found.

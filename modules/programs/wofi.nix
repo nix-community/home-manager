@@ -24,10 +24,7 @@ in {
       type = types.attrs;
       description = ''
         Configuration options for wofi. See
-        <citerefentry>
-          <refentrytitle>wofi</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>.
+        {manpage}`wofi(5)`.
       '';
       example = literalExpression ''
         {
@@ -43,10 +40,7 @@ in {
       type = types.nullOr types.str;
       description = ''
         CSS style for wofi to use as a stylesheet. See
-        <citerefentry>
-          <refentrytitle>wofi</refentrytitle>
-          <manvolnum>7</manvolnum>
-        </citerefentry>.
+        {manpage}`wofi(7)`.
       '';
       example = ''
         * {

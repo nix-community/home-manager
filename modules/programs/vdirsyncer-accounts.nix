@@ -25,8 +25,8 @@ in {
       default = null;
       description = ''
         What to do in case of a conflict between the storages. Either
-        <literal>remote wins</literal> or
-        <literal>local wins</literal> or
+        `remote wins` or
+        `local wins` or
         a list that contains a command to run. By default, an error
         message is printed.
       '';
@@ -38,10 +38,10 @@ in {
       description = ''
         What should happen if synchronization in one direction
         is impossible due to one storage being read-only.
-        Defaults to <literal>revert</literal>.
-        </para><para>
+        Defaults to `revert`.
+
         See
-        <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#pair-section"/>
+        <https://vdirsyncer.pimutils.org/en/stable/config.html#pair-section>
         for more information.
       '';
     };
@@ -73,7 +73,7 @@ in {
       default = null;
       description = ''
         A time range to synchronize. start and end can be any Python
-        expression that returns a <literal>datetime.datetime</literal>
+        expression that returns a `datetime.datetime`
         object.
       '';
       example = {
@@ -103,9 +103,9 @@ in {
       default = null;
       description = ''
         Optional. SHA1 or MD5 fingerprint of the expected server certificate.
-        </para><para>
+
         See
-        <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/ssl-tutorial.html#ssl-tutorial"/>
+        <https://vdirsyncer.pimutils.org/en/stable/ssl-tutorial.html#ssl-tutorial>
         for more information.
       '';
     };
@@ -114,7 +114,7 @@ in {
       type = types.nullOr (types.enum [ "basic" "digest" "guess" ]);
       default = null;
       description = ''
-        Authentication settings. The default is <literal>basic</literal>.
+        Authentication settings. The default is `basic`.
       '';
     };
 
@@ -132,7 +132,7 @@ in {
       default = null;
       description = ''
         The user agent to report to the server. Defaults to
-        <literal>vdirsyncer</literal>.
+        `vdirsyncer`.
       '';
     };
 
@@ -163,9 +163,9 @@ in {
       description = ''
         A command that prints the OAuth credentials to standard
         output.
-        </para><para>
+
         See
-        <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#google"/>
+        <https://vdirsyncer.pimutils.org/en/stable/config.html#google>
         for more information.
       '';
     };
@@ -177,9 +177,9 @@ in {
       description = ''
         A command that prints the OAuth credentials to standard
         output.
-        </para><para>
+
         See
-        <link xlink:href="https://vdirsyncer.pimutils.org/en/stable/config.html#google"/>
+        <https://vdirsyncer.pimutils.org/en/stable/config.html#google>
         for more information.
       '';
     };

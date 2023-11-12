@@ -1,11 +1,6 @@
 { config, lib, pkgs, ... }:
-
 with lib;
-
-let
-
-  cfg = config.services.clipman;
-
+let cfg = config.services.clipman;
 in {
   meta.maintainers = [ maintainers.jwygoda ];
 
@@ -19,11 +14,10 @@ in {
       default = "graphical-session.target";
       example = "sway-session.target";
       description = ''
-        The systemd target that will automatically start the Waybar service.
-        </para>
-        <para>
-        When setting this value to <literal>"sway-session.target"</literal>,
-        make sure to also enable <option>wayland.windowManager.sway.systemdIntegration</option>,
+        The systemd target that will automatically start the clipman service.
+
+        When setting this value to `"sway-session.target"`,
+        make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
         otherwise the service may never be started.
       '';
     };

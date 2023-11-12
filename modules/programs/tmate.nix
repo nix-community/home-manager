@@ -36,7 +36,7 @@ in {
       };
 
       dsaFingerprint = mkOption {
-        type = with types; nullOr string;
+        type = with types; nullOr str;
         default = null;
         example = literalExpression
           "SHA256:1111111111111111111111111111111111111111111";
@@ -44,7 +44,7 @@ in {
       };
 
       rsaFingerprint = mkOption {
-        type = with types; nullOr string;
+        type = with types; nullOr str;
         default = null;
         example = literalExpression
           "SHA256:1111111111111111111111111111111111111111111";
@@ -56,7 +56,7 @@ in {
         default = "";
         description = ''
           Additional content written at the end of
-          <filename>~/.tmate.conf</filename>.
+          {file}`~/.tmate.conf`.
         '';
       };
     };
@@ -65,7 +65,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file.".tmate.conf".text = let
+    home.file.".tmate.conf" = let
       conf =
         optional (cfg.host != null) ''set -g tmate-server-host "${cfg.host}"''
         ++ optional (cfg.port != null)
@@ -75,6 +75,6 @@ in {
         ++ optional (cfg.rsaFingerprint != null)
         ''set -g tmate-server-rsa-fingerprint "${cfg.rsaFingerprint}"''
         ++ optional (cfg.extraConfig != "") cfg.extraConfig;
-    in concatStringsSep "\n" conf + "\n";
+    in mkIf (conf != [ ]) { text = concatLines conf; };
   };
 }

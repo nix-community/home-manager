@@ -153,7 +153,7 @@ let
         default = false;
         description = ''
           Enable SASL external authentication. This requires setting a path in
-          <xref linkend="opt-programs.irssi.networks._name_.server.ssl.certificateFile"/>.
+          [](#opt-programs.irssi.networks._name_.server.ssl.certificateFile).
         '';
       };
     };

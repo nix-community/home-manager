@@ -63,7 +63,7 @@ in {
       default = "";
       description = ''
         Configuration lines appended unchanged to the end of the
-        <filename>~/.inputrc</filename> file.
+        {file}`~/.inputrc` file.
       '';
     };
   };

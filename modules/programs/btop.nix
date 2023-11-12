@@ -40,8 +40,8 @@ in {
         theme_background = false;
       };
       description = ''
-        Options to add to <filename>btop.conf</filename> file.
-        See <link xlink:href="https://github.com/aristocratos/btop#configurability"/>
+        Options to add to {file}`btop.conf` file.
+        See <https://github.com/aristocratos/btop#configurability>
         for options.
       '';
     };
@@ -50,7 +50,7 @@ in {
       type = types.lines;
       default = "";
       description = ''
-        Extra lines added to the <filename>btop.conf</filename> file.
+        Extra lines added to the {file}`btop.conf` file.
       '';
     };
   };

@@ -9,7 +9,7 @@ let
   jsonFormat = pkgs.formats.json { };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.gallery-dl = {
     enable = mkEnableOption "gallery-dl";
@@ -24,8 +24,8 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/gallery-dl/config.json</filename>. See
-        <link xlink:href="https://github.com/mikf/gallery-dl#configuration"/>
+        {file}`$XDG_CONFIG_HOME/gallery-dl/config.json`. See
+        <https://github.com/mikf/gallery-dl#configuration>
         for supported values.
       '';
     };

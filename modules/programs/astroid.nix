@@ -80,14 +80,19 @@ in {
         example =
           "nvim-qt -- -c 'set ft=mail' '+set fileencoding=utf-8' '+set ff=unix' '+set enc=utf-8' '+set fo+=w' %1";
         description = ''
-          You can use <code>%1</code>, <code>%2</code>, and
-          <code>%3</code> to refer respectively to:
-          <orderedlist numeration="arabic">
-            <listitem><para>file name</para></listitem>
-            <listitem><para>server name</para></listitem>
-            <listitem><para>socket ID</para></listitem>
-          </orderedlist>
-          See <link xlink:href='https://github.com/astroidmail/astroid/wiki/Customizing-editor' />.
+          You can use the following variables:
+
+          `%1`
+          : file name
+
+          `%2`
+          : server name
+
+          `%3`
+          : socket ID
+
+          See [Customizing editor](https://github.com/astroidmail/astroid/wiki/Customizing-editor)
+          on the Astroid wiki.
         '';
       };
 

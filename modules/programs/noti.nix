@@ -7,7 +7,7 @@ let
   cfg = config.programs.noti;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.noti = {
     enable = mkEnableOption "Noti";
@@ -17,13 +17,10 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/noti/noti.yaml</filename>.
-        </para><para>
+        {file}`$XDG_CONFIG_HOME/noti/noti.yaml`.
+
         See
-        <citerefentry>
-          <refentrytitle>noti.yaml</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>.
+        {manpage}`noti.yaml(5)`.
         for the full list of options.
       '';
       example = literalExpression ''

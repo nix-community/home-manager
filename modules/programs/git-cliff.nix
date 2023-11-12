@@ -26,8 +26,8 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/git-cliff/cliff.toml</filename>. See
-        <link xlink:href="https://git-cliff.org/docs/configuration" />
+        {file}`$XDG_CONFIG_HOME/git-cliff/cliff.toml`. See
+        <https://git-cliff.org/docs/configuration>
         for the documentation.
       '';
     };

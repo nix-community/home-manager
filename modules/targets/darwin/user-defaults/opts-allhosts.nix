@@ -70,16 +70,16 @@ in {
         type = types.bool;
         example = false;
         description = ''
-          Disable use of <filename>.DS_Store</filename> files on network shares.
-          See <link xlink:href="https://support.apple.com/en-us/HT208209">the
-          official article</link> for more info.
+          Disable use of {file}`.DS_Store` files on network shares.
+          See [the
+          official article](https://support.apple.com/en-us/HT208209) for more info.
         '';
       };
       DSDontWriteUSBStores = mkNullableOption {
         type = types.bool;
         example = false;
         description = ''
-          Disable use of <filename>.DS_Store</filename> files on thumb drives.
+          Disable use of {file}`.DS_Store` files on thumb drives.
         '';
       };
     };
@@ -100,7 +100,7 @@ in {
       example = "NO";
       description = ''
         This option no longer works on macOS 11 and later. Instead, use
-        <option>targets.darwin.currentHostDefaults.\"com.apple.controlcenter\".BatteryShowPercentage</option>.
+        {option}`targets.darwin.currentHostDefaults.\"com.apple.controlcenter\".BatteryShowPercentage`.
 
         Whether to show battery percentage in the menu bar.
       '';
@@ -122,12 +122,10 @@ in {
         description = ''
           Configures the web inspector.
 
-          <warning>
-            <para>
-              Instead of setting this option directly, set
-              <option>IncludeDevelopMenu</option> instead.
-            </para>
-          </warning>
+          ::: {.warning}
+          Instead of setting this option directly, set
+          {option}`IncludeDevelopMenu` instead.
+          :::
         '';
       };
       "WebKitPreferences.developerExtrasEnabled" = mkNullableOption {
@@ -135,12 +133,10 @@ in {
         description = ''
           Configures the web inspector.
 
-          <warning>
-            <para>
-              Instead of setting this option directly, set
-              <option>IncludeDevelopMenu</option> instead.
-            </para>
-          </warning>
+          ::: {.warning}
+          Instead of setting this option directly, set
+          {option}`IncludeDevelopMenu` instead.
+          :::
         '';
       };
     };
@@ -151,12 +147,10 @@ in {
         description = ''
           Show the "Develop" menu in Safari's menubar.
 
-          <warning>
-            <para>
-              Instead of setting this option directly, set
-              <option>"com.apple.Safari".IncludeDevelopMenu</option> instead.
-            </para>
-          </warning>
+          ::: {.warning}
+          Instead of setting this option directly, set
+          {option}`"com.apple.Safari".IncludeDevelopMenu` instead.
+          :::
         '';
       };
     };
@@ -177,20 +171,16 @@ in {
         description = ''
           Configures how to restore tmux windows when attaching to a session.
 
-          <variablelist><title>Possible Values</title>
-            <varlistentry>
-              <term><literal>0</literal></term>
-              <listitem><para>Native windows</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>1</literal></term>
-              <listitem><para>Native tabs in a new window</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>2</literal></term>
-              <listitem><para>Tabs in the attaching window</para></listitem>
-            </varlistentry>
-          </variablelist>
+          **Possible Values**
+
+          `0`
+          : Native windows
+
+          `1`
+          : Native tabs in a new window
+
+          `2`
+          : Tabs in the attaching window
         '';
       };
 

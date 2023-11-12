@@ -99,7 +99,8 @@ in {
 
     systemdTarget = mkOption {
       type = types.str;
-      default = "sway-session.target";
+      default = "graphical-session.target";
+      example = "sway-session.target";
       description = ''
         Systemd target to bind to.
       '';
@@ -121,6 +122,7 @@ in {
 
       Service = {
         Type = "simple";
+        Restart = "always";
         # swayidle executes commands using "sh -c", so the PATH needs to contain a shell.
         Environment = [ "PATH=${makeBinPath [ pkgs.bash ]}" ];
         ExecStart =

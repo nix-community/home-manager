@@ -1,0 +1,1 @@
+{ khal-config = ./config.nix; }

@@ -41,15 +41,12 @@ let
         example = [ "--enable-logging=stderr" "--ignore-gpu-blocklist" ];
         description = ''
           List of command-line arguments to be passed to ${name}.
-          </para><para>
-          Note this option does not have any effect when using a
-          custom package for <option>programs.${browser}.package</option>.
-          </para><para>
+
           For a list of common switches, see
-          <link xlink:href="https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.cc">Chrome switches</link>.
-          </para><para>
+          [Chrome switches](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.cc).
+
           To search switches for other components, see
-          <link xlink:href="https://source.chromium.org/search?q=file:switches.cc&amp;ss=chromium%2Fchromium%2Fsrc">Chromium codesearch</link>.
+          [Chromium codesearch](https://source.chromium.org/search?q=file:switches.cc&ss=chromium%2Fchromium%2Fsrc).
         '';
       };
     } // optionalAttrs (!isProprietaryChrome) {
@@ -117,13 +114,27 @@ let
         description = ''
           List of ${name} extensions to install.
           To find the extension ID, check its URL on the
-          <link xlink:href="https://chrome.google.com/webstore/category/extensions">Chrome Web Store</link>.
-          </para><para>
+          [Chrome Web Store](https://chrome.google.com/webstore/category/extensions).
+
           To install extensions outside of the Chrome Web Store set
-          <literal>updateUrl</literal> or <literal>crxPath</literal> and
-          <literal>version</literal> as explained in the
-          <link xlink:href="https://developer.chrome.com/docs/extensions/mv2/external_extensions">Chrome
-          documentation</link>.
+          `updateUrl` or `crxPath` and
+          `version` as explained in the
+          [Chrome
+          documentation](https://developer.chrome.com/docs/extensions/mv2/external_extensions).
+        '';
+      };
+
+      dictionaries = mkOption {
+        inherit visible;
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression ''
+          [
+            pkgs.hunspellDictsChromium.en_US
+          ]
+        '';
+        description = ''
+          List of ${name} dictionaries to install.
         '';
       };
     };
@@ -162,20 +173,24 @@ let
           });
         };
 
-    in mkIf cfg.enable {
-      home.packages = [ cfg.package ];
-      home.file = optionalAttrs (!isProprietaryChrome)
-        (listToAttrs (map extensionJson cfg.extensions));
-    };
+      dictionary = pkg: {
+        name = "${configDir}/Dictionaries/${pkg.passthru.dictFileName}";
+        value.source = pkg;
+      };
 
-  browserPkgs = genAttrs supportedBrowsers (browser:
-    let cfg = config.programs.${browser};
-    in if cfg.commandLineArgs != [ ] then
-      pkgs.${browser}.override {
-        commandLineArgs = concatStringsSep " " cfg.commandLineArgs;
-      }
-    else
-      pkgs.${browser});
+      package = if cfg.commandLineArgs != [ ] then
+        cfg.package.override {
+          commandLineArgs = concatStringsSep " " cfg.commandLineArgs;
+        }
+      else
+        cfg.package;
+
+    in mkIf cfg.enable {
+      home.packages = [ package ];
+      home.file = optionalAttrs (!isProprietaryChrome) (listToAttrs
+        ((map extensionJson cfg.extensions)
+          ++ (map dictionary cfg.dictionaries)));
+    };
 
 in {
   # Extensions do not work with the proprietary Google Chrome version
@@ -188,15 +203,14 @@ in {
     ];
 
   options.programs = {
-    chromium = browserModule browserPkgs.chromium "Chromium" true;
-    google-chrome =
-      browserModule browserPkgs.google-chrome "Google Chrome" false;
+    chromium = browserModule pkgs.chromium "Chromium" true;
+    google-chrome = browserModule pkgs.google-chrome "Google Chrome" false;
     google-chrome-beta =
-      browserModule browserPkgs.google-chrome-beta "Google Chrome Beta" false;
+      browserModule pkgs.google-chrome-beta "Google Chrome Beta" false;
     google-chrome-dev =
-      browserModule browserPkgs.google-chrome-dev "Google Chrome Dev" false;
-    brave = browserModule browserPkgs.brave "Brave Browser" false;
-    vivaldi = browserModule browserPkgs.vivaldi "Vivaldi Browser" false;
+      browserModule pkgs.google-chrome-dev "Google Chrome Dev" false;
+    brave = browserModule pkgs.brave "Brave Browser" false;
+    vivaldi = browserModule pkgs.vivaldi "Vivaldi Browser" false;
   };
 
   config = mkMerge

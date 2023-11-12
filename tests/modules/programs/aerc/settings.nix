@@ -4,7 +4,11 @@ with lib;
 
 {
   config = {
-    nmt.script = let dir = "home-files/.config/aerc";
+    nmt.script = let
+      dir = if (pkgs.stdenv.isDarwin && !config.xdg.enable) then
+        "home-files/Library/Preferences/aerc"
+      else
+        "home-files/.config/aerc";
     in ''
       assertFileContent   ${dir}/accounts.conf     ${./extraAccounts.expected}
       assertFileContent   ${dir}/binds.conf        ${./extraBinds.expected}

@@ -55,7 +55,7 @@ in {
       default = pkgs.ncmpcpp;
       defaultText = literalExpression "pkgs.ncmpcpp";
       description = ''
-        Package providing the <code>ncmpcpp</code> command.
+        Package providing the `ncmpcpp` command.
       '';
       example =
         literalExpression "pkgs.ncmpcpp.override { visualizerSupport = true; }";
@@ -75,10 +75,10 @@ in {
           null
       '';
       description = ''
-        Value of the <code>mpd_music_dir</code> setting. On Linux platforms the
-        value of <varname>services.mpd.musicDirectory</varname> is used as the
-        default if <varname>services.mpd.enable</varname> is
-        <literal>true</literal>.
+        Value of the `mpd_music_dir` setting. On Linux platforms the
+        value of {var}`services.mpd.musicDirectory` is used as the
+        default if {var}`services.mpd.enable` is
+        `true`.
       '';
       example = "~/music";
     };
@@ -89,10 +89,7 @@ in {
       description = ''
         Attribute set from name of a setting to its value. For available options
         see
-        <citerefentry>
-          <refentrytitle>ncmpcpp</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>.
+        {manpage}`ncmpcpp(1)`.
       '';
       example = { ncmpcpp_directory = "~/.local/share/ncmpcpp"; };
     };

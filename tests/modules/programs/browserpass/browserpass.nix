@@ -6,11 +6,12 @@ with lib;
   config = {
     programs.browserpass = {
       enable = true;
-      browsers = [ "brave" "chrome" "chromium" "firefox" "vivaldi" ];
+      browsers =
+        [ "brave" "chrome" "chromium" "firefox" "librewolf" "vivaldi" ];
     };
 
     nmt.script = if pkgs.stdenv.hostPlatform.isDarwin then ''
-      for dir in "BraveSoftware/Brave-Browser" "Google/Chrome" "Chromium" "Mozilla" "Vivaldi"; do
+      for dir in "BraveSoftware/Brave-Browser" "Google/Chrome" "Chromium" "Mozilla" "LibreWolf" "Vivaldi"; do
         assertFileExists "home-files/Library/Application Support/$dir/NativeMessagingHosts/com.github.browserpass.native.json"
       done
 
@@ -26,7 +27,9 @@ with lib;
         assertFileExists "home-files/.config/$dir/policies/managed/com.github.browserpass.native.json"
       done
 
-      assertFileExists "home-files/.mozilla/native-messaging-hosts/com.github.browserpass.native.json"
+      for dir in ".mozilla" ".librewolf"; do
+        assertFileExists "home-files/$dir/native-messaging-hosts/com.github.browserpass.native.json"
+      done
     '';
   };
 }

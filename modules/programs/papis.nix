@@ -14,7 +14,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.papis = {
     enable = mkEnableOption "papis";
@@ -31,8 +31,8 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/papis/config</filename>. See
-        <link xlink:href="https://papis.readthedocs.io/en/latest/configuration.html"/>
+        {file}`$XDG_CONFIG_HOME/papis/config`. See
+        <https://papis.readthedocs.io/en/latest/configuration.html>
         for supported values.
       '';
     };
@@ -71,6 +71,7 @@ in {
           };
         };
       }));
+      description = "Attribute set of papis libraries.";
     };
   };
 

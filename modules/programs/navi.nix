@@ -13,7 +13,7 @@ let
     config.xdg.configHome;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.navi = {
     enable = mkEnableOption "Navi";
@@ -39,10 +39,10 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/navi/config.yaml</filename> on Linux or
-        <filename>$HOME/Library/Application Support/navi/config.yaml</filename>
+        {file}`$XDG_CONFIG_HOME/navi/config.yaml` on Linux or
+        {file}`$HOME/Library/Application Support/navi/config.yaml`
         on Darwin. See
-        <link xlink:href="https://github.com/denisidoro/navi/blob/master/docs/config_file.md"/>
+        <https://github.com/denisidoro/navi/blob/master/docs/config_file.md>
         for more information.
       '';
     };

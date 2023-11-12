@@ -1,7 +1,7 @@
 {
   description = "Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs = { self, nixpkgs, ... }:
     {
@@ -55,7 +55,7 @@
                 - 'system'
 
               have been removed. Instead use the arguments 'pkgs' and
-              'modules'. See the 22.11 release notes for more: https://nix-community.github.io/home-manager/release-notes.html#sec-release-22.11-highlights 
+              'modules'. See the 22.11 release notes for more: https://nix-community.github.io/home-manager/release-notes.html#sec-release-22.11-highlights
             '';
 
             throwForRemovedArgs = v:
@@ -80,7 +80,10 @@
             configuration = { ... }: {
               imports = modules
                 ++ [{ programs.home-manager.path = toString ./.; }];
-              nixpkgs = { inherit (pkgs) config overlays; };
+              nixpkgs = {
+                config = nixpkgs.lib.mkDefault pkgs.config;
+                inherit (pkgs) overlays;
+              };
             };
           });
       };
@@ -93,10 +96,21 @@
           tests = import ./tests { inherit pkgs; };
         in tests.run);
 
+      formatter = forAllSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in pkgs.linkFarm "format" [{
+          name = "bin/format";
+          path = ./format;
+        }]);
+
       packages = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          docs = import ./docs { inherit pkgs; };
+          releaseInfo = nixpkgs.lib.importJSON ./release.json;
+          docs = import ./docs {
+            inherit pkgs;
+            inherit (releaseInfo) release isReleaseBranch;
+          };
           hmPkg = pkgs.callPackage ./home-manager { path = toString ./.; };
         in {
           default = hmPkg;

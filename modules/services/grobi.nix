@@ -23,8 +23,8 @@ in {
         description = ''
           Commands to be run after an output configuration was
           changed. The Nix value declared here will be translated to
-          JSON and written to the <option>execute_after</option> key
-          in <filename>$XDG_CONFIG_HOME/grobi.conf</filename>.
+          JSON and written to the {option}`execute_after` key
+          in {file}`$XDG_CONFIG_HOME/grobi.conf`.
         '';
       };
 
@@ -61,10 +61,10 @@ in {
           These are the rules grobi tries to match to the current
           output configuration. The rules are evaluated top to bottom,
           the first matching rule is applied and processing stops. See
-          <link xlink:href="https://github.com/fd0/grobi/blob/master/doc/grobi.conf"/>
+          <https://github.com/fd0/grobi/blob/master/doc/grobi.conf>
           for more information. The Nix value declared here will be
-          translated to JSON and written to the <option>rules</option>
-          key in <filename>$XDG_CONFIG_HOME/grobi.conf</filename>.
+          translated to JSON and written to the {option}`rules`
+          key in {file}`$XDG_CONFIG_HOME/grobi.conf`.
         '';
       };
     };

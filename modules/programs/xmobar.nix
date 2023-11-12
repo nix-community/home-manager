@@ -12,7 +12,7 @@ in {
       defaultText = literalExpression "pkgs.haskellPackages.xmobar";
       type = types.package;
       description = ''
-        Package providing the <command>xmobar</command> binary.
+        Package providing the {command}`xmobar` binary.
       '';
     };
 
@@ -42,9 +42,9 @@ in {
       type = types.lines;
       description = ''
         Extra configuration lines to add to
-        <filename>$XDG_CONFIG_HOME/xmobar/.xmobarrc</filename>.
+        {file}`$XDG_CONFIG_HOME/xmobar/.xmobarrc`.
         See
-        <link xlink:href="https://xmobar.org/#configuration" />
+        <https://xmobar.org/#configuration>
         for options.
       '';
     };

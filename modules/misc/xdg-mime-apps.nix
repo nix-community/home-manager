@@ -17,9 +17,8 @@ in {
       type = types.bool;
       default = false;
       description = ''
-        Whether to manage <filename>$XDG_CONFIG_HOME/mimeapps.list</filename>.
-        </para>
-        <para>
+        Whether to manage {file}`$XDG_CONFIG_HOME/mimeapps.list`.
+
         The generated file is read-only.
       '';
     };
@@ -49,7 +48,7 @@ in {
       example = { "mimetype1" = "foo5.desktop"; };
       description = ''
         Removes associations of applications with mimetypes, as if the
-        .desktop file was <emphasis>not</emphasis> listing this
+        .desktop file was *not* listing this
         mimetype in the first place.
       '';
     };

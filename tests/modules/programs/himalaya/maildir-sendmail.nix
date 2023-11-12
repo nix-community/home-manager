@@ -11,12 +11,10 @@ with lib;
       realName = "H. M. Test";
       passwordCommand = "password-command";
       folders = { trash = "Deleted"; };
+      msmtp.enable = true;
       himalaya = {
         enable = true;
-        settings = {
-          sender = "sendmail";
-          sendmail-cmd = "msmtp";
-        };
+        settings = { sendmail-cmd = "msmtp"; };
       };
     };
   };

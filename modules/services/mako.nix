@@ -185,8 +185,8 @@ in {
           Set popup progress indicator color to a specific color,
           represented in hex color code. To draw the progress
           indicator on top of the background color, use the
-          <literal>over</literal> attribute. To replace the background
-          color, use the <literal>source</literal> attribute (this can
+          `over` attribute. To replace the background
+          color, use the `source` attribute (this can
           be useful when the notification is semi-transparent).
         '';
       };
@@ -216,9 +216,9 @@ in {
           algorithm used by the XDG Icon Theme Specification, but does not
           support any of the theme metadata. Therefore, if you want to search
           parent themes, you'll need to add them to the path manually.
-          </para><para>
-          The <filename>/usr/share/icons/hicolor</filename> and
-          <filename>/usr/share/pixmaps</filename> directories are
+
+          The {file}`/usr/share/icons/hicolor` and
+          {file}`/usr/share/pixmaps` directories are
           always searched.
         '';
       };

@@ -17,7 +17,7 @@
   };
 
   nmt.script = ''
-    assertFileNotRegex home-files/.zshrc '@scmpuff@ init -s'
-    assertFileNotRegex home-files/.bashrc '@scmpuff@ init -s'
+    assertFileNotRegex home-files/.zshrc '@scmpuff@'
+    assertFileNotRegex home-files/.bashrc '@scmpuff@'
   '';
 }

@@ -11,7 +11,7 @@ let
   starshipCmd = "${config.home.profileDirectory}/bin/starship";
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.starship = {
     enable = mkEnableOption "starship";
@@ -51,9 +51,9 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/starship.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://starship.rs/config/" /> for the full list
+        {file}`$XDG_CONFIG_HOME/starship.toml`.
+
+        See <https://starship.rs/config/> for the full list
         of options.
       '';
     };
@@ -77,6 +77,19 @@ in {
     enableNushellIntegration = mkEnableOption "Nushell integration" // {
       default = true;
     };
+
+    enableTransience = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        The TransientPrompt feature of Starship replaces previous prompts with a
+        custom string. This is only a valid option for the Fish shell.
+
+        For documentation on how to change the default replacement string and
+        for more information visit
+        https://starship.rs/advanced-config/#transientprompt-and-transientrightprompt-in-cmd
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -87,25 +100,26 @@ in {
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
+      if [[ $TERM != "dumb" ]]; then
         eval "$(${starshipCmd} init bash --print-full-init)"
       fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
+      if [[ $TERM != "dumb" ]]; then
         eval "$(${starshipCmd} init zsh)"
       fi
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      if test "$TERM" != "dumb"  -a \( -z "$INSIDE_EMACS"  -o "$INSIDE_EMACS" = "vterm" \)
+      if test "$TERM" != "dumb"
         eval (${starshipCmd} init fish)
+        ${lib.optionalString cfg.enableTransience "enable_transience"}
       end
     '';
 
     programs.ion.initExtra = mkIf cfg.enableIonIntegration ''
-      if test $TERM != "dumb" && not exists -s INSIDE_EMACS || test $INSIDE_EMACS = "vterm"
+      if test $TERM != "dumb"
         eval $(${starshipCmd} init ion)
       end
     '';
@@ -123,7 +137,7 @@ in {
         ${starshipCmd} init nu | save --force ${config.xdg.cacheHome}/starship/init.nu
       '';
       extraConfig = ''
-        source ${config.xdg.cacheHome}/starship/init.nu
+        use ${config.xdg.cacheHome}/starship/init.nu
       '';
     };
   };

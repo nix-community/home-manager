@@ -9,7 +9,7 @@ let
   cfgOptions = concatStringsSep " " cfg.options;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.zoxide = {
     enable = mkEnableOption "zoxide";

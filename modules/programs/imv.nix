@@ -23,10 +23,7 @@ in {
       type = with types; attrsOf (attrsOf (oneOf [ bool int str ]));
       description = ''
         Configuration options for imv. See
-        <citerefentry>
-          <refentrytitle>imv</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry>.
+        {manpage}`imv(5)`.
       '';
       example = literalExpression ''
         {

@@ -9,7 +9,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.ncspot = {
     enable = mkEnableOption "ncspot";
@@ -32,9 +32,9 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/ncspot/config.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://github.com/hrkfdn/ncspot#configuration" />
+        {file}`$XDG_CONFIG_HOME/ncspot/config.toml`.
+
+        See <https://github.com/hrkfdn/ncspot#configuration>
         for the full list of options.
       '';
     };

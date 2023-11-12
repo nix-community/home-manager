@@ -22,7 +22,7 @@ let
       };
 
       commandOptions = mkOption rec {
-        type = with types; attrsOf str;
+        type = with types; attrsOf (either str (listOf str));
         apply = mergeAttrs default;
         default = {
           repeat = "watch";
@@ -34,13 +34,12 @@ let
         };
         description = ''
           Additional command line options as a dictionary to pass to the
-          <literal>unison</literal> program.
-          </para><para>
+          `unison` program.
+
+          Use a list of strings to declare the same option multiple times.
+
           See
-          <citerefentry>
-            <refentrytitle>unison</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>
+          {manpage}`unison(1)`
           for a list of available options.
         '';
       };
@@ -60,7 +59,9 @@ let
     };
   };
 
-  serialiseArg = key: val: escapeShellArg "-${key}=${escape [ "=" ] val}";
+  serialiseArg = key: val:
+    concatStringsSep " "
+    (forEach (toList val) (x: escapeShellArg "-${key}=${escape [ "=" ] x}"));
 
   serialiseArgs = args: concatStringsSep " " (mapAttrsToList serialiseArg args);
 
@@ -74,6 +75,10 @@ in {
 
   options.services.unison = {
     enable = mkEnableOption "Unison synchronisation";
+
+    package = mkPackageOption pkgs "unison" {
+      example = "pkgs.unison.override { enableX11 = false; }";
+    };
 
     pairs = mkOption {
       type = with types; attrsOf (submodule pairOptions);
@@ -116,7 +121,7 @@ in {
 
         Environment = [ "UNISON='${toString pairCfg.stateDirectory}'" ];
         ExecStart = ''
-          ${pkgs.unison}/bin/unison \
+          ${cfg.package}/bin/unison \
             ${serialiseArgs pairCfg.commandOptions} \
             ${strings.concatMapStringsSep " " escapeShellArg pairCfg.roots}
         '';

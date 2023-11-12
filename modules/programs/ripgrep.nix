@@ -21,8 +21,8 @@ in {
         description = ''
           List of arguments to pass to ripgrep. Each item is given to ripgrep as
           a single command line argument verbatim.
-          </para><para>
-          See <link xlink:href="https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file"/>
+
+          See <https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file>
           for an example configuration.
         '';
       };
@@ -30,13 +30,13 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home = {
-      packages = [ cfg.package ];
+    home = mkMerge [
+      { packages = [ cfg.package ]; }
+      (mkIf (cfg.arguments != [ ]) {
+        file."${configPath}".text = lib.concatLines cfg.arguments;
 
-      file."${configPath}" =
-        mkIf (cfg.arguments != [ ]) { text = lib.concatLines cfg.arguments; };
-
-      sessionVariables = { "RIPGREP_CONFIG_PATH" = configPath; };
-    };
+        sessionVariables."RIPGREP_CONFIG_PATH" = configPath;
+      })
+    ];
   };
 }

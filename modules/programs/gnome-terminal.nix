@@ -106,7 +106,7 @@ let
         default = null;
         type = types.nullOr types.bool;
         description = ''
-          If <literal>true</literal>, allow applications in the
+          If `true`, allow applications in the
           terminal to make text boldface.
         '';
       };
@@ -150,40 +150,22 @@ let
         type = eraseBinding;
         description = ''
           Which string the terminal should send to an application when the user
-          presses the <emphasis>Backspace</emphasis> key.
+          presses the *Backspace* key.
 
-          <variablelist>
-            <varlistentry>
-              <term><literal>auto</literal></term>
-              <listitem><para>
-                Attempt to determine the right value from the terminal's IO settings.
-              </para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>ascii-backspace</literal></term>
-              <listitem><para>
-                Send an ASCII backspace character (0x08).
-              </para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>ascii-delete</literal></term>
-              <listitem><para>
-                Send an ASCII delete character (0x7F).
-              </para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>delete-sequence</literal></term>
-              <listitem><para>
-                Send the <quote>@7</quote> control sequence.
-              </para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>tty</literal></term>
-              <listitem><para>
-                Send terminal’s <quote>erase</quote> setting.
-              </para></listitem>
-            </varlistentry>
-          </variablelist>
+          `auto`
+          : Attempt to determine the right value from the terminal's IO settings.
+
+          `ascii-backspace`
+          : Send an ASCII backspace character (`0x08`).
+
+          `ascii-delete`
+          : Send an ASCII delete character (`0x7F`).
+
+          `delete-sequence`
+          : Send the `@7` control sequence.
+
+          `tty`
+          : Send terminal's "erase" setting.
         '';
       };
 
@@ -198,40 +180,22 @@ let
         type = eraseBinding;
         description = ''
           Which string the terminal should send to an application when the user
-          presses the <emphasis>Delete</emphasis> key.
+          presses the *Delete* key.
 
-          <variablelist>
-            <varlistentry>
-              <term><literal>auto</literal></term>
-              <listitem><para>
-                Send the <quote>@7</quote> control sequence.
-              </para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>ascii-backspace</literal></term>
-              <listitem><para>
-                Send an ASCII backspace character (0x08).
-              </para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>ascii-delete</literal></term>
-              <listitem><para>
-                Send an ASCII delete character (0x7F).
-              </para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>delete-sequence</literal></term>
-              <listitem><para>
-                Send the <quote>@7</quote> control sequence.
-              </para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>tty</literal></term>
-              <listitem><para>
-                Send terminal’s <quote>erase</quote> setting.
-              </para></listitem>
-            </varlistentry>
-          </variablelist>
+          `auto`
+          : Send the `@7` control sequence.
+
+          `ascii-backspace`
+          : Send an ASCII backspace character (`0x08`).
+
+          `ascii-delete`
+          : Send an ASCII delete character (`0x7F`).
+
+          `delete-sequence`
+          : Send the `@7` control sequence.
+
+          `tty`
+          : Send terminal's "erase" setting.
         '';
       };
 
@@ -328,12 +292,30 @@ in {
       profile = mkOption {
         default = { };
         type = types.attrsOf profileSubModule;
-        description = "A set of Gnome Terminal profiles.";
+        description = ''
+          A set of Gnome Terminal profiles. Note, the name of a profile must be
+          a UUID. You can generate one, for example, using {command}`uuidgen`
+          (from `util-linux`).
+        '';
       };
     };
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (let
+        uuidre =
+          "[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}";
+        erroneous =
+          filter (n: builtins.match uuidre n == null) (attrNames cfg.profile);
+      in {
+        assertion = erroneous == [ ];
+        message = ''
+          The attribute name of a Gnome Terminal profile must be a UUID.
+          Incorrect profile names: ${concatStringsSep ", " erroneous}'';
+      })
+    ];
+
     home.packages = [ pkgs.gnome.gnome-terminal ];
 
     dconf.settings = let dconfPath = "org/gnome/terminal/legacy";

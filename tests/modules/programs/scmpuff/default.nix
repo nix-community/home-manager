@@ -6,4 +6,5 @@
   scmpuff-zsh = ./zsh.nix;
   scmpuff-fish = ./fish.nix;
   scmpuff-no-fish = ./no-fish.nix;
+  scmpuff-no-aliases = ./no-aliases.nix;
 }

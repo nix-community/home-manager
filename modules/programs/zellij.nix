@@ -33,22 +33,22 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/zellij/config.yaml</filename>.
-        </para><para>
-        See <link xlink:href="https://zellij.dev/documentation" /> for the full
+        {file}`$XDG_CONFIG_HOME/zellij/config.yaml`.
+
+        See <https://zellij.dev/documentation> for the full
         list of options.
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Enable Bash integration." // {
+    enableBashIntegration = mkEnableOption "Bash integration" // {
       default = false;
     };
 
-    enableZshIntegration = mkEnableOption "Enable Zsh integration." // {
+    enableZshIntegration = mkEnableOption "Zsh integration" // {
       default = false;
     };
 
-    enableFishIntegration = mkEnableOption "Enable Fish integration." // {
+    enableFishIntegration = mkEnableOption "Fish integration" // {
       default = false;
     };
   };

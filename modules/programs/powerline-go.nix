@@ -58,7 +58,7 @@ in {
         description = ''
           List of module names to load. The list of all available
           modules as well as the choice of default ones are at
-          <link xlink:href="https://github.com/justjanne/powerline-go"/>.
+          <https://github.com/justjanne/powerline-go>.
         '';
         example = [ "host" "ssh" "cwd" "gitlite" "jobs" "exit" ];
       };
@@ -102,7 +102,7 @@ in {
         type = with types; attrsOf (oneOf [ bool int str (listOf str) ]);
         description = ''
           This can be any key/value pair as described in
-          <link xlink:href="https://github.com/justjanne/powerline-go"/>.
+          <https://github.com/justjanne/powerline-go>.
         '';
         example = literalExpression ''
           {

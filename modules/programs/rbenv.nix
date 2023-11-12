@@ -24,7 +24,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.rbenv = {
     enable = mkEnableOption "rbenv";
@@ -48,9 +48,9 @@ in {
         ]
       '';
       description = ''
-        rbenv plugins to install in <filename>$HOME/.rbenv/plugins/</filename>.
-        </para><para>
-        See <link xlink:href="https://github.com/rbenv/rbenv/wiki/Plugins" />
+        rbenv plugins to install in {file}`$HOME/.rbenv/plugins/`.
+
+        See <https://github.com/rbenv/rbenv/wiki/Plugins>
         for the full list of plugins.
       '';
     };

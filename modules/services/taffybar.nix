@@ -32,6 +32,8 @@ in {
       Unit = {
         Description = "Taffybar desktop bar";
         PartOf = [ "tray.target" ];
+        StartLimitBurst = 5;
+        StartLimitIntervalSec = 10;
       };
 
       Service = {
@@ -39,6 +41,7 @@ in {
         BusName = "org.taffybar.Bar";
         ExecStart = "${cfg.package}/bin/taffybar";
         Restart = "on-failure";
+        RestartSec = "2s";
       };
 
       Install = { WantedBy = [ "tray.target" ]; };

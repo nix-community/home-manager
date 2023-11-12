@@ -1,1 +1,4 @@
-{ bat = ./bat.nix; }
+{
+  bat = ./bat.nix;
+  bat-deprecated-options = ./deprecated-options.nix;
+}

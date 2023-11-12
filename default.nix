@@ -1,7 +1,11 @@
 { pkgs ? import <nixpkgs> { } }:
 
 rec {
-  docs = with import ./docs { inherit pkgs; }; {
+  docs = let releaseInfo = pkgs.lib.importJSON ./release.json;
+  in with import ./docs {
+    inherit pkgs;
+    inherit (releaseInfo) release isReleaseBranch;
+  }; {
     html = manual.html;
     manPages = manPages;
     json = options.json;

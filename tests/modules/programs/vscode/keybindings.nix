@@ -1,7 +1,5 @@
 # Test that keybindings.json is created correctly.
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ pkgs, ... }:
 
 let
   bindings = [
@@ -65,18 +63,16 @@ let
   '';
 
 in {
-  config = {
-    programs.vscode = {
-      enable = true;
-      keybindings = bindings;
-      package = pkgs.writeScriptBin "vscode" "" // { pname = "vscode"; };
-    };
-
-    nmt.script = ''
-      assertFileExists "home-files/${keybindingsPath}"
-      assertFileContent "home-files/${keybindingsPath}" "${expectedKeybindings}"
-
-      assertPathNotExists "home-files/${settingsPath}"
-    '';
+  programs.vscode = {
+    enable = true;
+    keybindings = bindings;
+    package = pkgs.writeScriptBin "vscode" "" // { pname = "vscode"; };
   };
+
+  nmt.script = ''
+    assertFileExists "home-files/${keybindingsPath}"
+    assertFileContent "home-files/${keybindingsPath}" "${expectedKeybindings}"
+
+    assertPathNotExists "home-files/${settingsPath}"
+  '';
 }

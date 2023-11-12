@@ -33,7 +33,7 @@ standard way using channels. If you prefer to use
 === Standalone installation
 
 :nix-allowed-users: https://nixos.org/nix/manual/#conf-allowed-users
-:nixos-allowed-users: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
+:nixos-allowed-users: https://nixos.org/manual/nixos/stable/options.html#opt-nix.settings.allowed-users
 :bash: https://www.gnu.org/software/bash/
 :zsh: http://zsh.sourceforge.net/
 :fish: https://fishshell.com
@@ -47,7 +47,7 @@ example, you should be able to successfully run a command like
 root user. For a multi-user install of Nix this means that your user
 must be covered by the {nix-allowed-users}[`allowed-users`] Nix
 option. On NixOS you can control this option using the
-{nixos-allowed-users}[`nix.allowedUsers`] system option.
+{nixos-allowed-users}[`nix.settings.allowed-users`] system option.
 
 2. Add the appropriate Home Manager channel. If you are following
 Nixpkgs master or an unstable channel you can run
@@ -155,6 +155,10 @@ users.users.eve.isNormalUser = true;
 home-manager.users.eve = { pkgs, ... }: {
   home.packages = [ pkgs.atool pkgs.httpie ];
   programs.bash.enable = true;
+
+  # The state version is required and should stay at the version you
+  # originally installed.
+  home.stateVersion = "23.05";
 };
 ----
 
@@ -219,6 +223,15 @@ the dependency on `NIX_PATH`, which is otherwise used for importing
 Nixpkgs.
 ====
 
+[NOTE]
+====
+Home Manager will pass `osConfig` as a module argument to any modules
+you create. This contains the system's NixOS configuration.
+
+[source,nix]
+{ lib, pkgs, osConfig, ... }:
+====
+
 Once installed you can see <<ch-usage>> for a more detailed
 description of Home Manager and how to use it.
 
@@ -269,6 +282,10 @@ users.users.eve = {
 home-manager.users.eve = { pkgs, ... }: {
   home.packages = [ pkgs.atool pkgs.httpie ];
   programs.bash.enable = true;
+
+  # The state version is required and should stay at the version you
+  # originally installed.
+  home.stateVersion = "23.05";
 };
 ----
 
@@ -323,6 +340,15 @@ home-manager.useGlobalPkgs = true;
 This saves an extra Nixpkgs evaluation, adds consistency, and removes
 the dependency on `NIX_PATH`, which is otherwise used for importing
 Nixpkgs.
+====
+
+[NOTE]
+====
+Home Manager will pass `osConfig` as a module argument to any modules
+you create. This contains the system's nix-darwin configuration.
+
+[source,nix]
+{ lib, pkgs, osConfig, ... }:
 ====
 
 Once installed you can see <<ch-usage>> for a more detailed

@@ -24,8 +24,8 @@ in {
       default = "${config.xdg.configHome}/sage";
       defaultText = literalExpression "\${config.xdg.configHome}/sage";
       description = ''
-        Directory where the <filename>sage.init</filename> file will be stored.
-        Note that the upstream default is <filename>~/.sage</filename>,
+        Directory where the {file}`sage.init` file will be stored.
+        Note that the upstream default is {file}`~/.sage`,
         but our default is to follow XDG.
       '';
     };
@@ -35,8 +35,8 @@ in {
       default = "${config.xdg.dataHome}/sage";
       defaultText = literalExpression "\${config.xdg.dataHome}/sage";
       description = ''
-        Location for <envar>DOT_SAGE</envar>.
-        Note that the upstream default is <filename>~/.sage</filename>,
+        Location for {env}`DOT_SAGE`.
+        Note that the upstream default is {file}`~/.sage`,
         but our default is to follow XDG.
       '';
     };
@@ -46,7 +46,7 @@ in {
       default = "";
       example = "%colors linux";
       description = ''
-        Contents of the <filename>init.sage</filename> file that is loaded on startup.
+        Contents of the {file}`init.sage` file that is loaded on startup.
       '';
     };
   };

@@ -18,7 +18,7 @@ in {
         default = pkgs.plasma-workspace;
         defaultText = literalExpression "pkgs.plasma-workspace";
         description = ''
-          Package containing the <command>xembedsniproxy</command>
+          Package containing the {command}`xembedsniproxy`
           program.
         '';
       };

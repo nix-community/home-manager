@@ -24,18 +24,17 @@ in {
   options.programs.direnv = {
     enable = mkEnableOption "direnv, the environment switcher";
 
+    package = mkPackageOption pkgs "direnv" { };
+
     config = mkOption {
       type = tomlFormat.type;
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/direnv/direnv.toml</filename>.
-        </para><para>
+        {file}`$XDG_CONFIG_HOME/direnv/direnv.toml`.
+
         See
-        <citerefentry>
-          <refentrytitle>direnv.toml</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>.
+        {manpage}`direnv.toml(1)`.
         for the full list of options.
       '';
     };
@@ -45,7 +44,7 @@ in {
       default = "";
       description = ''
         Custom stdlib written to
-        <filename>$XDG_CONFIG_HOME/direnv/direnvrc</filename>.
+        {file}`$XDG_CONFIG_HOME/direnv/direnvrc`.
       '';
     };
 
@@ -73,9 +72,9 @@ in {
         Whether to enable Fish integration. Note, enabling the direnv module
         will always active its functionality for Fish since the direnv package
         automatically gets loaded in Fish. If this is not the case try adding
-        <programlisting language="nix">
+        ```nix
           environment.pathsToLink = [ "/share/fish" ];
-        </programlisting>
+        ```
         to the system configuration.
       '';
     };
@@ -90,15 +89,16 @@ in {
 
     nix-direnv = {
       enable = mkEnableOption ''
-        <link
-            xlink:href="https://github.com/nix-community/nix-direnv">nix-direnv</link>,
-            a fast, persistent use_nix implementation for direnv'';
+        [nix-direnv](https://github.com/nix-community/nix-direnv),
+        a fast, persistent use_nix implementation for direnv'';
+
+      package = mkPackageOption pkgs "nix-direnv" { };
     };
 
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.direnv ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."direnv/direnv.toml" = mkIf (cfg.config != { }) {
       source = tomlFormat.generate "direnv-config" cfg.config;
@@ -107,38 +107,38 @@ in {
     xdg.configFile."direnv/direnvrc" = let
       text = concatStringsSep "\n" (optional (cfg.stdlib != "") cfg.stdlib
         ++ optional cfg.nix-direnv.enable
-        "source ${pkgs.nix-direnv}/share/nix-direnv/direnvrc");
+        "source ${cfg.nix-direnv.package}/share/nix-direnv/direnvrc");
     in mkIf (text != "") { inherit text; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
       # Using mkAfter to make it more likely to appear after other
       # manipulations of the prompt.
       mkAfter ''
-        eval "$(${pkgs.direnv}/bin/direnv hook bash)"
+        eval "$(${cfg.package}/bin/direnv hook bash)"
       '');
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
+      eval "$(${cfg.package}/bin/direnv hook zsh)"
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (
       # Using mkAfter to make it more likely to appear after other
       # manipulations of the prompt.
       mkAfter ''
-        ${pkgs.direnv}/bin/direnv hook fish | source
+        ${cfg.package}/bin/direnv hook fish | source
       '');
 
     programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration (
       # Using mkAfter to make it more likely to appear after other
       # manipulations of the prompt.
       mkAfter ''
-        let-env config = ($env | default {} config).config
-        let-env config = ($env.config | default {} hooks)
-        let-env config = ($env.config | update hooks ($env.config.hooks | default [] pre_prompt))
-        let-env config = ($env.config | update hooks.pre_prompt ($env.config.hooks.pre_prompt | append {
+        $env.config = ($env | default {} config).config
+        $env.config = ($env.config | default {} hooks)
+        $env.config = ($env.config | update hooks ($env.config.hooks | default [] pre_prompt))
+        $env.config = ($env.config | update hooks.pre_prompt ($env.config.hooks.pre_prompt | append {
           code: "
-            let direnv = (${pkgs.direnv}/bin/direnv export json | from json)
-            let direnv = if ($direnv | length) == 1 { $direnv } else { {} }
+            let direnv = (${cfg.package}/bin/direnv export json | from json)
+            let direnv = if not ($direnv | is-empty) { $direnv } else { {} }
             $direnv | load-env
             "
         }))

@@ -35,17 +35,15 @@ in {
         description = ''
           Whether to enable Bash completion for all interactive Bash shells.
 
-          </para><para>
-
           Note, if you use NixOS or nix-darwin and do not have Bash completion
           enabled in the system configuration, then make sure to add
 
-          <programlisting language="nix">
+          ```nix
             environment.pathsToLink = [ "/share/bash-completion" ];
-          </programlisting>
+          ```
 
           to your system configuration to get completion for system packages.
-          Note, the legacy <filename>/etc/bash_completion.d</filename> path is
+          Note, the legacy {file}`/etc/bash_completion.d` path is
           not supported by Home Manager.
         '';
       };
@@ -103,7 +101,7 @@ in {
         example = [ "extglob" "-cdspell" ];
         description = ''
           Shell options to set. Prefix an option with
-          <quote><literal>-</literal></quote> to unset.
+          "`-`" to unset.
         '';
       };
 
@@ -153,7 +151,7 @@ in {
         default = "";
         type = types.lines;
         description = ''
-          Extra commands that should be placed in <filename>~/.bashrc</filename>.
+          Extra commands that should be placed in {file}`~/.bashrc`.
           Note that these commands will be run even in non-interactive shells.
         '';
       };

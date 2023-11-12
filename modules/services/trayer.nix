@@ -6,52 +6,44 @@ let
 
   boolTrue = {
     type = types.bool;
-    values = "true|false";
-    default = "true";
+    default = true;
   };
 
   number0 = {
     type = types.int;
-    values = "number";
-    default = "0";
+    default = 0;
   };
 
   knownSettings = {
     edge = {
-      type = types.str;
-      values = "left|right|top|bottom|none";
+      type = types.enum [ "left" "right" "top" "bottom" "none" ];
       default = "bottom";
     };
 
     align = {
-      type = types.str;
-      values = "left|right|center";
+      type = types.enum [ "left" "right" "center" ];
       default = "center";
     };
 
     margin = number0;
     widthtype = {
-      type = types.str;
-      values = "request|pixel|percent";
+      type = types.enum [ "request" "pixel" "percent" ];
       default = "percent";
     };
 
     width = {
       type = types.int;
-      values = "number";
-      default = "100";
+      default = 100;
     };
 
     heighttype = {
-      type = types.str;
-      values = "request|pixel";
+      type = types.enum [ "request" "pixel" ];
       default = "pixel";
     };
 
     height = {
       type = types.int;
-      values = "number";
-      default = "26";
+      default = 26;
     };
 
     SetDockType = boolTrue;
@@ -60,27 +52,23 @@ let
 
     transparent = {
       type = types.bool;
-      values = "true|false";
-      default = "false";
+      default = false;
     };
 
     alpha = {
       type = types.int;
-      values = "number";
-      default = "127";
+      default = 127;
     };
 
     tint = {
       type = types.str;
-      values = "int";
       default = "0xFFFFFFFF";
     };
 
     distance = number0;
 
     distancefrom = {
-      type = types.str;
-      values = "left|right|top|bottom";
+      type = types.enum [ "left" "right" "top" "bottom" ];
       default = "top";
     };
 
@@ -89,9 +77,8 @@ let
     padding = number0;
 
     monitor = {
-      values = "number|primary";
-      type = types.str;
-      default = "0";
+      type = types.either types.ints.unsigned (types.enum [ "primary" ]);
+      default = 0;
     };
 
     iconspacing = number0;
@@ -119,26 +106,12 @@ in {
         type = with types; attrsOf (nullOr (either str (either bool int)));
         description = ''
           Trayer configuration as a set of attributes. Further details can be
-          found at <link xlink:href="https://github.com/sargon/trayer-srg"/>.
+          found in [trayer's README](https://github.com/sargon/trayer-srg/blob/master/README).
 
-          <informaltable frame="none"><tgroup cols="4">
-          <thead>
-          <row>
-          <entry>Property Name</entry>
-          <entry>Type</entry>
-          <entry>Values</entry>
-          <entry>Default</entry>
-          </row>
-          </thead><tbody>
           ${concatStringsSep "\n" (mapAttrsToList (n: v: ''
-            <row>
-              <entry><varname>${n}</varname></entry>
-              <entry>${v.type.description}</entry>
-              <entry>${v.values}</entry>
-              <entry>${v.default}</entry>
-            </row>
+            {var}`${n}`
+            : ${v.type.description} (default: `${builtins.toJSON v.default}`)
           '') knownSettings)}
-          </tbody></tgroup></informaltable>
         '';
         default = { };
         example = literalExpression ''

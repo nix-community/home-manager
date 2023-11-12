@@ -20,7 +20,7 @@ in {
         pkgs.pass.withExtensions (exts: [ exts.pass-otp ])
       '';
       description = ''
-        The <literal>pass</literal> package to use.
+        The `pass` package to use.
         Can be used to specify extensions.
       '';
     };
@@ -42,13 +42,10 @@ in {
         }
       '';
       description = ''
-        The <literal>pass</literal> environment variables dictionary.
-        </para><para>
+        The `pass` environment variables dictionary.
+
         See the "Environment variables" section of
-        <citerefentry>
-          <refentrytitle>pass</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>
+        {manpage}`pass(1)`
         and the extension man pages for more information about the
         available keys.
       '';

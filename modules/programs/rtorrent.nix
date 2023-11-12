@@ -7,7 +7,7 @@ let
   cfg = config.programs.rtorrent;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   imports = [
     (mkRenamedOptionModule # \
@@ -23,8 +23,8 @@ in {
       default = "";
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/rtorrent/rtorrent.rc</filename>. See
-        <link xlink:href="https://github.com/rakshasa/rtorrent/wiki/Config-Guide" />
+        {file}`$XDG_CONFIG_HOME/rtorrent/rtorrent.rc`. See
+        <https://github.com/rakshasa/rtorrent/wiki/Config-Guide>
         for explanation about possible values.
       '';
     };

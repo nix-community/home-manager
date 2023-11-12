@@ -28,8 +28,8 @@ in {
         }
       '';
       description = ''
-        Options to add to the <filename>.jjconfig.toml</filename> file. See
-        <link xlink:href="https://github.com/martinvonz/jj/blob/main/docs/config.md"/>
+        Options to add to the {file}`.jjconfig.toml` file. See
+        <https://github.com/martinvonz/jj/blob/main/docs/config.md>
         for options.
       '';
     };
@@ -61,16 +61,16 @@ in {
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      source <(${pkgs.jujutsu}/bin/jj debug completion)
+      source <(${pkgs.jujutsu}/bin/jj util completion)
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      source <(${pkgs.jujutsu}/bin/jj debug completion --zsh | sed '$d')
+      source <(${pkgs.jujutsu}/bin/jj util completion --zsh)
       compdef _jj ${pkgs.jujutsu}/bin/jj
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      ${pkgs.jujutsu}/bin/jj debug completion --fish | source
+      ${pkgs.jujutsu}/bin/jj util completion --fish | source
     '';
   };
 }

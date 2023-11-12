@@ -1,27 +1,51 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/6616de389ed55fba6eeba60377fc04732d5a207c.tar.gz -i bash -p findutils nixfmt
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/6616de389ed55fba6eeba60377fc04732d5a207c.tar.gz -i bash -p git gnugrep gnused findutils nixfmt
 
-CHECK_ARG=
+nixfmt_args=()
+files=()
 
-case $1 in
-    -h)
-        echo "$0 [-c]"
-        ;;
-    -c)
-        CHECK_ARG=-c
-        ;;
-esac
+for arg do
+    case $arg in
+        -h)
+            echo "$0 [-c]"
+            exit
+            ;;
+        -c)
+            nixfmt_args+=("$arg")
+            ;;
+        -*)
+            echo "unrecognised flag: $arg" >&2
+            exit 1
+            ;;
+        *)
+            files+=("$arg")
+            ;;
+    esac
+done
 
 # The excludes are for files touched by open pull requests and we want
 # to avoid merge conflicts.
-find . -name '*.nix' \
-  ! -path ./modules/default.nix \
-  ! -path ./modules/files.nix \
-  ! -path ./modules/home-environment.nix \
-  ! -path ./modules/lib/default.nix \
-  ! -path ./modules/lib/file-type.nix \
-  ! -path ./modules/misc/news.nix \
-  ! -path ./modules/programs/ssh.nix \
-  ! -path ./modules/programs/zsh.nix \
-  ! -path ./tests/default.nix \
-  -exec nixfmt $CHECK_ARG {} +
+excludes=(
+    modules/default.nix
+    modules/files.nix
+    modules/home-environment.nix
+    modules/lib/default.nix
+    modules/lib/file-type.nix
+    modules/misc/news.nix
+    modules/programs/ssh.nix
+    modules/programs/zsh.nix
+    tests/default.nix
+)
+
+exclude_args=()
+for e in "${excludes[@]}"; do
+    exclude_args+=(-e "$e")
+done
+
+git_root=$(git rev-parse --show-toplevel)
+
+git ls-files -z --cached --others --full-name -- "${files[@]}" |
+    grep -z '\.nix$' |
+    grep -z -v "${exclude_args[@]}" |
+    sed -z "s|^|$git_root/|" |
+    xargs -0 nixfmt "${nixfmt_args[@]}"

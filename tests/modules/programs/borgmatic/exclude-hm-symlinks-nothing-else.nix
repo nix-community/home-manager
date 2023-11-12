@@ -27,7 +27,7 @@ in {
 
     yq=${pkgs.yq-go}/bin/yq
 
-    hmExclusionsFile=$($yq '.location.exclude_from[0]' $config_file)
+    hmExclusionsFile=$($yq '.exclude_from[0]' $config_file)
     expected_content='/home/hm-user/.config/borgmatic.d/main.yaml'
 
     grep --quiet "$expected_content" "$hmExclusionsFile"

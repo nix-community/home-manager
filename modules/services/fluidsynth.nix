@@ -36,10 +36,7 @@ in {
         example = [ "--sample-rate 96000" ];
         description = ''
           Extra arguments, added verbatim to the fluidsynth command. See
-          <citerefentry>
-            <refentrytitle>fluidsynth.conf</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>.
+          {manpage}`fluidsynth.conf(1)`.
         '';
       };
     };

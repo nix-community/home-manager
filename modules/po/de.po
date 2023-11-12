@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-05-27 09:08+0200\n"
-"PO-Revision-Date: 2023-05-13 06:48+0000\n"
-"Last-Translator: Reiner Gerecke <me@reinergerecke.de>\n"
+"POT-Creation-Date: 2023-09-13 23:46+0200\n"
+"PO-Revision-Date: 2023-06-20 05:50+0000\n"
+"Last-Translator: Sven Keidel <svenkeidel@pm.me>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/home-manager/"
 "modules/de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 4.18.1\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
@@ -35,7 +35,7 @@ msgstr "Erstelle Profilgeneration %s"
 msgid "No change so reusing latest profile generation %s"
 msgstr "Keine Änderungen. Benutze daher letzte Profilgeneration %s"
 
-#: modules/home-environment.nix:627
+#: modules/home-environment.nix:640
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -64,17 +64,19 @@ msgstr ""
 "\n"
 "Versuchen Sie dann, Ihre Home Manager Konfiguration erneut zu aktivieren."
 
-#: modules/home-environment.nix:660
+#: modules/home-environment.nix:673
 msgid "Activating %s"
 msgstr "Aktiviere %s"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr "Migriere Profil von %s zu %s"
+msgstr "Migriere das Profil von %s zu %s"
 
 #: modules/lib-bash/activation-init.sh:53
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr "Kein passendes Profil-Verzeichnis gefunden. Versuchte %s und %s"
+msgstr ""
+"Es konnte kein passendes Profilverzeichnis gefunden werden, %s und %s wurden "
+"versucht"
 
 #: modules/lib-bash/activation-init.sh:81
 msgid "Sanity checking oldGenNum and oldGenPath"
@@ -110,11 +112,11 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:95
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Fehler: USER ist auf \"%s\" gesetzt, aber wir erwarten \"%s\""
 
 #: modules/lib-bash/activation-init.sh:104
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Fehler: HOME ist auf \"%s\" gesetzt, aber wir erwarten \"%s\""
 
 #: modules/lib-bash/activation-init.sh:119
 msgid "Starting Home Manager activation"

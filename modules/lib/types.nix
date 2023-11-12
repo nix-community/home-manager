@@ -41,7 +41,7 @@ in rec {
         example = literalExpression "pkgs.dejavu_fonts";
         description = ''
           Package providing the font. This package will be installed
-          to your profile. If <literal>null</literal> then the font
+          to your profile. If `null` then the font
           is assumed to already be available in your profile.
         '';
       };

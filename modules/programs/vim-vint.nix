@@ -21,7 +21,7 @@ in {
         default = { };
         description = ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/.vintrc.yaml</filename>
+          {file}`$XDG_CONFIG_HOME/.vintrc.yaml`
         '';
       };
     };

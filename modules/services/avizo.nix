@@ -39,7 +39,7 @@ in {
           patchPhase = "cp ''${./images}/*.png data/images/";
         })
       '';
-      description = "The <literal>avizo</literal> package to use.";
+      description = "The `avizo` package to use.";
     };
   };
 

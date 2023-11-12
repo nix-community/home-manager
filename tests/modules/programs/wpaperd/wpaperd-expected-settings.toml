@@ -1,0 +1,7 @@
+[DP-2]
+path = "/home/foo/Pictures/Anime"
+sorting = "descending"
+
+[eDP-1]
+apply-shadow = true
+path = "/home/foo/Pictures/Wallpaper"

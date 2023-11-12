@@ -10,7 +10,7 @@ with lib;
       description = ''
         Command to send a mail. If msmtp is enabled for the account,
         then this is set to
-        <command>msmtpq --read-envelope-from --read-recipients</command>.
+        {command}`msmtpq --read-envelope-from --read-recipients`.
       '';
     };
 
@@ -35,7 +35,7 @@ with lib;
       '';
       description = ''
         Contact completion configuration as expected per alot.
-        See <link xlink:href="http://alot.readthedocs.io/en/latest/configuration/contacts_completion.html">alot's wiki</link> for
+        See [alot's wiki](http://alot.readthedocs.io/en/latest/configuration/contacts_completion.html) for
         explanation about possible values.
       '';
     };

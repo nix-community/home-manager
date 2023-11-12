@@ -65,31 +65,24 @@ let
         description = ''
           The amount of trust you have in the key ownership and the care the
           owner puts into signing other keys. The available levels are
-          <variablelist>
-            <varlistentry>
-              <term><literal>unknown</literal> or <literal>1</literal></term>
-              <listitem><para>I don't know or won't say.</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>never</literal> or <literal>2</literal></term>
-              <listitem><para>I do NOT trust.</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>marginal</literal> or <literal>3</literal></term>
-              <listitem><para>I trust marginally.</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>full</literal> or <literal>4</literal></term>
-              <listitem><para>I trust fully.</para></listitem>
-            </varlistentry>
-            <varlistentry>
-              <term><literal>ultimate</literal> or <literal>5</literal></term>
-              <listitem><para>I trust ultimately.</para></listitem>
-            </varlistentry>
-          </variablelist>
-          </para><para>
-          See <link xlink:href="https://www.gnupg.org/gph/en/manual/x334.html"/>
-          for more.
+
+          `unknown` or `1`
+          : I don't know or won't say.
+
+          `never` or `2`
+          : I do **not** trust.
+
+          `marginal` or `3`
+          : I trust marginally.
+
+          `full` or `4`
+          : I trust fully.
+
+          `ultimate` or `5`
+          : I trust ultimately.
+
+          See the [Key Management chapter](https://www.gnupg.org/gph/en/manual/x334.html)
+          of the GNU Privacy Handbook for more.
         '';
       };
     };
@@ -154,7 +147,7 @@ in {
       defaultText = literalExpression "pkgs.gnupg";
       example = literalExpression "pkgs.gnupg23";
       description =
-        "The Gnupg package to use (also used the gpg-agent service).";
+        "The Gnupg package to use (also used by the gpg-agent service).";
     };
 
     settings = mkOption {
@@ -169,14 +162,10 @@ in {
       description = ''
         GnuPG configuration options. Available options are described
         in
-        <link xlink:href="https://gnupg.org/documentation/manpage.html">
-          <citerefentry>
-              <refentrytitle>gpg</refentrytitle>
-              <manvolnum>1</manvolnum>
-          </citerefentry>
-        </link>.
-        </para>
-        <para>
+        [
+          {manpage}`gpg(1)`
+        ](https://gnupg.org/documentation/manpage.html).
+
         Note that lists are converted to duplicate keys.
       '';
     };
@@ -192,12 +181,9 @@ in {
       description = ''
         SCdaemon configuration options. Available options are described
         in
-        <link xlink:href="https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html">
-          <citerefentry>
-              <refentrytitle>scdaemon</refentrytitle>
-              <manvolnum>1</manvolnum>
-          </citerefentry>
-        </link>.
+        [
+          {manpage}`scdaemon(1)`
+        ](https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html).
       '';
     };
 
@@ -214,12 +200,12 @@ in {
       type = types.bool;
       default = true;
       description = ''
-        If set to <literal>true</literal>, you may manage your keyring as a user
-        using the <literal>gpg</literal> command. Upon activation, the keyring
+        If set to `true`, you may manage your keyring as a user
+        using the `gpg` command. Upon activation, the keyring
         will have managed keys added without overwriting unmanaged keys.
-        </para><para>
-        If set to <literal>false</literal>, the path
-        <filename>$GNUPGHOME/pubring.kbx</filename> will become an immutable
+
+        If set to `false`, the path
+        {file}`$GNUPGHOME/pubring.kbx` will become an immutable
         link to the Nix store, denying modifications.
       '';
     };
@@ -228,15 +214,15 @@ in {
       type = types.bool;
       default = true;
       description = ''
-        If set to <literal>true</literal>, you may manage trust as a user using
-        the <command>gpg</command> command. Upon activation, trusted keys have
+        If set to `true`, you may manage trust as a user using
+        the {command}`gpg` command. Upon activation, trusted keys have
         their trust set without overwriting unmanaged keys.
-        </para><para>
-        If set to <literal>false</literal>, the path
-        <filename>$GNUPGHOME/trustdb.gpg</filename> will be
-        <emphasis>overwritten</emphasis> on each activation, removing trust for
+
+        If set to `false`, the path
+        {file}`$GNUPGHOME/trustdb.gpg` will be
+        *overwritten* on each activation, removing trust for
         any unmanaged keys. Be careful to make a backup of your old
-        <filename>trustdb.gpg</filename> before switching to immutable trust!
+        {file}`trustdb.gpg` before switching to immutable trust!
       '';
     };
 

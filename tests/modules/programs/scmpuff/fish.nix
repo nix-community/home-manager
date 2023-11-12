@@ -16,6 +16,6 @@
     assertFileExists home-files/.config/fish/config.fish
     assertFileContains \
       home-files/.config/fish/config.fish \
-      '@scmpuff@/bin/scmpuff init -s --shell=fish | source'
+      '@scmpuff@/bin/scmpuff init --shell=fish | source'
   '';
 }

@@ -30,7 +30,7 @@ in {
       '';
       description = ''
         Key config in Ron file format. This is written to
-        <filename>$XDG_CONFIG_HOME/gitui/key_config.ron</filename>.
+        {file}`$XDG_CONFIG_HOME/gitui/key_config.ron`.
       '';
     };
 
@@ -63,7 +63,7 @@ in {
       '';
       description = ''
         Theme in Ron file format. This is written to
-        <filename>$XDG_CONFIG_HOME/gitui/theme.ron</filename>.
+        {file}`$XDG_CONFIG_HOME/gitui/theme.ron`.
       '';
     };
   };

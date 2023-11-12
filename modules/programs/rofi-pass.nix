@@ -7,10 +7,13 @@ let
   cfg = config.programs.rofi.pass;
 
 in {
-  meta.maintainers = [ maintainers.seylerius ];
+  meta.maintainers = with maintainers; [ seylerius robwalt ];
 
   options.programs.rofi.pass = {
     enable = mkEnableOption "rofi integration with password-store";
+
+    package =
+      mkPackageOption pkgs "rofi-pass" { example = "pkgs.rofi-pass-wayland"; };
 
     stores = mkOption {
       type = types.listOf types.str;
@@ -31,13 +34,13 @@ in {
       description = ''
         Extra configuration to be added at to the rofi-pass config file.
         Additional examples can be found at
-        <link xlink:href="https://github.com/carnager/rofi-pass/blob/master/config.example"/>.
+        <https://github.com/carnager/rofi-pass/blob/master/config.example>.
       '';
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.rofi-pass ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."rofi-pass/config".text = optionalString (cfg.stores != [ ])
       ("root=" + (concatStringsSep ":" cfg.stores) + "\n") + cfg.extraConfig

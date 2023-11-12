@@ -78,8 +78,7 @@ in {
       type = listOf wlogoutLayoutConfig;
       default = [ ];
       description = ''
-        Layout configuration for wlogout, see <link
-          xlink:href="https://github.com/ArtsyMacaw/wlogout#config"/>
+        Layout configuration for wlogout, see <https://github.com/ArtsyMacaw/wlogout#config>
         for supported values.
       '';
       example = literalExpression ''
@@ -99,12 +98,10 @@ in {
       default = null;
       description = ''
         CSS style of the bar.
-        </para>
-        <para>
-        See <link xlink:href="https://github.com/ArtsyMacaw/wlogout#style"/>
+
+        See <https://github.com/ArtsyMacaw/wlogout#style>
         for the documentation.
-        </para>
-        <para>
+
         If the value is set to a path literal, then the path will be used as the css file.
       '';
       example = ''

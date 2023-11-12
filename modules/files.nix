@@ -28,7 +28,7 @@ in
     home.file = mkOption {
       description = "Attribute set of files to link into the user home.";
       default = {};
-      type = fileType "home.file" "<envar>HOME</envar>" homeDirectory;
+      type = fileType "home.file" "{env}`HOME`" homeDirectory;
     };
 
     home-files = mkOption {

@@ -94,11 +94,11 @@ All contributed code _must_ pass the test suite.
 [[sec-guidelines-module-maintainer]]
 
 ==== Add relevant documentation
+:nixpkgs-markdown: https://nixos.org/manual/nixpkgs/unstable/#sec-contributing-markup
 :docbook: https://tdg.docbook.org/
 :asciidoc: https://asciidoc.org/
-:docbook-rocks: https://berbiche.github.io/docbook.rocks/
 
-Many code changes require changing the documentation as well. Module options should be documented with DocBook. See {docbook-rocks}[DocBook rocks!] for a quick introduction and {docbook}[DocBook 5: The Definitive Guide] for in-depth information of DocBook. Home Manager is itself documented using a combination of DocBook and {asciidoc}[AsciiDoc]. All text is hosted in Home Manager's Git repository.
+Many code changes require changing the documentation as well. Module options should be documented with {nixpkgs-markdown}[Nixpkgs-flavoured Markdown]. Home Manager is itself documented using a combination of {docbook}[DocBook] and {asciidoc}[AsciiDoc]. All text is hosted in Home Manager's Git repository.
 
 The HTML version of the manual containing both the module option descriptions and the documentation of Home Manager can be generated and opened by typing the following in a shell within a clone of the Home Manager Git repository:
 
@@ -243,7 +243,7 @@ should be added. If you contribute a module then you don't need to add this entr
 
 Home Manager includes a basic test suite and it is highly recommended to include at least one test when adding a module. Tests are typically in the form of "golden tests" where, for example, a generated configuration file is compared to a known correct file.
 
-It is relatively easy to create tests by modeling the existing tests, found in the `tests` project directory.
+It is relatively easy to create tests by modeling the existing tests, found in the `tests` project directory. For a full reference to the functions available in test scripts, you can look at NMT's https://git.sr.ht/~rycee/nmt/tree/master/item/bash-lib[bash-lib].
 
 The full Home Manager test suite can be run by executing
 

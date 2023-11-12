@@ -28,7 +28,7 @@ in {
 
     declare -A expectations
 
-    expectations[location.exclude_from[0]]="${excludeFile}"
+    expectations[exclude_from[0]]="${excludeFile}"
 
     yq=${pkgs.yq-go}/bin/yq
 

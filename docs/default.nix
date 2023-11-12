@@ -1,17 +1,28 @@
 { pkgs
 
 # Note, this should be "the standard library" + HM extensions.
-, lib ? import ../modules/lib/stdlib-extended.nix pkgs.lib }:
+, lib ? import ../modules/lib/stdlib-extended.nix pkgs.lib
+
+, release, isReleaseBranch }:
 
 let
 
   nmdSrc = fetchTarball {
     url =
-      "https://git.sr.ht/~rycee/nmd/archive/abb15317ebd17e5a0a7dd105e2ce52f2700185a8.tar.gz";
-    sha256 = "0zzrbjxf15hada279irif7s3sb8vs95jn4y4f8694as0j739gd1m";
+      "https://git.sr.ht/~rycee/nmd/archive/824a380546b5d0d0eb701ff8cd5dbafb360750ff.tar.gz";
+    sha256 = "0vvj40k6bw8ssra8wil9rqbsznmfy1kwy7cihvm13rajwdg9ycgg";
   };
 
-  nmd = import nmdSrc { inherit lib pkgs; };
+  nmd = import nmdSrc {
+    inherit lib;
+    # The DocBook output of `nixos-render-docs` doesn't have the change
+    # `nmd` uses to work around the broken stylesheets in
+    # `docbook-xsl-ns`, so we restore the patched version here.
+    pkgs = pkgs // {
+      docbook-xsl-ns =
+        pkgs.docbook-xsl-ns.override { withManOptDedupPatch = true; };
+    };
+  };
 
   # Make sure the used package is scrubbed to avoid actually
   # instantiating derivations.
@@ -26,42 +37,72 @@ let
 
   dontCheckDefinitions = { _module.check = false; };
 
-  buildModulesDocs = args:
-    nmd.buildModulesDocs ({
-      moduleRootPaths = [ ./.. ];
-      mkModuleUrl = path:
-        "https://github.com/nix-community/home-manager/blob/master/${path}#blob-path";
-      channelName = "home-manager";
-    } // args);
+  gitHubDeclaration = user: repo: subpath:
+    let urlRef = if isReleaseBranch then "release-${release}" else "master";
+    in {
+      url = "https://github.com/${user}/${repo}/blob/${urlRef}/${subpath}";
+      name = "<${repo}/${subpath}>";
+    };
 
-  hmModulesDocs = buildModulesDocs {
+  hmPath = toString ./..;
+
+  buildOptionsDocs = args@{ modules, includeModuleSystemOptions ? true, ... }:
+    let options = (lib.evalModules { inherit modules; }).options;
+    in pkgs.buildPackages.nixosOptionsDoc ({
+      options = if includeModuleSystemOptions then
+        options
+      else
+        builtins.removeAttrs options [ "_module" ];
+      transformOptions = opt:
+        opt // {
+          # Clean up declaration sites to not refer to the Home Manager
+          # source tree.
+          declarations = map (decl:
+            if lib.hasPrefix hmPath (toString decl) then
+              gitHubDeclaration "nix-community" "home-manager"
+              (lib.removePrefix "/" (lib.removePrefix hmPath (toString decl)))
+            else if decl == "lib/modules.nix" then
+            # TODO: handle this in a better way (may require upstream
+            # changes to nixpkgs)
+              gitHubDeclaration "NixOS" "nixpkgs" decl
+            else
+              decl) opt.declarations;
+        };
+    } // builtins.removeAttrs args [ "modules" "includeModuleSystemOptions" ]);
+
+  hmOptionsDocs = buildOptionsDocs {
     modules = import ../modules/modules.nix {
       inherit lib pkgs;
       check = false;
     } ++ [ scrubbedPkgsModule ];
-    docBook.id = "home-manager-options";
+    variablelistId = "home-manager-options";
   };
 
-  nixosModuleDocs = buildModulesDocs {
+  nixosOptionsDocs = buildOptionsDocs {
     modules = [ ../nixos scrubbedPkgsModule dontCheckDefinitions ];
-    docBook = {
-      id = "nixos-options";
-      optionIdPrefix = "nixos-opt";
-    };
+    includeModuleSystemOptions = false;
+    variablelistId = "nixos-options";
+    optionIdPrefix = "nixos-opt-";
   };
 
-  nixDarwinModuleDocs = buildModulesDocs {
+  nixDarwinOptionsDocs = buildOptionsDocs {
     modules = [ ../nix-darwin scrubbedPkgsModule dontCheckDefinitions ];
-    docBook = {
-      id = "nix-darwin-options";
-      optionIdPrefix = "nix-darwin-opt";
-    };
+    includeModuleSystemOptions = false;
+    variablelistId = "nix-darwin-options";
+    optionIdPrefix = "nix-darwin-opt-";
   };
 
   docs = nmd.buildDocBookDocs {
     pathName = "home-manager";
     projectName = "Home Manager";
-    modulesDocs = [ hmModulesDocs nixDarwinModuleDocs nixosModuleDocs ];
+    modulesDocs = [{
+      docBook = pkgs.linkFarm "hm-module-docs-for-nmd" {
+        "nmd-result/home-manager-options.xml" = hmOptionsDocs.optionsDocBook;
+        "nmd-result/nix-darwin-options.xml" =
+          nixDarwinOptionsDocs.optionsDocBook;
+        "nmd-result/nixos-options.xml" = nixosOptionsDocs.optionsDocBook;
+      };
+    }];
     documentsDirectory = ./.;
     documentType = "book";
     chunkToc = ''
@@ -81,9 +122,20 @@ in {
   inherit nmdSrc;
 
   options = {
-    json = hmModulesDocs.json.override {
-      path = "share/doc/home-manager/options.json";
-    };
+    # TODO: Use `hmOptionsDocs.optionsJSON` directly once upstream
+    # `nixosOptionsDoc` is more customizable.
+    json = pkgs.runCommand "options.json" {
+      meta.description = "List of Home Manager options in JSON format";
+    } ''
+      mkdir -p $out/{share/doc,nix-support}
+      cp -a ${hmOptionsDocs.optionsJSON}/share/doc/nixos $out/share/doc/home-manager
+      substitute \
+        ${hmOptionsDocs.optionsJSON}/nix-support/hydra-build-products \
+        $out/nix-support/hydra-build-products \
+        --replace \
+          '${hmOptionsDocs.optionsJSON}/share/doc/nixos' \
+          "$out/share/doc/home-manager"
+    '';
   };
 
   manPages = docs.manPages;

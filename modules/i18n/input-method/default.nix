@@ -32,46 +32,32 @@ in {
         default = null;
         example = "fcitx5";
         description = ''
-          Select the enabled input method. Input methods is a software to input
+          Select the enabled input method. Input methods are software to input
           symbols that are not available on standard input devices.
-          </para><para>
-          Input methods are specially used to input Chinese, Japanese and Korean
-          characters.
-          </para><para>
+
+          Input methods are especially used to input Chinese, Japanese and
+          Korean characters.
+
           Currently the following input methods are available in Home Manager:
 
-          <variablelist>
-          <varlistentry>
-            <term><literal>fcitx5</literal></term>
-            <listitem><para>
-              A customizable lightweight input method.
-              The next generation of fcitx,
-              addons (including engines, dictionaries, skins) can be added using
-              <literal>i18n.inputMethod.fcitx5.addons</literal>.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>nabi</literal></term>
-            <listitem><para>
-              A Korean input method based on XIM. Nabi doesn't support Qt 5.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>uim</literal></term>
-            <listitem><para>
-              The universal input method, is a library with a XIM bridge.
-              uim mainly support Chinese, Japanese and Korean.
-            </para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>hime</literal></term>
-            <listitem><para>An extremely easy-to-use input method framework.</para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><literal>kime</literal></term>
-            <listitem><para>A Korean IME.</para></listitem>
-          </varlistentry>
-          </variablelist>
+          `fcitx5`
+          : A customizable lightweight input method.
+            The next generation of fcitx.
+            Addons (including engines, dictionaries, skins) can be added using
+            [](#opt-i18n.inputMethod.fcitx5.addons).
+
+          `nabi`
+          : A Korean input method based on XIM. Nabi doesn't support Qt 5.
+
+          `uim`
+          : The "universal input method" is a library with an XIM bridge.
+            uim mainly supports Chinese, Japanese and Korean.
+
+          `hime`
+          : An extremely easy-to-use input method framework.
+
+          `kime`
+          : A Korean IME.
         '';
       };
 

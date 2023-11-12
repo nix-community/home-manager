@@ -27,3 +27,10 @@
   - modules/programs/bash*
   - tests/modules/programs/zsh/**/*
 
+"calendar":
+  - modules/programs/khal*
+  - modules/*/vdirsyncer*
+  - modules/accounts/calendar.nix
+
+"contacts":
+  - modules/accounts/contacts.nix

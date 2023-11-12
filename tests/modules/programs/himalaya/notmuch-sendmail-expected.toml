@@ -1,0 +1,16 @@
+email-listing-page-size = 50
+
+["hm@example.com"]
+backend = "notmuch"
+default = true
+display-name = "H. M. Test"
+email = "hm@example.com"
+notmuch-db-path = "/home/hm-user/Maildir"
+sender = "sendmail"
+sendmail-cmd = "msmtp"
+
+["hm@example.com".folder-aliases]
+drafts = "Drafts"
+inbox = "Inbox"
+sent = "Sent"
+trash = "Deleted"

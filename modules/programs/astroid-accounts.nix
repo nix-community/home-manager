@@ -11,7 +11,7 @@ with lib;
       description = ''
         Command to send a mail. If msmtp is enabled for the account,
         then this is set to
-        <command>msmtpq --read-envelope-from --read-recipients</command>.
+        {command}`msmtpq --read-envelope-from --read-recipients`.
       '';
     };
 

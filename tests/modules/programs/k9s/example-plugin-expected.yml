@@ -1,0 +1,16 @@
+plugin:
+  fred:
+    args:
+    - logs
+    - -f
+    - $NAME
+    - -n
+    - $NAMESPACE
+    - --context
+    - $CLUSTER
+    background: false
+    command: kubectl
+    description: Pod logs
+    scopes:
+    - po
+    shortCut: Ctrl-L

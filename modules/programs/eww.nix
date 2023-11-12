@@ -27,7 +27,7 @@ in {
       example = literalExpression "./eww-config-dir";
       description = ''
         The directory that gets symlinked to
-        <filename>$XDG_CONFIG_HOME/eww</filename>.
+        {file}`$XDG_CONFIG_HOME/eww`.
       '';
     };
   };

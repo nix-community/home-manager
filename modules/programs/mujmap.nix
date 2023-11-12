@@ -70,10 +70,10 @@ let
       default = "inbox";
       description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <code>Inbox</code> name attribute.
-        </para><para>
-        If set to an empty string, this mailbox <emphasis>and its child
-        mailboxes</emphasis> are not synchronized with a tag.
+        `Inbox` name attribute.
+
+        If set to an empty string, this mailbox *and its child
+        mailboxes* are not synchronized with a tag.
       '';
     };
 
@@ -82,10 +82,10 @@ let
       default = "deleted";
       description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <code>Trash</code> name attribute.
-        </para><para>
-        If set to an empty string, this mailbox <emphasis>and its child
-        mailboxes</emphasis> are not synchronized with a tag.
+        `Trash` name attribute.
+
+        If set to an empty string, this mailbox *and its child
+        mailboxes* are not synchronized with a tag.
       '';
     };
 
@@ -94,10 +94,10 @@ let
       default = "sent";
       description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <code>Sent</code> name attribute.
-        </para><para>
-        If set to an empty string, this mailbox <emphasis>and its child
-        mailboxes</emphasis> are not synchronized with a tag.
+        `Sent` name attribute.
+
+        If set to an empty string, this mailbox *and its child
+        mailboxes* are not synchronized with a tag.
       '';
     };
 
@@ -106,11 +106,11 @@ let
       default = "spam";
       description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <code>Junk</code> name attribute and/or with the <code>$Junk</code> keyword,
-        <emphasis>except</emphasis> for messages with the <code>$NotJunk</code> keyword.
-        </para><para>
-        If set to an empty string, this mailbox, <emphasis>its child
-        mailboxes</emphasis>, and these keywords are not synchronized with a tag.
+        `Junk` name attribute and/or with the `$Junk` keyword,
+        *except* for messages with the `$NotJunk` keyword.
+
+        If set to an empty string, this mailbox, *its child
+        mailboxes*, and these keywords are not synchronized with a tag.
       '';
     };
 
@@ -119,11 +119,11 @@ let
       default = "important";
       description = ''
         Tag for notmuch to use for messages stored in the mailbox labeled with the
-        <code>Important</code> name attribute and/or with the <code>$Important</code>
+        `Important` name attribute and/or with the `$Important`
         keyword.
-        </para><para>
-        If set to an empty string, this mailbox, <emphasis>its child
-        mailboxes</emphasis>, and these keywords are not synchronized with a tag.
+
+        If set to an empty string, this mailbox, *its child
+        mailboxes*, and these keywords are not synchronized with a tag.
       '';
     };
 
@@ -131,8 +131,8 @@ let
       type = types.str;
       default = "phishing";
       description = ''
-        Tag for notmuch to use for the IANA <code>$Phishing</code> keyword.
-        </para><para>
+        Tag for notmuch to use for the IANA `$Phishing` keyword.
+
         If set to an empty string, this keyword is not synchronized with a tag.
       '';
     };
@@ -145,9 +145,9 @@ let
       example = "alice@example.com";
       description = ''
         Username for basic HTTP authentication.
-        </para><para>
-        If <literal>null</literal>, defaults to
-        <xref linkend="opt-accounts.email.accounts._name_.userName"/>.
+
+        If `null`, defaults to
+        [](#opt-accounts.email.accounts._name_.userName).
       '';
     };
 
@@ -159,9 +159,9 @@ let
       description = ''
         Shell command which will print a password to stdout for basic HTTP
         authentication.
-        </para><para>
-        If <literal>null</literal>, defaults to
-        <xref linkend="opt-accounts.email.accounts._name_.passwordCommand"/>.
+
+        If `null`, defaults to
+        [](#opt-accounts.email.accounts._name_.passwordCommand).
       '';
     };
 
@@ -171,13 +171,13 @@ let
       example = "example.com";
       description = ''
         Fully qualified domain name of the JMAP service.
-        </para><para>
+
         mujmap looks up the JMAP SRV record for this host to determine the JMAP session
         URL. Mutually exclusive with
-        <xref linkend="opt-accounts.email.accounts._name_.mujmap.settings.session_url"/>.
-        </para><para>
-        If <literal>null</literal>, defaults to
-        <xref linkend="opt-accounts.email.accounts._name_.jmap.host"/>.
+        [](#opt-accounts.email.accounts._name_.mujmap.settings.session_url).
+
+        If `null`, defaults to
+        [](#opt-accounts.email.accounts._name_.jmap.host).
       '';
     };
 
@@ -187,12 +187,12 @@ let
       example = "https://jmap.example.com/.well-known/jmap";
       description = ''
         Session URL to connect to.
-        </para><para>
+
         Mutually exclusive with
-        <xref linkend="opt-accounts.email.accounts._name_.mujmap.settings.fqdn"/>.
-        </para><para>
-        If <literal>null</literal>, defaults to
-        <xref linkend="opt-accounts.email.accounts._name_.jmap.sessionUrl"/>.
+        [](#opt-accounts.email.accounts._name_.mujmap.settings.fqdn).
+
+        If `null`, defaults to
+        [](#opt-accounts.email.accounts._name_.jmap.sessionUrl).
       '';
     };
 
@@ -222,10 +222,10 @@ let
       default = { };
       description = ''
         Tag configuration.
-        </para><para>
+
         Beware that there are quirks that require manual consideration if changing the
         values of these files; please see
-        <link xlink:href="https://github.com/elizagamedev/mujmap/blob/main/mujmap.toml.example"/>
+        <https://github.com/elizagamedev/mujmap/blob/main/mujmap.toml.example>
         for more details.
       '';
     };
@@ -239,8 +239,8 @@ let
       default = true;
       description = ''
         Warn if Notmuch is not also enabled for this account.
-        </para><para>
-        This can safely be disabled if <filename>mujmap.toml</filename> is managed
+
+        This can safely be disabled if {file}`mujmap.toml` is managed
         outside of Home Manager.
       '';
     };
@@ -252,10 +252,10 @@ let
       };
       default = { };
       description = ''
-        Settings which are applied to <filename>mujmap.toml</filename>
+        Settings which are applied to {file}`mujmap.toml`
         for the account.
-        </para><para>
-        See the <link xlink:href="https://github.com/elizagamedev/mujmap">mujmap project</link>
+
+        See the [mujmap project](https://github.com/elizagamedev/mujmap)
         for documentation of settings not explicitly covered by this module.
       '';
     };

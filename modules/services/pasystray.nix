@@ -2,14 +2,26 @@
 
 with lib;
 
-{
+let cfg = config.services.pasystray;
+
+in {
   meta.maintainers = [ hm.maintainers.pltanton ];
 
   options = {
-    services.pasystray = { enable = mkEnableOption "PulseAudio system tray"; };
+    services.pasystray = {
+      enable = mkEnableOption "PulseAudio system tray";
+
+      extraOptions = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = ''
+          Extra command-line arguments to pass to {command}`pasystray`.
+        '';
+      };
+    };
   };
 
-  config = mkIf config.services.pasystray.enable {
+  config = mkIf cfg.enable {
     assertions = [
       (hm.assertions.assertPlatform "services.pasystray" pkgs platforms.linux)
     ];
@@ -28,7 +40,8 @@ with lib;
         Environment =
           let toolPaths = makeBinPath [ pkgs.paprefs pkgs.pavucontrol ];
           in [ "PATH=${toolPaths}" ];
-        ExecStart = "${pkgs.pasystray}/bin/pasystray";
+        ExecStart = escapeShellArgs
+          ([ "${pkgs.pasystray}/bin/pasystray" ] ++ cfg.extraOptions);
       };
     };
   };

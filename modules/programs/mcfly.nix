@@ -6,7 +6,7 @@ let
   cfg = config.programs.mcfly;
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   imports = [
     (mkChangedOptionModule # \

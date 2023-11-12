@@ -55,8 +55,8 @@ in {
       type = with types; nullOr (either str float);
       default = null;
       description = ''
-        Your current latitude, between <literal>-90.0</literal> and
-        <literal>90.0</literal>. Must be provided along with
+        Your current latitude, between `-90.0` and
+        `90.0`. Must be provided along with
         longitude.
       '';
     };
@@ -65,8 +65,8 @@ in {
       type = with types; nullOr (either str float);
       default = null;
       description = ''
-        Your current longitude, between <literal>-180.0</literal> and
-        <literal>180.0</literal>. Must be provided along with
+        Your current longitude, between `-180.0` and
+        `180.0`. Must be provided along with
         latitude.
       '';
     };
@@ -76,8 +76,8 @@ in {
       default = "manual";
       description = ''
         The location provider to use for determining your location. If set to
-        <literal>manual</literal> you must also provide latitude/longitude.
-        If set to <literal>geoclue2</literal>, you must also enable the global
+        `manual` you must also provide latitude/longitude.
+        If set to `geoclue2`, you must also enable the global
         geoclue2 service.
       '';
     };
@@ -88,7 +88,7 @@ in {
         default = 5500;
         description = ''
           Colour temperature to use during the day, between
-          <literal>1000</literal> and <literal>25000</literal> K.
+          `1000` and `25000` K.
         '';
       };
       night = mkOption {
@@ -96,7 +96,7 @@ in {
         default = 3700;
         description = ''
           Colour temperature to use at night, between
-          <literal>1000</literal> and <literal>25000</literal> K.
+          `1000` and `25000` K.
         '';
       };
     };
@@ -137,10 +137,7 @@ in {
       description = ''
         The configuration to pass to ${programName}.
         Available options for ${programName} described in
-        <citerefentry>
-          <refentrytitle>${moduleName}</refentrytitle>
-          <manvolnum>1</manvolnum>
-        </citerefentry>.
+        {manpage}`${moduleName}(1)`.
       '';
     };
   };

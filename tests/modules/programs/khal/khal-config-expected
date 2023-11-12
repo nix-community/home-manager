@@ -1,0 +1,26 @@
+[calendars]
+[[test]]
+path = /home/hm-user/$XDG_CONFIG_HOME/cal/test/
+readonly = True
+priority=10
+type=calendar
+
+
+
+[default]
+default_calendar=test
+highlight_event_days=true
+timedelta=5d
+
+[locale]
+dateformat=%x
+datetimeformat=%c
+firstweekday=0
+longdateformat=%x
+longdatetimeformat=%c
+timeformat=%X
+unicode_symbols=true
+weeknumbers=off
+
+[view]
+agenda_event_format={calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}

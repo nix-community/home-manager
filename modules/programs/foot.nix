@@ -27,8 +27,7 @@ in {
       default = { };
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/foot/foot.ini</filename>. See <link
-        xlink:href="https://codeberg.org/dnkl/foot/src/branch/master/foot.ini"/>
+        {file}`$XDG_CONFIG_HOME/foot/foot.ini`. See <https://codeberg.org/dnkl/foot/src/branch/master/foot.ini>
         for a list of available options.
       '';
       example = literalExpression ''

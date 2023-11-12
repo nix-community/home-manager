@@ -160,10 +160,7 @@ in {
         description = ''
           Emit escape sequences for extra keys,
           like the modifyOtherKeys resource for
-          <citerefentry>
-            <refentrytitle>xterm</refentrytitle>
-            <manvolnum>1</manvolnum>
-          </citerefentry>.
+          {manpage}`xterm(1)`.
         '';
       };
 

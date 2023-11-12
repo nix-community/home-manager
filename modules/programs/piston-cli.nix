@@ -31,7 +31,7 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/piston-cli/config.yml</filename>.
+        {file}`$XDG_CONFIG_HOME/piston-cli/config.yml`.
       '';
     };
   };

@@ -37,9 +37,9 @@ in {
       description = ''
         Inactive time interval in minutes after which session will be locked.
         The minimum is 1 minute, and the maximum is 1 hour.
-        If <option>xautolock.enable</option> is true, it will use this setting.
-        See <link xlink:href="https://linux.die.net/man/1/xautolock"/>.
-        Otherwise, this will be used with <command>xset</command> to configure
+        If {option}`xautolock.enable` is true, it will use this setting.
+        See <https://linux.die.net/man/1/xautolock>.
+        Otherwise, this will be used with {command}`xset` to configure
         the X server's screensaver timeout.
       '';
     };
@@ -55,7 +55,7 @@ in {
         type = types.package;
         default = pkgs.xautolock;
         description = ''
-          Package providing the <command>xautolock</command> binary.
+          Package providing the {command}`xautolock` binary.
         '';
       };
 
@@ -64,7 +64,7 @@ in {
         default = true;
         description = ''
           Whether to reset xautolock timers when awaking from sleep.
-          No effect if <option>xautolock.enable</option> is false.
+          No effect if {option}`xautolock.enable` is false.
         '';
       };
 
@@ -72,8 +72,8 @@ in {
         type = types.listOf types.str;
         default = [ ];
         description = ''
-          Extra command-line arguments to pass to <command>xautolock</command>.
-          No effect if <option>xautolock.enable</option> is false.
+          Extra command-line arguments to pass to {command}`xautolock`.
+          No effect if {option}`xautolock.enable` is false.
         '';
       };
     };
@@ -83,7 +83,7 @@ in {
         type = types.package;
         default = pkgs.xss-lock;
         description = ''
-          Package providing the <command>xss-lock</command> binary.
+          Package providing the {command}`xss-lock` binary.
         '';
       };
 
@@ -91,7 +91,7 @@ in {
         type = types.listOf types.str;
         default = [ ];
         description = ''
-          Extra command-line arguments to pass to <command>xss-lock</command>.
+          Extra command-line arguments to pass to {command}`xss-lock`.
         '';
       };
 
@@ -100,7 +100,7 @@ in {
         default = 600;
         description = ''
           The X server's screensaver cycle value expressed as seconds.
-          This will be used with <command>xset</command> to configure
+          This will be used with {command}`xset` to configure
           the cycle along with timeout.
         '';
       };

@@ -18,6 +18,22 @@ in {
       description = "The package to use for helix.";
     };
 
+    extraPackages = mkOption {
+      type = with types; listOf package;
+      default = [ ];
+      example = literalExpression "[ pkgs.marksman ]";
+      description = "Extra packages available to hx.";
+    };
+
+    defaultEditor = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to configure {command}`hx` as the default
+        editor using the {env}`EDITOR` environment variable.
+      '';
+    };
+
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
@@ -38,9 +54,9 @@ in {
       '';
       description = ''
         Configuration written to
-        <filename>$XDG_CONFIG_HOME/helix/config.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://docs.helix-editor.com/configuration.html" />
+        {file}`$XDG_CONFIG_HOME/helix/config.toml`.
+
+        See <https://docs.helix-editor.com/configuration.html>
         for the full list of options.
       '';
     };
@@ -73,9 +89,9 @@ in {
       '';
       description = ''
         Language specific configuration at
-        <filename>$XDG_CONFIG_HOME/helix/languages.toml</filename>.
-        </para><para>
-        See <link xlink:href="https://docs.helix-editor.com/languages.html" />
+        {file}`$XDG_CONFIG_HOME/helix/languages.toml`.
+
+        See <https://docs.helix-editor.com/languages.html>
         for more information.
       '';
     };
@@ -142,17 +158,34 @@ in {
       '';
       description = ''
         Each theme is written to
-        <filename>$XDG_CONFIG_HOME/helix/themes/theme-name.toml</filename>.
+        {file}`$XDG_CONFIG_HOME/helix/themes/theme-name.toml`.
         Where the name of each attribute is the theme-name (in the example "base16").
-        </para><para>
-        See <link xlink:href="https://docs.helix-editor.com/themes.html" />
+
+        See <https://docs.helix-editor.com/themes.html>
         for the full list of options.
       '';
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = if cfg.extraPackages != [ ] then
+      [
+        (pkgs.symlinkJoin {
+          name =
+            "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+          paths = [ cfg.package ];
+          preferLocalBuild = true;
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/hx \
+              --prefix PATH : ${lib.makeBinPath cfg.extraPackages}
+          '';
+        })
+      ]
+    else
+      [ cfg.package ];
+
+    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "hx"; };
 
     xdg.configFile = let
       settings = {

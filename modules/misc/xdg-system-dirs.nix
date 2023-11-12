@@ -19,7 +19,7 @@ in {
       default = [ ];
       example = literalExpression ''[ "/etc/xdg" ]'';
       description = ''
-        Directory names to add to <envar>XDG_CONFIG_DIRS</envar>
+        Directory names to add to {env}`XDG_CONFIG_DIRS`
         in the user session.
       '';
     };
@@ -29,7 +29,7 @@ in {
       default = [ ];
       example = literalExpression ''[ "/usr/share" "/usr/local/share" ]'';
       description = ''
-        Directory names to add to <envar>XDG_DATA_DIRS</envar>
+        Directory names to add to {env}`XDG_DATA_DIRS`
         in the user session.
       '';
     };

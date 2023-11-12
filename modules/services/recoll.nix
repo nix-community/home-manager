@@ -85,7 +85,7 @@ in {
       default = pkgs.recoll;
       defaultText = literalExpression "pkgs.recoll";
       description = ''
-        Package providing the <literal>recoll</literal> binary.
+        Package providing the {command}`recoll` binary.
       '';
       example = literalExpression "(pkgs.recoll.override { withGui = false; })";
     };
@@ -96,11 +96,7 @@ in {
       example = "00/2:00";
       description = ''
         When or how often the periodic update should run. Must be the format
-        described from
-        <citerefentry>
-          <refentrytitle>systemd.time</refentrytitle>
-          <manvolnum>7</manvolnum>
-        </citerefentry>.
+        described from {manpage}`systemd.time(7)`.
       '';
     };
 
@@ -108,14 +104,9 @@ in {
       type = settingsFormat.type;
       default = { };
       description = ''
-        The configuration to be written at
-        <filename>''${config.services.recoll.configDir}/recoll.conf</filename>.
+        The configuration to be written at {file}`$RECOLL_CONFDIR/recoll.conf`.
 
-        See
-        <citerefentry>
-          <refentrytitle>recoll</refentrytitle>
-          <manvolnum>5</manvolnum>
-        </citerefentry> for more details about the configuration.
+        See {manpage}`recoll.conf(5)` for more details about the configuration.
       '';
       example = literalExpression ''
         {
@@ -141,7 +132,7 @@ in {
       example = literalExpression "\${config.xdg.configHome}/recoll";
       description = ''
         The directory to contain Recoll configuration files. This will be set
-        as <literal>RECOLL_CONFDIR</literal>.
+        as {env}`RECOLL_CONFDIR`.
       '';
     };
   };

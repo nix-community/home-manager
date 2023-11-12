@@ -52,7 +52,7 @@ in {
       '';
       description = ''
         Associations written to the Pistol configuration at
-        <filename>$XDG_CONFIG_HOME/pistol/pistol.conf</filename>.
+        {file}`$XDG_CONFIG_HOME/pistol/pistol.conf`.
       '';
     };
 

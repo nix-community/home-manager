@@ -15,9 +15,9 @@ in {
     enable = mkEnableOption ''
       Pulseeffects daemon
       Note, it is necessary to add
-      <programlisting language="nix">
+      ```nix
       programs.dconf.enable = true;
-      </programlisting>
+      ```
       to your system configuration for the daemon to work correctly'';
 
     package = mkOption {

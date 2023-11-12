@@ -46,7 +46,7 @@ in {
         ''''';
       description = ''
         Configuration using syntax written to
-        <filename>$HOME/.pubsrc</filename>.
+        {file}`$HOME/.pubsrc`.
       '';
     };
   };

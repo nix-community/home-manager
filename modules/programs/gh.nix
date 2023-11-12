@@ -60,6 +60,12 @@ in {
         "settings"
         "git_protocol"
       ])
+      (mkRenamedOptionModule [ "programs" "gh" "enableGitCredentialHelper" ] [
+        "programs"
+        "gh"
+        "gitCredentialHelper"
+        "enable"
+      ])
     ];
 
   options.programs.gh = {
@@ -69,14 +75,14 @@ in {
       type = types.package;
       default = pkgs.gh;
       defaultText = literalExpression "pkgs.gh";
-      description = "Package providing <command>gh</command>.";
+      description = "Package providing {command}`gh`.";
     };
 
     settings = mkOption {
       type = settingsType;
       default = { };
       description =
-        "Configuration written to <filename>$XDG_CONFIG_HOME/gh/config.yml</filename>.";
+        "Configuration written to {file}`$XDG_CONFIG_HOME/gh/config.yml`.";
       example = literalExpression ''
         {
           git_protocol = "ssh";
@@ -91,16 +97,26 @@ in {
       '';
     };
 
-    enableGitCredentialHelper =
-      mkEnableOption "the gh git credential helper for github.com" // {
+    gitCredentialHelper = {
+      enable = mkEnableOption "the gh git credential helper" // {
         default = true;
       };
+
+      hosts = mkOption {
+        type = types.listOf types.str;
+        default = [ "https://github.com" ];
+        description = "GitHub hosts to enable the gh git credential helper for";
+        example = literalExpression ''
+          [ "https://github.com" "https://github.example.com" ]
+        '';
+      };
+    };
 
     extensions = mkOption {
       type = types.listOf types.package;
       default = [ ];
       description = ''
-        gh extensions, see <link xlink:href="https://cli.github.com/manual/gh_extension"/>.
+        gh extensions, see <https://cli.github.com/manual/gh_extension>.
       '';
       example = literalExpression "[ pkgs.gh-eco ]";
     };
@@ -112,9 +128,11 @@ in {
     xdg.configFile."gh/config.yml".source =
       yamlFormat.generate "gh-config.yml" cfg.settings;
 
-    programs.git.extraConfig.credential."https://github.com".helper =
-      mkIf cfg.enableGitCredentialHelper
-      "${cfg.package}/bin/gh auth git-credential";
+    programs.git.extraConfig.credential = mkIf cfg.gitCredentialHelper.enable
+      (builtins.listToAttrs (map (host:
+        lib.nameValuePair host {
+          helper = "${cfg.package}/bin/gh auth git-credential";
+        }) cfg.gitCredentialHelper.hosts));
 
     xdg.dataFile."gh/extensions" = mkIf (cfg.extensions != [ ]) {
       source = pkgs.linkFarm "gh-extensions" (builtins.map (p: {

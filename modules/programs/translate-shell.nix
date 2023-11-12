@@ -22,7 +22,7 @@ let
   toKeyValue = generators.toKeyValue { inherit mkKeyValue; };
 
 in {
-  meta.maintainers = [ maintainers.marsam ];
+  meta.maintainers = [ ];
 
   options.programs.translate-shell = {
     enable = mkEnableOption "translate-shell";
@@ -36,8 +36,8 @@ in {
         tl = [ "es" "fr" ];
       };
       description = ''
-        Options to add to <filename>$XDG_CONFIG_HOME/translate-shell/init.trans</filename> file.
-        See <link xlink:href="https://github.com/soimort/translate-shell/wiki/Configuration"/>
+        Options to add to {file}`$XDG_CONFIG_HOME/translate-shell/init.trans` file.
+        See <https://github.com/soimort/translate-shell/wiki/Configuration>
         for options.
       '';
     };

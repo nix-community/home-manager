@@ -22,9 +22,9 @@ in {
         defaultText = "false";
         description = ''
           Whether to enable the beets music library manager. This
-          defaults to <literal>false</literal> for state
+          defaults to `false` for state
           version ≥ 19.03. For earlier versions beets is enabled if
-          <option>programs.beets.settings</option> is non-empty.
+          {option}`programs.beets.settings` is non-empty.
         '';
       };
 
@@ -35,7 +35,7 @@ in {
         example =
           literalExpression "(pkgs.beets.override { enableCheck = true; })";
         description = ''
-          The <literal>beets</literal> package to use.
+          The `beets` package to use.
           Can be used to specify extensions.
         '';
       };
@@ -45,7 +45,7 @@ in {
         default = { };
         description = ''
           Configuration written to
-          <filename>$XDG_CONFIG_HOME/beets/config.yaml</filename>
+          {file}`$XDG_CONFIG_HOME/beets/config.yaml`
         '';
       };
 

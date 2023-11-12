@@ -29,10 +29,7 @@ in {
       description = ''
         How often to run mbsync.  This value is passed to the systemd
         timer configuration as the onCalendar option.  See
-        <citerefentry>
-          <refentrytitle>systemd.time</refentrytitle>
-          <manvolnum>7</manvolnum>
-        </citerefentry>
+        {manpage}`systemd.time(7)`
         for more information about the format.
       '';
     };
@@ -50,7 +47,7 @@ in {
       default = null;
       description = ''
         Optional configuration file to link to use instead of
-        the default file (<filename>~/.mbsyncrc</filename>).
+        the default file ({file}`~/.mbsyncrc`).
       '';
     };
 
