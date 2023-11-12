@@ -46,6 +46,7 @@
 
     assertFileExists $serviceFile
     assertFileRegex $serviceFile 'ExecStart=.*/bin/swayidle ${expectedArgs}'
+    assertFileRegex $serviceFile 'Restart=always'
     assertFileRegex $serviceFile 'Environment=.*PATH=${
       lib.makeBinPath [ pkgs.bash ]
     }'
