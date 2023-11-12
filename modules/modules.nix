@@ -104,6 +104,7 @@ let
     ./programs/helix.nix
     ./programs/hexchat.nix
     ./programs/himalaya.nix
+    ./programs/hishtory.nix
     ./programs/home-manager.nix
     ./programs/hstr.nix
     ./programs/htop.nix

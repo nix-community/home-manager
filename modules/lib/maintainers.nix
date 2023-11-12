@@ -454,6 +454,15 @@
     github = "wcarlsen";
     githubId = 17003032;
   };
+  willemml = {
+    github = "willemml";
+    email = "17758796+willemml@users.noreply.github.com";
+    githubId = 17758796;
+    keys = [{
+      longkeyid = "rsa4096/0xC3DE5DF6198DACBD";
+      fingerprint = "860B 5C62 BF1F CE42 72D2  6BF8 C3DE 5DF6 198D ACBD";
+    }];
+  };
   "9p4" = {
     name = "9p4";
     email = "vcs@ersei.net";
