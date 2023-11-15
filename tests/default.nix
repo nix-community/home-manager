@@ -118,6 +118,7 @@ import nmt {
     ./modules/programs/nnn
     ./modules/programs/nushell
     ./modules/programs/oh-my-posh
+    ./modules/programs/openstackclient
     ./modules/programs/pandoc
     ./modules/programs/papis
     ./modules/programs/pet
