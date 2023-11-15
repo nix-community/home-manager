@@ -190,6 +190,7 @@ let
     ./programs/rofi.nix
     ./programs/rtorrent.nix
     ./programs/rtx.nix
+    ./programs/ruff.nix
     ./programs/sagemath.nix
     ./programs/sbt.nix
     ./programs/scmpuff.nix

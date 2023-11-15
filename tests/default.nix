@@ -133,6 +133,7 @@ import nmt {
     ./modules/programs/rio
     ./modules/programs/ripgrep
     ./modules/programs/rtx
+    ./modules/programs/ruff
     ./modules/programs/sagemath
     ./modules/programs/sbt
     ./modules/programs/scmpuff
