@@ -8378,6 +8378,46 @@ boolean</p><p><span class="emphasis"><em>Default:</em></span>
 package</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.opam</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opam.nix" target="_top">
 &lt;home-manager/modules/programs/opam.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.openstackclient.enable"></a><a class="term" href="options.html#opt-programs.openstackclient.enable"><code class="option">programs.openstackclient.enable</code></a></span></dt><dd><p>Whether to enable OpenStack command-line client.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/openstackclient.nix" target="_top">
+&lt;home-manager/modules/programs/openstackclient.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.openstackclient.package"></a><a class="term" href="options.html#opt-programs.openstackclient.package"><code class="option">programs.openstackclient.package</code></a></span></dt><dd><p>The openstackclient package to use.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.openstackclient</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/openstackclient.nix" target="_top">
+&lt;home-manager/modules/programs/openstackclient.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.openstackclient.clouds"></a><a class="term" href="options.html#opt-programs.openstackclient.clouds"><code class="option">programs.openstackclient.clouds</code></a></span></dt><dd><p>Configuration needed to connect to one or more clouds.</p><p>Do not include passwords here as they will be publicly readable in the Nix store.
+Configuration written to <code class="filename">$XDG_CONFIG_HOME/openstack/clouds.yaml</code>.
+See <a class="link" href="https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#clouds-yaml" target="_top">https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#clouds-yaml</a>.</p><p><span class="emphasis"><em>Type:</em></span>
+YAML value</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  my-infra = {
+    cloud = "example-cloud";
+    auth = {
+      project_id = "0123456789abcdef0123456789abcdef";
+      username = "openstack";
+    };
+    region_name = "XXX";
+    interface = "internal";
+  };
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/openstackclient.nix" target="_top">
+&lt;home-manager/modules/programs/openstackclient.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.openstackclient.publicClouds"></a><a class="term" href="options.html#opt-programs.openstackclient.publicClouds"><code class="option">programs.openstackclient.publicClouds</code></a></span></dt><dd><p>Public information about clouds.</p><p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/openstack/clouds-public.yaml</code>.
+See <a class="link" href="https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#clouds-public-yaml" target="_top">https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#clouds-public-yaml</a>.</p><p><span class="emphasis"><em>Type:</em></span>
+YAML value</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  example-cloud = {
+    auth = {
+      auth_url = "https://identity.cloud.example.com/v2.0";
+    };
+  };
+};
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/openstackclient.nix" target="_top">
+&lt;home-manager/modules/programs/openstackclient.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.pandoc.enable"></a><a class="term" href="options.html#opt-programs.pandoc.enable"><code class="option">programs.pandoc.enable</code></a></span></dt><dd><p>Whether to enable pandoc.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
