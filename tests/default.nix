@@ -84,6 +84,7 @@ import nmt {
     ./modules/programs/git
     ./modules/programs/git-cliff
     ./modules/programs/gpg
+    ./modules/programs/gradle
     ./modules/programs/granted
     ./modules/programs/helix
     ./modules/programs/himalaya
