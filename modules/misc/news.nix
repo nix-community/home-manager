@@ -1116,7 +1116,7 @@ in
           can control it by using the `qt5ct` and `qt6ct` applications;
           - `qt.style.name = "kvantum"`: override the style by using themes
           written in SVG. Supports many popular themes.
-          '';
+        '';
       }
 
       {
@@ -1271,6 +1271,13 @@ in
         time = "2023-10-04T06:44:15+00:00";
         message = ''
           A new module is available: 'programs.thefuck'.
+        '';
+      }
+
+      {
+        time = "2023-10-04T18:35:42+00:00";
+        message = ''
+          A new module is available: 'programs.openstackclient'.
         '';
       }
 
