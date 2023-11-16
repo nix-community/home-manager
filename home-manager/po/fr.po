@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-06-17 07:49+0000\n"
-"Last-Translator: Pink Pony <dreammc@protonmail.com>\n"
+"PO-Revision-Date: 2023-11-16 07:06+0000\n"
+"Last-Translator: \"Julien H. Gibson\" <julienhgibson@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/home-manager/cli/"
 "fr/>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.18.1\n"
+"X-Generator: Weblate 5.2-dev\n"
 
 #: home-manager/home-manager:81
 msgid "No configuration file found at %s"
@@ -42,7 +42,7 @@ msgstr ""
 
 #: home-manager/home-manager:124
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home Manager n'a pas été trouvé à l'emplacement %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:132
