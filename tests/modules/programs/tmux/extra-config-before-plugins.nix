@@ -1,28 +1,47 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib; {
   config = {
     programs.tmux = {
+      aggressiveResize = true;
+      clock24 = true;
       enable = true;
-      mouse = true;
-      extraConfigBeforePlugins = ''
-        set -g mouse off
-      '';
+      keyMode = "emacs";
+      newSession = true;
+      reverseSplit = true;
 
-      plugins = with pkgs.tmuxPlugins; [ logging ];
+      plugins = with pkgs.tmuxPlugins; [
+        logging
+      ];
     };
 
     nixpkgs.overlays = [
       (self: super: {
-        tmuxPlugins = super.tmuxPlugins // {
-          sensible = super.tmuxPlugins.sensible // { rtp = "@sensible_rtp@"; };
-        };
+        tmuxPlugins =
+          super.tmuxPlugins
+          // {
+            logging =
+              super.tmuxPlugins.logging
+              // {
+                rtp = "@tmuxplugin_logging_rtp@";
+              };
+
+            sensible =
+              super.tmuxPlugins.sensible
+              // {
+                rtp = "@tmuxplugin_sensible_rtp@";
+              };
+          };
       })
     ];
 
     nmt.script = ''
       assertFileExists home-files/.config/tmux/tmux.conf
-      assertFileContent home-files/.config/tmux/tmux.conf \
-        ${./mouse-enabled.conf}
+      assertFileContent home-files/.config/tmux/tmux.conf ${./emacs-with-plugins.conf}
     '';
   };
 }
