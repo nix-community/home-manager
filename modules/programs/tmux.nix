@@ -1,9 +1,6 @@
 { config, lib, pkgs, ... }:
-
 with lib;
-
 let
-
   cfg = config.programs.tmux;
 
   pluginName = p: if types.package.check p then p.pname else p.plugin.pname;
@@ -127,7 +124,6 @@ let
       # ============================================= #
     '';
   };
-
 in {
   options = {
     programs.tmux = {
@@ -188,6 +184,15 @@ in {
         description = ''
           Additional configuration to add to
           {file}`tmux.conf`.
+        '';
+      };
+
+      extraConfigBeforePlugins = mkOption {
+        type = types.lines;
+        default = "";
+        description = ''
+          Additional configuration to add to
+          {file}`tmux.conf` before the plugins.
         '';
       };
 
@@ -324,7 +329,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge ([
+  config = mkIf cfg.enable (mkMerge [
     {
       home.packages = [ cfg.package ]
         ++ optional cfg.tmuxinator.enable pkgs.tmuxinator
@@ -332,7 +337,6 @@ in {
     }
 
     { xdg.configFile."tmux/tmux.conf".text = mkBefore tmuxConf; }
-    { xdg.configFile."tmux/tmux.conf".text = mkAfter cfg.extraConfig; }
 
     (mkIf cfg.secureSocket {
       home.sessionVariables = {
@@ -340,6 +344,11 @@ in {
       };
     })
 
+    {
+      xdg.configFile."tmux/tmux.conf".text =
+        mkAfter cfg.extraConfigBeforePlugins;
+    }
     (mkIf (cfg.plugins != [ ]) configPlugins)
-  ]));
+    { xdg.configFile."tmux/tmux.conf".text = cfg.extraConfig; }
+  ]);
 }
