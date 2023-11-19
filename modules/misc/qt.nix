@@ -159,8 +159,10 @@ in {
 
     # Necessary because home.sessionVariables doesn't support mkIf
     envVars = lib.filterAttrs (n: v: v != null) {
-      QT_QPA_PLATFORMTHEME =
-        styleNames.${cfg.platformTheme} or cfg.platformTheme;
+      QT_QPA_PLATFORMTHEME = if (cfg.platformTheme != null) then
+        styleNames.${cfg.platformTheme} or cfg.platformTheme
+      else
+        null;
       QT_STYLE_OVERRIDE = cfg.style.name;
     };
 
@@ -206,9 +208,10 @@ in {
     # Apply theming also to apps started by systemd.
     systemd.user.sessionVariables = envVars // envVarsExtra;
 
-    home.packages = (platformPackages.${cfg.platformTheme} or [ ])
-      ++ lib.optionals (cfg.style.package != null)
-      (lib.toList cfg.style.package);
+    home.packages = (lib.optionals (cfg.platformTheme != null)
+      platformPackages.${cfg.platformTheme})
+      ++ (lib.optionals (cfg.style.package != null)
+        (lib.toList cfg.style.package));
 
     xsession.importedVariables = [ "QT_PLUGIN_PATH" "QML2_IMPORT_PATH" ]
       ++ lib.optionals (cfg.platformTheme != null) [ "QT_QPA_PLATFORMTHEME" ]
