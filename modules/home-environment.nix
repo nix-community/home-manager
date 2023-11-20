@@ -577,7 +577,7 @@ in
 
         ${config.lib.shell.exportAll cfg.sessionVariables}
       '' + lib.optionalString (cfg.sessionPath != [ ]) ''
-        export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
+        export PATH="${concatStringsSep ":" cfg.sessionPath}''${PATH:+:}$PATH"
       '' + cfg.sessionVariablesExtra;
     };
 
