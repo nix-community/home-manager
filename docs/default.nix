@@ -110,10 +110,12 @@ let
     } ''
       # Generate manpages.
       mkdir -p $out/share/man/man5
+      mkdir -p $out/share/man/man1
       home-manager-render-docs -j $NIX_BUILD_CORES options manpage \
         --revision ${revision} \
         ${hmOptionsDocs.optionsJSON}/share/doc/nixos/options.json \
         $out/share/man/man5/home-configuration.nix.5
+      cp ${./home-manager.1} $out/share/man/man1/home-manager.1
     '';
   # Generate the HTML manual pages
   home-manager-manual = pkgs.callPackage ./home-manager-manual.nix {
