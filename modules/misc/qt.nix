@@ -209,7 +209,7 @@ in {
     systemd.user.sessionVariables = envVars // envVarsExtra;
 
     home.packages = (lib.optionals (cfg.platformTheme != null)
-      platformPackages.${cfg.platformTheme})
+      platformPackages.${cfg.platformTheme} or [ ])
       ++ (lib.optionals (cfg.style.package != null)
         (lib.toList cfg.style.package));
 
