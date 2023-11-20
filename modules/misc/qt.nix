@@ -158,11 +158,12 @@ in {
   config = let
 
     # Necessary because home.sessionVariables doesn't support mkIf
-    envVars = lib.filterAttrs (n: v: v != null) {
-      QT_QPA_PLATFORMTHEME =
-        styleNames.${cfg.platformTheme} or cfg.platformTheme;
-      QT_STYLE_OVERRIDE = cfg.style.name;
-    };
+    envVars =
+      lib.filterAttrs (n: v: v != null) { QT_STYLE_OVERRIDE = cfg.style.name; }
+      // lib.optionalAttrs (cfg.platformTheme != null) {
+        QT_QPA_PLATFORMTHEME =
+          cfg.styleNames.${cfg.platformTheme} or cfg.platformTheme;
+      };
 
     envVarsExtra = let
       inherit (config.home) profileDirectory;
@@ -206,7 +207,8 @@ in {
     # Apply theming also to apps started by systemd.
     systemd.user.sessionVariables = envVars // envVarsExtra;
 
-    home.packages = (platformPackages.${cfg.platformTheme} or [ ])
+    home.packages = lib.optionals (cfg.platformTheme != null)
+      (platformPackages.${cfg.platformTheme} or [ ])
       ++ lib.optionals (cfg.style.package != null)
       (lib.toList cfg.style.package);
 
