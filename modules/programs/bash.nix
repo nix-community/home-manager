@@ -68,7 +68,7 @@ in {
 
       historyControl = mkOption {
         type =
-          types.listOf (types.enum [ "erasedups" "ignoredups" "ignorespace" ]);
+          types.listOf (types.enum [ "erasedups" "ignoredups" "ignorespace" "ignoreboth" ]);
         default = [ ];
         description = "Controlling how commands are saved on the history list.";
       };
