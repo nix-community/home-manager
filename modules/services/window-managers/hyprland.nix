@@ -229,7 +229,7 @@ in {
           };
           allFields = filterAttrs (n: v: !(isAttrs v)) attrs;
           importantFields = filterAttrs (n: _:
-            (hasPrefix "$" n) || (hasPrefix "bezier" n)
+            (hasPrefix "$" n) || (hasPrefix "bezier" n) || (n == "plugin")
             || (cfg.sourceFirst && (hasPrefix "source" n))) allFields;
           fields = builtins.removeAttrs allFields
             (mapAttrsToList (n: _: n) importantFields);
