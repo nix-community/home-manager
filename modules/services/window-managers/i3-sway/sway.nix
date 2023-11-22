@@ -253,6 +253,11 @@ let
   outputStr = moduleStr "output";
   seatStr = moduleStr "seat";
 
+  variables = concatStringsSep " " cfg.systemd.variables;
+  extraCommands = concatStringsSep " && " cfg.systemd.extraCommands;
+  systemdActivation = ''
+    exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
+
   configFile = pkgs.writeText "sway.conf" (concatStringsSep "\n"
     ((optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
       ++ (if cfg.config != null then
@@ -307,8 +312,7 @@ let
           ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
         )
       else
-        [ ]) ++ (optional cfg.systemd.enable ''
-          exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL; systemctl --user start sway-session.target"'')
+        [ ]) ++ (optional cfg.systemd.enable systemdActivation)
       ++ (optional (!cfg.xwayland) "xwayland disable") ++ [ cfg.extraConfig ]));
 
   defaultSwayPackage = pkgs.sway.override {
@@ -364,6 +368,33 @@ in {
           * {env}`WAYLAND_DISPLAY`
           * {env}`SWAYSOCK`
           * {env}`XDG_CURRENT_DESKTOP`
+          * {env}`XDG_SESSION_TYPE`
+          * {env}`NIXOS_OZONE_WL`
+          You can extend this list using the `systemd.variables` option.
+        '';
+      };
+
+      variables = mkOption {
+        type = types.listOf types.str;
+        default = [
+          "DISPLAY"
+          "WAYLAND_DISPLAY"
+          "SWAYSOCK"
+          "XDG_CURRENT_DESKTOP"
+          "XDG_SESSION_TYPE"
+          "NIXOS_OZONE_WL"
+        ];
+        example = [ "-all" ];
+        description = ''
+          Environment variables imported into the systemd and D-Bus user environment.
+        '';
+      };
+
+      extraCommands = mkOption {
+        type = types.listOf types.str;
+        default = [ "systemctl --user start sway-session.target" ];
+        description = ''
+          Extra commands to run after D-Bus activation.
         '';
       };
 
