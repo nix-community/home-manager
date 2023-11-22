@@ -9323,6 +9323,28 @@ settings = {
 
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtx.nix" target="_top">
 &lt;home-manager/modules/programs/rtx.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ruff.enable"></a><a class="term" href="options.html#opt-programs.ruff.enable"><code class="option">programs.ruff.enable</code></a></span></dt><dd><p>Whether to enable ruff, an extremely fast Python linter and code formatter, written in Rust.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ruff.nix" target="_top">
+&lt;home-manager/modules/programs/ruff.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ruff.package"></a><a class="term" href="options.html#opt-programs.ruff.package"><code class="option">programs.ruff.package</code></a></span></dt><dd><p>The ruff package to use.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.ruff</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ruff.nix" target="_top">
+&lt;home-manager/modules/programs/ruff.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.ruff.settings"></a><a class="term" href="options.html#opt-programs.ruff.settings"><code class="option">programs.ruff.settings</code></a></span></dt><dd><p>Ruff configuration.
+For available settings see <a class="link" href="https://docs.astral.sh/ruff/settings" target="_top">https://docs.astral.sh/ruff/settings</a>.</p><p><span class="emphasis"><em>Type:</em></span>
+TOML value</p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  line-length = 100;
+  per-file-ignores = { "__init__.py" = [ "F401" ]; };
+  lint = {
+    select = [ "E4" "E7" "E9" "F" ];
+    ignore = [ ];
+  };
+}
+
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ruff.nix" target="_top">
+&lt;home-manager/modules/programs/ruff.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.sagemath.enable"></a><a class="term" href="options.html#opt-programs.sagemath.enable"><code class="option">programs.sagemath.enable</code></a></span></dt><dd><p>Whether to enable SageMath, a mathematics software system.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
