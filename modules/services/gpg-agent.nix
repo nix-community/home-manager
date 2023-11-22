@@ -193,15 +193,8 @@ in {
           Which pinentry interface to use. If not
           `null`, it sets
           {option}`pinentry-program` in
-          {file}`gpg-agent.conf`. Beware that
-          `pinentry-gnome3` may not work on non-Gnome
-          systems. You can fix it by adding the following to your
-          system configuration:
-          ```nix
-          services.dbus.packages = [ pkgs.gcr ];
-          ```
-          For this reason, the default is `gtk2` for
-          now.
+          {file}`gpg-agent.conf`.
+          The default is `gtk2`.
         '';
       };
 
@@ -236,6 +229,9 @@ in {
           ++ optional (cfg.pinentryFlavor != null)
           "pinentry-program ${pkgs.pinentry.${cfg.pinentryFlavor}}/bin/pinentry"
           ++ [ cfg.extraConfig ]);
+
+      services.dbus.packages =
+        mkIf (cfg.pinentryFlavor == "gnome3") [ pkgs.gcr ];
 
       home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''
         if [[ -z "$SSH_AUTH_SOCK" ]]; then
