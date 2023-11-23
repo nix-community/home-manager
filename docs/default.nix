@@ -128,6 +128,8 @@ let
     };
     inherit revision home-manager-render-docs;
   };
+  html = home-manager-manual;
+  htmlOpenTool = pkgs.callPackage ./html-open-tool.nix { } { inherit html; };
 in {
   inherit nmdSrc;
 
@@ -150,7 +152,7 @@ in {
 
   manPages = home-configuration-manual;
 
-  manual = { html = home-manager-manual; };
+  manual = { inherit html htmlOpenTool; };
 
   # Unstable, mainly for CI.
   jsonModuleMaintainers = pkgs.writeText "hm-module-maintainers.json" (let
