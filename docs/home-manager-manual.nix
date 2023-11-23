@@ -1,6 +1,6 @@
 { stdenv, home-manager-render-docs, optionsDoc, lib, documentation-highlighter
 , nmd, revision, home-manager-options }:
-let outputPath = "share/docs/home-manager";
+let outputPath = "share/doc/home-manager";
 in stdenv.mkDerivation {
   name = "nixpkgs-manual";
 

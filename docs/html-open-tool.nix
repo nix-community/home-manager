@@ -18,7 +18,7 @@ let
       echo "$0: unable to start a web browser; please set \$BROWSER"
       exit 1
     else
-      exec "$BROWSER" "${html}/share/docs/${pathName}/index.html"
+      exec "$BROWSER" "${html}/share/doc/${pathName}/index.html"
     fi
   '';
 
