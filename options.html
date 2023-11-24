@@ -4429,11 +4429,16 @@ path</p><p><span class="emphasis"><em>Declared by:</em></span></p><table border=
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.fish.shellAbbrs"></a><a class="term" href="options.html#opt-programs.fish.shellAbbrs"><code class="option">programs.fish.shellAbbrs</code></a></span></dt><dd><p>An attribute set that maps aliases (the top level attribute names
 in this option) to abbreviations. Abbreviations are expanded with
 the longer phrase after they are entered.</p><p><span class="emphasis"><em>Type:</em></span>
-attribute set of string</p><p><span class="emphasis"><em>Default:</em></span>
+attribute set of (string or (submodule))</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
-  gco = "git checkout";
   l = "less";
+  gco = "git checkout";
+  "-C" = {
+    position = "anywhere";
+    expansion = "--color";
+  };
 }
+
 </pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fish.nix" target="_top">
 &lt;home-manager/modules/programs/fish.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-programs.fish.shellAliases"></a><a class="term" href="options.html#opt-programs.fish.shellAliases"><code class="option">programs.fish.shellAliases</code></a></span></dt><dd><p>An attribute set that maps aliases (the top level attribute names
