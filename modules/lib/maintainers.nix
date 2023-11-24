@@ -414,6 +414,11 @@
     keys =
       [{ fingerprint = "75F0 AB7C FE01 D077 AEE6  CAFD 353E 4A18 EE0F AB72"; }];
   };
+  tensor5 = {
+    github = "tensor5";
+    githubId = 1545895;
+    name = "Nicola Squartini";
+  };
   toastal = {
     email = "toastal+nix@posteo.net";
     matrix = "@toastal:matrix.org";

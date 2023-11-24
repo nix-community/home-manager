@@ -15,6 +15,10 @@
         'QT_QPA_PLATFORMTHEME="gnome"'
       assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
         'QT_STYLE_OVERRIDE="adwaita"'
+      assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
+        'QT_PLUGIN_PATH'
+      assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
+        'QML2_IMPORT_PATH'
     '';
   };
 }

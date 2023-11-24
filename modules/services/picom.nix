@@ -5,7 +5,7 @@ let
   inherit (lib)
     boolToString concatMapStringsSep concatStringsSep escape literalExpression
     mapAttrsToList mkEnableOption mkRenamedOptionModule mkRemovedOptionModule
-    mkDefault mkIf mkOption optional types warn;
+    mkDefault mkIf mkOption optional types warn getExe;
 
   cfg = config.services.picom;
   opt = options.services.picom;
@@ -318,7 +318,7 @@ in {
 
       Service = {
         ExecStart = concatStringsSep " " ([
-          "${cfg.package}/bin/picom"
+          "${getExe cfg.package}"
           "--config ${config.xdg.configFile."picom/picom.conf".source}"
         ] ++ cfg.extraArgs);
         Restart = "always";

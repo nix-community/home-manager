@@ -118,6 +118,7 @@ import nmt {
     ./modules/programs/nnn
     ./modules/programs/nushell
     ./modules/programs/oh-my-posh
+    ./modules/programs/openstackclient
     ./modules/programs/pandoc
     ./modules/programs/papis
     ./modules/programs/pet
@@ -132,6 +133,7 @@ import nmt {
     ./modules/programs/rio
     ./modules/programs/ripgrep
     ./modules/programs/rtx
+    ./modules/programs/ruff
     ./modules/programs/sagemath
     ./modules/programs/sbt
     ./modules/programs/scmpuff

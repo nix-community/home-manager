@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-06-17 07:49+0000\n"
-"Last-Translator: Pink Pony <dreammc@protonmail.com>\n"
+"PO-Revision-Date: 2023-11-17 08:06+0000\n"
+"Last-Translator: \"Julien H. Gibson\" <julienhgibson@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/home-manager/cli/"
 "fr/>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.18.1\n"
+"X-Generator: Weblate 5.2\n"
 
 #: home-manager/home-manager:81
 msgid "No configuration file found at %s"
@@ -42,7 +42,7 @@ msgstr ""
 
 #: home-manager/home-manager:124
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home Manager n'a pas été trouvé à l'emplacement %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:132
@@ -50,6 +50,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"Le chemin d'accès de secours vers Home Manager %s est obsolète et un fichier/"
+"dossier y a été trouvé."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:135
@@ -72,6 +74,25 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"Pour enlever cet avertissement, faites l'une des manipulations suivantes.\n"
+"\n"
+"1. Dire explicitement à Home Manager d'utiliser le path, par exemple en "
+"ajoutant\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   à votre configuration.\n"
+"\n"
+"   Si vous importez directement Home Manager, vous pouvez utiliser le "
+"paramètre `path`\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   lorsque vous appelez le package Home Manager.\n"
+"\n"
+"2. Supprimer le path obsolète.\n"
+"\n"
+"     $ rm -r \"%s\""
 
 #: home-manager/home-manager:174
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -80,12 +101,12 @@ msgstr "Impossible de trouver le dossier de profil approprié, essayé %s et %s"
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:229
 msgid "Can't inspect options of a flake configuration"
-msgstr "Impossible d'inspecter les options d'une configuration en flocons"
+msgstr "Impossible d'inspecter les options de la configuration d'un flake"
 
 #: home-manager/home-manager:291 home-manager/home-manager:314
 #: home-manager/home-manager:1034
 msgid "%s: unknown option '%s'"
-msgstr "%s : option inconnue « %s »"
+msgstr "%s : option inconnue '%s'"
 
 #: home-manager/home-manager:296 home-manager/home-manager:1035
 msgid "Run '%s --help' for usage help"
@@ -158,7 +179,7 @@ msgstr[1] ""
 
 #: home-manager/home-manager:576
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr "Configuration \"news.display\" iconnue \"%s\"."
+msgstr "Configuration \"news.display\" inconnue \"%s\"."
 
 #: home-manager/home-manager:583
 #, sh-format
@@ -171,7 +192,7 @@ msgstr "Impossible de lancer une compilation dans un dossier en écriture seule"
 
 #: home-manager/home-manager:676
 msgid "No generation with ID %s"
-msgstr "Aucune génération avec l'identifiant %s"
+msgstr "Aucune génération avec l'ID %s"
 
 #: home-manager/home-manager:678
 msgid "Cannot remove the current generation %s"
@@ -187,11 +208,11 @@ msgstr "Aucune génération expirée"
 
 #: home-manager/home-manager:710
 msgid "No home-manager packages seem to be installed."
-msgstr "Aucun paquet home-manager ne semble être installé."
+msgstr "Aucun package home-manager ne semble être installé."
 
 #: home-manager/home-manager:792
 msgid "Unknown argument %s"
-msgstr "Aucun argument %s"
+msgstr "Argument inconnu %s"
 
 #: home-manager/home-manager:816
 msgid "This will remove Home Manager from your system."

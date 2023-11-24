@@ -1,0 +1,8 @@
+line-length = 100
+
+[lint]
+ignore = []
+select = ["E4", "E7", "E9", "F"]
+
+[per-file-ignores]
+"__init__.py" = ["F401"]

@@ -8,10 +8,20 @@ let
 
   package = pkgs.bat;
 
-  toConfigFile = generators.toKeyValue {
-    mkKeyValue = k: v: "--${k}=${lib.escapeShellArg v}";
-    listsAsDuplicateKeys = true;
-  };
+  toConfigFile = attrs:
+    let
+      inherit (builtins) isBool attrNames;
+      nonBoolFlags = filterAttrs (_: v: !(isBool v)) attrs;
+      enabledBoolFlags = filterAttrs (_: v: isBool v && v) attrs;
+
+      keyValuePairs = generators.toKeyValue {
+        mkKeyValue = k: v: "--${k}=${lib.escapeShellArg v}";
+        listsAsDuplicateKeys = true;
+      } nonBoolFlags;
+      switches = concatMapStrings (k: ''
+        --${k}
+      '') (attrNames enabledBoolFlags);
+    in keyValuePairs + switches;
 
 in {
   meta.maintainers = [ ];
@@ -20,7 +30,7 @@ in {
     enable = mkEnableOption "bat, a cat clone with wings";
 
     config = mkOption {
-      type = with types; attrsOf (either str (listOf str));
+      type = with types; attrsOf (oneOf [ str (listOf str) bool ]);
       default = { };
       example = {
         theme = "TwoDark";

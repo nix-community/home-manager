@@ -4,13 +4,12 @@
   config = {
     qt = {
       enable = true;
-      platformTheme = "gtk";
+      platformTheme = "gtk3";
     };
-    i18n.inputMethod.enabled = "fcitx5";
 
     nmt.script = ''
       assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
-        'QT_QPA_PLATFORMTHEME="gtk2"'
+        'QT_QPA_PLATFORMTHEME="gtk3"'
       assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
         'QT_PLUGIN_PATH'
       assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
