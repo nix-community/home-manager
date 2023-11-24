@@ -1,7 +1,7 @@
 [[sec-release-23.11]]
 == Release 23.11
 
-This is the current unstable branch and the information in this section is therefore not final.
+The 23.11 release branch became stable in November, 2023.
 
 [[sec-release-23.11-highlights]]
 === Highlights
