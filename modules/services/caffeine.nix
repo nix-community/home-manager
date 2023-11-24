@@ -28,7 +28,6 @@ in {
         Restart = "on-failure";
         PrivateTmp = true;
         ProtectSystem = "full";
-        ProtectHome = "yes";
         Type = "exec";
         Slice = "session.slice";
         ExecStart = "${pkgs.caffeine-ng}/bin/caffeine";
