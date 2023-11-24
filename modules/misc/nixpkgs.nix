@@ -40,7 +40,14 @@ let
     merge = lib.mergeOneOption;
   };
 
-  _pkgs = import pkgsPath (filterAttrs (n: v: v != null) config.nixpkgs);
+  # Passing Home Manager's built-in overlay to the Nixpkgs import below would
+  # cause the overlays under `~/.config/nixpkgs/` to always be ignored. To
+  # prevent this, we evaluate Nixpkgs twice: first, to include the overlays
+  # under `~/.config/nixpkgs/` if none is specified using the `nixpkgs.overlays`
+  # option, and second, to also include Home Manager's built-in overlay.
+  _pkgs =
+    (import pkgsPath (filterAttrs (n: v: v != null) config.nixpkgs)).extend
+    (import ../pkgs).overlay;
 
 in {
   options.nixpkgs = {

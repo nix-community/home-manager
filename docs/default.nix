@@ -1,7 +1,7 @@
-{ pkgs
-
+{ # Note, this should be Nixpkgs + HM extensions.
+pkgs
 # Note, this should be "the standard library" + HM extensions.
-, lib ? import ../modules/lib/stdlib-extended.nix pkgs.lib
+, lib ? pkgs.lib
 
 , release, isReleaseBranch }:
 

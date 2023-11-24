@@ -1,6 +1,10 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ pkgs ? null }@args:
 
-rec {
+let
+
+  pkgs = (import ./modules/pkgs).extendAttrOrDefault args;
+
+in rec {
   docs = let releaseInfo = pkgs.lib.importJSON ./release.json;
   in with import ./docs {
     inherit pkgs;
@@ -18,6 +22,8 @@ rec {
     pkgs.callPackage ./home-manager/install.nix { inherit home-manager; };
 
   nixos = import ./nixos;
+
+  nix-darwin = import ./nix-darwin;
 
   path = ./.;
 }

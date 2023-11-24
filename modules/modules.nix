@@ -1,9 +1,9 @@
-{ pkgs
-
+{ # Note, this should be Nixpkgs + HM extensions.
+pkgs
 # Note, this should be "the standard library" + HM extensions.
-, lib
+, lib ? pkgs.lib
 
-# Whether to enable module type checking.
+  # Whether to enable module type checking.
 , check ? true
 
   # If disabled, the pkgs attribute passed to this function is used instead.

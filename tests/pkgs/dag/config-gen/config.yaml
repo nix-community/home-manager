@@ -1,0 +1,7 @@
+nested:
+  dags: null
+  should: also
+work:
+- 0
+- '1'
+- 2

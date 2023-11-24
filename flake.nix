@@ -4,7 +4,8 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs = { self, nixpkgs, ... }:
-    {
+    let hmPkgs = import ./modules/pkgs;
+    in {
       nixosModules = rec {
         home-manager = import ./nixos;
         default = home-manager;
@@ -44,6 +45,10 @@
           , configuration ? null, extraModules ? null, stateVersion ? null
           , username ? null, homeDirectory ? null, system ? null }@args:
           let
+            pkgs = (args.pkgs // { inherit (args) lib; }).extend hmPkgs.overlay;
+
+            inherit (pkgs) lib;
+
             msgForRemovedArg = ''
               The 'homeManagerConfiguration' arguments
 
@@ -89,10 +94,15 @@
       };
     } // (let
       forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+      hmPkgsForSystem = system:
+        import nixpkgs {
+          localSystem = { inherit system; };
+          overlays = [ hmPkgs.overlay ];
+        };
     in {
       devShells = forAllSystems (system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = hmPkgsForSystem system;
           tests = import ./tests { inherit pkgs; };
         in tests.run);
 
@@ -105,7 +115,7 @@
 
       packages = forAllSystems (system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = hmPkgsForSystem system;
           releaseInfo = nixpkgs.lib.importJSON ./release.json;
           docs = import ./docs {
             inherit pkgs;

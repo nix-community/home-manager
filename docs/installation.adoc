@@ -141,7 +141,7 @@ $ sudo nix-channel --update
 It is then possible to add
 
 [source,nix]
-imports = [ <home-manager/nixos> ];
+imports = [ (import <home-manager>).nixos ];
 
 to your system `configuration.nix` file, which will introduce a new
 NixOS option called `home-manager.users` whose type is an attribute
@@ -265,7 +265,7 @@ $ nix-channel --update
 It is then possible to add
 
 [source,nix]
-imports = [ <home-manager/nix-darwin> ];
+imports = [ (import <home-manager>).nix-darwin ];
 
 to your nix-darwin `configuration.nix` file, which will introduce a
 new NixOS option called `home-manager` whose type is an attribute set

@@ -1,8 +1,10 @@
-{ pkgs ? import <nixpkgs> {}, enableBig ? true }:
+{ pkgs ? null, enableBig ? true }@args:
 
 let
 
-  lib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
+  pkgs = (import ../modules/pkgs).extendAttrOrDefault args;
+
+  inherit (pkgs) lib;
 
   nmt = fetchTarball {
     url =
@@ -158,6 +160,7 @@ import nmt {
     ./modules/programs/zsh
     ./modules/services/syncthing/common
     ./modules/xresources
+    ./pkgs/dag
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
     ./modules/services/git-sync-darwin

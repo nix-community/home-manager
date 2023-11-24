@@ -1,7 +1,7 @@
 # This module is the common base for the NixOS and nix-darwin modules.
 # For OS-specific configuration, please edit nixos/default.nix or nix-darwin/default.nix instead.
 
-{ config, lib, pkgs, ... }:
+{ config, lib, hmLib, pkgs, hmPkgs, ... }:
 
 with lib;
 
@@ -9,20 +9,17 @@ let
 
   cfg = config.home-manager;
 
-  extendedLib = import ../modules/lib/stdlib-extended.nix lib;
-
   hmModule = types.submoduleWith {
     description = "Home Manager module";
     specialArgs = {
-      lib = extendedLib;
+      lib = hmLib;
       osConfig = config;
       modulesPath = builtins.toString ../modules;
     } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
         imports = import ../modules/modules.nix {
-          inherit pkgs;
-          lib = extendedLib;
+          pkgs = hmPkgs;
           useNixpkgsModule = !cfg.useGlobalPkgs;
         };
 
@@ -112,5 +109,14 @@ in {
           message = "${user} profile: ${assertion.message}";
         })));
     })
+
+    # Provide Nixpkgs with Home Manager's extensions as additional
+    # module arguments in case other modules require them
+    {
+      _module.args = rec {
+        hmPkgs = pkgs.extend (import ../modules/pkgs).overlay;
+        hmLib = hmPkgs.lib;
+      };
+    }
   ]);
 }
