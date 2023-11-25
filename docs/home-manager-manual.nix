@@ -1,10 +1,10 @@
-{ stdenv, home-manager-render-docs, optionsDoc, lib, documentation-highlighter
-, nmd, revision, home-manager-options }:
+{ stdenv, lib, documentation-highlighter, nmd, revision, home-manager-options
+, nixos-render-docs }:
 let outputPath = "share/doc/home-manager";
 in stdenv.mkDerivation {
   name = "nixpkgs-manual";
 
-  nativeBuildInputs = [ home-manager-render-docs ];
+  nativeBuildInputs = [ nixos-render-docs ];
 
   src = ./manual;
 
@@ -33,7 +33,7 @@ in stdenv.mkDerivation {
         '@OPTIONS_JSON@' \
         ${home-manager-options.nix-darwin}/share/doc/nixos/options.json
 
-    home-manager-render-docs manual html \
+    nixos-render-docs manual html \
       --manpage-urls ./manpage-urls.json \
       --revision ${lib.trivial.revisionWithDefault revision} \
       --stylesheet ${nmd}/static/style.css \
