@@ -92,41 +92,35 @@ let
     optionIdPrefix = "nix-darwin-opt-";
   };
 
-  # home-manager specialized version of nixos-render-docs
-  home-manager-render-docs = let python = pkgs.buildPackages.python3;
-  in python.pkgs.callPackage ./home-manager-render-docs.nix {
-    python = python;
-    nixos-render-docs = python.pkgs.toPythonModule pkgs.nixos-render-docs;
-  };
-
   release-config = builtins.fromJSON (builtins.readFile ../release.json);
   revision = "release-${release-config.release}";
   # Generate the `man home-configuration.nix` package
   home-configuration-manual =
     pkgs.runCommand "home-configuration-reference-manpage" {
       nativeBuildInputs =
-        [ pkgs.buildPackages.installShellFiles home-manager-render-docs ];
+        [ pkgs.buildPackages.installShellFiles pkgs.nixos-render-docs ];
       allowedReferences = [ "out" ];
     } ''
       # Generate manpages.
       mkdir -p $out/share/man/man5
       mkdir -p $out/share/man/man1
-      home-manager-render-docs -j $NIX_BUILD_CORES options manpage \
+      nixos-render-docs -j $NIX_BUILD_CORES options manpage \
         --revision ${revision} \
+        --header ${./home-configuration-nix-header.5} \
+        --footer ${./home-configuration-nix-footer.5} \
         ${hmOptionsDocs.optionsJSON}/share/doc/nixos/options.json \
         $out/share/man/man5/home-configuration.nix.5
       cp ${./home-manager.1} $out/share/man/man1/home-manager.1
     '';
   # Generate the HTML manual pages
   home-manager-manual = pkgs.callPackage ./home-manager-manual.nix {
-    optionsDoc = hmOptionsDocs;
     nmd = nmdSrc;
     home-manager-options = {
       home-manager = hmOptionsDocs.optionsJSON;
       nixos = nixosOptionsDocs.optionsJSON;
       nix-darwin = nixDarwinOptionsDocs.optionsJSON;
     };
-    inherit revision home-manager-render-docs;
+    inherit revision;
   };
   html = home-manager-manual;
   htmlOpenTool = pkgs.callPackage ./html-open-tool.nix { } { inherit html; };
