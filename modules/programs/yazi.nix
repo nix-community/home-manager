@@ -21,7 +21,7 @@ let
     function ya
       set tmp (mktemp -t "yazi-cwd.XXXXX")
       yazi --cwd-file="$tmp"
-      if set cwd (cat -- "$tmp") && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]
+      if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
         cd -- "$cwd"
       end
       rm -f -- "$tmp"
@@ -29,10 +29,10 @@ let
   '';
 
   nushellIntegration = ''
-    def-env ya [] {
-      let tmp = (mktemp -t "yazi-cwd.XXXXX")
+    def --env ya [] {
+      let tmp = $"($env.TEMP)(char path_sep)yazi-cwd." + (random chars -l 5)
       yazi --cwd-file $tmp
-      let cwd = (cat -- $tmp)
+      let cwd = (open $tmp)
       if $cwd != "" and $cwd != $env.PWD {
         cd $cwd
       }
@@ -82,7 +82,7 @@ in {
         Configuration written to
         {file}`$XDG_CONFIG_HOME/yazi/keymap.toml`.
 
-        See <https://github.com/sxyazi/yazi/blob/main/config/docs/keymap.md>
+        See <https://yazi-rs.github.io/docs/configuration/keymap>
         for the full list of options.
       '';
     };
@@ -107,7 +107,7 @@ in {
         Configuration written to
         {file}`$XDG_CONFIG_HOME/yazi/yazi.toml`.
 
-        See <https://github.com/sxyazi/yazi/blob/main/config/docs/yazi.md>
+        See <https://yazi-rs.github.io/docs/configuration/yazi>
         for the full list of options.
       '';
     };
@@ -131,7 +131,7 @@ in {
         Configuration written to
         {file}`$XDG_CONFIG_HOME/yazi/theme.toml`.
 
-        See <https://github.com/sxyazi/yazi/blob/main/config/docs/theme.md>
+        See <https://yazi-rs.github.io/docs/configuration/theme>
         for the full list of options
       '';
     };
