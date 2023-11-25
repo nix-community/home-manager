@@ -22,6 +22,16 @@ let
     set -gx GPG_TTY (tty)
   '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
 
+  gpgNushellInitStr = ''
+    $env.GPG_TTY = (tty)
+  '' + optionalString cfg.enableSshSupport ''
+    ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye | ignore
+
+    if not "SSH_AUTH_SOCK" in $env {
+      $env.SSH_AUTH_SOCK = (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)
+    }
+  '';
+
   # mimic `gpgconf` output for use in `systemd` unit definitions.
   # we cannot use `gpgconf` directly because it heavily depends on system
   # state, but we need the values at build time. original:
@@ -216,6 +226,10 @@ in {
       enableFishIntegration = mkEnableOption "Fish integration" // {
         default = true;
       };
+
+      enableNushellIntegration = mkEnableOption "Nushell integration" // {
+        default = true;
+      };
     };
   };
 
@@ -247,6 +261,9 @@ in {
       programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgInitStr;
       programs.fish.interactiveShellInit =
         mkIf cfg.enableFishIntegration gpgFishInitStr;
+
+      programs.nushell.extraEnv =
+        mkIf cfg.enableNushellIntegration gpgNushellInitStr;
     }
 
     (mkIf (cfg.sshKeys != null) {
