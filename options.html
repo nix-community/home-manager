@@ -15027,6 +15027,29 @@ for more details.</p><p><span class="emphasis"><em>Type:</em></span>
 integer between 2500 and 9000 (both inclusive)</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">4500</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/sctd.nix" target="_top">
 &lt;home-manager/modules/services/sctd.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.signaturepdf.enable"></a><a class="term" href="options.html#opt-services.signaturepdf.enable"><code class="option">services.signaturepdf.enable</code></a></span></dt><dd><p>Whether to enable signaturepdf; signing, organizing, editing metadatas or compressing PDFs.</p><p><span class="emphasis"><em>Type:</em></span>
+boolean</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/signaturepdf.nix" target="_top">
+&lt;home-manager/modules/services/signaturepdf.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.signaturepdf.package"></a><a class="term" href="options.html#opt-services.signaturepdf.package"><code class="option">services.signaturepdf.package</code></a></span></dt><dd><p>signaturepdf derivation to use.</p><p><span class="emphasis"><em>Type:</em></span>
+package</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">"pkgs.signaturepdf"</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/signaturepdf.nix" target="_top">
+&lt;home-manager/modules/services/signaturepdf.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.signaturepdf.extraConfig"></a><a class="term" href="options.html#opt-services.signaturepdf.extraConfig"><code class="option">services.signaturepdf.extraConfig</code></a></span></dt><dd><p>Additional configuration optional.</p><p><span class="emphasis"><em>Type:</em></span>
+attribute set of (string or signed integer or boolean or floating point number)</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p><p><span class="emphasis"><em>Example:</em></span></p><pre class="programlisting">{
+  max_file_uploads = "201";
+  post_max_size = "24M";
+  upload_max_filesize = "24M";
+}
+</pre><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/signaturepdf.nix" target="_top">
+&lt;home-manager/modules/services/signaturepdf.nix&gt;
+</a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.signaturepdf.port"></a><a class="term" href="options.html#opt-services.signaturepdf.port"><code class="option">services.signaturepdf.port</code></a></span></dt><dd><p>The port on which the application runs</p><p><span class="emphasis"><em>Type:</em></span>
+16 bit unsigned integer; between 0 and 65535 (both inclusive)</p><p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">8080</code></p><p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">8081</code></p><p><span class="emphasis"><em>Declared by:</em></span></p><table border="0" summary="Simple list" class="simplelist"><tr><td><code class="filename"><a class="filename" href="https://github.com/nix-community/home-manager/blob/master/modules/services/signaturepdf.nix" target="_top">
+&lt;home-manager/modules/services/signaturepdf.nix&gt;
 </a></code></td></tr></table></dd><dt><span class="term"><a id="opt-services.spotifyd.enable"></a><a class="term" href="options.html#opt-services.spotifyd.enable"><code class="option">services.spotifyd.enable</code></a></span></dt><dd><p>Whether to enable SpotifyD connect.</p><p><span class="emphasis"><em>Type:</em></span>
 boolean</p><p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p><p><span class="emphasis"><em>Example:</em></span>
