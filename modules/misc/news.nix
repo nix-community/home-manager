@@ -1379,6 +1379,14 @@ in
           A new module is available: 'programs.i3blocks'.
         '';
       }
+
+      {
+        time = "2024-01-03T19:25:09+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xdg.portal'.
+        '';
+      }
     ];
   };
 }
