@@ -74,6 +74,7 @@ in {
       example = literalExpression ''
         [
           { timeout = 60; command = "${pkgs.swaylock}/bin/swaylock -fF"; }
+          { timeout = 90; command = "${pkgs.systemd}/bin/systemctl suspend"; }
         ]
       '';
       description = "List of commands to run after idle timeout.";
