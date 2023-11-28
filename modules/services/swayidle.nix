@@ -84,7 +84,7 @@ in {
       default = [ ];
       example = literalExpression ''
         [
-          { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock"; }
+          { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock -fF"; }
           { event = "lock"; command = "lock"; }
         ]
       '';
