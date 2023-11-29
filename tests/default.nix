@@ -181,6 +181,7 @@ import nmt {
     ./modules/programs/autorandr
     ./modules/programs/awscli
     ./modules/programs/beets  # One test relies on services.mpd
+    ./modules/programs/bemenu
     ./modules/programs/borgmatic
     ./modules/programs/boxxy
     ./modules/programs/firefox
