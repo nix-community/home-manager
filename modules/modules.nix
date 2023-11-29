@@ -63,6 +63,7 @@ let
     ./programs/bat.nix
     ./programs/bacon.nix
     ./programs/beets.nix
+    ./programs/bemenu.nix
     ./programs/borgmatic.nix
     ./programs/bottom.nix
     ./programs/boxxy.nix
