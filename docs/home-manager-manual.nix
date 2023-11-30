@@ -2,7 +2,7 @@
 , nixos-render-docs }:
 let outputPath = "share/doc/home-manager";
 in stdenv.mkDerivation {
-  name = "nixpkgs-manual";
+  name = "home-manager-manual";
 
   nativeBuildInputs = [ nixos-render-docs ];
 
