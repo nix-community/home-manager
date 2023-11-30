@@ -5,7 +5,7 @@ which is typically found at `~/.config/home-manager/home.nix` in the
 standard installation or `~/.config/home-manager/flake.nix` in a Nix
 flake based installation.
 
-::: note
+::: {.note}
 The default configuration used to be placed in `~/.config/nixpkgs`¸ so
 you may see references to that elsewhere. The old directory still works
 but Home Manager will print a warning message when used.
