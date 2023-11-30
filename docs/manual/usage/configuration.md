@@ -29,7 +29,7 @@ A fresh install of Home Manager will generate a minimal
 
 You can use this as a base for your further configurations.
 
-::: note
+::: {.note}
 If you are not very familiar with the Nix language and NixOS modules
 then it is encouraged to start with small and simple changes. As you
 learn you can gradually grow the configuration with confidence.
