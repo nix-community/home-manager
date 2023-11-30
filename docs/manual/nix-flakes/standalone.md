@@ -48,7 +48,7 @@ $ # And after the initial activation.
 $ home-manager switch --flake ~/hmconf
 ```
 
-::: note
+::: {.note}
 The flake inputs are not automatically updated by Home Manager. You need
 to use the standard `nix flake update` command for that.
 
