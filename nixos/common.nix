@@ -92,6 +92,15 @@ in {
         Per-user Home Manager configuration.
       '';
     };
+
+    activationTimeout = mkOption {
+      type = types.str;
+      default = "5m";
+      example = "1h";
+      description = ''
+        Timeout of the activation script.
+      '';
+    };
   };
 
   config = (mkMerge [
