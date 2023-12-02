@@ -29,7 +29,7 @@
     -   Alternatively, you can enable flakes on a per-command basis with
         the following additional flags to `nix` and `home-manager`:
 
-        ``` console
+        ``` shell
         $ nix --extra-experimental-features "nix-command flakes" <sub-commands>
         $ home-manager --extra-experimental-features "nix-command flakes" <sub-commands>
         ```

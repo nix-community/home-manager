@@ -17,13 +17,13 @@ the `home-manager` command use it by either
 
 1.  overriding the default path by using the `-I` command line option:
 
-    ``` console
+    ``` shell
     $ home-manager -I home-manager=$HOME/devel/home-manager
     ```
 
     or, if using [flakes](#sec-flakes-standalone):
 
-    ``` console
+    ``` shell
     $ home-manager --override-input home-manager ~/devel/home-manager
     ```
 

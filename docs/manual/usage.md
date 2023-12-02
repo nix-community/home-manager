@@ -30,7 +30,7 @@ programs.emacs.enable = "yes";
 then building it, for example using `home-manager build`, will result in
 an error message saying something like
 
-``` console
+```console
 $ home-manager build
 error: A definition for option `programs.emacs.enable' is not of type `boolean'. Definition values:
 - In `/home/jdoe/.config/home-manager/home.nix': "yes"
@@ -45,7 +45,7 @@ there also find information about the default value and a description of
 the option. You can find the complete option documentation in
 [Home Manager Configuration Options](#ch-options) or directly in the terminal by running
 
-``` console
+``` shell
 man home-configuration.nix
 ```
 

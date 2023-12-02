@@ -98,13 +98,13 @@ follows:
 
 To activate this configuration you can run
 
-``` console
+``` shell
 home-manager switch
 ```
 
 or if you are not feeling so lucky,
 
-``` console
+``` shell
 home-manager build
 ```
 

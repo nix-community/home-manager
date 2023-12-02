@@ -10,7 +10,7 @@ installed manually, that is, packages that shows up when you run
 For example, imagine you have the `hello` package installed in your
 environment
 
-``` console
+``` shell
 $ nix-env --query
 hello-2.10
 ```
@@ -24,7 +24,7 @@ home.packages = [ pkgs.hello ];
 Then attempting to switch to this configuration will result in an error
 similar to
 
-``` console
+``` shell
 $ home-manager switch
 these derivations will be built:
   /nix/store/xg69wsnd1rp8xgs9qfsjal017nf0ldhm-home-manager-path.drv

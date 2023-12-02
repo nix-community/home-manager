@@ -12,20 +12,20 @@ functions available in test scripts, you can look at NMT's
 
 The full Home Manager test suite can be run by executing
 
-``` console
+``` shell
 $ nix-shell --pure tests -A run.all
 ```
 
 in the project root. List all test cases through
 
-``` console
+``` shell
 $ nix-shell --pure tests -A list
 ```
 
 and run an individual test, for example `alacritty-empty-settings`,
 through
 
-``` console
+``` shell
 $ nix-shell --pure tests -A run.alacritty-empty-settings
 ```
 
@@ -33,6 +33,6 @@ However, those invocations will impurely source the system's nixpkgs,
 and may cause failures. To run against the nixpkgs from the flake.lock,
 use instead e.g.
 
-``` console
+``` shell
 $ nix develop --ignore-environment .#all
 ```

@@ -14,14 +14,14 @@
 2.  Add the appropriate Home Manager channel. If you are following
     Nixpkgs master or an unstable channel you can run
 
-    ``` console
+    ``` shell
     $ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
     $ nix-channel --update
     ```
 
     and if you follow a Nixpkgs version 23.11 channel you can run
 
-    ``` console
+    ``` shell
     $ nix-channel --add https://github.com/nix-community/home-manager/archive/release-23.11.tar.gz home-manager
     $ nix-channel --update
     ```
@@ -29,7 +29,7 @@
 3.  Run the Home Manager installation command and create the first Home
     Manager generation:
 
-    ``` console
+    ``` shell
     $ nix-shell '<home-manager>' -A install
     ```
 
