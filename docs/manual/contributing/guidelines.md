@@ -82,7 +82,7 @@ descriptions and the documentation of Home Manager can be generated and
 opened by typing the following in a shell within a clone of the Home
 Manager Git repository:
 
-``` console
+``` shell
 $ nix-build -A docs.html
 $ xdg-open ./result/share/doc/home-manager/index.html
 ```
@@ -90,7 +90,7 @@ $ xdg-open ./result/share/doc/home-manager/index.html
 When you have made changes to a module, it is a good idea to check that
 the man page version of the module options looks good:
 
-``` console
+``` shell
 $ nix-build -A docs.manPages
 $ man ./result/share/man/man5/home-configuration.nix.5.gz
 ```

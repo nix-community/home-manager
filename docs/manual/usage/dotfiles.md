@@ -27,7 +27,7 @@ For example, suppose you have a wonderful, painstakingly created
 to your configuration. Attempting to switch to the generation will then
 result in
 
-``` console
+``` shell
 $ home-manager switch
 …
 Activating checkLinkTargets
