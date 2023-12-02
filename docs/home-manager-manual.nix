@@ -32,14 +32,17 @@ in stdenv.mkDerivation {
       --replace \
         '@OPTIONS_JSON@' \
         ${home-manager-options.nix-darwin}/share/doc/nixos/options.json
+    cp -t out/highlightjs ${nmd}/static/highlightjs/tomorrow-night.min.css
+    cp ${./highlight-style.css} out/highlightjs/highlight-style.css
 
     nixos-render-docs manual html \
       --manpage-urls ./manpage-urls.json \
       --revision ${lib.trivial.revisionWithDefault revision} \
       --stylesheet ${nmd}/static/style.css \
-      --stylesheet ${nmd}/static/highlightjs/tomorrow-night.min.css \
-      --script ${nmd}/static/highlightjs/highlight.min.js \
-      --script ${nmd}/static/highlightjs/highlight.load.js \
+      --stylesheet $out/share/doc/home-manager/highlightjs/tomorrow-night.min.css \
+      --stylesheet $out/share/doc/home-manager/highlightjs/highlight-style.css \
+      --script $out/share/doc/home-manager/highlightjs/highlight.pack.js \
+      --script $out/share/doc/home-manager/highlightjs/loader.js \
       --toc-depth 1 \
       --section-toc-depth 1 \
       manual.md \
