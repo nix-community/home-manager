@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-11-30 18:45+0000\n"
-"Last-Translator: Nikolay Mokrinsky <me@mokrinsky.ru>\n"
+"PO-Revision-Date: 2023-12-02 23:06+0000\n"
+"Last-Translator: Blezz Rot <markus.jenya04@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/home-manager/cli/"
 "ru/>\n"
 "Language: ru\n"
@@ -32,6 +32,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Файл %s вашего Home Manager находится в устаревшем месте %s\n"
+"пожалуйста, переместите его в %s"
 
 #: home-manager/home-manager:109
 msgid "No configuration file found. Please create one at %s"
@@ -114,7 +116,7 @@ msgstr "Файл %s уже существует, оставляем без из�
 
 #: home-manager/home-manager:324 home-manager/home-manager:423
 msgid "Creating %s..."
-msgstr ""
+msgstr "Создание %s..."
 
 #: home-manager/home-manager:465
 msgid "Creating initial Home Manager generation..."
