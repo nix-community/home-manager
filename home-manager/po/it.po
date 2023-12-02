@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-11-12 11:01+0000\n"
-"Last-Translator: Frankie McEyes <mceyes@protonmail.com>\n"
+"PO-Revision-Date: 2023-12-02 23:06+0000\n"
+"Last-Translator: Lorenzo Brzek <lorenzoservizi@proton.me>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/home-manager/cli/"
 "it/>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.2-dev\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: home-manager/home-manager:81
 msgid "No configuration file found at %s"
@@ -31,14 +31,16 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Mantere il tuo Home Manger su %s su %s è obsoleto,\n"
+"si raccomanda di spostarlo su %s"
 
 #: home-manager/home-manager:109
 msgid "No configuration file found. Please create one at %s"
-msgstr "Nessun file di configurazione trovato. Per favore crearne uno in %s"
+msgstr "Nessun file di configurazione trovato. Per favore creane uno in %s"
 
 #: home-manager/home-manager:124
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home Manager non è stato trovato in %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:132
@@ -46,6 +48,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"Il percorso di riserva di Home Manager %s è stato deprecato e un file/"
+"directory è stato trovato lì."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:135
@@ -68,6 +72,26 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"Per rimuovere questo avvertimento, esegui queste istruzioni.\n"
+"\n"
+"1.Di esplicitamente a Home Manager di usare il percorso, per esempio "
+"aggiungendo\n"
+"\n"
+"· · · · · { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"nella tua configurazione.\n"
+"\n"
+"· · · Se hai importato Home Manager direttamente, puoi usare il parametro "
+"`path`\n"
+"\n"
+"· · · · · pkgs.callPackage /percorso/di/home-manager-package { path = \"%s\""
+";}\n"
+"\n"
+"· · · quando chiami il pacchetto Home Manager\n"
+"\n"
+"2. Rimuovi il percorso obsoleto\n"
+"\n"
+"· · · · · $ rm -r \"%s\""
 
 #: home-manager/home-manager:174
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -86,15 +110,15 @@ msgstr "%s: opzione sconosciuta '%s'"
 
 #: home-manager/home-manager:296 home-manager/home-manager:1035
 msgid "Run '%s --help' for usage help"
-msgstr "Esegui '%s --help' per ottenere aiuto"
+msgstr "Esegui '%s --help' per le informazioni d'uso"
 
 #: home-manager/home-manager:322 home-manager/home-manager:421
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr "Il file %s è già esistente, non verrà modificato..."
+msgstr "Il file %s esiste già, non verrà modificato..."
 
 #: home-manager/home-manager:324 home-manager/home-manager:423
 msgid "Creating %s..."
-msgstr ""
+msgstr "Creando %s..."
 
 #: home-manager/home-manager:465
 msgid "Creating initial Home Manager generation..."
@@ -112,7 +136,7 @@ msgid ""
 msgstr ""
 "Tutto fatto! Home-manager dovrebbe essere installato e puoi modificare\n"
 "\n"
-"%s\n"
+"· · · · %s\n"
 "\n"
 "per configurare Home Manager. Esegui 'man home-configurazion.nix' per\n"
 "consultare tutte le opzioni disponibili."
@@ -126,10 +150,10 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
-"Oh no, l'installazione non è andata a buon fine! Per favore aprire un ticket "
+"Oh oh, l'installazione non è andata a buon fine! Per favore aprire un ticket "
 "issue a\n"
 "\n"
-"%s\n"
+"· · · · %s\n"
 "\n"
 "se l'errore sembra essere causato da Home Manager."
 
@@ -146,10 +170,10 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
-"C'è %d novità di elementi non letta.\n"
+"C'è %d novità rilevante non letta.\n"
 "Leggila con il comando \"%s news\"."
 msgstr[1] ""
-"Ci sono %d novità di elementi non letti\n"
+"Ci sono %d novità rilevanti non lette.\n"
 "Leggile con il comando \"%s news\"."
 
 #: home-manager/home-manager:576
@@ -159,7 +183,7 @@ msgstr "Opzione \"news.display\" sconosciuta \"%s\"."
 #: home-manager/home-manager:583
 #, sh-format
 msgid "Please set the $EDITOR environment variable"
-msgstr "Per favore impostare la variabile d'ambient $EDITOR"
+msgstr "Per favore impostare la variabile d'ambiente $EDITOR"
 
 #: home-manager/home-manager:598
 msgid "Cannot run build in read-only directory"
@@ -183,7 +207,7 @@ msgstr "Nessuna generazione in scadenza"
 
 #: home-manager/home-manager:710
 msgid "No home-manager packages seem to be installed."
-msgstr "Nessun pacchetto home-manager sembra essere installato."
+msgstr "Sembrerebbe che nessun pacchetto home-manager sia installato."
 
 #: home-manager/home-manager:792
 msgid "Unknown argument %s"
@@ -203,7 +227,7 @@ msgstr "Vuoi davvero disinstallare Home Manager?"
 
 #: home-manager/home-manager:829
 msgid "Switching to empty Home Manager configuration..."
-msgstr "Cambio ad una configurazione Home Manager vuota..."
+msgstr "Passaando ad una configurazione Home Manager vuota..."
 
 #: home-manager/home-manager:857
 msgid "Yay!"
@@ -211,7 +235,7 @@ msgstr "Urrà!"
 
 #: home-manager/home-manager:862
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr "Home Manager è disinstallato ma la tua home.Nix non è stata toccata."
+msgstr "Home Manager è disinstallato ma la tua home.nix non è stata toccata."
 
 #: home-manager/home-manager:1074
 msgid "expire-generations expects one argument, got %d."
@@ -224,7 +248,7 @@ msgstr "Comando sconosciuto: %s"
 #: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
-"Questa derivazione non è compilabile, prova ad eseguila usando nix-shell."
+"Questa derivazione non è compilabile, prova ad eseguirla usando nix-shell."
 
 #~ msgid "Creating initial Home Manager configuration..."
 #~ msgstr "Creando la configurazione iniziale di Home Manager..."
