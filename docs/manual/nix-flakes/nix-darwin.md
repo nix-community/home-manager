@@ -42,6 +42,6 @@ command here may be `darwin-rebuild switch --flake <flake-uri>`.
 
 You can use the above `flake.nix` as a template in `~/.config/darwin` by
 
-``` console
+``` shell
 $ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin
 ```

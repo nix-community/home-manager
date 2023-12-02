@@ -7,7 +7,7 @@ do so are
 1.  Run `home-manager generations` to determine which generation you
     wish to rollback to:
 
-    ``` console
+    ``` shell
     $ home-manager generations
     2018-01-04 11:56 : id 765 -> /nix/store/kahm1rxk77mnvd2l8pfvd4jkkffk5ijk-home-manager-generation
     2018-01-03 10:29 : id 764 -> /nix/store/2wsmsliqr5yynqkdyjzb1y57pr5q2lsj-home-manager-generation
@@ -25,7 +25,7 @@ do so are
 
 3.  Run the `activate` script inside the copied store path:
 
-    ``` console
+    ``` shell
     $ /nix/store/mv960kl9chn2lal5q8lnqdp1ygxngcd1-home-manager-generation/activate
     Starting home manager activation
     …

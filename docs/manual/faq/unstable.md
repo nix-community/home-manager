@@ -27,7 +27,7 @@ should work provided you have a Nix channel called `nixpkgs-unstable`.
 
 You can add the `nixpkgs-unstable` channel by running
 
-``` console
+``` shell
 $ nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
 $ nix-channel --update
 ```

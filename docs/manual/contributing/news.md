@@ -14,7 +14,7 @@ but you should follow some basic guidelines:
     as time zone. For example, \"2017-09-13T17:10:14+00:00\". A suitable
     timestamp can be produced by the command
 
-    ``` console
+    ``` shell
     $ date --iso-8601=second --universal
     ```
 

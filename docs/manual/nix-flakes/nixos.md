@@ -42,6 +42,6 @@ command for the system, such as
 
 You can use the above `flake.nix` as a template in `/etc/nixos` by
 
-``` console
+``` shell
 $ nix flake new /etc/nixos -t github:nix-community/home-manager#nixos
 ```
