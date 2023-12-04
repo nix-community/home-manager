@@ -175,6 +175,14 @@ in {
       '';
     };
 
+    enableNushellIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Nushell integration.
+      '';
+    };
+
     package = mkOption {
       type = types.package;
       default = pkgs.broot;
@@ -226,5 +234,8 @@ in {
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration (shellInit "zsh");
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration (shellInit "fish");
+
+    programs.nushell.extraConfig =
+      mkIf cfg.enableNushellIntegration (shellInit "nushell");
   };
 }
