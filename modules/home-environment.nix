@@ -906,6 +906,7 @@ in
             --subst-var-by GENERATION_DIR $out
 
           ln -s ${config.home-files} $out/home-files
+          ln -s ${config.home.internal.filePutterConfig} $out/putter.json
           ln -s ${cfg.path} $out/home-path
 
           cp "$extraDependenciesPath" "$out/extra-dependencies"
