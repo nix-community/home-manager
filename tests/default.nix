@@ -158,6 +158,8 @@ let
 
           test.enableBig = enableBig;
           test.enableLegacyIfd = enableLegacyIfd;
+
+          home.fileActivator = "putter";
         }
       )
     ];
