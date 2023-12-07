@@ -356,6 +356,13 @@ in
         description = "Enable zsh autosuggestions";
       };
 
+      zproof.enable = mkOption {
+        default = false;
+        description = ''
+          Enable zproof in your zshrc.
+        '';
+      };
+
       syntaxHighlighting = mkOption {
         type = syntaxHighlightingModule;
         default = {};
@@ -534,6 +541,12 @@ in
         ++ optional cfg.oh-my-zsh.enable cfg.oh-my-zsh.package;
 
       home.file."${relToDotDir ".zshrc"}".text = concatStringsSep "\n" ([
+        # zproof must be loaded before everything else, since it
+        # benchmarks the shell initialization.
+        (optionalString cfg.zproof.enable ''
+          zmodload zsh/zprof
+        '')
+
         cfg.initExtraFirst
         "typeset -U path cdpath fpath manpath"
 
@@ -656,6 +669,11 @@ in
             (downKey: "bindkey \"${downKey}\" history-substring-search-down")
             (lib.toList cfg.historySubstringSearch.searchDownKey)
           }
+        '')
+
+        (optionalString cfg.zproof.enable
+        ''
+          zprof
         '')
       ]);
     }
