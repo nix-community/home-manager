@@ -1,5 +1,11 @@
-{ stdenv, lib, documentation-highlighter, nmd, revision, home-manager-options
-, nixos-render-docs }:
+{ stdenv
+, lib
+, documentation-highlighter
+, nmd
+, revision
+, home-manager-options
+, nixos-render-docs
+}:
 let outputPath = "share/doc/home-manager";
 in stdenv.mkDerivation {
   name = "home-manager-manual";
@@ -46,7 +52,7 @@ in stdenv.mkDerivation {
       --toc-depth 1 \
       --section-toc-depth 1 \
       manual.md \
-      out/index.html
+      out/index.xhtml
   '';
 
   installPhase = ''

@@ -1,6 +1,9 @@
 { writeShellScriptBin, makeDesktopItem, symlinkJoin }:
-{ html, pathName ? "home-manager", projectName ? pathName
-, name ? "${pathName}-help" }:
+{ html
+, pathName ? "home-manager"
+, projectName ? pathName
+, name ? "${pathName}-help"
+}:
 let
   helpScript = writeShellScriptBin name ''
     set -euo pipefail
@@ -18,7 +21,7 @@ let
       echo "$0: unable to start a web browser; please set \$BROWSER"
       exit 1
     else
-      exec "$BROWSER" "${html}/share/doc/${pathName}/index.html"
+      exec "$BROWSER" "${html}/share/doc/${pathName}/index.xhtml"
     fi
   '';
 
@@ -30,7 +33,8 @@ let
     exec = "${helpScript}/bin/${name}";
     categories = [ "System" ];
   };
-in symlinkJoin {
+in
+symlinkJoin {
   inherit name;
   paths = [ helpScript desktopItem ];
 }
