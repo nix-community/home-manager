@@ -175,6 +175,12 @@ in {
         Extra configuration lines to add to `~/.config/hypr/hyprland.conf`.
       '';
     };
+
+    sourceFirst = lib.mkEnableOption ''
+      putting source entries at the top of the configuration
+    '' // {
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -222,9 +228,9 @@ in {
             inherit indent;
           };
           allFields = filterAttrs (n: v: !(isAttrs v)) attrs;
-          importantFields =
-            filterAttrs (n: _: (hasPrefix "$" n) || (hasPrefix "bezier" n))
-            allFields;
+          importantFields = filterAttrs (n: _:
+            (hasPrefix "$" n) || (hasPrefix "bezier" n)
+            || (cfg.sourceFirst && (hasPrefix "source" n))) allFields;
           fields = builtins.removeAttrs allFields
             (mapAttrsToList (n: _: n) importantFields);
         in mkFields importantFields
