@@ -8,6 +8,8 @@
     plugins =
       [ "/path/to/plugin1" (config.lib.test.mkStubPackage { name = "foo"; }) ];
     settings = {
+      source = [ "sourced.conf" ];
+
       decoration = {
         shadow_offset = "0 5";
         "col.shadow" = "rgba(00000099)";
