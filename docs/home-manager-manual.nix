@@ -1,11 +1,5 @@
-{ stdenv
-, lib
-, documentation-highlighter
-, nmd
-, revision
-, home-manager-options
-, nixos-render-docs
-}:
+{ stdenv, lib, documentation-highlighter, nmd, revision, home-manager-options
+, nixos-render-docs }:
 let outputPath = "share/doc/home-manager";
 in stdenv.mkDerivation {
   name = "home-manager-manual";
