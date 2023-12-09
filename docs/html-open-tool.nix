@@ -1,9 +1,6 @@
 { writeShellScriptBin, makeDesktopItem, symlinkJoin }:
-{ html
-, pathName ? "home-manager"
-, projectName ? pathName
-, name ? "${pathName}-help"
-}:
+{ html, pathName ? "home-manager", projectName ? pathName
+, name ? "${pathName}-help" }:
 let
   helpScript = writeShellScriptBin name ''
     set -euo pipefail
@@ -33,8 +30,7 @@ let
     exec = "${helpScript}/bin/${name}";
     categories = [ "System" ];
   };
-in
-symlinkJoin {
+in symlinkJoin {
   inherit name;
   paths = [ helpScript desktopItem ];
 }
