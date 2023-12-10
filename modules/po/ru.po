@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-12-10 16:00+0000\n"
+"PO-Revision-Date: 2023-12-11 16:06+0000\n"
 "Last-Translator: Blezz Rot <markus.jenya04@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/home-manager/"
 "modules/ru/>\n"
@@ -123,7 +123,7 @@ msgstr "Начинаю активацию Home Manager"
 
 #: modules/lib-bash/activation-init.sh:123
 msgid "Sanity checking Nix"
-msgstr "Проверяю работоспособность Nix"
+msgstr "Проверка работоспособности Nix"
 
 #: modules/lib-bash/activation-init.sh:133
 msgid "This is a dry run"
