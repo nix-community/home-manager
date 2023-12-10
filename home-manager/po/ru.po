@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-12-02 23:06+0000\n"
+"PO-Revision-Date: 2023-12-10 16:00+0000\n"
 "Last-Translator: Blezz Rot <markus.jenya04@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/home-manager/cli/"
 "ru/>\n"
@@ -112,7 +112,7 @@ msgstr "Выполните '%s --help', чтобы получить справк
 
 #: home-manager/home-manager:322 home-manager/home-manager:421
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr "Файл %s уже существует, оставляем без изменений..."
+msgstr "Файл %s уже существует и не будет изменен..."
 
 #: home-manager/home-manager:324 home-manager/home-manager:423
 msgid "Creating %s..."
