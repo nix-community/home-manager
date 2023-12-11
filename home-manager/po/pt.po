@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-10-19 04:00+0000\n"
-"Last-Translator: SrGesus <gabriel.fcf04@gmail.com>\n"
+"PO-Revision-Date: 2023-12-11 16:06+0000\n"
+"Last-Translator: Lucas Eduardo <lucas59356@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/home-manager/"
 "cli/pt/>\n"
 "Language: pt\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.1\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: home-manager/home-manager:81
 msgid "No configuration file found at %s"
@@ -48,6 +48,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"O caminho alternativo do Home Manager %s foi depreciado e um arquivo/"
+"diretório foi encontrado lá."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:135
@@ -70,6 +72,24 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"Para remover este aviso, faça o seguinte.\n"
+"\n"
+"1. Instrua o Home Manager para usar o caminho, por exemplo, adicionando\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   em sua configuração.\n"
+"\n"
+"   Se você importa o Home Manager diretamente, você pode usar o parâmetro "
+"`path`\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   quando chamar o pacote do Home Manager.\n"
+"\n"
+"2. Remova o caminho depreciado.\n"
+"\n"
+"     $ rm -r \"%s\""
 
 #: home-manager/home-manager:174
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -93,11 +113,11 @@ msgstr "Execute '%s --help' para instruções de uso"
 
 #: home-manager/home-manager:322 home-manager/home-manager:421
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "O arquivo %s já existe, deixando do jeito que está..."
 
 #: home-manager/home-manager:324 home-manager/home-manager:423
 msgid "Creating %s..."
-msgstr ""
+msgstr "Criando %s..."
 
 #: home-manager/home-manager:465
 msgid "Creating initial Home Manager generation..."
