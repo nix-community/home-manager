@@ -57,11 +57,16 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file."${config.home.homeDirectory}/.aws/config".source =
-      iniFormat.generate "aws-config-${config.home.username}" cfg.settings;
+    home.file."${config.home.homeDirectory}/.aws/config" =
+      lib.mkIf (cfg.settings != { }) {
+        source =
+          iniFormat.generate "aws-config-${config.home.username}" cfg.settings;
+      };
 
-    home.file."${config.home.homeDirectory}/.aws/credentials".source =
-      iniFormat.generate "aws-credentials-${config.home.username}"
-      cfg.credentials;
+    home.file."${config.home.homeDirectory}/.aws/credentials" =
+      lib.mkIf (cfg.credentials != { }) {
+        source = iniFormat.generate "aws-credentials-${config.home.username}"
+          cfg.credentials;
+      };
   };
 }
