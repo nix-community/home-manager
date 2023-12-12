@@ -161,7 +161,7 @@ NixOS option called <code class="literal">home-manager</code> whose type is an a
 maps user names to Home Manager configurations.</p><p>For example, a nix-darwin configuration may include the lines</p><pre><code class="programlisting  nix">users.users.eve = {
   name = &quot;eve&quot;;
   home = &quot;/Users/eve&quot;;
-}
+};
 home-manager.users.eve = { pkgs, ... }: {
   home.packages = [ pkgs.atool pkgs.httpie ];
   programs.bash.enable = true;
