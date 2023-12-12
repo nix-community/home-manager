@@ -38,7 +38,7 @@ For example, a nix-darwin configuration may include the lines
 users.users.eve = {
   name = "eve";
   home = "/Users/eve";
-}
+};
 home-manager.users.eve = { pkgs, ... }: {
   home.packages = [ pkgs.atool pkgs.httpie ];
   programs.bash.enable = true;
