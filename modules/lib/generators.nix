@@ -99,4 +99,31 @@
     in attrs: ''
       ${concatStringsSep "\n" (mapAttrsToList convertAttributeToKDL attrs)}
     '';
+
+  toSCFG = let
+    inherit (lib)
+      concatLines concatStringsSep filterAttrs isAttrs isBool isFloat isInt
+      isList isString mapAttrsToList;
+    inherit (builtins) typeOf toJSON;
+
+    toSCFG' = v:
+      if isAttrs v then ''
+        {
+          ${toSCFG v}
+        }
+      '' else if isList v then
+        concatStringsSep " " v
+      else if isString v then
+        v
+      else if isInt v || isFloat v || isBool v then
+        toJSON v
+      else
+        abort "toSCFG: type ${typeOf v} is unsupported";
+
+    filterSCFG = filterAttrs (_: val: !isNull val && val != { });
+
+    sectionSCFG = mapAttrsToList (key: val: "${key} ${toSCFG' val}");
+
+    toSCFG = v: concatLines (sectionSCFG (filterSCFG v));
+  in toSCFG;
 }
