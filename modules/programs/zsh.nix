@@ -30,6 +30,27 @@ let
     vicmd = "bindkey -a";
   };
 
+  mkLinkFarmEntry = name: dir:
+    let
+      env = pkgs.buildEnv {
+        name = "zsh-${name}-env";
+        paths = cfg.oh-my-zsh.customPkgs;
+        pathsToLink = "/share/zsh/${dir}";
+      };
+    in
+      { inherit name; path = "${env}/share/zsh/${dir}"; };
+
+  mkNamedLinkFarmEntry = name: mkLinkFarmEntry name name;
+
+  omz-custom =
+    if length cfg.oh-my-zsh.customPkgs != 0 then
+      pkgs.linkFarm "oh-my-zsh-custom" [
+        (mkNamedLinkFarmEntry "themes")
+        (mkLinkFarmEntry "completions" "site-functions")
+        (mkNamedLinkFarmEntry "plugins")
+      ]
+    else cfg.oh-my-zsh.custom;
+
   stateVersion = config.home.stateVersion;
 
   historyModule = types.submodule ({ config, ... }: {
@@ -168,9 +189,21 @@ let
         type = types.str;
         example = "$HOME/my_customizations";
         description = ''
-          Path to a custom oh-my-zsh package to override config of
+          Path to a custom oh-my-zsh directory to override config of
           oh-my-zsh. See <https://github.com/robbyrussell/oh-my-zsh/wiki/Customization>
           for more information.
+          Cannot be used with `customPkgs`.
+        '';
+      };
+
+      customPkgs = mkOption {
+        default = [];
+        type = types.listOf types.package;
+        example = "$HOME/my_customizations";
+        description = ''
+          List of custom packages that should be placed into `$ZSH_CUSTOM`.
+          See <https://github.com/robbyrussell/oh-my-zsh/wiki/Customization> for more information.
+          Cannot be used with `custom`.
         '';
       };
 
@@ -581,8 +614,8 @@ in
             ${optionalString (cfg.oh-my-zsh.plugins != [])
               "plugins=(${concatStringsSep " " cfg.oh-my-zsh.plugins})"
             }
-            ${optionalString (cfg.oh-my-zsh.custom != "")
-              "ZSH_CUSTOM=\"${cfg.oh-my-zsh.custom}\""
+            ${optionalString (omz-custom != "")
+              "ZSH_CUSTOM=\"${omz-custom}\""
             }
             ${optionalString (cfg.oh-my-zsh.theme != "")
               "ZSH_THEME=\"${cfg.oh-my-zsh.theme}\""
@@ -623,8 +656,8 @@ in
         # Aliases
         ${aliasesStr}
         ''
-      ] 
-      ++ (mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases) 
+      ]
+      ++ (mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases)
       ++ [ (''
         # Named Directory Hashes
         ${dirHashesStr}
