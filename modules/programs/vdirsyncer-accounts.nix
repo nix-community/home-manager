@@ -137,8 +137,8 @@ in {
     };
 
     postHook = mkOption {
-      type = types.lines;
-      default = "";
+      type = types.nullOr types.lines;
+      default = null;
       description = ''
         Command to call for each item creation and modification.
         The command will be called with the path of the new/updated
