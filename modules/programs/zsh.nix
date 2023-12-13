@@ -199,7 +199,7 @@ let
       customPkgs = mkOption {
         default = [];
         type = types.listOf types.package;
-        example = "$HOME/my_customizations";
+        example = "[ pkgs.nix-zsh-completions ]";
         description = ''
           List of custom packages that should be placed into `$ZSH_CUSTOM`.
           See <https://github.com/robbyrussell/oh-my-zsh/wiki/Customization> for more information.
