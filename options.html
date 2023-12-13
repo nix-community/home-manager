@@ -40152,6 +40152,33 @@ null or package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.ssh.addKeysToAgent"></a><a class="term" href="options.html#opt-programs.ssh.addKeysToAgent"><code class="option">programs.ssh.addKeysToAgent</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>When enabled, a private key that is used during authentication will be
+added to ssh-agent if it is running (with confirmation enabled if
+set to ‘confirm’). The argument must be ‘no’ (the default), ‘yes’, ‘confirm’
+(optionally followed by a time interval), ‘ask’ or a time interval (e.g. ‘1h’).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;no&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ssh.nix" target="_top">
+&lt;home-manager/modules/programs/ssh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.ssh.compression"></a><a class="term" href="options.html#opt-programs.ssh.compression"><code class="option">programs.ssh.compression</code>
   </a>
  </span>
