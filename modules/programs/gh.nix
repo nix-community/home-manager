@@ -126,7 +126,7 @@ in {
     home.packages = [ cfg.package ];
 
     xdg.configFile."gh/config.yml".source =
-      yamlFormat.generate "gh-config.yml" cfg.settings;
+      yamlFormat.generate "gh-config.yml" (cfg.settings // { version = "1"; });
 
     programs.git.extraConfig.credential = mkIf cfg.gitCredentialHelper.enable
       (builtins.listToAttrs (map (host:
