@@ -1,0 +1,8 @@
+pre {
+  padding: 0;
+}
+
+pre code.hljs {
+  border: none;
+  margin: 0;
+}

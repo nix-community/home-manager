@@ -9,8 +9,8 @@ let
 
   nmdSrc = fetchTarball {
     url =
-      "https://git.sr.ht/~rycee/nmd/archive/824a380546b5d0d0eb701ff8cd5dbafb360750ff.tar.gz";
-    sha256 = "0vvj40k6bw8ssra8wil9rqbsznmfy1kwy7cihvm13rajwdg9ycgg";
+      "https://git.sr.ht/~rycee/nmd/archive/f18defadcc25e69e95b04493ee02682005472255.tar.gz";
+    sha256 = "14fazjqbc6sfsxycwadfhcymi37xg5wmrlvg3jb8d4mpbcdwfwz4";
   };
 
   nmd = import nmdSrc {
@@ -92,32 +92,38 @@ let
     optionIdPrefix = "nix-darwin-opt-";
   };
 
-  docs = nmd.buildDocBookDocs {
-    pathName = "home-manager";
-    projectName = "Home Manager";
-    modulesDocs = [{
-      docBook = pkgs.linkFarm "hm-module-docs-for-nmd" {
-        "nmd-result/home-manager-options.xml" = hmOptionsDocs.optionsDocBook;
-        "nmd-result/nix-darwin-options.xml" =
-          nixDarwinOptionsDocs.optionsDocBook;
-        "nmd-result/nixos-options.xml" = nixosOptionsDocs.optionsDocBook;
-      };
-    }];
-    documentsDirectory = ./.;
-    documentType = "book";
-    chunkToc = ''
-      <toc>
-        <d:tocentry xmlns:d="http://docbook.org/ns/docbook" linkend="book-home-manager-manual"><?dbhtml filename="index.html"?>
-          <d:tocentry linkend="ch-options"><?dbhtml filename="options.html"?></d:tocentry>
-          <d:tocentry linkend="ch-nixos-options"><?dbhtml filename="nixos-options.html"?></d:tocentry>
-          <d:tocentry linkend="ch-nix-darwin-options"><?dbhtml filename="nix-darwin-options.html"?></d:tocentry>
-          <d:tocentry linkend="ch-tools"><?dbhtml filename="tools.html"?></d:tocentry>
-          <d:tocentry linkend="ch-release-notes"><?dbhtml filename="release-notes.html"?></d:tocentry>
-        </d:tocentry>
-      </toc>
+  release-config = builtins.fromJSON (builtins.readFile ../release.json);
+  revision = "release-${release-config.release}";
+  # Generate the `man home-configuration.nix` package
+  home-configuration-manual =
+    pkgs.runCommand "home-configuration-reference-manpage" {
+      nativeBuildInputs =
+        [ pkgs.buildPackages.installShellFiles pkgs.nixos-render-docs ];
+      allowedReferences = [ "out" ];
+    } ''
+      # Generate manpages.
+      mkdir -p $out/share/man/man5
+      mkdir -p $out/share/man/man1
+      nixos-render-docs -j $NIX_BUILD_CORES options manpage \
+        --revision ${revision} \
+        --header ${./home-configuration-nix-header.5} \
+        --footer ${./home-configuration-nix-footer.5} \
+        ${hmOptionsDocs.optionsJSON}/share/doc/nixos/options.json \
+        $out/share/man/man5/home-configuration.nix.5
+      cp ${./home-manager.1} $out/share/man/man1/home-manager.1
     '';
+  # Generate the HTML manual pages
+  home-manager-manual = pkgs.callPackage ./home-manager-manual.nix {
+    nmd = nmdSrc;
+    home-manager-options = {
+      home-manager = hmOptionsDocs.optionsJSON;
+      nixos = nixosOptionsDocs.optionsJSON;
+      nix-darwin = nixDarwinOptionsDocs.optionsJSON;
+    };
+    inherit revision;
   };
-
+  html = home-manager-manual;
+  htmlOpenTool = pkgs.callPackage ./html-open-tool.nix { } { inherit html; };
 in {
   inherit nmdSrc;
 
@@ -138,9 +144,9 @@ in {
     '';
   };
 
-  manPages = docs.manPages;
+  manPages = home-configuration-manual;
 
-  manual = { inherit (docs) html htmlOpenTool; };
+  manual = { inherit html htmlOpenTool; };
 
   # Unstable, mainly for CI.
   jsonModuleMaintainers = pkgs.writeText "hm-module-maintainers.json" (let
