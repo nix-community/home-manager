@@ -9,7 +9,7 @@ let
   bashIntegration = ''
     function ya() {
       tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-      yazi --cwd-file="$tmp"
+      yazi "$@" --cwd-file="$tmp"
       if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
         cd -- "$cwd"
       fi
@@ -20,7 +20,7 @@ let
   fishIntegration = ''
     function ya
       set tmp (mktemp -t "yazi-cwd.XXXXX")
-      yazi --cwd-file="$tmp"
+      yazi $argv --cwd-file="$tmp"
       if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
         cd -- "$cwd"
       end
@@ -29,9 +29,9 @@ let
   '';
 
   nushellIntegration = ''
-    def --env ya [] {
+    def --env ya [args?] {
       let tmp = $"($env.TEMP)(char path_sep)yazi-cwd." + (random chars -l 5)
-      yazi --cwd-file $tmp
+      yazi $args --cwd-file $tmp
       let cwd = (open $tmp)
       if $cwd != "" and $cwd != $env.PWD {
         cd $cwd
