@@ -17,15 +17,15 @@ contributing.md
 faq.md
 ```
 
-```{=include=} appendix html:into-file=//options.html
+```{=include=} appendix html:into-file=//options.xhtml
 options.md
 ```
 
-```{=include=} appendix html:into-file=//nixos-options.html
+```{=include=} appendix html:into-file=//nixos-options.xhtml
 nixos-options.md
 ```
 
-```{=include=} appendix html:into-file=//nix-darwin-options.html
+```{=include=} appendix html:into-file=//nix-darwin-options.xhtml
 nix-darwin-options.md
 ```
 ```{=include=} appendix html:into-file=//release-notes.xhtml
