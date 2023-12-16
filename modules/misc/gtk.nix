@@ -35,6 +35,8 @@ let
           Package providing the theme. This package will be installed
           to your profile. If `null` then the theme
           is assumed to already be available in your profile.
+
+          For the theme to apply to GTK 4, this option is mandatory.
         '';
       };
 
@@ -233,6 +235,15 @@ in {
         gtk-cursor-theme-size = cfg.cursorTheme.size;
       };
 
+    gtk4Css =
+      lib.optionalString (cfg.theme != null && cfg.theme.package != null) ''
+        /**
+         * GTK 4 reads the theme configured by gtk-theme-name, but ignores it.
+         * It does however respect user CSS, so import the theme from here.
+        **/
+        @import url("file://${cfg.theme.package}/share/themes/${cfg.theme.name}/gtk-4.0/gtk.css");
+      '' + cfg4.extraCss;
+
     dconfIni = optionalAttrs (cfg.font != null) {
       font-name = let
         fontSize =
@@ -277,8 +288,7 @@ in {
     xdg.configFile."gtk-4.0/settings.ini".text =
       toGtk3Ini { Settings = gtkIni // cfg4.extraConfig; };
 
-    xdg.configFile."gtk-4.0/gtk.css" =
-      mkIf (cfg4.extraCss != "") { text = cfg4.extraCss; };
+    xdg.configFile."gtk-4.0/gtk.css" = mkIf (gtk4Css != "") { text = gtk4Css; };
 
     dconf.settings."org/gnome/desktop/interface" = dconfIni;
   });
