@@ -61,4 +61,6 @@ in stdenv.mkDerivation {
     mkdir -p $out/nix-support/
     echo "doc manual $dest index.html" >> $out/nix-support/hydra-build-products
   '';
+
+  meta = { maintainers = [ lib.maintainers.considerate ]; };
 }
