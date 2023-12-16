@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <title>Appendix D. Release Notes</title>
+<link rel="stylesheet" type="text/css" href="style.css" /><link rel="stylesheet" type="text/css" href="highlightjs/tomorrow-night.min.css" /><link rel="stylesheet" type="text/css" href="highlightjs/highlight-style.css" />
+<script src="highlightjs/highlight.pack.js" type="text/javascript"></script><script src="highlightjs/loader.js" type="text/javascript"></script>
+ <meta name="generator" content="nixos-render-docs" />
+ <link rel="home" href="index.xhtml" title="Home Manager Manual" />
+ <link rel="up" href="index.xhtml" title="Home Manager Manual" /><link rel="prev" href="nix-darwin-options.xhtml" title="Appendix C. nix-darwin Configuration Options" />
+ </head>
+ <body>
+  <div class="navheader">
+   <table width="100%" summary="Navigation header">
+    <tr>
+    <th colspan="3" align="center">Appendix D. Release Notes</th>
+    </tr>
+    <tr>
+    <td width="20%" align="left"><a accesskey="p" href="nix-darwin-options.xhtml">Prev</a>&nbsp;</td>
+    <th width="60%" align="center">&nbsp;</th>
+    <td width="20%" align="right">&nbsp;</td>
+    </tr>
+   </table>
+   <hr />
+  </div><div class="appendix"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <a id="ch-release-notes"></a>Appendix D. Release Notes   </h1>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-24.05">Release 24.05</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-23.11">Release 23.11</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-23.05">Release 23.05</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-22.11">Release 22.11</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-22.05">Release 22.05</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-21.11">Release 21.11</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-21.05">Release 21.05</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-20.09">Release 20.09</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-20.03">Release 20.03</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-19.09">Release 19.09</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-19.03">Release 19.03</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-18.09">Release 18.09</a> </span></dt> </dl></div><p>This section lists the release notes for stable versions of Home Manager
+and the current unstable version.</p><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-24.05"></a>Release 24.05   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-24.05-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-24.05-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>This is the current unstable branch and the information in this section
+is therefore not final.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-24.05-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>The <code class="literal">.release</code> file in the Home Manager project root has been
+removed. Please use the <code class="literal">release.json</code> file instead.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-24.05-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <code class="literal">home.stateVersion</code> option is set to
+&quot;24.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>Nothing, yet.</p></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-23.11"></a>Release 23.11   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-23.11-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-23.11-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 23.11 release branch became stable in November, 2023.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-23.11-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>When using <a class="link" href="options.xhtml#opt-programs.fish.enable"  >opt-programs.fish.enable</a>, the setup code for
+<a class="link" href="options.xhtml#opt-home.sessionVariables"  >opt-home.sessionVariables</a> is now translated with
+<a class="link" href="https://github.com/bouk/babelfish"  target="_top">babelfish</a>. This should result
+in significantly faster shell startup times but could theoretically
+break if you have very complex bash expressions in a session
+variable. Please report any issues you experience.</p></li><li class="listitem"><p>The <code class="literal">.release</code> file in the Home Manager source tree has been
+supplanted by <code class="literal">release.json</code>, which contains more information about
+the branch. If you have any external code reading this file, please
+switch to consuming <code class="literal">release.json</code> instead. The <code class="literal">.release</code> file will
+be removed in 24.05.</p></li><li class="listitem"><p>Home Manager has migrated to using the upstream Nixpkgs
+<code class="literal">lib.nixosOptionsDoc</code> processor for option documentation. If you
+have any external Home Manager modules, their option descriptions
+and literal examples should be translated to <a class="link" href="https://nixos.org/manual/nixpkgs/unstable/#sec-contributing-markup"  target="_top">Nixpkgs-flavoured
+Markdown</a>.</p></li><li class="listitem"><p>The <code class="literal">services.password-store-sync</code> module has been removed. Use
+<code class="literal">services.git-sync</code> instead.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-23.11-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <code class="literal">home.stateVersion</code> option is set to
+&quot;23.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>Nothing, yet.</p></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-23.05"></a>Release 23.05   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-23.05-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-23.05-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 23.05 release branch became the stable branch in May, 2023.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-23.05-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Firefox add-ons are now managed per-profile. That is, if you are
+currently having</p><pre><code class="programlisting  nix">programs.firefox.extensions = [ foo bar ];
+</code></pre><p>in your configuration then you must change it to</p><pre><code class="programlisting  nix">programs.firefox.profiles.myprofile.extensions = [ foo bar ];
+</code></pre></li><li class="listitem"><p>The default configuration location has been changed from
+<code class="literal">~/.config/nixpkgs/home.nix</code> to <code class="literal">~/.config/home-manager/home.nix</code>.</p><p>Similarly, if you are using a Nix flake based setup then the default
+flake file location has changed from <code class="literal">~/.config/nixpkgs/flake.nix</code>
+to <code class="literal">~/.config/home-manager/flake.nix</code>.</p><p>The old location will continue to work but using it will trigger a
+warning message. We changed the default configuration location to
+avoid confusion about which files belong to Home Manager and which
+belong to Nixpkgs.</p></li><li class="listitem"><p>The <code class="literal">home-manager</code> tool now offers an <code class="literal">init</code> command. This command
+can be used to generate an initial Home Manager configuration, and
+optionally also activate it. The recommended installation method for
+a standalone Home Manager setup with Nix flakes uses this new
+command. The standard installation method remains the same but uses
+the new command internally. See <a class="link" href="index.xhtml#sec-flakes-standalone" title="Standalone setup" >sec-flakes-standalone</a> for
+more.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-23.05-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <code class="literal">home.stateVersion</code> option is set to
+&quot;23.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The options</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p><a class="link" href="options.xhtml#opt-xsession.windowManager.i3.config.window.titlebar"  >opt-xsession.windowManager.i3.config.window.titlebar</a></p></li><li class="listitem"><p><a class="link" href="options.xhtml#opt-xsession.windowManager.i3.config.floating.titlebar"  >opt-xsession.windowManager.i3.config.floating.titlebar</a></p></li><li class="listitem"><p><a class="link" href="options.xhtml#opt-wayland.windowManager.sway.config.window.titlebar"  >opt-wayland.windowManager.sway.config.window.titlebar</a></p></li><li class="listitem"><p><a class="link" href="options.xhtml#opt-wayland.windowManager.sway.config.floating.titlebar"  >opt-wayland.windowManager.sway.config.floating.titlebar</a></p></li></ul></div><p>now default to <code class="literal">true</code> which is consistent with the default values
+for those options used by <code class="literal">i3</code> and <code class="literal">sway</code>.</p></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-22.11"></a>Release 22.11   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-22.11-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-22.11-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 22.11 release branch became the stable branch in November, 2022.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-22.11-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-home.stateVersion"  >opt-home.stateVersion</a> option no longer has a default
+value. It used to default to “18.09”, which was the Home Manager
+version that introduced the option. If your configuration does not
+explicitly set this option then you need to add</p><pre><code class="programlisting  nix">home.stateVersion = &quot;18.09&quot;;
+</code></pre><p>to your configuration.</p></li><li class="listitem"><p>The Flake function <code class="literal">homeManagerConfiguration</code> has been simplified.
+Specifically, the arguments</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p><code class="literal">configuration</code>,</p></li><li class="listitem"><p><code class="literal">username</code>,</p></li><li class="listitem"><p><code class="literal">homeDirectory</code>,</p></li><li class="listitem"><p><code class="literal">stateVersion</code>,</p></li><li class="listitem"><p><code class="literal">extraModules</code>, and</p></li><li class="listitem"><p><code class="literal">system</code></p></li></ul></div><p>have been removed. Instead use the new <code class="literal">modules</code> argument, which
+accepts a list of NixOS modules.</p><p>Further, the <code class="literal">pkgs</code> argument is now mandatory and should be set to
+<code class="literal">nixpkgs.legacyPackages.${system}</code> where <code class="literal">nixpkgs</code> is the Nixpkgs
+input of your choice.</p><p>For example, if your Flake currently contains</p><pre><code class="programlisting  nix">homeManagerConfiguration {
+  configuration = import ./home.nix;
+  system = &quot;x86_64-linux&quot;;
+  username = &quot;jdoe&quot;;
+  homeDirectory = &quot;/home/jdoe&quot;;
+  stateVersion = &quot;22.05&quot;;
+  extraModules = [ ./some-extra-module.nix ];
+}
+</code></pre><p>then you can change it to</p><pre><code class="programlisting  nix">homeManagerConfiguration {
+  pkgs = nixpkgs.legacyPackages.${system};
+  modules = [
+    ./home.nix
+    ./some-extra-module.nix
+    {
+      home = {
+        username = &quot;jdoe&quot;;
+        homeDirectory = &quot;/home/jdoe&quot;;
+        stateVersion = &quot;22.05&quot;;
+      };
+    }
+  ];
+}
+</code></pre><p>Of course, you can move the assignment of <a class="link" href="options.xhtml#opt-home.username"  >opt-home.username</a>,
+<a class="link" href="options.xhtml#opt-home.stateVersion"  >opt-home.stateVersion</a> to
+some other file or simply place them in your <code class="literal">home.nix</code>.</p></li><li class="listitem"><p>The <code class="literal">services.picom</code> module has been refactored to use structural
+settings.</p><p>As a result <code class="literal">services.picom.extraOptions</code> has been removed in favor
+of <a class="link" href="options.xhtml#opt-services.picom.settings"  >opt-services.picom.settings</a>. Also, <code class="literal">services.picom.blur*</code>
+were removed since upstream changed the blur settings to be more
+flexible. You can migrate the blur settings to use
+<a class="link" href="options.xhtml#opt-services.picom.settings"  >opt-services.picom.settings</a> instead.</p></li><li class="listitem"><p>The <code class="literal">services.compton</code> module has been removed. It was deprecated in
+release 20.03. Use <code class="literal">services.picom</code> instead.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-22.11-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <code class="literal">home.stateVersion</code> option is set to
+&quot;22.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-services.mpd.musicDirectory"  >opt-services.mpd.musicDirectory</a> option now defaults to
+the value of <a class="link" href="options.xhtml#opt-xdg.userDirs.music"  >opt-xdg.userDirs.music</a> if
+<a class="link" href="options.xhtml#opt-xdg.userDirs.enable"  >opt-xdg.userDirs.enable</a> is enabled. Otherwise it is
+undefined and must be specified in the user configuration.</p></li><li class="listitem"><p>The activation script now resets <code class="literal">PATH</code> before running. Before, the
+user’s <code class="literal">PATH</code> environment variable would be used in the script and
+this made it possible for commands in the activation script to run
+arbitrary commands accessible to the user. We now restrict the
+activation script to commands that are explicitly specified.</p><p>There is no official way to restore the old behavior. We attempt to
+make the activation script as reproducible as possible and honoring
+the user’s <code class="literal">PATH</code> reduces reproducibility.</p><p>If you need to run a command in an activation script block then
+refer to the command by its absolute command path, such as
+<code class="literal">${pkgs.hello}/bin/hello</code>.</p></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-22.05"></a>Release 22.05   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-22.05-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-22.05-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 22.05 release branch became the stable branch in May, 2022.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-22.05-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <code class="literal">programs.waybar.settings.modules</code> option was removed. Waybar
+modules should now be declared directly under
+<code class="literal">programs.waybar.settings</code>.</p></li><li class="listitem"><p>Home Manager now partially support translation of texts into
+different languages. Note, the support is quite limited at the
+moment. Specifically, it only applies to parts of the system written
+in the Bash language, such as the <code class="literal">home-manager</code> command line tool
+and the activation script.</p><p>If you would like to contribute to the translation effort then you
+can do so through the <a class="link" href="https://hosted.weblate.org/projects/home-manager/"  target="_top">Home Manager Weblate
+project</a>.</p></li><li class="listitem"><p>A new module, <code class="literal">launchd.agents</code> was added. Use this to enable
+services based on macOS LaunchAgents.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-22.05-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <code class="literal">home.stateVersion</code> option is set to
+&quot;22.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >opt-programs.waybar.settings</a> option now allows defining
+modules directly under <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >opt-programs.waybar.settings</a>.
+Defining modules under <code class="literal">programs.waybar.settings.modules</code> will now
+be an error. For example,</p><pre><code class="programlisting  nix">programs.waybar.settings.modules.&quot;custom/my-module&quot; = { };
+</code></pre><p>becomes</p><pre><code class="programlisting  nix">programs.waybar.settings.&quot;custom/my-module&quot; = { };
+</code></pre></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-21.11"></a>Release 21.11   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-21.11-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-21.11-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 21.11 release branch became the stable branch in November, 2021.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-21.11-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>All Home Manager modules are now loaded on all platforms. With this
+change you will get a more descriptive error message if you attempt
+to enable a module that is incompatible with the host platform.</p><p>Previously, modules that were platform specific would only be loaded
+on that particular platform. For example, a module defining a
+<a class="link" href="https://systemd.io/"  target="_top">systemd</a> service would only be loaded when the
+host platform was Linux. This reduced evaluation times, simplified
+the generated documentation, and made it impossible to accidentally
+use modules that do not support the host platform.</p><p>While the above benefits are quite nice, avoiding module loads also
+brings a few problems. For example, the <a class="link" href="https://nix-community.github.io/home-manager/"  target="_top">public
+documentation</a> will
+only show the options available for Linux hosts and the
+documentation cannot make references to options within modules that
+are unavailable on some hosts. Finally, users who wish to use the
+same configuration file for different platforms cannot do so, even
+if the platform incompatible options are unused.</p><p>Ultimately, the benefits of loading all modules won and the behavior
+has now changed. For associated discussion see
+<a class="link" href="https://github.com/nix-community/home-manager/issues/1906"  target="_top">issue #1906</a>.</p></li><li class="listitem"><p>Rofi version 1.7.0 removed many options that were used by the module
+and replaced them with custom themes, which are more flexible and
+powerful.</p><p>You can replicate your old configuration by moving those options to
+<a class="link" href="options.xhtml#opt-programs.rofi.theme"  >opt-programs.rofi.theme</a>. Keep in mind that the syntax is
+different so you may need to do some changes.</p></li><li class="listitem"><p>Taskwarrior version 2.6.0 respects XDG Specification for the config
+file now. Option <a class="link" href="options.xhtml#opt-programs.taskwarrior.config"  >opt-programs.taskwarrior.config</a> and friends
+now generate the config file at <code class="literal">$XDG_CONFIG_HOME/task/taskrc</code>
+instead of <code class="literal">~/.taskrc</code>.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-21.11-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <code class="literal">home.stateVersion</code> option is set to
+&quot;21.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-home.keyboard"  >opt-home.keyboard</a> option now defaults to <code class="literal">null</code>, meaning
+that Home Manager won’t do any keyboard layout management. For
+example, <code class="literal">setxkbmap</code> won’t be run in X sessions.</p></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.pet.settings"  >opt-programs.pet.settings</a> option no longer place its
+value inside a <code class="literal">General</code> attribute. For example,</p><pre><code class="programlisting  nix">programs.pet.settings.editor = &quot;nvim&quot;;
+</code></pre><p>becomes</p><pre><code class="programlisting  nix">programs.pet.settings.General.editor = &quot;nvim&quot;;
+</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >opt-programs.waybar.settings</a> option now allows defining
+modules directly under <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >opt-programs.waybar.settings</a>. For
+example,</p><pre><code class="programlisting  nix">programs.waybar.settings.modules.&quot;custom/my-module&quot; = { };
+</code></pre><p>becomes</p><pre><code class="programlisting  nix">programs.waybar.settings.&quot;custom/my-module&quot; = { };
+</code></pre></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-21.05"></a>Release 21.05   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-21.05-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-21.05-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 21.05 release branch became the stable branch in May, 2021.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-21.05-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The ‘opt-programs.broot.verbs` option is now a list rather than an
+attribute set. To migrate, move the keys of the attrset into the
+list items’ <code class="literal">invocation</code> keys. For example,</p><pre><code class="programlisting  nix">programs.broot.verbs = {
+  &quot;p&quot; = { execution = &quot;:parent&quot;; };
+};
+</code></pre><p>becomes</p><pre><code class="programlisting  nix">programs.broot.verbs = [
+  {
+    invocation = &quot;p&quot;;
+    execution = &quot;:parent&quot;;
+  }
+];
+</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.mpv.package"  >opt-programs.mpv.package</a> option has been changed to
+allow custom derivations. The following configuration is now
+possible:</p><pre><code class="programlisting  nix">programs.mpv.package = (pkgs.wrapMpv (pkgs.mpv-unwrapped.override {
+  vapoursynthSupport = true;
+}) {
+  extraMakeWrapperArgs = [
+    &quot;--prefix&quot; &quot;LD_LIBRARY_PATH&quot; &quot;:&quot; &quot;${pkgs.vapoursynth-mvtools}/lib/vapoursynth&quot;
+  ];
+});
+</code></pre><p>As a result of this change, <a class="link" href="options.xhtml#opt-programs.mpv.package"  >opt-programs.mpv.package</a> is no
+longer the resulting derivation. Use the newly introduced
+<code class="literal">programs.mpv.finalPackage</code> instead.</p></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.rofi.extraConfig"  >opt-programs.rofi.extraConfig</a> option is now an attribute
+set rather than a string. To migrate, move each line into the
+attribute set, removing the <code class="literal">rofi.</code> prefix from the keys. For
+example,</p><pre><code class="programlisting  nix">programs.rofi.extraConfig = &#x27;&#x27;
+  rofi.show-icons: true
+  rofi.modi: drun,emoji,ssh
+&#x27;&#x27;;
+</code></pre><p>becomes</p><pre><code class="programlisting  nix">programs.rofi.extraConfig = {
+  show-icons = true;
+  modi = &quot;drun,emoji,ssh&quot;;
+};
+</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.rofi.theme"  >opt-programs.rofi.theme</a> option now supports defining a
+theme using an attribute set, the following configuration is now
+possible:</p><pre><code class="programlisting  nix">programs.rofi.theme = let
+  # Necessary to avoid quoting non-string values
+  inherit (config.lib.formats.rasi) mkLiteral;
+in {
+   &quot;@import&quot; = &quot;~/.config/rofi/theme.rasi&quot;;
+
+  &quot;*&quot; = {
+    background-color = mkLiteral &quot;#000000&quot;;
+    foreground-color = mkLiteral &quot;rgba ( 250, 251, 252, 100 % )&quot;;
+    border-color = mkLiteral &quot;#FFFFFF&quot;;
+    width = 512;
+  };
+
+  &quot;#textbox-prompt-colon&quot; = {
+    expand = false;
+    str = &quot;:&quot;;
+    margin = mkLiteral &quot;0px 0.3em 0em 0em&quot;;
+    text-color = mkLiteral &quot;@foreground-color&quot;;
+  };
+};
+</code></pre></li><li class="listitem"><p>The <code class="literal">services.redshift.extraOptions</code> and
+<code class="literal">services.gammastep.extraOptions</code> options were removed in favor of
+<a class="link" href="options.xhtml#opt-services.redshift.settings"  >opt-services.redshift.settings</a> and
+<code class="literal">services.gammastep.settings</code>, that are now an attribute set rather
+than a string. They also support new features not available before,
+for example:</p><pre><code class="programlisting  nix">services.redshift = {
+  dawnTime = &quot;6:00-7:45&quot;;
+  duskTime = &quot;18:35-20:15&quot;;
+  settings = {
+    redshift = {
+      gamma = 0.8;
+      adjustment-method = &quot;randr&quot;;
+    };
+
+    randr = {
+      screen = 0;
+    };
+  };
+};
+</code></pre><p>It is recommended to check either
+<a class="link" href="https://github.com/jonls/redshift/blob/master/redshift.conf.sample"  target="_top">redshift.conf.sample</a>
+or
+<a class="link" href="https://gitlab.com/chinstrap/gammastep/-/blob/master/gammastep.conf.sample"  target="_top">gammastep.conf.sample</a>
+for the available additional options in each program.</p></li><li class="listitem"><p>Specifying <code class="literal">programs.neomutt.binds.map</code> or
+<code class="literal">programs.neomutt.macros.map</code> as a single string is now deprecated
+in favor of specfiying it as a list of strings.</p></li><li class="listitem"><p>The <code class="literal">programs.neovim.configure</code> is deprecated in favor of other
+<code class="literal">programs.neovim</code> options; please use the other options at your
+disposal:</p><pre><code class="programlisting  nix">configure.packages.*.opt  -&gt; programs.neovim.plugins = [ { plugin = ...; optional = true; }]
+configure.packages.*.start  -&gt; programs.neovim.plugins = [ { plugin = ...; }]
+configure.customRC -&gt; programs.neovim.extraConfig
+</code></pre></li><li class="listitem"><p>Home Manager now respects the <code class="literal">NO_COLOR</code> environment variable as per
+<a class="link" href="https://no-color.org/"  target="_top">https://no-color.org/</a>.</p></li><li class="listitem"><p>Qt module now supports <a class="link" href="options.xhtml#opt-qt.style.name"  >opt-qt.style.name</a> to specify a theme
+name and <a class="link" href="options.xhtml#opt-qt.style.package"  >opt-qt.style.package</a> to specify a theme package. If
+you have set <a class="link" href="options.xhtml#opt-qt.platformTheme"  >opt-qt.platformTheme</a> to <code class="literal">gnome</code>, a
+<a class="link" href="options.xhtml#opt-qt.style.package"  >opt-qt.style.package</a> compatible with both Qt and Gtk is now
+required to be set. For instance:</p><pre><code class="programlisting  nix">qt = {
+  platformTheme = &quot;gnome&quot;;
+  style = {
+    name = &quot;adwaita-dark&quot;;
+    package = pkgs.adwaita-qt;
+  };
+};
+</code></pre></li><li class="listitem"><p>The library type <code class="literal">fontType</code> now has a <code class="literal">size</code> attribute in addition
+to <code class="literal">name</code>. For example:</p><pre><code class="programlisting  nix">font = {
+  name = &quot;DejaVu Sans&quot;;
+  size = 8;
+};
+</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.htop.settings"  >opt-programs.htop.settings</a> option is introduced to
+replace individual options in <code class="literal">programs.htop</code>. To migrate, set the
+htop options directly in <a class="link" href="options.xhtml#opt-programs.htop.settings"  >opt-programs.htop.settings</a>. For
+example:</p><pre><code class="programlisting  nix">programs.htop = {
+  enabled = true;
+  settings = {
+     color_scheme = 5;
+     delay = 15;
+     highlight_base_name = 1;
+     highlight_megabytes = 1;
+     highlight_threads = 1;
+  };
+};
+</code></pre></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-21.05-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <code class="literal">home.stateVersion</code> option is set to
+&quot;21.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>The <code class="literal">newsboat</code> module now stores generated configuration in
+<code class="literal">$XDG_CONFIG_HOME/newsboat</code>.</p></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-20.09"></a>Release 20.09   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-20.09-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-20.09-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 20.09 release branch became the stable branch in late September,
+2020.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-20.09-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>Nothing has happened.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-20.09-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <code class="literal">home.stateVersion</code> option is set to
+&quot;20.09&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The options <a class="link" href="options.xhtml#opt-home.homeDirectory"  >opt-home.homeDirectory</a> and
+<a class="link" href="options.xhtml#opt-home.username"  >opt-home.username</a> no longer have default values and must
+therefore be provided in your configuration. Previously their values
+would default to the content of the environment variables <code class="literal">HOME</code> and
+<code class="literal">USER</code>, respectively.</p><p>Further, the options <a class="link" href="options.xhtml#opt-xdg.cacheHome"  >opt-xdg.cacheHome</a>,
+<a class="link" href="options.xhtml#opt-xdg.dataHome"  >opt-xdg.dataHome</a> will no
+longer be affected by the <code class="literal">XDG_CACHE_HOME</code>, <code class="literal">XDG_CONFIG_HOME</code>, and
+<code class="literal">XDG_DATA_HOME</code> environment variables. They now unconditionally
+default to</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p><code class="literal">&quot;${config.home.homeDirectory}/.cache&quot;</code>,</p></li><li class="listitem"><p><code class="literal">&quot;${config.home.homeDirectory}/.config&quot;</code>, and</p></li><li class="listitem"><p><code class="literal">&quot;${config.home.homeDirectory}/.local/share&quot;</code>.</p></li></ul></div><p>If you choose to switch to state version 20.09 then you must set
+these options if you use non-default XDG base directory paths.</p><p>The initial configuration generated by</p><pre><code class="programlisting  console">$ nix-shell &#x27;&lt;home-manager&gt;&#x27; -A install
+</code></pre><p>will automatically include these options, when necessary.</p></li><li class="listitem"><p>Git’s <code class="literal">smtpEncryption</code> option is now set to <code class="literal">tls</code> only if both
+<a class="link" href="options.xhtml#opt-accounts.email.accounts._name_.smtp.tls.enable"  >opt-accounts.email.accounts.<span class="emphasis"><em>name</em></span>.smtp.tls.enable</a> and
+<a class="link" href="options.xhtml#opt-accounts.email.accounts._name_.smtp.tls.useStartTls"  >opt-accounts.email.accounts.<span class="emphasis"><em>name</em></span>.smtp.tls.useStartTls</a> are
+<code class="literal">true</code>. If only
+<a class="link" href="options.xhtml#opt-accounts.email.accounts._name_.smtp.tls.enable"  >opt-accounts.email.accounts.<span class="emphasis"><em>name</em></span>.smtp.tls.enable</a> is
+<code class="literal">true</code>, <code class="literal">ssl</code> is used instead.</p></li><li class="listitem"><p>The <code class="literal">nixpkgs</code> module no longer references <code class="literal">&lt;nixpkgs&gt;</code>. Before it
+would do so when building the <code class="literal">pkgs</code> module argument. Starting with
+state version 20.09, the <code class="literal">pkgs</code> argument is instead built from the
+same Nixpkgs that was used to initialize the Home Manager modules.
+This is useful, for example, when using Home Manager within a Nix
+Flake. If you want to keep using <code class="literal">&lt;nixpkgs&gt;</code> with state version ≥
+20.09 then add</p><pre><code class="programlisting  nix">_module.args.pkgsPath = &lt;nixpkgs&gt;;
+</code></pre><p>to your Home Manager configuration.</p></li><li class="listitem"><p>The options <code class="literal">wayland.windowManager.sway.config.bars</code> and
+<code class="literal">opt-xsession.windowManager.i3.config.bars</code> have been changed so
+that most of the suboptions are now nullable and default to <code class="literal">null</code>.
+The default for these two options has been changed to manually set
+the old defaults for each suboption. The overall effect is that if
+the <code class="literal">bars</code> options is not set, then the default remains the same. On
+the other hand, something like:</p><pre><code class="programlisting  nix">bars = [ {
+  command = &quot;waybar&quot;;
+} ];
+</code></pre><p>will now create the config:</p><pre><code class="programlisting">bar {
+  swaybar_command waybar
+}
+</code></pre><p>instead of</p><pre><code class="programlisting">bar {
+
+  font pango:monospace 8
+  mode dock
+  hidden_state hide
+  position bottom
+  status_command /nix/store/h7s6i9q1z5fxrlyyw5ls8vqxhf5bcs5a-i3status-2.13/bin/i3status
+  swaybar_command waybar
+  workspace_buttons yes
+  strip_workspace_numbers no
+  tray_output primary
+  colors {
+    background #000000
+    statusline #ffffff
+    separator #666666
+    focused_workspace #4c7899 #285577 #ffffff
+    active_workspace #333333 #5f676a #ffffff
+    inactive_workspace #333333 #222222 #888888
+    urgent_workspace #2f343a #900000 #ffffff
+    binding_mode #2f343a #900000 #ffffff
+  }
+
+}
+</code></pre></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-20.03"></a>Release 20.03   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-20.03-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-20.03-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 20.03 release branch became the stable branch in April, 2020.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-20.03-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Assigning a list to the <a class="link" href="options.xhtml#opt-home.file"  >opt-home.file</a>,
+<a class="link" href="options.xhtml#opt-xdg.dataFile"  >opt-xdg.dataFile</a> options is
+now deprecated and will produce a warning message if used.
+Specifically, if your configuration currently contains something
+like</p><pre><code class="programlisting  nix">home.file = [
+  {
+    target = &quot;.config/foo.txt&quot;;
+    text = &quot;bar&quot;;
+  }
+]
+</code></pre><p>then it should be updated to instead use the equivalent attribute
+set form</p><pre><code class="programlisting  nix">home.file = {
+  &quot;.config/foo.txt&quot;.text = &quot;bar&quot;;
+}
+</code></pre><p>Support for the list form will be removed in Home Manager version
+20.09.</p></li><li class="listitem"><p>The <code class="literal">lib</code> function attribute given to modules is now enriched with
+an attribute <code class="literal">hm</code> containing extra library functions specific for
+Home Manager. More specifically, <code class="literal">lib.hm</code> is now the same as
+<code class="literal">config.lib</code> and should be the preferred choice since it is more
+robust.</p><p>Therefore, if your configuration makes use of, for example,
+<code class="literal">config.lib.dag</code> to create activation script blocks, it is
+recommended to change to <code class="literal">lib.hm.dag</code>.</p><p>Note, in the unlikely case that you are</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p>using Home Manager’s NixOS or nix-darwin module,</p></li><li class="listitem"><p>have made your own Home Manager module containing an top-level
+option named <code class="literal">config</code> or <code class="literal">options</code>, and</p></li><li class="listitem"><p>assign to this option in your system configuration inside a
+plain attribute set, i.e., without a function argument,</p></li></ul></div><p>then you must update your configuration to perform the option
+assignment inside a <code class="literal">config</code> attribute. For example, instead of</p><pre><code class="programlisting  nix">home-manager.users.jane = { config = &quot;foo&quot;; };
+</code></pre><p>use</p><pre><code class="programlisting  nix">home-manager.users.jane = { config.config = &quot;foo&quot;; };
+</code></pre></li><li class="listitem"><p>The <code class="literal">services.compton</code> module has been deprecated and instead the
+new module <code class="literal">services.picom</code> should be used. This is because Nixpkgs
+no longer packages compton, and instead packages the (mostly)
+compatible fork called picom.</p></li><li class="listitem"><p>The list form of the <a class="link" href="options.xhtml#opt-programs.ssh.matchBlocks"  >opt-programs.ssh.matchBlocks</a> option has
+been deprecated and configurations requiring match blocks in a
+defined order should switch to using DAG entries instead. For
+example, a configuration</p><pre><code class="programlisting  nix">programs.ssh.matchBlocks = [
+  {
+    host = &quot;alpha.foo.com&quot;;
+    user = &quot;jd&quot;;
+  }
+  {
+    host = &quot;*.foo.com&quot;;
+    user = &quot;john.doe&quot;;
+  }
+];
+</code></pre><p>can be expressed along the lines of</p><pre><code class="programlisting  nix">programs.ssh.matchBlocks = {
+  &quot;*.example.com&quot; = {
+    user = &quot;john.doe&quot;;
+  }
+  &quot;alpha.example.com&quot; = lib.hm.dag.entryBefore [&quot;*.example.com&quot;] {
+    user = &quot;jd&quot;;
+  }
+};
+</code></pre><p>Support for the list form will be removed in Home Manager version
+20.09.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-20.03-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <code class="literal">home.stateVersion</code> option is set to
+&quot;20.03&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.zsh.history.path"  >opt-programs.zsh.history.path</a> option is no longer
+prepended by <code class="literal">$HOME</code>, which allows specifying absolute paths, for
+example, using the xdg module. Also, the default value is fixed to
+<code class="literal">$HOME/.zsh_history</code> and <code class="literal">dotDir</code> path is not prepended to it
+anymore.</p></li><li class="listitem"><p>The newsboat module will now default in displaying <code class="literal">queries</code> before
+<code class="literal">urls</code> in its main window. This makes sense in the case when one has
+a lot of URLs and few queries.</p></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-19.09"></a>Release 19.09   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-19.09-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-19.09-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 19.09 release branch became the stable branch in October, 2019.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-19.09-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <code class="literal">programs.firefox.enableGoogleTalk</code> and
+<code class="literal">programs.firefox.enableIcedTea</code> options are now deprecated and will
+only work if Firefox ESR 52.x is used.</p></li><li class="listitem"><p>The <code class="literal">home-manager</code> tool now provides an <code class="literal">uninstall</code> sub-command that
+can be used to uninstall Home Manager, if used in the standalone
+mode. That is, not as a NixOS module.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-19.09-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <code class="literal">home.stateVersion</code> option is set to
+&quot;19.09&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.firefox.package"  >opt-programs.firefox.package</a> option now expects a
+wrapped Firefox package and defaults to <code class="literal">pkgs.firefox</code>.</p></li><li class="listitem"><p>The options <a class="link" href="options.xhtml#opt-home.keyboard.layout"  >opt-home.keyboard.layout</a> and
+<a class="link" href="options.xhtml#opt-home.keyboard.variant"  >opt-home.keyboard.variant</a> now default to <code class="literal">null</code>, which
+indicates that the system value should be used.</p></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-19.03"></a>Release 19.03   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-19.03-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-19.03-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 19.03 release branch became the stable branch in April, 2019.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-19.03-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-home.file._name_.source"  >opt-home.file.<span class="emphasis"><em>name</em></span>.source</a> option now allows source
+files to be hidden, that is, having a name starting with the <code class="literal">.</code>
+character. It also allows the source file name to contain characters
+not typically allowed for Nix store paths. For example, your
+configuration can now contain things such as</p><pre><code class="programlisting  nix">home.file.&quot;my file&quot;.source = ./. + &quot;/file with spaces!&quot;;
+</code></pre></li><li class="listitem"><p>The type used for the systemd unit options under
+<a class="link" href="options.xhtml#opt-systemd.user.sockets"  >opt-systemd.user.sockets</a>,
+etc. has been changed to offer more robust merging of
+configurations. If you don’t override values within systemd units
+then you are not affected by this change. Unfortunately, if you do
+override unit values you may encounter errors.</p><p>In particular, if you get an error saying that a “unique option” is
+“defined multiple times” then you need to use the
+<a class="link" href="https://nixos.org/nixos/manual/#sec-option-definitions-setting-priorities"  target="_top"><code class="literal">mkForce</code></a>
+function. For example,</p><pre><code class="programlisting  nix">systemd.user.services.foo.Service.ExecStart = &quot;/foo/bar&quot;;
+</code></pre><p>becomes</p><pre><code class="programlisting  nix">systemd.user.services.foo.Service.ExecStart = lib.mkForce &quot;/foo/bar&quot;;
+</code></pre><p>We had to make this change because the old merging was causing too
+many confusing situations for people.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-19.03-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
+changes are only active if the <a class="link" href="options.xhtml#opt-home.stateVersion"  >opt-home.stateVersion</a> option is
+set to “19.03” or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>There is now an option <a class="link" href="options.xhtml#opt-programs.beets.enable"  >opt-programs.beets.enable</a> that
+defaults to <code class="literal">false</code>. Before the module would be active if the
+<a class="link" href="options.xhtml#opt-programs.beets.settings"  >opt-programs.beets.settings</a> option was non-empty.</p></li></ul></div>
+</div>
+
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-18.09"></a>Release 18.09   </h2>  </div> </div></div><p>The 18.09 release branch became the stable branch in September, 2018.</p>
+</div>
+</div>  <div class="navfooter">
+   <hr />
+   <table width="100%" summary="Navigation footer">
+    <tr>
+    <td width="40%" align="left"><a accesskey="p" href="nix-darwin-options.xhtml">Prev</a>&nbsp;</td>
+    <td width="20%" align="center">&nbsp;</td>
+    <td width="40%" align="right">&nbsp;</td>
+    </tr>
+    <tr>
+     <td width="40%" align="left" valign="top">Appendix C. nix-darwin Configuration Options&nbsp;</td>
+     <td width="20%" align="center"><a accesskey="h" href="index.xhtml">Home</a></td>
+     <td width="40%" align="right" valign="top">&nbsp;</td>
+    </tr>
+   </table>
+  </div>
+ </body>
+</html>
