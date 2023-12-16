@@ -28,3 +28,6 @@ nixos-options.md
 ```{=include=} appendix html:into-file=//nix-darwin-options.html
 nix-darwin-options.md
 ```
+```{=include=} appendix html:into-file=//release-notes.xhtml
+release-notes/release-notes.md
+```

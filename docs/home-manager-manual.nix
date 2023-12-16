@@ -37,6 +37,8 @@ in stdenv.mkDerivation {
     cp -t out/highlightjs ${nmd}/static/highlightjs/tomorrow-night.min.css
     cp ${./highlight-style.css} out/highlightjs/highlight-style.css
 
+    cp -r ${./release-notes} release-notes
+
     nixos-render-docs manual html \
       --manpage-urls ./manpage-urls.json \
       --revision ${lib.trivial.revisionWithDefault revision} \
