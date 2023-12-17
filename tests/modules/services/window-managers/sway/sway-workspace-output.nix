@@ -14,7 +14,7 @@ in {
 
   wayland.windowManager.sway = {
     enable = true;
-    package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
+
     # overriding findutils causes issues
     config.menu = "${pkgs.dmenu}/bin/dmenu_run";
 
