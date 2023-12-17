@@ -33,8 +33,8 @@ changes are only active if the <code class="literal">home.stateVersion</code> op
 &quot;24.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>Nothing, yet.</p></li></ul></div>
 </div>
 
-</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-23.11"></a>Release 23.11   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-23.11-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-23.11-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 23.11 release branch became stable in November, 2023.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-23.11-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>When using <a class="link" href="options.xhtml#opt-programs.fish.enable"  >opt-programs.fish.enable</a>, the setup code for
-<a class="link" href="options.xhtml#opt-home.sessionVariables"  >opt-home.sessionVariables</a> is now translated with
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-23.11"></a>Release 23.11   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-23.11-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-23.11-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 23.11 release branch became stable in November, 2023.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-23.11-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>When using <a class="link" href="options.xhtml#opt-programs.fish.enable"  >programs.fish.enable</a>, the setup code for
+<a class="link" href="options.xhtml#opt-home.sessionVariables"  >home.sessionVariables</a> is now translated with
 <a class="link" href="https://github.com/bouk/babelfish"  target="_top">babelfish</a>. This should result
 in significantly faster shell startup times but could theoretically
 break if you have very complex bash expressions in a session
@@ -71,11 +71,11 @@ the new command internally. See <a class="link" href="index.xhtml#sec-flakes-sta
 more.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-23.05-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
-&quot;23.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The options</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p><a class="link" href="options.xhtml#opt-xsession.windowManager.i3.config.window.titlebar"  >opt-xsession.windowManager.i3.config.window.titlebar</a></p></li><li class="listitem"><p><a class="link" href="options.xhtml#opt-xsession.windowManager.i3.config.floating.titlebar"  >opt-xsession.windowManager.i3.config.floating.titlebar</a></p></li><li class="listitem"><p><a class="link" href="options.xhtml#opt-wayland.windowManager.sway.config.window.titlebar"  >opt-wayland.windowManager.sway.config.window.titlebar</a></p></li><li class="listitem"><p><a class="link" href="options.xhtml#opt-wayland.windowManager.sway.config.floating.titlebar"  >opt-wayland.windowManager.sway.config.floating.titlebar</a></p></li></ul></div><p>now default to <code class="literal">true</code> which is consistent with the default values
+&quot;23.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The options</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p><a class="link" href="options.xhtml#opt-xsession.windowManager.i3.config.window.titlebar"  >xsession.windowManager.i3.config.window.titlebar</a></p></li><li class="listitem"><p><a class="link" href="options.xhtml#opt-xsession.windowManager.i3.config.floating.titlebar"  >xsession.windowManager.i3.config.floating.titlebar</a></p></li><li class="listitem"><p><a class="link" href="options.xhtml#opt-wayland.windowManager.sway.config.window.titlebar"  >wayland.windowManager.sway.config.window.titlebar</a></p></li><li class="listitem"><p><a class="link" href="options.xhtml#opt-wayland.windowManager.sway.config.floating.titlebar"  >wayland.windowManager.sway.config.floating.titlebar</a></p></li></ul></div><p>now default to <code class="literal">true</code> which is consistent with the default values
 for those options used by <code class="literal">i3</code> and <code class="literal">sway</code>.</p></li></ul></div>
 </div>
 
-</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-22.11"></a>Release 22.11   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-22.11-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-22.11-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 22.11 release branch became the stable branch in November, 2022.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-22.11-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-home.stateVersion"  >opt-home.stateVersion</a> option no longer has a default
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-22.11"></a>Release 22.11   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-22.11-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-22.11-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 22.11 release branch became the stable branch in November, 2022.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-22.11-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-home.stateVersion"  >home.stateVersion</a> option no longer has a default
 value. It used to default to “18.09”, which was the Home Manager
 version that introduced the option. If your configuration does not
 explicitly set this option then you need to add</p><pre><code class="programlisting  nix">home.stateVersion = &quot;18.09&quot;;
@@ -105,20 +105,20 @@ input of your choice.</p><p>For example, if your Flake currently contains</p><pr
     }
   ];
 }
-</code></pre><p>Of course, you can move the assignment of <a class="link" href="options.xhtml#opt-home.username"  >opt-home.username</a>,
-<a class="link" href="options.xhtml#opt-home.stateVersion"  >opt-home.stateVersion</a> to
+</code></pre><p>Of course, you can move the assignment of <a class="link" href="options.xhtml#opt-home.username"  >home.username</a>,
+<a class="link" href="options.xhtml#opt-home.stateVersion"  >home.stateVersion</a> to
 some other file or simply place them in your <code class="literal">home.nix</code>.</p></li><li class="listitem"><p>The <code class="literal">services.picom</code> module has been refactored to use structural
 settings.</p><p>As a result <code class="literal">services.picom.extraOptions</code> has been removed in favor
-of <a class="link" href="options.xhtml#opt-services.picom.settings"  >opt-services.picom.settings</a>. Also, <code class="literal">services.picom.blur*</code>
+of <a class="link" href="options.xhtml#opt-services.picom.settings"  >services.picom.settings</a>. Also, <code class="literal">services.picom.blur*</code>
 were removed since upstream changed the blur settings to be more
 flexible. You can migrate the blur settings to use
-<a class="link" href="options.xhtml#opt-services.picom.settings"  >opt-services.picom.settings</a> instead.</p></li><li class="listitem"><p>The <code class="literal">services.compton</code> module has been removed. It was deprecated in
+<a class="link" href="options.xhtml#opt-services.picom.settings"  >services.picom.settings</a> instead.</p></li><li class="listitem"><p>The <code class="literal">services.compton</code> module has been removed. It was deprecated in
 release 20.03. Use <code class="literal">services.picom</code> instead.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-22.11-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
-&quot;22.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-services.mpd.musicDirectory"  >opt-services.mpd.musicDirectory</a> option now defaults to
-the value of <a class="link" href="options.xhtml#opt-xdg.userDirs.music"  >opt-xdg.userDirs.music</a> if
-<a class="link" href="options.xhtml#opt-xdg.userDirs.enable"  >opt-xdg.userDirs.enable</a> is enabled. Otherwise it is
+&quot;22.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-services.mpd.musicDirectory"  >services.mpd.musicDirectory</a> option now defaults to
+the value of <a class="link" href="options.xhtml#opt-xdg.userDirs.music"  >xdg.userDirs.music</a> if
+<a class="link" href="options.xhtml#opt-xdg.userDirs.enable"  >xdg.userDirs.enable</a> is enabled. Otherwise it is
 undefined and must be specified in the user configuration.</p></li><li class="listitem"><p>The activation script now resets <code class="literal">PATH</code> before running. Before, the
 user’s <code class="literal">PATH</code> environment variable would be used in the script and
 this made it possible for commands in the activation script to run
@@ -142,8 +142,8 @@ project</a>.</p></li><li class="listitem"><p>A new module, <code class="literal"
 services based on macOS LaunchAgents.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-22.05-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
-&quot;22.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >opt-programs.waybar.settings</a> option now allows defining
-modules directly under <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >opt-programs.waybar.settings</a>.
+&quot;22.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >programs.waybar.settings</a> option now allows defining
+modules directly under <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >programs.waybar.settings</a>.
 Defining modules under <code class="literal">programs.waybar.settings.modules</code> will now
 be an error. For example,</p><pre><code class="programlisting  nix">programs.waybar.settings.modules.&quot;custom/my-module&quot; = { };
 </code></pre><p>becomes</p><pre><code class="programlisting  nix">programs.waybar.settings.&quot;custom/my-module&quot; = { };
@@ -169,20 +169,20 @@ has now changed. For associated discussion see
 <a class="link" href="https://github.com/nix-community/home-manager/issues/1906"  target="_top">issue #1906</a>.</p></li><li class="listitem"><p>Rofi version 1.7.0 removed many options that were used by the module
 and replaced them with custom themes, which are more flexible and
 powerful.</p><p>You can replicate your old configuration by moving those options to
-<a class="link" href="options.xhtml#opt-programs.rofi.theme"  >opt-programs.rofi.theme</a>. Keep in mind that the syntax is
+<a class="link" href="options.xhtml#opt-programs.rofi.theme"  >programs.rofi.theme</a>. Keep in mind that the syntax is
 different so you may need to do some changes.</p></li><li class="listitem"><p>Taskwarrior version 2.6.0 respects XDG Specification for the config
-file now. Option <a class="link" href="options.xhtml#opt-programs.taskwarrior.config"  >opt-programs.taskwarrior.config</a> and friends
+file now. Option <a class="link" href="options.xhtml#opt-programs.taskwarrior.config"  >programs.taskwarrior.config</a> and friends
 now generate the config file at <code class="literal">$XDG_CONFIG_HOME/task/taskrc</code>
 instead of <code class="literal">~/.taskrc</code>.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-21.11-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
-&quot;21.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-home.keyboard"  >opt-home.keyboard</a> option now defaults to <code class="literal">null</code>, meaning
+&quot;21.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-home.keyboard"  >home.keyboard</a> option now defaults to <code class="literal">null</code>, meaning
 that Home Manager won’t do any keyboard layout management. For
-example, <code class="literal">setxkbmap</code> won’t be run in X sessions.</p></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.pet.settings"  >opt-programs.pet.settings</a> option no longer place its
+example, <code class="literal">setxkbmap</code> won’t be run in X sessions.</p></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.pet.settings"  >programs.pet.settings</a> option no longer place its
 value inside a <code class="literal">General</code> attribute. For example,</p><pre><code class="programlisting  nix">programs.pet.settings.editor = &quot;nvim&quot;;
 </code></pre><p>becomes</p><pre><code class="programlisting  nix">programs.pet.settings.General.editor = &quot;nvim&quot;;
-</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >opt-programs.waybar.settings</a> option now allows defining
-modules directly under <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >opt-programs.waybar.settings</a>. For
+</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >programs.waybar.settings</a> option now allows defining
+modules directly under <a class="link" href="options.xhtml#opt-programs.waybar.settings"  >programs.waybar.settings</a>. For
 example,</p><pre><code class="programlisting  nix">programs.waybar.settings.modules.&quot;custom/my-module&quot; = { };
 </code></pre><p>becomes</p><pre><code class="programlisting  nix">programs.waybar.settings.&quot;custom/my-module&quot; = { };
 </code></pre></li></ul></div>
@@ -199,7 +199,7 @@ list items’ <code class="literal">invocation</code> keys. For example,</p><pre
     execution = &quot;:parent&quot;;
   }
 ];
-</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.mpv.package"  >opt-programs.mpv.package</a> option has been changed to
+</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.mpv.package"  >programs.mpv.package</a> option has been changed to
 allow custom derivations. The following configuration is now
 possible:</p><pre><code class="programlisting  nix">programs.mpv.package = (pkgs.wrapMpv (pkgs.mpv-unwrapped.override {
   vapoursynthSupport = true;
@@ -208,9 +208,9 @@ possible:</p><pre><code class="programlisting  nix">programs.mpv.package = (pkgs
     &quot;--prefix&quot; &quot;LD_LIBRARY_PATH&quot; &quot;:&quot; &quot;${pkgs.vapoursynth-mvtools}/lib/vapoursynth&quot;
   ];
 });
-</code></pre><p>As a result of this change, <a class="link" href="options.xhtml#opt-programs.mpv.package"  >opt-programs.mpv.package</a> is no
+</code></pre><p>As a result of this change, <a class="link" href="options.xhtml#opt-programs.mpv.package"  >programs.mpv.package</a> is no
 longer the resulting derivation. Use the newly introduced
-<code class="literal">programs.mpv.finalPackage</code> instead.</p></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.rofi.extraConfig"  >opt-programs.rofi.extraConfig</a> option is now an attribute
+<code class="literal">programs.mpv.finalPackage</code> instead.</p></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.rofi.extraConfig"  >programs.rofi.extraConfig</a> option is now an attribute
 set rather than a string. To migrate, move each line into the
 attribute set, removing the <code class="literal">rofi.</code> prefix from the keys. For
 example,</p><pre><code class="programlisting  nix">programs.rofi.extraConfig = &#x27;&#x27;
@@ -221,7 +221,7 @@ example,</p><pre><code class="programlisting  nix">programs.rofi.extraConfig = &
   show-icons = true;
   modi = &quot;drun,emoji,ssh&quot;;
 };
-</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.rofi.theme"  >opt-programs.rofi.theme</a> option now supports defining a
+</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.rofi.theme"  >programs.rofi.theme</a> option now supports defining a
 theme using an attribute set, the following configuration is now
 possible:</p><pre><code class="programlisting  nix">programs.rofi.theme = let
   # Necessary to avoid quoting non-string values
@@ -245,7 +245,7 @@ in {
 };
 </code></pre></li><li class="listitem"><p>The <code class="literal">services.redshift.extraOptions</code> and
 <code class="literal">services.gammastep.extraOptions</code> options were removed in favor of
-<a class="link" href="options.xhtml#opt-services.redshift.settings"  >opt-services.redshift.settings</a> and
+<a class="link" href="options.xhtml#opt-services.redshift.settings"  >services.redshift.settings</a> and
 <code class="literal">services.gammastep.settings</code>, that are now an attribute set rather
 than a string. They also support new features not available before,
 for example:</p><pre><code class="programlisting  nix">services.redshift = {
@@ -274,10 +274,10 @@ disposal:</p><pre><code class="programlisting  nix">configure.packages.*.opt  -&
 configure.packages.*.start  -&gt; programs.neovim.plugins = [ { plugin = ...; }]
 configure.customRC -&gt; programs.neovim.extraConfig
 </code></pre></li><li class="listitem"><p>Home Manager now respects the <code class="literal">NO_COLOR</code> environment variable as per
-<a class="link" href="https://no-color.org/"  target="_top">https://no-color.org/</a>.</p></li><li class="listitem"><p>Qt module now supports <a class="link" href="options.xhtml#opt-qt.style.name"  >opt-qt.style.name</a> to specify a theme
-name and <a class="link" href="options.xhtml#opt-qt.style.package"  >opt-qt.style.package</a> to specify a theme package. If
-you have set <a class="link" href="options.xhtml#opt-qt.platformTheme"  >opt-qt.platformTheme</a> to <code class="literal">gnome</code>, a
-<a class="link" href="options.xhtml#opt-qt.style.package"  >opt-qt.style.package</a> compatible with both Qt and Gtk is now
+<a class="link" href="https://no-color.org/"  target="_top">https://no-color.org/</a>.</p></li><li class="listitem"><p>Qt module now supports <a class="link" href="options.xhtml#opt-qt.style.name"  >qt.style.name</a> to specify a theme
+name and <a class="link" href="options.xhtml#opt-qt.style.package"  >qt.style.package</a> to specify a theme package. If
+you have set <a class="link" href="options.xhtml#opt-qt.platformTheme"  >qt.platformTheme</a> to <code class="literal">gnome</code>, a
+<a class="link" href="options.xhtml#opt-qt.style.package"  >qt.style.package</a> compatible with both Qt and Gtk is now
 required to be set. For instance:</p><pre><code class="programlisting  nix">qt = {
   platformTheme = &quot;gnome&quot;;
   style = {
@@ -290,9 +290,9 @@ to <code class="literal">name</code>. For example:</p><pre><code class="programl
   name = &quot;DejaVu Sans&quot;;
   size = 8;
 };
-</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.htop.settings"  >opt-programs.htop.settings</a> option is introduced to
+</code></pre></li><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.htop.settings"  >programs.htop.settings</a> option is introduced to
 replace individual options in <code class="literal">programs.htop</code>. To migrate, set the
-htop options directly in <a class="link" href="options.xhtml#opt-programs.htop.settings"  >opt-programs.htop.settings</a>. For
+htop options directly in <a class="link" href="options.xhtml#opt-programs.htop.settings"  >programs.htop.settings</a>. For
 example:</p><pre><code class="programlisting  nix">programs.htop = {
   enabled = true;
   settings = {
@@ -314,21 +314,21 @@ changes are only active if the <code class="literal">home.stateVersion</code> op
 2020.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-20.09-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>Nothing has happened.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-20.09-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
-&quot;20.09&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The options <a class="link" href="options.xhtml#opt-home.homeDirectory"  >opt-home.homeDirectory</a> and
-<a class="link" href="options.xhtml#opt-home.username"  >opt-home.username</a> no longer have default values and must
+&quot;20.09&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The options <a class="link" href="options.xhtml#opt-home.homeDirectory"  >home.homeDirectory</a> and
+<a class="link" href="options.xhtml#opt-home.username"  >home.username</a> no longer have default values and must
 therefore be provided in your configuration. Previously their values
 would default to the content of the environment variables <code class="literal">HOME</code> and
-<code class="literal">USER</code>, respectively.</p><p>Further, the options <a class="link" href="options.xhtml#opt-xdg.cacheHome"  >opt-xdg.cacheHome</a>,
-<a class="link" href="options.xhtml#opt-xdg.dataHome"  >opt-xdg.dataHome</a> will no
+<code class="literal">USER</code>, respectively.</p><p>Further, the options <a class="link" href="options.xhtml#opt-xdg.cacheHome"  >xdg.cacheHome</a>,
+<a class="link" href="options.xhtml#opt-xdg.dataHome"  >xdg.dataHome</a> will no
 longer be affected by the <code class="literal">XDG_CACHE_HOME</code>, <code class="literal">XDG_CONFIG_HOME</code>, and
 <code class="literal">XDG_DATA_HOME</code> environment variables. They now unconditionally
 default to</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p><code class="literal">&quot;${config.home.homeDirectory}/.cache&quot;</code>,</p></li><li class="listitem"><p><code class="literal">&quot;${config.home.homeDirectory}/.config&quot;</code>, and</p></li><li class="listitem"><p><code class="literal">&quot;${config.home.homeDirectory}/.local/share&quot;</code>.</p></li></ul></div><p>If you choose to switch to state version 20.09 then you must set
 these options if you use non-default XDG base directory paths.</p><p>The initial configuration generated by</p><pre><code class="programlisting  console">$ nix-shell &#x27;&lt;home-manager&gt;&#x27; -A install
 </code></pre><p>will automatically include these options, when necessary.</p></li><li class="listitem"><p>Git’s <code class="literal">smtpEncryption</code> option is now set to <code class="literal">tls</code> only if both
-<a class="link" href="options.xhtml#opt-accounts.email.accounts._name_.smtp.tls.enable"  >opt-accounts.email.accounts.<span class="emphasis"><em>name</em></span>.smtp.tls.enable</a> and
-<a class="link" href="options.xhtml#opt-accounts.email.accounts._name_.smtp.tls.useStartTls"  >opt-accounts.email.accounts.<span class="emphasis"><em>name</em></span>.smtp.tls.useStartTls</a> are
+<a class="link" href="options.xhtml#opt-accounts.email.accounts._name_.smtp.tls.enable"  >accounts.email.accounts.<span class="emphasis"><em>name</em></span>.smtp.tls.enable</a> and
+<a class="link" href="options.xhtml#opt-accounts.email.accounts._name_.smtp.tls.useStartTls"  >accounts.email.accounts.<span class="emphasis"><em>name</em></span>.smtp.tls.useStartTls</a> are
 <code class="literal">true</code>. If only
-<a class="link" href="options.xhtml#opt-accounts.email.accounts._name_.smtp.tls.enable"  >opt-accounts.email.accounts.<span class="emphasis"><em>name</em></span>.smtp.tls.enable</a> is
+<a class="link" href="options.xhtml#opt-accounts.email.accounts._name_.smtp.tls.enable"  >accounts.email.accounts.<span class="emphasis"><em>name</em></span>.smtp.tls.enable</a> is
 <code class="literal">true</code>, <code class="literal">ssl</code> is used instead.</p></li><li class="listitem"><p>The <code class="literal">nixpkgs</code> module no longer references <code class="literal">&lt;nixpkgs&gt;</code>. Before it
 would do so when building the <code class="literal">pkgs</code> module argument. Starting with
 state version 20.09, the <code class="literal">pkgs</code> argument is instead built from the
@@ -374,8 +374,8 @@ the other hand, something like:</p><pre><code class="programlisting  nix">bars =
 </code></pre></li></ul></div>
 </div>
 
-</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-20.03"></a>Release 20.03   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-20.03-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-20.03-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 20.03 release branch became the stable branch in April, 2020.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-20.03-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Assigning a list to the <a class="link" href="options.xhtml#opt-home.file"  >opt-home.file</a>,
-<a class="link" href="options.xhtml#opt-xdg.dataFile"  >opt-xdg.dataFile</a> options is
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-20.03"></a>Release 20.03   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-20.03-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-20.03-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 20.03 release branch became the stable branch in April, 2020.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-20.03-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Assigning a list to the <a class="link" href="options.xhtml#opt-home.file"  >home.file</a>,
+<a class="link" href="options.xhtml#opt-xdg.dataFile"  >xdg.dataFile</a> options is
 now deprecated and will produce a warning message if used.
 Specifically, if your configuration currently contains something
 like</p><pre><code class="programlisting  nix">home.file = [
@@ -403,7 +403,7 @@ assignment inside a <code class="literal">config</code> attribute. For example, 
 </code></pre></li><li class="listitem"><p>The <code class="literal">services.compton</code> module has been deprecated and instead the
 new module <code class="literal">services.picom</code> should be used. This is because Nixpkgs
 no longer packages compton, and instead packages the (mostly)
-compatible fork called picom.</p></li><li class="listitem"><p>The list form of the <a class="link" href="options.xhtml#opt-programs.ssh.matchBlocks"  >opt-programs.ssh.matchBlocks</a> option has
+compatible fork called picom.</p></li><li class="listitem"><p>The list form of the <a class="link" href="options.xhtml#opt-programs.ssh.matchBlocks"  >programs.ssh.matchBlocks</a> option has
 been deprecated and configurations requiring match blocks in a
 defined order should switch to using DAG entries instead. For
 example, a configuration</p><pre><code class="programlisting  nix">programs.ssh.matchBlocks = [
@@ -428,7 +428,7 @@ example, a configuration</p><pre><code class="programlisting  nix">programs.ssh.
 20.09.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-20.03-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
-&quot;20.03&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.zsh.history.path"  >opt-programs.zsh.history.path</a> option is no longer
+&quot;20.03&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.zsh.history.path"  >programs.zsh.history.path</a> option is no longer
 prepended by <code class="literal">$HOME</code>, which allows specifying absolute paths, for
 example, using the xdg module. Also, the default value is fixed to
 <code class="literal">$HOME/.zsh_history</code> and <code class="literal">dotDir</code> path is not prepended to it
@@ -444,19 +444,19 @@ can be used to uninstall Home Manager, if used in the standalone
 mode. That is, not as a NixOS module.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-19.09-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
-&quot;19.09&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.firefox.package"  >opt-programs.firefox.package</a> option now expects a
-wrapped Firefox package and defaults to <code class="literal">pkgs.firefox</code>.</p></li><li class="listitem"><p>The options <a class="link" href="options.xhtml#opt-home.keyboard.layout"  >opt-home.keyboard.layout</a> and
-<a class="link" href="options.xhtml#opt-home.keyboard.variant"  >opt-home.keyboard.variant</a> now default to <code class="literal">null</code>, which
+&quot;19.09&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-programs.firefox.package"  >programs.firefox.package</a> option now expects a
+wrapped Firefox package and defaults to <code class="literal">pkgs.firefox</code>.</p></li><li class="listitem"><p>The options <a class="link" href="options.xhtml#opt-home.keyboard.layout"  >home.keyboard.layout</a> and
+<a class="link" href="options.xhtml#opt-home.keyboard.variant"  >home.keyboard.variant</a> now default to <code class="literal">null</code>, which
 indicates that the system value should be used.</p></li></ul></div>
 </div>
 
-</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-19.03"></a>Release 19.03   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-19.03-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-19.03-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 19.03 release branch became the stable branch in April, 2019.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-19.03-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-home.file._name_.source"  >opt-home.file.<span class="emphasis"><em>name</em></span>.source</a> option now allows source
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-19.03"></a>Release 19.03   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-19.03-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-19.03-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 19.03 release branch became the stable branch in April, 2019.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-19.03-highlights"></a>Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="link" href="options.xhtml#opt-home.file._name_.source"  >home.file.<span class="emphasis"><em>name</em></span>.source</a> option now allows source
 files to be hidden, that is, having a name starting with the <code class="literal">.</code>
 character. It also allows the source file name to contain characters
 not typically allowed for Nix store paths. For example, your
 configuration can now contain things such as</p><pre><code class="programlisting  nix">home.file.&quot;my file&quot;.source = ./. + &quot;/file with spaces!&quot;;
 </code></pre></li><li class="listitem"><p>The type used for the systemd unit options under
-<a class="link" href="options.xhtml#opt-systemd.user.sockets"  >opt-systemd.user.sockets</a>,
+<a class="link" href="options.xhtml#opt-systemd.user.sockets"  >systemd.user.sockets</a>,
 etc. has been changed to offer more robust merging of
 configurations. If you don’t override values within systemd units
 then you are not affected by this change. Unfortunately, if you do
@@ -468,10 +468,10 @@ function. For example,</p><pre><code class="programlisting  nix">systemd.user.se
 </code></pre><p>We had to make this change because the old merging was causing too
 many confusing situations for people.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-release-19.03-state-version-changes"></a>State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
-changes are only active if the <a class="link" href="options.xhtml#opt-home.stateVersion"  >opt-home.stateVersion</a> option is
-set to “19.03” or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>There is now an option <a class="link" href="options.xhtml#opt-programs.beets.enable"  >opt-programs.beets.enable</a> that
+changes are only active if the <a class="link" href="options.xhtml#opt-home.stateVersion"  >home.stateVersion</a> option is
+set to “19.03” or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>There is now an option <a class="link" href="options.xhtml#opt-programs.beets.enable"  >programs.beets.enable</a> that
 defaults to <code class="literal">false</code>. Before the module would be active if the
-<a class="link" href="options.xhtml#opt-programs.beets.settings"  >opt-programs.beets.settings</a> option was non-empty.</p></li></ul></div>
+<a class="link" href="options.xhtml#opt-programs.beets.settings"  >programs.beets.settings</a> option was non-empty.</p></li></ul></div>
 </div>
 
 </div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 class="title" >     <a id="sec-release-18.09"></a>Release 18.09   </h2>  </div> </div></div><p>The 18.09 release branch became the stable branch in September, 2018.</p>

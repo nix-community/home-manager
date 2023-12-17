@@ -29,7 +29,7 @@
   <div class="titlepage">
    <div>
    <div><h1 class="title"><a id="home-manager-manual"></a>Home Manager Manual</h1></div>
-   <div><h2 class="subtitle">Version 23.11</h2></div>
+   <div><h2 class="subtitle">Version 24.05 (unstable)</h2></div>
    </div>
    <hr />
   </div>
@@ -292,7 +292,7 @@ follows:</p><pre><code class="programlisting  nix">{ config, pkgs, ... }:
   };
 }
 </code></pre><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Nixpkgs packages can be installed to the user profile using
-<a class="link" href="opt-home.packages"  target="_top">???</a>.</p></li><li class="listitem"><p>The option names of a program module typically start with
+<a class="link" href="options.xhtml#opt-home.packages"  >home.packages</a>.</p></li><li class="listitem"><p>The option names of a program module typically start with
 <code class="literal">programs.&lt;package name&gt;</code>.</p></li><li class="listitem"><p>Similarly, for a service module, the names start with
 <code class="literal">services.&lt;package name&gt;</code>. Note in some cases a package has both
 programs <span class="emphasis"><em>and</em></span> service options – Emacs is such an example.</p></li></ul></div><p>To activate this configuration you can run</p><pre><code class="programlisting  shell">home-manager switch
