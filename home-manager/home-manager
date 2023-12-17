@@ -894,6 +894,7 @@ function doHelp() {
     echo "                    Default is '~/.config/home-manager'."
     echo "  -b EXT            Move existing files to new path rather than fail."
     echo "  -v                Verbose output"
+    echo "  --priority int    Specify a priority for the installed Home Manager packages"
     echo "  -n                Do a dry run, only prints what actions would be taken"
     echo "  -h                Print this help"
     echo "  --version         Print the Home Manager version"
@@ -1019,7 +1020,11 @@ while [[ $# -gt 0 ]]; do
             doHelp
             exit 0
             ;;
-        -n|--dry-run)
+        --priority)
+        export HM_PACKAGE_PRIORITY=$1
+        shift
+        ;;
+    -n | --dry-run)
             export DRY_RUN=1
             ;;
         --option|--arg|--argstr)
