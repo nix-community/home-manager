@@ -87,7 +87,7 @@ follows:
 ```
 
 -   Nixpkgs packages can be installed to the user profile using
-    [???](opt-home.packages).
+    [home.packages](#opt-home.packages).
 
 -   The option names of a program module typically start with
     `programs.<package name>`.
