@@ -134,21 +134,33 @@ in {
       mkAfter ''
         $env.config = ($env.config? | default {})
         $env.config.hooks = ($env.config.hooks? | default {})
-        $env.config.hooks.pre_prompt = ($env.config.hooks.pre_prompt? | default [] | append {||
-            let direnv = (${
-              getExe cfg.package
-            } export json | from json | default {})
-            if ($direnv | is-empty) {
-                return
-            }
-            $direnv
-            | items {|key, value|
-                {
-                    key: $key
-                    value: (do ($env.ENV_CONVERSIONS? | default {} | get -i $key | get -i from_string | default {|x| $x}) $value)
+        $env.config.hooks.pre_prompt = (
+            $env.config.hooks.pre_prompt?
+            | default []
+            | append {||
+                let direnv = (${getExe cfg.package} export json
+                | from json
+                | default {})
+                if ($direnv | is-empty) {
+                    return
                 }
-            } | transpose -ird | load-env
-        })
+                $direnv
+                | items {|key, value|
+                    {
+                        key: $key
+                        value: (do (
+                            $env.env_conversions?
+                            | default {}
+                            | get -i $key
+                            | get -i from_string
+                            | default {|x| $x}
+                        ) $value)
+                    }
+                }
+                | transpose -ird
+                | load-env
+            }
+        )
       '');
   };
 }
