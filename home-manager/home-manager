@@ -722,7 +722,7 @@ function doListPackages() {
     local outPath
     outPath="$($LIST_OUTPATH_CMD | grep -o '/.*home-manager-path$')"
     if [[ -n "$outPath" ]] ; then
-        nix-store -q --references "$outPath" | sed 's/[^-]*-//'
+        nix-store -q --references "$outPath" | sed 's/[^-]*-//' | sort --ignore-case
     else
         _i 'No home-manager packages seem to be installed.' >&2
     fi
