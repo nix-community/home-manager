@@ -1,8 +1,8 @@
 # Nix Flakes {#ch-nix-flakes}
 
 Home Manager is compatible with [Nix
-Flakes](https://nixos.wiki/wiki/Flakes). But please be aware that the
-support it is still experimental and may change in backwards
+Flakes](https://nixos.wiki/wiki/Flakes). But please be aware that this
+support is still experimental and may change in backwards
 incompatible ways.
 
 Just like in the standard installation you can use the Home Manager
