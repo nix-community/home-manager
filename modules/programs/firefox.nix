@@ -212,12 +212,12 @@ in {
         example = literalExpression ''
           pkgs.firefox.override {
             # See nixpkgs' firefox/wrapper.nix to check which options you can use
-            cfg = {
+            nativeMessagingHosts = [
               # Gnome shell native connector
-              enableGnomeExtensions = true;
+              pkgs.gnome-browser-connector
               # Tridactyl native connector
-              enableTridactylNative = true;
-            };
+              pkgs.tridactyl-native
+            ];
           }
         '';
         description = ''
