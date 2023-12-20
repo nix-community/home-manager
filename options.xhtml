@@ -22151,6 +22151,205 @@ attribute set of (string or boolean or list of string)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.gradle.enable"></a><a class="term" href="options.xhtml#opt-programs.gradle.enable"><code class="option">programs.gradle.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Gradle Build Tool.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gradle.nix" target="_top">
+&lt;home-manager/modules/programs/gradle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gradle.package"></a><a class="term" href="options.xhtml#opt-programs.gradle.package"><code class="option">programs.gradle.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The gradle package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.gradle</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">pkgs.gradle_7</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gradle.nix" target="_top">
+&lt;home-manager/modules/programs/gradle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gradle.home"></a><a class="term" href="options.xhtml#opt-programs.gradle.home"><code class="option">programs.gradle.home</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The Gradle home directory, relative to <a class="xref" href="options.xhtml#opt-home.homeDirectory"  ><code class="option">home.homeDirectory</code></a>.</p><p>If set, the <code class="envar">GRADLE_USER_HOME</code> environment variable will be
+set accordingly. Defaults to <code class="filename">.gradle</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;.gradle&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gradle.nix" target="_top">
+&lt;home-manager/modules/programs/gradle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gradle.initScripts"></a><a class="term" href="options.xhtml#opt-programs.gradle.initScripts"><code class="option">programs.gradle.initScripts</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Definition of init scripts to link into the Gradle home directory.</p><p>For more information about init scripts, including naming conventions
+see https://docs.gradle.org/current/userguide/init_scripts.html.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;maven-local.gradle&quot;.text = &#x27;&#x27;
+      allProject {
+        repositories {
+          mavenLocal()
+        }
+      }
+  &#x27;&#x27;;
+  &quot;another.init.gradle.kts&quot;.source = ./another.init.gradle.kts;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gradle.nix" target="_top">
+&lt;home-manager/modules/programs/gradle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gradle.initScripts._name_.source"></a><a class="term" href="options.xhtml#opt-programs.gradle.initScripts._name_.source"><code class="option">programs.gradle.initScripts.&lt;name&gt;.source</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path of the init script file. If
+<code class="literal">text</code> is non-null then this option will automatically point
+to a file containing that text.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+path</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gradle.nix" target="_top">
+&lt;home-manager/modules/programs/gradle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gradle.initScripts._name_.text"></a><a class="term" href="options.xhtml#opt-programs.gradle.initScripts._name_.text"><code class="option">programs.gradle.initScripts.&lt;name&gt;.text</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Text of the init script file. if this option is null
+then <code class="literal">source</code> must be set.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gradle.nix" target="_top">
+&lt;home-manager/modules/programs/gradle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gradle.settings"></a><a class="term" href="options.xhtml#opt-programs.gradle.settings"><code class="option">programs.gradle.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Key value pairs to write to <code class="filename">gradle.properties</code> in the Gradle
+home directory.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (string, package, bool, int or float)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;org.gradle.caching&quot; = true;
+  &quot;org.gradle.parallel&quot; = true;
+  &quot;org.gradle.jvmargs&quot; = &quot;-XX:MaxMetaspaceSize=384m&quot;;
+  &quot;org.gradle.home&quot; = pkgs.jdk17;
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gradle.nix" target="_top">
+&lt;home-manager/modules/programs/gradle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.granted.enable"></a><a class="term" href="options.xhtml#opt-programs.granted.enable"><code class="option">programs.granted.enable</code>
   </a>
  </span>
