@@ -117,7 +117,7 @@ This project is licensed under the terms of the [MIT license](LICENSE).
 [Nix]: https://nixos.org/explore.html
 [Nixpkgs]: https://github.com/NixOS/nixpkgs
 [OFTC]: https://oftc.net/
-[configuration options]: https://nix-community.github.io/home-manager/options.html
+[configuration options]: https://nix-community.github.io/home-manager/options.xhtml
 [contributing]: https://nix-community.github.io/home-manager/#ch-contributing
 [manual nix flakes]: https://nix-community.github.io/home-manager/#ch-nix-flakes
 [manual nix-darwin install]: https://nix-community.github.io/home-manager/#sec-install-nix-darwin-module
