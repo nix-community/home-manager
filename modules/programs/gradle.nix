@@ -34,7 +34,9 @@ let
     }));
   });
 in {
-  meta.maintainers = [ maintainers.britter ];
+  meta.maintainers = [
+    # maintainers.britter
+  ];
 
   options.programs.gradle = {
     enable = mkEnableOption "Gradle Build Tool";
