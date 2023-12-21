@@ -76,7 +76,7 @@ in {
       eval "$(${cfg.package}/bin/zoxide init zsh ${cfgOptions})"
     '';
 
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
       ${cfg.package}/bin/zoxide init fish ${cfgOptions} | source
     '';
 
