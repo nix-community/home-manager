@@ -149,7 +149,7 @@ in {
                     {
                         key: $key
                         value: (do (
-                            $env.env_conversions?
+                            $env.ENV_CONVERSIONS?
                             | default {}
                             | get -i $key
                             | get -i from_string
