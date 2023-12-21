@@ -511,6 +511,13 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
+    {
+      assertions = [{
+        assertion = with config.programs.zsh.oh-my-zsh; custom == "" || length customPkgs == 0;
+        message = ''The options `programs.zsh.oh-my-zsh.custom' and `programs.zsh.oh-my-zsh.customPkgs' are mutually exclusive.'';
+      }];
+    }
+
     (mkIf (cfg.envExtra != "") {
       home.file."${relToDotDir ".zshenv"}".text = cfg.envExtra;
     })
