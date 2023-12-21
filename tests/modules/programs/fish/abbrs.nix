@@ -26,8 +26,13 @@
         };
         "4DIRS" = {
           setCursor = "!";
-          expansion =
-            "$(string join \\n -- 'for dir in */' 'cd $dir' '!' 'cd ..' 'end')";
+          expansion = ''
+            for dir in */
+              cd $dir
+              !
+              cd ..
+            end
+          '';
         };
         dotdot = {
           regex = "^\\.\\.+$";
@@ -41,19 +46,24 @@
         "if fish.shellAbbrs is set, check fish.config contains valid abbreviations";
       script = ''
         assertFileContains home-files/.config/fish/config.fish \
-          'abbr --add -- l less'
+          "abbr --add -- l less"
         assertFileContains home-files/.config/fish/config.fish \
-          'abbr --add -- gco "git checkout"'
+          "abbr --add -- gco 'git checkout'"
         assertFileContains home-files/.config/fish/config.fish \
-          'abbr --add --position anywhere -- -C --color'
+          "abbr --add --position anywhere -- -C --color"
         assertFileContains home-files/.config/fish/config.fish \
-          'abbr --add --position anywhere --set-cursor -- L "% | less"'
+          "abbr --add --position anywhere --set-cursor -- L '% | less'"
         assertFileContains home-files/.config/fish/config.fish \
-          'abbr --add --function last_history_item --position anywhere -- !!'
+          "abbr --add --function last_history_item --position anywhere -- !!"
         assertFileContains home-files/.config/fish/config.fish \
           "abbr --add --function vim_edit --position command --regex '.+\.txt' -- vim_edit_texts"
         assertFileContains home-files/.config/fish/config.fish \
-          'abbr --add '"'"'--set-cursor=!'"'"' -- 4DIRS "$(string join \n -- '"'"'for dir in */'"'"' '"'"'cd $dir'"'"' '"'"'!'"'"' '"'"'cd ..'"'"' '"'"'end'"'"')'
+          "abbr --add '--set-cursor=!' -- 4DIRS 'for dir in */
+          cd \$dir
+          !
+          cd ..
+        end
+        '"
         assertFileContains home-files/.config/fish/config.fish \
           "abbr --add --function multicd --regex '^\.\.+$' -- dotdot"
       '';
