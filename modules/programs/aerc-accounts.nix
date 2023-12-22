@@ -145,6 +145,11 @@ in {
             "maildir://${config.accounts.email.maildirBasePath}/${cfg.maildir.path}";
         };
 
+        maildirpp = cfg: {
+          source =
+            "maildirpp://${config.accounts.email.maildirBasePath}/${cfg.maildir.path}/Inbox";
+        };
+
         imap = { userName, imap, passwordCommand, aerc, ... }@cfg:
           let
             loginMethod' =
@@ -207,7 +212,10 @@ in {
         // (optAttr "aliases" account.aliases);
 
       sourceCfg = account:
-        if account.mbsync.enable || account.offlineimap.enable then
+        if account.mbsync.enable && account.mbsync.flatten == null
+        && account.mbsync.subFolders == "Maildir++" then
+          mkConfig.maildirpp account
+        else if account.mbsync.enable || account.offlineimap.enable then
           mkConfig.maildir account
         else if account.imap != null then
           mkConfig.imap account
