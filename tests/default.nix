@@ -269,6 +269,7 @@ in import nmtSrc {
     ./modules/services/pbgopy
     ./modules/services/picom
     ./modules/services/playerctld
+    ./modules/services/podman-linux
     ./modules/services/polybar
     ./modules/services/recoll
     ./modules/services/redshift-gammastep
