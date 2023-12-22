@@ -62,7 +62,7 @@ in {
     };
   };
 
-  config = mkIf pkgs.stdenv.hostPlatform.isLinux {
+  config = mkIf (pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isGnu) {
     # For shell sessions.
     home.sessionVariables = localeVars;
 
