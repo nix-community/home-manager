@@ -219,6 +219,16 @@
     github = "nilp0inter";
     githubId = 1224006;
   };
+  n-hass = {
+    name = "Nicholas Hassan";
+    email = "nick@hassan.host";
+    github = "n-hass";
+    githubId = 72363381;
+    keys = [{
+      longkeyid = "ed25519/0xA37159732728A6A6";
+      fingerprint = "FDEE 6116 DBA7 8840 7323  4466 A371 5973 2728 A6A6";
+    }];
+  };
   seylerius = {
     email = "sable@seyleri.us";
     name = "Sable Seyler";
