@@ -17636,12 +17636,12 @@ null or package</p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">pkgs.firefox.override {
   # See nixpkgs&#x27; firefox/wrapper.nix to check which options you can use
-  cfg = {
+  nativeMessagingHosts = [
     # Gnome shell native connector
-    enableGnomeExtensions = true;
+    pkgs.gnome-browser-connector
     # Tridactyl native connector
-    enableTridactylNative = true;
-  };
+    pkgs.tridactyl-native
+  ];
 }
 
 </code></pre>
