@@ -5,6 +5,7 @@ with lib;
 let
 
   cfg = config.programs.feh;
+  mkInstallOption = hm.options.mkInstallOptionWithDefault config.programs.installPackages;
 
   bindingsOf = t: with types; attrsOf (nullOr (either t (listOf t)));
 
@@ -26,6 +27,8 @@ let
 in {
   options.programs.feh = {
     enable = mkEnableOption "feh - a fast and light image viewer";
+
+    install = mkInstallOption "feh";
 
     package = mkPackageOption pkgs "feh" { };
 
@@ -71,7 +74,7 @@ in {
         "To disable a keybinding, use `null` instead of an empty string.";
     }];
 
-    home.packages = [ cfg.package ];
+    home.packages = optional cfg.install cfg.package;
 
     xdg.configFile."feh/buttons" =
       mkIf (cfg.buttons != { }) { text = renderBindings cfg.buttons + "\n"; };
