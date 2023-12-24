@@ -198,7 +198,7 @@ in {
       pinentryFlavor = mkOption {
         type = types.nullOr (types.enum pkgs.pinentry.flavors);
         example = "gnome3";
-        default = "gtk2";
+        default = null;
         description = ''
           Which pinentry interface to use. If not
           `null`, it sets
@@ -210,8 +210,6 @@ in {
           ```nix
           services.dbus.packages = [ pkgs.gcr ];
           ```
-          For this reason, the default is `gtk2` for
-          now.
         '';
       };
 
