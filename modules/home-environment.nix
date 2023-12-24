@@ -585,11 +585,15 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-          if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
+          # We don't use `cfg.profileDirectory` here because it defaults to
+          # `/etc/profiles/per-user/<user>` which is constructed by NixOS or
+          # nix-darwin and won't require uninstalling `home-manager-path`.
+          if [[ -e $HOME/.nix-profile/manifest.json \
+             || -e "''${XDG_STATE_HOME:-$HOME/.local/state}/nix/profile/manifest.json" ]] ; then
             nix profile list \
               | { grep 'home-manager-path$' || test $? = 1; } \
               | cut -d ' ' -f 4 \
-              | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+              | xargs -rt $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
           else
             if nix-env -q | grep '^home-manager-path$'; then
               $DRY_RUN_CMD nix-env -e home-manager-path
