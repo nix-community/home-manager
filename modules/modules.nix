@@ -306,6 +306,7 @@ let
     ./services/nextcloud-client.nix
     ./services/notify-osd.nix
     ./services/opensnitch-ui.nix
+    ./services/osmscout-server.nix
     ./services/owncloud-client.nix
     ./services/pantalaimon.nix
     ./services/parcellite.nix
