@@ -279,6 +279,7 @@ let
     ./services/clipman.nix
     ./services/clipmenu.nix
     ./services/comodoro.nix
+    ./services/conky.nix
     ./services/copyq.nix
     ./services/darkman.nix
     ./services/devilspie2.nix
