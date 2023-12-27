@@ -136,7 +136,7 @@ in {
     # See https://github.com/nix-community/home-manager/issues/4744 for details.
     home.activation.migrateGhAccounts =
       hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-        if [[ -e "${config.xdg.configHome}/gh/config.yml" ]]; then
+        if [[ -e "${config.xdg.configHome}/gh/hosts.yml" ]]; then
           (
             TMP_DIR=$(mktemp -d)
             trap "rm --force --recursive $TMP_DIR" EXIT
