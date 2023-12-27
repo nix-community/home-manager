@@ -215,6 +215,7 @@ import nmt {
     ./modules/services/cliphist
     ./modules/services/clipman
     ./modules/services/comodoro
+    ./modules/services/conky
     ./modules/services/darkman
     ./modules/services/devilspie2
     ./modules/services/dropbox
