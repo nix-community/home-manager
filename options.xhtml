@@ -56294,14 +56294,13 @@ null or signed integer</p>
 <code class="literal">pinentry-gnome3</code> may not work on non-Gnome
 systems. You can fix it by adding the following to your
 system configuration:</p><pre><code class="programlisting nix">services.dbus.packages = [ pkgs.gcr ];
-</code></pre><p>For this reason, the default is <code class="literal">gtk2</code> for
-now.</p>
+</code></pre>
 
 <p><span class="emphasis"><em>Type:</em></span>
 null or one of “curses”, “tty”, “emacs”, “gnome3”, “qt”</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;gtk2&quot;</code></p>
+<code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">&quot;gnome3&quot;</code></p>
