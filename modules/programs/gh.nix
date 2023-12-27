@@ -135,15 +135,16 @@ in {
     #
     # See https://github.com/nix-community/home-manager/issues/4744 for details.
     home.activation.migrateGhAccounts =
-      hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-        if [[ -e "${config.xdg.configHome}/gh/hosts.yml" ]]; then
+      let ghHosts = "${config.xdg.configHome}/gh/hosts.yml";
+      in hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+        if [[ ! -L "${ghHosts}" && -f "${ghHosts}" ]]; then
           (
             TMP_DIR=$(mktemp -d)
             trap "rm --force --recursive $TMP_DIR" EXIT
-            cp "${config.xdg.configHome}/gh/hosts.yml" $TMP_DIR/
+            cp "${ghHosts}" $TMP_DIR/
             export GH_CONFIG_DIR=$TMP_DIR
             $DRY_RUN_CMD ${getExe cfg.package} help 2>&1 > $DRY_RUN_NULL
-            cp $TMP_DIR/hosts.yml "${config.xdg.configHome}/gh/hosts.yml"
+            cp $TMP_DIR/hosts.yml "${ghHosts}"
           )
         fi
       '';
