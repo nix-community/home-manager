@@ -119,6 +119,12 @@
     github = "JustinLovinger";
     githubId = 7183441;
   };
+  kaleo = {
+    name = "Kaleo Cheng";
+    email = "kaleocheng@gmail.com";
+    github = "kaleocheng";
+    githubId = 7939352;
+  };
   owm111 = {
     email = "7798336+owm111@users.noreply.github.com";
     name = "Owen McGrath";
