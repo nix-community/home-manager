@@ -6,7 +6,7 @@ with lib;
   config = {
     programs.alacritty = {
       enable = true;
-      package = config.lib.test.mkStubPackage { };
+      package = config.lib.test.mkStubPackage { version = "0.12.3"; };
 
       settings = {
         window.dimensions = {

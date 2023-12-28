@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, ... }:
 
 {
   config = {
@@ -19,13 +17,18 @@ with lib;
           mods = "Control";
           chars = "\\x0c";
         }];
+
+        font = {
+          normal.family = "SFMono";
+          bold.family = "SFMono";
+        };
       };
     };
 
     nmt.script = ''
       assertFileContent \
         home-files/.config/alacritty/alacritty.toml \
-        ${./example-settings-expected.toml}
+        ${./settings-toml-expected.toml}
     '';
   };
 }

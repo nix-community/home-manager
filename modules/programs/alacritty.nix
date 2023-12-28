@@ -4,7 +4,9 @@ with lib;
 
 let
   cfg = config.programs.alacritty;
-  yamlFormat = pkgs.formats.yaml { };
+  useToml = lib.versionAtLeast cfg.package.version "0.13";
+  tomlFormat = pkgs.formats.toml { };
+  configFileName = "alacritty.${if useToml then "toml" else "yml"}";
 in {
   options = {
     programs.alacritty = {
@@ -18,7 +20,7 @@ in {
       };
 
       settings = mkOption {
-        type = yamlFormat.type;
+        type = tomlFormat.type;
         default = { };
         example = literalExpression ''
           {
@@ -26,7 +28,7 @@ in {
               lines = 3;
               columns = 200;
             };
-            key_bindings = [
+            keyboard.bindings = [
               {
                 key = "K";
                 mods = "Control";
@@ -37,27 +39,37 @@ in {
         '';
         description = ''
           Configuration written to
-          {file}`$XDG_CONFIG_HOME/alacritty/alacritty.yml`. See
-          <https://github.com/alacritty/alacritty/blob/master/alacritty.yml>
-          for the default configuration.
+          {file}`$XDG_CONFIG_HOME/alacritty/alacritty.yml` or
+          {file}`$XDG_CONFIG_HOME/alacritty/alacritty.toml`
+          (the latter being used for alacritty 0.13 and later).
+          See <https://github.com/alacritty/alacritty/tree/master#configuration>
+          for more info.
         '';
       };
     };
   };
 
-  config = mkMerge [
-    (mkIf cfg.enable {
-      home.packages = [ cfg.package ];
+  config = mkIf cfg.enable {
+    home.packages = [ cfg.package ];
 
-      xdg.configFile."alacritty/alacritty.yml" = mkIf (cfg.settings != { }) {
-        # TODO: Replace by the generate function but need to figure out how to
-        # handle the escaping first.
-        #
-        # source = yamlFormat.generate "alacritty.yml" cfg.settings;
-
-        text =
-          replaceStrings [ "\\\\" ] [ "\\" ] (builtins.toJSON cfg.settings);
-      };
-    })
-  ];
+    xdg.configFile."alacritty/${configFileName}" =
+      lib.mkIf (cfg.settings != { }) (lib.mkMerge [
+        (lib.mkIf useToml {
+          source =
+            (tomlFormat.generate configFileName cfg.settings).overrideAttrs
+            (finalAttrs: prevAttrs: {
+              buildCommand = lib.concatStringsSep "\n" [
+                prevAttrs.buildCommand
+                # TODO: why is this needed? Is there a better way to retain escape sequences?
+                "substituteInPlace $out --replace '\\\\' '\\'"
+              ];
+            });
+        })
+        # TODO remove this once we don't need to support Alacritty < 0.12 anymore
+        (lib.mkIf (!useToml) {
+          text =
+            replaceStrings [ "\\\\" ] [ "\\" ] (builtins.toJSON cfg.settings);
+        })
+      ]);
+  };
 }
