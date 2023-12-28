@@ -86,7 +86,9 @@ in {
         if not ($zoxide_cache | path exists) {
           mkdir $zoxide_cache
         }
-        ${cfg.package}/bin/zoxide init nushell ${cfgOptions} | save --force ${config.xdg.cacheHome}/zoxide/init.nu
+        ${cfg.package}/bin/zoxide init nushell ${cfgOptions} |
+          str replace "def-env" "def --env" --all |  # https://github.com/ajeetdsouza/zoxide/pull/632
+          save --force ${config.xdg.cacheHome}/zoxide/init.nu
       '';
       extraConfig = ''
         source ${config.xdg.cacheHome}/zoxide/init.nu
