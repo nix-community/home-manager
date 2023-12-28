@@ -39757,6 +39757,290 @@ null or string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.sftpman.enable"></a><a class="term" href="options.xhtml#opt-programs.sftpman.enable"><code class="option">programs.sftpman.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable sftpman, an application that handles sshfs/sftp file systems mounting.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.package"></a><a class="term" href="options.xhtml#opt-programs.sftpman.package"><code class="option">programs.sftpman.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The sftpman package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.sftpman</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.defaultSshKey"></a><a class="term" href="options.xhtml#opt-programs.sftpman.defaultSshKey"><code class="option">programs.sftpman.defaultSshKey</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to the SSH key to be used by default. Can be overridden per host.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.mounts"></a><a class="term" href="options.xhtml#opt-programs.sftpman.mounts"><code class="option">programs.sftpman.mounts</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The sshfs mount configurations written to
+<code class="filename">$XDG_CONFIG_HOME/sftpman/mounts/</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.mounts._name_.authType"></a><a class="term" href="options.xhtml#opt-programs.sftpman.mounts._name_.authType"><code class="option">programs.sftpman.mounts.&lt;name&gt;.authType</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The authentication method to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “password”, “publickey”, “hostbased”, “keyboard-interactive”, “gssapi-with-mic”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;publickey&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.mounts._name_.beforeMount"></a><a class="term" href="options.xhtml#opt-programs.sftpman.mounts._name_.beforeMount"><code class="option">programs.sftpman.mounts.&lt;name&gt;.beforeMount</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Command to run before mounting.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;true&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.mounts._name_.host"></a><a class="term" href="options.xhtml#opt-programs.sftpman.mounts._name_.host"><code class="option">programs.sftpman.mounts.&lt;name&gt;.host</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The host to connect to.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.mounts._name_.mountOptions"></a><a class="term" href="options.xhtml#opt-programs.sftpman.mounts._name_.mountOptions"><code class="option">programs.sftpman.mounts.&lt;name&gt;.mountOptions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Options to pass to sshfs.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.mounts._name_.mountPoint"></a><a class="term" href="options.xhtml#opt-programs.sftpman.mounts._name_.mountPoint"><code class="option">programs.sftpman.mounts.&lt;name&gt;.mountPoint</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The remote path to mount.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.mounts._name_.port"></a><a class="term" href="options.xhtml#opt-programs.sftpman.mounts._name_.port"><code class="option">programs.sftpman.mounts.&lt;name&gt;.port</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The port to connect to.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">22</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.mounts._name_.sshKey"></a><a class="term" href="options.xhtml#opt-programs.sftpman.mounts._name_.sshKey"><code class="option">programs.sftpman.mounts.&lt;name&gt;.sshKey</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to the SSH key to use for authentication.
+Only applies if authMethod is <code class="literal">publickey</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">config.programs.sftpman.defaultSshKey</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sftpman.mounts._name_.user"></a><a class="term" href="options.xhtml#opt-programs.sftpman.mounts._name_.user"><code class="option">programs.sftpman.mounts.&lt;name&gt;.user</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The username to authenticate with.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sftpman.nix" target="_top">
+&lt;home-manager/modules/programs/sftpman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.sioyek.enable"></a><a class="term" href="options.xhtml#opt-programs.sioyek.enable"><code class="option">programs.sioyek.enable</code>
   </a>
  </span>
