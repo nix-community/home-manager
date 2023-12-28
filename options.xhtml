@@ -60452,6 +60452,129 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.osmscout-server.enable"></a><a class="term" href="options.xhtml#opt-services.osmscout-server.enable"><code class="option">services.osmscout-server.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable OSM Scout Server.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/osmscout-server.nix" target="_top">
+&lt;home-manager/modules/services/osmscout-server.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.osmscout-server.package"></a><a class="term" href="options.xhtml#opt-services.osmscout-server.package"><code class="option">services.osmscout-server.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The osmscout-server package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.osmscout-server</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/osmscout-server.nix" target="_top">
+&lt;home-manager/modules/services/osmscout-server.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.osmscout-server.network.listenAddress"></a><a class="term" href="options.xhtml#opt-services.osmscout-server.network.listenAddress"><code class="option">services.osmscout-server.network.listenAddress</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The address for the server to listen on.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;127.0.0.1&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/osmscout-server.nix" target="_top">
+&lt;home-manager/modules/services/osmscout-server.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.osmscout-server.network.port"></a><a class="term" href="options.xhtml#opt-services.osmscout-server.network.port"><code class="option">services.osmscout-server.network.port</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The TCP port on which the server will listen.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">8553</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/osmscout-server.nix" target="_top">
+&lt;home-manager/modules/services/osmscout-server.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.osmscout-server.network.startWhenNeeded"></a><a class="term" href="options.xhtml#opt-services.osmscout-server.network.startWhenNeeded"><code class="option">services.osmscout-server.network.startWhenNeeded</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Enable systemd socket activation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/osmscout-server.nix" target="_top">
+&lt;home-manager/modules/services/osmscout-server.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.owncloud-client.enable"></a><a class="term" href="options.xhtml#opt-services.owncloud-client.enable"><code class="option">services.owncloud-client.enable</code>
   </a>
  </span>
