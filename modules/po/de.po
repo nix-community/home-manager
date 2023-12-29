@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-06-20 05:50+0000\n"
-"Last-Translator: Sven Keidel <svenkeidel@pm.me>\n"
+"PO-Revision-Date: 2023-12-29 02:09+0000\n"
+"Last-Translator: Peter Pfeufer <info@ppfeufer.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/home-manager/"
 "modules/de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18.1\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
@@ -132,7 +132,7 @@ msgstr "Dies ist ein Probelauf"
 
 #: modules/lib-bash/activation-init.sh:137
 msgid "This is a live run"
-msgstr "Dies ist eine Live-Ausführung"
+msgstr "Dies ist kein Probelauf"
 
 #: modules/lib-bash/activation-init.sh:143
 msgid "Using Nix version: %s"
