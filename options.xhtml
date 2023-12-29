@@ -14180,6 +14180,99 @@ YAML value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.bemenu.enable"></a><a class="term" href="options.xhtml#opt-programs.bemenu.enable"><code class="option">programs.bemenu.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable bemenu.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bemenu.nix" target="_top">
+&lt;home-manager/modules/programs/bemenu.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.bemenu.package"></a><a class="term" href="options.xhtml#opt-programs.bemenu.package"><code class="option">programs.bemenu.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The bemenu package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.bemenu</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bemenu.nix" target="_top">
+&lt;home-manager/modules/programs/bemenu.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.bemenu.settings"></a><a class="term" href="options.xhtml#opt-programs.bemenu.settings"><code class="option">programs.bemenu.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration options for bemenu. See <span class="citerefentry"><span class="refentrytitle">bemenu</span>(1)</span>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (string or signed integer or boolean)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  line-height = 28;
+  prompt = &quot;open&quot;;
+  ignorecase = true;
+  fb = &quot;#1e1e2e&quot;;
+  ff = &quot;#cdd6f4&quot;;
+  nb = &quot;#1e1e2e&quot;;
+  nf = &quot;#cdd6f4&quot;;
+  tb = &quot;#1e1e2e&quot;;
+  hb = &quot;#1e1e2e&quot;;
+  tf = &quot;#f38ba8&quot;;
+  hf = &quot;#f9e2af&quot;;
+  af = &quot;#cdd6f4&quot;;
+  ab = &quot;#1e1e2e&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bemenu.nix" target="_top">
+&lt;home-manager/modules/programs/bemenu.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.borgmatic.enable"></a><a class="term" href="options.xhtml#opt-programs.borgmatic.enable"><code class="option">programs.borgmatic.enable</code>
   </a>
  </span>
