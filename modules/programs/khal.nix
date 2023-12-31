@@ -12,13 +12,14 @@ let
   khalCalendarAccounts =
     filterAttrs (_: a: a.khal.enable) config.accounts.calendar.accounts;
 
-  khalContactAccounts = mapAttrs (_: v: v // { type = "birthdays"; })
+  khalContactAccounts =
+    mapAttrs (_: v: recursiveUpdate v { khal.type = "birthdays"; })
     (filterAttrs (_: a: a.khal.enable) config.accounts.contact.accounts);
 
   khalAccounts = khalCalendarAccounts // khalContactAccounts;
 
   primaryAccount = findSingle (a: a.primary) null null
-    (mapAttrsToList (n: v: v // { name = n; }) khalAccounts);
+    (mapAttrsToList (n: v: v // { name = n; }) khalCalendarAccounts);
 
   definedAttrs = filterAttrs (_: v: !isNull v);
 
@@ -153,7 +154,7 @@ in {
     locale = mkOption {
       type = lib.types.submodule { options = localeOptions; };
       description = ''
-        khal locale settings. 
+        khal locale settings.
       '';
       default = { };
     };
