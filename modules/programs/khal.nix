@@ -12,9 +12,20 @@ let
   khalCalendarAccounts =
     filterAttrs (_: a: a.khal.enable) config.accounts.calendar.accounts;
 
-  khalContactAccounts =
-    mapAttrs (_: v: recursiveUpdate v { khal.type = "birthdays"; })
-    (filterAttrs (_: a: a.khal.enable) config.accounts.contact.accounts);
+  # a contact account may have multiple collections, each a separate calendar
+  expandContactAccount = name: acct:
+    if acct.khal.collections != null then
+      listToAttrs (map (c: {
+        name = "${name}-${c}";
+        value = recursiveUpdate acct { khal.thisCollection = c; };
+      }) acct.khal.collections)
+    else {
+      ${name} = acct;
+    };
+
+  khalContactAccounts = concatMapAttrs expandContactAccount
+    (mapAttrs (_: v: recursiveUpdate v { khal.type = "birthdays"; })
+      (filterAttrs (_: a: a.khal.enable) config.accounts.contact.accounts));
 
   khalAccounts = khalCalendarAccounts // khalContactAccounts;
 
@@ -31,6 +42,9 @@ let
       "path = ${
         value.local.path + "/"
         + (optionalString (value.khal.type == "discover") value.khal.glob)
+        + (optionalString
+          (value.khal.type == "birthdays" && value.khal ? thisCollection)
+          value.khal.thisCollection)
       }"
     ] ++ optional (value.khal.readOnly) "readonly = True" ++ [
       (toKeyValueIfDefined (getAttrs [ "type" "color" "priority" ] value.khal))
