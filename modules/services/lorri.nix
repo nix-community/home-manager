@@ -52,6 +52,12 @@ in {
           PrivateTmp = true;
           ProtectSystem = "strict";
           ProtectHome = "read-only";
+          ReadWritePaths = [
+            # /run/user/1000 for the socket
+            "%t"
+            "/nix/var/nix/gcroots/per-user/%u"
+          ];
+          CacheDirectory = [ "lorri" ];
           Restart = "on-failure";
           Environment = let
             path = with pkgs;
