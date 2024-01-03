@@ -13,7 +13,7 @@ let
 
     Service = {
       Environment = [
-        "PATH=${lib.makeBinPath (with pkgs; [ openssh git ])}"
+        "PATH=${lib.makeBinPath (with pkgs; [ openssh git git-lfs ])}"
         "GIT_SYNC_DIRECTORY=${repo.path}"
         "GIT_SYNC_COMMAND=${cfg.package}/bin/git-sync"
         "GIT_SYNC_REPOSITORY=${repo.uri}"
