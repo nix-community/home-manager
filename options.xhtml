@@ -73854,6 +73854,169 @@ attribute set of ((list of string) or ((list of string) or string) convertible t
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-xdg.portal.enable"></a><a class="term" href="options.xhtml#opt-xdg.portal.enable"><code class="option">xdg.portal.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable <a class="link" href="https://github.com/flatpak/xdg-desktop-portal"  target="_top">XDG desktop integration</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix" target="_top">
+&lt;home-manager/modules/misc/xdg-portal.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.portal.config"></a><a class="term" href="options.xhtml#opt-xdg.portal.config"><code class="option">xdg.portal.config</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Sets which portal backend should be used to provide the implementation
+for the requested interface. For details check <span class="citerefentry"><span class="refentrytitle">portals.conf</span>(5)</span>.</p><p>These will be written with the name <code class="literal">$desktop-portals.conf</code> for
+<code class="literal">xdg.portal.config.$desktop</code> and <code class="literal">portals.conf</code> for
+<code class="literal">xdg.portal.config.common</code> as an exception.</p><p>These, together with <code class="literal">xdg.portal.configPackages</code>, will be joined into a
+directory and passed to <code class="literal">xdg-desktop-portal.service</code> through a
+<code class="literal">NIXOS_XDG_DESKTOP_PORTAL_CONFIG_DIR</code> variable.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (string or ((list of string) or string) convertible to it)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  common = {
+    default = [
+      &quot;gtk&quot;
+    ];
+  };
+  pantheon = {
+    default = [
+      &quot;pantheon&quot;
+      &quot;gtk&quot;
+    ];
+    &quot;org.freedesktop.impl.portal.Secret&quot; = [
+      &quot;gnome-keyring&quot;
+    ];
+  };
+  x-cinnamon = {
+    default = [
+      &quot;xapp&quot;
+      &quot;gtk&quot;
+    ];
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix" target="_top">
+&lt;home-manager/modules/misc/xdg-portal.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.portal.configPackages"></a><a class="term" href="options.xhtml#opt-xdg.portal.configPackages"><code class="option">xdg.portal.configPackages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of packages that provide XDG desktop portal configuration, usually in
+the form of <code class="literal">share/xdg-desktop-portal/$desktop-portals.conf</code>.</p><p>Note that configs in <code class="literal">xdg.portal.config</code> will be preferred if set.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">[ pkgs.gnome.gnome-session ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix" target="_top">
+&lt;home-manager/modules/misc/xdg-portal.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.portal.extraPortals"></a><a class="term" href="options.xhtml#opt-xdg.portal.extraPortals"><code class="option">xdg.portal.extraPortals</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of additional portals that should be passed to the
+<code class="literal">xdg-desktop-portal.service</code>, via the <code class="literal">XDG_DESKTOP_PORTAL_DIR</code>
+variable.</p><p>Portals allow interaction with system, like choosing files or taking
+screenshots. At minimum, a desktop portal implementation should be
+listed.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix" target="_top">
+&lt;home-manager/modules/misc/xdg-portal.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.portal.xdgOpenUsePortal"></a><a class="term" href="options.xhtml#opt-xdg.portal.xdgOpenUsePortal"><code class="option">xdg.portal.xdgOpenUsePortal</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Sets environment variable <code class="literal">NIXOS_XDG_OPEN_USE_PORTAL</code> to <code class="literal">1</code>
+This will make <code class="literal">xdg-open</code> use the portal to open programs, which resolves bugs involving
+programs opening inside FHS envs or with unexpected env vars set from wrappers.
+See <a class="link" href="https://github.com/NixOS/nixpkgs/issues/160923"  target="_top">#160923</a> for more info.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix" target="_top">
+&lt;home-manager/modules/misc/xdg-portal.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-xdg.stateHome"></a><a class="term" href="options.xhtml#opt-xdg.stateHome"><code class="option">xdg.stateHome</code>
   </a>
  </span>
