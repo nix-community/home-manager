@@ -30,8 +30,12 @@ let
 
   nushellIntegration = ''
     def --env ya [args?] {
-      let tmp = $"($env.TEMP)(char path_sep)yazi-cwd." + (random chars -l 5)
-      yazi $args --cwd-file $tmp
+      let tmp = (mktemp -t "yazi-cwd.XXXXX")
+      if ($args == null) {
+        yazi --cwd-file $tmp
+      } else {
+        yazi $args --cwd-file $tmp
+      }
       let cwd = (open $tmp)
       if $cwd != "" and $cwd != $env.PWD {
         cd $cwd
