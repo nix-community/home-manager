@@ -253,6 +253,7 @@ in
 {
   imports = [
     (mkRenamedOptionModule [ "programs" "zsh" "enableSyntaxHighlighting" ] [ "programs" "zsh" "syntaxHighlighting" "enable" ])
+    (mkRenamedOptionModule [ "programs" "zsh" "zproof" ] [ "programs" "zsh" "zprof" ])
   ];
 
   options = {
@@ -356,10 +357,10 @@ in
         description = "Enable zsh autosuggestions";
       };
 
-      zproof.enable = mkOption {
+      zprof.enable = mkOption {
         default = false;
         description = ''
-          Enable zproof in your zshrc.
+          Enable zprof in your zshrc.
         '';
       };
 
@@ -541,9 +542,9 @@ in
         ++ optional cfg.oh-my-zsh.enable cfg.oh-my-zsh.package;
 
       home.file."${relToDotDir ".zshrc"}".text = concatStringsSep "\n" ([
-        # zproof must be loaded before everything else, since it
+        # zprof must be loaded before everything else, since it
         # benchmarks the shell initialization.
-        (optionalString cfg.zproof.enable ''
+        (optionalString cfg.zprof.enable ''
           zmodload zsh/zprof
         '')
 
@@ -671,7 +672,7 @@ in
           }
         '')
 
-        (optionalString cfg.zproof.enable
+        (optionalString cfg.zprof.enable
         ''
           zprof
         '')
