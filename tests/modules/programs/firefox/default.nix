@@ -4,5 +4,6 @@
   firefox-deprecated-native-messenger = ./deprecated-native-messenger.nix;
   firefox-duplicate-profile-ids = ./duplicate-profile-ids.nix;
   firefox-duplicate-container-ids = ./duplicate-container-ids.nix;
+  firefox-container-id-out-of-range = ./container-id-out-of-range.nix;
   firefox-policies = ./policies.nix;
 }
