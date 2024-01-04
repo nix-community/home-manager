@@ -477,4 +477,10 @@
     github = "9p4";
     githubId = 17993169;
   };
+  britter = {
+    name = "Benedikt Ritter";
+    email = "beneritter@gmail.com";
+    github = "britter";
+    githubId = 1327662;
+  };
 }
