@@ -48666,15 +48666,26 @@ strings concatenated with “\n”</p>
  </span>
 </dt>
 <dd>
-<p>Plugins to be added to your configuration file.</p><p>Must be a package, an absolute plugin path, or string to be recognized
-by xplr. Paths will be relative to
-<code class="filename">$XDG_CONFIG_HOME/xplr/init.lua</code> unless they are absolute.</p>
+<p>An attribute set of plugin paths to be added to the [package.path]<a class="link" href="https://www.lua.org/manual/5.4/manual.html#pdf-package.path"  target="_top">https://www.lua.org/manual/5.4/manual.html#pdf-package.path</a> of the <code class="filename">~/config/xplr/init.lua</code> configuration file.</p><p>Must be a package or string representing the plugin directory’s path.
+If the path string is not absolute, it will be relative to <code class="filename">$XDG_CONFIG_HOME/xplr/init.lua</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (list of (package or string))</p>
+null or (attribute set of (package or string))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">[]</code></p>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  wl-clipboard = fetchFromGitHub {
+    owner = &quot;sayanarijit&quot;;
+    repo = &quot;wl-clipboard.xplr&quot;;
+    rev = &quot;a3ffc87460c5c7f560bffea689487ae14b36d9c3&quot;;
+    hash = &quot;sha256-I4rh5Zks9hiXozBiPDuRdHwW5I7ppzEpQNtirY0Lcks=&quot;;
+  }
+  local-plugin = &quot;/home/user/.config/plugins/local-plugin&quot;;
+};
+
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
