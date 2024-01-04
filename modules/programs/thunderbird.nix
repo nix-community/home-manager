@@ -49,6 +49,11 @@ let
       "mail.identity.id_${id}.fullName" = account.realName;
       "mail.identity.id_${id}.useremail" = address;
       "mail.identity.id_${id}.valid" = true;
+      "mail.identity.id_${id}.htmlSigText" =
+        if account.signature.showSignature == "none" then
+          ""
+        else
+          account.signature.text;
     } // optionalAttrs (account.gpg != null) {
       "mail.identity.id_${id}.attachPgpKey" = false;
       "mail.identity.id_${id}.autoEncryptDrafts" = true;
