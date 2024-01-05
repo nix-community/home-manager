@@ -37,6 +37,7 @@ let
     ./misc/specialisation.nix
     ./misc/submodule-support.nix
     ./misc/tmpfiles.nix
+    ./misc/uninstall.nix
     ./misc/version.nix
     ./misc/vte.nix
     ./misc/xdg-desktop-entries.nix
