@@ -34,7 +34,8 @@ function migrateProfile() {
 function setupVars() {
     declare -r stateHome="${XDG_STATE_HOME:-$HOME/.local/state}"
     declare -r userNixStateDir="$stateHome/nix"
-    declare -r hmGcrootsDir="$stateHome/home-manager/gcroots"
+    declare -gr hmStatePath="$stateHome/home-manager"
+    declare -r hmGcrootsDir="$hmStatePath/gcroots"
 
     declare -r globalNixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
     declare -r globalProfilesDir="$globalNixStateDir/profiles/per-user/$USER"
@@ -55,6 +56,7 @@ function setupVars() {
         exit 1
     fi
 
+    declare -gr hmDataPath="${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
     declare -gr genProfilePath="$profilesDir/home-manager"
     declare -gr newGenPath="@GENERATION_DIR@";
     declare -gr newGenGcPath="$hmGcrootsDir/current-home"
@@ -85,6 +87,34 @@ function setupVars() {
            "${oldGenNum:-}" "${oldGenPath:-}" \
            "$profilesDir" "$hmGcrootsDir"
         exit 1
+    fi
+}
+
+# Helper used to list content of a `nix profile` profile.
+function nixProfileList() {
+    # We attempt to use `--json` first (added in Nix 2.17). Otherwise attempt to
+    # parse the legacy output format.
+    {
+        nix profile list --json 2>/dev/null \
+            | jq -r --arg name "$1" '.elements[].storePaths[] | select(endswith($name))'
+    } || {
+        nix profile list \
+            | { grep "$1\$" || test $? = 1; } \
+            | cut -d ' ' -f 4
+    }
+}
+
+# Helper used to remove a package from a Nix profile. Supports both `nix-env`
+# and `nix profile`.
+function nixProfileRemove() {
+    # We don't use `cfg.profileDirectory` here because it defaults to
+    # `/etc/profiles/per-user/<user>` which is constructed by NixOS or
+    # nix-darwin and won't require uninstalling `home-manager-path`.
+    if  [[ -e $HOME/.nix-profile/manifest.json \
+        || -e ${XDG_STATE_HOME:-$HOME/.local/state}/nix/profile/manifest.json ]] ; then
+        nixProfileList "$1" | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+    else
+        $DRY_RUN_CMD nix-env -e "$1" > $DRY_RUN_NULL 2>&1
     fi
 }
 
