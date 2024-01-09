@@ -31,6 +31,10 @@ let
       ({ account = account.address; } // account.lieer.settings);
   };
 
+  activationScript = account: ''
+    $DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG "${account.maildir.absPath}"/mail/{cur,new,tmp}
+  '';
+
   settingsOpts = {
     drop_non_existing_label = mkOption {
       type = types.bool;
@@ -288,6 +292,13 @@ in {
       programs.notmuch.new.ignore = [ "/.*[.](json|lock|bak)$/" ];
 
       home.file = listToAttrs (map configFile lieerAccounts);
+
+      # Lieer requires the maildir structure to exist before syncing will work.
+      # Normally this is done via 'gmi init', but 'gmi init' bails out if the
+      # config file alreasy exists.
+      home.activation.initLieer =
+        hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]
+        (concatMapStringsSep "\n" activationScript lieerAccounts);
     }
   ]);
 }
