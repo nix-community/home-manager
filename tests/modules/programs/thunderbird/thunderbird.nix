@@ -17,6 +17,11 @@
         tls.enable = true;
       };
       smtp.port = 456;
+
+      signature = {
+        text = "signature";
+        showSignature = "append";
+      };
     };
 
     hm-account = {

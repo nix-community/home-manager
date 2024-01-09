@@ -12,6 +12,7 @@ user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ec
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.e2etechpref", 0);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.encryptionpolicy", 0);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.fullName", "H. M. Test");
+user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.htmlSigText", "signature");
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.is_gnupg_key_id", true);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.last_entered_external_gnupg_key_id", "ABC");
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.openpgp_key_id", "ABC");
@@ -21,6 +22,7 @@ user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ec
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.valid", true);
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.autoEncryptDrafts", false);
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.fullName", "H. M. Test Jr.");
+user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.htmlSigText", "");
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.protectSubject", false);
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.smtpServer", "smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.useremail", "hm@example.org");
@@ -30,6 +32,7 @@ user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.e2etechpref", 0);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.encryptionpolicy", 0);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.fullName", "H. M. Test");
+user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.htmlSigText", "signature");
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.is_gnupg_key_id", true);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.last_entered_external_gnupg_key_id", "ABC");
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.openpgp_key_id", "ABC");
