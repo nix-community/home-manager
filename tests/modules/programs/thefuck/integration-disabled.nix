@@ -7,6 +7,7 @@
     thefuck.enableFishIntegration = false;
     thefuck.enableZshIntegration = false;
     bash.enable = true;
+    fish.enable = true;
     zsh.enable = true;
   };
 
@@ -14,7 +15,7 @@
 
   nmt.script = ''
     assertFileNotRegex home-files/.bashrc '@thefuck@/bin/thefuck'
-    assertPathNotExists home-files/.config/fish/functions/fuck.fish
+    assertFileNotRegex home-files/.config/fish/config.fish '@thefuck@/bin/thefuck'
     assertFileNotRegex home-files/.zshrc '@thefuck@/bin/thefuck'
   '';
 }
