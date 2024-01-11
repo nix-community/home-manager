@@ -40,6 +40,10 @@ in {
         ExecStart = "${cfg.package}/bin/listenbrainz-mpd";
         Restart = "always";
         RestartSec = 5;
+        Type = if lib.versionAtLeast cfg.package.version "2.3.2" then
+          "notify"
+        else
+          "simple";
       };
       Install.WantedBy = [ "default.target" ];
     };
