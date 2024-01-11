@@ -203,6 +203,16 @@ in
       description = "The user's home directory. Must be an absolute path.";
     };
 
+    meta.priority = mkOption {
+      type = types.nullOr types.int;
+      default = null;
+      example = 10;
+      description = ''
+        The priority of the Home Manager generation in the user's profile.
+        Passed to "nix-env --set-flag priority" or to "nix profile install --priority" for flakes.
+        Lower values mean higher priority.
+      '';
+    };
     home.profileDirectory = mkOption {
       type = types.path;
       defaultText = literalExpression ''
@@ -623,10 +633,27 @@ in
             local oldNix="$(command -v nix)"
 
             nixRemoveProfileByName 'home-manager-path'
-
-            $DRY_RUN_CMD $oldNix profile install $1
+            
+            if [[ -v HM_PACKAGE_PRIORITY ]]; then
+              priority_arg="--priority $HM_PACKAGE_PRIORITY"
+            else
+              priority_arg=""
+            fi
+            $DRY_RUN_CMD $oldNix profile install $1 $priority_arg
           }
 
+          function nixEnvInstall() {
+            $DRY_RUN_CMD nix-env -i $1
+            
+            if [[ -v HM_PACKAGE_PRIORITY ]]; then
+              $DRY_RUN_CMD nix-env --set-flag priority $HM_PACKAGE_PRIORITY home-manager-path
+            fi
+          }
+          
+          ${if config.meta.priority != null
+            then "HM_PACKAGE_PRIORITY=\${HM_PACKAGE_PRIORITY:-${toString config.meta.priority}}"
+            else ""
+          }
           if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
             INSTALL_CMD="nix profile install"
             INSTALL_CMD_ACTUAL="nixReplaceProfile"
@@ -634,7 +661,7 @@ in
             REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
           else
             INSTALL_CMD="nix-env -i"
-            INSTALL_CMD_ACTUAL="$DRY_RUN_CMD nix-env -i"
+            INSTALL_CMD_ACTUAL="nixEnvInstall"
             LIST_CMD="nix-env -q"
             REMOVE_CMD_SYNTAX='nix-env -e {package name}'
           fi
@@ -644,7 +671,7 @@ in
             _iError $'Oops, Nix failed to install your new Home Manager profile!\n\nPerhaps there is a conflict with a package that was installed using\n"%s"? Try running\n\n    %s\n\nand if there is a conflicting package you can remove it with\n\n    %s\n\nThen try activating your Home Manager configuration again.' "$INSTALL_CMD" "$LIST_CMD" "$REMOVE_CMD_SYNTAX"
             exit 1
           fi
-          unset -f nixProfileList nixRemoveProfileByName nixReplaceProfile
+          unset -f nixProfileList nixRemoveProfileByName nixReplaceProfile nixEnvInstall
           unset INSTALL_CMD INSTALL_CMD_ACTUAL LIST_CMD REMOVE_CMD_SYNTAX
         ''
     );

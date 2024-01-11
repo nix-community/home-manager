@@ -16,6 +16,7 @@ _arguments \
   '(-h --help)'{--help,-h}'[help]' \
   '(-v --verbose)'{--verbose,-v}'[verbose]' \
   '(-n --dry-run)'{--dry-run,-n}'[dry run]' \
+  '--priority[priority]:NUM:()' \
   '(-f --file)'{--file,-f}'[configuration file]:FILE:_files' \
   '(-j --max-jobs)'{--max-jobs,-j}'[max jobs]:NUM:()' \
   '--option[option]:NAME VALUE:()' \
@@ -55,6 +56,7 @@ case "$state" in
         _arguments \
           '--cores[cores]:NUM:()' \
           '--flake[flake-uri]:PATH:_files -/' \
+          '--priority[priority]:NUM:()' \
           '--debug[debug]' \
           '--impure[impure]' \
           '--keep-failed[keep failed]' \
@@ -75,6 +77,7 @@ case "$state" in
       init)
         _arguments \
           '--switch[switch]' \
+          '--priority[priority]:NUM:()' \
           ':PATH:_files -/'
         ;;
     esac

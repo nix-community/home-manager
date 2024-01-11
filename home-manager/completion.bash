@@ -297,7 +297,7 @@ _home-manager_subcommand() {
 _home-manager_completions ()
 {
     local Options
-    Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "-v" \
+    Options=( "-f" "--file" "-b" "-A" "-I" "-h" "--help" "-n" "--dry-run" "--priority" "-v" \
               "--verbose" "--cores" "--debug" "--impure" "--keep-failed" \
               "--keep-going" "-j" "--max-jobs" "--no-substitute" "--no-out-link" \
               "-L" "--print-build-logs" \
