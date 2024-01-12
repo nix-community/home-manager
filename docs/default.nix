@@ -7,10 +7,7 @@
 
 let
 
-  nmdSrc = fetchTarball {
-    url = "https://rycee.net/nmd.tar.gz";
-    sha256 = "123pvsnwnha0zivk77yzdvqakn96l17n8lwa78s2h1njlgkw0ng2";
-  };
+  nmdSrc = pkgs.nix-lib-nmd;
 
   nmd = import nmdSrc {
     inherit lib;
