@@ -42,14 +42,10 @@ let
       };
     };
 
-    config = {
-      id = mkDefault (builtins.hashString "sha256" config.message);
-    };
+    config = { id = mkDefault (builtins.hashString "sha256" config.message); };
   });
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -97,9 +93,8 @@ in
   };
 
   config = {
-    news.json.output = pkgs.writeText "hm-news.json" (builtins.toJSON {
-      inherit (cfg) display entries;
-    });
+    news.json.output = pkgs.writeText "hm-news.json"
+      (builtins.toJSON { inherit (cfg) display entries; });
 
     # Add news entries in chronological order (i.e., latest time
     # should be at the bottom of the list). The time should be
@@ -255,7 +250,8 @@ in
 
       {
         time = "2021-09-23T17:04:48+00:00";
-        condition = hostPlatform.isLinux && config.services.screen-locker.enable;
+        condition = hostPlatform.isLinux
+          && config.services.screen-locker.enable;
         message = ''
           'xautolock' is now optional in 'services.screen-locker', and the
           'services.screen-locker' options have been reorganized for clarity.

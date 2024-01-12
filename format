@@ -26,15 +26,9 @@ done
 # The excludes are for files touched by open pull requests and we want
 # to avoid merge conflicts.
 excludes=(
-    modules/default.nix
     modules/files.nix
     modules/home-environment.nix
-    modules/lib/default.nix
-    modules/lib/file-type.nix
-    modules/misc/news.nix
-    modules/programs/ssh.nix
     modules/programs/zsh.nix
-    tests/default.nix
 )
 
 exclude_args=()

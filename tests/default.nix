@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {}, enableBig ? true }:
+{ pkgs ? import <nixpkgs> { }, enableBig ? true }:
 
 let
 
@@ -13,37 +13,33 @@ let
   modules = import ../modules/modules.nix {
     inherit lib pkgs;
     check = false;
-  } ++ [
-    {
-      # Bypass <nixpkgs> reference inside modules/modules.nix to make the test
-      # suite more pure.
-      _module.args.pkgsPath = pkgs.path;
+  } ++ [{
+    # Bypass <nixpkgs> reference inside modules/modules.nix to make the test
+    # suite more pure.
+    _module.args.pkgsPath = pkgs.path;
 
-      # Fix impurities. Without these some of the user's environment
-      # will leak into the tests through `builtins.getEnv`.
-      xdg.enable = true;
-      home = {
-        username = "hm-user";
-        homeDirectory = "/home/hm-user";
-        stateVersion = lib.mkDefault "18.09";
-      };
+    # Fix impurities. Without these some of the user's environment
+    # will leak into the tests through `builtins.getEnv`.
+    xdg.enable = true;
+    home = {
+      username = "hm-user";
+      homeDirectory = "/home/hm-user";
+      stateVersion = lib.mkDefault "18.09";
+    };
 
-      # Avoid including documentation since this will cause
-      # unnecessary rebuilds of the tests.
-      manual.manpages.enable = lib.mkDefault false;
+    # Avoid including documentation since this will cause
+    # unnecessary rebuilds of the tests.
+    manual.manpages.enable = lib.mkDefault false;
 
-      imports = [ ./asserts.nix ./big-test.nix ./stubs.nix ];
+    imports = [ ./asserts.nix ./big-test.nix ./stubs.nix ];
 
-      test.enableBig = enableBig;
-    }
-  ];
+    test.enableBig = enableBig;
+  }];
 
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   isLinux = pkgs.stdenv.hostPlatform.isLinux;
 
-in
-
-import nmt {
+in import nmt {
   inherit lib pkgs modules;
   testedAttrPath = [ "home" "activationPackage" ];
   tests = builtins.foldl' (a: b: a // (import b)) { } ([
@@ -180,7 +176,7 @@ import nmt {
     ./modules/programs/abook
     ./modules/programs/autorandr
     ./modules/programs/awscli
-    ./modules/programs/beets  # One test relies on services.mpd
+    ./modules/programs/beets # One test relies on services.mpd
     ./modules/programs/bemenu
     ./modules/programs/borgmatic
     ./modules/programs/boxxy
