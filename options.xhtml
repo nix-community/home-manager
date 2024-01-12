@@ -69547,6 +69547,33 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-uninstall"></a><a class="term" href="options.xhtml#opt-uninstall"><code class="option">uninstall</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to set up a minimal configuration that will remove all managed
+files and packages.</p><p>Use this with extreme care since running the generated activation script
+will remove all Home Manager state from your user environment. This
+includes removing all your historic Home Manager generations.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/uninstall.nix" target="_top">
+&lt;home-manager/modules/misc/uninstall.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-wayland.windowManager.hyprland.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.hyprland.enable"><code class="option">wayland.windowManager.hyprland.enable</code>
   </a>
  </span>
