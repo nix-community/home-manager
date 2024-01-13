@@ -106,7 +106,7 @@ in {
     home.activation.xfconfSettings = hm.dag.entryAfter [ "installPackages" ]
       (let
         mkCommand = channel: property: value: ''
-          $DRY_RUN_CMD ${pkgs.xfce.xfconf}/bin/xfconf-query \
+          run ${pkgs.xfce.xfconf}/bin/xfconf-query \
             ${
               escapeShellArgs ([ "-c" channel "-p" "/${property}" ]
                 ++ (if value == null then
@@ -129,7 +129,7 @@ in {
           export DBUS_RUN_SESSION_CMD="${pkgs.dbus}/bin/dbus-run-session --dbus-daemon=${pkgs.dbus}/bin/dbus-daemon"
         fi
 
-        $DRY_RUN_CMD $DBUS_RUN_SESSION_CMD ${load}
+        run $DBUS_RUN_SESSION_CMD ${load}
 
         unset DBUS_RUN_SESSION_CMD
       '');

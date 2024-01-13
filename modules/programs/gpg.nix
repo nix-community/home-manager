@@ -282,7 +282,7 @@ in {
     home.activation = {
       createGpgHomedir =
         hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-          $DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG ${escapeShellArg cfg.homedir}
+          run mkdir -m700 -p $VERBOSE_ARG ${escapeShellArg cfg.homedir}
         '';
 
       importGpgKeys = let
@@ -290,12 +290,11 @@ in {
 
         importKey = { source, trust, ... }:
           # Import mutable keys
-          optional cfg.mutableKeys
-          "$DRY_RUN_CMD ${gpg} $QUIET_ARG --import ${source}"
+          optional cfg.mutableKeys "run ${gpg} $QUIET_ARG --import ${source}"
 
           # Import mutable trust
           ++ optional (trust != null && cfg.mutableTrust)
-          ''$DRY_RUN_CMD importTrust "${source}" ${toString trust}'';
+          ''run importTrust "${source}" ${toString trust}'';
 
         anyTrust = any (k: k.trust != null) cfg.publicKeys;
 

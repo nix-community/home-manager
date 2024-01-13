@@ -110,5 +110,5 @@ function systemdPostReload() {
 oldGenPath="$1"
 newGenPath="$2"
 
-$DRY_RUN_CMD systemctl --user daemon-reload
+run systemctl --user daemon-reload
 systemdPostReload
