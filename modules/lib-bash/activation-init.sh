@@ -115,7 +115,7 @@ function nixProfileRemove() {
         nixProfileList "$1" | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
     else
         if nix-env -q | grep -q "^$1$"; then
-            $DRY_RUN_CMD nix-env -e "$1" > $DRY_RUN_NULL 2>&1
+            run --silence nix-env -e "$1"
         fi
     fi
 }
@@ -161,6 +161,9 @@ nix-env -q > /dev/null 2>&1 || true
 migrateProfile
 setupVars
 
+# Note, the DRY_RUN_CMD and DRY_RUN_NULL variables are deprecated and should not
+# be used inside the Home Manager project. They are provided here for backwards
+# compatibility.
 if [[ -v DRY_RUN ]] ; then
     _i "This is a dry run"
     export DRY_RUN_CMD=echo

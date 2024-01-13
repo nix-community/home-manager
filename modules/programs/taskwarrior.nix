@@ -110,13 +110,13 @@ in {
       if [[ ! -s "${userConf}" ]]; then
         # Ensure file's existence
         if [[ -v DRY_RUN ]]; then
-          $DRY_RUN_CMD echo "include ${homeConf}" ">" "${userConf}"
+          run echo "include ${homeConf}" ">" "${userConf}"
         else
           echo "include ${homeConf}" > "${userConf}"
         fi
       elif ! grep -qF "include ${homeConf}" ${escapeShellArg userConf}; then
         # Add include statement for Home Manager generated config.
-        $DRY_RUN_CMD sed -i '1i include ${homeConf}' ${escapeShellArg userConf}
+        run sed -i '1i include ${homeConf}' ${escapeShellArg userConf}
       fi
     '';
   };

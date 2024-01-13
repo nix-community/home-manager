@@ -31,19 +31,19 @@ in {
         nixProfileRemove home-manager-path
 
         if [[ -e $hmDataPath ]]; then
-            $DRY_RUN_CMD rm $VERBOSE_ARG -r "$hmDataPath"
+            run rm $VERBOSE_ARG -r "$hmDataPath"
         fi
 
         if [[ -e $hmStatePath ]]; then
-            $DRY_RUN_CMD rm $VERBOSE_ARG -r "$hmStatePath"
+            run rm $VERBOSE_ARG -r "$hmStatePath"
         fi
 
         if [[ -e $genProfilePath ]]; then
-            $DRY_RUN_CMD rm $VERBOSE_ARG "$genProfilePath"*
+            run rm $VERBOSE_ARG "$genProfilePath"*
         fi
 
         if [[ -e $legacyGenGcPath ]]; then
-            $DRY_RUN_CMD rm $VERBOSE_ARG "$legacyGenGcPath"
+            run rm $VERBOSE_ARG "$legacyGenGcPath"
         fi
       '';
   };

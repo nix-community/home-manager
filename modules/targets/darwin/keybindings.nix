@@ -38,7 +38,7 @@ in {
     home.activation.setCocoaKeybindings =
       hm.dag.entryAfter [ "writeBoundary" ] ''
         $VERBOSE_ECHO "Configuring keybindings for the Cocoa Text System"
-        $DRY_RUN_CMD install -Dm644 $VERBOSE_ARG \
+        run install -Dm644 $VERBOSE_ARG \
           "${confFile}" "${homeDir}/Library/KeyBindings/DefaultKeyBinding.dict"
       '';
   };

@@ -83,3 +83,27 @@ function _iNote() {
     _i "$@"
     echo -n "${normalColor}"
 }
+
+# Runs the given command on live run, otherwise prints the command to standard
+# output.
+#
+# If given the command line option `--silence`, then the command's standard and
+# error output is sent to `/dev/null` on a live run.
+#
+# Note, the run function is exported. I.e., it is available also to called Bash
+# script.
+function run() {
+    if [[ $1 == '--silence' ]]; then
+        local silence=1
+        shift
+    fi
+
+    if [[ -v DRY_RUN ]] ; then
+        echo "$@"
+    elif [[ -v silence ]] ; then
+        "$@" > /dev/null 2>&1
+    else
+        "$@"
+    fi
+}
+export -f run

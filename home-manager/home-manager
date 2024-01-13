@@ -21,17 +21,11 @@ function setNixProfileCommands() {
     fi
 }
 
-function setVerboseAndDryRun() {
+function setVerboseArg() {
     if [[ -v VERBOSE ]]; then
         export VERBOSE_ARG="--verbose"
     else
         export VERBOSE_ARG=""
-    fi
-
-    if [[ -v DRY_RUN ]] ; then
-        export DRY_RUN_CMD=echo
-    else
-        export DRY_RUN_CMD=""
     fi
 }
 
@@ -661,7 +655,7 @@ function doListGens() {
 # generations to remove.
 function doRmGenerations() {
     setHomeManagerPathVariables
-    setVerboseAndDryRun
+    setVerboseArg
 
     pushd "$HM_PROFILE_DIR" > /dev/null
 
@@ -674,7 +668,7 @@ function doRmGenerations() {
             _i 'Cannot remove the current generation %s' "$generationId" >&2
         else
             _i 'Removing generation %s' "$generationId"
-            $DRY_RUN_CMD rm $VERBOSE_ARG $linkName
+            run rm $VERBOSE_ARG $linkName
         fi
     done
 
@@ -809,7 +803,6 @@ function doShowNews() {
 
 function doUninstall() {
     setHomeManagerPathVariables
-    setVerboseAndDryRun
     setNixProfileCommands
 
     _i 'This will remove Home Manager from your system.'

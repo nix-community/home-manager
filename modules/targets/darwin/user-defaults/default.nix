@@ -13,9 +13,9 @@ let
       cliFlags = lib.optionalString isLocal "-currentHost";
 
       toActivationCmd = domain: attrs:
-        "$DRY_RUN_CMD /usr/bin/defaults ${cliFlags} import ${
-          escapeShellArg domain
-        } ${toDefaultsFile domain attrs}";
+        "run /usr/bin/defaults ${cliFlags} import ${escapeShellArg domain} ${
+          toDefaultsFile domain attrs
+        }";
 
       nonNullDefaults =
         mapAttrs (domain: attrs: (filterAttrs (n: v: v != null) attrs))

@@ -143,7 +143,7 @@ in {
             trap "rm --force --recursive $TMP_DIR" EXIT
             cp "${ghHosts}" $TMP_DIR/
             export GH_CONFIG_DIR=$TMP_DIR
-            $DRY_RUN_CMD ${getExe cfg.package} help 2>&1 > $DRY_RUN_NULL
+            run --silence ${getExe cfg.package} help
             cp $TMP_DIR/hosts.yml "${ghHosts}"
           )
         fi

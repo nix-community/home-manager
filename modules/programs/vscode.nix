@@ -257,9 +257,9 @@ in {
             "${extensionPath}/.extensions-immutable.json" = {
               text = extensionJson;
               onChange = ''
-                $DRY_RUN_CMD rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
+                run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
                 $VERBOSE_ECHO "Regenerating VSCode extensions.json"
-                $DRY_RUN_CMD ${getExe cfg.package} --list-extensions > /dev/null
+                run ${getExe cfg.package} --list-extensions > /dev/null
               '';
             };
           })
