@@ -5,7 +5,7 @@ with lib;
 {
   config = {
     services.gpg-agent.enable = true;
-    services.gpg-agent.pinentryFlavor = null; # Don't build pinentry package.
+    services.gpg-agent.pinentryPackage = null; # Don't build pinentry package.
     programs.gpg = {
       enable = true;
       homedir = "/path/to/hash";
