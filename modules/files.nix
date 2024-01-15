@@ -1,5 +1,6 @@
 {
   pkgs,
+  activationPkgs,
   config,
   lib,
   ...
@@ -99,9 +100,11 @@ in
           lib.mapAttrsToList (n: v: v.target) (lib.filterAttrs (n: v: v.force) cfg)
         );
 
+
         storeDir = lib.escapeShellArg builtins.storeDir;
 
-        check = pkgs.replaceVars ./files/check-link-targets.sh {
+
+        check = activationPkgs.replaceVars ./files/check-link-targets.sh {
           inherit (config.lib.bash) initHomeManagerLib;
           inherit forcedPaths storeDir;
         };
@@ -138,7 +141,7 @@ in
     # source and target generation.
     home.activation.linkGeneration = lib.hm.dag.entryAfter [ "writeBoundary" ] (
       let
-        link = pkgs.writeShellScript "link" ''
+        link = activationPkgs.writeShellScript "link" ''
           ${config.lib.bash.initHomeManagerLib}
 
           newGenFiles="$1"

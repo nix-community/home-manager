@@ -2,9 +2,9 @@
   config,
   lib,
   pkgs,
+  activationPkgs,
   ...
 }:
-
 let
   inherit (lib) mkOption types;
 
@@ -135,7 +135,7 @@ in
     home.activation.xfconfSettings = lib.hm.dag.entryAfter [ "installPackages" ] (
       let
         mkCommand = channel: property: value: ''
-          run ${pkgs.xfce.xfconf}/bin/xfconf-query \
+          run ${activationPkgs.xfce.xfconf}/bin/xfconf-query \
             ${lib.escapeShellArgs (
               [
                 "-c"
@@ -151,7 +151,7 @@ in
           channel: properties: lib.mapAttrsToList (mkCommand channel) properties
         ) cfg.settings;
 
-        load = pkgs.writeShellScript "load-xfconf" ''
+        load = activationPkgs.writeShellScript "load-xfconf" ''
           ${config.lib.bash.initHomeManagerLib}
           ${lib.concatMapStrings lib.concatStrings commands}
         '';
@@ -160,7 +160,7 @@ in
         if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
           export DBUS_RUN_SESSION_CMD=""
         else
-          export DBUS_RUN_SESSION_CMD="${pkgs.dbus}/bin/dbus-run-session --dbus-daemon=${pkgs.dbus}/bin/dbus-daemon"
+          export DBUS_RUN_SESSION_CMD="${activationPkgs.dbus}/bin/dbus-run-session --dbus-daemon=${pkgs.dbus}/bin/dbus-daemon"
         fi
 
         run $DBUS_RUN_SESSION_CMD ${load}

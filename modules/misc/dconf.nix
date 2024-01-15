@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  activationPkgs,
   ...
 }:
 
@@ -95,29 +96,29 @@ in
 
     home.activation.dconfSettings = lib.hm.dag.entryAfter [ "installPackages" ] (
       let
-        iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
+        iniFile = activationPkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
 
         statePath = "state/${stateDconfKeys.name}";
 
-        cleanup = pkgs.writeShellScript "dconf-cleanup" ''
-          set -euo pipefail
+      cleanup = activationPkgs.writeShellScript "dconf-cleanup" ''
+        set -euo pipefail
 
-          ${config.lib.bash.initHomeManagerLib}
+        ${config.lib.bash.initHomeManagerLib}
 
           PATH=${
             lib.makeBinPath [
-              pkgs.dconf
-              pkgs.jq
+              activationPkgs.dconf
+              activationPkgs.jq
             ]
           }''${PATH:+:}$PATH
 
-          oldState="$1"
-          newState="$2"
+        oldState="$1"
+        newState="$2"
 
-          # Can't do cleanup if we don't know the old state.
-          if [[ ! -f $oldState ]]; then
-            exit 0
-          fi
+        # Can't do cleanup if we don't know the old state.
+        if [[ ! -f $oldState ]]; then
+          exit 0
+        fi
 
           # Reset all keys that are present in the old generation but not the new
           # one.
@@ -135,7 +136,7 @@ in
         if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
           export DCONF_DBUS_RUN_SESSION=""
         else
-          export DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session --dbus-daemon=${pkgs.dbus}/bin/dbus-daemon"
+          export DCONF_DBUS_RUN_SESSION="${activationPkgs.dbus}/bin/dbus-run-session --dbus-daemon=${activationPkgs.dbus}/bin/dbus-daemon"
         fi
 
         if [[ -v oldGenPath ]]; then
