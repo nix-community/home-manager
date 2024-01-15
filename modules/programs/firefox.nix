@@ -172,7 +172,7 @@ let
     else if versionAtLeast config.home.stateVersion "19.09" then
       package.override (old: {
         cfg = old.cfg or { } // fcfg;
-        extraPolicies = cfg.policies;
+        extraPolicies = (old.extraPolicies or { }) // cfg.policies;
       })
     else
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
