@@ -114,7 +114,9 @@ function nixProfileRemove() {
         || -e ${XDG_STATE_HOME:-$HOME/.local/state}/nix/profile/manifest.json ]] ; then
         nixProfileList "$1" | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
     else
-        $DRY_RUN_CMD nix-env -e "$1" > $DRY_RUN_NULL 2>&1
+        if nix-env -q | grep -q "^$1$"; then
+            $DRY_RUN_CMD nix-env -e "$1" > $DRY_RUN_NULL 2>&1
+        fi
     fi
 }
 
