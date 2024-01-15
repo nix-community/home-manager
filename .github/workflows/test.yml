@@ -15,7 +15,7 @@ jobs:
     - uses: cachix/install-nix-action@v23
       with:
         nix_path: nixpkgs=channel:nixos-23.11
-    - uses: cachix/cachix-action@v13
+    - uses: cachix/cachix-action@v14
       with:
         name: nix-community
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
