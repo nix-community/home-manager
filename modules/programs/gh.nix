@@ -104,7 +104,7 @@ in {
 
       hosts = mkOption {
         type = types.listOf types.str;
-        default = [ "https://github.com" ];
+        default = [ "https://github.com" "https://gist.github.com" ];
         description = "GitHub hosts to enable the gh git credential helper for";
         example = literalExpression ''
           [ "https://github.com" "https://github.example.com" ]
