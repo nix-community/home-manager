@@ -207,7 +207,8 @@ in {
             else
               entry;
         in map mkEntry cfg.plugins;
-      };
+      } // lib.mapAttrs' (n: v: lib.nameValuePair "plugin:${n}" v)
+        (lib.attrByPath [ "plugin" ] { } cfg.settings);
 
       shouldGenerate = cfg.systemd.enable || cfg.extraConfig != ""
         || combinedSettings != { };
