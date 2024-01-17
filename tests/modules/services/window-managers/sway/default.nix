@@ -11,6 +11,7 @@
   sway-null-package = ./sway-null-package.nix;
   sway-post-2003 = ./sway-post-2003.nix;
   sway-systemd-autostart = ./sway-systemd-autostart.nix;
+  sway-systemd-variables = ./sway-systemd-variables.nix;
   sway-workspace-default = ./sway-workspace-default.nix;
   sway-workspace-output = ./sway-workspace-output.nix;
   swaynag-example-settings = ./swaynag-example-settings.nix;
