@@ -108,7 +108,5 @@ in {
     home.sessionVariables = mkIf (cfg.home != defaultHomeDirectory) {
       GRADLE_USER_HOME = gradleHome;
     };
-
-    programs.java.enable = true;
   };
 }
