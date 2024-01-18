@@ -186,6 +186,7 @@ in import pkgs.nix-lib-nmt {
     ./modules/programs/kodi
     ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
+    ./modules/programs/mullvad-browser
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/pqiv
     ./modules/programs/rbw
