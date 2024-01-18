@@ -14,7 +14,7 @@ in {
       enable = mkEnableOption "GNOME Keyring";
 
       components = mkOption {
-        type = types.listOf (types.enum [ "pkcs11" "secrets" "ssh" ]);
+        type = types.listOf (types.enum [ "pkcs11" "secrets" "ssh" "gpg" ]);
         default = [ ];
         description = ''
           The GNOME keyring components to start. If empty then the
