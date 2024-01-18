@@ -4,6 +4,11 @@ let
 
   lib = import ../modules/lib/stdlib-extended.nix pkgs.lib;
 
+  nmtSrc = fetchTarball {
+    url = "https://git.sr.ht/~rycee/nmt/archive/v0.5.1.tar.gz";
+    sha256 = "0qhn7nnwdwzh910ss78ga2d00v42b0lspfd7ybl61mpfgz3lmdcj";
+  };
+
   modules = import ../modules/modules.nix {
     inherit lib pkgs;
     check = false;
@@ -33,7 +38,7 @@ let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   isLinux = pkgs.stdenv.hostPlatform.isLinux;
 
-in import pkgs.nix-lib-nmt {
+in import nmtSrc {
   inherit lib pkgs modules;
   testedAttrPath = [ "home" "activationPackage" ];
   tests = builtins.foldl' (a: b: a // (import b)) { } ([
