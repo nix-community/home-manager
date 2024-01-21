@@ -25744,7 +25744,7 @@ package</p>
  </span>
 </dt>
 <dd>
-<p>Aliases written to <code class="filename">$XDG_CONFIG_HOME/k9s/aliases.yml</code>. See
+<p>Aliases written to <code class="filename">$XDG_CONFIG_HOME/k9s/aliases.yaml</code>. See
 <a class="link" href="https://k9scli.io/topics/aliases/"  target="_top">https://k9scli.io/topics/aliases/</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
@@ -25776,7 +25776,7 @@ YAML value</p>
  </span>
 </dt>
 <dd>
-<p>Hotkeys written to <code class="filename">$XDG_CONFIG_HOME/k9s/hotkey.yml</code>. See
+<p>Hotkeys written to <code class="filename">$XDG_CONFIG_HOME/k9s/hotkey.yaml</code>. See
 <a class="link" href="https://k9scli.io/topics/hotkeys/"  target="_top">https://k9scli.io/topics/hotkeys/</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
@@ -25814,7 +25814,7 @@ YAML value</p>
  </span>
 </dt>
 <dd>
-<p>Plugins written to <code class="filename">$XDG_CONFIG_HOME/k9s/plugin.yml</code>. See
+<p>Plugins written to <code class="filename">$XDG_CONFIG_HOME/k9s/plugin.yaml</code>. See
 <a class="link" href="https://k9scli.io/topics/plugins/"  target="_top">https://k9scli.io/topics/plugins/</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
@@ -25862,7 +25862,7 @@ YAML value</p>
  </span>
 </dt>
 <dd>
-<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/k9s/config.yml</code>. See
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/k9s/config.yaml</code>. See
 <a class="link" href="https://k9scli.io/topics/config/"  target="_top">https://k9scli.io/topics/config/</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
@@ -25888,23 +25888,25 @@ YAML value</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.k9s.skin"></a><a class="term" href="options.xhtml#opt-programs.k9s.skin"><code class="option">programs.k9s.skin</code>
+ <a id="opt-programs.k9s.skins"></a><a class="term" href="options.xhtml#opt-programs.k9s.skins"><code class="option">programs.k9s.skins</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Skin written to <code class="filename">$XDG_CONFIG_HOME/k9s/skin.yml</code>. See
+<p>Skin files written to <code class="filename">$XDG_CONFIG_HOME/k9s/skins/</code>. See
 <a class="link" href="https://k9scli.io/topics/skins/"  target="_top">https://k9scli.io/topics/skins/</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-YAML value</p>
+attribute set of (YAML value)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">k9s = {
-  body = {
-    fgColor = &quot;dodgerblue&quot;;
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">my_blue_skin = {
+  k9s = {
+    body = {
+      fgColor = &quot;dodgerblue&quot;;
+    };
   };
 };
 
@@ -25926,7 +25928,7 @@ YAML value</p>
  </span>
 </dt>
 <dd>
-<p>Resource column views written to <code class="filename">$XDG_CONFIG_HOME/k9s/views.yml</code>.
+<p>Resource column views written to <code class="filename">$XDG_CONFIG_HOME/k9s/views.yaml</code>.
 See <a class="link" href="https://k9scli.io/topics/columns/"  target="_top">https://k9scli.io/topics/columns/</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
