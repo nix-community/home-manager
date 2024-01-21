@@ -140,6 +140,7 @@ in import nmtSrc {
     ./modules/programs/ssh
     ./modules/programs/starship
     ./modules/programs/taskwarrior
+    ./modules/programs/tealdeer
     ./modules/programs/texlive
     ./modules/programs/thefuck
     ./modules/programs/tmate
