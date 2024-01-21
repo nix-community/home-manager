@@ -147,6 +147,7 @@ let
     ./programs/mcfly.nix
     ./programs/mercurial.nix
     ./programs/micro.nix
+    ./programs/mise.nix
     ./programs/mpv.nix
     ./programs/mr.nix
     ./programs/msmtp.nix
@@ -194,7 +195,6 @@ let
     ./programs/rofi-pass.nix
     ./programs/rofi.nix
     ./programs/rtorrent.nix
-    ./programs/rtx.nix
     ./programs/ruff.nix
     ./programs/sagemath.nix
     ./programs/sapling.nix

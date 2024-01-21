@@ -101,6 +101,7 @@ in import nmtSrc {
     ./modules/programs/man
     ./modules/programs/mbsync
     ./modules/programs/micro
+    ./modules/programs/mise
     ./modules/programs/mpv
     ./modules/programs/mu
     ./modules/programs/mujmap
@@ -128,7 +129,6 @@ in import nmtSrc {
     ./modules/programs/readline
     ./modules/programs/rio
     ./modules/programs/ripgrep
-    ./modules/programs/rtx
     ./modules/programs/ruff
     ./modules/programs/sagemath
     ./modules/programs/sapling
