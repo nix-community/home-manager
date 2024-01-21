@@ -3,3 +3,5 @@ k9s:
   headless: false
   maxConnRetry: 5
   refreshRate: 2
+  ui:
+    skin: default
