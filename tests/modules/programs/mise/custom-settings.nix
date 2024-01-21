@@ -21,7 +21,7 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/mise/config.toml
-    assertPathExists home-files/.config/mise/settings.toml
+    assertFileExists home-files/.config/mise/settings.toml
 
     assertFileContent home-files/.config/mise/config.toml ${
       pkgs.writeText "mise.config.expected" ''
