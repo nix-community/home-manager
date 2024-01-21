@@ -159,6 +159,12 @@
     github = "loicreynier";
     githubId = 88983487;
   };
+  LucasWagler = {
+    name = "Lucas Wagler";
+    email = "lucas@wagler.dev";
+    github = "LucasWagler";
+    githubId = 32136449;
+  };
   matrss = {
     name = "Matthias Riße";
     email = "matrss@users.noreply.github.com";
