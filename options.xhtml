@@ -30556,6 +30556,205 @@ JSON value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.mise.enable"></a><a class="term" href="options.xhtml#opt-programs.mise.enable"><code class="option">programs.mise.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable mise.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix" target="_top">
+&lt;home-manager/modules/programs/mise.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mise.enableBashIntegration"></a><a class="term" href="options.xhtml#opt-programs.mise.enableBashIntegration"><code class="option">programs.mise.enableBashIntegration</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Bash Integration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix" target="_top">
+&lt;home-manager/modules/programs/mise.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mise.enableFishIntegration"></a><a class="term" href="options.xhtml#opt-programs.mise.enableFishIntegration"><code class="option">programs.mise.enableFishIntegration</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Fish Integration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix" target="_top">
+&lt;home-manager/modules/programs/mise.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mise.enableZshIntegration"></a><a class="term" href="options.xhtml#opt-programs.mise.enableZshIntegration"><code class="option">programs.mise.enableZshIntegration</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Zsh Integration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix" target="_top">
+&lt;home-manager/modules/programs/mise.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mise.package"></a><a class="term" href="options.xhtml#opt-programs.mise.package"><code class="option">programs.mise.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The mise package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.mise</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix" target="_top">
+&lt;home-manager/modules/programs/mise.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mise.globalConfig"></a><a class="term" href="options.xhtml#opt-programs.mise.globalConfig"><code class="option">programs.mise.globalConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Config written to <code class="filename">$XDG_CONFIG_HOME/mise/config.toml</code>.</p><p>See <a class="link" href="https://mise.jdx.dev/configuration.html#global-config-config-mise-config-toml"  target="_top">https://mise.jdx.dev/configuration.html#global-config-config-mise-config-toml</a>
+for details on supported values.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">tools = {
+  node = &quot;lts&quot;;
+  python = [&quot;3.10&quot; &quot;3.11&quot;];
+};
+
+aliases = {
+  my_custom_node = &quot;20&quot;;
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix" target="_top">
+&lt;home-manager/modules/programs/mise.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mise.settings"></a><a class="term" href="options.xhtml#opt-programs.mise.settings"><code class="option">programs.mise.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings written to <code class="filename">$XDG_CONFIG_HOME/mise/settings.toml</code>.</p><p>See <a class="link" href="https://mise.jdx.dev/configuration.html#settings-file-config-mise-settings-toml"  target="_top">https://mise.jdx.dev/configuration.html#settings-file-config-mise-settings-toml</a>
+for details on supported values.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">verbose = false;
+experimental = false;
+disable_tools = [&quot;node&quot;];
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix" target="_top">
+&lt;home-manager/modules/programs/mise.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.mpv.enable"></a><a class="term" href="options.xhtml#opt-programs.mpv.enable"><code class="option">programs.mpv.enable</code>
   </a>
  </span>
@@ -38704,176 +38903,6 @@ strings concatenated with “\n”</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtorrent.nix" target="_top">
 &lt;home-manager/modules/programs/rtorrent.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.rtx.enable"></a><a class="term" href="options.xhtml#opt-programs.rtx.enable"><code class="option">programs.rtx.enable</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Whether to enable RTX. Runtime Executor (asdf Rust clone).</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtx.nix" target="_top">
-&lt;home-manager/modules/programs/rtx.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.rtx.enableBashIntegration"></a><a class="term" href="options.xhtml#opt-programs.rtx.enableBashIntegration"><code class="option">programs.rtx.enableBashIntegration</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Whether to enable Bash Integration.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtx.nix" target="_top">
-&lt;home-manager/modules/programs/rtx.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.rtx.enableFishIntegration"></a><a class="term" href="options.xhtml#opt-programs.rtx.enableFishIntegration"><code class="option">programs.rtx.enableFishIntegration</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Whether to enable Fish Integration.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtx.nix" target="_top">
-&lt;home-manager/modules/programs/rtx.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.rtx.enableZshIntegration"></a><a class="term" href="options.xhtml#opt-programs.rtx.enableZshIntegration"><code class="option">programs.rtx.enableZshIntegration</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Whether to enable Zsh Integration.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtx.nix" target="_top">
-&lt;home-manager/modules/programs/rtx.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.rtx.package"></a><a class="term" href="options.xhtml#opt-programs.rtx.package"><code class="option">programs.rtx.package</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>The rtx package to use.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-package</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">pkgs.rtx</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtx.nix" target="_top">
-&lt;home-manager/modules/programs/rtx.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.rtx.settings"></a><a class="term" href="options.xhtml#opt-programs.rtx.settings"><code class="option">programs.rtx.settings</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Settings written to <code class="filename">$XDG_CONFIG_HOME/rtx/config.toml</code>.</p><p>See <a class="link" href="https://github.com/jdxcode/rtx#global-config-configrtxconfigtoml"  target="_top">https://github.com/jdxcode/rtx#global-config-configrtxconfigtoml</a>
-for details on supported values.</p><div class="warning"><h3 class="title">Warning</h3><p>Modifying the <code class="literal">tools</code> section doesn’t make RTX install them.
-You have to manually run <code class="literal">rtx install</code> to install the tools.</p></div>
-
-<p><span class="emphasis"><em>Type:</em></span>
-TOML value</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">{ }</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">tools = {
-  node = &quot;lts&quot;;
-  python = [&quot;3.10&quot; &quot;3.11&quot;];
-};
-
-settings = {
-  verbose = false;
-  experimental = false;
-};
-
-</code></pre>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rtx.nix" target="_top">
-&lt;home-manager/modules/programs/rtx.nix&gt;
 </a></code>
 </td></tr>
 </table>
