@@ -16,6 +16,8 @@
     };
   };
 
+  test.stubs.k9s = { };
+
   test.asserts.warnings.enable = true;
   test.asserts.warnings.expected = [
     "The option `programs.k9s.skin' defined in ${
