@@ -44,6 +44,8 @@
     };
   };
 
+  test.stubs.k9s = { };
+
   nmt.script = ''
     assertFileExists home-files/.config/k9s/config.yaml
     assertFileContent \
