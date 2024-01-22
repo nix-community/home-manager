@@ -112,7 +112,7 @@ function nixProfileRemove() {
     # nix-darwin and won't require uninstalling `home-manager-path`.
     if  [[ -e $HOME/.nix-profile/manifest.json \
         || -e ${XDG_STATE_HOME:-$HOME/.local/state}/nix/profile/manifest.json ]] ; then
-        nixProfileList "$1" | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+        nixProfileList "$1" | xargs -rt $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
     else
         if nix-env -q | grep -q "^$1$"; then
             run --silence nix-env -e "$1"
