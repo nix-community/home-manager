@@ -268,7 +268,7 @@ in
               # `nix profile remove '.*' --profile "$genProfilePath"` was not working, so here is a workaround:
               nix profile list --profile "$genProfilePath" \
                 | cut -d ' ' -f 4 \
-                | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG --profile "$genProfilePath"
+                | xargs -rt $DRY_RUN_CMD nix profile remove $VERBOSE_ARG --profile "$genProfilePath"
               run nix profile install $VERBOSE_ARG --profile "$genProfilePath" "$newGenPath"
             else
               run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
