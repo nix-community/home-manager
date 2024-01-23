@@ -111,7 +111,7 @@ in {
             --slurpfile new "$newState" \
             '($old[] - $new[])[]' \
           | while read -r key; do
-              $VERBOSE_ECHO "Resetting dconf key \"$key\""
+              verboseEcho "Resetting dconf key \"$key\""
               run $DCONF_DBUS_RUN_SESSION dconf reset "$key"
             done
       '';

@@ -18,10 +18,12 @@ function run() {
            -k_iError:1 --flag=_i:1:c-format \
            -k_iWarn:1 --flag=_i:1:c-format \
            -k_iNote:1 --flag=_i:1:c-format \
+           -k_iVerbose:1 --flag=_i:1:c-format \
            -k_ip:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
            -k_ipError:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
            -k_ipWarn:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
            -k_ipNote:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           -k_ipVerbose:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
            --add-comments=translators: \
            -o "$output" -d "$domain" "$@"
 }

@@ -100,7 +100,7 @@ in {
     '';
 
     home.activation.setDarwinDefaults = hm.dag.entryAfter [ "writeBoundary" ] ''
-      $VERBOSE_ECHO "Configuring macOS user defaults"
+      verboseEcho "Configuring macOS user defaults"
       ${concatStringsSep "\n" activationCmds}
     '';
   };

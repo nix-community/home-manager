@@ -80,7 +80,7 @@ function setupVars() {
         oldGenPath="$(readlink -e "$genProfilePath")"
     fi
 
-    $VERBOSE_RUN _i "Sanity checking oldGenNum and oldGenPath"
+    _iVerbose "Sanity checking oldGenNum and oldGenPath"
     if [[ -v oldGenNum && ! -v oldGenPath
             || ! -v oldGenNum && -v oldGenPath ]]; then
         _i $'The previous generation number and path are in conflict! These\nmust be either both empty or both set but are now set to\n\n    \'%s\' and \'%s\'\n\nIf you don\'t mind losing previous profile generations then\nthe easiest solution is probably to run\n\n   rm %s/home-manager*\n   rm %s/current-home\n\nand trying home-manager switch again. Good luck!' \
@@ -138,6 +138,8 @@ function checkHomeDirectory() {
   fi
 }
 
+# Note, the VERBOSE_ECHO variable is deprecated and should not be used inside
+# the Home Manager project. It is provided here for backwards compatibility.
 if [[ -v VERBOSE ]]; then
     export VERBOSE_ECHO=echo
     export VERBOSE_ARG="--verbose"
@@ -152,7 +154,7 @@ _i "Starting Home Manager activation"
 
 # Verify that we can connect to the Nix store and/or daemon. This will
 # also create the necessary directories in profiles and gcroots.
-$VERBOSE_RUN _i "Sanity checking Nix"
+_iVerbose "Sanity checking Nix"
 nix-build --expr '{}' --no-out-link
 
 # Also make sure that the Nix profiles path is created.
@@ -169,7 +171,7 @@ if [[ -v DRY_RUN ]] ; then
     export DRY_RUN_CMD=echo
     export DRY_RUN_NULL=/dev/stdout
 else
-    $VERBOSE_RUN _i "This is a live run"
+    _iVerbose "This is a live run"
     export DRY_RUN_CMD=""
     export DRY_RUN_NULL=/dev/null
 fi
@@ -178,16 +180,16 @@ if [[ -v VERBOSE ]]; then
     _i 'Using Nix version: %s' "$(nix-env --version)"
 fi
 
-$VERBOSE_RUN _i "Activation variables:"
+_iVerbose "Activation variables:"
 if [[ -v oldGenNum ]] ; then
-    $VERBOSE_ECHO "  oldGenNum=$oldGenNum"
-    $VERBOSE_ECHO "  oldGenPath=$oldGenPath"
+    verboseEcho "  oldGenNum=$oldGenNum"
+    verboseEcho "  oldGenPath=$oldGenPath"
 else
-    $VERBOSE_ECHO "  oldGenNum undefined (first run?)"
-    $VERBOSE_ECHO "  oldGenPath undefined (first run?)"
+    verboseEcho "  oldGenNum undefined (first run?)"
+    verboseEcho "  oldGenPath undefined (first run?)"
 fi
-$VERBOSE_ECHO "  newGenPath=$newGenPath"
-$VERBOSE_ECHO "  newGenNum=$newGenNum"
-$VERBOSE_ECHO "  genProfilePath=$genProfilePath"
-$VERBOSE_ECHO "  newGenGcPath=$newGenGcPath"
-$VERBOSE_ECHO "  legacyGenGcPath=$legacyGenGcPath"
+verboseEcho "  newGenPath=$newGenPath"
+verboseEcho "  newGenNum=$newGenNum"
+verboseEcho "  genProfilePath=$genProfilePath"
+verboseEcho "  newGenGcPath=$newGenGcPath"
+verboseEcho "  legacyGenGcPath=$legacyGenGcPath"
