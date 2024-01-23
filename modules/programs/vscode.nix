@@ -258,7 +258,7 @@ in {
               text = extensionJson;
               onChange = ''
                 run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
-                $VERBOSE_ECHO "Regenerating VSCode extensions.json"
+                verboseEcho "Regenerating VSCode extensions.json"
                 run ${getExe cfg.package} --list-extensions > /dev/null
               '';
             };

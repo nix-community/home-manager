@@ -105,7 +105,7 @@ in {
     '';
 
     home.activation.regenDotTaskRc = hm.dag.entryAfter [ "writeBoundary" ] ''
-      $VERBOSE_ECHO "Ensuring generated taskwarrior config included in taskrc"
+      verboseEcho "Ensuring generated taskwarrior config included in taskrc"
 
       if [[ ! -s "${userConf}" ]]; then
         # Ensure file's existence

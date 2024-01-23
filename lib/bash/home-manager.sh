@@ -48,6 +48,12 @@ function noteEcho() {
     echo "${noteColor}$*${normalColor}"
 }
 
+function verboseEcho() {
+    if [[ -v VERBOSE ]]; then
+        echo "$*"
+    fi
+}
+
 function _i() {
     local msgid="$1"
     shift
@@ -82,6 +88,12 @@ function _iNote() {
     echo -n "${noteColor}"
     _i "$@"
     echo -n "${normalColor}"
+}
+
+function _iVerbose() {
+    if [[ -v VERBOSE ]]; then
+        _i "$@"
+    fi
 }
 
 # Runs the given command on live run, otherwise prints the command to standard

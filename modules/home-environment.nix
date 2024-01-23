@@ -410,12 +410,12 @@ in
         output to {file}`/dev/null`, otherwise prints the command to standard
         output.
 
-        A script block should also respect the
-        {var}`VERBOSE` variable, and if set print
-        information on standard out that may be useful for debugging
-        any issue that may arise. The variable
-        {var}`VERBOSE_ARG` is set to
-        {option}`--verbose` if verbose output is enabled.
+        A script block should also respect the {var}`VERBOSE` variable, and if
+        set print information on standard out that may be useful for debugging
+        any issue that may arise. The variable {var}`VERBOSE_ARG` is set to
+        {option}`--verbose` if verbose output is enabled. You can also use the
+        provided shell function {command}`verboseEcho`, which acts as
+        {command}`echo` when verbose output is enabled.
       '';
     };
 

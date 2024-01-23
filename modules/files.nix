@@ -103,7 +103,7 @@ in
             done
 
             if [[ -n $forced ]]; then
-              $VERBOSE_ECHO "Skipping collision check for $targetPath"
+              verboseEcho "Skipping collision check for $targetPath"
             elif [[ -e "$targetPath" \
                 && ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               # The target file already exists and it isn't a symlink owned by Home Manager.
@@ -184,7 +184,7 @@ in
 
             if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
               # The target exists but is identical – don't do anything.
-              $VERBOSE_ECHO "Skipping '$targetPath' as it is identical to '$sourcePath'"
+              verboseEcho "Skipping '$targetPath' as it is identical to '$sourcePath'"
             else
               # Place that symlink, --force
               # This can still fail if the target is a directory, in which case we bail out.
@@ -206,11 +206,11 @@ in
           for relativePath in "$@" ; do
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
-              $VERBOSE_ECHO "Checking $targetPath: exists"
+              verboseEcho "Checking $targetPath: exists"
             elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
             else
-              $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
+              verboseEcho "Checking $targetPath: gone (deleting)"
               run rm $VERBOSE_ARG "$targetPath"
 
               # Recursively delete empty parent directories.
