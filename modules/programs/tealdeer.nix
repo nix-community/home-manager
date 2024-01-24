@@ -49,5 +49,10 @@ in {
     home.file."${configDir}/tealdeer/config.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "tealdeer-config" cfg.settings;
     };
+
+    home.activation.tealdeerCache = hm.dag.entryAfter [ "linkGeneration" ] ''
+      $VERBOSE_ECHO "Rebuilding tealdeer cache"
+      $DRY_RUN_CMD ${getExe pkgs.tealdeer} --update
+    '';
   };
 }
