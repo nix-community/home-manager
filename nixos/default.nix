@@ -36,6 +36,12 @@ in
 
               # Inherit glibcLocales setting from NixOS.
               i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
+
+              # Legacy profile management is when the activation script
+              # generates GC root and home-manager profile. The modern way
+              # simply relies on the GC root that the system maintains, which
+              # should also protect the Home Manager activation package outputs.
+              home.activationGenerateGcRoot = cfg.enableLegacyProfileManagement;
             };
           }
         ];
@@ -46,6 +52,7 @@ in
         _: usercfg:
         let
           username = usercfg.home.username;
+          driverVersion = if cfg.enableLegacyProfileManagement then "0" else "1";
         in
         lib.nameValuePair "home-manager-${utils.escapeSystemdPath username}" {
           description = "Home Manager environment for ${username}";
@@ -94,7 +101,7 @@ in
                     | ${sed} -En '/^(${exportedSystemdVariables})=/s/^/export /p'
                   )"
 
-                  exec "$1/activate"
+                  exec "$1/activate" --driver-version ${driverVersion}
                 '';
               in
               "${setupEnv} ${usercfg.home.activationPackage}";

@@ -477,6 +477,18 @@ in
       description = "The package containing the complete activation script.";
     };
 
+    home.activationGenerateGcRoot = mkOption {
+      internal = true;
+      type = types.bool;
+      default = true;
+      description = ''
+        Whether the activation script should create a GC root to avoid being
+        garbage collected. Typically you want this but if you know for certain
+        that the Home Manager generation is referenced from some other GC root,
+        then it may be appropriate to not create our own root.
+      '';
+    };
+
     home.extraActivationPath = mkOption {
       internal = true;
       type = types.listOf types.package;
@@ -627,12 +639,16 @@ in
     # The entry acting as a boundary between the activation script's "check" and
     # the "write" phases. This is where we commit to attempting to actually
     # activate the configuration.
+    #
+    # Note, if we are run by a version 0 driver then we update the profile here.
     home.activation.writeBoundary = lib.hm.dag.entryAnywhere ''
-      if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
-        _i "Creating new profile generation"
-        run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
-      else
-        _i "No change so reusing latest profile generation"
+      if (( $hmDriverVersion < 1 )); then
+        if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
+          _i "Creating new profile generation"
+          run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
+        else
+          _i "No change so reusing latest profile generation"
+        fi
       fi
     '';
 
@@ -763,6 +779,38 @@ in
           export PATH="${activationBinPaths}"
           ${config.lib.bash.initHomeManagerLib}
 
+          # The driver version indicates the behavior expected by the caller of
+          # this script.
+          #
+          # - 0 : legacy behavior
+          # - 1 : the script will not attempt to update the Home Manager Nix profile.
+          hmDriverVersion=0
+
+          while (( $# > 0 )); do
+            opt="$1"
+            shift
+
+            case $opt in
+              --driver-version)
+                if (( $# == 0 )); then
+                  errorEcho "$0: no driver version specified" >&2
+                  exit 1
+                elif (( 0 <= $1 && $1 <= 1 )); then
+                  hmDriverVersion=$1
+                else
+                  errorEcho "$0: unexpected driver version $1" >&2
+                  exit 1
+                fi
+                shift
+                ;;
+              *)
+                _iError "%s: unknown option '%s'" "$0" "$opt" >&2
+                exit 1
+                ;;
+            esac
+          done
+          unset opt
+
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
           if [[ ! -v SKIP_SANITY_CHECKS ]]; then
@@ -770,13 +818,15 @@ in
             checkHomeDirectory ${lib.escapeShellArg config.home.homeDirectory}
           fi
 
-          # Create a temporary GC root to prevent collection during activation.
-          trap 'run rm -f $VERBOSE_ARG "$newGenGcPath"' EXIT
-          run --silence nix-store --realise "$newGenPath" --add-root "$newGenGcPath"
+          ${lib.optionalString config.home.activationGenerateGcRoot ''
+            # Create a temporary GC root to prevent collection during activation.
+            trap 'run rm -f $VERBOSE_ARG "$newGenGcPath"' EXIT
+            run --silence nix-store --realise "$newGenPath" --add-root "$newGenGcPath"
+          ''}
 
           ${activationCmds}
 
-          ${lib.optionalString (!config.uninstall) ''
+          ${lib.optionalString (config.home.activationGenerateGcRoot && !config.uninstall) ''
             # Create the "current generation" GC root.
             run --silence nix-store --realise "$newGenPath" --add-root "$currentGenGcPath"
 
@@ -796,6 +846,11 @@ in
           mkdir -p $out
 
           echo "${config.home.version.full}" > $out/hm-version
+
+          # The gen-version indicates the format of the generation package
+          # itself. It allows us to make backwards incompatible changes in the
+          # package output and have surrounding tooling adapt.
+          echo 1 > $out/gen-version
 
           cp ${activationScript} $out/activate
 

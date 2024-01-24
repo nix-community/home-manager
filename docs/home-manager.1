@@ -28,6 +28,8 @@
 .Cm | packages
 .Cm | remove-generations Ar ID \&...
 .Cm | switch
+.Op Fl -rollback
+.Op Bro Fl c | Fl -specialisation Brc Ar NAME
 .Cm | uninstall
 .Brc
 .Op Fl A Ar attrPath
@@ -157,9 +159,18 @@ sub-command to find suitable generation numbers.
 .RE
 .Pp
 
-.It Cm switch
+.It Cm switch Oo Fl -rollback Oc Oo Bro Fl c | Fl -specialisation Brc Ar NAME Oc
 .RS 4
 Build and activate the configuration\&.
+.sp
+If the
+.Fl -rollback
+option is given, then the build is not done, instead roll back to and
+activate the configuration prior to the current configuration\&.
+.sp
+If the
+.Fl -specialisation
+option is given, then the named specialisation is activated\&.
 .RE
 .Pp
 

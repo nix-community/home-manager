@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -I https://github.com/NixOS/nixpkgs/archive/62b852f6c6742134ade1abdd2a21685fd617a291.tar.gz -i bash -p gettext
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/62b852f6c6742134ade1abdd2a21685fd617a291.tar.gz -i bash -p gettext
 
 set -euo pipefail
 shopt -s globstar
