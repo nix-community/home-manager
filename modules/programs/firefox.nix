@@ -236,8 +236,9 @@ in {
       nativeMessagingHosts = mkOption {
         type = types.listOf types.package;
         default = [ ];
-        description = mdDoc ''
-          Additional packages containing native messaging hosts that should be made available to Firefox extensions.
+        description = ''
+          Additional packages containing native messaging hosts that should be
+          made available to Firefox extensions.
         '';
       };
 
