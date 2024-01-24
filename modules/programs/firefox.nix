@@ -21,6 +21,11 @@ let
   profilesPath =
     if isDarwin then "${firefoxConfigPath}/Profiles" else firefoxConfigPath;
 
+  nativeMessagingHostsJoined = pkgs.symlinkJoin {
+    name = "home_ff_nmhs";
+    paths = cfg.package.nativeMessagingHosts or cfg.nativeMessagingHosts;
+  };
+
   # The extensions path shared by all profiles; will not be supported
   # by future Firefox versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
@@ -225,6 +230,15 @@ in {
           this should be a wrapped Firefox package. For earlier state
           versions it should be an unwrapped Firefox package.
           Set to `null` to disable installing Firefox.
+        '';
+      };
+
+      nativeMessagingHosts = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        description = ''
+          Additional packages containing native messaging hosts that should be
+          made available to Firefox extensions.
         '';
       };
 
@@ -673,7 +687,11 @@ in {
       will be removed in the future. Please change to overriding the package
       configuration using 'programs.firefox.package' instead. You can refer to
       its example for how to do this.
-    '';
+    '' ++ optional (cfg.package.nativeMessagingHosts or null != null
+      && cfg.nativeMessagingHosts != [ ]) ''
+        Using both 'programs.firefox.package.nativeMessagingHosts' and
+        'programs.firefox.nativeMessagingHosts' is not supported, the latter will be ignored.
+      '';
 
     programs.firefox.finalPackage = wrapPackage cfg.package;
 
@@ -682,6 +700,8 @@ in {
     home.file = mkMerge ([{
       "${firefoxConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
+      "${mozillaConfigPath}/native-messaging-hosts".source =
+        "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
     }] ++ flip mapAttrsToList cfg.profiles (_: profile: {
       "${profilesPath}/${profile.path}/.keep".text = "";
 
