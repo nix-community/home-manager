@@ -108,6 +108,19 @@ in
 
     verbose = mkEnableOption "verbose output on activation";
 
+    enableLegacyProfileManagement = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to enable legacy profile (and garbage collection root)
+        management during activation. When enabled, the Home Manager activation
+        will produce a per-user `home-manager` Nix profile as well as a garbage
+        collection root, just like in the standalone installation of Home
+        Manager. Typically, this is not desired when Home Manager is embedded in
+        the system configuration.
+      '';
+    };
+
     users = mkOption {
       type = types.attrsOf hmModule;
       default = { };
