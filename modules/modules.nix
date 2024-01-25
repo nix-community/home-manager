@@ -291,7 +291,6 @@ let
     ./services/kanshi.nix
     ./services/kbfs.nix
     ./services/kdeconnect.nix
-    ./services/keepassx.nix
     ./services/keybase.nix
     ./services/keynav.nix
     ./services/lieer.nix
@@ -382,6 +381,9 @@ let
 
     (mkRemovedOptionModule [ "services" "password-store-sync" ] ''
       Use services.git-sync instead.
+    '')
+    (mkRemovedOptionModule [ "services" "keepassx" ] ''
+      KeePassX is no longer maintained.
     '')
   ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
     ++ optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
