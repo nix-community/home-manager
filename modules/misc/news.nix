@@ -1392,6 +1392,15 @@ in {
           This module replaces 'programs.rtx', which has been removed.
         '';
       }
+
+      {
+        time = "2024-01-27T22:53:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.wob'.
+        '';
+      }
+
     ];
   };
 }
