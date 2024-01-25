@@ -78,7 +78,24 @@ let
         version = 4;
         lastUserContextId =
           elemAt (mapAttrsToList (_: container: container.id) containers) 0;
-        identities = mapAttrsToList containerToIdentity containers;
+        identities = mapAttrsToList containerToIdentity containers ++ [
+          {
+            userContextId = 4294967294; # 2^32 - 2
+            name = "userContextIdInternal.thumbnail";
+            icon = "";
+            color = "";
+            accessKey = "";
+            public = false;
+          }
+          {
+            userContextId = 4294967295; # 2^32 - 1
+            name = "userContextIdInternal.webextStorageLocal";
+            icon = "";
+            color = "";
+            accessKey = "";
+            public = false;
+          }
+        ];
       }}
     '';
 
@@ -675,6 +692,20 @@ in {
         message = "Must have exactly one default Firefox profile but found "
           + toString (length defaults) + optionalString (length defaults > 1)
           (", namely " + concatStringsSep ", " defaults);
+      })
+
+      (let
+        getContainers = profiles:
+          flatten
+          (mapAttrsToList (_: value: (attrValues value.containers)) profiles);
+
+        findInvalidContainerIds = profiles:
+          filter (container: container.id >= 4294967294)
+          (getContainers profiles);
+      in {
+        assertion = cfg.profiles == { }
+          || length (findInvalidContainerIds cfg.profiles) == 0;
+        message = "Container id must be smaller than 4294967294 (2^32 - 2)";
       })
 
       (mkNoDuplicateAssertion cfg.profiles "profile")
