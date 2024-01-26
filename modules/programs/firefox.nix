@@ -21,6 +21,11 @@ let
   profilesPath =
     if isDarwin then "${firefoxConfigPath}/Profiles" else firefoxConfigPath;
 
+  nativeMessagingHostsPath = if isDarwin then
+    "${mozillaConfigPath}/NativeMessagingHosts"
+  else
+    "${mozillaConfigPath}/native-messaging-hosts";
+
   nativeMessagingHostsJoined = pkgs.symlinkJoin {
     name = "home_ff_nmhs";
     paths = cfg.package.nativeMessagingHosts or cfg.nativeMessagingHosts;
@@ -731,7 +736,7 @@ in {
     home.file = mkMerge ([{
       "${firefoxConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
-      "${mozillaConfigPath}/native-messaging-hosts".source =
+      "${nativeMessagingHostsPath}".source =
         "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
     }] ++ flip mapAttrsToList cfg.profiles (_: profile: {
       "${profilesPath}/${profile.path}/.keep".text = "";
