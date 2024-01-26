@@ -105,14 +105,19 @@ function _iVerbose() {
 # Note, the run function is exported. I.e., it is available also to called Bash
 # script.
 function run() {
+	# This function gets exported, and passed on down to child shell
+	# processes. Some of those might not be controlled by Nix, particularly in
+	# user activation scripts calling on /bin/sh, so stick to a bash dialect
+	# that is compatible with older versions.
+	local silence=0
     if [[ $1 == '--silence' ]]; then
-        local silence=1
+        silence=1
         shift
     fi
 
-    if [[ -v DRY_RUN ]] ; then
+    if [[ x == "${DRY_RUN:+x}" ]] ; then
         echo "$@"
-    elif [[ -v silence ]] ; then
+    elif [[ 1 == "$silence" ]] ; then
         "$@" > /dev/null 2>&1
     else
         "$@"
