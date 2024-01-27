@@ -27,8 +27,15 @@ let
     "${mozillaConfigPath}/native-messaging-hosts";
 
   nativeMessagingHostsJoined = pkgs.symlinkJoin {
-    name = "home_ff_nmhs";
-    paths = cfg.package.nativeMessagingHosts or cfg.nativeMessagingHosts;
+    name = "ff_native-messaging-hosts";
+    paths = [
+      # Link a .keep file to keep the directory around
+      (pkgs.writeTextDir "lib/mozilla/native-messaging-hosts/.keep" "")
+      # Link package configured native messaging hosts (entire Firefox actually)
+      cfg.finalPackage
+    ]
+    # Link user configured native messaging hosts
+      ++ cfg.nativeMessagingHosts;
   };
 
   # The extensions path shared by all profiles; will not be supported
@@ -723,11 +730,7 @@ in {
       will be removed in the future. Please change to overriding the package
       configuration using 'programs.firefox.package' instead. You can refer to
       its example for how to do this.
-    '' ++ optional (cfg.package.nativeMessagingHosts or null != null
-      && cfg.nativeMessagingHosts != [ ]) ''
-        Using both 'programs.firefox.package.nativeMessagingHosts' and
-        'programs.firefox.nativeMessagingHosts' is not supported, the latter will be ignored.
-      '';
+    '';
 
     programs.firefox.finalPackage = wrapPackage cfg.package;
 
@@ -736,8 +739,12 @@ in {
     home.file = mkMerge ([{
       "${firefoxConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
-      "${nativeMessagingHostsPath}".source =
-        "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
+
+      "${nativeMessagingHostsPath}" = {
+        source =
+          "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
+        recursive = true;
+      };
     }] ++ flip mapAttrsToList cfg.profiles (_: profile: {
       "${profilesPath}/${profile.path}/.keep".text = "";
 
