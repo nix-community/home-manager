@@ -1392,6 +1392,13 @@ in {
           This module replaces 'programs.rtx', which has been removed.
         '';
       }
+
+      {
+        time = "2024-01-27T10:12:40+00:00";
+        message = ''
+          A new module is available: 'services.arrpc'
+        '';
+      }
     ];
   };
 }
