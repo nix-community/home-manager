@@ -261,6 +261,7 @@ in import nmtSrc {
     ./modules/services/window-managers/spectrwm
     ./modules/services/window-managers/sway
     ./modules/services/wlsunset
+    ./modules/services/wob
     ./modules/services/xsettingsd
     ./modules/systemd
     ./modules/targets-linux
