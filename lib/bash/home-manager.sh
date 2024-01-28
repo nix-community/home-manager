@@ -101,9 +101,6 @@ function _iVerbose() {
 #
 # If given the command line option `--silence`, then the command's standard and
 # error output is sent to `/dev/null` on a live run.
-#
-# Note, the run function is exported. I.e., it is available also to called Bash
-# script.
 function run() {
     if [[ $1 == '--silence' ]]; then
         local silence=1
@@ -118,4 +115,3 @@ function run() {
         "$@"
     fi
 }
-export -f run
