@@ -21,6 +21,11 @@ let
   profilesPath =
     if isDarwin then "${firefoxConfigPath}/Profiles" else firefoxConfigPath;
 
+  nativeMessagingHostsPath = if isDarwin then
+    "${mozillaConfigPath}/NativeMessagingHosts"
+  else
+    "${mozillaConfigPath}/native-messaging-hosts";
+
   nativeMessagingHostsJoined = pkgs.symlinkJoin {
     name = "ff_native-messaging-hosts";
     paths = [
@@ -734,7 +739,8 @@ in {
     home.file = mkMerge ([{
       "${firefoxConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
-      "${mozillaConfigPath}/native-messaging-hosts" = {
+
+      "${nativeMessagingHostsPath}" = {
         source =
           "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
         recursive = true;
