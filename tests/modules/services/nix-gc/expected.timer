@@ -1,0 +1,9 @@
+[Install]
+WantedBy=timers.target
+
+[Timer]
+OnCalendar=monthly
+Unit=nix-gc.service
+
+[Unit]
+Description=Nix Garbage Collector

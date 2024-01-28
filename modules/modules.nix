@@ -308,6 +308,7 @@ let
     ./services/muchsync.nix
     ./services/network-manager-applet.nix
     ./services/nextcloud-client.nix
+    ./services/nix-gc.nix
     ./services/notify-osd.nix
     ./services/opensnitch-ui.nix
     ./services/osmscout-server.nix

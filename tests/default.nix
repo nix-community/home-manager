@@ -161,6 +161,7 @@ in import nmtSrc {
     ./modules/launchd
     ./modules/services/git-sync-darwin
     ./modules/services/imapnotify-darwin
+    ./modules/services/nix-gc-darwin
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
     ./modules/config/i18n
@@ -234,6 +235,7 @@ in import nmtSrc {
     ./modules/services/mpd
     ./modules/services/mpd-mpris
     ./modules/services/mpdris2
+    ./modules/services/nix-gc
     ./modules/services/osmscout-server
     ./modules/services/pantalaimon
     ./modules/services/parcellite
