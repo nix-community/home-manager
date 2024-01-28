@@ -17,6 +17,14 @@ in {
   options.programs.tealdeer = {
     enable = mkEnableOption "Tealdeer";
 
+    updateOnActivation = mkOption {
+      type = with types; bool;
+      default = true;
+      description = ''
+        Whether to update tealdeer's cache on activation.
+      '';
+    };
+
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
@@ -50,9 +58,11 @@ in {
       source = tomlFormat.generate "tealdeer-config" cfg.settings;
     };
 
-    home.activation.tealdeerCache = hm.dag.entryAfter [ "linkGeneration" ] ''
-      $VERBOSE_ECHO "Rebuilding tealdeer cache"
-      $DRY_RUN_CMD ${getExe pkgs.tealdeer} --update
-    '';
+    home.activation = mkIf cfg.updateOnActivation {
+      tealdeerCache = hm.dag.entryAfter [ "linkGeneration" ] ''
+        $VERBOSE_ECHO "Rebuilding tealdeer cache"
+        $DRY_RUN_CMD ${getExe pkgs.tealdeer} --update
+      '';
+    };
   };
 }
