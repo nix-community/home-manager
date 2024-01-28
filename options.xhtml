@@ -66649,6 +66649,120 @@ signed integer</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.wob.enable"></a><a class="term" href="options.xhtml#opt-services.wob.enable"><code class="option">services.wob.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable wob.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wob.nix" target="_top">
+&lt;home-manager/modules/services/wob.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wob.package"></a><a class="term" href="options.xhtml#opt-services.wob.package"><code class="option">services.wob.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The wob package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.wob</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wob.nix" target="_top">
+&lt;home-manager/modules/services/wob.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wob.settings"></a><a class="term" href="options.xhtml#opt-services.wob.settings"><code class="option">services.wob.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/wob/wob.ini</code>.
+See <span class="citerefentry"><span class="refentrytitle">wob.ini</span>(5)</span> for documentation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;&quot; = {
+    border_size = 10;
+    height = 50;
+  };
+  &quot;output.foo&quot;.name = &quot;DP-1&quot;;
+  &quot;style.muted&quot;.background_color = &quot;032cfc&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wob.nix" target="_top">
+&lt;home-manager/modules/services/wob.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wob.systemd"></a><a class="term" href="options.xhtml#opt-services.wob.systemd"><code class="option">services.wob.systemd</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable systemd service and socket for wob.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wob.nix" target="_top">
+&lt;home-manager/modules/services/wob.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.xcape.enable"></a><a class="term" href="options.xhtml#opt-services.xcape.enable"><code class="option">services.xcape.enable</code>
   </a>
  </span>
