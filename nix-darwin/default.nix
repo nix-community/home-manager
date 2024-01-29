@@ -21,6 +21,8 @@ in {
               "export HOME_MANAGER_BACKUP_EXT=${
                 lib.escapeShellArg cfg.backupFileExtension
               }"}
+              ${lib.optionalString (cfg.backupOverwrite)
+              "export HOME_MANAGER_BACKUP_OVERWRITE=1"}
               ${lib.optionalString cfg.verbose "export VERBOSE=1"}
               exec ${usercfg.home.activationPackage}/activate
             ''

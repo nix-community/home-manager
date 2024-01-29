@@ -62,6 +62,11 @@ in {
       '';
     };
 
+    backupOverwrite = mkEnableOption ''
+      When using backupFileExtension, whether to overwrite old
+      backups or not.
+    '';
+
     extraSpecialArgs = mkOption {
       type = types.attrs;
       default = { };

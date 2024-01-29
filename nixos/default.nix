@@ -6,9 +6,15 @@ let
 
   cfg = config.home-manager;
 
-  serviceEnvironment = optionalAttrs (cfg.backupFileExtension != null) {
-    HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
-  } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
+  serviceEnvironment = mkMerge [
+    (mkIf cfg.verbose { VERBOSE = "1"; })
+
+    (mkIf (cfg.backupFileExtension != null) {
+      HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
+    })
+
+    (mkIf cfg.backupOverwrite { HOME_MANAGER_BACKUP_OVERWRITE = "1"; })
+  ];
 
 in {
   imports = [ ./common.nix ];

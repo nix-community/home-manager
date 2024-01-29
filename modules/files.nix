@@ -113,9 +113,11 @@ in
               elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 # Next, try to move the file to a backup location if configured and possible
                 backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-                if [[ -e "$backup" ]]; then
-                  errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath'"
+                if [[ -e "$backup" && -z "$HOME_MANAGER_BACKUP_OVERWRITE" ]]; then
+                  errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath', use HOME_MANAGER_BACKUP_OVERWRITE=1 if you want to overwrite the backup"
                   collision=1
+                elif [[ -e "$backup" && -n "$HOME_MANAGER_BACKUP_OVERWRITE" ]]; then
+                  warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', and existing backup '$backup' is on the way, old backup will be overwritten"
                 else
                   warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be moved to '$backup'"
                 fi
@@ -179,6 +181,9 @@ in
             if [[ -e "$targetPath" && ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
               # The target exists, back it up
               backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
+              if [[ -e "$backup" && "$HOME_MANAGER_BACKUP_OVERWRITE" ]]; then
+                run rm $VERBOSE_ARG "$backup"
+              fi
               run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
             fi
 
