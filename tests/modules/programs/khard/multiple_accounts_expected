@@ -1,0 +1,11 @@
+[addressbooks]
+[[test1]]
+path = /home/hm-user/.contacts/test1
+
+[[test2]]
+path = /home/hm-user/.contacts/test2
+
+
+[general]
+default_action=list
+

@@ -32,7 +32,7 @@
         ${
           pkgs.substituteAll {
             inherit (pkgs) runtimeShell coreutils;
-            src = ./emacs-socket-emacs.service;
+            src = ./emacs-socket-28-emacs.service;
           }
         }
 

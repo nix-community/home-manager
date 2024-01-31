@@ -20,6 +20,7 @@ in {
         "22.11"
         "23.05"
         "23.11"
+        "24.05"
       ];
       description = ''
         It is occasionally necessary for Home Manager to change

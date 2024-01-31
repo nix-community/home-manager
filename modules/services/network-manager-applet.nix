@@ -21,6 +21,9 @@ in {
         lib.platforms.linux)
     ];
 
+    # The package provides some icons that are good to have available.
+    xdg.systemDirs.data = [ "${pkgs.networkmanagerapplet}/share" ];
+
     systemd.user.services.network-manager-applet = {
       Unit = {
         Description = "Network Manager applet";

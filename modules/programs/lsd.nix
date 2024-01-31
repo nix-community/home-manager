@@ -45,6 +45,26 @@ in {
         for supported values.
       '';
     };
+
+    colors = mkOption {
+      type = yamlFormat.type;
+      default = { };
+      example = {
+        size = {
+          none = "grey";
+          small = "yellow";
+          large = "dark_yellow";
+        };
+      };
+      description = ''
+        Configuration written to {file}`$XDG_CONFIG_HOME/lsd/colors.yaml`. See
+        <https://github.com/lsd-rs/lsd/tree/v1.0.0#color-theme-file-content> for
+        supported colors.
+
+        If this option is non-empty then the `color.theme` option is
+        automatically set to `"custom"`.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -55,6 +75,13 @@ in {
     programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
 
     programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
+
+    programs.lsd =
+      mkIf (cfg.colors != { }) { settings.color.theme = "custom"; };
+
+    xdg.configFile."lsd/colors.yaml" = mkIf (cfg.colors != { }) {
+      source = yamlFormat.generate "lsd-colors" cfg.colors;
+    };
 
     xdg.configFile."lsd/config.yaml" = mkIf (cfg.settings != { }) {
       source = yamlFormat.generate "lsd-config" cfg.settings;

@@ -137,7 +137,7 @@ in {
 
     home.activation.createXdgUserDirectories = mkIf cfg.createDirectories (let
       directoriesList = attrValues directories;
-      mkdir = (dir: ''$DRY_RUN_CMD mkdir -p $VERBOSE_ARG "${dir}"'');
+      mkdir = (dir: ''run mkdir -p $VERBOSE_ARG "${dir}"'');
     in lib.hm.dag.entryAfter [ "linkGeneration" ]
     (strings.concatMapStringsSep "\n" mkdir directoriesList));
   };

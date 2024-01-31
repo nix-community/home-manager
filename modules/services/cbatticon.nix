@@ -24,7 +24,7 @@ let
     ++ optional (cfg.updateIntervalSeconds != null)
     "--update-interval ${toString cfg.updateIntervalSeconds}"
     ++ optional (cfg.hideNotification != null && cfg.hideNotification)
-    "--hide-notification");
+    "--hide-notification" ++ optional (cfg.batteryId != null) cfg.batteryId);
 
 in {
   meta.maintainers = [ maintainers.pmiddend ];
@@ -93,6 +93,15 @@ in {
         type = types.nullOr types.bool;
         default = null;
         description = "Hide the notification popups.";
+      };
+
+      batteryId = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          ID of the battery to monitor. List with {command}`cbatticon -p`.
+          Defaults to the first entry in the list.
+        '';
       };
     };
   };

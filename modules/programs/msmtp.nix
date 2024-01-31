@@ -51,6 +51,13 @@ in {
     programs.msmtp = {
       enable = mkEnableOption "msmtp";
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.msmtp;
+        defaultText = literalExpression "pkgs.msmtp";
+        description = "The msmtp package to use.";
+      };
+
       extraConfig = mkOption {
         type = types.lines;
         default = "";
@@ -81,7 +88,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.msmtp ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."msmtp/config".text = configFile msmtpAccounts;
 

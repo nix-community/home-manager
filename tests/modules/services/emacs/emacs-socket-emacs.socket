@@ -1,9 +1,11 @@
 [Install]
+RequiredBy=emacs.service
 WantedBy=sockets.target
 
 [Socket]
 DirectoryMode=0700
 FileDescriptorName=server
+FlushPending=true
 ListenStream=%t/emacs/server
 SocketMode=0600
 

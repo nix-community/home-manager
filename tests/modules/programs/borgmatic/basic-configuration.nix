@@ -12,7 +12,14 @@ in {
       main = {
         location = {
           sourceDirectories = [ "/my-stuff-to-backup" ];
-          repositories = [ "/mnt/disk1" "/mnt/disk2" ];
+          repositories = [
+            "/mnt/disk1"
+            { path = "/mnt/disk2"; }
+            {
+              path = "/mnt/disk3";
+              label = "disk3";
+            }
+          ];
           extraConfig = {
             one_file_system = true;
             exclude_patterns = [ "*.swp" ];
@@ -62,50 +69,54 @@ in {
 
     declare -A expectations
 
-    expectations[location.source_directories[0]]="${
+    expectations[source_directories[0]]="${
       builtins.elemAt backups.main.location.sourceDirectories 0
     }"
-    expectations[location.repositories[0]]="${
-      builtins.elemAt backups.main.location.repositories 0
+    expectations[repositories[0].path]="${
+      (builtins.elemAt backups.main.location.repositories 0).path
     }"
-    expectations[location.repositories[1]]="${
-      builtins.elemAt backups.main.location.repositories 1
+    expectations[repositories[1].path]="${
+      (builtins.elemAt backups.main.location.repositories 1).path
     }"
-    expectations[location.one_file_system]="${
+    expectations[repositories[2].path]="${
+      (builtins.elemAt backups.main.location.repositories 2).path
+    }"
+    expectations[repositories[2].label]="${
+      (builtins.elemAt backups.main.location.repositories 2).label
+    }"
+    expectations[one_file_system]="${
       boolToString backups.main.location.extraConfig.one_file_system
     }"
-    expectations[location.exclude_patterns[0]]="${
+    expectations[exclude_patterns[0]]="${
       builtins.elemAt backups.main.location.extraConfig.exclude_patterns 0
     }"
 
-    expectations[storage.encryption_passcommand]="${backups.main.storage.encryptionPasscommand}"
-    expectations[storage.checkpoint_interval]="${
+    expectations[encryption_passcommand]="${backups.main.storage.encryptionPasscommand}"
+    expectations[checkpoint_interval]="${
       toString backups.main.storage.extraConfig.checkpoint_interval
     }"
 
-    expectations[retention.keep_within]="${backups.main.retention.keepWithin}"
-    expectations[retention.keep_secondly]="${
+    expectations[keep_within]="${backups.main.retention.keepWithin}"
+    expectations[keep_secondly]="${
       toString backups.main.retention.keepSecondly
     }"
-    expectations[retention.prefix]="${backups.main.retention.extraConfig.prefix}"
+    expectations[prefix]="${backups.main.retention.extraConfig.prefix}"
 
-    expectations[consistency.checks[0].name]="${
+    expectations[checks[0].name]="${
       (builtins.elemAt backups.main.consistency.checks 0).name
     }"
-    expectations[consistency.checks[0].frequency]="${
+    expectations[checks[0].frequency]="${
       (builtins.elemAt backups.main.consistency.checks 0).frequency
     }"
-    expectations[consistency.checks[1].name]="${
+    expectations[checks[1].name]="${
       (builtins.elemAt backups.main.consistency.checks 1).name
     }"
-    expectations[consistency.checks[1].frequency]="${
+    expectations[checks[1].frequency]="${
       (builtins.elemAt backups.main.consistency.checks 1).frequency
     }"
-    expectations[consistency.prefix]="${backups.main.consistency.extraConfig.prefix}"
-    expectations[output.color]="${
-      boolToString backups.main.output.extraConfig.color
-    }"
-    expectations[hooks.before_actions[0]]="${
+    expectations[prefix]="${backups.main.consistency.extraConfig.prefix}"
+    expectations[color]="${boolToString backups.main.output.extraConfig.color}"
+    expectations[before_actions[0]]="${
       builtins.elemAt backups.main.hooks.extraConfig.before_actions 0
     }"
 
@@ -120,7 +131,7 @@ in {
       fi
     done
 
-    one_file_system=$($yq ".location.one_file_system" $config_file)
+    one_file_system=$($yq ".one_file_system" $config_file)
     if [[ $one_file_system != "true" ]]; then
        fail "Expected one_file_system to be true but it was $one_file_system"
     fi

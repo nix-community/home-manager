@@ -19,7 +19,7 @@ in {
 
         local f
         find -L "${fonts}" -type f -printf '%P\0' | while IFS= read -rd "" f; do
-          $DRY_RUN_CMD install $VERBOSE_ARG -Dm644 -T \
+          run install $VERBOSE_ARG -Dm644 -T \
             "${fonts}/$f" "${homeDir}/Library/Fonts/HomeManager/$f"
         done
       }

@@ -246,11 +246,8 @@ in {
 
     xdg.configFile = mapAttrs' (cfgFileSuffix: cfgBar:
       nameValuePair ("i3status-rust/config-${cfgFileSuffix}.toml") ({
-        onChange = mkIf config.xsession.windowManager.i3.enable ''
-          i3Socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*"
-          if [[ -S $i3Socket ]]; then
-            ${config.xsession.windowManager.i3.package}/bin/i3-msg -s $i3Socket restart >/dev/null
-          fi
+        onChange = ''
+          ${pkgs.procps}/bin/pkill -u $USER -USR2 i3status-rs || true
         '';
 
         source = settingsFormat.generate ("config-${cfgFileSuffix}.toml") ({

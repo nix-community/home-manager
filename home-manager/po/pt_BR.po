@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-08-11 19:50+0000\n"
-"Last-Translator: Gabriel Grysuk <gabrielgrysuk@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/home-"
-"manager/cli/pt_BR/>\n"
+"PO-Revision-Date: 2023-11-30 15:04+0000\n"
+"Last-Translator: Gabriel Fontes <hi@m7.rs>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
+"home-manager/cli/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: home-manager/home-manager:81
 msgid "No configuration file found at %s"
@@ -48,6 +48,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"O caminho alternativo do Home Manager, %s, foi descontinuado, mas existe "
+"algum arquivo/diretório nele."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:135
@@ -70,10 +72,30 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"Para remover esse aviso, faça um dos seguintes.\n"
+"\n"
+"1. Explicitamente diga para o Home Manager usar esse caminho, por exemplo, "
+"adicionando\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   à sua configuração.\n"
+"\n"
+"   Se você importa o Home Manager diretamente, você pode usar o parâmetro "
+"`path`\n"
+"\n"
+"      pkgs.callPackage /caminho/do/pacote-home-manager { path = \"%s\"; }\n"
+"\n"
+"   ao chamar o pacote do Home Manager.\n"
+"\n"
+"2. Apague o caminho descontinuado.\n"
+"\n"
+"     $ rm -r \"%s\""
 
 #: home-manager/home-manager:174
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
+"Não foi possível encontrar um diretório de perfil apropriado, tentei %s e %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:229
@@ -91,11 +113,11 @@ msgstr "Execute '%s --help' para instruções de uso"
 
 #: home-manager/home-manager:322 home-manager/home-manager:421
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "O arquivo %s já existe, mantendo ele sem modificações..."
 
 #: home-manager/home-manager:324 home-manager/home-manager:423
 msgid "Creating %s..."
-msgstr ""
+msgstr "Criando %s..."
 
 #: home-manager/home-manager:465
 msgid "Creating initial Home Manager generation..."

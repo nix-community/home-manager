@@ -8,6 +8,8 @@
     plugins =
       [ "/path/to/plugin1" (config.lib.test.mkStubPackage { name = "foo"; }) ];
     settings = {
+      source = [ "sourced.conf" ];
+
       decoration = {
         shadow_offset = "0 5";
         "col.shadow" = "rgba(00000099)";
@@ -43,6 +45,13 @@
         "$mod, mouse:273, resizewindow"
         "$mod ALT, mouse:272, resizewindow"
       ];
+
+      plugin = {
+        plugin1 = {
+          dummy = "plugin setting";
+          section = { other = "dummy setting"; };
+        };
+      };
     };
     extraConfig = ''
       # window resize

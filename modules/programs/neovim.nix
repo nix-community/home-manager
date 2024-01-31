@@ -237,7 +237,6 @@ in {
 
       finalPackage = mkOption {
         type = types.package;
-        visible = false;
         readOnly = true;
         description = "Resulting customized neovim package.";
       };

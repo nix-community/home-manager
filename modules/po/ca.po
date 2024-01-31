@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-04-23 12:49+0000\n"
-"Last-Translator: Leix b <abone9999@gmail.com>\n"
+"PO-Revision-Date: 2023-12-10 15:58+0000\n"
+"Last-Translator: Nara Díaz Viñolas <rdvdev2@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/home-manager/"
 "modules/ca/>\n"
 "Language: ca\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: modules/files.nix:234
 msgid "Creating home file links in %s"
@@ -110,11 +110,11 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:95
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Error: USER està configurat a \"%s\", però s'esperava \"%s\""
 
 #: modules/lib-bash/activation-init.sh:104
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Error: HOME està configurat a \"%s\", però s'esperava \"%s\""
 
 #: modules/lib-bash/activation-init.sh:119
 msgid "Starting Home Manager activation"

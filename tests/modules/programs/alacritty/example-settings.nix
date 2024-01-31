@@ -6,7 +6,7 @@ with lib;
   config = {
     programs.alacritty = {
       enable = true;
-      package = config.lib.test.mkStubPackage { };
+      package = config.lib.test.mkStubPackage { version = "0.13.0"; };
 
       settings = {
         window.dimensions = {
@@ -14,7 +14,7 @@ with lib;
           columns = 200;
         };
 
-        key_bindings = [{
+        keyboard.bindings = [{
           key = "K";
           mods = "Control";
           chars = "\\x0c";
@@ -24,8 +24,8 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.config/alacritty/alacritty.yml \
-        ${./example-settings-expected.yml}
+        home-files/.config/alacritty/alacritty.toml \
+        ${./example-settings-expected.toml}
     '';
   };
 }

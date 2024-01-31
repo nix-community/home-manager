@@ -13,6 +13,13 @@ let
       default = null;
     });
 
+  cleanRepositories = repos:
+    map (repo:
+      if builtins.isString repo then {
+        path = repo;
+      } else
+        removeNullValues repo) repos;
+
   mkRetentionOption = frequency:
     mkNullableOption {
       type = types.int;
@@ -25,6 +32,26 @@ let
     type = yamlFormat.type;
     default = { };
     description = "Extra settings.";
+  };
+
+  repositoryOption = types.submodule {
+    options = {
+      path = mkOption {
+        type = types.str;
+        example = "ssh://myuser@myrepo.myserver.com/./repo";
+        description = "Path of the repository.";
+      };
+
+      label = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "remote";
+        description = ''
+          Short text describing the repository. Can be used with the
+          `--repository` flag to select a repository.
+        '';
+      };
+    };
   };
 
   consistencyCheckModule = types.submodule {
@@ -56,10 +83,23 @@ let
         };
 
         repositories = mkOption {
-          type = types.listOf types.str;
-          description = "Paths to repositories.";
-          example =
-            literalExpression ''["ssh://myuser@myrepo.myserver.com/./repo"]'';
+          type = types.listOf (types.either types.str repositoryOption);
+          apply = cleanRepositories;
+          example = literalExpression ''
+            [
+              {
+                "path" = "ssh://myuser@myrepo.myserver.com/./repo";
+                "label" = "server";
+              }
+              {
+                "path" = "/var/lib/backups/local.borg";
+                "label" = "local";
+              }
+            ]
+          '';
+          description = ''
+            List of local or remote repositories with paths and optional labels.
+          '';
         };
 
         excludeHomeManagerSymlinks = mkOption {
@@ -152,29 +192,22 @@ let
   hmExcludeFile = pkgs.writeText "hm-symlinks.txt" hmExcludePatterns;
 
   writeConfig = config:
-    generators.toYAML { } {
-      location = removeNullValues {
-        source_directories = config.location.sourceDirectories;
-        repositories = config.location.repositories;
-      } // config.location.extraConfig;
-      storage = removeNullValues {
-        encryption_passcommand = config.storage.encryptionPasscommand;
-      } // config.storage.extraConfig;
-      retention = removeNullValues {
-        keep_within = config.retention.keepWithin;
-        keep_secondly = config.retention.keepSecondly;
-        keep_minutely = config.retention.keepMinutely;
-        keep_hourly = config.retention.keepHourly;
-        keep_daily = config.retention.keepDaily;
-        keep_weekly = config.retention.keepWeekly;
-        keep_monthly = config.retention.keepMonthly;
-        keep_yearly = config.retention.keepYearly;
-      } // config.retention.extraConfig;
-      consistency = removeNullValues { checks = config.consistency.checks; }
-        // config.consistency.extraConfig;
-      output = config.output.extraConfig;
-      hooks = config.hooks.extraConfig;
-    };
+    generators.toYAML { } (removeNullValues ({
+      source_directories = config.location.sourceDirectories;
+      repositories = config.location.repositories;
+      encryption_passcommand = config.storage.encryptionPasscommand;
+      keep_within = config.retention.keepWithin;
+      keep_secondly = config.retention.keepSecondly;
+      keep_minutely = config.retention.keepMinutely;
+      keep_hourly = config.retention.keepHourly;
+      keep_daily = config.retention.keepDaily;
+      keep_weekly = config.retention.keepWeekly;
+      keep_monthly = config.retention.keepMonthly;
+      keep_yearly = config.retention.keepYearly;
+      checks = config.consistency.checks;
+    } // config.location.extraConfig // config.storage.extraConfig
+      // config.retention.extraConfig // config.consistency.extraConfig
+      // config.output.extraConfig // config.hooks.extraConfig));
 in {
   meta.maintainers = [ maintainers.DamienCassou ];
 

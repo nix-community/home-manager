@@ -15,7 +15,7 @@ jobs:
     - uses: cachix/install-nix-action@v23
       with:
         nix_path: nixpkgs=channel:nixos-unstable
-    - uses: cachix/cachix-action@v12
+    - uses: cachix/cachix-action@v13
       with:
         name: nix-community
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -27,4 +27,5 @@ jobs:
     - run: nix-build --show-trace -A docs.jsonModuleMaintainers
     - run: ./format -c
     - run: nix-shell --show-trace . -A install
+    - run: yes | home-manager -I home-manager=. uninstall
     - run: nix-shell --show-trace --arg enableBig false --pure tests -A run.all

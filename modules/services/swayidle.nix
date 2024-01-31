@@ -74,6 +74,7 @@ in {
       example = literalExpression ''
         [
           { timeout = 60; command = "${pkgs.swaylock}/bin/swaylock -fF"; }
+          { timeout = 90; command = "${pkgs.systemd}/bin/systemctl suspend"; }
         ]
       '';
       description = "List of commands to run after idle timeout.";
@@ -84,7 +85,7 @@ in {
       default = [ ];
       example = literalExpression ''
         [
-          { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock"; }
+          { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock -fF"; }
           { event = "lock"; command = "lock"; }
         ]
       '';
@@ -99,7 +100,8 @@ in {
 
     systemdTarget = mkOption {
       type = types.str;
-      default = "sway-session.target";
+      default = "graphical-session.target";
+      example = "sway-session.target";
       description = ''
         Systemd target to bind to.
       '';
@@ -121,6 +123,7 @@ in {
 
       Service = {
         Type = "simple";
+        Restart = "always";
         # swayidle executes commands using "sh -c", so the PATH needs to contain a shell.
         Environment = [ "PATH=${makeBinPath [ pkgs.bash ]}" ];
         ExecStart =

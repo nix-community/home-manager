@@ -4,11 +4,19 @@ let
 
   cfg = config.systemd.user;
 
-  inherit (lib) getAttr hm isBool literalExpression mkIf mkMerge mkOption types;
+  inherit (lib)
+    any attrValues getAttr hm isBool literalExpression mkIf mkMerge mkOption
+    types;
+
+  settingsFormat = pkgs.formats.ini { listsAsDuplicateKeys = true; };
 
   # From <nixpkgs/nixos/modules/system/boot/systemd-lib.nix>
   mkPathSafeName =
     lib.replaceStrings [ "@" ":" "\\" "[" "]" ] [ "-" "-" "-" "" "" ];
+
+  removeIfEmpty = attrs: names:
+    lib.filterAttrs (name: value: !(builtins.elem name names) || value != "")
+    attrs;
 
   toSystemdIni = lib.generators.toINI {
     listsAsDuplicateKeys = true;
@@ -85,6 +93,11 @@ let
     "environment.d/10-home-manager.conf".text = lib.concatStringsSep "\n"
       (lib.mapAttrsToList (n: v: "${n}=${toString v}") cfg.sessionVariables)
       + "\n";
+  };
+
+  settings = mkIf (any (v: v != { }) (attrValues cfg.settings)) {
+    "systemd/user.conf".source =
+      settingsFormat.generate "user.conf" cfg.settings;
   };
 
 in {
@@ -209,6 +222,64 @@ in {
           {manpage}`environment.d(5)`.
         '';
       };
+
+      settings = mkOption {
+        apply = sections:
+          sections // {
+            # Setting one of these to an empty value would reset any
+            # previous settings, so we’ll remove them instead if they
+            # are not explicitly set.
+            Manager = removeIfEmpty sections.Manager [
+              "ManagerEnvironment"
+              "DefaultEnvironment"
+            ];
+          };
+
+        type = types.submodule {
+          freeformType = settingsFormat.type;
+
+          options = let
+            inherit (lib) concatStringsSep escapeShellArg mapAttrsToList;
+            environmentOption = args:
+              mkOption {
+                type = with types;
+                  attrsOf (nullOr (oneOf [ str path package ]));
+                default = { };
+                example = literalExpression ''
+                  {
+                    PATH = "%u/bin:%u/.cargo/bin";
+                  }
+                '';
+                apply = value:
+                  concatStringsSep " "
+                  (mapAttrsToList (n: v: "${n}=${escapeShellArg v}") value);
+              } // args;
+          in {
+            Manager = {
+              DefaultEnvironment = environmentOption {
+                description = ''
+                  Configures environment variables passed to all executed processes.
+                '';
+              };
+              ManagerEnvironment = environmentOption {
+                description = ''
+                  Sets environment variables just for the manager process itself.
+                '';
+              };
+            };
+          };
+        };
+        default = { };
+        example = literalExpression ''
+          {
+            Manager.DefaultCPUAccounting = true;
+          }
+        '';
+        description = ''
+          Extra config options for user session service manager. See {manpage}`systemd-user.conf(5)` for
+          available options.
+        '';
+      };
     };
   };
 
@@ -227,6 +298,8 @@ in {
         ++ (buildServices "automount" cfg.automounts)))
 
       sessionVariables
+
+      settings
     ];
 
     # Run systemd service reload if user is logged in. If we're

@@ -21,6 +21,6 @@
       'systemctl --user stop sxhkd.scope 2> /dev/null || true'
 
     assertFileContains $xsessionFile \
-      'systemd-cat -t sxhkd systemd-run --user --scope -u sxhkd @sxhkd@/bin/sxhkd -m 1 &'
+      'systemd-cat -t sxhkd systemd-run --user --scope --property=OOMPolicy=continue -u sxhkd @sxhkd@/bin/sxhkd -m 1 &'
   '';
 }

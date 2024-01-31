@@ -175,7 +175,7 @@ in
       done automatically if the shell configuration is managed by Home
       Manager. If not, then you must source the
 
-        ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+        ${cfg.profileDirectory}/etc/profile.d/hm-session-vars.sh
 
       file yourself.
     '')
@@ -374,7 +374,7 @@ in
       example = literalExpression ''
         {
           myActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] '''
-            $DRY_RUN_CMD ln -s $VERBOSE_ARG \
+            run ln -s $VERBOSE_ARG \
                 ''${builtins.toPath ./link-me-directly} $HOME
           ''';
         }
@@ -396,18 +396,26 @@ in
         collisions between non-managed files and files defined in
         [](#opt-home.file).
 
-        A script block should respect the {var}`DRY_RUN`
-        variable, if it is set then the actions taken by the script
-        should be logged to standard out and not actually performed.
-        The variable {var}`DRY_RUN_CMD` is set to
-        {command}`echo` if dry run is enabled.
+        A script block should respect the {var}`DRY_RUN` variable. If it is set
+        then the actions taken by the script should be logged to standard out
+        and not actually performed. A convenient shell function {command}`run`
+        is provided for activation script blocks. It is used as follows:
 
-        A script block should also respect the
-        {var}`VERBOSE` variable, and if set print
-        information on standard out that may be useful for debugging
-        any issue that may arise. The variable
-        {var}`VERBOSE_ARG` is set to
-        {option}`--verbose` if verbose output is enabled.
+        {command}`run {command}`
+        : Runs the given command on live run, otherwise prints the command to
+        standard output.
+
+        {command}`run --silence {command}`
+        : Runs the given command on live run and sends its standard and error
+        output to {file}`/dev/null`, otherwise prints the command to standard
+        output.
+
+        A script block should also respect the {var}`VERBOSE` variable, and if
+        set print information on standard out that may be useful for debugging
+        any issue that may arise. The variable {var}`VERBOSE_ARG` is set to
+        {option}`--verbose` if verbose output is enabled. You can also use the
+        provided shell function {command}`verboseEcho`, which acts as
+        {command}`echo` when verbose output is enabled.
       '';
     };
 
@@ -585,52 +593,26 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-          if [[ -e $HOME/.nix-profile/manifest.json ]] ; then
-            nix profile list \
-              | { grep 'home-manager-path$' || test $? = 1; } \
-              | cut -d ' ' -f 4 \
-              | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
-          else
-            if nix-env -q | grep '^home-manager-path$'; then
-              $DRY_RUN_CMD nix-env -e home-manager-path
-            fi
-          fi
+          nixProfileRemove home-manager-path
         ''
       else
         ''
-          function nixProfileList() {
-            # We attempt to use `--json` first (added in Nix 2.17). Otherwise attempt to
-            # parse the legacy output format.
-            {
-              nix profile list --json 2>/dev/null \
-                | jq -r --arg name "$1" '.elements[].storePaths[] | select(endswith($name))'
-            } || {
-              nix profile list \
-                | { grep "$1\$" || test $? = 1; } \
-                | cut -d ' ' -f 4
-            }
-          }
-
-          function nixRemoveProfileByName() {
-              nixProfileList "$1" | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
-          }
-
           function nixReplaceProfile() {
             local oldNix="$(command -v nix)"
 
-            nixRemoveProfileByName 'home-manager-path'
+            nixProfileRemove 'home-manager-path'
 
-            $DRY_RUN_CMD $oldNix profile install $1
+            run $oldNix profile install $1
           }
 
-          if [[ -e $HOME/.nix-profile/manifest.json ]] ; then
+          if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
             INSTALL_CMD="nix profile install"
             INSTALL_CMD_ACTUAL="nixReplaceProfile"
             LIST_CMD="nix profile list"
             REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
           else
             INSTALL_CMD="nix-env -i"
-            INSTALL_CMD_ACTUAL="$DRY_RUN_CMD nix-env -i"
+            INSTALL_CMD_ACTUAL="run nix-env -i"
             LIST_CMD="nix-env -q"
             REMOVE_CMD_SYNTAX='nix-env -e {package name}'
           fi
@@ -640,7 +622,7 @@ in
             _iError $'Oops, Nix failed to install your new Home Manager profile!\n\nPerhaps there is a conflict with a package that was installed using\n"%s"? Try running\n\n    %s\n\nand if there is a conflicting package you can remove it with\n\n    %s\n\nThen try activating your Home Manager configuration again.' "$INSTALL_CMD" "$LIST_CMD" "$REMOVE_CMD_SYNTAX"
             exit 1
           fi
-          unset -f nixProfileList nixRemoveProfileByName nixReplaceProfile
+          unset -f nixReplaceProfile
           unset INSTALL_CMD INSTALL_CMD_ACTUAL LIST_CMD REMOVE_CMD_SYNTAX
         ''
     );

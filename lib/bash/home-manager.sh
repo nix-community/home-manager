@@ -48,6 +48,12 @@ function noteEcho() {
     echo "${noteColor}$*${normalColor}"
 }
 
+function verboseEcho() {
+    if [[ -v VERBOSE ]]; then
+        echo "$*"
+    fi
+}
+
 function _i() {
     local msgid="$1"
     shift
@@ -82,4 +88,30 @@ function _iNote() {
     echo -n "${noteColor}"
     _i "$@"
     echo -n "${normalColor}"
+}
+
+function _iVerbose() {
+    if [[ -v VERBOSE ]]; then
+        _i "$@"
+    fi
+}
+
+# Runs the given command on live run, otherwise prints the command to standard
+# output.
+#
+# If given the command line option `--silence`, then the command's standard and
+# error output is sent to `/dev/null` on a live run.
+function run() {
+    if [[ $1 == '--silence' ]]; then
+        local silence=1
+        shift
+    fi
+
+    if [[ -v DRY_RUN ]] ; then
+        echo "$@"
+    elif [[ -v silence ]] ; then
+        "$@" > /dev/null 2>&1
+    else
+        "$@"
+    fi
 }

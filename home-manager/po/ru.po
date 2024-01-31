@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-06-07 12:51+0000\n"
-"Last-Translator: Nikolay Mokrinsky <me@mokrinsky.ru>\n"
+"PO-Revision-Date: 2023-12-10 16:00+0000\n"
+"Last-Translator: Blezz Rot <markus.jenya04@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/home-manager/cli/"
 "ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: home-manager/home-manager:81
 msgid "No configuration file found at %s"
@@ -32,6 +32,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Файл %s вашего Home Manager находится в устаревшем месте %s\n"
+"пожалуйста, переместите его в %s"
 
 #: home-manager/home-manager:109
 msgid "No configuration file found. Please create one at %s"
@@ -39,7 +41,7 @@ msgstr "Не найден файл конфигурации. Пожалуйст�
 
 #: home-manager/home-manager:124
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home Manager не был найден в %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:132
@@ -47,6 +49,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"Резервный путь Home Manager %s считается устаревшим, но в нём был найден "
+"файл или папка."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:135
@@ -69,6 +73,24 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"Чтобы убрать это предупреждение, совершите один из шагов, приведённых ниже.\n"
+"\n"
+"1. Явно заставьте Home Manager использовать путь, например добавив\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   в ваш файл конфигурации.\n"
+"\n"
+"   Если вы импортируете Home Manager напрямую, то вы можете использовать "
+"параметр `path`\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   когда вызываете пакет Home Manager\n"
+"\n"
+"2. Удалите устаревший путь.\n"
+"\n"
+"     $ rm -r \"%s\""
 
 #: home-manager/home-manager:174
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -90,11 +112,11 @@ msgstr "Выполните '%s --help', чтобы получить справк
 
 #: home-manager/home-manager:322 home-manager/home-manager:421
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "Файл %s уже существует и не будет изменен..."
 
 #: home-manager/home-manager:324 home-manager/home-manager:423
 msgid "Creating %s..."
-msgstr ""
+msgstr "Создание %s..."
 
 #: home-manager/home-manager:465
 msgid "Creating initial Home Manager generation..."

@@ -65,9 +65,10 @@ let
 
   serialiseArgs = args: concatStringsSep " " (mapAttrsToList serialiseArg args);
 
+  unitName = name: "unison-pair-${name}";
+
   makeDefs = gen:
-    mapAttrs'
-    (name: pairCfg: nameValuePair "unison-pair-${name}" (gen name pairCfg))
+    mapAttrs' (name: pairCfg: nameValuePair (unitName name) (gen name pairCfg))
     cfg.pairs;
 
 in {
@@ -75,6 +76,10 @@ in {
 
   options.services.unison = {
     enable = mkEnableOption "Unison synchronisation";
+
+    package = mkPackageOption pkgs "unison" {
+      example = "pkgs.unison.override { enableX11 = false; }";
+    };
 
     pairs = mkOption {
       type = with types; attrsOf (submodule pairOptions);
@@ -102,28 +107,27 @@ in {
     ];
 
     systemd.user.services = makeDefs (name: pairCfg: {
-      Unit = {
-        Description = "Unison pair sync (${name})";
-        # Retry forever, useful in case of network disruption.
-        StartLimitIntervalSec = 0;
-      };
-
+      Unit.Description = "Unison pair sync (${name})";
       Service = {
-        Restart = "always";
-        RestartSec = 60;
-
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
-
         Environment = [ "UNISON='${toString pairCfg.stateDirectory}'" ];
         ExecStart = ''
-          ${pkgs.unison}/bin/unison \
+          ${cfg.package}/bin/unison \
             ${serialiseArgs pairCfg.commandOptions} \
             ${strings.concatMapStringsSep " " escapeShellArg pairCfg.roots}
         '';
       };
+    });
 
-      Install = { WantedBy = [ "default.target" ]; };
+    systemd.user.timers = makeDefs (name: pairCfg: {
+      Unit.Description = "Unison pair sync auto-restart (${name})";
+      Install.WantedBy = [ "timers.target" ];
+      Timer = {
+        Unit = "${unitName name}.service";
+        OnActiveSec = 1;
+        OnUnitInactiveSec = 60;
+      };
     });
   };
 }

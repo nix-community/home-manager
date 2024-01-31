@@ -4,7 +4,11 @@ with lib;
 
 {
   config = {
-    nmt.script = let dir = "home-files/.config/aerc";
+    nmt.script = let
+      dir = if (pkgs.stdenv.isDarwin && !config.xdg.enable) then
+        "home-files/Library/Preferences/aerc"
+      else
+        "home-files/.config/aerc";
     in ''
       assertFileContent   ${dir}/accounts.conf     ${./extraAccounts.expected}
       assertFileContent   ${dir}/binds.conf        ${./extraBinds.expected}
@@ -198,7 +202,16 @@ with lib;
           tls.useStartTls = true;
         };
       };
-      i_maildir-mbsync = basics // { mbsync.enable = true; };
+      i1_maildir-mbsync = basics // { mbsync.enable = true; };
+      i2_maildirpp-mbsync = basics // {
+        mbsync.enable = true;
+        mbsync.subFolders = "Maildir++";
+      };
+      i3_maildir_flatten-mbsync = basics // {
+        mbsync.enable = true;
+        mbsync.subFolders = "Maildir++";
+        mbsync.flatten = ".";
+      };
       j_maildir-offlineimap = basics // { offlineimap.enable = true; };
       k_notEnabled = basics // { aerc.enable = false; };
       l_smtp-auth-none = basics // {

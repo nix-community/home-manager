@@ -12,6 +12,10 @@ let
   clientWMClass =
     if versionAtLeast emacsVersion "28" then "Emacsd" else "Emacs";
 
+  # Workaround for https://debbugs.gnu.org/47511
+  needsSocketWorkaround = versionOlder emacsVersion "28"
+    && cfg.socketActivation.enable;
+
   # Adapted from upstream emacs.desktop
   clientDesktopItem = pkgs.writeTextDir "share/applications/emacsclient.desktop"
     (generators.toINI { } {
@@ -128,7 +132,7 @@ in {
           # Avoid killing the Emacs session, which may be full of
           # unsaved buffers.
           X-RestartIfChanged = false;
-        } // optionalAttrs (cfg.socketActivation.enable) {
+        } // optionalAttrs needsSocketWorkaround {
           # Emacs deletes its socket when shutting down, which systemd doesn't
           # handle, resulting in a server without a socket.
           # See https://github.com/nix-community/home-manager/issues/2018
@@ -157,7 +161,7 @@ in {
           SuccessExitStatus = 15;
 
           Restart = "on-failure";
-        } // optionalAttrs (cfg.socketActivation.enable) {
+        } // optionalAttrs needsSocketWorkaround {
           # Use read-only directory permissions to prevent emacs from
           # deleting systemd's socket file before exiting.
           ExecStartPost =
@@ -201,9 +205,21 @@ in {
           FileDescriptorName = "server";
           SocketMode = "0600";
           DirectoryMode = "0700";
+          # This prevents the service from immediately starting again
+          # after being stopped, due to the function
+          # `server-force-stop' present in `kill-emacs-hook', which
+          # calls `server-running-p', which opens the socket file.
+          FlushPending = true;
         };
 
-        Install = { WantedBy = [ "sockets.target" ]; };
+        Install = {
+          WantedBy = [ "sockets.target" ];
+          # Adding this Requires= dependency ensures that systemd
+          # manages the socket file, in the case where the service is
+          # started when the socket is stopped.
+          # The socket unit is implicitly ordered before the service.
+          RequiredBy = [ "emacs.service" ];
+        };
       };
     })
   ]);

@@ -204,7 +204,8 @@ let
         default = [ "^[[A" ];
         description = ''
           The key codes to be used when searching up.
-          The default of `^[[A` corresponds to the UP key.
+          The default of `^[[A` may correspond to the UP key -- if not, try
+          `$terminfo[kcuu1]`.
         '';
       };
       searchDownKey = mkOption {
@@ -212,7 +213,8 @@ let
         default = [ "^[[B" ];
         description = ''
           The key codes to be used when searching down.
-          The default of `^[[B` corresponds to the DOWN key.
+          The default of `^[[B` may correspond to the DOWN key -- if not, try
+          `$terminfo[kcud1]`.
         '';
       };
     };
@@ -224,9 +226,20 @@ let
 
       package = mkPackageOption pkgs "zsh-syntax-highlighting" { };
 
+      highlighters = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = [ "brackets" ];
+        description = ''
+          Highlighters to enable
+          See the list of highlighters: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md>
+        '';
+      };
+
       styles = mkOption {
         type = types.attrsOf types.str;
         default = {};
+        example = { comment = "fg=black,bold"; };
         description = ''
           Custom styles for syntax highlighting.
           See each highlighter's options: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md>
@@ -240,6 +253,7 @@ in
 {
   imports = [
     (mkRenamedOptionModule [ "programs" "zsh" "enableSyntaxHighlighting" ] [ "programs" "zsh" "syntaxHighlighting" "enable" ])
+    (mkRenamedOptionModule [ "programs" "zsh" "zproof" ] [ "programs" "zsh" "zprof" ])
   ];
 
   options = {
@@ -341,6 +355,13 @@ in
       enableAutosuggestions = mkOption {
         default = false;
         description = "Enable zsh autosuggestions";
+      };
+
+      zprof.enable = mkOption {
+        default = false;
+        description = ''
+          Enable zprof in your zshrc.
+        '';
       };
 
       syntaxHighlighting = mkOption {
@@ -490,7 +511,7 @@ in
 
     (mkIf (cfg.dotDir != null) {
       home.file."${relToDotDir ".zshenv"}".text = ''
-        ZDOTDIR=${zdotdir}
+        export ZDOTDIR=${zdotdir}
       '';
 
       # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
@@ -521,6 +542,12 @@ in
         ++ optional cfg.oh-my-zsh.enable cfg.oh-my-zsh.package;
 
       home.file."${relToDotDir ".zshrc"}".text = concatStringsSep "\n" ([
+        # zprof must be loaded before everything else, since it
+        # benchmarks the shell initialization.
+        (optionalString cfg.zprof.enable ''
+          zmodload zsh/zprof
+        '')
+
         cfg.initExtraFirst
         "typeset -U path cdpath fpath manpath"
 
@@ -622,6 +649,7 @@ in
           # https://github.com/zsh-users/zsh-syntax-highlighting#faq
         ''
           source ${cfg.syntaxHighlighting.package}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+          ZSH_HIGHLIGHT_HIGHLIGHTERS+=(${lib.concatStringsSep " " (map lib.escapeShellArg cfg.syntaxHighlighting.highlighters)})
           ${lib.concatStringsSep "\n" (
               lib.mapAttrsToList
                 (name: value: "ZSH_HIGHLIGHT_STYLES+=(${lib.escapeShellArg name} ${lib.escapeShellArg value})")
@@ -635,13 +663,18 @@ in
         ''
           source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
           ${lib.concatMapStringsSep "\n"
-            (upKey: "bindkey '${upKey}' history-substring-search-up")
+            (upKey: "bindkey \"${upKey}\" history-substring-search-up")
             (lib.toList cfg.historySubstringSearch.searchUpKey)
           }
           ${lib.concatMapStringsSep "\n"
-            (downKey: "bindkey '${downKey}' history-substring-search-down")
+            (downKey: "bindkey \"${downKey}\" history-substring-search-down")
             (lib.toList cfg.historySubstringSearch.searchDownKey)
           }
+        '')
+
+        (optionalString cfg.zprof.enable
+        ''
+          zprof
         '')
       ]);
     }

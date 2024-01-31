@@ -1,0 +1,15 @@
+[addressbooks]
+[[test]]
+path = /home/hm-user/.contacts/test
+
+
+[contact table]
+group_by_address_book=yes
+preferred_email_address_type=pref, work, home
+preferred_phone_number_type=pref, cell, home
+reverse=no
+
+[general]
+default_action=list
+editor=vim, -i, NONE
+

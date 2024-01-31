@@ -21,6 +21,23 @@ let
   profilesPath =
     if isDarwin then "${firefoxConfigPath}/Profiles" else firefoxConfigPath;
 
+  nativeMessagingHostsPath = if isDarwin then
+    "${mozillaConfigPath}/NativeMessagingHosts"
+  else
+    "${mozillaConfigPath}/native-messaging-hosts";
+
+  nativeMessagingHostsJoined = pkgs.symlinkJoin {
+    name = "ff_native-messaging-hosts";
+    paths = [
+      # Link a .keep file to keep the directory around
+      (pkgs.writeTextDir "lib/mozilla/native-messaging-hosts/.keep" "")
+      # Link package configured native messaging hosts (entire Firefox actually)
+      cfg.finalPackage
+    ]
+    # Link user configured native messaging hosts
+      ++ cfg.nativeMessagingHosts;
+  };
+
   # The extensions path shared by all profiles; will not be supported
   # by future Firefox versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
@@ -59,6 +76,41 @@ let
       ${extraPrefs}
     '';
 
+  mkContainersJson = containers:
+    let
+      containerToIdentity = _: container: {
+        userContextId = container.id;
+        name = container.name;
+        icon = container.icon;
+        color = container.color;
+        public = true;
+      };
+    in ''
+      ${builtins.toJSON {
+        version = 4;
+        lastUserContextId =
+          elemAt (mapAttrsToList (_: container: container.id) containers) 0;
+        identities = mapAttrsToList containerToIdentity containers ++ [
+          {
+            userContextId = 4294967294; # 2^32 - 2
+            name = "userContextIdInternal.thumbnail";
+            icon = "";
+            color = "";
+            accessKey = "";
+            public = false;
+          }
+          {
+            userContextId = 4294967295; # 2^32 - 1
+            name = "userContextIdInternal.webextStorageLocal";
+            icon = "";
+            color = "";
+            accessKey = "";
+            public = false;
+          }
+        ];
+      }}
+    '';
+
   firefoxBookmarksFile = bookmarks:
     let
       indent = level:
@@ -68,7 +120,7 @@ let
         ''
           ${indent indentLevel}<DT><A HREF="${
             escapeXML bookmark.url
-          }" ADD_DATE="0" LAST_MODIFIED="0"${
+          }" ADD_DATE="1" LAST_MODIFIED="1"${
             lib.optionalString (bookmark.keyword != null)
             " SHORTCUTURL=\"${escapeXML bookmark.keyword}\""
           }${
@@ -79,13 +131,14 @@ let
       directoryToHTML = indentLevel: directory: ''
         ${indent indentLevel}<DT>${
           if directory.toolbar then
-            ''<H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks Toolbar''
+            ''
+              <H3 ADD_DATE="1" LAST_MODIFIED="1" PERSONAL_TOOLBAR_FOLDER="true">Bookmarks Toolbar''
           else
-            "<H3>${escapeXML directory.name}"
+            ''<H3 ADD_DATE="1" LAST_MODIFIED="1">${escapeXML directory.name}''
         }</H3>
         ${indent indentLevel}<DL><p>
         ${allItemsToHTML (indentLevel + 1) directory.bookmarks}
-        ${indent indentLevel}</p></DL>'';
+        ${indent indentLevel}</DL><p>'';
 
       itemToHTMLOrRecurse = indentLevel: item:
         if item ? "url" then
@@ -108,8 +161,55 @@ let
       <H1>Bookmarks Menu</H1>
       <DL><p>
       ${bookmarkEntries}
-      </p></DL>
+      </DL>
     '';
+
+  mkNoDuplicateAssertion = entities: entityKind:
+    (let
+      # Return an attribute set with entity IDs as keys and a list of
+      # entity names with corresponding ID as value. An ID is present in
+      # the result only if more than one entity has it. The argument
+      # entities is a list of AttrSet of one id/name pair.
+      findDuplicateIds = entities:
+        filterAttrs (_entityId: entityNames: length entityNames != 1)
+        (zipAttrs entities);
+
+      duplicates = findDuplicateIds (mapAttrsToList
+        (entityName: entity: { "${toString entity.id}" = entityName; })
+        entities);
+
+      mkMsg = entityId: entityNames:
+        "  - ID ${entityId} is used by " + concatStringsSep ", " entityNames;
+    in {
+      assertion = duplicates == { };
+      message = ''
+        Must not have a Firefox ${entityKind} with an existing ID but
+      '' + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
+    });
+
+  wrapPackage = package:
+    let
+      # The configuration expected by the Firefox wrapper.
+      fcfg = { enableGnomeExtensions = cfg.enableGnomeExtensions; };
+
+      # A bit of hackery to force a config into the wrapper.
+      browserName =
+        package.browserName or (builtins.parseDrvName package.name).name;
+
+      # The configuration expected by the Firefox wrapper builder.
+      bcfg = setAttrByPath [ browserName ] fcfg;
+
+    in if package == null then
+      null
+    else if isDarwin then
+      package
+    else if versionAtLeast config.home.stateVersion "19.09" then
+      package.override (old: {
+        cfg = old.cfg or { } // fcfg;
+        extraPolicies = (old.extraPolicies or { }) // cfg.policies;
+      })
+    else
+      (pkgs.wrapFirefox.override { config = bcfg; }) package { };
 
 in {
   meta.maintainers = [ maintainers.rycee maintainers.kira-bruneau ];
@@ -146,20 +246,46 @@ in {
         example = literalExpression ''
           pkgs.firefox.override {
             # See nixpkgs' firefox/wrapper.nix to check which options you can use
-            cfg = {
+            nativeMessagingHosts = [
               # Gnome shell native connector
-              enableGnomeExtensions = true;
+              pkgs.gnome-browser-connector
               # Tridactyl native connector
-              enableTridactylNative = true;
-            };
+              pkgs.tridactyl-native
+            ];
           }
         '';
         description = ''
           The Firefox package to use. If state version ≥ 19.09 then
           this should be a wrapped Firefox package. For earlier state
           versions it should be an unwrapped Firefox package.
-          Set to <literal>null</literal> to disable installing Firefox.
+          Set to `null` to disable installing Firefox.
         '';
+      };
+
+      nativeMessagingHosts = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        description = ''
+          Additional packages containing native messaging hosts that should be
+          made available to Firefox extensions.
+        '';
+      };
+
+      finalPackage = mkOption {
+        type = with types; nullOr package;
+        readOnly = true;
+        description = "Resulting Firefox package.";
+      };
+
+      policies = mkOption {
+        type = types.attrsOf jsonFormat.type;
+        default = { };
+        description =
+          "[See list of policies](https://mozilla.github.io/policy-templates/).";
+        example = {
+          DefaultDownloadDirectory = "\${home}/Downloads";
+          BlockAboutConfig = true;
+        };
       };
 
       profiles = mkOption {
@@ -295,7 +421,11 @@ in {
                     toolbar = mkOption {
                       type = types.bool;
                       default = false;
-                      description = "If directory should be shown in toolbar.";
+                      description = ''
+                        Make this the toolbar directory. Note, this does _not_
+                        mean that this directory will be added to the toolbar,
+                        this directory _is_ the toolbar.
+                      '';
                     };
                   };
                 }) // {
@@ -376,6 +506,15 @@ in {
                 '';
               };
 
+              privateDefault = mkOption {
+                type = with types; nullOr str;
+                default = null;
+                example = "DuckDuckGo";
+                description = ''
+                  The default search engine used in the Private Browsing.
+                '';
+              };
+
               order = mkOption {
                 type = with types; uniq (listOf str);
                 default = [ ];
@@ -432,6 +571,83 @@ in {
                   absolute icon paths.
                 '';
               };
+            };
+
+            containers = mkOption {
+              type = types.attrsOf (types.submodule ({ name, ... }: {
+                options = {
+                  name = mkOption {
+                    type = types.str;
+                    default = name;
+                    description = "Container name, e.g., shopping.";
+                  };
+
+                  id = mkOption {
+                    type = types.ints.unsigned;
+                    default = 0;
+                    description = ''
+                      Container ID. This should be set to a unique number per container in this profile.
+                    '';
+                  };
+
+                  # List of colors at
+                  # https://searchfox.org/mozilla-central/rev/5ad226c7379b0564c76dc3b54b44985356f94c5a/toolkit/components/extensions/parent/ext-contextualIdentities.js#32
+                  color = mkOption {
+                    type = types.enum [
+                      "blue"
+                      "turquoise"
+                      "green"
+                      "yellow"
+                      "orange"
+                      "red"
+                      "pink"
+                      "purple"
+                      "toolbar"
+                    ];
+                    default = "pink";
+                    description = "Container color.";
+                  };
+
+                  icon = mkOption {
+                    type = types.enum [
+                      "briefcase"
+                      "cart"
+                      "circle"
+                      "dollar"
+                      "fence"
+                      "fingerprint"
+                      "gift"
+                      "vacation"
+                      "food"
+                      "fruit"
+                      "pet"
+                      "tree"
+                      "chill"
+                    ];
+                    default = "fruit";
+                    description = "Container icon.";
+                  };
+                };
+              }));
+              default = { };
+              example = {
+                "shopping" = {
+                  id = 1;
+                  color = "blue";
+                  icon = "cart";
+                };
+                "dangerous" = {
+                  id = 2;
+                  color = "red";
+                  icon = "fruit";
+                };
+              };
+              description = ''
+                Attribute set of container configurations. See
+                [Multi-Account
+                Containers](https://support.mozilla.org/en-US/kb/containers)
+                for more information.
+              '';
             };
 
             extensions = mkOption {
@@ -491,17 +707,23 @@ in {
       })
 
       (let
-        duplicates = filterAttrs (_: v: length v != 1) (zipAttrs
-          (mapAttrsToList (n: v: { "${toString v.id}" = n; }) (cfg.profiles)));
+        getContainers = profiles:
+          flatten
+          (mapAttrsToList (_: value: (attrValues value.containers)) profiles);
 
-        mkMsg = n: v: "  - ID ${n} is used by ${concatStringsSep ", " v}";
+        findInvalidContainerIds = profiles:
+          filter (container: container.id >= 4294967294)
+          (getContainers profiles);
       in {
-        assertion = duplicates == { };
-        message = ''
-          Must not have Firefox profiles with duplicate IDs but
-        '' + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
+        assertion = cfg.profiles == { }
+          || length (findInvalidContainerIds cfg.profiles) == 0;
+        message = "Container id must be smaller than 4294967294 (2^32 - 2)";
       })
-    ];
+
+      (mkNoDuplicateAssertion cfg.profiles "profile")
+    ] ++ (mapAttrsToList
+      (_: profile: mkNoDuplicateAssertion profile.containers "container")
+      cfg.profiles);
 
     warnings = optional (cfg.enableGnomeExtensions or false) ''
       Using 'programs.firefox.enableGnomeExtensions' has been deprecated and
@@ -510,28 +732,19 @@ in {
       its example for how to do this.
     '';
 
-    home.packages = let
-      # The configuration expected by the Firefox wrapper.
-      fcfg = { enableGnomeExtensions = cfg.enableGnomeExtensions; };
+    programs.firefox.finalPackage = wrapPackage cfg.package;
 
-      # A bit of hackery to force a config into the wrapper.
-      browserName = cfg.package.browserName or (builtins.parseDrvName
-        cfg.package.name).name;
-
-      # The configuration expected by the Firefox wrapper builder.
-      bcfg = setAttrByPath [ browserName ] fcfg;
-
-      package = if isDarwin then
-        cfg.package
-      else if versionAtLeast config.home.stateVersion "19.09" then
-        cfg.package.override (old: { cfg = old.cfg or { } // fcfg; })
-      else
-        (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
-    in lib.optional (cfg.package != null) package;
+    home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
 
     home.file = mkMerge ([{
       "${firefoxConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
+
+      "${nativeMessagingHostsPath}" = {
+        source =
+          "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
+        recursive = true;
+      };
     }] ++ flip mapAttrsToList cfg.profiles (_: profile: {
       "${profilesPath}/${profile.path}/.keep".text = "";
 
@@ -547,9 +760,14 @@ in {
             mkUserJs profile.settings profile.extraConfig profile.bookmarks;
         };
 
+      "${profilesPath}/${profile.path}/containers.json" =
+        mkIf (profile.containers != { }) {
+          text = mkContainersJson profile.containers;
+        };
+
       "${profilesPath}/${profile.path}/search.json.mozlz4" = mkIf
-        (profile.search.default != null || profile.search.order != [ ]
-          || profile.search.engines != { }) {
+        (profile.search.default != null || profile.search.privateDefault != null
+          || profile.search.order != [ ] || profile.search.engines != { }) {
             force = profile.search.force;
             source = let
               settings = {
@@ -640,12 +858,18 @@ in {
                     # engine if it's not in profile.search.engines
                     ${profile.search.default} =
                       profile.search.engines.${profile.search.default} or { };
+                  } // {
+                    ${profile.search.privateDefault} =
+                      profile.search.engines.${profile.search.privateDefault} or { };
                   };
                 in sortEngineConfigs (mapAttrs buildEngineConfig engineInput);
 
                 metaData = optionalAttrs (profile.search.default != null) {
                   current = profile.search.default;
                   hash = "@hash@";
+                } // optionalAttrs (profile.search.privateDefault != null) {
+                  private = profile.search.privateDefault;
+                  privateHash = "@privateHash@";
                 } // {
                   useSavedOrder = profile.search.order != [ ];
                 };
@@ -667,14 +891,21 @@ in {
                 profile.path + profile.search.default + disclaimer "Firefox"
               else
                 null;
+
+              privateSalt = if profile.search.privateDefault != null then
+                profile.path + profile.search.privateDefault
+                + disclaimer "Firefox"
+              else
+                null;
             in pkgs.runCommand "search.json.mozlz4" {
               nativeBuildInputs = with pkgs; [ mozlz4a openssl ];
               json = builtins.toJSON settings;
-              inherit salt;
+              inherit salt privateSalt;
             } ''
               if [[ -n $salt ]]; then
                 export hash=$(echo -n "$salt" | openssl dgst -sha256 -binary | base64)
-                mozlz4a <(substituteStream json search.json.in --subst-var hash) "$out"
+                export privateHash=$(echo -n "$privateSalt" | openssl dgst -sha256 -binary | base64)
+                mozlz4a <(substituteStream json search.json.in --subst-var hash --subst-var privateHash) "$out"
               else
                 mozlz4a <(echo "$json") "$out"
               fi
