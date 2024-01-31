@@ -227,6 +227,7 @@ let
     ./programs/translate-shell.nix
     ./programs/urxvt.nix
     ./programs/vdirsyncer.nix
+    ./programs/vifm.nix
     ./programs/vim.nix
     ./programs/vim-vint.nix
     ./programs/vscode.nix
