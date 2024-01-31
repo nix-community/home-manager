@@ -1,0 +1,310 @@
+:root {
+    --nmd-color0: #0A3E68;
+    --nmd-color1: #268598;
+    --nmd-color2: #B8D09E;
+    --nmd-color3: #F6CF5E;
+    --nmd-color4: #EC733B;
+
+    --nmd-color-info: #167cb9;
+    --nmd-color-warn: #ff6700;
+}
+
+// Copied from Tailwind CSS.
+$color-gray-50: #F9FAFB;
+$color-gray-100: #F3F4F6;
+$color-gray-200: #E5E7EB;
+$color-gray-300: #D1D5DB;
+$color-gray-400: #9CA3AF;
+$color-gray-500: #6B7280;
+$color-gray-600: #4B5563;
+$color-gray-700: #374151;
+$color-gray-800: #1F2937;
+$color-gray-900: #111827;
+
+$color-blue-50: #EFF6FF;
+$color-blue-100: #DBEAFE;
+$color-blue-200: #BFDBFE;
+$color-blue-300: #93C5FD;
+$color-blue-400: #60A5FA;
+$color-blue-500: #3B82F6;
+$color-blue-600: #2563EB;
+$color-blue-700: #1D4ED8;
+$color-blue-800: #1E40AF;
+$color-blue-900: #1E3A8A;
+
+
+@use 'scss-reset/reset';
+
+@mixin boxed {
+    background: $color-gray-50;
+    margin: 2rem 16px;
+    padding: 10px;
+    border: 1px solid $color-gray-200;
+    border-radius: 4px;
+    box-shadow: 4px 4px 8px $color-gray-200;
+
+    @media (prefers-color-scheme: dark) {
+        background: $color-gray-800;
+        border-color: black;
+        box-shadow: 4px 4px 8px black;
+    }
+}
+
+@mixin margined {
+    margin: 0.9rem 0;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+body {
+    background: white;
+    color: $color-gray-900;
+    max-width: min(100ch, 1024px);
+    margin: 0 auto;
+    padding: 10px;
+
+    font-family: 'Lucida Sans', Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.4em;
+
+    @media (prefers-color-scheme: dark) {
+        background: $color-gray-900;
+        color: $color-gray-50;
+    }
+}
+
+h1, h2, h3 {
+    color: var(--nmd-color0);
+    font-family: "Lato", sans-serif;
+    font-weight: 300;
+    line-height: 1.125;
+
+    @media (prefers-color-scheme: dark) {
+        color: var(--nmd-color4);
+    }
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 300;
+    margin: 4rem 0 1.5rem;
+}
+
+h2 {
+    font-size: 32px;
+    font-weight: 300;
+    margin: 2rem 0 1rem;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0.5rem 0.25rem;
+}
+
+p {
+    @include margined;
+}
+
+a {
+    color: var(--nmd-color0); //$color-secondary-1-3;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:visited {
+        color: var(--nmd-color1);
+    }
+
+    &:hover {
+        color: var(--nmd-color1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        color: var(--nmd-color3);
+
+        &:visited {
+            color: var(--nmd-color2);
+        }
+
+        &:hover {
+            color: var(--nmd-color4);
+        }
+    }
+}
+
+code {
+    font-size: 90%;
+}
+
+span.command {
+    font-size: 90%;
+    font-family: monospace;
+}
+
+em {
+    font-style: italic;
+}
+
+strong {
+    font-weight: bold;
+}
+
+pre {
+    @include boxed;
+
+    font-size: 90%;
+    margin-bottom: 1.5rem;
+    padding: 6px;
+    overflow: auto;
+
+    // The callout markers should not be selectable.
+    span img {
+        user-select: none;
+    }
+}
+
+pre:has(code) {
+    padding: 0;
+}
+
+td, th {
+    padding: 2px 5px;
+
+    &:first-child {
+        padding-left: 0;
+    }
+
+    &:last-child {
+        padding-right: 0;
+    }
+}
+
+dt {
+    margin: 1.2rem 0 0.8rem;
+}
+
+dd {
+    margin-left: 2rem;
+}
+
+div.book {
+
+}
+
+ul {
+    @include margined;
+
+    padding-left: 30px;
+    list-style: disc;
+}
+
+ol {
+    @include margined;
+
+    padding-left: 30px;
+    list-style: decimal;
+}
+
+li {
+    @include margined;
+
+    padding-left: 5px;
+}
+
+.navheader, .navfooter {
+    hr {
+        margin: 1rem 0;
+        background: $color-gray-200;
+        @media (prefers-color-scheme: dark) {
+            background: $color-gray-600;
+        }
+    }
+
+    a {
+        text-decoration: none;
+    }
+}
+
+div.titlepage {
+    margin: 40px 0;
+
+    hr {
+        display: none;
+    }
+}
+
+div.toc {
+    @include boxed;
+
+    a {
+        text-decoration: none;
+    }
+}
+
+div.note, div.warning {
+    @include boxed;
+
+    font-style: italic;
+
+    h3 {
+        float: right;
+        margin: 0 0 1rem 1rem;
+        width: 42px;
+        height: 42px;
+        content: url();
+    }
+
+
+    h3 + p {
+        margin-top: 0;
+    }
+}
+
+div.note {
+    h3 {
+        background-color: var(--nmd-color-info);
+        // From https://tabler-icons.io/i/info-square-rounded
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 24 24' stroke-width='2' stroke='black' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'%3E%3C/path%3E%3Cpath d='M12 8h.01'%3E%3C/path%3E%3Cpath d='M11 12h1v4h1'%3E%3C/path%3E%3Cpath d='M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z'%3E%3C/path%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 24 24' stroke-width='2' stroke='black' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'%3E%3C/path%3E%3Cpath d='M12 8h.01'%3E%3C/path%3E%3Cpath d='M11 12h1v4h1'%3E%3C/path%3E%3Cpath d='M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z'%3E%3C/path%3E%3C/svg%3E");
+    }
+}
+
+div.warning {
+    h3 {
+        background-color: var(--nmd-color-warn);
+        // From https://tabler-icons.io/i/alert-triangle
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 24 24' stroke-width='2' stroke='black' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'%3E%3C/path%3E%3Cpath d='M12 9v2m0 4v.01'%3E%3C/path%3E%3Cpath d='M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75'%3E%3C/path%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 24 24' stroke-width='2' stroke='black' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'%3E%3C/path%3E%3Cpath d='M12 9v2m0 4v.01'%3E%3C/path%3E%3Cpath d='M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75'%3E%3C/path%3E%3C/svg%3E");
+    }
+}
+
+.term {
+    font-weight: 300;
+}
+
+.docbook .xref img[src^=images\/callouts\/],
+.screen img,
+.programlisting img {
+    width: 1em;
+}
+
+.calloutlist img {
+    width: 1.3em;
+}
+
+/** The console prompt, e.g., `$` and `#` should not be selectable. */
+.programlisting.language-shell .hljs-meta.prompt_ {
+    user-select: none;
+}
+
+@import 'tomorrow.min.css';
+
+@media (prefers-color-scheme: dark) {
+    @import 'tomorrow-night.min.css';
+}
