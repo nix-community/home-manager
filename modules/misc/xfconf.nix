@@ -120,8 +120,10 @@ in {
           (channel: properties: mapAttrsToList (mkCommand channel) properties)
           cfg.settings;
 
-        load = pkgs.writeShellScript "load-xfconf"
-          (concatMapStrings concatStrings commands);
+        load = pkgs.writeShellScript "load-xfconf" ''
+          ${config.lib.bash.initHomeManagerLib}
+          ${concatMapStrings concatStrings commands}
+        '';
       in ''
         if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
           export DBUS_RUN_SESSION_CMD=""
