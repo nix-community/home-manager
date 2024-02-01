@@ -1,4 +1,5 @@
 {
+  systemd-services-of-package = ./services-of-package.nix;
   systemd-services = ./services.nix;
   systemd-services-disabled-for-root = ./services-disabled-for-root.nix;
   systemd-session-variables = ./session-variables.nix;

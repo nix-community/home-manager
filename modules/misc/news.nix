@@ -1401,6 +1401,13 @@ in {
         '';
       }
 
+      {
+        time = "2024-02-02T12:47:28+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new systemd option is available: 'systemd.user.servicesOfPackages'.
+        '';
+      }
     ];
   };
 }
