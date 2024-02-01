@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, activationPkgs, config, lib, ... }:
 
 with lib;
 
@@ -79,7 +79,7 @@ in
             (mapAttrsToList (n: v: v.target)
             (filterAttrs (n: v: v.force) cfg));
 
-        check = pkgs.writeText "check" ''
+        check = activationPkgs.writeText "check" ''
           ${config.lib.bash.initHomeManagerLib}
 
           # A symbolic link whose target path matches this pattern will be
@@ -168,7 +168,7 @@ in
     # source and target generation.
     home.activation.linkGeneration = hm.dag.entryAfter ["writeBoundary"] (
       let
-        link = pkgs.writeShellScript "link" ''
+        link = activationPkgs.writeShellScript "link" ''
           ${config.lib.bash.initHomeManagerLib}
 
           newGenFiles="$1"

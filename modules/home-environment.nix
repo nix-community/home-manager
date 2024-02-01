@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, activationPkgs, ... }:
 
 with lib;
 
@@ -666,7 +666,7 @@ in
         # Programs that always should be available on the activation
         # script's PATH.
         activationBinPaths = lib.makeBinPath (
-          with pkgs; [
+          with activationPkgs; [
             bash
             coreutils
             diffutils           # For `cmp` and `diff`.
@@ -685,11 +685,11 @@ in
           if config.nix.enable && config.nix.package != null then
             ":${config.nix.package}/bin"
           else
-            ":$(${pkgs.coreutils}/bin/dirname $(${pkgs.coreutils}/bin/readlink -m $(type -p nix-env)))"
+            ":$(${activationPkgs.coreutils}/bin/dirname $(${activationPkgs.coreutils}/bin/readlink -m $(type -p nix-env)))"
         )
         + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
-        activationScript = pkgs.writeShellScript "activation-script" ''
+        activationScript = activationPkgs.writeShellScript "activation-script" ''
           set -eu
           set -o pipefail
 

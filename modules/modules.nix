@@ -398,6 +398,7 @@ let
         else
           <nixpkgs>);
       _module.args.pkgs = lib.mkDefault pkgs;
+      _module.args.activationPkgs = lib.mkDefault pkgs;
       _module.check = check;
       lib = lib.hm;
     } // optionalAttrs useNixpkgsModule {
