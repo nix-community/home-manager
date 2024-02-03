@@ -18,6 +18,21 @@
     fcitx5-qt = { outPath = null; };
     fcitx5-gtk = { outPath = null; };
     fcitx5-chinese-addons = { outPath = null; };
+
+    gtk2 = {
+      buildScript = ''
+        mkdir -p $out/bin
+        echo '#/usr/bin/env bash' > $out/bin/gtk-query-immodules-2.0
+        chmod +x $out/bin/*
+      '';
+    };
+    gtk3 = {
+      buildScript = ''
+        mkdir -p $out/bin
+        echo '#/usr/bin/env bash' > $out/bin/gtk-query-immodules-3.0
+        chmod +x $out/bin/*
+      '';
+    };
   };
 
   nixpkgs.overlays = [
