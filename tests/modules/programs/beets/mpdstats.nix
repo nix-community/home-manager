@@ -11,8 +11,12 @@
 
   programs.beets = {
     enable = true;
-    package = config.lib.test.mkStubPackage { outPath = "@beets@"; };
     mpdIntegration.enableStats = true;
+  };
+
+  test.stubs = {
+    beets = { };
+    mpd = { };
   };
 
   nmt.script = ''
