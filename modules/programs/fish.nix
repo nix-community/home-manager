@@ -314,6 +314,15 @@ in {
           initialisation.
         '';
       };
+
+      shellInitLast = mkOption {
+        type = types.lines;
+        default = "";
+        description = ''
+          Shell script code called during interactive fish shell
+          initialisation, this will be the last thing executed in fish startup.
+        '';
+      };
     };
 
     programs.fish.plugins = mkOption {
@@ -469,6 +478,8 @@ in {
           ${cfg.interactiveShellInit}
 
         end
+
+        ${cfg.shellInitLast}
       '';
     }
     {
