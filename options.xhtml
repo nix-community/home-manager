@@ -28472,7 +28472,7 @@ attribute set of (string or boolean or signed integer)</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">config.programs.kitty.shellIntegration.mode != &quot;disabled&quot;
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">!(elem &quot;disabled&quot; (splitString &quot; &quot; config.programs.kitty.shellIntegration.mode))
 
 </code></pre>
 
@@ -28500,7 +28500,7 @@ boolean</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">config.programs.kitty.shellIntegration.mode != &quot;disabled&quot;
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">!(elem &quot;disabled&quot; (splitString &quot; &quot; config.programs.kitty.shellIntegration.mode))
 
 </code></pre>
 
@@ -28528,7 +28528,7 @@ boolean</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">config.programs.kitty.shellIntegration.mode != &quot;disabled&quot;
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">!(elem &quot;disabled&quot; (splitString &quot; &quot; config.programs.kitty.shellIntegration.mode))
 
 </code></pre>
 
@@ -28561,7 +28561,7 @@ for more details.</p>
 string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;enabled&quot;</code></p>
+<code class="literal">&quot;no-rc&quot;</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">&quot;no-cursor&quot;</code></p>
