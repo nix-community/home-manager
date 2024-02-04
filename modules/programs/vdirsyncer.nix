@@ -26,8 +26,9 @@ let
     filterAttrs (_: v: v != null)
     ((getAttrs [ "type" "fileExt" "encoding" ] a.local) // {
       path = a.local.path;
-      postHook = pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook
-        + "/bin/post-hook";
+      postHook = optionalString (a.vdirsyncer.postHook != null)
+        (pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook
+          + "/bin/post-hook");
     });
 
   remoteStorage = a:
