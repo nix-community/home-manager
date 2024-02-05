@@ -224,7 +224,6 @@ let
       set certificate_file=${toString config.accounts.email.certificatesFile}
 
       # GPG section
-      set crypt_use_gpgme = yes
       set crypt_autosign = ${lib.hm.booleans.yesNo (gpg.signByDefault or false)}
       set crypt_opportunistic_encrypt = ${
         lib.hm.booleans.yesNo (gpg.encryptByDefault or false)
@@ -351,6 +350,7 @@ in {
         set message_cachedir = "${config.xdg.cacheHome}/neomutt/messages/"
         set editor = "${cfg.editor}"
         set implicit_autoview = yes
+        set crypt_use_gpgme = yes
 
         alternative_order text/enriched text/plain text
 
