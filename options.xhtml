@@ -64454,21 +64454,48 @@ package</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-services.swayosd.maxVolume"></a><a class="term" href="options.xhtml#opt-services.swayosd.maxVolume"><code class="option">services.swayosd.maxVolume</code>
+ <a id="opt-services.swayosd.display"></a><a class="term" href="options.xhtml#opt-services.swayosd.display"><code class="option">services.swayosd.display</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Sets the maximum volume.</p>
+<p>X display to use.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (unsigned integer, meaning &gt;=0)</p>
+null or string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">120</code></p>
+<code class="literal">&quot;eDP-1&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/swayosd.nix" target="_top">
+&lt;home-manager/modules/services/swayosd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.swayosd.topMargin"></a><a class="term" href="options.xhtml#opt-services.swayosd.topMargin"><code class="option">services.swayosd.topMargin</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>OSD margin from top edge (0.5 would be screen center).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or float between 0.0 and 1.0 (inclusive)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">1.0</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
