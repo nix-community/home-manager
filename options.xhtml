@@ -10764,6 +10764,86 @@ strings concatenated with “\n”</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-nix.gc.automatic"></a><a class="term" href="options.xhtml#opt-nix.gc.automatic"><code class="option">nix.gc.automatic</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Automatically run the garbage collector at a specific time.</p><p>Note: This will only garbage collect the current user’s profiles.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/nix-gc.nix" target="_top">
+&lt;home-manager/modules/services/nix-gc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-nix.gc.frequency"></a><a class="term" href="options.xhtml#opt-nix.gc.frequency"><code class="option">nix.gc.frequency</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The frequency at which to run the garbage collector.</p><p>These enums are based on special expressions from the
+<a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “hourly”, “weekly”, “monthly”, “semiannually”, “annually”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;weekly&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;monthly&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/nix-gc.nix" target="_top">
+&lt;home-manager/modules/services/nix-gc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-nix.gc.options"></a><a class="term" href="options.xhtml#opt-nix.gc.options"><code class="option">nix.gc.options</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Options given to <code class="filename">nix-collect-garbage</code> when the
+garbage collector is run automatically.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;--max-freed $((64 * 1024**3))&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/nix-gc.nix" target="_top">
+&lt;home-manager/modules/services/nix-gc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-nix.registry"></a><a class="term" href="options.xhtml#opt-nix.registry"><code class="option">nix.registry</code>
   </a>
  </span>
