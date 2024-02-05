@@ -16,12 +16,22 @@ in {
 
     package = mkPackageOption pkgs "swayosd" { };
 
-    maxVolume = mkOption {
-      type = types.nullOr types.ints.unsigned;
+    topMargin = mkOption {
+      type = types.nullOr (types.addCheck types.float (f: f >= 0.0 && f <= 1.0)
+        // {
+          description = "float between 0.0 and 1.0 (inclusive)";
+        });
       default = null;
-      example = 120;
+      example = 1.0;
+      description = "OSD margin from top edge (0.5 would be screen center).";
+    };
+
+    display = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = "eDP-1";
       description = ''
-        Sets the maximum volume.
+        X display to use.
       '';
     };
   };
@@ -45,9 +55,10 @@ in {
 
         Service = {
           Type = "simple";
-          ExecStart = "${cfg.package}/bin/swayosd"
-            + (optionalString (cfg.maxVolume != null)
-              " --max-volume ${toString cfg.maxVolume}");
+          ExecStart = "${cfg.package}/bin/swayosd-server"
+            + (optionalString (cfg.display != null) " --display ${cfg.display}")
+            + (optionalString (cfg.topMargin != null)
+              " --top-margin ${toString cfg.topMargin}");
           Restart = "always";
         };
 
