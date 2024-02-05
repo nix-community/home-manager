@@ -1401,6 +1401,13 @@ in {
         '';
       }
 
+
+      {
+        time = "2024-02-04T15:26:19+02:00";
+        message = ''
+          A new module is available: 'services.swaync'
+        '';
+      }
     ];
   };
 }
