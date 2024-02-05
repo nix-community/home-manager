@@ -7,7 +7,8 @@
       name = "swayosd";
       outPath = "@swayosd@";
     };
-    maxVolume = 10;
+    display = "DISPLAY";
+    topMargin = 0.1;
   };
 
   nmt.script = ''
@@ -19,7 +20,7 @@
           WantedBy=graphical-session.target
 
           [Service]
-          ExecStart=@swayosd@/bin/swayosd --max-volume 10
+          ExecStart=@swayosd@/bin/swayosd-server --display DISPLAY --top-margin 0.100000
           Restart=always
           Type=simple
 
