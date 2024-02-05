@@ -565,10 +565,14 @@ function presentNews() {
 }
 
 function doEdit() {
-    if [[ ! -v EDITOR || -z $EDITOR ]]; then
-        # shellcheck disable=2016
-        _i 'Please set the $EDITOR environment variable' >&2
-        return 1
+    if [[ ! -v VISUAL || -z $VISUAL ]]; then
+        if [[ ! -v EDITOR || -z $EDITOR ]]; then
+            # shellcheck disable=2016
+            _i 'Please set the $EDITOR or $VISUAL environment variable' >&2
+            return 1
+        fi
+    else
+        EDITOR=$VISUAL
     fi
 
     setConfigFile
@@ -881,7 +885,7 @@ function doHelp() {
     echo
     echo "  help         Print this help"
     echo
-    echo "  edit         Open the home configuration in \$EDITOR"
+    echo "  edit         Open the home configuration in \$VISUAL or \$EDITOR"
     echo
     echo "  option OPTION.NAME"
     echo "               Inspect configuration option named OPTION.NAME."
