@@ -120,6 +120,7 @@ let
     ./programs/ion.nix
     ./programs/irssi.nix
     ./programs/java.nix
+    ./programs/jetbrains-remote.nix
     ./programs/jq.nix
     ./programs/jujutsu.nix
     ./programs/joshuto.nix
