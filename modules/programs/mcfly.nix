@@ -48,6 +48,14 @@ in {
       '';
     };
 
+    interfaceView = mkOption {
+      type = types.enum [ "TOP" "BOTTOM" ];
+      default = "TOP";
+      description = ''
+        Interface view to use.
+      '';
+    };
+
     fzf.enable = mkEnableOption "McFly fzf integration";
 
     enableLightTheme = mkOption {
@@ -104,6 +112,8 @@ in {
       programs.fish.shellInit = mkIf cfg.enableFishIntegration fishIntegration;
 
       home.sessionVariables.MCFLY_KEY_SCHEME = cfg.keyScheme;
+
+      home.sessionVariables.MCFLY_INTERFACE_VIEW = cfg.interfaceView;
     }
 
     (mkIf cfg.enableLightTheme { home.sessionVariables.MCFLY_LIGHT = "TRUE"; })
