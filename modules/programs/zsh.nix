@@ -242,7 +242,7 @@ let
         example = { comment = "fg=black,bold"; };
         description = ''
           Custom styles for syntax highlighting.
-          See each highlighter's options: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md>
+          See each highlighter style option: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md>
         '';
       };
     };
