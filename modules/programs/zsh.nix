@@ -236,6 +236,16 @@ let
         '';
       };
 
+      patterns = mkOption {
+        type = types.attrsOf types.str;
+        default = {};
+        example = { "rm -rf *" = "fg=white,bold,bg=red"; };
+        description = ''
+          Custom syntax highlighting for user-defined patterns.
+          Reference: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/pattern.md>
+        '';
+      };
+
       styles = mkOption {
         type = types.attrsOf types.str;
         default = {};
@@ -672,6 +682,11 @@ in
               lib.mapAttrsToList
                 (name: value: "ZSH_HIGHLIGHT_STYLES+=(${lib.escapeShellArg name} ${lib.escapeShellArg value})")
                 cfg.syntaxHighlighting.styles
+          )}
+          ${lib.concatStringsSep "\n" (
+              lib.mapAttrsToList
+                (name: value: "ZSH_HIGHLIGHT_PATTERNS+=(${lib.escapeShellArg name} ${lib.escapeShellArg value})")
+                cfg.syntaxHighlighting.patterns
           )}
         '')
 
