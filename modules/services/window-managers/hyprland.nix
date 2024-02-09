@@ -102,6 +102,10 @@ in {
         ];
         description = "Extra commands to be run after D-Bus activation.";
       };
+
+      enableXdgAutostart = lib.mkEnableOption ''
+        autostart of applications using
+        {manpage}`systemd-xdg-autostart-generator(8)`'';
     };
 
     xwayland.enable = lib.mkEnableOption "XWayland" // { default = true; };
@@ -247,8 +251,12 @@ in {
         Description = "Hyprland compositor session";
         Documentation = [ "man:systemd.special(7)" ];
         BindsTo = [ "graphical-session.target" ];
-        Wants = [ "graphical-session-pre.target" ];
+        Wants = [ "graphical-session-pre.target" ]
+          ++ lib.optional cfg.systemd.enableXdgAutostart
+          "xdg-desktop-autostart.target";
         After = [ "graphical-session-pre.target" ];
+        Before = lib.mkIf cfg.systemd.enableXdgAutostart
+          [ "xdg-desktop-autostart.target" ];
       };
     };
 
