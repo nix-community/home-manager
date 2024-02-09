@@ -1,12 +1,8 @@
 { config, lib, pkgs, ... }:
-
 with lib;
-
 let
-
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
-
 in {
   meta.maintainers = [ hm.maintainers.mainrs ];
 
@@ -29,6 +25,17 @@ in {
         {
           theme = "custom";
           themes.custom.fg = "#ffffff";
+          keybinds = {
+            _props = { clear-defaults = true; };
+            normal = [
+              { _name = "bind"; _args = [ "Ctrl q" "Alt F4" ]; Quit = []; }
+              { _name = "bind"; _args = [ "Alt l" ]; MoveFocusOrTab = "Right"; }
+            ];
+            locked = [
+              { _name = "bind"; _args = [ "Ctrl q" "Alt F4" ]; Quit = []; }
+              { _name = "bind"; _args = [ "Alt l" ]; MoveFocusOrTab = "Right"; }
+            ];
+          };
         }
       '';
       description = ''

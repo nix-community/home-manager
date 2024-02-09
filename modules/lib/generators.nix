@@ -1,6 +1,4 @@
-{ lib }:
-
-{
+{ lib, ... }: {
   toKDL = { }:
     let
       inherit (lib) concatStringsSep splitString mapAttrsToList any;
@@ -11,8 +9,8 @@
         # Although the input of this function is a list of strings,
         # the strings themselves *will* contain newlines, so you need
         # to normalize the list by joining and resplitting them.
-        unlines = lib.splitString "\n";
-        lines = lib.concatStringsSep "\n";
+        unlines = splitString "\n";
+        lines = concatStringsSep "\n";
         indentAll = lines: concatStringsSep "\n" (map (x: "	" + x) lines);
       in stringsWithNewlines: indentAll (unlines (lines stringsWithNewlines));
 
@@ -54,10 +52,13 @@
               (s: s + " ")
             ]);
 
+          nameString = if (attrs ? "_name") then attrs._name else name;
+
           children =
-            lib.filterAttrs (name: _: !(elem name [ "_args" "_props" ])) attrs;
+            lib.filterAttrs (name: _: !(elem name [ "_args" "_props" "_name" ]))
+            attrs;
         in ''
-          ${name} ${optArgsString}${optPropsString}{
+          ${nameString} ${optArgsString}${optPropsString}{
           ${indentStrings (mapAttrsToList convertAttributeToKDL children)}
           }'';
 
