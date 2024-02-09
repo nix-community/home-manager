@@ -72,6 +72,7 @@ let
       inherit (account.imap) host;
       inherit port;
       tls = account.imap.tls.enable;
+      tlsOptions.starttls = account.imap.tls.useStartTls;
       username = account.userName;
       passwordCmd =
         lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
