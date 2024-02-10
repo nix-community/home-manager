@@ -65,12 +65,12 @@ in {
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      source <(${pkgs.jujutsu}/bin/jj util completion --zsh)
+      source <(${pkgs.jujutsu}/bin/jj util completion zsh)
       compdef _jj ${pkgs.jujutsu}/bin/jj
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      ${pkgs.jujutsu}/bin/jj util completion --fish | source
+      ${pkgs.jujutsu}/bin/jj util completion fish | source
     '';
   };
 }
