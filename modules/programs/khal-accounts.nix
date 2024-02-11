@@ -44,7 +44,7 @@ with lib;
       type = types.int;
       default = 10;
       description = ''
-        Priority of a calendar used for coloring.
+        Priority of a calendar used for coloring (calendar with highest priority is preferred).
       '';
     };
   };
