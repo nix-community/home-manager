@@ -258,6 +258,9 @@ function doInit() {
         withFlake=1
     fi
 
+    local homeManagerUrl="github:nix-community/home-manager"
+    local nixpkgsUrl="github:nixos/nixpkgs/nixos-unstable"
+
     while (( $# > 0 )); do
         local opt="$1"
         shift
@@ -268,6 +271,14 @@ function doInit() {
                 ;;
             --switch)
                 switch=1
+                ;;
+            --home-manager-url)
+                homeManagerUrl="$1"
+                shift
+                ;;
+            --nixpkgs-url)
+                nixpkgsUrl="$1"
+                shift
                 ;;
             -*)
                 _iError "%s: unknown option '%s'" "$0" "$opt" >&2
@@ -419,9 +430,9 @@ EOF
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "$nixpkgsUrl";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "$homeManagerUrl";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
