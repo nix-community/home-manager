@@ -335,6 +335,7 @@ let
     ./services/rsibreak.nix
     ./services/safeeyes.nix
     ./services/screen-locker.nix
+    ./services/scrutiny-collector.nix
     ./services/sctd.nix
     ./services/signaturepdf.nix
     ./services/spotifyd.nix
