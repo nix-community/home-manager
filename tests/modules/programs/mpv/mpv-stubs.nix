@@ -9,7 +9,7 @@
       mpv-unwrapped = super.mpv-unwrapped.overrideAttrs {
         builder = pkgs.writeShellScript "dummy" ''
           PATH=${pkgs.coreutils}/bin
-          mkdir -p $dev $man $out/bin $out/Applications/mpv.app/Contents/MacOS
+          mkdir -p $dev $doc $man $out/bin $out/Applications/mpv.app/Contents/MacOS
           touch $out/bin/{mpv,umpv} \
                 $out/Applications/mpv.app/Contents/MacOS/{mpv,mpv-bundle}
           chmod +x $out/bin/{mpv,umpv} \
