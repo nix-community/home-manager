@@ -154,7 +154,7 @@ function setHomeManagerPathVariables() {
         declare -gr HM_PROFILE_DIR="$globalProfilesDir"
     else
         _iError 'Could not find suitable profile directory, tried %s and %s' \
-                "$HM_STATE_DIR/profiles" "$globalProfilesDir" >&2
+                "$userNixStateDir/profiles" "$globalProfilesDir" >&2
         exit 1
     fi
 }
