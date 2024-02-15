@@ -137,6 +137,10 @@ function setHomeManagerPathVariables() {
         return
     fi
 
+    _iVerbose "Sanity checking Nix"
+    nix-build -q --expr '{}' --no-out-link > /dev/null 2>&1 || true
+    nix-env -q > /dev/null 2>&1 || true
+
     declare -r globalNixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
     declare -r globalProfilesDir="$globalNixStateDir/profiles/per-user/$USER"
     declare -r globalGcrootsDir="$globalNixStateDir/gcroots/per-user/$USER"
