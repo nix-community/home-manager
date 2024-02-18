@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-02-15 16:04+0100\n"
 "PO-Revision-Date: 2024-02-16 22:01+0000\n"
-"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
+"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/home-manager/cli/"
 "tr/>\n"
 "Language: tr\n"
@@ -185,7 +185,7 @@ msgstr "Bilinmeyen \"news.display\" seçeneği \"%s\"."
 #: home-manager/home-manager:586
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "Lütfen $EDITOR veya $VISUAL ortam değişkenini ayarlayın"
 
 #: home-manager/home-manager:604
 msgid "Cannot run build in read-only directory"
