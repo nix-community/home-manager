@@ -43279,16 +43279,14 @@ boolean</p>
 <dd>
 <p>Configuration written to
 <code class="filename">$XDG_CONFIG_HOME/tealdeer/config.toml</code> on Linux or
-<code class="filename">$HOME/Library/Application Support/tealdeer/config.toml</code>
-on Darwin. See
-<a class="link" href="https://dbrgn.github.io/tealdeer/config.html"  target="_top">https://dbrgn.github.io/tealdeer/config.html</a>
-for more information.</p>
+<code class="filename">$HOME/Library/Application Support/tealdeer/config.toml</code> on Darwin.
+See <a class="link" href="https://dbrgn.github.io/tealdeer/config.html"  target="_top">https://dbrgn.github.io/tealdeer/config.html</a> for more information.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-TOML value</p>
+null or (TOML value)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">{ }</code></p>
+<code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   display = {
@@ -43313,18 +43311,74 @@ TOML value</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.tealdeer.updateOnActivation"></a><a class="term" href="options.xhtml#opt-programs.tealdeer.updateOnActivation"><code class="option">programs.tealdeer.updateOnActivation</code>
+ <a id="opt-programs.tealdeer.settings.updates"></a><a class="term" href="options.xhtml#opt-programs.tealdeer.settings.updates"><code class="option">programs.tealdeer.settings.updates</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Whether to update tealdeer’s cache on activation.</p>
+<p>Tealdeer can refresh the cache automatically when it is outdated.
+This behavior can be configured in the updates section.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tealdeer.nix" target="_top">
+&lt;home-manager/modules/programs/tealdeer.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.tealdeer.settings.updates.auto_update"></a><a class="term" href="options.xhtml#opt-programs.tealdeer.settings.updates.auto_update"><code class="option">programs.tealdeer.settings.updates.auto_update</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable auto-update.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tealdeer.nix" target="_top">
+&lt;home-manager/modules/programs/tealdeer.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.tealdeer.settings.updates.auto_update_interval_hours"></a><a class="term" href="options.xhtml#opt-programs.tealdeer.settings.updates.auto_update_interval_hours"><code class="option">programs.tealdeer.settings.updates.auto_update_interval_hours</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Duration, since the last cache update, after which the cache will be refreshed.
+This parameter is ignored if <code class="varname">auto_update</code> is set to <code class="literal">false</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+positive integer, meaning &gt;0</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">720</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">24</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
