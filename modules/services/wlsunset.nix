@@ -63,6 +63,39 @@ in {
       '';
     };
 
+    output = mkOption {
+      type = types.str;
+      description = ''
+        Name of output to use, by default all outputs are used.
+      '';
+    };
+
+    time = {
+      duration = mkOption {
+        type = types.int;
+        description = ''
+          The duration in seconds.
+          e.g 1800
+        '';
+      };
+
+      sunrise = mkOption {
+        type = types.str;
+        description = ''
+          The time when the sun rises (in 24 hour format).
+          e.g 06:30
+        '';
+      };
+
+      sunset = mkOption {
+        type = types.str;
+        description = ''
+          The time when the sun sets (in 24 hour format).
+          e.g 18:30
+        '';
+      };
+    };
+
     systemdTarget = mkOption {
       type = types.str;
       default = "graphical-session.target";
@@ -91,7 +124,11 @@ in {
             "-L ${cfg.longitude}"
             "-t ${toString cfg.temperature.night}"
             "-T ${toString cfg.temperature.day}"
+            "-S ${cfg.time.sunrise}"
+            "-s ${cfg.time.sunset}"
+            "-d ${toString cfg.time.duration}"
             "-g ${cfg.gamma}"
+            "-o ${cfg.output}"
           ];
         in "${cfg.package}/bin/wlsunset ${concatStringsSep " " args}";
       };
