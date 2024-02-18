@@ -506,4 +506,10 @@
     github = "britter";
     githubId = 1327662;
   };
+  zorrobert = {
+    name = "zorrobert";
+    email = "zorrobert@mailbox.org";
+    github = "zorrobert";
+    githubId = 118135271;
+  };
 }

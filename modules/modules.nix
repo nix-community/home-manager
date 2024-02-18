@@ -124,6 +124,7 @@ let
     ./programs/jq.nix
     ./programs/jujutsu.nix
     ./programs/joshuto.nix
+    ./programs/joplin-desktop.nix
     ./programs/just.nix
     ./programs/k9s.nix
     ./programs/kakoune.nix
