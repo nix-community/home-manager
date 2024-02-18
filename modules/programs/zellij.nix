@@ -80,6 +80,7 @@ in {
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration
       (mkOrder 200 ''
         eval (${zellijCmd} setup --generate-auto-start fish | string collect)
+        eval (${zellijCmd} setup --generate-completion fish | string collect)
       '');
   };
 }
