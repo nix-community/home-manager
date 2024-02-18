@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-02-15 16:04+0100\n"
-"PO-Revision-Date: 2023-07-17 10:03+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2024-02-16 22:01+0000\n"
+"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/home-manager/cli/"
 "es/>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.4\n"
 
 #: home-manager/home-manager:58
 msgid "No configuration file found at %s"
@@ -93,7 +93,7 @@ msgstr ""
 
 #: home-manager/home-manager:140
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Chequeando Nix"
 
 #: home-manager/home-manager:160
 msgid "Could not find suitable profile directory, tried %s and %s"
