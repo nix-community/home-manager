@@ -88,6 +88,7 @@ in import nmtSrc {
     ./modules/programs/i3status
     ./modules/programs/irssi
     ./modules/programs/jujutsu
+    ./modules/programs/joplin-desktop
     ./modules/programs/k9s
     ./modules/programs/kakoune
     ./modules/programs/khal
