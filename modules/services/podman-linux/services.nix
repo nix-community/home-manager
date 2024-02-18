@@ -18,7 +18,6 @@ in {
         type = types.str;
         default = "Sun *-*-* 00:00";
         description = "Systemd OnCalendar expression for the update";
-        example = "Sun *-*-* 00:00";
       };
     };
 
