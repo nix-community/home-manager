@@ -239,6 +239,7 @@ in import nmtSrc {
     ./modules/services/gpg-agent
     ./modules/services/gromit-mpx
     ./modules/services/home-manager-auto-upgrade
+    ./modules/services/hypridle
     ./modules/services/imapnotify
     ./modules/services/kanshi
     ./modules/services/lieer

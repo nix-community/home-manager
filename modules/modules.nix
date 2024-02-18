@@ -302,6 +302,7 @@ let
     ./services/gromit-mpx.nix
     ./services/home-manager-auto-upgrade.nix
     ./services/hound.nix
+    ./services/hypridle.nix
     ./services/imapnotify.nix
     ./services/kanshi.nix
     ./services/kbfs.nix
