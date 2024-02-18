@@ -1436,6 +1436,13 @@ in {
           A new module is available: 'programs.ranger'.
         '';
       }
+
+      {
+        time = "2024-03-13T13:28:22+00:00";
+        message = ''
+          A new module is available: 'programs.joplin-desktop'.
+        '';
+      }
     ];
   };
 }
