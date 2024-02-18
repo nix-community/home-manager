@@ -1,7 +1,9 @@
 { config, pkgs, lib, ... }:
+
 let
+
   cfg = config.qt.kde.settings;
-  inherit (builtins) toJSON;
+
   toKconfVal = p: v:
     let t = builtins.typeOf v;
     in if t == "set" then
@@ -12,30 +14,50 @@ let
       "--type bool ${builtins.toJSON v}"
     else
       toString v;
+
 in {
   options.qt.kde.settings = lib.mkOption {
-    type = lib.types.anything;
+    type = with lib.types;
+      let
+        valueType =
+          nullOr (oneOf [ bool int float str path (attrsOf valueType) ]) // {
+            description = "KDE option value";
+          };
+      in attrsOf valueType;
     default = { };
-    example = lib.literalExpression ''
-      { powermanagementprofilesrc.AC.HandleButtonEvents.lidAction = 32;}
-    '';
+    example = {
+      powermanagementprofilesrc.AC.HandleButtonEvents.lidAction = 32;
+    };
     description = ''
-      A set of values to be modified by kwriteconfig5.
+      A set of values to be modified by {command}`kwriteconfig5`.
 
-      The example value would run in the activation script
-      kwriteconfig5 --file $HDG_CONFIG_HOME/powermanagementprofilesrc --group AC --group HandleButtonEvents --group lidAction --key lidAction 32
-      .
+      The example value would cause the following command to run in the
+      activation script:
 
-      null values will delete the corresponding entry instead of inserting any value.
+      ``` shell
+      kwriteconfig5 --file $XDG_CONFIG_HOME/powermanagementprofilesrc \
+                    --group AC \
+                    --group HandleButtonEvents \
+                    --group lidAction \
+                    --key lidAction \
+                    32
+      ```
+
+      Note, `null` values will delete the corresponding entry instead of
+      inserting any value.
     '';
   };
 
   config = lib.mkIf (cfg != { }) {
-    home.activation.kconfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    home.activation.kconfig = let
+      kwriteconfig5 = "${pkgs.plasma5Packages.kconfig}/bin/kwriteconfig5";
+      qdbus = "${pkgs.libsForQt5.qt5.qttools.bin}/bin/qdbus";
+      dbusSend = "${pkgs.dbus}/bin/dbus-send";
+    in lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       source ${
         pkgs.runCommandLocal "kwriteconfig.sh" {
           passAsFile = [ "cfg" "jqScript" ];
-          cfg = toJSON (lib.mapAttrsRecursive toKconfVal cfg);
+          cfg = builtins.toJSON (lib.mapAttrsRecursive toKconfVal cfg);
           jqScript = ''
             . as $cfg|[
               paths(strings)|
@@ -43,19 +65,18 @@ in {
               .[0] as $file|
               .[-1] as $key|
               .[1:-2]|map("--group '\(.)'")|join(" ")|
-              "$DRY_RUN_CMD ${pkgs.plasma5Packages.kconfig}/bin/kwriteconfig5 --file '${config.xdg.configHome}/\($file)' \(.) --key \($key) \($el)"
+              "run ${kwriteconfig5} --file '${config.xdg.configHome}/\($file)' \(.) --key \($key) \($el)"
             ]|join("\n")
           '';
-        } ''${pkgs.jq}/bin/jq -rf "$jqScriptPath" <"$cfgPath" >"$out"''
+        } ''jq -rf "$jqScriptPath" <"$cfgPath" >"$out"''
       }
 
       # TODO: some way to only call the dbus calls needed
-      $DRY_RUN_CMD ${pkgs.libsForQt5.qt5.qttools.bin}/bin/qdbus org.kde.KWin /KWin reconfigure || echo "KWin reconfigure failed"
+      run ${qdbus} org.kde.KWin /KWin reconfigure || echo "KWin reconfigure failed"
       # the actual values are https://github.com/KDE/plasma-workspace/blob/c97dddf20df5702eb429b37a8c10b2c2d8199d4e/kcms/kcms-common_p.h#L13
       for changeType in {0..10}; do
-        $DRY_RUN_CMD ${pkgs.dbus}/bin/dbus-send /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:$changeType int32:0 || echo "KGlobalSettings.notifyChange $changeType failed"
+        run ${dbusSend} /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:$changeType int32:0 || echo "KGlobalSettings.notifyChange $changeType failed"
       done
     '';
   };
-
 }
