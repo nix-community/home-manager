@@ -2,86 +2,103 @@
 
 with lib;
 
-
 let
-  createQuadletSource = name: containerDef:
-  let
-    ifNotNull = condition: text: if condition != null then text else "";
-    ifNotEmptyList = list: text: if list != [] then text else "";
-    ifNotEmptySet = set: text: if set != {} then text else "";
-    
-    serviceName = if containerDef.serviceName != null then containerDef.serviceName else name;
-    containerName = name; # Use the submodule name as the container name
+  podman-lib = import ./podman-lib.nix { inherit lib; };
 
-    formatEnvironment = env:
-      if env != {} then
-        concatStringsSep " " (mapAttrsToList (k: v: "${k}=${v}") env)
-      else
-        "";
+  createQuadletSource = name: containerDef: 
+    let
+      ### Definitions
+      serviceName = if containerDef.serviceName != null then containerDef.serviceName else name;
+      containerName = name; # Use the submodule name as the container name
+      mergedServiceConfig = podman-lib.serviceConfigDefaults // containerDef.serviceConfig;    
+      mergedUnitConfig = podman-lib.unitConfigDefaults // containerDef.unitConfig;
+      ###
 
-    formatPorts = ports:
-      if ports != [] then
-        concatStringsSep "\n" (map (port: "PublishPort=${port}") ports)
-      else
-        "";
+      ### Helpers
+      ifNotNull = condition: text: if condition != null then text else "";
+      ifNotEmptyList = list: text: if list != [] then text else "";
+      ifNotEmptySet = set: text: if set != {} then text else "";
+      ###
 
-    formatVolumes = volumes:
-      if volumes != [] then
-        concatStringsSep "\n" (map (volume: "Volume=${volume}") volumes)
-      else
-        "";
-    
-    formatDevices = devices:
-      if devices != [] then
-        concatStringsSep "\n" (map (device: "AddDevice=${device}") devices)
-      else
-        "";
+      ### Formatters
+      formatExtraConfig = podman-lib.formatExtraConfig;
 
-    formatCapabilities = action: capabilities:
-      if capabilities != [] then
-        concatStringsSep "\n" (map (capability: "${action}Capability=${capability}") capabilities)
-      else
-        "";
+      formatNetworkDependencies = networks:
+        let 
+          formatElement = network: "podman-${network}-network.service";
+        in
+          concatStringsSep " " (map formatElement networks);
 
-    formatLabels = labels:
-      if labels != [] then
-        concatStringsSep "\n" (map (label: "Label=${label}") labels)
-      else
-        "";
-
-    formatAutoUpdate = autoupdate:
-      if autoupdate == "registry" then
-        "AutoUpdate=registry"
-      else if autoupdate == "local" then
-        "AutoUpdate=local"
-      else
-        "";
-
-    # TODO: check that the user hasn't supplied both networkMode and networks
-    formatNetwork = containerDef: 
-      if containerDef.networkMode != null then
-        "Network=${containerDef.networkMode}"
-      else if containerDef.networks != [] then
-        "Network=${concatStringsSep "," containerDef.networks}"
-      else
-        "";
-    
-    formatUnitTags = tagList:
-      if tagList != [] then
-        concatStringsSep " " (map (tag: "${tag}") tagList)
-      else
-        "";
-
-    formatExtraArgs = containerDef:
-      let
-        networkAliasArg = if containerDef.networkAlias != null then "--network-alias ${containerDef.networkAlias}" else "";
-        entrypointArg = if containerDef.entrypoint != null then "--entrypoint '${containerDef.entrypoint}'" else "";
-        allArgs = [networkAliasArg entrypointArg] ++ containerDef.extraOptions;
-      in
-        if allArgs != [] && allArgs != [""] then
-          "PodmanArgs=${concatStringsSep " " (filter (arg: arg != null && arg != "") allArgs)}"
+      formatEnvironment = env:
+        if env != {} then
+          concatStringsSep " " (mapAttrsToList (k: v: "${k}=${v}") env)
         else
           "";
+
+      formatPorts = ports:
+        if ports != [] then
+          concatStringsSep "\n" (map (port: "PublishPort=${port}") ports)
+        else
+          "";
+
+      formatVolumes = volumes:
+        if volumes != [] then
+          concatStringsSep "\n" (map (volume: "Volume=${volume}") volumes)
+        else
+          "";
+      
+      formatDevices = devices:
+        if devices != [] then
+          concatStringsSep "\n" (map (device: "AddDevice=${device}") devices)
+        else
+          "";
+
+      formatCapabilities = action: capabilities:
+        if capabilities != [] then
+          concatStringsSep "\n" (map (capability: "${action}Capability=${capability}") capabilities)
+        else
+          "";
+
+      formatLabels = labels:
+        if labels != [] then
+          concatStringsSep "\n" (map (label: "Label=${label}") labels)
+        else
+          "";
+
+      formatAutoUpdate = autoupdate:
+        if autoupdate == "registry" then
+          "AutoUpdate=registry"
+        else if autoupdate == "local" then
+          "AutoUpdate=local"
+        else
+          "";
+
+      # TODO: check that the user hasn't supplied both networkMode and networks
+      formatNetwork = containerDef: 
+        if containerDef.networkMode != null then
+          "Network=${containerDef.networkMode}"
+        else if containerDef.networks != [] then
+          "Network=${concatStringsSep "," containerDef.networks}"
+        else
+          "";
+      
+      formatUnitTags = tagList:
+        if tagList != [] then
+          concatStringsSep " " (map (tag: "${tag}") tagList)
+        else
+          "";
+
+      formatPodmanArgs = containerDef:
+        let
+          networkAliasArg = if containerDef.networkAlias != null then "--network-alias ${containerDef.networkAlias}" else "";
+          entrypointArg = if containerDef.entrypoint != null then "--entrypoint '${containerDef.entrypoint}'" else "";
+          allArgs = [networkAliasArg entrypointArg] ++ containerDef.extraOptions;
+        in
+          if allArgs != [] && allArgs != [""] then
+            "PodmanArgs=${concatStringsSep " " (filter (arg: arg != null && arg != "") allArgs)}"
+          else
+            "";
+      ###
 
       configText = ''
         # Automatically generated by home-manager podman containers module
@@ -90,8 +107,9 @@ let
         # ${serviceName}.container
         [Unit]
         Description=${if containerDef.description != null then containerDef.description else "Service for container ${containerName}"}
-        After=network.target ${formatUnitTags containerDef.unitConfig.After}
-        ${ifNotEmptyList containerDef.networks "After=podman-networks-hm.service"}
+        After=network.target
+        ${ifNotEmptyList containerDef.networks "After=${formatNetworkDependencies containerDef.networks}"}
+        ${formatExtraConfig mergedUnitConfig}
 
         [Container]
         ContainerName=${containerName}
@@ -112,13 +130,12 @@ let
         ${ifNotEmptyList containerDef.addCapabilities (formatCapabilities "Add" containerDef.addCapabilities)}
         ${ifNotEmptyList containerDef.dropCapabilities (formatCapabilities "Drop" containerDef.dropCapabilities)}
         ${ifNotEmptyList containerDef.labels (formatLabels containerDef.labels)}
-        ${formatExtraArgs containerDef}
+        ${formatPodmanArgs containerDef}
+        ${formatExtraConfig containerDef.extraContainerConfig}
 
         [Service]
         Environment="PATH=/run/wrappers/bin:/run/current-system/sw/bin:${config.home.homeDirectory}/.nix-profile/bin"
-        Restart=${containerDef.serviceConfig.Restart}
-        TimeoutStopSec=${toString containerDef.serviceConfig.TimeoutStopSec}
-        ${ifNotNull containerDef.serviceConfig.ExecStartPre "ExecStartPre=${containerDef.serviceConfig.ExecStartPre}"}
+        ${formatExtraConfig mergedServiceConfig}
 
         [Install]
         ${if containerDef.autostart then "WantedBy=multi-user.target default.target" else ""}
@@ -135,11 +152,16 @@ let
     removeBlankLines configText;
 
   toQuadletInternal = name: containerDef:
-    {
-      serviceName = if containerDef.serviceName != null then containerDef.serviceName else "podman-${name}";
-      source = createQuadletSource name containerDef;
-      unitType = "container";
-    };
+    let
+      allAssertions = (podman-lib.assertConfigTypes podman-lib.serviceConfigTypeRules containerDef.serviceConfig name) ++ 
+                      (podman-lib.assertConfigTypes podman-lib.unitConfigTypeRules containerDef.unitConfig name);
+    in
+      {
+        serviceName = if containerDef.serviceName != null then containerDef.serviceName else "podman-${name}";
+        source = createQuadletSource name containerDef;
+        unitType = "container";
+        assertions = allAssertions;
+      };
 in 
 
 let  
@@ -264,39 +286,31 @@ let
         default = [];
       };
 
-      serviceConfig = {
-        TimeoutStopSec = mkOption {
-          type = types.int;
-          default = 30;
-        };
-
-        ExecStartPre = mkOption {
-          type = with types; nullOr str;
-          default = null;
-        };
-
-        Restart = mkOption {
-          type = types.enum [
-            "no"
-            "always"
-            "on-failure"
-            "unless-stopped"
-          ];
-          default = "always";
-          description = "The restart policy of the container.";
-        };
-      };
-
-      unitConfig = {
-        After = mkOption {
-          type = with types; listOf str;
-          default = [];
-        };
-      };
-
       extraOptions = mkOption {
         type = types.listOf types.str;
         default = [];
+      };
+
+      extraContainerConfig = mkOption {
+        type = podman-lib.primitiveAttrs;
+        default = {};
+        example = literalExample ''
+          extraContainerConfig = {
+            UIDMap = "0:1000:1";
+            ReadOnlyTmpfs = true;
+            EnvironmentFile = [ /etc/environment /root/.env];
+          };
+        '';
+      };
+
+      serviceConfig = mkOption {
+        type = podman-lib.serviceConfigType;
+        default = {};
+      };
+
+      unitConfig = mkOption {
+        type = podman-lib.unitConfigType;
+        default = {};
       };
 
     };
@@ -316,5 +330,6 @@ in {
 
   config = {
     internal.podman-quadlet-definitions = mapAttrsToList toQuadletInternal config.services.podman.containers;
+    assertions = lib.flatten (map (container: container.assertions) config.internal.podman-quadlet-definitions);
   };
 }

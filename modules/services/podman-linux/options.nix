@@ -1,7 +1,7 @@
 {lib, ...}:
 
 let
-  # Define the type which the systemd services will be derived from
+  # Define the systemd service type
   quadletInternalType = lib.types.submodule {
     options = {
       serviceName = lib.mkOption {
@@ -19,8 +19,14 @@ let
         type = lib.types.str;
         description = "The quadlet source file content.";
       };
+
+      assertions = lib.mkOption {
+        type = with lib.types; listOf unspecified;
+        default = [];
+        description = "List of Nix type assertions.";
+      };
     };
-  }; 
+  };
 in {
   options.internal.podman-quadlet-definitions = lib.mkOption {
     type = lib.types.listOf quadletInternalType;

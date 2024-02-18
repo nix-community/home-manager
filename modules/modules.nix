@@ -333,7 +333,7 @@ let
     ./services/plan9port.nix
     ./services/playerctld.nix
     ./services/plex-mpv-shim.nix
-    ./services/podman-linux/podman.nix
+    ./services/podman-linux/default.nix
     ./services/polybar.nix
     ./services/poweralertd.nix
     ./services/pueue.nix
