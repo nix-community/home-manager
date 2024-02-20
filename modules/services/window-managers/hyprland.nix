@@ -207,23 +207,37 @@ in {
         let
           indent = concatStrings (replicate indentLevel "  ");
 
+          sections = filterAttrs (n: v: (isAttrs v) && n != "device") attrs;
+
           mkSection = n: attrs: ''
             ${indent}${n} {
             ${toHyprconf attrs (indentLevel + 1)}${indent}}
           '';
-          sections = filterAttrs (n: v: isAttrs v) attrs;
+
+          mkDeviceCategory = device: ''
+            ${indent}device {
+              name=${device.name}
+            ${
+              toHyprconf (filterAttrs (n: _: "name" != n) device)
+              (indentLevel + 1)
+            }${indent}}
+          '';
 
           mkFields = generators.toKeyValue {
             listsAsDuplicateKeys = true;
             inherit indent;
           };
-          allFields = filterAttrs (n: v: !(isAttrs v)) attrs;
+          allFields = filterAttrs (n: v: !(isAttrs v) && n != "device") attrs;
+
           importantFields = filterAttrs (n: _:
             (hasPrefix "$" n) || (hasPrefix "bezier" n)
             || (cfg.sourceFirst && (hasPrefix "source" n))) allFields;
+
           fields = builtins.removeAttrs allFields
             (mapAttrsToList (n: _: n) importantFields);
         in mkFields importantFields
+        + lib.optionalString (hasAttr "device" attrs && isList attrs.device)
+        (concatMapStringsSep "\n" (d: mkDeviceCategory d) attrs.device)
         + concatStringsSep "\n" (mapAttrsToList mkSection sections)
         + mkFields fields;
 
