@@ -459,14 +459,14 @@ in {
 
         ${cfg.shellInit}
 
-        status --is-login; and begin
+        status is-login; and begin
 
           # Login shell initialisation
           ${cfg.loginShellInit}
 
         end
 
-        status --is-interactive; and begin
+        status is-interactive; and begin
 
           # Abbreviations
           ${abbrsStr}
