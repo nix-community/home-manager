@@ -40,37 +40,19 @@ in {
     ### Sync
     sync = {
       target = lib.mkOption {
-        type = lib.types.enum [
-          null
-          "none"
-          "file-system"
-          "onedrive"
-          "nextcloud"
-          "webdav"
-          "dropbox"
-          "s3"
-          "joplin-server"
-          "joplin-cloud"
-        ];
+        type = lib.types.enum [ null "none" "file-system" "onedrive" "nextcloud" "webdav" "dropbox" "s3" "joplin-server" "joplin-cloud" ];
         default = null;
         description = "What is the type of sync target.";
         example = "dropbox";
       };
 
       interval = lib.mkOption {
-        type = lib.types.enum [ null 300 600 1800 3600 43200 86400 ];
+        type = lib.types.enum [ null "disabled" "5m" "10m" "30m" "1h" "12h" "1d" ];
         default = null;
         description = ''
-          Sync Interval in seconds. Only values shown as options in the settings are valid.
-          Disabled: 0
-          5 Min: 300
-          10 Min: 600
-          30 Min: 1800
-          1 hour: 3600
-          12 Hours: 43200
-          24 Hours: 86400
+          Set the Synchronisation interval. The following values can be used: "disabled" "5m" "10m" "30m" "1h" "12h" "1d"
         '';
-        example = 600;
+        example = "10m";
       };
     };
   };
@@ -86,18 +68,30 @@ in {
               {
                 # TODO: find a better way to convert nix attribute names to strings:
                 # sync.interval = ... -> "sync.interval" = ...
+
                 "editor" = config.programs.joplin-desktop.general.editor;
-                "sync.interval" = config.programs.joplin-desktop.sync.interval;
-              } // {
-                "sync.target" =
-                  if (config.programs.joplin-desktop.sync.target != null)
-                  then lib.strings.toInt (
-                    # convert name of sync target into number that joplin expects
-                    builtins.replaceStrings [ "none" "file-system" "onedrive" "nextcloud" "webdav" "dropbox" "s3" "joplin-server" "joplin-cloud" ]
-                    [ "0" "2" "3" "5" "6" "7" "8" "9" "10" ]
-                    config.programs.joplin-desktop.sync.target
-                  )
-                  else null;
+
+                "sync.target" = {
+                  "none"          = 0;
+                  "file-system"   = 2;
+                  "onedrive"      = 3;
+                  "nextcloud"     = 5;
+                  "webdav"        = 6;
+                  "dropbox"       = 7;
+                  "s3"            = 8;
+                  "joplin-server" = 9;
+                  "joplin-cloud"  = 10;
+                }.${config.programs.joplin-desktop.sync.target} or null;
+
+                "sync.interval" = {
+                  "disabled"  =     0;
+                  "5m"        =   300;
+                  "10m"       =   600;
+                  "30m"       =  1800;
+                  "1h"        =  3600;
+                  "12h"       = 43200;
+                  "1d"        = 86400;
+                }.${config.programs.joplin-desktop.sync.interval} or null;
               } // config.programs.joplin-desktop.extraConfig
             )
           );
