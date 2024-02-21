@@ -11,7 +11,7 @@ in {
     enable = mkEnableOption "wlsunset";
 
     package = mkOption {
-      type = types.package;
+      type = with types; package;
       default = pkgs.wlsunset;
       defaultText = "pkgs.wlsunset";
       description = ''
@@ -20,7 +20,8 @@ in {
     };
 
     latitude = mkOption {
-      type = types.str;
+      type = with types; nullOr str;
+      example = "-74.3";
       description = ''
         Your current latitude, between `-90.0` and
         `90.0`.
@@ -28,7 +29,8 @@ in {
     };
 
     longitude = mkOption {
-      type = types.str;
+      type = with types; nullOr str;
+      example = "12.5";
       description = ''
         Your current longitude, between `-180.0` and
         `180.0`.
@@ -37,7 +39,7 @@ in {
 
     temperature = {
       day = mkOption {
-        type = types.int;
+        type = with types; int;
         default = 6500;
         description = ''
           Colour temperature to use during the day, in Kelvin (K).
@@ -46,7 +48,7 @@ in {
       };
 
       night = mkOption {
-        type = types.int;
+        type = with types; int;
         default = 4000;
         description = ''
           Colour temperature to use during the night, in Kelvin (K).
@@ -56,7 +58,7 @@ in {
     };
 
     gamma = mkOption {
-      type = types.str;
+      type = with types; str;
       default = "1.0";
       description = ''
         Gamma value to use.
@@ -64,7 +66,7 @@ in {
     };
 
     output = mkOption {
-      type = types.str;
+      type = with types; nullOr str;
       description = ''
         Name of output to use, by default all outputs are used.
       '';
@@ -72,32 +74,32 @@ in {
 
     time = {
       duration = mkOption {
-        type = types.int;
+        type = with types; nullOr int;
+        example = 1800;
         description = ''
           The duration in seconds.
-          e.g 1800
         '';
       };
 
       sunrise = mkOption {
-        type = types.str;
+        type = with types; nullOr str;
+        example = "06:30";
         description = ''
           The time when the sun rises (in 24 hour format).
-          e.g 06:30
         '';
       };
 
       sunset = mkOption {
-        type = types.str;
+        type = with types; nullOr str;
+        example = "18:00";
         description = ''
           The time when the sun sets (in 24 hour format).
-          e.g 18:30
         '';
       };
     };
 
     systemdTarget = mkOption {
-      type = types.str;
+      type = with types; str;
       default = "graphical-session.target";
       description = ''
         Systemd target to bind to.
