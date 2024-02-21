@@ -41,6 +41,19 @@ in {
         description = "Sets the measurement unit.";
       };
 
+      ApplePressAndHoldEnabled = mkNullableOption {
+        type = types.bool;
+        example = true;
+        description =
+          "Repeat a key when it is held down (false) or display the accented character selector (true)";
+      };
+
+      AppleShowAllExtensions = mkNullableOption {
+        type = types.bool;
+        example = true;
+        description = "Always show file extensions in Finder";
+      };
+
       AppleTemperatureUnit = mkNullableOption {
         type = types.enum [ "Celsius" "Fahrenheit" ];
         example = "Celsius";
@@ -48,6 +61,16 @@ in {
       };
 
       AppleMetricUnits = mkNullableEnableOption "the metric system";
+
+      KeyRepeat = mkNullableOption {
+        type = types.int;
+        example = 2;
+        description = ''
+          Interval between key repetitions when holding down a key. Lower is
+          faster. When setting through the control panel, 2 is the lowest value,
+          and 120 the highest.
+        '';
+      };
 
       NSAutomaticCapitalizationEnabled =
         mkNullableEnableOption "automatic capitalization";
@@ -85,14 +108,50 @@ in {
     };
 
     "com.apple.dock" = {
+      autohide = mkNullableOption {
+        type = types.bool;
+        example = true;
+        description = "Hide the Dock automatically";
+      };
+      expose-group-apps = mkNullableEnableOption
+        "grouping of windows by application in Mission Control";
+      orientation = mkNullableOption {
+        type = types.enum [ "left" "bottom" "right" ];
+        example = "left";
+        description = "Position of the Dock on the screen";
+      };
+      size-immutable = mkNullableEnableOption "locking of the dock size";
       tilesize = mkNullableOption {
         type = types.int;
         example = 64;
         description = "Sets the size of the dock.";
       };
-      size-immutable = mkNullableEnableOption "locking of the dock size";
-      expose-group-apps = mkNullableEnableOption
-        "grouping of windows by application in Mission Control";
+    };
+
+    "com.apple.finder" = {
+      AppleShowAllFiles = mkNullableOption {
+        type = types.bool;
+        example = true;
+        description = "Show hidden files in Finder";
+      };
+
+      FXRemoveOldTrashItems = mkNullableOption {
+        type = types.bool;
+        example = true;
+        description = "Automatically delete items from trash after 30 days";
+      };
+
+      ShowPathBar = mkNullableOption {
+        type = types.bool;
+        example = true;
+        description = "Show the path bar at the bottom of a Finder window";
+      };
+
+      ShowStatusBar = mkNullableOption {
+        type = types.bool;
+        example = true;
+        description = "Show the status bar at the bottom of a Finder window";
+      };
     };
 
     "com.apple.menuextra.battery".ShowPercent = mkNullableOption {
@@ -104,6 +163,41 @@ in {
 
         Whether to show battery percentage in the menu bar.
       '';
+    };
+
+    "com.apple.menuextra.clock" = {
+      IsAnalog = mkNullableEnableOption
+        "showing an analog clock instead of a digital one";
+
+      Show24Hour = mkNullableEnableOption
+        "showing a 24-hour clock, instead of a 12-hour clock";
+
+      ShowAMPM = mkNullableOption {
+        type = types.bool;
+        description = ''
+          Show the AM/PM label. Useful if Show24Hour is false. Default is null.
+        '';
+      };
+
+      ShowDate = mkNullableOption {
+        type = types.enum [ 0 1 2 ];
+        description = ''
+          Show the full date. Default is null.
+
+          0 = Show the date
+          1 = Don't show
+          2 = Don't show
+
+          TODO: I don't know what the difference is between 1 and 2.
+        '';
+      };
+
+      ShowDayOfMonth = mkNullableEnableOption "showing the day of the month";
+
+      ShowDayOfWeek = mkNullableEnableOption "showing the day of the week";
+
+      ShowSeconds = mkNullableEnableOption
+        "showing the clock with second precision, instead of minutes";
     };
 
     "com.apple.Safari" = {
