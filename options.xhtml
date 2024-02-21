@@ -70241,6 +70241,301 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-wayland.windowManager.river.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.river.enable"><code class="option">wayland.windowManager.river.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable the river window manager.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/river.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.river.package"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.river.package"><code class="option">wayland.windowManager.river.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The river package to use. Set to <code class="literal">null</code> to not add any river package to your path.
+This should be done if you want to use the NixOS river module to install river.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.river</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/river.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.river.extraConfig"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.river.extraConfig"><code class="option">wayland.windowManager.river.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra lines appended to <code class="filename">$XDG_CONFIG_HOME/river/init</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  rivertile -view-padding 6 -outer-padding 6 &amp;
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/river.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.river.extraSessionVariables"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.river.extraSessionVariables"><code class="option">wayland.windowManager.river.extraSessionVariables</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra session variables set when running the compositor.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  MOZ_ENABLE_WAYLAND = &quot;1&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/river.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.river.settings"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.river.settings"><code class="option">wayland.windowManager.river.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>General settings given to <code class="literal">riverctl</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+River configuration value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  border-width = 2;
+  declare-mode = [
+    &quot;locked&quot;
+    &quot;normal&quot;
+    &quot;passthrough&quot;
+  ];
+  input = {
+    pointer-foo-bar = {
+      accel-profile = &quot;flat&quot;;
+      events = true;
+      pointer-accel = -0.3;
+      tap = false;
+    };
+  };
+  map = {
+    normal = {
+      &quot;Alt Q&quot; = &quot;close&quot;;
+    };
+  };
+  rule-add = {
+    &quot;-app-id&quot; = {
+      &quot;&#x27;bar&#x27;&quot; = &quot;csd&quot;;
+      &quot;&#x27;float*&#x27;&quot; = {
+        &quot;-title&quot; = {
+          &quot;&#x27;foo&#x27;&quot; = &quot;float&quot;;
+        };
+      };
+    };
+  };
+  set-cursor-warp = &quot;on-output-change&quot;;
+  set-repeat = &quot;50 300&quot;;
+  spawn = [
+    &quot;firefox&quot;
+    &quot;&#x27;foot -a terminal&#x27;&quot;
+  ];
+  xcursor-theme = &quot;someGreatTheme 12&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/river.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.river.systemd.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.river.systemd.enable"><code class="option">wayland.windowManager.river.systemd.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable <code class="filename">river-session.target</code> on
+river startup. This links to <code class="filename">graphical-session.target</code>}.
+Some important environment variables will be imported to systemd
+and D-Bus user environment before reaching the target, including</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><code class="literal">DISPLAY</code></p></li><li class="listitem"><p><code class="literal">WAYLAND_DISPLAY</code></p></li><li class="listitem"><p><code class="literal">XDG_CURRENT_DESKTOP</code></p></li><li class="listitem"><p><code class="literal">NIXOS_OZONE_WL</code></p></li><li class="listitem"><p><code class="literal">XCURSOR_THEME</code></p></li><li class="listitem"><p><code class="literal">XCURSOR_SIZE</code></p></li></ul></div>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/river.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.river.systemd.extraCommands"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.river.systemd.extraCommands"><code class="option">wayland.windowManager.river.systemd.extraCommands</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra commands to be run after D-Bus activation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;systemctl --user stop river-session.target&quot;
+  &quot;systemctl --user start river-session.target&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/river.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.river.systemd.variables"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.river.systemd.variables"><code class="option">wayland.windowManager.river.systemd.variables</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Environment variables to be imported in the systemd &amp; D-Bus user
+environment.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;DISPLAY&quot;
+  &quot;WAYLAND_DISPLAY&quot;
+  &quot;XDG_CURRENT_DESKTOP&quot;
+  &quot;NIXOS_OZONE_WL&quot;
+  &quot;XCURSOR_THEME&quot;
+  &quot;XCURSOR_SIZE&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;-all&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/river.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.river.xwayland.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.river.xwayland.enable"><code class="option">wayland.windowManager.river.xwayland.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable XWayland.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/river.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-wayland.windowManager.sway.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.sway.enable"><code class="option">wayland.windowManager.sway.enable</code>
   </a>
  </span>
