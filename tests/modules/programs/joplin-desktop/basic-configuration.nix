@@ -7,7 +7,7 @@
       package = pkgs.joplin-desktop;
       sync = {
         target = "dropbox";
-        interval = 600;
+        interval = "10m";
       };
       extraConfig = {
         "richTextBannerDismissed" = true;
