@@ -1,8 +1,10 @@
 { lib }:
-
-rec {
+let
+  escapeQuotes =
+    lib.strings.stringAsChars (x: if x == ''"'' then ''\"'' else x);
+in rec {
   # Produces a Bourne shell like variable export statement.
-  export = n: v: ''export ${n}="${toString v}"'';
+  export = n: v: ''export ${n}="${escapeQuotes (toString v)}"'';
 
   # Given an attribute set containing shell variable names and their
   # assignment, this function produces a string containing an export

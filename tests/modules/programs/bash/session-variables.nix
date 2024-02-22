@@ -11,6 +11,7 @@ with lib;
       sessionVariables = {
         V1 = "v1";
         V2 = "v2-${config.programs.bash.sessionVariables.V1}";
+        EDITOR = ''emacsclient -t -a ""'';
       };
     };
 
@@ -22,6 +23,7 @@ with lib;
           builtins.toFile "session-variables-expected" ''
             . "/home/hm-user/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
+            export EDITOR="emacsclient -t -a \"\""
             export V1="v1"
             export V2="v2-v1"
 

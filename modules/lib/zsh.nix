@@ -1,12 +1,14 @@
 { lib }:
-
-rec {
+let
+  escapeQuotes =
+    lib.strings.stringAsChars (x: if x == ''"'' then ''\"'' else x);
+in rec {
   # Produces a Zsh shell like value
   toZshValue = v:
     if builtins.isBool v then
       if v then "true" else "false"
     else if builtins.isString v then
-      ''"${v}"''
+      ''"${escapeQuotes v}"''
     else if builtins.isList v then
       "(${lib.concatStringsSep " " (map toZshValue v)})"
     else
