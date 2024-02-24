@@ -186,6 +186,7 @@ let
     ./programs/pistol.nix
     ./programs/piston-cli.nix
     ./programs/pls.nix
+    ./programs/poetry.nix
     ./programs/powerline-go.nix
     ./programs/pqiv.nix
     ./programs/pubs.nix
