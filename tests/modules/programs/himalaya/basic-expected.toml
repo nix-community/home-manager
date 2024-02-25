@@ -1,32 +1,32 @@
-["hm@example.com"]
+[accounts."hm@example.com"]
 backend = "imap"
 default = true
 display-name = "H. M. Test"
 email = "hm@example.com"
 
-["hm@example.com".folder.alias]
+[accounts."hm@example.com".folder.alias]
 drafts = "Drafts"
 inbox = "Inbox"
 sent = "Sent"
 trash = "Trash"
 
-["hm@example.com".imap]
+[accounts."hm@example.com".imap]
 encryption = "tls"
 host = "imap.example.com"
 login = "home.manager"
 port = 993
 
-["hm@example.com".imap.passwd]
+[accounts."hm@example.com".imap.passwd]
 cmd = "password-command"
 
-["hm@example.com".message.send]
+[accounts."hm@example.com".message.send]
 backend = "smtp"
 
-["hm@example.com".smtp]
+[accounts."hm@example.com".smtp]
 encryption = "tls"
 host = "smtp.example.com"
 login = "home.manager"
 port = 465
 
-["hm@example.com".smtp.passwd]
+[accounts."hm@example.com".smtp.passwd]
 cmd = "password-command"
