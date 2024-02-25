@@ -9,7 +9,7 @@ let
   extraCommands = builtins.concatStringsSep " "
     (map (f: "&& ${f}") cfg.systemd.extraCommands);
   systemdActivation = ''
-    exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}"
+    ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}
   '';
 
   toValue = val:
