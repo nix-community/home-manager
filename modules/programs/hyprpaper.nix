@@ -4,6 +4,8 @@ with lib;
 
 let cfg = config.programs.hyprpaper;
 in {
+  meta.maintainers = [ lib.maintainers.silmarp ];
+
   options = {
     programs.hyprpaper = {
       enable = mkEnableOption "hyprpaper";
