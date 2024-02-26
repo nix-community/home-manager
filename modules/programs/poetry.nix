@@ -10,13 +10,10 @@ in {
   meta.maintainers = with lib.maintainers; [ mirkolenz ];
   options.programs.poetry = with lib; {
     enable = mkEnableOption "poetry";
-    package = mkOption {
-      type = types.package;
-      default = pkgs.poetry;
-      defaultText = literalExpression "pkgs.poetry";
-      description = "The poetry package to use (e.g., with custom plugins).";
+    package = mkPackageOption pkgs "poetry" {
       example = literalExpression
         "pkgs.poetry.withPlugins (ps: with ps; [ poetry-plugin-up ])";
+      extraDescription = "May be used to install custom poetry plugins.";
     };
     settings = mkOption {
       type = tomlFormat.type;
