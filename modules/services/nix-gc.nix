@@ -116,9 +116,9 @@ in {
     (mkIf pkgs.stdenv.isDarwin {
       assertions = [{
         assertion = builtins.elem cfg.frequency darwinIntervals;
-        message = ''
-          On Darwin nix.gc.frequency must be one of:
-                      ${toString darwinIntervals}.'';
+        message = "On Darwin nix.gc.frequency must be one of: ${
+            toString darwinIntervals
+          }. ";
       }];
       launchd.agents.nix-gc = {
         enable = true;
