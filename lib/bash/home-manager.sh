@@ -99,16 +99,26 @@ function _iVerbose() {
 # Runs the given command on live run, otherwise prints the command to standard
 # output.
 #
+# If given the command line option `--quiet`, then the command's standard output
+# is sent to `/dev/null` on a live run.
+#
 # If given the command line option `--silence`, then the command's standard and
 # error output is sent to `/dev/null` on a live run.
+#
+# The `--silence` and `--quiet` flags are mutually exclusive.
 function run() {
-    if [[ $1 == '--silence' ]]; then
+    if [[ $1 == '--quiet' ]]; then
+        local quiet=1
+        shift
+    elif [[ $1 == '--silence' ]]; then
         local silence=1
         shift
     fi
 
     if [[ -v DRY_RUN ]] ; then
         echo "$@"
+    elif [[ -v quiet ]] ; then
+        "$@" > /dev/null
     elif [[ -v silence ]] ; then
         "$@" > /dev/null 2>&1
     else
