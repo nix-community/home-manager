@@ -32,6 +32,13 @@ in {
           defaultText = literalExpression "name";
           description = ''
             Path to target file relative to ${basePathDesc}.
+            </para><para>
+            Please note that only a single 
+            <xref linkend="opt-home.file"/> directive
+            may write to a given target.
+            In order to link several directories to the same place, you may use
+            <literal>symlinkJoin</literal> as such:</para><para>
+            <literal>source = pkgs.symlinkJoin{name="myjoin"; dirs=[ home-package /some/path ]; postBuild="echo custom shell script here";};</literal>
           '';
         };
 
