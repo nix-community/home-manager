@@ -148,11 +148,11 @@ in {
     enable = mkEnableOption "Waybar";
 
     package = mkOption {
-      type = package;
+      type = nullOr package;
       default = pkgs.waybar;
       defaultText = literalExpression "pkgs.waybar";
       description = ''
-        Waybar package to use. Set to `null` to use the default package.
+        Waybar package to use. Set to `null` to skip the package installation.
       '';
     };
 
@@ -282,7 +282,7 @@ in {
         })
       ];
 
-      home.packages = [ cfg.package ];
+      home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
 
       xdg.configFile."waybar/config" = mkIf (settings != [ ]) {
         source = configSource;
