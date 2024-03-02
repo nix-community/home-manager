@@ -98,7 +98,8 @@ let
       };
 
       primaryCollection = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
+        default = null;
         description = ''
           The primary collection of the account. Required when an
           account has multiple collections.
