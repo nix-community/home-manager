@@ -18,12 +18,13 @@ let
 
         type = mkOption {
           type = types.enum [ "filesystem" "singlefile" ];
+          default = "filesystem";
           description = "The type of the storage.";
         };
 
         fileExt = mkOption {
           type = types.nullOr types.str;
-          default = null;
+          default = ".ics";
           description = "The file extension to use.";
         };
 
@@ -108,7 +109,7 @@ let
 
       local = mkOption {
         type = localModule name;
-        default = {};
+        default = { };
         description = ''
           Local configuration for the calendar.
         '';
@@ -130,6 +131,7 @@ in {
   options.accounts.calendar = {
     basePath = mkOption {
       type = types.str;
+      example = ".calendar";
       apply = p:
         if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''
