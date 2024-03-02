@@ -15,7 +15,6 @@
     };
     fcitx5-configtool = { outPath = null; };
     fcitx5-lua = { outPath = null; };
-    fcitx5-qt = { outPath = null; };
     fcitx5-gtk = { outPath = null; };
     fcitx5-chinese-addons = { outPath = null; };
 
@@ -36,9 +35,18 @@
   };
 
   nixpkgs.overlays = [
-    (self: super: {
-      fcitx5-with-addons =
-        super.fcitx5-with-addons.override { inherit (self) fcitx5-qt; };
+    (final: super: {
+      libsForQt5 = super.libsForQt5.overrideScope' (qt5prev: qt5final: {
+        fcitx5-qt = super.mkStubPackage { outPath = null; };
+      });
+
+      qt6Packages = super.qt6Packages.overrideScope' (qt6prev: qt6final: {
+        fcitx5-qt = super.mkStubPackage { outPath = null; };
+      });
+
+      fcitx5-with-addons = super.fcitx5-with-addons.override {
+        inherit (final) libsForQt5 qt6Packages;
+      };
     })
   ];
 }
