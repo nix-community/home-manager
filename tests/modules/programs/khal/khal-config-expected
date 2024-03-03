@@ -7,6 +7,27 @@ type=calendar
 
 
 
+[[testcontacts-automaticallyCollected]]
+path = /home/hm-user/$XDG_CONFIG_HOME/card/testcontacts/automaticallyCollected
+priority=10
+type=birthdays
+
+
+
+[[testcontacts-default]]
+path = /home/hm-user/$XDG_CONFIG_HOME/card/testcontacts/default
+priority=10
+type=birthdays
+
+
+
+[[testcontactsNoCollections]]
+path = /home/hm-user/$XDG_CONFIG_HOME/card/testcontactsNoCollections/
+priority=10
+type=birthdays
+
+
+
 [default]
 default_calendar=test
 highlight_event_days=true

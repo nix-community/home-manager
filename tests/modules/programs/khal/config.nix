@@ -32,6 +32,36 @@
     };
   };
 
+  accounts.contact = {
+    basePath = "$XDG_CONFIG_HOME/card";
+    accounts = {
+      testcontacts = {
+        khal = {
+          enable = true;
+          collections = [ "default" "automaticallyCollected" ];
+        };
+        local.type = "filesystem";
+        local.fileExt = ".vcf";
+        name = "testcontacts";
+        remote = {
+          type = "http";
+          url = "https://example.com/contacts.vcf";
+        };
+      };
+
+      testcontactsNoCollections = {
+        khal.enable = true;
+        local.type = "filesystem";
+        local.fileExt = ".vcf";
+        name = "testcontactsNoCollections";
+        remote = {
+          type = "http";
+          url = "https://example.com/contacts.vcf";
+        };
+      };
+    };
+  };
+
   test.stubs = { khal = { }; };
 
   nmt.script = ''
