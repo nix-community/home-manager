@@ -185,7 +185,7 @@ string</p>
  </span>
 </dt>
 <dd>
-<p>Priority of a calendar used for coloring.</p>
+<p>Priority of a calendar used for coloring (calendar with highest priority is preferred).</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 signed integer</p>
@@ -1134,6 +1134,81 @@ boolean</p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/contacts.nix" target="_top">
+&lt;home-manager/modules/accounts/contacts.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.contact.accounts._name_.khal.collections"></a><a class="term" href="options.xhtml#opt-accounts.contact.accounts._name_.khal.collections"><code class="option">accounts.contact.accounts.&lt;name&gt;.khal.collections</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>VCARD collections to be searched for contact birthdays.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (list of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/contacts.nix" target="_top">
+&lt;home-manager/modules/accounts/contacts.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.contact.accounts._name_.khal.color"></a><a class="term" href="options.xhtml#opt-accounts.contact.accounts._name_.khal.color"><code class="option">accounts.contact.accounts.&lt;name&gt;.khal.color</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Color in which events in this calendar are displayed.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or one of “black”, “white”, “brown”, “yellow”, “dark gray”, “dark green”, “dark blue”, “light gray”, “light green”, “light blue”, “dark magenta”, “dark cyan”, “dark red”, “light magenta”, “light cyan”, “light red”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;light green&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/contacts.nix" target="_top">
+&lt;home-manager/modules/accounts/contacts.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.contact.accounts._name_.khal.priority"></a><a class="term" href="options.xhtml#opt-accounts.contact.accounts._name_.khal.priority"><code class="option">accounts.contact.accounts.&lt;name&gt;.khal.priority</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Priority of a calendar used for coloring (calendar with highest priority is preferred).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">10</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
