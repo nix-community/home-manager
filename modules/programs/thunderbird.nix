@@ -7,6 +7,11 @@ let
 
   cfg = config.programs.thunderbird;
 
+  thunderbirdJson = types.attrsOf (pkgs.formats.json { }).type // {
+    description =
+      "Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)";
+  };
+
   enabledAccounts = attrValues
     (filterAttrs (_: a: a.thunderbird.enable) config.accounts.email.accounts);
 
@@ -161,11 +166,21 @@ in {
               };
 
               settings = mkOption {
-                type = with types; attrsOf (oneOf [ bool int str ]);
+                type = thunderbirdJson;
                 default = { };
                 example = literalExpression ''
                   {
                     "mail.spellcheck.inline" = false;
+                    "mailnews.database.global.views.global.columns" = {
+                      selectCol = {
+                        visible = false;
+                        ordinal = 1;
+                      };
+                      threadCol = {
+                        visible = true;
+                        ordinal = 2;
+                      };
+                    };
                   }
                 '';
                 description = ''
@@ -216,7 +231,7 @@ in {
       };
 
       settings = mkOption {
-        type = with types; attrsOf (oneOf [ bool int str ]);
+        type = thunderbirdJson;
         default = { };
         example = literalExpression ''
           {

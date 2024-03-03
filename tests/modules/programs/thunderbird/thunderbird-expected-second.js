@@ -28,6 +28,7 @@ user_pref("mail.smtpserver.smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da
 user_pref("mail.smtpserver.smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.username", "home.manager.jr");
 user_pref("mail.smtpservers", "smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("privacy.donottrackheader.enabled", true);
+user_pref("second", {"nested":{"evenFurtherNested":[1,2,3]}});
 user_pref("second.setting", "some-test-setting");
 
 
