@@ -27,9 +27,7 @@ let
   '' + optionalString cfg.enableSshSupport ''
     ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye | ignore
 
-    if not "SSH_AUTH_SOCK" in $env {
-      $env.SSH_AUTH_SOCK = (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)
-    }
+    $env.SSH_AUTH_SOCK = ($env.SSH_AUTH_SOCK? | default (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket))
   '';
 
   # mimic `gpgconf` output for use in `systemd` unit definitions.
