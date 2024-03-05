@@ -13,6 +13,7 @@ usage.md
 nix-flakes.md
 writing-modules.md
 contributing.md
+internals.md
 3rd-party.md
 faq.md
 ```

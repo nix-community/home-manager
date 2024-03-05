@@ -467,7 +467,7 @@ EOF
         _i "Creating initial Home Manager generation..."
         echo
 
-        if doSwitch; then
+        if doSwitch --switch; then
             # translators: The "%s" specifier will be replaced by a file path.
             _i $'All done! The home-manager tool should now be installed and you can edit\n\n    %s\n\nto configure Home Manager. Run \'man home-configuration.nix\' to\nsee all available options.' \
                 "$confFile"
@@ -626,31 +626,89 @@ function doBuild() {
 }
 
 function doSwitch() {
+    setHomeManagerPathVariables
+    setVerboseArg
     setWorkDir
+
+    local action
+
+    while (( $# > 0 )); do
+        local opt="$1"
+        shift
+
+        case $opt in
+            --switch)
+                action='switch'
+                ;;
+            --test)
+                action='test'
+                ;;
+            --rollback)
+                action='rollback'
+                ;;
+            *)
+                errorEcho "home-manager switch: unknown option '%s'" "$opt" >&2
+                return 1
+                ;;
+        esac
+    done
+
+    if [[ ! -v action ]]; then
+        errorEcho "home-manager switch: missing required option" >&2
+        return 1
+    fi
 
     local generation
 
-    # Build the generation and run the activate script. Note, we
-    # specify an output link so that it is treated as a GC root. This
-    # prevents an unfortunately timed GC from removing the generation
-    # before activation completes.
-    generation="$WORK_DIR/generation"
+    case $action in
+        switch|test)
+            # Build the generation and run the activate script. Note, we
+            # specify an output link so that it is treated as a GC root. This
+            # prevents an unfortunately timed GC from removing the generation
+            # before activation completes.
+            generation="$WORK_DIR/generation"
 
-    setFlakeAttribute
-    if [[ -v FLAKE_CONFIG_URI ]]; then
-        doBuildFlake \
-            "$FLAKE_CONFIG_URI.activationPackage" \
-            --out-link "$generation" \
-            ${PRINT_BUILD_LOGS+--print-build-logs} \
-            && "$generation/activate" || return
-    else
-        doBuildAttr \
-            --out-link "$generation" \
-            --attr activationPackage \
-            && "$generation/activate" || return
+            setFlakeAttribute
+            if [[ -v FLAKE_CONFIG_URI ]]; then
+                doBuildFlake \
+                    "$FLAKE_CONFIG_URI.activationPackage" \
+                    --out-link "$generation" \
+                    ${PRINT_BUILD_LOGS+--print-build-logs}
+            else
+                doBuildAttr \
+                    --out-link "$generation" \
+                    --attr activationPackage
+            fi
+            ;;
+        rollback)
+            generation="$HM_PROFILE_DIR/home-manager"
+            ;;
+    esac
+
+    # If we are doing a switch but built a legacy configuration, where the
+    # activation script manages the profile, then we instead perform a test
+    # action.
+    #
+    # The migration away from legacy activation scripts happened when
+    # introducing the gen-version file, hence the existence check.
+    if [[ $action == 'switch' && ! -e "$generation/gen-version" ]]; then
+        action='test'
     fi
 
-    presentNews
+    case $action in
+        switch)
+            run nix-env $VERBOSE_ARG --profile "$HM_PROFILE_DIR/home-manager" --set "$generation"
+            ;;
+        rollback)
+            run nix-env $VERBOSE_ARG --profile "$HM_PROFILE_DIR/home-manager" --rollback
+            ;;
+    esac
+
+    "$generation"/activate --driver-version 1 || return
+
+    if [[ $action == 'switch' || $action == 'test' ]]; then
+        presentNews
+    fi
 }
 
 function doListGens() {
@@ -663,10 +721,14 @@ function doListGens() {
     fi
 
     pushd "$HM_PROFILE_DIR" > /dev/null
+    local curProfile
+    curProfile=$(readlink home-manager)
+
     # shellcheck disable=2012
     ls --color=$color -gG --time-style=long-iso --sort time home-manager-*-link \
         | cut -d' ' -f 4- \
-        | sed -E 's/home-manager-([[:digit:]]*)-link/: id \1/'
+        | sed -E -e "/$curProfile/ { s/\$/ \(current\)/ }" \
+                 -e 's/home-manager-([[:digit:]]*)-link/: id \1/'
     popd > /dev/null
 }
 
@@ -916,7 +978,11 @@ function doHelp() {
     echo
     echo "  instantiate  Instantiate the configuration and print the resulting derivation"
     echo
-    echo "  switch       Build and activate configuration"
+    echo "  switch [OPTION]"
+    echo "      Build and activate configuration"
+    echo
+    echo "      --rollback    Do not build a new configuration, instead roll back to"
+    echo "                    the configuration prior to the current configuration."
     echo
     echo "  generations  List all home environment generations"
     echo
@@ -947,7 +1013,7 @@ while [[ $# -gt 0 ]]; do
     opt="$1"
     shift
     case $opt in
-        build|init|instantiate|option|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
+        build|init|instantiate|option|edit|expire-generations|generations|help|news|packages|remove-generations|rollback|switch|test|uninstall)
             COMMAND="$opt"
             ;;
         -A)
@@ -1001,6 +1067,17 @@ while [[ $# -gt 0 ]]; do
             ;;
         -n|--dry-run)
             export DRY_RUN=1
+            ;;
+        --rollback)
+            case $COMMAND in
+                switch)
+                    COMMAND_ARGS+=("$opt")
+                    ;;
+                *)
+                    _iError 'home-manager: "--rollback" can only be used after "switch"' >&2
+                    exit 1
+                    ;;
+            esac
             ;;
         --option|--arg|--argstr)
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
@@ -1057,13 +1134,21 @@ case $COMMAND in
         doInstantiate
         ;;
     switch)
-        doSwitch
+        doSwitch --switch "${COMMAND_ARGS[@]}"
         ;;
+    # TODO: The test functionality is not really sensible until we perform
+    # activation through some form of systemd unit.
+    # test)
+    #     doSwitch --test
+    #     ;;
     generations)
         doListGens
         ;;
     remove-generations)
         doRmGenerations "${COMMAND_ARGS[@]}"
+        ;;
+    rollback)
+        doRollback
         ;;
     expire-generations)
         if [[ ${#COMMAND_ARGS[@]} != 1 ]]; then

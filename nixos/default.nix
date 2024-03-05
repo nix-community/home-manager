@@ -13,6 +13,24 @@ let
 in {
   imports = [ ./common.nix ];
 
+  options.home-manager = {
+    enableLegacyProfileManagement = mkOption {
+      type = types.bool;
+      default = versionOlder config.system.stateVersion "24.05";
+      defaultText = lib.literalMD ''
+        - `true` for `system.stateVersion` < 24.05,
+        - `false` otherwise'';
+      description = ''
+        Whether to enable legacy profile (and garbage collection root)
+        management during activation. When enabled, the Home Manager activation
+        will produce a per-user `home-manager` Nix profile as well as a garbage
+        collection root, just like in the standalone installation of Home
+        Manager. Typically, this is not desired when Home Manager is embedded in
+        the system configuration.
+      '';
+    };
+  };
+
   config = mkMerge [
     {
       home-manager = {
@@ -26,12 +44,21 @@ in {
 
           # Inherit glibcLocales setting from NixOS.
           i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
+
+          # Legacy profile management is when the activation script generates GC
+          # root and home-manager profile. The modern way simply relies on the
+          # GC root that the system maintains, which should also protect the
+          # Home Manager activation package outputs.
+          home.activationGenerateGcRoot = cfg.enableLegacyProfileManagement;
         }];
       };
     }
     (mkIf (cfg.users != { }) {
       systemd.services = mapAttrs' (_: usercfg:
-        let username = usercfg.home.username;
+        let
+          username = usercfg.home.username;
+          driverVersion =
+            if cfg.enableLegacyProfileManagement then "0" else "1";
         in nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
           description = "Home Manager environment for ${username}";
           wantedBy = [ "multi-user.target" ];
@@ -78,7 +105,7 @@ in {
                   | ${sed} -En '/^(${exportedSystemdVariables})=/s/^/export /p'
                 )"
 
-                exec "$1/activate"
+                exec "$1/activate" --driver-version ${driverVersion}
               '';
             in "${setupEnv} ${usercfg.home.activationPackage}";
           };
