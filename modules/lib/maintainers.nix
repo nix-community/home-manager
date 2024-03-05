@@ -476,6 +476,12 @@
     github = "liyangau";
     githubId = 71299093;
   };
+  luisnquin = {
+    name = "Luis Quiñones";
+    email = "lpaandres2020@gmail.com";
+    github = "luisnquin";
+    githubId = 86449787;
+  };
   wcarlsen = {
     name = "Willi Carlsen";
     email = "carlsenwilli+nix@gmail.com";
