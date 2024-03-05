@@ -326,7 +326,6 @@ in {
     Scrumplex
     alexarice
     sumnerevans
-    sebtm
     oxalica
   ];
 
