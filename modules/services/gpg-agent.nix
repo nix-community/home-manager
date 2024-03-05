@@ -27,7 +27,7 @@ let
   '' + optionalString cfg.enableSshSupport ''
     ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye | ignore
 
-    if not "SSH_AUTH_SOCK" in $env {
+    if not ("SSH_AUTH_SOCK" in $env) {
       $env.SSH_AUTH_SOCK = (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)
     }
   '';
