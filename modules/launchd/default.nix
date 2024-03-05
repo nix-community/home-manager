@@ -98,7 +98,7 @@ in {
             oldDir=""
             err=0
             if [[ -n "''${oldGenPath:-}" ]]; then
-              oldDir="$(readlink -m "$oldGenPath/LaunchAgents")" || err=$?
+              oldDir="$(${pkgs.coreutils}/bin/readlink -m "$oldGenPath/LaunchAgents")" || err=$?
               if (( err )); then
                 oldDir=""
               fi
@@ -138,12 +138,12 @@ in {
             oldDir=""
             err=0
             if [[ -n "''${oldGenPath:-}" ]]; then
-              oldDir="$(readlink -m "$oldGenPath/LaunchAgents")" || err=$?
+              oldDir="$(${pkgs.coreutils}/bin/readlink -m "$oldGenPath/LaunchAgents")" || err=$?
               if (( err )); then
                 oldDir=""
               fi
             fi
-            newDir="$(readlink -m "$newGenPath/LaunchAgents")"
+            newDir="$(${pkgs.coreutils}/bin/readlink -m "$newGenPath/LaunchAgents")"
             dstDir=${escapeShellArg dstDir}
             domain="gui/$UID"
             err=0

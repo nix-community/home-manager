@@ -17,7 +17,7 @@
     hookPath=$(getGitConfig core.hooksPath)
     assertLinkExists $hookPath/pre-commit
 
-    actual="$(readlink "$hookPath/pre-commit")"
+    actual="$(${pkgs.coreutils}/bin/readlink "$hookPath/pre-commit")"
     expected="${./git-pre-commit-hook.sh}"
     if [[ $actual != $expected ]]; then
       fail "Symlink $hookPath/pre-commit should point to $expected via the Nix store, but it actually points to $actual."

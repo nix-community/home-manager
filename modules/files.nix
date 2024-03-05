@@ -84,7 +84,7 @@ in
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
+          homeFilePattern="$(${pkgs.coreutils}/bin/readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
 
           forcedPaths=(${forcedPaths})
 
@@ -105,7 +105,7 @@ in
             if [[ -n $forced ]]; then
               verboseEcho "Skipping collision check for $targetPath"
             elif [[ -e "$targetPath" \
-                && ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
+                && ! "$(${pkgs.coreutils}/bin/readlink "$targetPath")" == $homeFilePattern ]] ; then
               # The target file already exists and it isn't a symlink owned by Home Manager.
               if cmp -s "$sourcePath" "$targetPath"; then
                 # First compare the files' content. If they're equal, we're fine.
@@ -136,7 +136,7 @@ in
       ''
         function checkNewGenCollision() {
           local newGenFiles
-          newGenFiles="$(readlink -e "$newGenPath/home-files")"
+          newGenFiles="$(${pkgs.coreutils}/bin/readlink -e "$newGenPath/home-files")"
           find "$newGenFiles" \( -type f -or -type l \) \
               -exec bash ${check} "$newGenFiles" {} +
         }
@@ -199,7 +199,7 @@ in
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
+          homeFilePattern="$(${pkgs.coreutils}/bin/readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
 
           newGenFiles="$1"
           shift 1
@@ -207,7 +207,7 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               verboseEcho "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
+            elif [[ ! "$(${pkgs.coreutils}/bin/readlink "$targetPath")" == $homeFilePattern ]] ; then
               warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
             else
               verboseEcho "Checking $targetPath: gone (deleting)"
@@ -236,7 +236,7 @@ in
             _i "Creating home file links in %s" "$HOME"
 
             local newGenFiles
-            newGenFiles="$(readlink -e "$newGenPath/home-files")"
+            newGenFiles="$(${pkgs.coreutils}/bin/readlink -e "$newGenPath/home-files")"
             find "$newGenFiles" \( -type f -or -type l \) \
               -exec bash ${link} "$newGenFiles" {} +
           }
@@ -249,8 +249,8 @@ in
             _i "Cleaning up orphan links from %s" "$HOME"
 
             local newGenFiles oldGenFiles
-            newGenFiles="$(readlink -e "$newGenPath/home-files")"
-            oldGenFiles="$(readlink -e "$oldGenPath/home-files")"
+            newGenFiles="$(${pkgs.coreutils}/bin/readlink -e "$newGenPath/home-files")"
+            oldGenFiles="$(${pkgs.coreutils}/bin/readlink -e "$oldGenPath/home-files")"
 
             # Apply the cleanup script on each leaf in the old
             # generation. The find command below will print the

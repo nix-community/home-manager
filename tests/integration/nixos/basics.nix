@@ -83,11 +83,11 @@
       # There should be a GC root and Home Manager profile and they should point
       # to the same path in the Nix store.
       gcroot = "/home/alice/.local/state/home-manager/gcroots/current-home"
-      gcrootTarget = machine.succeed(f"readlink {gcroot}")
+      gcrootTarget = machine.succeed(f"${pkgs.coreutils}/bin/readlink {gcroot}")
 
       profile = "/home/alice/.local/state/nix/profiles"
-      profileTarget = machine.succeed(f"readlink {profile}/home-manager")
-      profile1Target = machine.succeed(f"readlink {profile}/{profileTarget}")
+      profileTarget = machine.succeed(f"${pkgs.coreutils}/bin/readlink {profile}/home-manager")
+      profile1Target = machine.succeed(f"${pkgs.coreutils}/bin/readlink {profile}/{profileTarget}")
 
       assert gcrootTarget == profile1Target, \
         f"expected GC root and profile to point to same, but pointed to {gcrootTarget} and {profile1Target}"
