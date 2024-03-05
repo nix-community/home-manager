@@ -1402,7 +1402,29 @@ in {
       }
 
       {
-        time = "2024-02-02T12:47:28+00:00";
+        time = "2024-02-05T22:33:54+00:00";
+        message = ''
+          A new module is available: 'services.arrpc'
+        '';
+      }
+
+      {
+        time = "2024-02-05T22:45:37+00:00";
+        message = ''
+          A new module is available: 'programs.jetbrains-remote'
+        '';
+      }
+
+      {
+        time = "2024-02-21T23:01:27+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'wayland.windowManager.river'.
+        '';
+      }
+      
+      {
+        time = "2024-03-05T12:47:28+00:00";
         condition = hostPlatform.isLinux;
         message = ''
           A new systemd option is available: 'systemd.user.servicesOfPackages'.

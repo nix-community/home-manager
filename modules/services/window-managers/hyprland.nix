@@ -246,11 +246,11 @@ in {
 
       onChange = lib.mkIf (cfg.package != null) ''
         ( # Execute in subshell so we don't poision environment with vars
-          # This var must be set for hyprctl to function, but the value doesn't matter.
-          export HYPRLAND_INSTANCE_SIGNATURE="bogus"
-          for i in $(${cfg.finalPackage}/bin/hyprctl instances -j | jq ".[].instance" -r); do
-            HYPRLAND_INSTANCE_SIGNATURE=$i ${cfg.finalPackage}/bin/hyprctl reload config-only
-          done
+          if [[ -d "/tmp/hypr" ]]; then
+            for i in $(${cfg.finalPackage}/bin/hyprctl instances -j | jq ".[].instance" -r); do
+              ${cfg.finalPackage}/bin/hyprctl -i "$i" reload config-only
+            done
+          fi
         )
       '';
     };

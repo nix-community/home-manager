@@ -22,7 +22,7 @@ let
     mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
   );
 
-  zdotdir = "$HOME/" + cfg.dotDir;
+  zdotdir = "$HOME/" + lib.escapeShellArg cfg.dotDir;
 
   bindkeyCommands = {
     emacs = "bindkey -e";

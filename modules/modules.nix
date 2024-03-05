@@ -120,6 +120,7 @@ let
     ./programs/ion.nix
     ./programs/irssi.nix
     ./programs/java.nix
+    ./programs/jetbrains-remote.nix
     ./programs/jq.nix
     ./programs/jujutsu.nix
     ./programs/joshuto.nix
@@ -251,6 +252,7 @@ let
     ./programs/zsh.nix
     ./programs/zsh/prezto.nix
     ./programs/zsh/zsh-abbr.nix
+    ./services/arrpc.nix
     ./services/autorandr.nix
     ./services/avizo.nix
     ./services/barrier.nix
@@ -308,6 +310,7 @@ let
     ./services/muchsync.nix
     ./services/network-manager-applet.nix
     ./services/nextcloud-client.nix
+    ./services/nix-gc.nix
     ./services/notify-osd.nix
     ./services/opensnitch-ui.nix
     ./services/osmscout-server.nix
@@ -361,6 +364,7 @@ let
     ./services/window-managers/i3-sway/i3.nix
     ./services/window-managers/i3-sway/sway.nix
     ./services/window-managers/i3-sway/swaynag.nix
+    ./services/window-managers/river.nix
     ./services/window-managers/spectrwm.nix
     ./services/window-managers/xmonad.nix
     ./services/wlsunset.nix
