@@ -93,9 +93,10 @@ in {
     };
 
     verify = mkOption {
-      type = types.nullOr types.bool;
+      type = types.nullOr types.path;
       default = null;
-      description = "Verify SSL certificate.";
+      description = "Null or path to certificate to verify SSL against";
+      example = "/path/to/cert.pem";
     };
 
     verifyFingerprint = mkOption {
