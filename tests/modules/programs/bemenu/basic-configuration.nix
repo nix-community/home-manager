@@ -19,6 +19,8 @@
     };
   };
 
+  test.stubs.bemenu = { };
+
   nmt.script = ''
     assertFileExists home-path/etc/profile.d/hm-session-vars.sh
     assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
