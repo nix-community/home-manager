@@ -96,6 +96,7 @@ in {
       type = types.nullOr types.path;
       default = null;
       description = "Null or path to certificate to verify SSL against";
+      example = "/path/to/cert.pem";
     };
 
     verifyFingerprint = mkOption {
