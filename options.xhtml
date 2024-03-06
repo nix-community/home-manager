@@ -236,10 +236,10 @@ boolean</p>
 <p>Either a single calendar (calendar which is the default) or a directory with multiple calendars (discover).</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or one of “calendar”, “discover”</p>
+one of “calendar”, “discover”</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
+<code class="literal">&quot;calendar&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -260,10 +260,10 @@ null or one of “calendar”, “discover”</p>
 <p>Local configuration for the calendar.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (submodule)</p>
+submodule</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
+<code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -312,7 +312,7 @@ null or string</p>
 null or string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
+<code class="literal">&quot;.ics&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -358,6 +358,9 @@ string</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 one of “filesystem”, “singlefile”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;filesystem&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -426,7 +429,10 @@ boolean</p>
 account has multiple collections.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-string</p>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -1078,6 +1084,9 @@ directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 string</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;.calendar&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
