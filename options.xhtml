@@ -49933,6 +49933,100 @@ YAML value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.zk.enable"></a><a class="term" href="options.xhtml#opt-programs.zk.enable"><code class="option">programs.zk.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable zk.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zk.nix" target="_top">
+&lt;home-manager/modules/programs/zk.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zk.package"></a><a class="term" href="options.xhtml#opt-programs.zk.package"><code class="option">programs.zk.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The zk package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.zk</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zk.nix" target="_top">
+&lt;home-manager/modules/programs/zk.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zk.settings"></a><a class="term" href="options.xhtml#opt-programs.zk.settings"><code class="option">programs.zk.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/zk/config.toml</code>.</p><p>See <a class="link" href="https://github.com/mickael-menu/zk/blob/main/docs/config.md"  target="_top">https://github.com/mickael-menu/zk/blob/main/docs/config.md</a> for
+available options and documentation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  note = {
+    language = &quot;en&quot;;
+    default-title = &quot;Untitled&quot;;
+    filename = &quot;{{id}}-{{slug title}}&quot;;
+    extension = &quot;md&quot;;
+    template = &quot;default.md&quot;;
+    id-charset = &quot;alphanum&quot;;
+    id-length = 4;
+    id-case = &quot;lower&quot;;
+  };
+  extra = {
+    author = &quot;Mickaël&quot;;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zk.nix" target="_top">
+&lt;home-manager/modules/programs/zk.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.zoxide.enable"></a><a class="term" href="options.xhtml#opt-programs.zoxide.enable"><code class="option">programs.zoxide.enable</code>
   </a>
  </span>
