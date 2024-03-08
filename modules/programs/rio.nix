@@ -18,8 +18,8 @@ in {
       type = settingsFormat.type;
       default = { };
       description = ''
-        Configuration written to <filename>$XDG_CONFIG_HOME/rio/config.toml</filename>. See
-        <link xlink:href="https://raphamorim.io/rio/docs/#configuration-file"/> for options.
+        Configuration written to {file}`$XDG_CONFIG_HOME/rio/config.toml`. See
+        <https://raphamorim.io/rio/docs/#configuration-file> for options.
       '';
     };
   };
