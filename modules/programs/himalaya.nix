@@ -169,7 +169,7 @@ in {
         config.accounts.email.accounts;
       accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
       globalConfig = compactAttrs himalaya.settings;
-      allConfig = globalConfig // accountsConfig;
+      allConfig = globalConfig // { accounts = accountsConfig; };
     in tomlFormat.generate "himalaya-config.toml" allConfig;
     systemd.user.services = let
       inherit (config.services.himalaya-watch) enable environment settings;
