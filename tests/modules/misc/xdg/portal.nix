@@ -13,6 +13,9 @@ lib.mkIf config.test.enableBig {
     xdgDesktopPortal=home-files/.config/systemd/user/xdg-desktop-portal.service
     assertFileExists $xdgDesktopPortal
 
+    xdgDesktopPortalWlr=home-files/.config/systemd/user/xdg-desktop-portal-wlr.service
+    assertFileExists $xdgDesktopPortalWlr
+
     xdgDesktopPortalWlr=home-path/share/systemd/user/xdg-desktop-portal-wlr.service
     assertFileExists $xdgDesktopPortalWlr
 

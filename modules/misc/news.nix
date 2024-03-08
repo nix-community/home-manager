@@ -1422,6 +1422,14 @@ in {
           A new module is available: 'wayland.windowManager.river'.
         '';
       }
+      
+      {
+        time = "2024-03-05T12:47:28+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new systemd option is available: 'systemd.user.servicesOfPackages'.
+        '';
+      }
     ];
   };
 }

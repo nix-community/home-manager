@@ -136,6 +136,8 @@ in {
       packages = [ pkgs.xdg-desktop-portal ] ++ cfg.extraPortals;
     };
 
+    systemd.user.servicesOfPackages = cfg.extraPortals;
+
     systemd.user.services.xdg-desktop-portal = {
       Unit = {
         Description = "Portal service";

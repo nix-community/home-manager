@@ -29,6 +29,23 @@ let
       in "${key}=${value'}";
   };
 
+  importServicesFromPkg = pkg:
+    let
+      isService = (path: type: (builtins.match ".service$" path) == null);
+      systemdDir = "${pkg}/share/systemd/user/";
+      path = builtins.path {
+        path = systemdDir;
+        filter = isService;
+      };
+      sources = lib.pipe (builtins.readDir path) [
+        builtins.attrNames
+        (map (file: { "systemd/user/${file}".source = "${path}/${file}"; }))
+      ];
+    in sources;
+
+  importServicesFromPkgs = pkgs:
+    lib.concatLists (map importServicesFromPkg pkgs);
+
   buildService = style: name: serviceCfg:
     let
       filename = "${name}.${style}";
@@ -121,6 +138,12 @@ in {
         type = unitType "service";
         description = (unitDescription "service");
         example = unitExample "Service";
+      };
+
+      servicesOfPackages = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        description = "The set of packages which services should be imported";
       };
 
       slices = mkOption {
@@ -287,7 +310,7 @@ in {
   # available, in particular we assume that systemctl is in PATH.
   # Do not install any user services if username is root.
   config = mkIf (pkgs.stdenv.isLinux && config.home.username != "root") {
-    xdg.configFile = mkMerge [
+    xdg.configFile = mkMerge ([
       (lib.listToAttrs ((buildServices "service" cfg.services)
         ++ (buildServices "slice" cfg.slices)
         ++ (buildServices "socket" cfg.sockets)
@@ -300,7 +323,7 @@ in {
       sessionVariables
 
       settings
-    ];
+    ] ++ (importServicesFromPkgs cfg.servicesOfPackages));
 
     # Run systemd service reload if user is logged in. If we're
     # running this from the NixOS module then XDG_RUNTIME_DIR is not
