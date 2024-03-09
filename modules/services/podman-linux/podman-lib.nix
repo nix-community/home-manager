@@ -46,7 +46,7 @@ in {
       else []
     ) config);
 
-  formatPrimitiveValue = formatPrimitiveValue; # export
+  inherit formatPrimitiveValue; # export
 
   formatExtraConfig = extraConfig:
     let
@@ -55,4 +55,32 @@ in {
       concatStringsSep "\n" (
         mapAttrsToList (name: value: "${name}=${formatPrimitiveValue value}") nonNullConfig
       );
+
+  
+  # manifest input is expecting a list of quadletInternalType
+  generateManifestText = quadlets:
+    let
+      # create a list of all unique quadlet.unitTypes in quadlets
+      quadletTypes = unique (map (quadlet: quadlet.unitType) quadlets);
+      # if quadletTypes is not length 1, then all quadlets are not the same type
+      allQuadletsSameType = length quadletTypes == 1;
+      
+      # ensures the service name is formatted correctly to be easily read by the activation script
+      formatServiceName = quadlet: 
+        let 
+          # remove the podman- prefix from the service name string
+          strippedName = builtins.replaceStrings ["podman-"] [""] quadlet.serviceName;
+        in 
+          {
+            "container" = strippedName;
+            "network" = strippedName;
+          }."${quadlet.unitType}";
+    in 
+      if allQuadletsSameType then ''
+        ${concatStringsSep "\n" (map (quadlet: formatServiceName quadlet) quadlets)}
+      '' 
+      else
+        warn "Quadlet types in this manifest: ${concatStringsSep ", " quadletTypes}"
+        abort "All quadlets must be of the same type"
+      ;
 }

@@ -31,7 +31,7 @@ let
 
       formatEnvironment = env:
         if env != {} then
-          concatStringsSep " " (mapAttrsToList (k: v: "${k}=${v}") env)
+          concatStringsSep " " (mapAttrsToList (k: v: "${k}=${podman-lib.formatPrimitiveValue v}") env)
         else
           "";
 
@@ -81,17 +81,11 @@ let
           "Network=${concatStringsSep "," containerDef.networks}"
         else
           "";
-      
-      formatUnitTags = tagList:
-        if tagList != [] then
-          concatStringsSep " " (map (tag: "${tag}") tagList)
-        else
-          "";
 
       formatPodmanArgs = containerDef:
         let
-          networkAliasArg = if containerDef.networkAlias != null then "--network-alias ${containerDef.networkAlias}" else "";
-          entrypointArg = if containerDef.entrypoint != null then "--entrypoint '${containerDef.entrypoint}'" else "";
+          networkAliasArg = if containerDef.networkAlias != null then "--network-alias ${containerDef.networkAlias}" else null;
+          entrypointArg = if containerDef.entrypoint != null then "--entrypoint ${containerDef.entrypoint}" else null;
           allArgs = [networkAliasArg entrypointArg] ++ containerDef.extraOptions;
         in
           if allArgs != [] && allArgs != [""] then
@@ -114,12 +108,14 @@ let
         [Container]
         ContainerName=${containerName}
         Image=${containerDef.image}
+        Label=nix.home-manager.managed=true
         ${ifNotEmptySet containerDef.environment "Environment=${formatEnvironment containerDef.environment}"}
         ${ifNotNull containerDef.environmentFile "EnvironmentFile=${containerDef.environmentFile}"}
-        ${ifNotEmptyList containerDef.ports (formatPorts containerDef.ports)}
+        ${ifNotNull containerDef.command "Exec=${containerDef.command}"}
         ${ifNotNull containerDef.user "User=${containerDef.user}"}
         ${ifNotNull containerDef.userNS "UserNS=${containerDef.userNS}"}
         ${ifNotNull containerDef.group "Group=${containerDef.group}"}
+        ${ifNotEmptyList containerDef.ports (formatPorts containerDef.ports)}
         ${ifNotNull containerDef.networkMode "Network=${containerDef.networkMode}"}
         ${formatNetwork containerDef}
         ${ifNotNull containerDef.ip4 "IP=${containerDef.ip4}"}
@@ -191,8 +187,14 @@ let
         default = null;
       };
 
+      command = mkOption {
+        type = with types; nullOr str;
+        description = "The command to run after the container specification.";
+        default = null;
+      };
+
       environment = mkOption {
-        type = with types; attrsOf str;
+        type = podman-lib.primitiveAttrs;
         default = {};
       };
 
@@ -287,7 +289,7 @@ let
       };
 
       extraOptions = mkOption {
-        type = types.listOf types.str;
+        type = with types; listOf str;
         default = [];
       };
 
@@ -328,8 +330,13 @@ in {
     description = "Attribute set of container definitions.";
   };
 
-  config = {
-    internal.podman-quadlet-definitions = mapAttrsToList toQuadletInternal config.services.podman.containers;
+  config = let 
+    containerQuadlets = mapAttrsToList toQuadletInternal config.services.podman.containers;
+  in {
+    internal.podman-quadlet-definitions = containerQuadlets;
     assertions = lib.flatten (map (container: container.assertions) config.internal.podman-quadlet-definitions);
+
+    # manifest file
+    home.file."${config.xdg.configHome}/podman/containers.manifest".text = podman-lib.generateManifestText containerQuadlets;
   };
 }
