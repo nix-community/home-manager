@@ -14715,6 +14715,41 @@ YAML value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.borgmatic.backups._name_.location.patterns"></a><a class="term" href="options.xhtml#opt-programs.borgmatic.backups._name_.location.patterns"><code class="option">programs.borgmatic.backups.&lt;name&gt;.location.patterns</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Patterns to include/exclude.</p><p>See the output of <code class="literal">borg help patterns</code> for the syntax. Pattern paths
+are relative to <code class="literal">/</code> even when a different recursion root is set.</p><p>Mutually exclusive with <a class="xref" href="options.xhtml#opt-programs.borgmatic.backups._name_.location.sourceDirectories"  ><code class="option">programs.borgmatic.backups.&lt;name&gt;.location.sourceDirectories</code></a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (list of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;R /home/user&quot;
+  &quot;- home/user/.cache&quot;
+  &quot;- home/user/Downloads&quot;
+  &quot;+ home/user/Videos/Important Video&quot;
+  &quot;- home/user/Videos&quot;
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix" target="_top">
+&lt;home-manager/modules/programs/borgmatic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.borgmatic.backups._name_.location.repositories"></a><a class="term" href="options.xhtml#opt-programs.borgmatic.backups._name_.location.repositories"><code class="option">programs.borgmatic.backups.&lt;name&gt;.location.repositories</code>
   </a>
  </span>
@@ -14754,10 +14789,13 @@ list of (string or (submodule))</p>
  </span>
 </dt>
 <dd>
-<p>Directories to backup.</p>
+<p>Directories to backup.</p><p>Mutually exclusive with <a class="xref" href="options.xhtml#opt-programs.borgmatic.backups._name_.location.patterns"  ><code class="option">programs.borgmatic.backups.&lt;name&gt;.location.patterns</code></a>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-list of string</p>
+null or (list of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">[config.home.homeDirectory]</code></p>
