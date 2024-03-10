@@ -41,9 +41,9 @@ let
         };
 
         pinentry = mkOption {
-          type = with types; either package (enum pkgs.pinentry.flavors);
-          example = "gnome3";
-          default = "gtk2";
+          type = types.nullOr types.package;
+          example = literalExpression "pkgs.pinentry-gnome3";
+          default = null;
           description = ''
             Which pinentry interface to use. Beware that
             `pinentry-gnome3` may not work on non-Gnome
@@ -52,15 +52,9 @@ let
             ```nix
             services.dbus.packages = [ pkgs.gcr ];
             ```
-            For this reason, the default is `gtk2` for
-            now.
           '';
           # we want the program in the config
-          apply = val:
-            if builtins.isString val then
-              "${pkgs.pinentry.${val}}/bin/pinentry"
-            else
-              "${val}/${val.binaryPath or "bin/pinentry"}";
+          apply = val: if val == null then val else lib.getExe val;
         };
       };
     };
@@ -87,7 +81,7 @@ in {
         {
           email = "name@example.com";
           lock_timeout = 300;
-          pinentry = "gnome3";
+          pinentry = pkgs.pinentry-gnome3;
         }
       '';
       description = ''
