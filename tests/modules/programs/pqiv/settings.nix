@@ -10,6 +10,10 @@
         thumbnail-size = "256x256";
       };
     };
+    extraConfig = ''
+      [keybindings]
+      t { montage_mode_enter() }
+    '';
   };
 
   nmt.script = ''
@@ -19,6 +23,10 @@
         [options]
         hide-info-box=1
         thumbnail-size=256x256
+
+        [keybindings]
+        t { montage_mode_enter() }
+
       ''
     }
   '';
