@@ -10,6 +10,12 @@ let
 in {
   meta.maintainers = [ maintainers.shikanime ];
 
+  imports = let
+    mkRemovedShellIntegration = name:
+      mkRemovedOptionModule [ "programs" "jujutsu" "enable${name}Integration" ]
+      "This option is no longer necessary.";
+  in map mkRemovedShellIntegration [ "Bash" "Fish" "Zsh" ];
+
   options.programs.jujutsu = {
     enable =
       mkEnableOption "a Git-compatible DVCS that is both simple and powerful";
@@ -33,24 +39,6 @@ in {
         for options.
       '';
     };
-
-    enableBashIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Whether to enable Bash integration.";
-    };
-
-    enableZshIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Whether to enable Zsh integration.";
-    };
-
-    enableFishIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Whether to enable Fish integration.";
-    };
   };
 
   config = mkIf cfg.enable {
@@ -59,18 +47,5 @@ in {
     home.file.".jjconfig.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "jujutsu-config" cfg.settings;
     };
-
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      source <(${pkgs.jujutsu}/bin/jj util completion)
-    '';
-
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      source <(${pkgs.jujutsu}/bin/jj util completion --zsh)
-      compdef _jj ${pkgs.jujutsu}/bin/jj
-    '';
-
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      ${pkgs.jujutsu}/bin/jj util completion --fish | source
-    '';
   };
 }

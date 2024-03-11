@@ -115,7 +115,7 @@ function nixProfileRemove() {
         nixProfileList "$1" | xargs -rt $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
     else
         if nix-env -q | grep -q "^$1$"; then
-            run --silence nix-env -e "$1"
+            run --quiet nix-env -e "$1"
         fi
     fi
 }

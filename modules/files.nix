@@ -274,7 +274,7 @@ in
               run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
             fi
 
-            run --silence nix-store --realise "$newGenPath" --add-root "$newGenGcPath"
+            run --quiet nix-store --realise "$newGenPath" --add-root "$newGenGcPath" --indirect
             if [[ -e "$legacyGenGcPath" ]]; then
               run rm $VERBOSE_ARG "$legacyGenGcPath"
             fi

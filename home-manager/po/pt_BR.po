@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-02-15 16:04+0100\n"
-"PO-Revision-Date: 2024-02-16 22:01+0000\n"
-"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
+"PO-Revision-Date: 2024-02-28 13:02+0000\n"
+"Last-Translator: guto <joaoaugustolanjoni@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "home-manager/cli/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.4\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: home-manager/home-manager:58
 msgid "No configuration file found at %s"
@@ -186,7 +186,7 @@ msgstr "Valor \"%s\" para configuração \"news.display\" não reconhecido."
 #: home-manager/home-manager:586
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "Por favor, defina a variável de ambiente $EDITOR ou $VISUAL"
 
 #: home-manager/home-manager:604
 msgid "Cannot run build in read-only directory"

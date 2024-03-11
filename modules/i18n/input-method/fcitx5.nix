@@ -5,7 +5,8 @@ with lib;
 let
   im = config.i18n.inputMethod;
   cfg = im.fcitx5;
-  fcitx5Package = pkgs.fcitx5-with-addons.override { inherit (cfg) addons; };
+  fcitx5Package =
+    pkgs.libsForQt5.fcitx5-with-addons.override { inherit (cfg) addons; };
 in {
   options = {
     i18n.inputMethod.fcitx5 = {

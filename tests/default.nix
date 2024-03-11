@@ -126,6 +126,7 @@ in import nmtSrc {
     ./modules/programs/pyenv
     ./modules/programs/qcal
     ./modules/programs/qutebrowser
+    ./modules/programs/ranger
     ./modules/programs/readline
     ./modules/programs/rio
     ./modules/programs/ripgrep
@@ -153,6 +154,7 @@ in import nmtSrc {
     ./modules/programs/wezterm
     ./modules/programs/yazi
     ./modules/programs/zellij
+    ./modules/programs/zk
     ./modules/programs/zplug
     ./modules/programs/zsh
     ./modules/services/syncthing/common
@@ -260,6 +262,7 @@ in import nmtSrc {
     ./modules/services/window-managers/herbstluftwm
     ./modules/services/window-managers/hyprland
     ./modules/services/window-managers/i3
+    ./modules/services/window-managers/river
     ./modules/services/window-managers/spectrwm
     ./modules/services/window-managers/sway
     ./modules/services/wlsunset

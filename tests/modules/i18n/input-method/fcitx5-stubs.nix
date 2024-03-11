@@ -13,11 +13,8 @@
                  $out/bin/fcitx5-config-qt
       '';
     };
-    fcitx5-configtool = { outPath = null; };
     fcitx5-lua = { outPath = null; };
-    fcitx5-qt = { outPath = null; };
     fcitx5-gtk = { outPath = null; };
-    fcitx5-chinese-addons = { outPath = null; };
 
     gtk2 = {
       buildScript = ''
@@ -36,9 +33,21 @@
   };
 
   nixpkgs.overlays = [
-    (self: super: {
-      fcitx5-with-addons =
-        super.fcitx5-with-addons.override { inherit (self) fcitx5-qt; };
+    (final: prev: {
+      libsForQt5 = prev.libsForQt5.overrideScope (qt5final: qt5prev: {
+        fcitx5-chinese-addons = prev.mkStubPackage { outPath = null; };
+        fcitx5-configtool = prev.mkStubPackage { outPath = null; };
+        fcitx5-qt = prev.mkStubPackage { outPath = null; };
+
+        fcitx5-with-addons = qt5prev.fcitx5-with-addons.override {
+          inherit (final) libsForQt5 qt6Packages;
+        };
+      });
+
+      qt6Packages = prev.qt6Packages.overrideScope (qt6final: qt6prev: {
+        fcitx5-qt = prev.mkStubPackage { outPath = null; };
+      });
+
     })
   ];
 }

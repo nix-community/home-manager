@@ -159,10 +159,14 @@ in {
         };
       })));
 
+      # NOTE: run `bat cache --build` in an empty directory to work
+      # around failure when ~/cache exists
+      # https://github.com/sharkdp/bat/issues/1726
       home.activation.batCache = hm.dag.entryAfter [ "linkGeneration" ] ''
         (
           export XDG_CACHE_HOME=${escapeShellArg config.xdg.cacheHome}
           verboseEcho "Rebuilding bat theme cache"
+          cd "${pkgs.emptyDirectory}"
           run ${lib.getExe package} cache --build
         )
       '';
