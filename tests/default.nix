@@ -189,7 +189,7 @@ in import nmtSrc {
     ./modules/programs/bemenu
     ./modules/programs/borgmatic
     ./modules/programs/boxxy
-    ./modules/programs/firefox
+    ./modules/programs/firefox/firefox.nix
     ./modules/programs/foot
     ./modules/programs/freetube
     ./modules/programs/fuzzel
