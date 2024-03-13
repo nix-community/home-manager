@@ -280,6 +280,7 @@ let
     ./services/emacs.nix
     ./services/etesync-dav.nix
     ./services/espanso.nix
+    ./services/eww.nix
     ./services/flameshot.nix
     ./services/fluidsynth.nix
     ./services/fnott.nix
