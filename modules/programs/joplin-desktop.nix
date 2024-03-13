@@ -10,7 +10,7 @@ let
   configPath = "${config.xdg.configHome}/joplin-desktop/settings.json";
 
 in {
-  meta.maintainers = [ lib.maintainers.zorrobert ];
+  meta.maintainers = [ lib.hm.maintainers.zorrobert ];
 
   options.programs.joplin-desktop = {
     enable = lib.mkEnableOption "joplin-desktop";
