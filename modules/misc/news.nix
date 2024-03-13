@@ -1443,6 +1443,13 @@ in {
           A new module is available: 'programs.joplin-desktop'.
         '';
       }
+
+      {
+        time = "2024-03-13T17:04:13+00:00";
+        message = ''
+          A new module is available: 'services.eww'.
+        '';
+      }
     ];
   };
 }
