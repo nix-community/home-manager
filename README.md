@@ -17,7 +17,7 @@ For a systematic overview of Home Manager and its available options, please see:
 - [Home Manager manual][manual]
 - [Home Manager configuration options][configuration options]
 - [3rd party Home Manager option
-  search](https://mipmip.github.io/home-manager-option-search/)
+  search](https://home-manager-options.extranix.com/)
 
 If you would like to contribute to Home Manager, then please have a look at
 ["Contributing" in the manual][contributing].
