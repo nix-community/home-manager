@@ -25708,6 +25708,172 @@ list of package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.joplin-desktop.enable"></a><a class="term" href="options.xhtml#opt-programs.joplin-desktop.enable"><code class="option">programs.joplin-desktop.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable joplin-desktop.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/joplin-desktop.nix" target="_top">
+&lt;home-manager/modules/programs/joplin-desktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.joplin-desktop.package"></a><a class="term" href="options.xhtml#opt-programs.joplin-desktop.package"><code class="option">programs.joplin-desktop.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The joplin-desktop package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.joplin-desktop</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/joplin-desktop.nix" target="_top">
+&lt;home-manager/modules/programs/joplin-desktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.joplin-desktop.extraConfig"></a><a class="term" href="options.xhtml#opt-programs.joplin-desktop.extraConfig"><code class="option">programs.joplin-desktop.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Use this to add other options to the Joplin config file. Settings are
+written in JSON, so <code class="literal">&quot;sync.interval&quot;: 600</code> would be written as
+<code class="literal">&quot;sync.interval&quot; = 600</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;markdown.plugin.mark&quot; = true;
+  newNoteFocus = &quot;title&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/joplin-desktop.nix" target="_top">
+&lt;home-manager/modules/programs/joplin-desktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.joplin-desktop.general.editor"></a><a class="term" href="options.xhtml#opt-programs.joplin-desktop.general.editor"><code class="option">programs.joplin-desktop.general.editor</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The editor command (may include arguments) that will be used to open a
+note. If none is provided Joplin will try to auto-detect the default
+editor.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;kate&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/joplin-desktop.nix" target="_top">
+&lt;home-manager/modules/programs/joplin-desktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.joplin-desktop.sync.interval"></a><a class="term" href="options.xhtml#opt-programs.joplin-desktop.sync.interval"><code class="option">programs.joplin-desktop.sync.interval</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Set the synchronisation interval.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of &lt;null&gt;, “disabled”, “5m”, “10m”, “30m”, “1h”, “12h”, “1d”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;10m&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/joplin-desktop.nix" target="_top">
+&lt;home-manager/modules/programs/joplin-desktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.joplin-desktop.sync.target"></a><a class="term" href="options.xhtml#opt-programs.joplin-desktop.sync.target"><code class="option">programs.joplin-desktop.sync.target</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>What is the type of sync target.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of &lt;null&gt;, “none”, “file-system”, “onedrive”, “nextcloud”, “webdav”, “dropbox”, “s3”, “joplin-server”, “joplin-cloud”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;dropbox&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/joplin-desktop.nix" target="_top">
+&lt;home-manager/modules/programs/joplin-desktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.joshuto.enable"></a><a class="term" href="options.xhtml#opt-programs.joshuto.enable"><code class="option">programs.joshuto.enable</code>
   </a>
  </span>
