@@ -75,7 +75,7 @@ with lib;
 
     optionsAlias = { eza = "eza ${args}"; };
 
-    aliases = {
+    aliases = builtins.mapAttrs (_name: value: lib.mkDefault value) {
       ls = "eza";
       ll = "eza -l";
       la = "eza -a";
