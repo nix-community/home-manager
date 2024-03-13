@@ -171,6 +171,12 @@
     github = "LucasWagler";
     githubId = 32136449;
   };
+  madnat = {
+    name = "Jakub Kopański";
+    email = "nix@jakub.famisoft.pl";
+    github = "jkopanski";
+    githubId = 611423;
+  };
   matrss = {
     name = "Matthias Riße";
     email = "matrss@users.noreply.github.com";
