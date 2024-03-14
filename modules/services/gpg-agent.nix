@@ -248,7 +248,7 @@ in {
           ++ optional (cfg.maxCacheTtlSsh != null)
           "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
           ++ optional (cfg.pinentryPackage != null)
-          "pinentry-program ${lib.getExe pinentryPackage}"
+          "pinentry-program ${lib.getExe cfg.pinentryPackage}"
           ++ [ cfg.extraConfig ]);
 
       home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''
