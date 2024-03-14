@@ -5,7 +5,7 @@ with lib;
 {
   config = {
     services.gpg-agent.enable = true;
-    services.gpg-agent.pinentryPackage = null; # Don't build pinentry package.
+    services.gpg-agent.pinentryPackage = pkgs.cowsay;
     programs.gpg.enable = true;
 
     test.stubs.gnupg = { };
@@ -18,6 +18,9 @@ with lib;
         echo $in
         fail "gpg-agent socket directory not set to default value"
       fi
+
+      local configFile=home-files/.gnupg/gpg-agent.conf
+      assertFileRegex $configFile "pinentry-program /nix/store/.*/bin/cowsay
     '';
   };
 }
