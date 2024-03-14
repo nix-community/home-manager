@@ -14187,7 +14187,7 @@ package</p>
 <code class="literal">pkgs.beets</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">(pkgs.beets.override { enableCheck = true; })</code></p>
+<code class="literal">(pkgs.beets.override { pluginOverrides = { beatport.enable = false; }; })</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
