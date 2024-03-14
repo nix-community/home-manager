@@ -9,7 +9,7 @@ with lib;
       options per shell, for example, 'programs.eza.enableBashIntegration'.
 
       Note, the default for these options is 'true' so if you want to enable the
-      aliases you can simply remove 'rograms.eza.enableAliases' from your
+      aliases you can simply remove 'programs.eza.enableAliases' from your
       configuration.'';
     mkRenamed = opt:
       mkRenamedOptionModule [ "programs" "exa" opt ] [ "programs" "eza" opt ];
