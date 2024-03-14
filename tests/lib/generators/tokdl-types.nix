@@ -38,16 +38,18 @@
         { b = true; }
         {
           c = null;
-          d = [{ e = "asdfadfasdfasdf"; }];
+          d = [{ e = ''"asdfadfasdfasdf"''; }];
         }
+        [ [ [ "test" ] ] ]
       ];
       list2 = [{ a = 8; }];
     };
+    layout = [ ''unbind "a"'' ''unbind "b"'' ];
   };
 
   nmt.script = ''
     assertFileContent \
       home-files/result.txt \
-      ${./tokdl-result.txt}
+      ${./result-tokdl-types.txt}
   '';
 }
