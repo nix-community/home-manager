@@ -8,6 +8,11 @@ let
 
   cfg = config.programs.mullvad-browser;
 
+  package = if isDarwin then
+      pkgs.runCommand "mullvad-browser-0.0.0" { } "mkdir $out"
+    else
+      pkgs.mullvad-browser;
+
   jsonFormat = pkgs.formats.json { };
 
   firefoxConfigPath = if isDarwin then
@@ -629,11 +634,13 @@ in {
       cfg.profiles);
 
     warnings = optional (cfg.enableGnomeExtensions or false) ''
-      Using 'programs.firefox.enableGnomeExtensions' has been deprecated and
+      Using 'programs.mullvad-browser.enableGnomeExtensions' has been deprecated and
       will be removed in the future. Please change to overriding the package
-      configuration using 'programs.firefox.package' instead. You can refer to
+      configuration using 'programs.mullvad-browser.package' instead. You can refer to
       its example for how to do this.
     '';
+
+    home.packages = [ package ];
 
     home.file = mkMerge ([{
       "${firefoxConfigPath}/profiles.ini" =

@@ -155,6 +155,7 @@ let
     ./programs/msmtp.nix
     ./programs/mu.nix
     ./programs/mujmap.nix
+    ./programs/mullvad-browser.nix
     ./programs/navi.nix
     ./programs/ncmpcpp.nix
     ./programs/ncspot.nix
