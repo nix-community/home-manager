@@ -27,9 +27,7 @@ let
   '' + optionalString cfg.enableSshSupport ''
     ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye | ignore
 
-    if not "SSH_AUTH_SOCK" in $env {
-      $env.SSH_AUTH_SOCK = (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)
-    }
+    $env.SSH_AUTH_SOCK = ($env.SSH_AUTH_SOCK? | default (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket))
   '';
 
   # mimic `gpgconf` output for use in `systemd` unit definitions.
@@ -82,6 +80,11 @@ let
 
 in {
   meta.maintainers = [ maintainers.rycee ];
+
+  imports = [
+    (mkRemovedOptionModule [ "services" "gpg-agent" "pinentryFlavor" ]
+      "Use services.gpg-agent.pinentryPackage instead")
+  ];
 
   options = {
     services.gpg-agent = {
@@ -194,10 +197,9 @@ in {
           configuration file.
         '';
       };
-
-      pinentryFlavor = mkOption {
-        type = types.nullOr (types.enum pkgs.pinentry.flavors);
-        example = "gnome3";
+      pinentryPackage = mkOption {
+        type = types.nullOr types.package;
+        example = literalExpression "pkgs.pinentry-gnome3";
         default = null;
         description = ''
           Which pinentry interface to use. If not
@@ -245,8 +247,8 @@ in {
           "max-cache-ttl ${toString cfg.maxCacheTtl}"
           ++ optional (cfg.maxCacheTtlSsh != null)
           "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
-          ++ optional (cfg.pinentryFlavor != null)
-          "pinentry-program ${pkgs.pinentry.${cfg.pinentryFlavor}}/bin/pinentry"
+          ++ optional (cfg.pinentryPackage != null)
+          "pinentry-program ${lib.getExe cfg.pinentryPackage}"
           ++ [ cfg.extraConfig ]);
 
       home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''

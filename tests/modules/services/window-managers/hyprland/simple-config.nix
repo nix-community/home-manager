@@ -45,6 +45,18 @@
         "$mod, mouse:273, resizewindow"
         "$mod ALT, mouse:272, resizewindow"
       ];
+
+      device = {
+        name = "some:device";
+        enable = true;
+      };
+
+      plugin = {
+        plugin1 = {
+          dummy = "plugin setting";
+          section = { other = "dummy setting"; };
+        };
+      };
     };
     extraConfig = ''
       # window resize

@@ -93,9 +93,10 @@ in {
     };
 
     verify = mkOption {
-      type = types.nullOr types.bool;
+      type = types.nullOr types.path;
       default = null;
-      description = "Verify SSL certificate.";
+      description = "Null or path to certificate to verify SSL against";
+      example = "/path/to/cert.pem";
     };
 
     verifyFingerprint = mkOption {
@@ -137,8 +138,8 @@ in {
     };
 
     postHook = mkOption {
-      type = types.lines;
-      default = "";
+      type = types.nullOr types.lines;
+      default = null;
       description = ''
         Command to call for each item creation and modification.
         The command will be called with the path of the new/updated

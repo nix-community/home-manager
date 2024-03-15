@@ -21,6 +21,23 @@ let
   profilesPath =
     if isDarwin then "${firefoxConfigPath}/Profiles" else firefoxConfigPath;
 
+  nativeMessagingHostsPath = if isDarwin then
+    "${mozillaConfigPath}/NativeMessagingHosts"
+  else
+    "${mozillaConfigPath}/native-messaging-hosts";
+
+  nativeMessagingHostsJoined = pkgs.symlinkJoin {
+    name = "ff_native-messaging-hosts";
+    paths = [
+      # Link a .keep file to keep the directory around
+      (pkgs.writeTextDir "lib/mozilla/native-messaging-hosts/.keep" "")
+      # Link package configured native messaging hosts (entire Firefox actually)
+      cfg.finalPackage
+    ]
+    # Link user configured native messaging hosts
+      ++ cfg.nativeMessagingHosts;
+  };
+
   # The extensions path shared by all profiles; will not be supported
   # by future Firefox versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
@@ -73,7 +90,24 @@ let
         version = 4;
         lastUserContextId =
           elemAt (mapAttrsToList (_: container: container.id) containers) 0;
-        identities = mapAttrsToList containerToIdentity containers;
+        identities = mapAttrsToList containerToIdentity containers ++ [
+          {
+            userContextId = 4294967294; # 2^32 - 2
+            name = "userContextIdInternal.thumbnail";
+            icon = "";
+            color = "";
+            accessKey = "";
+            public = false;
+          }
+          {
+            userContextId = 4294967295; # 2^32 - 1
+            name = "userContextIdInternal.webextStorageLocal";
+            icon = "";
+            color = "";
+            accessKey = "";
+            public = false;
+          }
+        ];
       }}
     '';
 
@@ -225,6 +259,15 @@ in {
           this should be a wrapped Firefox package. For earlier state
           versions it should be an unwrapped Firefox package.
           Set to `null` to disable installing Firefox.
+        '';
+      };
+
+      nativeMessagingHosts = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        description = ''
+          Additional packages containing native messaging hosts that should be
+          made available to Firefox extensions.
         '';
       };
 
@@ -663,6 +706,20 @@ in {
           (", namely " + concatStringsSep ", " defaults);
       })
 
+      (let
+        getContainers = profiles:
+          flatten
+          (mapAttrsToList (_: value: (attrValues value.containers)) profiles);
+
+        findInvalidContainerIds = profiles:
+          filter (container: container.id >= 4294967294)
+          (getContainers profiles);
+      in {
+        assertion = cfg.profiles == { }
+          || length (findInvalidContainerIds cfg.profiles) == 0;
+        message = "Container id must be smaller than 4294967294 (2^32 - 2)";
+      })
+
       (mkNoDuplicateAssertion cfg.profiles "profile")
     ] ++ (mapAttrsToList
       (_: profile: mkNoDuplicateAssertion profile.containers "container")
@@ -682,6 +739,12 @@ in {
     home.file = mkMerge ([{
       "${firefoxConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
+
+      "${nativeMessagingHostsPath}" = {
+        source =
+          "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
+        recursive = true;
+      };
     }] ++ flip mapAttrsToList cfg.profiles (_: profile: {
       "${profilesPath}/${profile.path}/.keep".text = "";
 

@@ -162,7 +162,7 @@ in {
               fi
               if [[ -f "$dstPath" ]]; then
                 for (( i = 0; i < bootout_retries; i++ )); do
-                  $DRY_RUN_CMD /bin/launchctl bootout "$domain/$agentName" || err=$?
+                  run /bin/launchctl bootout "$domain/$agentName" || err=$?
                   if [[ -v DRY_RUN ]]; then
                     break
                   fi
@@ -177,8 +177,8 @@ in {
                   return 1
                 fi
               fi
-              $DRY_RUN_CMD install -Dm444 -T "$srcPath" "$dstPath"
-              $DRY_RUN_CMD /bin/launchctl bootstrap "$domain" "$dstPath"
+              run install -Dm444 -T "$srcPath" "$dstPath"
+              run /bin/launchctl bootstrap "$domain" "$dstPath"
             done
 
             if [[ ! -e "$oldDir" ]]; then
@@ -194,7 +194,7 @@ in {
                 continue
               fi
 
-              $DRY_RUN_CMD /bin/launchctl bootout "$domain/$agentName" || :
+              run /bin/launchctl bootout "$domain/$agentName" || :
               if [[ ! -e "$dstPath" ]]; then
                 continue
               fi
@@ -202,7 +202,7 @@ in {
                 warnEcho "Skipping deletion of '$dstPath', since its contents have diverged"
                 continue
               fi
-              $DRY_RUN_CMD rm -f $VERBOSE_ARG "$dstPath"
+              run rm -f $VERBOSE_ARG "$dstPath"
             done
           }
 

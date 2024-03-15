@@ -54,7 +54,7 @@ in {
       # In theory, mu is the only thing that creates that directory, and it is
       # only created during the initial index.
       if [[ ! -d "${dbLocation}" ]]; then
-        $DRY_RUN_CMD ${
+        run ${
           getExe cfg.package
         } init ${maildirOption} ${myAddresses} $VERBOSE_ARG;
       fi

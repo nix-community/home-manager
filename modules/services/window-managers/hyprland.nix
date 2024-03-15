@@ -199,56 +199,76 @@ in {
     home.packages = lib.optional (cfg.package != null) cfg.finalPackage;
 
     xdg.configFile."hypr/hyprland.conf" = let
-      combinedSettings = cfg.settings // {
-        plugin = let
-          mkEntry = entry:
-            if lib.types.package.check entry then
-              "${entry}/lib/lib${entry.pname}.so"
-            else
-              entry;
-        in map mkEntry cfg.plugins;
-      };
-
       shouldGenerate = cfg.systemd.enable || cfg.extraConfig != ""
-        || combinedSettings != { };
+        || cfg.settings != { } || cfg.plugins != [ ];
 
       toHyprconf = with lib;
         attrs: indentLevel:
         let
           indent = concatStrings (replicate indentLevel "  ");
 
+          sections = filterAttrs (n: v: isAttrs v && n != "device") attrs;
+
           mkSection = n: attrs: ''
             ${indent}${n} {
             ${toHyprconf attrs (indentLevel + 1)}${indent}}
           '';
-          sections = filterAttrs (n: v: isAttrs v) attrs;
+
+          mkDeviceCategory = device: ''
+            ${indent}device {
+              name=${device.name}
+            ${
+              toHyprconf (filterAttrs (n: _: "name" != n) device)
+              (indentLevel + 1)
+            }${indent}}
+          '';
+
+          deviceCategory = lib.optionalString (hasAttr "device" attrs)
+            (if isList attrs.device then
+              (concatMapStringsSep "\n" (d: mkDeviceCategory d) attrs.device)
+            else
+              mkDeviceCategory attrs.device);
 
           mkFields = generators.toKeyValue {
             listsAsDuplicateKeys = true;
             inherit indent;
           };
-          allFields = filterAttrs (n: v: !(isAttrs v)) attrs;
+          allFields = filterAttrs (n: v: !(isAttrs v) && n != "device") attrs;
+
           importantFields = filterAttrs (n: _:
-            (hasPrefix "$" n) || (hasPrefix "bezier" n) || (n == "plugin")
+            (hasPrefix "$" n) || (hasPrefix "bezier" n)
             || (cfg.sourceFirst && (hasPrefix "source" n))) allFields;
+
           fields = builtins.removeAttrs allFields
             (mapAttrsToList (n: _: n) importantFields);
-        in mkFields importantFields
+        in mkFields importantFields + deviceCategory
         + concatStringsSep "\n" (mapAttrsToList mkSection sections)
         + mkFields fields;
+
+      pluginsToHyprconf = plugins:
+        toHyprconf {
+          plugin = let
+            mkEntry = entry:
+              if lib.types.package.check entry then
+                "${entry}/lib/lib${entry.pname}.so"
+              else
+                entry;
+          in map mkEntry cfg.plugins;
+        } 0;
     in lib.mkIf shouldGenerate {
       text = lib.optionalString cfg.systemd.enable systemdActivation
-        + lib.optionalString (combinedSettings != { })
-        (toHyprconf combinedSettings 0)
+        + lib.optionalString (cfg.plugins != [ ])
+        (pluginsToHyprconf cfg.plugins)
+        + lib.optionalString (cfg.settings != { }) (toHyprconf cfg.settings 0)
         + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
 
       onChange = lib.mkIf (cfg.package != null) ''
         ( # Execute in subshell so we don't poision environment with vars
-          # This var must be set for hyprctl to function, but the value doesn't matter.
-          export HYPRLAND_INSTANCE_SIGNATURE="bogus"
-          for i in $(${cfg.finalPackage}/bin/hyprctl instances -j | jq ".[].instance" -r); do
-            HYPRLAND_INSTANCE_SIGNATURE=$i ${cfg.finalPackage}/bin/hyprctl reload config-only
-          done
+          if [[ -d "/tmp/hypr" ]]; then
+            for i in $(${cfg.finalPackage}/bin/hyprctl instances -j | jq ".[].instance" -r); do
+              ${cfg.finalPackage}/bin/hyprctl -i "$i" reload config-only
+            done
+          fi
         )
       '';
     };

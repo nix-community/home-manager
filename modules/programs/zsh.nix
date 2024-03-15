@@ -15,14 +15,14 @@ let
   localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
 
   aliasesStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: "alias ${k}=${lib.escapeShellArg v}") cfg.shellAliases
+    mapAttrsToList (k: v: "alias -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}") cfg.shellAliases
   );
 
   dirHashesStr = concatStringsSep "\n" (
     mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
   );
 
-  zdotdir = "$HOME/" + cfg.dotDir;
+  zdotdir = "$HOME/" + lib.escapeShellArg cfg.dotDir;
 
   bindkeyCommands = {
     emacs = "bindkey -e";
@@ -637,8 +637,8 @@ in
         # Aliases
         ${aliasesStr}
         ''
-      ] 
-      ++ (mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases) 
+      ]
+      ++ (mapAttrsToList (k: v: "alias -g -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases)
       ++ [ (''
         # Named Directory Hashes
         ${dirHashesStr}

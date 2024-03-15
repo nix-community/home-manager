@@ -374,7 +374,7 @@ in
       example = literalExpression ''
         {
           myActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] '''
-            $DRY_RUN_CMD ln -s $VERBOSE_ARG \
+            run ln -s $VERBOSE_ARG \
                 ''${builtins.toPath ./link-me-directly} $HOME
           ''';
         }
@@ -396,18 +396,32 @@ in
         collisions between non-managed files and files defined in
         [](#opt-home.file).
 
-        A script block should respect the {var}`DRY_RUN`
-        variable, if it is set then the actions taken by the script
-        should be logged to standard out and not actually performed.
-        The variable {var}`DRY_RUN_CMD` is set to
-        {command}`echo` if dry run is enabled.
+        A script block should respect the {var}`DRY_RUN` variable. If it is set
+        then the actions taken by the script should be logged to standard out
+        and not actually performed. A convenient shell function {command}`run`
+        is provided for activation script blocks. It is used as follows:
 
-        A script block should also respect the
-        {var}`VERBOSE` variable, and if set print
-        information on standard out that may be useful for debugging
-        any issue that may arise. The variable
-        {var}`VERBOSE_ARG` is set to
-        {option}`--verbose` if verbose output is enabled.
+        {command}`run {command}`
+        : Runs the given command on live run, otherwise prints the command to
+        standard output.
+
+        {command}`run --quiet {command}`
+        : Runs the given command on live run and sends its standard output to
+        {file}`/dev/null`, otherwise prints the command to standard output.
+
+        {command}`run --silence {command}`
+        : Runs the given command on live run and sends its standard and error
+        output to {file}`/dev/null`, otherwise prints the command to standard
+        output.
+
+        The `--quiet` and `--silence` flags are mutually exclusive.
+
+        A script block should also respect the {var}`VERBOSE` variable, and if
+        set print information on standard out that may be useful for debugging
+        any issue that may arise. The variable {var}`VERBOSE_ARG` is set to
+        {option}`--verbose` if verbose output is enabled. You can also use the
+        provided shell function {command}`verboseEcho`, which acts as
+        {command}`echo` when verbose output is enabled.
       '';
     };
 
@@ -594,7 +608,7 @@ in
 
             nixProfileRemove 'home-manager-path'
 
-            $DRY_RUN_CMD $oldNix profile install $1
+            run $oldNix profile install $1
           }
 
           if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
@@ -604,7 +618,7 @@ in
             REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
           else
             INSTALL_CMD="nix-env -i"
-            INSTALL_CMD_ACTUAL="$DRY_RUN_CMD nix-env -i"
+            INSTALL_CMD_ACTUAL="run nix-env -i"
             LIST_CMD="nix-env -q"
             REMOVE_CMD_SYNTAX='nix-env -e {package name}'
           fi

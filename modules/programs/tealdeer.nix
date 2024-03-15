@@ -4,23 +4,64 @@ with lib;
 let
   cfg = config.programs.tealdeer;
 
-  tomlFormat = pkgs.formats.toml { };
-
   configDir = if pkgs.stdenv.isDarwin then
     "Library/Application Support"
   else
     config.xdg.configHome;
 
+  tomlFormat = pkgs.formats.toml { };
+
+  settingsFormat = let
+    updatesSection = types.submodule {
+      options = {
+        auto_update = mkEnableOption "auto-update";
+
+        auto_update_interval_hours = mkOption {
+          type = types.ints.positive;
+          default = 720;
+          example = literalExpression "24";
+          description = ''
+            Duration, since the last cache update, after which the cache will be refreshed.
+            This parameter is ignored if {var}`auto_update` is set to `false`.
+          '';
+        };
+      };
+    };
+  in types.submodule {
+    freeformType = tomlFormat.type;
+    options = {
+      updates = mkOption {
+        type = updatesSection;
+        default = { };
+        description = ''
+          Tealdeer can refresh the cache automatically when it is outdated.
+          This behavior can be configured in the updates section.
+        '';
+      };
+    };
+  };
+
 in {
-  meta.maintainers = [ ];
+  meta.maintainers = [ hm.maintainers.pedorich-n ];
+
+  imports = [
+    (mkRemovedOptionModule [ "programs" "tealdeer" "updateOnActivation" ] ''
+      Updating tealdeer's cache requires network access.
+      The activation script should be fast and idempotent, so the option was removed.
+      Please use
+
+        `programs.teadleer.settings.updates.auto_update = true`
+
+      instead, to make sure tealdeer's cache is updated periodically.
+    '')
+  ];
 
   options.programs.tealdeer = {
     enable = mkEnableOption "Tealdeer";
 
     settings = mkOption {
-      type = tomlFormat.type;
-      default = { };
-      defaultText = literalExpression "{ }";
+      type = types.nullOr settingsFormat;
+      default = null;
       example = literalExpression ''
         {
           display = {
@@ -35,10 +76,8 @@ in {
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/tealdeer/config.toml` on Linux or
-        {file}`$HOME/Library/Application Support/tealdeer/config.toml`
-        on Darwin. See
-        <https://dbrgn.github.io/tealdeer/config.html>
-        for more information.
+        {file}`$HOME/Library/Application Support/tealdeer/config.toml` on Darwin.
+        See <https://dbrgn.github.io/tealdeer/config.html> for more information.
       '';
     };
   };
@@ -46,8 +85,9 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ pkgs.tealdeer ];
 
-    home.file."${configDir}/tealdeer/config.toml" = mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "tealdeer-config" cfg.settings;
-    };
+    home.file."${configDir}/tealdeer/config.toml" =
+      mkIf (cfg.settings != null && cfg.settings != { }) {
+        source = tomlFormat.generate "tealdeer-config" cfg.settings;
+      };
   };
 }

@@ -26,8 +26,9 @@ let
     filterAttrs (_: v: v != null)
     ((getAttrs [ "type" "fileExt" "encoding" ] a.local) // {
       path = a.local.path;
-      postHook = pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook
-        + "/bin/post-hook";
+      postHook = optionalString (a.vdirsyncer.postHook != null)
+        (pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook
+          + "/bin/post-hook");
     });
 
   remoteStorage = a:
@@ -91,7 +92,7 @@ let
     else if (n == "passwordPrompt") then
       ''password.fetch = ["prompt", "${v}"]''
     else if (n == "verify") then
-      "verify = ${if v then "true" else "false"}"
+      ''verify = "${v}"''
     else if (n == "verifyFingerprint") then
       ''verify_fingerprint = "${v}"''
     else if (n == "auth") then

@@ -5,6 +5,24 @@ let
 
   cfg = config.programs.mcfly;
 
+  bashIntegration = ''
+    eval "$(${getExe pkgs.mcfly} init bash)"
+  '' + optionalString cfg.fzf.enable ''
+    eval "$(${getExe pkgs.mcfly-fzf} init bash)"
+  '';
+
+  fishIntegration = ''
+    ${getExe pkgs.mcfly} init fish | source
+  '' + optionalString cfg.fzf.enable ''
+    ${getExe pkgs.mcfly-fzf} init fish | source
+  '';
+
+  zshIntegration = ''
+    eval "$(${getExe pkgs.mcfly} init zsh)"
+  '' + optionalString cfg.fzf.enable ''
+    eval "$(${getExe pkgs.mcfly-fzf} init zsh)"
+  '';
+
 in {
   meta.maintainers = [ ];
 
@@ -29,6 +47,16 @@ in {
         Key scheme to use.
       '';
     };
+
+    interfaceView = mkOption {
+      type = types.enum [ "TOP" "BOTTOM" ];
+      default = "TOP";
+      description = ''
+        Interface view to use.
+      '';
+    };
+
+    fzf.enable = mkEnableOption "McFly fzf integration";
 
     enableLightTheme = mkOption {
       default = false;
@@ -75,21 +103,17 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ pkgs.mcfly ];
+      home.packages = [ pkgs.mcfly ] ++ optional cfg.fzf.enable pkgs.mcfly-fzf;
 
-      programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        eval "$(${pkgs.mcfly}/bin/mcfly init bash)"
-      '';
+      programs.bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 
-      programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-        eval "$(${pkgs.mcfly}/bin/mcfly init zsh)"
-      '';
+      programs.zsh.initExtra = mkIf cfg.enableZshIntegration zshIntegration;
 
-      programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-        ${pkgs.mcfly}/bin/mcfly init fish | source
-      '';
+      programs.fish.shellInit = mkIf cfg.enableFishIntegration fishIntegration;
 
       home.sessionVariables.MCFLY_KEY_SCHEME = cfg.keyScheme;
+
+      home.sessionVariables.MCFLY_INTERFACE_VIEW = cfg.interfaceView;
     }
 
     (mkIf cfg.enableLightTheme { home.sessionVariables.MCFLY_LIGHT = "TRUE"; })

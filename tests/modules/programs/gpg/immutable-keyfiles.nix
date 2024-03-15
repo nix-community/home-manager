@@ -11,8 +11,8 @@
       {
         source = pkgs.fetchurl {
           url =
-            "https://keys.openpgp.org/pks/lookup?op=get&options=mr&search=0x36cacf52d098cc0e78fb0cb13573356c25c424d4";
-          hash = "sha256-9Zjsb/TtOyiPzMO/Jg3CtJwSxuw7QmX0pcfZT2/1w5E=";
+            "https://keys.openpgp.org/pks/lookup?op=get&options=mr&search=0x44CF42371ADF842E12F116EAA9D3F98FCCF5460B";
+          hash = "sha256-u01QTYEFSY1feJWX3JJjXB6thiVO4WOnrqNmzg6vIDs=";
         };
         trust = 1; # "unknown"
       }
@@ -44,7 +44,7 @@
 
     # Check Trust
     assertFileRegex $WORKDIR/gpgtrust.txt \
-      '^36CACF52D098CC0E78FB0CB13573356C25C424D4:2:$'
+      '^44CF42371ADF842E12F116EAA9D3F98FCCF5460B:2:$'
 
     assertFileRegex $WORKDIR/gpgtrust.txt \
       '^BB847B5A69EF343CEF511B29073C282D7D6F806C:3:$'

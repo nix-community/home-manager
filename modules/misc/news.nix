@@ -1383,14 +1383,90 @@ in {
           A new module is available: 'xdg.portal'.
         '';
       }
+      {
+        time = "2024-01-20T23:45:07+00:00";
+        message = ''
+          A new module is available: 'programs.mise'.
+
+          This module replaces 'programs.rtx', which has been removed.
+        '';
+      }
 
       {
-        time = "2024-01-18T23:49:25+00:00";
+        time = "2024-01-27T22:53:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.wob'.
+        '';
+      }
+
+      {
+        time = "2024-02-05T22:33:54+00:00";
+        message = ''
+          A new module is available: 'services.arrpc'
+        '';
+      }
+
+      {
+        time = "2024-02-05T22:45:37+00:00";
+        message = ''
+          A new module is available: 'programs.jetbrains-remote'
+        '';
+      }
+
+      {
+        time = "2024-02-21T23:01:27+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'wayland.windowManager.river'.
+        '';
+      }
+
+      {
+        time = "2024-03-08T22:20:04+00:00";
+        message = ''
+          A new module is available: 'programs.zk'
+        '';
+      }
+
+      {
+        time = "2024-03-08T22:23:24+00:00";
+        message = ''
+          A new module is available: 'programs.ranger'.
+        '';
+      }
+
+      {
+        time = "2024-03-13T13:28:22+00:00";
+        message = ''
+          A new module is available: 'programs.joplin-desktop'.
+        '';
+      }
+
+      {
+        time = "2024-03-14T07:22:09+00:00";
+        condition = config.services.gpg-agent.enable;
+        message = ''
+          'services.gpg-agent.pinentryFlavor' has been removed and replaced by
+          'services.gpg-agent.pinentryPackage'.
+        '';
+      }
+
+      {
+        time = "2024-03-14T07:22:59+00:00";
+        condition = config.programs.rbw.enable;
+        message = ''
+          'programs.rbw.pinentry' has been simplified to only accept 'null' or
+          a package.
+        '';
+      }
+      
+      {
+        time = "2024-03-14T20:56:25+00:00";
         message = ''
           A new module is available: 'programs.mullvad-browser'.
         '';
       }
-
     ];
   };
 }

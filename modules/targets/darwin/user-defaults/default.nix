@@ -13,9 +13,9 @@ let
       cliFlags = lib.optionalString isLocal "-currentHost";
 
       toActivationCmd = domain: attrs:
-        "$DRY_RUN_CMD /usr/bin/defaults ${cliFlags} import ${
-          escapeShellArg domain
-        } ${toDefaultsFile domain attrs}";
+        "run /usr/bin/defaults ${cliFlags} import ${escapeShellArg domain} ${
+          toDefaultsFile domain attrs
+        }";
 
       nonNullDefaults =
         mapAttrs (domain: attrs: (filterAttrs (n: v: v != null) attrs))
@@ -100,7 +100,7 @@ in {
     '';
 
     home.activation.setDarwinDefaults = hm.dag.entryAfter [ "writeBoundary" ] ''
-      $VERBOSE_ECHO "Configuring macOS user defaults"
+      verboseEcho "Configuring macOS user defaults"
       ${concatStringsSep "\n" activationCmds}
     '';
   };

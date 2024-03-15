@@ -126,6 +126,7 @@ in {
         contactOpts
         (import ../programs/vdirsyncer-accounts.nix)
         (import ../programs/khal-accounts.nix)
+        (import ../programs/khal-contact-accounts.nix)
       ]);
       default = { };
       description = "List of contacts.";
