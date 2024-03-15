@@ -23,7 +23,7 @@ let
         imports = import ../modules/modules.nix {
           inherit pkgs;
           lib = extendedLib;
-          useNixpkgsModule = !cfg.useGlobalPkgs;
+          inheritGlobalPkgs = cfg.useGlobalPkgs;
         };
 
         config = {
