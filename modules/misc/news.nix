@@ -1383,7 +1383,6 @@ in {
           A new module is available: 'xdg.portal'.
         '';
       }
-
       {
         time = "2024-01-20T23:45:07+00:00";
         message = ''
@@ -1459,6 +1458,13 @@ in {
         message = ''
           'programs.rbw.pinentry' has been simplified to only accept 'null' or
           a package.
+        '';
+      }
+      
+      {
+        time = "2024-03-14T20:56:25+00:00";
+        message = ''
+          A new module is available: 'programs.mullvad-browser'.
         '';
       }
     ];

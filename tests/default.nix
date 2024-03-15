@@ -196,6 +196,7 @@ in import nmtSrc {
     ./modules/programs/kodi
     ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
+    ./modules/programs/mullvad-browser
     ./modules/programs/ncmpcpp-linux
     ./modules/programs/pqiv
     ./modules/programs/rbw
