@@ -44,7 +44,7 @@ in {
     };
 
     skins = mkOption {
-      type = types.attrsOf yamlFormat.type;
+      type = with types; attrsOf (oneOf [ yamlFormat.type path ]);
       default = { };
       description = ''
         Skin files written to {file}`$XDG_CONFIG_HOME/k9s/skins/`. See
@@ -58,6 +58,7 @@ in {
             };
           };
         };
+        my_red_skin = ./red_skin.yaml;
       '';
     };
 
@@ -163,7 +164,10 @@ in {
 
     skinFiles = mapAttrs' (name: value:
       nameValuePair "k9s/skins/${name}.yaml" {
-        source = yamlFormat.generate "k9s-skin-${name}.yaml" value;
+        source = if lib.types.path.check value then
+          value
+        else
+          yamlFormat.generate "k9s-skin-${name}.yaml" value;
       }) cfg.skins;
   in mkIf cfg.enable {
     home.packages = [ cfg.package ];

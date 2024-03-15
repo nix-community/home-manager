@@ -37,6 +37,7 @@
           };
         };
       };
+      "default2" = ./example-skin-expected.yaml;
       "alt-skin" = {
         k9s = {
           body = {
@@ -84,6 +85,10 @@
     assertFileExists home-files/.config/k9s/skins/default.yaml
     assertFileContent \
       home-files/.config/k9s/skins/default.yaml \
+      ${./example-skin-expected.yaml}
+    assertFileExists home-files/.config/k9s/skins/default2.yaml
+    assertFileContent \
+      home-files/.config/k9s/skins/default2.yaml \
       ${./example-skin-expected.yaml}
     assertFileExists home-files/.config/k9s/skins/alt-skin.yaml
     assertFileContent \
