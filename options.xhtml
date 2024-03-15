@@ -40845,11 +40845,11 @@ package</p>
 <span class="citerefentry"><span class="refentrytitle">senpai</span>(5)</span>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-YAML value</p>
+attribute set of anything</p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  addr = &quot;libera.chat:6697&quot;;
-  nick = &quot;nicholas&quot;;
+  address = &quot;libera.chat:6697&quot;;
+  nickname = &quot;nicholas&quot;;
   password = &quot;verysecurepassword&quot;;
 }
 
@@ -40866,14 +40866,17 @@ YAML value</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.senpai.config.addr"></a><a class="term" href="options.xhtml#opt-programs.senpai.config.addr"><code class="option">programs.senpai.config.addr</code>
+ <a id="opt-programs.senpai.config.address"></a><a class="term" href="options.xhtml#opt-programs.senpai.config.address"><code class="option">programs.senpai.config.address</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>The address (host[:port]) of the IRC server. senpai uses TLS
-connections by default unless you specify no-tls option. TLS
-connections default to port 6697, plain-text use port 6667.</p>
+<p>The address (<code class="literal">host[:port]</code>) of the IRC server. senpai uses TLS
+connections by default unless you specify tls option to be false.
+TLS connections default to port 6697, plain-text use port 6667.</p><p>UR<code class="literal">ircs://</code>, <code class="literal">irc://</code>, and <code class="literal">irc+insecure://</code> URLs are supported,
+in which case only the hostname and port parts will be used. If
+the scheme is <code class="literal">ircs/irc+insecure</code>, tls will be overriden and set
+to true/false accordingly.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 string</p>
@@ -40889,7 +40892,7 @@ string</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.senpai.config.nick"></a><a class="term" href="options.xhtml#opt-programs.senpai.config.nick"><code class="option">programs.senpai.config.nick</code>
+ <a id="opt-programs.senpai.config.nickname"></a><a class="term" href="options.xhtml#opt-programs.senpai.config.nickname"><code class="option">programs.senpai.config.nickname</code>
   </a>
  </span>
 </dt>
@@ -40899,30 +40902,6 @@ spaces or colons (:).</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 string</p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/senpai.nix" target="_top">
-&lt;home-manager/modules/programs/senpai.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.senpai.config.no-tls"></a><a class="term" href="options.xhtml#opt-programs.senpai.config.no-tls"><code class="option">programs.senpai.config.no-tls</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Disables TLS encryption.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -40948,6 +40927,44 @@ null or string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/senpai.nix" target="_top">
+&lt;home-manager/modules/programs/senpai.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.senpai.config.password-cmd"></a><a class="term" href="options.xhtml#opt-programs.senpai.config.password-cmd"><code class="option">programs.senpai.config.password-cmd</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Alternatively to providing your SASL authentication password
+directly in plaintext, you can specify a command to be run to
+fetch the password at runtime. This is useful if you store your
+passwords in a separate (probably encrypted) file using <code class="literal">gpg</code> or a
+command line password manager such as <code class="literal">pass</code> or <code class="literal">gopass</code>. If a
+password-cmd is provided, the value of password will be ignored
+and the first line of the output of <code class="literal">password-cmd</code> will be used
+for login.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (list of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;gopass&quot;
+  &quot;show&quot;
+  &quot;irc/guest&quot;
+]
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
