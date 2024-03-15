@@ -50964,30 +50964,6 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.zsh.enableAutosuggestions"></a><a class="term" href="options.xhtml#opt-programs.zsh.enableAutosuggestions"><code class="option">programs.zsh.enableAutosuggestions</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Enable zsh autosuggestions</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-unspecified value</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix" target="_top">
-&lt;home-manager/modules/programs/zsh.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
  <a id="opt-programs.zsh.enableCompletion"></a><a class="term" href="options.xhtml#opt-programs.zsh.enableCompletion"><code class="option">programs.zsh.enableCompletion</code>
   </a>
  </span>
@@ -51185,6 +51161,58 @@ null or boolean</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix" target="_top">
+&lt;home-manager/modules/programs/zsh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zsh.autosuggestion.enable"></a><a class="term" href="options.xhtml#opt-programs.zsh.autosuggestion.enable"><code class="option">programs.zsh.autosuggestion.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Enable zsh autosuggestions</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix" target="_top">
+&lt;home-manager/modules/programs/zsh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zsh.autosuggestion.highlight"></a><a class="term" href="options.xhtml#opt-programs.zsh.autosuggestion.highlight"><code class="option">programs.zsh.autosuggestion.highlight</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Custom styles for autosuggestion highlighting. See
+<span class="citerefentry"><span class="refentrytitle">zshzle</span>(1)</span> for syntax.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;fg=#ff00ff,bg=cyan,bold,underline&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
