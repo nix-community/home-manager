@@ -9,6 +9,10 @@ let
     let
       freq = {
         "hourly" = [{ Minute = 0; }];
+        "daily" = [{
+          Hour = 0;
+          Minute = 0;
+        }];
         "weekly" = [{
           Weekday = 1;
           Hour = 0;
@@ -62,8 +66,14 @@ in {
       };
 
       frequency = mkOption {
-        type =
-          types.enum [ "hourly" "weekly" "monthly" "semiannually" "annually" ];
+        type = types.enum [
+          "hourly"
+          "daily"
+          "weekly"
+          "monthly"
+          "semiannually"
+          "annually"
+        ];
         default = "weekly";
         example = "monthly";
         description = ''
