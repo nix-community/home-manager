@@ -3,6 +3,8 @@ if [ -z "$HM_XPROFILE_SOURCED" ]; then
 fi
 unset HM_XPROFILE_SOURCED
 
+
+
 systemctl --user start hm-graphical-session.target
 
 init extra commands

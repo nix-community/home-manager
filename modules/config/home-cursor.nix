@@ -163,7 +163,7 @@ in {
     }
 
     (mkIf cfg.x11.enable {
-      xsession.initExtra = ''
+      xsession.initBeforeSystemd = ''
         ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${
           toString cfg.size
         }
