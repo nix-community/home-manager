@@ -53905,6 +53905,359 @@ null or string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.activitywatch.enable"></a><a class="term" href="options.xhtml#opt-services.activitywatch.enable"><code class="option">services.activitywatch.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable ActivityWatch, an automated time tracker.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.activitywatch.package"></a><a class="term" href="options.xhtml#opt-services.activitywatch.package"><code class="option">services.activitywatch.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Package containing <a class="link" href="https://github.com/ActivityWatch/aw-server-rust"  target="_top">the Rust implementation of ActivityWatch
+server</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.activitywatch</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">pkgs.aw-server-rust</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.activitywatch.extraOptions"></a><a class="term" href="options.xhtml#opt-services.activitywatch.extraOptions"><code class="option">services.activitywatch.extraOptions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Additional arguments to be passed on to the ActivityWatch server.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--port&quot;
+  &quot;5999&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.activitywatch.settings"></a><a class="term" href="options.xhtml#opt-services.activitywatch.settings"><code class="option">services.activitywatch.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration for <code class="literal">aw-server-rust</code> to be generated at
+<code class="filename">$XDG_CONFIG_HOME/activitywatch/aw-server-rust/config.toml</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  port = 3012;
+
+  custom_static = {
+    my-custom-watcher = &quot;${pkgs.my-custom-watcher}/share/my-custom-watcher/static&quot;;
+    aw-keywatcher = &quot;${pkgs.aw-keywatcher}/share/aw-keywatcher/static&quot;;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.activitywatch.watchers"></a><a class="term" href="options.xhtml#opt-services.activitywatch.watchers"><code class="option">services.activitywatch.watchers</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Watchers to be included with the service alongside with their
+configuration.</p><p>If a configuration is set, a file will be generated in
+<code class="filename">$XDG_CONFIG_HOME/activitywatch/$WATCHER_NAME/$WATCHER_SETTINGS_FILENAME</code>.</p><div class="note"><h3 class="title">Note</h3><p>The watchers are run with the service manager and the settings format
+of the configuration is only assumed to be in TOML. Furthermore, it
+assumes the watcher program is using the official client libraries
+which has functions to store it in the appropriate location.</p></div>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  aw-watcher-afk = {
+    package = pkgs.activitywatch;
+    settings = {
+      timeout = 300;
+      poll_time = 2;
+    };
+  };
+
+  aw-watcher-windows = {
+    package = pkgs.activitywatch;
+    settings = {
+      poll_time = 1;
+      exclude_title = true;
+    };
+  };
+
+  my-custom-watcher = {
+    package = pkgs.my-custom-watcher;
+    executable = &quot;mcw&quot;;
+    settings = {
+      hello = &quot;there&quot;;
+      enable_greetings = true;
+      poll_time = 5;
+    };
+    settingsFilename = &quot;config.toml&quot;;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.activitywatch.watchers._name_.package"></a><a class="term" href="options.xhtml#opt-services.activitywatch.watchers._name_.package"><code class="option">services.activitywatch.watchers.&lt;name&gt;.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The derivation containing the watcher executable.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">pkgs.activitywatch</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.activitywatch.watchers._name_.executable"></a><a class="term" href="options.xhtml#opt-services.activitywatch.watchers._name_.executable"><code class="option">services.activitywatch.watchers.&lt;name&gt;.executable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The name of the executable of the watcher. This is useful in case the
+watcher name is different from the executable. By default, this
+option uses the watcher name.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;‹name›&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.activitywatch.watchers._name_.extraOptions"></a><a class="term" href="options.xhtml#opt-services.activitywatch.watchers._name_.extraOptions"><code class="option">services.activitywatch.watchers.&lt;name&gt;.extraOptions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra arguments to be passed to the watcher executable.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--host&quot;
+  &quot;127.0.0.1&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.activitywatch.watchers._name_.name"></a><a class="term" href="options.xhtml#opt-services.activitywatch.watchers._name_.name"><code class="option">services.activitywatch.watchers.&lt;name&gt;.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The name of the watcher. This will be used as the directory name for
+<code class="filename">$XDG_CONFIG_HOME/activitywatch/$NAME</code> when
+<code class="option">services.activitywatch.watchers.&lt;name&gt;.settings</code> is set.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;‹name›&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;aw-watcher-afk&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.activitywatch.watchers._name_.settings"></a><a class="term" href="options.xhtml#opt-services.activitywatch.watchers._name_.settings"><code class="option">services.activitywatch.watchers.&lt;name&gt;.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The settings for the individual watcher in TOML format. If set, a
+file will be generated at
+<code class="filename">$XDG_CONFIG_HOME/activitywatch/$NAME/$FILENAME</code>.</p><p>To set the basename of the settings file, see
+<a class="xref" href="options.xhtml#opt-services.activitywatch.watchers._name_.settingsFilename"  ><code class="option">services.activitywatch.watchers.&lt;name&gt;.settingsFilename</code></a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  poll_time = 2;
+  timeout = 300;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.activitywatch.watchers._name_.settingsFilename"></a><a class="term" href="options.xhtml#opt-services.activitywatch.watchers._name_.settingsFilename"><code class="option">services.activitywatch.watchers.&lt;name&gt;.settingsFilename</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The filename of the generated settings file. By default, this uses
+the watcher name to be generated at
+<code class="filename">$XDG_CONFIG_HOME/activitywatch/$NAME/$NAME.toml</code>.</p><p>This is useful in case the watcher requires a different name for the
+configuration file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;‹name›.toml&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;config.toml&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/activitywatch.nix" target="_top">
+&lt;home-manager/modules/services/activitywatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.arrpc.enable"></a><a class="term" href="options.xhtml#opt-services.arrpc.enable"><code class="option">services.arrpc.enable</code>
   </a>
  </span>
