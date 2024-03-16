@@ -29,7 +29,8 @@ let
   else
     unwrappedPackageName;
 
-  profilesPath = if isDarwin then "${cfg.configPath}/Profiles" else cfg.configPath;
+  profilesPath =
+    if isDarwin then "${cfg.configPath}/Profiles" else cfg.configPath;
 
   nativeMessagingHostsPath = if isDarwin then
     "${cfg.vendorPath}/NativeMessagingHosts"
@@ -269,6 +270,13 @@ in {
       default = name;
       example = "Firefox";
       description = "The name of the browser.";
+    };
+
+    wrappedPackageName = mkOption {
+      internal = true;
+      type = with types; nullOr str;
+      default = wrappedPackageName;
+      description = "Name of the wrapped browser package.";
     };
 
     vendorPath = mkOption {
@@ -928,7 +936,8 @@ in {
                 null;
 
               privateSalt = if profile.search.privateDefault != null then
-                profile.path + profile.search.privateDefault + disclaimer cfg.name
+                profile.path + profile.search.privateDefault
+                + disclaimer cfg.name
               else
                 null;
             in pkgs.runCommand "search.json.mozlz4" {

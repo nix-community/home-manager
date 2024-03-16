@@ -1,22 +1,29 @@
+modulePath:
 { config, lib, pkgs, ... }:
 
-{
-  imports = [ ./setup-firefox-mock-overlay.nix ];
+with lib;
 
-  config = lib.mkIf config.test.enableBig {
+let
+
+  cfg = getAttrFromPath modulePath config;
+
+  firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix modulePath;
+
+in {
+  imports = [ firefoxMockOverlay ];
+
+  config = mkIf config.test.enableBig ({
     home.stateVersion = "23.05";
-
-    programs.firefox = {
-      enable = true;
-      policies = { BlockAboutConfig = true; };
-      package = pkgs.firefox.override {
-        extraPolicies = { DownloadDirectory = "/foo"; };
-      };
+  } // setAttrByPath modulePath {
+    enable = true;
+    policies = { BlockAboutConfig = true; };
+    package = pkgs.${cfg.wrappedPackageName}.override {
+      extraPolicies = { DownloadDirectory = "/foo"; };
     };
-
+  }) // {
     nmt.script = ''
       jq=${lib.getExe pkgs.jq}
-      config_file="${config.programs.firefox.finalPackage}/lib/firefox/distribution/policies.json"
+      config_file="${cfg.finalPackage}/lib/${cfg.wrappedPackageName}/distribution/policies.json"
 
       assertFileExists "$config_file"
 

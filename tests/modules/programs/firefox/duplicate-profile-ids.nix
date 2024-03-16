@@ -1,23 +1,30 @@
+modulePath:
 { config, lib, ... }:
 
-{
-  imports = [ ./setup-firefox-mock-overlay.nix ];
+with lib;
 
-  config = lib.mkIf config.test.enableBig {
+let
+
+  cfg = getAttrFromPath modulePath config;
+
+  firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix modulePath;
+
+in {
+  imports = [ firefoxMockOverlay ];
+
+  config = mkIf config.test.enableBig ({
     test.asserts.assertions.expected = [''
-      Must not have a Firefox profile with an existing ID but
+      Must not have a ${cfg.name} profile with an existing ID but
         - ID 1 is used by first, second''];
+  } // setAttrByPath modulePath {
+    enable = true;
 
-    programs.firefox = {
-      enable = true;
-
-      profiles = {
-        first = {
-          isDefault = true;
-          id = 1;
-        };
-        second = { id = 1; };
+    profiles = {
+      first = {
+        isDefault = true;
+        id = 1;
       };
+      second = { id = 1; };
     };
-  };
+  });
 }
