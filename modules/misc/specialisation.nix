@@ -2,7 +2,8 @@
 
 with lib;
 
-{
+let cfg = config.specialisation;
+in {
   imports =
     [ (mkRenamedOptionModule [ "specialization" ] [ "specialisation" ]) ];
 
@@ -31,11 +32,21 @@ with lib;
             Arbitrary Home Manager configuration settings.
           '';
         };
+        default = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Whether this specialisation is activated by default.
+            Note that setting this option will override the default activation
+            script, making it impossible to activate the default
+            configuration.
+          '';
+        };
       };
     });
     default = { };
     description = ''
-      A set of named specialized configurations. These can be used to extend
+      A set of named specialised configurations. These can be used to extend
       your base configuration with additional settings. For example, you can
       have specialisations named "light" and "dark"
       that apply light and dark color theme configurations.
@@ -70,14 +81,27 @@ with lib;
     '';
   };
 
-  config = mkIf (config.specialisation != { }) {
+  config = mkIf (cfg != { }) {
+    assertions = [{
+      assertion = count (s: s.default) (attrValues cfg) <= 1;
+      message = "There can only be one default specialisation";
+    }];
+
     home.extraBuilderCommands = let
       link = n: v:
         let pkg = v.configuration.home.activationPackage;
         in "ln -s ${pkg} $out/specialisation/${n}";
     in ''
       mkdir $out/specialisation
-      ${concatStringsSep "\n" (mapAttrsToList link config.specialisation)}
+      ${concatStringsSep "\n" (mapAttrsToList link cfg)}
     '';
+
+    home.activation = let
+      defaultSpecialisation = findFirst (s: s.default) null (attrValues cfg);
+    in mkIf (defaultSpecialisation != null) (mkForce {
+      activateSpecialisation = ''
+        ${defaultSpecialisation.configuration.home.activationPackage}/activate
+      '';
+    });
   };
 }
