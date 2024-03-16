@@ -5,7 +5,7 @@ with lib;
 let
 
   cfg = config.services.kdeconnect;
-  package = pkgs.plasma5Packages.kdeconnect-kde;
+  package = cfg.package;
 
 in {
   meta.maintainers = [ maintainers.adisbladis ];
@@ -13,6 +13,8 @@ in {
   options = {
     services.kdeconnect = {
       enable = mkEnableOption "KDE connect";
+
+      package = mkPackageOption pkgs [ "plasma5Packages" "kdeconnect-kde" ] { };
 
       indicator = mkOption {
         type = types.bool;
