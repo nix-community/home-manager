@@ -48,12 +48,6 @@ in {
       '';
     };
 
-    finalStdlib = mkOption {
-      type = types.lines;
-      readOnly = true;
-      internal = true;
-    };
-
     enableBashIntegration = mkOption {
       default = true;
       type = types.bool;
@@ -106,18 +100,17 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.direnv.finalStdlib = lib.mkMerge [
-      cfg.stdlib
-      (lib.mkIf (cfg.nix-direnv.enable) (lib.mkBefore
-        "source ${cfg.nix-direnv.package}/share/nix-direnv/direnvrc"))
-    ];
-
     xdg.configFile."direnv/direnv.toml" = mkIf (cfg.config != { }) {
       source = tomlFormat.generate "direnv-config" cfg.config;
     };
 
+    xdg.configFile."direnv/lib/nix-direnv.sh" = mkIf cfg.nix-direnv.enable {
+      source = "${cfg.nix-direnv.package}/share/nix-direnv/direnvrc";
+      executable = true;
+    };
+
     xdg.configFile."direnv/direnvrc" =
-      lib.mkIf (cfg.finalStdlib != "") { text = cfg.finalStdlib; };
+      lib.mkIf (cfg.stdlib != "") { text = cfg.stdlib; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
       # Using mkAfter to make it more likely to appear after other
