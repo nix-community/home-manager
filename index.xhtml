@@ -34,7 +34,7 @@
    <hr />
   </div>
 <div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="preface">  <a href="index.xhtml#preface">Preface</a> </span></dt><dt> <span class="part">  <a href="index.xhtml#ch-installation">Installing Home Manager</a> </span></dt><dd><dl><dt> <span class="section">  <a href="index.xhtml#sec-install-standalone">Standalone installation</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-install-nixos-module">NixOS module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-install-nix-darwin-module">nix-darwin module</a> </span></dt></dl></dd><dt> <span class="part">  <a href="index.xhtml#ch-usage">Using Home Manager</a> </span></dt><dd><dl><dt> <span class="section">  <a href="index.xhtml#sec-usage-configuration">Configuration Example</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-rollbacks">Rollbacks</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-dotfiles">Keeping your ~ safe from harm</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-graphical">Graphical services</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-updating">Updating</a> </span></dt></dl></dd><dt> <span class="part">  <a href="index.xhtml#ch-nix-flakes">Nix Flakes</a> </span></dt><dd><dl><dt> <span class="section">  <a href="index.xhtml#sec-flakes-prerequisites">Prerequisites</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-standalone">Standalone setup</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nixos-module">NixOS module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nix-darwin-module">nix-darwin module</a> </span></dt></dl></dd><dt> <span class="part">  <a href="index.xhtml#ch-writing-modules">Writing Home Manager Modules</a> </span></dt><dd><dl><dt> <span class="section">  <a href="index.xhtml#sec-option-types">Option Types</a> </span></dt></dl></dd><dt> <span class="part">  <a href="index.xhtml#ch-contributing">Contributing</a> </span></dt><dd><dl><dt> <span class="section">  <a href="index.xhtml#sec-contrib-getting-started">Getting started</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines">Guidelines</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-news">News</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests">Tests</a> </span></dt></dl></dd><dt> <span class="part">  <a href="index.xhtml#ch-3rd-party">Third-Party Tools and Extensions</a> </span></dt><dd><dl><dt> <span class="section">  <a href="index.xhtml#sec-3rd-party-module-collections">Module Collections</a> </span></dt></dl></dd><dt> <span class="part">  <a href="index.xhtml#ch-faq">Frequently Asked Questions (FAQ)</a> </span></dt><dd><dl><dt> <span class="section">  <a href="index.xhtml#_why_is_there_a_collision_error_when_switching_generation">Why is there a collision error when switching generation?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_why_are_the_session_variables_not_set">Why are the session variables not set?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_how_to_set_up_a_configuration_for_multiple_users_machines">How to set up a configuration for multiple users/machines?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_why_do_i_get_an_error_message_about_literal_ca_desrt_dconf_literal_or_literal_dconf_service_literal">Why do I get an error message about <code class="literal">ca.desrt.dconf</code> or <code class="literal">dconf.service</code>?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_how_do_i_install_packages_from_nixpkgs_unstable">How do I install packages from Nixpkgs unstable?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_how_do_i_change_the_package_used_by_a_module">How do I change the package used by a module?</a> </span></dt></dl></dd><dt> <span class="appendix">  <a href="options.xhtml">A. Home Manager Configuration Options</a> </span></dt><dt> <span class="appendix">  <a href="nixos-options.xhtml">B. NixOS Configuration Options</a> </span></dt><dt> <span class="appendix">  <a href="nix-darwin-options.xhtml">C. nix-darwin Configuration Options</a> </span></dt><dt> <span class="appendix">  <a href="release-notes.xhtml">D. Release Notes</a> </span></dt> </dl></div>
-<div class="preface"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <a id="preface"></a>Preface   </h1>  </div> </div></div><p>This manual will eventually describe how to install, use, and extend Home
+<div class="preface"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <span id="preface"></span>Preface   </h1>  </div> </div></div><p>This manual will eventually describe how to install, use, and extend Home
 Manager.</p><p>If you encounter problems then please reach out on the IRC channel
 <a class="link" href="https://webchat.oftc.net/?channels=home-manager"  target="_top">#home-manager</a>
 hosted by <a class="link" href="https://oftc.net/"  target="_top">OFTC</a>.
@@ -45,7 +45,7 @@ be reported on the
 <a class="link" href="https://github.com/nix-community/home-manager/issues"  target="_top">Home Manager issue tracker</a>.</p><div class="note"><h3 class="title">Note</h3><p>Commands prefixed with <code class="literal">$ sudo</code> have to be run as root, either
 requiring to login as root user or temporarily switching to it using
 <code class="literal">sudo</code> for example.</p></div>
-</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <a id="ch-installation"></a>Installing Home Manager   </h1>  </div> </div></div><div class="partintro"><p>Home Manager can be used in three primary ways:</p><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>Using the standalone <code class="literal">home-manager</code> tool. For platforms other than
+</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <span id="ch-installation"></span>Installing Home Manager   </h1>  </div> </div></div><div class="partintro"><p>Home Manager can be used in three primary ways:</p><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>Using the standalone <code class="literal">home-manager</code> tool. For platforms other than
 NixOS and Darwin, this is the only available choice. It is also
 recommended for people on NixOS or Darwin that want to manage their
 home directory independently of the system as a whole. See
@@ -61,7 +61,7 @@ module</a> for a description of this
 setup.</p></li></ol></div><div class="note"><h3 class="title">Note</h3><p>In this chapter we describe how to install Home Manager in the standard
 way using channels. If you prefer to use <a class="link" href="https://nixos.wiki/wiki/Flakes"  target="_top">Nix
 Flakes</a> then please see the instructions
-in <a class="link" href="index.xhtml#ch-nix-flakes" title="Nix Flakes" >nix flakes</a>.</p></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-install-standalone">Standalone installation</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-install-nixos-module">NixOS module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-install-nix-darwin-module">nix-darwin module</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-install-standalone"></a>Standalone installation   </h2>  </div> </div></div><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>Make sure you have a working Nix installation. Specifically, make
+in <a class="link" href="index.xhtml#ch-nix-flakes" title="Nix Flakes" >nix flakes</a>.</p></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-install-standalone">Standalone installation</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-install-nixos-module">NixOS module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-install-nix-darwin-module">nix-darwin module</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-install-standalone"></span>Standalone installation   </h2>  </div> </div></div><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>Make sure you have a working Nix installation. Specifically, make
 sure that your user is able to build and install Nix packages. For
 example, you should be able to successfully run a command like
 <code class="literal">nix-instantiate &#x27;&lt;nixpkgs&gt;&#x27; -A hello</code> without having to switch to
@@ -92,7 +92,7 @@ checkout of the repository then you can use the
 <a class="link" href="options.xhtml#opt-programs.home-manager.path"  >home-manager.path</a> option to specify the absolute
 path to the repository.</p><p>Once installed you can see <a class="link" href="index.xhtml#ch-usage" title="Using Home Manager" >Using Home Manager</a> for a more detailed
 description of Home Manager and how to use it.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-install-nixos-module"></a>NixOS module   </h2>  </div> </div></div><p>Home Manager provides a NixOS module that allows you to prepare user
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-install-nixos-module"></span>NixOS module   </h2>  </div> </div></div><p>Home Manager provides a NixOS module that allows you to prepare user
 environments directly from the system configuration file, which often is
 more convenient than using the <code class="literal">home-manager</code> tool. It also opens up
 additional possibilities, for example, to automatically configure user
@@ -145,7 +145,7 @@ Nixpkgs.</p></div><div class="note"><h3 class="title">Note</h3><p>Home Manager w
 you create. This contains the system’s NixOS configuration.</p><pre><code class="programlisting  nix">{ lib, pkgs, osConfig, ... }:
 </code></pre></div><p>Once installed you can see <a class="link" href="index.xhtml#ch-usage" title="Using Home Manager" >Using Home Manager</a> for a more detailed
 description of Home Manager and how to use it.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-install-nix-darwin-module"></a>nix-darwin module   </h2>  </div> </div></div><p>Home Manager provides a module that allows you to prepare user
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-install-nix-darwin-module"></span>nix-darwin module   </h2>  </div> </div></div><p>Home Manager provides a module that allows you to prepare user
 environments directly from the
 <a class="link" href="https://github.com/LnL7/nix-darwin/"  target="_top">nix-darwin</a> configuration file,
 which often is more convenient than using the <code class="literal">home-manager</code> tool.</p><p>To make the NixOS module available for use you must <code class="literal">import</code> it into
@@ -196,7 +196,7 @@ you create. This contains the system’s nix-darwin configuration.</p><pre><code
 </code></pre></div><p>Once installed you can see <a class="link" href="index.xhtml#ch-usage" title="Using Home Manager" >Using Home Manager</a> for a more detailed
 description of Home Manager and how to use it.</p>
 </div>
-</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <a id="ch-usage"></a>Using Home Manager   </h1>  </div> </div></div><div class="partintro"><p>Your use of Home Manager is centered around the configuration file,
+</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <span id="ch-usage"></span>Using Home Manager   </h1>  </div> </div></div><div class="partintro"><p>Your use of Home Manager is centered around the configuration file,
 which is typically found at <code class="literal">~/.config/home-manager/home.nix</code> in the
 standard installation or <code class="literal">~/.config/home-manager/flake.nix</code> in a Nix
 flake based installation.</p><div class="note"><h3 class="title">Note</h3><p>The default configuration used to be placed in <code class="literal">~/.config/nixpkgs</code>¸ so
@@ -223,7 +223,7 @@ the option. You can find the complete option documentation in
 </code></pre><p>Once a configuration is successfully built, it can be activated. The
 activation performs the steps necessary to make the files, programs, and
 services available in your user environment. The <code class="literal">home-manager switch</code>
-command performs a combined build and activation.</p><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-usage-configuration">Configuration Example</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-rollbacks">Rollbacks</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-dotfiles">Keeping your ~ safe from harm</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-graphical">Graphical services</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-updating">Updating</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-usage-configuration"></a>Configuration Example   </h2>  </div> </div></div><p>A fresh install of Home Manager will generate a minimal
+command performs a combined build and activation.</p><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-usage-configuration">Configuration Example</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-rollbacks">Rollbacks</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-dotfiles">Keeping your ~ safe from harm</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-graphical">Graphical services</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-updating">Updating</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-usage-configuration"></span>Configuration Example   </h2>  </div> </div></div><p>A fresh install of Home Manager will generate a minimal
 <code class="literal">~/.config/home-manager/home.nix</code> file containing something like</p><pre><code class="programlisting  nix">{ config, pkgs, ... }:
 
 {
@@ -299,7 +299,7 @@ programs <span class="emphasis"><em>and</em></span> service options – Emacs is
 </code></pre><p>or if you are not feeling so lucky,</p><pre><code class="programlisting  shell">home-manager build
 </code></pre><p>which will create a <code class="literal">result</code> link to a directory containing an
 activation script and the generated home directory files.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-usage-rollbacks"></a>Rollbacks   </h2>  </div> </div></div><p>While the <code class="literal">home-manager</code> tool does not explicitly support rollbacks at
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-usage-rollbacks"></span>Rollbacks   </h2>  </div> </div></div><p>While the <code class="literal">home-manager</code> tool does not explicitly support rollbacks at
 the moment it is relatively easy to perform one manually. The steps to
 do so are</p><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>Run <code class="literal">home-manager generations</code> to determine which generation you
 wish to rollback to:</p><pre><code class="programlisting  shell">$ home-manager generations
@@ -314,7 +314,7 @@ wish to rollback to:</p><pre><code class="programlisting  shell">$ home-manager 
 Starting home manager activation
 …
 </code></pre></li></ol></div>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-usage-dotfiles"></a>Keeping your ~ safe from harm   </h2>  </div> </div></div><p>To configure programs and services Home Manager must write various
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-usage-dotfiles"></span>Keeping your ~ safe from harm   </h2>  </div> </div></div><p>To configure programs and services Home Manager must write various
 things to your home directory. To prevent overwriting any existing files
 when switching to a new generation, Home Manager will attempt to detect
 collisions between existing files and generated files. If any such
@@ -338,7 +338,7 @@ Activating checkLinkTargets
 Existing file &#x27;/home/jdoe/.config/git/config&#x27; is in the way
 Please move the above files and try again
 </code></pre>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-usage-graphical"></a>Graphical services   </h2>  </div> </div></div><p>Home Manager includes a number of services intended to run in a
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-usage-graphical"></span>Graphical services   </h2>  </div> </div></div><p>Home Manager includes a number of services intended to run in a
 graphical session, for example <code class="literal">xscreensaver</code> and <code class="literal">dunst</code>.
 Unfortunately, such services will not be started automatically unless
 you let Home Manager start your X session. That is, you have something
@@ -358,7 +358,7 @@ like</p><pre><code class="programlisting  nix">{
   # …
 }
 </code></pre><p>in your Home Manager configuration.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-updating"></a>Updating   </h2>  </div> </div></div><p>If you have installed Home Manager using the Nix channel method then
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-updating"></span>Updating   </h2>  </div> </div></div><p>If you have installed Home Manager using the Nix channel method then
 updating Home Manager is done by first updating the channel. You can
 then switch to the updated Home Manager environment.</p><pre><code class="programlisting  shell">$ nix-channel --update
 …
@@ -366,7 +366,7 @@ unpacking channels...
 $ home-manager switch
 </code></pre>
 </div>
-</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <a id="ch-nix-flakes"></a>Nix Flakes   </h1>  </div> </div></div><div class="partintro"><p>Home Manager is compatible with <a class="link" href="https://nixos.wiki/wiki/Flakes"  target="_top">Nix
+</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <span id="ch-nix-flakes"></span>Nix Flakes   </h1>  </div> </div></div><div class="partintro"><p>Home Manager is compatible with <a class="link" href="https://nixos.wiki/wiki/Flakes"  target="_top">Nix
 Flakes</a>. But please be aware that this
 support is still experimental and may change in backwards
 incompatible ways.</p><p>Just like in the standard installation you can use the Home Manager
@@ -381,7 +381,7 @@ user profiles to be built together with the system when running
 description of this setup.</p></li><li class="listitem"><p>This allows the user profiles to be built together with the system
 when running <code class="literal">darwin-rebuild</code>. See <a class="link" href="index.xhtml#sec-flakes-nix-darwin-module" title="nix-darwin module" >nix-darwin
 module</a> for a description of this
-setup.</p></li></ol></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-flakes-prerequisites">Prerequisites</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-standalone">Standalone setup</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nixos-module">NixOS module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nix-darwin-module">nix-darwin module</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-flakes-prerequisites"></a>Prerequisites   </h2>  </div> </div></div><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Install Nix 2.4 or later, or have it in <code class="literal">nix-shell</code>.</p></li><li class="listitem"><p>Enable experimental features <code class="literal">nix-command</code> and <code class="literal">flakes</code>.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p>When using NixOS, add the following to your <code class="literal">configuration.nix</code>
+setup.</p></li></ol></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-flakes-prerequisites">Prerequisites</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-standalone">Standalone setup</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nixos-module">NixOS module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nix-darwin-module">nix-darwin module</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-flakes-prerequisites"></span>Prerequisites   </h2>  </div> </div></div><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Install Nix 2.4 or later, or have it in <code class="literal">nix-shell</code>.</p></li><li class="listitem"><p>Enable experimental features <code class="literal">nix-command</code> and <code class="literal">flakes</code>.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p>When using NixOS, add the following to your <code class="literal">configuration.nix</code>
 and rebuild your system.</p><pre><code class="programlisting  nix">nix = {
   package = pkgs.nixFlakes;
   extraOptions = &#x27;&#x27;
@@ -398,7 +398,7 @@ $ home-manager --extra-experimental-features &quot;nix-command flakes&quot; &lt;
 the flake is built, so it must be present before bootstrap of Home
 Manager from the flake. See <a class="link" href="index.xhtml#sec-usage-configuration" title="Configuration Example" >Configuration Example</a> for
 introduction about writing a Home Manager configuration.</p></li></ul></div>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-flakes-standalone"></a>Standalone setup   </h2>  </div> </div></div><p>To prepare an initial Home Manager configuration for your logged in
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-flakes-standalone"></span>Standalone setup   </h2>  </div> </div></div><p>To prepare an initial Home Manager configuration for your logged in
 user, you can run the Home Manager <code class="literal">init</code> command directly from its
 flake.</p><p>For example, if you are using the unstable version of Nixpkgs or NixOS,
 then to generate and activate a basic configuration run the command</p><pre><code class="programlisting  shell">$ nix run home-manager/master -- init --switch
@@ -421,7 +421,7 @@ to use the standard <code class="literal">nix flake update</code> command for th
 or <code class="literal">--update-input &lt;input&gt;</code> to <code class="literal">home-manager</code> when building or
 switching, and these options will be forwarded to <code class="literal">nix build</code>. See the
 <a class="link" href="https://nixos.wiki/wiki/Flakes"  target="_top">NixOS Wiki page</a> for details.</p></div>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-flakes-nixos-module"></a>NixOS module   </h2>  </div> </div></div><p>To use Home Manager as a NixOS module, a bare-minimum <code class="literal">flake.nix</code> would
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-flakes-nixos-module"></span>NixOS module   </h2>  </div> </div></div><p>To use Home Manager as a NixOS module, a bare-minimum <code class="literal">flake.nix</code> would
 be as follows:</p><pre><code class="programlisting  nix">{
   description = &quot;NixOS configuration&quot;;
 
@@ -456,7 +456,7 @@ and is automatically rebuilt with the system when using the appropriate
 command for the system, such as
 <code class="literal">nixos-rebuild switch --flake &lt;flake-uri&gt;</code>.</p><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">/etc/nixos</code> by</p><pre><code class="programlisting  shell">$ nix flake new /etc/nixos -t github:nix-community/home-manager#nixos
 </code></pre>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-flakes-nix-darwin-module"></a>nix-darwin module   </h2>  </div> </div></div><p>The flake-based setup of the Home Manager nix-darwin module is similar
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-flakes-nix-darwin-module"></span>nix-darwin module   </h2>  </div> </div></div><p>The flake-based setup of the Home Manager nix-darwin module is similar
 to that of NixOS. The <code class="literal">flake.nix</code> would be:</p><pre><code class="programlisting  nix">{
   description = &quot;Darwin configuration&quot;;
 
@@ -492,16 +492,16 @@ to that of NixOS. The <code class="literal">flake.nix</code> would be:</p><pre><
 command here may be <code class="literal">darwin-rebuild switch --flake &lt;flake-uri&gt;</code>.</p><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">~/.config/darwin</code> by</p><pre><code class="programlisting  shell">$ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin
 </code></pre>
 </div>
-</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <a id="ch-writing-modules"></a>Writing Home Manager Modules   </h1>  </div> </div></div><div class="partintro"><p>The module system in Home Manager is based entirely on the NixOS module
+</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <span id="ch-writing-modules"></span>Writing Home Manager Modules   </h1>  </div> </div></div><div class="partintro"><p>The module system in Home Manager is based entirely on the NixOS module
 system so we will here only highlight aspects that are specific for Home
 Manager. For information about the module system as such please refer to
 the <a class="link" href="https://nixos.org/nixos/manual/index.html#sec-writing-modules"  target="_top">Writing NixOS
 Modules</a>
-chapter of the NixOS manual.</p><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-option-types">Option Types</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-option-types"></a>Option Types   </h2>  </div> </div></div><p>Overall the basic option types are the same in Home Manager as NixOS. A
+chapter of the NixOS manual.</p><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-option-types">Option Types</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-option-types"></span>Option Types   </h2>  </div> </div></div><p>Overall the basic option types are the same in Home Manager as NixOS. A
 few Home Manager options, however, make use of custom types that are
 worth describing in more detail. These are the option types <code class="literal">dagOf</code> and
 <code class="literal">gvariant</code> that are used, for example, by
-<a class="link" href="options.xhtml#opt-programs.ssh.matchBlocks"  >programs.ssh.matchBlocks</a> and <a class="link" href="options.xhtml#opt-dconf.settings"  >dconf.settings</a>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><a id="sec-option-types-dag" /><code class="literal">hm.types.dagOf</code></span></dt><dd><p>Options of this type have attribute sets as values where each member
+<a class="link" href="options.xhtml#opt-programs.ssh.matchBlocks"  >programs.ssh.matchBlocks</a> and <a class="link" href="options.xhtml#opt-dconf.settings"  >dconf.settings</a>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span id="sec-option-types-dag"></span><code class="literal">hm.types.dagOf</code></span></dt><dd><p>Options of this type have attribute sets as values where each member
 is a node in a <a class="link" href="https://en.wikipedia.org/w/index.php?title=Directed_acyclic_graph&amp;oldid=939656095"  target="_top">directed acyclic
 graph</a>
 (DAG). This allows the attribute set entries to express dependency
@@ -510,7 +510,7 @@ control the order of match blocks in a OpenSSH client configuration
 or the order of activation script blocks in
 <a class="link" href="options.xhtml#opt-home.activation"  >home.activation</a>.</p><p>A number of functions are provided to create DAG nodes. The
 functions are shown below with examples using an option <code class="literal">foo.bar</code> of
-type <code class="literal">hm.types.dagOf types.int</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><a id="sec-option-types-dag-entryAnywhere" /><code class="literal">hm.dag.entryAnywhere (value: T) : DagEntry&lt;T&gt;</code></span></dt><dd><p>Indicates that <code class="literal">value</code> can be placed anywhere within the DAG.
+type <code class="literal">hm.types.dagOf types.int</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span id="sec-option-types-dag-entryAnywhere"></span><code class="literal">hm.dag.entryAnywhere (value: T) : DagEntry&lt;T&gt;</code></span></dt><dd><p>Indicates that <code class="literal">value</code> can be placed anywhere within the DAG.
 This is also the default for plain attribute set entries, that
 is</p><pre><code class="programlisting  nix">foo.bar = {
   a = hm.dag.entryAnywhere 0;
@@ -518,17 +518,17 @@ is</p><pre><code class="programlisting  nix">foo.bar = {
 </code></pre><p>and</p><pre><code class="programlisting  nix">foo.bar = {
   a = 0;
 }
-</code></pre><p>are equivalent.</p></dd><dt><span class="term"><a id="sec-option-types-dag-entryAfter" /><code class="literal">hm.dag.entryAfter (afters: list string) (value: T) : DagEntry&lt;T&gt;</code></span></dt><dd><p>Indicates that <code class="literal">value</code> must be placed <span class="emphasis"><em>after</em></span> each of the
+</code></pre><p>are equivalent.</p></dd><dt><span class="term"><span id="sec-option-types-dag-entryAfter"></span><code class="literal">hm.dag.entryAfter (afters: list string) (value: T) : DagEntry&lt;T&gt;</code></span></dt><dd><p>Indicates that <code class="literal">value</code> must be placed <span class="emphasis"><em>after</em></span> each of the
 attribute names in the given list. For example</p><pre><code class="programlisting  nix">foo.bar = {
   a = 0;
   b = hm.dag.entryAfter [ &quot;a&quot; ] 1;
 }
-</code></pre><p>would place <code class="literal">b</code> after <code class="literal">a</code> in the graph.</p></dd><dt><span class="term"><a id="sec-option-types-dag-entryBefore" /><code class="literal">hm.dag.entryBefore (befores: list string) (value: T) : DagEntry&lt;T&gt;</code></span></dt><dd><p>Indicates that <code class="literal">value</code> must be placed <span class="emphasis"><em>before</em></span> each of the
+</code></pre><p>would place <code class="literal">b</code> after <code class="literal">a</code> in the graph.</p></dd><dt><span class="term"><span id="sec-option-types-dag-entryBefore"></span><code class="literal">hm.dag.entryBefore (befores: list string) (value: T) : DagEntry&lt;T&gt;</code></span></dt><dd><p>Indicates that <code class="literal">value</code> must be placed <span class="emphasis"><em>before</em></span> each of the
 attribute names in the given list. For example</p><pre><code class="programlisting  nix">foo.bar = {
   b = hm.dag.entryBefore [ &quot;a&quot; ] 1;
   a = 0;
 }
-</code></pre><p>would place <code class="literal">b</code> before <code class="literal">a</code> in the graph.</p></dd><dt><span class="term"><a id="sec-option-types-dag-entryBetween" /><code class="literal">hm.dag.entryBetween (befores: list string) (afters: list string) (value: T) : DagEntry&lt;T&gt;</code></span></dt><dd><p>Indicates that <code class="literal">value</code> must be placed <span class="emphasis"><em>before</em></span> the attribute
+</code></pre><p>would place <code class="literal">b</code> before <code class="literal">a</code> in the graph.</p></dd><dt><span class="term"><span id="sec-option-types-dag-entryBetween"></span><code class="literal">hm.dag.entryBetween (befores: list string) (afters: list string) (value: T) : DagEntry&lt;T&gt;</code></span></dt><dd><p>Indicates that <code class="literal">value</code> must be placed <span class="emphasis"><em>before</em></span> the attribute
 names in the first list and <span class="emphasis"><em>after</em></span> the attribute names in the
 second list. For example</p><pre><code class="programlisting  nix">foo.bar = {
   a = 0;
@@ -539,13 +539,13 @@ second list. For example</p><pre><code class="programlisting  nix">foo.bar = {
 These are convenient when you just want to have a linear list of DAG
 entries, without having to manually enter the relationship between
 each entry. Each of these functions take a <code class="literal">tag</code> as argument and the
-DAG entries will be named <code class="literal">${tag}-${index}</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><a id="sec-option-types-dag-entriesAnywhere" /><code class="literal">hm.dag.entriesAnywhere (tag: string) (values: [T]) : Dag&lt;T&gt;</code></span></dt><dd><p>Creates a DAG with the given values with each entry labeled
+DAG entries will be named <code class="literal">${tag}-${index}</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span id="sec-option-types-dag-entriesAnywhere"></span><code class="literal">hm.dag.entriesAnywhere (tag: string) (values: [T]) : Dag&lt;T&gt;</code></span></dt><dd><p>Creates a DAG with the given values with each entry labeled
 using the given tag. For example</p><pre><code class="programlisting  nix">foo.bar = hm.dag.entriesAnywhere &quot;a&quot; [ 0 1 ];
 </code></pre><p>is equivalent to</p><pre><code class="programlisting  nix">foo.bar = {
   a-0 = 0;
   a-1 = hm.dag.entryAfter [ &quot;a-0&quot; ] 1;
 }
-</code></pre></dd><dt><span class="term"><a id="sec-option-types-dag-entriesAfter" /><code class="literal">hm.dag.entriesAfter (tag: string) (afters: list string) (values: [T]) : Dag&lt;T&gt;</code></span></dt><dd><p>Creates a DAG with the given values with each entry labeled
+</code></pre></dd><dt><span class="term"><span id="sec-option-types-dag-entriesAfter"></span><code class="literal">hm.dag.entriesAfter (tag: string) (afters: list string) (values: [T]) : Dag&lt;T&gt;</code></span></dt><dd><p>Creates a DAG with the given values with each entry labeled
 using the given tag. The list of values are placed are placed
 <span class="emphasis"><em>after</em></span> each of the attribute names in <code class="literal">afters</code>. For example</p><pre><code class="programlisting  nix">foo.bar =
   { b = 0; }
@@ -555,7 +555,7 @@ using the given tag. The list of values are placed are placed
   a-0 = hm.dag.entryAfter [ &quot;b&quot; ] 1;
   a-1 = hm.dag.entryAfter [ &quot;a-0&quot; ] 2;
 }
-</code></pre></dd><dt><span class="term"><a id="sec-option-types-dag-entriesBefore" /><code class="literal">hm.dag.entriesBefore (tag: string) (befores: list string) (values: [T]) : Dag&lt;T&gt;</code></span></dt><dd><p>Creates a DAG with the given values with each entry labeled
+</code></pre></dd><dt><span class="term"><span id="sec-option-types-dag-entriesBefore"></span><code class="literal">hm.dag.entriesBefore (tag: string) (befores: list string) (values: [T]) : Dag&lt;T&gt;</code></span></dt><dd><p>Creates a DAG with the given values with each entry labeled
 using the given tag. The list of values are placed <span class="emphasis"><em>before</em></span> each
 of the attribute names in <code class="literal">befores</code>. For example</p><pre><code class="programlisting  nix">foo.bar =
   { b = 0; }
@@ -565,7 +565,7 @@ of the attribute names in <code class="literal">befores</code>. For example</p><
   a-0 = 1;
   a-1 = hm.dag.entryBetween [ &quot;b&quot; ] [ &quot;a-0&quot; ] 2;
 }
-</code></pre></dd><dt><span class="term"><a id="sec-option-types-dag-entriesBetween" /><code class="literal">hm.dag.entriesBetween (tag: string) (befores: list string) (afters: list string) (values: [T]) : Dag&lt;T&gt;</code></span></dt><dd><p>Creates a DAG with the given values with each entry labeled
+</code></pre></dd><dt><span class="term"><span id="sec-option-types-dag-entriesBetween"></span><code class="literal">hm.dag.entriesBetween (tag: string) (befores: list string) (afters: list string) (values: [T]) : Dag&lt;T&gt;</code></span></dt><dd><p>Creates a DAG with the given values with each entry labeled
 using the given tag. The list of values are placed <span class="emphasis"><em>before</em></span> each
 of the attribute names in <code class="literal">befores</code> and <span class="emphasis"><em>after</em></span> each of the
 attribute names in <code class="literal">afters</code>. For example</p><pre><code class="programlisting  nix">foo.bar =
@@ -577,36 +577,36 @@ attribute names in <code class="literal">afters</code>. For example</p><pre><cod
   a-0 = hm.dag.entryAfter [ &quot;c&quot; ] 1;
   a-1 = hm.dag.entryBetween [ &quot;b&quot; ] [ &quot;a-0&quot; ] 2;
 }
-</code></pre></dd></dl></div></dd><dt><span class="term"><a id="sec-option-types-gvariant" /><code class="literal">hm.types.gvariant</code></span></dt><dd><p>This type is useful for options representing
+</code></pre></dd></dl></div></dd><dt><span class="term"><span id="sec-option-types-gvariant"></span><code class="literal">hm.types.gvariant</code></span></dt><dd><p>This type is useful for options representing
 <a class="link" href="https://docs.gtk.org/glib/struct.Variant.html#description"  target="_top">GVariant</a>
 values. The type accepts all primitive GVariant types as well as
 arrays, tuples, “maybe” types, and dictionaries.</p><p>Some Nix values are automatically coerced to matching GVariant value
 but the GVariant model is richer so you may need to use one of the
 provided constructor functions. Examples assume an option <code class="literal">foo.bar</code>
-of type <code class="literal">hm.types.gvariant</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><a id="sec-option-types-gvariant-mkBoolean" /><code class="literal">hm.gvariant.mkBoolean (v: bool)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">boolean</code> value (GVariant
+of type <code class="literal">hm.types.gvariant</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span id="sec-option-types-gvariant-mkBoolean"></span><code class="literal">hm.gvariant.mkBoolean (v: bool)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">boolean</code> value (GVariant
 format string <code class="literal">b</code>). Note, Nix booleans are automatically coerced
 using this function. That is,</p><pre><code class="programlisting  nix">foo.bar = hm.gvariant.mkBoolean true;
 </code></pre><p>is equivalent to</p><pre><code class="programlisting  nix">foo.bar = true;
-</code></pre></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkString" /><code class="literal">hm.gvariant.mkString (v: string)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">string</code> value (GVariant
+</code></pre></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkString"></span><code class="literal">hm.gvariant.mkString (v: string)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">string</code> value (GVariant
 format string <code class="literal">s</code>). Note, Nix strings are automatically coerced
 using this function. That is,</p><pre><code class="programlisting  nix">foo.bar = hm.gvariant.mkString &quot;a string&quot;;
 </code></pre><p>is equivalent to</p><pre><code class="programlisting  nix">foo.bar = &quot;a string&quot;;
-</code></pre></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkObjectpath" /><code class="literal">hm.gvariant.mkObjectpath (v: string)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">objectpath</code> value (GVariant
-format string <code class="literal">o</code>).</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkUchar" /><code class="literal">hm.gvariant.mkUchar (v: string)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uchar</code> value (GVariant
-format string <code class="literal">y</code>).</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkInt16" /><code class="literal">hm.gvariant.mkInt16 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int16</code> value (GVariant
-format string <code class="literal">n</code>).</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkUint16" /><code class="literal">hm.gvariant.mkUint16 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint16</code> value (GVariant
-format string <code class="literal">q</code>).</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkInt32" /><code class="literal">hm.gvariant.mkInt32 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int32</code> value (GVariant
+</code></pre></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkObjectpath"></span><code class="literal">hm.gvariant.mkObjectpath (v: string)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">objectpath</code> value (GVariant
+format string <code class="literal">o</code>).</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkUchar"></span><code class="literal">hm.gvariant.mkUchar (v: string)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uchar</code> value (GVariant
+format string <code class="literal">y</code>).</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkInt16"></span><code class="literal">hm.gvariant.mkInt16 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int16</code> value (GVariant
+format string <code class="literal">n</code>).</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkUint16"></span><code class="literal">hm.gvariant.mkUint16 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint16</code> value (GVariant
+format string <code class="literal">q</code>).</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkInt32"></span><code class="literal">hm.gvariant.mkInt32 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int32</code> value (GVariant
 format string <code class="literal">i</code>). Note, Nix integers are automatically coerced
 using this function. That is,</p><pre><code class="programlisting  nix">foo.bar = hm.gvariant.mkInt32 7;
 </code></pre><p>is equivalent to</p><pre><code class="programlisting  nix">foo.bar = 7;
-</code></pre></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkUint32" /><code class="literal">hm.gvariant.mkUint32 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint32</code> value (GVariant
-format string <code class="literal">u</code>).</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkInt64" /><code class="literal">hm.gvariant.mkInt64 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int64</code> value (GVariant
-format string <code class="literal">x</code>).</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkUint64" /><code class="literal">hm.gvariant.mkUint64 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint64</code> value (GVariant
-format string <code class="literal">t</code>).</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkDouble" /><code class="literal">hm.gvariant.mkDouble (v: double)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">double</code> value (GVariant
+</code></pre></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkUint32"></span><code class="literal">hm.gvariant.mkUint32 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint32</code> value (GVariant
+format string <code class="literal">u</code>).</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkInt64"></span><code class="literal">hm.gvariant.mkInt64 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">int64</code> value (GVariant
+format string <code class="literal">x</code>).</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkUint64"></span><code class="literal">hm.gvariant.mkUint64 (v: int)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">uint64</code> value (GVariant
+format string <code class="literal">t</code>).</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkDouble"></span><code class="literal">hm.gvariant.mkDouble (v: double)</code></span></dt><dd><p>Takes a Nix value <code class="literal">v</code> to a GVariant <code class="literal">double</code> value (GVariant
 format string <code class="literal">d</code>). Note, Nix floats are automatically coerced
 using this function. That is,</p><pre><code class="programlisting  nix">foo.bar = hm.gvariant.mkDouble 3.14;
 </code></pre><p>is equivalent to</p><pre><code class="programlisting  nix">foo.bar = 3.14;
-</code></pre></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkArray" /><code class="literal">hm.gvariant.mkArray type elements</code></span></dt><dd><p>Builds a GVariant array containing the given list of elements,
+</code></pre></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkArray"></span><code class="literal">hm.gvariant.mkArray type elements</code></span></dt><dd><p>Builds a GVariant array containing the given list of elements,
 where each element is a GVariant value of the given type
 (GVariant format string <code class="literal">a${type}</code>). The <code class="literal">type</code> value can be
 constructed using</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><code class="literal">hm.gvariant.type.string</code> (GVariant format string <code class="literal">s</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.boolean</code> (GVariant format string <code class="literal">b</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.uchar</code> (GVariant format string <code class="literal">y</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.int16</code> (GVariant format string <code class="literal">n</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.uint16</code> (GVariant format string <code class="literal">q</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.int32</code> (GVariant format string <code class="literal">i</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.uint32</code> (GVariant format string <code class="literal">u</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.int64</code> (GVariant format string <code class="literal">x</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.uint64</code> (GVariant format string <code class="literal">t</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.double</code> (GVariant format string <code class="literal">d</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.variant</code> (GVariant format string <code class="literal">v</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.arrayOf type</code> (GVariant format string
@@ -614,18 +614,18 @@ constructed using</p><div class="itemizedlist"><ul class="itemizedlist " style="
 <code class="literal">m${type}</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.tupleOf types</code> (GVariant format string
 <code class="literal">(${lib.concatStrings types})</code>)</p></li><li class="listitem"><p><code class="literal">hm.gvariant.type.dictionaryEntryOf [keyType valueType]</code>
 (GVariant format string <code class="literal">{${keyType}${valueType}}</code>)</p></li></ul></div><p>where <code class="literal">type</code> and <code class="literal">types</code> are themselves a type and list of
-types, respectively.</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkEmptyArray" /><code class="literal">hm.gvariant.mkEmptyArray type</code></span></dt><dd><p>An alias of
-<a class="link" href="index.xhtml#sec-option-types-gvariant-mkArray"  ><code class="literal">hm.gvariant.mkArray type []</code></a>.</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkNothing" /><code class="literal">hm.gvariant.mkNothing type</code></span></dt><dd><p>Builds a GVariant maybe value (GVariant format string
+types, respectively.</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkEmptyArray"></span><code class="literal">hm.gvariant.mkEmptyArray type</code></span></dt><dd><p>An alias of
+<a class="link" href="index.xhtml#sec-option-types-gvariant-mkArray"  ><code class="literal">hm.gvariant.mkArray type []</code></a>.</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkNothing"></span><code class="literal">hm.gvariant.mkNothing type</code></span></dt><dd><p>Builds a GVariant maybe value (GVariant format string
 <code class="literal">m${type}</code>) whose (non-existent) element is of the given type.
 The <code class="literal">type</code> value is constructed as described for the
-<a class="link" href="index.xhtml#sec-option-types-gvariant-mkArray"  ><code class="literal">mkArray</code></a> function above.</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkJust" /><code class="literal">hm.gvariant.mkJust element</code></span></dt><dd><p>Builds a GVariant maybe value (GVariant format string
-<code class="literal">m${element.type}</code>) containing the given GVariant element.</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkTuple" /><code class="literal">hm.gvariant.mkTuple elements</code></span></dt><dd><p>Builds a GVariant tuple containing the given list of elements,
-where each element is a GVariant value.</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkVariant" /><code class="literal">hm.gvariant.mkVariant element</code></span></dt><dd><p>Builds a GVariant variant (GVariant format string <code class="literal">v</code>) which
-contains the value of a GVariant element.</p></dd><dt><span class="term"><a id="sec-option-types-gvariant-mkDictionaryEntry" /><code class="literal">hm.gvariant.mkDictionaryEntry [key value]</code></span></dt><dd><p>Builds a GVariant dictionary entry containing the given list of
+<a class="link" href="index.xhtml#sec-option-types-gvariant-mkArray"  ><code class="literal">mkArray</code></a> function above.</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkJust"></span><code class="literal">hm.gvariant.mkJust element</code></span></dt><dd><p>Builds a GVariant maybe value (GVariant format string
+<code class="literal">m${element.type}</code>) containing the given GVariant element.</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkTuple"></span><code class="literal">hm.gvariant.mkTuple elements</code></span></dt><dd><p>Builds a GVariant tuple containing the given list of elements,
+where each element is a GVariant value.</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkVariant"></span><code class="literal">hm.gvariant.mkVariant element</code></span></dt><dd><p>Builds a GVariant variant (GVariant format string <code class="literal">v</code>) which
+contains the value of a GVariant element.</p></dd><dt><span class="term"><span id="sec-option-types-gvariant-mkDictionaryEntry"></span><code class="literal">hm.gvariant.mkDictionaryEntry [key value]</code></span></dt><dd><p>Builds a GVariant dictionary entry containing the given list of
 elements (GVariant format string <code class="literal">{${key.type}${value.type}}</code>),
 where each element is a GVariant value.</p></dd></dl></div></dd></dl></div>
 </div>
-</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <a id="ch-contributing"></a>Contributing   </h1>  </div> </div></div><div class="partintro"><p>Contributions to Home Manager are very welcome. To make the process as
+</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <span id="ch-contributing"></span>Contributing   </h1>  </div> </div></div><div class="partintro"><p>Contributions to Home Manager are very welcome. To make the process as
 smooth as possible for both you and the Home Manager maintainers we
 provide some guidelines that we ask you to follow. See <a class="link" href="index.xhtml#sec-contrib-getting-started" title="Getting started" >Getting
 started</a> for information on how to set up
@@ -640,7 +640,7 @@ to the <a class="link" href="https://github.com/nix-community/home-manager/issue
 issue</a> page
 and write a description of your problem. Include as much information as
 you can, ideally also include relevant excerpts from your Home Manager
-configuration.</p><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-contrib-getting-started">Getting started</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines">Guidelines</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-news">News</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests">Tests</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-contrib-getting-started"></a>Getting started   </h2>  </div> </div></div><p>If you have not previously forked Home Manager then you need to do that
+configuration.</p><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-contrib-getting-started">Getting started</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines">Guidelines</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-news">News</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests">Tests</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-contrib-getting-started"></span>Getting started   </h2>  </div> </div></div><p>If you have not previously forked Home Manager then you need to do that
 first. Have a look at GitHub’s <a class="link" href="https://help.github.com/articles/fork-a-repo/"  target="_top">Fork a
 repo</a> for instructions on
 how to do this.</p><p>Once you have a fork of Home Manager you should create a branch starting
@@ -656,13 +656,13 @@ programs.home-manager.path = &quot;$HOME/devel/home-manager&quot;;
 </code></pre><p>and running <code class="literal">home-manager switch</code> to activate the change.
 Afterwards, <code class="literal">home-manager build</code> and <code class="literal">home-manager switch</code> will use
 your cloned repository.</p></li></ol></div><p>The first option is good if you only temporarily want to use your clone.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-guidelines"></a>Guidelines   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-guidelines-back-compat">Maintain backward compatibility</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-forward-compat">Keep forward compatibility in mind</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-valuable-options">Add only valuable options</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-add-tests">Add relevant tests</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-module-maintainer">Add relevant documentation</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_add_yourself_as_a_module_maintainer">Add yourself as a module maintainer</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-code-style">Format your code</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-commit-message-style">Format your commit messages</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-news-style">Format your news entries</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-conditional-modules">Use conditional modules and news</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-licensing">Mind the license</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-commit-style">Commits</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#ex-commit-message">Example commit</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-code-style">Code Style</a> </span></dt> </dl></div><p>If your contribution satisfy the following rules then there is a good
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-guidelines"></span>Guidelines   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-guidelines-back-compat">Maintain backward compatibility</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-forward-compat">Keep forward compatibility in mind</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-valuable-options">Add only valuable options</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-add-tests">Add relevant tests</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-module-maintainer">Add relevant documentation</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_add_yourself_as_a_module_maintainer">Add yourself as a module maintainer</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-code-style">Format your code</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-commit-message-style">Format your commit messages</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-news-style">Format your news entries</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-conditional-modules">Use conditional modules and news</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-guidelines-licensing">Mind the license</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-commit-style">Commits</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#ex-commit-message">Example commit</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-code-style">Code Style</a> </span></dt> </dl></div><p>If your contribution satisfy the following rules then there is a good
 chance it will be merged without too much trouble. The rules are
 enforced by the Home Manager maintainers and to a lesser extent the Home
 Manager CI system.</p><p>If you are uncertain how these rules affect the change you would like to
 make then feel free to start a discussion in the
 <a class="link" href="https://webchat.oftc.net/?channels=home-manager"  target="_top">#home-manager</a> IRC
-channel, ideally before you start developing.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-guidelines-back-compat"></a>Maintain backward compatibility   </h3>  </div> </div></div><p>Your contribution should not cause another user’s existing configuration
+channel, ideally before you start developing.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-guidelines-back-compat"></span>Maintain backward compatibility   </h3>  </div> </div></div><p>Your contribution should not cause another user’s existing configuration
 to break unless there is a very good reason and the change should be
 announced to the user through an
 <a class="link" href="https://nixos.org/manual/nixos/stable/index.html#sec-assertions"  target="_top">assertion</a>
@@ -670,12 +670,12 @@ or similar.</p><p>Remember that Home Manager is used in many different environme
 you should consider how your change may effect others. For example,</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Does your change work for people that do not use NixOS? Consider
 other GNU/Linux distributions and macOS.</p></li><li class="listitem"><p>Does your change work for people whose configuration is built on one
 system and deployed on another system?</p></li></ul></div>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-guidelines-forward-compat"></a>Keep forward compatibility in mind   </h3>  </div> </div></div><p>The master branch of Home Manager tracks the unstable channel of
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-guidelines-forward-compat"></span>Keep forward compatibility in mind   </h3>  </div> </div></div><p>The master branch of Home Manager tracks the unstable channel of
 Nixpkgs, which may update package versions at any time. It is therefore
 important to consider how a package update may affect your code and try
 to reduce the risk of breakage.</p><p>The most effective way to reduce this risk is to follow the advice in
 <a class="link" href="index.xhtml#sec-guidelines-valuable-options" title="Add only valuable options" >Add only valuable options</a>.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-guidelines-valuable-options"></a>Add only valuable options   </h3>  </div> </div></div><p>When creating a new module it is tempting to include every option
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-guidelines-valuable-options"></span>Add only valuable options   </h3>  </div> </div></div><p>When creating a new module it is tempting to include every option
 supported by the software. This is <span class="emphasis"><em>strongly</em></span> discouraged. Providing
 many options increases maintenance burden and risk of breakage
 considerably. This is why only the most <a class="link" href="https://github.com/NixOS/rfcs/blob/master/rfcs/0042-config-option.md#valuable-options"  target="_top">important software
@@ -689,17 +689,14 @@ require no explicit options at all.</p><p>If the software uses a structured conf
 YAML, INI, TOML, or even a plain list of key/value pairs then consider
 using a <code class="literal">settings</code> option as described in <a class="link" href="https://github.com/NixOS/rfcs/blob/master/rfcs/0042-config-option.md"  target="_top">Nix RFC
 42</a>.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-guidelines-add-tests"></a>Add relevant tests   </h3>  </div> </div></div><p>If at all possible, make sure to add new tests and expand existing tests
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-guidelines-add-tests"></span>Add relevant tests   </h3>  </div> </div></div><p>If at all possible, make sure to add new tests and expand existing tests
 so that your change will keep working in the future. See
 <a class="link" href="index.xhtml#sec-tests" title="Tests" >Tests</a> for more information about the Home Manager test
 suite.</p><p>All contributed code <span class="emphasis"><em>must</em></span> pass the test suite.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-guidelines-module-maintainer"></a>Add relevant documentation   </h3>  </div> </div></div><p>Many code changes require changing the documentation as well. Module
-options should be documented with <a class="link" href="https://nixos.org/manual/nixpkgs/unstable/#sec-contributing-markup"  target="_top">Nixpkgs-flavoured
-Markdown</a>.
-Home Manager is itself documented using a combination of
-<a class="link" href="https://tdg.docbook.org/"  target="_top">DocBook</a> and
-<a class="link" href="https://asciidoc.org/"  target="_top">AsciiDoc</a>. All text is hosted in Home Manager’s
-Git repository.</p><p>The HTML version of the manual containing both the module option
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-guidelines-module-maintainer"></span>Add relevant documentation   </h3>  </div> </div></div><p>Many code changes require changing the documentation as well. The
+documentation is written in
+<a class="link" href="https://nixos.org/manual/nixpkgs/unstable/#sec-contributing-markup"  target="_top">Nixpkgs-flavoured Markdown</a>.
+All text is hosted in Home Manager’s Git repository.</p><p>The HTML version of the manual containing both the module option
 descriptions and the documentation of Home Manager can be generated and
 opened by typing the following in a shell within a clone of the Home
 Manager Git repository:</p><pre><code class="programlisting  shell">$ nix-build -A docs.html
@@ -708,25 +705,26 @@ $ xdg-open ./result/share/doc/home-manager/index.html
 the man page version of the module options looks good:</p><pre><code class="programlisting  shell">$ nix-build -A docs.manPages
 $ man ./result/share/man/man5/home-configuration.nix.5.gz
 </code></pre>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="_add_yourself_as_a_module_maintainer"></a>Add yourself as a module maintainer   </h3>  </div> </div></div><p>Every new module <span class="emphasis"><em>must</em></span> include a named maintainer using the
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="_add_yourself_as_a_module_maintainer"></span>Add yourself as a module maintainer   </h3>  </div> </div></div><p>Every new module <span class="emphasis"><em>must</em></span> include a named maintainer using the
 <code class="literal">meta.maintainers</code> attribute. If you are a user of a module that
 currently lacks a maintainer then please consider adopting it.</p><p>If you are present in the nixpkgs maintainer list then you can use that
 entry. If you are not then you can add yourself to
-<code class="literal">modules/lib/maintainers.nix</code> in the Home Manager project.</p><p>Maintainers are encouraged to join the IRC or Matrix channel and
+<code class="literal">modules/lib/maintainers.nix</code> in the Home Manager project.</p><p>As a maintainer you are expected to respond to issues and
+pull-requests associated with your module.</p><p>Maintainers are encouraged to join the IRC or Matrix channel and
 participate when they have opportunity.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-guidelines-code-style"></a>Format your code   </h3>  </div> </div></div><p>Make sure your code is formatted as described in <a class="link" href="index.xhtml#sec-code-style" title="Code Style" >Code
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-guidelines-code-style"></span>Format your code   </h3>  </div> </div></div><p>Make sure your code is formatted as described in <a class="link" href="index.xhtml#sec-code-style" title="Code Style" >Code
 Style</a>. To maintain consistency throughout the project
 you are encouraged to browse through existing code and adopt its style
 also in new code.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-guidelines-commit-message-style"></a>Format your commit messages   </h3>  </div> </div></div><p>Similar to <a class="link" href="index.xhtml#sec-guidelines-code-style" title="Format your code" >Format your code</a> we encourage a
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-guidelines-commit-message-style"></span>Format your commit messages   </h3>  </div> </div></div><p>Similar to <a class="link" href="index.xhtml#sec-guidelines-code-style" title="Format your code" >Format your code</a> we encourage a
 consistent commit message format as described in
 <a class="link" href="index.xhtml#sec-commit-style" title="Commits" >Commits</a>.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-guidelines-news-style"></a>Format your news entries   </h3>  </div> </div></div><p>If your contribution includes a change that should be communicated to
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-guidelines-news-style"></span>Format your news entries   </h3>  </div> </div></div><p>If your contribution includes a change that should be communicated to
 users of Home Manager then you can add a news entry. The entry must be
 formatted as described in <a class="link" href="index.xhtml#sec-news" title="News" >News</a>.</p><p>When new modules are added a news entry should be included but you do
 not need to create this entry manually. The merging maintainer will
 create the entry for you. This is to reduce the risk of merge conflicts.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-guidelines-conditional-modules"></a>Use conditional modules and news   </h3>  </div> </div></div><p>Home Manager includes a number of modules that are only usable on some
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-guidelines-conditional-modules"></span>Use conditional modules and news   </h3>  </div> </div></div><p>Home Manager includes a number of modules that are only usable on some
 of the supported platforms. The most common example of platform specific
 modules are those that define systemd user services, which only works on
 Linux systems.</p><p>If you add a module that is platform specific then make sure to include
@@ -734,7 +732,7 @@ a condition in the <code class="literal">loadModule</code> function call. This w
 accessible only on systems where the condition evaluates to <code class="literal">true</code>.</p><p>Similarly, if you are adding a news entry then it should be shown only
 to users that may find it relevant, see <a class="link" href="index.xhtml#sec-news" title="News" >News</a> for a
 description of conditional news.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-guidelines-licensing"></a>Mind the license   </h3>  </div> </div></div><p>The Home Manager project is covered by the MIT license and we can only
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-guidelines-licensing"></span>Mind the license   </h3>  </div> </div></div><p>The Home Manager project is covered by the MIT license and we can only
 accept contributions that fall under this license, or are licensed in a
 compatible way. When you contribute self written code and documentation
 it is assumed that you are doing so under the MIT license.</p><p>A potential gotcha with respect to licensing are option descriptions.
@@ -742,7 +740,7 @@ Often it is convenient to copy from the upstream software documentation.
 When this is done it is important to verify that the license of the
 upstream documentation allows redistribution under the terms of the MIT
 license.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-commit-style"></a>Commits   </h3>  </div> </div></div><p>The commits in your pull request should be reasonably self-contained,
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-commit-style"></span>Commits   </h3>  </div> </div></div><p>The commits in your pull request should be reasonably self-contained,
 that is, each commit should make sense in isolation. In particular, you
 will be asked to amend any commit that introduces syntax errors or
 similar problems even if they are fixed in a later commit.</p><p>The commit messages should follow the <a class="link" href="https://chris.beams.io/posts/git-commit/#seven-rules"  target="_top">seven
@@ -759,7 +757,7 @@ exception, if there is no clear component, or your change affects many
 components, then the <code class="literal">{component}</code> part is optional. See
 <a class="link" href="index.xhtml#ex-commit-message" title="Example commit" >example_title</a> for a commit message that fulfills
 these requirements.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="ex-commit-message"></a>Example commit   </h3>  </div> </div></div><p>The commit
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="ex-commit-message"></span>Example commit   </h3>  </div> </div></div><p>The commit
 <a class="link" href="https://github.com/nix-community/home-manager/commit/69f8e47e9e74c8d3d060ca22e18246b7f7d988ef"  target="_top">69f8e47e9e74c8d3d060ca22e18246b7f7d988ef</a>
 contains the commit message</p><pre><code class="programlisting">
     starship: allow running in Emacs if vterm is used
@@ -769,7 +767,7 @@ contains the commit message</p><pre><code class="programlisting">
 </code></pre><p>which ticks all the boxes necessary to be accepted in Home Manager.</p><p>Finally, when adding a new module, say <code class="literal">programs/foo.nix</code>, we use the
 fixed commit format <code class="literal">foo: add module</code>. You can, of course, still include
 a long description if you wish.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <a id="sec-code-style"></a>Code Style   </h3>  </div> </div></div><p>The code in Home Manager is formatted by the
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 class="title" >     <span id="sec-code-style"></span>Code Style   </h3>  </div> </div></div><p>The code in Home Manager is formatted by the
 <a class="link" href="https://github.com/serokell/nixfmt/"  target="_top">nixfmt</a> tool and the formatting is
 checked in the pull request tests. Run the <code class="literal">format</code> tool inside the
 project repository before submitting your pull request.</p><p>Keep lines at a reasonable width, ideally 80 characters or less. This
@@ -780,7 +778,7 @@ which use a hyphenated style. For example, the Home Manager option
 in Nixpkgs.</p>
 </div>
 
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-news"></a>News   </h2>  </div> </div></div><p>Home Manager includes a system for presenting news to the user. When
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-news"></span>News   </h2>  </div> </div></div><p>Home Manager includes a system for presenting news to the user. When
 making a change you, therefore, have the option to also include an
 associated news entry. In general, a news entry should only be added for
 truly noteworthy news. For example, a bug fix or new option does
@@ -806,7 +804,7 @@ has a message along the lines of</p><pre><code class="programlisting">A new modu
 systemd, then a condition like</p><pre><code class="programlisting  nix">condition = hostPlatform.isLinux;
 </code></pre><p>should be added. If you contribute a module then you don’t need to
 add this entry, the merger will create an entry for you.</p></li></ul></div>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-tests"></a>Tests   </h2>  </div> </div></div><p>Home Manager includes a basic test suite and it is highly recommended to
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-tests"></span>Tests   </h2>  </div> </div></div><p>Home Manager includes a basic test suite and it is highly recommended to
 include at least one test when adding a module. Tests are typically in
 the form of &quot;golden tests&quot; where, for example, a generated
 configuration file is compared to a known correct file.</p><p>It is relatively easy to create tests by modeling the existing tests,
@@ -821,16 +819,16 @@ and may cause failures. To run against the nixpkgs from the flake.lock,
 use instead e.g.</p><pre><code class="programlisting  shell">$ nix develop --ignore-environment .#all
 </code></pre>
 </div>
-</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <a id="ch-3rd-party"></a>Third-Party Tools and Extensions   </h1>  </div> </div></div><div class="partintro"><p>Here is a collection of tools and extensions that relate to Home
+</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <span id="ch-3rd-party"></span>Third-Party Tools and Extensions   </h1>  </div> </div></div><div class="partintro"><p>Here is a collection of tools and extensions that relate to Home
 Manager. Note, these are maintained outside the regular Home Manager
 flow so quality and support may vary wildly. If you encounter problems
 then please raise them in the corresponding project, not as issues in
 the Home Manager tracker.</p><p>If you have made something interesting related to Home Manager then you
-are encouraged to create a PR that expands this chapter.</p><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-3rd-party-module-collections">Module Collections</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="sec-3rd-party-module-collections"></a>Module Collections   </h2>  </div> </div></div><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><a class="link" href="https://github.com/schuelermine/xhmm"  target="_top">xhmm — extra Home Manager
+are encouraged to create a PR that expands this chapter.</p><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-3rd-party-module-collections">Module Collections</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="sec-3rd-party-module-collections"></span>Module Collections   </h2>  </div> </div></div><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><a class="link" href="https://github.com/schuelermine/xhmm"  target="_top">xhmm — extra Home Manager
 modules</a></p><p>A collection of modules maintained by Anselm Schüler.</p></li><li class="listitem"><p><a class="link" href="https://github.com/danth/stylix/"  target="_top">Stylix — System-wide colorscheming and
 typography</a></p><p>Configure your applications to get coherent color scheme and font.</p></li></ul></div>
 </div>
-</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <a id="ch-faq"></a>Frequently Asked Questions (FAQ)   </h1>  </div> </div></div><div class="partintro"><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#_why_is_there_a_collision_error_when_switching_generation">Why is there a collision error when switching generation?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_why_are_the_session_variables_not_set">Why are the session variables not set?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_how_to_set_up_a_configuration_for_multiple_users_machines">How to set up a configuration for multiple users/machines?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_why_do_i_get_an_error_message_about_literal_ca_desrt_dconf_literal_or_literal_dconf_service_literal">Why do I get an error message about <code class="literal">ca.desrt.dconf</code> or <code class="literal">dconf.service</code>?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_how_do_i_install_packages_from_nixpkgs_unstable">How do I install packages from Nixpkgs unstable?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_how_do_i_change_the_package_used_by_a_module">How do I change the package used by a module?</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="_why_is_there_a_collision_error_when_switching_generation"></a>Why is there a collision error when switching generation?   </h2>  </div> </div></div><p>Home Manager currently installs packages into the user environment,
+</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 class="title" >     <span id="ch-faq"></span>Frequently Asked Questions (FAQ)   </h1>  </div> </div></div><div class="partintro"><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#_why_is_there_a_collision_error_when_switching_generation">Why is there a collision error when switching generation?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_why_are_the_session_variables_not_set">Why are the session variables not set?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_how_to_set_up_a_configuration_for_multiple_users_machines">How to set up a configuration for multiple users/machines?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_why_do_i_get_an_error_message_about_literal_ca_desrt_dconf_literal_or_literal_dconf_service_literal">Why do I get an error message about <code class="literal">ca.desrt.dconf</code> or <code class="literal">dconf.service</code>?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_how_do_i_install_packages_from_nixpkgs_unstable">How do I install packages from Nixpkgs unstable?</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#_how_do_i_change_the_package_used_by_a_module">How do I change the package used by a module?</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="_why_is_there_a_collision_error_when_switching_generation"></span>Why is there a collision error when switching generation?   </h2>  </div> </div></div><p>Home Manager currently installs packages into the user environment,
 precisely as if the packages were installed through <code class="literal">nix-env --install</code>.
 This means that you will get a collision error if your Home Manager
 configuration attempts to install a package that you already have
@@ -856,7 +854,7 @@ error: build of ‘/nix/store/b37x3s7pzxbasfqhaca5dqbf3pjjw0ip-user-environment.
 using <code class="literal">nix-env --uninstall</code> and reattempt the Home Manager generation
 switch.</p><p>You could also opt to unistall <span class="emphasis"><em>all</em></span> of the packages from your profile
 with <code class="literal">nix-env --uninstall &#x27;*&#x27;</code>.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="_why_are_the_session_variables_not_set"></a>Why are the session variables not set?   </h2>  </div> </div></div><p>Home Manager is only able to set session variables automatically if it
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="_why_are_the_session_variables_not_set"></span>Why are the session variables not set?   </h2>  </div> </div></div><p>Home Manager is only able to set session variables automatically if it
 manages your Bash, Z shell, or fish shell configuration. To enable such
 management you use <a class="link" href="options.xhtml#opt-programs.bash.enable"  >programs.bash.enable</a>,
 <a class="link" href="options.xhtml#opt-programs.zsh.enable"  >programs.zsh.enable</a>, or <a class="link" href="options.xhtml#opt-programs.fish.enable"  >programs.fish.enable</a>.</p><p>If you don’t want to let Home Manager manage your shell then you will
@@ -868,7 +866,7 @@ way. In Bash and Z shell this can be done by adding</p><pre><code class="program
 fish shell, it is possible to source it using <a class="link" href="https://github.com/oh-my-fish/plugin-foreign-env"  target="_top">the foreign-env
 plugin</a></p><pre><code class="programlisting  bash">fenv source &quot;$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh&quot; &gt; /dev/null
 </code></pre>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="_how_to_set_up_a_configuration_for_multiple_users_machines"></a>How to set up a configuration for multiple users/machines?   </h2>  </div> </div></div><p>A typical way to prepare a repository of configurations for multiple
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="_how_to_set_up_a_configuration_for_multiple_users_machines"></span>How to set up a configuration for multiple users/machines?   </h2>  </div> </div></div><p>A typical way to prepare a repository of configurations for multiple
 logins and machines is to prepare one &quot;top-level&quot; file for each unique
 combination.</p><p>For example, if you have two machines, called &quot;kronos&quot; and &quot;rhea&quot; on
 which you want to configure your user &quot;jane&quot; then you could create the
@@ -886,13 +884,13 @@ logins. Of course, instead of just a single <code class="literal">common.nix</co
 have multiple ones, even one per program or service.</p><p>You can get some inspiration from the <a class="link" href="https://www.reddit.com/r/NixOS/comments/9bb9h9/post_your_homemanager_homenix_file/"  target="_top">Post your home-manager home.nix
 file!</a>
 Reddit thread.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="_why_do_i_get_an_error_message_about_literal_ca_desrt_dconf_literal_or_literal_dconf_service_literal"></a>Why do I get an error message about <code class="literal">ca.desrt.dconf</code> or <code class="literal">dconf.service</code>?   </h2>  </div> </div></div><p>You are most likely trying to configure something that uses dconf but
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="_why_do_i_get_an_error_message_about_literal_ca_desrt_dconf_literal_or_literal_dconf_service_literal"></span>Why do I get an error message about <code class="literal">ca.desrt.dconf</code> or <code class="literal">dconf.service</code>?   </h2>  </div> </div></div><p>You are most likely trying to configure something that uses dconf but
 the DBus session is not aware of the dconf service. The full error you
 might get is</p><pre><code class="programlisting">error: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name ca.desrt.dconf was not provided by any .service files
 </code></pre><p>or</p><pre><code class="programlisting">error: GDBus.Error:org.freedesktop.systemd1.NoSuchUnit: Unit dconf.service not found.
 </code></pre><p>The solution on NixOS is to add</p><pre><code class="programlisting  nix">programs.dconf.enable = true;
 </code></pre><p>to your system configuration.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="_how_do_i_install_packages_from_nixpkgs_unstable"></a>How do I install packages from Nixpkgs unstable?   </h2>  </div> </div></div><p>If you are using a stable version of Nixpkgs but would like to install
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="_how_do_i_install_packages_from_nixpkgs_unstable"></span>How do I install packages from Nixpkgs unstable?   </h2>  </div> </div></div><p>If you are using a stable version of Nixpkgs but would like to install
 some particular packages from Nixpkgs unstable – or some other channel
 – then you can import the unstable Nixpkgs and refer to its packages
 within your configuration. Something like</p><pre><code class="programlisting  nix">{ pkgs, config, ... }:
@@ -914,7 +912,7 @@ in
 $ nix-channel --update
 </code></pre><p>Note, the package will not be affected by any package overrides,
 overlays, etc.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <a id="_how_do_i_change_the_package_used_by_a_module"></a>How do I change the package used by a module?   </h2>  </div> </div></div><p>By default Home Manager will install the package provided by your chosen
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 class="title" style="clear: both">     <span id="_how_do_i_change_the_package_used_by_a_module"></span>How do I change the package used by a module?   </h2>  </div> </div></div><p>By default Home Manager will install the package provided by your chosen
 <code class="literal">nixpkgs</code> channel but occasionally you might end up needing to change
 this package. This can typically be done in two ways.</p><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>If the module provides a <code class="literal">package</code> option, such as
 <code class="literal">programs.beets.package</code>, then this is the recommended way to
