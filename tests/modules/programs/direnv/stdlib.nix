@@ -10,6 +10,7 @@ in {
     programs.direnv.stdlib = expectedContent;
 
     nmt.script = ''
+      assertPathNotExists home-files/.config/direnv/lib/nix-direnv.sh
       assertFileExists home-files/.bashrc
       assertFileRegex \
         home-files/.config/direnv/direnvrc \
