@@ -10856,17 +10856,17 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>The frequency at which to run the garbage collector.</p><p>These enums are based on special expressions from the
-<a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a></p>
+<p>When to run the Nix garbage collector.</p><p>On Linux this is a string as defined by <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a>.</p><p>On Darwin it must be one of: hourly daily weekly monthly semiannually annually, which are
+implemented as defined in the manual page above.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-one of “hourly”, “daily”, “weekly”, “monthly”, “semiannually”, “annually”</p>
+string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;weekly&quot;</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;monthly&quot;</code></p>
+<code class="literal">&quot;03:15&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
