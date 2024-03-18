@@ -27,7 +27,7 @@ in {
         '';
         description = ''
           kime configuration. Refer to
-          <https://github.com/Riey/kime/blob/v${pkgs.kime.version}/docs/CONFIGURATION.md>
+          <https://github.com/Riey/kime/blob/develop/docs/CONFIGURATION.md>
           for details on supported values.
         '';
       };
