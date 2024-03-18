@@ -8360,7 +8360,7 @@ list of package</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-i18n.inputMethod.kime.config"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.kime.config"><code class="option">i18n.inputMethod.kime.config</code>
+ <a id="opt-i18n.inputMethod.kime.extraConfig"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.kime.extraConfig"><code class="option">i18n.inputMethod.kime.extraConfig</code>
   </a>
  </span>
 </dt>
@@ -8370,26 +8370,18 @@ list of package</p>
 for details on supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-YAML value</p>
+strings concatenated with “\n”</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">{ }</code></p>
+<code class="literal">&quot;&quot;</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  daemon = {
-    modules = [&quot;Xim&quot; &quot;Indicator&quot;];
-  };
-
-  indicator = {
-    icon_color = &quot;White&quot;;
-  };
-
-  engine = {
-    hangul = {
-      layout = &quot;dubeolsik&quot;;
-    };
-  };
-}
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">daemon:
+  modules: [Xim,Indicator]
+indicator:
+  icon_color: White
+engine:
+  hangul:
+    layout: dubeolsik
 
 </code></pre>
 
