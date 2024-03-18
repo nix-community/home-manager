@@ -10,8 +10,8 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-files/.bashrc
-      assertFileExists home-files/.config/direnv/lib/nix-direnv.sh
-      assertFileIsExecutable home-files/.config/direnv/lib/nix-direnv.sh
+      assertFileExists home-files/.config/direnv/lib/hm-nix-direnv.sh
+      assertFileIsExecutable home-files/.config/direnv/lib/hm-nix-direnv.sh
     '';
   };
 }

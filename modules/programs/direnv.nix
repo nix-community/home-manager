@@ -104,7 +104,7 @@ in {
       source = tomlFormat.generate "direnv-config" cfg.config;
     };
 
-    xdg.configFile."direnv/lib/nix-direnv.sh" = mkIf cfg.nix-direnv.enable {
+    xdg.configFile."direnv/lib/hm-nix-direnv.sh" = mkIf cfg.nix-direnv.enable {
       source = "${cfg.nix-direnv.package}/share/nix-direnv/direnvrc";
       executable = true;
     };
