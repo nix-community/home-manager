@@ -162,6 +162,7 @@ let
     ./programs/neomutt.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
+    ./programs/newsraft.nix
     ./programs/nheko.nix
     ./programs/nix-index.nix
     ./programs/nnn.nix
