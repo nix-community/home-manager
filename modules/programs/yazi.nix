@@ -4,6 +4,7 @@
   pkgs,
   ...
 }:
+
 let
   inherit (lib)
     literalExpression
@@ -62,6 +63,8 @@ in
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    enableXonshIntegration = mkEnableOption "Xonsh integration";
 
     keymap = mkOption {
       type = tomlFormat.type;
@@ -217,6 +220,19 @@ in
 
     programs =
       let
+        xonshIntegration = ''
+          def _y(args):
+              tmp = $(mktemp -t "yazi-cwd.XXXXXX")
+              args.append(f"--cwd-file={tmp}")
+              $[yazi @(args)]
+              with open(tmp) as f:
+                  cwd = f.read().strip()
+              if cwd != $PWD:
+                  cd @(cwd)
+              rm -f -- @(tmp)
+
+          aliases["${cfg.shellWrapperName}"] = _y
+        '';
         bashIntegration = ''
           function ${cfg.shellWrapperName}() {
             local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
@@ -227,7 +243,6 @@ in
             rm -f -- "$tmp"
           }
         '';
-
         fishIntegration = ''
           set -l tmp (mktemp -t "yazi-cwd.XXXXX")
           command yazi $argv --cwd-file="$tmp"
@@ -254,58 +269,61 @@ in
 
         zsh.initContent = mkIf cfg.enableZshIntegration bashIntegration;
 
+        xonsh.xonshrc = lib.mkIf cfg.enableXonshIntegration xonshIntegration;
+
         fish.functions.${cfg.shellWrapperName} = mkIf cfg.enableFishIntegration fishIntegration;
 
         nushell.extraConfig = mkIf cfg.enableNushellIntegration nushellIntegration;
       };
-
-    xdg.configFile = {
-      "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
-        source = tomlFormat.generate "yazi-keymap" cfg.keymap;
-      };
-      "yazi/yazi.toml" = mkIf (cfg.settings != { }) {
-        source = tomlFormat.generate "yazi-settings" cfg.settings;
-      };
-      "yazi/theme.toml" = mkIf (cfg.theme != { }) {
-        source = tomlFormat.generate "yazi-theme" cfg.theme;
-      };
-      "yazi/init.lua" = mkIf (cfg.initLua != null) (
-        if builtins.isPath cfg.initLua then
-          {
-            source = cfg.initLua;
-          }
-        else
-          {
-            text = cfg.initLua;
-          }
-      );
-    }
-    // (lib.mapAttrs' (
-      name: value: lib.nameValuePair "yazi/flavors/${name}.yazi" { source = value; }
-    ) cfg.flavors)
-    // (lib.mapAttrs' (
-      name: value: lib.nameValuePair "yazi/plugins/${name}.yazi" { source = value; }
-    ) cfg.plugins);
-
-    warnings = lib.filter (s: s != "") (
-      lib.concatLists [
-        (mapAttrsToList (
-          name: _value:
-          optionalString (lib.hasSuffix ".yazi" name) ''
-            Flavors like `programs.yazi.flavors."${name}"` should no longer have the suffix ".yazi" in their attribute name.
-            The flavor will be linked to `$XDG_CONFIG_HOME/yazi/flavors/${name}.yazi`.
-            You probably want to rename it to `programs.yazi.flavors."${lib.removeSuffix ".yazi" name}"`.
-          ''
-        ) cfg.flavors)
-        (mapAttrsToList (
-          name: _value:
-          optionalString (lib.hasSuffix ".yazi" name) ''
-            Plugins like `programs.yazi.plugins."${name}"` should no longer have the suffix ".yazi" in their attribute name.
-            The plugin will be linked to `$XDG_CONFIG_HOME/yazi/plugins/${name}.yazi`.
-            You probably want to rename it to `programs.yazi.plugins."${lib.removeSuffix ".yazi" name}"`.
-          ''
-        ) cfg.plugins)
-      ]
-    );
   };
+
+  xdg.configFile = {
+    "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
+      source = tomlFormat.generate "yazi-keymap" cfg.keymap;
+    };
+    "yazi/yazi.toml" = mkIf (cfg.settings != { }) {
+      source = tomlFormat.generate "yazi-settings" cfg.settings;
+    };
+    "yazi/theme.toml" = mkIf (cfg.theme != { }) {
+      source = tomlFormat.generate "yazi-theme" cfg.theme;
+    };
+    "yazi/init.lua" = mkIf (cfg.initLua != null) (
+      if builtins.isPath cfg.initLua then
+        {
+          source = cfg.initLua;
+        }
+      else
+        {
+          text = cfg.initLua;
+        }
+    );
+  }
+  // (lib.mapAttrs' (
+    name: value: lib.nameValuePair "yazi/flavors/${name}.yazi" { source = value; }
+  ) cfg.flavors)
+  // (lib.mapAttrs' (
+    name: value: lib.nameValuePair "yazi/plugins/${name}.yazi" { source = value; }
+  ) cfg.plugins);
+
+  warnings = lib.filter (s: s != "") (
+    lib.concatLists [
+      (mapAttrsToList (
+        name: _value:
+        optionalString (lib.hasSuffix ".yazi" name) ''
+          Flavors like `programs.yazi.flavors."${name}"` should no longer have the suffix ".yazi" in their attribute name.
+          The flavor will be linked to `$XDG_CONFIG_HOME/yazi/flavors/${name}.yazi`.
+          You probably want to rename it to `programs.yazi.flavors."${lib.removeSuffix ".yazi" name}"`.
+        ''
+      ) cfg.flavors)
+      (mapAttrsToList (
+        name: _value:
+        optionalString (lib.hasSuffix ".yazi" name) ''
+          Plugins like `programs.yazi.plugins."${name}"` should no longer have the suffix ".yazi" in their attribute name.
+          The plugin will be linked to `$XDG_CONFIG_HOME/yazi/plugins/${name}.yazi`.
+          You probably want to rename it to `programs.yazi.plugins."${lib.removeSuffix ".yazi" name}"`.
+        ''
+      ) cfg.plugins)
+    ]
+  );
+
 }
