@@ -77,6 +77,12 @@
     githubId = 32838899;
     name = "Daniel Wagenknecht";
   };
+  inmaldrerah = {
+    name = "In'Maldrerah Eyllisitryanmitore";
+    email = "i@httpssec.com";
+    github = "inmaldrerah";
+    githubId = 71413779;
+  };
   jkarlson = {
     email = "jekarlson@gmail.com";
     github = "jkarlson";

@@ -243,6 +243,7 @@ let
     ./programs/wofi.nix
     ./programs/wpaperd.nix
     ./programs/xmobar.nix
+    ./programs/xonsh.nix
     ./programs/xplr.nix
     ./programs/yazi.nix
     ./programs/yt-dlp.nix
