@@ -39,6 +39,21 @@ let
       rm -fp $tmp
     }
   '';
+
+  xonshIntegration = ''
+    def __yazi_init():
+      def yy(args):
+        tmp = $(mktemp -t "yazi-cwd.XXXXX").strip()
+        $[yazi @(args) @(f"--cwd-file={tmp}")]
+        cwd = fp"{tmp}".read_text()
+        if cwd != "" and cwd != $PWD:
+          xonsh.dirstack.cd((cwd,))
+        $[rm -f -- @(tmp)]
+
+      aliases['yy'] = yy
+    __yazi_init()
+    del __yazi_init
+  '';
 in {
   meta.maintainers = with maintainers; [ xyenon ];
 
@@ -54,6 +69,8 @@ in {
     enableFishIntegration = mkEnableOption "Fish integration";
 
     enableNushellIntegration = mkEnableOption "Nushell integration";
+
+    enableXonshIntegration = mkEnableOption "Xonsh integration";
 
     keymap = mkOption {
       type = tomlFormat.type;
@@ -186,6 +203,8 @@ in {
 
     programs.nushell.extraConfig =
       mkIf cfg.enableNushellIntegration nushellIntegration;
+
+    programs.xonsh.xonshrc = mkIf cfg.enableXonshIntegration xonshIntegration;
 
     xdg.configFile = {
       "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
