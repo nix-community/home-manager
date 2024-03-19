@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.yazi;
   tomlFormat = pkgs.formats.toml { };
+
+
 in {
   meta.maintainers = with lib.maintainers; [ eljamm khaneliman xyenon ];
 
@@ -34,6 +36,8 @@ in {
 
     enableZshIntegration =
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    enableXonshIntegration = mkEnableOption "Xonsh integration";
 
     keymap = mkOption {
       type = tomlFormat.type;
@@ -193,6 +197,21 @@ in {
           rm -fp $tmp
         }
       '';
+
+    xonshIntegration = ''
+      def __yazi_init():
+        def yy(args):
+          tmp = $(mktemp -t "yazi-cwd.XXXXX").strip()
+          $[yazi @(args) @(f"--cwd-file={tmp}")]
+          cwd = fp"{tmp}".read_text()
+          if cwd != "" and cwd != $PWD:
+            xonsh.dirstack.cd((cwd,))
+          $[rm -f -- @(tmp)]
+
+        aliases['yy'] = yy
+      __yazi_init()
+      del __yazi_init
+    '';
     in {
       bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 
@@ -204,6 +223,8 @@ in {
       nushell.extraConfig =
         mkIf cfg.enableNushellIntegration nushellIntegration;
     };
+
+    programs.xonsh.xonshrc = mkIf cfg.enableXonshIntegration xonshIntegration;
 
     xdg.configFile = {
       "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
