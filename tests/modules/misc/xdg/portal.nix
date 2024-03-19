@@ -10,28 +10,18 @@ lib.mkIf config.test.enableBig {
   };
 
   nmt.script = ''
-    xdgDesktopPortal=home-files/.config/systemd/user/xdg-desktop-portal.service
-    assertFileExists $xdgDesktopPortal
+    assertFileExists home-path/share/systemd/user/xdg-desktop-portal.service
+    assertFileExists home-path/share/systemd/user/xdg-desktop-portal-wlr.service
+    assertFileExists home-path/share/systemd/user/xdg-desktop-portal-hyprland.service
 
-    xdgDesktopPortalWlr=home-path/share/systemd/user/xdg-desktop-portal-wlr.service
-    assertFileExists $xdgDesktopPortalWlr
-
-    xdgDesktopPortalHyprland=home-path/share/systemd/user/xdg-desktop-portal-hyprland.service
-    assertFileExists $xdgDesktopPortalHyprland
-
-    portalsDir="$(cat $TESTED/$xdgDesktopPortal | grep Environment=XDG_DESKTOP_PORTAL_DIR | cut -d '=' -f3)"
-    portalConfigsDir="$(cat $TESTED/$xdgDesktopPortal | grep Environment=NIXOS_XDG_DESKTOP_PORTAL_CONFIG_DIR | cut -d '=' -f3)"
-
-    assertFileContent $portalsDir/hyprland.portal \
+    assertFileContent home-path/share/xdg-desktop-portal/portals/hyprland.portal \
       ${pkgs.xdg-desktop-portal-hyprland}/share/xdg-desktop-portal/portals/hyprland.portal
-
-    assertFileContent $portalsDir/wlr.portal \
+    assertFileContent home-path/share/xdg-desktop-portal/portals/wlr.portal \
       ${pkgs.xdg-desktop-portal-wlr}/share/xdg-desktop-portal/portals/wlr.portal
 
-    assertFileContent $portalConfigsDir/hyprland-portals.conf \
+    assertFileContent home-path/share/xdg-desktop-portal/hyprland-portals.conf \
       ${pkgs.hyprland}/share/xdg-desktop-portal/hyprland-portals.conf
-
-    assertFileContent $portalConfigsDir/sway-portals.conf \
+    assertFileContent home-files/.config/xdg-desktop-portal/sway-portals.conf \
       ${./sway-portals-expected.conf}
   '';
 }
