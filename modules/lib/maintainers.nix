@@ -113,6 +113,12 @@
     github = "jack5079";
     githubId = 29169102;
   };
+  inmaldrerah = {
+    name = "In'Maldrerah Eyllisitryanmitore";
+    email = "i@httpssec.com";
+    github = "inmaldrerah";
+    githubId = 71413779;
+  };
   jkarlson = {
     email = "jekarlson@gmail.com";
     github = "jkarlson";
