@@ -1,9 +1,8 @@
-{ config, lib, pkgs, ... }:
-
 {
   config = {
     qt = {
       enable = true;
+      # Check if still backwards compatible
       platformTheme = "gnome";
       style.name = "adwaita";
     };
