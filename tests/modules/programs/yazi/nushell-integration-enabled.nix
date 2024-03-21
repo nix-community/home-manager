@@ -2,14 +2,14 @@
 
 let
   shellIntegration = ''
-    def-env ya [] {
+    def --env ya [...args] {
       let tmp = (mktemp -t "yazi-cwd.XXXXX")
-      yazi --cwd-file $tmp
-      let cwd = (cat -- $tmp)
+      yazi ...$args --cwd-file $tmp
+      let cwd = (open $tmp)
       if $cwd != "" and $cwd != $env.PWD {
         cd $cwd
       }
-      rm -f $tmp
+      rm -fp $tmp
     }
   '';
 in {

@@ -8,8 +8,8 @@ let
 
   bashIntegration = ''
     function ya() {
-      tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-      yazi --cwd-file="$tmp"
+      local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+      yazi "$@" --cwd-file="$tmp"
       if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
         cd -- "$cwd"
       fi
@@ -20,8 +20,8 @@ let
   fishIntegration = ''
     function ya
       set tmp (mktemp -t "yazi-cwd.XXXXX")
-      yazi --cwd-file="$tmp"
-      if set cwd (cat -- "$tmp") && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]
+      yazi $argv --cwd-file="$tmp"
+      if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
         cd -- "$cwd"
       end
       rm -f -- "$tmp"
@@ -29,14 +29,14 @@ let
   '';
 
   nushellIntegration = ''
-    def-env ya [] {
+    def --env ya [...args] {
       let tmp = (mktemp -t "yazi-cwd.XXXXX")
-      yazi --cwd-file $tmp
-      let cwd = (cat -- $tmp)
+      yazi ...$args --cwd-file $tmp
+      let cwd = (open $tmp)
       if $cwd != "" and $cwd != $env.PWD {
         cd $cwd
       }
-      rm -f $tmp
+      rm -fp $tmp
     }
   '';
 in {
@@ -82,7 +82,7 @@ in {
         Configuration written to
         {file}`$XDG_CONFIG_HOME/yazi/keymap.toml`.
 
-        See <https://github.com/sxyazi/yazi/blob/main/config/docs/keymap.md>
+        See <https://yazi-rs.github.io/docs/configuration/keymap>
         for the full list of options.
       '';
     };
@@ -107,7 +107,7 @@ in {
         Configuration written to
         {file}`$XDG_CONFIG_HOME/yazi/yazi.toml`.
 
-        See <https://github.com/sxyazi/yazi/blob/main/config/docs/yazi.md>
+        See <https://yazi-rs.github.io/docs/configuration/yazi>
         for the full list of options.
       '';
     };
@@ -131,7 +131,7 @@ in {
         Configuration written to
         {file}`$XDG_CONFIG_HOME/yazi/theme.toml`.
 
-        See <https://github.com/sxyazi/yazi/blob/main/config/docs/theme.md>
+        See <https://yazi-rs.github.io/docs/configuration/theme>
         for the full list of options
       '';
     };

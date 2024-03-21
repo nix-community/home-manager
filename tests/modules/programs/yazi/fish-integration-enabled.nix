@@ -4,8 +4,8 @@ let
   shellIntegration = ''
     function ya
       set tmp (mktemp -t "yazi-cwd.XXXXX")
-      yazi --cwd-file="$tmp"
-      if set cwd (cat -- "$tmp") && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]
+      yazi $argv --cwd-file="$tmp"
+      if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
         cd -- "$cwd"
       end
       rm -f -- "$tmp"
