@@ -155,7 +155,7 @@ _i "Starting Home Manager activation"
 # Verify that we can connect to the Nix store and/or daemon. This will
 # also create the necessary directories in profiles and gcroots.
 _iVerbose "Sanity checking Nix"
-nix-build --expr '{}' --no-out-link
+nix-build --quiet --expr '{}' --no-out-link
 
 # Also make sure that the Nix profiles path is created.
 nix-env -q > /dev/null 2>&1 || true
