@@ -91,7 +91,7 @@ in {
 
               `adwaita`
               : Use Adwaita theme with
-                [`qadwaitadecorations`](https://github.com/FedoraQt/QGnomePlatform)
+                [`qadwaitadecorations`](https://github.com/FedoraQt/QAdwaitaDecorations)
 
               `gnome` (deprecated)
               : Use GNOME theme with
