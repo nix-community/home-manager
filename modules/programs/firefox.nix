@@ -10,13 +10,15 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  mozillaConfigPath =
-    if isDarwin then "Library/Application Support/Mozilla" else ".mozilla";
+  isLibrewolf = cfg.package.meta.mainProgram == "librewolf";
 
-  firefoxConfigPath = if isDarwin then
-    "Library/Application Support/Firefox"
+  firefoxConfigPath = if isLibrewolf then
+    (if isDarwin then "Library/Application Support/Librewolf" else ".librewolf")
   else
-    "${mozillaConfigPath}/firefox";
+    (if isDarwin then
+      "Library/Application Support/Firefox"
+    else
+      ".mozilla/firefox");
 
   profilesPath =
     if isDarwin then "${firefoxConfigPath}/Profiles" else firefoxConfigPath;
