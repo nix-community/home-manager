@@ -122,6 +122,7 @@ in import nmtSrc {
     ./modules/programs/pet
     ./modules/programs/pistol
     ./modules/programs/pls
+    ./modules/programs/poetry
     ./modules/programs/powerline-go
     ./modules/programs/pubs
     ./modules/programs/pyenv
