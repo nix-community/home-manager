@@ -85,6 +85,7 @@ in import nmtSrc {
     ./modules/programs/himalaya
     ./modules/programs/htop
     ./modules/programs/hyfetch
+    ./modules/programs/hyprpaper
     ./modules/programs/i3status
     ./modules/programs/irssi
     ./modules/programs/jujutsu

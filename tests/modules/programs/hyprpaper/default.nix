@@ -1,0 +1,1 @@
+{ hyprpaper = ./hyprpaper.nix; }
