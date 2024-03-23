@@ -1,0 +1,8 @@
+set color-status-good-bg bold green
+set color-status-good-fg default
+set copy-to-clipboard-command wl-copy
+set scrolloff 12
+set section-menu-paramount-explore true
+bind ^P mark-unread-all
+bind f exec feh %l
+unbind r

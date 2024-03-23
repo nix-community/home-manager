@@ -1,0 +1,1 @@
+{ newsraft-tests = ./tests.nix; }

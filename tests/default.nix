@@ -111,6 +111,7 @@ in import nmtSrc {
     ./modules/programs/neomutt
     ./modules/programs/neovim
     ./modules/programs/newsboat
+    ./modules/programs/newsraft
     ./modules/programs/nheko
     ./modules/programs/nix-index
     ./modules/programs/nnn
