@@ -89,5 +89,5 @@ in {
     in { source = tomlFormat.generate "wallust.toml" mergedCfg; };
   };
 
-  meta.maintainers = [ hm.maintainers.temp ]; # TODO
+  meta.maintainers = [ hm.maintainers.DaniD3v ];
 }
