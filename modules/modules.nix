@@ -34,6 +34,7 @@ let
     ./misc/numlock.nix
     ./misc/pam.nix
     ./misc/qt.nix
+    ./misc/qt/kconfig.nix
     ./misc/specialisation.nix
     ./misc/submodule-support.nix
     ./misc/tmpfiles.nix
