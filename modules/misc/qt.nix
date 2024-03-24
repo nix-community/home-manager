@@ -187,22 +187,17 @@ in {
   };
 
   config = let
-    warnGnomeDeprecation = option: name:
-      lib.warnIf (name == "gnome")
-      "The value `gnome` for option `${option}` is deprecated. Use `adwaita` instead."
-      name;
-
     platformTheme = if (builtins.isString cfg.platformTheme) then {
-      name = lib.warn
-        "The option `qt.platformTheme` has been renamed to `qt.platformTheme.name`."
-        (warnGnomeDeprecation "qt.platformTheme" cfg.platformTheme);
+      option = "qt.platformTheme";
+      name = cfg.platformTheme;
       package = null;
     } else if cfg.platformTheme == null then {
+      option = null;
       name = null;
       package = null;
     } else {
-      name =
-        warnGnomeDeprecation "cfg.platformTheme.name" cfg.platformTheme.name;
+      option = "qt.platformTheme.name";
+      name = cfg.platformTheme.name;
       package = cfg.platformTheme.package;
     };
 
@@ -237,6 +232,12 @@ in {
         supports both Qt and Gtk, for example "adwaita", "adwaita-dark", or "breeze".
       '';
     }];
+
+    warnings = (lib.lists.optional (platformTheme.option == "qt.platformTheme")
+      "The option `qt.platformTheme` has been renamed to `qt.platformTheme.name`.")
+      ++ (lib.lists.optional
+        (platformTheme.name == "gnome" && platformTheme.package == null)
+        "The value `gnome` for option `${platformTheme.option}` is deprecated. Use `adwaita` instead.");
 
     qt.style.package = lib.mkIf (cfg.style.name != null)
       (lib.mkDefault (stylePackages.${lib.toLower cfg.style.name} or null));
