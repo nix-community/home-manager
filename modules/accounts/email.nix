@@ -508,6 +508,13 @@ in {
       default = { };
       description = "List of email accounts.";
     };
+
+    order = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description =
+        "Order of email accounts from [](#opt-accounts.email.accounts).";
+    };
   };
 
   config = mkIf (cfg.accounts != { }) {
@@ -521,6 +528,10 @@ in {
           + toString (length primaries) + optionalString (length primaries > 1)
           (", namely " + concatStringsSep ", " primaries);
       })
-    ];
+    ] ++ (builtins.map (n: {
+      assertion = lib.elem n (builtins.attrNames cfg.accounts);
+      message =
+        "'${n}' is present in config.accounts.email.orders but not in config.accounts.email.accounts.";
+    }) cfg.order);
   };
 }

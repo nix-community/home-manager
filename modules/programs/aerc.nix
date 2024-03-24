@@ -23,6 +23,10 @@ let
 
   aerc-accounts =
     attrsets.filterAttrs (_: v: v.aerc.enable) config.accounts.email.accounts;
+  aerc-accounts-order = builtins.filter (n:
+    config.accounts.email.accounts ? n
+    && config.accounts.email.accounts.${n}.aerc.enable)
+    config.accounts.email.order;
 
   configDir = if (pkgs.stdenv.isDarwin && !config.xdg.enable) then
     "Library/Preferences/aerc"
@@ -136,11 +140,15 @@ in {
     });
 
     primaryAccount = attrsets.filterAttrs (_: v: v.primary) aerc-accounts;
-    otherAccounts = attrsets.filterAttrs (_: v: !v.primary) aerc-accounts;
+    orderedAccountsList =
+      builtins.map (n: { ${n} = aerc-accounts."${n}"; }) aerc-accounts-order;
+    unorderedAccounts = attrsets.filterAttrs
+      (n: v: !v.primary && !builtins.elem n aerc-accounts-order) aerc-accounts;
 
     primaryAccountAccounts = mapAttrs accounts.mkAccount primaryAccount;
-
-    accountsExtraAccounts = mapAttrs accounts.mkAccount otherAccounts;
+    orderedAccountsAccountsList =
+      builtins.map (mapAttrs accounts.mkAccount) orderedAccountsList;
+    unorderedAccountsAccounts = mapAttrs accounts.mkAccount unorderedAccounts;
 
     accountsExtraConfig = mapAttrs accounts.mkAccountConfig aerc-accounts;
 
@@ -155,7 +163,9 @@ in {
         false;
 
     genAccountsConf = ((cfg.extraAccounts != "" && cfg.extraAccounts != { })
-      || !(isRecursivelyEmpty accountsExtraAccounts)
+      || !(isRecursivelyEmpty unorderedAccountsAccounts)
+      || !(builtins.all (v: v)
+        (builtins.map isRecursivelyEmpty orderedAccountsAccountsList))
       || !(isRecursivelyEmpty primaryAccountAccounts));
 
     genAercConf = ((cfg.extraConfig != "" && cfg.extraConfig != { })
@@ -197,12 +207,10 @@ in {
 
     home.file = {
       "${configDir}/accounts.conf" = mkIf genAccountsConf {
-        text = joinCfg [
-          header
-          (mkINI cfg.extraAccounts)
-          (mkINI primaryAccountAccounts)
-          (mkINI accountsExtraAccounts)
-        ];
+        text = joinCfg
+          ([ header (mkINI cfg.extraAccounts) (mkINI primaryAccountAccounts) ]
+            ++ (builtins.map mkINI orderedAccountsAccountsList)
+            ++ [ (mkINI unorderedAccountsAccounts) ]);
       };
 
       "${configDir}/aerc.conf" = mkIf genAercConf {
