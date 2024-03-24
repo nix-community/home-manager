@@ -379,6 +379,7 @@ let
     ./services/xscreensaver.nix
     ./services/xsettingsd.nix
     ./services/xsuspender.nix
+    ./programs/wallust.nix
     ./systemd.nix
     ./targets/darwin
     ./targets/generic-linux.nix
