@@ -71,6 +71,12 @@
     github = "Dines97";
     githubId = 19364873;
   };
+  diniamo = {
+    name = "diniamo";
+    email = "diniamo69@gmail.com";
+    github = "diniamo";
+    githubId = 55629891;
+  };
   dwagenk = {
     email = "dwagenk@mailbox.org";
     github = "dwagenk";

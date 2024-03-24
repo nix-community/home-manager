@@ -211,6 +211,7 @@ let
     ./programs/sioyek.nix
     ./programs/skim.nix
     ./programs/sm64ex.nix
+    ./programs/spotify-player.nix
     ./programs/sqls.nix
     ./programs/ssh.nix
     ./programs/starship.nix
