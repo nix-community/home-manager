@@ -174,7 +174,10 @@ in {
 
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "vim"; };
+    home.sessionVariables = mkIf cfg.defaultEditor {
+      EDITOR = getBin
+        (pkgs.writeShellScript "editor" "exec ${getBin cfg.package}/bin/vim");
+    };
 
     programs.vim = {
       package = vim;
