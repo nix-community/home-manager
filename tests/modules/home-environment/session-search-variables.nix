@@ -2,14 +2,14 @@
 
 {
   imports = [
-    ({ ... }: { config.home.sessionPath = [ "foo" ]; })
-    ({ ... }: { config.home.sessionPath = [ "bar" "baz" ]; })
+    ({ ... }: { config.home.sessionSearchVariables.TEST = [ "foo" ]; })
+    ({ ... }: { config.home.sessionSearchVariables.TEST = [ "bar" "baz" ]; })
   ];
 
   nmt.script = ''
     hmSessVars=home-path/etc/profile.d/hm-session-vars.sh
     assertFileExists $hmSessVars
     assertFileContains $hmSessVars \
-      'export PATH="bar:baz:foo''${PATH:+:}$PATH"'
+      'export TEST="bar:baz:foo''${TEST:+:}$TEST"'
   '';
 }
