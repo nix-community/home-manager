@@ -4,11 +4,11 @@ with lib;
 
 let
   homeDir = config.home.homeDirectory;
-  fontsEnv = pkgs.buildEnv {
+  fontsEnv = (pkgs.buildEnv {
     name = "home-manager-fonts";
     paths = config.home.packages;
     pathsToLink = "/share/fonts";
-  };
+  }).overrideAttrs (old: { __noChroot = config.home.buildEnvWithNoChroot; });
   fonts = "${fontsEnv}/share/fonts";
   installDir = "${homeDir}/Library/Fonts/HomeManager";
 in {
