@@ -1,0 +1,5 @@
+vim.cmd [[source /nix/store/00000000000000000000000000000000-nvim-init-home-manager.vim]]
+
+vim.opt.expandtab = false
+
+vim.g.test_plugin2 = 1
