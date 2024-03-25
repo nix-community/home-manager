@@ -7,6 +7,12 @@
 # [1] https://github.com/NixOS/nixpkgs/blob/fca0d6e093c82b31103dc0dacc48da2a9b06e24b/maintainers/maintainer-list.nix#LC1
 
 {
+  willbou1 = {
+    name = "William Boulanger";
+    github = "willbou1";
+    email = "willbou2@gmail.com";
+    githubId = 6372967;
+  };
   amesgen = {
     name = "amesgen";
     email = "amesgen@amesgen.de";

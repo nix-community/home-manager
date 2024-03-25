@@ -1,0 +1,1 @@
+{ vifm-settings = ./settings.nix; }
