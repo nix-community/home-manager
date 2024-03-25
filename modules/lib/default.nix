@@ -11,6 +11,7 @@ rec {
   maintainers = import ./maintainers.nix;
   strings = import ./strings.nix { inherit lib; };
   types = import ./types.nix { inherit gvariant lib; };
+  options = import ./options.nix { inherit lib; };
 
   shell = import ./shell.nix { inherit lib; };
   zsh = import ./zsh.nix { inherit lib; };
