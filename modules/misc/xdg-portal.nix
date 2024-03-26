@@ -2,9 +2,7 @@
 
 let
 
-  inherit (lib)
-    mapAttrsToList mkEnableOption mkIf mkMerge mkOption optional optionalString
-    types;
+  inherit (lib) mkIf mkMerge mkOption optional types;
 
   associationOptions = with types;
     attrsOf (coercedTo (either (listOf str) str)
@@ -14,8 +12,24 @@ in {
   meta.maintainers = [ lib.maintainers.misterio77 ];
 
   options.xdg.portal = {
-    enable = mkEnableOption
-      "[XDG desktop integration](https://github.com/flatpak/xdg-desktop-portal)";
+    enable = mkOption {
+      type = types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to enable [XDG desktop integration](https://github.com/flatpak/xdg-desktop-portal).
+
+        Note, if you use the NixOS module and have `useUserPackages = true`,
+        make sure to add
+
+        ``` nix
+        environment.pathsToLink = [ "/share/xdg-desktop-portal" "/share/applications" ];
+        ```
+
+        to your system configuration so that the portal definitions and DE
+        provided configurations get linked.
+      '';
+    };
 
     extraPortals = mkOption {
       type = types.listOf types.package;
