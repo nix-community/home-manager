@@ -4,9 +4,7 @@ with lib;
 
 let
   cfg = config.programs.alacritty;
-  useToml = lib.versionAtLeast cfg.package.version "0.13";
   tomlFormat = pkgs.formats.toml { };
-  configFileName = "alacritty.${if useToml then "toml" else "yml"}";
 in {
   options = {
     programs.alacritty = {
@@ -32,7 +30,7 @@ in {
               {
                 key = "K";
                 mods = "Control";
-                chars = "\\x0c";
+                chars = "\\u000c";
               }
             ];
           }
@@ -52,24 +50,15 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."alacritty/${configFileName}" =
-      lib.mkIf (cfg.settings != { }) (lib.mkMerge [
-        (lib.mkIf useToml {
-          source =
-            (tomlFormat.generate configFileName cfg.settings).overrideAttrs
-            (finalAttrs: prevAttrs: {
-              buildCommand = lib.concatStringsSep "\n" [
-                prevAttrs.buildCommand
-                # TODO: why is this needed? Is there a better way to retain escape sequences?
-                "substituteInPlace $out --replace '\\\\' '\\'"
-              ];
-            });
-        })
-        # TODO remove this once we don't need to support Alacritty < 0.12 anymore
-        (lib.mkIf (!useToml) {
-          text =
-            replaceStrings [ "\\\\" ] [ "\\" ] (builtins.toJSON cfg.settings);
-        })
-      ]);
+    xdg.configFile."alacritty/alacritty.toml" = lib.mkIf (cfg.settings != { }) {
+      source = (tomlFormat.generate "alacritty.toml" cfg.settings).overrideAttrs
+        (finalAttrs: prevAttrs: {
+          buildCommand = lib.concatStringsSep "\n" [
+            prevAttrs.buildCommand
+            # TODO: why is this needed? Is there a better way to retain escape sequences?
+            "substituteInPlace $out --replace '\\\\' '\\'"
+          ];
+        });
+    };
   };
 }
