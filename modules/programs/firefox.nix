@@ -262,6 +262,18 @@ in {
         '';
       };
 
+      languagePacks = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = ''
+          The language packs to install. Available language codes can be found
+          on the releases page:
+          `https://releases.mozilla.org/pub/firefox/releases/''${version}/linux-x86_64/xpi/`,
+          replacing `''${version}` with the version of Firefox you have.
+        '';
+        example = [ "en-GB" "de" ];
+      };
+
       nativeMessagingHosts = mkOption {
         type = types.listOf types.package;
         default = [ ];
@@ -736,6 +748,14 @@ in {
         message = "Container id must be smaller than 4294967294 (2^32 - 2)";
       })
 
+      {
+        assertion = cfg.languagePacks == [ ] || cfg.package != null;
+        message = ''
+          'programs.firefox.languagePacks' requires 'programs.firefox.package'
+          to be set to a non-null value.
+        '';
+      }
+
       (mkNoDuplicateAssertion cfg.profiles "profile")
     ] ++ (mapAttrsToList
       (_: profile: mkNoDuplicateAssertion profile.containers "container")
@@ -749,6 +769,15 @@ in {
     '';
 
     programs.firefox.finalPackage = wrapPackage cfg.package;
+
+    programs.firefox.policies = {
+      ExtensionSettings = listToAttrs (map (lang:
+        nameValuePair "langpack-${lang}@firefox.mozilla.org" {
+          installation_mode = "normal_installed";
+          install_url =
+            "https://releases.mozilla.org/pub/firefox/releases/${cfg.package.version}/linux-x86_64/xpi/${lang}.xpi";
+        }) cfg.languagePacks);
+    };
 
     home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
 
