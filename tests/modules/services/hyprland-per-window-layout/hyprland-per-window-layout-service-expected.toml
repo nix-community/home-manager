@@ -1,0 +1,3 @@
+keyboards = ["lenovo-keyboard"]
+[[default_layouts]]
+1 = ["org.telegram.desktop"]

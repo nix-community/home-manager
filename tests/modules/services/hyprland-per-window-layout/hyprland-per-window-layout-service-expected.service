@@ -1,0 +1,13 @@
+[Install]
+WantedBy=hyprland-session.target
+
+[Service]
+Environment=PATH=@hyprland@/bin
+ExecStart=@hyprland-per-window-layout@/bin/hyprland-per-window-layout
+Restart=on-failure
+Type=simple
+
+[Unit]
+Description=Per window keyboard layout (language) for Hyprland Wayland compositor
+PartOf=hyprland-session.target
+X-Restart-Triggers=/nix/store/00000000000000000000000000000000-options.toml
