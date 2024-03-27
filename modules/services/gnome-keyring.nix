@@ -13,8 +13,16 @@ in {
     services.gnome-keyring = {
       enable = mkEnableOption "GNOME Keyring";
 
+      useSecurityWrapper = mkEnableOption ''
+        using gnome-keyring-daemon wrapped by NixOS security wrapper
+        (i.e. {file}`/run/wrappers/bin/gnome-keyring-daemon`) with
+        `CAP_IPC_LOCK` to enhance memory security. This option will
+        only work on NixOS with system-wide
+        {option}`services.gnome.gnome-keyring.enable` option enabled
+      '';
+
       components = mkOption {
-        type = types.listOf (types.enum [ "pkcs11" "secrets" "ssh" ]);
+        type = types.listOf (types.enum [ "pkcs11" "secrets" "ssh" "gpg" ]);
         default = [ ];
         description = ''
           The GNOME keyring components to start. If empty then the
@@ -49,7 +57,11 @@ in {
           args = concatStringsSep " " ([ "--start" "--foreground" ]
             ++ optional (cfg.components != [ ])
             ("--components=" + concatStringsSep "," cfg.components));
-        in "${pkgs.gnome.gnome-keyring}/bin/gnome-keyring-daemon ${args}";
+          executable = if cfg.useSecurityWrapper then
+            "/run/wrappers/bin/gnome-keyring-daemon"
+          else
+            "${pkgs.gnome.gnome-keyring}/bin/gnome-keyring-daemon";
+        in "${executable} ${args}";
         Restart = "on-abort";
       };
 
