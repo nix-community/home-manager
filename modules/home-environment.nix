@@ -473,6 +473,12 @@ in
         will be printed when the user configuration is being built.
       '';
     };
+
+    home.preferXdgDirectories = mkEnableOption "" // {
+    description = ''
+      Whether to make programs use XDG directories whenever supported.
+    '';
+};
   };
 
   config = {
