@@ -1,13 +1,14 @@
 { pkgs
 
-# Note, this should be "the standard library" + HM extensions.
+  # Note, this should be "the standard library" + HM extensions.
 , lib
 
-# Whether to enable module type checking.
+  # Whether to enable module type checking.
 , check ? true
 
   # If disabled, the pkgs attribute passed to this function is used instead.
-, useNixpkgsModule ? true }:
+, useNixpkgsModule ? true
+}:
 
 with lib;
 
@@ -340,6 +341,7 @@ let
     ./services/safeeyes.nix
     ./services/screen-locker.nix
     ./services/sctd.nix
+    ./services/secret-service/secret-service.nix
     ./services/signaturepdf.nix
     ./services/spotifyd.nix
     ./services/ssh-agent.nix
@@ -395,7 +397,7 @@ let
       KeePassX is no longer maintained.
     '')
   ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
-    ++ optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
+  ++ optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
 
   pkgsModule = { config, ... }: {
     config = {
@@ -413,4 +415,5 @@ let
     };
   };
 
-in modules ++ [ pkgsModule ]
+in
+modules ++ [ pkgsModule ]

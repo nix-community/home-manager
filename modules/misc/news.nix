@@ -1469,6 +1469,14 @@ in {
           A new module is available: 'services.activitywatch'.
         '';
       }
+
+      {
+        time = "2024-03-23T17:24:35+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.secret-service'.
+        '';
+      }
     ];
   };
 }
