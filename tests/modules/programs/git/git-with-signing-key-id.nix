@@ -6,8 +6,10 @@
       userEmail = "user@example.org";
 
       signing = {
-        gpgPath = "path-to-gpg";
-        key = "00112233445566778899AABBCCDDEEFF";
+        signer = "path-to-ssh";
+        format = "ssh";
+        key =
+          "ssh-ed25519 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         signByDefault = true;
       };
     };
