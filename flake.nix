@@ -112,7 +112,7 @@
             inherit pkgs;
             inherit (releaseInfo) release isReleaseBranch;
           };
-          hmPkg = pkgs.callPackage ./home-manager { path = toString ./.; };
+          hmPkg = pkgs.callPackage ./home-manager { path = "${self}"; };
 
           testPackages = let
             tests = import ./tests { inherit pkgs; };
