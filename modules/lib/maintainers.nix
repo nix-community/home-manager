@@ -512,4 +512,10 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+  diniamo = {
+    name = "diniamo";
+    email = "diniamo69@gmail.com";
+    github = "diniamo";
+    githubId = 55629891;
+  };
 }

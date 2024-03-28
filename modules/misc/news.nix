@@ -1469,6 +1469,13 @@ in {
           A new module is available: 'services.activitywatch'.
         '';
       }
+
+      {
+        time = "2024-03-24T20:58:23+00:00";
+        message = ''
+          A new module is available: 'programs.spotify-player'.
+        '';
+      }
     ];
   };
 }
