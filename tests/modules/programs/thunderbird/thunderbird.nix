@@ -53,7 +53,10 @@
         '';
       };
 
-      second.settings = { "second.setting" = "some-test-setting"; };
+      second.settings = {
+        "second.setting" = "some-test-setting";
+        second.nested.evenFurtherNested = [ 1 2 3 ];
+      };
     };
 
     settings = {
