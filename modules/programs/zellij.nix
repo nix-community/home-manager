@@ -52,6 +52,39 @@ in {
     enableFishIntegration = mkEnableOption "Fish integration" // {
       default = false;
     };
+
+    extraConfig = mkOption {
+      type = lib.types.lines;
+      default = "";
+      example = ''
+        keybinds {
+            // keybinds are divided into modes
+            normal {
+                // bind instructions can include one or more keys (both keys will be bound separately)
+                // bind keys can include one or more actions (all actions will be performed with no sequential guarantees)
+                bind "Ctrl g" { SwitchToMode "locked"; }
+                bind "Ctrl p" { SwitchToMode "pane"; }
+                bind "Alt n" { NewPane; }
+                bind "Alt h" "Alt Left" { MoveFocusOrTab "Left"; }
+            }
+            pane {
+                bind "h" "Left" { MoveFocus "Left"; }
+                bind "l" "Right" { MoveFocus "Right"; }
+                bind "j" "Down" { MoveFocus "Down"; }
+                bind "k" "Up" { MoveFocus "Up"; }
+                bind "p" { SwitchFocus; }
+            }
+            locked {
+                bind "Ctrl g" { SwitchToMode "normal"; }
+            }
+        }
+      '';
+      description = ''
+        Extra configuration lines
+        Versions prior to 0.32.0 use Yaml
+        Versions after 0.32.0 use KDL
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -60,14 +93,28 @@ in {
     # Zellij switched from yaml to KDL in version 0.32.0:
     # https://github.com/zellij-org/zellij/releases/tag/v0.32.0
     xdg.configFile."zellij/config.yaml" = mkIf
-      (cfg.settings != { } && (versionOlder cfg.package.version "0.32.0")) {
-        source = yamlFormat.generate "zellij.yaml" cfg.settings;
-      };
+      ((cfg.settings != { } || cfg.extraConfig != "")
+        && (versionOlder cfg.package.version "0.32.0")) {
+          source =
+            let settings = yamlFormat.generate "zellij.yaml" cfg.settings;
+            in ''
+              ${settings}
+
+              ${cfg.extraConfig}
+            '';
+        };
 
     xdg.configFile."zellij/config.kdl" = mkIf
-      (cfg.settings != { } && (versionAtLeast cfg.package.version "0.32.0")) {
-        text = lib.hm.generators.toKDL { } cfg.settings;
-      };
+      ((cfg.settings != { } || cfg.extraConfig != "")
+        && (versionAtLeast cfg.package.version "0.32.0")) {
+          text = let settings = lib.hm.generators.toKDL { } cfg.settings;
+          in ''
+            ${settings}
+
+            ${cfg.extraConfig}
+          '';
+
+        };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
       eval "$(${zellijCmd} setup --generate-auto-start bash)"
