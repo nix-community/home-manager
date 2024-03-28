@@ -475,10 +475,10 @@ in
     };
 
     home.preferXdgDirectories = mkEnableOption "" // {
-    description = ''
-      Whether to make programs use XDG directories whenever supported.
-    '';
-};
+      description = ''
+        Whether to make programs use XDG directories whenever supported.
+      '';
+    };
   };
 
   config = {
