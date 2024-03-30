@@ -69,6 +69,15 @@ in {
       '';
     };
 
+    themePackage = mkOption {
+      type = types.package;
+      default = pkgs.kitty-themes;
+      defaultText = literalExpression "pkgs.kitty-themes";
+      description = ''
+        Kitty themes package to install.
+      '';
+    };
+
     darwinLaunchOptions = mkOption {
       type = types.nullOr (types.listOf types.str);
       default = null;
@@ -193,11 +202,11 @@ in {
         '')
 
         (optionalString (cfg.theme != null) ''
-          include ${pkgs.kitty-themes}/share/kitty-themes/${
+          include ${cfg.themePackage}/share/kitty-themes/${
             let
               matching = filter (x: x.name == cfg.theme) (builtins.fromJSON
                 (builtins.readFile
-                  "${pkgs.kitty-themes}/share/kitty-themes/themes.json"));
+                  "${cfg.themePackage}/share/kitty-themes/themes.json"));
             in throwIf (length matching == 0)
             "kitty-themes does not contain a theme named ${cfg.theme}"
             (head matching).file
