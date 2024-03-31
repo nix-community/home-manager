@@ -15,27 +15,11 @@ with lib;
     };
 
     color = mkOption {
-      type = types.nullOr (types.enum [
-        "black"
-        "white"
-        "brown"
-        "yellow"
-        "dark gray"
-        "dark green"
-        "dark blue"
-        "light gray"
-        "light green"
-        "light blue"
-        "dark magenta"
-        "dark cyan"
-        "dark red"
-        "light magenta"
-        "light cyan"
-        "light red"
-      ]);
+      type = types.nullOr types.str;
       default = null;
       description = ''
         Color in which events in this calendar are displayed.
+        For instance 'light green' or an RGB color '#ff0000'
       '';
       example = "light green";
     };
