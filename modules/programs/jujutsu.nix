@@ -34,16 +34,14 @@ in {
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
-      example = literalExpression ''
-        {
-          user = {
-            name = "John Doe";
-            email = "jdoe@example.org";
-          };
-        }
-      '';
+      example = {
+        user = {
+          name = "John Doe";
+          email = "jdoe@example.org";
+        };
+      };
       description = ''
-        Options to add to the {file}`.jjconfig.toml` file. See
+        Options to add to the {file}`config.toml` file. See
         <https://github.com/martinvonz/jj/blob/main/docs/config.md>
         for options.
       '';
@@ -53,7 +51,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file.".jjconfig.toml" = mkIf (cfg.settings != { }) {
+    xdg.configFile."jj/config.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "jujutsu-config" (cfg.settings
         // optionalAttrs (cfg.ediff) (let
           emacsDiffScript = pkgs.writeShellScriptBin "emacs-ediff" ''

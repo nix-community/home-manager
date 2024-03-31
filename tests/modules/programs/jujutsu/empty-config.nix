@@ -6,6 +6,6 @@
   test.stubs.jujutsu = { };
 
   nmt.script = ''
-    assertPathNotExists home-files/.jjconfig.toml
+    assertPathNotExists home-files/.config/jj/config.toml
   '';
 }
