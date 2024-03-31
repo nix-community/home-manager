@@ -215,6 +215,8 @@ in {
             {file}`$XDG_CONFIG_HOME/gtk-4.0/gtk.css`.
           '';
         };
+
+        enableTheme = mkEnableOption "Add gtkk theme to user CSS";
       };
     };
   };
@@ -236,7 +238,7 @@ in {
       };
 
     gtk4Css =
-      lib.optionalString (cfg.theme != null && cfg.theme.package != null) ''
+      lib.optionalString (cfg4.enableTheme && cfg.theme != null && cfg.theme.package != null) ''
         /**
          * GTK 4 reads the theme configured by gtk-theme-name, but ignores it.
          * It does however respect user CSS, so import the theme from here.
