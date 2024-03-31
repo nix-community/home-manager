@@ -1,7 +1,9 @@
 [calendars]
 [[test]]
 path = /home/hm-user/$XDG_CONFIG_HOME/cal/test/
+        
 readonly = True
+color = '#ff0000'
 priority=10
 type=calendar
 
@@ -9,6 +11,7 @@ type=calendar
 
 [[testcontacts-automaticallyCollected]]
 path = /home/hm-user/$XDG_CONFIG_HOME/card/testcontacts/automaticallyCollected
+        
 priority=10
 type=birthdays
 
@@ -16,6 +19,7 @@ type=birthdays
 
 [[testcontacts-default]]
 path = /home/hm-user/$XDG_CONFIG_HOME/card/testcontacts/default
+        
 priority=10
 type=birthdays
 
@@ -23,6 +27,7 @@ type=birthdays
 
 [[testcontactsNoCollections]]
 path = /home/hm-user/$XDG_CONFIG_HOME/card/testcontactsNoCollections/
+        
 priority=10
 type=birthdays
 

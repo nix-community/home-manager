@@ -19,6 +19,7 @@
         khal = {
           enable = true;
           readOnly = true;
+          color = "#ff0000";
           type = "calendar";
         };
         local.type = "filesystem";
