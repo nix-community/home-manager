@@ -237,8 +237,8 @@ in {
         gtk-cursor-theme-size = cfg.cursorTheme.size;
       };
 
-    gtk4Css =
-      lib.optionalString (cfg4.enableTheme && cfg.theme != null && cfg.theme.package != null) ''
+    gtk4Css = lib.optionalString
+      (cfg4.enableTheme && cfg.theme != null && cfg.theme.package != null) ''
         /**
          * GTK 4 reads the theme configured by gtk-theme-name, but ignores it.
          * It does however respect user CSS, so import the theme from here.
