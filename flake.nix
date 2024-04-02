@@ -78,8 +78,7 @@
           in throwForRemovedArgs (import ./modules {
             inherit pkgs lib check extraSpecialArgs;
             configuration = { ... }: {
-              imports = modules
-                ++ [{ programs.home-manager.path = toString ./.; }];
+              imports = modules ++ [{ programs.home-manager.path = "${./.}"; }];
               nixpkgs = {
                 config = nixpkgs.lib.mkDefault pkgs.config;
                 inherit (pkgs) overlays;
@@ -112,7 +111,7 @@
             inherit pkgs;
             inherit (releaseInfo) release isReleaseBranch;
           };
-          hmPkg = pkgs.callPackage ./home-manager { path = toString ./.; };
+          hmPkg = pkgs.callPackage ./home-manager { path = "${./.}"; };
 
           testPackages = let
             tests = import ./tests { inherit pkgs; };
