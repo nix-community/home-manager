@@ -88,7 +88,7 @@ in {
           "WAYLAND_DISPLAY"
           "XDG_CURRENT_DESKTOP"
         ];
-        example = [ "-all" ];
+        example = [ "--all" ];
         description = ''
           Environment variables to be imported in the systemd & D-Bus user
           environment.
