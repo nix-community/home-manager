@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-02-15 16:04+0100\n"
-"PO-Revision-Date: 2024-02-16 22:01+0000\n"
-"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
+"PO-Revision-Date: 2024-04-02 21:38+0000\n"
+"Last-Translator: LilleAila <olai.solsvik@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "home-manager/cli/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: home-manager/home-manager:58
 msgid "No configuration file found at %s"
@@ -27,10 +27,13 @@ msgstr "Fant ingen oppsettsfil i %s"
 #. 'home.nix' or 'flake.nix'.
 #: home-manager/home-manager:75 home-manager/home-manager:79
 #: home-manager/home-manager:178
+#, fuzzy
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Å holde Home Manager %s i %s er avviklet,\n"
+"vennligst flytt det til %s"
 
 #: home-manager/home-manager:86
 msgid "No configuration file found. Please create one at %s"
@@ -38,7 +41,7 @@ msgstr "Fant ikke noen oppsettsfil. Opprett en i %s"
 
 #: home-manager/home-manager:101
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home Manager var ikke funnet på %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:109
@@ -75,7 +78,7 @@ msgstr "Kontrollerer at Nix fungerer"
 
 #: home-manager/home-manager:160
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Kunne ikke finne en passende profilmappe, prøvde %s og %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:215
@@ -92,12 +95,13 @@ msgid "Run '%s --help' for usage help"
 msgstr "Kjør «%s --help» for brukshjelp"
 
 #: home-manager/home-manager:319 home-manager/home-manager:423
+#, fuzzy
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "Filen %s eksisterer fra før, lar den være uendret..."
 
 #: home-manager/home-manager:321 home-manager/home-manager:425
 msgid "Creating %s..."
-msgstr ""
+msgstr "Lager %s..."
 
 #: home-manager/home-manager:467
 msgid "Creating initial Home Manager generation..."
