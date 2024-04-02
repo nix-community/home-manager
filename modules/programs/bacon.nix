@@ -17,6 +17,7 @@ in {
 
     settings = mkOption {
       type = settingsFormat.type;
+      default = { };
       example = {
         jobs.default = {
           command = [ "cargo" "build" "--all-features" "--color" "always" ];
