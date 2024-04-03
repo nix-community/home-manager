@@ -68,6 +68,11 @@ in {
       type = with lib.types;
         attrsOf (submodule {
           options.khard.enable = lib.mkEnableOption "khard access";
+          options.khard.defaultCollection = lib.mkOption {
+            type = types.str;
+            default = "";
+            description = "VCARD collection to be searched by khard.";
+          };
         });
     };
   };
@@ -79,7 +84,12 @@ in {
       [addressbooks]
       ${lib.concatMapStringsSep "\n" (acc: ''
         [[${acc.name}]]
-        path = ${acc.local.path}
+        path = ${
+          builtins.toPath (lib.concatStringsSep "/" [
+            acc.local.path
+            acc.khard.defaultCollection
+          ])
+        }
       '') (lib.attrValues accounts)}
 
       ${renderSettings cfg.settings}
