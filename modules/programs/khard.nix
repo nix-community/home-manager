@@ -81,7 +81,6 @@ in {
     home.packages = [ pkgs.khard ];
 
     xdg.configFile."khard/khard.conf".text = let
-      # Append subdir, use builtins.toString (/. + <subdir>) to sanitize
       makePath = anAccount:
         builtins.toString (/. + lib.concatStringsSep "/" [
           anAccount.local.path
