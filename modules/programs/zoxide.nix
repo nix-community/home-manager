@@ -87,8 +87,6 @@ in {
           mkdir $zoxide_cache
         }
         ${cfg.package}/bin/zoxide init nushell ${cfgOptions} |
-          str replace "def-env" "def --env" --all |  # https://github.com/ajeetdsouza/zoxide/pull/632
-          str replace --all "-- $rest" "-- ...$rest" |
           save --force ${config.xdg.cacheHome}/zoxide/init.nu
       '';
       extraConfig = ''
