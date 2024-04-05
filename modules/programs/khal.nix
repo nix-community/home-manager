@@ -45,8 +45,10 @@ let
         + (optionalString
           (value.khal.type == "birthdays" && value.khal ? thisCollection)
           value.khal.thisCollection)
-      }\n        "
+      }"
     ] ++ optional (value.khal.readOnly) "readonly = True"
+      ++ optional (value.khal.addresses != [ ])
+      "addresses= ${lib.concatStringsSep ", " value.khal.addresses}"
       ++ optional (value.khal.color != null) "color = '${value.khal.color}'"
       ++ [ (toKeyValueIfDefined (getAttrs [ "type" "priority" ] value.khal)) ]
       ++ [ "\n" ]);
