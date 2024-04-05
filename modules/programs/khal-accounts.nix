@@ -31,5 +31,14 @@ with lib;
         Priority of a calendar used for coloring (calendar with highest priority is preferred).
       '';
     };
+
+    addresses = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = ''
+        Email addresses to be associated with this account. Used to check the
+        participation status ("PARTSTAT"), refer to khal documentation.
+      '';
+    };
   };
 }
