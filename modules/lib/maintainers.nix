@@ -77,6 +77,12 @@
     githubId = 32838899;
     name = "Daniel Wagenknecht";
   };
+  jack5079 = {
+    name = "Jack W.";
+    email = "nix@jack.cab";
+    github = "jack5079";
+    githubId = 29169102;
+  };
   jkarlson = {
     email = "jekarlson@gmail.com";
     github = "jkarlson";
