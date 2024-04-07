@@ -17,6 +17,27 @@ in {
         description = "The Alacritty package to install.";
       };
 
+      theme = mkOption {
+        type = let
+          themes = with lib;
+            pipe pkgs.alacritty-theme [
+              builtins.readDir
+              (filterAttrs
+                (name: type: type == "regular" && hasSuffix ".toml" name))
+              attrNames
+              (map (removeSuffix ".toml"))
+            ];
+        in with types; nullOr (enum themes);
+        default = null;
+        example = "solarized_dark";
+        description = ''
+          A theme to import in the configuration, taken from the [`alacritty-theme`] repository,
+          as [packaged] in `nixpkgs`.
+          [`alacritty-theme`]: https://github.com/alacritty/alacritty-theme
+          [packaged]: https://search.nixos.org/packages?query=alacritty-theme
+        '';
+      };
+
       settings = mkOption {
         type = tomlFormat.type;
         default = { };
@@ -49,6 +70,9 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
+
+    programs.alacritty.settings.import =
+      mkIf (cfg.theme != null) [ "${pkgs.alacritty-theme}/${cfg.theme}.toml" ];
 
     xdg.configFile."alacritty/alacritty.toml" = lib.mkIf (cfg.settings != { }) {
       source = (tomlFormat.generate "alacritty.toml" cfg.settings).overrideAttrs
