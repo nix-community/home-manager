@@ -27,7 +27,13 @@ in {
               attrNames
               (map (removeSuffix ".toml"))
             ];
-        in with types; nullOr (enum themes);
+        in with types;
+        nullOr (enum themes) // {
+          description = ''
+            a theme present in [`alacritty-theme`], i.e. its filename without extension
+            [`alacritty-theme`]: https://github.com/alacritty/alacritty-theme/tree/${pkgs.alacritty-theme.src.rev}/themes
+          '';
+        };
         default = null;
         example = "solarized_dark";
         description = ''
