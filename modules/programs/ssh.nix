@@ -537,15 +537,14 @@ in {
 
     home.file.".ssh/config".source = mkIf cfg.internallyManaged cfg.configPath;
 
-    programs.ssh.configPath =
-      let
-        sortedMatchBlocks = hm.dag.topoSort cfg.matchBlocks;
-        sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
-        matchBlocks =
-          sortedMatchBlocks.result or abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}";
-      in pkgs.writeText "ssh_config" ''
-      ${concatStringsSep "\n" (
-        (mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)
+    programs.ssh.configPath = let
+      sortedMatchBlocks = hm.dag.topoSort cfg.matchBlocks;
+      sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
+      matchBlocks = sortedMatchBlocks.result or (abort
+        "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}");
+    in pkgs.writeText "ssh_config" ''
+      ${concatStringsSep "\n"
+      ((mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)
         ++ (optional (cfg.includes != [ ]) ''
           Include ${concatStringsSep " " cfg.includes}
         '') ++ (map (block: matchBlockStr block.name block.data) matchBlocks))}
