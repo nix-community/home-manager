@@ -72,6 +72,7 @@ let
     ./programs/broot.nix
     ./programs/browserpass.nix
     ./programs/btop.nix
+    ./programs/bun.nix
     ./programs/carapace.nix
     ./programs/cava.nix
     ./programs/chromium.nix
