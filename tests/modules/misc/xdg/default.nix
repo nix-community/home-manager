@@ -9,4 +9,5 @@
   xdg-mime = ./mime.nix;
   xdg-mime-disabled = ./mime-disabled.nix;
   xdg-mime-package = ./mime-packages.nix;
+  xdg-autostart = ./autostart.nix;
 }
