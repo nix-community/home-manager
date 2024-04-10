@@ -89,17 +89,17 @@
     assertFileContent \
       home-files/.config/k9s/skins/alt-skin.yaml \
       ${./example-skin-expected-alt.yaml}
-    assertFileExists home-files/.config/k9s/hotkey.yaml
+    assertFileExists home-files/.config/k9s/hotkeys.yaml
     assertFileContent \
-      home-files/.config/k9s/hotkey.yaml \
+      home-files/.config/k9s/hotkeys.yaml \
       ${./example-hotkey-expected.yaml}
     assertFileExists home-files/.config/k9s/aliases.yaml
     assertFileContent \
       home-files/.config/k9s/aliases.yaml \
       ${./example-aliases-expected.yaml}
-    assertFileExists home-files/.config/k9s/plugin.yaml
+    assertFileExists home-files/.config/k9s/plugins.yaml
     assertFileContent \
-      home-files/.config/k9s/plugin.yaml \
+      home-files/.config/k9s/plugins.yaml \
       ${./example-plugin-expected.yaml}
     assertFileExists home-files/.config/k9s/views.yaml
     assertFileContent \
