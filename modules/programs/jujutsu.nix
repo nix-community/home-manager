@@ -1,12 +1,8 @@
 { config, lib, pkgs, ... }:
-
 with lib;
-
 let
-
   cfg = config.programs.jujutsu;
   tomlFormat = pkgs.formats.toml { };
-
 in {
   meta.maintainers = [ maintainers.shikanime ];
 
@@ -21,6 +17,17 @@ in {
       mkEnableOption "a Git-compatible DVCS that is both simple and powerful";
 
     package = mkPackageOption pkgs "jujutsu" { };
+
+    configFile = mkOption {
+      default = ".jjconfig.toml";
+      example = literalExpression ''
+        ".jjconfig.toml"
+        ".config/jj/config.toml"
+      '';
+      description = ''
+        Location of the jj configuration file rrelative to the home directory.
+      '';
+    };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -44,7 +51,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file.".jjconfig.toml" = mkIf (cfg.settings != { }) {
+    home.file."${cfg.configFile}" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "jujutsu-config" cfg.settings;
     };
   };
