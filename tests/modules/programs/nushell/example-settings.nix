@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   programs.nushell = {
@@ -34,7 +34,7 @@
   test.stubs.nushell = { };
 
   nmt.script = let
-    configDir = if pkgs.stdenv.isDarwin then
+    configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
       "home-files/Library/Application Support/nushell"
     else
       "home-files/.config/nushell";
