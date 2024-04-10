@@ -7,8 +7,12 @@ let
   cfg = config.programs.todoman;
 
 in {
+
+  meta.maintainers = [ maintainers.mikilio ];
+
   options.todoman = {
-    enable = lib.mkEnableOption "Enable todoman a standards-based task manager based on iCalendar";
+    enable = lib.mkEnableOption
+      "Enable todoman a standards-based task manager based on iCalendar";
 
     glob = mkOption {
       type = types.str;
@@ -70,7 +74,7 @@ in {
       description = ''
         The string used to separate date and time when displaying and parsing.
       '';
-    }; 
+    };
 
     humanize = mkOption {
       type = types.bool;
@@ -79,7 +83,7 @@ in {
         If set to true, datetimes will be printed in human friendly formats like
         “tomorrow”, “in one hour”, “3 weeks ago”, etc.
       '';
-    }; 
+    };
 
     startable = mkOption {
       type = types.bool;
@@ -90,7 +94,7 @@ in {
         Todos with no start date are always considered current. Incomplete todos
         (eg: partially-complete) are also included.
       '';
-    }; 
+    };
 
     timeformat = mkOption {
       type = types.nullOr types.str;
@@ -115,7 +119,7 @@ in {
         assertion = 0 <= cfg.defaultPriority && cfg.defaultPriority <= 10;
         message = "Todoman's `defaultPriority` must be between 0 and 10.";
       }
-    ]; 
+    ];
 
     home.packages = [ pkgs.todoman ];
 
