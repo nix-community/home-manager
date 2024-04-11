@@ -68,6 +68,7 @@ in {
         };
 
         Service = {
+          Environment = "PATH=${makeBinPath [ cfg.package ]}";
           ExecStart = "${cfg.package}/bin/foot --server";
           Restart = "on-failure";
           OOMPolicy = "continue";
