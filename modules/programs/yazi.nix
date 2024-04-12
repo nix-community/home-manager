@@ -10,8 +10,8 @@ let
     function ya() {
       local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
       yazi "$@" --cwd-file="$tmp"
-      if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        cd -- "$cwd"
+      if cwd="$(env cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
       fi
       rm -f -- "$tmp"
     }
@@ -21,8 +21,8 @@ let
     function ya
       set tmp (mktemp -t "yazi-cwd.XXXXX")
       yazi $argv --cwd-file="$tmp"
-      if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-        cd -- "$cwd"
+      if set cwd (env cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+        builtin cd -- "$cwd"
       end
       rm -f -- "$tmp"
     end
@@ -34,7 +34,7 @@ let
       yazi ...$args --cwd-file $tmp
       let cwd = (open $tmp)
       if $cwd != "" and $cwd != $env.PWD {
-        cd $cwd
+        ^cd $cwd
       }
       rm -fp $tmp
     }
@@ -135,6 +135,35 @@ in {
         for the full list of options
       '';
     };
+
+    extraLuaConfig = mkOption {
+        type = types.lines;
+        default = "";
+        example = literalExpression ''
+          '''
+          -- Add symlink target to the status bar
+          function Status:name()
+            local h = cx.active.current.hovered
+            if h == nil then
+              return ui.Span("")
+            end
+
+            local linked = ""
+            if h.link_to ~= nil then
+              linked = " -> " .. tostring(h.link_to)
+            end
+            return ui.Span(" " .. h.name .. linked)
+          end
+          '''
+        '';
+        description = ''
+          Configuration written to
+          {file}`$XDG_CONFIG_HOME/yazi/init.lua`.
+
+          See <https://yazi-rs.github.io/docs/tips>
+          for more information
+        '';
+      };
   };
 
   config = mkIf cfg.enable {
@@ -159,6 +188,9 @@ in {
       };
       "yazi/theme.toml" = mkIf (cfg.theme != { }) {
         source = tomlFormat.generate "yazi-theme" cfg.theme;
+      };
+      "yazi/init.lua" = mkIf (cfg.extraLuaConfig != { }) {
+        source = pkgs.writeText "yazi-extraluaConfig" cfg.extraLuaConfig;
       };
     };
   };
