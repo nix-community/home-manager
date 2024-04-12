@@ -10,12 +10,13 @@
         V2 = false;
         V3 = "some-string";
         V4 = 42;
-        V5 = [
-          V1
-          V2
-          V3
-          V4
-        ];
+        V5 = builtins.attrValues V6;
+        V6 = {
+          a = V1;
+          b = V2;
+          c = V3;
+          d = V4;
+        };
       };
     };
 
@@ -28,6 +29,7 @@
       assertFileRegex home-files/.zshrc '^V3="some-string"$'
       assertFileRegex home-files/.zshrc '^V4="42"$'
       assertFileRegex home-files/.zshrc '^V5=[(]'
+      assertFileContains home-files/.zshrc ${lib.escapeShellArg ''typeset -A V6=([a]=true [b]=false [c]="some-string" [d]="42")''}
     '';
   };
 }
