@@ -518,4 +518,10 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+  knoc-off = {
+    name = "Niko Selby";
+    email = "selby@niko.ink";
+    github = "knoc-off";
+    githubId = 36494048;
+  };
 }
