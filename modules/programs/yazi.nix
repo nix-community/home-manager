@@ -189,7 +189,7 @@ in {
       "yazi/theme.toml" = mkIf (cfg.theme != { }) {
         source = tomlFormat.generate "yazi-theme" cfg.theme;
       };
-      "yazi/init.lua" = mkIf (cfg.extraLuaConfig != { }) {
+      "yazi/init.lua" = mkIf (cfg.extraLuaConfig != "") {
         source = pkgs.writeText "yazi-extraluaConfig" cfg.extraLuaConfig;
       };
     };
