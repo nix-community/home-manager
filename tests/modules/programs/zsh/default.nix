@@ -1,4 +1,5 @@
 {
+  zsh-local-variables = ./local-variables.nix;
   zsh-session-variables = ./session-variables.nix;
   zsh-history-path-new-default = ./history-path-new-default.nix;
   zsh-history-path-new-custom = ./history-path-new-custom.nix;
