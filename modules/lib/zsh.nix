@@ -9,11 +9,20 @@ rec {
       ''"${v}"''
     else if builtins.isList v then
       "(${lib.concatStringsSep " " (map toZshValue v)})"
+    else if builtins.isAttrs v then
+      "(${
+        lib.concatStringsSep " "
+        (lib.mapAttrsToList (n: v: "[${lib.escapeShellArg n}]=${toZshValue v}")
+          v)
+      })"
     else
       ''"${toString v}"'';
 
   # Produces a Zsh shell like definition statement
-  define = n: v: "${n}=${toZshValue v}";
+  define = n: v:
+    "${lib.optionalString (builtins.isAttrs v) "typeset -A "}${n}=${
+      toZshValue v
+    }";
 
   # Given an attribute set containing shell variable names and their
   # assignments, this function produces a string containing a definition
