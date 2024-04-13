@@ -2,6 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
+Environment=PATH=@foot@/bin
 ExecStart=@foot@/bin/foot --server
 OOMPolicy=continue
 Restart=on-failure
