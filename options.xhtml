@@ -33753,6 +33753,45 @@ See the example for more info.</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.neovim.extraWrapperArgs"></a><a class="term" href="options.xhtml#opt-programs.neovim.extraWrapperArgs"><code class="option">programs.neovim.extraWrapperArgs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra arguments to be passed to the neovim wrapper.
+This option sets environment variables required for building and running binaries
+with external package managers like mason.nvim.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--suffix&quot;
+  &quot;LIBRARY_PATH&quot;
+  &quot;:&quot;
+  &quot;${lib.makeLibraryPath [ pkgs.stdenv.cc.cc pkgs.zlib ]}&quot;
+  &quot;--suffix&quot;
+  &quot;PKG_CONFIG_PATH&quot;
+  &quot;:&quot;
+  &quot;${lib.makeSearchPathOutput &quot;dev&quot; &quot;lib/pkgconfig&quot; [ pkgs.stdenv.cc.cc pkgs.zlib ]}&quot;
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovim.nix" target="_top">
+&lt;home-manager/modules/programs/neovim.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.neovim.finalPackage"></a><a class="term" href="options.xhtml#opt-programs.neovim.finalPackage"><code class="option">programs.neovim.finalPackage</code>
   </a>
  </span>
