@@ -589,7 +589,7 @@ in
             nix profile list \
               | { grep 'home-manager-path$' || test $? = 1; } \
               | cut -d ' ' -f 4 \
-              | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+              | xargs -rt $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
           else
             if nix-env -q | grep '^home-manager-path$'; then
               $DRY_RUN_CMD nix-env -e home-manager-path
