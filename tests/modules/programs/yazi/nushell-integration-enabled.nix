@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 let
   shellIntegration = ''
@@ -23,7 +23,7 @@ in {
   test.stubs.yazi = { };
 
   nmt.script = let
-    configPath = if pkgs.stdenv.isDarwin then
+    configPath = if pkgs.stdenv.isDarwin && !config.xdg.enable then
       "home-files/Library/Application Support/nushell/config.nu"
     else
       "home-files/.config/nushell/config.nu";
