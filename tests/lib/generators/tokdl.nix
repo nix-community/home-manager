@@ -20,7 +20,7 @@
       ''
       null
     ];
-    nested = [ [ 1 2 ] [ true false ] [ ] [ null ] ];
+    repeated = [ [ 1 2 ] [ true false ] [ ] [ null ] ];
     extraAttrs = {
       _args = [ 2 true ];
       _props = {
@@ -33,12 +33,12 @@
       };
     };
     listInAttrsInList = {
-      list1 = [
+      list1."-" = [
         { a = 1; }
         { b = true; }
         {
           c = null;
-          d = [{ e = "asdfadfasdfasdf"; }];
+          d."-" = [{ e = "asdfadfasdfasdf"; }];
         }
       ];
       list2 = [{ a = 8; }];
