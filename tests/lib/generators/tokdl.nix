@@ -1,49 +1,126 @@
-{ config, lib, ... }:
-
-{
-  home.file."tokdl-result.txt".text = lib.hm.generators.toKDL { } {
-    a = 1;
-    b = "string";
-    c = ''
-      multiline string
-      with special characters:
-      \t \n \" "
-    '';
-    unsafeString = " \" \n 	 ";
-    flatItems = [ 1 2 "asdf" true null ];
-    bigFlatItems = [
-      23847590283751
-      1.239
-      ''
-        multiline " " "
-        string
-      ''
-      null
-    ];
-    nested = [ [ 1 2 ] [ true false ] [ ] [ null ] ];
-    extraAttrs = {
-      _args = [ 2 true ];
-      _props = {
+{ lib, ... }: {
+  home.file."tokdl-result.txt".text = lib.hm.generators.toKDL { } [
+    {
+      name = "a";
+      args = 1;
+    }
+    {
+      name = "b";
+      args = "string";
+    }
+    {
+      name = "c";
+      args = ''
+        multiline string
+        with special characters:
+        \t \n \" "
+      '';
+    }
+    {
+      name = "unsafeString";
+      args = " \" \n 	 ";
+    }
+    {
+      name = "flatItems";
+      args = [ 1 2 "asdf" true null ];
+    }
+    {
+      name = "bigFlatItems";
+      args = [
+        23847590283751
+        1.239
+        ''
+          multiline " " "
+          string
+        ''
+        null
+      ];
+    }
+    {
+      name = "repeated";
+      args = [ 1 2 ];
+    }
+    {
+      name = "repeated";
+      args = [ true false ];
+    }
+    { name = "repeated"; }
+    {
+      name = "repeated";
+      args = [ null ];
+    }
+    {
+      name = "extraAttrs";
+      args = [ 2 true ];
+      props = {
         arg1 = 1;
         arg2 = false;
       };
-      nested = {
-        a = 1;
-        b = null;
+      children = {
+        name = "nested";
+        children = [
+          {
+            name = "a";
+            args = [ 1 ];
+          }
+          {
+            name = "b";
+            args = [ null ];
+          }
+        ];
       };
-    };
-    listInAttrsInList = {
-      list1 = [
-        { a = 1; }
-        { b = true; }
+    }
+    {
+      name = "listInAttrsInList";
+      children = [
         {
-          c = null;
-          d = [{ e = "asdfadfasdfasdf"; }];
+          name = "list1";
+          children = [
+            {
+              name = "-";
+              children = {
+                name = "a";
+                args = [ 1 ];
+              };
+            }
+            {
+              name = "-";
+              children = {
+                name = "b";
+                args = [ true ];
+              };
+            }
+            {
+              name = "-";
+              children = [
+                {
+                  name = "c";
+                  args = [ null ];
+                }
+                {
+                  name = "d";
+                  children = {
+                    name = "-";
+                    children = {
+                      name = "e";
+                      args = [ "asdfadfasdfasdf" ];
+                    };
+                  };
+                }
+              ];
+            }
+          ];
+        }
+        {
+          name = "list2";
+          children = [{
+            name = "a";
+            args = [ 8 ];
+          }];
         }
       ];
-      list2 = [{ a = 8; }];
-    };
-  };
+    }
+  ];
 
   nmt.script = ''
     assertFileContent \
