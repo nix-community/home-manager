@@ -207,6 +207,7 @@ in import nmtSrc {
     ./modules/programs/swayr
     ./modules/programs/terminator
     ./modules/programs/thunderbird
+    ./modules/programs/tofi
     ./modules/programs/waybar
     ./modules/programs/wlogout
     ./modules/programs/wofi
