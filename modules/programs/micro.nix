@@ -31,6 +31,26 @@ in {
           for supported values.
         '';
       };
+
+      keybinds = mkOption {
+        type = jsonFormat.type;
+        default = {
+          "Alt-/" = "lua:comment.comment";
+          "CtrlUnderscore" = "lua:comment.comment";
+        };
+        example = literalExpression ''
+          {
+            "Ctrl-y" = "Undo";
+            "Ctrl-z" = "Redo";
+          }
+        '';
+        description = ''
+          Configuration written to
+          {file}`$XDG_CONFIG_HOME/micro/bindings.json`. See
+          <https://github.com/zyedidia/micro/blob/master/runtime/help/keybindings.md>
+          for supported values.
+        '';
+      };
     };
   };
 
@@ -39,5 +59,8 @@ in {
 
     xdg.configFile."micro/settings.json".source =
       jsonFormat.generate "micro-settings" cfg.settings;
+
+    xdg.configFile."micro/bindings.json".source =
+      jsonFormat.generate "micro-keybinds" cfg.keybinds;
   };
 }
