@@ -59,7 +59,7 @@ configuration. This allows the user profiles to be built together
 with the system when running <code class="literal">darwin-rebuild</code>. See <a class="link" href="index.xhtml#sec-install-nix-darwin-module" title="nix-darwin module" >nix-darwin
 module</a> for a description of this
 setup.</p></li></ol></div><div class="note"><h3 class="title">Note</h3><p>In this chapter we describe how to install Home Manager in the standard
-way using channels. If you prefer to use <a class="link" href="https://nixos.wiki/wiki/Flakes"  target="_top">Nix
+way using channels. If you prefer to use <a class="link" href="https://wiki.nixos.org/wiki/Flakes"  target="_top">Nix
 Flakes</a> then please see the instructions
 in <a class="link" href="index.xhtml#ch-nix-flakes" title="Nix Flakes" >nix flakes</a>.</p></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-install-standalone">Standalone installation</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-install-nixos-module">NixOS module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-install-nix-darwin-module">nix-darwin module</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-install-standalone" class="title" style="clear: both">Standalone installation   </h2>  </div> </div></div><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>Make sure you have a working Nix installation. Specifically, make
 sure that your user is able to build and install Nix packages. For
@@ -366,7 +366,7 @@ unpacking channels...
 $ home-manager switch
 </code></pre>
 </div>
-</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 id="ch-nix-flakes" class="title" >Nix Flakes   </h1>  </div> </div></div><div class="partintro"><p>Home Manager is compatible with <a class="link" href="https://nixos.wiki/wiki/Flakes"  target="_top">Nix
+</div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 id="ch-nix-flakes" class="title" >Nix Flakes   </h1>  </div> </div></div><div class="partintro"><p>Home Manager is compatible with <a class="link" href="https://wiki.nixos.org/wiki/Flakes"  target="_top">Nix
 Flakes</a>. But please be aware that this
 support is still experimental and may change in backwards
 incompatible ways.</p><p>Just like in the standard installation you can use the Home Manager
@@ -420,7 +420,7 @@ to use the standard <code class="literal">nix flake update</code> command for th
 <code class="literal">nix flake lock --update-input &lt;input&gt;</code> can be used.</p><p>You can also pass flake-related options such as <code class="literal">--recreate-lock-file</code>
 or <code class="literal">--update-input &lt;input&gt;</code> to <code class="literal">home-manager</code> when building or
 switching, and these options will be forwarded to <code class="literal">nix build</code>. See the
-<a class="link" href="https://nixos.wiki/wiki/Flakes"  target="_top">NixOS Wiki page</a> for details.</p></div>
+<a class="link" href="https://wiki.nixos.org/wiki/Flakes"  target="_top">NixOS Wiki page</a> for details.</p></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-nixos-module" class="title" style="clear: both">NixOS module   </h2>  </div> </div></div><p>To use Home Manager as a NixOS module, a bare-minimum <code class="literal">flake.nix</code> would
 be as follows:</p><pre><code class="programlisting  nix">{
   description = &quot;NixOS configuration&quot;;

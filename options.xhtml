@@ -18520,7 +18520,7 @@ previously existing bookmarks!</p>
       {
         name = &quot;wiki&quot;;
         tags = [ &quot;wiki&quot; &quot;nix&quot; ];
-        url = &quot;https://nixos.wiki/&quot;;
+        url = &quot;https://wiki.nixos.org/&quot;;
       }
     ];
   }
@@ -18921,8 +18921,8 @@ attribute set of attribute set of (JSON value)</p>
   };
 
   &quot;NixOS Wiki&quot; = {
-    urls = [{ template = &quot;https://nixos.wiki/index.php?search={searchTerms}&quot;; }];
-    iconUpdateURL = &quot;https://nixos.wiki/favicon.png&quot;;
+    urls = [{ template = &quot;https://wiki.nixos.org/index.php?search={searchTerms}&quot;; }];
+    iconUpdateURL = &quot;https://wiki.nixos.org/favicon.png&quot;;
     updateInterval = 24 * 60 * 60 * 1000; # every day
     definedAliases = [ &quot;@nw&quot; ];
   };
@@ -38608,7 +38608,7 @@ attribute set of string</p>
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   w = &quot;https://en.wikipedia.org/wiki/Special:Search?search={}&amp;go=Go&amp;ns0=1&quot;;
   aw = &quot;https://wiki.archlinux.org/?search={}&quot;;
-  nw = &quot;https://nixos.wiki/index.php?search={}&quot;;
+  nw = &quot;https://wiki.nixos.org/index.php?search={}&quot;;
   g = &quot;https://www.google.com/search?hl=en&amp;q={}&quot;;
 }
 
