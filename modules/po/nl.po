@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-02-15 16:04+0100\n"
+"POT-Creation-Date: 2024-04-17 23:19+0200\n"
 "PO-Revision-Date: 2023-12-02 23:06+0000\n"
 "Last-Translator: Zurga <jim.lemmers@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/home-manager/"
@@ -19,24 +19,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.3-dev\n"
 
-#: modules/files.nix:236
+#: modules/files.nix:191
 msgid "Creating home file links in %s"
 msgstr "Home-bestandskoppelingen aan het maken in %s"
 
-#: modules/files.nix:249
+#: modules/files.nix:204
 msgid "Cleaning up orphan links from %s"
 msgstr "Wees links van %s aan het opkuisen"
 
-#: modules/files.nix:265
+#: modules/files.nix:220
 msgid "Creating profile generation %s"
 msgstr "Profiel generatie %s aan het maken"
 
-#: modules/files.nix:282
+#: modules/files.nix:237
 msgid "No change so reusing latest profile generation %s"
 msgstr ""
 "Geen veranderingen dus de laatste profiel generatie %s wordt hergebruikt"
 
-#: modules/home-environment.nix:622
+#: modules/home-environment.nix:634
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -65,7 +65,7 @@ msgstr ""
 "\n"
 "Probeer daarna je Home Manager configuratie opnieuw te activeren."
 
-#: modules/home-environment.nix:655
+#: modules/home-environment.nix:667
 msgid "Activating %s"
 msgstr "%s aan het activeren"
 
