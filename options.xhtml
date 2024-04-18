@@ -54290,27 +54290,13 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>Platform theme to use for Qt applications.</p><p>The options are</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">gtk</code></span></dt><dd><p>Use GTK theme with
-<a class="link" href="https://github.com/qt/qtstyleplugins"  target="_top"><code class="literal">qtstyleplugins</code></a></p></dd><dt><span class="term"><code class="literal">gtk3</code></span></dt><dd><p>Use <a class="link" href="https://github.com/qt/qtbase/tree/dev/src/plugins/platformthemes/gtk3"  target="_top">GTK3 integration</a>
-for file picker dialogs, font and theme configuration</p></dd><dt><span class="term"><code class="literal">gnome</code></span></dt><dd><p>Use GNOME theme with
-<a class="link" href="https://github.com/FedoraQt/QGnomePlatform"  target="_top"><code class="literal">qgnomeplatform</code></a></p></dd><dt><span class="term"><code class="literal">lxqt</code></span></dt><dd><p>Use LXQt theme style set using the
-<a class="link" href="https://github.com/lxqt/lxqt-config"  target="_top"><code class="literal">lxqt-config-appearance</code></a>
-application</p></dd><dt><span class="term"><code class="literal">qtct</code></span></dt><dd><p>Use Qt style set using
-<a class="link" href="https://github.com/desktop-app/qt5ct"  target="_top"><code class="literal">qt5ct</code></a>
-and <a class="link" href="https://github.com/trialuser02/qt6ct"  target="_top"><code class="literal">qt6ct</code></a>
-applications</p></dd><dt><span class="term"><code class="literal">kde</code></span></dt><dd><p>Use Qt settings from Plasma</p></dd></dl></div>
+<p>Deprecated. Use <code class="option">qt.platformTheme.name</code> instead.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or one of “gtk”, “gtk3”, “gnome”, “lxqt”, “qtct”, “kde”</p>
+null or one of “gtk”, “gtk3”, “gnome”, “adwaita”, “lxqt”, “qtct”, “kde” or (submodule)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;gnome&quot;</code></p>
-
-<p><span class="emphasis"><em>Related packages:</em></span></p>
-<div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><a class="link" href="https://search.nixos.org/packages?show=qgnomeplatform&amp;sort=relevance&amp;query=qgnomeplatform"  target="_top"><code class="literal">pkgs.qgnomeplatform</code></a></p></li><li class="listitem"><p><a class="link" href="https://search.nixos.org/packages?show=qgnomeplatform-qt6&amp;sort=relevance&amp;query=qgnomeplatform-qt6"  target="_top"><code class="literal">pkgs.qgnomeplatform-qt6</code></a></p></li><li class="listitem"><p><a class="link" href="https://search.nixos.org/packages?show=libsForQt5.plasma-integration&amp;sort=relevance&amp;query=libsForQt5.plasma-integration"  target="_top"><code class="literal">pkgs.libsForQt5.plasma-integration</code></a></p></li><li class="listitem"><p><a class="link" href="https://search.nixos.org/packages?show=libsForQt5.qt5ct&amp;sort=relevance&amp;query=libsForQt5.qt5ct"  target="_top"><code class="literal">pkgs.libsForQt5.qt5ct</code></a></p></li><li class="listitem"><p><a class="link" href="https://search.nixos.org/packages?show=libsForQt5.qtstyleplugins&amp;sort=relevance&amp;query=libsForQt5.qtstyleplugins"  target="_top"><code class="literal">pkgs.libsForQt5.qtstyleplugins</code></a></p></li><li class="listitem"><p><a class="link" href="https://search.nixos.org/packages?show=libsForQt5.systemsettings&amp;sort=relevance&amp;query=libsForQt5.systemsettings"  target="_top"><code class="literal">pkgs.libsForQt5.systemsettings</code></a></p></li><li class="listitem"><p><a class="link" href="https://search.nixos.org/packages?show=lxqt.lxqt-config&amp;sort=relevance&amp;query=lxqt.lxqt-config"  target="_top"><code class="literal">pkgs.lxqt.lxqt-config</code></a></p></li><li class="listitem"><p><a class="link" href="https://search.nixos.org/packages?show=lxqt.lxqt-qtplugin&amp;sort=relevance&amp;query=lxqt.lxqt-qtplugin"  target="_top"><code class="literal">pkgs.lxqt.lxqt-qtplugin</code></a></p></li><li class="listitem"><p><a class="link" href="https://search.nixos.org/packages?show=qt6Packages.qt6ct&amp;sort=relevance&amp;query=qt6Packages.qt6ct"  target="_top"><code class="literal">pkgs.qt6Packages.qt6ct</code></a></p></li><li class="listitem"><p><a class="link" href="https://search.nixos.org/packages?show=qt6Packages.qt6gtk2&amp;sort=relevance&amp;query=qt6Packages.qt6gtk2"  target="_top"><code class="literal">pkgs.qt6Packages.qt6gtk2</code></a></p></li></ul></div>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -54329,7 +54315,8 @@ null or one of “gtk”, “gtk3”, “gnome”, “lxqt”, “qtct”, “kd
 </dt>
 <dd>
 <p>Theme package to be used in Qt5/Qt6 applications.
-Auto-detected from <code class="option">qt.style.name</code> if possible.</p>
+Auto-detected from <code class="option">qt.style.name</code> if possible.
+See its documentation for available options.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 null or package or list of package</p>
