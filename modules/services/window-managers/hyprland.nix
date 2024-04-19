@@ -28,9 +28,12 @@ in {
       [ "wayland" "windowManager" "hyprland" "xwayland" "hidpi" ]
       "HiDPI patches are deprecated. Refer to https://wiki.hyprland.org/Configuring/XWayland")
 
-    (lib.mkRenamedOptionModule # \
+    (lib.mkRemovedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "nvidiaPatches" ] # \
-      [ "wayland" "windowManager" "hyprland" "enableNvidiaPatches" ])
+      "Nvidia patches are no longer needed")
+    (lib.mkRemovedOptionModule # \
+      [ "wayland" "windowManager" "hyprland" "enableNvidiaPatches" ] # \
+      "Nvidia patches are no longer needed")
 
     (lib.mkRenamedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "systemdIntegration" ] # \
@@ -45,10 +48,7 @@ in {
     finalPackage = lib.mkOption {
       type = lib.types.package;
       readOnly = true;
-      default = cfg.package.override {
-        enableXWayland = cfg.xwayland.enable;
-        enableNvidiaPatches = cfg.enableNvidiaPatches;
-      };
+      default = cfg.package.override { enableXWayland = cfg.xwayland.enable; };
       defaultText = lib.literalMD
         "`wayland.windowManager.hyprland.package` with applied configuration";
       description = ''
@@ -106,9 +106,6 @@ in {
     };
 
     xwayland.enable = lib.mkEnableOption "XWayland" // { default = true; };
-
-    enableNvidiaPatches =
-      lib.mkEnableOption "patching wlroots for better Nvidia support";
 
     settings = lib.mkOption {
       type = with lib.types;
