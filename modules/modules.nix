@@ -298,6 +298,7 @@ let
     ./services/gromit-mpx.nix
     ./services/home-manager-auto-upgrade.nix
     ./services/hound.nix
+    ./services/hyprland-per-window-layout.nix
     ./services/imapnotify.nix
     ./services/kanshi.nix
     ./services/kbfs.nix
