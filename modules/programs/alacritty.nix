@@ -32,7 +32,7 @@ in {
               {
                 key = "K";
                 mods = "Control";
-                chars = "\\x0c";
+                chars = "\\u000c";
               }
             ];
           }
