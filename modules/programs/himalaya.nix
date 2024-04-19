@@ -130,16 +130,6 @@ in {
           Extra environment variables to be exported in the service.
         '';
       };
-
-      settings.account = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        example = "personal";
-        description = ''
-          Name of the account the watcher should be started for.
-          If no account is given, the default one is used.
-        '';
-      };
     };
 
     accounts.email.accounts = lib.mkOption {
@@ -171,31 +161,26 @@ in {
       globalConfig = compactAttrs himalaya.settings;
       allConfig = globalConfig // { accounts = accountsConfig; };
     in tomlFormat.generate "himalaya-config.toml" allConfig;
-    systemd.user.services = let
-      inherit (config.services.himalaya-watch) enable environment settings;
-      optionalArg = key:
-        if (key ? settings && !isNull settings."${key}") then
-          [ "--${key} ${settings."${key}"}" ]
-        else
-          [ ];
-    in {
-      himalaya-watch = lib.mkIf enable {
-        Unit = {
-          Description = "Email client Himalaya CLI envelopes watcher service";
-          After = [ "network.target" ];
-        };
-        Install = { WantedBy = [ "default.target" ]; };
-        Service = {
-          ExecStart = lib.concatStringsSep " "
-            ([ "${himalaya.package}/bin/himalaya" "envelopes" "watch" ]
-              ++ optionalArg "account");
-          ExecSearchPath = "/bin";
-          Environment =
-            lib.mapAttrsToList (key: val: "${key}=${val}") environment;
-          Restart = "always";
-          RestartSec = 10;
+
+    systemd.user.services =
+      let inherit (config.services.himalaya-watch) enable environment;
+      in {
+        "himalaya-watch@" = lib.mkIf enable {
+          Unit = {
+            Description = "Email client Himalaya CLI envelopes watcher service";
+            After = [ "network.target" ];
+          };
+          Install = { WantedBy = [ "default.target" ]; };
+          Service = {
+            ExecStart =
+              "${himalaya.package}/bin/himalaya envelopes watch --account %I";
+            ExecSearchPath = "/bin";
+            Environment =
+              lib.mapAttrsToList (key: val: "${key}=${val}") environment;
+            Restart = "always";
+            RestartSec = 10;
+          };
         };
       };
-    };
   };
 }
