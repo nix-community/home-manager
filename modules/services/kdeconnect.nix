@@ -42,7 +42,7 @@ in {
             "Adds communication between your desktop and your smartphone";
           After = [ "graphical-session-pre.target" ];
           PartOf = [ "graphical-session.target" ];
-        } // lib.optionalAttrs cfg.indicator { Requires = [ "tray.target" ]; };
+        };
 
         Install = { WantedBy = [ "graphical-session.target" ]; };
 
@@ -70,6 +70,7 @@ in {
             "stalonetray.service"
           ];
           PartOf = [ "graphical-session.target" ];
+          Requires = [ "tray.target" ];
         };
 
         Install = { WantedBy = [ "graphical-session.target" ]; };
