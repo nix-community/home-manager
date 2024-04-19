@@ -230,8 +230,15 @@ in {
         else
           { };
 
+      gpgCfg = account:
+        optionalAttrs (account.gpg != null) {
+          pgp-key-id = account.gpg.key;
+          pgp-auto-sign = account.gpg.signByDefault;
+          pgp-opportunistic-encrypt = account.gpg.encryptByDefault;
+        };
+
     in (basicCfg account) // (sourceCfg account) // (outgoingCfg account)
-    // account.aerc.extraAccounts;
+    // (gpgCfg account) // account.aerc.extraAccounts;
 
   mkAccountConfig = name: account:
     mapAttrNames (addAccountName name) account.aerc.extraConfig;
