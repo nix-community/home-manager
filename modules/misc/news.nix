@@ -1491,6 +1491,13 @@ in {
           A new module is available: 'programs.tofi'.
         '';
       }
+
+      {
+        time = "2024-04-19T10:01:55+00:00";
+        message = ''
+          A new module is available: 'programs.spotify-player'.
+        '';
+      }
     ];
   };
 }
