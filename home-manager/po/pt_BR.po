@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-02-28 13:02+0000\n"
-"Last-Translator: guto <joaoaugustolanjoni@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/home-"
-"manager/cli/pt_BR/>\n"
+"PO-Revision-Date: 2024-04-19 17:07+0000\n"
+"Last-Translator: Felipe Silva <hey@felipeqq2.rocks>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
+"home-manager/cli/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr ""
+msgstr "%s: faltando argumento para %s"
 
 #: home-manager/home-manager:64
 msgid "No configuration file found at %s"
@@ -104,7 +104,7 @@ msgstr "Revalidando Nix"
 #: home-manager/home-manager:166
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
-"Não foi possível encontrar um diretório de perfil apropriado, tentei %s e %s"
+"Não foi possível encontrar um diretório de perfil apropriado, tentou %s e %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:221
