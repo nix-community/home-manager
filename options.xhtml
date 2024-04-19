@@ -18164,6 +18164,141 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.fd.enable"></a><a class="term" href="options.xhtml#opt-programs.fd.enable"><code class="option">programs.fd.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable fd, a simple, fast and user-friendly alternative to <span class="command"><strong>find</strong></span>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fd.nix" target="_top">
+&lt;home-manager/modules/programs/fd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.fd.package"></a><a class="term" href="options.xhtml#opt-programs.fd.package"><code class="option">programs.fd.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The fd package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.fd</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fd.nix" target="_top">
+&lt;home-manager/modules/programs/fd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.fd.extraOptions"></a><a class="term" href="options.xhtml#opt-programs.fd.extraOptions"><code class="option">programs.fd.extraOptions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra command line options passed to fd.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--no-ignore&quot;
+  &quot;--absolute-path&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fd.nix" target="_top">
+&lt;home-manager/modules/programs/fd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.fd.hidden"></a><a class="term" href="options.xhtml#opt-programs.fd.hidden"><code class="option">programs.fd.hidden</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Search hidden files and directories (<code class="option">--hidden</code> argument).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fd.nix" target="_top">
+&lt;home-manager/modules/programs/fd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.fd.ignores"></a><a class="term" href="options.xhtml#opt-programs.fd.ignores"><code class="option">programs.fd.ignores</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of paths that should be globally ignored.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;.git/&quot;
+  &quot;*.bak&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fd.nix" target="_top">
+&lt;home-manager/modules/programs/fd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.feh.enable"></a><a class="term" href="options.xhtml#opt-programs.feh.enable"><code class="option">programs.feh.enable</code>
   </a>
  </span>
