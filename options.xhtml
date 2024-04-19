@@ -47536,6 +47536,97 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.tofi.enable"></a><a class="term" href="options.xhtml#opt-programs.tofi.enable"><code class="option">programs.tofi.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Tofi, a tiny dynamic menu for Wayland.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tofi.nix" target="_top">
+&lt;home-manager/modules/programs/tofi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.tofi.package"></a><a class="term" href="options.xhtml#opt-programs.tofi.package"><code class="option">programs.tofi.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The tofi package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.tofi</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tofi.nix" target="_top">
+&lt;home-manager/modules/programs/tofi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.tofi.settings"></a><a class="term" href="options.xhtml#opt-programs.tofi.settings"><code class="option">programs.tofi.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings to be written to the Tofi configuration file.</p><p>See <a class="link" href="https://github.com/philj56/tofi/blob/master/doc/config"  target="_top">https://github.com/philj56/tofi/blob/master/doc/config</a>
+for the full list of options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (string or signed integer or boolean)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  background-color = &quot;#000000&quot;;
+  border-width = 0;
+  font = &quot;monospace&quot;;
+  height = &quot;100%&quot;;
+  num-results = 5;
+  outline-width = 0;
+  padding-left = &quot;35%&quot;;
+  padding-top = &quot;35%&quot;;
+  result-spacing = 25;
+  width = &quot;100%&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tofi.nix" target="_top">
+&lt;home-manager/modules/programs/tofi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.topgrade.enable"></a><a class="term" href="options.xhtml#opt-programs.topgrade.enable"><code class="option">programs.topgrade.enable</code>
   </a>
  </span>
