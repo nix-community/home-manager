@@ -75577,7 +75577,8 @@ attribute set of attribute set of (Swaynag config atom (null, bool, int, float, 
 sway startup. This links to
 <code class="filename">graphical-session.target</code>.
 Some important environment variables will be imported to systemd
-and dbus user environment before reaching the target, including</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><code class="envar">DISPLAY</code></p></li><li class="listitem"><p><code class="envar">WAYLAND_DISPLAY</code></p></li><li class="listitem"><p><code class="envar">SWAYSOCK</code></p></li><li class="listitem"><p><code class="envar">XDG_CURRENT_DESKTOP</code></p></li></ul></div>
+and dbus user environment before reaching the target, including</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><code class="envar">DISPLAY</code></p></li><li class="listitem"><p><code class="envar">WAYLAND_DISPLAY</code></p></li><li class="listitem"><p><code class="envar">SWAYSOCK</code></p></li><li class="listitem"><p><code class="envar">XDG_CURRENT_DESKTOP</code></p></li><li class="listitem"><p><code class="envar">XDG_SESSION_TYPE</code></p></li><li class="listitem"><p><code class="envar">NIXOS_OZONE_WL</code></p></li><li class="listitem"><p><code class="envar">XCURSOR_THEME</code></p></li><li class="listitem"><p><code class="envar">XCURSOR_SIZE</code>
+You can extend this list using the <code class="literal">systemd.variables</code> option.</p></li></ul></div>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
@@ -75587,6 +75588,70 @@ boolean</p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.sway.systemd.extraCommands"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.sway.systemd.extraCommands"><code class="option">wayland.windowManager.sway.systemd.extraCommands</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra commands to run after D-Bus activation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;systemctl --user start sway-session.target&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.sway.systemd.variables"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.sway.systemd.variables"><code class="option">wayland.windowManager.sway.systemd.variables</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Environment variables imported into the systemd and D-Bus user environment.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;DISPLAY&quot;
+  &quot;WAYLAND_DISPLAY&quot;
+  &quot;SWAYSOCK&quot;
+  &quot;XDG_CURRENT_DESKTOP&quot;
+  &quot;XDG_SESSION_TYPE&quot;
+  &quot;NIXOS_OZONE_WL&quot;
+  &quot;XCURSOR_THEME&quot;
+  &quot;XCURSOR_SIZE&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;-all&quot;
+]
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
