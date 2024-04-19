@@ -42474,6 +42474,217 @@ null or (attribute set of (string or signed integer or boolean or list of string
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.spotify-player.enable"></a><a class="term" href="options.xhtml#opt-programs.spotify-player.enable"><code class="option">programs.spotify-player.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable spotify-player.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/spotify-player.nix" target="_top">
+&lt;home-manager/modules/programs/spotify-player.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.spotify-player.package"></a><a class="term" href="options.xhtml#opt-programs.spotify-player.package"><code class="option">programs.spotify-player.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The spotify-player package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.spotify-player</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/spotify-player.nix" target="_top">
+&lt;home-manager/modules/programs/spotify-player.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.spotify-player.keymaps"></a><a class="term" href="options.xhtml#opt-programs.spotify-player.keymaps"><code class="option">programs.spotify-player.keymaps</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to the <code class="literal">keymaps</code> field of
+<code class="filename">$XDG_CONFIG_HOME/spotify-player/keymap.toml</code>.</p><p>See
+<a class="link" href="https://github.com/aome510/spotify-player/blob/master/docs/config.md#keymaps"  target="_top">https://github.com/aome510/spotify-player/blob/master/docs/config.md#keymaps</a>
+for the full list of options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of (TOML value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    command = &quot;NextTrack&quot;;
+    key_sequence = &quot;g n&quot;;
+  }
+  {
+    command = &quot;PreviousTrack&quot;;
+    key_sequence = &quot;g p&quot;;
+  }
+  {
+    command = &quot;Search&quot;;
+    key_sequence = &quot;C-c C-x /&quot;;
+  }
+  {
+    command = &quot;ResumePause&quot;;
+    key_sequence = &quot;M-enter&quot;;
+  }
+  {
+    command = &quot;None&quot;;
+    key_sequence = &quot;q&quot;;
+  }
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/spotify-player.nix" target="_top">
+&lt;home-manager/modules/programs/spotify-player.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.spotify-player.settings"></a><a class="term" href="options.xhtml#opt-programs.spotify-player.settings"><code class="option">programs.spotify-player.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/spotify-player/app.toml</code>.</p><p>See
+<a class="link" href="https://github.com/aome510/spotify-player/blob/master/docs/config.md#general"  target="_top">https://github.com/aome510/spotify-player/blob/master/docs/config.md#general</a>
+for the full list of options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  theme = &quot;default&quot;;
+  playback_window_position = &quot;Top&quot;;
+  copy_command = {
+    command = &quot;wl-copy&quot;;
+    args = [];
+  };
+  device = {
+    audio_cache = false;
+    normalization = false;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/spotify-player.nix" target="_top">
+&lt;home-manager/modules/programs/spotify-player.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.spotify-player.themes"></a><a class="term" href="options.xhtml#opt-programs.spotify-player.themes"><code class="option">programs.spotify-player.themes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to the <code class="literal">themes</code> field of
+<code class="filename">$XDG_CONFIG_HOME/spotify-player/theme.toml</code>.</p><p>See
+<a class="link" href="https://github.com/aome510/spotify-player/blob/master/docs/config.md#themes"  target="_top">https://github.com/aome510/spotify-player/blob/master/docs/config.md#themes</a>
+for the full list of options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of (TOML value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    name = &quot;default2&quot;;
+    palette = {
+      black = &quot;black&quot;;
+      red = &quot;red&quot;;
+      green = &quot;green&quot;;
+      yellow = &quot;yellow&quot;;
+      blue = &quot;blue&quot;;
+      magenta = &quot;magenta&quot;;
+      cyan = &quot;cyan&quot;;
+      white = &quot;white&quot;;
+      bright_black = &quot;bright_black&quot;;
+      bright_red = &quot;bright_red&quot;;
+      bright_green = &quot;bright_green&quot;;
+      bright_yellow = &quot;bright_yellow&quot;;
+      bright_blue = &quot;bright_blue&quot;;
+      bright_magenta = &quot;bright_magenta&quot;;
+      bright_cyan = &quot;bright_cyan&quot;;
+      bright_white = &quot;bright_white&quot;;
+    };
+    component_style = {
+      block_title = { fg = &quot;Magenta&quot;; };
+      border = {};
+      playback_track = { fg = &quot;Cyan&quot;; modifiers = [&quot;Bold&quot;]; };
+      playback_artists = { fg = &quot;Cyan&quot;; modifiers = [&quot;Bold&quot;]; };
+      playback_album = { fg = &quot;Yellow&quot;; };
+      playback_metadata = { fg = &quot;BrightBlack&quot;; };
+      playback_progress_bar = { bg = &quot;BrightBlack&quot;; fg = &quot;Green&quot;; };
+      current_playing = { fg = &quot;Green&quot;; modifiers = [&quot;Bold&quot;]; };
+      page_desc = { fg = &quot;Cyan&quot;; modifiers = [&quot;Bold&quot;]; };
+      table_header = { fg = &quot;Blue&quot;; };
+      selection = { modifiers = [&quot;Bold&quot; &quot;Reversed&quot;]; };
+    };
+  }
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/spotify-player.nix" target="_top">
+&lt;home-manager/modules/programs/spotify-player.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.sqls.enable"></a><a class="term" href="options.xhtml#opt-programs.sqls.enable"><code class="option">programs.sqls.enable</code>
   </a>
  </span>
