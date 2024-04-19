@@ -82,7 +82,7 @@ let
       sendmailConfig =
         lib.optionalAttrs (isNull account.smtp && !isNull account.msmtp) {
           sender = "sendmail";
-          sendmail.cmd = "${pkgs.msmtp}/bin/msmtp";
+          sendmail.cmd = lib.getExe pkgs.msmtp;
         };
 
       config = lib.attrsets.mergeAttrsList [
@@ -173,7 +173,7 @@ in {
           Install = { WantedBy = [ "default.target" ]; };
           Service = {
             ExecStart =
-              "${himalaya.package}/bin/himalaya envelopes watch --account %I";
+              "${lib.getExe himalaya.package} envelopes watch --account %I";
             ExecSearchPath = "/bin";
             Environment =
               lib.mapAttrsToList (key: val: "${key}=${val}") environment;
