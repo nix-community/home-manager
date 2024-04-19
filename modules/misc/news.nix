@@ -1498,6 +1498,14 @@ in {
           A new module is available: 'programs.spotify-player'.
         '';
       }
+
+      {
+        time = "2024-04-19T14:53:17+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.remmina'.
+        '';
+      }
     ];
   };
 }

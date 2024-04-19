@@ -255,6 +255,7 @@ in import nmtSrc {
     ./modules/services/polybar
     ./modules/services/recoll
     ./modules/services/redshift-gammastep
+    ./modules/services/remmina
     ./modules/services/screen-locker
     ./modules/services/signaturepdf
     ./modules/services/swayidle

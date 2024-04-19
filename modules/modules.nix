@@ -340,6 +340,7 @@ let
     ./services/recoll.nix
     ./services/redshift-gammastep/gammastep.nix
     ./services/redshift-gammastep/redshift.nix
+    ./services/remmina.nix
     ./services/rsibreak.nix
     ./services/safeeyes.nix
     ./services/screen-locker.nix
