@@ -24,7 +24,6 @@ in {
         default = false;
         description = "Whether to enable kdeconnect-indicator service.";
       };
-
     };
   };
 
@@ -43,7 +42,7 @@ in {
             "Adds communication between your desktop and your smartphone";
           After = [ "graphical-session-pre.target" ];
           PartOf = [ "graphical-session.target" ];
-        };
+        } // lib.optionalAttrs cfg.indicator { Requires = [ "tray.target" ]; };
 
         Install = { WantedBy = [ "graphical-session.target" ]; };
 
@@ -82,6 +81,5 @@ in {
         };
       };
     })
-
   ];
 }
