@@ -154,32 +154,44 @@ in {
   config = lib.mkIf himalaya.enable {
     home.packages = [ himalaya.package ];
 
-    xdg.configFile."himalaya/config.toml".source = let
-      enabledAccounts = lib.filterAttrs (_: account: account.himalaya.enable)
-        config.accounts.email.accounts;
-      accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
-      globalConfig = compactAttrs himalaya.settings;
-      allConfig = globalConfig // { accounts = accountsConfig; };
-    in tomlFormat.generate "himalaya-config.toml" allConfig;
+    xdg = {
+      configFile."himalaya/config.toml".source = let
+        enabledAccounts = lib.filterAttrs (_: account: account.himalaya.enable)
+          config.accounts.email.accounts;
+        accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
+        globalConfig = compactAttrs himalaya.settings;
+        allConfig = globalConfig // { accounts = accountsConfig; };
+      in tomlFormat.generate "himalaya-config.toml" allConfig;
 
-    systemd.user.services =
+      desktopEntries.himalaya = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+        type = "Application";
+        name = "himalaya";
+        genericName = "Email Client";
+        comment = "CLI to manage emails";
+        terminal = true;
+        exec = "himalaya %u";
+        categories = [ "Network" ];
+        mimeType = [ "x-scheme-handler/mailto" "message/rfc822" ];
+        settings = { Keywords = "email"; };
+      };
+    };
+
+    systemd.user.services."himalaya-watch@" =
       let inherit (config.services.himalaya-watch) enable environment;
-      in {
-        "himalaya-watch@" = lib.mkIf enable {
-          Unit = {
-            Description = "Email client Himalaya CLI envelopes watcher service";
-            After = [ "network.target" ];
-          };
-          Install = { WantedBy = [ "default.target" ]; };
-          Service = {
-            ExecStart =
-              "${lib.getExe himalaya.package} envelopes watch --account %I";
-            ExecSearchPath = "/bin";
-            Environment =
-              lib.mapAttrsToList (key: val: "${key}=${val}") environment;
-            Restart = "always";
-            RestartSec = 10;
-          };
+      in lib.mkIf enable {
+        Unit = {
+          Description = "Email client Himalaya CLI envelopes watcher service";
+          After = [ "network.target" ];
+        };
+        Install = { WantedBy = [ "default.target" ]; };
+        Service = {
+          ExecStart =
+            "${lib.getExe himalaya.package} envelopes watch --account %I";
+          ExecSearchPath = "/bin";
+          Environment =
+            lib.mapAttrsToList (key: val: "${key}=${val}") environment;
+          Restart = "always";
+          RestartSec = 10;
         };
       };
   };
