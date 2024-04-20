@@ -6,7 +6,7 @@ in with lib; {
 
   meta.maintainers = [ maintainers.knoc-off ];
   options.services.pyprland = {
-    enable = mkEnableOption "pyperland";
+    enable = mkEnableOption "pyprland";
 
     package = mkOption {
       default = pkgs.pyprland;
