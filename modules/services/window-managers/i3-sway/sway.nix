@@ -331,13 +331,6 @@ let
         ++ [ cfg.extraConfig ]);
   };
 
-  defaultSwayPackage = pkgs.sway.override {
-    extraSessionCommands = cfg.extraSessionCommands;
-    extraOptions = cfg.extraOptions;
-    withBaseWrapper = cfg.wrapperFeatures.base;
-    withGtkWrapper = cfg.wrapperFeatures.gtk;
-  };
-
 in {
   meta.maintainers = with maintainers; [
     Scrumplex
@@ -357,7 +350,12 @@ in {
 
     package = mkOption {
       type = with types; nullOr package;
-      default = defaultSwayPackage;
+      default = pkgs.sway.override {
+        extraSessionCommands = cfg.extraSessionCommands;
+        extraOptions = cfg.extraOptions;
+        withBaseWrapper = cfg.wrapperFeatures.base;
+        withGtkWrapper = cfg.wrapperFeatures.gtk;
+      };
       defaultText = literalExpression "${pkgs.sway}";
       description = ''
         Sway package to use. Will override the options
