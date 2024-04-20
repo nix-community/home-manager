@@ -258,7 +258,7 @@ in {
     # Apply theming also to apps started by systemd.
     systemd.user.sessionVariables = envVars // envVarsExtra;
 
-    home.packages = (lib.findFirst (x: x != null) [ ] [
+    home.packages = (lib.findFirst (x: x != [ ]) [ ] [
       (lib.optionals (platformTheme.package != null)
         (lib.toList platformTheme.package))
       (lib.optionals (platformTheme.name != null)
