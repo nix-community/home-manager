@@ -190,6 +190,7 @@ in import nmtSrc {
     ./modules/programs/boxxy
     ./modules/programs/firefox
     ./modules/programs/foot
+    ./modules/programs/freetube
     ./modules/programs/fuzzel
     ./modules/programs/getmail
     ./modules/programs/gnome-terminal
