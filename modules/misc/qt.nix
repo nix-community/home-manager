@@ -262,7 +262,7 @@ in {
       (lib.optionals (platformTheme.package != null)
         (lib.toList platformTheme.package))
       (lib.optionals (platformTheme.name != null)
-        platformPackages.${platformTheme.name})
+        platformPackages.${platformTheme.name} or [ ])
     ]) ++ (lib.optionals (cfg.style.package != null)
       (lib.toList cfg.style.package));
 
