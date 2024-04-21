@@ -1471,6 +1471,14 @@ in {
       }
 
       {
+        time = "2024-03-28T17:02:19+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.amberol'.
+        '';
+      }
+
+      {
         time = "2024-04-08T21:43:38+00:00";
         message = ''
           A new module is available: 'programs.bun'.
@@ -1514,6 +1522,19 @@ in {
 
           Poetry is a tool that helps you manage Python project dependencies and
           packages. See https://python-poetry.org/ for more.
+        '';
+      }
+
+      {
+        time = "2024-04-22T18:04:47+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.amberol'.
+
+          Amberol is a music player with no delusions of grandeur. If you just
+          want to play music available on your local system then Amberol is the
+          music player you are looking for. See https://apps.gnome.org/Amberol/
+          for more.
         '';
       }
     ];
