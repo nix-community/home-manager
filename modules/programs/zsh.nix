@@ -612,7 +612,7 @@ in
           source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
         '')
         (optionalString (cfg.autosuggestion.enable && cfg.autosuggestion.highlight != null) ''
-          AUTOSUGGESTION_HIGHLIGHT_COLOR="${cfg.autosuggestion.highlight}"
+          ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="${cfg.autosuggestion.highlight}"
         '')
 
         (optionalString cfg.oh-my-zsh.enable ''
