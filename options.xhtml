@@ -55401,6 +55401,106 @@ string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.amberol.enable"></a><a class="term" href="options.xhtml#opt-services.amberol.enable"><code class="option">services.amberol.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Amberol music player as a daemon.</p><p>Note, it is necessary to add</p><pre><code class="programlisting nix">programs.dconf.enable = true;
+</code></pre><p>to your system configuration for the daemon to work correctly.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/amberol.nix" target="_top">
+&lt;home-manager/modules/services/amberol.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.amberol.enableRecoloring"></a><a class="term" href="options.xhtml#opt-services.amberol.enableRecoloring"><code class="option">services.amberol.enableRecoloring</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>UI recoloring using the album art.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/amberol.nix" target="_top">
+&lt;home-manager/modules/services/amberol.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.amberol.package"></a><a class="term" href="options.xhtml#opt-services.amberol.package"><code class="option">services.amberol.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The amberol package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.amberol</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/amberol.nix" target="_top">
+&lt;home-manager/modules/services/amberol.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.amberol.replaygain"></a><a class="term" href="options.xhtml#opt-services.amberol.replaygain"><code class="option">services.amberol.replaygain</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>ReplayGain mode.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “album”, “track”, “off”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;track&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/amberol.nix" target="_top">
+&lt;home-manager/modules/services/amberol.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.arrpc.enable"></a><a class="term" href="options.xhtml#opt-services.arrpc.enable"><code class="option">services.arrpc.enable</code>
   </a>
  </span>
