@@ -22,7 +22,8 @@ let
   '';
 
 in {
-  imports = [ ./fcitx5.nix ./hime.nix ./kime.nix ./nabi.nix ./uim.nix ./ibus.nix ];
+  imports =
+    [ ./fcitx5.nix ./hime.nix ./kime.nix ./nabi.nix ./uim.nix ./ibus.nix ];
 
   options.i18n = {
     inputMethod = {

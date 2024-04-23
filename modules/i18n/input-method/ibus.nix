@@ -7,8 +7,7 @@ let
   cfg = im.ibus;
   impanel = optionalString (cfg.panel != null) "--panel=${cfg.panel}";
   ibusPackage = pkgs.ibus-with-plugins.override { inherit (cfg) engines; };
-in
-{
+in {
   options = {
     i18n.inputMethod.ibus = {
       engines = mkOption {
@@ -23,7 +22,8 @@ in
     panel = mkOption {
       type = with types; nullOr path;
       default = null;
-      example = literalExpression ''"''${pkgs.plasma5Packages.plasma-desktop}/libexec/kimpanel-ibus-panel"'';
+      example = literalExpression ''
+        "''${pkgs.plasma5Packages.plasma-desktop}/libexec/kimpanel-ibus-panel"'';
       description = ''
         Replace the IBus panel with another panel.
       '';
@@ -47,9 +47,7 @@ in
 
     services.dbus.packages = [ ibusPackage ];
 
-    xdg.portal.extraPortals = mkIf config.xdg.portal.enable [
-      ibusPackage
-    ];
+    xdg.portal.extraPortals = mkIf config.xdg.portal.enable [ ibusPackage ];
 
     systemd.user.services.ibus-daemon = {
       Unit = {
