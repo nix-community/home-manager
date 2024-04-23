@@ -6,6 +6,12 @@ let
   im = config.i18n.inputMethod;
   cfg = im.ibus;
   impanel = optionalString (cfg.panel != null) "--panel=${cfg.panel}";
+  ibusEngine = types.package // {
+    name = "ibus-engine";
+    check = x:
+      (lib.types.package.check x)
+      && (attrByPath [ "meta" "isIbusEngine" ] false x);
+  };
   ibusPackage = pkgs.ibus-with-plugins.override { inherit (cfg) engines; };
 in {
   options = {
@@ -18,15 +24,15 @@ in {
           Enabled IBus engines.
         '';
       };
-    };
-    panel = mkOption {
-      type = with types; nullOr path;
-      default = null;
-      example = literalExpression ''
-        "''${pkgs.plasma5Packages.plasma-desktop}/libexec/kimpanel-ibus-panel"'';
-      description = ''
-        Replace the IBus panel with another panel.
-      '';
+      panel = mkOption {
+        type = with types; nullOr path;
+        default = null;
+        example = literalExpression ''
+          "''${pkgs.plasma5Packages.plasma-desktop}/libexec/kimpanel-ibus-panel"'';
+        description = ''
+          Replace the IBus panel with another panel.
+        '';
+      };
     };
   };
 
