@@ -22,13 +22,13 @@ let
   '';
 
 in {
-  imports = [ ./fcitx5.nix ./hime.nix ./kime.nix ./nabi.nix ./uim.nix ];
+  imports = [ ./fcitx5.nix ./hime.nix ./kime.nix ./nabi.nix ./uim.nix ./ibus.nix ];
 
   options.i18n = {
     inputMethod = {
       enabled = mkOption {
         type = types.nullOr
-          (types.enum [ "fcitx" "fcitx5" "nabi" "uim" "hime" "kime" ]);
+          (types.enum [ "fcitx" "fcitx5" "nabi" "uim" "hime" "kime" "ibus" ]);
         default = null;
         example = "fcitx5";
         description = ''
@@ -58,6 +58,9 @@ in {
 
           `kime`
           : A Korean IME.
+
+          `ibus`
+          : The intelligent input bus.
         '';
       };
 
