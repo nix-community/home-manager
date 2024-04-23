@@ -33,7 +33,7 @@ in with lib; {
       default = { };
       description = ''
         Configuration for pyprland, see
-        <link xlink:href="https://github.com/hyprland-community/pyprland/wiki/Getting-started#configuring"/>
+        <https://github.com/hyprland-community/pyprland/wiki/Getting-started#configuring">
         for supported values.
       '';
     };
