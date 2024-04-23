@@ -219,6 +219,12 @@
     github = "nilp0inter";
     githubId = 1224006;
   };
+  nyadiia = {
+    name = "Nadia";
+    email = "nyadiia@pm.me";
+    github = "nyadiia";
+    githubId = 43252360;
+  };
   seylerius = {
     email = "sable@seyleri.us";
     name = "Sable Seyler";

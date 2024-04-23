@@ -62,4 +62,5 @@ in {
       Install.WantedBy = [ "graphical-session.target" ];
     };
   };
+  meta.maintainers = with maintainers; [ nyadiia ];
 }
