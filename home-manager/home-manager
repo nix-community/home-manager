@@ -742,7 +742,11 @@ function newsReadIdsFile() {
         touch "$path"
     fi
 
-    echo "$path"
+    # Remove duplicate slashes in case $HOME or $XDG_DATA_HOME have a trailing
+    # slash. Double slashes causes Nix to error out with
+    #
+    #     error: syntax error, unexpected PATH_END, expecting DOLLAR_CURLY".
+    echo "$path" | tr -s /
 }
 
 # Builds the Home Manager news data file.
@@ -777,7 +781,7 @@ function buildNews() {
     done
 
     local readIdsFile
-    readIdsFile=$(newsReadIdsFile)
+    readIdsFile="$(newsReadIdsFile)"
 
     nix-instantiate \
         --no-build-output --strict \
@@ -796,7 +800,7 @@ function doShowNews() {
     buildNews "$newsNixFile"
 
     local readIdsFile
-    readIdsFile=$(newsReadIdsFile)
+    readIdsFile="$(newsReadIdsFile)"
 
     local news
 
