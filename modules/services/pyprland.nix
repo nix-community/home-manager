@@ -4,7 +4,7 @@ let
   settingsFormat = pkgs.formats.toml { };
 in with lib; {
 
-  meta.maintainers = [ maintainers.knoc-off ];
+  meta.maintainers = [ hm.maintainers.knoc-off ];
   options.services.pyprland = {
     enable = mkEnableOption "pyprland";
 
