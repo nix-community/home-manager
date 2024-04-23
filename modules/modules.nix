@@ -118,6 +118,7 @@ let
     ./programs/hstr.nix
     ./programs/htop.nix
     ./programs/hyfetch.nix
+    ./programs/hyprlock.nix
     ./programs/i3blocks.nix
     ./programs/i3status-rust.nix
     ./programs/i3status.nix

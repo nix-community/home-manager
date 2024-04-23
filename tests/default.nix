@@ -197,6 +197,7 @@ in import nmtSrc {
     ./modules/programs/gnome-shell
     ./modules/programs/gnome-terminal
     ./modules/programs/hexchat
+    ./modules/programs/hyprlock
     ./modules/programs/i3blocks
     ./modules/programs/i3status-rust
     ./modules/programs/imv
