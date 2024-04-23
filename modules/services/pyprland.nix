@@ -48,7 +48,8 @@ in with lib; {
           ++ (optional (cfg.settings.scratchpads != { }) "scratchpads");
       };
     };
-
+    
+    wayland.windowManager.hyprland.settings.exec-once = [(getExe cfg.package)];
     home.file.".config/hypr/pyprland.toml".source =
       settingsFormat.generate "pyprland-config.toml" cfg.settings;
   };
