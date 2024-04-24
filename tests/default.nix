@@ -49,6 +49,7 @@ in import nmtSrc {
     ./modules/misc/fontconfig
     ./modules/misc/manual
     ./modules/misc/nix
+    ./modules/misc/nixgl
     ./modules/misc/specialisation
     ./modules/programs/aerc
     ./modules/programs/alacritty
