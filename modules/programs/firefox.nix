@@ -683,6 +683,11 @@ in {
 
                 Note that it is necessary to manually enable these extensions
                 inside Firefox after the first installation.
+
+                To automatically enable extensions add
+                `"extensions.autoDisableScopes" = 0;`
+                to
+                [{option}`programs.firefox.profiles.<profile>.settings`](#opt-programs.firefox.profiles._name_.settings)
               '';
             };
 
