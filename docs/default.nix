@@ -55,7 +55,11 @@ let
   hmPath = toString ./..;
 
   buildOptionsDocs = args@{ modules, includeModuleSystemOptions ? true, ... }:
-    let options = (lib.evalModules { inherit modules; }).options;
+    let
+      options = (lib.evalModules {
+        inherit modules;
+        class = "homeManager";
+      }).options;
     in pkgs.buildPackages.nixosOptionsDoc ({
       options = if includeModuleSystemOptions then
         options
@@ -160,6 +164,7 @@ in {
         inherit lib pkgs;
         check = false;
       } ++ [ scrubbedPkgsModule ];
+      class = "homeManager";
     };
   in builtins.toJSON result.config.meta.maintainers);
 }

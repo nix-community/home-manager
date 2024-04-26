@@ -26,6 +26,7 @@ let
   rawModule = extendedLib.evalModules {
     modules = [ configuration ] ++ hmModules;
     specialArgs = { modulesPath = builtins.toString ./.; } // extraSpecialArgs;
+    class = "homeManager";
   };
 
   moduleChecks = raw:
