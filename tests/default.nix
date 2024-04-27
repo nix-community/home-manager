@@ -243,6 +243,7 @@ in import nmtSrc {
     ./modules/services/gromit-mpx
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/hypridle
+    ./modules/services/hyprpaper
     ./modules/services/imapnotify
     ./modules/services/kanshi
     ./modules/services/lieer
