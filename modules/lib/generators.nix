@@ -1,10 +1,21 @@
 { lib }:
 
 {
+
   toKDL = { }:
     let
-      inherit (lib) concatStringsSep splitString mapAttrsToList any;
+      inherit (lib) concatStringsSep;
       inherit (builtins) typeOf replaceStrings elem;
+
+      # KDL Spec Summary
+      # Document -> Node[]
+      # Node -> {[Type] NodeName [Args] [Properties] [Children]}
+      # Type -> Ident
+      # NodeName -> Ident
+      # Args -> Value[] # Note: ordered
+      # Properties -> map[Ident]Value # Note: Unordered
+      # Children -> Node[] # Note: ordered
+      # Value -> String | Number | Bool | Null
 
       # ListOf String -> String
       indentStrings = let
@@ -35,69 +46,49 @@
         else
           toString element);
 
-      # Attrset Conversion
-      # String -> AttrsOf Anything -> String
-      convertAttrsToKDL = name: attrs:
+      # Node Attrset Conversion
+      # AttrsOf Anything -> String
+      attrsToKDLNode = attrs:
         let
-          optArgsString = lib.optionalString (attrs ? "_args")
-            (lib.pipe attrs._args [
+          optType = lib.optionalString (attrs ? "type") attrs.type;
+
+          name = attrs.name;
+
+          optArgsString = lib.optionalString (attrs ? "args")
+            (lib.pipe attrs.args [
+              (a: if typeOf a == "list" then a else [ a ])
               (map literalValueToString)
               (lib.concatStringsSep " ")
-              (s: s + " ")
             ]);
 
-          optPropsString = lib.optionalString (attrs ? "_props")
-            (lib.pipe attrs._props [
+          optPropsString = lib.optionalString (attrs ? "props")
+            (lib.pipe attrs.props [
               (lib.mapAttrsToList
                 (name: value: "${name}=${literalValueToString value}"))
               (lib.concatStringsSep " ")
-              (s: s + " ")
             ]);
 
-          children =
-            lib.filterAttrs (name: _: !(elem name [ "_args" "_props" ])) attrs;
-        in ''
-          ${name} ${optArgsString}${optPropsString}{
-          ${indentStrings (mapAttrsToList convertAttributeToKDL children)}
-          }'';
+          optChildren = lib.optionalString (attrs ? "children")
+            (lib.pipe attrs.children [
+              (a: if typeOf a == "list" then a else [ a ])
+              (map attrsToKDLNode)
+              (s:
+                lib.optionalString (builtins.length s > 0) ''
+                  {
+                  ${indentStrings s}
+                  }'')
+            ]);
 
-      # List Conversion
-      # String -> ListOf (OneOf [Int Float String Bool Null])  -> String
-      convertListOfFlatAttrsToKDL = name: list:
-        let flatElements = map literalValueToString list;
-        in "${name} ${concatStringsSep " " flatElements}";
+        in lib.concatStringsSep " " (lib.filter (s: s != "") [
+          optType
+          name
+          optArgsString
+          optPropsString
+          optChildren
+        ]);
 
-      # String -> ListOf Anything -> String
-      convertListOfNonFlatAttrsToKDL = name: list: ''
-        ${name} {
-        ${indentStrings (map (x: convertAttributeToKDL "-" x) list)}
-        }'';
-
-      # String -> ListOf Anything  -> String
-      convertListToKDL = name: list:
-        let elementsAreFlat = !any (el: elem (typeOf el) [ "list" "set" ]) list;
-        in if elementsAreFlat then
-          convertListOfFlatAttrsToKDL name list
-        else
-          convertListOfNonFlatAttrsToKDL name list;
-
-      # Combined Conversion
-      # String -> Anything  -> String
-      convertAttributeToKDL = name: value:
-        let vType = typeOf value;
-        in if elem vType [ "int" "float" "bool" "null" "string" ] then
-          "${name} ${literalValueToString value}"
-        else if vType == "set" then
-          convertAttrsToKDL name value
-        else if vType == "list" then
-          convertListToKDL name value
-        else
-          throw ''
-            Cannot convert type `(${typeOf value})` to KDL:
-              ${name} = ${toString value}
-          '';
-    in attrs: ''
-      ${concatStringsSep "\n" (mapAttrsToList convertAttributeToKDL attrs)}
+    in nodes: ''
+      ${concatStringsSep "\n" (map attrsToKDLNode nodes)}
     '';
 
   toSCFG = { }:
