@@ -9,6 +9,14 @@ in {
 
     package = lib.mkPackageOption pkgs "cliphist" { };
 
+    allowImages = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Store images in clipboard history.
+      '';
+    };
+
     systemdTarget = lib.mkOption {
       type = lib.types.str;
       default = "graphical-session.target";
@@ -41,6 +49,22 @@ in {
         Type = "simple";
         ExecStart =
           "${pkgs.wl-clipboard}/bin/wl-paste --watch ${cfg.package}/bin/cliphist store";
+        Restart = "on-failure";
+      };
+
+      Install = { WantedBy = [ cfg.systemdTarget ]; };
+    };
+
+    systemd.user.services.cliphist-images = lib.mkIf cfg.allowImages {
+      Unit = {
+        Description = "Clipboard management daemon - images";
+        PartOf = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStart =
+          "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${cfg.package}/bin/cliphist store";
         Restart = "on-failure";
       };
 
