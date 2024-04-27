@@ -77350,7 +77350,10 @@ attribute set of ((list of string) or ((list of string) or string) convertible t
  </span>
 </dt>
 <dd>
-<p>Whether to enable <a class="link" href="https://github.com/flatpak/xdg-desktop-portal"  target="_top">XDG desktop integration</a>.</p>
+<p>Whether to enable <a class="link" href="https://github.com/flatpak/xdg-desktop-portal"  target="_top">XDG desktop integration</a>.</p><p>Note, if you use the NixOS module and have <code class="literal">useUserPackages = true</code>,
+make sure to add</p><pre><code class="programlisting  nix">environment.pathsToLink = [ &quot;/share/xdg-desktop-portal&quot; &quot;/share/applications&quot; ];
+</code></pre><p>to your system configuration so that the portal definitions and DE
+provided configurations get linked.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
