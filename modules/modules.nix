@@ -165,6 +165,7 @@ let
     ./programs/neomutt.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
+    ./programs/nh.nix
     ./programs/nheko.nix
     ./programs/nix-index.nix
     ./programs/nnn.nix
