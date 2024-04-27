@@ -9,7 +9,6 @@ let
   systemdActivation = ''
     exec-once = ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}
   '';
-
 in {
   meta.maintainers = [ lib.maintainers.fufexan ];
 
@@ -178,6 +177,16 @@ in {
     '' // {
       default = true;
     };
+
+    importantPrefixes = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ "$" "bezier" "name" ]
+        ++ lib.optionals cfg.sourceFirst [ "source" ];
+      example = [ "$" "bezier" ];
+      description = ''
+        List of prefix of attributes to source at the top of the config.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -199,65 +208,28 @@ in {
       shouldGenerate = cfg.systemd.enable || cfg.extraConfig != ""
         || cfg.settings != { } || cfg.plugins != [ ];
 
-      toHyprconf = with lib;
-        attrs: indentLevel:
-        let
-          indent = concatStrings (replicate indentLevel "  ");
-
-          sections = filterAttrs (n: v: isAttrs v && n != "device") attrs;
-
-          mkSection = n: attrs: ''
-            ${indent}${n} {
-            ${toHyprconf attrs (indentLevel + 1)}${indent}}
-          '';
-
-          mkDeviceCategory = device: ''
-            ${indent}device {
-              name=${device.name}
-            ${
-              toHyprconf (filterAttrs (n: _: "name" != n) device)
-              (indentLevel + 1)
-            }${indent}}
-          '';
-
-          deviceCategory = lib.optionalString (hasAttr "device" attrs)
-            (if isList attrs.device then
-              (concatMapStringsSep "\n" (d: mkDeviceCategory d) attrs.device)
-            else
-              mkDeviceCategory attrs.device);
-
-          mkFields = generators.toKeyValue {
-            listsAsDuplicateKeys = true;
-            inherit indent;
-          };
-          allFields = filterAttrs (n: v: !(isAttrs v) && n != "device") attrs;
-
-          importantFields = filterAttrs (n: _:
-            (hasPrefix "$" n) || (hasPrefix "bezier" n)
-            || (cfg.sourceFirst && (hasPrefix "source" n))) allFields;
-
-          fields = builtins.removeAttrs allFields
-            (mapAttrsToList (n: _: n) importantFields);
-        in mkFields importantFields + deviceCategory
-        + concatStringsSep "\n" (mapAttrsToList mkSection sections)
-        + mkFields fields;
-
       pluginsToHyprconf = plugins:
-        toHyprconf {
-          plugin = let
-            mkEntry = entry:
-              if lib.types.package.check entry then
-                "${entry}/lib/lib${entry.pname}.so"
-              else
-                entry;
-          in map mkEntry cfg.plugins;
-        } 0;
+        lib.hm.generators.toHyprconf {
+          attrs = {
+            plugin = let
+              mkEntry = entry:
+                if lib.types.package.check entry then
+                  "${entry}/lib/lib${entry.pname}.so"
+                else
+                  entry;
+            in map mkEntry cfg.plugins;
+          };
+          inherit (cfg) importantPrefixes;
+        };
     in lib.mkIf shouldGenerate {
       text = lib.optionalString cfg.systemd.enable systemdActivation
         + lib.optionalString (cfg.plugins != [ ])
         (pluginsToHyprconf cfg.plugins)
-        + lib.optionalString (cfg.settings != { }) (toHyprconf cfg.settings 0)
-        + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
+        + lib.optionalString (cfg.settings != { })
+        (lib.hm.generators.toHyprconf {
+          attrs = cfg.settings;
+          inherit (cfg) importantPrefixes;
+        }) + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
 
       onChange = lib.mkIf (cfg.package != null) ''
         ( # Execute in subshell so we don't poision environment with vars
