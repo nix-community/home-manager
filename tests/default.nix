@@ -260,6 +260,7 @@ in import nmtSrc {
     ./modules/services/screen-locker
     ./modules/services/signaturepdf
     ./modules/services/swayidle
+    ./modules/services/swaync
     ./modules/services/swayosd
     ./modules/services/sxhkd
     ./modules/services/syncthing/linux
