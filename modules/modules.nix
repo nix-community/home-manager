@@ -337,6 +337,7 @@ let
     ./services/plex-mpv-shim.nix
     ./services/polybar.nix
     ./services/poweralertd.nix
+    ./services/psd.nix
     ./services/pueue.nix
     ./services/pulseeffects.nix
     ./services/random-background.nix

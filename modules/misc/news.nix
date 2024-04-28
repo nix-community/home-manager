@@ -1537,6 +1537,18 @@ in {
           for more.
         '';
       }
+
+      {
+        time = "2024-04-28T18:30:24+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.psd'.
+
+          Profile-sync-daemon (psd) is a tiny pseudo-daemon designed to manage
+          your browser's profile in tmpfs and to periodically sync it back
+          to your physical disc (HDD/SSD).
+        '';
+      }
     ];
   };
 }

@@ -55,6 +55,12 @@
     github = "cvoges12";
     githubId = 38054771;
   };
+  danjujan = {
+    name = "Jan Schmitz";
+    email = "44864658+danjujan@users.noreply.github.com";
+    github = "danjujan";
+    githubId = 44864658;
+  };
   d-dervishi = {
     email = "david.dervishi@epfl.ch";
     github = "d-dervishi";
