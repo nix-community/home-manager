@@ -65288,6 +65288,62 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.psd.enable"></a><a class="term" href="options.xhtml#opt-services.psd.enable"><code class="option">services.psd.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Profile-sync-daemon service.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/psd.nix" target="_top">
+&lt;home-manager/modules/services/psd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.psd.resyncTimer"></a><a class="term" href="options.xhtml#opt-services.psd.resyncTimer"><code class="option">services.psd.resyncTimer</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The amount of time to wait before syncing browser profiles back to the
+disk.</p><p>Takes a systemd time span, see <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a>. The time unit
+defaults to seconds if omitted.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;1h&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;1h 30min&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/psd.nix" target="_top">
+&lt;home-manager/modules/services/psd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.pueue.enable"></a><a class="term" href="options.xhtml#opt-services.pueue.enable"><code class="option">services.pueue.enable</code>
   </a>
  </span>
