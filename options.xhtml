@@ -32039,6 +32039,38 @@ list of string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.mpv.extraInput"></a><a class="term" href="options.xhtml#opt-programs.mpv.extraInput"><code class="option">programs.mpv.extraInput</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Additional lines that are appended to <code class="filename">$XDG_CONFIG_HOME/mpv/input.conf</code>.
+See <span class="citerefentry"><span class="refentrytitle">mpv</span>(1)</span> for the full list of options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  esc         quit                        #! Quit
+  #           script-binding uosc/video   #! Video tracks
+  # additional comments
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix" target="_top">
+&lt;home-manager/modules/programs/mpv.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.mpv.profiles"></a><a class="term" href="options.xhtml#opt-programs.mpv.profiles"><code class="option">programs.mpv.profiles</code>
   </a>
  </span>
