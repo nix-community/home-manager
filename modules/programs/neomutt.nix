@@ -457,14 +457,14 @@ in {
 
         set delete = yes
 
+        ${optionalString cfg.vimKeys
+        "source ${pkgs.neomutt}/share/doc/neomutt/vim-keys/vim-keys.rc"}
+
         # Binds
         ${bindSection}
 
         # Macros
         ${macroSection}
-
-        ${optionalString cfg.vimKeys
-        "source ${pkgs.neomutt}/share/doc/neomutt/vim-keys/vim-keys.rc"}
 
         # Register accounts
         ${
