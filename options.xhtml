@@ -67391,6 +67391,150 @@ positive integer, meaning &gt;0</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.swaync.enable"></a><a class="term" href="options.xhtml#opt-services.swaync.enable"><code class="option">services.swaync.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Swaync notification daemon.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/swaync.nix" target="_top">
+&lt;home-manager/modules/services/swaync.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.swaync.package"></a><a class="term" href="options.xhtml#opt-services.swaync.package"><code class="option">services.swaync.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The swaynotificationcenter package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.swaynotificationcenter</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/swaync.nix" target="_top">
+&lt;home-manager/modules/services/swaync.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.swaync.settings"></a><a class="term" href="options.xhtml#opt-services.swaync.settings"><code class="option">services.swaync.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/swaync/config.json</code>.
+See
+<a class="link" href="https://github.com/ErikReider/SwayNotificationCenter/blob/main/src/configSchema.json"  target="_top">https://github.com/ErikReider/SwayNotificationCenter/blob/main/src/configSchema.json</a>
+for the documentation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  positionX = &quot;right&quot;;
+  positionY = &quot;top&quot;;
+  layer = &quot;overlay&quot;;
+  control-center-layer = &quot;top&quot;;
+  layer-shell = true;
+  cssPriority = &quot;application&quot;;
+  control-center-margin-top = 0;
+  control-center-margin-bottom = 0;
+  control-center-margin-right = 0;
+  control-center-margin-left = 0;
+  notification-2fa-action = true;
+  notification-inline-replies = false;
+  notification-icon-size = 64;
+  notification-body-image-height = 100;
+  notification-body-image-width = 200
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/swaync.nix" target="_top">
+&lt;home-manager/modules/services/swaync.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.swaync.style"></a><a class="term" href="options.xhtml#opt-services.swaync.style"><code class="option">services.swaync.style</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>CSS style of the bar. See
+<a class="link" href="https://github.com/ErikReider/SwayNotificationCenter/blob/main/src/style.css"  target="_top">https://github.com/ErikReider/SwayNotificationCenter/blob/main/src/style.css</a>
+for the documentation.</p><p>If the value is set to a path literal, then the path will be used as the CSS file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or path or strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  .notification-row {
+    outline: none;
+  }
+  
+  .notification-row:focus,
+  .notification-row:hover {
+    background: @noti-bg-focus;
+  }
+  
+  .notification {
+    border-radius: 12px;
+    margin: 6px 12px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.7),
+      0 2px 6px 2px rgba(0, 0, 0, 0.3);
+    padding: 0;
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/swaync.nix" target="_top">
+&lt;home-manager/modules/services/swaync.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.swayosd.enable"></a><a class="term" href="options.xhtml#opt-services.swayosd.enable"><code class="option">services.swayosd.enable</code>
   </a>
  </span>
