@@ -12,6 +12,10 @@
       "Alt+0" = "set window-scale 0.5";
     };
 
+    extraInput = ''
+      #           script-binding uosc/video                   #! Video tracks
+    '';
+
     config = {
       force-window = true;
       ytdl-format = "bestvideo+bestaudio";
