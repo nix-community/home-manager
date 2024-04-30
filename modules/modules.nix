@@ -31,6 +31,7 @@ let
     ./misc/gtk.nix
     ./misc/lib.nix
     ./misc/news.nix
+    ./misc/nixgl.nix
     ./misc/numlock.nix
     ./misc/pam.nix
     ./misc/qt.nix
