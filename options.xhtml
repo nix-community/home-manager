@@ -19798,6 +19798,91 @@ attribute set of section of an INI file (attrs of INI atom (null, bool, int, flo
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.freetube.enable"></a><a class="term" href="options.xhtml#opt-programs.freetube.enable"><code class="option">programs.freetube.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable FreeTube, a YT client for Windows, Mac, and Linux.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/freetube.nix" target="_top">
+&lt;home-manager/modules/programs/freetube.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.freetube.package"></a><a class="term" href="options.xhtml#opt-programs.freetube.package"><code class="option">programs.freetube.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The freetube package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.freetube</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/freetube.nix" target="_top">
+&lt;home-manager/modules/programs/freetube.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.freetube.settings"></a><a class="term" href="options.xhtml#opt-programs.freetube.settings"><code class="option">programs.freetube.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings for FreeTube.</p><p>All configurable options can be deduced by enabling them through the
+GUI and observing the changes in <code class="filename">settings.db</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  allowDashAv1Formats = true;
+  checkForUpdates     = false;
+  defaultQuality      = &quot;1080&quot;;
+  baseTheme           = &quot;catppuccinMocha&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/freetube.nix" target="_top">
+&lt;home-manager/modules/programs/freetube.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.fuzzel.enable"></a><a class="term" href="options.xhtml#opt-programs.fuzzel.enable"><code class="option">programs.fuzzel.enable</code>
   </a>
  </span>
