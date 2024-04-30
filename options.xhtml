@@ -57106,6 +57106,84 @@ non-empty (list of non-empty string)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.conky.enable"></a><a class="term" href="options.xhtml#opt-services.conky.enable"><code class="option">services.conky.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Conky, a light-weight system monitor.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/conky.nix" target="_top">
+&lt;home-manager/modules/services/conky.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.conky.package"></a><a class="term" href="options.xhtml#opt-services.conky.package"><code class="option">services.conky.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The conky package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.conky</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/conky.nix" target="_top">
+&lt;home-manager/modules/services/conky.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.conky.extraConfig"></a><a class="term" href="options.xhtml#opt-services.conky.extraConfig"><code class="option">services.conky.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration used by the Conky daemon. Check
+<a class="link" href="https://github.com/brndnmtthws/conky/wiki/Configurations"  target="_top">https://github.com/brndnmtthws/conky/wiki/Configurations</a> for
+options. If not set, the default configuration, as described by
+<span class="command"><strong>conky --print-config</strong></span>, will be used.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/conky.nix" target="_top">
+&lt;home-manager/modules/services/conky.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.copyq.enable"></a><a class="term" href="options.xhtml#opt-services.copyq.enable"><code class="option">services.copyq.enable</code>
   </a>
  </span>
