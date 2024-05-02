@@ -87,6 +87,7 @@ let
     ./programs/emacs.nix
     ./programs/eww.nix
     ./programs/eza.nix
+    ./programs/fastfetch.nix
     ./programs/fd.nix
     ./programs/feh.nix
     ./programs/firefox.nix

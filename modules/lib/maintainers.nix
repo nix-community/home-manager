@@ -13,6 +13,12 @@
     github = "abayomi185";
     githubId = 21103047;
   };
+  afresquet = {
+    name = "Alvaro Fresquet";
+    email = "alvarofresquet@gmail.com";
+    github = "afresquet";
+    githubId = 29437693;
+  };
   amesgen = {
     name = "amesgen";
     email = "amesgen@amesgen.de";
