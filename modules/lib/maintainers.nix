@@ -548,4 +548,10 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+  afresquet = {
+    name = "Alvaro Fresquet";
+    email = "alvarofresquet@gmail.com";
+    github = "afresquet";
+    githubId = 29437693;
+  };
 }
