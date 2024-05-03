@@ -48,6 +48,8 @@ let
   configFilePaths = concatStringsSep ":"
     ([ "${config.xdg.configHome}/mopidy/mopidy.conf" ] ++ cfg.extraConfigFiles);
 
+  hasMopidyLocal = builtins.elem pkgs.mopidy-local cfg.extensionPackages;
+
 in {
   meta.maintainers = [ hm.maintainers.foo-dogsquared ];
 
@@ -133,7 +135,7 @@ in {
       Install.WantedBy = [ "default.target" ];
     };
 
-    systemd.user.services.mopidy-scan = {
+    systemd.user.services.mopidy-scan = mkIf hasMopidyLocal {
       Unit = {
         Description = "mopidy local files scanner";
         Documentation = [ "https://mopidy.com/" ];
