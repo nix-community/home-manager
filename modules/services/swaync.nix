@@ -84,7 +84,7 @@ in {
       "swaync/config.json".source =
         jsonFormat.generate "config.json" cfg.settings;
       "swaync/style.css" = lib.mkIf (cfg.style != null) {
-        source = if lib.isStorePath cfg.style then
+        source = if builtins.isPath cfg.style || lib.isStorePath cfg.style then
           cfg.style
         else
           pkgs.writeText "swaync/style.css" cfg.style;
