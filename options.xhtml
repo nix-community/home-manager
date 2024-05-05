@@ -60790,6 +60790,136 @@ attribute set of (JSON value)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.hypridle.enable"></a><a class="term" href="options.xhtml#opt-services.hypridle.enable"><code class="option">services.hypridle.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Hypridle, Hyprland’s idle daemon.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/hypridle.nix" target="_top">
+&lt;home-manager/modules/services/hypridle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.hypridle.package"></a><a class="term" href="options.xhtml#opt-services.hypridle.package"><code class="option">services.hypridle.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The hypridle package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.hypridle</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/hypridle.nix" target="_top">
+&lt;home-manager/modules/services/hypridle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.hypridle.importantPrefixes"></a><a class="term" href="options.xhtml#opt-services.hypridle.importantPrefixes"><code class="option">services.hypridle.importantPrefixes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of prefix of attributes to source at the top of the config.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;$&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;$&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/hypridle.nix" target="_top">
+&lt;home-manager/modules/services/hypridle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.hypridle.settings"></a><a class="term" href="options.xhtml#opt-services.hypridle.settings"><code class="option">services.hypridle.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Hypridle configuration written in Nix. Entries with the same key
+should be written as lists. Variables’ and colors’ names should be
+quoted. See <a class="link" href="https://wiki.hyprland.org/Hypr-Ecosystem/hypridle/"  target="_top">https://wiki.hyprland.org/Hypr-Ecosystem/hypridle/</a> for more examples.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+Hypridle configuration value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  general = {
+    after_sleep_cmd = &quot;hyprctl dispatch dpms on&quot;;
+    ignore_dbus_inhibit = false;
+    lock_cmd = &quot;hyprlock&quot;;
+  };
+
+  listener = [
+    {
+      timeout = 900;
+      on-timeout = &quot;hyprlock&quot;;
+    }
+    {
+      timeout = 1200;
+      on-timeout = &quot;hyprctl dispatch dpms off&quot;;
+      on-resume = &quot;hyprctl dispatch dpms on&quot;;
+    }
+  ];
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/hypridle.nix" target="_top">
+&lt;home-manager/modules/services/hypridle.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.imapnotify.enable"></a><a class="term" href="options.xhtml#opt-services.imapnotify.enable"><code class="option">services.imapnotify.enable</code>
   </a>
  </span>
