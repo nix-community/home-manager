@@ -69991,10 +69991,13 @@ package</p>
 <p>Gamma value to use.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-string</p>
+string or floating point number or signed integer</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;1.0&quot;</code></p>
+<code class="literal">1.0</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">0.6</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -70016,7 +70019,13 @@ string</p>
 <code class="literal">90.0</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-string</p>
+null or string or floating point number or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">-74.3</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -70038,7 +70047,91 @@ string</p>
 <code class="literal">180.0</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-string</p>
+null or string or floating point number or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">12.5</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix" target="_top">
+&lt;home-manager/modules/services/wlsunset.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wlsunset.output"></a><a class="term" href="options.xhtml#opt-services.wlsunset.output"><code class="option">services.wlsunset.output</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Name of output to use, by default all outputs are used.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix" target="_top">
+&lt;home-manager/modules/services/wlsunset.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wlsunset.sunrise"></a><a class="term" href="options.xhtml#opt-services.wlsunset.sunrise"><code class="option">services.wlsunset.sunrise</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The time when the sun rises (in 24 hour format).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;06:30&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wlsunset.nix" target="_top">
+&lt;home-manager/modules/services/wlsunset.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wlsunset.sunset"></a><a class="term" href="options.xhtml#opt-services.wlsunset.sunset"><code class="option">services.wlsunset.sunset</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The time when the sun sets (in 24 hour format).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;18:00&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
