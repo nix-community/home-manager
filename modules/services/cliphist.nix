@@ -17,6 +17,14 @@ in {
       '';
     };
 
+    extraOptions = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ "-max-dedupe-search" "10" "-max-items" "500" ];
+      description = ''
+        Flags to append to the cliphist command.
+      '';
+    };
+
     systemdTarget = lib.mkOption {
       type = lib.types.str;
       default = "graphical-session.target";
@@ -31,7 +39,8 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = let extraOptionsStr = lib.escapeShellArgs cfg.extraOptions;
+  in lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.cliphist" pkgs
         lib.platforms.linux)
@@ -48,7 +57,7 @@ in {
       Service = {
         Type = "simple";
         ExecStart =
-          "${pkgs.wl-clipboard}/bin/wl-paste --watch ${cfg.package}/bin/cliphist store";
+          "${pkgs.wl-clipboard}/bin/wl-paste --watch ${cfg.package}/bin/cliphist ${extraOptionsStr} store";
         Restart = "on-failure";
       };
 
@@ -64,7 +73,7 @@ in {
       Service = {
         Type = "simple";
         ExecStart =
-          "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${cfg.package}/bin/cliphist store";
+          "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${cfg.package}/bin/cliphist ${extraOptionsStr} store";
         Restart = "on-failure";
       };
 
