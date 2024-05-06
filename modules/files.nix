@@ -321,7 +321,7 @@ in
               if [[ -d $source ]]; then
                 if [[ $recursive ]]; then
                   mkdir -p "$target"
-                  lndir -silent "$source" "$target"
+                  lndir -silent -ignorelinks "$source" "$target"
                 else
                   ln -s "$source" "$target"
                 fi
