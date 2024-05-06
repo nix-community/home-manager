@@ -22019,6 +22019,200 @@ path or strings concatenated with “\n”</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.gnome-shell.enable"></a><a class="term" href="options.xhtml#opt-programs.gnome-shell.enable"><code class="option">programs.gnome-shell.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable GNOME Shell customization.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gnome-shell.nix" target="_top">
+&lt;home-manager/modules/programs/gnome-shell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gnome-shell.extensions"></a><a class="term" href="options.xhtml#opt-programs.gnome-shell.extensions"><code class="option">programs.gnome-shell.extensions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of GNOME Shell extensions.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  { package = pkgs.gnomeExtensions.dash-to-panel; }
+  {
+    id = &quot;user-theme@gnome-shell-extensions.gcampax.github.com&quot;;
+    package = pkgs.gnome.gnome-shell-extensions;
+  }
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gnome-shell.nix" target="_top">
+&lt;home-manager/modules/programs/gnome-shell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gnome-shell.extensions._.package"></a><a class="term" href="options.xhtml#opt-programs.gnome-shell.extensions._.package"><code class="option">programs.gnome-shell.extensions.*.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Package providing a GNOME Shell extension in
+<code class="literal">$out/share/gnome-shell/extensions/${id}</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;pkgs.gnome.gnome-shell-extensions&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gnome-shell.nix" target="_top">
+&lt;home-manager/modules/programs/gnome-shell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gnome-shell.extensions._.id"></a><a class="term" href="options.xhtml#opt-programs.gnome-shell.extensions._.id"><code class="option">programs.gnome-shell.extensions.*.id</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>ID of the GNOME Shell extension. If not provided, it
+will be obtained from <code class="literal">package.extensionUuid</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;user-theme@gnome-shell-extensions.gcampax.github.com&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gnome-shell.nix" target="_top">
+&lt;home-manager/modules/programs/gnome-shell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gnome-shell.theme"></a><a class="term" href="options.xhtml#opt-programs.gnome-shell.theme"><code class="option">programs.gnome-shell.theme</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Theme to use for GNOME Shell.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  name = &quot;Plata-Noir&quot;;
+  package = pkgs.plata-theme;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gnome-shell.nix" target="_top">
+&lt;home-manager/modules/programs/gnome-shell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gnome-shell.theme.package"></a><a class="term" href="options.xhtml#opt-programs.gnome-shell.theme.package"><code class="option">programs.gnome-shell.theme.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Package providing a GNOME Shell theme in
+<code class="literal">$out/share/themes/${name}/gnome-shell</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">pkgs.plata-theme</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gnome-shell.nix" target="_top">
+&lt;home-manager/modules/programs/gnome-shell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.gnome-shell.theme.name"></a><a class="term" href="options.xhtml#opt-programs.gnome-shell.theme.name"><code class="option">programs.gnome-shell.theme.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Name of the GNOME Shell theme.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;Plata-Noir&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gnome-shell.nix" target="_top">
+&lt;home-manager/modules/programs/gnome-shell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.gnome-terminal.enable"></a><a class="term" href="options.xhtml#opt-programs.gnome-terminal.enable"><code class="option">programs.gnome-terminal.enable</code>
   </a>
  </span>
