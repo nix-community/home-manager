@@ -169,6 +169,7 @@ let
     ./programs/newsboat.nix
     ./programs/nheko.nix
     ./programs/nix-index.nix
+    ./programs/nix-init.nix
     ./programs/nnn.nix
     ./programs/noti.nix
     ./programs/notmuch.nix

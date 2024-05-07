@@ -1607,6 +1607,13 @@ in {
           between windows, and is also a widget engine.
         '';
       }
+
+      {
+        time = "2024-05-07T16:33:07+00:00";
+        message = ''
+          A new module is available: 'programs.nix-init'.
+        '';
+      }
     ];
   };
 }
