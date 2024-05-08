@@ -143,6 +143,8 @@ let
   '';
 
 in {
+  meta.maintainers = [ maintainers.Cryolitia ];
+
   options.programs.gpg = {
     enable = mkEnableOption "GnuPG";
 
