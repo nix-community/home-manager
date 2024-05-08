@@ -18,6 +18,11 @@ let
     listsAsDuplicateKeys = true;
   } cfg.scdaemonSettings;
 
+  dirmngrCfgText = generators.toKeyValue {
+    inherit mkKeyValue;
+    listsAsDuplicateKeys = true;
+  } cfg.dirmngrSettings;
+
   primitiveType = types.oneOf [ types.str types.bool ];
 
   publicKeyOpts = { config, ... }: {
@@ -187,6 +192,24 @@ in {
       '';
     };
 
+    dirmngrSettings = mkOption {
+      type =
+        types.attrsOf (types.either primitiveType (types.listOf types.str));
+      example = literalExpression ''
+        {
+          keyserver = "keyserver.ubuntu.com";
+          disable-ipv6 = true;
+        }
+      '';
+      description = ''
+        Dirmngr configuration options. Available options are described
+        in
+        [
+          {manpage}`dirmngr(8)`
+        ](https://www.gnupg.org/documentation/manuals/gnupg/Dirmngr-Options.html).
+      '';
+    };
+
     homedir = mkOption {
       type = types.path;
       example = literalExpression ''"''${config.xdg.dataHome}/gnupg"'';
@@ -247,6 +270,9 @@ in {
     programs.gpg.scdaemonSettings = {
       # no defaults for scdaemon
     };
+    programs.gpg.dirmngrSettings = {
+      # no defaults for dirmngr
+    };
 
     home.packages = [ cfg.package ];
     home.sessionVariables = { GNUPGHOME = cfg.homedir; };
@@ -254,6 +280,8 @@ in {
     home.file."${cfg.homedir}/gpg.conf".text = cfgText;
 
     home.file."${cfg.homedir}/scdaemon.conf".text = scdaemonCfgText;
+
+    home.file."${cfg.homedir}/dirmngr.conf".text = dirmngrCfgText;
 
     # Link keyring if keys are not mutable
     home.file."${cfg.homedir}/pubring.kbx" =
