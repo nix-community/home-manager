@@ -224,6 +224,7 @@ in import nmtSrc {
     ./modules/services/activitywatch
     ./modules/services/avizo
     ./modules/services/barrier
+    ./modules/services/blanket
     ./modules/services/borgmatic
     ./modules/services/cachix-agent
     ./modules/services/cliphist
