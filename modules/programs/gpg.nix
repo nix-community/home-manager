@@ -8,20 +8,10 @@ let
   mkKeyValue = key: value:
     if isString value then "${key} ${value}" else optionalString value key;
 
-  cfgText = generators.toKeyValue {
+  generateCfgText = generators.toKeyValue {
     inherit mkKeyValue;
     listsAsDuplicateKeys = true;
-  } cfg.settings;
-
-  scdaemonCfgText = generators.toKeyValue {
-    inherit mkKeyValue;
-    listsAsDuplicateKeys = true;
-  } cfg.scdaemonSettings;
-
-  dirmngrCfgText = generators.toKeyValue {
-    inherit mkKeyValue;
-    listsAsDuplicateKeys = true;
-  } cfg.dirmngrSettings;
+  };
 
   primitiveType = types.oneOf [ types.str types.bool ];
 
@@ -160,6 +150,7 @@ in {
     settings = mkOption {
       type =
         types.attrsOf (types.either primitiveType (types.listOf types.str));
+      default = { };
       example = literalExpression ''
         {
           no-comments = false;
@@ -180,6 +171,7 @@ in {
     scdaemonSettings = mkOption {
       type =
         types.attrsOf (types.either primitiveType (types.listOf types.str));
+      default = { };
       example = literalExpression ''
         {
           disable-ccid = true;
@@ -197,6 +189,7 @@ in {
     dirmngrSettings = mkOption {
       type =
         types.attrsOf (types.either primitiveType (types.listOf types.str));
+      default = { };
       example = literalExpression ''
         {
           keyserver = "keyserver.ubuntu.com";
@@ -265,31 +258,21 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # To prevent error: The option `programs.gpg.settings' is used but not defined.
-    programs.gpg.settings = {
-      # no defaults for gpg
-    };
-    programs.gpg.scdaemonSettings = {
-      # no defaults for scdaemon
-    };
-    programs.gpg.dirmngrSettings = {
-      # no defaults for dirmngr
-    };
-
     home.packages = [ cfg.package ];
     home.sessionVariables = { GNUPGHOME = cfg.homedir; };
 
-    home.file."${cfg.homedir}/gpg.conf".text = cfgText;
+    home.file = {
+      "${cfg.homedir}/gpg.conf".text = generateCfgText cfg.settings;
+      "${cfg.homedir}/scdaemon.conf".text =
+        generateCfgText cfg.scdaemonSettings;
+      "${cfg.homedir}/dirmngr.conf".text = generateCfgText cfg.dirmngrSettings;
 
-    home.file."${cfg.homedir}/scdaemon.conf".text = scdaemonCfgText;
-
-    home.file."${cfg.homedir}/dirmngr.conf".text = dirmngrCfgText;
-
-    # Link keyring if keys are not mutable
-    home.file."${cfg.homedir}/pubring.kbx" =
-      mkIf (!cfg.mutableKeys && cfg.publicKeys != [ ]) {
-        source = "${keyringFiles}/pubring.kbx";
-      };
+      # Link keyring if keys are not mutable
+      "${cfg.homedir}/pubring.kbx" =
+        mkIf (!cfg.mutableKeys && cfg.publicKeys != [ ]) {
+          source = "${keyringFiles}/pubring.kbx";
+        };
+    };
 
     home.activation = {
       createGpgHomedir =
