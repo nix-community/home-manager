@@ -213,6 +213,7 @@ let
     ./programs/script-directory.nix
     ./programs/senpai.nix
     ./programs/sftpman.nix
+    ./programs/silicon.nix
     ./programs/sioyek.nix
     ./programs/skim.nix
     ./programs/sm64ex.nix
