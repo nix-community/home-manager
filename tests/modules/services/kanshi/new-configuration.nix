@@ -3,16 +3,25 @@
     services.kanshi = {
       enable = true;
       package = config.lib.test.mkStubPackage { };
-      profiles = {
-        nomad = {
-          outputs = [{
+      settings = [
+        { include = "path/to/included/file"; }
+        {
+          output = {
+            criteria = "*";
+            status = "enable";
+          };
+        }
+        {
+          profile.name = "nomad";
+          profile.outputs = [{
             criteria = "eDP-1";
             status = "enable";
           }];
-        };
-        desktop = {
-          exec = [ ''echo "1 two 3"'' ''echo "4 five 6"'' ];
-          outputs = [
+        }
+        {
+          profile.name = "desktop";
+          profile.exec = [ ''echo "1 two 3"'' ''echo "4 five 6"'' ];
+          profile.outputs = [
             {
               criteria = "eDP-1";
               status = "disable";
@@ -31,26 +40,16 @@
               transform = "flipped-270";
             }
           ];
-        };
-        backwardsCompat = {
-          outputs = [{
+        }
+        {
+          profile.outputs = [{
             criteria = "LVDS-1";
             status = "enable";
           }];
-          exec = ''echo "7 eight 9"'';
-        };
-      };
-      extraConfig = ''
-        profile test {
-          output "*" enable
+          profile.exec = ''echo "7 eight 9"'';
         }
-      '';
+      ];
     };
-
-    test.asserts.warnings.expected = [
-      "kanshi.profiles option is deprecated. Use kanshi.settings instead."
-      "kanshi.extraConfig option is deprecated. Use kanshi.settings instead."
-    ];
 
     nmt.script = ''
       serviceFile=home-files/.config/systemd/user/kanshi.service
@@ -58,7 +57,7 @@
 
       assertFileExists home-files/.config/kanshi/config
       assertFileContent home-files/.config/kanshi/config \
-                ${./basic-configuration.conf}
+                ${./new-configuration.conf}
     '';
   };
 }
