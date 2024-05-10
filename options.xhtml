@@ -25260,6 +25260,210 @@ JSON value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.hyprlock.enable"></a><a class="term" href="options.xhtml#opt-programs.hyprlock.enable"><code class="option">programs.hyprlock.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Hyprlock, Hyprland’s GPU-accelerated lock screen
+utility.</p><p>Note that PAM must be configured to enable hyprlock to perform
+authentication. The package installed through home-manager will <span class="emphasis"><em>not</em></span> be
+able to unlock the session without this configuration.</p><p>On NixOS, it can be enabled using:</p><pre><code class="programlisting nix">security.pam.services.hyprlock = {};
+</code></pre>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprlock.nix" target="_top">
+&lt;home-manager/modules/programs/hyprlock.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hyprlock.package"></a><a class="term" href="options.xhtml#opt-programs.hyprlock.package"><code class="option">programs.hyprlock.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The hyprlock package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.hyprlock</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprlock.nix" target="_top">
+&lt;home-manager/modules/programs/hyprlock.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hyprlock.extraConfig"></a><a class="term" href="options.xhtml#opt-programs.hyprlock.extraConfig"><code class="option">programs.hyprlock.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra configuration lines to add to <code class="literal">~/.config/hypr/hyprlock.conf</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprlock.nix" target="_top">
+&lt;home-manager/modules/programs/hyprlock.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hyprlock.importantPrefixes"></a><a class="term" href="options.xhtml#opt-programs.hyprlock.importantPrefixes"><code class="option">programs.hyprlock.importantPrefixes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of prefix of attributes to source at the top of the config.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;$&quot;
+  &quot;monitor&quot;
+  &quot;size&quot;
+  &quot;source&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;$&quot;
+  &quot;monitor&quot;
+  &quot;size&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprlock.nix" target="_top">
+&lt;home-manager/modules/programs/hyprlock.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hyprlock.settings"></a><a class="term" href="options.xhtml#opt-programs.hyprlock.settings"><code class="option">programs.hyprlock.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Hyprlock configuration written in Nix. Entries with the same key should
+be written as lists. Variables’ and colors’ names should be quoted. See
+<a class="link" href="https://wiki.hyprland.org/Hypr-Ecosystem/hyprlock/"  target="_top">https://wiki.hyprland.org/Hypr-Ecosystem/hyprlock/</a> for more examples.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+Hyprlock configuration value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  general = {
+    disable_loading_bar = true;
+    grace = 300;
+    hide_cursor = true;
+    no_fade_in = false;
+  };
+
+  background = [
+    {
+      path = &quot;screenshot&quot;;
+      blur_passes = 3;
+      blur_size = 8;
+    }
+  ];
+
+  input-field = [
+    {
+      size = &quot;200, 50&quot;;
+      position = &quot;0, -80&quot;;
+      monitor = &quot;&quot;;
+      dots_center = true;
+      fade_on_empty = false;
+      font_color = &quot;rgb(202, 211, 245)&quot;;
+      inner_color = &quot;rgb(91, 96, 120)&quot;;
+      outer_color = &quot;rgb(24, 25, 38)&quot;;
+      outline_thickness = 5;
+      placeholder_text = &#x27;\&#x27;&lt;span foreground=&quot;##cad3f5&quot;&gt;Password...&lt;/span&gt;&#x27;\&#x27;;
+      shadow_passes = 2;
+    }
+  ];
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprlock.nix" target="_top">
+&lt;home-manager/modules/programs/hyprlock.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hyprlock.sourceFirst"></a><a class="term" href="options.xhtml#opt-programs.hyprlock.sourceFirst"><code class="option">programs.hyprlock.sourceFirst</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable putting source entries at the top of the configuration
+.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprlock.nix" target="_top">
+&lt;home-manager/modules/programs/hyprlock.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.i3blocks.enable"></a><a class="term" href="options.xhtml#opt-programs.i3blocks.enable"><code class="option">programs.i3blocks.enable</code>
   </a>
  </span>
