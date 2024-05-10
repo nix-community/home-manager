@@ -18212,6 +18212,114 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.fastfetch.enable"></a><a class="term" href="options.xhtml#opt-programs.fastfetch.enable"><code class="option">programs.fastfetch.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Fastfetch.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fastfetch.nix" target="_top">
+&lt;home-manager/modules/programs/fastfetch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.fastfetch.package"></a><a class="term" href="options.xhtml#opt-programs.fastfetch.package"><code class="option">programs.fastfetch.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The fastfetch package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.fastfetch</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fastfetch.nix" target="_top">
+&lt;home-manager/modules/programs/fastfetch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.fastfetch.settings"></a><a class="term" href="options.xhtml#opt-programs.fastfetch.settings"><code class="option">programs.fastfetch.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/fastfetch/config.jsonc</code>.
+See <a class="link" href="https://github.com/fastfetch-cli/fastfetch/wiki/Json-Schema"  target="_top">https://github.com/fastfetch-cli/fastfetch/wiki/Json-Schema</a>
+for the documentation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  logo = {
+    source = &quot;nixos_small&quot;;
+    padding = {
+      right = 1;
+    };
+  };
+  display = {
+    binaryPrefix = &quot;si&quot;;
+    color = &quot;blue&quot;;
+    separator = &quot;  &quot;;
+  };
+  modules = [
+    {
+      type = &quot;datetime&quot;;
+      key = &quot;Date&quot;;
+      format = &quot;{1}-{3}-{11}&quot;;
+    }
+    {
+      type = &quot;datetime&quot;;
+      key = &quot;Time&quot;;
+      format = &quot;{14}:{17}:{20}&quot;;
+    }
+    &quot;break&quot;
+    &quot;player&quot;
+    &quot;media&quot;
+  ];
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fastfetch.nix" target="_top">
+&lt;home-manager/modules/programs/fastfetch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.fd.enable"></a><a class="term" href="options.xhtml#opt-programs.fd.enable"><code class="option">programs.fd.enable</code>
   </a>
  </span>
