@@ -51618,6 +51618,100 @@ null or (attribute set of (package or string))</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.yambar.enable"></a><a class="term" href="options.xhtml#opt-programs.yambar.enable"><code class="option">programs.yambar.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Yambar.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yambar.nix" target="_top">
+&lt;home-manager/modules/programs/yambar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.yambar.package"></a><a class="term" href="options.xhtml#opt-programs.yambar.package"><code class="option">programs.yambar.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The yambar package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.yambar</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yambar.nix" target="_top">
+&lt;home-manager/modules/programs/yambar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.yambar.settings"></a><a class="term" href="options.xhtml#opt-programs.yambar.settings"><code class="option">programs.yambar.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/yambar/config.yml</code>.
+See <span class="citerefentry"><span class="refentrytitle">yambar</span>(5)</span> for options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+YAML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">bar = {
+  location = &quot;top&quot;;
+  height = 26;
+  background = &quot;00000066&quot;;
+
+  right = [
+    {
+      clock.content = [
+        {
+          string.text = &quot;{time}&quot;;
+        }
+      ];
+    }
+  ];
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yambar.nix" target="_top">
+&lt;home-manager/modules/programs/yambar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.yazi.enable"></a><a class="term" href="options.xhtml#opt-programs.yazi.enable"><code class="option">programs.yazi.enable</code>
   </a>
  </span>
