@@ -1618,6 +1618,16 @@ in {
           https://github.com/fastfetch-cli/fastfetch for more.
         '';
       }
+
+      {
+        time = "2024-05-09T15:12:32+00:00";
+        message = ''
+          A new module is available: 'programs.silicon'.
+          Silicon is an alternative to Carbon implemented in Rust,
+          it can render your source code into a beautiful image.
+          See https://github.com/Aloxaf/silicon for more.
+        '';
+      }
     ];
   };
 }

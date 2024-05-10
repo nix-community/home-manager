@@ -1,0 +1,4 @@
+--shadow-color '#555'
+--background '#fff'
+--shadow-blur-radius 30
+--no-window-controls
