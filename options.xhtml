@@ -61381,7 +61381,7 @@ strings concatenated with “\n”</p>
  </span>
 </dt>
 <dd>
-<p>List of profiles.</p>
+<p>Attribute set of profiles.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 attribute set of (submodule)</p>
@@ -61438,6 +61438,30 @@ executed asynchronously with no guaranteed ordering.</p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">&quot;[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix" target="_top">
+&lt;home-manager/modules/services/kanshi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.profiles._name_.name"></a><a class="term" href="options.xhtml#opt-services.kanshi.profiles._name_.name"><code class="option">services.kanshi.profiles.&lt;name&gt;.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Profile name</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -61656,6 +61680,414 @@ null or one of “normal”, “90”, “180”, “270”, “flipped”, “f
 </a></code>
 </td></tr>
 </table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings"><code class="option">services.kanshi.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Ordered list of directives.
+See kanshi(5) for informations.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of attribute-tagged union</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{ include = &quot;path/to/included/files&quot;; }
+{ output.criteria = &quot;eDP-1&quot;;
+  output.scale = 2;
+}
+{ profile.name = &quot;undocked&quot;;
+  profile.outputs = [
+    {
+      criteria = &quot;eDP-1&quot;;
+    }
+  ];
+}
+{ profile.name = &quot;docked&quot;;
+  profile.outputs = [
+    {
+      criteria = &quot;eDP-1&quot;;
+    }
+    {
+      criteria = &quot;Some Company ASDF 4242&quot;;
+      transform = &quot;90&quot;;
+    }
+  ];
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix" target="_top">
+&lt;home-manager/modules/services/kanshi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.include"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.include"><code class="option">services.kanshi.settings.*.include</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Include as another file from <span class="emphasis"><em>path</em></span>.
+Expands shell syntax (see <span class="emphasis"><em>wordexp</em></span>(3) for details).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix" target="_top">
+&lt;home-manager/modules/services/kanshi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.output"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.output"><code class="option">services.kanshi.settings.*.output</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>output attribute set.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix" target="_top">
+&lt;home-manager/modules/services/kanshi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.output.adaptiveSync"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.output.adaptiveSync"><code class="option">services.kanshi.settings.*.output.adaptiveSync</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Enables or disables adaptive synchronization
+(aka. Variable Refresh Rate).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.output.criteria"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.output.criteria"><code class="option">services.kanshi.settings.*.output.criteria</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The criteria can either be an output name, an output description or “*”.
+The latter can be used to match any output.</p><p>On
+<span class="citerefentry"><span class="refentrytitle">sway</span>(1)</span>,
+output names and descriptions can be obtained via
+<code class="literal">swaymsg -t get_outputs</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.output.mode"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.output.mode"><code class="option">services.kanshi.settings.*.output.mode</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>&lt;width&gt;x&lt;height&gt;[@&lt;rate&gt;[Hz]]</p><p>Configures the specified output to use the specified mode.
+Modes are a combination of width and height (in pixels) and
+a refresh rate (in Hz) that your display can be configured to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;1920x1080@60Hz&quot;</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.output.position"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.output.position"><code class="option">services.kanshi.settings.*.output.position</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>&lt;x&gt;,&lt;y&gt;</p><p>Places the output at the specified position in the global coordinates
+space.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;1600,0&quot;</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.output.scale"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.output.scale"><code class="option">services.kanshi.settings.*.output.scale</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Scales the output by the specified scale factor.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or floating point number</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">2</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.output.status"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.output.status"><code class="option">services.kanshi.settings.*.output.status</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Enables or disables the specified output.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or one of “enable”, “disable”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.output.transform"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.output.transform"><code class="option">services.kanshi.settings.*.output.transform</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Sets the output transform.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or one of “normal”, “90”, “180”, “270”, “flipped”, “flipped-90”, “flipped-180”, “flipped-270”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile"><code class="option">services.kanshi.settings.*.profile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>profile attribute set.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix" target="_top">
+&lt;home-manager/modules/services/kanshi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.exec"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.exec"><code class="option">services.kanshi.settings.*.profile.exec</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Commands executed after the profile is successfully applied.
+Note that if you provide multiple commands, they will be
+executed asynchronously with no guaranteed ordering.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+(list of string) or string convertible to it</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]&quot;</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.name"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.name"><code class="option">services.kanshi.settings.*.profile.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Profile name</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.outputs"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.outputs"><code class="option">services.kanshi.settings.*.profile.outputs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Outputs configuration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.outputs._.adaptiveSync"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.outputs._.adaptiveSync"><code class="option">services.kanshi.settings.*.profile.outputs.*.adaptiveSync</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Enables or disables adaptive synchronization
+(aka. Variable Refresh Rate).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.outputs._.criteria"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.outputs._.criteria"><code class="option">services.kanshi.settings.*.profile.outputs.*.criteria</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The criteria can either be an output name, an output description or “*”.
+The latter can be used to match any output.</p><p>On
+<span class="citerefentry"><span class="refentrytitle">sway</span>(1)</span>,
+output names and descriptions can be obtained via
+<code class="literal">swaymsg -t get_outputs</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.outputs._.mode"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.outputs._.mode"><code class="option">services.kanshi.settings.*.profile.outputs.*.mode</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>&lt;width&gt;x&lt;height&gt;[@&lt;rate&gt;[Hz]]</p><p>Configures the specified output to use the specified mode.
+Modes are a combination of width and height (in pixels) and
+a refresh rate (in Hz) that your display can be configured to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;1920x1080@60Hz&quot;</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.outputs._.position"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.outputs._.position"><code class="option">services.kanshi.settings.*.profile.outputs.*.position</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>&lt;x&gt;,&lt;y&gt;</p><p>Places the output at the specified position in the global coordinates
+space.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;1600,0&quot;</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.outputs._.scale"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.outputs._.scale"><code class="option">services.kanshi.settings.*.profile.outputs.*.scale</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Scales the output by the specified scale factor.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or floating point number</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">2</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.outputs._.status"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.outputs._.status"><code class="option">services.kanshi.settings.*.profile.outputs.*.status</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Enables or disables the specified output.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or one of “enable”, “disable”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.outputs._.transform"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.outputs._.transform"><code class="option">services.kanshi.settings.*.profile.outputs.*.transform</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Sets the output transform.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or one of “normal”, “90”, “180”, “270”, “flipped”, “flipped-90”, “flipped-180”, “flipped-270”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
 </dd>
 <dt>
  <span class="term">
