@@ -228,7 +228,6 @@ let
       echo "end"
       echo "setup_hm_session_vars") > $out
     '';
-
 in {
   imports = [
     (mkRemovedOptionModule [ "programs" "fish" "promptInit" ] ''
@@ -548,5 +547,16 @@ in {
           '';
       }) cfg.plugins));
     })
+    (let
+      themes = foldl (themeList: plugin:
+        if pathIsDirectory "${plugin.src}/themes" then
+          themeList ++ filesystem.listFilesRecursive "${plugin.src}/themes"
+        else
+          themeList) [ ] cfg.plugins;
+    in (mkIf (length themes > 0) {
+      xdg.configFile = mkMerge ((map (theme:
+        let basename = last (builtins.split "/" (toString theme));
+        in { "fish/themes/${basename}".source = theme; }) themes));
+    }))
   ]);
 }
