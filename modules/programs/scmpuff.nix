@@ -54,7 +54,7 @@ in {
       concatStringsSep " " ([ "--shell=${shell}" ]
         ++ optional (!cfg.enableAliases) "--aliases=false");
   in {
-    home.packages = [ cfg.package ];
+    home.packages = [ pkgs.git pkgs.which cfg.package ];
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       eval "$(${cfg.package}/bin/scmpuff init ${mkArgs "bash"})"
