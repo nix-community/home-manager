@@ -1,0 +1,7 @@
+{
+  "node": {
+    "alias": "hm-user",
+    "listen": []
+  },
+  "publicExplorer": "https://app.radicle.xyz/nodes/$host/$rid$path"
+}
