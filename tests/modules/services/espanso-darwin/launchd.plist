@@ -16,8 +16,6 @@
 	</dict>
 	<key>Label</key>
 	<string>org.nix-community.home.espanso</string>
-	<key>ProcessType</key>
-	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>@espanso@/bin/espanso</string>
