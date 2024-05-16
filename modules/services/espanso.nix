@@ -138,7 +138,6 @@ in {
           Crashed = true;
           SuccessfulExit = false;
         };
-        ProcessType = "Background";
         RunAtLoad = true;
       };
     };
