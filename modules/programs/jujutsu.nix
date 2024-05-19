@@ -7,6 +7,11 @@ let
   cfg = config.programs.jujutsu;
   tomlFormat = pkgs.formats.toml { };
 
+  configDir = if pkgs.stdenv.isDarwin then
+    "Library/Application Support"
+  else
+    config.xdg.configHome;
+
 in {
   meta.maintainers = [ maintainers.shikanime ];
 
@@ -51,7 +56,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."jj/config.toml" = mkIf (cfg.settings != { }) {
+    home.file."${configDir}/jj/config.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "jujutsu-config" (cfg.settings
         // optionalAttrs (cfg.ediff) (let
           emacsDiffScript = pkgs.writeShellScriptBin "emacs-ediff" ''
